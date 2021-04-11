@@ -1,3 +1,10 @@
+/**
+ * The UnifiedLog is a Log which supports both user and debug logging.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/Log/unifiedLog.hpp"
 
 babelwires::Log::MessageBuilder babelwires::UnifiedLog::logInfo() {

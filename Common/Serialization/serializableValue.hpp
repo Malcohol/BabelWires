@@ -1,3 +1,10 @@
+/**
+ * A Trait supporting the serialization of values.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 namespace babelwires {

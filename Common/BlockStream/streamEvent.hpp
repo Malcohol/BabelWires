@@ -1,3 +1,10 @@
+/**
+ * Common functionality for objects residing in BlockStreams.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/types.hpp"

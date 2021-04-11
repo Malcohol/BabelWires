@@ -1,3 +1,10 @@
+/**
+ * A DataSource provides a source of bytes with a simple mechanism for rewinding.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/types.hpp"

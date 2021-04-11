@@ -1,3 +1,10 @@
+/**
+ * Some general type definitions, functions and templates.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/types.hpp"
 
 #include <cassert>

@@ -1,3 +1,10 @@
+/**
+ * Common exception classes.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/exceptions.hpp"
 #include <sstream>
 

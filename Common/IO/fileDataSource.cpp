@@ -1,3 +1,10 @@
+/**
+ * A FileDataSource is a DataSource corresponding to the contents of a file.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/IO/fileDataSource.hpp"
 #include "Common/exceptions.hpp"
 

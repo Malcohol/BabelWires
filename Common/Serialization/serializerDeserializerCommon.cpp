@@ -1,3 +1,10 @@
+/**
+ * Functionality common to serialization and deserialization.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/Serialization/serializerDeserializerCommon.hpp"
 #include "Common/Log/userLogger.hpp"
 #include "Common/Serialization/deserializationRegistry.hpp"

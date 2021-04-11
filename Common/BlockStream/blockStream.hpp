@@ -1,3 +1,10 @@
+/**
+ * A container which can carry a sequence of hetrogeneous events.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/BlockStream/streamEvent.hpp"

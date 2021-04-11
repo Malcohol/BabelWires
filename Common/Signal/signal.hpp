@@ -1,3 +1,10 @@
+/**
+ * A Signal links callers and callees for a given function signature.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/Signal/signalSubscription.hpp"

@@ -1,3 +1,10 @@
+/**
+ * A Registry is a container which is used in various places for registering factories.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/exceptions.hpp"

@@ -1,3 +1,10 @@
+/**
+ * The FileTypeRegistry is a registry that can be queried by file extension.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 template <typename ENTRY, typename UNTYPED_REGISTRY>
 babelwires::FileTypeRegistry<ENTRY, UNTYPED_REGISTRY>::FileTypeRegistry(std::string registryName)
     : Registry<ENTRY, UntypedFileTypeRegistry>(std::move(registryName)) {}

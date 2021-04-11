@@ -1,3 +1,10 @@
+/**
+ * An interface for objects which can consume audio data.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/exceptions.hpp"
@@ -5,7 +12,7 @@
 
 namespace babelwires {
 
-    /// An interface for objects that provide audio data.
+    /// An interface for objects that can consume audio data.
     struct AudioDest {
         virtual ~AudioDest();
 

@@ -1,3 +1,10 @@
+/**
+ * The Deserializer supports the loading of serialized data, where the particular representation (e.g. XML) of data is abstracted.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/Serialization/serializable.hpp"
@@ -11,6 +18,7 @@
 #include <string_view>
 
 namespace babelwires {
+
 
     class Deserializer : public SerializerDeserializerCommon {
       public:

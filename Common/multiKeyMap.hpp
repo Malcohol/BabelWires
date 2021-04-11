@@ -1,3 +1,10 @@
+/**
+ * The MultiKeyMap is a simple implementation of a map which can be indexed by more than one key.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include <cassert>

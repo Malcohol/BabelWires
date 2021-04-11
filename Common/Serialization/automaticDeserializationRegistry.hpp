@@ -1,3 +1,10 @@
+/**
+ * The AutomaticDeserializationRegistry is a DeserializationRegistry into which serializable classes are automatically registered.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/Serialization/deserializationRegistry.hpp"
@@ -5,7 +12,7 @@
 namespace babelwires {
 
     /// This class has a static registry into which all serializable classes are automatically registered.
-    /// NOTE: This will not work for dynamically linked executable.
+    /// NOTE: This will not work out-of-the-box for dynamically linked executable.
     /// Any instance of this class can be used to look up the classes.
     class AutomaticDeserializationRegistry : public DeserializationRegistry {
       public:

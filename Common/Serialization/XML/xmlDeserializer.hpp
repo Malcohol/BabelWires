@@ -1,3 +1,10 @@
+/**
+ * The XmlDeserializer implements the Deserializer and loads data from an XML representation.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/Serialization/deserializer.hpp"

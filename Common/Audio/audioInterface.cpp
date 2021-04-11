@@ -1,3 +1,10 @@
+/**
+ * A system for registering AudioSources and AudioDests.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/Audio/audioInterface.hpp"
 #include "Common/Audio/audioDest.hpp"
 #include "Common/Audio/audioSource.hpp"

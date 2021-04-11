@@ -1,3 +1,10 @@
+/**
+ * The OStreamLogListener writes all messages to a provided ostream.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/Log/log.hpp"
@@ -8,6 +15,7 @@
 
 namespace babelwires {
 
+    /// Writes all messages to a provided ostream.
     class OStreamLogListener {
       public:
         enum class Features : unsigned int { none = 0, timestamp = 1, logDebugMessages = 2 };

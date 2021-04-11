@@ -1,3 +1,10 @@
+/**
+ * Factories for creating AudioSources corresponding to sound formats.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/Audio/fileAudioSource.hpp"
 #include <assert.h>
 #include <stdexcept>

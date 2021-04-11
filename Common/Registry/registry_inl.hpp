@@ -1,3 +1,10 @@
+/**
+ * A Registry is a container which is used in various places for registering factories.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 template <typename ENTRY, typename UNTYPED_REGISTRY>
 babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::Registry(std::string registryName)
     : m_untypedRegistry(std::move(registryName)) {}

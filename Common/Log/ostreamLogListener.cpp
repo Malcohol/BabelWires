@@ -1,3 +1,10 @@
+/**
+ * The OStreamLogListener writes all messages to a provided ostream.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/Log/ostreamLogListener.hpp"
 
 #include <cassert>

@@ -1,3 +1,10 @@
+/**
+ * An interface for classes which support serialization/deserialization.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/Serialization/automaticDeserializationRegistry.hpp"

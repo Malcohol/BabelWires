@@ -1,3 +1,10 @@
+/**
+ * The XmlSerializer implements Serializer and writes data in an XML representation.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/Serialization/serializer.hpp"

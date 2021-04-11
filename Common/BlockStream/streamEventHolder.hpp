@@ -1,3 +1,10 @@
+/**
+ * A StreamEventHolder is a container for a single mutable StreamEvent.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
 
 #include "Common/BlockStream/streamEvent.hpp"

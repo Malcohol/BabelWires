@@ -1,3 +1,10 @@
+/**
+ * The AutomaticDeserializationRegistry is a DeserializationRegistry into which serializable classes are automatically registered.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/Serialization/automaticDeserializationRegistry.hpp"
 
 #include <cassert>

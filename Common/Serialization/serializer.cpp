@@ -1,3 +1,10 @@
+/**
+ * The Serializer supports the saving of serialized data, where the particular representation (e.g. XML) of data is abstracted.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/Serialization/serializer.hpp"
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializable.hpp"

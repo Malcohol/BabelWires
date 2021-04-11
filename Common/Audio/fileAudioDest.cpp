@@ -1,3 +1,10 @@
+/**
+ * Factories for creating AudioDests corresponding to sound formats.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "Common/Audio/fileAudioDest.hpp"
 #include "Common/exceptions.hpp"
 #include <assert.h>
