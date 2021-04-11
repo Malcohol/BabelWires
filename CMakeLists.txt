@@ -34,9 +34,6 @@ ADD_SUBDIRECTORY( Audio/Alsa )
 add_subdirectory(Tests/Audio/Alsa)
 ENDIF( ALSA_FOUND )
 
-FIND_PACKAGE( LibSndFile REQUIRED )
-INCLUDE_DIRECTORIES(${LibSndFile_INCLUDE_DIRS})
-
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 # Update submodules as needed
@@ -60,6 +57,8 @@ add_subdirectory(extern/tinyxml2)
 INCLUDE_DIRECTORIES(${tinyxml2_INCLUDE_DIRS})
 
 add_subdirectory(extern/googletest)
+
+add_subdirectory(extern/libsndfile)
 
 add_subdirectory(Tests/TestUtils)
 add_subdirectory(Tests/Common)
