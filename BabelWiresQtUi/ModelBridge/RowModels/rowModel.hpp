@@ -1,0 +1,104 @@
+/**
+ * Base class of models corresponding to a row in a node of the flow graph.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include "BabelWires/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
+
+#include <QVariant>
+
+#include <memory>
+#include <vector>
+
+class QWidget;
+class QModelIndex;
+class QStyleOptionViewItem;
+class QPainter;
+
+namespace babelwires {
+
+    class Feature;
+    class FeatureElement;
+    class ModifierData;
+    struct ContentsCacheEntry;
+    class Modifier;
+    class FeatureModelDelegate;
+
+    /// Base class of models corresponding to a row in a node of the flow graph.
+    /// Such objects are created as temporaries, and should not have state.
+    class RowModel {
+      public:
+        // Note: No virtual destructor.
+
+        virtual QVariant getValueDisplayData() const;
+
+        virtual QVariant getTooltip() const;
+
+        enum class ColumnType { Key, Value };
+
+        enum class BackgroundStyle {
+            normal,
+            editable,
+            failed,
+            // There's a failed modifier which is hidden because a containing feature is collapsed in the UI.
+            failedHidden
+        };
+
+        virtual BackgroundStyle getBackgroundStyle(ColumnType c) const;
+
+        /// Only called for input features.
+        virtual bool isItemEditable() const;
+
+        /// Return an editor for editing the value.
+        virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
+
+        /// Set the data in the editor.
+        virtual void setEditorData(QWidget* editor) const;
+
+        /// Given that the user has committed the edit, return a new modifier corresponding
+        /// to that edit.
+        virtual std::unique_ptr<babelwires::ModifierData> createModifierFromEditor(QWidget* editor) const;
+
+        /// Returns true if this RowModel overrides paint and sizeHint.
+        /// The default implementation returns false.
+        virtual bool hasCustomPainting() const;
+
+        /// Option is a copy and may safely be modified.
+        /// Painter is already saved and will be restored after this call.
+        virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
+
+        /// Required when custom painting.
+        /// Option is a copy and may safely be modified.
+        virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
+
+        /// Add any context actions which should appear in the context menu for this row.
+        /// Subclasses overriding this should use super-calls to collect standard actions.
+        virtual void getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const;
+
+      public:
+        bool isFeatureModified() const;
+
+        /// Obtain the delegate, given the parent of a row model.
+        static FeatureModelDelegate* getDelegateFromParentWidget(QWidget* widget);
+
+        /// Obtain the model, given the parent of a row model.
+        static FeatureModel* getModelFromParentWidget(QWidget* widget);
+
+      protected:
+        bool hasInputFeature() const;
+        const Feature* getInputFeature() const;
+        const Feature* getOutputFeature() const;
+        const Feature* getInputThenOutputFeature() const;
+        const Feature* getOutputThenInputFeature() const;
+
+      public:
+        const ContentsCacheEntry* m_contentsCacheEntry = nullptr;
+        const FeatureElement* m_featureElement = nullptr;
+    };
+
+} // namespace babelwires

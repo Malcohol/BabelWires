@@ -1,0 +1,15 @@
+#include "BabelWires/Project/Modifiers/localModifier.hpp"
+
+namespace libTestUtils {
+    struct LocalTestModifier : babelwires::LocalModifier {
+        LocalTestModifier(std::unique_ptr<babelwires::LocalModifierData> modifierData)
+            : LocalModifier(std::move(modifierData)) {}
+        LocalTestModifier(const LocalModifier& other)
+            : LocalModifier(other) {}
+        CLONEABLE(LocalTestModifier);
+
+        void simulateFailure() { setFailed(babelwires::Modifier::State::ApplicationFailed, "synthetic failure"); }
+
+        void simulateRecovery() { setSucceeded(); }
+    };
+} // namespace libTestUtils

@@ -1,0 +1,32 @@
+SET( COMMON_SRCS
+	Audio/audioDest.cpp
+	Audio/audioSource.cpp
+	Audio/audioInterface.cpp
+	Audio/fileAudioDest.cpp
+	Audio/fileAudioSource.cpp
+	exceptions.cpp
+	types.cpp
+	Cloning/cloneable.cpp
+	Registry/registry.cpp
+	Registry/fileTypeRegistry.cpp
+	IO/dataSource.cpp
+	IO/fileDataSource.cpp
+	IO/outFileStream.cpp
+	Math/rational.cpp
+	Log/log.cpp
+	Log/ostreamLogListener.cpp
+	Log/unifiedLog.cpp
+	Log/debugLogger.cpp
+	uuid.cpp
+	Serialization/deserializer.cpp
+	Serialization/serializer.cpp
+	Serialization/serializerDeserializerCommon.cpp
+	Serialization/automaticDeserializationRegistry.cpp
+	Serialization/XML/xmlSerializer.cpp
+	Serialization/XML/xmlDeserializer.cpp
+	Signal/signalSubscription.cpp
+	BlockStream/blockStream.cpp
+   )
+
+ADD_LIBRARY( Common ${COMMON_SRCS} )
+TARGET_LINK_LIBRARIES(Common PUBLIC tinyxml2 sndfile)
