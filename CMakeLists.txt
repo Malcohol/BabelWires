@@ -6,7 +6,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.10 )
 
 PROJECT( Pmc100 )
 
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+#SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 SET( CMAKE_EDIT_COMMAND /usr/bin/cmake -i )
 SET( CMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT TRUE )
@@ -59,6 +59,11 @@ INCLUDE_DIRECTORIES(${tinyxml2_INCLUDE_DIRS})
 add_subdirectory(extern/googletest)
 
 add_subdirectory(extern/libsndfile)
+
+set(BUILD_SHARED_LIBS_SAVED "${BUILD_SHARED_LIBS}")
+set(BUILD_SHARED_LIBS OFF)
+add_subdirectory(extern/nodeeditor)
+set(BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS_SAVED}")
 
 add_subdirectory(Tests/TestUtils)
 add_subdirectory(Tests/Common)

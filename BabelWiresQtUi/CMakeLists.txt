@@ -38,9 +38,6 @@ SET( BABELWIRESQTUI_SRCS
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )
 
-ADD_LIBRARY(nodes STATIC IMPORTED)
-SET_TARGET_PROPERTIES(nodes PROPERTIES INTERFACE_INCLUDE_DIRECTORIES /home/malcohol/MyStuff/Projects/Programming/C++/nodeeditor/include)
-SET_PROPERTY(TARGET nodes PROPERTY IMPORTED_LOCATION /home/malcohol/MyStuff/Projects/Programming/C++/nodeeditorBuild/lib/libnodes.a)
 TARGET_COMPILE_DEFINITIONS(BabelWiresQtUi PRIVATE NODE_EDITOR_STATIC)
 
 TARGET_LINK_LIBRARIES( BabelWiresQtUi BabelWiresLib Common nodes Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL)
