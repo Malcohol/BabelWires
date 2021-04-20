@@ -4,14 +4,13 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.10 )
 # Build the project
 ###############################################################################
 
-PROJECT( Pmc100 )
+PROJECT( BabelWires )
 
 #SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 SET( CMAKE_EDIT_COMMAND /usr/bin/cmake -i )
 SET( CMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT TRUE )
 SET(CMAKE_CXX_STANDARD 17)
-INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR} )
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 

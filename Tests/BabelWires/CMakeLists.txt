@@ -42,5 +42,5 @@ SET( LIB_TESTS_SRCS
    )
 
 ADD_EXECUTABLE( babelWiresTests ${LIB_TESTS_SRCS} )
-
+TARGET_INCLUDE_DIRECTORIES( babelWiresTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
 TARGET_LINK_LIBRARIES(babelWiresTests Common testUtils BabelWiresLib gtest)
