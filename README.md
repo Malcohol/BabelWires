@@ -10,7 +10,7 @@ Applications built in BabelWires allow a user to configure a conversion from a f
 
 Users can create graphs of these nodes, defining how the source data is imported, processed and exported.    
 
-Babelwires itself has no domain specific code, but provides the bulk of the domain agnostic code needed to construct this kind of application.
+BabelWires itself has no domain specific code, but provides the bulk of the domain agnostic code needed to construct this kind of application.
 The defining use-case is [SeqWires](https://github.com/Malcohol/SeqWires), which supports the conversion of music sequence data between various music sequencer formats.
 
 The framework provides:
