@@ -44,3 +44,6 @@ Ideas:
 * Processors could maybe be pure, and let the processorElement own the features.
   - Maybe they would have three pure methods: process(input, output), createDefaultInputFeature(), createDefaultOutputFeature().
   - Consider informing processors about array operations at a semantic level.
+* SelectableArrays: For arrays larger than 16 elements:
+  - Each element has an input drop down which selects the output array element.
+  - This would be useful for complex input formats.
