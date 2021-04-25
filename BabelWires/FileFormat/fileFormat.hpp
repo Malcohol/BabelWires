@@ -28,7 +28,6 @@ namespace babelwires {
         FileFormat(std::string identifier, std::string name, VersionNumber version, Extensions extensions);
         virtual std::unique_ptr<babelwires::FileFeature> loadFromFile(DataSource& dataSource,
                                                                       UserLogger& userLogger) const = 0;
-        virtual void writeToFile(const FileFeature& fileFeature, std::ostream& os, UserLogger& userLogger) const = 0;
     };
 
     /// Registry of file formats.
@@ -38,13 +37,16 @@ namespace babelwires {
     };
 
     /// Factories which can create FileFeatures in a default state.
-    class FileFeatureFactory : public RegistryEntry, ProductInfo {
+    class FileFeatureFactory : public FileTypeEntry, ProductInfo {
       public:
-        FileFeatureFactory(std::string identifier, std::string name, VersionNumber version);
+        FileFeatureFactory(std::string identifier, std::string name, VersionNumber version, Extensions extensions);
         virtual std::unique_ptr<FileFeature> createNewFeature() const = 0;
+        virtual void writeToFile(const FileFeature& fileFeature, std::ostream& os, UserLogger& userLogger) const = 0;
     };
 
     /// Registry of FileFeatureFactories.
+    /// Note: This is not a FileTypeRegistry, since these are not expected to be queried by extension and
+    /// more than one can target the same extension.
     class FileFeatureFactoryRegistry : public Registry<FileFeatureFactory> {
       public:
         FileFeatureFactoryRegistry();

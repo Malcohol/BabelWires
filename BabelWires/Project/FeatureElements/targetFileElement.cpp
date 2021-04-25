@@ -2,7 +2,7 @@
  * TargetFileElements are FeatureElements which correspond to a target file.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWires/Project/FeatureElements/targetFileElement.hpp"
@@ -76,11 +76,16 @@ void babelwires::TargetFileElement::setFilePath(std::string newFilePath) {
     }
 }
 
-std::string babelwires::TargetFileElement::getFileFormatIdentifier() const {
-    assert(!isFailed() && "It's not safe to call this when the feature has failed");
-    assert(dynamic_cast<const FileFeature*>(m_feature.get()) &&
-           "If the feature has succeeded, then it should carry a file feature");
-    return static_cast<const FileFeature*>(m_feature.get())->getFileFormatIdentifier();
+const babelwires::FileTypeEntry*
+babelwires::TargetFileElement::getFileFormatInformation(const ProjectContext& context) const {
+    // TODO: tryGetRegisteredEntry
+    try {
+        const FileFeatureFactory& format =
+            context.m_factoryFormatReg.getRegisteredEntry(getElementData().m_factoryIdentifier);
+        return &format;
+    } catch (const RegistryException& e) {
+    }
+    return nullptr;
 }
 
 babelwires::FileElement::FileOperations babelwires::TargetFileElement::getSupportedFileOperations() const {
@@ -101,7 +106,7 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
     try {
         OutFileStream outStream(data.m_filePath);
         const auto& fileFeature = dynamic_cast<const FileFeature&>(*m_feature.get());
-        const FileFormat* format = context.m_fileFormatReg.getEntryByIdentifier(fileFeature.getFileFormatIdentifier());
+        const FileFeatureFactory* format = context.m_factoryFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
         assert(format && "FileFeature with unregistered file format");
         format->writeToFile(fileFeature, outStream, userLogger);
         outStream.close();

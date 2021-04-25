@@ -10,6 +10,7 @@
 #include "BabelWires/Project/FeatureElements/featureElement.hpp"
 
 namespace babelwires {
+    class FileTypeEntry;
 
     /// A feature element which represents the contents of a file.
     class FileElement : public FeatureElement {
@@ -23,8 +24,7 @@ namespace babelwires {
         /// Implementations are not expected to perform file operations.
         virtual void setFilePath(std::string newFilePath) = 0;
 
-        /// Get the FileFormatIdentifier, used when saving and loading this type of file.
-        virtual std::string getFileFormatIdentifier() const = 0;
+        virtual const FileTypeEntry* getFileFormatInformation(const ProjectContext& context) const = 0;
 
         enum class FileOperations : unsigned int { reload = 0b01, save = 0b10 };
 

@@ -2,7 +2,7 @@
  * SourceFileElements are FeatureElements which correspond to a source file.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWires/Project/FeatureElements/sourceFileElement.hpp"
@@ -60,8 +60,15 @@ void babelwires::SourceFileElement::setFilePath(std::string newFilePath) {
     }
 }
 
-std::string babelwires::SourceFileElement::getFileFormatIdentifier() const {
-    return getElementData().m_factoryIdentifier;
+const babelwires::FileTypeEntry*
+babelwires::SourceFileElement::getFileFormatInformation(const ProjectContext& context) const {
+    // TODO: tryGetRegisteredEntry
+   try {
+        const FileTypeEntry& format = context.m_fileFormatReg.getRegisteredEntry(getElementData().m_factoryIdentifier);
+        return &format;
+    } catch (const RegistryException& e) {
+    }
+    return nullptr;
 }
 
 babelwires::FileElement::FileOperations babelwires::SourceFileElement::getSupportedFileOperations() const {

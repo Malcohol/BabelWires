@@ -18,7 +18,7 @@ namespace {
     void createTestFile(libTestUtils::TestProjectContext& context, const std::filesystem::path& path, int value = 14) {
         std::ofstream tempFile(path);
 
-        auto fileFormat = std::make_unique<libTestUtils::TestFileFormat>();
+        auto fileFormat = std::make_unique<libTestUtils::TestFileFeatureFactory>();
         auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>();
         fileFeature->m_intChildFeature->set(value);
         fileFormat->writeToFile(*fileFeature, tempFile, context.m_log);
@@ -50,8 +50,9 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
         static_cast<babelwires::SourceFileElement*>(featureElement.get());
 
     EXPECT_EQ(sourceFileElement->getFilePath(), tempFilePath.m_filePath);
-    EXPECT_EQ(sourceFileElement->getFileFormatIdentifier(), libTestUtils::TestFileFormat::getThisIdentifier());
     EXPECT_EQ(sourceFileElement->getSupportedFileOperations(), babelwires::FileElement::FileOperations::reload);
+    EXPECT_NE(sourceFileElement->getFileFormatInformation(context.m_projectContext), nullptr);
+    EXPECT_EQ(sourceFileElement->getFileFormatInformation(context.m_projectContext)->getIdentifier(), libTestUtils::TestFileFormat::getThisIdentifier());
 
     std::filesystem::remove(tempFilePath);
 

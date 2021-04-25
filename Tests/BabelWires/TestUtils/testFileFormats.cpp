@@ -80,19 +80,13 @@ libTestUtils::TestFileFormat::loadFromFile(babelwires::DataSource& dataSource,
     return newFeature;
 }
 
-void libTestUtils::TestFileFormat::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
-                                               babelwires::UserLogger& userLogger) const {
-    const TestFileFeature& testFileFeature = dynamic_cast<const TestFileFeature&>(fileFeature);
-    os << s_fileFormatId << char(testFileFeature.m_intChildFeature->get());
-}
-
 void libTestUtils::TestFileFormat::writeToTestFile(const std::filesystem::path& path, char testData) {
     std::ofstream fs(path);
     fs << s_fileFormatId << testData;
 }
 
 libTestUtils::TestFileFeatureFactory::TestFileFeatureFactory()
-    : FileFeatureFactory(s_factoryFormatId, s_factoryFormatId, 3) {}
+    : FileFeatureFactory(s_factoryFormatId, s_factoryFormatId, 3, {s_fileFormatId}) {}
 
 std::string libTestUtils::TestFileFeatureFactory::getThisIdentifier() {
     return s_factoryFormatId;
@@ -108,4 +102,10 @@ std::string libTestUtils::TestFileFeatureFactory::getProductName() const {
 
 std::unique_ptr<babelwires::FileFeature> libTestUtils::TestFileFeatureFactory::createNewFeature() const {
     return std::make_unique<TestFileFeature>();
+}
+
+void libTestUtils::TestFileFeatureFactory::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
+                                                       babelwires::UserLogger& userLogger) const {
+    const TestFileFeature& testFileFeature = dynamic_cast<const TestFileFeature&>(fileFeature);
+    os << s_fileFormatId << char(testFileFeature.m_intChildFeature->get());
 }

@@ -33,7 +33,7 @@ namespace babelwires {
 
         virtual std::string getFilePath() const override;
         virtual void setFilePath(std::string newFilePath) override;
-        virtual std::string getFileFormatIdentifier() const override;
+        virtual const FileTypeEntry* getFileFormatInformation(const ProjectContext& context) const override;
         virtual FileOperations getSupportedFileOperations() const override;
         virtual bool reload(const ProjectContext& context, UserLogger& userLogger) override;
 

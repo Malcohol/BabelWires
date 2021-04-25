@@ -122,7 +122,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     {
         std::ofstream tempFile(tempFilePath);
 
-        auto fileFormat = std::make_unique<libTestUtils::TestFileFormat>();
+        auto fileFormat = std::make_unique<libTestUtils::TestFileFeatureFactory>();
         auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>();
         fileFeature->m_intChildFeature->set(14);
         fileFormat->writeToFile(*fileFeature, tempFile, context.m_log);

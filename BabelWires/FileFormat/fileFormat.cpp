@@ -11,11 +11,11 @@ babelwires::FileFormatRegistry::FileFormatRegistry()
     : FileTypeRegistry("File Format Registry") {}
 
 babelwires::FileFeatureFactoryRegistry::FileFeatureFactoryRegistry()
-    : Registry<FileFeatureFactory>("File Feature Factory Registry"){};
+    : Registry("File Feature Factory Registry"){};
 
 babelwires::FileFormat::FileFormat(std::string identifier, std::string name, VersionNumber version,
                                    Extensions extensions)
     : FileTypeEntry(std::move(identifier), std::move(name), version, std::move(extensions)) {}
 
-babelwires::FileFeatureFactory::FileFeatureFactory(std::string identifier, std::string name, VersionNumber version)
-    : RegistryEntry(std::move(identifier), std::move(name), version) {}
+babelwires::FileFeatureFactory::FileFeatureFactory(std::string identifier, std::string name, VersionNumber version, Extensions extensions)
+    : FileTypeEntry(std::move(identifier), std::move(name), version, std::move(extensions)) {}

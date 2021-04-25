@@ -12,7 +12,7 @@
 #include <QtWidgets/QFileDialog>
 
 namespace {
-    QString getFormatString(const babelwires::FileFormat& format) {
+    QString getFormatString(const babelwires::FileTypeEntry& format) {
         QString dialogFormats = QString(format.getName().c_str()) + " (";
         const auto& extensions = format.getFileExtensions();
         for (int i = 0; i < extensions.size(); ++i) {
@@ -26,14 +26,14 @@ namespace {
     }
 } // namespace
 
-QString babelwires::showOpenFileDialog(QWidget* parent, const FileFormat& format) {
+QString babelwires::showOpenFileDialog(QWidget* parent, const FileTypeEntry& format) {
     QString dialogCaption = QObject::tr("Open ") + format.getName().c_str();
     QString dialogFormats = getFormatString(format);
     // Currently case sensitive for me. Could use QFileDialog::DontUseNativeDialog to get around this.
     return QFileDialog::getOpenFileName(parent, dialogCaption, QString(), dialogFormats);
 }
 
-QString babelwires::showSaveFileDialog(QWidget* parent, const FileFormat& format) {
+QString babelwires::showSaveFileDialog(QWidget* parent, const FileTypeEntry& format) {
     QString dialogCaption = QObject::tr("Save ") + format.getName().c_str();
     QString dialogFormats = getFormatString(format);
     QFileDialog dialog(parent, dialogCaption, QString(), dialogFormats);

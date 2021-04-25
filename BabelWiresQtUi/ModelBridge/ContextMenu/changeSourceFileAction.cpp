@@ -27,7 +27,7 @@ void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::FeatureMode
     const ElementId elementId = model.getElementId();
 
     // Since formats are immuatable and live in the registry, they can be accessed outside a scope.
-    const FileFormat* fileFormat = nullptr;
+    const FileTypeEntry* fileFormatInformation = nullptr;
     {
         AccessModelScope scope(projectBridge);
         const Project& project = scope.getProject();
@@ -42,12 +42,11 @@ void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::FeatureMode
         if (isZero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {
             return;
         }
-        fileFormat =
-            projectBridge.getContext().m_fileFormatReg.getEntryByIdentifier(fileElement->getFileFormatIdentifier());
+        fileFormatInformation = fileElement->getFileFormatInformation(projectBridge.getContext());
     }
-    assert(fileFormat && "This function should not be called when the format is not registered");
+    assert(fileFormatInformation && "This function should not be called when the format is not registered");
 
-    QString newFilePath = showOpenFileDialog(projectBridge.getFlowGraphWidget(), *fileFormat);
+    QString newFilePath = showOpenFileDialog(projectBridge.getFlowGraphWidget(), *fileFormatInformation);
     if (!newFilePath.isEmpty()) {
         projectBridge.scheduleCommand(
             std::make_unique<ChangeFileCommand>("Change file path", elementId, newFilePath.toStdString()));

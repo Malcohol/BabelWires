@@ -13,10 +13,10 @@ class QWidget;
 
 namespace babelwires {
 
-    class FileFormat;
+    class FileTypeEntry;
 
-    QString showOpenFileDialog(QWidget* parent, const FileFormat& format);
+    QString showOpenFileDialog(QWidget* parent, const FileTypeEntry& format);
 
-    QString showSaveFileDialog(QWidget* parent, const FileFormat& format);
+    QString showSaveFileDialog(QWidget* parent, const FileTypeEntry& format);
 
 } // namespace babelwires

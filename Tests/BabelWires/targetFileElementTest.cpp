@@ -39,8 +39,9 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
         static_cast<babelwires::TargetFileElement*>(featureElement.get());
 
     EXPECT_EQ(targetFileElement->getFilePath(), tempFilePath.m_filePath);
-    EXPECT_EQ(targetFileElement->getFileFormatIdentifier(), libTestUtils::TestFileFormat::getThisIdentifier());
     EXPECT_EQ(targetFileElement->getSupportedFileOperations(), babelwires::FileElement::FileOperations::save);
+    EXPECT_NE(targetFileElement->getFileFormatInformation(context.m_projectContext), nullptr);
+    EXPECT_EQ(targetFileElement->getFileFormatInformation(context.m_projectContext)->getIdentifier(), libTestUtils::TestFileFeatureFactory::getThisIdentifier());
 
     EXPECT_TRUE(endsWithStar(targetFileElement->getLabel()));
     EXPECT_TRUE(targetFileElement->save(context.m_projectContext, context.m_log));

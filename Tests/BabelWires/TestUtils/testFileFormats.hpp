@@ -39,8 +39,6 @@ namespace libTestUtils {
         std::string getProductName() const override;
         std::unique_ptr<babelwires::FileFeature> loadFromFile(babelwires::DataSource& dataSource,
                                                               babelwires::UserLogger& userLogger) const override;
-        void writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
-                         babelwires::UserLogger& userLogger) const override;
 
         static char getFileData(const std::filesystem::path& path);
         static void writeToTestFile(const std::filesystem::path& path, char testData = 3);
@@ -55,6 +53,8 @@ namespace libTestUtils {
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
         std::unique_ptr<babelwires::FileFeature> createNewFeature() const override;
+        void writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
+                         babelwires::UserLogger& userLogger) const override;
     };
 
 } // namespace libTestUtils
