@@ -12,8 +12,8 @@
 #include "BabelWiresQtUi/ModelBridge/modifyModelScope.hpp"
 #include "BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
-#include "BabelWiresQtUi/ModelBridge/sourceFileFactory.hpp"
-#include "BabelWiresQtUi/ModelBridge/targetFileFactory.hpp"
+#include "BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp"
+#include "BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
 #include "BabelWires/Commands/commandManager.hpp"

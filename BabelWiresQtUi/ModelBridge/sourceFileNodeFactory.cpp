@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/sourceFileFactory.hpp"
+#include "BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp"
 
 #include "BabelWiresQtUi/ModelBridge/elementNodeModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"

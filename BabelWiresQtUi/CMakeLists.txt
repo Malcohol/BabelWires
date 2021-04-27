@@ -1,8 +1,8 @@
 SET( BABELWIRESQTUI_SRCS
     uiMain.cpp
     mainWindow.cpp
-    ModelBridge/sourceFileFactory.cpp
-    ModelBridge/targetFileFactory.cpp
+    ModelBridge/sourceFileNodeFactory.cpp
+    ModelBridge/targetFileNodeFactory.cpp
     ModelBridge/processorNodeFactory.cpp
     ModelBridge/baseNodeModel.cpp
     ModelBridge/projectBridge.cpp

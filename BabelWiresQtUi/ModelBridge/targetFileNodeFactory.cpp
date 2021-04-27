@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/targetFileFactory.hpp"
+#include "BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp"
 #include "BabelWires/Commands/addElementCommand.hpp"
 #include "BabelWires/FileFormat/fileFormat.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
