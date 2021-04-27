@@ -28,7 +28,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
-    libTestUtils::TestFileFormat::writeToTestFile(sourceFilePath, 3);
+    libTestUtils::TestSourceFileFactory::writeToTestFile(sourceFilePath, 3);
 
     context.m_project.setProjectData(projectData);
     context.m_project.process();

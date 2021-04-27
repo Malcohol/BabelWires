@@ -24,7 +24,7 @@ TEST(ProjectTest, setAndExtractProjectData) {
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
-    libTestUtils::TestFileFormat::writeToTestFile(sourceFilePath);
+    libTestUtils::TestSourceFileFactory::writeToTestFile(sourceFilePath);
 
     context.m_project.setProjectData(projectData);
     // Processing ensures the featurePaths get resolved.
@@ -366,13 +366,13 @@ TEST(ProjectTest, reloadSource) {
     babelwires::FieldNameRegistryScope fieldNameRegistry;
     libTestUtils::TestProjectContext context;
 
-    testUtils::TempFilePath tempFilePath("testSource." + libTestUtils::TestFileFormat::getFileExtension());
+    testUtils::TempFilePath tempFilePath("testSource." + libTestUtils::TestSourceFileFactory::getFileExtension());
 
-    libTestUtils::TestFileFormat::writeToTestFile(tempFilePath, 14);
+    libTestUtils::TestSourceFileFactory::writeToTestFile(tempFilePath, 14);
 
     babelwires::SourceFileData sourceFileData;
     sourceFileData.m_filePath = tempFilePath;
-    sourceFileData.m_factoryIdentifier = libTestUtils::TestFileFormat::getThisIdentifier();
+    sourceFileData.m_factoryIdentifier = libTestUtils::TestSourceFileFactory::getThisIdentifier();
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(sourceFileData);
     const babelwires::FeatureElement* element =
@@ -383,13 +383,13 @@ TEST(ProjectTest, reloadSource) {
     EXPECT_EQ(static_cast<const libTestUtils::TestFileFeature*>(element->getOutputFeature())->m_intChildFeature->get(),
               14);
 
-    libTestUtils::TestFileFormat::writeToTestFile(tempFilePath, 88);
+    libTestUtils::TestSourceFileFactory::writeToTestFile(tempFilePath, 88);
 
     context.m_project.tryToReloadSource(elementId);
     EXPECT_EQ(static_cast<const libTestUtils::TestFileFeature*>(element->getOutputFeature())->m_intChildFeature->get(),
               88);
 
-    libTestUtils::TestFileFormat::writeToTestFile(tempFilePath, 55);
+    libTestUtils::TestSourceFileFactory::writeToTestFile(tempFilePath, 55);
 
     context.m_project.tryToReloadAllSources();
     EXPECT_EQ(static_cast<const libTestUtils::TestFileFeature*>(element->getOutputFeature())->m_intChildFeature->get(),
@@ -407,11 +407,11 @@ TEST(ProjectTest, saveTarget) {
     babelwires::FieldNameRegistryScope fieldNameRegistry;
     libTestUtils::TestProjectContext context;
 
-    testUtils::TempFilePath tempFilePath("testTarget." + libTestUtils::TestFileFormat::getFileExtension());
+    testUtils::TempFilePath tempFilePath("testTarget." + libTestUtils::TestSourceFileFactory::getFileExtension());
 
     babelwires::TargetFileData targetFileData;
     targetFileData.m_filePath = tempFilePath;
-    targetFileData.m_factoryIdentifier = libTestUtils::TestFileFeatureFactory::getThisIdentifier();
+    targetFileData.m_factoryIdentifier = libTestUtils::TestTargetFileFactory::getThisIdentifier();
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(targetFileData);
     babelwires::FeatureElement* element =
@@ -425,15 +425,15 @@ TEST(ProjectTest, saveTarget) {
 
     context.m_project.tryToSaveTarget(elementId);
 
-    EXPECT_EQ(libTestUtils::TestFileFormat::getFileData(tempFilePath), 47);
+    EXPECT_EQ(libTestUtils::TestSourceFileFactory::getFileData(tempFilePath), 47);
 
     inputFeature->m_intChildFeature->set(30);
     context.m_project.tryToSaveTarget(elementId);
-    EXPECT_EQ(libTestUtils::TestFileFormat::getFileData(tempFilePath), 30);
+    EXPECT_EQ(libTestUtils::TestSourceFileFactory::getFileData(tempFilePath), 30);
 
     inputFeature->m_intChildFeature->set(79);
     context.m_project.tryToSaveAllTargets();
-    EXPECT_EQ(libTestUtils::TestFileFormat::getFileData(tempFilePath), 79);
+    EXPECT_EQ(libTestUtils::TestSourceFileFactory::getFileData(tempFilePath), 79);
 
     std::ofstream lockThisStream(tempFilePath);
 
@@ -452,7 +452,7 @@ TEST(ProjectTest, process) {
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
-    libTestUtils::TestFileFormat::writeToTestFile(sourceFilePath, 3);
+    libTestUtils::TestSourceFileFactory::writeToTestFile(sourceFilePath, 3);
 
     context.m_project.setProjectData(projectData);
     context.m_project.process();
@@ -484,7 +484,7 @@ TEST(ProjectTest, process) {
     // 4rd array entry, where they count up from the input value (3).
     EXPECT_EQ(targetInput->m_intChildFeature->get(), 6);
 
-    libTestUtils::TestFileFormat::writeToTestFile(sourceFilePath, 4);
+    libTestUtils::TestSourceFileFactory::writeToTestFile(sourceFilePath, 4);
     context.m_project.tryToReloadSource(libTestUtils::TestProjectData::c_sourceElementId);
     context.m_project.process();
     EXPECT_EQ(targetInput->m_intChildFeature->get(), 7);

@@ -28,7 +28,7 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
-    libTestUtils::TestFileFormat::writeToTestFile(sourceFilePath);
+    libTestUtils::TestSourceFileFactory::writeToTestFile(sourceFilePath);
 
     babelwires::PasteElementsCommand command("Test command", std::move(projectData));
 
@@ -87,7 +87,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
     // It's OK for sources to be duplicated. It's not so great for targets, but it won't affect this test.
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
     originalProjectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
-    libTestUtils::TestFileFormat::writeToTestFile(sourceFilePath);
+    libTestUtils::TestSourceFileFactory::writeToTestFile(sourceFilePath);
 
     {
         // Confirm the original data applied as expected.

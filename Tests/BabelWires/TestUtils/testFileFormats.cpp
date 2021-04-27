@@ -27,22 +27,22 @@ libTestUtils::TestFileFeature::TestFileFeature()
         addField(std::make_unique<babelwires::HasStaticRange<babelwires::IntFeature, 0, 255>>(), m_intChildId);
 }
 
-std::string libTestUtils::TestFileFormat::getThisIdentifier() {
+std::string libTestUtils::TestSourceFileFactory::getThisIdentifier() {
     return s_fileFormatId;
 }
 
-std::string libTestUtils::TestFileFormat::getFileExtension() {
+std::string libTestUtils::TestSourceFileFactory::getFileExtension() {
     return s_fileFormatId;
 }
 
-libTestUtils::TestFileFormat::TestFileFormat()
+libTestUtils::TestSourceFileFactory::TestSourceFileFactory()
     : SourceFileFormat(s_fileFormatId, s_fileFormatId, 1, {s_fileFormatId}) {}
 
-std::string libTestUtils::TestFileFormat::getManufacturerName() const {
+std::string libTestUtils::TestSourceFileFactory::getManufacturerName() const {
     return s_manufacturer;
 }
 
-std::string libTestUtils::TestFileFormat::getProductName() const {
+std::string libTestUtils::TestSourceFileFactory::getProductName() const {
     return s_product;
 }
 
@@ -53,26 +53,26 @@ namespace {
             babelwires::Byte d = dataSource.getNextByte();
             if (c != 0) {
                 if (d != c) {
-                    throw babelwires::ParseException() << "Invalid TestFileFormat file";
+                    throw babelwires::ParseException() << "Invalid TestSourceFileFactory file";
                 }
             } else {
                 value = d;
             }
         }
         if (!dataSource.isEof()) {
-            throw babelwires::ParseException() << "Invalid TestFileFormat file";
+            throw babelwires::ParseException() << "Invalid TestSourceFileFactory file";
         }
         return value;
     }
 } // namespace
 
-char libTestUtils::TestFileFormat::getFileData(const std::filesystem::path& path) {
+char libTestUtils::TestSourceFileFactory::getFileData(const std::filesystem::path& path) {
     babelwires::FileDataSource dataSource(path.c_str());
     return getFileDataInternal(dataSource);
 }
 
 std::unique_ptr<babelwires::FileFeature>
-libTestUtils::TestFileFormat::loadFromFile(babelwires::DataSource& dataSource,
+libTestUtils::TestSourceFileFactory::loadFromFile(babelwires::DataSource& dataSource,
                                            babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
     auto newFeature = std::make_unique<TestFileFeature>();
@@ -80,31 +80,31 @@ libTestUtils::TestFileFormat::loadFromFile(babelwires::DataSource& dataSource,
     return newFeature;
 }
 
-void libTestUtils::TestFileFormat::writeToTestFile(const std::filesystem::path& path, char testData) {
+void libTestUtils::TestSourceFileFactory::writeToTestFile(const std::filesystem::path& path, char testData) {
     std::ofstream fs(path);
     fs << s_fileFormatId << testData;
 }
 
-libTestUtils::TestFileFeatureFactory::TestFileFeatureFactory()
+libTestUtils::TestTargetFileFactory::TestTargetFileFactory()
     : TargetFileFactory(s_factoryFormatId, s_factoryFormatId, 3, {s_fileFormatId}) {}
 
-std::string libTestUtils::TestFileFeatureFactory::getThisIdentifier() {
+std::string libTestUtils::TestTargetFileFactory::getThisIdentifier() {
     return s_factoryFormatId;
 }
 
-std::string libTestUtils::TestFileFeatureFactory::getManufacturerName() const {
+std::string libTestUtils::TestTargetFileFactory::getManufacturerName() const {
     return s_manufacturer;
 }
 
-std::string libTestUtils::TestFileFeatureFactory::getProductName() const {
+std::string libTestUtils::TestTargetFileFactory::getProductName() const {
     return s_product;
 }
 
-std::unique_ptr<babelwires::FileFeature> libTestUtils::TestFileFeatureFactory::createNewFeature() const {
+std::unique_ptr<babelwires::FileFeature> libTestUtils::TestTargetFileFactory::createNewFeature() const {
     return std::make_unique<TestFileFeature>();
 }
 
-void libTestUtils::TestFileFeatureFactory::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
+void libTestUtils::TestTargetFileFactory::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
                                                        babelwires::UserLogger& userLogger) const {
     const TestFileFeature& testFileFeature = dynamic_cast<const TestFileFeature&>(fileFeature);
     os << s_fileFormatId << char(testFileFeature.m_intChildFeature->get());

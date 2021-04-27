@@ -10,12 +10,12 @@
 #include "Tests/BabelWires/TestUtils/testRecord.hpp"
 
 libTestUtils::TestProjectData::TestProjectData()
-    : m_sourceFilePath(std::string("testSourceFile") + libTestUtils::TestFileFormat::getFileExtension())
-    , m_targetFilePath(std::string("testTargetFile") + libTestUtils::TestFileFormat::getFileExtension()) {
+    : m_sourceFilePath(std::string("testSourceFile") + libTestUtils::TestSourceFileFactory::getFileExtension())
+    , m_targetFilePath(std::string("testTargetFile") + libTestUtils::TestSourceFileFactory::getFileExtension()) {
     m_projectId = 1243;
     {
         babelwires::TargetFileData data;
-        data.m_factoryIdentifier = libTestUtils::TestFileFeatureFactory::getThisIdentifier();
+        data.m_factoryIdentifier = libTestUtils::TestTargetFileFactory::getThisIdentifier();
         data.m_id = c_targetElementId;
         data.m_filePath = m_targetFilePath;
         {
@@ -50,7 +50,7 @@ libTestUtils::TestProjectData::TestProjectData()
     {
         babelwires::SourceFileData data;
         data.m_id = c_sourceElementId;
-        data.m_factoryIdentifier = libTestUtils::TestFileFormat::getThisIdentifier();
+        data.m_factoryIdentifier = libTestUtils::TestSourceFileFactory::getThisIdentifier();
         data.m_filePath = m_sourceFilePath;
         m_elements.emplace_back(data.clone());
     }

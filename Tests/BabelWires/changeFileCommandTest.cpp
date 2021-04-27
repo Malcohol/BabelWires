@@ -18,19 +18,19 @@ namespace {
         babelwires::FieldNameRegistryScope fieldNameRegistry;
         libTestUtils::TestProjectContext context;
 
-        testUtils::TempFilePath filePath1("foo" + libTestUtils::TestFileFormat::getFileExtension());
-        testUtils::TempFilePath filePath2("erm" + libTestUtils::TestFileFormat::getFileExtension());
+        testUtils::TempFilePath filePath1("foo" + libTestUtils::TestSourceFileFactory::getFileExtension());
+        testUtils::TempFilePath filePath2("erm" + libTestUtils::TestSourceFileFactory::getFileExtension());
 
         if (source1Present) {
-            libTestUtils::TestFileFormat::writeToTestFile(filePath1, 'x');
+            libTestUtils::TestSourceFileFactory::writeToTestFile(filePath1, 'x');
         }
         if (source2Present) {
-            libTestUtils::TestFileFormat::writeToTestFile(filePath2, 'q');
+            libTestUtils::TestSourceFileFactory::writeToTestFile(filePath2, 'q');
         }
 
         babelwires::SourceFileData elementData;
         elementData.m_filePath = filePath1;
-        elementData.m_factoryIdentifier = libTestUtils::TestFileFormat::getThisIdentifier();
+        elementData.m_factoryIdentifier = libTestUtils::TestSourceFileFactory::getThisIdentifier();
 
         const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
         const auto* element =
@@ -99,12 +99,12 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     babelwires::FieldNameRegistryScope fieldNameRegistry;
     libTestUtils::TestProjectContext context;
 
-    std::string filePath1("foo" + libTestUtils::TestFileFormat::getFileExtension());
-    std::string filePath2("erm" + libTestUtils::TestFileFormat::getFileExtension());
+    std::string filePath1("foo" + libTestUtils::TestSourceFileFactory::getFileExtension());
+    std::string filePath2("erm" + libTestUtils::TestSourceFileFactory::getFileExtension());
 
     babelwires::TargetFileData elementData;
     elementData.m_filePath = filePath1;
-    elementData.m_factoryIdentifier = libTestUtils::TestFileFeatureFactory::getThisIdentifier();
+    elementData.m_factoryIdentifier = libTestUtils::TestTargetFileFactory::getThisIdentifier();
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
     const auto* element =
@@ -139,7 +139,7 @@ TEST(ChangeFileCommandTest, failSafelyNoElement) {
     babelwires::FieldNameRegistryScope fieldNameRegistry;
     libTestUtils::TestProjectContext context;
 
-    std::string filePath2("erm" + libTestUtils::TestFileFormat::getFileExtension());
+    std::string filePath2("erm" + libTestUtils::TestSourceFileFactory::getFileExtension());
     babelwires::ChangeFileCommand command("Test command", 57, filePath2);
 
     context.m_project.process();
@@ -153,7 +153,7 @@ TEST(ChangeFileCommandTest, failSafelyNotAFileElement) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
-    std::string filePath2("erm" + libTestUtils::TestFileFormat::getFileExtension());
+    std::string filePath2("erm" + libTestUtils::TestSourceFileFactory::getFileExtension());
     babelwires::ChangeFileCommand command("Test command", elementId, filePath2);
 
     context.m_project.process();
