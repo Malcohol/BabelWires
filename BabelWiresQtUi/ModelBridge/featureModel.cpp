@@ -21,7 +21,6 @@
 #include "BabelWires/Commands/commands.hpp"
 #include "BabelWires/Commands/setExpandedCommand.hpp"
 #include "BabelWires/Features/Path/featurePath.hpp"
-#include "BabelWires/FileFormat/fileFormat.hpp"
 #include "BabelWires/Project/FeatureElements/fileElement.hpp"
 #include "BabelWires/Project/Modifiers/modifierData.hpp"
 #include "BabelWires/Project/project.hpp"

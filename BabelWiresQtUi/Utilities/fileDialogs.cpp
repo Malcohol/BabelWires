@@ -6,8 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
-
-#include "BabelWires/FileFormat/fileFormat.hpp"
+#include "Common/Registry/fileTypeRegistry.hpp"
 
 #include <QtWidgets/QFileDialog>
 

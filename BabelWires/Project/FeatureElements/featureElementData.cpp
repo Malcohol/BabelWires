@@ -7,7 +7,8 @@
  **/
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Features/recordFeature.hpp"
-#include "BabelWires/FileFormat/fileFormat.hpp"
+#include "BabelWires/FileFormat/sourceFileFormat.hpp"
+#include "BabelWires/FileFormat/targetFileFormat.hpp"
 #include "BabelWires/Processors/processor.hpp"
 #include "BabelWires/Processors/processorFactory.hpp"
 #include "BabelWires/Processors/processorFactoryRegistry.hpp"

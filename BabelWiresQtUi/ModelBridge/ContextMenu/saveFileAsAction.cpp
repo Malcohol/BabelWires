@@ -15,7 +15,6 @@
 
 #include "BabelWires/Commands/changeFileCommand.hpp"
 #include "BabelWires/Commands/commandManager.hpp"
-#include "BabelWires/FileFormat/fileFormat.hpp"
 #include "BabelWires/Project/FeatureElements/fileElement.hpp"
 #include "BabelWires/Project/project.hpp"
 

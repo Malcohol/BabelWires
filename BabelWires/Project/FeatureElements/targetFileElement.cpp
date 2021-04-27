@@ -9,7 +9,7 @@
 
 #include "BabelWires/Features/modelExceptions.hpp"
 #include "BabelWires/FileFormat/fileFeature.hpp"
-#include "BabelWires/FileFormat/fileFormat.hpp"
+#include "BabelWires/FileFormat/targetFileFormat.hpp"
 #include "BabelWires/Project/FeatureElements/failedFeature.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/Modifiers/modifier.hpp"

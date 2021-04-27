@@ -12,7 +12,7 @@
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 
 #include "BabelWires/Commands/addElementCommand.hpp"
-#include "BabelWires/FileFormat/fileFormat.hpp"
+#include "BabelWires/FileFormat/sourceFileFormat.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/project.hpp"
 

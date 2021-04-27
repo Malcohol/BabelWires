@@ -22,20 +22,6 @@ namespace babelwires {
 namespace babelwires {
     class FileFeature;
 
-    /// Format which can create a feature by loading a file.
-    class SourceFileFormat : public FileTypeEntry, ProductInfo {
-      public:
-        SourceFileFormat(std::string identifier, std::string name, VersionNumber version, Extensions extensions);
-        virtual std::unique_ptr<babelwires::FileFeature> loadFromFile(DataSource& dataSource,
-                                                                      UserLogger& userLogger) const = 0;
-    };
-
-    /// Registry of SourceFileFormats.
-    class SourceFileFormatRegistry : public FileTypeRegistry<SourceFileFormat> {
-      public:
-        SourceFileFormatRegistry();
-    };
-
     /// Factories which can create FileFeatures in a default state, and write those features as files.
     class TargetFileFormat : public FileTypeEntry, ProductInfo {
       public:

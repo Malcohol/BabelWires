@@ -13,7 +13,8 @@
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 
 #include "BabelWires/Commands/changeFileCommand.hpp"
-#include "BabelWires/FileFormat/fileFormat.hpp"
+#include "BabelWires/FileFormat/sourceFileFormat.hpp"
+#include "Common/Registry/fileTypeRegistry.hpp"
 #include "BabelWires/Project/FeatureElements/fileElement.hpp"
 #include "BabelWires/Project/project.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
