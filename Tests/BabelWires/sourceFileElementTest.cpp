@@ -18,7 +18,7 @@ namespace {
     void createTestFile(libTestUtils::TestProjectContext& context, const std::filesystem::path& path, int value = 14) {
         std::ofstream tempFile(path);
 
-        auto fileFormat = std::make_unique<libTestUtils::TestTargetFileFactory>();
+        auto fileFormat = std::make_unique<libTestUtils::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>();
         fileFeature->m_intChildFeature->set(value);
         fileFormat->writeToFile(*fileFeature, tempFile, context.m_log);
@@ -31,14 +31,14 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
 
     // Create a test file.
     std::ostringstream tempFileName;
-    tempFileName << "foo." << libTestUtils::TestSourceFileFactory::getFileExtension();
+    tempFileName << "foo." << libTestUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath(tempFileName.str());
 
     createTestFile(context, tempFilePath);
 
     // Create sourceFileData which expect to be able to load the file.
     babelwires::SourceFileData data;
-    data.m_factoryIdentifier = libTestUtils::TestSourceFileFactory::getThisIdentifier();
+    data.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
@@ -52,7 +52,7 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     EXPECT_EQ(sourceFileElement->getFilePath(), tempFilePath.m_filePath);
     EXPECT_EQ(sourceFileElement->getSupportedFileOperations(), babelwires::FileElement::FileOperations::reload);
     EXPECT_NE(sourceFileElement->getFileFormatInformation(context.m_projectContext), nullptr);
-    EXPECT_EQ(sourceFileElement->getFileFormatInformation(context.m_projectContext)->getIdentifier(), libTestUtils::TestSourceFileFactory::getThisIdentifier());
+    EXPECT_EQ(sourceFileElement->getFileFormatInformation(context.m_projectContext)->getIdentifier(), libTestUtils::TestSourceFileFormat::getThisIdentifier());
 
     std::filesystem::remove(tempFilePath);
 
@@ -89,11 +89,11 @@ TEST(SourceFileElementTest, changeFile) {
 
     // Create a test file.
     std::ostringstream tempFileName1;
-    tempFileName1 << "foo1." << libTestUtils::TestSourceFileFactory::getFileExtension();
+    tempFileName1 << "foo1." << libTestUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath1(tempFileName1.str());
 
     std::ostringstream tempFileName2;
-    tempFileName2 << "foo2." << libTestUtils::TestSourceFileFactory::getFileExtension();
+    tempFileName2 << "foo2." << libTestUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath2(tempFileName2.str());
 
     createTestFile(context, tempFilePath1, 18);
@@ -101,7 +101,7 @@ TEST(SourceFileElementTest, changeFile) {
 
     // Create sourceFileData which expect to be able to load the file.
     babelwires::SourceFileData data;
-    data.m_factoryIdentifier = libTestUtils::TestSourceFileFactory::getThisIdentifier();
+    data.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
 

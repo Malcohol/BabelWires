@@ -11,18 +11,18 @@
 
 namespace babelwires {
     class ProjectBridge;
-    class TargetFileFactory;
+    class TargetFileFormat;
 
     class TargetFileNodeFactory {
       public:
-        TargetFileNodeFactory(ProjectBridge* projectBridge, const TargetFileFactory* fileFeatureFactory);
+        TargetFileNodeFactory(ProjectBridge* projectBridge, const TargetFileFormat* fileFeatureFactory);
 
         QString name() const;
         std::unique_ptr<QtNodes::NodeDataModel> operator()() const;
 
       private:
         ProjectBridge* m_projectBridge;
-        const TargetFileFactory* m_fileFeatureFactory;
+        const TargetFileFormat* m_fileFeatureFactory;
         mutable bool m_queryHack = false;
     };
 

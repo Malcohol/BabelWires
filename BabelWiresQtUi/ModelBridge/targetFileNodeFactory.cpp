@@ -16,7 +16,7 @@
 #include <nodes/FlowScene>
 
 babelwires::TargetFileNodeFactory::TargetFileNodeFactory(ProjectBridge* projectBridge,
-                                                 const TargetFileFactory* fileFeatureFactory)
+                                                 const TargetFileFormat* fileFeatureFactory)
     : m_projectBridge(projectBridge)
     , m_fileFeatureFactory(fileFeatureFactory) {}
 

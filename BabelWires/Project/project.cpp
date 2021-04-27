@@ -271,7 +271,7 @@ void babelwires::Project::clear() {
 
 babelwires::Project::~Project() {}
 
-const babelwires::TargetFileFactoryRegistry& babelwires::Project::getFactoryFormatRegistry() const {
+const babelwires::TargetFileFormatRegistry& babelwires::Project::getFactoryFormatRegistry() const {
     return m_context.m_factoryFormatReg;
 }
 

@@ -14,7 +14,7 @@ namespace babelwires {
 
 namespace babelwires {
 
-    class TargetFileFactoryRegistry;
+    class TargetFileFormatRegistry;
     class SourceFileFormatRegistry;
     class ProcessorFactoryRegistry;
 
@@ -25,7 +25,7 @@ namespace babelwires {
     /// * The debug log, because that is needed everywhere.
     /// * The FieldNameRegistry, because I judged it too painful to pass around.
     struct ProjectContext {
-        TargetFileFactoryRegistry& m_factoryFormatReg;
+        TargetFileFormatRegistry& m_factoryFormatReg;
         SourceFileFormatRegistry& m_fileFormatReg;
         ProcessorFactoryRegistry& m_processorReg;
         DeserializationRegistry& m_deserializationReg;

@@ -117,12 +117,12 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
 
     // Create a test file.
     std::ostringstream tempFileName;
-    tempFileName << "foo." << libTestUtils::TestSourceFileFactory::getFileExtension();
+    tempFileName << "foo." << libTestUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath(tempFileName.str());
     {
         std::ofstream tempFile(tempFilePath);
 
-        auto fileFormat = std::make_unique<libTestUtils::TestTargetFileFactory>();
+        auto fileFormat = std::make_unique<libTestUtils::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>();
         fileFeature->m_intChildFeature->set(14);
         fileFormat->writeToFile(*fileFeature, tempFile, context.m_log);
@@ -130,7 +130,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
 
     // Create sourceFileData which expect to be able to load the file.
     babelwires::SourceFileData data;
-    data.m_factoryIdentifier = libTestUtils::TestSourceFileFactory::getThisIdentifier();
+    data.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
@@ -154,7 +154,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     const libTestUtils::TestFileFeature* inputFeature =
         static_cast<const libTestUtils::TestFileFeature*>(featureElement->getOutputFeature());
 
-    EXPECT_EQ(inputFeature->getFileFormatIdentifier(), libTestUtils::TestSourceFileFactory::getThisIdentifier());
+    EXPECT_EQ(inputFeature->getFileFormatIdentifier(), libTestUtils::TestSourceFileFormat::getThisIdentifier());
     EXPECT_EQ(inputFeature->m_intChildFeature->get(), 14);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));
@@ -222,7 +222,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     libTestUtils::TestProjectContext context;
 
     babelwires::TargetFileData data;
-    data.m_factoryIdentifier = libTestUtils::TestTargetFileFactory::getThisIdentifier();
+    data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = "foo";
     setCommonFields(data);
@@ -250,7 +250,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     const libTestUtils::TestFileFeature* inputFeature =
         static_cast<const libTestUtils::TestFileFeature*>(featureElement->getInputFeature());
 
-    EXPECT_EQ(inputFeature->getFileFormatIdentifier(), libTestUtils::TestSourceFileFactory::getThisIdentifier());
+    EXPECT_EQ(inputFeature->getFileFormatIdentifier(), libTestUtils::TestSourceFileFormat::getThisIdentifier());
     EXPECT_EQ(inputFeature->m_intChildFeature->get(), 12);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));

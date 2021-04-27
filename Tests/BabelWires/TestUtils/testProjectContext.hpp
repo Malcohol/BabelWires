@@ -12,7 +12,7 @@ namespace libTestUtils {
     struct TestProjectContext {
         TestProjectContext();
 
-        babelwires::TargetFileFactoryRegistry m_factoryFormatReg;
+        babelwires::TargetFileFormatRegistry m_factoryFormatReg;
         babelwires::SourceFileFormatRegistry m_fileFormatReg;
         babelwires::ProcessorFactoryRegistry m_processorReg;
         testUtils::TestDeserializationRegistry m_deserializationReg;
