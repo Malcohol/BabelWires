@@ -79,7 +79,7 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
     const SourceFileData& data = getElementData();
 
     try {
-        const FileFormat& format = context.m_fileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
+        const SourceFileFormat& format = context.m_fileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
         setFactoryName(format.getName());
 
         if (data.m_filePath.empty()) {

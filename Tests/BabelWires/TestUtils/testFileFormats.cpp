@@ -36,7 +36,7 @@ std::string libTestUtils::TestFileFormat::getFileExtension() {
 }
 
 libTestUtils::TestFileFormat::TestFileFormat()
-    : FileFormat(s_fileFormatId, s_fileFormatId, 1, {s_fileFormatId}) {}
+    : SourceFileFormat(s_fileFormatId, s_fileFormatId, 1, {s_fileFormatId}) {}
 
 std::string libTestUtils::TestFileFormat::getManufacturerName() const {
     return s_manufacturer;
@@ -86,7 +86,7 @@ void libTestUtils::TestFileFormat::writeToTestFile(const std::filesystem::path& 
 }
 
 libTestUtils::TestFileFeatureFactory::TestFileFeatureFactory()
-    : FileFeatureFactory(s_factoryFormatId, s_factoryFormatId, 3, {s_fileFormatId}) {}
+    : TargetFileFactory(s_factoryFormatId, s_factoryFormatId, 3, {s_fileFormatId}) {}
 
 std::string libTestUtils::TestFileFeatureFactory::getThisIdentifier() {
     return s_factoryFormatId;

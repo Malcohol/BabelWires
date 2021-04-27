@@ -18,15 +18,15 @@
 
 #include <nodes/FlowScene>
 
-babelwires::SourceFileFactory::SourceFileFactory(ProjectBridge* projectBridge, const FileFormat* fileFormat)
+babelwires::SourceFileNodeFactory::SourceFileNodeFactory(ProjectBridge* projectBridge, const SourceFileFormat* fileFormat)
     : m_projectBridge(projectBridge)
     , m_fileFormat(fileFormat) {}
 
-QString babelwires::SourceFileFactory::name() const {
+QString babelwires::SourceFileNodeFactory::name() const {
     return m_fileFormat->getName().c_str();
 }
 
-std::unique_ptr<QtNodes::NodeDataModel> babelwires::SourceFileFactory::operator()() const {
+std::unique_ptr<QtNodes::NodeDataModel> babelwires::SourceFileNodeFactory::operator()() const {
     if (!m_queryHack) {
         m_queryHack = true;
         return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_fileFormat->getName().c_str());

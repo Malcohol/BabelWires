@@ -14,8 +14,8 @@ namespace babelwires {
 
 namespace babelwires {
 
-    class FileFeatureFactoryRegistry;
-    class FileFormatRegistry;
+    class TargetFileFactoryRegistry;
+    class SourceFileFormatRegistry;
     class ProcessorFactoryRegistry;
 
     /// The ProjectContext provides the project with access to its fundimental dependencies (e.g. registries).
@@ -25,8 +25,8 @@ namespace babelwires {
     /// * The debug log, because that is needed everywhere.
     /// * The FieldNameRegistry, because I judged it too painful to pass around.
     struct ProjectContext {
-        FileFeatureFactoryRegistry& m_factoryFormatReg;
-        FileFormatRegistry& m_fileFormatReg;
+        TargetFileFactoryRegistry& m_factoryFormatReg;
+        SourceFileFormatRegistry& m_fileFormatReg;
         ProcessorFactoryRegistry& m_processorReg;
         DeserializationRegistry& m_deserializationReg;
         std::default_random_engine m_randomEngine;

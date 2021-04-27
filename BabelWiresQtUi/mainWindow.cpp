@@ -55,11 +55,11 @@ namespace {
 
         const auto& context = projectBridge.getContext();
         for (const auto& f : context.m_fileFormatReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::SourceFileFactory(&projectBridge, &f),
+            ret->registerModel<QtNodes::NodeDataModel>(babelwires::SourceFileNodeFactory(&projectBridge, &f),
                                                        "Source Files");
         }
         for (const auto& f : context.m_factoryFormatReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::TargetFileFactory(&projectBridge, &f),
+            ret->registerModel<QtNodes::NodeDataModel>(babelwires::TargetFileNodeFactory(&projectBridge, &f),
                                                        "Target Files");
         }
         for (const auto& f : context.m_processorReg) {

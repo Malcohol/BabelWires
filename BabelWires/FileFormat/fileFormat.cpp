@@ -7,15 +7,15 @@
  **/
 #include "BabelWires/FileFormat/fileFormat.hpp"
 
-babelwires::FileFormatRegistry::FileFormatRegistry()
+babelwires::SourceFileFormatRegistry::SourceFileFormatRegistry()
     : FileTypeRegistry("File Format Registry") {}
 
-babelwires::FileFeatureFactoryRegistry::FileFeatureFactoryRegistry()
+babelwires::TargetFileFactoryRegistry::TargetFileFactoryRegistry()
     : Registry("File Feature Factory Registry"){};
 
-babelwires::FileFormat::FileFormat(std::string identifier, std::string name, VersionNumber version,
+babelwires::SourceFileFormat::SourceFileFormat(std::string identifier, std::string name, VersionNumber version,
                                    Extensions extensions)
     : FileTypeEntry(std::move(identifier), std::move(name), version, std::move(extensions)) {}
 
-babelwires::FileFeatureFactory::FileFeatureFactory(std::string identifier, std::string name, VersionNumber version, Extensions extensions)
+babelwires::TargetFileFactory::TargetFileFactory(std::string identifier, std::string name, VersionNumber version, Extensions extensions)
     : FileTypeEntry(std::move(identifier), std::move(name), version, std::move(extensions)) {}

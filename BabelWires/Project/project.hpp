@@ -23,8 +23,8 @@ namespace babelwires {
 namespace babelwires {
 
     class RecordFeature;
-    class FileFeatureFactoryRegistry;
-    class FileFormatRegistry;
+    class TargetFileFactoryRegistry;
+    class SourceFileFormatRegistry;
     class ProcessorFactoryRegistry;
     struct ProjectContext;
     class Modifier;
@@ -89,8 +89,8 @@ namespace babelwires {
         /// Sets the Ui size of the element's contents.
         void setElementContentsSize(ElementId elementId, const UiSize& newSize);
 
-        const FileFeatureFactoryRegistry& getFactoryFormatRegistry() const;
-        const FileFormatRegistry& getFileFormatRegistry() const;
+        const TargetFileFactoryRegistry& getFactoryFormatRegistry() const;
+        const SourceFileFormatRegistry& getFileFormatRegistry() const;
 
         FeatureElement* getFeatureElement(ElementId id);
         const FeatureElement* getFeatureElement(ElementId id) const;

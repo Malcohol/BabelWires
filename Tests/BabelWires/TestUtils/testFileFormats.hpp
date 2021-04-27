@@ -30,7 +30,7 @@ namespace libTestUtils {
     /// A file format that can save and load some test data.
     /// The serialized format is just the identifier followed by a single byte which carries the value of
     /// intChildFeature. This has version 1.
-    struct TestFileFormat : babelwires::FileFormat {
+    struct TestFileFormat : babelwires::SourceFileFormat {
         static std::string getThisIdentifier();
         static std::string getFileExtension();
 
@@ -46,7 +46,7 @@ namespace libTestUtils {
 
     /// A factor for construction new file features.
     /// This is given version 3, to allow version testing.
-    struct TestFileFeatureFactory : babelwires::FileFeatureFactory {
+    struct TestFileFeatureFactory : babelwires::TargetFileFactory {
         static std::string getThisIdentifier();
 
         TestFileFeatureFactory();

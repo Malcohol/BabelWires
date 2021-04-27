@@ -11,19 +11,19 @@
 
 namespace babelwires {
     class ProjectBridge;
-    class FileFormat;
+    class SourceFileFormat;
 
     /// The factory which creates nodes for source files.
-    class SourceFileFactory {
+    class SourceFileNodeFactory {
       public:
-        SourceFileFactory(ProjectBridge* projectBridge, const FileFormat* fileFormat);
+        SourceFileNodeFactory(ProjectBridge* projectBridge, const SourceFileFormat* fileFormat);
 
         QString name() const;
         std::unique_ptr<QtNodes::NodeDataModel> operator()() const;
 
       private:
         ProjectBridge* m_projectBridge;
-        const FileFormat* m_fileFormat;
+        const SourceFileFormat* m_fileFormat;
         mutable bool m_queryHack = false;
     };
 

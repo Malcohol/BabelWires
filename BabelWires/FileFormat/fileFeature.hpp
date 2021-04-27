@@ -11,7 +11,7 @@
 
 namespace babelwires {
 
-    class FileFormat;
+    class SourceFileFormat;
 
     /// A record feature which has a corresponding file format, and therefore can be loaded and saved.
     class FileFeature : public RecordFeature {

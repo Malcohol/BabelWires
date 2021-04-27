@@ -22,34 +22,34 @@ namespace babelwires {
 namespace babelwires {
     class FileFeature;
 
-    /// Format which knows how to load and save files to disk.
-    class FileFormat : public FileTypeEntry, ProductInfo {
+    /// Format which can create a feature by loading a file.
+    class SourceFileFormat : public FileTypeEntry, ProductInfo {
       public:
-        FileFormat(std::string identifier, std::string name, VersionNumber version, Extensions extensions);
+        SourceFileFormat(std::string identifier, std::string name, VersionNumber version, Extensions extensions);
         virtual std::unique_ptr<babelwires::FileFeature> loadFromFile(DataSource& dataSource,
                                                                       UserLogger& userLogger) const = 0;
     };
 
-    /// Registry of file formats.
-    class FileFormatRegistry : public FileTypeRegistry<FileFormat> {
+    /// Registry of SourceFileFormats.
+    class SourceFileFormatRegistry : public FileTypeRegistry<SourceFileFormat> {
       public:
-        FileFormatRegistry();
+        SourceFileFormatRegistry();
     };
 
-    /// Factories which can create FileFeatures in a default state.
-    class FileFeatureFactory : public FileTypeEntry, ProductInfo {
+    /// Factories which can create FileFeatures in a default state, and write those features as files.
+    class TargetFileFactory : public FileTypeEntry, ProductInfo {
       public:
-        FileFeatureFactory(std::string identifier, std::string name, VersionNumber version, Extensions extensions);
+        TargetFileFactory(std::string identifier, std::string name, VersionNumber version, Extensions extensions);
         virtual std::unique_ptr<FileFeature> createNewFeature() const = 0;
         virtual void writeToFile(const FileFeature& fileFeature, std::ostream& os, UserLogger& userLogger) const = 0;
     };
 
-    /// Registry of FileFeatureFactories.
+    /// Registry of TargetFileFactories.
     /// Note: This is not a FileTypeRegistry, since these are not expected to be queried by extension and
     /// more than one can target the same extension.
-    class FileFeatureFactoryRegistry : public Registry<FileFeatureFactory> {
+    class TargetFileFactoryRegistry : public Registry<TargetFileFactory> {
       public:
-        FileFeatureFactoryRegistry();
+        TargetFileFactoryRegistry();
     };
 
 } // namespace babelwires

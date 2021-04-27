@@ -15,16 +15,16 @@
 #include <QtWidgets/QFileDialog>
 #include <nodes/FlowScene>
 
-babelwires::TargetFileFactory::TargetFileFactory(ProjectBridge* projectBridge,
-                                                 const FileFeatureFactory* fileFeatureFactory)
+babelwires::TargetFileNodeFactory::TargetFileNodeFactory(ProjectBridge* projectBridge,
+                                                 const TargetFileFactory* fileFeatureFactory)
     : m_projectBridge(projectBridge)
     , m_fileFeatureFactory(fileFeatureFactory) {}
 
-QString babelwires::TargetFileFactory::name() const {
+QString babelwires::TargetFileNodeFactory::name() const {
     return m_fileFeatureFactory->getName().c_str();
 }
 
-std::unique_ptr<QtNodes::NodeDataModel> babelwires::TargetFileFactory::operator()() const {
+std::unique_ptr<QtNodes::NodeDataModel> babelwires::TargetFileNodeFactory::operator()() const {
     if (!m_queryHack) {
         m_queryHack = true;
         return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_fileFeatureFactory->getName().c_str());
