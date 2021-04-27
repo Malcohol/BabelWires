@@ -25,8 +25,8 @@ namespace babelwires {
     /// * The debug log, because that is needed everywhere.
     /// * The FieldNameRegistry, because I judged it too painful to pass around.
     struct ProjectContext {
-        TargetFileFormatRegistry& m_factoryFormatReg;
-        SourceFileFormatRegistry& m_fileFormatReg;
+        SourceFileFormatRegistry& m_sourceFileFormatReg;
+        TargetFileFormatRegistry& m_targetFileFormatReg;
         ProcessorFactoryRegistry& m_processorReg;
         DeserializationRegistry& m_deserializationReg;
         std::default_random_engine m_randomEngine;

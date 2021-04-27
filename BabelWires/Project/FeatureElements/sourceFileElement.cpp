@@ -64,7 +64,7 @@ const babelwires::FileTypeEntry*
 babelwires::SourceFileElement::getFileFormatInformation(const ProjectContext& context) const {
     // TODO: tryGetRegisteredEntry
    try {
-        const FileTypeEntry& format = context.m_fileFormatReg.getRegisteredEntry(getElementData().m_factoryIdentifier);
+        const FileTypeEntry& format = context.m_sourceFileFormatReg.getRegisteredEntry(getElementData().m_factoryIdentifier);
         return &format;
     } catch (const RegistryException& e) {
     }
@@ -79,7 +79,7 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
     const SourceFileData& data = getElementData();
 
     try {
-        const SourceFileFormat& format = context.m_fileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
+        const SourceFileFormat& format = context.m_sourceFileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
         setFactoryName(format.getName());
 
         if (data.m_filePath.empty()) {

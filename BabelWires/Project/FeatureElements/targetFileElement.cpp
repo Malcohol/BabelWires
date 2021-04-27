@@ -29,7 +29,7 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
     try {
         setFactoryName(elementData.m_factoryIdentifier);
         const TargetFileFormat& factory =
-            context.m_factoryFormatReg.getRegisteredEntry(elementData.m_factoryIdentifier);
+            context.m_targetFileFormatReg.getRegisteredEntry(elementData.m_factoryIdentifier);
         setFactoryName(factory.getName());
         setFeature(factory.createNewFeature());
     } catch (const RegistryException& e) {
@@ -81,7 +81,7 @@ babelwires::TargetFileElement::getFileFormatInformation(const ProjectContext& co
     // TODO: tryGetRegisteredEntry
     try {
         const TargetFileFormat& format =
-            context.m_factoryFormatReg.getRegisteredEntry(getElementData().m_factoryIdentifier);
+            context.m_targetFileFormatReg.getRegisteredEntry(getElementData().m_factoryIdentifier);
         return &format;
     } catch (const RegistryException& e) {
     }
@@ -106,7 +106,7 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
     try {
         OutFileStream outStream(data.m_filePath);
         const auto& fileFeature = dynamic_cast<const FileFeature&>(*m_feature.get());
-        const TargetFileFormat* format = context.m_factoryFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
+        const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
         assert(format && "FileFeature with unregistered file format");
         format->writeToFile(fileFeature, outStream, userLogger);
         outStream.close();

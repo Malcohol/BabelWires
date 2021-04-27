@@ -272,11 +272,11 @@ void babelwires::Project::clear() {
 babelwires::Project::~Project() {}
 
 const babelwires::TargetFileFormatRegistry& babelwires::Project::getFactoryFormatRegistry() const {
-    return m_context.m_factoryFormatReg;
+    return m_context.m_targetFileFormatReg;
 }
 
 const babelwires::SourceFileFormatRegistry& babelwires::Project::getFileFormatRegistry() const {
-    return m_context.m_fileFormatReg;
+    return m_context.m_sourceFileFormatReg;
 }
 
 babelwires::FeatureElement* babelwires::Project::getFeatureElement(ElementId id) {

@@ -54,11 +54,11 @@ namespace {
         auto ret = std::make_shared<QtNodes::DataModelRegistry>();
 
         const auto& context = projectBridge.getContext();
-        for (const auto& f : context.m_fileFormatReg) {
+        for (const auto& f : context.m_sourceFileFormatReg) {
             ret->registerModel<QtNodes::NodeDataModel>(babelwires::SourceFileNodeFactory(&projectBridge, &f),
                                                        "Source Files");
         }
-        for (const auto& f : context.m_factoryFormatReg) {
+        for (const auto& f : context.m_targetFileFormatReg) {
             ret->registerModel<QtNodes::NodeDataModel>(babelwires::TargetFileNodeFactory(&projectBridge, &f),
                                                        "Target Files");
         }

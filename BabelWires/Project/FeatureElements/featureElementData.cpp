@@ -132,7 +132,7 @@ babelwires::SourceFileData::SourceFileData(const SourceFileData& other, ShallowC
     , m_filePath(other.m_filePath) {}
 
 bool babelwires::SourceFileData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
-    return checkFactoryVersionCommon(context.m_fileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
+    return checkFactoryVersionCommon(context.m_sourceFileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
 }
 
 std::unique_ptr<babelwires::FeatureElement>
@@ -160,7 +160,7 @@ babelwires::TargetFileData::TargetFileData(const TargetFileData& other, ShallowC
     , m_filePath(other.m_filePath) {}
 
 bool babelwires::TargetFileData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
-    return checkFactoryVersionCommon(context.m_factoryFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
+    return checkFactoryVersionCommon(context.m_targetFileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
 }
 
 std::unique_ptr<babelwires::FeatureElement>
