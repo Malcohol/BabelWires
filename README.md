@@ -15,7 +15,7 @@ The defining use-case is [SeqWires](https://github.com/Malcohol/SeqWires), which
 
 The framework provides:
 * a generic way of representing data in a tree of self-describing data structures (Feature)
-* abstractions for source and target formats
+* abstractions for source and target formats (SourceFileFormat and TargetFileFormat)
 * an abstraction for processing data (Processor)
 * a data structure describing a graph of wired nodes (Project)
 * a versionable serialization system for projects, which writes human readable(-ish) and writable(-ish) files. 
