@@ -122,10 +122,10 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     {
         std::ofstream tempFile(tempFilePath);
 
-        auto fileFormat = std::make_unique<libTestUtils::TestTargetFileFormat>();
+        auto targetFileFormat = std::make_unique<libTestUtils::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>();
         fileFeature->m_intChildFeature->set(14);
-        fileFormat->writeToFile(*fileFeature, tempFile, context.m_log);
+        targetFileFormat->writeToFile(*fileFeature, tempFile, context.m_log);
     }
 
     // Create sourceFileData which expect to be able to load the file.

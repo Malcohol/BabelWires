@@ -18,27 +18,27 @@
 
 #include <nodes/FlowScene>
 
-babelwires::SourceFileNodeFactory::SourceFileNodeFactory(ProjectBridge* projectBridge, const SourceFileFormat* fileFormat)
+babelwires::SourceFileNodeFactory::SourceFileNodeFactory(ProjectBridge* projectBridge, const SourceFileFormat* sourceFileFormat)
     : m_projectBridge(projectBridge)
-    , m_fileFormat(fileFormat) {}
+    , m_sourceFileFormat(sourceFileFormat) {}
 
 QString babelwires::SourceFileNodeFactory::name() const {
-    return m_fileFormat->getName().c_str();
+    return m_sourceFileFormat->getName().c_str();
 }
 
 std::unique_ptr<QtNodes::NodeDataModel> babelwires::SourceFileNodeFactory::operator()() const {
     if (!m_queryHack) {
         m_queryHack = true;
-        return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_fileFormat->getName().c_str());
+        return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_sourceFileFormat->getName().c_str());
     }
 
-    QString filePath = showOpenFileDialog(m_projectBridge->getFlowGraphWidget(), *m_fileFormat);
+    QString filePath = showOpenFileDialog(m_projectBridge->getFlowGraphWidget(), *m_sourceFileFormat);
 
     if (!filePath.isNull()) {
         auto newDataPtr = std::make_unique<SourceFileData>();
-        newDataPtr->m_factoryIdentifier = m_fileFormat->getIdentifier();
+        newDataPtr->m_factoryIdentifier = m_sourceFileFormat->getIdentifier();
         newDataPtr->m_filePath = filePath.toStdString();
-        newDataPtr->m_factoryVersion = m_fileFormat->getVersion();
+        newDataPtr->m_factoryVersion = m_sourceFileFormat->getVersion();
 
         auto commandPtr = std::make_unique<AddElementCommand>("Add source file", std::move(newDataPtr));
         AddElementCommand& addElementCommand = *commandPtr;

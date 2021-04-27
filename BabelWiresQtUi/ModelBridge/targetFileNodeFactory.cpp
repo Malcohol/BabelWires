@@ -16,23 +16,23 @@
 #include <nodes/FlowScene>
 
 babelwires::TargetFileNodeFactory::TargetFileNodeFactory(ProjectBridge* projectBridge,
-                                                 const TargetFileFormat* fileFeatureFactory)
+                                                 const TargetFileFormat* targetFileFormat)
     : m_projectBridge(projectBridge)
-    , m_fileFeatureFactory(fileFeatureFactory) {}
+    , m_targetFileFormat(targetFileFormat) {}
 
 QString babelwires::TargetFileNodeFactory::name() const {
-    return m_fileFeatureFactory->getName().c_str();
+    return m_targetFileFormat->getName().c_str();
 }
 
 std::unique_ptr<QtNodes::NodeDataModel> babelwires::TargetFileNodeFactory::operator()() const {
     if (!m_queryHack) {
         m_queryHack = true;
-        return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_fileFeatureFactory->getName().c_str());
+        return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_targetFileFormat->getName().c_str());
     }
 
     auto newDataPtr = std::make_unique<TargetFileData>();
-    newDataPtr->m_factoryIdentifier = m_fileFeatureFactory->getIdentifier();
-    newDataPtr->m_factoryVersion = m_fileFeatureFactory->getVersion();
+    newDataPtr->m_factoryIdentifier = m_targetFileFormat->getIdentifier();
+    newDataPtr->m_factoryVersion = m_targetFileFormat->getVersion();
 
     auto commandPtr = std::make_unique<AddElementCommand>("Add target file", std::move(newDataPtr));
     AddElementCommand& addElementCommand = *commandPtr;

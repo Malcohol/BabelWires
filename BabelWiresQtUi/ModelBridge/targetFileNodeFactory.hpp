@@ -15,14 +15,14 @@ namespace babelwires {
 
     class TargetFileNodeFactory {
       public:
-        TargetFileNodeFactory(ProjectBridge* projectBridge, const TargetFileFormat* fileFeatureFactory);
+        TargetFileNodeFactory(ProjectBridge* projectBridge, const TargetFileFormat* targetFileFormat);
 
         QString name() const;
         std::unique_ptr<QtNodes::NodeDataModel> operator()() const;
 
       private:
         ProjectBridge* m_projectBridge;
-        const TargetFileFormat* m_fileFeatureFactory;
+        const TargetFileFormat* m_targetFileFormat;
         mutable bool m_queryHack = false;
     };
 
