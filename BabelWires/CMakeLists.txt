@@ -16,6 +16,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/arraySizeModifierData.cpp
 	Project/Modifiers/connectionModifier.cpp
 	Project/Modifiers/connectionModifierData.cpp
+	Project/Modifiers/activateOptionalsModifierData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp
 	ProjectExtra/projectObserver.cpp

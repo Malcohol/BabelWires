@@ -187,10 +187,10 @@ babelwires::Deserializer::Iterator<T> babelwires::Deserializer::deserializeArray
 }
 
 template <typename T> struct babelwires::Deserializer::ValueIterator : BaseIterator {
-    T deserializeValue() {
-        T value;
-        m_deserializer.deserializeValue("value", value);
-        return value;
+    /// Pass in a tempValue if T cannot be default constructed.
+    T deserializeValue(T tempValue = T()) {
+        m_deserializer.deserializeValue("value", tempValue);
+        return tempValue;
     }
 
     ValueIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer, std::string_view typeName)
