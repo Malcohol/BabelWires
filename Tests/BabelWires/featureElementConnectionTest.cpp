@@ -87,7 +87,7 @@ struct FeatureElementConnectionTest : ::testing::Test {
     libTestUtils::TestFeatureElement* m_sourceElement;
 
     babelwires::AssignFromFeatureData m_assignData;
-    babelwires::ArrayInitializationData m_arrayInitData;
+    babelwires::ArraySizeModifierData m_arrayInitData;
     babelwires::IntValueAssignmentData m_arrayElemData;
     babelwires::IntValueAssignmentData m_arrayElemDataHigh;
 };

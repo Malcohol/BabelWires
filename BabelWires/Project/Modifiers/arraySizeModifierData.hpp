@@ -1,5 +1,5 @@
 /**
- * ArrayInitializationData sets an array to a certain size.
+ * ArraySizeModifierData sets an array to a certain size.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -11,15 +11,15 @@
 
 namespace babelwires {
     /// Data used to set an array within a container to a certain size.
-    struct ArrayInitializationData : LocalModifierData {
+    struct ArraySizeModifierData : LocalModifierData {
         void apply(Feature* targetFeature) const override;
         std::unique_ptr<Modifier> createModifier() const override;
 
         void addEntries(Feature* targetFeature, int indexOfNewElement, int numEntriesToAdd);
         void removeEntries(Feature* targetFeature, int indexOfElementToRemove, int numEntriesToRemove);
-        CLONEABLE(ArrayInitializationData);
+        CLONEABLE(ArraySizeModifierData);
 
-        SERIALIZABLE(ArrayInitializationData, "arraySize", LocalModifierData, 1);
+        SERIALIZABLE(ArraySizeModifierData, "arraySize", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
 

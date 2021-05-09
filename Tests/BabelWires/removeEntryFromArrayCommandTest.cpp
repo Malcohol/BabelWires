@@ -21,7 +21,7 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     const babelwires::ElementId sourceId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const babelwires::ElementId targetId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     {
-        babelwires::ArrayInitializationData arrayInitialization;
+        babelwires::ArraySizeModifierData arrayInitialization;
         arrayInitialization.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray;
         arrayInitialization.m_size = 5;
         context.m_project.addModifier(elementId, arrayInitialization);

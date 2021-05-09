@@ -168,8 +168,8 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     {
         const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
-        ASSERT_TRUE(dynamic_cast<const babelwires::ArrayInitializationData*>(&modifier->getModifierData()));
-        EXPECT_EQ(static_cast<const babelwires::ArrayInitializationData&>(modifier->getModifierData()).m_size, 4);
+        ASSERT_TRUE(dynamic_cast<const babelwires::ArraySizeModifierData*>(&modifier->getModifierData()));
+        EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size, 4);
     }
 
     context.m_project.process();
@@ -177,7 +177,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     {
         const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
-        EXPECT_EQ(dynamic_cast<const babelwires::ArrayInitializationData&>(modifier->getModifierData()).m_size, 6);
+        EXPECT_EQ(dynamic_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size, 6);
     }
 
     context.m_project.process();
@@ -185,7 +185,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     {
         const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
-        EXPECT_EQ(dynamic_cast<const babelwires::ArrayInitializationData&>(modifier->getModifierData()).m_size, 4);
+        EXPECT_EQ(dynamic_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size, 4);
     }
 
     context.m_project.process();

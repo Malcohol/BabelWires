@@ -60,7 +60,7 @@ bool babelwires::RemoveEntryFromArrayCommand::initialize(const Project& project)
         const auto& modifierData = modifier->getModifierData();
         const FeaturePath& modifierPath = modifierData.m_pathToFeature;
         if (m_pathToArray == modifierPath) {
-            if (dynamic_cast<const ArrayInitializationData*>(&modifier->getModifierData())) {
+            if (dynamic_cast<const ArraySizeModifierData*>(&modifier->getModifierData())) {
                 m_wasModifier = true;
             }
         } else {

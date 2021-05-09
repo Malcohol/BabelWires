@@ -164,7 +164,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
                 }
                 if (!arrayModifier) {
                     if (ensureModifier) {
-                        ArrayInitializationData arrayInitDataPtr;
+                        ArraySizeModifierData arrayInitDataPtr;
                         arrayInitDataPtr.m_pathToFeature = pathToArray;
                         arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
                         arrayModifier =
@@ -211,7 +211,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
                 }
                 if (!arrayModifier) {
                     if (ensureModifier) {
-                        ArrayInitializationData arrayInitDataPtr;
+                        ArraySizeModifierData arrayInitDataPtr;
                         arrayInitDataPtr.m_pathToFeature = pathToArray;
                         arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
                         arrayModifier =

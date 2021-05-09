@@ -165,7 +165,7 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
 
     babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa");
 
-    auto arrayModData = std::make_unique<babelwires::ArrayInitializationData>();
+    auto arrayModData = std::make_unique<babelwires::ArraySizeModifierData>();
     arrayModData->m_pathToFeature = path;
     arrayModData->m_size = 3;
 
@@ -215,7 +215,7 @@ TEST(ModifierTest, arraySizeModifierFailure) {
 
     babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa");
 
-    auto arrayModData = std::make_unique<babelwires::ArrayInitializationData>();
+    auto arrayModData = std::make_unique<babelwires::ArraySizeModifierData>();
     arrayModData->m_pathToFeature = path;
     // The default max size range is 16.
     arrayModData->m_size = 17;

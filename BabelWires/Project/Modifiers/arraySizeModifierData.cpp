@@ -9,7 +9,7 @@
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializer.hpp"
 
-void babelwires::ArrayInitializationData::apply(Feature* targetFeature) const {
+void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
     if (ArrayFeature* array = dynamic_cast<ArrayFeature*>(targetFeature)) {
         array->setSize(m_size);
     } else {
@@ -17,21 +17,21 @@ void babelwires::ArrayInitializationData::apply(Feature* targetFeature) const {
     }
 }
 
-std::unique_ptr<babelwires::Modifier> babelwires::ArrayInitializationData::createModifier() const {
+std::unique_ptr<babelwires::Modifier> babelwires::ArraySizeModifierData::createModifier() const {
     return std::make_unique<babelwires::ArraySizeModifier>(clone());
 }
 
-void babelwires::ArrayInitializationData::serializeContents(Serializer& serializer) const {
+void babelwires::ArraySizeModifierData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_pathToFeature);
     serializer.serializeValue("size", m_size);
 }
 
-void babelwires::ArrayInitializationData::deserializeContents(Deserializer& deserializer) {
+void babelwires::ArraySizeModifierData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_pathToFeature);
     deserializer.deserializeValue("size", m_size);
 }
 
-void babelwires::ArrayInitializationData::addEntries(Feature* targetFeature, int indexOfNewElement,
+void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int indexOfNewElement,
                                                      int numEntriesToAdd) {
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     m_size += numEntriesToAdd;
@@ -44,10 +44,10 @@ void babelwires::ArrayInitializationData::addEntries(Feature* targetFeature, int
     }
 }
 
-void babelwires::ArrayInitializationData::removeEntries(Feature* targetFeature, int indexOfElementToRemove,
+void babelwires::ArraySizeModifierData::removeEntries(Feature* targetFeature, int indexOfElementToRemove,
                                                         int numEntriesToRemove) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
-    assert((m_size >= numEntriesToRemove) && "You can't have ArrayInitializationData with negative size");
+    assert((m_size >= numEntriesToRemove) && "You can't have ArraySizeModifierData with negative size");
     m_size -= numEntriesToRemove;
     if (ArrayFeature* array = dynamic_cast<ArrayFeature*>(targetFeature)) {
         for (int i = 0; i < numEntriesToRemove; ++i) {

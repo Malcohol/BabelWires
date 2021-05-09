@@ -15,18 +15,18 @@
 
 #include <cassert>
 
-babelwires::ArraySizeModifier::ArraySizeModifier(std::unique_ptr<ArrayInitializationData> moddata)
+babelwires::ArraySizeModifier::ArraySizeModifier(std::unique_ptr<ArraySizeModifierData> moddata)
     : LocalModifier(std::move(moddata)) {}
 
 babelwires::ArraySizeModifier::ArraySizeModifier(const ArraySizeModifier& other)
     : LocalModifier(other) {}
 
-const babelwires::ArrayInitializationData& babelwires::ArraySizeModifier::getModifierData() const {
-    return dynamic_cast<const babelwires::ArrayInitializationData&>(Modifier::getModifierData());
+const babelwires::ArraySizeModifierData& babelwires::ArraySizeModifier::getModifierData() const {
+    return dynamic_cast<const babelwires::ArraySizeModifierData&>(Modifier::getModifierData());
 }
 
-babelwires::ArrayInitializationData& babelwires::ArraySizeModifier::getModifierData() {
-    return dynamic_cast<babelwires::ArrayInitializationData&>(Modifier::getModifierData());
+babelwires::ArraySizeModifierData& babelwires::ArraySizeModifier::getModifierData() {
+    return dynamic_cast<babelwires::ArraySizeModifierData&>(Modifier::getModifierData());
 }
 
 bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, Feature* container, int indexOfNewElement,
@@ -34,7 +34,7 @@ bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, Feat
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     State state = State::TargetMissing;
     try {
-        ArrayInitializationData& data = getModifierData();
+        ArraySizeModifierData& data = getModifierData();
         Feature* targetFeature = data.getTargetFeature(container);
         state = State::ApplicationFailed;
         data.addEntries(targetFeature, indexOfNewElement, numEntriesToAdd);
@@ -52,7 +52,7 @@ bool babelwires::ArraySizeModifier::removeArrayEntries(UserLogger& userLogger, F
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     State state = State::TargetMissing;
     try {
-        ArrayInitializationData& data = getModifierData();
+        ArraySizeModifierData& data = getModifierData();
         Feature* targetFeature = data.getTargetFeature(container);
         state = State::ApplicationFailed;
         data.removeEntries(targetFeature, indexOfElementToRemove, numEntriesToRemove);

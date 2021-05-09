@@ -15,7 +15,7 @@
 #include "Tests/TestUtils/testLog.hpp"
 
 TEST(ModifierDataTest, arrayInitializationApply) {
-    babelwires::ArrayInitializationData data;
+    babelwires::ArraySizeModifierData data;
     data.m_size = 5;
 
     babelwires::StandardArrayFeature<babelwires::IntFeature> arrayFeature;
@@ -29,7 +29,7 @@ TEST(ModifierDataTest, arrayInitializationApply) {
 }
 
 TEST(ModifierDataTest, arrayInitializationClone) {
-    babelwires::ArrayInitializationData data;
+    babelwires::ArraySizeModifierData data;
     data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
     data.m_size = 5;
     auto dataPtr = data.clone();
@@ -41,7 +41,7 @@ TEST(ModifierDataTest, arrayInitializationClone) {
 TEST(ModifierDataTest, arrayInitializationSerialization) {
     std::string serializedContents;
     {
-        babelwires::ArrayInitializationData data;
+        babelwires::ArraySizeModifierData data;
         data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
         data.m_size = 5;
 
@@ -54,7 +54,7 @@ TEST(ModifierDataTest, arrayInitializationSerialization) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::ArrayInitializationData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::ArraySizeModifierData>();
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
@@ -274,7 +274,7 @@ TEST(ModifierDataTest, assignFromFeatureSerialization) {
 
 TEST(ModifierDataTest, createModifierMethods) {
     {
-        babelwires::ArrayInitializationData data;
+        babelwires::ArraySizeModifierData data;
         ASSERT_NE(data.createModifier(), nullptr);
         EXPECT_NE(dynamic_cast<babelwires::ArraySizeModifier*>(data.createModifier().get()), nullptr);
     }

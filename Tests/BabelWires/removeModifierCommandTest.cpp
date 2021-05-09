@@ -17,7 +17,7 @@ TEST(RemoveModifierCommandTest, executeAndUndo) {
 
     libTestUtils::TestFeatureElementData elementData;
     {
-        babelwires::ArrayInitializationData arrayInitialization;
+        babelwires::ArraySizeModifierData arrayInitialization;
         arrayInitialization.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray;
         arrayInitialization.m_size = 5;
         elementData.m_modifiers.emplace_back(arrayInitialization.clone());

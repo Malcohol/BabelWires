@@ -11,18 +11,18 @@
 
 namespace babelwires {
 
-    struct ArrayInitializationData;
+    struct ArraySizeModifierData;
 
     /// Extends local modifier with some array specific methods.
     // TODO This doesn't override any methods, so there's a bit of a code smell here.
     class ArraySizeModifier : public LocalModifier {
       public:
-        ArraySizeModifier(std::unique_ptr<ArrayInitializationData> modifierData);
+        ArraySizeModifier(std::unique_ptr<ArraySizeModifierData> modifierData);
         ArraySizeModifier(const ArraySizeModifier& other);
         CLONEABLE(ArraySizeModifier);
 
-        ArrayInitializationData& getModifierData();
-        const ArrayInitializationData& getModifierData() const;
+        ArraySizeModifierData& getModifierData();
+        const ArraySizeModifierData& getModifierData() const;
 
         bool addArrayEntries(UserLogger& userLogger, Feature* container, int indexOfNewElement, int numEntriesToAdd);
 

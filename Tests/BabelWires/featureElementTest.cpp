@@ -79,7 +79,7 @@ TEST(FeatureElementTest, modifiers) {
         featureElementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
-        auto arrayInitData = std::make_unique<babelwires::ArrayInitializationData>();
+        auto arrayInitData = std::make_unique<babelwires::ArraySizeModifierData>();
         arrayInitData->m_pathToFeature = arrayPath;
         arrayInitData->m_size = 5;
         featureElementData.m_modifiers.emplace_back(std::move(arrayInitData));
@@ -99,8 +99,8 @@ TEST(FeatureElementTest, modifiers) {
         const babelwires::Modifier* arrayInitData = featureElement->findModifier(arrayPath);
         ASSERT_TRUE(arrayInitData);
         EXPECT_FALSE(arrayInitData->isFailed());
-        ASSERT_TRUE(dynamic_cast<const babelwires::ArrayInitializationData*>(&arrayInitData->getModifierData()));
-        EXPECT_EQ(static_cast<const babelwires::ArrayInitializationData*>(&arrayInitData->getModifierData())->m_size,
+        ASSERT_TRUE(dynamic_cast<const babelwires::ArraySizeModifierData*>(&arrayInitData->getModifierData()));
+        EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(&arrayInitData->getModifierData())->m_size,
                   5);
     }
     {
@@ -244,7 +244,7 @@ TEST(FeatureElementTest, extractElementData) {
         featureElementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
-        auto arrayInitData = std::make_unique<babelwires::ArrayInitializationData>();
+        auto arrayInitData = std::make_unique<babelwires::ArraySizeModifierData>();
         arrayInitData->m_pathToFeature = arrayPath;
         arrayInitData->m_size = 5;
         featureElementData.m_modifiers.emplace_back(std::move(arrayInitData));
@@ -283,8 +283,8 @@ TEST(FeatureElementTest, extractElementData) {
     ASSERT_EQ(extractedData->m_modifiers.size(), 3);
     // We assume extracted data is sorted, though that assumption is not part of the guarantee.
     EXPECT_EQ(extractedData->m_modifiers[0]->m_pathToFeature, arrayPath);
-    EXPECT_TRUE(dynamic_cast<const babelwires::ArrayInitializationData*>(extractedData->m_modifiers[0].get()));
-    EXPECT_EQ(static_cast<const babelwires::ArrayInitializationData*>(extractedData->m_modifiers[0].get())->m_size, 5);
+    EXPECT_TRUE(dynamic_cast<const babelwires::ArraySizeModifierData*>(extractedData->m_modifiers[0].get()));
+    EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(extractedData->m_modifiers[0].get())->m_size, 5);
     EXPECT_EQ(extractedData->m_modifiers[1]->m_pathToFeature, arrayElemPath2);
     EXPECT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[1].get()));
     EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[1].get())->m_value, 12);
@@ -321,7 +321,7 @@ TEST(FeatureElementTest, removedModifiers) {
         featureElementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
-        auto arrayInitData = std::make_unique<babelwires::ArrayInitializationData>();
+        auto arrayInitData = std::make_unique<babelwires::ArraySizeModifierData>();
         arrayInitData->m_pathToFeature = arrayPath;
         arrayInitData->m_size = 5;
         featureElementData.m_modifiers.emplace_back(std::move(arrayInitData));
@@ -415,7 +415,7 @@ TEST(FeatureElementTest, simpleChanges) {
     }
     {
         featureElement->clearChanges();
-        babelwires::ArrayInitializationData arrayInitData;
+        babelwires::ArraySizeModifierData arrayInitData;
         arrayInitData.m_pathToFeature = arrayPath;
         arrayInitData.m_size = 5;
         featureElement->addModifier(context.m_log, arrayInitData);
