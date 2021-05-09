@@ -214,21 +214,25 @@ TEST(RecordWithOptionalsFeatureTest, queries) {
 
     EXPECT_FALSE(recordFeature.isActivated(op0));
     EXPECT_FALSE(recordFeature.isActivated(op1));
+    EXPECT_EQ(recordFeature.getNumInactiveFields(), 2);
 
     recordFeature.activateField(op0);
 
     EXPECT_TRUE(recordFeature.isActivated(op0));
     EXPECT_FALSE(recordFeature.isActivated(op1));
+    EXPECT_EQ(recordFeature.getNumInactiveFields(), 1);
 
     recordFeature.activateField(op1);
 
     EXPECT_TRUE(recordFeature.isActivated(op0));
     EXPECT_TRUE(recordFeature.isActivated(op1));
+    EXPECT_EQ(recordFeature.getNumInactiveFields(), 0);
 
     recordFeature.deactivateField(op0);
 
     EXPECT_FALSE(recordFeature.isActivated(op0));
     EXPECT_TRUE(recordFeature.isActivated(op1));
+    EXPECT_EQ(recordFeature.getNumInactiveFields(), 1);
 }
 
 TEST(RecordWithOptionalsFeatureTest, exceptions) {

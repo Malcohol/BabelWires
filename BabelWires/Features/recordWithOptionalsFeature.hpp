@@ -34,6 +34,9 @@ namespace babelwires {
             /// Get the set of optional fields.
             const std::vector<FieldIdentifier>& getOptionalFields() const;
 
+            /// Get the count of the currently inactive optional fields.
+            int getNumInactiveFields() const;
+
         protected:
             void addOptionalFieldInternal(FieldAndIndex f);
 

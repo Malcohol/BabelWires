@@ -45,3 +45,7 @@ bool babelwires::RecordWithOptionalsFeature::isActivated(FieldIdentifier identif
 const std::vector<babelwires::FieldIdentifier>& babelwires::RecordWithOptionalsFeature::getOptionalFields() const {
     return m_optionalFields;
 }
+
+int babelwires::RecordWithOptionalsFeature::getNumInactiveFields() const {
+    return m_inactiveFields.size();
+}
