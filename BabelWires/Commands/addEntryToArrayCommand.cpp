@@ -12,7 +12,7 @@
 #include "BabelWires/Features/recordFeature.hpp"
 #include "BabelWires/Project/FeatureElements/featureElement.hpp"
 #include "BabelWires/Project/Modifiers/modifier.hpp"
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
+#include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
 #include "BabelWires/Project/project.hpp"
 
 #include <cassert>

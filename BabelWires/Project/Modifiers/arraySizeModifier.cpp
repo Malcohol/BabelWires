@@ -8,7 +8,7 @@
 #include "BabelWires/Project/Modifiers/arraySizeModifier.hpp"
 
 #include "BabelWires/Features/modelExceptions.hpp"
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
+#include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
 #include "BabelWires/Project/projectContext.hpp"
 
 #include "Common/Log/userLogger.hpp"

@@ -3,6 +3,7 @@
 #include "BabelWires/Features/Path/fieldNameRegistry.hpp"
 #include "BabelWires/Project/Modifiers/modifier.hpp"
 #include "BabelWires/Project/project.hpp"
+#include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"
