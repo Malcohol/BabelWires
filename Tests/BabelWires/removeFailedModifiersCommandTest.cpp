@@ -34,7 +34,7 @@ namespace {
         }
         {
             // Will fail.
-            babelwires::AssignFromFeatureData inputConnection;
+            babelwires::ConnectionModifierData inputConnection;
             inputConnection.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
             inputConnection.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
             inputConnection.m_sourceId = 57;

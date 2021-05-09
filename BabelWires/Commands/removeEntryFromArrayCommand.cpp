@@ -82,7 +82,7 @@ bool babelwires::RemoveEntryFromArrayCommand::initialize(const Project& project)
         if (it != connectionInfo.m_requiredFor.end()) {
             for (auto&& connection : it->second) {
                 const ConnectionModifier* const cmod = std::get<0>(connection);
-                const AssignFromFeatureData& modifierData = cmod->getModifierData();
+                const ConnectionModifierData& modifierData = cmod->getModifierData();
                 const FeaturePath& modifierPath = modifierData.m_pathToSourceFeature;
                 if (m_pathToArray.isStrictPrefixOf(modifierPath)) {
                     const unsigned int pathIndexOfStepIntoArray = m_pathToArray.getNumSteps();
@@ -140,7 +140,7 @@ void babelwires::RemoveEntryFromArrayCommand::undo(Project& project) const {
         }
     }
     for (auto&& outgoingConnection : m_outgoingConnections) {
-        AssignFromFeatureData newModifier;
+        ConnectionModifierData newModifier;
         newModifier.m_pathToFeature = outgoingConnection.m_pathInTarget;
         newModifier.m_sourceId = m_elementId;
         newModifier.m_pathToSourceFeature = outgoingConnection.m_pathInSource;

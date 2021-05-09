@@ -1,3 +1,10 @@
+/**
+ * ArraySizeModifierData sets an array to a certain size.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
 
 #include "BabelWires/Features/arrayFeature.hpp"

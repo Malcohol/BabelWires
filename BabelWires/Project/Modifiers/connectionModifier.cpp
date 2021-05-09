@@ -16,22 +16,22 @@
 
 #include <cassert>
 
-babelwires::ConnectionModifier::ConnectionModifier(std::unique_ptr<AssignFromFeatureData> moddata)
+babelwires::ConnectionModifier::ConnectionModifier(std::unique_ptr<ConnectionModifierData> moddata)
     : Modifier(std::move(moddata)) {}
 
 babelwires::ConnectionModifier::ConnectionModifier(const ConnectionModifier& other)
     : Modifier(other) {}
 
-const babelwires::AssignFromFeatureData& babelwires::ConnectionModifier::getModifierData() const {
-    assert(dynamic_cast<const babelwires::AssignFromFeatureData*>(&Modifier::getModifierData()) &&
+const babelwires::ConnectionModifierData& babelwires::ConnectionModifier::getModifierData() const {
+    assert(dynamic_cast<const babelwires::ConnectionModifierData*>(&Modifier::getModifierData()) &&
            "Holding wrong kind of data");
-    return static_cast<const babelwires::AssignFromFeatureData&>(Modifier::getModifierData());
+    return static_cast<const babelwires::ConnectionModifierData&>(Modifier::getModifierData());
 }
 
-babelwires::AssignFromFeatureData& babelwires::ConnectionModifier::getModifierData() {
-    assert(dynamic_cast<const babelwires::AssignFromFeatureData*>(&Modifier::getModifierData()) &&
+babelwires::ConnectionModifierData& babelwires::ConnectionModifier::getModifierData() {
+    assert(dynamic_cast<const babelwires::ConnectionModifierData*>(&Modifier::getModifierData()) &&
            "Holding wrong kind of data");
-    return static_cast<babelwires::AssignFromFeatureData&>(Modifier::getModifierData());
+    return static_cast<babelwires::ConnectionModifierData&>(Modifier::getModifierData());
 }
 
 const babelwires::ConnectionModifier* babelwires::ConnectionModifier::doAsConnectionModifier() const {
@@ -47,7 +47,7 @@ void babelwires::ConnectionModifier::applyConnection(const Project& project, Use
     Feature* targetFeature = nullptr;
 
     try {
-        const babelwires::AssignFromFeatureData& data = getModifierData();
+        const babelwires::ConnectionModifierData& data = getModifierData();
         targetFeature = data.getTargetFeature(container);
         state = State::SourceMissing;
         const Feature* sourceFeature = data.getSourceFeature(project);
@@ -70,7 +70,7 @@ bool babelwires::ConnectionModifier::isConnected() const {
 
 void babelwires::ConnectionModifier::adjustSourceArrayIndices(const babelwires::FeaturePath& pathToArray,
                                                               babelwires::ArrayIndex startIndex, int adjustment) {
-    babelwires::AssignFromFeatureData& modifierData = getModifierData();
+    babelwires::ConnectionModifierData& modifierData = getModifierData();
     babelwires::FeaturePath& modifierPath = modifierData.m_pathToSourceFeature;
     if (pathToArray.isStrictPrefixOf(modifierPath)) {
         // Is the modifier affected?

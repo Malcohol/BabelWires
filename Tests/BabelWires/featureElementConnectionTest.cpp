@@ -87,7 +87,7 @@ struct FeatureElementConnectionTest : ::testing::Test {
     std::unique_ptr<libTestUtils::TestFeatureElement> m_featureElement;
     libTestUtils::TestFeatureElement* m_sourceElement;
 
-    babelwires::AssignFromFeatureData m_assignData;
+    babelwires::ConnectionModifierData m_assignData;
     babelwires::ArraySizeModifierData m_arrayInitData;
     babelwires::IntValueAssignmentData m_arrayElemData;
     babelwires::IntValueAssignmentData m_arrayElemDataHigh;

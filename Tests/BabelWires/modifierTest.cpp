@@ -261,7 +261,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
 
     const babelwires::FeaturePath targetPath = babelwires::FeaturePath::deserializeFromString("bb");
 
-    auto assignFromData = std::make_unique<babelwires::AssignFromFeatureData>();
+    auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_pathToFeature = targetPath;
     assignFromData->m_pathToSourceFeature = sourcePath;
     assignFromData->m_sourceId = sourceId;
@@ -289,7 +289,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
     const babelwires::FeaturePath sourcePath = babelwires::FeaturePath::deserializeFromString("aa");
     const babelwires::FeaturePath targetPath = babelwires::FeaturePath::deserializeFromString("xx");
 
-    auto assignFromData = std::make_unique<babelwires::AssignFromFeatureData>();
+    auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_pathToFeature = targetPath;
     assignFromData->m_pathToSourceFeature = sourcePath;
     assignFromData->m_sourceId = 10;
@@ -322,7 +322,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
     const babelwires::FeaturePath sourcePath = babelwires::FeaturePath::deserializeFromString("aa");
     const babelwires::FeaturePath targetPath = babelwires::FeaturePath::deserializeFromString("bb");
 
-    auto assignFromData = std::make_unique<babelwires::AssignFromFeatureData>();
+    auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_pathToFeature = targetPath;
     assignFromData->m_pathToSourceFeature = sourcePath;
     assignFromData->m_sourceId = 99;
@@ -365,7 +365,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 
     const babelwires::FeaturePath targetPath = babelwires::FeaturePath::deserializeFromString("bb");
 
-    auto assignFromData = std::make_unique<babelwires::AssignFromFeatureData>();
+    auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_pathToFeature = targetPath;
     assignFromData->m_pathToSourceFeature = babelwires::FeaturePath::deserializeFromString("xx");
     assignFromData->m_sourceId = sourceId;
@@ -406,7 +406,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
 
     const babelwires::FeaturePath targetPath = babelwires::FeaturePath::deserializeFromString("bb");
 
-    auto assignFromData = std::make_unique<babelwires::AssignFromFeatureData>();
+    auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_pathToFeature = targetPath;
     assignFromData->m_pathToSourceFeature = sourcePath;
     assignFromData->m_sourceId = sourceId;

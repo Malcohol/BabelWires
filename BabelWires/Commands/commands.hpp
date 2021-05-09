@@ -22,7 +22,7 @@ namespace babelwires {
     class Project;
     struct ElementData;
     struct TargetFileData;
-    struct AssignFromFeatureData;
+    struct ConnectionModifierData;
     struct ModifierData;
 
     /// Commands define undoable ways of mutating the project.

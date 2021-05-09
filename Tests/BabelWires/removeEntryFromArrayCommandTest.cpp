@@ -28,14 +28,14 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
         context.m_project.addModifier(elementId, arrayInitialization);
     }
     {
-        babelwires::AssignFromFeatureData inputConnection;
+        babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
         inputConnection.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         inputConnection.m_sourceId = sourceId;
         context.m_project.addModifier(elementId, inputConnection);
     }
     {
-        babelwires::AssignFromFeatureData outputConnection;
+        babelwires::ConnectionModifierData outputConnection;
         outputConnection.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         outputConnection.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
         outputConnection.m_sourceId = elementId;

@@ -20,7 +20,7 @@ libTestUtils::TestProjectData::TestProjectData()
         data.m_id = c_targetElementId;
         data.m_filePath = m_targetFilePath;
         {
-            babelwires::AssignFromFeatureData modData;
+            babelwires::ConnectionModifierData modData;
             modData.m_pathToFeature = libTestUtils::TestFileFeature::s_pathToIntChild;
             modData.m_sourceId = c_processorId;
             modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToArray_3;
@@ -33,7 +33,7 @@ libTestUtils::TestProjectData::TestProjectData()
         data.m_factoryIdentifier = libTestUtils::TestProcessorFactory::getThisIdentifier();
         data.m_id = c_processorId;
         {
-            babelwires::AssignFromFeatureData modData;
+            babelwires::ConnectionModifierData modData;
             modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt;
             modData.m_sourceId = c_sourceElementId;
             modData.m_pathToSourceFeature = libTestUtils::TestFileFeature::s_pathToIntChild;
@@ -85,7 +85,7 @@ void libTestUtils::TestProjectData::testProjectDataAndDisciminators(
                       return a->m_pathToFeature < b->m_pathToFeature;
                   });
 
-        auto modData1 = dynamic_cast<const babelwires::AssignFromFeatureData*>(sortedModifiers[0]);
+        auto modData1 = dynamic_cast<const babelwires::ConnectionModifierData*>(sortedModifiers[0]);
         ASSERT_TRUE(modData1);
         EXPECT_EQ(*modData1->m_pathToFeature.getStep(0).asField(), libTestUtils::TestRecordFeature::s_intIdInitializer);
         EXPECT_EQ(modData1->m_pathToFeature.getStep(0).asField()->getDiscriminator(), recordIntDiscriminator);
@@ -114,7 +114,7 @@ void libTestUtils::TestProjectData::testProjectDataAndDisciminators(
 
     EXPECT_EQ(sortedElements[2]->m_id, 45);
     ASSERT_EQ(sortedElements[2]->m_modifiers.size(), 1);
-    auto modData0 = dynamic_cast<const babelwires::AssignFromFeatureData*>(sortedElements[2]->m_modifiers[0].get());
+    auto modData0 = dynamic_cast<const babelwires::ConnectionModifierData*>(sortedElements[2]->m_modifiers[0].get());
     ASSERT_TRUE(modData0);
     EXPECT_EQ(*modData0->m_pathToFeature.getStep(0).asField(), libTestUtils::TestFileFeature::s_intChildInitializer);
     EXPECT_EQ(modData0->m_pathToFeature.getStep(0).asField()->getDiscriminator(), fileIntChildDiscriminator);
@@ -139,10 +139,10 @@ void libTestUtils::TestProjectData::resolvePathsInCurrentContext() {
     libTestUtils::TestFileFeature testFileFeature;
 
     // These have side-effects on the mutable field discriminators in the paths.
-    auto modData0 = dynamic_cast<const babelwires::AssignFromFeatureData*>(m_elements[0]->m_modifiers[0].get());
+    auto modData0 = dynamic_cast<const babelwires::ConnectionModifierData*>(m_elements[0]->m_modifiers[0].get());
     modData0->m_pathToFeature.tryFollow(testFileFeature);
     modData0->m_pathToSourceFeature.tryFollow(testRecord);
-    auto modData1 = dynamic_cast<const babelwires::AssignFromFeatureData*>(m_elements[1]->m_modifiers[0].get());
+    auto modData1 = dynamic_cast<const babelwires::ConnectionModifierData*>(m_elements[1]->m_modifiers[0].get());
     modData1->m_pathToFeature.tryFollow(testRecord);
     modData1->m_pathToSourceFeature.tryFollow(testFileFeature);
     auto modData2 = dynamic_cast<const babelwires::IntValueAssignmentData*>(m_elements[1]->m_modifiers[1].get());

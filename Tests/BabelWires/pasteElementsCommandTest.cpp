@@ -163,8 +163,8 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
                 newProcessor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt);
             ASSERT_NE(modifier, nullptr);
             EXPECT_FALSE(modifier->isFailed());
-            const babelwires::AssignFromFeatureData* modData =
-                dynamic_cast<const babelwires::AssignFromFeatureData*>(&modifier->getModifierData());
+            const babelwires::ConnectionModifierData* modData =
+                dynamic_cast<const babelwires::ConnectionModifierData*>(&modifier->getModifierData());
             ASSERT_NE(modData, nullptr);
             EXPECT_EQ(modData->m_sourceId, newSourceElement->getElementId());
         } else {
@@ -209,7 +209,7 @@ namespace {
         }
 
         {
-            babelwires::AssignFromFeatureData modifierData;
+            babelwires::ConnectionModifierData modifierData;
             modifierData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
             modifierData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
             modifierData.m_sourceId = sourceElementId;

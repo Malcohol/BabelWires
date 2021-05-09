@@ -55,7 +55,7 @@ bool babelwires::RemoveElementCommand::addConnection(const babelwires::Connectio
 
         const auto subtree = targetEdits.modifierRange<ConnectionModifier>(desc.m_pathToTargetFeature);
         for (const auto* m : subtree) {
-            const AssignFromFeatureData& data = m->getModifierData();
+            const ConnectionModifierData& data = m->getModifierData();
             if (data.m_sourceId == desc.m_sourceId) {
                 if ((testSourceUsingPrefix && (desc.m_pathToSourceFeature.isPrefixOf(data.m_pathToSourceFeature))) ||
                     (!testSourceUsingPrefix && (desc.m_pathToSourceFeature == data.m_pathToSourceFeature))) {
@@ -76,7 +76,7 @@ bool babelwires::RemoveElementCommand::addConnection(const babelwires::Connectio
             return false;
         }
 
-        const AssignFromFeatureData& data = actualConnection->getModifierData();
+        const ConnectionModifierData& data = actualConnection->getModifierData();
         if ((data.m_sourceId != desc.m_sourceId) ||
             !desc.m_pathToSourceFeature.isPrefixOf(data.m_pathToSourceFeature)) {
             return false;
@@ -122,7 +122,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
         auto newEnd = std::remove_if(
             newElementData->m_modifiers.begin(), newElementData->m_modifiers.end(),
             [this, elementId, &connectionsBeingRemoved](const std::unique_ptr<ModifierData>& modData) {
-                if (const auto* assignFromData = dynamic_cast<const AssignFromFeatureData*>(modData.get())) {
+                if (const auto* assignFromData = dynamic_cast<const ConnectionModifierData*>(modData.get())) {
                     ConnectionDescription connection(elementId, *assignFromData);
                     if (connectionsBeingRemoved.insert(connection).second) {
                         m_connections.emplace_back(connection);
@@ -144,7 +144,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
             for (const auto& connection : it->second) {
                 const FeatureElement* const target = std::get<1>(connection);
                 const ConnectionModifier* const cmod = std::get<0>(connection);
-                const AssignFromFeatureData& data = cmod->getModifierData();
+                const ConnectionModifierData& data = cmod->getModifierData();
                 ConnectionDescription connectionDesc(target->getElementId(), data);
                 if (connectionsBeingRemoved.insert(connectionDesc).second) {
                     m_connections.emplace_back(connectionDesc);
@@ -170,7 +170,7 @@ void babelwires::RemoveElementCommand::undo(Project& project) const {
         project.addFeatureElement(*elementData);
     }
     for (const auto& connection : m_connections) {
-        AssignFromFeatureData newModifier;
+        ConnectionModifierData newModifier;
         newModifier.m_pathToFeature = connection.m_pathToTargetFeature;
         newModifier.m_sourceId = connection.m_sourceId;
         newModifier.m_pathToSourceFeature = connection.m_pathToSourceFeature;

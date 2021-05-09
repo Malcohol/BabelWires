@@ -208,7 +208,7 @@ TEST(ModifierDataTest, stringValueAssignmentSerialization) {
 }
 
 TEST(ModifierDataTest, assignFromFeatureApply) {
-    babelwires::AssignFromFeatureData data;
+    babelwires::ConnectionModifierData data;
 
     babelwires::IntFeature srcIntFeature;
     srcIntFeature.set(14);
@@ -240,7 +240,7 @@ TEST(ModifierDataTest, assignFromFeatureApply) {
 }
 
 TEST(ModifierDataTest, assignFromFeatureClone) {
-    babelwires::AssignFromFeatureData data;
+    babelwires::ConnectionModifierData data;
     data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
     data.m_pathToSourceFeature = babelwires::FeaturePath::deserializeFromString("10/ee/ff");
     auto dataPtr = data.clone();
@@ -252,7 +252,7 @@ TEST(ModifierDataTest, assignFromFeatureClone) {
 TEST(ModifierDataTest, assignFromFeatureSerialization) {
     std::string serializedContents;
     {
-        babelwires::AssignFromFeatureData data;
+        babelwires::ConnectionModifierData data;
         data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
         data.m_pathToSourceFeature = babelwires::FeaturePath::deserializeFromString("10/ee/ff");
 
@@ -265,7 +265,7 @@ TEST(ModifierDataTest, assignFromFeatureSerialization) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::AssignFromFeatureData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::ConnectionModifierData>();
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
@@ -295,7 +295,7 @@ TEST(ModifierDataTest, createModifierMethods) {
         EXPECT_NE(dynamic_cast<babelwires::LocalModifier*>(data.createModifier().get()), nullptr);
     }
     {
-        babelwires::AssignFromFeatureData data;
+        babelwires::ConnectionModifierData data;
         ASSERT_NE(data.createModifier(), nullptr);
         EXPECT_NE(dynamic_cast<babelwires::ConnectionModifier*>(data.createModifier().get()), nullptr);
     }

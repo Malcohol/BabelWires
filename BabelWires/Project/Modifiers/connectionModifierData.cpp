@@ -1,5 +1,5 @@
 /**
- * ModifierDatas carry the data sufficient to reconstruct a Modifier.
+ * ConnectionModifierData used to assign a ValueFeature within a container to a value from another element.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -18,7 +18,7 @@
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializer.hpp"
 
-const babelwires::Feature* babelwires::AssignFromFeatureData::getSourceFeature(const Project& project) const {
+const babelwires::Feature* babelwires::ConnectionModifierData::getSourceFeature(const Project& project) const {
     const FeatureElement* sourceElement = project.getFeatureElement(m_sourceId);
     if (!sourceElement) {
         throw babelwires::ModelException()
@@ -47,7 +47,7 @@ const babelwires::Feature* babelwires::AssignFromFeatureData::getSourceFeature(c
     }
 }
 
-void babelwires::AssignFromFeatureData::apply(const Feature* sourceFeature, Feature* targetFeature,
+void babelwires::ConnectionModifierData::apply(const Feature* sourceFeature, Feature* targetFeature,
                                               bool applyEvenIfSourceUnchanged) const {
     if (!(applyEvenIfSourceUnchanged || sourceFeature->isChanged(Feature::Changes::ValueChanged))) {
         return;
@@ -67,18 +67,18 @@ void babelwires::AssignFromFeatureData::apply(const Feature* sourceFeature, Feat
     targetValueFeature->assign(*sourceValueFeature);
 }
 
-void babelwires::AssignFromFeatureData::serializeContents(Serializer& serializer) const {
+void babelwires::ConnectionModifierData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_pathToFeature);
     serializer.serializeValue("sourceId", m_sourceId);
     serializer.serializeValue("sourcePath", m_pathToSourceFeature);
 }
 
-void babelwires::AssignFromFeatureData::deserializeContents(Deserializer& deserializer) {
+void babelwires::ConnectionModifierData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_pathToFeature);
     deserializer.deserializeValue("sourceId", m_sourceId);
     deserializer.deserializeValue("sourcePath", m_pathToSourceFeature);
 }
 
-std::unique_ptr<babelwires::Modifier> babelwires::AssignFromFeatureData::createModifier() const {
+std::unique_ptr<babelwires::Modifier> babelwires::ConnectionModifierData::createModifier() const {
     return std::make_unique<babelwires::ConnectionModifier>(clone());
 }

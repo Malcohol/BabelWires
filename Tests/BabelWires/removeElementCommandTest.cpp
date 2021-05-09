@@ -106,7 +106,7 @@ TEST(RemoveElementCommandTest, subsumption) {
         context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     {
-        babelwires::AssignFromFeatureData modData;
+        babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         modData.m_sourceId = element1Id;

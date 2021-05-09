@@ -135,7 +135,7 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
     const babelwires::FeaturePath pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToArray_0;
 
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
-    babelwires::AssignFromFeatureData modData;
+    babelwires::ConnectionModifierData modData;
     modData.m_pathToFeature = pathToTargetFeature;
     modData.m_sourceId = sourceElementId;
     modData.m_pathToSourceFeature = pathToSourceFeature;
@@ -263,13 +263,13 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
     EXPECT_EQ(sourceElement->findModifier(pathToArray), nullptr);
 
     {
-        babelwires::AssignFromFeatureData modData;
+        babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = pathToTargetFeature;
         modData.m_sourceId = sourceElementId;
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
         context.m_project.addModifier(targetElementId, modData);
     }
-    const babelwires::AssignFromFeatureData& connectionData = dynamic_cast<const babelwires::AssignFromFeatureData&>(
+    const babelwires::ConnectionModifierData& connectionData = dynamic_cast<const babelwires::ConnectionModifierData&>(
         targetElement->findModifier(pathToTargetFeature)->getModifierData());
 
     context.m_project.process();
@@ -512,7 +512,7 @@ TEST(ProjectTest, process) {
     }
 
     {
-        babelwires::AssignFromFeatureData modData;
+        babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt;
         modData.m_sourceId = newProcId;
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
@@ -540,14 +540,14 @@ TEST(ProjectTest, dependencyLoop) {
     context.m_project.process();
 
     {
-        babelwires::AssignFromFeatureData modData;
+        babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         modData.m_sourceId = elementId2;
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         context.m_project.addModifier(elementId1, modData);
     }
     {
-        babelwires::AssignFromFeatureData modData;
+        babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         modData.m_sourceId = elementId3;
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
@@ -564,7 +564,7 @@ TEST(ProjectTest, dependencyLoop) {
     EXPECT_FALSE(element3->isInDependencyLoop());
 
     {
-        babelwires::AssignFromFeatureData modData;
+        babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         modData.m_sourceId = elementId1;
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
@@ -613,14 +613,14 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     context.m_project.process();
 
     {
-        babelwires::AssignFromFeatureData modData;
+        babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         modData.m_sourceId = elementId2;
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         context.m_project.addModifier(elementId1, modData);
     }
     {
-        babelwires::AssignFromFeatureData modData;
+        babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         modData.m_sourceId = elementId4;
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
@@ -639,7 +639,7 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     EXPECT_FALSE(element4->isInDependencyLoop());
 
     {
-        babelwires::AssignFromFeatureData modData;
+        babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         modData.m_sourceId = elementId1;
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;

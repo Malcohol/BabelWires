@@ -15,18 +15,18 @@ namespace babelwires {
 
 namespace babelwires {
 
-    struct AssignFromFeatureData;
+    struct ConnectionModifierData;
 
     /// A ConnectionModifier connects features from two FeatureElements together.
     /// By contrast with LocalModifiers, it application depends on context.
     class ConnectionModifier : public Modifier {
       public:
-        ConnectionModifier(std::unique_ptr<AssignFromFeatureData> modifierData);
+        ConnectionModifier(std::unique_ptr<ConnectionModifierData> modifierData);
         ConnectionModifier(const ConnectionModifier& other);
         CLONEABLE(ConnectionModifier);
 
-        AssignFromFeatureData& getModifierData();
-        const AssignFromFeatureData& getModifierData() const;
+        ConnectionModifierData& getModifierData();
+        const ConnectionModifierData& getModifierData() const;
 
         /// Usually this modifier only does work if the source is changed.
         /// However, if the modifier IS_NEW, then it is applied anyway.

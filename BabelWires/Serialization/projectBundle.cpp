@@ -43,7 +43,7 @@ namespace {
             for (const auto& modifier : element->m_modifiers) {
                 convertPath<SOURCE_REG, TARGET_REG>(modifier->m_pathToFeature, sourceReg, targetReg, authority);
                 if (const auto* assignModifier =
-                        dynamic_cast<const babelwires::AssignFromFeatureData*>(modifier.get())) {
+                        dynamic_cast<const babelwires::ConnectionModifierData*>(modifier.get())) {
                     convertPath<SOURCE_REG, TARGET_REG>(assignModifier->m_pathToSourceFeature, sourceReg, targetReg,
                                                         authority);
                 }

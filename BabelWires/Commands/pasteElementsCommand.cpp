@@ -49,7 +49,7 @@ bool babelwires::PasteElementsCommand::initialize(const Project& project) {
             element->m_modifiers.begin(), element->m_modifiers.end(),
             [this, &remappingTable, preserveInConnections, newElementId,
              &project](std::unique_ptr<ModifierData>& modData) {
-                if (auto* assignFromData = dynamic_cast<AssignFromFeatureData*>(modData.get())) {
+                if (auto* assignFromData = dynamic_cast<ConnectionModifierData*>(modData.get())) {
                     ElementId& sourceId = assignFromData->m_sourceId;
                     auto it = remappingTable.find(sourceId);
                     if (it == remappingTable.end()) {
@@ -103,7 +103,7 @@ void babelwires::PasteElementsCommand::execute(Project& project) const {
         project.addFeatureElement(*clone);
     }
     for (const auto& connection : m_connectionsToPaste) {
-        auto newModifier = std::make_unique<AssignFromFeatureData>();
+        auto newModifier = std::make_unique<ConnectionModifierData>();
         newModifier->m_pathToFeature = connection.m_pathToTargetFeature;
         newModifier->m_sourceId = connection.m_sourceId;
         newModifier->m_pathToSourceFeature = connection.m_pathToSourceFeature;

@@ -16,7 +16,7 @@
 #include <cassert>
 
 std::unique_ptr<babelwires::Command> babelwires::ConnectionDescription::getConnectionCommand() const {
-    auto modifier = std::make_unique<babelwires::AssignFromFeatureData>();
+    auto modifier = std::make_unique<babelwires::ConnectionModifierData>();
     modifier->m_sourceId = m_sourceId;
     modifier->m_pathToFeature = m_pathToTargetFeature;
     modifier->m_pathToSourceFeature = m_pathToSourceFeature;
@@ -47,7 +47,7 @@ babelwires::ConnectionDescription& babelwires::ConnectionDescription::operator=(
     return *this;
 }
 
-babelwires::ConnectionDescription::ConnectionDescription(ElementId targetId, const AssignFromFeatureData& data)
+babelwires::ConnectionDescription::ConnectionDescription(ElementId targetId, const ConnectionModifierData& data)
     : m_sourceId(data.m_sourceId)
     , m_targetId(targetId)
     , m_pathToSourceFeature(data.m_pathToSourceFeature)

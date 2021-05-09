@@ -12,7 +12,7 @@
 
 namespace babelwires {
 
-    class AssignFromFeatureData;
+    class ConnectionModifierData;
     class Command;
 
     /// ConnectionDescription is a self-contained description of a connection.
@@ -21,7 +21,7 @@ namespace babelwires {
         ConnectionDescription();
         ConnectionDescription(const ConnectionDescription& other);
         ConnectionDescription(ConnectionDescription&& other);
-        ConnectionDescription(ElementId targetId, const AssignFromFeatureData& data);
+        ConnectionDescription(ElementId targetId, const ConnectionModifierData& data);
         ConnectionDescription& operator=(const ConnectionDescription& other);
         ConnectionDescription& operator=(ConnectionDescription&& other);
 

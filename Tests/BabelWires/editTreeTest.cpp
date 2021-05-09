@@ -23,7 +23,7 @@ namespace {
 
     std::unique_ptr<babelwires::ConnectionModifier>
     createConnectionModifier(babelwires::FeaturePath path, babelwires::FeatureElement* owner = nullptr) {
-        auto data = std::make_unique<babelwires::AssignFromFeatureData>();
+        auto data = std::make_unique<babelwires::ConnectionModifierData>();
         data->m_pathToFeature = std::move(path);
         data->m_pathToSourceFeature = babelwires::FeaturePath();
         auto modPtr = std::make_unique<babelwires::ConnectionModifier>(std::move(data));

@@ -18,22 +18,22 @@ TEST(ConnectionDescriptionTest, equalityAndHash) {
     const babelwires::ElementId targetId0 = 4;
     const babelwires::ElementId targetId1 = 6;
 
-    babelwires::AssignFromFeatureData data0;
+    babelwires::ConnectionModifierData data0;
     data0.m_pathToFeature = path0;
     data0.m_pathToSourceFeature = path1;
     data0.m_sourceId = sourceId0;
 
-    babelwires::AssignFromFeatureData data1;
+    babelwires::ConnectionModifierData data1;
     data1.m_pathToFeature = path1;
     data1.m_pathToSourceFeature = path0;
     data1.m_sourceId = sourceId0;
 
-    babelwires::AssignFromFeatureData data2;
+    babelwires::ConnectionModifierData data2;
     data2.m_pathToFeature = path0;
     data2.m_pathToSourceFeature = path1;
     data2.m_sourceId = sourceId1;
 
-    babelwires::AssignFromFeatureData data3;
+    babelwires::ConnectionModifierData data3;
     data3.m_pathToFeature = path1;
     data3.m_pathToSourceFeature = path0;
     data3.m_sourceId = sourceId1;
@@ -66,7 +66,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
     const babelwires::ElementId sourceId = 12;
     const babelwires::ElementId targetId = 14;
 
-    babelwires::AssignFromFeatureData connectionData;
+    babelwires::ConnectionModifierData connectionData;
     connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
     connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
     connectionData.m_sourceId = sourceId;

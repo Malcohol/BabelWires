@@ -1,5 +1,5 @@
 /**
- * ModifierDatas carry the data sufficient to reconstruct a Modifier.
+ * ConnectionModifierData used to assign a ValueFeature within a container to a value from another element.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -10,8 +10,8 @@
 #include "BabelWires/Project/Modifiers/modifierData.hpp"
 
 namespace babelwires {
-    /// Data used to assign a ValueFeature within a container to a value from another file.
-    struct AssignFromFeatureData : ModifierData {
+    /// Data used to assign a ValueFeature within a container to a value from another element.
+    struct ConnectionModifierData : ModifierData {
         /// Find the source feature in the project, or throw.
         const Feature* getSourceFeature(const Project& project) const;
 
@@ -20,8 +20,8 @@ namespace babelwires {
 
         virtual std::unique_ptr<Modifier> createModifier() const;
 
-        CLONEABLE(AssignFromFeatureData);
-        SERIALIZABLE(AssignFromFeatureData, "assignFrom", ModifierData, 1);
+        CLONEABLE(ConnectionModifierData);
+        SERIALIZABLE(ConnectionModifierData, "assignFrom", ModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
 

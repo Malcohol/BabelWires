@@ -273,7 +273,7 @@ namespace {
         ObservedChanges observedChanges(projectObserver);
 
         // The connection we add.
-        babelwires::AssignFromFeatureData connectionData;
+        babelwires::ConnectionModifierData connectionData;
         connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
         connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         connectionData.m_sourceId = sourceElementId;
@@ -360,7 +360,7 @@ namespace {
         const babelwires::ElementId sourceElementId = context.m_project.addFeatureElement(sourceElementData);
 
         // The connection we will remove.
-        babelwires::AssignFromFeatureData connectionData;
+        babelwires::ConnectionModifierData connectionData;
         connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
         connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
         connectionData.m_sourceId = sourceElementId;
@@ -453,7 +453,7 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
     libTestUtils::TestFeatureElementData sourceElementData;
     const babelwires::ElementId sourceElementId = context.m_project.addFeatureElement(sourceElementData);
 
-    babelwires::AssignFromFeatureData connectionData;
+    babelwires::ConnectionModifierData connectionData;
     connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
     connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
     connectionData.m_sourceId = sourceElementId;
