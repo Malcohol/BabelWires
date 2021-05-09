@@ -25,6 +25,15 @@ namespace babelwires {
             /// This operation sets the subfeature to its default state.
             void deactivateField(FieldIdentifier identifier);
 
+            /// Is the given field an optional (irrespective of whether its activated or not).
+            bool isOptional(FieldIdentifier identifier) const;
+
+            /// Is the given optional field activated?
+            bool isActivated(FieldIdentifier identifier) const;
+
+            /// Get the set of optional fields.
+            const std::vector<FieldIdentifier>& getOptionalFields() const;
+
         protected:
             void addOptionalFieldInternal(FieldAndIndex f);
 

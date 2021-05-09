@@ -29,3 +29,16 @@ void babelwires::RecordWithOptionalsFeature::deactivateField(FieldIdentifier ide
     std::for_each(insertionPoint, m_inactiveFields.end(), [](FieldAndIndex& x) { --x.m_index; });
     m_inactiveFields.insert(insertionPoint, std::move(f));
 }
+
+bool babelwires::RecordWithOptionalsFeature::isOptional(FieldIdentifier identifier) const {
+    return std::find(m_optionalFields.begin(), m_optionalFields.end(), identifier) != m_optionalFields.end();
+}
+
+bool babelwires::RecordWithOptionalsFeature::isActivated(FieldIdentifier identifier) const {
+    assert(isOptional(identifier) && "The identifier does not identify an optional field");
+    return tryGetChildFromStep(PathStep(identifier));
+}
+
+const std::vector<babelwires::FieldIdentifier>& babelwires::RecordWithOptionalsFeature::getOptionalFields() const {
+    return m_optionalFields;
+}

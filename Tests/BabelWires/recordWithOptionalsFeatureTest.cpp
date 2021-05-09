@@ -4,7 +4,9 @@
 
 #include "BabelWires/Features/numericFeature.hpp"
 
-TEST(RecordWithOptionalsFeatureTest, activateAndDeactivate) {
+#include "Tests/TestUtils/equalSets.hpp"
+
+TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
     babelwires::RecordWithOptionalsFeature recordFeature;
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 0);
@@ -187,4 +189,44 @@ TEST(RecordWithOptionalsFeatureTest, hash) {
     EXPECT_NE(hash0, hash3);
     EXPECT_NE(hash2, hash3);
     EXPECT_EQ(hash1, hash3);
+}
+
+TEST(RecordWithOptionalsFeatureTest, queries) {
+    babelwires::RecordWithOptionalsFeature recordFeature;
+
+    babelwires::FieldIdentifier ff0("ff0");
+    ff0.setDiscriminator(1);
+    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
+
+    babelwires::FieldIdentifier op0("op0");
+    op0.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+
+    babelwires::FieldIdentifier op1("op1");
+    op1.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+
+    EXPECT_TRUE(testUtils::areEqualSets(recordFeature.getOptionalFields(), {op0, op1}));
+
+    EXPECT_FALSE(recordFeature.isOptional(ff0));
+    EXPECT_TRUE(recordFeature.isOptional(op0));
+    EXPECT_TRUE(recordFeature.isOptional(op1));
+
+    EXPECT_FALSE(recordFeature.isActivated(op0));
+    EXPECT_FALSE(recordFeature.isActivated(op1));
+
+    recordFeature.activateField(op0);
+
+    EXPECT_TRUE(recordFeature.isActivated(op0));
+    EXPECT_FALSE(recordFeature.isActivated(op1));
+
+    recordFeature.activateField(op1);
+
+    EXPECT_TRUE(recordFeature.isActivated(op0));
+    EXPECT_TRUE(recordFeature.isActivated(op1));
+
+    recordFeature.deactivateField(op0);
+
+    EXPECT_FALSE(recordFeature.isActivated(op0));
+    EXPECT_TRUE(recordFeature.isActivated(op1));
 }
