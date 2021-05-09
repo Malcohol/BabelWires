@@ -24,6 +24,7 @@ SET( LIB_TESTS_SRCS
     projectObserverTest.cpp
     projectSerializationTest.cpp
     projectTest.cpp
+    recordWithOptionalsFeatureTest.cpp
     removeElementCommandTest.cpp
     removeEntryFromArrayCommandTest.cpp
     removeFailedModifiersCommandTest.cpp

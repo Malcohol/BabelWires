@@ -7,6 +7,6 @@
  **/
 template <typename T> T* babelwires::RecordFeature::addField(std::unique_ptr<T> f, const FieldIdentifier& identifier) {
     T* fTPtr = f.get();
-    addFieldInternal(std::move(f), identifier);
+    addFieldInternal(Field{identifier, std::move(f)});
     return fTPtr;
 }

@@ -38,14 +38,21 @@ namespace babelwires {
         virtual const Feature* doGetFeature(int i) const override;
         virtual std::size_t doGetHash() const override;
 
-        void addFieldInternal(std::unique_ptr<Feature> f, const FieldIdentifier& identifier);
-
-      protected:
+        /// The per-field data.
         struct Field {
             FieldIdentifier m_identifier;
             std::unique_ptr<Feature> m_feature;
         };
 
+        void addFieldInternal(Field field, int index = -1);
+
+        struct FieldAndIndex : Field {
+            int m_index = -1;
+        };
+
+        FieldAndIndex removeField(FieldIdentifier identifier);
+
+      protected:
         std::vector<Field> m_fields;
     };
 

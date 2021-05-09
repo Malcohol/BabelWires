@@ -1,0 +1,190 @@
+#include <gtest/gtest.h>
+
+#include "BabelWires/Features/recordWithOptionalsFeature.hpp"
+
+#include "BabelWires/Features/numericFeature.hpp"
+
+TEST(RecordWithOptionalsFeatureTest, activateAndDeactivate) {
+    babelwires::RecordWithOptionalsFeature recordFeature;
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 0);
+
+    babelwires::FieldIdentifier op0("op0");
+    op0.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+
+    babelwires::FieldIdentifier ff0("ff0");
+    ff0.setDiscriminator(1);
+    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
+
+    babelwires::FieldIdentifier op1("op1");
+    op1.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+
+    babelwires::FieldIdentifier op2("op2");
+    op2.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature2 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op2);
+
+    babelwires::FieldIdentifier ff1("ff1");
+    ff1.setDiscriminator(1);
+    babelwires::IntFeature* fixedFeature1 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff1);
+
+    babelwires::FieldIdentifier op3("op3");
+    op3.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature3 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op3);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 2);
+    EXPECT_EQ(recordFeature.getFeature(0), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), fixedFeature1);
+
+    recordFeature.activateField(op0);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 3);
+    EXPECT_EQ(recordFeature.getFeature(0), optionalFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(2), fixedFeature1);
+
+
+    recordFeature.activateField(op2);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 4);
+    EXPECT_EQ(recordFeature.getFeature(0), optionalFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(2), optionalFeature2);
+    EXPECT_EQ(recordFeature.getFeature(3), fixedFeature1);
+
+    recordFeature.activateField(op1);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 5);
+    EXPECT_EQ(recordFeature.getFeature(0), optionalFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(2), optionalFeature1);
+    EXPECT_EQ(recordFeature.getFeature(3), optionalFeature2);
+    EXPECT_EQ(recordFeature.getFeature(4), fixedFeature1);
+
+    recordFeature.activateField(op3);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 6);
+    EXPECT_EQ(recordFeature.getFeature(0), optionalFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(2), optionalFeature1);
+    EXPECT_EQ(recordFeature.getFeature(3), optionalFeature2);
+    EXPECT_EQ(recordFeature.getFeature(4), fixedFeature1);
+    EXPECT_EQ(recordFeature.getFeature(5), optionalFeature3);
+
+    recordFeature.deactivateField(op1);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 5);
+    EXPECT_EQ(recordFeature.getFeature(0), optionalFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(2), optionalFeature2);
+    EXPECT_EQ(recordFeature.getFeature(3), fixedFeature1);
+    EXPECT_EQ(recordFeature.getFeature(4), optionalFeature3);
+
+    recordFeature.deactivateField(op2);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 4);
+    EXPECT_EQ(recordFeature.getFeature(0), optionalFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(2), fixedFeature1);
+    EXPECT_EQ(recordFeature.getFeature(3), optionalFeature3);
+
+    recordFeature.activateField(op1);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 5);
+    EXPECT_EQ(recordFeature.getFeature(0), optionalFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(2), optionalFeature1);
+    EXPECT_EQ(recordFeature.getFeature(3), fixedFeature1);
+    EXPECT_EQ(recordFeature.getFeature(4), optionalFeature3);
+
+    recordFeature.deactivateField(op0);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 4);
+    EXPECT_EQ(recordFeature.getFeature(0), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), optionalFeature1);
+    EXPECT_EQ(recordFeature.getFeature(2), fixedFeature1);
+    EXPECT_EQ(recordFeature.getFeature(3), optionalFeature3);
+
+    recordFeature.deactivateField(op3);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 3);
+    EXPECT_EQ(recordFeature.getFeature(0), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), optionalFeature1);
+    EXPECT_EQ(recordFeature.getFeature(2), fixedFeature1);
+
+    recordFeature.deactivateField(op1);
+
+    EXPECT_EQ(recordFeature.getNumFeatures(), 2);
+    EXPECT_EQ(recordFeature.getFeature(0), fixedFeature0);
+    EXPECT_EQ(recordFeature.getFeature(1), fixedFeature1);
+}
+
+TEST(RecordWithOptionalsFeatureTest, changes) {
+    babelwires::RecordWithOptionalsFeature recordFeature;
+
+    babelwires::FieldIdentifier ff0("ff0");
+    ff0.setDiscriminator(1);
+    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
+
+    babelwires::FieldIdentifier op0("op0");
+    op0.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+
+    recordFeature.clearChanges();
+    
+    recordFeature.activateField(op0);
+
+    EXPECT_TRUE(recordFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
+    EXPECT_FALSE(recordFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_TRUE(recordFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+
+    recordFeature.clearChanges();
+
+    recordFeature.deactivateField(op0);
+
+    EXPECT_TRUE(recordFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
+    EXPECT_FALSE(recordFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_TRUE(recordFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+}
+
+TEST(RecordWithOptionalsFeatureTest, hash) {
+    babelwires::RecordWithOptionalsFeature recordFeature;
+
+    babelwires::FieldIdentifier ff0("ff0");
+    ff0.setDiscriminator(1);
+    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
+
+    babelwires::FieldIdentifier op0("op0");
+    op0.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+
+    babelwires::FieldIdentifier op1("op1");
+    op1.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+
+    const size_t hash0 = recordFeature.getHash();
+
+    recordFeature.activateField(op0);
+
+    const size_t hash1 = recordFeature.getHash();
+
+    EXPECT_NE(hash0, hash1);
+
+    recordFeature.deactivateField(op0);
+    recordFeature.activateField(op1);
+
+    const size_t hash2 = recordFeature.getHash();
+
+    EXPECT_NE(hash0, hash2);
+    EXPECT_NE(hash1, hash2);
+
+    recordFeature.activateField(op0);
+    recordFeature.deactivateField(op1);
+
+    const size_t hash3 = recordFeature.getHash();
+
+    EXPECT_NE(hash0, hash3);
+    EXPECT_NE(hash2, hash3);
+    EXPECT_EQ(hash1, hash3);
+}
