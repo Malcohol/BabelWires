@@ -7,12 +7,12 @@
 #include "Common/Serialization/serializer.hpp"
 
 void babelwires::ActivateOptionalsModifierData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValueArray("activatedOptional", m_selectedOptionals, "field");
+    serializer.serializeValueArray("optionals", m_selectedOptionals, "activate");
 }
 
 void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
-    for (auto it = deserializer.deserializeValueArray<FieldIdentifier>("activatedOptional", Deserializer::IsOptional::Optional,
-                                                                   "field");
+    for (auto it = deserializer.deserializeValueArray<FieldIdentifier>("optionals", Deserializer::IsOptional::Optional,
+                                                                   "activate");
          it.isValid(); ++it) {
         FieldIdentifier temp("__TEMP");
         m_selectedOptionals.emplace_back(it.deserializeValue(temp));

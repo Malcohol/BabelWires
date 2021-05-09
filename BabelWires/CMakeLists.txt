@@ -42,6 +42,7 @@ SET( BABELWIRESLIB_SRCS
 	Features/Utilities/featureXml.cpp
 	Serialization/projectSerialization.cpp
 	Serialization/projectBundle.cpp
+	Commands/activateOptionalsCommand.cpp
 	Commands/commands.cpp
 	Commands/addElementCommand.cpp
 	Commands/removeElementCommand.cpp

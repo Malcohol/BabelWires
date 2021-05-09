@@ -83,6 +83,13 @@ namespace babelwires {
         void removeArrayEntries(ElementId elementId, const FeaturePath& featurePath, int indexOfElementToRemove,
                                 int numEntriesToRemove, bool ensureModifier);
 
+        /// Activate a modifier in a RecordWithOptionalsFeature.
+        void activateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional);
+
+        /// Deactivate a modifier in a RecordWithOptionalsFeature.
+        /// Note that this will not remove modifiers.
+        void deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional);
+
         /// Set the Ui position of the element.
         void setElementPosition(ElementId elementId, const UiPosition& newPosition);
 

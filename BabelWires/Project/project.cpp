@@ -23,6 +23,8 @@
 #include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 #include "BabelWires/Project/projectContext.hpp"
 #include "BabelWires/Project/projectData.hpp"
+#include "BabelWires/Project/Modifiers/activateOptionalsModifierData.hpp"
+#include "BabelWires/Features/recordWithOptionalsFeature.hpp"
 
 #include "Common/IO/fileDataSource.hpp"
 #include "Common/Log/userLogger.hpp"
@@ -585,4 +587,61 @@ void babelwires::Project::randomizeProjectId() {
 
 babelwires::ProjectId babelwires::Project::getProjectId() const {
     return m_projectId;
+}
+
+void babelwires::Project::activateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional) {
+    FeatureElement* elementToModify = getFeatureElement(elementId);
+    assert (elementToModify);
+    
+    Feature* const inputFeature = elementToModify->getInputFeature();
+    assert (inputFeature);
+
+    auto recordFeature = dynamic_cast<RecordWithOptionalsFeature*>(pathToRecord.tryFollow(*inputFeature));
+    assert (recordFeature);
+    
+    Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord);
+
+    if (auto activateOptionalsModifierData = dynamic_cast<ActivateOptionalsModifierData*>(&existingModifier->getModifierData())) {
+        assert(dynamic_cast<LocalModifier*>(existingModifier) && "Non-local modifier carrying local data");
+        auto localModifier = static_cast<LocalModifier*>(existingModifier);
+        activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
+        localModifier->applyIfLocal(m_userLogger, recordFeature);
+    } else {
+        if (existingModifier) {
+            // Discard the existing modifier, since it should be broken anyway.
+            assert(existingModifier->isFailed() && "A non-failed inapplicable modifier was found at a RecordWithOptionalsFeature");
+            removeModifier(elementId, pathToRecord);
+        }
+        ActivateOptionalsModifierData newData;
+        newData.m_pathToFeature = pathToRecord;
+        newData.m_selectedOptionals.emplace_back(optional);
+        addModifier(elementId, newData);
+    }
+}
+
+void babelwires::Project::deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional) {
+    FeatureElement* elementToModify = getFeatureElement(elementId);
+    assert (elementToModify);
+    
+    Feature* const inputFeature = elementToModify->getInputFeature();
+    assert (inputFeature);
+
+    auto recordFeature = dynamic_cast<RecordWithOptionalsFeature*>(pathToRecord.tryFollow(*inputFeature));
+    assert (recordFeature);
+    
+    Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord);
+    assert(existingModifier);
+
+    auto activateOptionalsModifierData = dynamic_cast<ActivateOptionalsModifierData*>(&existingModifier->getModifierData());
+    assert(activateOptionalsModifierData);
+    assert(dynamic_cast<LocalModifier*>(existingModifier) && "Non-local modifier carrying local data");
+    auto localModifier = static_cast<LocalModifier*>(existingModifier);
+
+    auto it = std::find(activateOptionalsModifierData->m_selectedOptionals.begin(), activateOptionalsModifierData->m_selectedOptionals.end(), optional);
+    activateOptionalsModifierData->m_selectedOptionals.erase(it);
+    localModifier->applyIfLocal(m_userLogger, recordFeature);
+
+    if (activateOptionalsModifierData->m_selectedOptionals.empty()) {
+        removeModifier(elementId, pathToRecord);
+    }
 }
