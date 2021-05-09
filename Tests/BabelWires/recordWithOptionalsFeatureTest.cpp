@@ -230,3 +230,24 @@ TEST(RecordWithOptionalsFeatureTest, queries) {
     EXPECT_FALSE(recordFeature.isActivated(op0));
     EXPECT_TRUE(recordFeature.isActivated(op1));
 }
+
+TEST(RecordWithOptionalsFeatureTest, exceptions) {
+    babelwires::RecordWithOptionalsFeature recordFeature;
+
+    babelwires::FieldIdentifier ff0("ff0");
+    ff0.setDiscriminator(1);
+    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
+
+    babelwires::FieldIdentifier op0("op0");
+    op0.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+
+    babelwires::FieldIdentifier op1("op1");
+    op1.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+
+    EXPECT_THROW(recordFeature.activateField("foo"), babelwires::ModelException);
+    EXPECT_THROW(recordFeature.activateField("ff0"), babelwires::ModelException);
+    EXPECT_THROW(recordFeature.deactivateField("ff0"), babelwires::ModelException);
+    EXPECT_THROW(recordFeature.deactivateField("op0"), babelwires::ModelException);
+}

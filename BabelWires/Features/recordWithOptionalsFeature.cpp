@@ -1,24 +1,27 @@
 #include "BabelWires/Features/recordWithOptionalsFeature.hpp"
 
+#include "BabelWires/Features/modelExceptions.hpp"
+
 void babelwires::RecordWithOptionalsFeature::addOptionalFieldInternal(FieldAndIndex f) {
     m_optionalFields.emplace_back(f.m_identifier);
     m_inactiveFields.emplace_back(std::move(f));
 }
 
 void babelwires::RecordWithOptionalsFeature::activateField(FieldIdentifier identifier) {
-    assert((std::find(m_optionalFields.begin(), m_optionalFields.end(), identifier) != m_optionalFields.end()) &&
-           "You cannot activate a field which is not optional");
     const auto it = std::find_if(m_inactiveFields.begin(), m_inactiveFields.end(),
                                  [identifier](const FieldAndIndex& f) { return f.m_identifier == identifier; });
-    assert((it != m_inactiveFields.end()) && "The optional to activate was not found");
+    if(it == m_inactiveFields.end()) {
+        throw ModelException() << "The field " << identifier << " is not an inactive optional field, so it cannot be activated";
+    }
     std::for_each(it + 1, m_inactiveFields.end(), [](FieldAndIndex& f) { ++f.m_index; });
     addFieldInternal(std::move(*it), it->m_index);
     m_inactiveFields.erase(it);
 }
 
 void babelwires::RecordWithOptionalsFeature::deactivateField(FieldIdentifier identifier) {
-    assert((std::find(m_optionalFields.begin(), m_optionalFields.end(), identifier) != m_optionalFields.end()) &&
-           "You cannot activate a field which is not optional");
+    if (!isOptional(identifier) || !isActivated(identifier)) {
+        throw ModelException() << "The field " << identifier << " is not an active optional field, so it cannot be deactivated";
+    }
     FieldAndIndex f = removeField(identifier);
     // This should maybe be the responsibility of the caller, but doing it here means that the owner is already null,
     // so value changes are not propagated to the record.
