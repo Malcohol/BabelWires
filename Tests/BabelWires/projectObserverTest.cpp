@@ -4,6 +4,7 @@
 
 #include "BabelWires/Features/Path/fieldNameRegistry.hpp"
 #include "BabelWires/Project/Modifiers/modifier.hpp"
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 #include "BabelWires/Project/project.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"

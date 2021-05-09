@@ -6,6 +6,7 @@
 #include "BabelWires/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWires/Project/Modifiers/localModifier.hpp"
 #include "BabelWires/Project/Modifiers/modifierData.hpp"
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Tests/TestUtils/equalSets.hpp"
 

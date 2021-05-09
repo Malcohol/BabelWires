@@ -7,6 +7,8 @@
  **/
 #include "BabelWires/Serialization/projectBundle.hpp"
 
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
+
 #include "Common/exceptions.hpp"
 
 #include "Common/Serialization/deserializer.hpp"

@@ -12,9 +12,10 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/modifier.cpp
 	Project/Modifiers/modifierData.cpp
 	Project/Modifiers/localModifier.cpp
-	Project/Modifiers/connectionModifier.cpp
 	Project/Modifiers/arraySizeModifier.cpp
 	Project/Modifiers/arraySizeModifierData.cpp
+	Project/Modifiers/connectionModifier.cpp
+	Project/Modifiers/connectionModifierData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp
 	ProjectExtra/projectObserver.cpp

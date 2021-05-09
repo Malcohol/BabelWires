@@ -9,7 +9,7 @@
 
 #include "BabelWires/Features/modelExceptions.hpp"
 #include "BabelWires/Project/FeatureElements/featureElement.hpp"
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 #include "BabelWires/Project/projectContext.hpp"
 
 #include "Common/Log/userLogger.hpp"

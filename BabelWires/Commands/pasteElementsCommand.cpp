@@ -10,6 +10,7 @@
 #include "BabelWires/Project/FeatureElements/featureElement.hpp"
 #include "BabelWires/Project/project.hpp"
 #include "BabelWires/Project/projectData.hpp"
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 
 #include <cassert>
 #include <unordered_set>

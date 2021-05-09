@@ -8,6 +8,7 @@
 #include "BabelWires/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWires/Project/Modifiers/localModifier.hpp"
 #include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Common/Serialization/XML/xmlDeserializer.hpp"
 #include "Common/Serialization/XML/xmlSerializer.hpp"

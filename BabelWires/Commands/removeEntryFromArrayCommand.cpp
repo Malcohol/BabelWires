@@ -12,6 +12,7 @@
 #include "BabelWires/Project/FeatureElements/featureElement.hpp"
 #include "BabelWires/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 #include "BabelWires/Project/project.hpp"
 
 #include <cassert>

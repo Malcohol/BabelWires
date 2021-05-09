@@ -20,6 +20,7 @@
 #include "BabelWires/Project/Modifiers/localModifier.hpp"
 #include "BabelWires/Project/Modifiers/modifier.hpp"
 #include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 #include "BabelWires/Project/projectContext.hpp"
 #include "BabelWires/Project/projectData.hpp"
 

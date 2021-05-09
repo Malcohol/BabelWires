@@ -14,6 +14,7 @@
 #include "BabelWires/Project/Modifiers/localModifier.hpp"
 #include "BabelWires/Project/Modifiers/modifierData.hpp"
 #include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 
 namespace {
     struct TestOwner : babelwires::FeatureElement {

@@ -11,6 +11,8 @@
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWires/Project/project.hpp"
+#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
+
 
 #include <algorithm>
 #include <cassert>
