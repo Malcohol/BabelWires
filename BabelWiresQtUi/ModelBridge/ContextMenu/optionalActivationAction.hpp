@@ -1,5 +1,5 @@
 /**
- * QAction for the insert entry into array action in the context menu.
+ * QAction for activating or deactivating optional fields.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

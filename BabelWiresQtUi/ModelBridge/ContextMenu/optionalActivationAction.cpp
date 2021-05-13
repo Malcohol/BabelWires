@@ -1,5 +1,5 @@
 /**
- * QAction for the insert entry into array action in the context menu.
+ * QAction for activating or deactivating optional fields.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -10,7 +10,7 @@
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWires/Commands/activateOptionalsCommand.hpp"
+#include "BabelWires/Commands/activateOptionalCommand.hpp"
 #include "BabelWires/Commands/deactivateOptionalCommand.hpp"
 #include "BabelWires/Features/Path/fieldNameRegistry.hpp"
 
@@ -31,7 +31,7 @@ void babelwires::OptionalActivationAction::actionTriggered(babelwires::FeatureMo
     std::unique_ptr<Command> command;
     std::string fieldName = FieldNameRegistry::read()->getFieldName(m_optional).c_str();
     if (!m_isActivated) {
-        command = std::make_unique<ActivateOptionalsCommand>("Activate optional field " + fieldName, elementId, m_pathToRecord, m_optional);
+        command = std::make_unique<ActivateOptionalCommand>("Activate optional field " + fieldName, elementId, m_pathToRecord, m_optional);
     } else {
         command = std::make_unique<DeactivateOptionalCommand>("Deactivate optional field " + fieldName, elementId, m_pathToRecord, m_optional);
     }

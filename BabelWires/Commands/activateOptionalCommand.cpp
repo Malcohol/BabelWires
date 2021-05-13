@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWires/Commands/activateOptionalsCommand.hpp"
+#include "BabelWires/Commands/activateOptionalCommand.hpp"
 
 #include "BabelWires/Features/recordWithOptionalsFeature.hpp"
 #include "BabelWires/Project/FeatureElements/featureElement.hpp"
@@ -14,7 +14,7 @@
 #include "BabelWires/Project/Modifiers/activateOptionalsModifierData.hpp"
 #include "BabelWires/Project/project.hpp"
 
-babelwires::ActivateOptionalsCommand::ActivateOptionalsCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                FieldIdentifier optional)
     : SimpleCommand(commandName)
     , m_elementId(elementId)
@@ -23,7 +23,7 @@ babelwires::ActivateOptionalsCommand::ActivateOptionalsCommand(std::string comma
 {
 }
 
-bool babelwires::ActivateOptionalsCommand::initialize(const Project& project) {
+bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
     if (!elementToModify) {
         return false;
@@ -50,10 +50,10 @@ bool babelwires::ActivateOptionalsCommand::initialize(const Project& project) {
     return true;
 }
 
-void babelwires::ActivateOptionalsCommand::execute(Project& project) const {
+void babelwires::ActivateOptionalCommand::execute(Project& project) const {
     project.activateOptional(m_elementId, m_pathToRecord, m_optional);
 }
 
-void babelwires::ActivateOptionalsCommand::undo(Project& project) const {
+void babelwires::ActivateOptionalCommand::undo(Project& project) const {
     project.deactivateOptional(m_elementId, m_pathToRecord, m_optional);
 }

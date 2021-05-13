@@ -13,9 +13,9 @@
 namespace babelwires {
 
     /// Activate an optional in a RecordWithOptionalsFeature
-    class ActivateOptionalsCommand : public SimpleCommand {
+    class ActivateOptionalCommand : public SimpleCommand {
       public:
-        ActivateOptionalsCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+        ActivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                FieldIdentifier optional);
 
         virtual bool initialize(const Project& project) override;
