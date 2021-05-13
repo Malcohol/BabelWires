@@ -11,6 +11,7 @@
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
 #include "BabelWires/Commands/activateOptionalsCommand.hpp"
+#include "BabelWires/Commands/deactivateOptionalCommand.hpp"
 #include "BabelWires/Features/Path/fieldNameRegistry.hpp"
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::FeaturePath pathToRecord,
@@ -28,11 +29,11 @@ void babelwires::OptionalActivationAction::actionTriggered(babelwires::FeatureMo
     ProjectBridge& projectBridge = model.getProjectBridge();
     const ElementId elementId = model.getElementId();
     std::unique_ptr<Command> command;
+    std::string fieldName = FieldNameRegistry::read()->getFieldName(m_optional).c_str();
     if (!m_isActivated) {
-        // TODO Add name.
-        command = std::make_unique<ActivateOptionalsCommand>("Activate optional", elementId, m_pathToRecord, m_optional);
+        command = std::make_unique<ActivateOptionalsCommand>("Activate optional field " + fieldName, elementId, m_pathToRecord, m_optional);
     } else {
-        // TODO
+        command = std::make_unique<DeactivateOptionalCommand>("Deactivate optional field " + fieldName, elementId, m_pathToRecord, m_optional);
     }
     projectBridge.scheduleCommand(std::move(command));
 }

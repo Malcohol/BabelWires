@@ -45,6 +45,7 @@ SET( BABELWIRESLIB_SRCS
 	Commands/activateOptionalsCommand.cpp
 	Commands/commands.cpp
 	Commands/addElementCommand.cpp
+	Commands/deactivateOptionalCommand.cpp
 	Commands/removeElementCommand.cpp
 	Commands/moveElementCommand.cpp
 	Commands/addModifierCommand.cpp

@@ -627,9 +627,6 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
     Feature* const inputFeature = elementToModify->getInputFeature();
     assert (inputFeature);
 
-    auto recordFeature = dynamic_cast<RecordWithOptionalsFeature*>(pathToRecord.tryFollow(*inputFeature));
-    assert (recordFeature);
-    
     Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord);
     assert(existingModifier);
 
@@ -640,7 +637,7 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
 
     auto it = std::find(activateOptionalsModifierData->m_selectedOptionals.begin(), activateOptionalsModifierData->m_selectedOptionals.end(), optional);
     activateOptionalsModifierData->m_selectedOptionals.erase(it);
-    localModifier->applyIfLocal(m_userLogger, recordFeature);
+    localModifier->applyIfLocal(m_userLogger, inputFeature);
 
     if (activateOptionalsModifierData->m_selectedOptionals.empty()) {
         removeModifier(elementId, pathToRecord);

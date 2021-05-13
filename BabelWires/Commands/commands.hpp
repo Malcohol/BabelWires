@@ -41,9 +41,11 @@ namespace babelwires {
         /// Returns false if the command cannot be initialized (because the project
         /// is not in the expected state).
         /// When false is returned, the system should be unaffected.
+        /// See command for execute about how commands should achieve their effect.
         virtual bool initializeAndExecute(Project& project) = 0;
 
         /// Perform the command.
+        /// Note: A command should not modify feature contents directly. Instead, it should add or remove modifiers to achieve that effect.
         virtual void execute(Project& project) const = 0;
 
         /// When the system is in the state just after the execution of the command,
