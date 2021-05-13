@@ -19,8 +19,8 @@ namespace babelwires {
       public:
         virtual QVariant getValueDisplayData() const override;
 
-        //virtual void
-        //getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const override;
+        virtual void
+        getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const override;
 
       public:
         const babelwires::RecordWithOptionalsFeature& getRecordWithOptionalsFeature() const;

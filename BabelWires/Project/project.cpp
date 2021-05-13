@@ -596,22 +596,23 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
     Feature* const inputFeature = elementToModify->getInputFeature();
     assert (inputFeature);
 
-    auto recordFeature = dynamic_cast<RecordWithOptionalsFeature*>(pathToRecord.tryFollow(*inputFeature));
-    assert (recordFeature);
+    ActivateOptionalsModifierData* modifierData = nullptr;
     
-    Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord);
-
-    if (auto activateOptionalsModifierData = dynamic_cast<ActivateOptionalsModifierData*>(&existingModifier->getModifierData())) {
-        assert(dynamic_cast<LocalModifier*>(existingModifier) && "Non-local modifier carrying local data");
-        auto localModifier = static_cast<LocalModifier*>(existingModifier);
-        activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
-        localModifier->applyIfLocal(m_userLogger, recordFeature);
-    } else {
-        if (existingModifier) {
+    if (Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord)) {
+        if (auto activateOptionalsModifierData = dynamic_cast<ActivateOptionalsModifierData*>(&existingModifier->getModifierData())) {
+            auto localModifier = dynamic_cast<LocalModifier*>(existingModifier);
+            assert(localModifier && "Non-local modifier carrying local data");
+            modifierData = activateOptionalsModifierData;
+            activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
+            localModifier->applyIfLocal(m_userLogger, inputFeature);
+        } else {
             // Discard the existing modifier, since it should be broken anyway.
             assert(existingModifier->isFailed() && "A non-failed inapplicable modifier was found at a RecordWithOptionalsFeature");
             removeModifier(elementId, pathToRecord);
         }
+    }
+
+    if (!modifierData) {
         ActivateOptionalsModifierData newData;
         newData.m_pathToFeature = pathToRecord;
         newData.m_selectedOptionals.emplace_back(optional);

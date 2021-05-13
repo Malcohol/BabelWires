@@ -15,12 +15,12 @@
  **/
 #include "BabelWiresQtUi/ModelBridge/RowModels/recordWithOptionalsRowModel.hpp"
 
-//#include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
-//#include "BabelWiresQtUi/ModelBridge/ContextMenu/insertArrayEntryAction.hpp"
+#include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
+#include "BabelWiresQtUi/ModelBridge/ContextMenu/optionalActivationAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
 #include "BabelWires/Features/recordWithOptionalsFeature.hpp"
-//#include "BabelWires/Project/FeatureElements/contentsCache.hpp"
+#include "BabelWires/Project/FeatureElements/contentsCache.hpp"
 
 const babelwires::RecordWithOptionalsFeature& babelwires::RecordWithOptionalsRowModel::getRecordWithOptionalsFeature() const {
     assert(dynamic_cast<const babelwires::RecordWithOptionalsFeature*>(getInputThenOutputFeature()) &&
@@ -40,17 +40,15 @@ QVariant babelwires::RecordWithOptionalsRowModel::getValueDisplayData() const {
     }
 }
 
-/*
+
 void babelwires::RecordWithOptionalsRowModel::getContextMenuActions(
     std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
     if (hasInputFeature()) {
-        const babelwires::ArrayFeature& arrayFeature = getArrayFeature();
-        const auto sizeRange = arrayFeature.getSizeRange();
-        const auto currentSize = arrayFeature.getNumFeatures();
-        auto addElement = std::make_unique<InsertArrayEntryAction>(m_contentsCacheEntry->getPath(), -1);
-        addElement->setEnabled(sizeRange.contains(currentSize + 1));
-        actionsOut.emplace_back(std::move(addElement));
+        const babelwires::RecordWithOptionalsFeature& recordFeature = getRecordWithOptionalsFeature();
+        for (auto op : recordFeature.getOptionalFields()) {
+            auto addElement = std::make_unique<OptionalActivationAction>(m_contentsCacheEntry->getPath(), op, recordFeature.isActivated(op));
+            actionsOut.emplace_back(std::move(addElement));
+        }
     }
 }
-*/

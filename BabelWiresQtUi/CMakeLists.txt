@@ -33,6 +33,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/saveFileAction.cpp
     ModelBridge/ContextMenu/saveFileAsAction.cpp
     ModelBridge/ContextMenu/removeFailedModifiersAction.cpp
+    ModelBridge/ContextMenu/optionalActivationAction.cpp
     Utilities/fileDialogs.cpp
     LogWindow/logWindow.cpp
 )

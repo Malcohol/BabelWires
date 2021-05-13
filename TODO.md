@@ -2,6 +2,7 @@ Bugs:
 * Sometimes elements get creation twice in the UI.
   - This is probably a symptom of the weird factory re-factor in nodeeditor.
   - Consider reverting that change in my custom branch.
+* The UI does not update a row directly after a failed modifier is removed, so the row stays red.
 
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.
@@ -19,20 +20,20 @@ Unit Tests:
 
 Model
 * Arrays should have a getDefaultSize.
-* Optional features & Unions
-  - Switch via context menu option. What does the UI action look like?
-  - If an unselected variant has state, does it get stored when the variant is switched. If so, where?
+* Unions
+  - Switch via context menu option.
+  - If an unselected variant is modified, does that modification get stored when the variant is switched. I presume only in undo stack, which is a little annoying.
+* FileFeature: Remove this and the offset hack in the FeatureCache. 
+  - Instead, allow the UI to add non-model rows at top for visualization, and use that.
 
 Refactor: 
 * Move some of the logic in doProcess up into FeatureElement.
 * Split featureElementData into separate files - replace any dynamic casts.
-* Split up import and export - They don't have to be as symmetric as I originally intended.
-  - This allows source formats to be designed to be robust on changes and target formats to be flexible.
 * Split Features & Import/Export out from the project lib. 
   - In _theory_ the import/export logic could be useful on its own.
 * Think about modules and dlls.
 * Replace assert handler with own macros.
-* Use std::format in logs and exceptions instead of streams - Better for internationalization
+* Use std::format in logs and exceptions instead of streams - Better, esp. for internationalization
 * Proper CMake usage
 * Review plugin initialization
 
