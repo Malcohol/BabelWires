@@ -639,7 +639,8 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
     activateOptionalsModifierData->m_selectedOptionals.erase(it);
     localModifier->applyIfLocal(m_userLogger, inputFeature);
 
-    if (activateOptionalsModifierData->m_selectedOptionals.empty()) {
-        removeModifier(elementId, pathToRecord);
-    }
+    // TODO Think about this.
+    //if (activateOptionalsModifierData->m_selectedOptionals.empty()) {
+    //    removeModifier(elementId, pathToRecord);
+    //}
 }

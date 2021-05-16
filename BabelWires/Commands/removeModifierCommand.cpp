@@ -8,12 +8,15 @@
 #include "BabelWires/Commands/removeModifierCommand.hpp"
 
 #include "BabelWires/Commands/removeEntryFromArrayCommand.hpp"
+#include "BabelWires/Commands/deactivateOptionalCommand.hpp"
 #include "BabelWires/Features/arrayFeature.hpp"
-#include "BabelWires/Features/recordFeature.hpp"
+#include "BabelWires/Features/recordWithOptionalsFeature.hpp"
 #include "BabelWires/Project/FeatureElements/featureElement.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/Modifiers/modifier.hpp"
 #include "BabelWires/Project/Modifiers/modifierData.hpp"
+#include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
+#include "BabelWires/Project/Modifiers/activateOptionalsModifierData.hpp"
 #include "BabelWires/Project/project.hpp"
 
 #include <cassert>
@@ -38,12 +41,30 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    if (auto arrayFeature = dynamic_cast<const ArrayFeature*>(path.tryFollow(*inputFeature))) {
-        const int numEntriesToRemove = arrayFeature->getNumFeatures() - arrayFeature->getSizeRange().m_min;
-        if (numEntriesToRemove > 0) {
-            const int lastEntryIndex = arrayFeature->getSizeRange().m_min;
-            addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>("RemoveArrayEntry", elementId, path,
-                                                                        lastEntryIndex, numEntriesToRemove));
+    auto* modifier = elementToModify->getEdits().findModifier(path);
+    if (!modifier) {
+        return false;
+    }
+
+    // TODO: There should be a way to move this to a virtual function on modifiers, so these modifiers know how to
+    // remove themselves cleanly.
+    if (dynamic_cast<const ArraySizeModifierData*>(&modifier->getModifierData())) {
+        if (auto arrayFeature = dynamic_cast<const ArrayFeature*>(path.tryFollow(*inputFeature))) {
+            const int numEntriesToRemove = arrayFeature->getNumFeatures() - arrayFeature->getSizeRange().m_min;
+            if (numEntriesToRemove > 0) {
+                const int lastEntryIndex = arrayFeature->getSizeRange().m_min;
+                addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>("RemoveArrayEntry subcommand", elementId, path,
+                                                                            lastEntryIndex, numEntriesToRemove));
+            }
+        }
+    }
+    else if (dynamic_cast<const ActivateOptionalsModifierData*>(&modifier->getModifierData())) {
+        if (auto optionalFeature = dynamic_cast<const RecordWithOptionalsFeature*>(path.tryFollow(*inputFeature))) {
+            for (auto optionalField : optionalFeature->getOptionalFields()) {
+                if (optionalFeature->isActivated(optionalField)) {
+                    addSubCommand(std::make_unique<DeactivateOptionalCommand>("DeactivateOptionalCommand subcommand", elementId, path, optionalField));
+                }
+            }
         }
     }
 
