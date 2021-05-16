@@ -90,9 +90,8 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     EXPECT_EQ(command.getName(), "Test command");
 
     context.m_project.process();
-    EXPECT_TRUE(command.initialize(context.m_project));
+    EXPECT_TRUE(command.initializeAndExecute(context.m_project));
 
-    command.execute(context.m_project);
     context.m_project.process();
 
     EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 4);
@@ -118,7 +117,7 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoElement) {
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"), 1, 1);
 
     context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    EXPECT_FALSE(command.initializeAndExecute(context.m_project));
 }
 
 TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
@@ -134,7 +133,7 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
     EXPECT_EQ(elementId, 51);
 
     context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    EXPECT_FALSE(command.initializeAndExecute(context.m_project));
 }
 
 TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
@@ -154,5 +153,5 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
                                                     libTestUtils::TestRecordFeature::s_pathToArray, 3, 1);
 
-    EXPECT_FALSE(command.initialize(context.m_project));
+    EXPECT_FALSE(command.initializeAndExecute(context.m_project));
 }

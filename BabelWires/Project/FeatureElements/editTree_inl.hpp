@@ -133,7 +133,7 @@ babelwires::EditTree::modifierRange(const FeaturePath& featurePath) {
         const TreeNodeIndex endIndex = beginIndex + m_nodes[beginIndex].m_numDescendents + 1;
         return {*this, static_cast<TreeNodeIndex>(beginIndex), endIndex};
     } else {
-        return modifierRange();
+        return {*this, 0, 0};
     }
 }
 
@@ -149,6 +149,6 @@ babelwires::EditTree::modifierRange(const FeaturePath& featurePath) const {
         const TreeNodeIndex endIndex = beginIndex + m_nodes[beginIndex].m_numDescendents + 1;
         return {*this, static_cast<TreeNodeIndex>(beginIndex), endIndex};
     } else {
-        return modifierRange<MODIFIER_TYPE>();
+        return {*this, 0, 0};
     }
 }

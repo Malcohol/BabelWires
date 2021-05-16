@@ -56,6 +56,7 @@ SET( BABELWIRESLIB_SRCS
 	Commands/pasteElementsCommand.cpp
 	Commands/commandManager.cpp
 	Commands/setExpandedCommand.cpp
+	Commands/removeAllEditsCommand.cpp
 	Commands/removeFailedModifiersCommand.cpp
 	Commands/resizeElementCommand.cpp
 	ValueNames/valueNames.cpp

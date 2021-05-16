@@ -15,7 +15,7 @@ namespace babelwires {
 
     /// A record feature which has a corresponding file format, and therefore can be loaded or saved.
     /// This is treated specially so a row with file operations is available in the UI.
-    // TODO: Consider dropping this and doing all the special casing in the UI.
+    // TODO: abandon this and do all special casing in the UI.
     class FileFeature : public RecordFeature {
       public:
         FileFeature(std::string fileFormatIdentifier);
