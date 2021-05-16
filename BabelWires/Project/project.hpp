@@ -162,13 +162,19 @@ namespace babelwires {
         /// elements, as described by the requiredForMap.
         void propagateChanges(const FeatureElement* e);
 
-        /// Get or compute the information about the connections between elements.
-        const ConnectionInfo& getOrBuildConnectionInfo();
-
         /// Set the ProjectId to a random value.
         void randomizeProjectId();
 
         ElementId addFeatureElementInternal(const ElementData& data);
+
+        void addConnectionToCache(FeatureElement* element, ConnectionModifier* data);
+
+        void removeConnectionFromCache(FeatureElement* element, ConnectionModifier* data);
+
+        void validateConnectionCache() const;
+
+        FeatureElement* addFeatureElementBody(const ElementData& data);
+        void addFeatureElementConnections(FeatureElement* element);
 
       private:
         ProjectContext& m_context;
@@ -185,9 +191,6 @@ namespace babelwires {
 
         /// A map of elements, keyed by ElementID.
         std::map<ElementId, std::unique_ptr<FeatureElement>> m_featureElements;
-
-        /// The cache is computed on-demand.
-        bool m_connectionCacheIsValid = false;
 
         /// Cache of connection information.
         ConnectionInfo m_connectionCache;

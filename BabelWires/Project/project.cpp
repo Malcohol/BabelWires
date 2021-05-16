@@ -2,7 +2,7 @@
  * The Project manages the graph of FeatureElements, and propagates data from sources to targets.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWires/Project/project.hpp"
@@ -62,32 +62,35 @@ babelwires::ElementId babelwires::Project::reserveElementId(ElementId hint) {
     }
 }
 
-babelwires::ElementId babelwires::Project::addFeatureElement(const ElementData& data) {
+babelwires::FeatureElement* babelwires::Project::addFeatureElementBody(const ElementData& data) {
     const ElementId availableId = reserveElementId(data.m_id);
     std::unique_ptr<FeatureElement> elementPtr = data.createFeatureElement(m_context, m_userLogger, availableId);
+    FeatureElement* element = elementPtr.get();
     m_featureElements.insert(std::make_pair(availableId, std::move(elementPtr)));
-    // Needs to be added to the sortedElements array.
-    setConnectionCacheInvalid();
+    return element;
+}
 
-    return availableId;
+void babelwires::Project::addFeatureElementConnections(FeatureElement* element) {
+    for (const auto& connectionModifier : element->getConnectionModifiers()) {
+        addConnectionToCache(element, connectionModifier);
+    }
+}
+
+babelwires::ElementId babelwires::Project::addFeatureElement(const ElementData& data) {
+    FeatureElement* element = addFeatureElementBody(data);
+    addFeatureElementConnections(element);
+    return element->getElementId();
 }
 
 void babelwires::Project::removeElement(ElementId elementId) {
     auto mapIt = m_featureElements.find(elementId);
     assert((mapIt != m_featureElements.end()) && "elementId must refer to an element in the project");
     FeatureElement* element = mapIt->second.get();
-#ifndef NDEBUG
-    {
-        // NOTE: Performing this step only in debug is a code smell.
-        // However, the setConnectionCacheInvalid below should mean
-        // that it doesn't cause different build configurations to
-        // differ.
-        const ConnectionInfo& info = getOrBuildConnectionInfo();
-        auto it = info.m_requiredFor.find(element);
-        assert((it == info.m_requiredFor.end()) && "You cannot remove an element with outward going connections");
+
+    for (const auto& connectionModifier : element->getConnectionModifiers()) {
+        removeConnectionFromCache(element, connectionModifier);
     }
-#endif
-    setConnectionCacheInvalid();
+
     m_removedFeatureElements.insert(std::move(*mapIt));
     m_featureElements.erase(mapIt);
 }
@@ -95,10 +98,10 @@ void babelwires::Project::removeElement(ElementId elementId) {
 void babelwires::Project::addModifier(ElementId elementId, const ModifierData& modifierData) {
     FeatureElement* element = getFeatureElement(elementId);
     assert(element && "Modifier added to unregistered feature element");
-    if (dynamic_cast<const AssignFromFeatureData*>(&modifierData)) {
-        setConnectionCacheInvalid();
+    Modifier* modifier = element->addModifier(m_userLogger, modifierData);
+    if (ConnectionModifier* connectionModifier = modifier->asConnectionModifier()) {
+        addConnectionToCache(element, connectionModifier);
     }
-    element->addModifier(m_userLogger, modifierData);
 }
 
 void babelwires::Project::removeModifier(ElementId elementId, const FeaturePath& featurePath) {
@@ -106,8 +109,8 @@ void babelwires::Project::removeModifier(ElementId elementId, const FeaturePath&
     assert(element && "Cannot remove a modifier from an element that does not exist");
     Modifier* const modifier = element->findModifier(featurePath);
     assert(modifier && "Cannot remove a modifier that does not exist");
-    if (modifier->asConnectionModifier()) {
-        setConnectionCacheInvalid();
+    if (ConnectionModifier* connectionModifier = modifier->asConnectionModifier()) {
+        removeConnectionFromCache(element, connectionModifier);
     }
     element->removeModifier(modifier);
 }
@@ -174,10 +177,6 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
                     // failed modifiers beyond the end of the array.
                     adjustModifiersInArrayElements(element, pathToArray, getConnectionInfo(), indexOfNewElement,
                                                    numEntriesToAdd);
-
-                    // A processor might adjust its state so that an out-connection failed.
-                    // TODO: Doing this every time is unnecessary.
-                    setConnectionCacheInvalid();
                 }
 
                 if (arrayModifier && !ensureModifier) {
@@ -224,12 +223,8 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
                                                       numEntriesToRemove)) {
                     // We do this even if indexOfElementToRemove is at the end, because there may be
                     // failed modifiers beyond the end of the array.
-                    adjustModifiersInArrayElements(element, pathToArray, getOrBuildConnectionInfo(),
+                    adjustModifiersInArrayElements(element, pathToArray, m_connectionCache,
                                                    indexOfElementToRemove + numEntriesToRemove, -numEntriesToRemove);
-
-                    // A processor might adjust its state so that an out-connection failed.
-                    // TODO: Doing this every time is unnecessary.
-                    setConnectionCacheInvalid();
                 }
 
                 if (arrayModifier && !ensureModifier) {
@@ -246,8 +241,12 @@ void babelwires::Project::setProjectData(const ProjectData& projectData) {
     if (projectData.m_projectId != INVALID_PROJECT_ID) {
         m_projectId = projectData.m_projectId;
     }
-    for (auto&& element : projectData.m_elements) {
-        addFeatureElement(*element);
+    std::vector<FeatureElement*> elementsAdded;
+    for (const auto& elementData : projectData.m_elements) {
+        elementsAdded.emplace_back(addFeatureElementBody(*elementData));
+    }
+    for (auto* element : elementsAdded) {
+        addFeatureElementConnections(element);
     }
 }
 
@@ -355,60 +354,122 @@ void babelwires::Project::setConnectionCacheInvalid() {
     m_connectionCache.m_dependsOn.clear();
     m_connectionCache.m_requiredFor.clear();
     m_connectionCache.m_brokenConnections.clear();
-    m_connectionCacheIsValid = false;
 }
 
-namespace {
-    void cacheConnectionsInElement(babelwires::Project& m_project, babelwires::Project::ConnectionInfo& cache,
-                                   babelwires::FeatureElement* target) {
+void babelwires::Project::addConnectionToCache(FeatureElement* element, ConnectionModifier* connectionModifier) {
+    if (auto source = getFeatureElement(connectionModifier->getModifierData().m_sourceId)) {
+        {
+            auto itAndBool = m_connectionCache.m_dependsOn.insert(
+                std::make_pair(element, babelwires::Project::ConnectionInfo::Connections()));
+            babelwires::Project::ConnectionInfo::Connections& connections = itAndBool.first->second;
+            connections.emplace_back(std::make_tuple(connectionModifier, source));
+        }
+        {
+            auto itAndBool = m_connectionCache.m_requiredFor.insert(
+                std::make_pair(source, babelwires::Project::ConnectionInfo::Connections()));
+            babelwires::Project::ConnectionInfo::Connections& connections = itAndBool.first->second;
+            connections.emplace_back(std::make_tuple(connectionModifier, element));
+        }
+    } else {
+        m_connectionCache.m_brokenConnections.emplace_back(std::make_tuple(connectionModifier, element));
+    }
+}
+
+void babelwires::Project::removeConnectionFromCache(FeatureElement* element, ConnectionModifier* connectionModifier) {
+    if (auto source = getFeatureElement(connectionModifier->getModifierData().m_sourceId)) {
+        {
+            auto dit = m_connectionCache.m_dependsOn.find(element);
+            assert((dit != m_connectionCache.m_dependsOn.end()) && "Cannot find dependency with connection to remove");
+            babelwires::Project::ConnectionInfo::Connections& connections = dit->second;
+            auto cit = std::find(connections.begin(), connections.end(), std::make_tuple(connectionModifier, source));
+            assert((cit != connections.end()) && "Cannot find connection to remove");
+            connections.erase(cit);
+            if (connections.empty()) {
+                m_connectionCache.m_dependsOn.erase(dit);
+            }
+        }
+        {
+            auto rit = m_connectionCache.m_requiredFor.find(source);
+            assert((rit != m_connectionCache.m_requiredFor.end()) &&
+                   "Cannot find dependency with connection to remove");
+            auto& connections = rit->second;
+            auto cit = std::find(connections.begin(), connections.end(), std::make_tuple(connectionModifier, element));
+            assert((cit != connections.end()) && "Cannot find connection to remove");
+            connections.erase(cit);
+            if (connections.empty()) {
+                m_connectionCache.m_requiredFor.erase(rit);
+            }
+        }
+    } else {
+        auto it = std::find(m_connectionCache.m_brokenConnections.begin(), m_connectionCache.m_brokenConnections.end(),
+                            std::make_tuple(connectionModifier, element));
+        m_connectionCache.m_brokenConnections.erase(it);
+    }
+}
+
+void babelwires::Project::validateConnectionCache() const {
+#ifndef NDEBUG
+    const auto checkOwned = [this](const FeatureElement* pointerToCheck) {
+        const auto it =
+            std::find_if(m_featureElements.begin(), m_featureElements.end(),
+                         [pointerToCheck](const auto& uPtr) { return std::get<1>(uPtr).get() == pointerToCheck; });
+        assert((it != m_featureElements.end()) && "The cache refers to an element that is not owned by the project");
+    };
+
+    for (auto mapPair : m_connectionCache.m_dependsOn) {
+        checkOwned(mapPair.first);
+        for (auto connectionPair : mapPair.second) {
+            checkOwned(std::get<1>(connectionPair));
+        }
+    }
+
+    for (auto mapPair : m_connectionCache.m_requiredFor) {
+        checkOwned(mapPair.first);
+        for (auto connectionPair : mapPair.second) {
+            checkOwned(std::get<1>(connectionPair));
+        }
+    }
+
+    for (const auto& pair : m_featureElements) {
+        const FeatureElement* target = pair.second.get();
+
         for (const auto& connectionModifier : target->getConnectionModifiers()) {
-            if (auto source = m_project.getFeatureElement(connectionModifier->getModifierData().m_sourceId)) {
+            if (auto source = getFeatureElement(connectionModifier->getModifierData().m_sourceId)) {
                 {
-                    auto itAndBool = cache.m_dependsOn.insert(
-                        std::make_pair(target, babelwires::Project::ConnectionInfo::Connections()));
-                    babelwires::Project::ConnectionInfo::Connections& connections = itAndBool.first->second;
-                    connections.emplace_back(std::make_tuple(connectionModifier, source));
+                    const auto dit = m_connectionCache.m_dependsOn.find(target);
+                    assert((dit != m_connectionCache.m_dependsOn.end()) &&
+                           "The connection cache is missing a dependsOn dependency");
+                    const babelwires::Project::ConnectionInfo::Connections& connections = dit->second;
+                    auto cit =
+                        std::find(connections.begin(), connections.end(), std::make_tuple(connectionModifier, source));
+                    assert((cit != connections.end()) && "The connection cache is missing a dependsOn connection");
                 }
                 {
-                    auto itAndBool = cache.m_requiredFor.insert(
-                        std::make_pair(source, babelwires::Project::ConnectionInfo::Connections()));
-                    babelwires::Project::ConnectionInfo::Connections& connections = itAndBool.first->second;
-                    connections.emplace_back(std::make_tuple(connectionModifier, target));
+                    const auto rit = m_connectionCache.m_requiredFor.find(source);
+                    assert((rit != m_connectionCache.m_requiredFor.end()) &&
+                           "The connection cache is missing a requiredFor dependency");
+                    const auto& connections = rit->second;
+                    const auto cit =
+                        std::find(connections.begin(), connections.end(), std::make_tuple(connectionModifier, target));
+                    assert((cit != connections.end()) && "The connection cache is missing a requiredFor connection");
                 }
             } else {
-                cache.m_brokenConnections.emplace_back(std::make_tuple(connectionModifier, target));
+                const auto it =
+                    std::find(m_connectionCache.m_brokenConnections.begin(),
+                              m_connectionCache.m_brokenConnections.end(), std::make_tuple(connectionModifier, target));
+                assert((it != m_connectionCache.m_brokenConnections.end()) &&
+                       "The connection cache is missing a broken connection");
             }
         }
     }
-} // namespace
-
-/// Returns the featureElements in a later-depends-on-earlier order.
-const babelwires::Project::ConnectionInfo& babelwires::Project::getOrBuildConnectionInfo() {
-    if (!m_connectionCacheIsValid) {
-        if (m_featureElements.empty()) {
-            m_connectionCacheIsValid = true;
-            return m_connectionCache;
-        }
-
-        for (auto&& pair : m_featureElements) {
-            cacheConnectionsInElement(*this, m_connectionCache, pair.second.get());
-        }
-
-        m_connectionCacheIsValid = true;
-    }
-
-    return m_connectionCache;
+#endif // NDEBUG
 }
 
 const babelwires::Project::ConnectionInfo& babelwires::Project::getConnectionInfo() const {
-    assert(m_connectionCacheIsValid && "The connection cache should be up-to-date, unless client code called this "
-                                       "after modification, and before processing");
     return m_connectionCache;
 }
 
 void babelwires::Project::propagateChanges(const FeatureElement* e) {
-    assert(m_connectionCacheIsValid && "You cannot call this when the connection cache is invalid");
-
     const auto r = m_connectionCache.m_requiredFor.find(e);
     if (r != m_connectionCache.m_requiredFor.end()) {
         const ConnectionInfo::Connections& connections = r->second;
@@ -430,9 +491,9 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
 }
 
 void babelwires::Project::process() {
-    getOrBuildConnectionInfo();
+    validateConnectionCache();
 
-    // Topologically order the elements based on dependency.
+    // Topologically sort the featureElements in a later-depends-on-earlier order.
     std::vector<FeatureElement*> sortedElements;
 
     sortedElements.reserve(m_featureElements.size());
@@ -454,8 +515,7 @@ void babelwires::Project::process() {
 
             const auto it = numDependencies.find(element);
             if (it == numDependencies.end() || it->second == 0) {
-                std::swap(sortedElements[firstUnsortedIndex],
-                            sortedElements[j]);
+                std::swap(sortedElements[firstUnsortedIndex], sortedElements[j]);
                 element->setInDependencyLoop(false);
                 ++firstUnsortedIndex;
                 const auto r = m_connectionCache.m_requiredFor.find(element);
