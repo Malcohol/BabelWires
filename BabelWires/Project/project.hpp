@@ -136,9 +136,6 @@ namespace babelwires {
 
             /// Connections that are missing their source, paired with their owner.
             Connections m_brokenConnections;
-
-            /// Internal: The featureElements in a later-depends-on-earlier order.
-            std::vector<FeatureElement*> m_sortedElements;
         };
 
         /// Get information about the connections between elements.

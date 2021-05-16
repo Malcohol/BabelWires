@@ -355,7 +355,6 @@ void babelwires::Project::setConnectionCacheInvalid() {
     m_connectionCache.m_dependsOn.clear();
     m_connectionCache.m_requiredFor.clear();
     m_connectionCache.m_brokenConnections.clear();
-    m_connectionCache.m_sortedElements.clear();
     m_connectionCacheIsValid = false;
 }
 
@@ -383,6 +382,7 @@ namespace {
     }
 } // namespace
 
+/// Returns the featureElements in a later-depends-on-earlier order.
 const babelwires::Project::ConnectionInfo& babelwires::Project::getOrBuildConnectionInfo() {
     if (!m_connectionCacheIsValid) {
         if (m_featureElements.empty()) {
@@ -390,50 +390,8 @@ const babelwires::Project::ConnectionInfo& babelwires::Project::getOrBuildConnec
             return m_connectionCache;
         }
 
-        m_connectionCache.m_sortedElements.reserve(m_featureElements.size());
         for (auto&& pair : m_featureElements) {
-            m_connectionCache.m_sortedElements.emplace_back(pair.second.get());
             cacheConnectionsInElement(*this, m_connectionCache, pair.second.get());
-        }
-
-        std::unordered_map<const FeatureElement*, int> numDependencies;
-        numDependencies.reserve(m_connectionCache.m_dependsOn.size());
-        for (auto&& pair : m_connectionCache.m_dependsOn) {
-            numDependencies.insert(std::make_pair(pair.first, pair.second.size()));
-        }
-
-        // Topologically order the processors based on dependency.
-        // Because we're marking the elements as they are sorted, we have to iterate to the end.
-        for (int firstUnsortedIndex = 0; firstUnsortedIndex < m_featureElements.size();) {
-            const int firstUnsortedIndexBefore = firstUnsortedIndex;
-            for (int j = firstUnsortedIndex; j < m_featureElements.size(); ++j) {
-                FeatureElement* element = m_connectionCache.m_sortedElements[j];
-
-                const auto it = numDependencies.find(element);
-                if (it == numDependencies.end() || it->second == 0) {
-                    std::swap(m_connectionCache.m_sortedElements[firstUnsortedIndex],
-                              m_connectionCache.m_sortedElements[j]);
-                    element->setInDependencyLoop(false);
-                    ++firstUnsortedIndex;
-                    const auto r = m_connectionCache.m_requiredFor.find(element);
-                    if (r != m_connectionCache.m_requiredFor.end()) {
-                        const ConnectionInfo::Connections& connections = r->second;
-                        for (auto&& pair : connections) {
-                            const auto sit = numDependencies.find(std::get<1>(pair));
-                            if (sit != numDependencies.end()) {
-                                --sit->second;
-                            }
-                        }
-                    }
-                }
-            }
-            // Check for a dependency loop.
-            if (firstUnsortedIndex == firstUnsortedIndexBefore) {
-                for (int i = firstUnsortedIndex; i < m_featureElements.size(); ++i) {
-                    m_connectionCache.m_sortedElements[i]->setInDependencyLoop(true);
-                }
-                break;
-            }
         }
 
         m_connectionCacheIsValid = true;
@@ -472,10 +430,57 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
 }
 
 void babelwires::Project::process() {
-    const ConnectionInfo& cache = getOrBuildConnectionInfo();
+    getOrBuildConnectionInfo();
+
+    // Topologically order the elements based on dependency.
+    std::vector<FeatureElement*> sortedElements;
+
+    sortedElements.reserve(m_featureElements.size());
+    for (auto&& pair : m_featureElements) {
+        sortedElements.emplace_back(pair.second.get());
+    }
+
+    std::unordered_map<const FeatureElement*, int> numDependencies;
+    numDependencies.reserve(m_connectionCache.m_dependsOn.size());
+    for (auto&& pair : m_connectionCache.m_dependsOn) {
+        numDependencies.insert(std::make_pair(pair.first, pair.second.size()));
+    }
+
+    // Because we're marking the elements as they are sorted, we have to iterate to the end.
+    for (int firstUnsortedIndex = 0; firstUnsortedIndex < m_featureElements.size();) {
+        const int firstUnsortedIndexBefore = firstUnsortedIndex;
+        for (int j = firstUnsortedIndex; j < m_featureElements.size(); ++j) {
+            FeatureElement* element = sortedElements[j];
+
+            const auto it = numDependencies.find(element);
+            if (it == numDependencies.end() || it->second == 0) {
+                std::swap(sortedElements[firstUnsortedIndex],
+                            sortedElements[j]);
+                element->setInDependencyLoop(false);
+                ++firstUnsortedIndex;
+                const auto r = m_connectionCache.m_requiredFor.find(element);
+                if (r != m_connectionCache.m_requiredFor.end()) {
+                    const ConnectionInfo::Connections& connections = r->second;
+                    for (auto&& pair : connections) {
+                        const auto sit = numDependencies.find(std::get<1>(pair));
+                        if (sit != numDependencies.end()) {
+                            --sit->second;
+                        }
+                    }
+                }
+            }
+        }
+        // Check for a dependency loop.
+        if (firstUnsortedIndex == firstUnsortedIndexBefore) {
+            for (int i = firstUnsortedIndex; i < m_featureElements.size(); ++i) {
+                sortedElements[i]->setInDependencyLoop(true);
+            }
+            break;
+        }
+    }
 
     // Now iterate in dependency order.
-    for (auto&& element : m_connectionCache.m_sortedElements) {
+    for (auto&& element : sortedElements) {
         element->process(m_userLogger);
         // Existing connections only apply their contents if their source has changed,
         // so this doesn't unnecessarily change dependent data.
