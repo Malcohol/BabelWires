@@ -47,13 +47,19 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
         return false;
     }
 
+    if (const Modifier* modifier = elementToModify->findModifier(m_pathToRecord)) {
+        if (dynamic_cast<const ActivateOptionalsModifierData*>(&modifier->getModifierData())) {
+            m_wasModifier = true;
+        }
+    }
+
     return true;
 }
 
 void babelwires::ActivateOptionalCommand::execute(Project& project) const {
-    project.activateOptional(m_elementId, m_pathToRecord, m_optional);
+    project.activateOptional(m_elementId, m_pathToRecord, m_optional, true);
 }
 
 void babelwires::ActivateOptionalCommand::undo(Project& project) const {
-    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional);
+    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional, m_wasModifier);
 }

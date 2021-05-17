@@ -589,7 +589,7 @@ babelwires::ProjectId babelwires::Project::getProjectId() const {
     return m_projectId;
 }
 
-void babelwires::Project::activateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional) {
+void babelwires::Project::activateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional, bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert (elementToModify);
     
@@ -618,9 +618,12 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
         newData.m_selectedOptionals.emplace_back(optional);
         addModifier(elementId, newData);
     }
+    if (!ensureModifier) {
+        removeModifier(elementId, pathToRecord);
+    }
 }
 
-void babelwires::Project::deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional) {
+void babelwires::Project::deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional, bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert (elementToModify);
     
@@ -639,8 +642,7 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
     activateOptionalsModifierData->m_selectedOptionals.erase(it);
     localModifier->applyIfLocal(m_userLogger, inputFeature);
 
-    // TODO Think about this.
-    //if (activateOptionalsModifierData->m_selectedOptionals.empty()) {
-    //    removeModifier(elementId, pathToRecord);
-    //}
+    if (!ensureModifier) {
+        removeModifier(elementId, pathToRecord);
+    }
 }

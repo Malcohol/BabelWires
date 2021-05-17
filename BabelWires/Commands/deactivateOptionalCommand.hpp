@@ -26,6 +26,9 @@ namespace babelwires {
         ElementId m_elementId;
         FeaturePath m_pathToRecord;
         FieldIdentifier m_optional;
+
+        /// Did an old modifier get replaced (otherwise this is the first modification).
+        bool m_wasModifier = false;
     };
 
 } // namespace babelwires

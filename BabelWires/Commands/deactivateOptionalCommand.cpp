@@ -48,6 +48,13 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         return false;
     }
 
+    if (const Modifier* modifier = elementToModify->getEdits().findModifier(m_pathToRecord)) {
+        const auto& modifierData = modifier->getModifierData();
+        if (dynamic_cast<const ActivateOptionalsModifierData*>(&modifier->getModifierData())) {
+            m_wasModifier = true;
+        }
+    }
+
     FeaturePath pathToOptional = m_pathToRecord;
     pathToOptional.pushStep(PathStep(m_optional));
     addSubCommand(std::make_unique<RemoveAllEditsCommand>("Remove optional field subcommand", m_elementId, pathToOptional));
@@ -56,17 +63,17 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         return false;
     }
 
-    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional);
+    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional, true);
 
     return true;
 }
 
 void babelwires::DeactivateOptionalCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional);
+    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional, true);
 }
 
 void babelwires::DeactivateOptionalCommand::undo(Project& project) const {
-    project.activateOptional(m_elementId, m_pathToRecord, m_optional);
+    project.activateOptional(m_elementId, m_pathToRecord, m_optional, m_wasModifier);
     CompoundCommand::undo(project);
 }
