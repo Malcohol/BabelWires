@@ -71,7 +71,7 @@ namespace babelwires {
         /// Otherwise, a modifier will be removed if present.
         /// This is special-cased to avoid treating all affected modifiers as add/removed,
         /// and possibly triggering arbitrary amount of work.
-        // TODO: Much of the work here could be pulled out into the commands.
+        // TODO: Much of the work here could be pulled out into the commands. Same with other operations below.
         void addArrayEntries(ElementId elementId, const FeaturePath& featurePath, int indexOfNewElement,
                              int numEntriesToAdd, bool ensureModifier);
 
@@ -172,16 +172,14 @@ namespace babelwires {
         /// Set the ProjectId to a random value.
         void randomizeProjectId();
 
-        ElementId addFeatureElementInternal(const ElementData& data);
-
         void addConnectionToCache(FeatureElement* element, ConnectionModifier* data);
 
         void removeConnectionFromCache(FeatureElement* element, ConnectionModifier* data);
 
         void validateConnectionCache() const;
 
-        FeatureElement* addFeatureElementBody(const ElementData& data);
-        void addFeatureElementConnections(FeatureElement* element);
+        FeatureElement* addFeatureElementWithoutCachingConnection(const ElementData& data);
+        void addFeatureElementConnectionsToCache(FeatureElement* element);
 
       private:
         ProjectContext& m_context;
