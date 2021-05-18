@@ -12,9 +12,10 @@
 namespace babelwires {
 
     /// Carries a sequence of features identified by FeatureIdentifier.
-    /// The sequence of fields will usually be fixed, although that is not a requirement.
-    /// For example, the set of fields in the output feature of a processor can depend on the
-    /// input.
+    /// The sequence of fields will usually be stable, although that is not a requirement.
+    /// For example, see RecordWithOptionalsFeature for a subclass with an API for activating
+    /// and deactivating certain fields. Additionally, the set of fields in the output feature
+    /// of a processor can depend on the input.
     class RecordFeature : public CompoundFeature {
       public:
         /// The identifier must be already be registered with a field name.
