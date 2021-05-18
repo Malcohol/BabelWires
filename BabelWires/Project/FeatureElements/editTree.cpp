@@ -59,6 +59,7 @@ bool babelwires::EditTree::TreeNode::isNeeded() const {
 }
 
 void babelwires::EditTree::addEdit(const FeaturePath& featurePath, const EditNodeFunc& applyFunc) {
+    assert((featurePath.getNumSteps() > 0) && "The root cannot carry edits");
     auto it = featurePath.begin();
     AncestorStack ancestorStack;
     ancestorStack.reserve(16);

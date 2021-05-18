@@ -1,6 +1,7 @@
 SET( LIB_TESTS_SRCS
     babelWiresTests.cpp
     activateOptionalsModifierDataTest.cpp
+    activateOptionalCommandTest.cpp
     addElementCommandTest.cpp
     addEntryToArrayCommandTest.cpp
     addModifierCommandTest.cpp
@@ -41,6 +42,7 @@ SET( LIB_TESTS_SRCS
     TestUtils/testProjectContext.cpp
     TestUtils/testProjectData.cpp
     TestUtils/testRecord.cpp
+    TestUtils/testFeatureWithOptionals.cpp
    )
 
 ADD_EXECUTABLE( babelWiresTests ${LIB_TESTS_SRCS} )
