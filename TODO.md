@@ -36,6 +36,9 @@ Refactor:
 * Use std::format in logs and exceptions instead of streams - Better, esp. for internationalization
 * Proper CMake usage
 * Review plugin initialization
+* Arrays and optional modification are special-cased in the project: Could that be handled instead by a virtual "merge" method?
+  - Also, they are special cased in the removeModifierCommand. Could that be handled instead by a virtual "removeModifier" method?
+  - It's slightly unfortunate to have modifierData know about commands, but overall might be worth it.
 
 Ideas:
 * Provide serializer via a registry, and move tinyxml dependency into its own lib.
