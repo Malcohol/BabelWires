@@ -48,6 +48,9 @@ namespace libTestUtils {
         static const babelwires::FeaturePath s_pathToFf1;
         static const babelwires::FeaturePath s_pathToOp0;
         static const babelwires::FeaturePath s_pathToOp1;
+
+        static const babelwires::FeaturePath s_pathToOp1_Array_1;
+        static const babelwires::FeaturePath s_pathToOp1_Int2;
     };
 
     struct TestFeatureElementWithOptionalsData : babelwires::ElementData {

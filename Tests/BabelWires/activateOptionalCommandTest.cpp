@@ -110,3 +110,45 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
 
     EXPECT_FALSE(command.initialize(context.m_project));
 }
+
+TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
+    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    libTestUtils::TestProjectContext context;
+
+    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
+
+    const auto* element =
+        dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(context.m_project.getFeatureElement(elementId));
+    ASSERT_NE(element, nullptr);
+    ASSERT_NE(element, nullptr);
+    const libTestUtils::TestFeatureWithOptionals* inputFeature =
+        dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+    ASSERT_NE(inputFeature, nullptr);
+
+    babelwires::ActivateOptionalCommand command("Test command", elementId,
+                                               libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, inputFeature->m_ff0Id);
+
+    EXPECT_FALSE(command.initialize(context.m_project));
+}
+
+TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
+    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    libTestUtils::TestProjectContext context;
+
+    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
+
+    const auto* element =
+        dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(context.m_project.getFeatureElement(elementId));
+    ASSERT_NE(element, nullptr);
+    ASSERT_NE(element, nullptr);
+    const libTestUtils::TestFeatureWithOptionals* inputFeature =
+        dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+    ASSERT_NE(inputFeature, nullptr);
+
+    inputFeature->m_subrecord->activateField(inputFeature->m_op0Id);
+
+    babelwires::ActivateOptionalCommand command("Test command", elementId,
+                                               libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, inputFeature->m_op0Id);
+
+    EXPECT_FALSE(command.initialize(context.m_project));
+}

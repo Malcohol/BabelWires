@@ -13,6 +13,9 @@ const babelwires::FeaturePath libTestUtils::TestFeatureWithOptionals::s_pathToOp
 const babelwires::FeaturePath libTestUtils::TestFeatureWithOptionals::s_pathToOp1 =
     babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestFeatureWithOptionals::s_subrecordIdInitializer) + "/" + libTestUtils::TestFeatureWithOptionals::s_op1IdInitializer);
 
+const babelwires::FeaturePath libTestUtils::TestFeatureWithOptionals::s_pathToOp1_Array_1 = babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestFeatureWithOptionals::s_subrecordIdInitializer) + "/" + libTestUtils::TestFeatureWithOptionals::s_op1IdInitializer + "/" + libTestUtils::TestRecordFeature::s_arrayIdInitializer + "/1");
+const babelwires::FeaturePath libTestUtils::TestFeatureWithOptionals::s_pathToOp1_Int2 = babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestFeatureWithOptionals::s_subrecordIdInitializer) + "/" + libTestUtils::TestFeatureWithOptionals::s_op1IdInitializer + "/" + libTestUtils::TestRecordFeature::s_recordIdInitializer + "/" + libTestUtils::TestRecordFeature::s_int2IdInitializer);
+
 libTestUtils::TestFeatureWithOptionals::TestFeatureWithOptionals()
     : m_subrecordId(babelwires::FieldNameRegistry::write()->addFieldName(
           s_subrecordIdInitializer, s_subrecordFieldName, s_subrecordUuid, babelwires::FieldNameRegistry::Authority::isAuthoritative))

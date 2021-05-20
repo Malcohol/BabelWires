@@ -9,6 +9,7 @@ SET( LIB_TESTS_SRCS
     commandManagerTest.cpp
     connectionDescriptionTest.cpp
     contentsCacheTest.cpp
+    deactivateOptionalCommandTest.cpp
     elementDataTest.cpp
     featureElementConnectionTest.cpp
     featureElementTest.cpp
