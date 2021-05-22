@@ -3,6 +3,7 @@
 #include "BabelWires/Features/recordWithOptionalsFeature.hpp"
 
 #include "BabelWires/Features/numericFeature.hpp"
+#include "BabelWires/Features/featureMixins.hpp"
 
 #include "Tests/TestUtils/equalSets.hpp"
 
@@ -254,4 +255,27 @@ TEST(RecordWithOptionalsFeatureTest, exceptions) {
     EXPECT_THROW(recordFeature.activateField("ff0"), babelwires::ModelException);
     EXPECT_THROW(recordFeature.deactivateField("ff0"), babelwires::ModelException);
     EXPECT_THROW(recordFeature.deactivateField("op0"), babelwires::ModelException);
+}
+
+TEST(RecordWithOptionalsFeatureTest, setToDefault) {
+    babelwires::RecordWithOptionalsFeature recordFeature;
+
+    babelwires::FieldIdentifier ff0("ff0");
+    ff0.setDiscriminator(1);
+    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 12>>(), ff0);
+
+    babelwires::FieldIdentifier op0("op0");
+    op0.setDiscriminator(1);
+    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 7>>(), op0);
+
+    recordFeature.setToDefault();
+
+    EXPECT_EQ(fixedFeature0->get(), 12);
+
+    recordFeature.activateField(op0);
+    EXPECT_EQ(optionalFeature0->get(), 7);
+
+    recordFeature.setToDefault();
+
+    EXPECT_FALSE(recordFeature.isActivated(op0));
 }

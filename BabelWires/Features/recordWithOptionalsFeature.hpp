@@ -39,7 +39,7 @@ namespace babelwires {
 
         protected:
             void addOptionalFieldInternal(FieldAndIndex f);
-
+            void doSetToDefault() override;
         protected:
             /// Those fields which are optional.
             std::vector<FieldIdentifier> m_optionalFields;

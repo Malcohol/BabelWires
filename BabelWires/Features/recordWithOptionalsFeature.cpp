@@ -49,3 +49,16 @@ const std::vector<babelwires::FieldIdentifier>& babelwires::RecordWithOptionalsF
 int babelwires::RecordWithOptionalsFeature::getNumInactiveFields() const {
     return m_inactiveFields.size();
 }
+
+void babelwires::RecordWithOptionalsFeature::doSetToDefault() {
+    for (auto& inactiveField : m_inactiveFields) {
+        // After construction, these may not have been set to their default state.
+        inactiveField.m_feature->setToDefault();
+    }
+    for (const auto& f : m_optionalFields) {
+        if (isActivated(f)) {
+            deactivateField(f);
+        }
+    }
+    CompoundFeature::doSetToDefault();
+}
