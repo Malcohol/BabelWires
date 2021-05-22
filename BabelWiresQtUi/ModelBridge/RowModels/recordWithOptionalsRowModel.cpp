@@ -35,7 +35,8 @@ QVariant babelwires::RecordWithOptionalsRowModel::getValueDisplayData() const {
         const int numActiveOptionals = numOptionals - recordFeature.getNumInactiveFields();
         return QString("(%1/%2 optionals)").arg(numActiveOptionals).arg(numOptionals);
     } else {
-        // Could log a debug message here.
+        // This is useful if you have a base class you want to have optionals for one subclass but not
+        // for others. In the latter case, it will just look like an ordinary record.
         return QVariant();
     }
 }
