@@ -77,7 +77,7 @@ babelwires::FeatureModel::FeatureModel(QObject* parent, ElementId elementId, Pro
 
 int babelwires::FeatureModel::getNumRows(AccessModelScope& scope) const {
     if (const FeatureElement* element = getFeatureElement(scope)) {
-        return element->getContentsCache().getNumRows();
+        return element->getContentsCache().getNumRows() + 1;
     } else {
         return 0;
     }
@@ -90,7 +90,9 @@ int babelwires::FeatureModel::rowCount(const QModelIndex& /*parent*/) const {
 
 const babelwires::ContentsCacheEntry* babelwires::FeatureModel::getEntry(AccessModelScope& scope, int row) const {
     if (const FeatureElement* element = getFeatureElement(scope)) {
-        return element->getContentsCache().getEntry(row);
+        if (row > 0) {
+            return element->getContentsCache().getEntry(row - 1);
+        }
     }
     return nullptr;
 }

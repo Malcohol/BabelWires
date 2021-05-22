@@ -63,9 +63,9 @@ QtNodes::NodeDataType babelwires::ElementNodeModel::dataType(QtNodes::PortType p
                                                              QtNodes::PortIndex portIndex) const {
     AccessModelScope scope(m_projectBridge);
     if (portType == QtNodes::PortType::In) {
-        return getDataTypeFromFeature(getInputFeature(scope, portIndex));
+        return getDataTypeFromFeature(getInputFeature(scope, portIndex - 1));
     } else {
-        return getDataTypeFromFeature(getOutputFeature(scope, portIndex));
+        return getDataTypeFromFeature(getOutputFeature(scope, portIndex - 1));
     }
 }
 
