@@ -19,6 +19,7 @@ namespace babelwires {
 
     template <typename T, int DEFAULT> class HasStaticDefault : public T {
       public:
+        static int getStaticDefault() { return DEFAULT; }
         virtual void doSetToDefault() override;
     };
 
