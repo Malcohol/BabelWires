@@ -48,12 +48,12 @@ void babelwires::SourceFileElement::doProcess(UserLogger& userLogger) {
     }
 }
 
-std::string babelwires::SourceFileElement::getFilePath() const {
+std::filesystem::path babelwires::SourceFileElement::getFilePath() const {
     return getElementData().m_filePath;
 }
 
-void babelwires::SourceFileElement::setFilePath(std::string newFilePath) {
-    std::string& filePath = getElementData().m_filePath;
+void babelwires::SourceFileElement::setFilePath(std::filesystem::path newFilePath) {
+    std::filesystem::path& filePath = getElementData().m_filePath;
     if (filePath != newFilePath) {
         filePath = std::move(newFilePath);
         setChanged(Changes::FileChanged);

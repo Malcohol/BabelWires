@@ -31,8 +31,8 @@ namespace babelwires {
 
         virtual RecordFeature* getInputFeature() override;
 
-        virtual std::string getFilePath() const override;
-        virtual void setFilePath(std::string newFilePath) override;
+        virtual std::filesystem::path getFilePath() const override;
+        virtual void setFilePath(std::filesystem::path newFilePath) override;
         virtual const FileTypeEntry* getFileFormatInformation(const ProjectContext& context) const override;
         virtual FileOperations getSupportedFileOperations() const override;
         virtual bool save(const ProjectContext& context, UserLogger& userLogger) override;

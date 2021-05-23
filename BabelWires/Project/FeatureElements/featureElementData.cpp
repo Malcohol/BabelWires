@@ -157,14 +157,16 @@ babelwires::SourceFileData::doCreateFeatureElement(const ProjectContext& context
 
 void babelwires::SourceFileData::serializeContents(Serializer& serializer) const {
     addCommonKeyValuePairs(serializer);
-    serializer.serializeValue("filename", m_filePath);
+    serializer.serializeValue("filename", m_filePath.u8string());
     serializeModifiers(serializer);
     serializeUiData(serializer);
 }
 
 void babelwires::SourceFileData::deserializeContents(Deserializer& deserializer) {
     getCommonKeyValuePairs(deserializer);
-    deserializer.deserializeValue("filename", m_filePath);
+    std::string filePath;
+    deserializer.deserializeValue("filename", filePath);
+    m_filePath = filePath;
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }
@@ -185,14 +187,16 @@ babelwires::TargetFileData::doCreateFeatureElement(const ProjectContext& context
 
 void babelwires::TargetFileData::serializeContents(Serializer& serializer) const {
     addCommonKeyValuePairs(serializer);
-    serializer.serializeValue("filename", m_filePath);
+    serializer.serializeValue("filename", m_filePath.u8string());
     serializeModifiers(serializer);
     serializeUiData(serializer);
 }
 
 void babelwires::TargetFileData::deserializeContents(Deserializer& deserializer) {
     getCommonKeyValuePairs(deserializer);
-    deserializer.deserializeValue("filename", m_filePath);
+    std::string path;
+    deserializer.deserializeValue("filename", path);
+    m_filePath = path;
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }

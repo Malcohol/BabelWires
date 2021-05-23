@@ -63,12 +63,12 @@ void babelwires::TargetFileElement::setFeature(std::unique_ptr<RecordFeature> fe
     m_feature = std::move(feature);
 }
 
-std::string babelwires::TargetFileElement::getFilePath() const {
+std::filesystem::path babelwires::TargetFileElement::getFilePath() const {
     return getElementData().m_filePath;
 }
 
-void babelwires::TargetFileElement::setFilePath(std::string newFilePath) {
-    std::string& filePath = getElementData().m_filePath;
+void babelwires::TargetFileElement::setFilePath(std::filesystem::path newFilePath) {
+    std::filesystem::path& filePath = getElementData().m_filePath;
     if (filePath != newFilePath) {
         filePath = std::move(newFilePath);
         setChanged(Changes::FileChanged);
@@ -143,7 +143,7 @@ std::string babelwires::TargetFileElement::getLabel() const {
 
 void babelwires::TargetFileElement::updateSaveHash() {
     std::size_t newHash = m_feature->getHash();
-    hash::mixInto(newHash, getFilePath());
+    hash::mixInto(newHash, getFilePath().u8string());
 
     if (m_saveHash != newHash) {
         if (m_saveHash == m_saveHashWhenSaved) {

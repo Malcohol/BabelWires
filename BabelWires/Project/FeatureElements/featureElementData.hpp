@@ -18,6 +18,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <filesystem>
 
 namespace babelwires {
     class UserLogger;
@@ -128,7 +129,7 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
         /// The file containing the data.
-        std::string m_filePath;
+        std::filesystem::path m_filePath;
 
       protected:
         std::unique_ptr<FeatureElement> doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
@@ -150,7 +151,7 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
         /// The file to which the feature should be saved.
-        std::string m_filePath;
+        std::filesystem::path m_filePath;
 
       protected:
         std::unique_ptr<FeatureElement> doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,

@@ -9,6 +9,8 @@
 
 #include "BabelWires/Project/FeatureElements/featureElement.hpp"
 
+#include <filesystem>
+
 namespace babelwires {
     class FileTypeEntry;
 
@@ -18,11 +20,11 @@ namespace babelwires {
         FileElement(const ElementData& data, ElementId newId);
 
         /// Return the file path to the file.
-        virtual std::string getFilePath() const = 0;
+        virtual std::filesystem::path getFilePath() const = 0;
 
         /// Set the file path to the file.
         /// Implementations are not expected to perform file operations.
-        virtual void setFilePath(std::string newFilePath) = 0;
+        virtual void setFilePath(std::filesystem::path newFilePath) = 0;
 
         virtual const FileTypeEntry* getFileFormatInformation(const ProjectContext& context) const = 0;
 
