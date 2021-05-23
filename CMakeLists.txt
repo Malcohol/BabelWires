@@ -27,12 +27,6 @@ ADD_SUBDIRECTORY( BabelWiresQtUi )
 MESSAGE(${Qt5Widgets_INCLUDE_DIRS})
 ENDIF( Qt5_FOUND )
 
-FIND_PACKAGE( ALSA )
-IF( ALSA_FOUND )
-ADD_SUBDIRECTORY( Audio/Alsa )
-add_subdirectory(Tests/Audio/Alsa)
-ENDIF( ALSA_FOUND )
-
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 # Update submodules as needed
