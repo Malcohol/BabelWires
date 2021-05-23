@@ -40,6 +40,17 @@ Refactor:
   - Also, they are special cased in the removeModifierCommand. Could that be handled instead by a virtual "removeModifier" method?
   - It's slightly unfortunate to have modifierData know about commands, but overall might be worth it.
 
+Parallel processing:
+* Not implemented, but code written with this in mind.
+  - Access to the project state is already funnelled through AccessModelScope and UpdateModelScope.
+  - The UI does not keep pointers to features.
+* Processors would run in background threads. When they are finished, they would:
+  - lock the project,
+  - updating their output features,
+  - process the changes.
+* Needs new UI features, since the parts of the project can be stale which processing is underway.
+* Investigate this if use-case with expensive processing ever arises.
+
 Ideas:
 * Provide serializer via a registry, and move tinyxml dependency into its own lib.
   - Consider switching from XML to yaml for project files
