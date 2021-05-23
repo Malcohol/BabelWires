@@ -38,9 +38,7 @@ Clone recursively to ensure submodules are populated:
 git clone --recurse-submodules https://github.com/Malcohol/BabelWires.git
 ```
 
-BabelWires is intended to be cross platform, but to date I have been working in a GNU/Linux environment.
-The ALSA (Advanced Linux Sound Architecture) plugin is not sufficiently abstracted within the build system, so a few files will probably need to be adjusted to build on other platforms.
-This will get fixed in time.
+BabelWires is intended to be cross platform, but to date I have been working in a GNU/Linux environment, and building in other environments is currently untested.
 
 ## License
 
