@@ -64,12 +64,12 @@ TEST(ElementDataTest, sourceFileDataClone) {
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
-    data.m_filePath = "/a/b/c/foo.bar";
+    data.m_absoluteFilePath = "/a/b/c/foo.bar";
     auto clone = data.clone();
     EXPECT_EQ(data.m_factoryIdentifier, "foo");
     EXPECT_EQ(data.m_factoryVersion, 14);
     checkCommonFields(*clone);
-    EXPECT_EQ(clone->m_filePath, "/a/b/c/foo.bar");
+    EXPECT_EQ(clone->m_absoluteFilePath, "/a/b/c/foo.bar");
 }
 
 TEST(ElementDataTest, sourceFileDataCustomClone) {
@@ -77,12 +77,12 @@ TEST(ElementDataTest, sourceFileDataCustomClone) {
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
-    data.m_filePath = "/a/b/c/foo.bar";
+    data.m_absoluteFilePath = "/a/b/c/foo.bar";
     auto clone = data.customClone();
     EXPECT_EQ(data.m_factoryIdentifier, "foo");
     EXPECT_EQ(data.m_factoryVersion, 14);
     checkCommonFields(*clone, false);
-    EXPECT_EQ(clone->m_filePath, "/a/b/c/foo.bar");
+    EXPECT_EQ(clone->m_absoluteFilePath, "/a/b/c/foo.bar");
 }
 
 TEST(ElementDataTest, sourceFileDataSerialize) {
@@ -91,7 +91,7 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
         babelwires::SourceFileData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
-        data.m_filePath = "/a/b/c/foo.bar";
+        data.m_absoluteFilePath = "/a/b/c/foo.bar";
 
         babelwires::XmlSerializer serializer;
         serializer.serializeObject(data);
@@ -108,7 +108,7 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
     checkCommonFields(*dataPtr);
-    EXPECT_EQ(dataPtr->m_filePath, "/a/b/c/foo.bar");
+    EXPECT_EQ(dataPtr->m_absoluteFilePath, "/a/b/c/foo.bar");
 }
 
 TEST(ElementDataTest, sourceFileDataCreateElement) {
@@ -132,7 +132,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     babelwires::SourceFileData data;
     data.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
-    data.m_filePath = tempFilePath;
+    data.m_absoluteFilePath = tempFilePath;
 
     const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
@@ -148,8 +148,8 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(dynamic_cast<const babelwires::SourceFileData*>(&featureElement->getElementData()));
-    EXPECT_EQ(static_cast<const babelwires::SourceFileData&>(featureElement->getElementData()).m_filePath,
-              data.m_filePath);
+    EXPECT_EQ(static_cast<const babelwires::SourceFileData&>(featureElement->getElementData()).m_absoluteFilePath,
+              data.m_absoluteFilePath);
 
     const libTestUtils::TestFileFeature* inputFeature =
         static_cast<const libTestUtils::TestFileFeature*>(featureElement->getOutputFeature());
@@ -166,13 +166,13 @@ TEST(ElementDataTest, targetFileDataClone) {
     data.m_factoryVersion = 14;
     setCommonFields(data);
     setModifiers(data, libTestUtils::TestFileFeature::s_intChildInitializer);
-    data.m_filePath = "/a/b/c/foo.bar";
+    data.m_absoluteFilePath = "/a/b/c/foo.bar";
     auto clone = data.clone();
     EXPECT_EQ(data.m_factoryIdentifier, "foo");
     EXPECT_EQ(data.m_factoryVersion, 14);
     checkCommonFields(*clone);
     checkModifiers(*clone, libTestUtils::TestFileFeature::s_intChildInitializer);
-    EXPECT_EQ(clone->m_filePath, "/a/b/c/foo.bar");
+    EXPECT_EQ(clone->m_absoluteFilePath, "/a/b/c/foo.bar");
 }
 
 TEST(ElementDataTest, targetFileDataCustomClone) {
@@ -181,13 +181,13 @@ TEST(ElementDataTest, targetFileDataCustomClone) {
     data.m_factoryVersion = 14;
     setCommonFields(data);
     setModifiers(data, libTestUtils::TestFileFeature::s_intChildInitializer);
-    data.m_filePath = "/a/b/c/foo.bar";
+    data.m_absoluteFilePath = "/a/b/c/foo.bar";
     auto clone = data.customClone();
     EXPECT_EQ(data.m_factoryIdentifier, "foo");
     EXPECT_EQ(data.m_factoryVersion, 14);
     checkCommonFields(*clone, false);
     EXPECT_TRUE(clone->m_modifiers.empty());
-    EXPECT_EQ(clone->m_filePath, "/a/b/c/foo.bar");
+    EXPECT_EQ(clone->m_absoluteFilePath, "/a/b/c/foo.bar");
 }
 
 TEST(ElementDataTest, targetFileDataSerialize) {
@@ -197,7 +197,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
         setModifiers(data, libTestUtils::TestFileFeature::s_intChildInitializer);
-        data.m_filePath = "/a/b/c/foo.bar";
+        data.m_absoluteFilePath = "/a/b/c/foo.bar";
 
         babelwires::XmlSerializer serializer;
         serializer.serializeObject(data);
@@ -215,7 +215,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
     checkCommonFields(*dataPtr);
     checkModifiers(*dataPtr, libTestUtils::TestFileFeature::s_intChildInitializer);
-    EXPECT_EQ(dataPtr->m_filePath, "/a/b/c/foo.bar");
+    EXPECT_EQ(dataPtr->m_absoluteFilePath, "/a/b/c/foo.bar");
 }
 
 TEST(ElementDataTest, targetFileDataCreateElement) {
@@ -224,7 +224,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     babelwires::TargetFileData data;
     data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
-    data.m_filePath = "foo";
+    data.m_absoluteFilePath = "foo";
     setCommonFields(data);
     setModifiers(data, libTestUtils::TestFileFeature::s_intChildInitializer);
 
@@ -244,8 +244,8 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(dynamic_cast<const babelwires::TargetFileData*>(&featureElement->getElementData()));
-    EXPECT_EQ(static_cast<const babelwires::TargetFileData&>(featureElement->getElementData()).m_filePath,
-              data.m_filePath);
+    EXPECT_EQ(static_cast<const babelwires::TargetFileData&>(featureElement->getElementData()).m_absoluteFilePath,
+              data.m_absoluteFilePath);
 
     const libTestUtils::TestFileFeature* inputFeature =
         static_cast<const libTestUtils::TestFileFeature*>(featureElement->getInputFeature());

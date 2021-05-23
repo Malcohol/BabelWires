@@ -29,7 +29,7 @@ namespace {
         }
 
         babelwires::SourceFileData elementData;
-        elementData.m_filePath = filePath1;
+        elementData.m_absoluteFilePath = filePath1;
         elementData.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
 
         const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
@@ -103,7 +103,7 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     std::string filePath2("erm" + libTestUtils::TestSourceFileFormat::getFileExtension());
 
     babelwires::TargetFileData elementData;
-    elementData.m_filePath = filePath1;
+    elementData.m_absoluteFilePath = filePath1;
     elementData.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);

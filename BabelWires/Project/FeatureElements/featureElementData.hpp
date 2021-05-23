@@ -129,7 +129,7 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
         /// The file containing the data.
-        std::filesystem::path m_filePath;
+        std::filesystem::path m_absoluteFilePath;
 
       protected:
         std::unique_ptr<FeatureElement> doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
@@ -151,7 +151,7 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
         /// The file to which the feature should be saved.
-        std::filesystem::path m_filePath;
+        std::filesystem::path m_absoluteFilePath;
 
       protected:
         std::unique_ptr<FeatureElement> doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,

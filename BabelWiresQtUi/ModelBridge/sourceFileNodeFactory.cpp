@@ -37,7 +37,7 @@ std::unique_ptr<QtNodes::NodeDataModel> babelwires::SourceFileNodeFactory::opera
     if (!filePath.isNull()) {
         auto newDataPtr = std::make_unique<SourceFileData>();
         newDataPtr->m_factoryIdentifier = m_sourceFileFormat->getIdentifier();
-        newDataPtr->m_filePath = filePath.toStdString();
+        newDataPtr->m_absoluteFilePath = filePath.toStdString();
         newDataPtr->m_factoryVersion = m_sourceFileFormat->getVersion();
 
         auto commandPtr = std::make_unique<AddElementCommand>("Add source file", std::move(newDataPtr));

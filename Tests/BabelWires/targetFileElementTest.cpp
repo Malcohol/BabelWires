@@ -29,7 +29,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
     babelwires::TargetFileData data;
     data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
-    data.m_filePath = tempFilePath;
+    data.m_absoluteFilePath = tempFilePath;
 
     auto featureElement = data.createFeatureElement(context.m_projectContext, context.m_log, 10);
     ASSERT_TRUE(featureElement);
@@ -90,7 +90,7 @@ TEST(TargetFileElementTest, changeFile) {
     babelwires::TargetFileData data;
     data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
-    data.m_filePath = tempFilePath1;
+    data.m_absoluteFilePath = tempFilePath1;
 
     auto featureElement = data.createFeatureElement(context.m_projectContext, context.m_log, 10);
     ASSERT_TRUE(featureElement);

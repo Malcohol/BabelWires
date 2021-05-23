@@ -64,11 +64,11 @@ void babelwires::TargetFileElement::setFeature(std::unique_ptr<RecordFeature> fe
 }
 
 std::filesystem::path babelwires::TargetFileElement::getFilePath() const {
-    return getElementData().m_filePath;
+    return getElementData().m_absoluteFilePath;
 }
 
 void babelwires::TargetFileElement::setFilePath(std::filesystem::path newFilePath) {
-    std::filesystem::path& filePath = getElementData().m_filePath;
+    std::filesystem::path& filePath = getElementData().m_absoluteFilePath;
     if (filePath != newFilePath) {
         filePath = std::move(newFilePath);
         setChanged(Changes::FileChanged);
@@ -98,13 +98,13 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
         userLogger.logError() << "Cannot write output for failed TargetFileElement (id=" << data.m_id << ")";
         return false;
     }
-    if (data.m_filePath.empty()) {
+    if (data.m_absoluteFilePath.empty()) {
         userLogger.logError() << "Cannot write output for TargetFileElement when there is no file path (id="
                               << data.m_id << ")";
         return false;
     }
     try {
-        OutFileStream outStream(data.m_filePath);
+        OutFileStream outStream(data.m_absoluteFilePath);
         const auto& fileFeature = dynamic_cast<const FileFeature&>(*m_feature.get());
         const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
         assert(format && "FileFeature with unregistered file format");

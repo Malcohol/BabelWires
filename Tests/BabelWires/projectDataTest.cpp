@@ -38,7 +38,7 @@ TEST(ProjectDataTest, serialization) {
         EXPECT_EQ(data->m_factoryIdentifier, libTestUtils::TestTargetFileFormat::getThisIdentifier());
         const babelwires::TargetFileData* targetData = dynamic_cast<const babelwires::TargetFileData*>(data);
         ASSERT_TRUE(targetData);
-        ASSERT_EQ(targetData->m_filePath, libTestUtils::TestProjectData().m_targetFilePath);
+        ASSERT_EQ(targetData->m_absoluteFilePath, libTestUtils::TestProjectData().m_targetFilePath);
     }
     {
         const babelwires::ElementData* data = dataPtr->m_elements[1].get();
@@ -55,6 +55,6 @@ TEST(ProjectDataTest, serialization) {
         EXPECT_EQ(data->m_factoryIdentifier, libTestUtils::TestSourceFileFormat::getThisIdentifier());
         const babelwires::SourceFileData* sourceData = dynamic_cast<const babelwires::SourceFileData*>(data);
         ASSERT_TRUE(sourceData);
-        ASSERT_EQ(sourceData->m_filePath, libTestUtils::TestProjectData().m_sourceFilePath);
+        ASSERT_EQ(sourceData->m_absoluteFilePath, libTestUtils::TestProjectData().m_sourceFilePath);
     }
 }

@@ -143,7 +143,7 @@ namespace {
 
 babelwires::SourceFileData::SourceFileData(const SourceFileData& other, ShallowCloneContext c)
     : ElementData(other, c)
-    , m_filePath(other.m_filePath) {}
+    , m_absoluteFilePath(other.m_absoluteFilePath) {}
 
 bool babelwires::SourceFileData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
     return checkFactoryVersionCommon(context.m_sourceFileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
@@ -157,7 +157,7 @@ babelwires::SourceFileData::doCreateFeatureElement(const ProjectContext& context
 
 void babelwires::SourceFileData::serializeContents(Serializer& serializer) const {
     addCommonKeyValuePairs(serializer);
-    serializer.serializeValue("filename", m_filePath.u8string());
+    serializer.serializeValue("filename", m_absoluteFilePath.u8string());
     serializeModifiers(serializer);
     serializeUiData(serializer);
 }
@@ -166,14 +166,14 @@ void babelwires::SourceFileData::deserializeContents(Deserializer& deserializer)
     getCommonKeyValuePairs(deserializer);
     std::string filePath;
     deserializer.deserializeValue("filename", filePath);
-    m_filePath = filePath;
+    m_absoluteFilePath = filePath;
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }
 
 babelwires::TargetFileData::TargetFileData(const TargetFileData& other, ShallowCloneContext c)
     : ElementData(other, c)
-    , m_filePath(other.m_filePath) {}
+    , m_absoluteFilePath(other.m_absoluteFilePath) {}
 
 bool babelwires::TargetFileData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
     return checkFactoryVersionCommon(context.m_targetFileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
@@ -187,7 +187,7 @@ babelwires::TargetFileData::doCreateFeatureElement(const ProjectContext& context
 
 void babelwires::TargetFileData::serializeContents(Serializer& serializer) const {
     addCommonKeyValuePairs(serializer);
-    serializer.serializeValue("filename", m_filePath.u8string());
+    serializer.serializeValue("filename", m_absoluteFilePath.u8string());
     serializeModifiers(serializer);
     serializeUiData(serializer);
 }
@@ -196,7 +196,7 @@ void babelwires::TargetFileData::deserializeContents(Deserializer& deserializer)
     getCommonKeyValuePairs(deserializer);
     std::string path;
     deserializer.deserializeValue("filename", path);
-    m_filePath = path;
+    m_absoluteFilePath = path;
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }

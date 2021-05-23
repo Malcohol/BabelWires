@@ -373,7 +373,7 @@ TEST(ProjectTest, reloadSource) {
     libTestUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 14);
 
     babelwires::SourceFileData sourceFileData;
-    sourceFileData.m_filePath = tempFilePath;
+    sourceFileData.m_absoluteFilePath = tempFilePath;
     sourceFileData.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(sourceFileData);
@@ -412,7 +412,7 @@ TEST(ProjectTest, saveTarget) {
     testUtils::TempFilePath tempFilePath("testTarget." + libTestUtils::TestSourceFileFormat::getFileExtension());
 
     babelwires::TargetFileData targetFileData;
-    targetFileData.m_filePath = tempFilePath;
+    targetFileData.m_absoluteFilePath = tempFilePath;
     targetFileData.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(targetFileData);
