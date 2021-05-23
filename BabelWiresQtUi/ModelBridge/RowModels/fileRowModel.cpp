@@ -33,8 +33,7 @@ const babelwires::FileElement& babelwires::FileRowModel::getFileElement() const 
 }
 
 QVariant babelwires::FileRowModel::getValueDisplayData() const {
-    // TODO Use std::filesystem::path to display just the filename.
-    return QString(getFileElement().getFilePath().c_str());
+    return QString(getFileElement().getFilePath().filename().u8string().c_str());
 }
 
 QVariant babelwires::FileRowModel::getTooltip() const {
@@ -42,7 +41,7 @@ QVariant babelwires::FileRowModel::getTooltip() const {
         return RowModel::getTooltip();
     } else {
         // Full path.
-        return QString(getFileElement().getFilePath().c_str());
+        return QString(getFileElement().getFilePath().u8string().c_str());
     }
 }
 
