@@ -38,7 +38,8 @@ Clone recursively to ensure submodules are populated:
 git clone --recurse-submodules https://github.com/Malcohol/BabelWires.git
 ```
 
-BabelWires is intended to be cross platform, but to date I have been working in a GNU/Linux environment, and building in other environments is currently untested.
+BabelWires is intended to be cross platform, but to date I have been working in a GNU/Linux environment. 
+Building in other environments is untested.
 
 ## License
 
