@@ -70,6 +70,9 @@ namespace babelwires {
         std::unique_ptr<FeatureElement> createFeatureElement(const ProjectContext& context, UserLogger& userLogger,
                                                              ElementId newId) const;
 
+        /// Call the visitor on all the fieldIdentifiers in the element.
+        virtual void visitFields(FieldVisitor& visitor);
+
         /// The factory which creates FeatureElements corresponding to this data.
         std::string m_factoryIdentifier;
 

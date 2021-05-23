@@ -100,6 +100,19 @@ void babelwires::ElementData::deserializeUiData(Deserializer& deserializer) {
     }
 }
 
+void babelwires::ElementData::visitFields(FieldVisitor& visitor) {
+    for (auto& m : m_modifiers) {
+        m->visitFields(visitor);
+    }
+    for (auto& p : m_expandedPaths) {
+        for (auto& s : p) {
+            if (s.isField()) {
+                visitor(s.getField());
+            }
+        }
+    }
+}
+
 namespace {
     template <typename Registry>
     bool checkFactoryVersionCommon(const Registry& reg, babelwires::UserLogger& userLogger,
@@ -208,3 +221,4 @@ void babelwires::ProcessorData::deserializeContents(Deserializer& deserializer) 
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }
+

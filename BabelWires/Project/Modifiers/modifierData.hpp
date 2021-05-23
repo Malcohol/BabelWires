@@ -17,6 +17,8 @@ namespace babelwires {
     class Project;
     class Modifier;
 
+    using FieldVisitor = std::function<void(FieldIdentifier&)>;
+
     /// ModifierData carry the data sufficient to reconstruct a Modifier.
     struct ModifierData : Cloneable, Serializable {
         CLONEABLE_ABSTRACT(ModifierData);
@@ -30,6 +32,10 @@ namespace babelwires {
 
         /// A factory method constructing the appropriate modifier.
         virtual std::unique_ptr<Modifier> createModifier() const = 0;
+
+        /// Call the visitor on all fields in the modifier.
+        /// This base implementation visits the fields in m_pathToFeature;
+        virtual void visitFields(FieldVisitor& visitor);
     };
 
     /// Base class for ModifierData which construct LocalModifiers.

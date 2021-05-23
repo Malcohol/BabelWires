@@ -24,6 +24,7 @@ namespace babelwires {
         SERIALIZABLE(ConnectionModifierData, "assignFrom", ModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
+        void visitFields(FieldVisitor& visitor) override;
 
         ElementId m_sourceId;
         FeaturePath m_pathToSourceFeature;

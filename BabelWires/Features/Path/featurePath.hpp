@@ -87,6 +87,10 @@ namespace babelwires {
         const_iterator begin() const { return m_steps.begin(); }
         const_iterator end() const { return m_steps.end(); }
 
+        using iterator = std::vector<PathStep>::iterator;
+        iterator begin() { return m_steps.begin(); }
+        iterator end() { return m_steps.end(); }
+
       private:
         /// Returns -1, 0 or 1.
         int compare(const FeaturePath& other) const;

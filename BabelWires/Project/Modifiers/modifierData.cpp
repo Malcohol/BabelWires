@@ -23,6 +23,14 @@ babelwires::Feature* babelwires::ModifierData::getTargetFeature(Feature* contain
     return &m_pathToFeature.follow(*container);
 }
 
+void babelwires::ModifierData::visitFields(FieldVisitor& visitor) {
+    for (auto& s : m_pathToFeature) {
+        if (s.isField()) {
+            visitor(s.getField());
+        }
+    }
+}
+
 std::unique_ptr<babelwires::Modifier> babelwires::LocalModifierData::createModifier() const {
     return std::make_unique<babelwires::LocalModifier>(clone());
 }

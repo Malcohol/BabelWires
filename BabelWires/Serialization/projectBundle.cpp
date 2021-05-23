@@ -16,12 +16,9 @@
 
 namespace {
     template <typename SOURCE_REG, typename TARGET_REG>
-    void convertPath(const babelwires::FeaturePath& path, SOURCE_REG& sourceReg, TARGET_REG& targetReg,
-                     babelwires::FieldNameRegistry::Authority authority) {
-        for (const auto& p : path) {
-            if (p.isField()) {
-                babelwires::FieldIdentifier sourceId = p.getField();
-                // Unregistered fields stay unregistered.
+    void convertProjectData(babelwires::ProjectData& projectData, SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
+                            babelwires::FieldNameRegistry::Authority authority) {
+        babelwires::FieldVisitor visitor = [&](babelwires::FieldIdentifier& sourceId) {
                 if (sourceId.getDiscriminator() != 0) {
                     babelwires::FieldIdentifier newId = sourceId;
                     newId.setDiscriminator(0);
@@ -29,28 +26,11 @@ namespace {
                     // In the saving case, the exception is caught and triggers an assertion.
                     babelwires::FieldNameRegistry::ValueType fieldData = sourceReg->getDeserializedFieldData(sourceId);
                     newId = targetReg->addFieldName(newId, *std::get<1>(fieldData), *std::get<2>(fieldData), authority);
-                    p.getField().setDiscriminator(newId.getDiscriminator());
+                    sourceId.setDiscriminator(newId.getDiscriminator());
                 }
-            }
-        }
-    }
-
-    template <typename SOURCE_REG, typename TARGET_REG>
-    void convertProjectData(babelwires::ProjectData& projectData, SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
-                            babelwires::FieldNameRegistry::Authority authority) {
-        for (const auto& element : projectData.m_elements) {
-            // TODO Obtain paths via a query on modifierData, rather than assuming structure.
-            for (const auto& modifier : element->m_modifiers) {
-                convertPath<SOURCE_REG, TARGET_REG>(modifier->m_pathToFeature, sourceReg, targetReg, authority);
-                if (const auto* assignModifier =
-                        dynamic_cast<const babelwires::ConnectionModifierData*>(modifier.get())) {
-                    convertPath<SOURCE_REG, TARGET_REG>(assignModifier->m_pathToSourceFeature, sourceReg, targetReg,
-                                                        authority);
-                }
-            }
-            for (const auto& path : element->m_expandedPaths) {
-                convertPath<SOURCE_REG, TARGET_REG>(path, sourceReg, targetReg, authority);
-            }
+            };
+        for (auto& element : projectData.m_elements) {
+            element->visitFields(visitor);
         }
     }
 } // namespace

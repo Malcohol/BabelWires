@@ -82,3 +82,12 @@ void babelwires::ConnectionModifierData::deserializeContents(Deserializer& deser
 std::unique_ptr<babelwires::Modifier> babelwires::ConnectionModifierData::createModifier() const {
     return std::make_unique<babelwires::ConnectionModifier>(clone());
 }
+
+void babelwires::ConnectionModifierData::visitFields(FieldVisitor& visitor) {
+    ModifierData::visitFields(visitor);
+    for (auto& s : m_pathToSourceFeature) {
+        if (s.isField()) {
+            visitor(s.getField());
+        }
+    }
+}

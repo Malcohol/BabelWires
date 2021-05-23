@@ -17,6 +17,7 @@ namespace babelwires {
         SERIALIZABLE(ActivateOptionalsModifierData, "activatedOptionals", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
+        void visitFields(FieldVisitor& visitor) override;
 
         std::vector<FieldIdentifier> m_selectedOptionals;
     };
