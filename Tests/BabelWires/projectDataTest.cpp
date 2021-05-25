@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/projectData.hpp"
 

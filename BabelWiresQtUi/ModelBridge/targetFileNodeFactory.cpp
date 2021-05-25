@@ -8,7 +8,7 @@
 #include "BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp"
 #include "BabelWires/Commands/addElementCommand.hpp"
 #include "BabelWires/FileFormat/targetFileFormat.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
 #include "BabelWiresQtUi/ModelBridge/elementNodeModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 

@@ -4,6 +4,7 @@
 
 #include "BabelWires/Features/Path/fieldNameRegistry.hpp"
 #include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/FeatureElements/sourceFileElement.hpp"
 #include "BabelWires/Project/FeatureElements/targetFileElement.hpp"
