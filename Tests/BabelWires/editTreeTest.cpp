@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "BabelWires/Project/FeatureElements/editTree.hpp"
+#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/FeatureElements/targetFileElement.hpp"
 #include "BabelWires/Project/Modifiers/connectionModifier.hpp"

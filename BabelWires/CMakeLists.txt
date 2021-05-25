@@ -9,6 +9,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/FeatureElements/failedFeature.cpp
 	Project/FeatureElements/editTree.cpp
 	Project/FeatureElements/contentsCache.cpp
+	Project/FeatureElements/sourceFileElementData.cpp
 	Project/Modifiers/modifier.cpp
 	Project/Modifiers/modifierData.cpp
 	Project/Modifiers/localModifier.cpp

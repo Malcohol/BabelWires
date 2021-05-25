@@ -14,6 +14,7 @@
 #include "Common/Cloning/cloneable.hpp"
 #include "Common/Serialization/serializable.hpp"
 #include "Common/types.hpp"
+#include "Common/Log/userLogger.hpp"
 
 #include <memory>
 #include <string>
@@ -21,13 +22,11 @@
 #include <filesystem>
 
 namespace babelwires {
+
     class UserLogger;
-}
-
-namespace babelwires {
-
     class ProjectContext;
     class FeatureElement;
+    class UntypedRegistry;
 
     /// Use the custom clone framework to do a shallow clone.
     struct ShallowCloneContext {};
@@ -110,31 +109,14 @@ namespace babelwires {
         /// For use when serializing subclasses.
         void serializeUiData(Serializer& serializer) const;
         void deserializeUiData(Deserializer& deserializer);
+
+        /// Look up the ID in the reg, and issue a warning if there are version incompatibilities.
+        template<typename REGISTRY>
+        bool checkFactoryVersionCommon(const REGISTRY& reg, UserLogger& userLogger,
+                                   const std::string factoryIdentifier, VersionNumber& thisVersion);
     };
 
     // TODO: Break these out into their own files.
-
-    /// Describes the construction of a SourceFileFeature.
-    struct SourceFileData : ElementData {
-        CLONEABLE(SourceFileData);
-        CUSTOM_CLONEABLE(SourceFileData);
-        SERIALIZABLE(SourceFileData, "sourceFile", ElementData, 1);
-        SourceFileData() = default;
-        SourceFileData(const SourceFileData&) = default;
-        SourceFileData(const SourceFileData& other, ShallowCloneContext);
-
-        bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) override;
-
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-
-        /// The file containing the data.
-        std::filesystem::path m_absoluteFilePath;
-
-      protected:
-        std::unique_ptr<FeatureElement> doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
-                                                               ElementId newId) const override;
-    };
 
     /// Describes the construction of a TargetFileFeature.
     struct TargetFileData : ElementData {
@@ -178,3 +160,5 @@ namespace babelwires {
     };
 
 } // namespace babelwires
+
+#include "BabelWires/Project/FeatureElements/featureElementData_inl.hpp"

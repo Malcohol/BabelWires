@@ -5,6 +5,7 @@
 #include "BabelWires/Project/project.hpp"
 #include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
 #include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
+#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"

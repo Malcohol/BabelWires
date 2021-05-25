@@ -2,23 +2,21 @@
  * FeatureElementDatas carry the data sufficient to reconstruct a FeatureElement.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+
 #include "BabelWires/Features/recordFeature.hpp"
-#include "BabelWires/FileFormat/sourceFileFormat.hpp"
 #include "BabelWires/FileFormat/targetFileFormat.hpp"
 #include "BabelWires/Processors/processor.hpp"
 #include "BabelWires/Processors/processorFactory.hpp"
 #include "BabelWires/Processors/processorFactoryRegistry.hpp"
 #include "BabelWires/Project/FeatureElements/processorElement.hpp"
-#include "BabelWires/Project/FeatureElements/sourceFileElement.hpp"
 #include "BabelWires/Project/FeatureElements/targetFileElement.hpp"
 #include "BabelWires/Project/Modifiers/modifierData.hpp"
 #include "BabelWires/Project/projectContext.hpp"
 
-#include "Common/Log/userLogger.hpp"
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializer.hpp"
 #include "Common/exceptions.hpp"
@@ -111,64 +109,6 @@ void babelwires::ElementData::visitFields(FieldVisitor& visitor) {
             }
         }
     }
-}
-
-namespace {
-    template <typename Registry>
-    bool checkFactoryVersionCommon(const Registry& reg, babelwires::UserLogger& userLogger,
-                                   const std::string factoryIdentifier, babelwires::VersionNumber& thisVersion) {
-        if (const auto* entry = reg.getEntryByIdentifier(factoryIdentifier)) {
-            const babelwires::VersionNumber registeredVersion = entry->getVersion();
-            if (thisVersion == 0) {
-                // Implicitly consider this version up-to-date.
-                thisVersion = registeredVersion;
-                return true;
-            } else if (thisVersion < registeredVersion) {
-                userLogger.logWarning() << "Data for the factory \"" << entry->getName() << "\" (" << factoryIdentifier
-                                        << ") corresponds to an old version (" << thisVersion
-                                        << "). The current version is " << registeredVersion
-                                        << ". Some edits may not apply correctly.";
-                return false;
-            } else if (thisVersion > registeredVersion) {
-                userLogger.logError() << "Data for the factory \"" << entry->getName() << "\" (" << factoryIdentifier
-                                      << ") has an unknown version (" << thisVersion << "). The current version is "
-                                      << registeredVersion << ". Some edits may not apply correctly.";
-                return false;
-            }
-            return true;
-        }
-        return true;
-    }
-} // namespace
-
-babelwires::SourceFileData::SourceFileData(const SourceFileData& other, ShallowCloneContext c)
-    : ElementData(other, c)
-    , m_absoluteFilePath(other.m_absoluteFilePath) {}
-
-bool babelwires::SourceFileData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
-    return checkFactoryVersionCommon(context.m_sourceFileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
-}
-
-std::unique_ptr<babelwires::FeatureElement>
-babelwires::SourceFileData::doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
-                                                   ElementId newId) const {
-    return std::make_unique<SourceFileElement>(context, userLogger, *this, newId);
-}
-
-void babelwires::SourceFileData::serializeContents(Serializer& serializer) const {
-    addCommonKeyValuePairs(serializer);
-    serializer.serializeValue("filename", m_absoluteFilePath.u8string());
-    serializeModifiers(serializer);
-    serializeUiData(serializer);
-}
-
-void babelwires::SourceFileData::deserializeContents(Deserializer& deserializer) {
-    getCommonKeyValuePairs(deserializer);
-    std::string filePath;
-    deserializer.deserializeValue("filename", filePath);
-    m_absoluteFilePath = filePath;
-    deserializeModifiers(deserializer);
-    deserializeUiData(deserializer);
 }
 
 babelwires::TargetFileData::TargetFileData(const TargetFileData& other, ShallowCloneContext c)

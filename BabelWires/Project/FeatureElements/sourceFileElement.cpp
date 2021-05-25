@@ -11,7 +11,7 @@
 #include "BabelWires/FileFormat/fileFeature.hpp"
 #include "BabelWires/FileFormat/sourceFileFormat.hpp"
 #include "BabelWires/Project/FeatureElements/failedFeature.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
 #include "BabelWires/Project/Modifiers/modifier.hpp"
 #include "BabelWires/Project/Modifiers/modifierData.hpp"
 #include "BabelWires/Project/projectContext.hpp"

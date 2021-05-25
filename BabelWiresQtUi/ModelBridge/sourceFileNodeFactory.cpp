@@ -15,6 +15,7 @@
 #include "BabelWires/FileFormat/sourceFileFormat.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/project.hpp"
+#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
 
 #include <nodes/FlowScene>
 

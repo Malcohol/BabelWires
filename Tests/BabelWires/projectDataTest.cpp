@@ -1,14 +1,16 @@
 #include <gtest/gtest.h>
 
+#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/projectData.hpp"
-#include "Tests/BabelWires/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWires/TestUtils/testProcessor.hpp"
 
 #include "Common/Serialization/XML/xmlDeserializer.hpp"
 #include "Common/Serialization/XML/xmlSerializer.hpp"
 
+#include "Tests/BabelWires/TestUtils/testFileFormats.hpp"
+#include "Tests/BabelWires/TestUtils/testProcessor.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectData.hpp"
+
 #include "Tests/TestUtils/testLog.hpp"
 
 TEST(ProjectDataTest, serialization) {

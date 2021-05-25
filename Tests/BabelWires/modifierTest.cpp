@@ -7,6 +7,7 @@
 #include "BabelWires/Features/numericFeature.hpp"
 #include "BabelWires/Features/recordFeature.hpp"
 #include "BabelWires/Features/stringFeature.hpp"
+#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWires/Project/FeatureElements/targetFileElement.hpp"
 #include "BabelWires/Project/Modifiers/arraySizeModifier.hpp"
