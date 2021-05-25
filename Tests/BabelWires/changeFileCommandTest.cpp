@@ -30,7 +30,7 @@ namespace {
             libTestUtils::TestSourceFileFormat::writeToTestFile(filePath2, 'q');
         }
 
-        babelwires::SourceFileData elementData;
+        babelwires::SourceFileElementData elementData;
         elementData.m_absoluteFilePath = filePath1;
         elementData.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
 
@@ -104,7 +104,7 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     std::string filePath1("foo" + libTestUtils::TestSourceFileFormat::getFileExtension());
     std::string filePath2("erm" + libTestUtils::TestSourceFileFormat::getFileExtension());
 
-    babelwires::TargetFileData elementData;
+    babelwires::TargetFileElementData elementData;
     elementData.m_absoluteFilePath = filePath1;
     elementData.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
 

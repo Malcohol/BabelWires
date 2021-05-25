@@ -1,5 +1,5 @@
 /**
- * SourceFileData describes the construction of a SourceFileFeature.
+ * SourceFileElementData describes the construction of a SourceFileFeature.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -16,13 +16,13 @@
 
 namespace babelwires {
     /// Describes the construction of a SourceFileFeature.
-    struct SourceFileData : ElementData {
-        CLONEABLE(SourceFileData);
-        CUSTOM_CLONEABLE(SourceFileData);
-        SERIALIZABLE(SourceFileData, "sourceFile", ElementData, 1);
-        SourceFileData() = default;
-        SourceFileData(const SourceFileData&) = default;
-        SourceFileData(const SourceFileData& other, ShallowCloneContext);
+    struct SourceFileElementData : ElementData {
+        CLONEABLE(SourceFileElementData);
+        CUSTOM_CLONEABLE(SourceFileElementData);
+        SERIALIZABLE(SourceFileElementData, "sourceFile", ElementData, 1);
+        SourceFileElementData() = default;
+        SourceFileElementData(const SourceFileElementData&) = default;
+        SourceFileElementData(const SourceFileElementData& other, ShallowCloneContext);
 
         bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) override;
 

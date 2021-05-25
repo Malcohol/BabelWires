@@ -17,7 +17,7 @@ libTestUtils::TestProjectData::TestProjectData()
     , m_targetFilePath(std::string("testTargetFile") + libTestUtils::TestSourceFileFormat::getFileExtension()) {
     m_projectId = 1243;
     {
-        babelwires::TargetFileData data;
+        babelwires::TargetFileElementData data;
         data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
         data.m_id = c_targetElementId;
         data.m_absoluteFilePath = m_targetFilePath;
@@ -31,7 +31,7 @@ libTestUtils::TestProjectData::TestProjectData()
         m_elements.emplace_back(data.clone());
     }
     {
-        babelwires::ProcessorData data;
+        babelwires::ProcessorElementData data;
         data.m_factoryIdentifier = libTestUtils::TestProcessorFactory::getThisIdentifier();
         data.m_id = c_processorId;
         {
@@ -51,7 +51,7 @@ libTestUtils::TestProjectData::TestProjectData()
         m_elements.emplace_back(data.clone());
     }
     {
-        babelwires::SourceFileData data;
+        babelwires::SourceFileElementData data;
         data.m_id = c_sourceElementId;
         data.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
         data.m_absoluteFilePath = m_sourceFilePath;
@@ -61,8 +61,8 @@ libTestUtils::TestProjectData::TestProjectData()
 
 void libTestUtils::TestProjectData::setFilePaths(std::string_view sourceFilePath, std::string_view targetFilePath) {
     assert(m_elements.size() == 3);
-    dynamic_cast<babelwires::SourceFileData&>(*m_elements[2]).m_absoluteFilePath = sourceFilePath;
-    dynamic_cast<babelwires::TargetFileData&>(*m_elements[0]).m_absoluteFilePath = targetFilePath;
+    dynamic_cast<babelwires::SourceFileElementData&>(*m_elements[2]).m_absoluteFilePath = sourceFilePath;
+    dynamic_cast<babelwires::TargetFileElementData&>(*m_elements[0]).m_absoluteFilePath = targetFilePath;
     m_sourceFilePath = sourceFilePath;
     m_targetFilePath = targetFilePath;
 }

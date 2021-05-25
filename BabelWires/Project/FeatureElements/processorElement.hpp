@@ -12,16 +12,16 @@
 namespace babelwires {
     struct UserLogger;
     class ProjectContext;
-    struct ProcessorData;
+    struct ProcessorElementData;
     class Processor;
 
     class ProcessorElement : public FeatureElement {
       public:
-        ProcessorElement(const ProjectContext& context, UserLogger& userLogger, const ProcessorData& data,
+        ProcessorElement(const ProjectContext& context, UserLogger& userLogger, const ProcessorElementData& data,
                          ElementId newId);
 
         /// Down-cast version of the parent's method.
-        const ProcessorData& getElementData() const;
+        const ProcessorElementData& getElementData() const;
 
         virtual RecordFeature* getInputFeature() override;
         virtual RecordFeature* getOutputFeature() override;

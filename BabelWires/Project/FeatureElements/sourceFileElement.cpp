@@ -20,17 +20,17 @@
 #include "Common/Log/userLogger.hpp"
 
 babelwires::SourceFileElement::SourceFileElement(const ProjectContext& context, UserLogger& userLogger,
-                                                 const SourceFileData& data, ElementId newId)
+                                                 const SourceFileElementData& data, ElementId newId)
     : FileElement(data, newId) {
     reload(context, userLogger);
 }
 
-const babelwires::SourceFileData& babelwires::SourceFileElement::getElementData() const {
-    return static_cast<const SourceFileData&>(FeatureElement::getElementData());
+const babelwires::SourceFileElementData& babelwires::SourceFileElement::getElementData() const {
+    return static_cast<const SourceFileElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::SourceFileData& babelwires::SourceFileElement::getElementData() {
-    return static_cast<SourceFileData&>(FeatureElement::getElementData());
+babelwires::SourceFileElementData& babelwires::SourceFileElement::getElementData() {
+    return static_cast<SourceFileElementData&>(FeatureElement::getElementData());
 }
 
 babelwires::RecordFeature* babelwires::SourceFileElement::getOutputFeature() {
@@ -76,7 +76,7 @@ babelwires::FileElement::FileOperations babelwires::SourceFileElement::getSuppor
 }
 
 bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLogger& userLogger) {
-    const SourceFileData& data = getElementData();
+    const SourceFileElementData& data = getElementData();
 
     try {
         const SourceFileFormat& format = context.m_sourceFileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);

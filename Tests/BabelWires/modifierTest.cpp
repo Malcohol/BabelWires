@@ -20,7 +20,7 @@
 namespace {
     struct TestOwner : babelwires::FeatureElement {
         TestOwner()
-            : FeatureElement(babelwires::SourceFileData(), 0) {}
+            : FeatureElement(babelwires::SourceFileElementData(), 0) {}
 
         void doProcess(babelwires::UserLogger& userLogger) override {}
     };

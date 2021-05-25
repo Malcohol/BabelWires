@@ -26,7 +26,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
     tempFileName << "foo." << libTestUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath(tempFileName.str());
 
-    babelwires::TargetFileData data;
+    babelwires::TargetFileElementData data;
     data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_absoluteFilePath = tempFilePath;
@@ -87,7 +87,7 @@ TEST(TargetFileElementTest, changeFile) {
     tempFileName2 << "foo2." << libTestUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath2(tempFileName2.str());
 
-    babelwires::TargetFileData data;
+    babelwires::TargetFileElementData data;
     data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_absoluteFilePath = tempFilePath1;

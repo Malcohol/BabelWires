@@ -23,7 +23,7 @@
 #include <fstream>
 
 babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, UserLogger& userLogger,
-                                                 const TargetFileData& data, ElementId newId)
+                                                 const TargetFileElementData& data, ElementId newId)
     : FileElement(data, newId) {
     auto elementData = getElementData();
     try {
@@ -46,12 +46,12 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
     }
 }
 
-const babelwires::TargetFileData& babelwires::TargetFileElement::getElementData() const {
-    return static_cast<const TargetFileData&>(FeatureElement::getElementData());
+const babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData() const {
+    return static_cast<const TargetFileElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::TargetFileData& babelwires::TargetFileElement::getElementData() {
-    return static_cast<TargetFileData&>(FeatureElement::getElementData());
+babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData() {
+    return static_cast<TargetFileElementData&>(FeatureElement::getElementData());
 }
 
 babelwires::RecordFeature* babelwires::TargetFileElement::getInputFeature() {

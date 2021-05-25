@@ -30,7 +30,7 @@ std::unique_ptr<QtNodes::NodeDataModel> babelwires::TargetFileNodeFactory::opera
         return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_targetFileFormat->getName().c_str());
     }
 
-    auto newDataPtr = std::make_unique<TargetFileData>();
+    auto newDataPtr = std::make_unique<TargetFileElementData>();
     newDataPtr->m_factoryIdentifier = m_targetFileFormat->getIdentifier();
     newDataPtr->m_factoryVersion = m_targetFileFormat->getVersion();
 

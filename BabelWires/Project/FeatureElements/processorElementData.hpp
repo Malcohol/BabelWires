@@ -1,5 +1,5 @@
 /**
- * ProcessorData describe the construction of a processor.
+ * ProcessorElementData describe the construction of a processor.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -11,13 +11,13 @@
 
 namespace babelwires {
     /// Describes the construction of a processor.
-    struct ProcessorData : ElementData {
-        CLONEABLE(ProcessorData);
-        CUSTOM_CLONEABLE(ProcessorData);
-        SERIALIZABLE(ProcessorData, "processor", ElementData, 1);
-        ProcessorData() = default;
-        ProcessorData(const ProcessorData& other) = default;
-        ProcessorData(const ProcessorData& other, ShallowCloneContext);
+    struct ProcessorElementData : ElementData {
+        CLONEABLE(ProcessorElementData);
+        CUSTOM_CLONEABLE(ProcessorElementData);
+        SERIALIZABLE(ProcessorElementData, "processor", ElementData, 1);
+        ProcessorElementData() = default;
+        ProcessorElementData(const ProcessorElementData& other) = default;
+        ProcessorElementData(const ProcessorElementData& other, ShallowCloneContext);
 
         bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) override;
 

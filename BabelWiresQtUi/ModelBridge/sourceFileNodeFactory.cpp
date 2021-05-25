@@ -36,7 +36,7 @@ std::unique_ptr<QtNodes::NodeDataModel> babelwires::SourceFileNodeFactory::opera
     QString filePath = showOpenFileDialog(m_projectBridge->getFlowGraphWidget(), *m_sourceFileFormat);
 
     if (!filePath.isNull()) {
-        auto newDataPtr = std::make_unique<SourceFileData>();
+        auto newDataPtr = std::make_unique<SourceFileElementData>();
         newDataPtr->m_factoryIdentifier = m_sourceFileFormat->getIdentifier();
         newDataPtr->m_absoluteFilePath = filePath.toStdString();
         newDataPtr->m_factoryVersion = m_sourceFileFormat->getVersion();

@@ -15,7 +15,7 @@ namespace babelwires {
 
 namespace babelwires {
 
-    struct TargetFileData;
+    struct TargetFileElementData;
     class RecordFeature;
     class ProjectContext;
     class FileFeature;
@@ -23,11 +23,11 @@ namespace babelwires {
     /// TargetFileElements are FeatureElements which correspond to a target file.
     class TargetFileElement : public FileElement {
       public:
-        TargetFileElement(const ProjectContext& context, UserLogger& userLogger, const TargetFileData& data,
+        TargetFileElement(const ProjectContext& context, UserLogger& userLogger, const TargetFileElementData& data,
                           ElementId newId);
 
         /// Down-cast version of the parent's method.
-        const TargetFileData& getElementData() const;
+        const TargetFileElementData& getElementData() const;
 
         virtual RecordFeature* getInputFeature() override;
 
@@ -44,7 +44,7 @@ namespace babelwires {
       protected:
         void setFeature(std::unique_ptr<RecordFeature> feature);
         virtual void doProcess(UserLogger& userLogger) override;
-        TargetFileData& getElementData();
+        TargetFileElementData& getElementData();
 
         /// Should be called when either the feature or the file path change.
         void updateSaveHash();

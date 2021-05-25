@@ -37,7 +37,7 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     createTestFile(context, tempFilePath);
 
     // Create sourceFileData which expect to be able to load the file.
-    babelwires::SourceFileData data;
+    babelwires::SourceFileElementData data;
     data.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_absoluteFilePath = tempFilePath;
@@ -100,7 +100,7 @@ TEST(SourceFileElementTest, changeFile) {
     createTestFile(context, tempFilePath2, 24);
 
     // Create sourceFileData which expect to be able to load the file.
-    babelwires::SourceFileData data;
+    babelwires::SourceFileElementData data;
     data.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_absoluteFilePath = tempFilePath1;

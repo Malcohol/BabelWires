@@ -62,7 +62,7 @@ namespace {
 } // namespace
 
 TEST(ElementDataTest, sourceFileDataClone) {
-    babelwires::SourceFileData data;
+    babelwires::SourceFileElementData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -75,7 +75,7 @@ TEST(ElementDataTest, sourceFileDataClone) {
 }
 
 TEST(ElementDataTest, sourceFileDataCustomClone) {
-    babelwires::SourceFileData data;
+    babelwires::SourceFileElementData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -90,7 +90,7 @@ TEST(ElementDataTest, sourceFileDataCustomClone) {
 TEST(ElementDataTest, sourceFileDataSerialize) {
     std::string serializedContents;
     {
-        babelwires::SourceFileData data;
+        babelwires::SourceFileElementData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
         data.m_absoluteFilePath = "/a/b/c/foo.bar";
@@ -105,7 +105,7 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::SourceFileData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::SourceFileElementData>();
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -131,7 +131,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     }
 
     // Create sourceFileData which expect to be able to load the file.
-    babelwires::SourceFileData data;
+    babelwires::SourceFileElementData data;
     data.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_absoluteFilePath = tempFilePath;
@@ -149,8 +149,8 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(dynamic_cast<const libTestUtils::TestFileFeature*>(featureElement->getOutputFeature()));
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(dynamic_cast<const babelwires::SourceFileData*>(&featureElement->getElementData()));
-    EXPECT_EQ(static_cast<const babelwires::SourceFileData&>(featureElement->getElementData()).m_absoluteFilePath,
+    EXPECT_TRUE(dynamic_cast<const babelwires::SourceFileElementData*>(&featureElement->getElementData()));
+    EXPECT_EQ(static_cast<const babelwires::SourceFileElementData&>(featureElement->getElementData()).m_absoluteFilePath,
               data.m_absoluteFilePath);
 
     const libTestUtils::TestFileFeature* inputFeature =
@@ -163,7 +163,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
 }
 
 TEST(ElementDataTest, targetFileDataClone) {
-    babelwires::TargetFileData data;
+    babelwires::TargetFileElementData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -178,7 +178,7 @@ TEST(ElementDataTest, targetFileDataClone) {
 }
 
 TEST(ElementDataTest, targetFileDataCustomClone) {
-    babelwires::TargetFileData data;
+    babelwires::TargetFileElementData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -195,7 +195,7 @@ TEST(ElementDataTest, targetFileDataCustomClone) {
 TEST(ElementDataTest, targetFileDataSerialize) {
     std::string serializedContents;
     {
-        babelwires::TargetFileData data;
+        babelwires::TargetFileElementData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
         setModifiers(data, libTestUtils::TestFileFeature::s_intChildInitializer);
@@ -211,7 +211,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::TargetFileData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::TargetFileElementData>();
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -223,7 +223,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
 TEST(ElementDataTest, targetFileDataCreateElement) {
     libTestUtils::TestProjectContext context;
 
-    babelwires::TargetFileData data;
+    babelwires::TargetFileElementData data;
     data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_absoluteFilePath = "foo";
@@ -245,8 +245,8 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     EXPECT_TRUE(dynamic_cast<const libTestUtils::TestFileFeature*>(featureElement->getInputFeature()));
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(dynamic_cast<const babelwires::TargetFileData*>(&featureElement->getElementData()));
-    EXPECT_EQ(static_cast<const babelwires::TargetFileData&>(featureElement->getElementData()).m_absoluteFilePath,
+    EXPECT_TRUE(dynamic_cast<const babelwires::TargetFileElementData*>(&featureElement->getElementData()));
+    EXPECT_EQ(static_cast<const babelwires::TargetFileElementData&>(featureElement->getElementData()).m_absoluteFilePath,
               data.m_absoluteFilePath);
 
     const libTestUtils::TestFileFeature* inputFeature =
@@ -259,7 +259,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
 }
 
 TEST(ElementDataTest, processorDataClone) {
-    babelwires::ProcessorData data;
+    babelwires::ProcessorElementData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -272,7 +272,7 @@ TEST(ElementDataTest, processorDataClone) {
 }
 
 TEST(ElementDataTest, processorDataCustomClone) {
-    babelwires::ProcessorData data;
+    babelwires::ProcessorElementData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -287,7 +287,7 @@ TEST(ElementDataTest, processorDataCustomClone) {
 TEST(ElementDataTest, processorDataSerialize) {
     std::string serializedContents;
     {
-        babelwires::ProcessorData data;
+        babelwires::ProcessorElementData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
         setModifiers(data, libTestUtils::TestRecordFeature::s_intIdInitializer);
@@ -302,7 +302,7 @@ TEST(ElementDataTest, processorDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::ProcessorData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::ProcessorElementData>();
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -313,7 +313,7 @@ TEST(ElementDataTest, processorDataSerialize) {
 TEST(ElementDataTest, processorDataCreateElement) {
     libTestUtils::TestProjectContext context;
 
-    babelwires::ProcessorData data;
+    babelwires::ProcessorElementData data;
     data.m_factoryIdentifier = libTestUtils::TestProcessorFactory::getThisIdentifier();
     data.m_factoryVersion = 1;
     setCommonFields(data);
@@ -334,7 +334,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     EXPECT_TRUE(dynamic_cast<const libTestUtils::TestRecordFeature*>(featureElement->getInputFeature()));
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(dynamic_cast<const babelwires::ProcessorData*>(&featureElement->getElementData()));
+    EXPECT_TRUE(dynamic_cast<const babelwires::ProcessorElementData*>(&featureElement->getElementData()));
 
     const libTestUtils::TestRecordFeature* inputFeature =
         static_cast<const libTestUtils::TestRecordFeature*>(featureElement->getInputFeature());

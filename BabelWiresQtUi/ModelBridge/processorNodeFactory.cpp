@@ -30,7 +30,7 @@ std::unique_ptr<QtNodes::NodeDataModel> babelwires::ProcessorNodeFactory::operat
         return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_processorFactory->getName().c_str());
     }
 
-    auto newDataPtr = std::make_unique<ProcessorData>();
+    auto newDataPtr = std::make_unique<ProcessorElementData>();
     newDataPtr->m_factoryIdentifier = m_processorFactory->getIdentifier();
     newDataPtr->m_factoryVersion = m_processorFactory->getVersion();
 

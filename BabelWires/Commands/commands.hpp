@@ -21,7 +21,7 @@ namespace babelwires {
 
     class Project;
     struct ElementData;
-    struct TargetFileData;
+    struct TargetFileElementData;
     struct ConnectionModifierData;
     struct ModifierData;
 

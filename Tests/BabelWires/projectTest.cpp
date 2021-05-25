@@ -375,7 +375,7 @@ TEST(ProjectTest, reloadSource) {
 
     libTestUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 14);
 
-    babelwires::SourceFileData sourceFileData;
+    babelwires::SourceFileElementData sourceFileData;
     sourceFileData.m_absoluteFilePath = tempFilePath;
     sourceFileData.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
 
@@ -414,7 +414,7 @@ TEST(ProjectTest, saveTarget) {
 
     testUtils::TempFilePath tempFilePath("testTarget." + libTestUtils::TestSourceFileFormat::getFileExtension());
 
-    babelwires::TargetFileData targetFileData;
+    babelwires::TargetFileElementData targetFileData;
     targetFileData.m_absoluteFilePath = tempFilePath;
     targetFileData.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
 
@@ -503,7 +503,7 @@ TEST(ProjectTest, process) {
 
     babelwires::ElementId newProcId;
     {
-        babelwires::ProcessorData procData;
+        babelwires::ProcessorElementData procData;
         procData.m_factoryIdentifier = libTestUtils::TestProcessorFactory::getThisIdentifier();
 
         babelwires::IntValueAssignmentData modData;

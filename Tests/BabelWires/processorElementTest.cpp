@@ -17,7 +17,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     babelwires::FieldNameRegistryScope fieldNameRegistryScope;
     libTestUtils::TestProjectContext context;
 
-    babelwires::ProcessorData data;
+    babelwires::ProcessorElementData data;
     data.m_factoryIdentifier = libTestUtils::TestProcessorFactory::getThisIdentifier();
     data.m_factoryVersion = 1;
 

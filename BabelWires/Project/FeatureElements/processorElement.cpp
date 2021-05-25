@@ -20,7 +20,7 @@
 #include "Common/Log/userLogger.hpp"
 
 babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, UserLogger& userLogger,
-                                               const ProcessorData& data, ElementId newId)
+                                               const ProcessorElementData& data, ElementId newId)
     : FeatureElement(data, newId) {
     auto elementData = getElementData();
     try {
@@ -35,8 +35,8 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
     }
 }
 
-const babelwires::ProcessorData& babelwires::ProcessorElement::getElementData() const {
-    return static_cast<const ProcessorData&>(FeatureElement::getElementData());
+const babelwires::ProcessorElementData& babelwires::ProcessorElement::getElementData() const {
+    return static_cast<const ProcessorElementData&>(FeatureElement::getElementData());
 }
 
 babelwires::RecordFeature* babelwires::ProcessorElement::getOutputFeature() {

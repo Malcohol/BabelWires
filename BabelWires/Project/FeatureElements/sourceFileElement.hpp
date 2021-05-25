@@ -15,18 +15,18 @@ namespace babelwires {
 
 namespace babelwires {
 
-    struct SourceFileData;
+    struct SourceFileElementData;
     class RecordFeature;
     class ProjectContext;
 
     /// SourceFileElements are FeatureElements which correspond to a source file.
     class SourceFileElement : public FileElement {
       public:
-        SourceFileElement(const ProjectContext& context, UserLogger& userLogger, const SourceFileData& data,
+        SourceFileElement(const ProjectContext& context, UserLogger& userLogger, const SourceFileElementData& data,
                           ElementId newId);
 
         /// Down-cast version of the parent's method.
-        const SourceFileData& getElementData() const;
+        const SourceFileElementData& getElementData() const;
 
         virtual RecordFeature* getOutputFeature() override;
         using FileElement::getOutputFeature;
@@ -40,7 +40,7 @@ namespace babelwires {
       protected:
         void setFeature(std::unique_ptr<RecordFeature> feature);
         virtual void doProcess(UserLogger& userLogger) override;
-        SourceFileData& getElementData();
+        SourceFileElementData& getElementData();
 
       private:
         std::unique_ptr<RecordFeature> m_feature;
