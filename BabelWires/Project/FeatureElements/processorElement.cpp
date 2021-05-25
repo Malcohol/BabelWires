@@ -12,7 +12,7 @@
 #include "BabelWires/Processors/processorFactory.hpp"
 #include "BabelWires/Processors/processorFactoryRegistry.hpp"
 #include "BabelWires/Project/FeatureElements/failedFeature.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
 #include "BabelWires/Project/Modifiers/modifier.hpp"
 #include "BabelWires/Project/Modifiers/modifierData.hpp"
 #include "BabelWires/Project/projectContext.hpp"

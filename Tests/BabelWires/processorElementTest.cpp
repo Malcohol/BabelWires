@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "BabelWires/Project/FeatureElements/featureElement.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
 #include "BabelWires/Project/FeatureElements/processorElement.hpp"
 
 #include "BabelWires/Features/Path/fieldNameRegistry.hpp"

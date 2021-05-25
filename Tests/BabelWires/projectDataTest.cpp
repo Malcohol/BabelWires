@@ -2,7 +2,7 @@
 
 #include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
 #include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
 #include "BabelWires/Project/projectData.hpp"
 
 #include "Common/Serialization/XML/xmlDeserializer.hpp"

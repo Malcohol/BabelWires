@@ -7,6 +7,7 @@
 #include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
 #include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
 #include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
+#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"

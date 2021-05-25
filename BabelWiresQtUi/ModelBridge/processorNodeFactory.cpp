@@ -8,7 +8,7 @@
 #include "BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp"
 #include "BabelWires/Commands/addElementCommand.hpp"
 #include "BabelWires/Processors/processorFactory.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
 #include "BabelWiresQtUi/ModelBridge/elementNodeModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 

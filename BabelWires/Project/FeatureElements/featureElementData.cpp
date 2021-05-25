@@ -109,28 +109,3 @@ void babelwires::ElementData::visitFields(FieldVisitor& visitor) {
     }
 }
 
-babelwires::ProcessorData::ProcessorData(const ProcessorData& other, ShallowCloneContext c)
-    : ElementData(other, c) {}
-
-bool babelwires::ProcessorData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
-    return checkFactoryVersionCommon(context.m_processorReg, userLogger, m_factoryIdentifier, m_factoryVersion);
-}
-
-std::unique_ptr<babelwires::FeatureElement>
-babelwires::ProcessorData::doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
-                                                  ElementId newId) const {
-    return std::make_unique<ProcessorElement>(context, userLogger, *this, newId);
-}
-
-void babelwires::ProcessorData::serializeContents(Serializer& serializer) const {
-    addCommonKeyValuePairs(serializer);
-    serializeModifiers(serializer);
-    serializeUiData(serializer);
-}
-
-void babelwires::ProcessorData::deserializeContents(Deserializer& deserializer) {
-    getCommonKeyValuePairs(deserializer);
-    deserializeModifiers(deserializer);
-    deserializeUiData(deserializer);
-}
-
