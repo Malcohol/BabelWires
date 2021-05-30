@@ -8,6 +8,7 @@
 #pragma once
 
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWires/FileFormat/filePath.hpp"
 
 #include <memory>
 #include <string>
@@ -28,9 +29,13 @@ namespace babelwires {
 
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
+        void visitFilePaths(FilePathVisitor& visitor) override;
 
         /// The file containing the data.
         std::filesystem::path m_absoluteFilePath;
+
+        /// The file containing the data.
+        FilePath m_filePath;
 
       protected:
         std::unique_ptr<FeatureElement> doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,

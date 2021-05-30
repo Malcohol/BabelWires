@@ -7,14 +7,18 @@
  **/
 #pragma once
 
+#include "Common/Serialization/serializable.hpp"
+
 #include <filesystem>
 
 namespace babelwires {
     class UserLogger;
 
     /// How file locations are represented in project data.
-    class FilePath {
+    class FilePath : public Serializable {
       public:
+        SERIALIZABLE(FilePath, "file", void, 1);
+
         /// The absolute path is returned.
         operator std::filesystem::path() const;
 
@@ -24,6 +28,9 @@ namespace babelwires {
 
         /// Set the relative paths from the absolute paths, starting at the given base path.
         void interpretRelativeTo(const std::filesystem::path& base);
+
+        void serializeContents(Serializer& serializer) const override;
+        void deserializeContents(Deserializer& deserializer) override;
 
       private:
         /// Used by the running system, this uniquely defines the file location.

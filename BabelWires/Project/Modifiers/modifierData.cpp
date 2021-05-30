@@ -31,6 +31,9 @@ void babelwires::ModifierData::visitFields(FieldVisitor& visitor) {
     }
 }
 
+void babelwires::ModifierData::visitFilePaths(FilePathVisitor& visitor) {
+}
+
 std::unique_ptr<babelwires::Modifier> babelwires::LocalModifierData::createModifier() const {
     return std::make_unique<babelwires::LocalModifier>(clone());
 }

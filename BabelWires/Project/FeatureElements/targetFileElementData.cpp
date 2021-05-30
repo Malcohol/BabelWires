@@ -47,3 +47,8 @@ void babelwires::TargetFileElementData::deserializeContents(Deserializer& deseri
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }
+
+void babelwires::TargetFileElementData::visitFilePaths(FilePathVisitor& visitor) {
+    ElementData::visitFilePaths(visitor);
+    visitor(m_filePath);
+}

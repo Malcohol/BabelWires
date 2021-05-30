@@ -109,3 +109,8 @@ void babelwires::ElementData::visitFields(FieldVisitor& visitor) {
     }
 }
 
+void babelwires::ElementData::visitFilePaths(FilePathVisitor& visitor) {
+    for (auto& m : m_modifiers) {
+        m->visitFilePaths(visitor);
+    }
+}

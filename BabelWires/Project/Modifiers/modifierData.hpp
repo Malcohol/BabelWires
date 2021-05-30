@@ -16,8 +16,10 @@ namespace babelwires {
 
     class Project;
     class Modifier;
+    class FilePath;
 
     using FieldVisitor = std::function<void(FieldIdentifier&)>;
+    using FilePathVisitor = std::function<void(FilePath&)>;
 
     /// ModifierData carry the data sufficient to reconstruct a Modifier.
     struct ModifierData : Cloneable, Serializable {
@@ -36,6 +38,12 @@ namespace babelwires {
         /// Call the visitor on all fields in the modifier.
         /// This base implementation visits the fields in m_pathToFeature;
         virtual void visitFields(FieldVisitor& visitor);
+
+        /// Call the visitor on any FilePaths in the modifier.
+        /// The default implementation does nothing.
+        /// (There is currently no scenario where a modifier references a filepath, but
+        /// this is just here for future proofing.)
+        virtual void visitFilePaths(FilePathVisitor& visitor);
     };
 
     /// Base class for ModifierData which construct LocalModifiers.
