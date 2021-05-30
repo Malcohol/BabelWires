@@ -18,6 +18,8 @@ namespace babelwires {
     class FilePath : public Serializable {
       public:
         SERIALIZABLE(FilePath, "file", void, 1);
+        FilePath() = default;
+        FilePath(std::filesystem::path absolutePath);
 
         /// The absolute path is returned.
         operator std::filesystem::path() const;

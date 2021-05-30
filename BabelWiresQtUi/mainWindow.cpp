@@ -333,7 +333,12 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
 }
 
 QString babelwires::MainWindow::getFullFilePath() const {
-    return QFileInfo(m_currentProjectDir + "/" + m_currentProjectFileName).filePath();
+    if (!m_currentProjectFileName.isEmpty()) {
+        return QFileInfo(m_currentProjectDir + "/" + m_currentProjectFileName).filePath();
+    }
+    else {
+        return QString();
+    }
 }
 
 void babelwires::MainWindow::saveProject() {
@@ -392,7 +397,7 @@ babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
 }
 
 void babelwires::MainWindow::writeToClipboard(ProjectData projectData) {
-    std::string asString = ProjectSerialization::saveToString(std::move(projectData));
+    std::string asString = ProjectSerialization::saveToString(getFullFilePath().toStdString(), std::move(projectData));
 
     QByteArray contents(asString.c_str(), asString.size());
     auto mimedata = std::make_unique<QMimeData>();
@@ -426,7 +431,7 @@ void babelwires::MainWindow::paste() {
 
     try {
         ProjectData projectData =
-            ProjectSerialization::loadFromString(asString, m_projectBridge.getContext(), m_userLogger);
+            ProjectSerialization::loadFromString(asString, m_projectBridge.getContext(), getFullFilePath().toStdString(), m_userLogger);
         {
             auto* flowView = dynamic_cast<QtNodes::FlowView*>(centralWidget());
             assert(flowView && "Unexpected central widget");

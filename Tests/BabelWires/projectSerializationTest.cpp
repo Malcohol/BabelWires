@@ -18,10 +18,11 @@ TEST(ProjectSerializationTest, saveLoadStringSameContext) {
     libTestUtils::TestProjectData testProjectData;
     testProjectData.resolvePathsInCurrentContext();
 
-    const std::string serializedContents = babelwires::ProjectSerialization::saveToString(std::move(testProjectData));
+    // TODO: FilePaths not properly handled here.
+    const std::string serializedContents = babelwires::ProjectSerialization::saveToString(std::filesystem::current_path(), std::move(testProjectData));
 
     babelwires::ProjectData loadedData =
-        babelwires::ProjectSerialization::loadFromString(serializedContents, context.m_projectContext, context.m_log);
+        babelwires::ProjectSerialization::loadFromString(serializedContents, context.m_projectContext, std::filesystem::current_path(), context.m_log);
 
     libTestUtils::TestRecordFeature testRecord;
     libTestUtils::TestFileFeature testFileFeature;
@@ -41,7 +42,7 @@ TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
         libTestUtils::TestProjectData testProjectData;
         testProjectData.resolvePathsInCurrentContext();
 
-        serializedContents = babelwires::ProjectSerialization::saveToString(std::move(testProjectData));
+        serializedContents = babelwires::ProjectSerialization::saveToString(std::filesystem::current_path(), std::move(testProjectData));
     }
 
     {
@@ -49,7 +50,7 @@ TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
         libTestUtils::TestProjectContext context;
 
         babelwires::ProjectData loadedData = babelwires::ProjectSerialization::loadFromString(
-            serializedContents, context.m_projectContext, context.m_log);
+            serializedContents, context.m_projectContext, std::filesystem::current_path(), context.m_log);
 
         libTestUtils::TestRecordFeature testRecord;
         libTestUtils::TestFileFeature testFileFeature;

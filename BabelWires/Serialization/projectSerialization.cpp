@@ -17,8 +17,9 @@
 
 #include <fstream>
 
-babelwires::ProjectData babelwires::ProjectSerialization::loadFromStream(std::istream& is,
+babelwires::ProjectData babelwires::ProjectSerialization::internal::loadFromStream(std::istream& is,
                                                                          const ProjectContext& context,
+                                                                         const std::filesystem::path& pathToProjectFile,
                                                                          UserLogger& userLogger) {
     std::string str((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
 
@@ -34,44 +35,45 @@ babelwires::ProjectData babelwires::ProjectSerialization::loadFromStream(std::is
     }
 }
 
-babelwires::ProjectData babelwires::ProjectSerialization::loadFromFile(const std::filesystem::path& filePath,
+babelwires::ProjectData babelwires::ProjectSerialization::loadFromFile(const std::filesystem::path& pathToProjectFile,
                                                                        const ProjectContext& context,
                                                                        UserLogger& userLogger) {
-    std::ifstream is(filePath);
+    std::ifstream is(pathToProjectFile);
     try {
-        return loadFromStream(is, context, userLogger);
+        return internal::loadFromStream(is, context, pathToProjectFile, userLogger);
     } catch (ParseException& e) {
-        e << " when reading the file \"" << filePath << "\"";
+        e << " when reading the file \"" << pathToProjectFile << "\"";
         throw;
     }
 }
 
 babelwires::ProjectData babelwires::ProjectSerialization::loadFromString(const std::string& string,
                                                                          const ProjectContext& context,
+                                                                         const std::filesystem::path& pathToProjectFile,
                                                                          UserLogger& userLogger) {
     std::istringstream is(string);
-    return loadFromStream(is, context, userLogger);
+    return internal::loadFromStream(is, context, pathToProjectFile, userLogger);
 }
 
-void babelwires::ProjectSerialization::saveToStream(std::ostream& os, ProjectData projectData) {
+void babelwires::ProjectSerialization::internal::saveToStream(std::ostream& os, const std::filesystem::path& pathToProjectFile, ProjectData projectData) {
     XmlSerializer serializer;
     ProjectBundle bundle(std::move(projectData));
     serializer.serializeObject(bundle);
     serializer.write(os);
 }
 
-void babelwires::ProjectSerialization::saveToFile(const std::filesystem::path& filePath, ProjectData projectData) {
+void babelwires::ProjectSerialization::saveToFile(const std::filesystem::path& pathToProjectFile, ProjectData projectData) {
     try {
-        OutFileStream os(filePath);
-        saveToStream(os, std::move(projectData));
+        OutFileStream os(pathToProjectFile);
+        internal::saveToStream(os, pathToProjectFile, std::move(projectData));
         os.close();
     } catch (const std::exception& e) {
-        throw FileIoException() << "Failed to save the project to: " << filePath;
+        throw FileIoException() << "Failed to save the project to: " << pathToProjectFile;
     }
 }
 
-std::string babelwires::ProjectSerialization::saveToString(ProjectData projectData) {
+std::string babelwires::ProjectSerialization::saveToString(const std::filesystem::path& pathToProjectFile, ProjectData projectData) {
     std::ostringstream os;
-    saveToStream(os, std::move(projectData));
+    internal::saveToStream(os, pathToProjectFile, std::move(projectData));
     return os.str();
 }
