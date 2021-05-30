@@ -67,7 +67,7 @@ namespace {
 } // namespace
 
 char libTestUtils::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
-    babelwires::FileDataSource dataSource(path.c_str());
+    babelwires::FileDataSource dataSource(path);
     return getFileDataInternal(dataSource);
 }
 

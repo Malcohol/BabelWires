@@ -10,7 +10,7 @@
 
 #include <cassert>
 
-babelwires::FileDataSource::FileDataSource(const char* fileName) {
+babelwires::FileDataSource::FileDataSource(const std::filesystem::path& fileName) {
     m_fileStream.open(fileName, std::ios_base::in | std::ios_base::binary);
     if (m_fileStream.fail()) {
         throw IoException() << "Cannot open file " << fileName << " for reading";

@@ -10,12 +10,13 @@
 #include "Common/IO/dataSource.hpp"
 
 #include <fstream>
+#include <filesystem>
 
 namespace babelwires {
 
     class FileDataSource : public DataSource {
       public:
-        FileDataSource(const char* fileName);
+        FileDataSource(const std::filesystem::path& fileName);
 
       protected:
         virtual bool doIsEof() override;
