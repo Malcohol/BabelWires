@@ -293,7 +293,7 @@ void babelwires::MainWindow::openProject() {
                     m_userLogger.logInfo() << "Open project \"" << filePathStr << '"';
                     ModifyModelScope scope(m_projectBridge);
                     ProjectData projectData = ProjectSerialization::loadFromFile(
-                        filePathStr.c_str(), m_projectBridge.getContext(), m_userLogger);
+                        filePathStr, m_projectBridge.getContext(), m_userLogger);
                     scope.getProject().setProjectData(projectData);
                     setCurrentFilePath(filePath);
                     return;
@@ -317,7 +317,7 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
             std::string filePathStr = filePath.toStdString();
             m_userLogger.logInfo() << "Save project to \"" << filePathStr << '"';
             ModifyModelScope scope(m_projectBridge);
-            ProjectSerialization::saveToFile(filePath.toStdString().c_str(), scope.getProject().extractProjectData());
+            ProjectSerialization::saveToFile(filePathStr, scope.getProject().extractProjectData());
             scope.getCommandManager().setCursor();
             return true;
         } catch (FileIoException& e) {

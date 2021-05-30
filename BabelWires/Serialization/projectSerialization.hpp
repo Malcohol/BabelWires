@@ -12,6 +12,7 @@
 #include <istream>
 #include <memory>
 #include <ostream>
+#include <filesystem>
 
 namespace babelwires {
     class UserLogger;
@@ -27,12 +28,12 @@ namespace babelwires {
 
         void saveToStream(std::ostream& os, ProjectData projectData);
 
-        ProjectData loadFromFile(const char* filePath, const ProjectContext& context, UserLogger& userLogger);
+        ProjectData loadFromFile(const std::filesystem::path& filePath, const ProjectContext& context, UserLogger& userLogger);
 
         ProjectData loadFromString(const std::string& string, const ProjectContext& context, UserLogger& userLogger);
 
         /// Throws a FileIoException on failure.
-        void saveToFile(const char* filePath, ProjectData projectData);
+        void saveToFile(const std::filesystem::path& filePath, ProjectData projectData);
 
         std::string saveToString(ProjectData projectData);
     } // namespace ProjectSerialization

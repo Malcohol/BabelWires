@@ -34,7 +34,7 @@ babelwires::ProjectData babelwires::ProjectSerialization::loadFromStream(std::is
     }
 }
 
-babelwires::ProjectData babelwires::ProjectSerialization::loadFromFile(const char* filePath,
+babelwires::ProjectData babelwires::ProjectSerialization::loadFromFile(const std::filesystem::path& filePath,
                                                                        const ProjectContext& context,
                                                                        UserLogger& userLogger) {
     std::ifstream is(filePath);
@@ -60,7 +60,7 @@ void babelwires::ProjectSerialization::saveToStream(std::ostream& os, ProjectDat
     serializer.write(os);
 }
 
-void babelwires::ProjectSerialization::saveToFile(const char* filePath, ProjectData projectData) {
+void babelwires::ProjectSerialization::saveToFile(const std::filesystem::path& filePath, ProjectData projectData) {
     try {
         OutFileStream os(filePath);
         saveToStream(os, std::move(projectData));
