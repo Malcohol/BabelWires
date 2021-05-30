@@ -376,7 +376,7 @@ TEST(ProjectTest, reloadSource) {
     libTestUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 14);
 
     babelwires::SourceFileElementData sourceFileData;
-    sourceFileData.m_absoluteFilePath = tempFilePath;
+    sourceFileData.m_filePath = tempFilePath;
     sourceFileData.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(sourceFileData);

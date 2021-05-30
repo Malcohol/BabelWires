@@ -19,7 +19,7 @@
 
 babelwires::SourceFileElementData::SourceFileElementData(const SourceFileElementData& other, ShallowCloneContext c)
     : ElementData(other, c)
-    , m_absoluteFilePath(other.m_absoluteFilePath) {}
+    , m_filePath(other.m_filePath) {}
 
 bool babelwires::SourceFileElementData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
     return checkFactoryVersionCommon(context.m_sourceFileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
@@ -33,16 +33,17 @@ babelwires::SourceFileElementData::doCreateFeatureElement(const ProjectContext& 
 
 void babelwires::SourceFileElementData::serializeContents(Serializer& serializer) const {
     addCommonKeyValuePairs(serializer);
-    serializer.serializeValue("filename", m_absoluteFilePath.u8string());
+    //serializer.serializeValue("filename", m_absoluteFilePath.u8string());
+    // Inline the filepath contents.
+    m_filePath.serializeContents(serializer);
     serializeModifiers(serializer);
     serializeUiData(serializer);
 }
 
 void babelwires::SourceFileElementData::deserializeContents(Deserializer& deserializer) {
     getCommonKeyValuePairs(deserializer);
-    std::string filePath;
-    deserializer.deserializeValue("filename", filePath);
-    m_absoluteFilePath = filePath;
+    // The filepath contents are inlined.
+    m_filePath.deserializeContents(deserializer);
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }

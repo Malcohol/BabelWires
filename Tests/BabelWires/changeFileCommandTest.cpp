@@ -31,7 +31,7 @@ namespace {
         }
 
         babelwires::SourceFileElementData elementData;
-        elementData.m_absoluteFilePath = filePath1;
+        elementData.m_filePath = filePath1;
         elementData.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
 
         const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);

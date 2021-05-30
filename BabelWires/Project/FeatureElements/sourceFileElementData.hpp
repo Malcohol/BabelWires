@@ -32,9 +32,6 @@ namespace babelwires {
         void visitFilePaths(FilePathVisitor& visitor) override;
 
         /// The file containing the data.
-        std::filesystem::path m_absoluteFilePath;
-
-        /// The file containing the data.
         FilePath m_filePath;
 
       protected:

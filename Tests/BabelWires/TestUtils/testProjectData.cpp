@@ -54,14 +54,14 @@ libTestUtils::TestProjectData::TestProjectData()
         babelwires::SourceFileElementData data;
         data.m_id = c_sourceElementId;
         data.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
-        data.m_absoluteFilePath = m_sourceFilePath;
+        data.m_filePath = m_sourceFilePath;
         m_elements.emplace_back(data.clone());
     }
 }
 
 void libTestUtils::TestProjectData::setFilePaths(std::string_view sourceFilePath, std::string_view targetFilePath) {
     assert(m_elements.size() == 3);
-    dynamic_cast<babelwires::SourceFileElementData&>(*m_elements[2]).m_absoluteFilePath = sourceFilePath;
+    dynamic_cast<babelwires::SourceFileElementData&>(*m_elements[2]).m_filePath = sourceFilePath;
     dynamic_cast<babelwires::TargetFileElementData&>(*m_elements[0]).m_absoluteFilePath = targetFilePath;
     m_sourceFilePath = sourceFilePath;
     m_targetFilePath = targetFilePath;

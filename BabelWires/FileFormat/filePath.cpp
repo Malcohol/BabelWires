@@ -14,8 +14,20 @@
 
 #include <cassert>
 
+babelwires::FilePath::FilePath(std::filesystem::path absolutePath)
+    : m_absolutePath(std::move(absolutePath)) {}
+
+babelwires::FilePath& babelwires::FilePath::operator=(std::filesystem::path absolutePath) {
+    m_absolutePath.swap(absolutePath);
+    return *this;
+}
+
 babelwires::FilePath::operator std::filesystem::path() const {
     return m_absolutePath;
+}
+
+bool babelwires::FilePath::empty() const {
+    return m_absolutePath.empty();
 }
 
 void babelwires::FilePath::resolveRelativeTo(const std::filesystem::path& base, UserLogger& userLogger) {
@@ -26,10 +38,13 @@ void babelwires::FilePath::resolveRelativeTo(const std::filesystem::path& base, 
             if (std::filesystem::exists(m_absolutePath)) {
                 if (std::filesystem::canonical(m_absolutePath) != std::filesystem::canonical(absPath)) {
                     userLogger.logWarning() << "Favouring file " << absPath << " over file " << m_absolutePath
-                                     << ", as its location relative to the project is maintained";
+                                            << ", as its location relative to the project is maintained";
                 }
             }
             m_absolutePath = std::move(absPath);
+        } else if (m_absolutePath.empty()) {
+            // Even if it the file doesn't exist, we use the relative path to ensure the abs path has a viable value.
+            m_absolutePath = absPath;
         }
     }
 }

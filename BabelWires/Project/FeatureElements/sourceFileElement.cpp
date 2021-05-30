@@ -49,13 +49,12 @@ void babelwires::SourceFileElement::doProcess(UserLogger& userLogger) {
 }
 
 std::filesystem::path babelwires::SourceFileElement::getFilePath() const {
-    return getElementData().m_absoluteFilePath;
+    return getElementData().m_filePath;
 }
 
 void babelwires::SourceFileElement::setFilePath(std::filesystem::path newFilePath) {
-    std::filesystem::path& filePath = getElementData().m_absoluteFilePath;
-    if (filePath != newFilePath) {
-        filePath = std::move(newFilePath);
+    if (newFilePath != getElementData().m_filePath) {
+        getElementData().m_filePath = std::move(newFilePath);
         setChanged(Changes::FileChanged);
     }
 }
@@ -82,11 +81,11 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
         const SourceFileFormat& format = context.m_sourceFileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
         setFactoryName(format.getName());
 
-        if (data.m_absoluteFilePath.empty()) {
+        if (data.m_filePath.empty()) {
             throw ModelException() << "No file name";
         }
 
-        FileDataSource file(data.m_absoluteFilePath.c_str());
+        FileDataSource file(data.m_filePath);
         setFeature(format.loadFromFile(file, userLogger));
         clearInternalFailure();
         return true;

@@ -19,10 +19,29 @@ namespace babelwires {
       public:
         SERIALIZABLE(FilePath, "file", void, 1);
         FilePath() = default;
-        FilePath(std::filesystem::path absolutePath);
+        FilePath(const FilePath&) = default;
+        FilePath(FilePath&&) = default;
 
-        /// The absolute path is returned.
+        FilePath& operator=(const FilePath&) = default;
+        FilePath& operator=(FilePath&&) = default;
+
+        FilePath(std::filesystem::path absolutePath);
+        FilePath& operator=(std::filesystem::path absolutePath);
         operator std::filesystem::path() const;
+
+        inline friend bool operator==(const FilePath& a, const FilePath& b) { 
+            return a.m_absolutePath == b.m_absolutePath;
+        }
+
+        inline friend bool operator==(const std::filesystem::path& a, const FilePath& b) { 
+            return a == b.m_absolutePath;
+        }
+
+        inline friend bool operator==(const FilePath& a, const std::filesystem::path& b) { 
+            return a.m_absolutePath == b;
+        }
+
+        bool empty() const;
 
         /// Interpret relative paths with respect to the given base path and, if there is a file at that location, set the absolute path
         /// to that absolute location. Otherwise, leave absolute paths unchanged.
