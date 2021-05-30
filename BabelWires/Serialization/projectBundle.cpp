@@ -29,9 +29,7 @@ namespace {
                     sourceId.setDiscriminator(newId.getDiscriminator());
                 }
             };
-        for (auto& element : projectData.m_elements) {
-            element->visitFields(visitor);
-        }
+        projectData.visitFields(visitor);
     }
 } // namespace
 

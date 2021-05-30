@@ -25,3 +25,15 @@ void babelwires::ProjectData::deserializeContents(Deserializer& deserializer) {
         ++it;
     }
 }
+
+void babelwires::ProjectData::visitFields(FieldVisitor& visitor) {
+    for (auto& m : m_elements) {
+        m->visitFields(visitor);
+    }
+}
+
+void babelwires::ProjectData::visitFilePaths(FilePathVisitor& visitor) {
+    for (auto& m : m_elements) {
+        m->visitFilePaths(visitor);
+    }
+}

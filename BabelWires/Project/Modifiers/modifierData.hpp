@@ -9,20 +9,20 @@
 
 #include "BabelWires/Features/Path/featurePath.hpp"
 #include "BabelWires/Project/projectIds.hpp"
+#include "BabelWires/Project/projectVisitable.hpp"
+
 #include "Common/Cloning/cloneable.hpp"
 #include "Common/Math/rational.hpp"
 #include "Common/Serialization/serializable.hpp"
+
 namespace babelwires {
 
     class Project;
     class Modifier;
     class FilePath;
 
-    using FieldVisitor = std::function<void(FieldIdentifier&)>;
-    using FilePathVisitor = std::function<void(FilePath&)>;
-
     /// ModifierData carry the data sufficient to reconstruct a Modifier.
-    struct ModifierData : Cloneable, Serializable {
+    struct ModifierData : Cloneable, Serializable, ProjectVisitable {
         CLONEABLE_ABSTRACT(ModifierData);
         SERIALIZABLE_ABSTRACT(ModifierData, "ModifierData", void);
 
@@ -37,13 +37,12 @@ namespace babelwires {
 
         /// Call the visitor on all fields in the modifier.
         /// This base implementation visits the fields in m_pathToFeature;
-        virtual void visitFields(FieldVisitor& visitor);
+        void visitFields(FieldVisitor& visitor) override;
 
-        /// Call the visitor on any FilePaths in the modifier.
-        /// The default implementation does nothing.
+        /// This does nothing.
         /// (There is currently no scenario where a modifier references a filepath, but
         /// this is just here for future proofing.)
-        virtual void visitFilePaths(FilePathVisitor& visitor);
+        void visitFilePaths(FilePathVisitor& visitor) override;
     };
 
     /// Base class for ModifierData which construct LocalModifiers.

@@ -49,7 +49,7 @@ namespace babelwires {
     /// FeatureElementDatas carry the data sufficient to reconstruct a FeatureElement.
     /// The class supports clone(), which returns a deep clone of the object,
     /// and customClone() which returns a clone with the array members unset.
-    struct ElementData : Cloneable, CustomCloneable<ShallowCloneContext>, Serializable {
+    struct ElementData : Cloneable, CustomCloneable<ShallowCloneContext>, Serializable, ProjectVisitable {
         CLONEABLE_ABSTRACT(ElementData);
         CUSTOM_CLONEABLE_ABSTRACT(ElementData);
         SERIALIZABLE_ABSTRACT(ElementData, "ElementData", void);
@@ -71,11 +71,11 @@ namespace babelwires {
                                                              ElementId newId) const;
 
         /// Call the visitor on all the FieldIdentifiers in the element.
-        virtual void visitFields(FieldVisitor& visitor);
+        void visitFields(FieldVisitor& visitor) override;
 
         /// Call the visitor on all the FilePaths in the element.
         /// This base implementation does nothing.
-        virtual void visitFilePaths(FilePathVisitor& visitor);
+        void visitFilePaths(FilePathVisitor& visitor) override;
 
         /// The factory which creates FeatureElements corresponding to this data.
         std::string m_factoryIdentifier;

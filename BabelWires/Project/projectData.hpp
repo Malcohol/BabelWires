@@ -14,7 +14,7 @@
 namespace babelwires {
 
     /// Carries data sufficient to reconstruct the project.
-    struct ProjectData : Serializable {
+    struct ProjectData : Serializable, ProjectVisitable {
         SERIALIZABLE(ProjectData, "projectData", void, 1);
         ProjectData() = default;
         ProjectData(ProjectData&&) = default;
@@ -30,6 +30,13 @@ namespace babelwires {
         // Serialization.
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
+
+        /// Call the visitor on all the FieldIdentifiers in the element.
+        void visitFields(FieldVisitor& visitor) override;
+
+        /// Call the visitor on all the FilePaths in the element.
+        /// This base implementation does nothing.
+        void visitFilePaths(FilePathVisitor& visitor) override;
 
         /// A randomly assigned ID which uniquely identifies this project.
         ProjectId m_projectId = INVALID_PROJECT_ID;
