@@ -26,7 +26,7 @@ namespace babelwires {
 
         /// Interpret relative paths with respect to the given base path and, if there is a file at that location, set the absolute path
         /// to that absolute location. Otherwise, leave absolute paths unchanged.
-        void resolveRelativeTo(const std::filesystem::path& base, UserLogger& log);
+        void resolveRelativeTo(const std::filesystem::path& base, UserLogger& userLogger);
 
         /// Set the relative paths from the absolute paths, starting at the given base path.
         void interpretRelativeTo(const std::filesystem::path& base);

@@ -28,7 +28,7 @@ babelwires::ProjectData babelwires::ProjectSerialization::internal::loadFromStre
         auto projectBundle = deserializer.deserializeObject<ProjectBundle>(ProjectBundle::serializationType);
         assert(projectBundle);
         deserializer.finalize();
-        return std::move(*projectBundle).resolveAgainstCurrentContext(context, userLogger);
+        return std::move(*projectBundle).resolveFieldsAgainstCurrentContext(context, userLogger);
     } catch (ParseException& e) {
         deserializer.addContextDescription(e);
         throw;

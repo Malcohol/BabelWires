@@ -18,14 +18,14 @@ babelwires::FilePath::operator std::filesystem::path() const {
     return m_absolutePath;
 }
 
-void babelwires::FilePath::resolveRelativeTo(const std::filesystem::path& base, UserLogger& log) {
+void babelwires::FilePath::resolveRelativeTo(const std::filesystem::path& base, UserLogger& userLogger) {
     assert(base.is_absolute() && "The base path must be absolute");
     if (!m_relativePath.empty()) {
         std::filesystem::path absPath = base / m_relativePath;
         if (std::filesystem::exists(absPath)) {
             if (std::filesystem::exists(m_absolutePath)) {
                 if (std::filesystem::canonical(m_absolutePath) != std::filesystem::canonical(absPath)) {
-                    log.logWarning() << "Favouring file " << absPath << " over file " << m_absolutePath
+                    userLogger.logWarning() << "Favouring file " << absPath << " over file " << m_absolutePath
                                      << ", as its location relative to the project is maintained";
                 }
             }

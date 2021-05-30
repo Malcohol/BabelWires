@@ -192,7 +192,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
                                                              babelwires::FieldNameRegistry::Authority::isAuthoritative);
 
         babelwires::ProjectData projectData =
-            std::move(bundle).resolveAgainstCurrentContext(projectContext.m_projectContext, projectContext.m_log);
+            std::move(bundle).resolveFieldsAgainstCurrentContext(projectContext.m_projectContext, projectContext.m_log);
 
         libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 2, 2, 4, 1, 2);
 
@@ -229,7 +229,7 @@ TEST(ProjectBundleTest, factoryMetadata) {
     EXPECT_EQ(bundle.m_metadata.m_factoryMetadata[libTestUtils::TestSourceFileFormat::getThisIdentifier()], 3);
 
     babelwires::ProjectData resolvedData =
-        std::move(bundle).resolveAgainstCurrentContext(context.m_projectContext, context.m_log);
+        std::move(bundle).resolveFieldsAgainstCurrentContext(context.m_projectContext, context.m_log);
 
     EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase(
         "Data for the factory \"testFactoryFormat\" (testFactoryFormat) corresponds to an old version (1)"));
