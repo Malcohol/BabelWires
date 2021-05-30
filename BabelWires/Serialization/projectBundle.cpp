@@ -74,7 +74,7 @@ babelwires::ProjectData babelwires::ProjectBundle::resolveFieldsAgainstCurrentCo
 
 void babelwires::ProjectBundle::interpretFilePathsInCurrentProjectPath(const std::filesystem::path& pathToProjectFile) {
     if (!pathToProjectFile.empty()) {
-        babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.interpretRelativeTo(pathToProjectFile); };
+        babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.interpretRelativeTo(pathToProjectFile.parent_path()); };
         m_projectData.visitFilePaths(visitor);
     }
 }
@@ -82,7 +82,7 @@ void babelwires::ProjectBundle::interpretFilePathsInCurrentProjectPath(const std
 void babelwires::ProjectBundle::resolveFilePathsAgainstCurrentProjectPath(
     const std::filesystem::path& pathToProjectFile, UserLogger& userLogger) {
     if (!pathToProjectFile.empty()) {
-        babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.resolveRelativeTo(pathToProjectFile, userLogger); };
+        babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.resolveRelativeTo(pathToProjectFile.parent_path(), userLogger); };
         m_projectData.visitFilePaths(visitor);
     }
 }
