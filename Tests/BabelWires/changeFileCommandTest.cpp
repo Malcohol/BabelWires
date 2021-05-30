@@ -105,7 +105,7 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     std::string filePath2("erm" + libTestUtils::TestSourceFileFormat::getFileExtension());
 
     babelwires::TargetFileElementData elementData;
-    elementData.m_absoluteFilePath = filePath1;
+    elementData.m_filePath = filePath1;
     elementData.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);

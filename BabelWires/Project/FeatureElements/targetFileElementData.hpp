@@ -32,9 +32,6 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        /// The file to which the feature should be saved.
-        std::filesystem::path m_absoluteFilePath;
-
         /// The file containing the data.
         FilePath m_filePath;
 

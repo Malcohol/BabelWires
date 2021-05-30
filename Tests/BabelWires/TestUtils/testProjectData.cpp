@@ -20,7 +20,7 @@ libTestUtils::TestProjectData::TestProjectData()
         babelwires::TargetFileElementData data;
         data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
         data.m_id = c_targetElementId;
-        data.m_absoluteFilePath = m_targetFilePath;
+        data.m_filePath = m_targetFilePath;
         {
             babelwires::ConnectionModifierData modData;
             modData.m_pathToFeature = libTestUtils::TestFileFeature::s_pathToIntChild;
@@ -62,7 +62,7 @@ libTestUtils::TestProjectData::TestProjectData()
 void libTestUtils::TestProjectData::setFilePaths(std::string_view sourceFilePath, std::string_view targetFilePath) {
     assert(m_elements.size() == 3);
     dynamic_cast<babelwires::SourceFileElementData&>(*m_elements[2]).m_filePath = sourceFilePath;
-    dynamic_cast<babelwires::TargetFileElementData&>(*m_elements[0]).m_absoluteFilePath = targetFilePath;
+    dynamic_cast<babelwires::TargetFileElementData&>(*m_elements[0]).m_filePath = targetFilePath;
     m_sourceFilePath = sourceFilePath;
     m_targetFilePath = targetFilePath;
 }
