@@ -28,6 +28,7 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
+	FileFormat/filePath.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
 	Processors/processorFactory.cpp
