@@ -42,9 +42,10 @@ void babelwires::FilePath::resolveRelativeTo(const std::filesystem::path& newBas
             if (std::filesystem::exists(oldPath)) {
                 const std::filesystem::path oldCanonical = std::filesystem::canonical(oldPath);
                 if (m_filePath != oldPath) {
-                    userLogger.logWarning()
+                    // Info, not warning, because this should be the expected behaviour.
+                    userLogger.logInfo()
                         << "Favouring file " << m_filePath << " over file " << oldCanonical
-                        << ", as its location relative to the project is maintained";
+                        << ", because its location relative to the project is preserved";
                 }
             }
         } else {
