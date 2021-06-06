@@ -36,15 +36,10 @@ namespace {
 
 babelwires::ProjectBundle::ProjectBundle() = default;
 
-babelwires::ProjectBundle::ProjectBundle(ProjectData&& projectData)
-    : m_projectData(std::move(projectData)) {
-    FieldNameRegistry::ReadAccess sourceRegistry = FieldNameRegistry::read();
-    try {
-        convertProjectData(m_projectData, sourceRegistry, &m_fieldNameRegistry,
-                           FieldNameRegistry::Authority::isTemporary);
-    } catch (const ParseException& e) {
-        assert(false && "A field with a discriminator did not resolve.");
-    }
+babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile, ProjectData&& projectData)
+    : m_projectData(std::move(projectData))
+    , m_projectFilePath(pathToProjectFile) {
+    interpretFieldsInCurrentContext();
 
     for (const auto& element : m_projectData.m_elements) {
         VersionNumber& storedVersion = m_metadata.m_factoryMetadata[element->m_factoryIdentifier];
@@ -52,13 +47,47 @@ babelwires::ProjectBundle::ProjectBundle(ProjectData&& projectData)
                "Inconsistent factory versions in ProjectData");
         storedVersion = element->m_factoryVersion;
     }
+
+    interpretFilePathsInCurrentProjectPath();
 }
 
-babelwires::ProjectData babelwires::ProjectBundle::resolveFieldsAgainstCurrentContext(const ProjectContext& context,
-                                                                                      UserLogger& userLogger) && {
+void babelwires::ProjectBundle::interpretFieldsInCurrentContext() {
+    FieldNameRegistry::ReadAccess sourceRegistry = FieldNameRegistry::read();
+    try {
+        convertProjectData(m_projectData, sourceRegistry, &m_fieldNameRegistry,
+                           FieldNameRegistry::Authority::isTemporary);
+    } catch (const ParseException& e) {
+        assert(false && "A field with a discriminator did not resolve.");
+    }
+}
+
+void babelwires::ProjectBundle::interpretFilePathsInCurrentProjectPath() {
+    if (!m_projectFilePath.empty()) {
+        const std::filesystem::path projectPath = m_projectFilePath;
+        babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.interpretRelativeTo(projectPath.parent_path()); };
+        m_projectData.visitFilePaths(visitor);
+    }
+}
+
+void babelwires::ProjectBundle::resolveFieldsAgainstCurrentContext() {
     FieldNameRegistry::WriteAccess targetRegistry = FieldNameRegistry::write();
     convertProjectData(m_projectData, &m_fieldNameRegistry, targetRegistry,
                        FieldNameRegistry::Authority::isProvisional);
+}
+
+void babelwires::ProjectBundle::resolveFilePathsAgainstCurrentProjectPath(
+    const std::filesystem::path& pathToProjectFile, UserLogger& userLogger) {
+    const std::filesystem::path newBase = pathToProjectFile.empty() ? std::filesystem::path() : pathToProjectFile.parent_path();
+    const std::filesystem::path oldBase = m_projectFilePath.empty() ? std::filesystem::path() : std::filesystem::path(m_projectFilePath).parent_path();
+    babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.resolveRelativeTo(newBase, oldBase, userLogger); };
+    m_projectData.visitFilePaths(visitor);
+}
+
+babelwires::ProjectData babelwires::ProjectBundle::resolveAgainstCurrentContext(const ProjectContext& context, const std::filesystem::path& pathToProjectFile,
+                                          UserLogger& userLogger) && {
+    resolveFieldsAgainstCurrentContext();
+
+    resolveFilePathsAgainstCurrentProjectPath(pathToProjectFile, userLogger);
 
     for (auto& element : m_projectData.m_elements) {
         element->m_factoryVersion = m_metadata.m_factoryMetadata[element->m_factoryIdentifier];
@@ -70,21 +99,6 @@ babelwires::ProjectData babelwires::ProjectBundle::resolveFieldsAgainstCurrentCo
     }
 
     return std::move(m_projectData);
-}
-
-void babelwires::ProjectBundle::interpretFilePathsInCurrentProjectPath(const std::filesystem::path& pathToProjectFile) {
-    if (!pathToProjectFile.empty()) {
-        babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.interpretRelativeTo(pathToProjectFile.parent_path()); };
-        m_projectData.visitFilePaths(visitor);
-    }
-}
-
-void babelwires::ProjectBundle::resolveFilePathsAgainstCurrentProjectPath(
-    const std::filesystem::path& pathToProjectFile, UserLogger& userLogger) {
-    const std::filesystem::path newBase = pathToProjectFile.empty() ? std::filesystem::path() : pathToProjectFile.parent_path();
-    const std::filesystem::path oldBase = m_projectFilePath.empty() ? std::filesystem::path() : std::filesystem::path(m_projectFilePath).parent_path();
-    babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.resolveRelativeTo(newBase, oldBase, userLogger); };
-    m_projectData.visitFilePaths(visitor);
 }
 
 namespace {

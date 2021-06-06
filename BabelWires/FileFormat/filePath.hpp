@@ -38,6 +38,7 @@ namespace babelwires {
             return a.m_filePath == b;
         }
 
+        /// Is the file path just the empty path?
         bool empty() const;
 
         /// Interpret m_filePath as relative to newBase if it exists. Otherwise, interpret it as relative to oldBase.

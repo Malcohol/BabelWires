@@ -28,8 +28,7 @@ babelwires::ProjectData babelwires::ProjectSerialization::internal::loadFromStre
         auto projectBundle = deserializer.deserializeObject<ProjectBundle>(ProjectBundle::serializationType);
         assert(projectBundle);
         deserializer.finalize();
-        projectBundle->resolveFilePathsAgainstCurrentProjectPath(pathToProjectFile, userLogger);
-        return std::move(*projectBundle).resolveFieldsAgainstCurrentContext(context, userLogger);
+        return std::move(*projectBundle).resolveAgainstCurrentContext(context, pathToProjectFile, userLogger);
     } catch (ParseException& e) {
         deserializer.addContextDescription(e);
         throw;
@@ -58,9 +57,7 @@ babelwires::ProjectData babelwires::ProjectSerialization::loadFromString(const s
 
 void babelwires::ProjectSerialization::internal::saveToStream(std::ostream& os, const std::filesystem::path& pathToProjectFile, ProjectData projectData) {
     XmlSerializer serializer;
-    ProjectBundle bundle(std::move(projectData));
-    bundle.m_projectFilePath = pathToProjectFile;
-    bundle.interpretFilePathsInCurrentProjectPath(pathToProjectFile);
+    ProjectBundle bundle(pathToProjectFile, std::move(projectData));
     serializer.serializeObject(bundle);
     serializer.write(os);
 }

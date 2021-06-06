@@ -96,7 +96,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         }
 
         // Test the construction of a bundle from a projectData.
-        babelwires::ProjectBundle bundle2(std::move(projectData));
+        babelwires::ProjectBundle bundle2(std::filesystem::current_path(), std::move(projectData));
 
         {
             // Bit of a hack, but this lets us iterate through the registry.
@@ -192,7 +192,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
                                                              babelwires::FieldNameRegistry::Authority::isAuthoritative);
 
         babelwires::ProjectData projectData =
-            std::move(bundle).resolveFieldsAgainstCurrentContext(projectContext.m_projectContext, projectContext.m_log);
+            std::move(bundle).resolveAgainstCurrentContext(projectContext.m_projectContext, std::filesystem::current_path(), projectContext.m_log);
 
         libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 2, 2, 4, 1, 2);
 
@@ -221,7 +221,7 @@ TEST(ProjectBundleTest, factoryMetadata) {
     // Newer than registered.
     projectData.m_elements[2]->m_factoryVersion = 3;
 
-    babelwires::ProjectBundle bundle(std::move(projectData));
+    babelwires::ProjectBundle bundle(std::filesystem::current_path(), std::move(projectData));
 
     ASSERT_EQ(bundle.m_metadata.m_factoryMetadata.size(), 3);
     EXPECT_EQ(bundle.m_metadata.m_factoryMetadata[libTestUtils::TestTargetFileFormat::getThisIdentifier()], 1);
@@ -229,7 +229,7 @@ TEST(ProjectBundleTest, factoryMetadata) {
     EXPECT_EQ(bundle.m_metadata.m_factoryMetadata[libTestUtils::TestSourceFileFormat::getThisIdentifier()], 3);
 
     babelwires::ProjectData resolvedData =
-        std::move(bundle).resolveFieldsAgainstCurrentContext(context.m_projectContext, context.m_log);
+        std::move(bundle).resolveAgainstCurrentContext(context.m_projectContext, std::filesystem::current_path(), context.m_log);
 
     EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase(
         "Data for the factory \"testFactoryFormat\" (testFactoryFormat) corresponds to an old version (1)"));
