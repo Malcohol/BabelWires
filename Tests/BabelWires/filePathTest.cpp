@@ -4,6 +4,7 @@
 #include "Common/exceptions.hpp"
 
 #include "Tests/TestUtils/testLog.hpp"
+#include "Tests/TestUtils/tempFilePath.hpp"
 
 #include <fstream>
 
@@ -59,88 +60,77 @@ TEST(FilePathTest, interpretRelativeTo) {
 TEST(FilePathTest, resolveRelativeTo) {
     testUtils::TestLogWithListener log;
 
-    std::filesystem::path tmp = std::filesystem::temp_directory_path();
+    std::filesystem::path root = std::filesystem::temp_directory_path();
 
-    std::filesystem::create_directories(tmp / "Foo/Bar");    
-    std::filesystem::path fileWhichExists(tmp / "Foo/Bar/Bar.boo");
+    testUtils::TempDirectory FooBar("Foo/Bar");
+    testUtils::TempDirectory OomBar("Oom/Bar");
 
-    std::filesystem::create_directories(tmp / "Oom/Bar");    
-    std::filesystem::path fileWhichExists2(tmp / "Oom/Bar/Bar.boo");
+    testUtils::TempFilePath fileWhichExists("Foo/Bar/Bar.boo");
+    fileWhichExists.ensureExists();
 
-    // Ensure the file2 exists.
-    {
-        std::ofstream fs(fileWhichExists, std::ofstream::out);
-        fs << "Test";
-        fs.close();
-        ASSERT_TRUE(fs.good());
-    }
-    {
-        std::ofstream fs(fileWhichExists2, std::ofstream::out);
-        fs << "Test";
-        fs.close();
-        ASSERT_TRUE(fs.good());
-    }
+    testUtils::TempFilePath fileWhichExists2("Oom/Bar/Bar.boo");
+    fileWhichExists2.ensureExists();
 
     // Same context.
     {
         babelwires::FilePath path("Bar.boo");
-        path.resolveRelativeTo(tmp / "Foo/Bar", tmp / "Foo/Bar", log);
-        EXPECT_EQ(path, tmp / "Foo/Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Foo/Bar", root / "Foo/Bar", log);
+        EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
     }
     // Same context.
     {
         babelwires::FilePath path("Bar/Bar.boo");
-        path.resolveRelativeTo(tmp / "Foo", tmp / "Foo", log);
-        EXPECT_EQ(path, tmp / "Foo/Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Foo", root / "Foo", log);
+        EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
     }
     // Same context, file doesn't exist.
     {
         babelwires::FilePath path("Bar/Bar.boo");
-        path.resolveRelativeTo(tmp / "Flerm", tmp / "Flerm", log);
-        EXPECT_EQ(path, tmp / "Flerm/Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Flerm", root / "Flerm", log);
+        EXPECT_EQ(path, root / "Flerm/Bar/Bar.boo");
     }
     // New exists, old doesn't.
     {
         babelwires::FilePath path("Bar/Bar.boo");
-        path.resolveRelativeTo(tmp / "Foo", tmp / "Flerm", log);
-        EXPECT_EQ(path, tmp / "Foo/Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Foo", root / "Flerm", log);
+        EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
     }
     // Old exists, new doesn't.
     {
         babelwires::FilePath path("Bar/Bar.boo");
-        path.resolveRelativeTo(tmp / "Flerm", tmp / "Foo", log);
-        EXPECT_EQ(path, tmp / "Foo/Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Flerm", root / "Foo", log);
+        EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
     }
     // Both exist. New prefered. Check log.
     {
         log.clear();
         babelwires::FilePath path("Bar/Bar.boo");
-        path.resolveRelativeTo(tmp / "Foo", tmp / "Oom", log);
-        EXPECT_EQ(path, tmp / "Foo/Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Foo", root / "Oom", log);
+        EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
         EXPECT_TRUE(log.hasSubstringIgnoreCase("Favouring"));
     }
     // Empty new
     {
         babelwires::FilePath path("Bar/Bar.boo");
-        path.resolveRelativeTo(std::filesystem::path(), tmp / "Foo", log);
-        EXPECT_EQ(path, tmp / "Foo/Bar/Bar.boo");
+        path.resolveRelativeTo(std::filesystem::path(), root / "Foo", log);
+        EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
     }
     // Empty old
     {
         babelwires::FilePath path("Bar/Bar.boo");
-        path.resolveRelativeTo(tmp / "Foo", std::filesystem::path(), log);
-        EXPECT_EQ(path, tmp / "Foo/Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Foo", std::filesystem::path(), log);
+        EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
     }
     // Absolute file
     {
-        babelwires::FilePath path(tmp / "Foo/Bar/Bar.boo");
-        path.resolveRelativeTo(tmp / "Flerm", tmp / "Glurg", log);
-        EXPECT_EQ(path, tmp / "Foo/Bar/Bar.boo");
+        babelwires::FilePath path(root / "Foo/Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Flerm", root / "Glurg", log);
+        EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
     }
     // Windows-style absolute file
     {
         babelwires::FilePath path("c:/Foo/Bar/Bar.boo");
-        path.resolveRelativeTo(tmp / "Flerm", "d:/Glurg", log);
+        path.resolveRelativeTo(root / "Flerm", "d:/Glurg", log);
         EXPECT_EQ(path, "c:/Foo/Bar/Bar.boo");
     }
 }
