@@ -41,7 +41,7 @@ void babelwires::TargetFileElementData::serializeContents(Serializer& serializer
 
 void babelwires::TargetFileElementData::deserializeContents(Deserializer& deserializer) {
     getCommonKeyValuePairs(deserializer);
-    deserializeModifiers(deserializer);
+    deserializer.deserializeValue("filePath", m_filePath);
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }
