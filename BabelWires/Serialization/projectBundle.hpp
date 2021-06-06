@@ -58,7 +58,7 @@ namespace babelwires {
                                                        UserLogger& userLogger);
 
         /// The versions of the factories in the stored ProjectData from the factory meta-data are updated.
-        /// NOTE: Right now, no versioning is done! All that currently happens is that warnings and errors are issued.
+        /// NOTE: Right now, no versioning is done! All that happens is that warnings and errors are issued.
         void adaptDataToCurrentFactories(const ProjectContext& context, UserLogger& userLogger);
 
       public:

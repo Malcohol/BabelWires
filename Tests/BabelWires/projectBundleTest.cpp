@@ -2,6 +2,8 @@
 
 #include "BabelWires/Project/Modifiers/modifierData.hpp"
 #include "BabelWires/Serialization/projectBundle.hpp"
+#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWires/TestUtils/testProcessor.hpp"
@@ -9,6 +11,7 @@
 #include "Tests/BabelWires/TestUtils/testProjectData.hpp"
 #include "Tests/BabelWires/TestUtils/testRecord.hpp"
 #include "Tests/TestUtils/testLog.hpp"
+#include "Tests/TestUtils/tempFilePath.hpp"
 
 TEST(ProjectBundleTest, fieldIdsInPaths) {
     // This will carry data between the first part of the test and the second.
@@ -221,4 +224,86 @@ TEST(ProjectBundleTest, factoryMetadata) {
     EXPECT_FALSE(context.m_log.hasSubstringIgnoreCase("Data for the factory \"testProcessor\""));
     EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase(
         "Data for the factory \"testFileFormat\" (testFileFormat) has an unknown version (3)"));
+}
+
+TEST(ProjectBundleTest, filePathResolution) {
+    testUtils::TestLogWithListener log;
+    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    libTestUtils::TestProjectContext context;
+
+    std::filesystem::path root = std::filesystem::temp_directory_path();
+
+    testUtils::TempDirectory FooBar("Foo/Bar");
+    testUtils::TempDirectory OomBar("Oom/Bar");
+
+    testUtils::TempFilePath fileWhichExists("Foo/Bar/Bar.boo");
+    fileWhichExists.ensureExists();
+
+    testUtils::TempFilePath fileWhichExists2("Oom/Bar/Bar.boo");
+    fileWhichExists2.ensureExists();
+
+    struct TestScenario {
+        std::filesystem::path m_pathInProjectData;
+        std::filesystem::path m_newBase;
+        std::filesystem::path m_oldBase;
+        std::filesystem::path m_expectedResolvedPath;
+    };
+
+    // Based on the tests in FilePathTest.
+    // Because we interpret / resolve on the same platform, some of those tests do not carry over.
+    std::vector<TestScenario> scenarios = {
+        // Same context.
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo/Bar", root / "Foo/Bar", root / "Foo/Bar/Bar.boo"},
+        // Same context.
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Foo", root / "Foo/Bar/Bar.boo"},
+        // Same context, file doesn't exist.
+        TestScenario{root / "Flerm/Bar/Bar.boo", root / "Flerm", root / "Flerm", root / "Flerm/Bar/Bar.boo"},
+        // New exists, old doesn't.
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Flerm", root / "Foo/Bar/Bar.boo"},
+        // Old exists, new doesn't.
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Flerm", root / "Foo/Bar/Bar.boo"},
+        // Both exist. New prefered. Check log.
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Oom", root / "Foo/Bar/Bar.boo"},
+        // Empty new
+        TestScenario{root / "Foo/Bar/Bar.boo", std::filesystem::path(), root / "Foo", root / "Foo/Bar/Bar.boo"},
+        // Empty old
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", std::filesystem::path(), root / "Foo/Bar/Bar.boo"}
+    };
+
+    // Check that the files in the element data get resolved in the expected way were the project to be opened
+    // in a different place.
+    for (const auto& scenario : scenarios) {
+        babelwires::ProjectBundle bundle;
+        {
+            babelwires::ProjectData projectData;
+            {
+                babelwires::SourceFileElementData elementData;
+                elementData.m_filePath = scenario.m_pathInProjectData;
+                elementData.m_factoryIdentifier = "MyFactory";
+                projectData.m_elements.emplace_back(elementData.clone());
+            }
+            {
+                babelwires::TargetFileElementData elementData;
+                elementData.m_filePath = scenario.m_pathInProjectData;
+                elementData.m_factoryIdentifier = "MyOtherFactory";
+                projectData.m_elements.emplace_back(elementData.clone());
+            }
+            bundle = babelwires::ProjectBundle(scenario.m_oldBase, std::move(projectData));
+        }
+
+        babelwires::ProjectData projectData;
+        projectData = std::move(bundle).resolveAgainstCurrentContext(context.m_projectContext, scenario.m_newBase, log);
+        
+        ASSERT_EQ(projectData.m_elements.size(), 2);
+        {
+            auto elementData = dynamic_cast<const babelwires::SourceFileElementData*>(projectData.m_elements[0].get());
+            ASSERT_NE(elementData, nullptr);
+            EXPECT_EQ(elementData->m_filePath, scenario.m_expectedResolvedPath);
+        }
+        {
+            auto elementData = dynamic_cast<const babelwires::TargetFileElementData*>(projectData.m_elements[1].get());
+            ASSERT_NE(elementData, nullptr);
+            EXPECT_EQ(elementData->m_filePath, scenario.m_expectedResolvedPath);
+        }
+    }
 }
