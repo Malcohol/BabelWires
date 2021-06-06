@@ -106,12 +106,13 @@ namespace babelwires {
         /// Gain write access to the registry.
         static WriteAccess write();
 
-      protected:
+      public:
         /// Iteration.
         class const_iterator;
         const_iterator begin() const;
         const_iterator end() const;
 
+      protected:
         struct InstanceData : Serializable {
             SERIALIZABLE(InstanceData, "field", void, 1);
             InstanceData();

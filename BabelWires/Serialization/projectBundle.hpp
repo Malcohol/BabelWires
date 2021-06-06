@@ -56,18 +56,25 @@ namespace babelwires {
         void resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToProjectFile,
                                                        UserLogger& userLogger);
 
-        // TODO Public for testing
       public:
-        /// The data.
-        ProjectData m_projectData;
+        // Used by tests.
+        const FieldNameRegistry& getFieldNameRegistry() const { return m_fieldNameRegistry; }
 
-        /// Field meta-data.
-        FieldNameRegistry m_fieldNameRegistry;
+        const ProjectData& getProjectData() const { return m_projectData; }
 
         struct Metadata {
             /// Factory meta-data
             std::map<std::string, VersionNumber> m_factoryMetadata;
         };
+
+        const Metadata& getMetadata() const { return m_metadata; }
+
+      private:
+        /// The data.
+        ProjectData m_projectData;
+
+        /// Field meta-data.
+        FieldNameRegistry m_fieldNameRegistry;
 
         Metadata m_metadata;
 

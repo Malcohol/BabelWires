@@ -10,18 +10,6 @@
 #include "Tests/BabelWires/TestUtils/testRecord.hpp"
 #include "Tests/TestUtils/testLog.hpp"
 
-namespace {
-    // Hack to get at the innards of a fieldNameRegistry.
-    struct TestFieldNameRegistry : babelwires::FieldNameRegistry {
-        TestFieldNameRegistry(babelwires::FieldNameRegistry&& other)
-            : FieldNameRegistry(std::move(other)) {}
-
-        using babelwires::FieldNameRegistry::begin;
-        using babelwires::FieldNameRegistry::const_iterator;
-        using babelwires::FieldNameRegistry::end;
-    };
-} // namespace
-
 TEST(ProjectBundleTest, fieldIdsInPaths) {
     // This will carry data between the first part of the test and the second.
     babelwires::ProjectBundle bundle;
@@ -101,7 +89,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         {
             // Bit of a hack, but this lets us iterate through the registry.
             // TODO Perhaps just make iteration public
-            TestFieldNameRegistry testRegistry(std::move(bundle2.m_fieldNameRegistry));
+            const babelwires::FieldNameRegistry& testRegistry = bundle2.getFieldNameRegistry();
 
             // These have no duplicates in the bundle.
             const int recordIntDiscriminator = 1;
@@ -152,11 +140,8 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
             EXPECT_NE(recordInt2Disciminator, fileIntChildDiscriminator);
 
             libTestUtils::TestProjectData::testProjectDataAndDisciminators(
-                bundle2.m_projectData, recordIntDiscriminator, recordArrayDiscriminator, recordRecordDiscriminator,
+                bundle2.getProjectData(), recordIntDiscriminator, recordArrayDiscriminator, recordRecordDiscriminator,
                 recordInt2Disciminator, fileIntChildDiscriminator);
-
-            // Restore the bundle's field name registry.
-            bundle2.m_fieldNameRegistry = std::move(testRegistry);
         }
         bundle = std::move(bundle2);
     }
@@ -223,10 +208,10 @@ TEST(ProjectBundleTest, factoryMetadata) {
 
     babelwires::ProjectBundle bundle(std::filesystem::current_path(), std::move(projectData));
 
-    ASSERT_EQ(bundle.m_metadata.m_factoryMetadata.size(), 3);
-    EXPECT_EQ(bundle.m_metadata.m_factoryMetadata[libTestUtils::TestTargetFileFormat::getThisIdentifier()], 1);
-    EXPECT_EQ(bundle.m_metadata.m_factoryMetadata[libTestUtils::TestProcessorFactory::getThisIdentifier()], 2);
-    EXPECT_EQ(bundle.m_metadata.m_factoryMetadata[libTestUtils::TestSourceFileFormat::getThisIdentifier()], 3);
+    ASSERT_EQ(bundle.getMetadata().m_factoryMetadata.size(), 3);
+    EXPECT_EQ(bundle.getMetadata().m_factoryMetadata.find(libTestUtils::TestTargetFileFormat::getThisIdentifier())->second, 1);
+    EXPECT_EQ(bundle.getMetadata().m_factoryMetadata.find(libTestUtils::TestProcessorFactory::getThisIdentifier())->second, 2);
+    EXPECT_EQ(bundle.getMetadata().m_factoryMetadata.find(libTestUtils::TestSourceFileFormat::getThisIdentifier())->second, 3);
 
     babelwires::ProjectData resolvedData =
         std::move(bundle).resolveAgainstCurrentContext(context.m_projectContext, std::filesystem::current_path(), context.m_log);
