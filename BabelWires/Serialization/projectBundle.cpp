@@ -40,15 +40,16 @@ babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile
     : m_projectData(std::move(projectData))
     , m_projectFilePath(pathToProjectFile) {
     interpretFieldsInCurrentContext();
-
-    for (const auto& element : m_projectData.m_elements) {
-        VersionNumber& storedVersion = m_metadata.m_factoryMetadata[element->m_factoryIdentifier];
-        assert(((storedVersion == 0) || (storedVersion == element->m_factoryVersion)) &&
-               "Inconsistent factory versions in ProjectData");
-        storedVersion = element->m_factoryVersion;
-    }
-
     interpretFilePathsInCurrentProjectPath();
+    captureCurrentFactoryMetadata();
+}
+
+babelwires::ProjectData babelwires::ProjectBundle::resolveAgainstCurrentContext(const ProjectContext& context, const std::filesystem::path& pathToProjectFile,
+                                          UserLogger& userLogger) && {
+    resolveFieldsAgainstCurrentContext();
+    resolveFilePathsAgainstCurrentProjectPath(pathToProjectFile, userLogger);
+    adaptDataToCurrentFactories(context, userLogger);
+    return std::move(m_projectData);
 }
 
 void babelwires::ProjectBundle::interpretFieldsInCurrentContext() {
@@ -69,6 +70,15 @@ void babelwires::ProjectBundle::interpretFilePathsInCurrentProjectPath() {
     }
 }
 
+void babelwires::ProjectBundle::captureCurrentFactoryMetadata() {
+    for (const auto& element : m_projectData.m_elements) {
+        VersionNumber& storedVersion = m_factoryMetadata[element->m_factoryIdentifier];
+        assert(((storedVersion == 0) || (storedVersion == element->m_factoryVersion)) &&
+               "Inconsistent factory versions in ProjectData");
+        storedVersion = element->m_factoryVersion;
+    }
+}
+
 void babelwires::ProjectBundle::resolveFieldsAgainstCurrentContext() {
     FieldNameRegistry::WriteAccess targetRegistry = FieldNameRegistry::write();
     convertProjectData(m_projectData, &m_fieldNameRegistry, targetRegistry,
@@ -83,27 +93,20 @@ void babelwires::ProjectBundle::resolveFilePathsAgainstCurrentProjectPath(
     m_projectData.visitFilePaths(visitor);
 }
 
-babelwires::ProjectData babelwires::ProjectBundle::resolveAgainstCurrentContext(const ProjectContext& context, const std::filesystem::path& pathToProjectFile,
-                                          UserLogger& userLogger) && {
-    resolveFieldsAgainstCurrentContext();
-
-    resolveFilePathsAgainstCurrentProjectPath(pathToProjectFile, userLogger);
-
+void babelwires::ProjectBundle::adaptDataToCurrentFactories(const ProjectContext& context, UserLogger& userLogger) {
     for (auto& element : m_projectData.m_elements) {
-        element->m_factoryVersion = m_metadata.m_factoryMetadata[element->m_factoryIdentifier];
+        element->m_factoryVersion = m_factoryMetadata[element->m_factoryIdentifier];
     }
 
     for (auto& element : m_projectData.m_elements) {
         // Can log the same message multiple times.
         element->checkFactoryVersion(context, userLogger);
     }
-
-    return std::move(m_projectData);
 }
 
 namespace {
-    struct FactoryMetadata : babelwires::Serializable {
-        SERIALIZABLE(FactoryMetadata, "factory", void, 1);
+    struct FactoryInfoPair : babelwires::Serializable {
+        SERIALIZABLE(FactoryInfoPair, "factory", void, 1);
         std::string m_factoryIdentifier;
         babelwires::VersionNumber m_factoryVersion;
 
@@ -122,9 +125,9 @@ void babelwires::ProjectBundle::serializeContents(Serializer& serializer) const 
     serializer.serializeValue("filePath", m_projectFilePath);
     serializer.serializeObject(m_projectData);
     serializer.serializeObject(m_fieldNameRegistry);
-    std::vector<FactoryMetadata> factoryMetadata;
-    for (const auto& [k, v] : m_metadata.m_factoryMetadata) {
-        FactoryMetadata metadata;
+    std::vector<FactoryInfoPair> factoryMetadata;
+    for (const auto& [k, v] : m_factoryMetadata) {
+        FactoryInfoPair metadata;
         metadata.m_factoryIdentifier = k;
         metadata.m_factoryVersion = v;
         factoryMetadata.emplace_back(metadata);
@@ -137,8 +140,8 @@ void babelwires::ProjectBundle::deserializeContents(Deserializer& deserializer) 
     m_projectData = std::move(*deserializer.deserializeObject<ProjectData>(ProjectData::serializationType));
     m_fieldNameRegistry =
         std::move(*deserializer.deserializeObject<FieldNameRegistry>(FieldNameRegistry::serializationType));
-    for (auto it = deserializer.deserializeArray<FactoryMetadata>("factoryMetadata"); it.isValid(); ++it) {
+    for (auto it = deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"); it.isValid(); ++it) {
         auto fm = it.getObject();
-        m_metadata.m_factoryMetadata.insert(std::make_pair(std::move(fm->m_factoryIdentifier), fm->m_factoryVersion));
+        m_factoryMetadata.insert(std::make_pair(std::move(fm->m_factoryIdentifier), fm->m_factoryVersion));
     }
 }

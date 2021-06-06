@@ -34,8 +34,6 @@ namespace babelwires {
 
         /// Returns the contained projectData, modified so it corresponds the current system.
         /// This object is invalidated after calling this.
-        /// The versions of the factories in the stored ProjectData from the factory meta-data are updated.
-        /// NOTE: No versioning is done! All that currently happens is that warnings and errors are issued.
         ProjectData resolveAgainstCurrentContext(const ProjectContext& context, const std::filesystem::path& pathToProjectFile,
                                                        UserLogger& userLogger) &&;
 
@@ -49,6 +47,9 @@ namespace babelwires {
         /// Ensure the filePaths in the projectData are made relative to the m_projectFilePath.
         void interpretFilePathsInCurrentProjectPath();
 
+        /// Record the metadata of factories used by the projectData.
+        void captureCurrentFactoryMetadata();
+
         /// Ensure the fields in the projectData refer to the global FileNameRegistry.
         void resolveFieldsAgainstCurrentContext();
 
@@ -56,27 +57,31 @@ namespace babelwires {
         void resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToProjectFile,
                                                        UserLogger& userLogger);
 
+        /// The versions of the factories in the stored ProjectData from the factory meta-data are updated.
+        /// NOTE: Right now, no versioning is done! All that currently happens is that warnings and errors are issued.
+        void adaptDataToCurrentFactories(const ProjectContext& context, UserLogger& userLogger);
+
       public:
         // Used by tests.
+
         const FieldNameRegistry& getFieldNameRegistry() const { return m_fieldNameRegistry; }
 
         const ProjectData& getProjectData() const { return m_projectData; }
 
-        struct Metadata {
-            /// Factory meta-data
-            std::map<std::string, VersionNumber> m_factoryMetadata;
-        };
+        /// Information about the factories used by the projectData.
+        using FactoryMetadata = std::map<std::string, VersionNumber>;
 
-        const Metadata& getMetadata() const { return m_metadata; }
+        const FactoryMetadata& getFactoryMetadata() const { return m_factoryMetadata; }
 
       private:
         /// The data.
         ProjectData m_projectData;
 
-        /// Field meta-data.
+        /// Field metadata.
         FieldNameRegistry m_fieldNameRegistry;
 
-        Metadata m_metadata;
+        /// Information about the factories.
+        FactoryMetadata m_factoryMetadata;
 
         /// Absolute path to the project, when saved.
         /// FilePaths in the projectData are stored in relative form whenever possible.

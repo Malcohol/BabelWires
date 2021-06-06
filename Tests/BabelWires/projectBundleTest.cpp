@@ -208,10 +208,10 @@ TEST(ProjectBundleTest, factoryMetadata) {
 
     babelwires::ProjectBundle bundle(std::filesystem::current_path(), std::move(projectData));
 
-    ASSERT_EQ(bundle.getMetadata().m_factoryMetadata.size(), 3);
-    EXPECT_EQ(bundle.getMetadata().m_factoryMetadata.find(libTestUtils::TestTargetFileFormat::getThisIdentifier())->second, 1);
-    EXPECT_EQ(bundle.getMetadata().m_factoryMetadata.find(libTestUtils::TestProcessorFactory::getThisIdentifier())->second, 2);
-    EXPECT_EQ(bundle.getMetadata().m_factoryMetadata.find(libTestUtils::TestSourceFileFormat::getThisIdentifier())->second, 3);
+    ASSERT_EQ(bundle.getFactoryMetadata().size(), 3);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(libTestUtils::TestTargetFileFormat::getThisIdentifier())->second, 1);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(libTestUtils::TestProcessorFactory::getThisIdentifier())->second, 2);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(libTestUtils::TestSourceFileFormat::getThisIdentifier())->second, 3);
 
     babelwires::ProjectData resolvedData =
         std::move(bundle).resolveAgainstCurrentContext(context.m_projectContext, std::filesystem::current_path(), context.m_log);
