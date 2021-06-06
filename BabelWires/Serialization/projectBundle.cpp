@@ -81,10 +81,10 @@ void babelwires::ProjectBundle::interpretFilePathsInCurrentProjectPath(const std
 
 void babelwires::ProjectBundle::resolveFilePathsAgainstCurrentProjectPath(
     const std::filesystem::path& pathToProjectFile, UserLogger& userLogger) {
-    if (!pathToProjectFile.empty()) {
-        babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.resolveRelativeTo(pathToProjectFile.parent_path(), userLogger); };
-        m_projectData.visitFilePaths(visitor);
-    }
+    const std::filesystem::path newBase = pathToProjectFile.empty() ? std::filesystem::path() : pathToProjectFile.parent_path();
+    const std::filesystem::path oldBase = m_projectFilePath.empty() ? std::filesystem::path() : std::filesystem::path(m_projectFilePath).parent_path();
+    babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.resolveRelativeTo(newBase, oldBase, userLogger); };
+    m_projectData.visitFilePaths(visitor);
 }
 
 namespace {
@@ -105,6 +105,7 @@ namespace {
 } // namespace
 
 void babelwires::ProjectBundle::serializeContents(Serializer& serializer) const {
+    serializer.serializeValue("filePath", m_projectFilePath);
     serializer.serializeObject(m_projectData);
     serializer.serializeObject(m_fieldNameRegistry);
     std::vector<FactoryMetadata> factoryMetadata;
@@ -118,6 +119,7 @@ void babelwires::ProjectBundle::serializeContents(Serializer& serializer) const 
 }
 
 void babelwires::ProjectBundle::deserializeContents(Deserializer& deserializer) {
+    deserializer.deserializeValue("filePath", m_projectFilePath, babelwires::Deserializer::IsOptional::Optional);
     m_projectData = std::move(*deserializer.deserializeObject<ProjectData>(ProjectData::serializationType));
     m_fieldNameRegistry =
         std::move(*deserializer.deserializeObject<FieldNameRegistry>(FieldNameRegistry::serializationType));

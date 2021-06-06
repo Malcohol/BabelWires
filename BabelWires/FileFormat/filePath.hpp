@@ -40,9 +40,8 @@ namespace babelwires {
 
         bool empty() const;
 
-        /// Interpret relative paths with respect to the given base path and, if there is a file at that location, set the absolute path
-        /// to that absolute location. Otherwise, leave absolute paths unchanged.
-        void resolveRelativeTo(const std::filesystem::path& base, UserLogger& userLogger);
+        /// Interpret m_filePath as relative to newBase if it exists. Otherwise, interpret it as relative to oldBase.
+        void resolveRelativeTo(const std::filesystem::path& newBase, const std::filesystem::path& oldBase, UserLogger& userLogger);
 
         /// Set the relative paths from the absolute paths, starting at the given base path.
         void interpretRelativeTo(const std::filesystem::path& base);

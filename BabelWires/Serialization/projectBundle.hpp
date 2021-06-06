@@ -9,6 +9,7 @@
 
 #include "BabelWires/Features/Path/fieldNameRegistry.hpp"
 #include "BabelWires/Project/projectData.hpp"
+#include "BabelWires/FileFormat/filePath.hpp"
 
 #include "Common/Serialization/serializable.hpp"
 
@@ -57,6 +58,11 @@ namespace babelwires {
         };
 
         Metadata m_metadata;
+
+        /// Path to the project, when saved.
+        /// Paths are stored in relative form if possible. This allows us to reconstruct the absolute path
+        /// in case the relative path from the project as loaded does not exist.  
+        FilePath m_projectFilePath;
     };
 
 } // namespace babelwires
