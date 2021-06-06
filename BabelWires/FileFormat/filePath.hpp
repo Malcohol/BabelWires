@@ -7,17 +7,14 @@
  **/
 #pragma once
 
-#include "Common/Serialization/serializable.hpp"
-
 #include <filesystem>
 
 namespace babelwires {
     class UserLogger;
 
     /// How file locations are represented in project data.
-    class FilePath : public Serializable {
+    class FilePath {
       public:
-        SERIALIZABLE(FilePath, "file", void, 1);
         FilePath() = default;
         FilePath(const FilePath&) = default;
         FilePath(FilePath&&) = default;
@@ -30,15 +27,15 @@ namespace babelwires {
         operator std::filesystem::path() const;
 
         inline friend bool operator==(const FilePath& a, const FilePath& b) { 
-            return a.m_absolutePath == b.m_absolutePath;
+            return a.m_filePath == b.m_filePath;
         }
 
         inline friend bool operator==(const std::filesystem::path& a, const FilePath& b) { 
-            return a == b.m_absolutePath;
+            return a == b.m_filePath;
         }
 
         inline friend bool operator==(const FilePath& a, const std::filesystem::path& b) { 
-            return a.m_absolutePath == b;
+            return a.m_filePath == b;
         }
 
         bool empty() const;
@@ -50,17 +47,14 @@ namespace babelwires {
         /// Set the relative paths from the absolute paths, starting at the given base path.
         void interpretRelativeTo(const std::filesystem::path& base);
 
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        /// Get a serializable representation of the path.
+        std::string serializeToString() const;
+        
+        /// Parse a serialized representation of a path.
+        static FilePath deserializeFromString(const std::string& string);
 
       private:
-        /// Used by the running system, this uniquely defines the file location.
-        std::filesystem::path m_absolutePath;
-
-        /// Used in addition to the absolute path when project data is in serialized form.
-        /// When data is loaded into a project, we attempt to resolve files first by their project-relative location,
-        /// and fall back to absolute paths only if that fails.
-        /// This allows a project and its imports to be relocated.
-        std::filesystem::path m_relativePath;
+        /// In the running system, this is the absolute path of the file.
+        std::filesystem::path m_filePath;
     };
 } // namespace babelwires

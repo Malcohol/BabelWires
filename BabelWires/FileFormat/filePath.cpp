@@ -7,75 +7,44 @@
  **/
 #include "BabelWires/FileFormat/filePath.hpp"
 
-#include "Common/Serialization/deserializer.hpp"
-#include "Common/Serialization/serializer.hpp"
-
 #include "Common/Log/userLogger.hpp"
+#include "Common/exceptions.hpp"
 
 #include <cassert>
 
 babelwires::FilePath::FilePath(std::filesystem::path absolutePath)
-    : m_absolutePath(std::move(absolutePath)) {}
+    : m_filePath(std::move(absolutePath)) {}
 
 babelwires::FilePath& babelwires::FilePath::operator=(std::filesystem::path absolutePath) {
-    m_absolutePath.swap(absolutePath);
+    m_filePath.swap(absolutePath);
     return *this;
 }
 
 babelwires::FilePath::operator std::filesystem::path() const {
-    return m_absolutePath;
+    return m_filePath;
 }
 
 bool babelwires::FilePath::empty() const {
-    return m_absolutePath.empty();
+    return m_filePath.empty();
 }
 
 void babelwires::FilePath::resolveRelativeTo(const std::filesystem::path& base, UserLogger& userLogger) {
-    assert(base.is_absolute() && "The base path must be absolute");
-    if (!m_relativePath.empty()) {
-        std::filesystem::path absPath = base / m_relativePath;
-        if (std::filesystem::exists(absPath)) {
-            if (std::filesystem::exists(m_absolutePath)) {
-                if (std::filesystem::canonical(m_absolutePath) != std::filesystem::canonical(absPath)) {
-                    userLogger.logWarning() << "Favouring file " << absPath << " over file " << m_absolutePath
-                                            << ", as its location relative to the project is maintained";
-                }
-            }
-            m_absolutePath = std::move(absPath);
-        } else if (m_absolutePath.empty()) {
-            // Even if it the file doesn't exist, we use the relative path to ensure the abs path has a viable value.
-            m_absolutePath = absPath;
-        }
-    }
 }
 
 void babelwires::FilePath::interpretRelativeTo(const std::filesystem::path& base) {
-    assert(base.is_absolute() && "The base path must be absolute");
-    std::filesystem::path relPath = std::filesystem::relative(m_absolutePath, base);
-    if (!relPath.empty()) {
-        m_relativePath = std::move(relPath);
-    }
 }
 
-void babelwires::FilePath::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("absolutePath", m_absolutePath.u8string());
-    serializer.serializeValue("relativePath", m_relativePath.u8string());
+std::string babelwires::FilePath::serializeToString() const {
+    return m_filePath.u8string();
 }
 
-void babelwires::FilePath::deserializeContents(Deserializer& deserializer) {
-    {
-        std::string absPath;
-        if (deserializer.deserializeValue("absolutePath", absPath, Deserializer::IsOptional::Optional)) {
-            m_absolutePath = absPath;
-        }
+babelwires::FilePath babelwires::FilePath::deserializeFromString(const std::string& string) {
+    std::filesystem::path path;
+    try {
+        path = string;
     }
-    {
-        std::string relPath;
-        if (deserializer.deserializeValue("relativePath", relPath, Deserializer::IsOptional::Optional)) {
-            m_relativePath = relPath;
-        }
+    catch (const std::exception& e) {
+        throw ParseException() << "Failed to parse \"" << string << "\" as a file path.";
     }
-    if (m_relativePath.empty() && m_absolutePath.empty()) {
-        throw ParseException() << "A filePath object must have a relative or absolute path set";
-    }
+    return FilePath(path);
 }

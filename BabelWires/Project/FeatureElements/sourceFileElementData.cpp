@@ -33,17 +33,14 @@ babelwires::SourceFileElementData::doCreateFeatureElement(const ProjectContext& 
 
 void babelwires::SourceFileElementData::serializeContents(Serializer& serializer) const {
     addCommonKeyValuePairs(serializer);
-    //serializer.serializeValue("filename", m_filePath.u8string());
-    // Inline the filepath contents.
-    m_filePath.serializeContents(serializer);
+    serializer.serializeValue("filePath", m_filePath);
     serializeModifiers(serializer);
     serializeUiData(serializer);
 }
 
 void babelwires::SourceFileElementData::deserializeContents(Deserializer& deserializer) {
     getCommonKeyValuePairs(deserializer);
-    // The filepath contents are inlined.
-    m_filePath.deserializeContents(deserializer);
+    deserializer.deserializeValue("filePath", m_filePath);
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }
