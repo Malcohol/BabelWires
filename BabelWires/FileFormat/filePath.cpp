@@ -30,7 +30,10 @@ bool babelwires::FilePath::empty() const {
 }
 
 void babelwires::FilePath::resolveRelativeTo(const std::filesystem::path& newBase, const std::filesystem::path& oldBase, UserLogger& userLogger) {
-    if (!m_filePath.is_absolute()) {
+    // Note: A Windows-style absolute path might appear relative to a posix platform.
+    // Since project paths are intended to be absolute, we rely on the fact that they will appear relative too
+    // to avoid building a nonsensical path like c:/path/to/project/d:/path/to/file.
+    if (!m_filePath.is_absolute() && (oldBase.empty() || oldBase.is_absolute())) {
         std::filesystem::path newPath = newBase / m_filePath;
         std::filesystem::path oldPath = oldBase / m_filePath;
         // Prefer new relative file locations to old ones.
