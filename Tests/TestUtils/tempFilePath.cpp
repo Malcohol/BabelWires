@@ -28,7 +28,7 @@ testUtils::TempFilePath::operator const std::filesystem::path&() {
 }
 
 testUtils::TempFilePath::operator const char*() {
-    return m_filePath.c_str();
+    return m_filePath.u8string().c_str();
 }
 
 void testUtils::TempFilePath::ensureExists(std::string contents) {
@@ -46,10 +46,10 @@ testUtils::TempDirectory::TempDirectory(std::string_view dirPath)
 testUtils::TempDirectory::~TempDirectory() {
     std::filesystem::path p = m_dirPath;
 
-    // 
-    std::string tmpString = std::filesystem::temp_directory_path();
-    std::string pString = p;
-    bool isUnderTmp = (pString.find(tmpString) == 0);
+    // Being very careful here.
+    const std::string tmpString = std::filesystem::temp_directory_path().u8string();
+    const std::string pString = p.u8string();
+    const bool isUnderTmp = (pString.find(tmpString) == 0);
     assert(isUnderTmp && "Attempted to delete directories which were not in the temp directory");
 
     if (isUnderTmp) {

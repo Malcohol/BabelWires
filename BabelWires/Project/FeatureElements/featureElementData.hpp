@@ -23,8 +23,8 @@
 
 namespace babelwires {
 
-    class UserLogger;
-    class ProjectContext;
+    struct UserLogger;
+    struct ProjectContext;
     class FeatureElement;
     class UntypedRegistry;
 

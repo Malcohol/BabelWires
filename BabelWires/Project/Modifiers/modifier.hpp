@@ -14,7 +14,7 @@
 #include <memory>
 
 namespace babelwires {
-    class UserLogger;
+    struct UserLogger;
 }
 
 namespace babelwires {

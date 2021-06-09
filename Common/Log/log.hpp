@@ -26,7 +26,7 @@ namespace babelwires {
       public:
         enum class MessageType { infoMessage, errorMessage, warningMessage, debugMessage };
 
-        using TimeStampClock = std::chrono::high_resolution_clock;
+        using TimeStampClock = std::chrono::system_clock;
         using TimeStamp = TimeStampClock::time_point;
 
         /// The actual data in a log message.

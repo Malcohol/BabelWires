@@ -15,12 +15,8 @@
 #include <filesystem>
 
 namespace babelwires {
-    class UserLogger;
-}
-
-namespace babelwires {
-
-    class ProjectContext;
+    struct UserLogger;
+    struct ProjectContext;
 
     /// Isolates the codebase from the choice of format and other implementation details of serialization.
     namespace ProjectSerialization {

@@ -32,8 +32,9 @@ babelwires::PathStep babelwires::PathStep::deserializeFromString(std::string_vie
     }
     if (std::isdigit(str[0])) {
         ArrayIndex arrayIndex = 0;
-        std::from_chars_result result = std::from_chars(str.begin(), str.end(), arrayIndex);
-        if ((result.ec != std::errc()) || (result.ptr != str.end())) {
+        const char* strEnd = str.data() + str.size();
+        std::from_chars_result result = std::from_chars(str.data(), strEnd, arrayIndex);
+        if ((result.ec != std::errc()) || (result.ptr != strEnd)) {
             throw ParseException() << "Could not parse \"" << str << "\" as an array index";
         }
         return arrayIndex;

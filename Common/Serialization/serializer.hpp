@@ -20,7 +20,8 @@ namespace babelwires {
     template <typename T> class SerializableConcrete;
 
     /// An interface for serializers.
-    struct Serializer : public SerializerDeserializerCommon {
+    class Serializer : public SerializerDeserializerCommon {
+      public:
         virtual ~Serializer();
 
         /// Serialize the object. The key is often the name of a field, but by

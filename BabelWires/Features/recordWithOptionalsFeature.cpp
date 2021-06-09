@@ -2,6 +2,8 @@
 
 #include "BabelWires/Features/modelExceptions.hpp"
 
+#include <algorithm>
+
 void babelwires::RecordWithOptionalsFeature::addOptionalFieldInternal(FieldAndIndex f) {
     m_optionalFields.emplace_back(f.m_identifier);
     m_inactiveFields.emplace_back(std::move(f));

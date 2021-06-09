@@ -11,8 +11,8 @@
 
 namespace babelwires {
 
-    class AudioDest;
-    class AudioSource;
+    struct AudioDest;
+    struct AudioSource;
 
     /// A given audio interface (e.g. Alsa) must provide an implementation of this interface.
     class AudioInterface : public RegistryEntry {

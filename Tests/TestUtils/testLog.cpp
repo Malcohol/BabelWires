@@ -1,6 +1,7 @@
 #include "Tests/TestUtils/testLog.hpp"
 
 #include <cassert>
+#include <algorithm>
 
 testUtils::TestLog::TestLog()
     : m_oldDebugLogger(babelwires::DebugLogger::swapGlobalDebugLogger(this)) {}
