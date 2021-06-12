@@ -1,6 +1,10 @@
 #include "Common/uuid.hpp"
+
 #include "Common/exceptions.hpp"
+
 #include <gtest/gtest.h>
+
+#include <array>
 
 using namespace babelwires;
 

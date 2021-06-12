@@ -3,6 +3,7 @@
 
 #include <string>
 #include <string_view>
+#include <array>
 
 using namespace babelwires;
 
