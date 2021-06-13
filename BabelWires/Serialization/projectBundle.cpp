@@ -57,7 +57,7 @@ void babelwires::ProjectBundle::interpretFieldsInCurrentContext() {
     try {
         convertProjectData(m_projectData, sourceRegistry, &m_fieldNameRegistry,
                            FieldNameRegistry::Authority::isTemporary);
-    } catch (const ParseException& e) {
+    } catch (const ParseException&) {
         assert(false && "A field with a discriminator did not resolve.");
     }
 }

@@ -11,7 +11,7 @@
 
 namespace babelwires {
     class UnifiedLog;
-    class UiProjectContext;
+    struct UiProjectContext;
 
     /// Manages the creation of the UI.
     class Ui {

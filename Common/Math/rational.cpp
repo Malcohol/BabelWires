@@ -35,8 +35,8 @@ void babelwires::Rational::setComponents(BigType numerator, BigType denominator)
         // TODO: Consider approximating the result, when possible.
         throw MathException() << "Unrepresentable rational";
     }
-    m_numerator = numerator;
-    m_denominator = denominator;
+    m_numerator = static_cast<ComponentType>(numerator);
+    m_denominator = static_cast<ComponentType>(denominator);
 }
 
 babelwires::Rational::Rational(ComponentType numerator, ComponentType denominator) {

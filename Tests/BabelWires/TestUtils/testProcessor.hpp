@@ -4,7 +4,7 @@
 #include "BabelWires/Project/FeatureElements/featureElementData.hpp"
 
 namespace libTestUtils {
-    class TestRecordFeature;
+    struct TestRecordFeature;
 
     /// Carries a TestRecord for input and output.
     /// The effect of the processor ensures:
