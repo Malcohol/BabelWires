@@ -4,12 +4,14 @@
 #include <cassert>
 
 testUtils::TempFilePath::TempFilePath(std::string_view fileName)
-    : m_filePath(std::filesystem::temp_directory_path() / fileName) {
+    : m_filePath(std::filesystem::temp_directory_path() / fileName)
+    , m_asString(m_filePath.u8string()) {
     tryRemoveFile();
 }
 
 testUtils::TempFilePath::TempFilePath(TempFilePath&& other) {
-    m_filePath = other.m_filePath;
+    m_filePath = std::move(other.m_filePath);
+    m_asString = std::move(other.m_asString);
     other.m_filePath.clear();
 }
 
@@ -28,7 +30,7 @@ testUtils::TempFilePath::operator const std::filesystem::path&() {
 }
 
 testUtils::TempFilePath::operator const char*() {
-    return m_filePath.u8string().c_str();
+    return m_asString.c_str();
 }
 
 void testUtils::TempFilePath::ensureExists(std::string contents) {

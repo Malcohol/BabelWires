@@ -26,6 +26,7 @@ namespace testUtils {
         operator const char*();
 
         std::filesystem::path m_filePath;
+        std::string m_asString;
     };
 
     class TempDirectory {
