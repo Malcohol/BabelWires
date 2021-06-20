@@ -46,21 +46,23 @@ testUtils::TempDirectory::TempDirectory(std::string_view dirPath)
 }
 
 testUtils::TempDirectory::~TempDirectory() {
+    const std::string tmpString = std::filesystem::temp_directory_path().u8string();
+
+    const auto isUnderTemp = [&tmpString](const std::filesystem::path& p) {
+        const std::string pString = p.u8string();
+        return (pString.find(tmpString) == 0);
+    };
+
     std::filesystem::path p = m_dirPath;
 
     // Being very careful here.
-    const std::string tmpString = std::filesystem::temp_directory_path().u8string();
-    const std::string pString = p.u8string();
-    const bool isUnderTmp = (pString.find(tmpString) == 0);
-    assert(isUnderTmp && "Attempted to delete directories which were not in the temp directory");
+    assert(isUnderTemp(p) && "Attempted to delete directories which were not in the temp directory");
 
-    if (isUnderTmp) {
-        while (p != std::filesystem::temp_directory_path()) {
-            // remove should only work on empty directories, but let's be extra careful.
-            if (std::filesystem::is_directory(p) && std::filesystem::is_empty(p)) {
-                std::filesystem::remove(p);
-            }
-            p = p.parent_path();
+    while (isUnderTemp(p)) {
+        // remove should only work on empty directories, but let's be extra careful.
+        if (std::filesystem::is_directory(p) && std::filesystem::is_empty(p)) {
+            std::filesystem::remove(p);
         }
+        p = p.parent_path();
     }
 }
