@@ -21,6 +21,14 @@ jobs:
             cc: "gcc-9",
             cxx: "g++-9"
           }
+        - {
+            name: "Windows Latest MSVC",
+            os: windows-latest,
+            build_type: "Debug",
+            cc: "cl",
+            cxx: "cl",
+            generators: "Visual Studio 16 2019"
+        }
 
     steps:
     - uses: actions/checkout@v2
@@ -33,6 +41,13 @@ jobs:
         cmake --version
         gcc --version
         g++ --version
+        qtchooser -print-env
+
+    - name: Install dependencies on windows
+      if: startsWith(matrix.config.os, 'windows')
+      run: |
+        choco install cmake qt5-default
+        cmake --version
         qtchooser -print-env
 
     - name: Configure CMake
