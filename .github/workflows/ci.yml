@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  # Debug is currently the most important configuration
-  BUILD_TYPE: Debug
-
 jobs:
   build-and-test:
     name: ${{ matrix.config.name }}
@@ -21,6 +17,7 @@ jobs:
         - {
             name: "Ubuntu_Latest_GCC",
             os: ubuntu-latest,
+            build_type: "Debug",
             cc: "gcc-9",
             cxx: "g++-9"
           }
