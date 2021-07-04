@@ -82,7 +82,7 @@ babelwires::TargetFileElement::getFileFormatInformation(const ProjectContext& co
         const TargetFileFormat& format =
             context.m_targetFileFormatReg.getRegisteredEntry(getElementData().m_factoryIdentifier);
         return &format;
-    } catch (const RegistryException& e) {
+    } catch (const RegistryException&) {
     }
     return nullptr;
 }

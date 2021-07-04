@@ -90,7 +90,7 @@ namespace babelwires {
         /// Destroy the contained event if there is one.
         void reset() {
             if (m_event) {
-                m_event->~StreamEvent();
+                m_event->~EVENT();
                 m_event = nullptr;
             }
         }

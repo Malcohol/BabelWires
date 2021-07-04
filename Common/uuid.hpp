@@ -10,6 +10,7 @@
 #include <functional>
 #include <string>
 #include <string_view>
+#include <ostream>
 
 namespace babelwires {
 

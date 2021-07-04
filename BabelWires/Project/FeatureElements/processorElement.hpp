@@ -11,7 +11,7 @@
 
 namespace babelwires {
     struct UserLogger;
-    class ProjectContext;
+    struct ProjectContext;
     struct ProcessorElementData;
     class Processor;
 

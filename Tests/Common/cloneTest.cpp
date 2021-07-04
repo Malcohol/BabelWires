@@ -1,6 +1,8 @@
 #include "Common/Cloning/cloneable.hpp"
 #include <gtest/gtest.h>
 
+#include <algorithm>
+
 using namespace babelwires;
 
 namespace {

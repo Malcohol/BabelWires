@@ -9,12 +9,14 @@
 
 #include "BabelWires/Commands/commands.hpp"
 
+#include <filesystem>
+
 namespace babelwires {
 
     /// Change the source file of a FileElement.
     class ChangeFileCommand : public SimpleCommand {
       public:
-        ChangeFileCommand(std::string commandName, ElementId elementId, std::string newFilePath);
+        ChangeFileCommand(std::string commandName, ElementId elementId, std::filesystem::path newFilePath);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
@@ -22,8 +24,8 @@ namespace babelwires {
 
       private:
         ElementId m_elementId;
-        std::string m_newFilePath;
-        std::string m_oldFilePath;
+        std::filesystem::path m_newFilePath;
+        std::filesystem::path m_oldFilePath;
     };
 
 } // namespace babelwires

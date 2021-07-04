@@ -10,7 +10,7 @@
 #include <filesystem>
 
 namespace babelwires {
-    class UserLogger;
+    struct UserLogger;
 
     /// How file locations are represented in project data.
     class FilePath {

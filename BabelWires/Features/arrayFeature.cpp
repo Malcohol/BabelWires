@@ -53,6 +53,7 @@ babelwires::PathStep babelwires::ArrayFeature::getStepToChild(const Feature* chi
         }
     }
     assert(!"No such child");
+    return PathStep(0);
 }
 
 babelwires::Feature* babelwires::ArrayFeature::tryGetChildFromStep(const PathStep& step) {

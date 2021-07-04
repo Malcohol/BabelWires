@@ -28,9 +28,9 @@ namespace babelwires {
     class ProcessorFactoryRegistry;
     struct ProjectContext;
     class Modifier;
-    class ModifierData;
+    struct ModifierData;
     class FeatureElement;
-    class ElementData;
+    struct ElementData;
     class ConnectionModifier;
     class FeaturePath;
     struct UiPosition;

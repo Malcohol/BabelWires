@@ -15,12 +15,30 @@ void babelwires::XmlDeserializer::keyWasQueried(std::string_view key) {
     m_xmlContext.back().m_keysQueried.insert(std::string(key));
 }
 
+namespace 
+{
+    // Work around the fact that tinyxml2 doesn't use overloading for integer queries.
+
+    template<typename T>
+    using BigInt = std::conditional_t<std::is_signed_v<T>, std::int64_t, std::uint64_t>;
+
+    template<typename T>
+    std::enable_if_t<std::is_signed_v<T>, tinyxml2::XMLError> queryIntAttribute(const tinyxml2::XMLElement& element, std::string_view key, BigInt<T>& value) {
+        return element.QueryInt64Attribute(babelwires::toCStr(key), &value);
+    }
+
+    template<typename T>
+    std::enable_if_t<std::is_unsigned_v<T>, tinyxml2::XMLError> queryIntAttribute(const tinyxml2::XMLElement& element, std::string_view key, BigInt<T>& value) {
+        return element.QueryUnsigned64Attribute(babelwires::toCStr(key), &value);
+    }
+}
+
 template <typename INT_TYPE>
 bool babelwires::XmlDeserializer::getIntValue(const tinyxml2::XMLElement& element, std::string_view key,
                                               INT_TYPE& value, IsOptional isOptional) {
     keyWasQueried(key);
-    int ret;
-    switch (element.QueryIntAttribute(babelwires::toCStr(key), &ret)) {
+    BigInt<INT_TYPE> bigValue;
+    switch (queryIntAttribute<INT_TYPE>(element, key, bigValue)) {
         case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
             throw babelwires::ParseException() << "Attribute \"" << key << "\" did not contain an int";
         case tinyxml2::XML_NO_ATTRIBUTE:
@@ -31,10 +49,10 @@ bool babelwires::XmlDeserializer::getIntValue(const tinyxml2::XMLElement& elemen
         case tinyxml2::XML_SUCCESS:
             break;
     }
-    if ((ret < std::numeric_limits<INT_TYPE>::min()) || (ret > std::numeric_limits<INT_TYPE>::max())) {
+    if ((bigValue < std::numeric_limits<INT_TYPE>::min()) || (bigValue > std::numeric_limits<INT_TYPE>::max())) {
         throw babelwires::ParseException() << "Attribute \"" << key << "\" was out of range";
     }
-    value = static_cast<INT_TYPE>(ret);
+    value = static_cast<INT_TYPE>(bigValue);
     return true;
 }
 

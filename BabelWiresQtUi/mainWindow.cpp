@@ -442,7 +442,7 @@ void babelwires::MainWindow::paste() {
 
         auto command = std::make_unique<PasteElementsCommand>("Paste elements", std::move(projectData));
         m_projectBridge.scheduleCommand(std::move(command));
-    } catch (std::exception& e) {
+    } catch (std::exception&) {
         // When using a specific mime-type, log a debug message?
         m_userLogger.logWarning() << "Failed to paste from clipboard";
     }

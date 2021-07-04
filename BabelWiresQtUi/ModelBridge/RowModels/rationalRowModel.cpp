@@ -84,7 +84,7 @@ babelwires::RationalRowModel::createModifierFromEditor(QWidget* editor) const {
 
     try {
         value = Rational::parseString(lineEditor->text().toStdString());
-    } catch (ParseException& e) {
+    } catch (ParseException& ) {
     }
 
     if ((value != ratFeature.get()) && ratFeature.getRange().contains(value)) {

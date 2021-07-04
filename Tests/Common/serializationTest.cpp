@@ -1,7 +1,10 @@
 #include "Common/Serialization/XML/xmlDeserializer.hpp"
 #include "Common/Serialization/XML/xmlSerializer.hpp"
 #include "Tests/TestUtils/testLog.hpp"
+
 #include <gtest/gtest.h>
+
+#include <array>
 
 using namespace babelwires;
 using namespace testUtils;
@@ -389,7 +392,7 @@ TEST(SerializationTest, polymorphismFail) {
 
     // Replace Concrete2 by an unrelated type, a distanct relation and its parent type.
     // All of these scenarios should throw, since they are not subtypes of Concrete2.
-    for (auto& t : std::array<std::string_view, 3>{"A", "Concrete0", "Concrete1"}) {
+    for (const auto& t : std::array<std::string_view, 3>{"A", "Concrete0", "Concrete1"}) {
         std::string serializedContents2 = serializedContents;
 
         {

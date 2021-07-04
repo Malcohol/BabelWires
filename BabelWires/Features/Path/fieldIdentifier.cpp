@@ -13,7 +13,7 @@
 #include <charconv>
 
 babelwires::FieldIdentifier::FieldIdentifier(std::string_view str) {
-    const unsigned int len = str.size();
+    const size_t len = str.size();
     assert((len > 0) && "Identifiers may not be empty");
     assert((len <= N) && "str is too long.");
     assert(validate(str.data(), str.size()) && "The identifier is invalid");
@@ -28,7 +28,7 @@ babelwires::FieldIdentifier babelwires::FieldIdentifier::deserializeFromString(s
     Discriminator discriminator = 0;
     std::size_t idEnd = str.find(s_discriminatorDelimiter);
     if (idEnd != std::string_view::npos) {
-        std::from_chars_result result = std::from_chars(str.begin() + idEnd + 1, str.end(), discriminator);
+        std::from_chars_result result = std::from_chars(str.data() + idEnd + 1, str.data() + str.size(), discriminator);
         if (result.ec != std::errc()) {
             throw ParseException() << "The disciminator part of \"" << str << "\" could not be parsed";
         }
@@ -70,7 +70,7 @@ std::string babelwires::FieldIdentifier::serializeToString() const {
     return oss.str();
 }
 
-bool babelwires::FieldIdentifier::validate(const char* chars, int n) {
+bool babelwires::FieldIdentifier::validate(const char* chars, size_t n) {
     assert(n >= 0);
     assert(n <= N);
     if ((chars[0] == '\0') || (n == 0)) {

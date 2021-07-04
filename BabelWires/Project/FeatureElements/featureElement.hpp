@@ -22,7 +22,7 @@ namespace babelwires {
     struct UserLogger;
     class Project;
     class Modifier;
-    class ModifierData;
+    struct ModifierData;
     class ConnectionModifier;
     struct ElementData;
     class RecordFeature;

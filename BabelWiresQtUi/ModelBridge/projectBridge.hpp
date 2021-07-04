@@ -30,7 +30,7 @@ namespace QtNodes {
 namespace babelwires {
 
     class Project;
-    class ProjectContext;
+    struct ProjectContext;
     class CommandManager;
     class ConnectionModifier;
     class FeatureElement;

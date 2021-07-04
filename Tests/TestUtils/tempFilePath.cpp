@@ -4,12 +4,14 @@
 #include <cassert>
 
 testUtils::TempFilePath::TempFilePath(std::string_view fileName)
-    : m_filePath(std::filesystem::temp_directory_path() / fileName) {
+    : m_filePath(std::filesystem::temp_directory_path() / fileName)
+    , m_asString(m_filePath.u8string()) {
     tryRemoveFile();
 }
 
 testUtils::TempFilePath::TempFilePath(TempFilePath&& other) {
-    m_filePath = other.m_filePath;
+    m_filePath = std::move(other.m_filePath);
+    m_asString = std::move(other.m_asString);
     other.m_filePath.clear();
 }
 
@@ -28,7 +30,7 @@ testUtils::TempFilePath::operator const std::filesystem::path&() {
 }
 
 testUtils::TempFilePath::operator const char*() {
-    return m_filePath.c_str();
+    return m_asString.c_str();
 }
 
 void testUtils::TempFilePath::ensureExists(std::string contents) {
@@ -44,21 +46,23 @@ testUtils::TempDirectory::TempDirectory(std::string_view dirPath)
 }
 
 testUtils::TempDirectory::~TempDirectory() {
+    const std::string tmpString = std::filesystem::temp_directory_path().u8string();
+
+    const auto isUnderTemp = [&tmpString](const std::filesystem::path& p) {
+        const std::string pString = p.u8string();
+        return (pString.find(tmpString) == 0);
+    };
+
     std::filesystem::path p = m_dirPath;
 
-    // 
-    std::string tmpString = std::filesystem::temp_directory_path();
-    std::string pString = p;
-    bool isUnderTmp = (pString.find(tmpString) == 0);
-    assert(isUnderTmp && "Attempted to delete directories which were not in the temp directory");
+    // Being very careful here.
+    assert(isUnderTemp(p) && "Attempted to delete directories which were not in the temp directory");
 
-    if (isUnderTmp) {
-        while (p != std::filesystem::temp_directory_path()) {
-            // remove should only work on empty directories, but let's be extra careful.
-            if (std::filesystem::is_directory(p) && std::filesystem::is_empty(p)) {
-                std::filesystem::remove(p);
-            }
-            p = p.parent_path();
+    while (isUnderTemp(p)) {
+        // remove should only work on empty directories, but let's be extra careful.
+        if (std::filesystem::is_directory(p) && std::filesystem::is_empty(p)) {
+            std::filesystem::remove(p);
         }
+        p = p.parent_path();
     }
 }

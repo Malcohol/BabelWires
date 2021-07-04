@@ -16,8 +16,10 @@ babelwires::FileElement::FileElement(const ElementData& data, ElementId newId)
 
 bool babelwires::FileElement::reload(const ProjectContext& context, UserLogger& userLogger) {
     assert(!"Reload is not supported on this type of FileElement");
+    return false;
 }
 
 bool babelwires::FileElement::save(const ProjectContext& context, UserLogger& userLogger) {
     assert(!"Save is not supported on this type of FileElement");
+    return false;
 }

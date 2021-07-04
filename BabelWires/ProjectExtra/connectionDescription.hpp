@@ -12,7 +12,7 @@
 
 namespace babelwires {
 
-    class ConnectionModifierData;
+    struct ConnectionModifierData;
     class Command;
 
     /// ConnectionDescription is a self-contained description of a connection.

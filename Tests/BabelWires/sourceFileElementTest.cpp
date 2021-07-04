@@ -61,9 +61,11 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     EXPECT_FALSE(sourceFileElement->reload(context.m_projectContext, context.m_log));
 
     EXPECT_TRUE(sourceFileElement->isFailed());
-    EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase(tempFilePath.m_filePath.u8string()));
+    std::ostringstream pathInError;
+    pathInError << tempFilePath.m_filePath;
+    EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase(pathInError.str()));
     EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase("could not be loaded"));
-    EXPECT_TRUE(sourceFileElement->getReasonForFailure().find(tempFilePath.m_filePath.u8string()) != std::string::npos);
+    EXPECT_TRUE(sourceFileElement->getReasonForFailure().find(pathInError.str()) != std::string::npos);
 
     EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
     EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));

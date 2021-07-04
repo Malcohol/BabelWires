@@ -27,7 +27,7 @@ TEST(DataSource, getNextByte) {
                 EXPECT_EQ(foo.getNextByte(), testContents[i]);
             }
             EXPECT_TRUE(foo.isEof());
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
             EXPECT_TRUE(false);
         }
     }
@@ -53,7 +53,7 @@ TEST(DataSource, peekNextByte) {
                 EXPECT_EQ(foo.getAbsolutePosition(), i);
             }
             EXPECT_TRUE(foo.isEof());
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
             EXPECT_TRUE(false);
         }
     }
@@ -116,7 +116,7 @@ TEST(DataSource, rewind) {
                 EXPECT_EQ(foo.getAbsolutePosition(), 6 + i);
             }
             EXPECT_TRUE(foo.isEof());
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
             EXPECT_TRUE(false);
         }
     }
@@ -155,7 +155,7 @@ TEST(DataSource, peekAndRewind) {
                 EXPECT_EQ(foo.getAbsolutePosition(), 16 + i);
             }
             EXPECT_TRUE(foo.isEof());
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
             EXPECT_TRUE(false);
         }
     }

@@ -74,7 +74,7 @@ babelwires::FilePath babelwires::FilePath::deserializeFromString(const std::stri
     try {
         path = std::filesystem::u8path(string);
     }
-    catch (const std::exception& e) {
+    catch (const std::exception&) {
         throw ParseException() << "Failed to parse \"" << string << "\" as a file path.";
     }
     return FilePath(path);

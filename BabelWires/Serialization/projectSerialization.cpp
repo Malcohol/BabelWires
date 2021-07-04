@@ -67,7 +67,7 @@ void babelwires::ProjectSerialization::saveToFile(const std::filesystem::path& p
         OutFileStream os(pathToProjectFile);
         internal::saveToStream(os, pathToProjectFile, std::move(projectData));
         os.close();
-    } catch (const std::exception& e) {
+    } catch (const std::exception&) {
         throw FileIoException() << "Failed to save the project to: " << pathToProjectFile;
     }
 }

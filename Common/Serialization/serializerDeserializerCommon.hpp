@@ -9,10 +9,12 @@
 
 #include "Common/types.hpp"
 #include <map>
+#include <string>
+#include <string_view>
 
 namespace babelwires {
 
-    class UserLogger;
+    struct UserLogger;
     class Serializer;
     class Deserializer;
     class DeserializationRegistry;

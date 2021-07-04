@@ -132,9 +132,9 @@ QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) cons
                 if (entry->isExpandable()) {
                     const char* triangle;
                     if (entry->isExpanded()) {
-                        triangle = entry->hasSubmodifiers() ? "\u25bc" : "\u25bd";
+                        triangle = entry->hasSubmodifiers() ? u8"\u25bc" : u8"\u25bd";
                     } else {
-                        triangle = entry->hasSubmodifiers() ? "\u25b6" : "\u25b7";
+                        triangle = entry->hasSubmodifiers() ? u8"\u25b6" : u8"\u25b7";
                     }
                     return QString(entry->getPath().getNumSteps() * 2 - 1, ' ') + triangle + entry->getLabel().c_str();
                 } else {

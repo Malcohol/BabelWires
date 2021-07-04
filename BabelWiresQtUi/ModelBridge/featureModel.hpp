@@ -19,7 +19,7 @@ namespace babelwires {
 
     class ContentsCache;
     class FeatureElement;
-    class ContentsCacheEntry;
+    struct ContentsCacheEntry;
     class ProjectBridge;
     class AccessModelScope;
     class FeaturePath;

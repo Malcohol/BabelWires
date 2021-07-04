@@ -13,6 +13,7 @@
 #include <functional>
 #include <string>
 #include <string_view>
+#include <algorithm>
 
 namespace babelwires {
 
@@ -115,7 +116,7 @@ namespace babelwires {
 
       private:
         /// Called by the constructors to ensure the data is valid.
-        static bool validate(const char* chars, int n);
+        static bool validate(const char* chars, size_t n);
 
         void copyDiscriminatorToInternal(const FieldIdentifier& other) const;
 

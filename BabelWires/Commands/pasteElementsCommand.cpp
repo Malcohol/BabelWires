@@ -87,7 +87,7 @@ void babelwires::PasteElementsCommand::execute(Project& project) const {
         for (const auto& elementData : m_dataToPaste.m_elements) {
             UiPosition pos = elementData->m_uiData.m_uiPosition + offset;
             if (occupiedPositions.find(pos) != occupiedPositions.end()) {
-                offset += 30.0;
+                offset += 30;
                 break;
             }
         }
