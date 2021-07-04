@@ -1,6 +1,6 @@
 # BabelWires
 
-BabelWires is a set of libraries for building data format conversion applications.
+BabelWires is a framework for building data format conversion applications.
 It attempts to occupy a space between command-line utilities (which tend to be quite fixed in functionality), and code (which is highly flexible, but unavailable to many people).
 
 Applications built in BabelWires allow a user to configure a conversion from a file in a source format to a file in a target format using a [dataflow](https://en.wikipedia.org/wiki/Dataflow_programming) style:
@@ -24,9 +24,9 @@ The framework provides:
 
 ## Status
 
-BabelWires is under active development.
-Interested developers can take a look around but please note that some refactoring is planned.
-Please do not expect development to be rapid.
+![Build and test pipeline](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml/badge.svg)
+
+BabelWires is under active development, but please do not expect development to be rapid.
 I have very limited time to devote to this.
 
 Here's a screenshot of the current state of SeqWires:
