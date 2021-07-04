@@ -18,7 +18,7 @@ The framework provides:
 * abstractions for source and target formats (SourceFileFormat and TargetFileFormat)
 * an abstraction for processing data (Processor)
 * a data structure describing a graph of wired nodes (Project)
-* a versionable serialization system for projects, which writes human readable(-ish) and writable(-ish) files. 
+* a version-aware serialization system.
 * a Qt-based application UI for manipulating projects. (Note: The underlying data management layer has no dependency on the UI or UI framework.)
 * a first-class concept of failure, allowing the project to cope with structural changes to the imported data. 
 
