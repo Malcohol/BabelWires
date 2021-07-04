@@ -10,13 +10,11 @@ Things to check:
 
 New features:
 * "Run project" - Load all, process, save all.
-* Use std::filesystem::path for paths.
-  - Show just filename in UI.
-  - Use canonical form in XML.
 * Make undo move the view to the XY and scale position of the undone command.
 
 Unit Tests:
 * Array commands with pre-existing ArraySizeModifier
+* ProjectBundle serialize/deserialize - check all data is restored.
 
 Model
 * Arrays should have a getDefaultSize.
@@ -25,6 +23,7 @@ Model
   - If an unselected variant is modified, does that modification get stored when the variant is switched. I presume only in undo stack, which is a little annoying.
 * FileFeature: Remove this and the offset hack in the FeatureCache. 
   - Instead, allow the UI to add non-model rows at top for visualization, and use that.
+* Would like SMF Format 1 Target Files to hide element 0.
 
 Refactor: 
 * Move some of the logic in doProcess up into FeatureElement.
@@ -48,6 +47,7 @@ Parallel processing:
   - lock the project,
   - updating their output features,
   - process the changes.
+* File loading would be similar.
 * Needs new UI features, since the parts of the project can be stale which processing is underway.
 * Investigate this if use-case with expensive processing ever arises.
 
@@ -59,6 +59,7 @@ Ideas:
 * Processors could maybe be pure, and let the processorElement own the features.
   - Maybe they would have three pure methods: process(input, output), createDefaultInputFeature(), createDefaultOutputFeature().
   - Consider informing processors about array operations at a semantic level.
+    OR giving them an old view of arrays (using the array index system already in place).
 * SelectableArrays: For arrays larger than 16 elements:
   - Each element has an input drop down which selects the output array element.
   - This would be useful for complex input formats.
