@@ -24,7 +24,7 @@ The framework provides:
 
 ## Status
 
-![Build and test pipeline](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml/badge.svg)
+[![Build and test pipeline](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml/badge.svg)](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml)
 
 BabelWires is under active development, but please do not expect development to be rapid.
 I have very limited time to devote to this.
