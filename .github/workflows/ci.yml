@@ -49,7 +49,7 @@ jobs:
         choco install cmake qt5-default
         cmake --version
         # Hack to access the QtSDKPath variable.
-        C:\ProgramData\Chocolatey\qt5-default\tools\sharedVars.ps1
+        ($Env:ProgramData)\Chocolatey\lib\qt5-default\tools\sharedVars.ps1
         echo "CMAKE_PREFIX_PATH=$QtSDKPath" >> $GITHUB_ENV
 
     - name: Configure CMake
