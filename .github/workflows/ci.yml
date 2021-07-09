@@ -46,15 +46,15 @@ jobs:
     - name: Install CMake on Windows
       if: startsWith(matrix.config.os, 'windows')
       run: |
-        version: '5.15.2'
-        host: 'windows'
         choco install cmake
 
     - name: Install Qt on Windows
       if: startsWith(matrix.config.os, 'windows')
-      uses: jurplel/install-qt-action@v2.13.2
+      uses: jurplel/install-qt-action@v2
       with:
-        setup-python: 'true'
+        version: '5.15.2'
+        host: 'windows'
+        setup-python: 'false'
 
     - name: Configure CMake
       run: |
