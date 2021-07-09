@@ -14,13 +14,13 @@ jobs:
       fail-fast: false
       matrix:
         config: 
-        - {
-            name: "Ubuntu_Latest_GCC",
-            os: ubuntu-latest,
-            build_type: "Debug",
-            cc: "gcc-9",
-            cxx: "g++-9"
-          }
+        #- {
+        #    name: "Ubuntu_Latest_GCC",
+        #    os: ubuntu-latest,
+        #    build_type: "Debug",
+        #    cc: "gcc-9",
+        #    cxx: "g++-9"
+        #  }
         - {
             name: "Windows Latest MSVC",
             os: windows-latest,
@@ -48,8 +48,9 @@ jobs:
       run: |
         choco install cmake qt5-default
         cmake --version
-        $Env:QtSDKPath
-        $Env:CMAKE_PREFIX_PATH = $Env:QtSDKPath
+        # Hack to access the QtSDKPath variable.
+        C:\ProgramData\Chocolatey\qt5-default\tools\sharedVars.ps1
+        echo "CMAKE_PREFIX_PATH=$QtSDKPath" >> $GITHUB_ENV
 
     - name: Configure CMake
       run: |
