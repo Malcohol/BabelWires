@@ -14,21 +14,23 @@ jobs:
       fail-fast: false
       matrix:
         config: 
-        #- {
-        #    name: "Ubuntu_Latest_GCC",
-        #    os: ubuntu-latest,
-        #    build_type: "Debug",
-        #    cc: "gcc-9",
-        #    cxx: "g++-9"
-        #  }
+        - {
+            name: "Ubuntu_Latest_GCC",
+            os: ubuntu-latest,
+            build_type: "Debug",
+            cc: "gcc-9",
+            cxx: "g++-9",
+            exeExtension: ""
+          }
         - {
             name: "Windows Latest MSVC",
             os: windows-latest,
             build_type: "Debug",
             cc: "cl",
             cxx: "cl",
-            generators: "Visual Studio 16 2019"
-        }
+            generators: "Visual Studio 16 2019",
+            exeExtension: ".exe"
+          }
 
     steps:
     - uses: actions/checkout@v2
@@ -68,8 +70,8 @@ jobs:
 
     - name: CommonTest
       working-directory: build
-      run: Tests/Common/commonTests
+      run: Tests/Common/commonTests${{ matrix.config.exeExtension }}
 
     - name: BabelWiresTest
       working-directory: build
-      run: Tests/BabelWires/babelWiresTests
+      run: Tests/BabelWires/babelWiresTests${{ matrix.config.exeExtension }}
