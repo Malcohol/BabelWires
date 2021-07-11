@@ -46,7 +46,7 @@ testUtils::TempDirectory::TempDirectory(std::string_view dirPath)
 }
 
 testUtils::TempDirectory::~TempDirectory() {
-    const std::string tmpString = std::filesystem::temp_directory_path().u8string();
+    const std::string tmpString = std::filesystem::canonical(std::filesystem::temp_directory_path()).u8string();
 
     const auto isUnderTemp = [&tmpString](const std::filesystem::path& p) {
         const std::string pString = p.u8string();
