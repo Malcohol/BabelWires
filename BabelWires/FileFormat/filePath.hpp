@@ -8,6 +8,7 @@
 #pragma once
 
 #include <filesystem>
+#include <ostream>
 
 namespace babelwires {
     struct UserLogger;
@@ -52,6 +53,12 @@ namespace babelwires {
         
         /// Parse a serialized representation of a path.
         static FilePath deserializeFromString(const std::string& string);
+
+      public:
+        /// Used when a test fails to print the paths.
+        inline friend std::ostream& operator<<(std::ostream& os, const FilePath& p) {
+            return os << p.m_filePath;
+        }
 
       private:
         /// In the running system, this is the absolute path of the file.
