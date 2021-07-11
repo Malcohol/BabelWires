@@ -4,7 +4,7 @@
 #include <cassert>
 
 testUtils::TempFilePath::TempFilePath(std::string_view fileName)
-    : m_filePath(std::filesystem::temp_directory_path() / fileName)
+    : m_filePath(std::filesystem::canonical(std::filesystem::temp_directory_path()) / fileName)
     , m_asString(m_filePath.u8string()) {
     tryRemoveFile();
 }
@@ -41,7 +41,7 @@ void testUtils::TempFilePath::ensureExists(std::string contents) {
 }
 
 testUtils::TempDirectory::TempDirectory(std::string_view dirPath)
-    : m_dirPath(std::filesystem::temp_directory_path() / dirPath) {
+    : m_dirPath(std::filesystem::canonical(std::filesystem::temp_directory_path()) / dirPath) {
     std::filesystem::create_directories(m_dirPath);
 }
 

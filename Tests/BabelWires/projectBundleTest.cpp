@@ -231,7 +231,7 @@ TEST(ProjectBundleTest, filePathResolution) {
     babelwires::FieldNameRegistryScope fieldNameRegistryScope;
     libTestUtils::TestProjectContext context;
 
-    std::filesystem::path root = std::filesystem::temp_directory_path();
+    std::filesystem::path root = std::filesystem::canonical(std::filesystem::temp_directory_path());
 
     testUtils::TempDirectory FooBar("Foo/Bar");
     testUtils::TempDirectory OomBar("Oom/Bar");

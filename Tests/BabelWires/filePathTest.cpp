@@ -60,7 +60,7 @@ TEST(FilePathTest, interpretRelativeTo) {
 TEST(FilePathTest, resolveRelativeTo) {
     testUtils::TestLogWithListener log;
 
-    std::filesystem::path root = std::filesystem::temp_directory_path();
+    std::filesystem::path root = std::filesystem::canonical(std::filesystem::temp_directory_path());
 
     testUtils::TempDirectory FooBar("Foo/Bar");
     testUtils::TempDirectory OomBar("Oom/Bar");
