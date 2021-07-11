@@ -27,7 +27,7 @@ jobs:
             name: "Windows Latest MSVC",
             os: windows-latest,
             build_type: "Debug",
-            targetFolder: "Debug\\", # Must match build_type.
+            targetFolder: "Debug/", # Must match build_type.
             exeExtension: ".exe",
             cc: "cl",
             cxx: "cl",
@@ -72,8 +72,10 @@ jobs:
 
     - name: CommonTest
       working-directory: build
+      shell: bash
       run: Tests/Common/${{ matrix.config.targetFolder }}commonTests${{ matrix.config.exeExtension }}
 
     - name: BabelWiresTest
       working-directory: build
+      shell: bash
       run: Tests/BabelWires/${{ matrix.config.targetFolder }}babelWiresTests${{ matrix.config.exeExtension }}
