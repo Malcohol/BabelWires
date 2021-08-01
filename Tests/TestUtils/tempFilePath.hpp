@@ -8,7 +8,8 @@ namespace testUtils {
       public:
         /// Generate a path to a temp file with the given file name.
         /// Attempts to delete any file which is already at that path.
-        TempFilePath(std::string_view fileName);
+        /// If a non-zero discriminator d is provided, then foo.bar becomes foo_d.bar.
+        TempFilePath(std::string_view fileName, int discriminator = 0);
 
         TempFilePath(TempFilePath&& other);
 

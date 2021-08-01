@@ -3,8 +3,21 @@
 #include <fstream>
 #include <cassert>
 
-testUtils::TempFilePath::TempFilePath(std::string_view fileName)
-    : m_filePath(std::filesystem::canonical(std::filesystem::temp_directory_path()) / fileName)
+namespace {
+    std::filesystem::path discriminateFileName(std::string_view fileName, int discriminator) {
+        std::filesystem::path filePath = fileName;
+        if (discriminator != 0) {
+            const std::filesystem::path extension = filePath.extension();
+            filePath.replace_extension("");
+            filePath += "_" + std::to_string(discriminator);
+            filePath.replace_extension(extension);
+        }
+        return filePath;
+    }
+}
+
+testUtils::TempFilePath::TempFilePath(std::string_view fileName, int discriminator)
+    : m_filePath(std::filesystem::canonical(std::filesystem::temp_directory_path()) / discriminateFileName(fileName, discriminator))
     , m_asString(m_filePath.u8string()) {
     tryRemoveFile();
 }
