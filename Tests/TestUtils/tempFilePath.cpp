@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <cassert>
+#include <string>
 
 namespace {
     std::filesystem::path discriminateFileName(std::string_view fileName, int discriminator) {
