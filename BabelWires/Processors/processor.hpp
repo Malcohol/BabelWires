@@ -30,17 +30,4 @@ namespace babelwires {
         const RecordFeature* getOutputFeature() const;
     };
 
-    /// This convenience class provides a default constructed recordFeature for input and output features.
-    class CommonProcessor : public Processor {
-      public:
-        CommonProcessor();
-
-        virtual babelwires::RecordFeature* getInputFeature() override;
-        virtual babelwires::RecordFeature* getOutputFeature() override;
-
-      protected:
-        std::unique_ptr<babelwires::RecordFeature> m_inputFeature;
-        std::unique_ptr<babelwires::RecordFeature> m_outputFeature;
-    };
-
 } // namespace babelwires

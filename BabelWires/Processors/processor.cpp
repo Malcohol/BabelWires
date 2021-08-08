@@ -14,15 +14,3 @@ const babelwires::RecordFeature* babelwires::Processor::getInputFeature() const 
 const babelwires::RecordFeature* babelwires::Processor::getOutputFeature() const {
     return const_cast<Processor*>(this)->getOutputFeature();
 }
-
-babelwires::CommonProcessor::CommonProcessor()
-    : m_inputFeature(std::make_unique<babelwires::RecordFeature>())
-    , m_outputFeature(std::make_unique<babelwires::RecordFeature>()) {}
-
-babelwires::RecordFeature* babelwires::CommonProcessor::getInputFeature() {
-    return m_inputFeature.get();
-}
-
-babelwires::RecordFeature* babelwires::CommonProcessor::getOutputFeature() {
-    return m_outputFeature.get();
-}
