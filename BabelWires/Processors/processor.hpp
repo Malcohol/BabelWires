@@ -2,7 +2,7 @@
  * A Processor defines a processing operation from an input feature to an output feature.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -28,6 +28,19 @@ namespace babelwires {
         virtual RecordFeature* getOutputFeature() = 0;
         const RecordFeature* getInputFeature() const;
         const RecordFeature* getOutputFeature() const;
+    };
+
+    /// This convenience class provides a default constructed recordFeature for input and output features.
+    class CommonProcessor : public Processor {
+      public:
+        CommonProcessor();
+
+        virtual babelwires::RecordFeature* getInputFeature() override;
+        virtual babelwires::RecordFeature* getOutputFeature() override;
+
+      protected:
+        std::unique_ptr<babelwires::RecordFeature> m_inputFeature;
+        std::unique_ptr<babelwires::RecordFeature> m_outputFeature;
     };
 
 } // namespace babelwires
