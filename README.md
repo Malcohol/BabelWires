@@ -29,9 +29,9 @@ The framework provides:
 BabelWires is under active development, but please do not expect development to be rapid.
 I have very limited time to devote to this.
 
-Here's a screenshot of the current state of SeqWires:
+Here's a screenshot of SeqWires:
 
-![Screenshot showing three nodes wired together](Docs/screenshot.png "The current state of SeqWires")
+![Screenshot showing several nodes wired together](Docs/screenshot.png "SeqWires screenshot showing several nodes wired together")
 
 ## Downloading and Building
 

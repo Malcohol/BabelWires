@@ -78,7 +78,9 @@ void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
         }
     }
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setFeatures(m_processor->getInputFeature(), m_processor->getOutputFeature());
+        if (m_processor) {
+            m_contentsCache.setFeatures(m_processor->getInputFeature(), m_processor->getOutputFeature());
+        }
     } else if (isChanged(Changes::ModifierChangesMask)) {
         m_contentsCache.updateModifierCache();
     }
