@@ -729,3 +729,40 @@ TEST(ProjectTest, updateWithAvailableIds) {
     EXPECT_NE(idsToCheck2[1], idsToCheck2[2]);
     EXPECT_NE(idsToCheck2[2], idsToCheck2[0]);
 }
+
+TEST(ProjectTest, processWithFailure) {
+    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    libTestUtils::TestProjectContext context;
+
+    libTestUtils::TestProjectData projectData;
+    // Ensure this element fails completely.
+    projectData.m_elements[1]->m_factoryIdentifier = "flerg";
+
+    // Make real data for project.
+    testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
+    testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
+    projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
+    libTestUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
+
+    context.m_project.setProjectData(projectData);
+    context.m_project.process();
+
+    const babelwires::FeatureElement* sourceElement =
+        context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId);
+    ASSERT_NE(sourceElement, nullptr);
+    const libTestUtils::TestFileFeature* sourceOutput =
+        dynamic_cast<const libTestUtils::TestFileFeature*>(sourceElement->getOutputFeature());
+    ASSERT_NE(sourceOutput, nullptr);
+
+    const babelwires::FeatureElement* processor =
+        context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
+    ASSERT_NE(processor, nullptr);
+    ASSERT_TRUE(processor->isFailed());
+
+    const babelwires::FeatureElement* targetElement =
+        context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
+    ASSERT_NE(targetElement, nullptr);
+    const libTestUtils::TestFileFeature* targetInput =
+        dynamic_cast<const libTestUtils::TestFileFeature*>(targetElement->getInputFeature());
+    ASSERT_NE(targetInput, nullptr);
+}

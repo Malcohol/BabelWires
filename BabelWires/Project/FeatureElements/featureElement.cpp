@@ -264,7 +264,9 @@ const babelwires::ContentsCache& babelwires::FeatureElement::getContentsCache() 
 }
 
 void babelwires::FeatureElement::process(UserLogger& userLogger) {
-    doProcess(userLogger);
+    if (!isFailed()) {
+        doProcess(userLogger);
+    }
 }
 
 void babelwires::FeatureElement::adjustArrayIndices(const babelwires::FeaturePath& pathToArray,
