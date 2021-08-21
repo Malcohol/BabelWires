@@ -87,7 +87,7 @@ void libTestUtils::TestProjectData::testProjectDataAndDisciminators(
                       return a->m_pathToFeature < b->m_pathToFeature;
                   });
 
-        auto modData1 = dynamic_cast<const babelwires::ConnectionModifierData*>(sortedModifiers[0]);
+        auto modData1 = sortedModifiers[0]->asA<babelwires::ConnectionModifierData>();
         ASSERT_TRUE(modData1);
         EXPECT_EQ(*modData1->m_pathToFeature.getStep(0).asField(), libTestUtils::TestRecordFeature::s_intIdInitializer);
         EXPECT_EQ(modData1->m_pathToFeature.getStep(0).asField()->getDiscriminator(), recordIntDiscriminator);
@@ -116,7 +116,7 @@ void libTestUtils::TestProjectData::testProjectDataAndDisciminators(
 
     EXPECT_EQ(sortedElements[2]->m_id, 45);
     ASSERT_EQ(sortedElements[2]->m_modifiers.size(), 1);
-    auto modData0 = dynamic_cast<const babelwires::ConnectionModifierData*>(sortedElements[2]->m_modifiers[0].get());
+    auto modData0 = sortedElements[2]->m_modifiers[0].get()->asA<babelwires::ConnectionModifierData>();
     ASSERT_TRUE(modData0);
     EXPECT_EQ(*modData0->m_pathToFeature.getStep(0).asField(), libTestUtils::TestFileFeature::s_intChildInitializer);
     EXPECT_EQ(modData0->m_pathToFeature.getStep(0).asField()->getDiscriminator(), fileIntChildDiscriminator);
@@ -141,10 +141,10 @@ void libTestUtils::TestProjectData::resolvePathsInCurrentContext() {
     libTestUtils::TestFileFeature testFileFeature;
 
     // These have side-effects on the mutable field discriminators in the paths.
-    auto modData0 = dynamic_cast<const babelwires::ConnectionModifierData*>(m_elements[0]->m_modifiers[0].get());
+    auto modData0 = m_elements[0]->m_modifiers[0].get()->asA<babelwires::ConnectionModifierData>();
     modData0->m_pathToFeature.tryFollow(testFileFeature);
     modData0->m_pathToSourceFeature.tryFollow(testRecord);
-    auto modData1 = dynamic_cast<const babelwires::ConnectionModifierData*>(m_elements[1]->m_modifiers[0].get());
+    auto modData1 = m_elements[1]->m_modifiers[0].get()->asA<babelwires::ConnectionModifierData>();
     modData1->m_pathToFeature.tryFollow(testRecord);
     modData1->m_pathToSourceFeature.tryFollow(testFileFeature);
     auto modData2 = dynamic_cast<const babelwires::IntValueAssignmentData*>(m_elements[1]->m_modifiers[1].get());

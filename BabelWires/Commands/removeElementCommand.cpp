@@ -122,7 +122,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
         auto newEnd = std::remove_if(
             newElementData->m_modifiers.begin(), newElementData->m_modifiers.end(),
             [this, elementId, &connectionsBeingRemoved](const std::unique_ptr<ModifierData>& modData) {
-                if (const auto* assignFromData = dynamic_cast<const ConnectionModifierData*>(modData.get())) {
+                if (const auto* assignFromData = modData.get()->asA<ConnectionModifierData>()) {
                     ConnectionDescription connection(elementId, *assignFromData);
                     if (connectionsBeingRemoved.insert(connection).second) {
                         m_connections.emplace_back(connection);

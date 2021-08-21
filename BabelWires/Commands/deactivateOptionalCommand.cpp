@@ -50,7 +50,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
 
     if (const Modifier* modifier = elementToModify->getEdits().findModifier(m_pathToRecord)) {
         const auto& modifierData = modifier->getModifierData();
-        if (dynamic_cast<const ActivateOptionalsModifierData*>(&modifier->getModifierData())) {
+        if (modifier->getModifierData().asA<ActivateOptionalsModifierData>()) {
             m_wasModifier = true;
         }
     }

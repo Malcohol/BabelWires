@@ -99,7 +99,7 @@ TEST(FeatureElementTest, modifiers) {
         const babelwires::Modifier* arrayInitData = featureElement->findModifier(arrayPath);
         ASSERT_TRUE(arrayInitData);
         EXPECT_FALSE(arrayInitData->isFailed());
-        ASSERT_TRUE(dynamic_cast<const babelwires::ArraySizeModifierData*>(&arrayInitData->getModifierData()));
+        ASSERT_TRUE(arrayInitData->getModifierData().asA<babelwires::ArraySizeModifierData>());
         EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(&arrayInitData->getModifierData())->m_size,
                   5);
     }
@@ -283,7 +283,7 @@ TEST(FeatureElementTest, extractElementData) {
     ASSERT_EQ(extractedData->m_modifiers.size(), 3);
     // We assume extracted data is sorted, though that assumption is not part of the guarantee.
     EXPECT_EQ(extractedData->m_modifiers[0]->m_pathToFeature, arrayPath);
-    EXPECT_TRUE(dynamic_cast<const babelwires::ArraySizeModifierData*>(extractedData->m_modifiers[0].get()));
+    EXPECT_TRUE(extractedData->m_modifiers[0].get()->asA<babelwires::ArraySizeModifierData>());
     EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(extractedData->m_modifiers[0].get())->m_size, 5);
     EXPECT_EQ(extractedData->m_modifiers[1]->m_pathToFeature, arrayElemPath2);
     EXPECT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[1].get()));

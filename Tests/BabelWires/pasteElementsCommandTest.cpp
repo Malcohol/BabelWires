@@ -164,7 +164,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
             ASSERT_NE(modifier, nullptr);
             EXPECT_FALSE(modifier->isFailed());
             const babelwires::ConnectionModifierData* modData =
-                dynamic_cast<const babelwires::ConnectionModifierData*>(&modifier->getModifierData());
+                modifier->getModifierData().asA<babelwires::ConnectionModifierData>();
             ASSERT_NE(modData, nullptr);
             EXPECT_EQ(modData->m_sourceId, newSourceElement->getElementId());
         } else {

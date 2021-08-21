@@ -53,7 +53,7 @@ bool babelwires::AddEntryToArrayCommand::initialize(const Project& project) {
     }
 
     if (const Modifier* modifier = elementToModify->findModifier(m_pathToArray)) {
-        if (dynamic_cast<const ArraySizeModifierData*>(&modifier->getModifierData())) {
+        if (modifier->getModifierData().asA<ArraySizeModifierData>()) {
             m_wasModifier = true;
         }
     }

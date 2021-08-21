@@ -172,7 +172,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     {
         const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
-        ASSERT_TRUE(dynamic_cast<const babelwires::ArraySizeModifierData*>(&modifier->getModifierData()));
+        ASSERT_TRUE(modifier->getModifierData().asA<babelwires::ArraySizeModifierData>());
         EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size, 4);
     }
 

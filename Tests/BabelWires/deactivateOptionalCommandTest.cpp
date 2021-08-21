@@ -114,7 +114,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
         const babelwires::Modifier* modifier =
             element->getEdits().findModifier(libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord);
         EXPECT_NE(modifier, nullptr);
-        EXPECT_NE(dynamic_cast<const babelwires::ActivateOptionalsModifierData*>(&modifier->getModifierData()),
+        EXPECT_NE(modifier->getModifierData().asA<babelwires::ActivateOptionalsModifierData>(),
                   nullptr);
     }
     checkModifiers(false);

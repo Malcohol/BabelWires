@@ -40,7 +40,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     {
         const babelwires::Modifier* modifier = element->getEdits().findModifier(libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord);
         EXPECT_NE(modifier, nullptr);
-        EXPECT_NE(dynamic_cast<const babelwires::ActivateOptionalsModifierData*>(&modifier->getModifierData()), nullptr);
+        EXPECT_NE(modifier->getModifierData().asA<babelwires::ActivateOptionalsModifierData>(), nullptr);
     }
 
     command.undo(context.m_project);
@@ -58,7 +58,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     {
         const babelwires::Modifier* modifier = element->getEdits().findModifier(libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord);
         EXPECT_NE(modifier, nullptr);
-        EXPECT_NE(dynamic_cast<const babelwires::ActivateOptionalsModifierData*>(&modifier->getModifierData()), nullptr);
+        EXPECT_NE(modifier->getModifierData().asA<babelwires::ActivateOptionalsModifierData>(), nullptr);
     }
 }
 

@@ -43,6 +43,14 @@ namespace babelwires {
         /// (There is currently no scenario where a modifier references a filepath, but
         /// this is just here for future proofing.)
         void visitFilePaths(FilePathVisitor& visitor) override;
+
+        /// Return a pointer to a T if this is a T, otherwise return nullptr.
+        template <typename T, std::enable_if_t<std::is_base_of_v<ModifierData, T>, std::nullptr_t> = nullptr>
+        T* asA() { return dynamic_cast<T*>(this); }
+
+        /// Return a pointer to a T if this is a T, otherwise return nullptr.
+        template <typename T, std::enable_if_t<std::is_base_of_v<ModifierData, T>, std::nullptr_t> = nullptr>
+        const T* asA() const { return dynamic_cast<const T*>(this); }
     };
 
     /// Base class for ModifierData which construct LocalModifiers.

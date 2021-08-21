@@ -48,7 +48,7 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
     }
 
     if (const Modifier* modifier = elementToModify->findModifier(m_pathToRecord)) {
-        if (dynamic_cast<const ActivateOptionalsModifierData*>(&modifier->getModifierData())) {
+        if (modifier->getModifierData().asA<ActivateOptionalsModifierData>()) {
             m_wasModifier = true;
         }
     }

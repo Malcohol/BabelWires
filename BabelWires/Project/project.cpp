@@ -599,7 +599,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
     ActivateOptionalsModifierData* modifierData = nullptr;
     
     if (Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord)) {
-        if (auto activateOptionalsModifierData = dynamic_cast<ActivateOptionalsModifierData*>(&existingModifier->getModifierData())) {
+        if (auto activateOptionalsModifierData = existingModifier->getModifierData().asA<ActivateOptionalsModifierData>()) {
             auto localModifier = dynamic_cast<LocalModifier*>(existingModifier);
             assert(localModifier && "Non-local modifier carrying local data");
             modifierData = activateOptionalsModifierData;
@@ -633,7 +633,7 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
     Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord);
     assert(existingModifier);
 
-    auto activateOptionalsModifierData = dynamic_cast<ActivateOptionalsModifierData*>(&existingModifier->getModifierData());
+    auto activateOptionalsModifierData = existingModifier->getModifierData().asA<ActivateOptionalsModifierData>();
     assert(activateOptionalsModifierData);
     assert(dynamic_cast<LocalModifier*>(existingModifier) && "Non-local modifier carrying local data");
     auto localModifier = static_cast<LocalModifier*>(existingModifier);
