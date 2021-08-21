@@ -55,6 +55,14 @@ namespace babelwires {
         /// This is not required to distinguish the contents of features of different types.
         std::size_t getHash() const;
 
+        /// Return a pointer to a T if this is a T, otherwise return nullptr.
+        template <typename T, std::enable_if_t<std::is_base_of_v<Feature, T>, std::nullptr_t> = nullptr>
+        T* asA() { return dynamic_cast<T*>(this); }
+
+        /// Return a pointer to a T if this is a T, otherwise return nullptr.
+        template <typename T, std::enable_if_t<std::is_base_of_v<Feature, T>, std::nullptr_t> = nullptr>
+        const T* asA() const { return dynamic_cast<const T*>(this); }
+
       protected:
         /// Set the isChanged flag and that of all parents.
         void setChanged(Changes changes);
