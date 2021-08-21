@@ -146,7 +146,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(dynamic_cast<const babelwires::SourceFileElement*>(featureElement.get()));
     EXPECT_TRUE(featureElement->getOutputFeature());
-    EXPECT_TRUE(dynamic_cast<const libTestUtils::TestFileFeature*>(featureElement->getOutputFeature()));
+    EXPECT_TRUE(featureElement->getOutputFeature()->asA<const libTestUtils::TestFileFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(dynamic_cast<const babelwires::SourceFileElementData*>(&featureElement->getElementData()));
@@ -242,7 +242,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(dynamic_cast<const babelwires::TargetFileElement*>(featureElement.get()));
     EXPECT_TRUE(featureElement->getInputFeature());
-    EXPECT_TRUE(dynamic_cast<const libTestUtils::TestFileFeature*>(featureElement->getInputFeature()));
+    EXPECT_TRUE(featureElement->getInputFeature()->asA<const libTestUtils::TestFileFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(dynamic_cast<const babelwires::TargetFileElementData*>(&featureElement->getElementData()));
@@ -331,7 +331,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(dynamic_cast<const babelwires::ProcessorElement*>(featureElement.get()));
     EXPECT_TRUE(featureElement->getInputFeature());
-    EXPECT_TRUE(dynamic_cast<const libTestUtils::TestRecordFeature*>(featureElement->getInputFeature()));
+    EXPECT_TRUE(featureElement->getInputFeature()->asA<const libTestUtils::TestRecordFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(dynamic_cast<const babelwires::ProcessorElementData*>(&featureElement->getElementData()));

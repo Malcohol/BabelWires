@@ -41,7 +41,7 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         return false;
     }
 
-    auto arrayFeature = dynamic_cast<const ArrayFeature*>(m_pathToArray.tryFollow(*inputFeature));
+    auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->asA<const ArrayFeature>();
     if (!arrayFeature) {
         return false;
     }

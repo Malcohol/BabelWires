@@ -51,7 +51,7 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return dynamic_cast<const libTestUtils::TestRecordFeature*>(element->getInputFeature());
+        return element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
     };
 
     const auto checkModifiers = [&context, element, targetElement](bool isCommandExecuted) {
@@ -146,7 +146,7 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
         dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
     ASSERT_NE(element, nullptr);
 
-    const auto* inputFeature = dynamic_cast<const libTestUtils::TestRecordFeature*>(element->getInputFeature());
+    const auto* inputFeature = element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
     ASSERT_NE(inputFeature, nullptr);
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
 

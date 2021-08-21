@@ -24,8 +24,8 @@ TEST(FeatureElementTest, basicAccessors) {
     EXPECT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->getInputFeature());
     EXPECT_TRUE(featureElement->getOutputFeature());
-    EXPECT_TRUE(dynamic_cast<const libTestUtils::TestRecordFeature*>(featureElement->getInputFeature()));
-    EXPECT_TRUE(dynamic_cast<const libTestUtils::TestRecordFeature*>(featureElement->getOutputFeature()));
+    EXPECT_TRUE(featureElement->getInputFeature()->asA<const libTestUtils::TestRecordFeature>());
+    EXPECT_TRUE(featureElement->getOutputFeature()->asA<const libTestUtils::TestRecordFeature>());
     EXPECT_EQ(featureElement->getElementId(), 54);
 }
 
@@ -122,10 +122,10 @@ TEST(FeatureElementTest, modifiers) {
     const babelwires::RecordFeature* const recordFeature = featureElement->getInputFeature();
     ASSERT_TRUE(recordFeature);
     const libTestUtils::TestRecordFeature* const testRecordFeature =
-        dynamic_cast<const libTestUtils::TestRecordFeature*>(recordFeature);
+        recordFeature->asA<const libTestUtils::TestRecordFeature>();
     ASSERT_TRUE(testRecordFeature);
     EXPECT_EQ(testRecordFeature->m_arrayFeature->getNumFeatures(), 5);
-    ASSERT_TRUE(dynamic_cast<const babelwires::IntFeature*>(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3)));
+    ASSERT_TRUE(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3)->asA<const babelwires::IntFeature>());
     EXPECT_EQ(
         static_cast<const babelwires::IntFeature*>(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3))->get(),
         16);

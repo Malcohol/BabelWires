@@ -23,7 +23,7 @@ void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer
 }
 
 void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) const {
-    RecordWithOptionalsFeature* record = dynamic_cast<RecordWithOptionalsFeature*>(targetFeature);
+    RecordWithOptionalsFeature* record = targetFeature->asA<RecordWithOptionalsFeature>();
     if (!record) {
         throw ModelException() << "Cannot selection optionals from a feature which does not have optionals";
     }

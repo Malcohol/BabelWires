@@ -20,7 +20,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
         dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestRecordFeature* inputFeature =
-        dynamic_cast<const libTestUtils::TestRecordFeature*>(element->getInputFeature());
+        element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
     ASSERT_NE(inputFeature, nullptr);
 
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
@@ -58,7 +58,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
         dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return dynamic_cast<const libTestUtils::TestRecordFeature*>(element->getInputFeature());
+        return element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
 
@@ -125,7 +125,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
         dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
     ASSERT_NE(element, nullptr);
 
-    const auto* inputFeature = dynamic_cast<const libTestUtils::TestRecordFeature*>(element->getInputFeature());
+    const auto* inputFeature = element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
     ASSERT_NE(inputFeature, nullptr);
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
 

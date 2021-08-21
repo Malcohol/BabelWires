@@ -153,7 +153,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should lead to an array");
 
-            if (ArrayFeature* const arrayFeature = dynamic_cast<ArrayFeature*>(featureAtPath)) {
+            if (ArrayFeature* const arrayFeature = featureAtPath->asA<ArrayFeature>()) {
                 // First, ensure there is an appropriate modifier at the array.
                 ArraySizeModifier* arrayModifier = nullptr;
                 if (Modifier* const modifier = element->findModifier(pathToArray)) {
@@ -200,7 +200,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should lead to an array");
 
-            if (ArrayFeature* const arrayFeature = dynamic_cast<ArrayFeature*>(featureAtPath)) {
+            if (ArrayFeature* const arrayFeature = featureAtPath->asA<ArrayFeature>()) {
                 // First, check if there is a modifier at the array.
                 ArraySizeModifier* arrayModifier = nullptr;
                 if (Modifier* const modifier = element->findModifier(pathToArray)) {

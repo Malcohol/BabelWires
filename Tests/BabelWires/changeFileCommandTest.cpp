@@ -40,7 +40,7 @@ namespace {
         ASSERT_NE(element, nullptr);
 
         const auto getOutputFeature = [element]() {
-            return dynamic_cast<const libTestUtils::TestFileFeature*>(element->getOutputFeature());
+            return element->getOutputFeature()->asA<const libTestUtils::TestFileFeature>();
         };
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);

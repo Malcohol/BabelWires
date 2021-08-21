@@ -28,7 +28,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     babelwires::ProcessorElement* processorElement = static_cast<babelwires::ProcessorElement*>(featureElement.get());
 
     const babelwires::RecordFeature* outputFeature = processorElement->getOutputFeature();
-    ASSERT_TRUE(dynamic_cast<const libTestUtils::TestRecordFeature*>(outputFeature));
+    ASSERT_TRUE(outputFeature->asA<const libTestUtils::TestRecordFeature>());
     const libTestUtils::TestRecordFeature* outputTestRecordFeature =
         static_cast<const libTestUtils::TestRecordFeature*>(outputFeature);
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);

@@ -53,12 +53,12 @@ void babelwires::ConnectionModifierData::apply(const Feature* sourceFeature, Fea
         return;
     }
 
-    auto targetValueFeature = dynamic_cast<babelwires::ValueFeature*>(targetFeature);
+    auto targetValueFeature = targetFeature->asA<babelwires::ValueFeature>();
     if (!targetValueFeature) {
         throw babelwires::ModelException() << "Cannot modify a non-value field";
     }
 
-    auto sourceValueFeature = dynamic_cast<const babelwires::ValueFeature*>(sourceFeature);
+    auto sourceValueFeature = sourceFeature->asA<const babelwires::ValueFeature>();
     if (!sourceValueFeature) {
         throw babelwires::ModelException()
             << "Cannot apply from the non-value field at " << m_pathToSourceFeature << " in element id=" << m_sourceId;

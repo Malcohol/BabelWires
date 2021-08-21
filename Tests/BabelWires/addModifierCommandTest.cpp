@@ -19,7 +19,7 @@ TEST(AddModifierCommandTest, executeAndUndo) {
         dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return dynamic_cast<const libTestUtils::TestRecordFeature*>(element->getInputFeature());
+        return element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
     EXPECT_NE(getInputFeature()->m_intFeature2->get(), 86);
@@ -67,7 +67,7 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
         dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return dynamic_cast<const libTestUtils::TestRecordFeature*>(element->getInputFeature());
+        return element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 77);

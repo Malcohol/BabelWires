@@ -23,7 +23,7 @@
 #include <cassert>
 
 const babelwires::FileFeature& babelwires::FileRowModel::getFileFeature() const {
-    assert(dynamic_cast<const FileFeature*>(getInputThenOutputFeature()) && "Wrong type of feature stored");
+    assert(getInputThenOutputFeature()->asA<const FileFeature>() && "Wrong type of feature stored");
     return *static_cast<const FileFeature*>(getInputThenOutputFeature());
 }
 

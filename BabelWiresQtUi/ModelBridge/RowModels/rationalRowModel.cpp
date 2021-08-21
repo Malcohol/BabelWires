@@ -17,7 +17,7 @@
 #include <cassert>
 
 const babelwires::RationalFeature& babelwires::RationalRowModel::getRationalFeature() const {
-    assert(dynamic_cast<const babelwires::RationalFeature*>(getInputThenOutputFeature()) &&
+    assert(getInputThenOutputFeature()->asA<const babelwires::RationalFeature>() &&
            "Wrong type of feature stored");
     return *static_cast<const babelwires::RationalFeature*>(getInputThenOutputFeature());
 }

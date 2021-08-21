@@ -384,7 +384,7 @@ TEST(ProjectTest, reloadSource) {
         dynamic_cast<const babelwires::FeatureElement*>(context.m_project.getFeatureElement(elementId));
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getOutputFeature(), nullptr);
-    ASSERT_NE(dynamic_cast<const libTestUtils::TestFileFeature*>(element->getOutputFeature()), nullptr);
+    ASSERT_NE(element->getOutputFeature()->asA<const libTestUtils::TestFileFeature>(), nullptr);
     EXPECT_EQ(static_cast<const libTestUtils::TestFileFeature*>(element->getOutputFeature())->m_intChildFeature->get(),
               14);
 
@@ -423,7 +423,7 @@ TEST(ProjectTest, saveTarget) {
         dynamic_cast<babelwires::FeatureElement*>(context.m_project.getFeatureElement(elementId));
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getInputFeature(), nullptr);
-    auto* inputFeature = dynamic_cast<libTestUtils::TestFileFeature*>(element->getInputFeature());
+    auto* inputFeature = element->getInputFeature()->asA<libTestUtils::TestFileFeature>();
     ASSERT_NE(inputFeature, nullptr);
 
     inputFeature->m_intChildFeature->set(47);
@@ -466,24 +466,24 @@ TEST(ProjectTest, process) {
         context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
     const libTestUtils::TestFileFeature* sourceOutput =
-        dynamic_cast<const libTestUtils::TestFileFeature*>(sourceElement->getOutputFeature());
+        sourceElement->getOutputFeature()->asA<const libTestUtils::TestFileFeature>();
     ASSERT_NE(sourceOutput, nullptr);
 
     const babelwires::FeatureElement* processor =
         context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
     const libTestUtils::TestRecordFeature* processorInput =
-        dynamic_cast<const libTestUtils::TestRecordFeature*>(processor->getInputFeature());
+        processor->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
     ASSERT_NE(processorInput, nullptr);
     const libTestUtils::TestRecordFeature* processorOutput =
-        dynamic_cast<const libTestUtils::TestRecordFeature*>(processor->getOutputFeature());
+        processor->getOutputFeature()->asA<const libTestUtils::TestRecordFeature>();
     ASSERT_NE(processorOutput, nullptr);
 
     const babelwires::FeatureElement* targetElement =
         context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
     const libTestUtils::TestFileFeature* targetInput =
-        dynamic_cast<const libTestUtils::TestFileFeature*>(targetElement->getInputFeature());
+        targetElement->getInputFeature()->asA<const libTestUtils::TestFileFeature>();
     ASSERT_NE(targetInput, nullptr);
 
     // 4rd array entry, where they count up from the input value (3).
@@ -666,9 +666,8 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     EXPECT_FALSE(element3->isInDependencyLoop());
     EXPECT_FALSE(element4->isInDependencyLoop());
 
-    ASSERT_NE(dynamic_cast<const libTestUtils::TestRecordFeature*>(element3->getOutputFeature()), nullptr);
-    EXPECT_EQ(dynamic_cast<const libTestUtils::TestRecordFeature*>(element3->getOutputFeature())->m_intFeature2->get(),
-              16);
+    ASSERT_NE(element3->getOutputFeature()->asA<libTestUtils::TestRecordFeature>(), nullptr);
+    EXPECT_EQ(element3->getOutputFeature()->asA<libTestUtils::TestRecordFeature>()->m_intFeature2->get(), 16);              
 
     context.m_project.removeModifier(elementId2, libTestUtils::TestRecordFeature::s_pathToInt2);
     context.m_project.process();
@@ -751,7 +750,7 @@ TEST(ProjectTest, processWithFailure) {
         context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
     const libTestUtils::TestFileFeature* sourceOutput =
-        dynamic_cast<const libTestUtils::TestFileFeature*>(sourceElement->getOutputFeature());
+        sourceElement->getOutputFeature()->asA<const libTestUtils::TestFileFeature>();
     ASSERT_NE(sourceOutput, nullptr);
 
     const babelwires::FeatureElement* processor =
@@ -763,6 +762,6 @@ TEST(ProjectTest, processWithFailure) {
         context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
     const libTestUtils::TestFileFeature* targetInput =
-        dynamic_cast<const libTestUtils::TestFileFeature*>(targetElement->getInputFeature());
+        targetElement->getInputFeature()->asA<const libTestUtils::TestFileFeature>();
     ASSERT_NE(targetInput, nullptr);
 }

@@ -34,7 +34,7 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
         return false;
     }
 
-    auto recordFeature = dynamic_cast<const RecordWithOptionalsFeature*>(m_pathToRecord.tryFollow(*inputFeature));
+    auto recordFeature = m_pathToRecord.tryFollow(*inputFeature)->asA<const RecordWithOptionalsFeature>();
     if (!recordFeature) {
         return false;
     }

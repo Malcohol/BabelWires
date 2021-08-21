@@ -30,22 +30,22 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     const babelwires::Feature* feature = entry->getInputThenOutputFeature();
     if (rowModelRegistry.handleFeature(feature, m_rowModel)) {
         // Handled by a registered handler.
-    } else if (dynamic_cast<const babelwires::StringFeature*>(feature)) {
+    } else if (feature->asA<const babelwires::StringFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::StringRowModel));
         new (m_rowModel) babelwires::StringRowModel();
-    } else if (dynamic_cast<const babelwires::IntFeature*>(feature)) {
+    } else if (feature->asA<const babelwires::IntFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::IntRowModel));
         new (m_rowModel) babelwires::IntRowModel();
-    } else if (dynamic_cast<const babelwires::RationalFeature*>(feature)) {
+    } else if (feature->asA<const babelwires::RationalFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::RationalRowModel));
         new (m_rowModel) babelwires::RationalRowModel();
-    } else if (dynamic_cast<const babelwires::ArrayFeature*>(feature)) {
+    } else if (feature->asA<const babelwires::ArrayFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ArrayRowModel));
         new (m_rowModel) babelwires::ArrayRowModel();
-    } else if (dynamic_cast<const babelwires::FileFeature*>(feature)) {
+    } else if (feature->asA<const babelwires::FileFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::FileRowModel));
         new (m_rowModel) babelwires::FileRowModel();
-    } else if (dynamic_cast<const babelwires::RecordWithOptionalsFeature*>(feature)) {
+    } else if (feature->asA<const babelwires::RecordWithOptionalsFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::RecordWithOptionalsRowModel));
         new (m_rowModel) babelwires::RecordWithOptionalsRowModel();
     } else {

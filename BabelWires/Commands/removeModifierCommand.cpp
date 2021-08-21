@@ -49,7 +49,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     // TODO: There should be a way to move this to a virtual function on modifiers, so these modifiers know how to
     // remove themselves cleanly.
     if (dynamic_cast<const ArraySizeModifierData*>(&modifier->getModifierData())) {
-        if (auto arrayFeature = dynamic_cast<const ArrayFeature*>(path.tryFollow(*inputFeature))) {
+        if (auto arrayFeature = path.tryFollow(*inputFeature)->asA<const ArrayFeature>()) {
             const int numEntriesToRemove = arrayFeature->getNumFeatures() - arrayFeature->getSizeRange().m_min;
             if (numEntriesToRemove > 0) {
                 const int lastEntryIndex = arrayFeature->getSizeRange().m_min;
@@ -59,7 +59,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         }
     }
     else if (dynamic_cast<const ActivateOptionalsModifierData*>(&modifier->getModifierData())) {
-        if (auto optionalFeature = dynamic_cast<const RecordWithOptionalsFeature*>(path.tryFollow(*inputFeature))) {
+        if (auto optionalFeature = path.tryFollow(*inputFeature)->asA<const RecordWithOptionalsFeature>()) {
             for (auto optionalField : optionalFeature->getOptionalFields()) {
                 if (optionalFeature->isActivated(optionalField)) {
                     addSubCommand(std::make_unique<DeactivateOptionalCommand>("DeactivateOptionalCommand subcommand", elementId, path, optionalField));

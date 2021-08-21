@@ -55,7 +55,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return dynamic_cast<const libTestUtils::TestRecordFeature*>(element->getInputFeature());
+        return element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
     };
     const auto checkModifiers = [&context, element](bool isCommandExecuted) {
         const babelwires::Modifier* arrayInitialization =

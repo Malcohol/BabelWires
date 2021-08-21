@@ -132,7 +132,7 @@ void babelwires::RowModel::getContextMenuActions(
         actionsOut.emplace_back(std::make_unique<RemoveFailedModifiersAction>());
     }
     if (const babelwires::Feature* inputFeature = getInputFeature()) {
-        if (auto arrayFeature = dynamic_cast<const ArrayFeature*>(inputFeature->getOwner())) {
+        if (auto arrayFeature = inputFeature->getOwner()->asA<const ArrayFeature>()) {
             FeaturePath pathToArray(arrayFeature);
             const PathStep step = arrayFeature->getStepToChild(inputFeature);
             const ArrayIndex index = step.getIndex();
