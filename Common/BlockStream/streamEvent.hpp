@@ -68,10 +68,12 @@ namespace babelwires {
         virtual ~StreamEvent() = default;
 
         /// Return a pointer to a T if this is a T, otherwise return nullptr.
-        template <typename T> T* asA() { return dynamic_cast<T*>(this); }
+        template <typename T, std::enable_if_t<std::is_base_of_v<StreamEvent, T>, std::nullptr_t> = nullptr>
+        T* asA() { return dynamic_cast<T*>(this); }
 
         /// Return a pointer to a T if this is a T, otherwise return nullptr.
-        template <typename T> const T* asA() const { return dynamic_cast<const T*>(this); }
+        template <typename T, std::enable_if_t<std::is_base_of_v<StreamEvent, T>, std::nullptr_t> = nullptr>
+        const T* asA() const { return dynamic_cast<const T*>(this); }
 
       private:
         friend BlockStream;
