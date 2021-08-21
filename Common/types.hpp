@@ -61,5 +61,13 @@ namespace babelwires {
     template <typename T, typename U> struct CopyConst {
         typedef typename std::conditional<std::is_const<T>::value, typename std::add_const<U>::type, U>::type type;
     };
-
 } // namespace babelwires
+
+/// Adds "asA" methods to a hierarchy, allowing limited downcasting within the hierarchy.
+/// This neatens up dynamic_casting in client code, and should make refactors easier in future.
+/// foo.asA<BAR>() either returns a BAR* or nullptr.
+#define DOWNCASTABLE_TYPE_HIERARCHY(BASE) \
+    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> \
+    T* asA() { return dynamic_cast<T*>(this); } \
+    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> \
+    const T* asA() const { return dynamic_cast<const T*>(this); }
