@@ -99,7 +99,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
         if (isAdded) {
             ASSERT_NE(modifier, nullptr);
             const babelwires::ConnectionModifier* connection =
-                dynamic_cast<const babelwires::ConnectionModifier*>(modifier);
+                modifier->asA<babelwires::ConnectionModifier>();
             ASSERT_NE(connection, nullptr);
             EXPECT_EQ(connection->getModifierData().m_pathToFeature, connectionData.m_pathToFeature);
             EXPECT_EQ(connection->getModifierData().m_pathToSourceFeature, connectionData.m_pathToSourceFeature);

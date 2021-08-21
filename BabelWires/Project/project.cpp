@@ -157,7 +157,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
                 // First, ensure there is an appropriate modifier at the array.
                 ArraySizeModifier* arrayModifier = nullptr;
                 if (Modifier* const modifier = element->findModifier(pathToArray)) {
-                    arrayModifier = dynamic_cast<ArraySizeModifier*>(modifier);
+                    arrayModifier = modifier->asA<ArraySizeModifier>();
                     if (!arrayModifier) {
                         // Defensive: Wasn't an array modifier at the path, so let it be replaced.
                         // This won't be restored by an undo, but that shouldn't matter since it isn't
@@ -204,7 +204,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
                 // First, check if there is a modifier at the array.
                 ArraySizeModifier* arrayModifier = nullptr;
                 if (Modifier* const modifier = element->findModifier(pathToArray)) {
-                    arrayModifier = dynamic_cast<ArraySizeModifier*>(modifier);
+                    arrayModifier = modifier->asA<ArraySizeModifier>();
                     if (!arrayModifier) {
                         // Defensive: Wasn't an array modifier at the path, so let it be replaced.
                         // This won't be restored by an undo, but that shouldn't matter since it isn't
@@ -600,7 +600,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
     
     if (Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord)) {
         if (auto activateOptionalsModifierData = existingModifier->getModifierData().asA<ActivateOptionalsModifierData>()) {
-            auto localModifier = dynamic_cast<LocalModifier*>(existingModifier);
+            auto localModifier = existingModifier->asA<LocalModifier>();
             assert(localModifier && "Non-local modifier carrying local data");
             modifierData = activateOptionalsModifierData;
             activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
@@ -635,7 +635,7 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
 
     auto activateOptionalsModifierData = existingModifier->getModifierData().asA<ActivateOptionalsModifierData>();
     assert(activateOptionalsModifierData);
-    assert(dynamic_cast<LocalModifier*>(existingModifier) && "Non-local modifier carrying local data");
+    assert(existingModifier->asA<LocalModifier>() && "Non-local modifier carrying local data");
     auto localModifier = static_cast<LocalModifier*>(existingModifier);
 
     auto it = std::find(activateOptionalsModifierData->m_selectedOptionals.begin(), activateOptionalsModifierData->m_selectedOptionals.end(), optional);
