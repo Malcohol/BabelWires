@@ -54,7 +54,7 @@ namespace {
 
     void checkModifiers(const babelwires::ElementData& data, const char* pathStep) {
         EXPECT_EQ(data.m_modifiers.size(), 1);
-        EXPECT_NE(dynamic_cast<const babelwires::IntValueAssignmentData*>(data.m_modifiers[0].get()), nullptr);
+        EXPECT_NE(data.m_modifiers[0]->asA<babelwires::IntValueAssignmentData>(), nullptr);
         const auto& mod = static_cast<const babelwires::IntValueAssignmentData&>(*data.m_modifiers[0]);
         EXPECT_EQ(mod.m_pathToFeature, babelwires::FeaturePath::deserializeFromString(pathStep));
         EXPECT_EQ(mod.m_value, 12);

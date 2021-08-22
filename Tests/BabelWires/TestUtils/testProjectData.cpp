@@ -95,7 +95,7 @@ void libTestUtils::TestProjectData::testProjectDataAndDisciminators(
                   libTestUtils::TestFileFeature::s_intChildInitializer);
         EXPECT_EQ(modData1->m_pathToSourceFeature.getStep(0).asField()->getDiscriminator(), fileIntChildDiscriminator);
 
-        auto modData2 = dynamic_cast<const babelwires::IntValueAssignmentData*>(sortedModifiers[1]);
+        auto modData2 = sortedModifiers[1]->asA<babelwires::IntValueAssignmentData>();
         ASSERT_TRUE(modData2);
         ASSERT_GE(modData2->m_pathToFeature.getNumSteps(), 2);
         EXPECT_EQ(*modData2->m_pathToFeature.getStep(0).asField(),
@@ -147,7 +147,7 @@ void libTestUtils::TestProjectData::resolvePathsInCurrentContext() {
     auto modData1 = m_elements[1]->m_modifiers[0].get()->asA<babelwires::ConnectionModifierData>();
     modData1->m_pathToFeature.tryFollow(testRecord);
     modData1->m_pathToSourceFeature.tryFollow(testFileFeature);
-    auto modData2 = dynamic_cast<const babelwires::IntValueAssignmentData*>(m_elements[1]->m_modifiers[1].get());
+    auto modData2 = m_elements[1]->m_modifiers[1].get()->asA<babelwires::IntValueAssignmentData>();
     modData2->m_pathToFeature.tryFollow(testRecord);
     m_elements[1]->m_expandedPaths[0].tryFollow(testRecord);
 }

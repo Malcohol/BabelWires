@@ -23,8 +23,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     const babelwires::ElementId targetId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     const libTestUtils::TestFeatureElementWithOptionals* element =
-        dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(
-            context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
         context.m_project.getFeatureElement(targetId)->asA<libTestUtils::TestFeatureElement>();
@@ -165,8 +164,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
     const babelwires::ElementId elementId =
         context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
-    const auto* element = dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(
-        context.m_project.getFeatureElement(elementId));
+    const auto* element = context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
 
     babelwires::FieldIdentifier opId("flerm");
@@ -184,8 +182,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     const babelwires::ElementId elementId =
         context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
-    const auto* element = dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(
-        context.m_project.getFeatureElement(elementId));
+    const auto* element = context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
@@ -205,8 +202,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
     const babelwires::ElementId elementId =
         context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
-    const auto* element = dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(
-        context.m_project.getFeatureElement(elementId));
+    const auto* element = context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =

@@ -38,7 +38,7 @@ TEST(ModifierTest, basicStuff) {
     EXPECT_EQ(intMod.asConnectionModifier(), nullptr);
     EXPECT_EQ(intMod.getModifierData().m_pathToFeature, path);
     EXPECT_EQ(intMod.getPathToFeature(), path);
-    EXPECT_NE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&intMod.getModifierData()), nullptr);
+    EXPECT_NE(intMod.getModifierData().asA<babelwires::IntValueAssignmentData>(), nullptr);
     EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData&>(intMod.getModifierData()).m_value, 198);
 
     EXPECT_EQ(const_cast<const babelwires::LocalModifier&>(intMod).getOwner(), nullptr);
@@ -59,7 +59,7 @@ TEST(ModifierTest, clone) {
     auto clone = intMod.clone();
     ASSERT_NE(clone, nullptr);
     EXPECT_EQ(clone->getModifierData().m_pathToFeature, path);
-    EXPECT_NE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&clone->getModifierData()), nullptr);
+    EXPECT_NE(clone->getModifierData().asA<babelwires::IntValueAssignmentData>(), nullptr);
     EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData&>(clone->getModifierData()).m_value, 198);
 }
 

@@ -23,7 +23,7 @@ template <typename BLOCKSTREAM, typename EVENT> struct babelwires::BlockStream::
     Iterator& operator++() {
         if (m_current->m_numBytesToNextEvent > 0) {
             auto* nextEvent = m_current->getNextEventInBlock();
-            assert((dynamic_cast<EVENT*>(nextEvent) != nullptr) && "The stream contained an event of unexpected type");
+            assert((nextEvent->template asA<EVENT>() != nullptr) && "The stream contained an event of unexpected type");
             m_current = static_cast<EVENT*>(nextEvent);
         } else {
             assert((m_current == m_blockStream->m_blocks[m_blockIndex]->m_lastEvent) &&
@@ -33,7 +33,7 @@ template <typename BLOCKSTREAM, typename EVENT> struct babelwires::BlockStream::
                 m_current = nullptr;
             } else {
                 auto* nextEvent = m_blockStream->m_blocks[m_blockIndex]->m_firstEvent;
-                assert((dynamic_cast<EVENT*>(nextEvent) != nullptr) &&
+                assert((nextEvent->template asA<EVENT>() != nullptr) &&
                        "The stream contained an event of unexpected type");
                 m_current = static_cast<EVENT*>(nextEvent);
             }

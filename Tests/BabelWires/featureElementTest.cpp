@@ -107,7 +107,7 @@ TEST(FeatureElementTest, modifiers) {
         const babelwires::Modifier* arrayElemData = featureElement->findModifier(arrayElemPath);
         ASSERT_TRUE(arrayElemData);
         EXPECT_FALSE(arrayElemData->isFailed());
-        ASSERT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&arrayElemData->getModifierData()));
+        ASSERT_TRUE(arrayElemData->getModifierData().asA<babelwires::IntValueAssignmentData>());
         EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&arrayElemData->getModifierData())->m_value,
                   16);
     }
@@ -115,7 +115,7 @@ TEST(FeatureElementTest, modifiers) {
         const babelwires::Modifier* failedModifier = featureElement->findModifier(failedPath);
         ASSERT_TRUE(failedModifier);
         EXPECT_TRUE(failedModifier->isFailed());
-        ASSERT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&failedModifier->getModifierData()));
+        ASSERT_TRUE(failedModifier->getModifierData().asA<babelwires::IntValueAssignmentData>());
         EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&failedModifier->getModifierData())->m_value,
                   71);
     }
@@ -286,11 +286,11 @@ TEST(FeatureElementTest, extractElementData) {
     EXPECT_TRUE(extractedData->m_modifiers[0].get()->asA<babelwires::ArraySizeModifierData>());
     EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(extractedData->m_modifiers[0].get())->m_size, 5);
     EXPECT_EQ(extractedData->m_modifiers[1]->m_pathToFeature, arrayElemPath2);
-    EXPECT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[1].get()));
+    EXPECT_TRUE(extractedData->m_modifiers[1]->asA<babelwires::IntValueAssignmentData>());
     EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[1].get())->m_value, 12);
     // Even though this modifier is currently failed, its data is still important.
     EXPECT_EQ(extractedData->m_modifiers[2]->m_pathToFeature, failedPath);
-    EXPECT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[2].get()));
+    EXPECT_TRUE(extractedData->m_modifiers[2]->asA<babelwires::IntValueAssignmentData>());
     EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[2].get())->m_value, 71);
 
     // The failed path is not included.
@@ -346,13 +346,13 @@ TEST(FeatureElementTest, removedModifiers) {
     for (const auto modifier : featureElement->getRemovedModifiers()) {
         ++numMods;
         if (modifier->getModifierData().m_pathToFeature == arrayElemPath) {
-            ASSERT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData()));
+            ASSERT_TRUE(modifier->getModifierData().asA<babelwires::IntValueAssignmentData>());
             EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData())->m_value,
                       16);
             ++numCorrectMods;
         }
         if (modifier->getModifierData().m_pathToFeature == failedPath) {
-            ASSERT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData()));
+            ASSERT_TRUE(modifier->getModifierData().asA<babelwires::IntValueAssignmentData>());
             EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData())->m_value,
                       71);
             ++numCorrectMods;

@@ -2,10 +2,12 @@
  * Allows the set of RowModels to be extended by client code.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
+
+#include "BabelWires/Features/features.hpp"
 
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
 
@@ -13,8 +15,6 @@
 #include <vector>
 
 namespace babelwires {
-
-    class Feature;
     class RowModel;
 
     /// Allows the set of RowModels to be extended by client code.
@@ -26,7 +26,7 @@ namespace babelwires {
 
         template <typename FEATURE_TYPE, typename ROW_MODEL_TYPE> void registryHandler() {
             m_handlers.emplace_back([](const Feature* feature, RowModel* rowModelAllocation) {
-                if (dynamic_cast<const FEATURE_TYPE*>(feature)) {
+                if (feature->template asA<FEATURE_TYPE>()) {
                     static_assert(sizeof(ROW_MODEL_TYPE) <= sizeof(babelwires::RowModel));
                     new (rowModelAllocation) ROW_MODEL_TYPE();
                     return true;

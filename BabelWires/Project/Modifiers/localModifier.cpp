@@ -22,11 +22,11 @@ babelwires::LocalModifier::LocalModifier(const LocalModifier& other)
     : Modifier(other) {}
 
 const babelwires::LocalModifierData& babelwires::LocalModifier::getModifierData() const {
-    return dynamic_cast<const babelwires::LocalModifierData&>(Modifier::getModifierData());
+    return *Modifier::getModifierData().asA<babelwires::LocalModifierData>();
 }
 
 babelwires::LocalModifierData& babelwires::LocalModifier::getModifierData() {
-    return dynamic_cast<babelwires::LocalModifierData&>(Modifier::getModifierData());
+    return *Modifier::getModifierData().asA<babelwires::LocalModifierData>();
 }
 
 const babelwires::ConnectionModifier* babelwires::LocalModifier::doAsConnectionModifier() const {
