@@ -12,6 +12,8 @@
 #include "BabelWires/Features/Path/featurePath.hpp"
 #include "BabelWires/Project/projectIds.hpp"
 
+#include "Common/types.hpp"
+
 #include <chrono>
 #include <memory>
 #include <ostream>
@@ -28,6 +30,8 @@ namespace babelwires {
     /// Commands define undoable ways of mutating the project.
     class Command {
       public:
+        DOWNCASTABLE_TYPE_HIERARCHY(Command);
+
         /// CommandName should be a displayable name
         /// The timestamp is set to the current time.
         Command(std::string commandName);

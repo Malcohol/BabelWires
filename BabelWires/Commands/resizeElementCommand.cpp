@@ -36,7 +36,7 @@ void babelwires::ResizeElementCommand::undo(Project& project) const {
 
 bool babelwires::ResizeElementCommand::shouldSubsume(const Command& subsequentCommand,
                                                      bool thisIsAlreadyExecuted) const {
-    const auto* resizeElementCommand = dynamic_cast<const ResizeElementCommand*>(&subsequentCommand);
+    const auto* resizeElementCommand = subsequentCommand.asA<ResizeElementCommand>();
     if (!resizeElementCommand) {
         return false;
     }
@@ -54,7 +54,7 @@ bool babelwires::ResizeElementCommand::shouldSubsume(const Command& subsequentCo
 }
 
 void babelwires::ResizeElementCommand::subsume(std::unique_ptr<Command> subsequentCommand) {
-    assert(dynamic_cast<const ResizeElementCommand*>(subsequentCommand.get()) && "subsume should not have been called");
+    assert(subsequentCommand->asA<ResizeElementCommand>() && "subsume should not have been called");
     ResizeElementCommand* resizeElementCommand = static_cast<ResizeElementCommand*>(subsequentCommand.get());
 
     m_newSize = resizeElementCommand->m_newSize;

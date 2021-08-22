@@ -23,7 +23,7 @@ namespace {
         void undo(babelwires::Project& project) const override { m_eventTrace.emplace_back(Event::undone); }
 
         bool shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const override {
-            const auto* newCommand = dynamic_cast<const TestCommand*>(&subsequentCommand);
+            const auto* newCommand = subsequentCommand.asA<TestCommand>();
             return (newCommand && newCommand->m_isSubsumable);
         }
 

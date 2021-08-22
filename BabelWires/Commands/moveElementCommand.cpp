@@ -40,7 +40,7 @@ void babelwires::MoveElementCommand::undo(Project& project) const {
 }
 
 bool babelwires::MoveElementCommand::shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const {
-    const auto* moveElementCommand = dynamic_cast<const MoveElementCommand*>(&subsequentCommand);
+    const auto* moveElementCommand = subsequentCommand.asA<MoveElementCommand>();
     if (!moveElementCommand) {
         return false;
     }
@@ -55,7 +55,7 @@ bool babelwires::MoveElementCommand::shouldSubsume(const Command& subsequentComm
 }
 
 void babelwires::MoveElementCommand::subsume(std::unique_ptr<Command> subsequentCommand) {
-    assert(dynamic_cast<const MoveElementCommand*>(subsequentCommand.get()) && "subsume should not have been called");
+    assert(subsequentCommand->asA<MoveElementCommand>() && "subsume should not have been called");
     MoveElementCommand* moveElementCommand = static_cast<MoveElementCommand*>(subsequentCommand.get());
     for (const auto& p : moveElementCommand->m_newPositions) {
         m_newPositions[p.first] = p.second;

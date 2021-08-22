@@ -180,11 +180,11 @@ void babelwires::RemoveElementCommand::undo(Project& project) const {
 
 bool babelwires::RemoveElementCommand::shouldSubsume(const Command& subsequentCommand,
                                                      bool thisIsAlreadyExecuted) const {
-    return !thisIsAlreadyExecuted && dynamic_cast<const RemoveElementCommand*>(&subsequentCommand);
+    return !thisIsAlreadyExecuted && subsequentCommand.asA<RemoveElementCommand>();
 }
 
 void babelwires::RemoveElementCommand::subsume(std::unique_ptr<Command> subsequentCommand) {
-    assert(dynamic_cast<const RemoveElementCommand*>(subsequentCommand.get()) && "subsume should not have been called");
+    assert(subsequentCommand->asA<RemoveElementCommand>() && "subsume should not have been called");
     RemoveElementCommand* removeElementCommand = static_cast<RemoveElementCommand*>(subsequentCommand.get());
     m_elementIds.insert(m_elementIds.end(), removeElementCommand->m_elementIds.begin(),
                         removeElementCommand->m_elementIds.end());
