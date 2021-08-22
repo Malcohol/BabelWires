@@ -34,7 +34,7 @@ void babelwires::SaveFileAsAction::actionTriggered(babelwires::FeatureModel& mod
         if (!featureElement) {
             return;
         }
-        const FileElement* const fileElement = dynamic_cast<const FileElement*>(featureElement);
+        const FileElement* const fileElement = featureElement->as<FileElement>();
         if (!fileElement) {
             return;
         }

@@ -15,7 +15,7 @@ void libTestUtils::TestProcessor::process(babelwires::UserLogger& userLogger) {
     m_outputFeature->m_intFeature2->set(m_inputFeature->m_intFeature2->get());
     int index = m_inputFeature->m_intFeature->get();
     for (auto c : babelwires::subfeatures(m_outputFeature->m_arrayFeature)) {
-        dynamic_cast<babelwires::IntFeature&>(*c).set(index);
+        c->as<babelwires::IntFeature>()->set(index);
         ++index;
     }
 }

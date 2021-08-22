@@ -25,6 +25,7 @@ namespace babelwires {
     struct ModifierData : Cloneable, Serializable, ProjectVisitable {
         CLONEABLE_ABSTRACT(ModifierData);
         SERIALIZABLE_ABSTRACT(ModifierData, "ModifierData", void);
+        DOWNCASTABLE_TYPE_HIERARCHY(ModifierData);
 
         /// Identifies the feature being modified.
         FeaturePath m_pathToFeature;

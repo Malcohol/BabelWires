@@ -33,11 +33,11 @@ bool babelwires::SetExpandedCommand::initialize(const Project& project) {
 
     const CompoundFeature* compoundFeature = nullptr;
     if (const Feature* feature = element->getInputFeature()) {
-        compoundFeature = dynamic_cast<const CompoundFeature*>(m_pathToCompound.tryFollow(*feature));
+        compoundFeature = m_pathToCompound.tryFollow(*feature)->as<const CompoundFeature>();
     }
     if (!compoundFeature) {
         if (const Feature* feature = element->getOutputFeature()) {
-            compoundFeature = dynamic_cast<const CompoundFeature*>(m_pathToCompound.tryFollow(*feature));
+            compoundFeature = m_pathToCompound.tryFollow(*feature)->as<const CompoundFeature>();
         }
     }
     if (!compoundFeature) {

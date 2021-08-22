@@ -27,7 +27,7 @@ std::string babelwires::StringFeature::doGetValueType() const {
 }
 
 void babelwires::StringFeature::doAssign(const ValueFeature& other) {
-    const auto& otherString = dynamic_cast<const StringFeature&>(other);
+    const auto& otherString = *other.as<StringFeature>();
     set(otherString.get());
 }
 

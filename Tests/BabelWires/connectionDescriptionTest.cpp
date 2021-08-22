@@ -85,7 +85,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
     }
 
     const libTestUtils::TestFeatureElement* targetElement =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(targetId));
+        context.m_project.getFeatureElement(targetId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(targetElement, nullptr);
 
     context.m_project.process();
@@ -99,7 +99,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
         if (isAdded) {
             ASSERT_NE(modifier, nullptr);
             const babelwires::ConnectionModifier* connection =
-                dynamic_cast<const babelwires::ConnectionModifier*>(modifier);
+                modifier->as<babelwires::ConnectionModifier>();
             ASSERT_NE(connection, nullptr);
             EXPECT_EQ(connection->getModifierData().m_pathToFeature, connectionData.m_pathToFeature);
             EXPECT_EQ(connection->getModifierData().m_pathToSourceFeature, connectionData.m_pathToSourceFeature);

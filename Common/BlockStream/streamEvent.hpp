@@ -58,6 +58,7 @@ namespace babelwires {
     class StreamEvent : public Streamable {
       public:
         STREAM_EVENT(StreamEvent);
+        DOWNCASTABLE_TYPE_HIERARCHY(StreamEvent);
 
         StreamEvent() = default;
         StreamEvent(const StreamEvent& other)
@@ -66,12 +67,6 @@ namespace babelwires {
             : m_numBytesToNextEvent(0) {}
 
         virtual ~StreamEvent() = default;
-
-        /// Return a pointer to a T if this is a T, otherwise return nullptr.
-        template <typename T> T* asA() { return dynamic_cast<T*>(this); }
-
-        /// Return a pointer to a T if this is a T, otherwise return nullptr.
-        template <typename T> const T* asA() const { return dynamic_cast<const T*>(this); }
 
       private:
         friend BlockStream;

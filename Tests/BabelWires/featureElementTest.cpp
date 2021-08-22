@@ -24,8 +24,8 @@ TEST(FeatureElementTest, basicAccessors) {
     EXPECT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->getInputFeature());
     EXPECT_TRUE(featureElement->getOutputFeature());
-    EXPECT_TRUE(dynamic_cast<const libTestUtils::TestRecordFeature*>(featureElement->getInputFeature()));
-    EXPECT_TRUE(dynamic_cast<const libTestUtils::TestRecordFeature*>(featureElement->getOutputFeature()));
+    EXPECT_TRUE(featureElement->getInputFeature()->as<const libTestUtils::TestRecordFeature>());
+    EXPECT_TRUE(featureElement->getOutputFeature()->as<const libTestUtils::TestRecordFeature>());
     EXPECT_EQ(featureElement->getElementId(), 54);
 }
 
@@ -99,7 +99,7 @@ TEST(FeatureElementTest, modifiers) {
         const babelwires::Modifier* arrayInitData = featureElement->findModifier(arrayPath);
         ASSERT_TRUE(arrayInitData);
         EXPECT_FALSE(arrayInitData->isFailed());
-        ASSERT_TRUE(dynamic_cast<const babelwires::ArraySizeModifierData*>(&arrayInitData->getModifierData()));
+        ASSERT_TRUE(arrayInitData->getModifierData().as<babelwires::ArraySizeModifierData>());
         EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(&arrayInitData->getModifierData())->m_size,
                   5);
     }
@@ -107,7 +107,7 @@ TEST(FeatureElementTest, modifiers) {
         const babelwires::Modifier* arrayElemData = featureElement->findModifier(arrayElemPath);
         ASSERT_TRUE(arrayElemData);
         EXPECT_FALSE(arrayElemData->isFailed());
-        ASSERT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&arrayElemData->getModifierData()));
+        ASSERT_TRUE(arrayElemData->getModifierData().as<babelwires::IntValueAssignmentData>());
         EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&arrayElemData->getModifierData())->m_value,
                   16);
     }
@@ -115,17 +115,17 @@ TEST(FeatureElementTest, modifiers) {
         const babelwires::Modifier* failedModifier = featureElement->findModifier(failedPath);
         ASSERT_TRUE(failedModifier);
         EXPECT_TRUE(failedModifier->isFailed());
-        ASSERT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&failedModifier->getModifierData()));
+        ASSERT_TRUE(failedModifier->getModifierData().as<babelwires::IntValueAssignmentData>());
         EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&failedModifier->getModifierData())->m_value,
                   71);
     }
     const babelwires::RecordFeature* const recordFeature = featureElement->getInputFeature();
     ASSERT_TRUE(recordFeature);
     const libTestUtils::TestRecordFeature* const testRecordFeature =
-        dynamic_cast<const libTestUtils::TestRecordFeature*>(recordFeature);
+        recordFeature->as<const libTestUtils::TestRecordFeature>();
     ASSERT_TRUE(testRecordFeature);
     EXPECT_EQ(testRecordFeature->m_arrayFeature->getNumFeatures(), 5);
-    ASSERT_TRUE(dynamic_cast<const babelwires::IntFeature*>(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3)));
+    ASSERT_TRUE(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3)->as<const babelwires::IntFeature>());
     EXPECT_EQ(
         static_cast<const babelwires::IntFeature*>(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3))->get(),
         16);
@@ -283,14 +283,14 @@ TEST(FeatureElementTest, extractElementData) {
     ASSERT_EQ(extractedData->m_modifiers.size(), 3);
     // We assume extracted data is sorted, though that assumption is not part of the guarantee.
     EXPECT_EQ(extractedData->m_modifiers[0]->m_pathToFeature, arrayPath);
-    EXPECT_TRUE(dynamic_cast<const babelwires::ArraySizeModifierData*>(extractedData->m_modifiers[0].get()));
+    EXPECT_TRUE(extractedData->m_modifiers[0].get()->as<babelwires::ArraySizeModifierData>());
     EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(extractedData->m_modifiers[0].get())->m_size, 5);
     EXPECT_EQ(extractedData->m_modifiers[1]->m_pathToFeature, arrayElemPath2);
-    EXPECT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[1].get()));
+    EXPECT_TRUE(extractedData->m_modifiers[1]->as<babelwires::IntValueAssignmentData>());
     EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[1].get())->m_value, 12);
     // Even though this modifier is currently failed, its data is still important.
     EXPECT_EQ(extractedData->m_modifiers[2]->m_pathToFeature, failedPath);
-    EXPECT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[2].get()));
+    EXPECT_TRUE(extractedData->m_modifiers[2]->as<babelwires::IntValueAssignmentData>());
     EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[2].get())->m_value, 71);
 
     // The failed path is not included.
@@ -346,13 +346,13 @@ TEST(FeatureElementTest, removedModifiers) {
     for (const auto modifier : featureElement->getRemovedModifiers()) {
         ++numMods;
         if (modifier->getModifierData().m_pathToFeature == arrayElemPath) {
-            ASSERT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData()));
+            ASSERT_TRUE(modifier->getModifierData().as<babelwires::IntValueAssignmentData>());
             EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData())->m_value,
                       16);
             ++numCorrectMods;
         }
         if (modifier->getModifierData().m_pathToFeature == failedPath) {
-            ASSERT_TRUE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData()));
+            ASSERT_TRUE(modifier->getModifierData().as<babelwires::IntValueAssignmentData>());
             EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData())->m_value,
                       71);
             ++numCorrectMods;
@@ -370,7 +370,7 @@ TEST(FeatureElementTest, failure) {
     auto featureElement = featureElementData.createFeatureElement(context.m_projectContext, context.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(dynamic_cast<libTestUtils::TestFeatureElement*>(featureElement.get()));
+    ASSERT_TRUE(featureElement->as<libTestUtils::TestFeatureElement>());
     libTestUtils::TestFeatureElement* testFeatureElement =
         static_cast<libTestUtils::TestFeatureElement*>(featureElement.get());
 
@@ -473,7 +473,7 @@ TEST(FeatureElementTest, simpleChanges) {
     }
     {
         featureElement->clearChanges();
-        ASSERT_TRUE(dynamic_cast<libTestUtils::TestFeatureElement*>(featureElement.get()));
+        ASSERT_TRUE(featureElement->as<libTestUtils::TestFeatureElement>());
         static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateFailure();
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
@@ -481,7 +481,7 @@ TEST(FeatureElementTest, simpleChanges) {
     }
     {
         featureElement->clearChanges();
-        ASSERT_TRUE(dynamic_cast<libTestUtils::TestFeatureElement*>(featureElement.get()));
+        ASSERT_TRUE(featureElement->as<libTestUtils::TestFeatureElement>());
         static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery();
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
@@ -497,7 +497,7 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     auto featureElement = featureElementData.createFeatureElement(context.m_projectContext, context.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(dynamic_cast<libTestUtils::TestFeatureElement*>(featureElement.get()));
+    ASSERT_TRUE(featureElement->as<libTestUtils::TestFeatureElement>());
 
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(true);

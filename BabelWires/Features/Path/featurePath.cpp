@@ -99,9 +99,8 @@ babelwires::FeaturePath babelwires::FeaturePath::deserializeFromString(const std
 namespace {
 
     template <typename T> T& followPath(T& start, const babelwires::FeaturePath& p, int& index) {
-        typedef typename babelwires::CopyConst<T, babelwires::CompoundFeature>::type Compound;
         if (index < p.getNumSteps()) {
-            if (Compound* compound = dynamic_cast<Compound*>(&start)) {
+            if (auto* compound = start.template as<babelwires::CompoundFeature>()) {
                 T& child = compound->getChildFromStep(p.getStep(index));
                 ++index;
                 return followPath(child, p, index);
@@ -136,9 +135,8 @@ const babelwires::Feature& babelwires::FeaturePath::follow(const Feature& start)
 namespace {
 
     template <typename T> T* tryFollowPath(T* start, const babelwires::FeaturePath& p, int index = 0) {
-        typedef typename babelwires::CopyConst<T, babelwires::CompoundFeature>::type Compound;
         if (index < p.getNumSteps()) {
-            if (Compound* compound = dynamic_cast<Compound*>(start)) {
+            if (auto* compound = start->template as<babelwires::CompoundFeature>()) {
                 T* child = compound->tryGetChildFromStep(p.getStep(index));
                 return tryFollowPath(child, p, index + 1);
             } else {

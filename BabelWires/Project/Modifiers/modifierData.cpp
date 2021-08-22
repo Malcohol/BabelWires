@@ -39,7 +39,7 @@ std::unique_ptr<babelwires::Modifier> babelwires::LocalModifierData::createModif
 }
 
 void babelwires::IntValueAssignmentData::apply(Feature* targetFeature) const {
-    if (IntFeature* intFeature = dynamic_cast<IntFeature*>(targetFeature)) {
+    if (IntFeature* intFeature = targetFeature->as<IntFeature>()) {
         intFeature->set(m_value);
     } else {
         throw babelwires::ModelException() << "Could not assign an int to a non-int feature";
@@ -57,7 +57,7 @@ void babelwires::IntValueAssignmentData::deserializeContents(Deserializer& deser
 }
 
 void babelwires::RationalValueAssignmentData::apply(Feature* targetFeature) const {
-    if (RationalFeature* rationalFeature = dynamic_cast<RationalFeature*>(targetFeature)) {
+    if (RationalFeature* rationalFeature = targetFeature->as<RationalFeature>()) {
         rationalFeature->set(m_value);
     } else {
         throw babelwires::ModelException() << "Could not assign a rational to a non-rational feature";
@@ -75,7 +75,7 @@ void babelwires::RationalValueAssignmentData::deserializeContents(Deserializer& 
 }
 
 void babelwires::StringValueAssignmentData::apply(Feature* targetFeature) const {
-    if (StringFeature* stringFeature = dynamic_cast<StringFeature*>(targetFeature)) {
+    if (StringFeature* stringFeature = targetFeature->as<StringFeature>()) {
         stringFeature->set(m_value);
     } else {
         throw babelwires::ModelException() << "Could not assign a string to a non-string field";

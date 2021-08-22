@@ -20,7 +20,7 @@ struct FeatureElementConnectionTest : ::testing::Test {
 
         auto featureElement = featureElementData.createFeatureElement(m_context.m_projectContext, m_context.m_log, 66);
         m_featureElement = std::unique_ptr<libTestUtils::TestFeatureElement>(
-            dynamic_cast<libTestUtils::TestFeatureElement*>(featureElement.release()));
+            featureElement.release()->as<libTestUtils::TestFeatureElement>());
         ASSERT_TRUE(m_featureElement);
         m_featureElement->clearChanges();
 
@@ -37,7 +37,7 @@ struct FeatureElementConnectionTest : ::testing::Test {
         sourceElementData.m_intValueLimit = 1000;
         m_sourceId = m_context.m_project.addFeatureElement(sourceElementData);
         m_sourceElement =
-            dynamic_cast<libTestUtils::TestFeatureElement*>(m_context.m_project.getFeatureElement(m_sourceId));
+            m_context.m_project.getFeatureElement(m_sourceId)->as<libTestUtils::TestFeatureElement>();
         ASSERT_TRUE(m_sourceElement);
 
         m_arrayInitData.m_pathToFeature = m_arrayPath;

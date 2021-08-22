@@ -17,7 +17,7 @@
 #include "Common/Serialization/serializer.hpp"
 
 void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
-    if (ArrayFeature* array = dynamic_cast<ArrayFeature*>(targetFeature)) {
+    if (ArrayFeature* array = targetFeature->as<ArrayFeature>()) {
         array->setSize(m_size);
     } else {
         throw babelwires::ModelException() << "Cannot initialize size of non-array";
@@ -42,7 +42,7 @@ void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int i
                                                      int numEntriesToAdd) {
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     m_size += numEntriesToAdd;
-    if (ArrayFeature* array = dynamic_cast<ArrayFeature*>(targetFeature)) {
+    if (ArrayFeature* array = targetFeature->as<ArrayFeature>()) {
         for (int i = 0; i < numEntriesToAdd; ++i) {
             array->addEntry(indexOfNewElement);
         }
@@ -56,7 +56,7 @@ void babelwires::ArraySizeModifierData::removeEntries(Feature* targetFeature, in
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     assert((m_size >= numEntriesToRemove) && "You can't have ArraySizeModifierData with negative size");
     m_size -= numEntriesToRemove;
-    if (ArrayFeature* array = dynamic_cast<ArrayFeature*>(targetFeature)) {
+    if (ArrayFeature* array = targetFeature->as<ArrayFeature>()) {
         for (int i = 0; i < numEntriesToRemove; ++i) {
             array->removeEntry(indexOfElementToRemove);
         }

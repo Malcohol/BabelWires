@@ -123,7 +123,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
         const babelwires::FeatureElement* newTargetElement = nullptr;
 
         for (const auto& pair : context.m_project.getElements()) {
-            if (dynamic_cast<const babelwires::SourceFileElement*>(pair.second.get())) {
+            if (pair.second->as<babelwires::SourceFileElement>()) {
                 if (pair.first == libTestUtils::TestProjectData::c_sourceElementId) {
                     EXPECT_EQ(originalSourceElement, nullptr);
                     originalSourceElement = pair.second.get();
@@ -131,7 +131,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
                     EXPECT_EQ(newSourceElement, nullptr);
                     newSourceElement = pair.second.get();
                 }
-            } else if (dynamic_cast<const babelwires::ProcessorElement*>(pair.second.get())) {
+            } else if (pair.second->as<babelwires::ProcessorElement>()) {
                 if (pair.first == libTestUtils::TestProjectData::c_processorId) {
                     EXPECT_EQ(originalProcessor, nullptr);
                     originalProcessor = pair.second.get();
@@ -139,7 +139,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
                     EXPECT_EQ(newProcessor, nullptr);
                     newProcessor = pair.second.get();
                 }
-            } else if (dynamic_cast<const babelwires::TargetFileElement*>(pair.second.get())) {
+            } else if (pair.second->as<babelwires::TargetFileElement>()) {
                 if (pair.first == libTestUtils::TestProjectData::c_targetElementId) {
                     EXPECT_EQ(originalTargetElement, nullptr);
                     originalTargetElement = pair.second.get();
@@ -164,7 +164,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
             ASSERT_NE(modifier, nullptr);
             EXPECT_FALSE(modifier->isFailed());
             const babelwires::ConnectionModifierData* modData =
-                dynamic_cast<const babelwires::ConnectionModifierData*>(&modifier->getModifierData());
+                modifier->getModifierData().as<babelwires::ConnectionModifierData>();
             ASSERT_NE(modData, nullptr);
             EXPECT_EQ(modData->m_sourceId, newSourceElement->getElementId());
         } else {

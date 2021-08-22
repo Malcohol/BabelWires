@@ -28,6 +28,8 @@ namespace babelwires {
     /// Features are structured in a tree, which also defines ownership.
     class Feature {
       public:
+        DOWNCASTABLE_TYPE_HIERARCHY(Feature);
+
         Feature() = default;
         virtual ~Feature();
 

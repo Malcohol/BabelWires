@@ -16,7 +16,7 @@
 #include <cassert>
 
 const babelwires::StringFeature& babelwires::StringRowModel::getStringFeature() const {
-    assert(dynamic_cast<const babelwires::StringFeature*>(getInputThenOutputFeature()) &&
+    assert(getInputThenOutputFeature()->as<const babelwires::StringFeature>() &&
            "Wrong type of feature stored");
     return *static_cast<const babelwires::StringFeature*>(getInputThenOutputFeature());
 }

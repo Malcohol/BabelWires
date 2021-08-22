@@ -45,7 +45,7 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     auto featureElement = data.createFeatureElement(context.m_projectContext, context.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(dynamic_cast<babelwires::SourceFileElement*>(featureElement.get()));
+    ASSERT_TRUE(featureElement->as<babelwires::SourceFileElement>());
     babelwires::SourceFileElement* sourceFileElement =
         static_cast<babelwires::SourceFileElement*>(featureElement.get());
 
@@ -110,7 +110,7 @@ TEST(SourceFileElementTest, changeFile) {
     auto featureElement = data.createFeatureElement(context.m_projectContext, context.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(dynamic_cast<babelwires::SourceFileElement*>(featureElement.get()));
+    ASSERT_TRUE(featureElement->as<babelwires::SourceFileElement>());
     babelwires::SourceFileElement* sourceFileElement =
         static_cast<babelwires::SourceFileElement*>(featureElement.get());
 

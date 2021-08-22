@@ -29,11 +29,12 @@ namespace babelwires {
     /// A Modifier changes the value of a feature in a FeatureElement, and corresponds to a user edit.
     class Modifier : public Cloneable {
       public:
+        CLONEABLE_ABSTRACT(Modifier);
+        DOWNCASTABLE_TYPE_HIERARCHY(Modifier);
+
         Modifier(std::unique_ptr<ModifierData> modifierData);
         Modifier(const Modifier& other);
         virtual ~Modifier();
-
-        CLONEABLE_ABSTRACT(Modifier);
 
         /// Describes whether the modifier succeeded or the type of failure.
         enum class State : unsigned int {

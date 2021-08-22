@@ -153,11 +153,11 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should lead to an array");
 
-            if (ArrayFeature* const arrayFeature = dynamic_cast<ArrayFeature*>(featureAtPath)) {
+            if (ArrayFeature* const arrayFeature = featureAtPath->as<ArrayFeature>()) {
                 // First, ensure there is an appropriate modifier at the array.
                 ArraySizeModifier* arrayModifier = nullptr;
                 if (Modifier* const modifier = element->findModifier(pathToArray)) {
-                    arrayModifier = dynamic_cast<ArraySizeModifier*>(modifier);
+                    arrayModifier = modifier->as<ArraySizeModifier>();
                     if (!arrayModifier) {
                         // Defensive: Wasn't an array modifier at the path, so let it be replaced.
                         // This won't be restored by an undo, but that shouldn't matter since it isn't
@@ -200,11 +200,11 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should lead to an array");
 
-            if (ArrayFeature* const arrayFeature = dynamic_cast<ArrayFeature*>(featureAtPath)) {
+            if (ArrayFeature* const arrayFeature = featureAtPath->as<ArrayFeature>()) {
                 // First, check if there is a modifier at the array.
                 ArraySizeModifier* arrayModifier = nullptr;
                 if (Modifier* const modifier = element->findModifier(pathToArray)) {
-                    arrayModifier = dynamic_cast<ArraySizeModifier*>(modifier);
+                    arrayModifier = modifier->as<ArraySizeModifier>();
                     if (!arrayModifier) {
                         // Defensive: Wasn't an array modifier at the path, so let it be replaced.
                         // This won't be restored by an undo, but that shouldn't matter since it isn't
@@ -304,7 +304,7 @@ void babelwires::Project::tryToReloadAllSources() {
     int attemptedReloads = 0;
     int successfulReloads = 0;
     for (const auto& [_, f] : m_featureElements) {
-        if (FileElement* const fileElement = dynamic_cast<FileElement*>(f.get())) {
+        if (FileElement* const fileElement = f->as<FileElement>()) {
             if (isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {
                 ++attemptedReloads;
                 if (fileElement->reload(m_context, m_userLogger)) {
@@ -320,7 +320,7 @@ void babelwires::Project::tryToSaveAllTargets() {
     int attemptedSaves = 0;
     int successfulSaves = 0;
     for (const auto& [_, f] : m_featureElements) {
-        if (FileElement* const fileElement = dynamic_cast<FileElement*>(f.get())) {
+        if (FileElement* const fileElement = f->as<FileElement>()) {
             if (isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::save)) {
                 ++attemptedSaves;
                 if (fileElement->save(m_context, m_userLogger)) {
@@ -336,7 +336,7 @@ void babelwires::Project::tryToReloadSource(ElementId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     FeatureElement* f = getFeatureElement(id);
     assert(f && "There was no such feature element");
-    FileElement* const fileElement = dynamic_cast<FileElement*>(f);
+    FileElement* const fileElement = f->as<FileElement>();
     assert(fileElement && "There was no such file element");
     assert(isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload) &&
            "There was no such reloadable file element");
@@ -347,7 +347,7 @@ void babelwires::Project::tryToSaveTarget(ElementId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     FeatureElement* f = getFeatureElement(id);
     assert(f && "There was no such feature element");
-    FileElement* const fileElement = dynamic_cast<FileElement*>(f);
+    FileElement* const fileElement = f->as<FileElement>();
     assert(fileElement && "There was no such file element");
     assert(isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::save) &&
            "There was no such saveable file element");
@@ -599,8 +599,8 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
     ActivateOptionalsModifierData* modifierData = nullptr;
     
     if (Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord)) {
-        if (auto activateOptionalsModifierData = dynamic_cast<ActivateOptionalsModifierData*>(&existingModifier->getModifierData())) {
-            auto localModifier = dynamic_cast<LocalModifier*>(existingModifier);
+        if (auto activateOptionalsModifierData = existingModifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+            auto localModifier = existingModifier->as<LocalModifier>();
             assert(localModifier && "Non-local modifier carrying local data");
             modifierData = activateOptionalsModifierData;
             activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
@@ -633,9 +633,9 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
     Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord);
     assert(existingModifier);
 
-    auto activateOptionalsModifierData = dynamic_cast<ActivateOptionalsModifierData*>(&existingModifier->getModifierData());
+    auto activateOptionalsModifierData = existingModifier->getModifierData().as<ActivateOptionalsModifierData>();
     assert(activateOptionalsModifierData);
-    assert(dynamic_cast<LocalModifier*>(existingModifier) && "Non-local modifier carrying local data");
+    assert(existingModifier->as<LocalModifier>() && "Non-local modifier carrying local data");
     auto localModifier = static_cast<LocalModifier*>(existingModifier);
 
     auto it = std::find(activateOptionalsModifierData->m_selectedOptionals.begin(), activateOptionalsModifierData->m_selectedOptionals.end(), optional);

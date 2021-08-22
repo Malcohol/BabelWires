@@ -36,7 +36,7 @@ template <typename T> void babelwires::NumericFeature<T>::doSetToDefault() {
 }
 
 template <typename T> void babelwires::NumericFeature<T>::doAssign(const ValueFeature& other) {
-    const NumericFeature<T>& otherNum = dynamic_cast<const NumericFeature<T>&>(other);
+    const NumericFeature<T>& otherNum = *other.as<NumericFeature<T>>();
     set(otherNum.get());
 }
 

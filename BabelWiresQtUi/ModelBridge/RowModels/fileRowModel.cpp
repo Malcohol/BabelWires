@@ -23,12 +23,12 @@
 #include <cassert>
 
 const babelwires::FileFeature& babelwires::FileRowModel::getFileFeature() const {
-    assert(dynamic_cast<const FileFeature*>(getInputThenOutputFeature()) && "Wrong type of feature stored");
+    assert(getInputThenOutputFeature()->as<const FileFeature>() && "Wrong type of feature stored");
     return *static_cast<const FileFeature*>(getInputThenOutputFeature());
 }
 
 const babelwires::FileElement& babelwires::FileRowModel::getFileElement() const {
-    assert(dynamic_cast<const FileElement*>(m_featureElement) && "A file feature should only appear in a file element");
+    assert(m_featureElement->as<FileElement>() && "A file feature should only appear in a file element");
     return *static_cast<const FileElement*>(m_featureElement);
 }
 

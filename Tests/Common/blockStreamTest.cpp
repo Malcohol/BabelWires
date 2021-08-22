@@ -49,7 +49,7 @@ TEST(BlockStream, BlocksAndAlignment) {
     int count = 0;
     for (const auto& event : stream) {
         if (count % 2) {
-            EXPECT_NE(dynamic_cast<const TestEvent*>(&event), nullptr);
+            EXPECT_NE(event.as<TestEvent>(), nullptr);
             const TestEvent& e = static_cast<const TestEvent&>(event);
             EXPECT_EQ(e.m_big[2], (count / 2));
         }
@@ -131,7 +131,7 @@ TEST(BlockStream, CopyTest) {
             int count = 0;
             for (const auto& event : stream2) {
                 if (count % 3 == 2) {
-                    EXPECT_NE(dynamic_cast<const TestEvent*>(&event), nullptr);
+                    EXPECT_NE(event.as<TestEvent>(), nullptr);
                     const TestEvent& e = static_cast<const TestEvent&>(event);
                     EXPECT_EQ(e.m_big[2], (count / 3));
                 }
@@ -172,7 +172,7 @@ TEST(BlockStream, MoveTest) {
             int count = 0;
             for (const auto& event : stream2) {
                 if (count % 3 == 2) {
-                    EXPECT_NE(dynamic_cast<const TestEvent*>(&event), nullptr);
+                    EXPECT_NE(event.as<TestEvent>(), nullptr);
                     const TestEvent& e = static_cast<const TestEvent&>(event);
                     EXPECT_EQ(e.m_big[2], (count / 3));
                 }
@@ -223,7 +223,7 @@ TEST(BlockStream, CopyAssignTest) {
             int count = 0;
             for (const auto& event : stream2) {
                 if (count % 3 == 2) {
-                    EXPECT_NE(dynamic_cast<const TestEvent*>(&event), nullptr);
+                    EXPECT_NE(event.as<TestEvent>(), nullptr);
                     const TestEvent& e = static_cast<const TestEvent&>(event);
                     EXPECT_EQ(e.m_big[2], (count / 3));
                 }
@@ -274,7 +274,7 @@ TEST(BlockStream, MoveAssignTest) {
             int count = 0;
             for (const auto& event : stream2) {
                 if (count % 3 == 2) {
-                    EXPECT_NE(dynamic_cast<const TestEvent*>(&event), nullptr);
+                    EXPECT_NE(event.as<TestEvent>(), nullptr);
                     const TestEvent& e = static_cast<const TestEvent&>(event);
                     EXPECT_EQ(e.m_big[2], (count / 3));
                 }

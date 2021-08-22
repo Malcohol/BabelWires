@@ -51,11 +51,11 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     context.m_project.process();
 
     const auto* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return dynamic_cast<const libTestUtils::TestRecordFeature*>(element->getInputFeature());
+        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
     };
     const auto checkModifiers = [&context, element](bool isCommandExecuted) {
         const babelwires::Modifier* arrayInitialization =
@@ -117,11 +117,11 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
     const libTestUtils::TestFeatureElementWithOptionals* element =
-        dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+        return element->getInputFeature()->as<libTestUtils::TestFeatureWithOptionals>();
     };
 
     ASSERT_NE(getInputFeature(), nullptr);

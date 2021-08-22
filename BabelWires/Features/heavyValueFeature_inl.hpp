@@ -35,7 +35,7 @@ template <typename T> void babelwires::HeavyValueFeature<T>::set(std::unique_ptr
 }
 
 template <typename T> void babelwires::HeavyValueFeature<T>::doAssign(const ValueFeature& other) {
-    assert(dynamic_cast<const HeavyValueFeature<T>*>(&other) && "Other is not a compatible type");
+    assert(other.as<HeavyValueFeature<T>>() && "Other is not a compatible type");
     const babelwires::HeavyValueFeature<T>& otherH = static_cast<const babelwires::HeavyValueFeature<T>&>(other);
     if (otherH.m_value != m_value) {
         if (*otherH.m_value != *m_value) {

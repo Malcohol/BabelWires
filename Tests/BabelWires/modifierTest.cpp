@@ -38,7 +38,7 @@ TEST(ModifierTest, basicStuff) {
     EXPECT_EQ(intMod.asConnectionModifier(), nullptr);
     EXPECT_EQ(intMod.getModifierData().m_pathToFeature, path);
     EXPECT_EQ(intMod.getPathToFeature(), path);
-    EXPECT_NE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&intMod.getModifierData()), nullptr);
+    EXPECT_NE(intMod.getModifierData().as<babelwires::IntValueAssignmentData>(), nullptr);
     EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData&>(intMod.getModifierData()).m_value, 198);
 
     EXPECT_EQ(const_cast<const babelwires::LocalModifier&>(intMod).getOwner(), nullptr);
@@ -59,7 +59,7 @@ TEST(ModifierTest, clone) {
     auto clone = intMod.clone();
     ASSERT_NE(clone, nullptr);
     EXPECT_EQ(clone->getModifierData().m_pathToFeature, path);
-    EXPECT_NE(dynamic_cast<const babelwires::IntValueAssignmentData*>(&clone->getModifierData()), nullptr);
+    EXPECT_NE(clone->getModifierData().as<babelwires::IntValueAssignmentData>(), nullptr);
     EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData&>(clone->getModifierData()).m_value, 198);
 }
 
@@ -186,25 +186,25 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
     EXPECT_EQ(arrayMod.getState(), babelwires::Modifier::State::Success);
     EXPECT_EQ(arrayFeature->getNumFeatures(), 3);
 
-    dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(0)).set(10);
-    dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(1)).set(11);
-    dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(2)).set(12);
+    arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->set(10);
+    arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->set(11);
+    arrayFeature->getFeature(2)->as<babelwires::IntFeature>()->set(12);
 
     EXPECT_TRUE(arrayMod.addArrayEntries(testLog, &recordFeature, 1, 2));
 
     EXPECT_EQ(arrayFeature->getNumFeatures(), 5);
-    EXPECT_EQ(dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(0)).get(), 10);
-    EXPECT_EQ(dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(1)).get(), 0);
-    EXPECT_EQ(dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(2)).get(), 0);
-    EXPECT_EQ(dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(3)).get(), 11);
-    EXPECT_EQ(dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(4)).get(), 12);
+    EXPECT_EQ(arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->get(), 10);
+    EXPECT_EQ(arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->get(), 0);
+    EXPECT_EQ(arrayFeature->getFeature(2)->as<babelwires::IntFeature>()->get(), 0);
+    EXPECT_EQ(arrayFeature->getFeature(3)->as<babelwires::IntFeature>()->get(), 11);
+    EXPECT_EQ(arrayFeature->getFeature(4)->as<babelwires::IntFeature>()->get(), 12);
 
     EXPECT_TRUE(arrayMod.removeArrayEntries(testLog, &recordFeature, 2, 2));
 
     EXPECT_EQ(arrayFeature->getNumFeatures(), 3);
-    EXPECT_EQ(dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(0)).get(), 10);
-    EXPECT_EQ(dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(1)).get(), 0);
-    EXPECT_EQ(dynamic_cast<babelwires::IntFeature&>(*arrayFeature->getFeature(2)).get(), 12);
+    EXPECT_EQ(arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->get(), 10);
+    EXPECT_EQ(arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->get(), 0);
+    EXPECT_EQ(arrayFeature->getFeature(2)->as<babelwires::IntFeature>()->get(), 12);
 }
 
 TEST(ModifierTest, arraySizeModifierFailure) {

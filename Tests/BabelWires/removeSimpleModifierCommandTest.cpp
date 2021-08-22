@@ -26,7 +26,7 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
     context.m_project.process();
 
     const auto* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto checkModifiers = [&context, element](bool isCommandExecuted) {
