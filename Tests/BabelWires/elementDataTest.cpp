@@ -144,7 +144,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(dynamic_cast<const babelwires::SourceFileElement*>(featureElement.get()));
+    EXPECT_TRUE(featureElement->asA<babelwires::SourceFileElement>());
     EXPECT_TRUE(featureElement->getOutputFeature());
     EXPECT_TRUE(featureElement->getOutputFeature()->asA<const libTestUtils::TestFileFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
@@ -240,7 +240,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(dynamic_cast<const babelwires::TargetFileElement*>(featureElement.get()));
+    EXPECT_TRUE(featureElement->asA<babelwires::TargetFileElement>());
     EXPECT_TRUE(featureElement->getInputFeature());
     EXPECT_TRUE(featureElement->getInputFeature()->asA<const libTestUtils::TestFileFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
@@ -329,7 +329,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(dynamic_cast<const babelwires::ProcessorElement*>(featureElement.get()));
+    EXPECT_TRUE(featureElement->asA<babelwires::ProcessorElement>());
     EXPECT_TRUE(featureElement->getInputFeature());
     EXPECT_TRUE(featureElement->getInputFeature()->asA<const libTestUtils::TestRecordFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);

@@ -51,7 +51,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     context.m_project.process();
 
     const auto* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {

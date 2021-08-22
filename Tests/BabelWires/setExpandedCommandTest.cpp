@@ -16,7 +16,7 @@ TEST(SetExpandedCommandTest, executeAndUndoTrue) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     const libTestUtils::TestFeatureElement* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     babelwires::SetExpandedCommand command("Test command", elementId, libTestUtils::TestRecordFeature::s_pathToArray,
@@ -50,7 +50,7 @@ TEST(SetExpandedCommandTest, executeAndUndoFalse) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
 
     const libTestUtils::TestFeatureElement* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     babelwires::SetExpandedCommand command("Test command", elementId, libTestUtils::TestRecordFeature::s_pathToArray,

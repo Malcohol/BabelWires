@@ -85,7 +85,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
     }
 
     const libTestUtils::TestFeatureElement* targetElement =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(targetId));
+        context.m_project.getFeatureElement(targetId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(targetElement, nullptr);
 
     context.m_project.process();

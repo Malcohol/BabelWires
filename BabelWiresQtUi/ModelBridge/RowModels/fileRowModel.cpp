@@ -28,7 +28,7 @@ const babelwires::FileFeature& babelwires::FileRowModel::getFileFeature() const 
 }
 
 const babelwires::FileElement& babelwires::FileRowModel::getFileElement() const {
-    assert(dynamic_cast<const FileElement*>(m_featureElement) && "A file feature should only appear in a file element");
+    assert(m_featureElement->asA<FileElement>() && "A file feature should only appear in a file element");
     return *static_cast<const FileElement*>(m_featureElement);
 }
 

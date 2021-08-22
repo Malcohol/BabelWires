@@ -24,7 +24,7 @@ bool babelwires::ChangeFileCommand::initialize(const Project& project) {
         return false;
     }
 
-    const FileElement* const fileElement = dynamic_cast<const FileElement*>(element);
+    const FileElement* const fileElement = element->asA<FileElement>();
 
     if (!fileElement) {
         return false;
@@ -37,7 +37,7 @@ bool babelwires::ChangeFileCommand::initialize(const Project& project) {
 void babelwires::ChangeFileCommand::execute(Project& project) const {
     FeatureElement* const element = project.getFeatureElement(m_elementId);
     assert(element && "The element should already be in the project");
-    FileElement* const fileElement = dynamic_cast<FileElement*>(element);
+    FileElement* const fileElement = element->asA<FileElement>();
     assert(fileElement && "The element should be a file element");
     fileElement->setFilePath(m_newFilePath);
     if (isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {
@@ -48,7 +48,7 @@ void babelwires::ChangeFileCommand::execute(Project& project) const {
 void babelwires::ChangeFileCommand::undo(Project& project) const {
     FeatureElement* const element = project.getFeatureElement(m_elementId);
     assert(element && "The element should already be in the project");
-    FileElement* const fileElement = dynamic_cast<FileElement*>(element);
+    FileElement* const fileElement = element->asA<FileElement>();
     assert(fileElement && "The element should be a file element");
     fileElement->setFilePath(m_oldFilePath);
     if (isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {

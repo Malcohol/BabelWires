@@ -304,7 +304,7 @@ void babelwires::Project::tryToReloadAllSources() {
     int attemptedReloads = 0;
     int successfulReloads = 0;
     for (const auto& [_, f] : m_featureElements) {
-        if (FileElement* const fileElement = dynamic_cast<FileElement*>(f.get())) {
+        if (FileElement* const fileElement = f->asA<FileElement>()) {
             if (isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {
                 ++attemptedReloads;
                 if (fileElement->reload(m_context, m_userLogger)) {
@@ -320,7 +320,7 @@ void babelwires::Project::tryToSaveAllTargets() {
     int attemptedSaves = 0;
     int successfulSaves = 0;
     for (const auto& [_, f] : m_featureElements) {
-        if (FileElement* const fileElement = dynamic_cast<FileElement*>(f.get())) {
+        if (FileElement* const fileElement = f->asA<FileElement>()) {
             if (isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::save)) {
                 ++attemptedSaves;
                 if (fileElement->save(m_context, m_userLogger)) {
@@ -336,7 +336,7 @@ void babelwires::Project::tryToReloadSource(ElementId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     FeatureElement* f = getFeatureElement(id);
     assert(f && "There was no such feature element");
-    FileElement* const fileElement = dynamic_cast<FileElement*>(f);
+    FileElement* const fileElement = f->asA<FileElement>();
     assert(fileElement && "There was no such file element");
     assert(isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload) &&
            "There was no such reloadable file element");
@@ -347,7 +347,7 @@ void babelwires::Project::tryToSaveTarget(ElementId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     FeatureElement* f = getFeatureElement(id);
     assert(f && "There was no such feature element");
-    FileElement* const fileElement = dynamic_cast<FileElement*>(f);
+    FileElement* const fileElement = f->asA<FileElement>();
     assert(fileElement && "There was no such file element");
     assert(isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::save) &&
            "There was no such saveable file element");

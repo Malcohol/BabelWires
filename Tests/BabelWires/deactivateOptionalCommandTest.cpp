@@ -27,7 +27,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
             context.m_project.getFeatureElement(elementId));
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(targetId));
+        context.m_project.getFeatureElement(targetId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {

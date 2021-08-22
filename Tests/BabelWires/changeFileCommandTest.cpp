@@ -36,7 +36,7 @@ namespace {
 
         const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
         const auto* element =
-            dynamic_cast<const babelwires::SourceFileElement*>(context.m_project.getFeatureElement(elementId));
+            context.m_project.getFeatureElement(elementId)->asA<babelwires::SourceFileElement>();
         ASSERT_NE(element, nullptr);
 
         const auto getOutputFeature = [element]() {
@@ -110,7 +110,7 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
     const auto* element =
-        dynamic_cast<const babelwires::TargetFileElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<babelwires::TargetFileElement>();
     ASSERT_NE(element, nullptr);
 
     EXPECT_EQ(element->getFilePath(), filePath1);

@@ -35,6 +35,8 @@ namespace babelwires {
     /// FeatureElements expose input and output Features, and carry edits.
     class FeatureElement {
       public:
+        DOWNCASTABLE_TYPE_HIERARCHY(FeatureElement);
+
         FeatureElement(const ElementData& data, ElementId newId);
         virtual ~FeatureElement();
 

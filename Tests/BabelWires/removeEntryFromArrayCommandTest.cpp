@@ -44,10 +44,10 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     context.m_project.process();
 
     const auto* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(targetId));
+        context.m_project.getFeatureElement(targetId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
@@ -143,7 +143,7 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     const auto* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto* inputFeature = element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();

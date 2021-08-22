@@ -18,7 +18,7 @@ TEST(MoveElementCommandTest, executeAndUndo) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
     const libTestUtils::TestFeatureElement* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
@@ -66,7 +66,7 @@ TEST(MoveElementCommandTest, subsumeMoves) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
     const libTestUtils::TestFeatureElement* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
@@ -104,7 +104,7 @@ TEST(MoveElementCommandTest, subsumeMovesDelay) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
     const libTestUtils::TestFeatureElement* element =
-        dynamic_cast<const libTestUtils::TestFeatureElement*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);

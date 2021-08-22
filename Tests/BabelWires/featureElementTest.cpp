@@ -370,7 +370,7 @@ TEST(FeatureElementTest, failure) {
     auto featureElement = featureElementData.createFeatureElement(context.m_projectContext, context.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(dynamic_cast<libTestUtils::TestFeatureElement*>(featureElement.get()));
+    ASSERT_TRUE(featureElement->asA<libTestUtils::TestFeatureElement>());
     libTestUtils::TestFeatureElement* testFeatureElement =
         static_cast<libTestUtils::TestFeatureElement*>(featureElement.get());
 
@@ -473,7 +473,7 @@ TEST(FeatureElementTest, simpleChanges) {
     }
     {
         featureElement->clearChanges();
-        ASSERT_TRUE(dynamic_cast<libTestUtils::TestFeatureElement*>(featureElement.get()));
+        ASSERT_TRUE(featureElement->asA<libTestUtils::TestFeatureElement>());
         static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateFailure();
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
@@ -481,7 +481,7 @@ TEST(FeatureElementTest, simpleChanges) {
     }
     {
         featureElement->clearChanges();
-        ASSERT_TRUE(dynamic_cast<libTestUtils::TestFeatureElement*>(featureElement.get()));
+        ASSERT_TRUE(featureElement->asA<libTestUtils::TestFeatureElement>());
         static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery();
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
@@ -497,7 +497,7 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     auto featureElement = featureElementData.createFeatureElement(context.m_projectContext, context.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(dynamic_cast<libTestUtils::TestFeatureElement*>(featureElement.get()));
+    ASSERT_TRUE(featureElement->asA<libTestUtils::TestFeatureElement>());
 
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(true);

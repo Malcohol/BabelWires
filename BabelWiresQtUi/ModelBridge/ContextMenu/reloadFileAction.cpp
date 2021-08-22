@@ -26,7 +26,7 @@ void babelwires::ReloadFileAction::actionTriggered(babelwires::FeatureModel& mod
     if (!featureElement) {
         return;
     }
-    FileElement* const fileElement = dynamic_cast<FileElement*>(featureElement);
+    FileElement* const fileElement = featureElement->asA<FileElement>();
     if (!fileElement) {
         return;
     }

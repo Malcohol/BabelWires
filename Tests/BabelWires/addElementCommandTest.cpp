@@ -23,7 +23,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     const babelwires::FeatureElement* newElement = context.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(newElement, nullptr);
-    EXPECT_NE(dynamic_cast<const libTestUtils::TestFeatureElement*>(newElement), nullptr);
+    EXPECT_NE(newElement->asA<libTestUtils::TestFeatureElement>(), nullptr);
 
     command.undo(context.m_project);
 
@@ -33,7 +33,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     const babelwires::FeatureElement* restoredElement = context.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(restoredElement, nullptr);
-    EXPECT_NE(dynamic_cast<const libTestUtils::TestFeatureElement*>(restoredElement), nullptr);
+    EXPECT_NE(restoredElement->asA<libTestUtils::TestFeatureElement>(), nullptr);
 }
 
 TEST(AddElementCommandTest, subsumeMoves) {
