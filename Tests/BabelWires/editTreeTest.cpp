@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Project/FeatureElements/editTree.hpp"
-#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
-#include "BabelWires/Project/FeatureElements/targetFileElement.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWires/Project/Modifiers/localModifier.hpp"
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
+#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Tests/TestUtils/equalSets.hpp"
 

@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Project/Modifiers/modifier.hpp"
-#include "BabelWires/Project/project.hpp"
-#include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
-#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
+#include "BabelWiresLib/Project/project.hpp"
+#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"

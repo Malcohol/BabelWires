@@ -9,7 +9,7 @@
 
 #include "BabelWiresQtUi/ModelBridge/ValueEditors/lineEditValueEditor.hpp"
 
-#include "BabelWires/Features/stringFeature.hpp"
+#include "BabelWiresLib/Features/stringFeature.hpp"
 
 #include <QString>
 

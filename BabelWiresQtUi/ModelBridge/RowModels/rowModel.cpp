@@ -13,11 +13,11 @@
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
-#include "BabelWires/Features/Path/featurePath.hpp"
-#include "BabelWires/Features/arrayFeature.hpp"
-#include "BabelWires/Project/FeatureElements/contentsCache.hpp"
-#include "BabelWires/Project/FeatureElements/featureElement.hpp"
-#include "BabelWires/Project/Modifiers/modifier.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Features/arrayFeature.hpp"
+#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 
 #include <QBrush>
 

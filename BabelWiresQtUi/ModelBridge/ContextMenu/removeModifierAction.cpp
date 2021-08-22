@@ -11,11 +11,11 @@
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWires/Commands/removeModifierCommand.hpp"
-#include "BabelWires/Project/FeatureElements/contentsCache.hpp"
-#include "BabelWires/Project/FeatureElements/featureElement.hpp"
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
-#include "BabelWires/Project/project.hpp"
+#include "BabelWiresLib/Commands/removeModifierCommand.hpp"
+#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresLib/Project/project.hpp"
 
 babelwires::RemoveModifierAction::RemoveModifierAction()
     : FeatureContextMenuAction(tr("Remove modifier")) {}

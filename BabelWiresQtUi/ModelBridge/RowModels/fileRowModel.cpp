@@ -13,8 +13,8 @@
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
-#include "BabelWires/FileFormat/fileFeature.hpp"
-#include "BabelWires/Project/FeatureElements/fileElement.hpp"
+#include "BabelWiresLib/FileFormat/fileFeature.hpp"
+#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
 
 #include <QComboBox>
 #include <QSpinBox>

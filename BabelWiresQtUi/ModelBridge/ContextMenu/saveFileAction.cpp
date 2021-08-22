@@ -11,8 +11,8 @@
 #include "BabelWiresQtUi/ModelBridge/modifyModelScope.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWires/Project/FeatureElements/fileElement.hpp"
-#include "BabelWires/Project/project.hpp"
+#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
+#include "BabelWiresLib/Project/project.hpp"
 
 babelwires::SaveFileAction::SaveFileAction()
     : FeatureContextMenuAction(tr("Save file")) {}

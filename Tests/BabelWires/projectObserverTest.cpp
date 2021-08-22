@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/ProjectExtra/projectObserver.hpp"
+#include "BabelWiresLib/ProjectExtra/projectObserver.hpp"
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Project/Modifiers/modifier.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
-#include "BabelWires/Project/project.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"

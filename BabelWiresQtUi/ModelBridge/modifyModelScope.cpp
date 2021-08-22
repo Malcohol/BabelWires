@@ -6,8 +6,8 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresQtUi/ModelBridge/modifyModelScope.hpp"
-#include "BabelWires/Commands/commandManager.hpp"
-#include "BabelWires/Commands/commands.hpp"
+#include "BabelWiresLib/Commands/commandManager.hpp"
+#include "BabelWiresLib/Commands/commands.hpp"
 
 babelwires::ModifyModelScope::ModifyModelScope(ProjectBridge& bridge)
     : AccessModelScope(bridge) {}

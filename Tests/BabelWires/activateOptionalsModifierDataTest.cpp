@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Features/numericFeature.hpp"
-#include "BabelWires/Features/recordWithOptionalsFeature.hpp"
-#include "BabelWires/Project/Modifiers/activateOptionalsModifierData.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
+#include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
 
 #include "Common/Serialization/XML/xmlDeserializer.hpp"
 #include "Common/Serialization/XML/xmlSerializer.hpp"

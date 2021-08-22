@@ -16,17 +16,17 @@
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
-#include "BabelWires/Commands/addModifierCommand.hpp"
-#include "BabelWires/Commands/commandManager.hpp"
-#include "BabelWires/Commands/commands.hpp"
-#include "BabelWires/Commands/setExpandedCommand.hpp"
-#include "BabelWires/Features/Path/featurePath.hpp"
-#include "BabelWires/Project/FeatureElements/fileElement.hpp"
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
-#include "BabelWires/Project/project.hpp"
-#include "BabelWires/Project/projectContext.hpp"
-#include "BabelWires/Project/uiPosition.hpp"
-#include "BabelWires/ValueNames/valueNames.hpp"
+#include "BabelWiresLib/Commands/addModifierCommand.hpp"
+#include "BabelWiresLib/Commands/commandManager.hpp"
+#include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Commands/setExpandedCommand.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresLib/Project/project.hpp"
+#include "BabelWiresLib/Project/projectContext.hpp"
+#include "BabelWiresLib/Project/uiPosition.hpp"
+#include "BabelWiresLib/ValueNames/valueNames.hpp"
 
 #include <QApplication>
 #include <QBrush>

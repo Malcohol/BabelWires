@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Commands/activateOptionalCommand.hpp"
+#include "BabelWiresLib/Commands/activateOptionalCommand.hpp"
 
-#include "BabelWires/Features/recordWithOptionalsFeature.hpp"
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Project/project.hpp"
-#include "BabelWires/Project/Modifiers/activateOptionalsModifierData.hpp"
-#include "BabelWires/Project/Modifiers/modifier.hpp"
+#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Project/project.hpp"
+#include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"

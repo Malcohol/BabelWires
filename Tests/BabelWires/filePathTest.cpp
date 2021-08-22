@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/FileFormat/filePath.hpp"
+#include "BabelWiresLib/FileFormat/filePath.hpp"
 #include "Common/exceptions.hpp"
 
 #include "Tests/TestUtils/testLog.hpp"

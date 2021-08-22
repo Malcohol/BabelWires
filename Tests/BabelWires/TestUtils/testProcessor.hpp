@@ -1,7 +1,7 @@
-#include "BabelWires/Features/numericFeature.hpp"
-#include "BabelWires/Processors/processor.hpp"
-#include "BabelWires/Processors/processorFactory.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/Processors/processor.hpp"
+#include "BabelWiresLib/Processors/processorFactory.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 
 namespace libTestUtils {
     struct TestRecordFeature;

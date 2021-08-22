@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Features/arrayFeature.hpp"
-#include "BabelWires/Features/numericFeature.hpp"
-#include "BabelWires/Features/stringFeature.hpp"
-#include "BabelWires/Project/Modifiers/arraySizeModifier.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWires/Project/Modifiers/localModifier.hpp"
-#include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Features/arrayFeature.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/Features/stringFeature.hpp"
+#include "BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Common/Serialization/XML/xmlDeserializer.hpp"
 #include "Common/Serialization/XML/xmlSerializer.hpp"

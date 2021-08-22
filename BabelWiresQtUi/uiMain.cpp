@@ -9,8 +9,8 @@
 
 #include <QtWidgets/QApplication>
 
-#include "BabelWires/Commands/commandManager.hpp"
-#include "BabelWires/Project/project.hpp"
+#include "BabelWiresLib/Commands/commandManager.hpp"
+#include "BabelWiresLib/Project/project.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 #include "BabelWiresQtUi/mainWindow.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"

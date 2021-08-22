@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BabelWires/Project/projectData.hpp"
+#include "BabelWiresLib/Project/projectData.hpp"
 
 namespace libTestUtils {
     /// A source file wired to a processor wired to a target file.

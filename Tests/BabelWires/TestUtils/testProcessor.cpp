@@ -1,9 +1,9 @@
 #include "Tests/BabelWires/TestUtils/testProcessor.hpp"
 #include "Tests/BabelWires/TestUtils/testRecord.hpp"
 
-#include "BabelWires/Features/Utilities/modelUtilities.hpp"
+#include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
 
-#include "BabelWires/Features/featureMixins.hpp"
+#include "BabelWiresLib/Features/featureMixins.hpp"
 
 libTestUtils::TestProcessor::TestProcessor() {
     m_inputFeature = std::make_unique<TestRecordFeature>();

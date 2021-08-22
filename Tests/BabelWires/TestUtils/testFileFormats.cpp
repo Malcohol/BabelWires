@@ -1,7 +1,7 @@
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Features/featureMixins.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Features/featureMixins.hpp"
 
 #include "Common/IO/fileDataSource.hpp"
 

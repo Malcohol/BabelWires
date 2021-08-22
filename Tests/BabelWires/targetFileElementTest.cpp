@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Project/FeatureElements/featureElement.hpp"
-#include "BabelWires/Project/FeatureElements/targetFileElement.hpp"
-#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
+#include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
+#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Features/numericFeature.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"

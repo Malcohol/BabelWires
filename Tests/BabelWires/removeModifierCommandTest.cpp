@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Commands/removeModifierCommand.hpp"
+#include "BabelWiresLib/Commands/removeModifierCommand.hpp"
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Project/Modifiers/modifier.hpp"
-#include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
-#include "BabelWires/Project/Modifiers/activateOptionalsModifierData.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
-#include "BabelWires/Project/project.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
+#include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"

@@ -3,11 +3,11 @@
 #include "Tests/TestUtils/testDeserializationRegistry.hpp"
 #include "Tests/TestUtils/testLog.hpp"
 
-#include "BabelWires/FileFormat/sourceFileFormat.hpp"
-#include "BabelWires/FileFormat/targetFileFormat.hpp"
-#include "BabelWires/Processors/processorFactoryRegistry.hpp"
-#include "BabelWires/Project/project.hpp"
-#include "BabelWires/Project/projectContext.hpp"
+#include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
+#include "BabelWiresLib/FileFormat/targetFileFormat.hpp"
+#include "BabelWiresLib/Processors/processorFactoryRegistry.hpp"
+#include "BabelWiresLib/Project/project.hpp"
+#include "BabelWiresLib/Project/projectContext.hpp"
 
 namespace libTestUtils {
     struct TestProjectContext {

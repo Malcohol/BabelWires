@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Features/Path/fieldName.hpp"
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Project/FeatureElements/contentsCache.hpp"
-#include "BabelWires/Project/FeatureElements/editTree.hpp"
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresLib/Features/Path/fieldName.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
+#include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"

@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWires/Features/features.hpp"
+#include "BabelWiresLib/Features/features.hpp"
 
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
 

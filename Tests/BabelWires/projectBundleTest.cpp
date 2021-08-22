@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
-#include "BabelWires/Serialization/projectBundle.hpp"
-#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresLib/Serialization/projectBundle.hpp"
+#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWires/TestUtils/testProcessor.hpp"

@@ -19,7 +19,7 @@ SET(gtest_force_shared_crt ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 ADD_SUBDIRECTORY( Common )
-ADD_SUBDIRECTORY( BabelWires )
+ADD_SUBDIRECTORY( BabelWiresLib )
 
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")

@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Features/Path/fieldName.hpp"
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWires/Project/Modifiers/modifier.hpp"
-#include "BabelWires/Project/Modifiers/arraySizeModifierData.hpp"
+#include "BabelWiresLib/Features/Path/fieldName.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"

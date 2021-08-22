@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
-#include "BabelWires/Project/projectData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
+#include "BabelWiresLib/Project/projectData.hpp"
 
 #include "Common/Serialization/XML/xmlDeserializer.hpp"
 #include "Common/Serialization/XML/xmlSerializer.hpp"

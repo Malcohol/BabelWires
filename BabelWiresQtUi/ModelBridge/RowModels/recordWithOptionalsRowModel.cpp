@@ -19,8 +19,8 @@
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/optionalActivationAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
-#include "BabelWires/Features/recordWithOptionalsFeature.hpp"
-#include "BabelWires/Project/FeatureElements/contentsCache.hpp"
+#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
+#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
 
 const babelwires::RecordWithOptionalsFeature& babelwires::RecordWithOptionalsRowModel::getRecordWithOptionalsFeature() const {
     assert(getInputThenOutputFeature()->as<const babelwires::RecordWithOptionalsFeature>() &&

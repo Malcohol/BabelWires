@@ -7,8 +7,8 @@
  **/
 #include "BabelWiresQtUi/ModelBridge/RowModels/intRowModel.hpp"
 
-#include "BabelWires/Features/numericFeature.hpp"
-#include "BabelWires/ValueNames/valueNames.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/ValueNames/valueNames.hpp"
 #include "BabelWiresQtUi/ModelBridge/ValueEditors/comboBoxValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/ValueEditors/spinBoxValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"

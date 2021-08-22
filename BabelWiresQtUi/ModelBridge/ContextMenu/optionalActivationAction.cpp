@@ -10,9 +10,9 @@
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWires/Commands/activateOptionalCommand.hpp"
-#include "BabelWires/Commands/deactivateOptionalCommand.hpp"
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Commands/activateOptionalCommand.hpp"
+#include "BabelWiresLib/Commands/deactivateOptionalCommand.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::FeaturePath pathToRecord,
                                                                FieldIdentifier optional, bool isActivated)

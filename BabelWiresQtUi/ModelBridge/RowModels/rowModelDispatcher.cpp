@@ -15,13 +15,13 @@
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModelRegistry.hpp"
 #include "BabelWiresQtUi/ModelBridge/RowModels/stringRowModel.hpp"
 
-#include "BabelWires/Project/FeatureElements/featureElement.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 
-#include "BabelWires/Features/arrayFeature.hpp"
-#include "BabelWires/Features/numericFeature.hpp"
-#include "BabelWires/Features/recordWithOptionalsFeature.hpp"
-#include "BabelWires/Features/stringFeature.hpp"
-#include "BabelWires/FileFormat/fileFeature.hpp"
+#include "BabelWiresLib/Features/arrayFeature.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
+#include "BabelWiresLib/Features/stringFeature.hpp"
+#include "BabelWiresLib/FileFormat/fileFeature.hpp"
 
 babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowModelRegistry,
                                                    const babelwires::ContentsCacheEntry* entry,

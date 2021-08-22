@@ -7,9 +7,9 @@
  **/
 #pragma once
 
-#include "BabelWires/Project/projectIds.hpp"
-#include "BabelWires/ProjectExtra/connectionDescription.hpp"
-#include "BabelWires/ProjectExtra/projectObserver.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
+#include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
+#include "BabelWiresLib/ProjectExtra/projectObserver.hpp"
 
 #include "BabelWiresQtUi/ModelBridge/Internal/flowSceneConnectionInfo.hpp"
 

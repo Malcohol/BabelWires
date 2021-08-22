@@ -11,8 +11,8 @@
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/insertArrayEntryAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
-#include "BabelWires/Features/arrayFeature.hpp"
-#include "BabelWires/Project/FeatureElements/contentsCache.hpp"
+#include "BabelWiresLib/Features/arrayFeature.hpp"
+#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
 
 const babelwires::ArrayFeature& babelwires::ArrayRowModel::getArrayFeature() const {
     assert(getInputThenOutputFeature()->as<const babelwires::ArrayFeature>() &&

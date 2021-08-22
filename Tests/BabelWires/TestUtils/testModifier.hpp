@@ -1,4 +1,4 @@
-#include "BabelWires/Project/Modifiers/localModifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
 
 namespace libTestUtils {
     struct LocalTestModifier : babelwires::LocalModifier {

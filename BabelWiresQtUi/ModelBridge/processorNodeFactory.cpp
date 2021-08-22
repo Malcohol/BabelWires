@@ -6,9 +6,9 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp"
-#include "BabelWires/Commands/addElementCommand.hpp"
-#include "BabelWires/Processors/processorFactory.hpp"
-#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
+#include "BabelWiresLib/Commands/addElementCommand.hpp"
+#include "BabelWiresLib/Processors/processorFactory.hpp"
+#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
 #include "BabelWiresQtUi/ModelBridge/elementNodeModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 

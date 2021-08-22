@@ -1,6 +1,6 @@
 #include "Tests/BabelWires/TestUtils/testRecord.hpp"
 
-#include "BabelWires/Features/featureMixins.hpp"
+#include "BabelWiresLib/Features/featureMixins.hpp"
 
 const babelwires::FeaturePath libTestUtils::TestRecordFeature::s_pathToInt =
     babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRecordFeature::s_intIdInitializer);

@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Commands/commands.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
-#include "BabelWires/ProjectExtra/connectionDescription.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
+#include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"

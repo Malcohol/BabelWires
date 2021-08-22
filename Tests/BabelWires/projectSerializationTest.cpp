@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Serialization/projectSerialization.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Serialization/projectSerialization.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"

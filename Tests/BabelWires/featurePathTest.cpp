@@ -3,12 +3,12 @@
 #include "Tests/BabelWires/TestUtils/testRecord.hpp"
 #include "Tests/TestUtils/testLog.hpp"
 
-#include "BabelWires/Features/Path/featurePath.hpp"
-#include "BabelWires/Features/Path/fieldName.hpp"
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Features/arrayFeature.hpp"
-#include "BabelWires/Features/numericFeature.hpp"
-#include "BabelWires/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Features/Path/fieldName.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Features/arrayFeature.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/Features/recordFeature.hpp"
 
 #include "Common/Log/unifiedLog.hpp"
 #include "Common/Serialization/XML/xmlDeserializer.hpp"

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/ValueNames/valueNames.hpp"
+#include "BabelWiresLib/ValueNames/valueNames.hpp"
 
 namespace {
     struct TestValueNames : babelwires::ValueNames {

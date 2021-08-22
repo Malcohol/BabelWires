@@ -13,10 +13,10 @@
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
-#include "BabelWires/Commands/changeFileCommand.hpp"
-#include "BabelWires/Commands/commandManager.hpp"
-#include "BabelWires/Project/FeatureElements/fileElement.hpp"
-#include "BabelWires/Project/project.hpp"
+#include "BabelWiresLib/Commands/changeFileCommand.hpp"
+#include "BabelWiresLib/Commands/commandManager.hpp"
+#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
+#include "BabelWiresLib/Project/project.hpp"
 
 babelwires::SaveFileAsAction::SaveFileAsAction()
     : FeatureContextMenuAction(tr("Save file as\u2026")) {}

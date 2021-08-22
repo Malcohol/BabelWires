@@ -2,11 +2,11 @@
 
 #include <gtest/gtest.h>
 
-#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
-#include "BabelWires/Project/Modifiers/modifierData.hpp"
-#include "BabelWires/Project/Modifiers/connectionModifierData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
+#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWires/TestUtils/testProcessor.hpp"

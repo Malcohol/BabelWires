@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Project/FeatureElements/featureElement.hpp"
-#include "BabelWires/Project/FeatureElements/processorElementData.hpp"
-#include "BabelWires/Project/FeatureElements/processorElement.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
+#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Features/numericFeature.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
 
 #include "Tests/BabelWires/TestUtils/testProcessor.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"

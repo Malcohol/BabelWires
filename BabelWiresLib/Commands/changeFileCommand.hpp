@@ -1,0 +1,31 @@
+/**
+ * The command which changes the file of a FileElement.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include "BabelWiresLib/Commands/commands.hpp"
+
+#include <filesystem>
+
+namespace babelwires {
+
+    /// Change the source file of a FileElement.
+    class ChangeFileCommand : public SimpleCommand {
+      public:
+        ChangeFileCommand(std::string commandName, ElementId elementId, std::filesystem::path newFilePath);
+
+        virtual bool initialize(const Project& project) override;
+        virtual void execute(Project& project) const override;
+        virtual void undo(Project& project) const override;
+
+      private:
+        ElementId m_elementId;
+        std::filesystem::path m_newFilePath;
+        std::filesystem::path m_oldFilePath;
+    };
+
+} // namespace babelwires

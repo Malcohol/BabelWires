@@ -1,8 +1,8 @@
 #pragma once
 
-#include "BabelWires/Features/recordFeature.hpp"
-#include "BabelWires/Project/FeatureElements/featureElement.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 
 #include "Tests/BabelWires/TestUtils/testRecord.hpp"
 

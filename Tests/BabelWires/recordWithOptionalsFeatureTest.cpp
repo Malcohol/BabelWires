@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Features/recordWithOptionalsFeature.hpp"
+#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
 
-#include "BabelWires/Features/numericFeature.hpp"
-#include "BabelWires/Features/featureMixins.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/Features/featureMixins.hpp"
 
 #include "Tests/TestUtils/equalSets.hpp"
 

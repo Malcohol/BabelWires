@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWires/Project/projectData.hpp"
-#include "BabelWires/Project/uiPosition.hpp"
+#include "BabelWiresLib/Project/projectData.hpp"
+#include "BabelWiresLib/Project/uiPosition.hpp"
 
 #include "Common/Signal/signalSubscription.hpp"
 

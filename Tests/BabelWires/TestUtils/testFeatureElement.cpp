@@ -1,6 +1,6 @@
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 
-#include "BabelWires/Project/FeatureElements/failedFeature.hpp"
+#include "BabelWiresLib/Project/FeatureElements/failedFeature.hpp"
 
 libTestUtils::TestFailedFeature::TestFailedFeature() {
     addField(std::make_unique<RecordFeature>(), babelwires::FieldNameRegistry::write()->addFieldName(

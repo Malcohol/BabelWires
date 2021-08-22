@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Commands/changeFileCommand.hpp"
+#include "BabelWiresLib/Commands/changeFileCommand.hpp"
 
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
-#include "BabelWires/Project/FeatureElements/sourceFileElement.hpp"
-#include "BabelWires/Project/FeatureElements/targetFileElement.hpp"
-#include "BabelWires/Project/project.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
+#include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
+#include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testFileFormats.hpp"

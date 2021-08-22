@@ -11,11 +11,11 @@
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 
-#include "BabelWires/Commands/addElementCommand.hpp"
-#include "BabelWires/FileFormat/sourceFileFormat.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
-#include "BabelWires/Project/project.hpp"
-#include "BabelWires/Project/FeatureElements/sourceFileElementData.hpp"
+#include "BabelWiresLib/Commands/addElementCommand.hpp"
+#include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWiresLib/Project/project.hpp"
+#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
 
 #include <nodes/FlowScene>
 

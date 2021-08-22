@@ -1,8 +1,8 @@
-#include "BabelWires/Features/numericFeature.hpp"
-#include "BabelWires/FileFormat/fileFeature.hpp"
-#include "BabelWires/FileFormat/sourceFileFormat.hpp"
-#include "BabelWires/FileFormat/targetFileFormat.hpp"
-#include "BabelWires/Project/FeatureElements/featureElementData.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/FileFormat/fileFeature.hpp"
+#include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
+#include "BabelWiresLib/FileFormat/targetFileFormat.hpp"
+#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 
 #include <filesystem>
 

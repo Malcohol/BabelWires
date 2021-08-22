@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Commands/addElementCommand.hpp"
+#include "BabelWiresLib/Commands/addElementCommand.hpp"
 
-#include "BabelWires/Commands/moveElementCommand.hpp"
-#include "BabelWires/Features/Path/fieldNameRegistry.hpp"
-#include "BabelWires/Project/project.hpp"
+#include "BabelWiresLib/Commands/moveElementCommand.hpp"
+#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWires/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"

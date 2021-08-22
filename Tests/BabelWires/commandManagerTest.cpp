@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWires/Commands/commandManager.hpp"
-#include "BabelWires/Commands/commands.hpp"
+#include "BabelWiresLib/Commands/commandManager.hpp"
+#include "BabelWiresLib/Commands/commands.hpp"
 #include "Tests/BabelWires/TestUtils/testProjectContext.hpp"
 
 namespace {

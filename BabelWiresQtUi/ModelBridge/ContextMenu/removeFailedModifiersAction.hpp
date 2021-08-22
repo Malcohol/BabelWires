@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWires/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
 
 namespace babelwires {
