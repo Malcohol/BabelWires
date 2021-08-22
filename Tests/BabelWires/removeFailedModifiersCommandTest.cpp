@@ -45,7 +45,7 @@ namespace {
         context.m_project.process();
 
         const auto* element =
-            context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
+            context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
         ASSERT_NE(element, nullptr);
 
         const auto checkModifiers = [&context, element, isWholeRecord](bool isCommandExecuted) {

@@ -35,7 +35,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         return false;
     }
 
-    auto recordFeature = m_pathToRecord.tryFollow(*inputFeature)->asA<const RecordWithOptionalsFeature>();
+    auto recordFeature = m_pathToRecord.tryFollow(*inputFeature)->as<const RecordWithOptionalsFeature>();
     if (!recordFeature) {
         return false;
     }
@@ -50,7 +50,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
 
     if (const Modifier* modifier = elementToModify->getEdits().findModifier(m_pathToRecord)) {
         const auto& modifierData = modifier->getModifierData();
-        if (modifier->getModifierData().asA<ActivateOptionalsModifierData>()) {
+        if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             m_wasModifier = true;
         }
     }

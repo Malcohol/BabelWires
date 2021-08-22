@@ -26,7 +26,7 @@ namespace babelwires {
 
         template <typename FEATURE_TYPE, typename ROW_MODEL_TYPE> void registryHandler() {
             m_handlers.emplace_back([](const Feature* feature, RowModel* rowModelAllocation) {
-                if (feature->template asA<FEATURE_TYPE>()) {
+                if (feature->template as<FEATURE_TYPE>()) {
                     static_assert(sizeof(ROW_MODEL_TYPE) <= sizeof(babelwires::RowModel));
                     new (rowModelAllocation) ROW_MODEL_TYPE();
                     return true;

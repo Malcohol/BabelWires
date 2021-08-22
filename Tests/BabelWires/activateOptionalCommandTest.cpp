@@ -18,10 +18,10 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
     const libTestUtils::TestFeatureElementWithOptionals* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
-        element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
+        element->getInputFeature()->as<libTestUtils::TestFeatureWithOptionals>();
     ASSERT_NE(inputFeature, nullptr);
 
     babelwires::ActivateOptionalCommand command("Test command", elementId,
@@ -40,7 +40,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     {
         const babelwires::Modifier* modifier = element->getEdits().findModifier(libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord);
         EXPECT_NE(modifier, nullptr);
-        EXPECT_NE(modifier->getModifierData().asA<babelwires::ActivateOptionalsModifierData>(), nullptr);
+        EXPECT_NE(modifier->getModifierData().as<babelwires::ActivateOptionalsModifierData>(), nullptr);
     }
 
     command.undo(context.m_project);
@@ -58,7 +58,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     {
         const babelwires::Modifier* modifier = element->getEdits().findModifier(libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord);
         EXPECT_NE(modifier, nullptr);
-        EXPECT_NE(modifier->getModifierData().asA<babelwires::ActivateOptionalsModifierData>(), nullptr);
+        EXPECT_NE(modifier->getModifierData().as<babelwires::ActivateOptionalsModifierData>(), nullptr);
     }
 }
 
@@ -100,7 +100,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
 
     babelwires::FieldIdentifier opId("flerm");
@@ -118,11 +118,11 @@ TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
-        element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
+        element->getInputFeature()->as<libTestUtils::TestFeatureWithOptionals>();
     ASSERT_NE(inputFeature, nullptr);
 
     babelwires::ActivateOptionalCommand command("Test command", elementId,
@@ -138,11 +138,11 @@ TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
-        element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
+        element->getInputFeature()->as<libTestUtils::TestFeatureWithOptionals>();
     ASSERT_NE(inputFeature, nullptr);
 
     inputFeature->m_subrecord->activateField(inputFeature->m_op0Id);

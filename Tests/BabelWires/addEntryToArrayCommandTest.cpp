@@ -17,10 +17,10 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestRecordFeature* inputFeature =
-        element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
+        element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
     ASSERT_NE(inputFeature, nullptr);
 
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
@@ -55,10 +55,10 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
 
@@ -122,10 +122,10 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    const auto* inputFeature = element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
+    const auto* inputFeature = element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
     ASSERT_NE(inputFeature, nullptr);
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
 

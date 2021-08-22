@@ -44,14 +44,14 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     context.m_project.process();
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
-        context.m_project.getFeatureElement(targetId)->asA<libTestUtils::TestFeatureElement>();
+        context.m_project.getFeatureElement(targetId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
     };
 
     const auto checkModifiers = [&context, element, targetElement](bool isCommandExecuted) {
@@ -143,10 +143,10 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    const auto* inputFeature = element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
+    const auto* inputFeature = element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
     ASSERT_NE(inputFeature, nullptr);
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
 

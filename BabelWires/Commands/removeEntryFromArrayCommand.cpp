@@ -41,7 +41,7 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         return false;
     }
 
-    auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->asA<const ArrayFeature>();
+    auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<const ArrayFeature>();
     if (!arrayFeature) {
         return false;
     }
@@ -60,7 +60,7 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
 
     if (const Modifier* modifier = elementToModify->getEdits().findModifier(m_pathToArray)) {
         const auto& modifierData = modifier->getModifierData();
-        if (modifier->getModifierData().asA<ArraySizeModifierData>()) {
+        if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             m_wasModifier = true;
         }
     }

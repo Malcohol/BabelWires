@@ -23,7 +23,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     const babelwires::FeatureElement* newElement = context.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(newElement, nullptr);
-    EXPECT_NE(newElement->asA<libTestUtils::TestFeatureElement>(), nullptr);
+    EXPECT_NE(newElement->as<libTestUtils::TestFeatureElement>(), nullptr);
 
     command.undo(context.m_project);
 
@@ -33,7 +33,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     const babelwires::FeatureElement* restoredElement = context.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(restoredElement, nullptr);
-    EXPECT_NE(restoredElement->asA<libTestUtils::TestFeatureElement>(), nullptr);
+    EXPECT_NE(restoredElement->as<libTestUtils::TestFeatureElement>(), nullptr);
 }
 
 TEST(AddElementCommandTest, subsumeMoves) {
@@ -55,7 +55,7 @@ TEST(AddElementCommandTest, subsumeMoves) {
     addCommand.undo(context.m_project);
     addCommand.execute(context.m_project);
     const auto* element =
-        context.m_project.getFeatureElement(addCommand.getElementId())->asA<libTestUtils::TestFeatureElement>();
+        context.m_project.getFeatureElement(addCommand.getElementId())->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
     EXPECT_EQ(element->getUiPosition().m_y, 88);

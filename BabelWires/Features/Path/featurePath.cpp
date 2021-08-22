@@ -100,7 +100,7 @@ namespace {
 
     template <typename T> T& followPath(T& start, const babelwires::FeaturePath& p, int& index) {
         if (index < p.getNumSteps()) {
-            if (auto* compound = start.template asA<babelwires::CompoundFeature>()) {
+            if (auto* compound = start.template as<babelwires::CompoundFeature>()) {
                 T& child = compound->getChildFromStep(p.getStep(index));
                 ++index;
                 return followPath(child, p, index);
@@ -136,7 +136,7 @@ namespace {
 
     template <typename T> T* tryFollowPath(T* start, const babelwires::FeaturePath& p, int index = 0) {
         if (index < p.getNumSteps()) {
-            if (auto* compound = start->template asA<babelwires::CompoundFeature>()) {
+            if (auto* compound = start->template as<babelwires::CompoundFeature>()) {
                 T* child = compound->tryGetChildFromStep(p.getStep(index));
                 return tryFollowPath(child, p, index + 1);
             } else {

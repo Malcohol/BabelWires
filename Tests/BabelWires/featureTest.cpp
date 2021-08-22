@@ -340,7 +340,7 @@ TEST(FeatureTest, arrayFeature) {
 
     babelwires::Feature* entry = arrayFeature.addEntry();
     EXPECT_NE(entry, nullptr);
-    babelwires::IntFeature* firstEntry = entry->asA<babelwires::IntFeature>();
+    babelwires::IntFeature* firstEntry = entry->as<babelwires::IntFeature>();
     EXPECT_NE(firstEntry, nullptr);
 
     EXPECT_EQ(arrayFeature.getNumFeatures(), 1);

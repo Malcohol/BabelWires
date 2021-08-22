@@ -65,15 +65,15 @@ namespace {
         }
 
         void featureToXml(const babelwires::Feature& feature) {
-            if (auto intFeature = feature.asA<const babelwires::IntFeature>()) {
+            if (auto intFeature = feature.as<const babelwires::IntFeature>()) {
                 intFeatureToXml(*intFeature);
-            } else if (auto ratFeature = feature.asA<const babelwires::RationalFeature>()) {
+            } else if (auto ratFeature = feature.as<const babelwires::RationalFeature>()) {
                 rationalFeatureToXml(*ratFeature);
-            } else if (auto stringFeature = feature.asA<const babelwires::StringFeature>()) {
+            } else if (auto stringFeature = feature.as<const babelwires::StringFeature>()) {
                 stringFeatureToXml(*stringFeature);
-            } else if (auto recordFeature = feature.asA<const babelwires::RecordFeature>()) {
+            } else if (auto recordFeature = feature.as<const babelwires::RecordFeature>()) {
                 recordFeatureToXml(*recordFeature);
-            } else if (auto arrayFeature = feature.asA<const babelwires::ArrayFeature>()) {
+            } else if (auto arrayFeature = feature.as<const babelwires::ArrayFeature>()) {
                 arrayFeatureToXml(*arrayFeature);
             } else {
                 assert(!"Unrecognized feature encountered");

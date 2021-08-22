@@ -106,6 +106,6 @@ std::unique_ptr<babelwires::FileFeature> libTestUtils::TestTargetFileFormat::cre
 
 void libTestUtils::TestTargetFileFormat::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
                                                        babelwires::UserLogger& userLogger) const {
-    const TestFileFeature& testFileFeature = *fileFeature.asA<TestFileFeature>();
+    const TestFileFeature& testFileFeature = *fileFeature.as<TestFileFeature>();
     os << s_fileFormatId << char(testFileFeature.m_intChildFeature->get());
 }

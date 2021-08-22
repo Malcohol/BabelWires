@@ -38,7 +38,7 @@ void babelwires::AddElementCommand::undo(Project& project) const {
 }
 
 bool babelwires::AddElementCommand::shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const {
-    const auto* moveElementCommand = subsequentCommand.asA<MoveElementCommand>();
+    const auto* moveElementCommand = subsequentCommand.as<MoveElementCommand>();
     if (!moveElementCommand) {
         return false;
     }
@@ -55,7 +55,7 @@ bool babelwires::AddElementCommand::shouldSubsume(const Command& subsequentComma
 }
 
 void babelwires::AddElementCommand::subsume(std::unique_ptr<Command> subsequentCommand) {
-    assert(subsequentCommand->asA<MoveElementCommand>() && "subsume should not have been called");
+    assert(subsequentCommand->as<MoveElementCommand>() && "subsume should not have been called");
     MoveElementCommand* moveElementCommand = static_cast<MoveElementCommand*>(subsequentCommand.get());
     if (auto optionalPosition = moveElementCommand->getPositionForOnlyNode(m_elementToAdd->m_id)) {
         m_elementToAdd->m_uiData.m_uiPosition = *optionalPosition;

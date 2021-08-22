@@ -16,10 +16,10 @@ TEST(AddModifierCommandTest, executeAndUndo) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
     EXPECT_NE(getInputFeature()->m_intFeature2->get(), 86);
@@ -64,10 +64,10 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElement>();
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->asA<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 77);

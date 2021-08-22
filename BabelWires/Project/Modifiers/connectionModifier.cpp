@@ -23,13 +23,13 @@ babelwires::ConnectionModifier::ConnectionModifier(const ConnectionModifier& oth
     : Modifier(other) {}
 
 const babelwires::ConnectionModifierData& babelwires::ConnectionModifier::getModifierData() const {
-    assert(Modifier::getModifierData().asA<babelwires::ConnectionModifierData>() &&
+    assert(Modifier::getModifierData().as<babelwires::ConnectionModifierData>() &&
            "Holding wrong kind of data");
     return static_cast<const babelwires::ConnectionModifierData&>(Modifier::getModifierData());
 }
 
 babelwires::ConnectionModifierData& babelwires::ConnectionModifier::getModifierData() {
-    assert(Modifier::getModifierData().asA<babelwires::ConnectionModifierData>() &&
+    assert(Modifier::getModifierData().as<babelwires::ConnectionModifierData>() &&
            "Holding wrong kind of data");
     return static_cast<babelwires::ConnectionModifierData&>(Modifier::getModifierData());
 }

@@ -122,7 +122,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
         auto newEnd = std::remove_if(
             newElementData->m_modifiers.begin(), newElementData->m_modifiers.end(),
             [this, elementId, &connectionsBeingRemoved](const std::unique_ptr<ModifierData>& modData) {
-                if (const auto* assignFromData = modData.get()->asA<ConnectionModifierData>()) {
+                if (const auto* assignFromData = modData.get()->as<ConnectionModifierData>()) {
                     ConnectionDescription connection(elementId, *assignFromData);
                     if (connectionsBeingRemoved.insert(connection).second) {
                         m_connections.emplace_back(connection);
@@ -180,11 +180,11 @@ void babelwires::RemoveElementCommand::undo(Project& project) const {
 
 bool babelwires::RemoveElementCommand::shouldSubsume(const Command& subsequentCommand,
                                                      bool thisIsAlreadyExecuted) const {
-    return !thisIsAlreadyExecuted && subsequentCommand.asA<RemoveElementCommand>();
+    return !thisIsAlreadyExecuted && subsequentCommand.as<RemoveElementCommand>();
 }
 
 void babelwires::RemoveElementCommand::subsume(std::unique_ptr<Command> subsequentCommand) {
-    assert(subsequentCommand->asA<RemoveElementCommand>() && "subsume should not have been called");
+    assert(subsequentCommand->as<RemoveElementCommand>() && "subsume should not have been called");
     RemoveElementCommand* removeElementCommand = static_cast<RemoveElementCommand*>(subsequentCommand.get());
     m_elementIds.insert(m_elementIds.end(), removeElementCommand->m_elementIds.begin(),
                         removeElementCommand->m_elementIds.end());

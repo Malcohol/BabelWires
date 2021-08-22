@@ -48,8 +48,8 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
 
     // TODO: There should be a way to move this to a virtual function on modifiers, so these modifiers know how to
     // remove themselves cleanly.
-    if (modifier->getModifierData().asA<ArraySizeModifierData>()) {
-        if (auto arrayFeature = path.tryFollow(*inputFeature)->asA<const ArrayFeature>()) {
+    if (modifier->getModifierData().as<ArraySizeModifierData>()) {
+        if (auto arrayFeature = path.tryFollow(*inputFeature)->as<const ArrayFeature>()) {
             const int numEntriesToRemove = arrayFeature->getNumFeatures() - arrayFeature->getSizeRange().m_min;
             if (numEntriesToRemove > 0) {
                 const int lastEntryIndex = arrayFeature->getSizeRange().m_min;
@@ -58,8 +58,8 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             }
         }
     }
-    else if (modifier->getModifierData().asA<ActivateOptionalsModifierData>()) {
-        if (auto optionalFeature = path.tryFollow(*inputFeature)->asA<const RecordWithOptionalsFeature>()) {
+    else if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+        if (auto optionalFeature = path.tryFollow(*inputFeature)->as<const RecordWithOptionalsFeature>()) {
             for (auto optionalField : optionalFeature->getOptionalFields()) {
                 if (optionalFeature->isActivated(optionalField)) {
                     addSubCommand(std::make_unique<DeactivateOptionalCommand>("DeactivateOptionalCommand subcommand", elementId, path, optionalField));

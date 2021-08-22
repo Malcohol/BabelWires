@@ -15,7 +15,7 @@
 #include "BabelWires/Project/FeatureElements/contentsCache.hpp"
 
 const babelwires::ArrayFeature& babelwires::ArrayRowModel::getArrayFeature() const {
-    assert(getInputThenOutputFeature()->asA<const babelwires::ArrayFeature>() &&
+    assert(getInputThenOutputFeature()->as<const babelwires::ArrayFeature>() &&
            "Wrong type of feature stored");
     return *static_cast<const babelwires::ArrayFeature*>(getInputThenOutputFeature());
 }

@@ -26,7 +26,7 @@ void babelwires::ReloadFileAction::actionTriggered(babelwires::FeatureModel& mod
     if (!featureElement) {
         return;
     }
-    FileElement* const fileElement = featureElement->asA<FileElement>();
+    FileElement* const fileElement = featureElement->as<FileElement>();
     if (!fileElement) {
         return;
     }

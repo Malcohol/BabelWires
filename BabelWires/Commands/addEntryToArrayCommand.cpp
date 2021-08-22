@@ -35,7 +35,7 @@ bool babelwires::AddEntryToArrayCommand::initialize(const Project& project) {
         return false;
     }
 
-    auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->asA<const ArrayFeature>();
+    auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<const ArrayFeature>();
     if (!arrayFeature) {
         return false;
     }
@@ -53,7 +53,7 @@ bool babelwires::AddEntryToArrayCommand::initialize(const Project& project) {
     }
 
     if (const Modifier* modifier = elementToModify->findModifier(m_pathToArray)) {
-        if (modifier->getModifierData().asA<ArraySizeModifierData>()) {
+        if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             m_wasModifier = true;
         }
     }

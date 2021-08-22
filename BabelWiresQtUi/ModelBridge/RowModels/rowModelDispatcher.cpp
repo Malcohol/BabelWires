@@ -30,22 +30,22 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     const babelwires::Feature* feature = entry->getInputThenOutputFeature();
     if (rowModelRegistry.handleFeature(feature, m_rowModel)) {
         // Handled by a registered handler.
-    } else if (feature->asA<const babelwires::StringFeature>()) {
+    } else if (feature->as<const babelwires::StringFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::StringRowModel));
         new (m_rowModel) babelwires::StringRowModel();
-    } else if (feature->asA<const babelwires::IntFeature>()) {
+    } else if (feature->as<const babelwires::IntFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::IntRowModel));
         new (m_rowModel) babelwires::IntRowModel();
-    } else if (feature->asA<const babelwires::RationalFeature>()) {
+    } else if (feature->as<const babelwires::RationalFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::RationalRowModel));
         new (m_rowModel) babelwires::RationalRowModel();
-    } else if (feature->asA<const babelwires::ArrayFeature>()) {
+    } else if (feature->as<const babelwires::ArrayFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ArrayRowModel));
         new (m_rowModel) babelwires::ArrayRowModel();
-    } else if (feature->asA<const babelwires::FileFeature>()) {
+    } else if (feature->as<const babelwires::FileFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::FileRowModel));
         new (m_rowModel) babelwires::FileRowModel();
-    } else if (feature->asA<const babelwires::RecordWithOptionalsFeature>()) {
+    } else if (feature->as<const babelwires::RecordWithOptionalsFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::RecordWithOptionalsRowModel));
         new (m_rowModel) babelwires::RecordWithOptionalsRowModel();
     } else {

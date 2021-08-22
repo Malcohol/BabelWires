@@ -277,26 +277,26 @@ TEST(ModifierDataTest, createModifierMethods) {
     {
         babelwires::ArraySizeModifierData data;
         ASSERT_NE(data.createModifier(), nullptr);
-        EXPECT_NE(data.createModifier()->asA<babelwires::ArraySizeModifier>(), nullptr);
+        EXPECT_NE(data.createModifier()->as<babelwires::ArraySizeModifier>(), nullptr);
     }
     {
         babelwires::IntValueAssignmentData data;
         ASSERT_NE(data.createModifier(), nullptr);
-        EXPECT_NE(data.createModifier()->asA<babelwires::LocalModifier>(), nullptr);
+        EXPECT_NE(data.createModifier()->as<babelwires::LocalModifier>(), nullptr);
     }
     {
         babelwires::RationalValueAssignmentData data;
         ASSERT_NE(data.createModifier(), nullptr);
-        EXPECT_NE(data.createModifier()->asA<babelwires::LocalModifier>(), nullptr);
+        EXPECT_NE(data.createModifier()->as<babelwires::LocalModifier>(), nullptr);
     }
     {
         babelwires::StringValueAssignmentData data;
         ASSERT_NE(data.createModifier(), nullptr);
-        EXPECT_NE(data.createModifier()->asA<babelwires::LocalModifier>(), nullptr);
+        EXPECT_NE(data.createModifier()->as<babelwires::LocalModifier>(), nullptr);
     }
     {
         babelwires::ConnectionModifierData data;
         ASSERT_NE(data.createModifier(), nullptr);
-        EXPECT_NE(data.createModifier()->asA<babelwires::ConnectionModifier>(), nullptr);
+        EXPECT_NE(data.createModifier()->as<babelwires::ConnectionModifier>(), nullptr);
     }
 }

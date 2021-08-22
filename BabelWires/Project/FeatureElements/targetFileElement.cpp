@@ -104,7 +104,7 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
     }
     try {
         OutFileStream outStream(data.m_filePath);
-        const auto* fileFeature = m_feature.get()->asA<FileFeature>();
+        const auto* fileFeature = m_feature.get()->as<FileFeature>();
         const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
         assert(format && "FileFeature with unregistered file format");
         format->writeToFile(*fileFeature, outStream, userLogger);

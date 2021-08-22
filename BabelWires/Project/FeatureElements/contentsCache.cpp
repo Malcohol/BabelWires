@@ -62,9 +62,9 @@ namespace {
             }
             m_rows.emplace_back(ContentsCacheEntry(std::move(label), f, nullptr, path, parentIndex));
             const std::uint8_t thisIndex = m_rows.size() - 1;
-            if (const auto* record = f->asA<const babelwires::RecordFeature>()) {
+            if (const auto* record = f->as<const babelwires::RecordFeature>()) {
                 addInputRecordFeatureToCache(record, path, thisIndex);
-            } else if (const auto* array = f->asA<const babelwires::ArrayFeature>()) {
+            } else if (const auto* array = f->as<const babelwires::ArrayFeature>()) {
                 addInputArrayFeatureToCache(array, path, thisIndex);
             }
         }
@@ -101,9 +101,9 @@ namespace {
             }
             m_rows.emplace_back(ContentsCacheEntry(std::move(label), nullptr, f, path, parentIndex));
             const std::uint8_t thisIndex = m_rows.size() - 1;
-            if (const auto* record = f->asA<const babelwires::RecordFeature>()) {
+            if (const auto* record = f->as<const babelwires::RecordFeature>()) {
                 addOutputRecordFeatureToCache(record, path, thisIndex);
-            } else if (const auto* array = f->asA<const babelwires::ArrayFeature>()) {
+            } else if (const auto* array = f->as<const babelwires::ArrayFeature>()) {
                 addOutputArrayFeatureToCache(array, path, thisIndex);
             }
         }
@@ -140,12 +140,12 @@ namespace {
             }
             m_rows.emplace_back(ContentsCacheEntry(std::move(label), inputFeature, outputFeature, path, parentIndex));
             const std::uint8_t thisIndex = m_rows.size() - 1;
-            if (const auto* const inputRecord = inputFeature->asA<const babelwires::RecordFeature>()) {
-                const auto* const outputRecord = outputFeature->asA<const babelwires::RecordFeature>();
+            if (const auto* const inputRecord = inputFeature->as<const babelwires::RecordFeature>()) {
+                const auto* const outputRecord = outputFeature->as<const babelwires::RecordFeature>();
                 assert(outputRecord && "If the input is a record, the output must be a record too");
                 addRecordContentsToCache(inputRecord, outputRecord, path, thisIndex);
-            } else if (const auto* const inputArray = inputFeature->asA<const babelwires::ArrayFeature>()) {
-                const auto* const outputArray = outputFeature->asA<const babelwires::ArrayFeature>();
+            } else if (const auto* const inputArray = inputFeature->as<const babelwires::ArrayFeature>()) {
+                const auto* const outputArray = outputFeature->as<const babelwires::ArrayFeature>();
                 assert(outputArray && "If the input is an array, the output must be an array too");
                 addArrayContentsToCache(inputArray, outputArray, path, thisIndex);
             }
@@ -220,7 +220,7 @@ void babelwires::ContentsCache::setFeatures(const babelwires::Feature* inputFeat
     m_rows.clear();
     ContentsCacheBuilder builder(m_rows, m_edits);
     const babelwires::Feature* const rootFeature = inputFeature ? inputFeature : outputFeature;
-    const char* rootLabel = rootFeature->asA<const babelwires::FileFeature>() ? "File" : "Root";
+    const char* rootLabel = rootFeature->as<const babelwires::FileFeature>() ? "File" : "Root";
     if (inputFeature && outputFeature) {
         builder.addFeatureToCache(rootLabel, inputFeature, outputFeature, FeaturePath(),
                                   ContentsCacheEntry::c_invalidIndex);
@@ -246,7 +246,7 @@ void babelwires::ContentsCache::setIndexOffset() {
     const ContentsCacheEntry& rootEntry = m_rows[0];
     const babelwires::Feature* const rootFeature = rootEntry.getInputThenOutputFeature();
     m_indexOffset =
-        (rootEntry.m_hasFailedHiddenModifiers || rootFeature->asA<const babelwires::FileFeature>()) ? 0 : 1;
+        (rootEntry.m_hasFailedHiddenModifiers || rootFeature->as<const babelwires::FileFeature>()) ? 0 : 1;
     if (oldIndexOffset != m_indexOffset) {
         setChanged(Changes::StructureChanged);
     }

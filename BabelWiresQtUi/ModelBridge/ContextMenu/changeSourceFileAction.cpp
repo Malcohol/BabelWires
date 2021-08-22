@@ -36,7 +36,7 @@ void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::FeatureMode
         if (!f) {
             return;
         }
-        const FileElement* const fileElement = f->asA<FileElement>();
+        const FileElement* const fileElement = f->as<FileElement>();
         if (!fileElement) {
             return;
         }

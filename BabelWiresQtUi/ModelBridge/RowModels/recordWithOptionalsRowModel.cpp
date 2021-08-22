@@ -23,7 +23,7 @@
 #include "BabelWires/Project/FeatureElements/contentsCache.hpp"
 
 const babelwires::RecordWithOptionalsFeature& babelwires::RecordWithOptionalsRowModel::getRecordWithOptionalsFeature() const {
-    assert(getInputThenOutputFeature()->asA<const babelwires::RecordWithOptionalsFeature>() &&
+    assert(getInputThenOutputFeature()->as<const babelwires::RecordWithOptionalsFeature>() &&
            "Wrong type of feature stored");
     return *static_cast<const babelwires::RecordWithOptionalsFeature*>(getInputThenOutputFeature());
 }
