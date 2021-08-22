@@ -62,16 +62,16 @@ TEST(StreamEventHolder, Alignment) {
     EXPECT_TRUE(holder.hasEvent());
     EXPECT_EQ((*holder).m_value, 10);
     EXPECT_EQ(holder->m_value, 10);
-    ASSERT_NE(dynamic_cast<BigAlignedEvent*>(&*holder), nullptr);
-    EXPECT_EQ(dynamic_cast<BigAlignedEvent&>(*holder).m_value, 10);
+    ASSERT_NE(holder->asA<BigAlignedEvent>(), nullptr);
+    EXPECT_EQ(holder->asA<BigAlignedEvent>()->m_value, 10);
 
     BigAlignedEvent event2(14);
     holder = event2;
     EXPECT_TRUE(holder.hasEvent());
     EXPECT_EQ((*holder).m_value, 14);
     EXPECT_EQ(holder->m_value, 14);
-    ASSERT_NE(dynamic_cast<BigAlignedEvent*>(&*holder), nullptr);
-    EXPECT_EQ(dynamic_cast<BigAlignedEvent&>(*holder).m_value, 14);
+    ASSERT_NE(holder->asA<BigAlignedEvent>(), nullptr);
+    EXPECT_EQ(holder->asA<BigAlignedEvent>()->m_value, 14);
 }
 
 namespace {

@@ -181,7 +181,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     {
         const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
-        EXPECT_EQ(dynamic_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size, 6);
+        EXPECT_EQ(modifier->getModifierData().asA<babelwires::ArraySizeModifierData>()->m_size, 6);
     }
 
     context.m_project.process();
@@ -189,7 +189,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     {
         const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
-        EXPECT_EQ(dynamic_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size, 4);
+        EXPECT_EQ(modifier->getModifierData().asA<babelwires::ArraySizeModifierData>()->m_size, 4);
     }
 
     context.m_project.process();
@@ -272,8 +272,8 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
         modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
         context.m_project.addModifier(targetElementId, modData);
     }
-    const babelwires::ConnectionModifierData& connectionData = dynamic_cast<const babelwires::ConnectionModifierData&>(
-        targetElement->findModifier(pathToTargetFeature)->getModifierData());
+    const babelwires::ConnectionModifierData& connectionData = 
+        *targetElement->findModifier(pathToTargetFeature)->getModifierData().asA<babelwires::ConnectionModifierData>();
 
     context.m_project.process();
 
