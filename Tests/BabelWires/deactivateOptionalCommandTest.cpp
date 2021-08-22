@@ -31,7 +31,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+        return element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
     };
 
     ASSERT_NE(getInputFeature(), nullptr);
@@ -189,7 +189,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
-        dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+        element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
     ASSERT_NE(inputFeature, nullptr);
 
     babelwires::DeactivateOptionalCommand command(
@@ -210,7 +210,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
-        dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+        element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
     ASSERT_NE(inputFeature, nullptr);
 
     babelwires::DeactivateOptionalCommand command(

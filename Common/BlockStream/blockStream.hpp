@@ -27,7 +27,7 @@ namespace babelwires {
         /// Add an event by moving or copying it into the track.
         template <typename EVENT> EVENT& addEvent(EVENT&& srcEvent) {
             StreamEvent& eventInTrack = addEventInternal(std::forward<EVENT>(srcEvent));
-            assert(dynamic_cast<typename std::remove_reference<EVENT>::type*>(&eventInTrack) != nullptr);
+            assert(eventInTrack.template asA<typename std::remove_reference<EVENT>::type>() != nullptr);
             return static_cast<EVENT&>(eventInTrack);
         };
 

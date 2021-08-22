@@ -54,8 +54,8 @@ TEST(AddElementCommandTest, subsumeMoves) {
     // Confirm that the move was subsumed
     addCommand.undo(context.m_project);
     addCommand.execute(context.m_project);
-    const auto* element = dynamic_cast<const libTestUtils::TestFeatureElement*>(
-        context.m_project.getFeatureElement(addCommand.getElementId()));
+    const auto* element =
+        context.m_project.getFeatureElement(addCommand.getElementId())->asA<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
     EXPECT_EQ(element->getUiPosition().m_y, 88);

@@ -18,10 +18,10 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
     const libTestUtils::TestFeatureElementWithOptionals* element =
-        dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
-        dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+        element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
     ASSERT_NE(inputFeature, nullptr);
 
     babelwires::ActivateOptionalCommand command("Test command", elementId,
@@ -100,7 +100,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element =
-        dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
 
     babelwires::FieldIdentifier opId("flerm");
@@ -118,11 +118,11 @@ TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element =
-        dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
-        dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+        element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
     ASSERT_NE(inputFeature, nullptr);
 
     babelwires::ActivateOptionalCommand command("Test command", elementId,
@@ -138,11 +138,11 @@ TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element =
-        dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
-        dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+        element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
     ASSERT_NE(inputFeature, nullptr);
 
     inputFeature->m_subrecord->activateField(inputFeature->m_op0Id);

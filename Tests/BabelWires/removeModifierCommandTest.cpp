@@ -117,11 +117,11 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
     const libTestUtils::TestFeatureElementWithOptionals* element =
-        dynamic_cast<const libTestUtils::TestFeatureElementWithOptionals*>(context.m_project.getFeatureElement(elementId));
+        context.m_project.getFeatureElement(elementId)->asA<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return dynamic_cast<const libTestUtils::TestFeatureWithOptionals*>(element->getInputFeature());
+        return element->getInputFeature()->asA<libTestUtils::TestFeatureWithOptionals>();
     };
 
     ASSERT_NE(getInputFeature(), nullptr);
