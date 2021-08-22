@@ -53,6 +53,7 @@ namespace babelwires {
         CLONEABLE_ABSTRACT(ElementData);
         CUSTOM_CLONEABLE_ABSTRACT(ElementData);
         SERIALIZABLE_ABSTRACT(ElementData, "ElementData", void);
+        DOWNCASTABLE_TYPE_HIERARCHY(ElementData);
 
         ElementData() = default;
 

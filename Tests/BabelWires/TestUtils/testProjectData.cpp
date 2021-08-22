@@ -61,8 +61,8 @@ libTestUtils::TestProjectData::TestProjectData()
 
 void libTestUtils::TestProjectData::setFilePaths(std::string_view sourceFilePath, std::string_view targetFilePath) {
     assert(m_elements.size() == 3);
-    dynamic_cast<babelwires::SourceFileElementData&>(*m_elements[2]).m_filePath = sourceFilePath;
-    dynamic_cast<babelwires::TargetFileElementData&>(*m_elements[0]).m_filePath = targetFilePath;
+    m_elements[2]->asA<babelwires::SourceFileElementData>()->m_filePath = sourceFilePath;
+    m_elements[0]->asA<babelwires::TargetFileElementData>()->m_filePath = targetFilePath;
     m_sourceFilePath = sourceFilePath;
     m_targetFilePath = targetFilePath;
 }

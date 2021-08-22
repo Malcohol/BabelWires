@@ -149,7 +149,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(featureElement->getOutputFeature()->asA<const libTestUtils::TestFileFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(dynamic_cast<const babelwires::SourceFileElementData*>(&featureElement->getElementData()));
+    EXPECT_TRUE(featureElement->getElementData().asA<babelwires::SourceFileElementData>());
     EXPECT_EQ(static_cast<const babelwires::SourceFileElementData&>(featureElement->getElementData()).m_filePath,
               data.m_filePath);
 
@@ -245,7 +245,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     EXPECT_TRUE(featureElement->getInputFeature()->asA<const libTestUtils::TestFileFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(dynamic_cast<const babelwires::TargetFileElementData*>(&featureElement->getElementData()));
+    EXPECT_TRUE(featureElement->getElementData().asA<babelwires::TargetFileElementData>());
     EXPECT_EQ(static_cast<const babelwires::TargetFileElementData&>(featureElement->getElementData()).m_filePath,
               data.m_filePath);
 
@@ -334,7 +334,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     EXPECT_TRUE(featureElement->getInputFeature()->asA<const libTestUtils::TestRecordFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(dynamic_cast<const babelwires::ProcessorElementData*>(&featureElement->getElementData()));
+    EXPECT_TRUE(featureElement->getElementData().asA<babelwires::ProcessorElementData>());
 
     const libTestUtils::TestRecordFeature* inputFeature =
         static_cast<const libTestUtils::TestRecordFeature*>(featureElement->getInputFeature());
