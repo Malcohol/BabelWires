@@ -23,7 +23,6 @@ Model
   - If an unselected variant is modified, does that modification get stored when the variant is switched. I presume only in undo stack, which is a little annoying.
 * FileFeature: Remove this and the offset hack in the FeatureCache. 
   - Instead, allow the UI to add non-model rows at top for visualization, and use that.
-* Would like SMF Format 1 Target Files to hide element 0.
 
 Refactor: 
 * Move some of the logic in doProcess up into FeatureElement.
@@ -50,6 +49,7 @@ Parallel processing:
 * File loading would be similar.
 * Needs new UI features, since the parts of the project can be stale which processing is underway.
 * Investigate this if use-case with expensive processing ever arises.
+* Ensure processor work can itself be multithreaded.
 
 Ideas:
 * Provide serializer via a registry, and move tinyxml dependency into its own lib.
