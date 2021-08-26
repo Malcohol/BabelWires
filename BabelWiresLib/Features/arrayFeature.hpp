@@ -41,6 +41,7 @@ namespace babelwires {
 
       protected:
         virtual void doSetToDefault() override;
+        virtual void doSetToDefaultNonRecursive() override;
         virtual std::size_t doGetHash() const override;
         virtual Feature* doGetFeature(int i) override;
         virtual const Feature* doGetFeature(int i) const override;

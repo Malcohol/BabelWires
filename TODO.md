@@ -23,6 +23,10 @@ Model
   - If an unselected variant is modified, does that modification get stored when the variant is switched. I presume only in undo stack, which is a little annoying.
 * FileFeature: Remove this and the offset hack in the FeatureCache. 
   - Instead, allow the UI to add non-model rows at top for visualization, and use that.
+* Consider a coercion system so numeric types can always be assigned.
+
+Processors:
+* Provide basic processors for standard types (+, *, etc)
 
 Refactor: 
 * Move some of the logic in doProcess up into FeatureElement.

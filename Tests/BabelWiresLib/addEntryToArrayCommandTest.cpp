@@ -134,3 +134,43 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
 
     EXPECT_FALSE(command.initialize(context.m_project));
 }
+
+TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
+    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    libTestUtils::TestProjectContext context;
+
+    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const libTestUtils::TestFeatureElement* element =
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+    ASSERT_NE(element, nullptr);
+    const auto getInputFeature = [element]() {
+        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+    };
+    ASSERT_NE(getInputFeature(), nullptr);
+
+    EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 2);
+
+    getInputFeature()->m_arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->set(3);
+    getInputFeature()->m_arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->set(-18);
+
+    // -1 means "at end".
+    babelwires::AddEntryToArrayCommand command("Test command", elementId,
+                                               libTestUtils::TestRecordFeature::s_pathToArray, -1);
+
+    context.m_project.process();
+    EXPECT_TRUE(command.initialize(context.m_project));
+
+    command.execute(context.m_project);
+    context.m_project.process();
+
+    EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 3);
+    EXPECT_EQ(getInputFeature()->m_arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->get(), 3);
+    EXPECT_EQ(getInputFeature()->m_arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->get(), -18);
+
+    command.undo(context.m_project);
+    context.m_project.process();
+
+    EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 2);
+    EXPECT_EQ(getInputFeature()->m_arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->get(), 3);
+    EXPECT_EQ(getInputFeature()->m_arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->get(), -18);
+}

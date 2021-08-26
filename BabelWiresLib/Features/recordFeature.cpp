@@ -18,6 +18,13 @@ int babelwires::RecordFeature::getNumFeatures() const {
     return m_fields.size();
 }
 
+void babelwires::RecordFeature::doSetToDefault() {
+    setSubfeaturesToDefault();
+}
+
+void babelwires::RecordFeature::doSetToDefaultNonRecursive() {
+}
+
 babelwires::Feature* babelwires::RecordFeature::doGetFeature(int i) {
     return m_fields.at(i).m_feature.get();
 }

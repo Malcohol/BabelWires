@@ -53,6 +53,11 @@ int babelwires::RecordWithOptionalsFeature::getNumInactiveFields() const {
 }
 
 void babelwires::RecordWithOptionalsFeature::doSetToDefault() {
+    setToDefaultNonRecursive();
+    setSubfeaturesToDefault();
+}
+
+void babelwires::RecordWithOptionalsFeature::doSetToDefaultNonRecursive() {
     for (auto& inactiveField : m_inactiveFields) {
         // After construction, these may not have been set to their default state.
         inactiveField.m_feature->setToDefault();
@@ -62,5 +67,4 @@ void babelwires::RecordWithOptionalsFeature::doSetToDefault() {
             deactivateField(f);
         }
     }
-    CompoundFeature::doSetToDefault();
 }

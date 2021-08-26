@@ -103,7 +103,18 @@ void babelwires::ArrayFeature::doSetToDefault() {
         removeEntry(-1);
     }
 
-    CompoundFeature::doSetToDefault();
+    setSubfeaturesToDefault();
+
+    while (getNumFeatures() < defaultSize) {
+        addEntry();
+    }
+}
+
+void babelwires::ArrayFeature::doSetToDefaultNonRecursive() {
+    unsigned int defaultSize = getSizeRange().m_min;
+    while (getNumFeatures() > defaultSize) {
+        removeEntry(-1);
+    }
 
     while (getNumFeatures() < defaultSize) {
         addEntry();

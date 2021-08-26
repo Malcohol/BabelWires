@@ -2,7 +2,7 @@
  * A Feature is a self-describing data-structure which stores the data in the model.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Features/features.hpp"
@@ -49,6 +49,10 @@ void babelwires::Feature::setToDefault() {
     doSetToDefault();
 }
 
+void babelwires::Feature::setToDefaultNonRecursive() {
+    doSetToDefaultNonRecursive();
+}
+
 std::size_t babelwires::Feature::getHash() const {
     return doGetHash();
 }
@@ -70,8 +74,11 @@ void babelwires::ValueFeature::assign(const ValueFeature& other) {
     doAssign(other);
 }
 
-namespace {
+void babelwires::ValueFeature::doSetToDefaultNonRecursive() {
+    setToDefault();
+}
 
+namespace {
     void checkIndex(const babelwires::CompoundFeature* f, int i) {
         if ((i < 0) || (i >= f->getNumFeatures())) {
             throw babelwires::ModelException()
@@ -91,7 +98,7 @@ const babelwires::Feature* babelwires::CompoundFeature::getFeature(int i) const 
     return doGetFeature(i);
 }
 
-void babelwires::CompoundFeature::doSetToDefault() {
+void babelwires::CompoundFeature::setSubfeaturesToDefault() {
     for (auto&& child : subfeatures(*this)) {
         child->setToDefault();
     }

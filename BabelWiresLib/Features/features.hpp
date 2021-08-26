@@ -39,6 +39,9 @@ namespace babelwires {
         /// Set to the default value.
         void setToDefault();
 
+        /// Set to this to default but, in the case of compound features, leave remaining subfeatures untouched.
+        void setToDefaultNonRecursive();
+
         /// Describes the way a feature may have changed.
         enum class Changes : unsigned int {
             NothingChanged = 0b0000,
@@ -63,6 +66,9 @@ namespace babelwires {
 
         /// Protected implementation of setToDefault.
         virtual void doSetToDefault() = 0;
+
+        /// Protected implementation of setToDefaultNonRecursive.
+        virtual void doSetToDefaultNonRecursive() = 0;
 
         /// Protected implementation of getHash.
         virtual std::size_t doGetHash() const = 0;
@@ -97,6 +103,9 @@ namespace babelwires {
         void assign(const ValueFeature& other);
 
       protected:
+        /// Calls doSetToDefault.
+        virtual void doSetToDefaultNonRecursive() override;
+
         /// Return a string of length <= 4 characters.
         virtual std::string doGetValueType() const = 0;
 
@@ -127,12 +136,14 @@ namespace babelwires {
         const Feature& getChildFromStep(const PathStep& step) const;
 
       protected:
-        /// By default, sets all children to default.
-        virtual void doSetToDefault() override;
         /// Clears the changes of this class and all children.
         virtual void doClearChanges() override;
         virtual Feature* doGetFeature(int i) = 0;
         virtual const Feature* doGetFeature(int i) const = 0;
+
+      protected:
+        /// Call setToDefault on each subfeature.
+        void setSubfeaturesToDefault();
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(Feature::Changes);

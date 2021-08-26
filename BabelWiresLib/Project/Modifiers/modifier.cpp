@@ -59,7 +59,8 @@ void babelwires::Modifier::unapply(Feature* container) const {
     assert(!isFailed() && "Don't try to unapply a failed modifier.");
     try {
         Feature& f = m_data->m_pathToFeature.follow(*container);
-        f.setToDefault();
+        // When undone, array size modifiers should not reset the remaining children.
+        f.setToDefaultNonRecursive();
     } catch (const BaseException& e) {
         assert(!"It should always be possible to unapply a modifier.");
     }

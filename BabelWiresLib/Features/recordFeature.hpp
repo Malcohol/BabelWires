@@ -35,6 +35,8 @@ namespace babelwires {
         int getChildIndexFromStep(const FieldIdentifier& identifier) const;
 
       protected:
+        virtual void doSetToDefault() override;
+        virtual void doSetToDefaultNonRecursive() override;
         virtual Feature* doGetFeature(int i) override;
         virtual const Feature* doGetFeature(int i) const override;
         virtual std::size_t doGetHash() const override;
