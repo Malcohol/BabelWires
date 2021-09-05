@@ -45,7 +45,7 @@ bool babelwires::SparseValueNamesImpl::getNextValueWithName(int& value) const {
 
 bool babelwires::SparseValueNamesImpl::doGetValueForName(const std::string& name, int& valueOut) const {
     const auto it = m_valueFromNames.find(name);
-    if (it != m_valueFromNames.end()) {
+    if (it == m_valueFromNames.end()) {
         return false;
     } else {
         valueOut = it->second;
@@ -55,7 +55,7 @@ bool babelwires::SparseValueNamesImpl::doGetValueForName(const std::string& name
 
 bool babelwires::SparseValueNamesImpl::doGetNameForValue(int value, std::string& nameOut) const {
     const auto it = m_nameFromValues.find(value);
-    if (it != m_nameFromValues.end()) {
+    if (it == m_nameFromValues.end()) {
         return false;
     } else {
         nameOut = it->second;
