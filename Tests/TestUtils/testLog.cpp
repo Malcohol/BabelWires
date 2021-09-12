@@ -30,5 +30,5 @@ bool testUtils::TestLogWithListener::hasSubstringIgnoreCase(std::string_view sub
 }
 
 void testUtils::TestLogWithListener::clear() {
-    m_output.clear();
+    m_output = std::ostringstream();
 }

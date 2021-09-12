@@ -21,6 +21,7 @@ SET( LIB_TESTS_SRCS
     modifierDataTest.cpp
     modifierTest.cpp
     moveElementCommandTest.cpp
+    parallelProcessorTest.cpp
     pasteElementsCommandTest.cpp
     processorElementTest.cpp
     projectBundleTest.cpp

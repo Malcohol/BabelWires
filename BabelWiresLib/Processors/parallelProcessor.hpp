@@ -1,0 +1,66 @@
+/**
+ * A convenient base class for processors which perform the same operation on several input features,
+ * producing several output features.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include "BabelWiresLib/Features/arrayFeature.hpp"
+#include "BabelWiresLib/Features/featureMixins.hpp"
+#include "BabelWiresLib/Features/modelExceptions.hpp"
+#include "BabelWiresLib/Processors/commonProcessor.hpp"
+
+namespace babelwires {
+    constexpr int s_maxParallelFeatures = 16;
+
+    /// Most of the code is moved out of the template.
+    void parallelProcessorHelper(const RecordFeature* inputFeature, const ArrayFeature* arrayIn, ArrayFeature* arrayOut,
+                                 UserLogger& userLogger,
+                                 std::function<void(UserLogger&, const Feature*, Feature*)> processEntry);
+
+    /// A base class for a common shape of processor which performs the same operation on several input features,
+    /// producing several output features.
+    /// Organizing suitable processors this way should reduce the number of elements in the project.
+    ///
+    /// Subclass constructor should call addArrayFeature to add the input/output array. This should almost always
+    /// be after all the input features are added.
+    template <typename INPUT_ENTRY_FEATURE, typename OUTPUT_ENTRY_FEATURE>
+    class ParallelProcessor : public CommonProcessor {
+      public:
+        using InputEntryFeature = INPUT_ENTRY_FEATURE;
+        using OutputEntryFeature = OUTPUT_ENTRY_FEATURE;
+        using InputArrayFeature = HasStaticSizeRange<StandardArrayFeature<InputEntryFeature>, 1, s_maxParallelFeatures>;
+        using OutputArrayFeature =
+            HasStaticSizeRange<StandardArrayFeature<OutputEntryFeature>, 1, s_maxParallelFeatures>;
+
+        void process(UserLogger& userLogger) override {
+            parallelProcessorHelper(m_inputFeature.get(), m_arrayIn, m_arrayOut, userLogger,
+                                    [this](UserLogger& userLogger, const Feature* input, Feature* output) {
+                                        const auto& featureIn = input->is<InputEntryFeature>();
+                                        auto& featureOut = output->is<OutputEntryFeature>();
+                                        processEntry(userLogger, featureIn, featureOut);
+                                    });
+        }
+
+      protected:
+        /// Subclass constructors should call this to add the input/output array. This should almost always
+        /// be after all the input features are added.
+        void addArrayFeature(FieldIdentifier id) {
+            m_arrayIn = m_inputFeature->addField(std::make_unique<InputArrayFeature>(), id);
+            m_arrayOut = m_outputFeature->addField(std::make_unique<OutputArrayFeature>(), id);
+        }
+
+        /// Subclasses must override this with the per-entry processing logic. This is only called if
+        /// input has changed or some other input feature which isn't the array has changed.
+        virtual void processEntry(UserLogger& userLogger, const InputEntryFeature& input,
+                                  OutputEntryFeature& output) const = 0;
+
+      private:
+        ArrayFeature* m_arrayIn = nullptr;
+        ArrayFeature* m_arrayOut = nullptr;
+    };
+
+} // namespace babelwires
