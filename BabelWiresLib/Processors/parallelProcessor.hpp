@@ -16,17 +16,19 @@
 namespace babelwires {
     constexpr int s_maxParallelFeatures = 16;
 
-    /// Most of the code is moved out of the template.
-    void parallelProcessorHelper(const RecordFeature* inputFeature, const ArrayFeature* arrayIn, ArrayFeature* arrayOut,
-                                 UserLogger& userLogger,
-                                 std::function<void(UserLogger&, const Feature*, Feature*)> processEntry);
+    namespace Detail {
+        /// This helper function carries code which doesn't need to be templated.
+        void parallelProcessorHelper(const RecordFeature* inputFeature, const ArrayFeature* arrayIn,
+                                     ArrayFeature* arrayOut, UserLogger& userLogger,
+                                     std::function<void(UserLogger&, const Feature*, Feature*)> processEntry);
+    } // namespace Detail
 
     /// A base class for a common shape of processor which performs the same operation on several input features,
-    /// producing several output features.
-    /// Organizing suitable processors this way should reduce the number of elements in the project.
+    /// producing several output features. Organizing suitable processors this way should reduce the number of
+    /// elements in the project.
     ///
-    /// Subclass constructor should call addArrayFeature to add the input/output array. This should almost always
-    /// be after all the input features are added.
+    /// Subclasses should call addArrayFeature in their constructor, and need to override the pure virtual processEntry
+    /// method.
     template <typename INPUT_ENTRY_FEATURE, typename OUTPUT_ENTRY_FEATURE>
     class ParallelProcessor : public CommonProcessor {
       public:
@@ -37,12 +39,12 @@ namespace babelwires {
             HasStaticSizeRange<StandardArrayFeature<OutputEntryFeature>, 1, s_maxParallelFeatures>;
 
         void process(UserLogger& userLogger) override {
-            parallelProcessorHelper(m_inputFeature.get(), m_arrayIn, m_arrayOut, userLogger,
-                                    [this](UserLogger& userLogger, const Feature* input, Feature* output) {
-                                        const auto& featureIn = input->is<InputEntryFeature>();
-                                        auto& featureOut = output->is<OutputEntryFeature>();
-                                        processEntry(userLogger, featureIn, featureOut);
-                                    });
+            Detail::parallelProcessorHelper(m_inputFeature.get(), m_arrayIn, m_arrayOut, userLogger,
+                                            [this](UserLogger& userLogger, const Feature* input, Feature* output) {
+                                                const auto& featureIn = input->is<InputEntryFeature>();
+                                                auto& featureOut = output->is<OutputEntryFeature>();
+                                                processEntry(userLogger, featureIn, featureOut);
+                                            });
         }
 
       protected:
