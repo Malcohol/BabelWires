@@ -9,6 +9,7 @@
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
 
 #include <algorithm>
 #include <numeric>
@@ -51,6 +52,15 @@ void babelwires::Detail::parallelProcessorHelper(
                       }
                   });
     if (isFailed) {
-        // TODO Throw a compound exception.
+        // TODO: Need a more precise way to signal failure.
+        ModelException compositeException;
+        const char* newline = "";
+        for (int i = 0; i < failureStrings.size(); ++i) {
+            if (!failureStrings[i].empty()) {
+                compositeException << newline << "Failure processing entry " << FeaturePath(arrayIn->getFeature(i)) << ": " << failureStrings[i];
+                newline = "\n";
+            }
+        }
+        throw compositeException;
     }
 }

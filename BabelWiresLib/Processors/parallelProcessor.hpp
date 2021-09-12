@@ -57,6 +57,7 @@ namespace babelwires {
 
         /// Subclasses must override this with the per-entry processing logic. This is only called if
         /// input has changed or some other input feature which isn't the array has changed.
+        /// This method can signal errors by throwing an exception.
         virtual void processEntry(UserLogger& userLogger, const InputEntryFeature& input,
                                   OutputEntryFeature& output) const = 0;
 

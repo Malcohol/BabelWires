@@ -5,11 +5,14 @@
 #include <BabelWiresLib/Features/Path/fieldNameRegistry.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
+#include "BabelWiresLib/Features/featureMixins.hpp"
 
 #include "Tests/TestUtils/testLog.hpp"
 
 namespace {
-    struct TestParallelProcessor : babelwires::ParallelProcessor<babelwires::IntFeature, babelwires::IntFeature> {
+    using LimitedIntFeature = babelwires::HasStaticRange<babelwires::IntFeature, -20, 20>;
+
+    struct TestParallelProcessor : babelwires::ParallelProcessor<LimitedIntFeature, LimitedIntFeature> {
         TestParallelProcessor() {
             const babelwires::FieldIdentifier intId = babelwires::FieldNameRegistry::write()->addFieldName(
                 "foo", "foo", "ec463f45-098d-4170-9890-d5a2db2e7658",
@@ -163,3 +166,36 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     EXPECT_TRUE(findPath(log.getLogContents(), getInputArrayEntry(1)));
 }
 
+TEST(ParallelProcessorTest, testFailure) {
+    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    // Use the log to determine when the processEntry method is called.
+    testUtils::TestLogWithListener log;
+
+    TestParallelProcessor processor;
+    processor.getInputFeature()->setToDefault();
+    processor.getOutputFeature()->setToDefault();
+
+    babelwires::ArrayFeature* const inputArrayFeature =
+        processor.getInputFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
+    const babelwires::ArrayFeature* const outputArrayFeature =
+        processor.getOutputFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
+
+    const auto getInputArrayEntry = [inputArrayFeature](int i) {
+        return inputArrayFeature->getFeature(i)->as<babelwires::IntFeature>();
+    };
+    const auto getOutputArrayEntry = [outputArrayFeature](int i) {
+        return outputArrayFeature->getFeature(i)->as<babelwires::IntFeature>();
+    };
+
+    processor.m_intValue->set(4);
+    inputArrayFeature->addEntry();
+    getInputArrayEntry(0)->set(17);
+    getInputArrayEntry(1)->set(6);
+    try {
+        processor.process(log);
+        EXPECT_FALSE(true);
+    } catch (const std::exception& e) {
+        EXPECT_TRUE(findPath(e.what(), getInputArrayEntry(0)));
+        EXPECT_FALSE(findPath(e.what(), getInputArrayEntry(1)));
+    }
+}
