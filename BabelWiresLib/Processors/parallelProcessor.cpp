@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <array>
 
 void babelwires::parallelProcessorHelper(
     const RecordFeature* inputFeature, const babelwires::ArrayFeature* arrayIn, babelwires::ArrayFeature* arrayOut,
