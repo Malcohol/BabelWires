@@ -5,25 +5,24 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/comboBoxValueEditor.hpp"
+#include "BabelWiresQtUi/ModelBridge/ValueEditors/dropDownValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
 #include <QLineEdit>
 
-babelwires::ComboBoxValueEditor::ComboBoxValueEditor(QWidget* parent, const QModelIndex& index)
+babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent, const QModelIndex& index)
     : ValueEditorCommonBase(parent, index) {
     setSizeAdjustPolicy(QComboBox::SizeAdjustPolicy::AdjustToMinimumContentsLengthWithIcon);
-    setEditable(true);
     // Commit on select.
     QObject::connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged),
                      RowModel::getDelegateFromParentWidget(parent), &FeatureModelDelegate::commitEditorValue);
 }
 
-void babelwires::ComboBoxValueEditor::setFeatureIsModified(bool isModified) {
-    assert(lineEdit() && "ComboBoxes are expected to be editable");
-    QLineEdit* lineEditor = lineEdit();
-    QFont font = lineEditor->font();
-    font.setBold(isModified);
-    lineEditor->setFont(font);
+void babelwires::DropDownValueEditor::setFeatureIsModified(bool isModified) {
+    //assert(lineEdit() && "ComboBoxes are expected to be editable");
+    //QLineEdit* lineEditor = lineEdit();
+    //QFont font = lineEditor->font();
+    //font.setBold(isModified);
+    //lineEditor->setFont(font);
 }

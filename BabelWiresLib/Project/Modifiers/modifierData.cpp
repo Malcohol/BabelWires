@@ -10,6 +10,7 @@
 #include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/stringFeature.hpp"
+#include "BabelWiresLib/Features/enumFeature.hpp"
 #include "BabelWiresLib/FileFormat/fileFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
@@ -90,4 +91,27 @@ void babelwires::StringValueAssignmentData::serializeContents(Serializer& serial
 void babelwires::StringValueAssignmentData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_pathToFeature);
     deserializer.deserializeValue("value", m_value);
+}
+
+void babelwires::EnumValueAssignmentData::apply(Feature* targetFeature) const {
+    if (EnumFeature* enumFeature = targetFeature->as<EnumFeature>()) {
+        enumFeature->set(m_value);
+    } else {
+        throw babelwires::ModelException() << "Could not assign an enum value to a non-enum field";
+    }
+}
+
+void babelwires::EnumValueAssignmentData::serializeContents(Serializer& serializer) const {
+    serializer.serializeValue("path", m_pathToFeature);
+    serializer.serializeValue("value", m_value);
+}
+
+void babelwires::EnumValueAssignmentData::deserializeContents(Deserializer& deserializer) {
+    deserializer.deserializeValue("path", m_pathToFeature);
+    deserializer.deserializeValue("value", m_value);
+}
+
+void babelwires::EnumValueAssignmentData::visitFields(FieldVisitor& visitor) {
+    ModifierData::visitFields(visitor);
+    visitor(m_value);
 }

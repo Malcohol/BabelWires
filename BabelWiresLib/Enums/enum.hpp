@@ -20,16 +20,11 @@
 #define ENUM_DEFINE_CPP_ENUM(Y)                                                                                        \
     enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) };                                                                \
     Value getValueFromIdentifier(babelwires::FieldIdentifier id) const {                                               \
-        const EnumValues& values = getEnumValues();                                                                    \
-        const auto it = std::find(values.begin(), values.end(), id);                                                   \
-        assert((it != values.end()) && "id not found in enum");                                                        \
-        return static_cast<Value>(it - values.begin());                                                                \
+        return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
     }                                                                                                                  \
     babelwires::FieldIdentifier getIdentifierFromValue(Value value) {                                                  \
-        const EnumValues& values = getEnumValues();                                                                    \
-        return values[static_cast<unsigned int>(value)];                                                               \
+        return getIdentifierFromIndex(static_cast<unsigned int>(value));                                               \
     }
-
 
 namespace babelwires {
 
@@ -50,6 +45,10 @@ namespace babelwires {
 
         /// Get the index of the default value in the vector of enum values.
         unsigned int getIndexOfDefaultValue() const;
+
+        unsigned int getIndexFromIdentifier(FieldIdentifier id) const;
+
+        FieldIdentifier getIdentifierFromIndex(unsigned int index);
 
       private:
         const EnumValues& m_values;
@@ -74,7 +73,7 @@ namespace babelwires {
         static const E* s_registeredInstance;
     };
 
-    template<typename E> const E* RegisteredEnum<E>::s_registeredInstance = nullptr;
+    template <typename E> const E* RegisteredEnum<E>::s_registeredInstance = nullptr;
 
     class EnumRegistry : public Registry<Enum> {
       public:
