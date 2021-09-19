@@ -20,9 +20,5 @@ babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent, const QMod
 }
 
 void babelwires::DropDownValueEditor::setFeatureIsModified(bool isModified) {
-    //assert(lineEdit() && "ComboBoxes are expected to be editable");
-    //QLineEdit* lineEditor = lineEdit();
-    //QFont font = lineEditor->font();
-    //font.setBold(isModified);
-    //lineEditor->setFont(font);
+    // TODO: when you click on the row value the value is not bold.
 }
