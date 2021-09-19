@@ -2,7 +2,7 @@
  * A Registry is a container which is used in various places for registering factories.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "Common/Registry/registry.hpp"
@@ -29,6 +29,8 @@ babelwires::VersionNumber babelwires::RegistryEntry::getVersion() const {
     return m_version;
 }
 
+void babelwires::RegistryEntry::onRegistered() {}
+
 babelwires::UntypedRegistry::UntypedRegistry(std::string registryName)
     : m_registryName(std::move(registryName)) {}
 
@@ -38,6 +40,7 @@ void babelwires::UntypedRegistry::addEntry(std::unique_ptr<RegistryEntry> newEnt
     assert((getEntryByName(newEntry->getName()) == nullptr) && "Format with that name already registered.");
     assert(isValidIdentifier(newEntry->getIdentifier().c_str()) && "Invalid identifier used for registry entry");
     validateNewEntry(newEntry.get());
+    newEntry->onRegistered();
     m_entries.push_back(std::move(newEntry));
 }
 

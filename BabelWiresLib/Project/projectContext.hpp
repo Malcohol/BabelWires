@@ -17,6 +17,7 @@ namespace babelwires {
     class TargetFileFormatRegistry;
     class SourceFileFormatRegistry;
     class ProcessorFactoryRegistry;
+    class EnumRegistry;
 
     /// The ProjectContext provides the project with access to its fundimental dependencies (e.g. registries).
     /// This approach is an instance of dependency injection, and is used for almost all of the dependencies.
@@ -29,6 +30,7 @@ namespace babelwires {
         TargetFileFormatRegistry& m_targetFileFormatReg;
         ProcessorFactoryRegistry& m_processorReg;
         DeserializationRegistry& m_deserializationReg;
+        EnumRegistry& m_enumRegistry;
         std::default_random_engine m_randomEngine;
     };
 
