@@ -17,6 +17,13 @@
 
 #include <cassert>
 
+namespace {
+    QString getNamedValueString(int value, const std::string& name) {
+
+        return QString("%1 (%2)").arg(name.c_str()).arg(value);
+    }
+}
+
 const babelwires::IntFeature& babelwires::IntRowModel::getIntFeature() const {
     assert(getInputThenOutputFeature()->as<const babelwires::IntFeature>() && "Wrong type of feature stored");
     return *static_cast<const babelwires::IntFeature*>(getInputThenOutputFeature());
@@ -28,7 +35,7 @@ QVariant babelwires::IntRowModel::getValueDisplayData() const {
     if (const babelwires::ValueNames* valueNames = intFeature.getValueNames()) {
         std::string name;
         if (valueNames->getNameForValue(value, name)) {
-            return QString("%1 (%2)").arg(name.c_str()).arg(value);
+            return getNamedValueString(value, name);
         }
     }
     return QString("%1").arg(value);
@@ -39,10 +46,9 @@ QWidget* babelwires::IntRowModel::createEditor(QWidget* parent, const QModelInde
     if (const babelwires::ValueNames* valueNames = intFeature.getValueNames()) {
         const auto range = intFeature.getRange();
         auto comboBox = std::make_unique<ComboBoxValueEditor>(parent, index);
-        comboBox->setEditable(true);
         for (auto valueName : *valueNames) {
             if (range.contains(std::get<0>(valueName))) {
-                comboBox->addItem(std::get<1>(valueName).c_str());
+                comboBox->addItem(getNamedValueString(std::get<0>(valueName), std::get<1>(valueName)));
             }
         }
         return comboBox.release();
@@ -80,10 +86,11 @@ std::unique_ptr<babelwires::ModifierData> babelwires::IntRowModel::createModifie
         auto comboBox = dynamic_cast<ComboBoxValueEditor*>(editor);
         assert(comboBox && "Unexpected editor");
         bool success;
-        int newValue = comboBox->currentText().toInt(&success);
+        const QString currentText = comboBox->currentText();
+        int newValue = currentText.toInt(&success);
         if (success) {
             value = newValue;
-        } else if (valueNames->getValueForName(comboBox->currentText().toStdString(), newValue)) {
+        } else if (valueNames->getValueForName(currentText.toStdString(), newValue)) {
             value = newValue;
         }
     } else {

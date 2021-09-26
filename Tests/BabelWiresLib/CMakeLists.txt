@@ -11,6 +11,7 @@ SET( LIB_TESTS_SRCS
     contentsCacheTest.cpp
     deactivateOptionalCommandTest.cpp
     elementDataTest.cpp
+    enumTest.cpp
     featureElementConnectionTest.cpp
     featureElementTest.cpp
     featurePathTest.cpp
@@ -39,6 +40,7 @@ SET( LIB_TESTS_SRCS
     setExpandedCommandTest.cpp
     sourceFileElementTest.cpp
     targetFileElementTest.cpp
+    TestUtils/testEnum.cpp
     TestUtils/testFeatureElement.cpp
     TestUtils/testFileFormats.cpp
     TestUtils/testProcessor.cpp

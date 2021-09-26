@@ -25,6 +25,7 @@ SET( BABELWIRESLIB_SRCS
 	ProjectExtra/projectObserver.cpp
 	ProjectExtra/connectionDescription.cpp
 	ProjectExtra/projectUtilities.cpp
+	Enums/enum.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
@@ -38,6 +39,7 @@ SET( BABELWIRESLIB_SRCS
 	Features/recordFeature.cpp
 	Features/recordWithOptionalsFeature.cpp
 	Features/arrayFeature.cpp
+	Features/enumFeature.cpp
 	Features/numericFeature.cpp
 	Features/stringFeature.cpp
 	Features/Path/fieldIdentifier.cpp
