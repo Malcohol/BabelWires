@@ -12,23 +12,10 @@
 
 #include <vector>
 
-// Implementation detail.
-#define ENUM_SELECT_FIRST_ARGUMENT(A, B, C) A,
-#define ENUM_ARGUMENTS_AS_INITIALIZERS(A, B, C) {#A, B, C},
-
-/// Defines a native enum corresponding to the enum values.
-#define ENUM_DEFINE_CPP_ENUM(Y)                                                                                        \
-    enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) };                                                                \
-    Value getValueFromIdentifier(babelwires::FieldIdentifier id) const {                                               \
-        return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
-    }                                                                                                                  \
-    babelwires::FieldIdentifier getIdentifierFromValue(Value value) {                                                  \
-        return getIdentifierFromIndex(static_cast<unsigned int>(value));                                               \
-    }
-
 namespace babelwires {
 
     /// Defines the set of values available for enum features.
+    /// See convenience class EnumWithCppEnum for a Enum which carries a corresponding C++ enum.
     /// TODO: Allow the user to create maps between Integers and Enums or Enums and Enums.
     class Enum : public RegistryEntry {
       public:

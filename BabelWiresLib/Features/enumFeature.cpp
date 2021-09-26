@@ -26,13 +26,13 @@ babelwires::FieldIdentifier babelwires::EnumFeature::get() const {
 void babelwires::EnumFeature::set(FieldIdentifier id) {
     const Enum::EnumValues& values = m_enum.getEnumValues();
     const auto it = std::find(values.begin(), values.end(), id);
-    if (it != values.end()) {
-        m_value = id;
-    }
-    else {
+    if (it == values.end()) {
         throw ModelException() << "The value \"" << FieldNameRegistry::read()->getFieldName(id) << "\" is not a valid value for the enum \"" << m_enum.getName() << "\" enum.";
     }
-    m_value = id;
+    if (id != m_value) {
+        setChanged(Changes::ValueChanged);
+        m_value = id;
+    }
 }
 
 void babelwires::EnumFeature::doSetToDefault() {

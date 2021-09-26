@@ -44,20 +44,12 @@ namespace babelwires {
         FieldIdentifier m_value;
     };
 
-    /// This provides convenience functions which allow the contained value to be queried or set from
-    /// the corresponding native enum (assuming the latter was defined with ENUM_DEFINE_CPP_ENUM).
-    template <typename E> class EnumFeatureImpl : public EnumFeature {
+    /// EnumFeature for RegisteredEnums, which can be conveniently constructed, since it assumes the Enum it
+    /// references has been registered in the EnumRegistry.
+    template <typename E> class RegisteredEnumFeature : public EnumFeature {
       public:
-        EnumFeatureImpl()
+        RegisteredEnumFeature()
             : EnumFeature(*E::getRegisteredInstance()) {}
-
-        /// Get the stored value as a native enum value.
-        typename E::Value getAsValue() const { return static_cast<const E&>(m_enum).getValueFromIdentifier(m_value); }
-
-        /// Set the value using a native enum value.
-        void setFromValue(typename E::Value value) {
-            set(static_cast<const E*>(m_enum)->getIdentifierFromValue(value));
-        }
     };
 
 } // namespace babelwires

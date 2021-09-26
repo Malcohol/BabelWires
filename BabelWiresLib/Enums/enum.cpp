@@ -4,7 +4,13 @@ babelwires::Enum::Enum(std::string identifier, std::string name, VersionNumber v
                        unsigned int indexOfDefaultValue)
     : RegistryEntry(std::move(identifier), std::move(name), version)
     , m_values(values)
-    , m_indexOfDefaultValue(indexOfDefaultValue) {}
+    , m_indexOfDefaultValue(indexOfDefaultValue) {
+#ifndef NDEBUG
+    for (int i = 0; i < values.size(); ++i) {
+        assert((values[i].getDiscriminator() != 0) && "Only registered ids can be used in an enum");
+    }
+#endif
+    }
 
 const babelwires::Enum::EnumValues& babelwires::Enum::getEnumValues() const {
     return m_values;
