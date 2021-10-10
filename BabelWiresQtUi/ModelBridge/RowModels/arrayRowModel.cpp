@@ -8,7 +8,7 @@
 #include "BabelWiresQtUi/ModelBridge/RowModels/arrayRowModel.hpp"
 
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/insertArrayEntryAction.hpp"
+#include "BabelWiresQtUi/ModelBridge/ContextMenu/setArraySizeAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
 #include "BabelWiresLib/Features/arrayFeature.hpp"
@@ -33,7 +33,7 @@ void babelwires::ArrayRowModel::getContextMenuActions(
         const babelwires::ArrayFeature& arrayFeature = getArrayFeature();
         const auto sizeRange = arrayFeature.getSizeRange();
         const auto currentSize = arrayFeature.getNumFeatures();
-        auto addElement = std::make_unique<InsertArrayEntryAction>("Add entry at end", m_contentsCacheEntry->getPath(), -1);
+        auto addElement = std::make_unique<SetArraySizeAction>(m_contentsCacheEntry->getPath());
         addElement->setEnabled(sizeRange.contains(currentSize + 1));
         actionsOut.emplace_back(std::move(addElement));
     }

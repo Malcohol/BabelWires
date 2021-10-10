@@ -67,6 +67,7 @@ SET( BABELWIRESLIB_SRCS
 	Commands/removeAllEditsCommand.cpp
 	Commands/removeFailedModifiersCommand.cpp
 	Commands/resizeElementCommand.cpp
+	Commands/setArraySizeCommand.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/valueNamesImpl.cpp
    )

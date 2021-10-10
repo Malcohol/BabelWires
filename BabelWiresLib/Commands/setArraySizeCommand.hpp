@@ -1,0 +1,37 @@
+/**
+ * The command which sets the size of an array feature.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include "BabelWiresLib/Commands/commands.hpp"
+
+namespace babelwires {
+
+    /// Set the size of an array feature.
+    class SetArraySizeCommand : public CompoundCommand {
+      public:
+        SetArraySizeCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+                                    int newSize);
+
+        virtual bool initializeAndExecute(Project& project) override;
+        virtual void execute(Project& project) const override;
+        virtual void undo(Project& project) const override;
+
+      private:
+        void executeBody(Project& project) const;
+        
+      private:
+        ElementId m_elementId;
+        FeaturePath m_pathToArray;
+        unsigned int m_newSize;
+        unsigned int m_oldSize;
+
+        /// Did an old modifier get replaced (otherwise this is the first modification).
+        bool m_wasModifier = false;
+    };
+
+} // namespace babelwires
