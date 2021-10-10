@@ -33,7 +33,7 @@ void babelwires::ArrayRowModel::getContextMenuActions(
         const babelwires::ArrayFeature& arrayFeature = getArrayFeature();
         const auto sizeRange = arrayFeature.getSizeRange();
         const auto currentSize = arrayFeature.getNumFeatures();
-        auto addElement = std::make_unique<InsertArrayEntryAction>(m_contentsCacheEntry->getPath(), -1);
+        auto addElement = std::make_unique<InsertArrayEntryAction>("Add entry at end", m_contentsCacheEntry->getPath(), -1);
         addElement->setEnabled(sizeRange.contains(currentSize + 1));
         actionsOut.emplace_back(std::move(addElement));
     }

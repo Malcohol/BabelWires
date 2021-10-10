@@ -15,7 +15,6 @@ namespace babelwires {
     /// Add an element to an array feature.
     class AddEntryToArrayCommand : public SimpleCommand {
       public:
-        /// If indexOfNewElement is negative, the element is appended.
         AddEntryToArrayCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                int indexOfNewEntry);
 

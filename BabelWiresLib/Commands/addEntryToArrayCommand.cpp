@@ -44,12 +44,8 @@ bool babelwires::AddEntryToArrayCommand::initialize(const Project& project) {
         return false;
     }
 
-    if (arrayFeature->getNumFeatures() <= m_indexOfNewEntry) {
+    if (m_indexOfNewEntry > arrayFeature->getNumFeatures()) {
         return false;
-    }
-
-    if (m_indexOfNewEntry < 0) {
-        m_indexOfNewEntry = arrayFeature->getNumFeatures();
     }
 
     if (const Modifier* modifier = elementToModify->findModifier(m_pathToArray)) {
