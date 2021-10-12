@@ -45,7 +45,7 @@ void babelwires::FeaturePath::popStep() {
 }
 
 std::ostream& babelwires::operator<<(std::ostream& os, const FeaturePath& p) {
-    FieldNameRegistry::ReadAccess fieldNameRegistry = FieldNameRegistry::read();
+    const FieldNameRegistry::ReadAccess fieldNameRegistry = FieldNameRegistry::read();
     const int numSteps = p.getNumSteps();
     if (numSteps) {
         const char* delimiter = "";

@@ -44,7 +44,9 @@ void babelwires::SetArraySizeAction::actionTriggered(babelwires::FeatureModel& m
     }
     
     bool ok;
-    int newSize = QInputDialog::getInt(projectBridge.getFlowGraphWidget(), "Set array size", "array size", currentSize, range.m_min, range.m_max, 1, &ok);
+    std::ostringstream text;
+    text << "Array at " << m_pathToArray;
+    int newSize = QInputDialog::getInt(projectBridge.getFlowGraphWidget(), "Set array size", text.str().c_str(), currentSize, range.m_min, range.m_max, 1, &ok);
 
     if (ok)
     {
