@@ -4,12 +4,11 @@
 
 #include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
+#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
-
-// TODO test where there's a pre-existing ArraySizeModifier
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     babelwires::FieldNameRegistryScope fieldNameRegistry;
@@ -23,7 +22,18 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
         element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
     ASSERT_NE(inputFeature, nullptr);
 
+    const auto checkModifiers = [element](bool isCommandExecuted) {
+        const babelwires::Modifier* arrayModifier =
+            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray);
+        if (isCommandExecuted) {
+            EXPECT_NE(arrayModifier, nullptr);
+        } else {
+            EXPECT_EQ(arrayModifier, nullptr);
+        }
+    };
+
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
+    checkModifiers(false);
 
     babelwires::AddEntryToArrayCommand command("Test command", elementId,
                                                libTestUtils::TestRecordFeature::s_pathToArray, 1);
@@ -37,16 +47,19 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     context.m_project.process();
 
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 3);
+    checkModifiers(true);
 
     command.undo(context.m_project);
     context.m_project.process();
 
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
+    checkModifiers(false);
 
     command.execute(context.m_project);
     context.m_project.process();
 
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 3);
+    checkModifiers(true);
 }
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
@@ -64,9 +77,9 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
 
     EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 2);
 
-    // -1 means "at end".
+    // 2 is not a current entry, and therefore means "at end".
     babelwires::AddEntryToArrayCommand command("Test command", elementId,
-                                               libTestUtils::TestRecordFeature::s_pathToArray, -1);
+                                               libTestUtils::TestRecordFeature::s_pathToArray, 2);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -87,6 +100,60 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
     context.m_project.process();
 
     EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 3);
+}
+
+TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
+    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    libTestUtils::TestProjectContext context;
+
+    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const libTestUtils::TestFeatureElement* element =
+        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+    ASSERT_NE(element, nullptr);
+    {
+        babelwires::ArraySizeModifierData arrayInitialization;
+        arrayInitialization.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray;
+        arrayInitialization.m_size = 3;
+        context.m_project.addModifier(elementId, arrayInitialization);
+    }
+    const libTestUtils::TestRecordFeature* inputFeature =
+        element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+    ASSERT_NE(inputFeature, nullptr);
+
+    const auto checkModifiers = [element](bool isCommandExecuted) {
+        const babelwires::Modifier* arrayModifier =
+            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray);
+        EXPECT_NE(arrayModifier, nullptr);
+    };
+
+    EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 3);
+    checkModifiers(false);
+
+    babelwires::AddEntryToArrayCommand command("Test command", elementId,
+                                               libTestUtils::TestRecordFeature::s_pathToArray, 1);
+
+    EXPECT_EQ(command.getName(), "Test command");
+
+    context.m_project.process();
+    EXPECT_TRUE(command.initialize(context.m_project));
+
+    command.execute(context.m_project);
+    context.m_project.process();
+
+    EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 4);
+    checkModifiers(true);
+
+    command.undo(context.m_project);
+    context.m_project.process();
+
+    EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 3);
+    checkModifiers(false);
+
+    command.execute(context.m_project);
+    context.m_project.process();
+
+    EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 4);
+    checkModifiers(true);
 }
 
 TEST(AddEntryToArrayCommandTest, failSafelyNoElement) {
@@ -153,9 +220,9 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
     getInputFeature()->m_arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->set(3);
     getInputFeature()->m_arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->set(-18);
 
-    // -1 means "at end".
+    // insert at the end
     babelwires::AddEntryToArrayCommand command("Test command", elementId,
-                                               libTestUtils::TestRecordFeature::s_pathToArray, -1);
+                                               libTestUtils::TestRecordFeature::s_pathToArray, 2);
 
     context.m_project.process();
     EXPECT_TRUE(command.initialize(context.m_project));

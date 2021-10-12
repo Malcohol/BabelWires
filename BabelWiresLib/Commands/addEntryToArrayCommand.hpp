@@ -16,7 +16,7 @@ namespace babelwires {
     class AddEntryToArrayCommand : public SimpleCommand {
       public:
         AddEntryToArrayCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                               int indexOfNewEntry);
+                               unsigned int indexOfNewEntry);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
@@ -25,7 +25,7 @@ namespace babelwires {
       private:
         ElementId m_elementId;
         FeaturePath m_pathToArray;
-        int m_indexOfNewEntry;
+        unsigned int m_indexOfNewEntry;
 
         /// Did an old modifier get replaced (otherwise this is the first modification).
         bool m_wasModifier = false;

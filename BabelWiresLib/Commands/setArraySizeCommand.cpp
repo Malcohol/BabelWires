@@ -86,9 +86,9 @@ void babelwires::SetArraySizeCommand::execute(Project& project) const {
 
 void babelwires::SetArraySizeCommand::undo(Project& project) const {
     if (m_newSize < m_oldSize) {
-        project.addArrayEntries(m_elementId, m_pathToArray, m_newSize, m_oldSize - m_newSize, true);
+        project.addArrayEntries(m_elementId, m_pathToArray, m_newSize, m_oldSize - m_newSize, m_wasModifier);
     } else if (m_oldSize < m_newSize) {
-        project.removeArrayEntries(m_elementId, m_pathToArray, m_oldSize, m_newSize - m_oldSize, true);
+        project.removeArrayEntries(m_elementId, m_pathToArray, m_oldSize, m_newSize - m_oldSize, m_wasModifier);
     } else {
         project.removeModifier(m_elementId, m_pathToArray);
     }
