@@ -36,6 +36,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/saveFileAsAction.cpp
     ModelBridge/ContextMenu/removeFailedModifiersAction.cpp
     ModelBridge/ContextMenu/optionalActivationAction.cpp
+    ModelBridge/ContextMenu/setArraySizeAction.cpp
     Utilities/fileDialogs.cpp
     LogWindow/logWindow.cpp
 )

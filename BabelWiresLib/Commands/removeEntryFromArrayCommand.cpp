@@ -19,8 +19,8 @@
 #include <cassert>
 
 babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId,
-                                                                     FeaturePath featurePath, int indexOfEntryToRemove,
-                                                                     int numEntriesToRemove)
+                                                                     FeaturePath featurePath, unsigned int indexOfEntryToRemove,
+                                                                     unsigned int numEntriesToRemove)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToArray(std::move(featurePath))
@@ -48,10 +48,6 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
 
     if (!arrayFeature->getSizeRange().contains(arrayFeature->getNumFeatures() - m_numEntriesToRemove)) {
         return false;
-    }
-
-    if (m_indexOfEntryToRemove < 0) {
-        m_indexOfEntryToRemove = arrayFeature->getNumFeatures() - m_numEntriesToRemove;
     }
 
     if (arrayFeature->getNumFeatures() <= m_indexOfEntryToRemove) {

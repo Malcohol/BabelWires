@@ -12,8 +12,8 @@
 
 #include "BabelWiresLib/Commands/addEntryToArrayCommand.hpp"
 
-babelwires::InsertArrayEntryAction::InsertArrayEntryAction(babelwires::FeaturePath pathToArray, int indexOfNewEntry)
-    : FeatureContextMenuAction((indexOfNewEntry == -1) ? tr("Add an element") : tr("Insert array element here"))
+babelwires::InsertArrayEntryAction::InsertArrayEntryAction(const QString& text, babelwires::FeaturePath pathToArray, int indexOfNewEntry)
+    : FeatureContextMenuAction(text)
     , m_pathToArray(std::move(pathToArray))
     , m_indexOfNewEntry(indexOfNewEntry) {}
 

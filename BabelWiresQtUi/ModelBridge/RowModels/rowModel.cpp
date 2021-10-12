@@ -139,7 +139,12 @@ void babelwires::RowModel::getContextMenuActions(
             const auto sizeRange = arrayFeature->getSizeRange();
             const auto currentSize = arrayFeature->getNumFeatures();
             {
-                auto insertElement = std::make_unique<InsertArrayEntryAction>(pathToArray, index);
+                auto insertElement = std::make_unique<InsertArrayEntryAction>("Add element before", pathToArray, index);
+                insertElement->setEnabled(sizeRange.contains(currentSize + 1));
+                actionsOut.emplace_back(std::move(insertElement));
+            }
+            {
+                auto insertElement = std::make_unique<InsertArrayEntryAction>("Add element after", pathToArray, index + 1);
                 insertElement->setEnabled(sizeRange.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }

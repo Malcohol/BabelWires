@@ -1,5 +1,5 @@
 /**
- * The command which removes an entry from an array.
+ * The command which sets the size of an array feature.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -11,21 +11,24 @@
 
 namespace babelwires {
 
-    /// Remove an element from an array feature.
-    class RemoveEntryFromArrayCommand : public CompoundCommand {
+    /// Set the size of an array feature.
+    class SetArraySizeCommand : public CompoundCommand {
       public:
-        RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                                    unsigned int indexOfEntryToRemove, unsigned int numEntriesToRemove);
+        SetArraySizeCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+                                    int newSize);
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
       private:
+        void executeBody(Project& project) const;
+        
+      private:
         ElementId m_elementId;
         FeaturePath m_pathToArray;
-        unsigned int m_indexOfEntryToRemove;
-        unsigned int m_numEntriesToRemove;
+        unsigned int m_newSize;
+        unsigned int m_oldSize;
 
         /// Did an old modifier get replaced (otherwise this is the first modification).
         bool m_wasModifier = false;
