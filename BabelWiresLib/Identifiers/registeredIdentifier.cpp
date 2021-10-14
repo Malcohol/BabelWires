@@ -7,9 +7,9 @@
  **/
 #include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
 
-babelwires::RegisteredFieldIdentifiers
-babelwires::detail::getFieldIdentifiers(const babelwires::FieldIdentifiersSource& source) {
-    RegisteredFieldIdentifiers identifiers;
+babelwires::RegisteredIdentifiers
+babelwires::detail::getIdentifiers(const babelwires::IdentifiersSource& source) {
+    RegisteredIdentifiers identifiers;
     babelwires::FieldNameRegistry::WriteAccess fieldNameRegistry = babelwires::FieldNameRegistry::write();
     identifiers.reserve(source.size());
     for (const auto& t : source) {
@@ -19,8 +19,8 @@ babelwires::detail::getFieldIdentifiers(const babelwires::FieldIdentifiersSource
     return identifiers;
 }
 
-bool babelwires::detail::testFieldIdentifiers(const babelwires::FieldIdentifiersSource& source,
-                                              const babelwires::RegisteredFieldIdentifiers& ids) {
+bool babelwires::detail::testIdentifiers(const babelwires::IdentifiersSource& source,
+                                              const babelwires::RegisteredIdentifiers& ids) {
     babelwires::FieldNameRegistry::ReadAccess fieldNameRegistry = babelwires::FieldNameRegistry::read();
     auto sourceIt = source.begin();
     auto idsIt = ids.begin();

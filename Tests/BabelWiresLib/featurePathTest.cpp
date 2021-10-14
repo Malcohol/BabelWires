@@ -276,7 +276,7 @@ TEST(FeaturePathTest, implicitFieldNameRegistrationVector) {
     // Work with a temporary global registry.
     babelwires::FieldNameRegistryScope fieldNameRegistryScope;
 
-    const babelwires::FieldIdentifiersSource source = {
+    const babelwires::IdentifiersSource source = {
         {"hello", "Hello world", "00000000-1111-2222-3333-000000000001"},
         {"byebye", "Goodbye world", "00000000-1111-2222-3333-000000000002"}};
 
@@ -284,7 +284,7 @@ TEST(FeaturePathTest, implicitFieldNameRegistrationVector) {
     int goodbye_discriminator = 0;
     for (int i = 0; i < 3; ++i) {
         // Repeating this line of code should be a NOOP.
-        babelwires::RegisteredFieldIdentifiers ids = REGISTERED_ID_VECTOR(source);
+        babelwires::RegisteredIdentifiers ids = REGISTERED_ID_VECTOR(source);
         EXPECT_EQ(ids.size(), 2);
 
         babelwires::Identifier hello = ids[0];

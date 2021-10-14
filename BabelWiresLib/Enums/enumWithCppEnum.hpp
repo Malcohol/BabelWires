@@ -34,7 +34,7 @@
 /// This defines a static which should be placed in a .cpp where the Enum will be constructed.
 #define ENUM_DEFINE_ENUM_VALUE_SOURCE(Y)                                                                               \
     namespace {                                                                                                        \
-        const babelwires::FieldIdentifiersSource s_enum_##Y = {Y(ENUM_ARGUMENTS_AS_INITIALIZERS)};                     \
+        const babelwires::IdentifiersSource s_enum_##Y = {Y(ENUM_ARGUMENTS_AS_INITIALIZERS)};                     \
     }
 
 /// This should be used in the Enum constructor

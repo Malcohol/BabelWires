@@ -1,5 +1,5 @@
 /**
- * The macros in this file allow field names to be implicitly registered on their first use.
+ * The macros in this file allow identifiers to be implicitly registered on their first use.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -12,19 +12,19 @@
 
 namespace babelwires {
     /// See the REGISTERED_ID_VECTOR macro.
-    using FieldIdentifiersSource = std::vector<std::tuple<const babelwires::Identifier, std::string, Uuid>>;
+    using IdentifiersSource = std::vector<std::tuple<const babelwires::Identifier, std::string, Uuid>>;
 
     /// See the REGISTERED_ID_VECTOR macro.
-    using RegisteredFieldIdentifiers = std::vector<babelwires::Identifier>;
+    using RegisteredIdentifiers = std::vector<babelwires::Identifier>;
 
     namespace detail {
-        RegisteredFieldIdentifiers getFieldIdentifiers(const FieldIdentifiersSource& source);
-        bool testFieldIdentifiers(const FieldIdentifiersSource& source,
-                                  const babelwires::RegisteredFieldIdentifiers& ids);
+        RegisteredIdentifiers getIdentifiers(const IdentifiersSource& source);
+        bool testIdentifiers(const IdentifiersSource& source,
+                                  const babelwires::RegisteredIdentifiers& ids);
     } // namespace detail
 } // namespace babelwires
 
-/// This macro offers a convenient way of registering field identifiers.
+/// This macro offers a convenient way of registering identifiers.
 /// This expression evaluates to a Identifier which has the data from the given IDENTIFIER and a discriminator
 /// which allows the name to be looked up in the FieldNameRegistry. The registration happens only the first time it is
 /// called.
@@ -40,12 +40,12 @@ namespace babelwires {
     }(IDENTIFIER, NAME, UUID))
 
 /// This macro offers a convenient way of registering a vector of field identifiers.
-/// This expression evaluates to a const RegisteredFieldIdentifiers& vector, which has been populated from the
-/// FieldIdentifiersSource array. The registration happens only the first time it is called.
+/// This expression evaluates to a const RegisteredIdentifiers& vector, which has been populated from the
+/// IdentifiersSource array. The registration happens only the first time it is called.
 #define REGISTERED_ID_VECTOR(SOURCE)                                                                                      \
-    ([](auto&& source) -> const babelwires::RegisteredFieldIdentifiers& {                                              \
-        static babelwires::RegisteredFieldIdentifiers ids = babelwires::detail::getFieldIdentifiers(source);           \
-        assert(babelwires::detail::testFieldIdentifiers(source, ids) &&                                                \
+    ([](auto&& source) -> const babelwires::RegisteredIdentifiers& {                                              \
+        static babelwires::RegisteredIdentifiers ids = babelwires::detail::getIdentifiers(source);           \
+        assert(babelwires::detail::testIdentifiers(source, ids) &&                                                \
                "Each usage of this macro must take the same source each time it is run."                               \
                " Do not use it in cases where the same code can be called a second time with a different contents.");  \
         return ids;                                                                                                    \
