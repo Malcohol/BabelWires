@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Identifiers/declareIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
 #include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
