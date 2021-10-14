@@ -3,7 +3,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"
 #include "BabelWiresLib/Features/stringFeature.hpp"

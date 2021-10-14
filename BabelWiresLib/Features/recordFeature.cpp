@@ -9,7 +9,7 @@
 
 #include "BabelWiresLib/Features/modelExceptions.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 
 #include "Common/Utilities/hash.hpp"
 #include "Common/types.hpp"

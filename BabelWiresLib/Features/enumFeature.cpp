@@ -9,7 +9,7 @@
 
 #include "BabelWiresLib/Enums/enum.hpp"
 #include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 
 babelwires::EnumFeature::EnumFeature(const Enum& e)
     : m_enum(e)

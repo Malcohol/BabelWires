@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/Path/pathStep.hpp"
 #include "BabelWiresLib/Features/features.hpp"
 #include "BabelWiresLib/Features/modelExceptions.hpp"

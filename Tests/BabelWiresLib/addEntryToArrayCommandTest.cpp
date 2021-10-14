@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/addEntryToArrayCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
 

@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 
 #include "Common/Log/debugLogger.hpp"
 #include "Common/Serialization/deserializer.hpp"

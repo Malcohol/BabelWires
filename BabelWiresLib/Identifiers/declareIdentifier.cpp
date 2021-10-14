@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Features/Path/fieldName.hpp"
+#include "BabelWiresLib/Identifiers/declareIdentifier.hpp"
 
 babelwires::RegisteredFieldIdentifiers
 babelwires::detail::getFieldIdentifiers(const babelwires::FieldIdentifiersSource& source) {

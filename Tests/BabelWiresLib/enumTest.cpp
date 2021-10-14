@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
-#include <BabelWiresLib/Features/Path/fieldNameRegistry.hpp>
+#include <BabelWiresLib/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/TestUtils/equalSets.hpp>

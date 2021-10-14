@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/changeFileCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
 #include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"

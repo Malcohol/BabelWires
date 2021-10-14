@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/Path/fieldName.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/declareIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
 #include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"

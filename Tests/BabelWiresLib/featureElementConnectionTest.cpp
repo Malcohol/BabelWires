@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/Path/fieldName.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/declareIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"

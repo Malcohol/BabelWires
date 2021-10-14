@@ -4,8 +4,8 @@
 #include "Tests/TestUtils/testLog.hpp"
 
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "BabelWiresLib/Features/Path/fieldName.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/declareIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"

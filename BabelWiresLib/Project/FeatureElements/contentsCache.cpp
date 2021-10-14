@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"

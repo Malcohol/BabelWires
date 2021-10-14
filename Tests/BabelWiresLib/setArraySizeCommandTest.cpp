@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/setArraySizeCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"

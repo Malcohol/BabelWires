@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/moveElementCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"

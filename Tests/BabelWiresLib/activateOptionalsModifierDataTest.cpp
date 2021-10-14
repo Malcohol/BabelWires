@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
 #include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"

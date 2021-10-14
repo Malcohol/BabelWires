@@ -6,7 +6,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Features/Path/fieldIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/identifier.hpp"
 
 #include "Common/exceptions.hpp"
 

@@ -4,7 +4,7 @@
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"

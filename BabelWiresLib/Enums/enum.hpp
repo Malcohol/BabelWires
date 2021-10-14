@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/Path/fieldIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/identifier.hpp"
 #include "Common/Registry/registry.hpp"
 
 #include <vector>
