@@ -38,7 +38,7 @@
     }
 
 /// This should be used in the Enum constructor
-#define ENUM_IDENTIFIER_VECTOR(Y) FIELD_NAME_VECTOR(s_enum_##Y)
+#define ENUM_IDENTIFIER_VECTOR(Y) REGISTERED_ID_VECTOR(s_enum_##Y)
 
 namespace babelwires {
     /// This provides convenience methods which allow the contained value of an EnumFeature

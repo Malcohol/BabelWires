@@ -258,7 +258,7 @@ TEST(FeaturePathTest, implicitFieldNameRegistration) {
     int discriminator = 0;
     for (int i = 0; i < 3; ++i) {
         // Repeating this line of code should be a NOOP.
-        babelwires::Identifier hello = FIELD_NAME("hello", "Hello world", "00000000-1111-2222-3333-000000000001");
+        babelwires::Identifier hello = REGISTERED_ID("hello", "Hello world", "00000000-1111-2222-3333-000000000001");
         EXPECT_EQ(hello, "hello");
         EXPECT_NE(hello.getDiscriminator(), 0);
         if (discriminator != 0) {
@@ -284,7 +284,7 @@ TEST(FeaturePathTest, implicitFieldNameRegistrationVector) {
     int goodbye_discriminator = 0;
     for (int i = 0; i < 3; ++i) {
         // Repeating this line of code should be a NOOP.
-        babelwires::RegisteredFieldIdentifiers ids = FIELD_NAME_VECTOR(source);
+        babelwires::RegisteredFieldIdentifiers ids = REGISTERED_ID_VECTOR(source);
         EXPECT_EQ(ids.size(), 2);
 
         babelwires::Identifier hello = ids[0];

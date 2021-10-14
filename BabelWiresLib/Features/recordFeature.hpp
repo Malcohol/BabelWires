@@ -19,7 +19,7 @@ namespace babelwires {
     class RecordFeature : public CompoundFeature {
       public:
         /// The identifier must be already be registered with a field name.
-        /// Fields are normally give names using the FIELD_NAME macro in fieldName.h.
+        /// Fields are normally give names using the REGISTERED_ID macro in fieldName.h.
         /// The identifier need only be unique in the Record.
         template <typename T> T* addField(std::unique_ptr<T> f, const Identifier& identifier);
 

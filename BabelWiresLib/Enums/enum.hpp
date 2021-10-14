@@ -20,13 +20,12 @@ namespace babelwires {
     class Enum : public RegistryEntry {
       public:
         /// The set of values. We use FieldIdentifiers to get versionable serialization support.
-        /// Note: This matches the result of FIELD_NAME_VECTOR.
-        // TODO Consider making the name "Identifier" less field specific now.
+        /// Note: This matches the result of REGISTERED_ID_VECTOR.
         using EnumValues = std::vector<Identifier>;
 
         /// Enums can be registered in a registry, so they need an identifier, name and version.
         /// They also need a set of values and a way of identifying the default.
-        /// The values object can be the "output" of the FIELD_NAME_VECTOR macro.
+        /// The values object can be the "output" of the REGISTERED_ID_VECTOR macro.
         Enum(std::string identifier, std::string name, VersionNumber version, const EnumValues& values,
              unsigned int indexOfDefaultValue);
 
