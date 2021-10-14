@@ -1,5 +1,5 @@
 /**
- * A PathStep is a union of a FieldIdentifier and an ArrayIndex.
+ * A PathStep is a union of a Identifier and an ArrayIndex.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -13,7 +13,7 @@
 #include <sstream>
 
 void babelwires::PathStep::writeToStream(std::ostream& os) const {
-    if (const FieldIdentifier* f = asField()) {
+    if (const Identifier* f = asField()) {
         os << *f;
     } else {
         os << getIndex();
@@ -39,6 +39,6 @@ babelwires::PathStep babelwires::PathStep::deserializeFromString(std::string_vie
         }
         return arrayIndex;
     } else {
-        return PathStep(FieldIdentifier::deserializeFromString(str));
+        return PathStep(Identifier::deserializeFromString(str));
     }
 }

@@ -66,12 +66,12 @@ TEST(ModifierTest, clone) {
 TEST(ModifierTest, localApplySuccess) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::RecordFeature* childRecordFeature =
         recordFeature.addField(std::make_unique<babelwires::RecordFeature>(), id0);
 
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(2);
     babelwires::IntFeature* intFeature = childRecordFeature->addField(std::make_unique<babelwires::IntFeature>(), id1);
 
@@ -98,12 +98,12 @@ TEST(ModifierTest, localApplySuccess) {
 TEST(ModifierTest, localApplyFailureWrongType) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::RecordFeature* childRecordFeature =
         recordFeature.addField(std::make_unique<babelwires::RecordFeature>(), id0);
 
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(2);
     babelwires::StringFeature* stringFeature =
         childRecordFeature->addField(std::make_unique<babelwires::StringFeature>(), id1);
@@ -130,7 +130,7 @@ TEST(ModifierTest, localApplyFailureWrongType) {
 TEST(ModifierTest, localApplyFailureNoTarget) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::RecordFeature* childRecordFeature =
         recordFeature.addField(std::make_unique<babelwires::RecordFeature>(), id0);
@@ -160,7 +160,7 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
 TEST(ModifierTest, arraySizeModifierSuccess) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::ArrayFeature* arrayFeature =
         recordFeature.addField(std::make_unique<babelwires::StandardArrayFeature<babelwires::IntFeature>>(), id0);
@@ -210,7 +210,7 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
 TEST(ModifierTest, arraySizeModifierFailure) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::ArrayFeature* arrayFeature =
         recordFeature.addField(std::make_unique<babelwires::StandardArrayFeature<babelwires::IntFeature>>(), id0);
@@ -255,7 +255,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
     const babelwires::ElementId sourceId = projectContext.m_project.addFeatureElement(elementData);
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
@@ -282,7 +282,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
     libTestUtils::TestProjectContext projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
@@ -315,7 +315,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
     libTestUtils::TestProjectContext projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
@@ -359,7 +359,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
     const babelwires::ElementId sourceId = projectContext.m_project.addFeatureElement(elementData);
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
@@ -399,7 +399,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     const babelwires::ElementId sourceId = projectContext.m_project.addFeatureElement(elementData);
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::StringFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::StringFeature>(), id1);

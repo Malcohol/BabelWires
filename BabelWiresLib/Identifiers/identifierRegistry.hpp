@@ -45,13 +45,13 @@ namespace babelwires {
             isTemporary
         };
 
-        /// Give the FieldIdentifier a unique index so it can be later used to look-up the name.
-        /// Returns a FieldIdentifier with a modified discriminator.
-        FieldIdentifier addFieldName(FieldIdentifier identifier, const std::string& name, const Uuid& uuid,
+        /// Give the Identifier a unique index so it can be later used to look-up the name.
+        /// Returns a Identifier with a modified discriminator.
+        Identifier addFieldName(Identifier identifier, const std::string& name, const Uuid& uuid,
                                      Authority authority);
 
         /// Get the name from the given identifier.
-        std::string getFieldName(FieldIdentifier identifier) const;
+        std::string getFieldName(Identifier identifier) const;
 
       public:
         // For use during serialization/deserialization:
@@ -60,11 +60,11 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
         /// Information stored about a field.
-        using ValueType = std::tuple<FieldIdentifier, const std::string*, const Uuid*>;
+        using ValueType = std::tuple<Identifier, const std::string*, const Uuid*>;
 
         /// Extract the information about a field from a local FieldNameRegistry.
         /// This can throw a ParseException if the contents are invalid.
-        ValueType getDeserializedFieldData(FieldIdentifier identifier) const;
+        ValueType getDeserializedFieldData(Identifier identifier) const;
 
       public:
         // Singleton stuff:
@@ -116,19 +116,19 @@ namespace babelwires {
         struct InstanceData : Serializable {
             SERIALIZABLE(InstanceData, "field", void, 1);
             InstanceData();
-            InstanceData(std::string fieldName, Uuid uuid, FieldIdentifier identifier, Authority authority);
+            InstanceData(std::string fieldName, Uuid uuid, Identifier identifier, Authority authority);
 
             void serializeContents(Serializer& serializer) const override;
             void deserializeContents(Deserializer& deserializer) override;
 
             std::string m_fieldName;
             Uuid m_uuid;
-            FieldIdentifier m_identifier;
+            Identifier m_identifier;
             Authority m_authority;
         };
 
         ///
-        const InstanceData* getInstanceData(FieldIdentifier identifier) const;
+        const InstanceData* getInstanceData(Identifier identifier) const;
 
       private:
         friend const_iterator;
@@ -141,7 +141,7 @@ namespace babelwires {
         };
 
         /// For each field, we can index associated data.
-        std::unordered_map<FieldIdentifier, Data> m_fieldData;
+        std::unordered_map<Identifier, Data> m_fieldData;
 
       private:
         /// Lifetime of this is managed externally.

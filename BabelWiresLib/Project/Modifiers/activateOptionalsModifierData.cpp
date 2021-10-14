@@ -13,10 +13,10 @@ void babelwires::ActivateOptionalsModifierData::serializeContents(Serializer& se
 
 void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_pathToFeature);
-    for (auto it = deserializer.deserializeValueArray<FieldIdentifier>("optionals", Deserializer::IsOptional::Optional,
+    for (auto it = deserializer.deserializeValueArray<Identifier>("optionals", Deserializer::IsOptional::Optional,
                                                                    "activate");
          it.isValid(); ++it) {
-        FieldIdentifier temp("__TEMP");
+        Identifier temp("__TEMP");
         m_selectedOptionals.emplace_back(it.deserializeValue(temp));
         assert((m_selectedOptionals.back() != "__TEMP") && "Problem deserializing optional fields");
     }
@@ -27,15 +27,15 @@ void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) co
     if (!record) {
         throw ModelException() << "Cannot selection optionals from a feature which does not have optionals";
     }
-    std::vector<FieldIdentifier> availableOptionals = record->getOptionalFields();
+    std::vector<Identifier> availableOptionals = record->getOptionalFields();
     std::sort(availableOptionals.begin(), availableOptionals.end());
     auto ait = availableOptionals.begin();
 
-    std::vector<FieldIdentifier> optionalsToEnsureActivated = m_selectedOptionals;
+    std::vector<Identifier> optionalsToEnsureActivated = m_selectedOptionals;
     std::sort(optionalsToEnsureActivated.begin(), optionalsToEnsureActivated.end());
     auto it = optionalsToEnsureActivated.begin();
 
-    std::vector<FieldIdentifier> missingOptionals;
+    std::vector<Identifier> missingOptionals;
 
     while ((ait != availableOptionals.end()) && (it != optionalsToEnsureActivated.end())) {
         if (*ait == *it) {

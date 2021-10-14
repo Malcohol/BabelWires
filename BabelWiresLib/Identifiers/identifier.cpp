@@ -12,7 +12,7 @@
 
 #include <charconv>
 
-babelwires::FieldIdentifier::FieldIdentifier(std::string_view str) {
+babelwires::Identifier::Identifier(std::string_view str) {
     const size_t len = str.size();
     assert((len > 0) && "Identifiers may not be empty");
     assert((len <= N) && "str is too long.");
@@ -24,7 +24,7 @@ babelwires::FieldIdentifier::FieldIdentifier(std::string_view str) {
     std::fill(m_data.m_chars, m_data.m_chars + N - len, 0);
 }
 
-babelwires::FieldIdentifier babelwires::FieldIdentifier::deserializeFromString(std::string_view str) {
+babelwires::Identifier babelwires::Identifier::deserializeFromString(std::string_view str) {
     Discriminator discriminator = 0;
     std::size_t idEnd = str.find(s_discriminatorDelimiter);
     if (idEnd != std::string_view::npos) {
@@ -46,12 +46,12 @@ babelwires::FieldIdentifier babelwires::FieldIdentifier::deserializeFromString(s
     {
         throw ParseException() << "The string \"" << str << "\" has a discriminator which is too large";
     }
-    FieldIdentifier f(str);
+    Identifier f(str);
     f.setDiscriminator(discriminator);
     return f;
 }
 
-void babelwires::FieldIdentifier::writeToStream(std::ostream& os) const {
+void babelwires::Identifier::writeToStream(std::ostream& os) const {
     for (int i = N - 1; i >= 0; --i) {
         if (m_data.m_chars[i] == '\0') {
             break;
@@ -64,13 +64,13 @@ void babelwires::FieldIdentifier::writeToStream(std::ostream& os) const {
 }
 
 /// Return a human-readable version of the identifier.
-std::string babelwires::FieldIdentifier::serializeToString() const {
+std::string babelwires::Identifier::serializeToString() const {
     std::ostringstream oss;
     writeToStream(oss);
     return oss.str();
 }
 
-bool babelwires::FieldIdentifier::validate(const char* chars, size_t n) {
+bool babelwires::Identifier::validate(const char* chars, size_t n) {
     assert(n >= 0);
     assert(n <= N);
     if ((chars[0] == '\0') || (n == 0)) {
@@ -93,7 +93,7 @@ bool babelwires::FieldIdentifier::validate(const char* chars, size_t n) {
     return true;
 }
 
-void babelwires::FieldIdentifier::copyDiscriminatorToInternal(const FieldIdentifier& other) const {
+void babelwires::Identifier::copyDiscriminatorToInternal(const Identifier& other) const {
     assert(other.getDiscriminator() == 0);
     other.setDiscriminator(getDiscriminator());
 }

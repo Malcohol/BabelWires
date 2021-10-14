@@ -99,6 +99,6 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitFields(FieldVisitor& visitor) override;
         
-        FieldIdentifier m_value = "Fixme";
+        Identifier m_value = "Fixme";
     };
 } // namespace babelwires

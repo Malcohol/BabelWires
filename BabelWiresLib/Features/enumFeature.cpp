@@ -19,11 +19,11 @@ const babelwires::Enum& babelwires::EnumFeature::getEnum() const {
     return m_enum;
 }
 
-babelwires::FieldIdentifier babelwires::EnumFeature::get() const {
+babelwires::Identifier babelwires::EnumFeature::get() const {
     return m_value;
 }
 
-void babelwires::EnumFeature::set(FieldIdentifier id) {
+void babelwires::EnumFeature::set(Identifier id) {
     const Enum::EnumValues& values = m_enum.getEnumValues();
     const auto it = std::find(values.begin(), values.end(), id);
     if (it == values.end()) {
@@ -40,7 +40,7 @@ void babelwires::EnumFeature::doSetToDefault() {
 }
 
 std::size_t babelwires::EnumFeature::doGetHash() const {
-    return std::hash<FieldIdentifier>{}(m_value);
+    return std::hash<Identifier>{}(m_value);
 }
 
 std::string babelwires::EnumFeature::doGetValueType() const {
@@ -49,6 +49,6 @@ std::string babelwires::EnumFeature::doGetValueType() const {
 
 void babelwires::EnumFeature::doAssign(const ValueFeature& other) {
     const EnumFeature& otherEnum = static_cast<const EnumFeature&>(other);
-    FieldIdentifier otherValue = otherEnum.get();
+    Identifier otherValue = otherEnum.get();
     set(otherValue);
 }

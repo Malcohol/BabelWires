@@ -12,10 +12,10 @@
 
 namespace babelwires {
     /// See the FIELD_NAME_VECTOR macro.
-    using FieldIdentifiersSource = std::vector<std::tuple<const babelwires::FieldIdentifier, std::string, Uuid>>;
+    using FieldIdentifiersSource = std::vector<std::tuple<const babelwires::Identifier, std::string, Uuid>>;
 
     /// See the FIELD_NAME_VECTOR macro.
-    using RegisteredFieldIdentifiers = std::vector<babelwires::FieldIdentifier>;
+    using RegisteredFieldIdentifiers = std::vector<babelwires::Identifier>;
 
     namespace detail {
         RegisteredFieldIdentifiers getFieldIdentifiers(const FieldIdentifiersSource& source);
@@ -25,12 +25,12 @@ namespace babelwires {
 } // namespace babelwires
 
 /// This macro offers a convenient way of registering field identifiers.
-/// This expression evaluates to a FieldIdentifier which has the data from the given IDENTIFIER and a discriminator
+/// This expression evaluates to a Identifier which has the data from the given IDENTIFIER and a discriminator
 /// which allows the name to be looked up in the FieldNameRegistry. The registration happens only the first time it is
 /// called.
 #define FIELD_NAME(IDENTIFIER, NAME, UUID)                                                                             \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
-        static babelwires::FieldIdentifier f = babelwires::FieldNameRegistry::write()->addFieldName(                   \
+        static babelwires::Identifier f = babelwires::FieldNameRegistry::write()->addFieldName(                   \
             id, name, uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative);                                \
         assert(                                                                                                        \
             (babelwires::FieldNameRegistry::read()->getFieldName(f) == name) &&                                        \

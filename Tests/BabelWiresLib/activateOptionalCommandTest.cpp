@@ -66,7 +66,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
 TEST(ActivateOptionalsCommandTest, failSafelyNoElement) {
     babelwires::FieldNameRegistryScope fieldNameRegistry;
     libTestUtils::TestProjectContext context;
-    babelwires::FieldIdentifier opId("flerm");
+    babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
     babelwires::ActivateOptionalCommand command("Test command", 51,
                                                libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, opId);
@@ -78,7 +78,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoElement) {
 TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::FieldNameRegistryScope fieldNameRegistry;
     libTestUtils::TestProjectContext context;
-    babelwires::FieldIdentifier opId("flerm");
+    babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
     babelwires::ActivateOptionalCommand command("Test command", 51,
                                                babelwires::FeaturePath::deserializeFromString("qqq/zzz"), opId);
@@ -103,7 +103,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
 
-    babelwires::FieldIdentifier opId("flerm");
+    babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
     babelwires::ActivateOptionalCommand command("Test command", elementId,
                                                libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, opId);

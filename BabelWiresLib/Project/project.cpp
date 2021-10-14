@@ -589,7 +589,7 @@ babelwires::ProjectId babelwires::Project::getProjectId() const {
     return m_projectId;
 }
 
-void babelwires::Project::activateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional, bool ensureModifier) {
+void babelwires::Project::activateOptional(ElementId elementId, const FeaturePath& pathToRecord, Identifier optional, bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert (elementToModify);
     
@@ -623,7 +623,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
     }
 }
 
-void babelwires::Project::deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, FieldIdentifier optional, bool ensureModifier) {
+void babelwires::Project::deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, Identifier optional, bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert (elementToModify);
     

@@ -21,8 +21,8 @@ namespace babelwires {
       public:
         /// The set of values. We use FieldIdentifiers to get versionable serialization support.
         /// Note: This matches the result of FIELD_NAME_VECTOR.
-        // TODO Consider making the name "FieldIdentifier" less field specific now.
-        using EnumValues = std::vector<FieldIdentifier>;
+        // TODO Consider making the name "Identifier" less field specific now.
+        using EnumValues = std::vector<Identifier>;
 
         /// Enums can be registered in a registry, so they need an identifier, name and version.
         /// They also need a set of values and a way of identifying the default.
@@ -37,10 +37,10 @@ namespace babelwires {
         unsigned int getIndexOfDefaultValue() const;
 
         /// Get the index within EnumValues of the given id.
-        unsigned int getIndexFromIdentifier(FieldIdentifier id) const;
+        unsigned int getIndexFromIdentifier(Identifier id) const;
 
         /// Get the identifier within EnumValues at the given index.
-        FieldIdentifier getIdentifierFromIndex(unsigned int index);
+        Identifier getIdentifierFromIndex(unsigned int index);
 
       private:
         const EnumValues& m_values;

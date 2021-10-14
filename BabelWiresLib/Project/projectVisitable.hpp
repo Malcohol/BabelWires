@@ -11,10 +11,10 @@
 #include <functional>
 
 namespace babelwires {
-    union FieldIdentifier;
+    union Identifier;
     class FilePath;
 
-    using FieldVisitor = std::function<void(FieldIdentifier&)>;
+    using FieldVisitor = std::function<void(Identifier&)>;
     using FilePathVisitor = std::function<void(FilePath&)>;
 
     /// An interface for classes storing project data, allowing them to expose certain data

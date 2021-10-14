@@ -15,7 +15,7 @@
 #include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::FeaturePath pathToRecord,
-                                                               FieldIdentifier optional, bool isActivated)
+                                                               Identifier optional, bool isActivated)
     : FeatureContextMenuAction(FieldNameRegistry::read()->getFieldName(optional).c_str())
     , m_pathToRecord(std::move(pathToRecord))
     , m_optional(optional)

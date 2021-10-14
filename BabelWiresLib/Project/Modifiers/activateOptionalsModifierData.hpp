@@ -19,6 +19,6 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitFields(FieldVisitor& visitor) override;
 
-        std::vector<FieldIdentifier> m_selectedOptionals;
+        std::vector<Identifier> m_selectedOptionals;
     };
 }

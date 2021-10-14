@@ -20,14 +20,14 @@ unsigned int babelwires::Enum::getIndexOfDefaultValue() const {
     return m_indexOfDefaultValue;
 }
 
-unsigned int babelwires::Enum::getIndexFromIdentifier(babelwires::FieldIdentifier id) const {
+unsigned int babelwires::Enum::getIndexFromIdentifier(babelwires::Identifier id) const {
     const EnumValues& values = getEnumValues();
     const auto it = std::find(values.begin(), values.end(), id);
     assert((it != values.end()) && "id not found in enum");
     return it - values.begin();
 }
 
-babelwires::FieldIdentifier babelwires::Enum::getIdentifierFromIndex(unsigned int index) {
+babelwires::Identifier babelwires::Enum::getIdentifierFromIndex(unsigned int index) {
     const EnumValues& values = getEnumValues();
     assert(index < values.size());
     return values[index];

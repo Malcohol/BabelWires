@@ -107,7 +107,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
             int unrecognizedEntries = 0;
             for (const auto& v : testRegistry) {
                 ++entries;
-                const babelwires::FieldIdentifier& fieldIdentifier = std::get<0>(v);
+                const babelwires::Identifier& fieldIdentifier = std::get<0>(v);
                 const std::string& fieldName = *std::get<1>(v);
                 const babelwires::Uuid& uuid = *std::get<2>(v);
                 if (uuid == libTestUtils::TestRecordFeature::s_intUuid) {

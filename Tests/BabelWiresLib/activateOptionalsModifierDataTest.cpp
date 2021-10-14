@@ -18,19 +18,19 @@ TEST(ActivateOptionalsModifierDataTest, apply) {
 
     babelwires::RecordWithOptionalsFeature recordFeature;
 
-    babelwires::FieldIdentifier op0("op0");
+    babelwires::Identifier op0("op0");
     op0.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
-    babelwires::FieldIdentifier ff0("ff0");
+    babelwires::Identifier ff0("ff0");
     ff0.setDiscriminator(1);
     babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
 
-    babelwires::FieldIdentifier op1("op1");
+    babelwires::Identifier op1("op1");
     op1.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
 
-    babelwires::FieldIdentifier op2("op2");
+    babelwires::Identifier op2("op2");
     op2.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature2 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op2);
 
@@ -52,19 +52,19 @@ TEST(ActivateOptionalsModifierDataTest, apply1) {
 
     babelwires::RecordWithOptionalsFeature recordFeature;
 
-    babelwires::FieldIdentifier op0("op0");
+    babelwires::Identifier op0("op0");
     op0.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
-    babelwires::FieldIdentifier ff0("ff0");
+    babelwires::Identifier ff0("ff0");
     ff0.setDiscriminator(1);
     babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
 
-    babelwires::FieldIdentifier op1("op1");
+    babelwires::Identifier op1("op1");
     op1.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
 
-    babelwires::FieldIdentifier op2("op2");
+    babelwires::Identifier op2("op2");
     op2.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature2 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op2);
 
@@ -85,11 +85,11 @@ TEST(ActivateOptionalsModifierDataTest, failure) {
 
     babelwires::RecordWithOptionalsFeature recordFeature;
 
-    babelwires::FieldIdentifier op0("op0");
+    babelwires::Identifier op0("op0");
     op0.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
-    babelwires::FieldIdentifier ff0("ff0");
+    babelwires::Identifier ff0("ff0");
     ff0.setDiscriminator(1);
     babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
 

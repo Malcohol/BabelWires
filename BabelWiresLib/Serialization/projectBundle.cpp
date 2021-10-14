@@ -19,9 +19,9 @@ namespace {
     template <typename SOURCE_REG, typename TARGET_REG>
     void convertProjectData(babelwires::ProjectData& projectData, SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
                             babelwires::FieldNameRegistry::Authority authority) {
-        babelwires::FieldVisitor visitor = [&](babelwires::FieldIdentifier& sourceId) {
+        babelwires::FieldVisitor visitor = [&](babelwires::Identifier& sourceId) {
             if (sourceId.getDiscriminator() != 0) {
-                babelwires::FieldIdentifier newId = sourceId;
+                babelwires::Identifier newId = sourceId;
                 newId.setDiscriminator(0);
                 // This can throw, but an exception here is only meaningful in the loading case.
                 // In the saving case, the exception is caught and triggers an assertion.

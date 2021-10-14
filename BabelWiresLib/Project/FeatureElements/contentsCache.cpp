@@ -158,7 +158,7 @@ namespace {
                 const int cacheStartSize = m_rows.size();
                 std::unordered_set<int> outputIndicesHandled;
                 for (int i = 0; i < inputFeature->getNumFeatures(); ++i) {
-                    FieldIdentifier stepToChild = inputFeature->getFieldIdentifier(i);
+                    Identifier stepToChild = inputFeature->getFieldIdentifier(i);
                     FeaturePath pathToChild = path;
                     const int outputChildIndex = outputFeature->getChildIndexFromStep(stepToChild);
                     pathToChild.pushStep(PathStep(stepToChild));

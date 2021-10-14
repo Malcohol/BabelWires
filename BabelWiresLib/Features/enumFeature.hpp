@@ -25,10 +25,10 @@ namespace babelwires {
         const Enum& getEnum() const;
 
         /// Get the current value of the feature.
-        FieldIdentifier get() const;
+        Identifier get() const;
 
         /// Set the value in the feature.
-        void set(FieldIdentifier value);
+        void set(Identifier value);
 
       protected:
         std::string doGetValueType() const override;
@@ -41,7 +41,7 @@ namespace babelwires {
         const Enum& m_enum;
 
         ///
-        FieldIdentifier m_value;
+        Identifier m_value;
     };
 
     /// EnumFeature for RegisteredEnums, which can be conveniently constructed, since it assumes the Enum it

@@ -33,11 +33,11 @@ namespace libTestUtils {
         static constexpr char s_int2Uuid[] = "00000000-1111-2222-3333-800000000004";
         static constexpr char s_extraIntUuid[] = "00000000-1111-2222-3333-800000000005";
 
-        babelwires::FieldIdentifier m_intId;
-        babelwires::FieldIdentifier m_arrayId;
-        babelwires::FieldIdentifier m_recordId;
-        babelwires::FieldIdentifier m_int2Id;
-        babelwires::FieldIdentifier m_extraIntId;
+        babelwires::Identifier m_intId;
+        babelwires::Identifier m_arrayId;
+        babelwires::Identifier m_recordId;
+        babelwires::Identifier m_int2Id;
+        babelwires::Identifier m_extraIntId;
 
         babelwires::IntFeature* m_intFeature;
         // This has a min and default size of 2.

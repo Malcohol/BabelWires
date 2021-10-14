@@ -21,10 +21,10 @@
 ///    X(Bar, "Bar value", "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
 #define ENUM_DEFINE_CPP_ENUM(Y)                                                                                        \
     enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) };                                                                \
-    Value getValueFromIdentifier(babelwires::FieldIdentifier id) const {                                               \
+    Value getValueFromIdentifier(babelwires::Identifier id) const {                                               \
         return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
     }                                                                                                                  \
-    babelwires::FieldIdentifier getIdentifierFromValue(Value value) {                                                  \
+    babelwires::Identifier getIdentifierFromValue(Value value) {                                                  \
         return getIdentifierFromIndex(static_cast<unsigned int>(value));                                               \
     }
 

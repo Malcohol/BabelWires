@@ -15,7 +15,7 @@
 #include "BabelWiresLib/Project/project.hpp"
 
 babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                               FieldIdentifier optional)
+                               Identifier optional)
     : SimpleCommand(commandName)
     , m_elementId(elementId)
     , m_pathToRecord(std::move(featurePath))

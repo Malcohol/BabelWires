@@ -22,7 +22,7 @@ babelwires::FieldNameRegistry::InstanceData::InstanceData()
     , m_identifier("Invald")
     , m_authority(Authority::isProvisional) {}
 
-babelwires::FieldNameRegistry::InstanceData::InstanceData(std::string fieldName, Uuid uuid, FieldIdentifier identifier,
+babelwires::FieldNameRegistry::InstanceData::InstanceData(std::string fieldName, Uuid uuid, Identifier identifier,
                                                           Authority authority)
     : m_fieldName(std::move(fieldName))
     , m_uuid(std::move(uuid))
@@ -42,17 +42,17 @@ void babelwires::FieldNameRegistry::InstanceData::deserializeContents(Deserializ
     m_authority = Authority::isProvisional;
 }
 
-babelwires::FieldIdentifier babelwires::FieldNameRegistry::addFieldName(babelwires::FieldIdentifier identifier,
+babelwires::Identifier babelwires::FieldNameRegistry::addFieldName(babelwires::Identifier identifier,
                                                                         const std::string& name, const Uuid& uuid,
                                                                         Authority authority) {
-    const FieldIdentifier::Discriminator discriminator = identifier.getDiscriminator();
+    const Identifier::Discriminator discriminator = identifier.getDiscriminator();
     assert((discriminator == 0) && "The field already has a discriminator: Did you already register it?");
 
     const auto it = m_uuidToInstanceDataMap.find(uuid);
     if (it == m_uuidToInstanceDataMap.end()) {
         if (authority != Authority::isTemporary) {
             logDebug() << ((authority == Authority::isAuthoritative) ? "Authoritatively" : "Provisionally")
-                       << " registering FieldIdentifier " << identifier << " as \"" << name << "\"";
+                       << " registering Identifier " << identifier << " as \"" << name << "\"";
         }
 
         auto [uit, _] = m_uuidToInstanceDataMap.insert(
@@ -62,7 +62,7 @@ babelwires::FieldIdentifier babelwires::FieldNameRegistry::addFieldName(babelwir
 
         const int newDiscriminator = data.m_fieldNames.size() + 1;
         // I could fail safe here, but it seems very unlikely to happen. If it does, then the system needs a rethink.
-        assert((newDiscriminator <= FieldIdentifier::c_maxDiscriminator) && "Too many duplicate field identifiers");
+        assert((newDiscriminator <= Identifier::c_maxDiscriminator) && "Too many duplicate field identifiers");
         data.m_fieldNames.emplace_back(uit->second.get());
         identifier.setDiscriminator(newDiscriminator);
         uit->second->m_identifier = identifier;
@@ -77,7 +77,7 @@ babelwires::FieldIdentifier babelwires::FieldNameRegistry::addFieldName(babelwir
             assert((((instanceData.m_authority == Authority::isProvisional) ||
                      ((instanceData.m_identifier == identifier) && instanceData.m_fieldName == name))) &&
                    "Uuid is registered twice from code with inconsistent field data");
-            logDebug() << "Authoritatively updating FieldIdentifier " << identifier << " as \"" << name << "\"";
+            logDebug() << "Authoritatively updating Identifier " << identifier << " as \"" << name << "\"";
             instanceData.m_fieldName = name;
             instanceData.m_authority = authority;
             // TODO Warn when identifier has changed in a file, and we register subsequently.
@@ -90,8 +90,8 @@ babelwires::FieldIdentifier babelwires::FieldNameRegistry::addFieldName(babelwir
 }
 
 const babelwires::FieldNameRegistry::InstanceData*
-babelwires::FieldNameRegistry::getInstanceData(FieldIdentifier identifier) const {
-    const babelwires::FieldIdentifier::Discriminator index = identifier.getDiscriminator();
+babelwires::FieldNameRegistry::getInstanceData(Identifier identifier) const {
+    const babelwires::Identifier::Discriminator index = identifier.getDiscriminator();
     if (index > 0) {
         identifier.setDiscriminator(0);
         const auto& it = m_fieldData.find(identifier);
@@ -106,7 +106,7 @@ babelwires::FieldNameRegistry::getInstanceData(FieldIdentifier identifier) const
 }
 
 babelwires::FieldNameRegistry::ValueType
-babelwires::FieldNameRegistry::getDeserializedFieldData(FieldIdentifier identifier) const {
+babelwires::FieldNameRegistry::getDeserializedFieldData(Identifier identifier) const {
     if (const babelwires::FieldNameRegistry::InstanceData* data = getInstanceData(identifier)) {
         return ValueType{identifier, &data->m_fieldName, &data->m_uuid};
     }
@@ -115,7 +115,7 @@ babelwires::FieldNameRegistry::getDeserializedFieldData(FieldIdentifier identifi
                               "discriminator) are allowed";
 }
 
-std::string babelwires::FieldNameRegistry::getFieldName(babelwires::FieldIdentifier identifier) const {
+std::string babelwires::FieldNameRegistry::getFieldName(babelwires::Identifier identifier) const {
     if (const InstanceData* data = getInstanceData(identifier)) {
         return data->m_fieldName;
     }
@@ -200,8 +200,8 @@ void babelwires::FieldNameRegistry::serializeContents(Serializer& serializer) co
     // We'd like the table sorted by identifier.
     // The default ordering for identifiers is unaware of disciminators.
     std::sort(contents.begin(), contents.end(), [](const auto* a, const auto* b) {
-        const babelwires::FieldIdentifier idA = a->m_identifier;
-        const babelwires::FieldIdentifier idB = b->m_identifier;
+        const babelwires::Identifier idA = a->m_identifier;
+        const babelwires::Identifier idB = b->m_identifier;
         if (idA < idB) {
             return true;
         } else if (idB < idA) {
@@ -219,7 +219,7 @@ void babelwires::FieldNameRegistry::deserializeContents(Deserializer& deserializ
         std::unique_ptr<InstanceData> instanceDataPtr = it.getObject();
         InstanceData* instanceData = instanceDataPtr.get();
 
-        const FieldIdentifier::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
+        const Identifier::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
         if (discriminator == 0) {
             throw ParseException() << "A field in the field metadata had no discriminator";
         }
