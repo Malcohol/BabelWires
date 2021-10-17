@@ -1,19 +1,18 @@
 /**
- * A short string which uniquely defines a field in a record, with a discriminator which
- * makes it unique in the project.
+ * An identifier uniquely identifies an object in some local context (e.g. a field in a record) and globally.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cstring>
 #include <functional>
 #include <string>
 #include <string_view>
-#include <algorithm>
 
 namespace babelwires {
 
@@ -21,19 +20,33 @@ namespace babelwires {
     constexpr char s_pathDelimiter = s_pathDelimiterString[0];
     constexpr char s_discriminatorDelimiter = '`';
 
-    /// A short string which uniquely defines a field in a record, with a discriminator which
-    /// makes it unique in the project.
-    /// Stores a string of length 7 in-place, and 1 reserved byte.
-    /// The string is stored in reverse order, and may not be null-terminated.
-    /// The intention is to have efficient comparison and reasonable
-    /// debuggability.
+    /// An identifier uniquely identifies an object in some local context and globally.
+    /// The primary use-case is identifying fields within records.
     ///
-    /// Constraints:
-    /// * characters must have a graphical representation (see std::isgraph).
-    /// * it may not contain the path delimiter
-    /// * it may not contain the discriminator delimiter
+    /// It stores a short string (6 bytes) and a numeric discriminator (2 bytes).
+    /// The string should be sufficient on its own to uniquely define an object during
+    /// local usage (e.g. a field within a record, or an Enum value within an Enum).
+    /// The discriminator is used to ensure the identifier is globally unique, which allows
+    /// the identifier to act as a key for look-up in a global registry. Global uniqueness
+    /// is achieved by registering the identifier with the IdentifierRegistry.
     ///
-    // TODO code for big endian architectures.
+    /// Data is arranged so the bit pattern can never be confused for array indices, when
+    /// considering FeaturePaths. On little-endian architectures, the string is stored in
+    /// reverse order. (On big-endian architectures, the string would be stored in the
+    /// normal way, but that's a todo.)
+    ///
+    /// Identifiers have the following benefits:
+    /// * They are small
+    /// * They are cheap to compare
+    /// * They provide a canonical form for fields when serializing and de-serializing paths.
+    /// * They sort in alphabetic order (deterministic and very useful for debugging)
+    /// * They can be examined in any debugger without a visualizer.
+    ///
+    /// Constraints on characters:
+    /// * They must have a graphical representation (see std::isgraph)
+    /// * They cannot be the path delimiter "/"
+    /// * They cannot be the discriminator delimiter "`"
+    ///
     union Identifier {
       public:
         /// The maximum size string which can be contained.
@@ -67,7 +80,7 @@ namespace babelwires {
         /// Return a serializable version of the identifier.
         std::string serializeToString() const;
 
-        /// Parse a string as a field identifier. This will parse disciminators too.
+        /// Parse a string as an identifier. This will parse disciminators too.
         /// This throws a ParseException if the identifier is not valid.
         static Identifier deserializeFromString(std::string_view str);
 
@@ -93,18 +106,20 @@ namespace babelwires {
         }
 
       public:
-        /// The numeric type which distinguishes two field identifiers with the same textual content.
+        /// The numeric type which distinguishes two identifiers with the same textual content.
         using Discriminator = std::uint16_t;
 
-        /// We need to reserve at least 1 so we can distinguish ArrayIndexes from fields. Reserve several just in case.
-        static constexpr Discriminator c_maxDiscriminator = std::numeric_limits<Identifier::Discriminator>::max() - 10; 
+        /// We need to reserve at least 1 so we can distinguish ArrayIndexes from identifiers when parsing paths.
+        /// Reserve several just in case.
+        static constexpr Discriminator c_maxDiscriminator = std::numeric_limits<Identifier::Discriminator>::max() - 10;
 
-        /// Allows two field identifiers to represent two different fields.
+        /// Get the discriminator (which distinguishes between identifiers with the same textual content).
         Discriminator getDiscriminator() const { return m_data.m_discriminator; }
 
-        /// Allows two field identifiers to represent two different fields.
+        /// Set the discriminator (which distinguishes between identifiers with the same textual content).
         void setDiscriminator(Discriminator index) const { m_data.m_discriminator = index; }
 
+        /// Get an integer corresponding to the texture part of the identifier, and not the discriminator.
         std::uint64_t getDataAsCode() const { return m_code & 0xffffffffffff0000; }
 
         /// If other doesn't have a discriminator set, set its discriminator to the discrimintor of this.

@@ -1,6 +1,5 @@
 /**
- * A short string which uniquely defines a field in a record, with a discriminator which
- * makes it unique in the project.
+ * An identifier uniquely identifies an object in some local context (e.g. a field in a record) and globally.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
