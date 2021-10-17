@@ -38,7 +38,7 @@ namespace babelwires {
 
         /// Call the visitor on all fields in the modifier.
         /// This base implementation visits the fields in m_pathToFeature;
-        void visitFields(FieldVisitor& visitor) override;
+        void visitIdentifiers(IdentifierVisitor& visitor) override;
 
         /// This does nothing.
         /// (There is currently no scenario where a modifier references a filepath, but
@@ -97,7 +97,7 @@ namespace babelwires {
         SERIALIZABLE(EnumValueAssignmentData, "assignEnum", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
-        void visitFields(FieldVisitor& visitor) override;
+        void visitIdentifiers(IdentifierVisitor& visitor) override;
         
         Identifier m_value = "Fixme";
     };

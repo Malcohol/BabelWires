@@ -24,7 +24,7 @@ babelwires::Feature* babelwires::ModifierData::getTargetFeature(Feature* contain
     return &m_pathToFeature.follow(*container);
 }
 
-void babelwires::ModifierData::visitFields(FieldVisitor& visitor) {
+void babelwires::ModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
     for (auto& s : m_pathToFeature) {
         if (s.isField()) {
             visitor(s.getField());
@@ -111,7 +111,7 @@ void babelwires::EnumValueAssignmentData::deserializeContents(Deserializer& dese
     deserializer.deserializeValue("value", m_value);
 }
 
-void babelwires::EnumValueAssignmentData::visitFields(FieldVisitor& visitor) {
-    ModifierData::visitFields(visitor);
+void babelwires::EnumValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {
+    ModifierData::visitIdentifiers(visitor);
     visitor(m_value);
 }

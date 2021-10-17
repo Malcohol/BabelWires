@@ -76,8 +76,8 @@ void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) co
     }
 }
 
-void babelwires::ActivateOptionalsModifierData::visitFields(FieldVisitor& visitor) {
-    ModifierData::visitFields(visitor);
+void babelwires::ActivateOptionalsModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
+    ModifierData::visitIdentifiers(visitor);
     for (auto& f : m_selectedOptionals) {
         visitor(f);
     }

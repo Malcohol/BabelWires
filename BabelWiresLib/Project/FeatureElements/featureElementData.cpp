@@ -96,9 +96,9 @@ void babelwires::ElementData::deserializeUiData(Deserializer& deserializer) {
     }
 }
 
-void babelwires::ElementData::visitFields(FieldVisitor& visitor) {
+void babelwires::ElementData::visitIdentifiers(IdentifierVisitor& visitor) {
     for (auto& m : m_modifiers) {
-        m->visitFields(visitor);
+        m->visitIdentifiers(visitor);
     }
     for (auto& p : m_expandedPaths) {
         for (auto& s : p) {

@@ -19,7 +19,7 @@ namespace {
     template <typename SOURCE_REG, typename TARGET_REG>
     void convertProjectData(babelwires::ProjectData& projectData, SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
                             babelwires::IdentifierRegistry::Authority authority) {
-        babelwires::FieldVisitor visitor = [&](babelwires::Identifier& sourceId) {
+        babelwires::IdentifierVisitor visitor = [&](babelwires::Identifier& sourceId) {
             if (sourceId.getDiscriminator() != 0) {
                 babelwires::Identifier newId = sourceId;
                 newId.setDiscriminator(0);
@@ -30,7 +30,7 @@ namespace {
                 sourceId.setDiscriminator(newId.getDiscriminator());
             }
         };
-        projectData.visitFields(visitor);
+        projectData.visitIdentifiers(visitor);
     }
 } // namespace
 

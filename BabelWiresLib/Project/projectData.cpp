@@ -26,9 +26,9 @@ void babelwires::ProjectData::deserializeContents(Deserializer& deserializer) {
     }
 }
 
-void babelwires::ProjectData::visitFields(FieldVisitor& visitor) {
+void babelwires::ProjectData::visitIdentifiers(IdentifierVisitor& visitor) {
     for (auto& m : m_elements) {
-        m->visitFields(visitor);
+        m->visitIdentifiers(visitor);
     }
 }
 
