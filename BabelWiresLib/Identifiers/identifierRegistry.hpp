@@ -27,7 +27,7 @@ namespace babelwires {
     /// just too painful, so a singleton was adopted in this case.
     class IdentifierRegistry : public Serializable {
       public:
-        SERIALIZABLE(IdentifierRegistry, "fieldMetadata", void, 1);
+        SERIALIZABLE(IdentifierRegistry, "identifierMetadata", void, 1);
         IdentifierRegistry();
         IdentifierRegistry(IdentifierRegistry&&);
         IdentifierRegistry& operator=(IdentifierRegistry&&);
@@ -114,7 +114,7 @@ namespace babelwires {
 
       protected:
         struct InstanceData : Serializable {
-            SERIALIZABLE(InstanceData, "field", void, 1);
+            SERIALIZABLE(InstanceData, "identifier", void, 1);
             InstanceData();
             InstanceData(std::string fieldName, Uuid uuid, Identifier identifier, Authority authority);
 

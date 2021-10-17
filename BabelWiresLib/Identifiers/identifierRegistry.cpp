@@ -210,11 +210,11 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
             return idA.getDiscriminator() < idB.getDiscriminator();
         }
     });
-    serializer.serializeArray("fields", contents);
+    serializer.serializeArray("identifiers", contents);
 }
 
 void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
-    for (auto it = deserializer.deserializeArray<InstanceData>("fields", Deserializer::IsOptional::Optional);
+    for (auto it = deserializer.deserializeArray<InstanceData>("identifiers", Deserializer::IsOptional::Optional);
          it.isValid(); ++it) {
         std::unique_ptr<InstanceData> instanceDataPtr = it.getObject();
         InstanceData* instanceData = instanceDataPtr.get();
