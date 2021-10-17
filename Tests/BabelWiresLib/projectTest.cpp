@@ -20,7 +20,7 @@
 #include <fstream>
 
 TEST(ProjectTest, setAndExtractProjectData) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestProjectData projectData;
@@ -41,7 +41,7 @@ TEST(ProjectTest, setAndExtractProjectData) {
 }
 
 TEST(ProjectTest, projectId) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     // The test context has a built-in newly constructed project.
@@ -63,7 +63,7 @@ TEST(ProjectTest, projectId) {
 }
 
 TEST(ProjectTest, addGetAndRemoveElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -92,7 +92,7 @@ TEST(ProjectTest, addGetAndRemoveElement) {
 }
 
 TEST(ProjectTest, addAndRemoveLocalModifier) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -119,7 +119,7 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
 }
 
 TEST(ProjectTest, addAndRemoveConnectionModifier) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId sourceElementId =
@@ -154,7 +154,7 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -199,7 +199,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -245,7 +245,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId sourceElementId =
@@ -303,7 +303,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 }
 
 TEST(ProjectTest, uiProperties) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestFeatureElementData testFeatureData;
@@ -334,7 +334,7 @@ TEST(ProjectTest, uiProperties) {
 }
 
 TEST(ProjectTest, elementIds) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -368,7 +368,7 @@ TEST(ProjectTest, elementIds) {
 }
 
 TEST(ProjectTest, reloadSource) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     testUtils::TempFilePath tempFilePath("testSource." + libTestUtils::TestSourceFileFormat::getFileExtension());
@@ -409,7 +409,7 @@ TEST(ProjectTest, reloadSource) {
 }
 
 TEST(ProjectTest, saveTarget) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     testUtils::TempFilePath tempFilePath("testTarget." + libTestUtils::TestSourceFileFormat::getFileExtension());
@@ -448,7 +448,7 @@ TEST(ProjectTest, saveTarget) {
 }
 
 TEST(ProjectTest, process) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestProjectData projectData;
@@ -526,7 +526,7 @@ TEST(ProjectTest, process) {
 }
 
 TEST(ProjectTest, dependencyLoop) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId1 =
@@ -596,7 +596,7 @@ TEST(ProjectTest, dependencyLoop) {
 
 // Check that one dependency loop does not prevent other elements from processing correctly.
 TEST(ProjectTest, dependencyLoopAndProcessing) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId1 =
@@ -683,7 +683,7 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 }
 
 TEST(ProjectTest, updateWithAvailableIds) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     std::vector<babelwires::ElementId> idsToCheck0 = {libTestUtils::TestProjectData::c_sourceElementId,
@@ -730,7 +730,7 @@ TEST(ProjectTest, updateWithAvailableIds) {
 }
 
 TEST(ProjectTest, processWithFailure) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestProjectData projectData;

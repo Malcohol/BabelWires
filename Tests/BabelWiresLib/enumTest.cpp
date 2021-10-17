@@ -56,7 +56,7 @@ TEST(EnumTest, enumWithCppEnum) {
     };
 
     testUtils::TestLog log;
-    babelwires::FieldNameRegistryScope fieldRegistry;
+    babelwires::IdentifierRegistryScope fieldRegistry;
     TestEnum testEnum;
 
     EXPECT_EQ(testEnum.getValueFromIdentifier("Foo"), TestEnum::Value::Foo);

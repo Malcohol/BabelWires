@@ -26,7 +26,7 @@ namespace {
 } // namespace
 
 TEST(SourceFileElementTest, sourceFileDataCreateElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     // Create a test file.
@@ -86,7 +86,7 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
 }
 
 TEST(SourceFileElementTest, changeFile) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     // Create a test file.

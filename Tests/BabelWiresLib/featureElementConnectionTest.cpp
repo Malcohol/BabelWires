@@ -77,7 +77,7 @@ struct FeatureElementConnectionTest : ::testing::Test {
         return modifier->asConnectionModifier();
     }
 
-    babelwires::FieldNameRegistryScope m_fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope m_fieldNameRegistryScope;
     libTestUtils::TestProjectContext m_context;
     babelwires::FeaturePath m_arrayPath;
     babelwires::FeaturePath m_arrayElemPath;

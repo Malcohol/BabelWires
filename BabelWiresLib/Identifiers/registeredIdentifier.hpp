@@ -26,14 +26,14 @@ namespace babelwires {
 
 /// This macro offers a convenient way of registering identifiers.
 /// This expression evaluates to a Identifier which has the data from the given IDENTIFIER and a discriminator
-/// which allows the name to be looked up in the FieldNameRegistry. The registration happens only the first time it is
+/// which allows the name to be looked up in the IdentifierRegistry. The registration happens only the first time it is
 /// called.
 #define REGISTERED_ID(IDENTIFIER, NAME, UUID)                                                                             \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
-        static babelwires::Identifier f = babelwires::FieldNameRegistry::write()->addFieldName(                   \
-            id, name, uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative);                                \
+        static babelwires::Identifier f = babelwires::IdentifierRegistry::write()->addFieldName(                   \
+            id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                                \
         assert(                                                                                                        \
-            (babelwires::FieldNameRegistry::read()->getFieldName(f) == name) &&                                        \
+            (babelwires::IdentifierRegistry::read()->getFieldName(f) == name) &&                                        \
             "Each usage of this macro should register a single fieldIdentifier."                                       \
             " Do not use it in cases where the same code can be called a second time with a different identifier.");   \
         return f;                                                                                                      \

@@ -14,7 +14,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 
 TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId =
@@ -128,7 +128,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
@@ -140,7 +140,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoElement) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
@@ -158,7 +158,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId =
@@ -176,7 +176,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId =
@@ -196,7 +196,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId =

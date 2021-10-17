@@ -20,9 +20,9 @@ namespace {
 
 libTestUtils::TestFileFeature::TestFileFeature()
     : babelwires::FileFeature(s_fileFormatId)
-    , m_intChildId(babelwires::FieldNameRegistry::write()->addFieldName(
+    , m_intChildId(babelwires::IdentifierRegistry::write()->addFieldName(
           s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
-          babelwires::FieldNameRegistry::Authority::isAuthoritative)) {
+          babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     m_intChildFeature =
         addField(std::make_unique<babelwires::HasStaticRange<babelwires::IntFeature, 0, 255>>(), m_intChildId);
 }

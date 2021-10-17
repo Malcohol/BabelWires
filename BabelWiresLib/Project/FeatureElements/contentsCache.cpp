@@ -35,7 +35,7 @@ namespace {
 
     struct ContentsCacheBuilder {
         ContentsCacheBuilder(std::vector<ContentsCacheEntry>& rows, const EditTree& edits)
-            : m_fieldNameRegistry(FieldNameRegistry::read())
+            : m_fieldNameRegistry(IdentifierRegistry::read())
             , m_rows(rows)
             , m_edits(edits) {}
 
@@ -209,7 +209,7 @@ namespace {
             }
         }
 
-        FieldNameRegistry::ReadAccess m_fieldNameRegistry;
+        IdentifierRegistry::ReadAccess m_fieldNameRegistry;
         std::vector<ContentsCacheEntry>& m_rows;
         const EditTree& m_edits;
     };

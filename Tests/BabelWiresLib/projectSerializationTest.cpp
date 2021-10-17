@@ -12,7 +12,7 @@
 #include "Tests/TestUtils/testLog.hpp"
 
 TEST(ProjectSerializationTest, saveLoadStringSameContext) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestProjectData testProjectData;
@@ -36,7 +36,7 @@ TEST(ProjectSerializationTest, saveLoadStringSameContext) {
 TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
     std::string serializedContents;
     {
-        babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         libTestUtils::TestProjectData testProjectData;
@@ -46,7 +46,7 @@ TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
     }
 
     {
-        babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         babelwires::ProjectData loadedData = babelwires::ProjectSerialization::loadFromString(
@@ -65,7 +65,7 @@ TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
 TEST(ProjectSerializationTest, saveLoadFile) {
     testUtils::TempFilePath tempFile("Foo.test");
     {
-        babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         libTestUtils::TestProjectData testProjectData;
@@ -75,7 +75,7 @@ TEST(ProjectSerializationTest, saveLoadFile) {
     }
 
     {
-        babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         babelwires::ProjectData loadedData =

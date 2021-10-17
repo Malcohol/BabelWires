@@ -17,16 +17,16 @@ const babelwires::FeaturePath libTestUtils::TestFeatureWithOptionals::s_pathToOp
 const babelwires::FeaturePath libTestUtils::TestFeatureWithOptionals::s_pathToOp1_Int2 = babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestFeatureWithOptionals::s_subrecordIdInitializer) + "/" + libTestUtils::TestFeatureWithOptionals::s_op1IdInitializer + "/" + libTestUtils::TestRecordFeature::s_recordIdInitializer + "/" + libTestUtils::TestRecordFeature::s_int2IdInitializer);
 
 libTestUtils::TestFeatureWithOptionals::TestFeatureWithOptionals()
-    : m_subrecordId(babelwires::FieldNameRegistry::write()->addFieldName(
-          s_subrecordIdInitializer, s_subrecordFieldName, s_subrecordUuid, babelwires::FieldNameRegistry::Authority::isAuthoritative))
-    , m_ff0Id(babelwires::FieldNameRegistry::write()->addFieldName(
-          s_ff0IdInitializer, s_ff0FieldName, s_ff0Uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative))
-    , m_ff1Id(babelwires::FieldNameRegistry::write()->addFieldName(
-          s_ff1IdInitializer, s_ff1FieldName, s_ff1Uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative))
-    , m_op0Id(babelwires::FieldNameRegistry::write()->addFieldName(
-          s_op0IdInitializer, s_op0FieldName, s_op0Uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative))
-    , m_op1Id(babelwires::FieldNameRegistry::write()->addFieldName(
-          s_op1IdInitializer, s_op1FieldName, s_op1Uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative)) {
+    : m_subrecordId(babelwires::IdentifierRegistry::write()->addFieldName(
+          s_subrecordIdInitializer, s_subrecordFieldName, s_subrecordUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_ff0Id(babelwires::IdentifierRegistry::write()->addFieldName(
+          s_ff0IdInitializer, s_ff0FieldName, s_ff0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_ff1Id(babelwires::IdentifierRegistry::write()->addFieldName(
+          s_ff1IdInitializer, s_ff1FieldName, s_ff1Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_op0Id(babelwires::IdentifierRegistry::write()->addFieldName(
+          s_op0IdInitializer, s_op0FieldName, s_op0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_op1Id(babelwires::IdentifierRegistry::write()->addFieldName(
+          s_op1IdInitializer, s_op1FieldName, s_op1Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     {
         auto testRecordWithOptionalsFeaturePtr = std::make_unique<babelwires::RecordWithOptionalsFeature>();
         m_subrecord = testRecordWithOptionalsFeaturePtr.get();

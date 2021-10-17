@@ -13,7 +13,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp"
 
 TEST(ActivateOptionalsCommandTest, executeAndUndo) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
@@ -64,7 +64,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
 
 
 TEST(ActivateOptionalsCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
@@ -76,7 +76,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoElement) {
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
@@ -94,7 +94,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
@@ -112,7 +112,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
@@ -132,7 +132,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());

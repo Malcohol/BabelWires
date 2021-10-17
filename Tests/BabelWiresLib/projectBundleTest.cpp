@@ -19,33 +19,33 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
     {
         testUtils::TestLog log;
-        babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+        babelwires::IdentifierRegistryScope identifierRegistry;
 
         // Ensure some of the test record's discriminators are not default.
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_intIdInitializer,
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_intIdInitializer,
                                                              "test int", "41000000-1111-2222-3333-800000000001",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_intIdInitializer,
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_intIdInitializer,
                                                              "test int 1", "42000000-1111-2222-3333-800000000001",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_intIdInitializer,
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_intIdInitializer,
                                                              "test int 2", "43000000-1111-2222-3333-800000000001",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_arrayIdInitializer,
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_arrayIdInitializer,
                                                              "test array", "41000000-1111-2222-3333-800000000002",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_arrayIdInitializer,
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_arrayIdInitializer,
                                                              "test array 1", "42000000-1111-2222-3333-800000000002",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_recordIdInitializer,
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_recordIdInitializer,
                                                              "test record", "41000000-1111-2222-3333-800000000003",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
         // Also register some irrelevant field names.
-        babelwires::FieldNameRegistry::write()->addFieldName("Flum", "Flum", "41000000-1111-2222-3333-800000000100",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName("Zarg", "Zarg", "41000000-1111-2222-3333-800000000101",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName("Flum", "Flum", "41000000-1111-2222-3333-800000000100",
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName("Zarg", "Zarg", "41000000-1111-2222-3333-800000000101",
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
         // Confirm that not all the discriminators in a test record are default.
         {
@@ -92,7 +92,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         {
             // Bit of a hack, but this lets us iterate through the registry.
             // TODO Perhaps just make iteration public
-            const babelwires::FieldNameRegistry& testRegistry = bundle2.getFieldNameRegistry();
+            const babelwires::IdentifierRegistry& testRegistry = bundle2.getFieldNameRegistry();
 
             // These have no duplicates in the bundle.
             const int recordIntDiscriminator = 1;
@@ -150,34 +150,34 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
     }
 
     {
-        babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext projectContext;
 
         // Slightly different arrangement and UUIDs to the above (not that it should matter)
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_intIdInitializer,
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_intIdInitializer,
                                                              "test int", "51000000-1111-2222-3333-800000000001",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_arrayIdInitializer,
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_arrayIdInitializer,
                                                              "test array", "51000000-1111-2222-3333-800000000002",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_recordIdInitializer,
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_recordIdInitializer,
                                                              "test record 1", "51000000-1111-2222-3333-800000000003",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_recordIdInitializer,
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_recordIdInitializer,
                                                              "test record 2", "52000000-1111-2222-3333-800000000003",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_recordIdInitializer,
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName(libTestUtils::TestRecordFeature::s_recordIdInitializer,
                                                              "test record 3", "53000000-1111-2222-3333-800000000003",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
         // Ensure the record's fieldIdentifiers are registered, but don't do the same for the file feature.
         libTestUtils::TestRecordFeature testRecord;
 
         // Also register some irrelevant field names.
-        babelwires::FieldNameRegistry::write()->addFieldName("Flum", "Flum", "51000000-1111-2222-3333-800000000100",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        babelwires::FieldNameRegistry::write()->addFieldName("Zarg", "Zarg", "51000000-1111-2222-3333-800000000101",
-                                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName("Flum", "Flum", "51000000-1111-2222-3333-800000000100",
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addFieldName("Zarg", "Zarg", "51000000-1111-2222-3333-800000000101",
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
         babelwires::ProjectData projectData =
             std::move(bundle).resolveAgainstCurrentContext(projectContext.m_projectContext, std::filesystem::current_path(), projectContext.m_log);
@@ -186,11 +186,11 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
         // Confirm that the resolved data is provisional.
         {
-            babelwires::FieldNameRegistry::write()->addFieldName(
+            babelwires::IdentifierRegistry::write()->addFieldName(
                 libTestUtils::TestFileFeature::s_intChildInitializer, "Updated field name",
                 libTestUtils::TestFileFeature::s_intChildUuid,
-                babelwires::FieldNameRegistry::Authority::isAuthoritative);
-            EXPECT_EQ(babelwires::FieldNameRegistry::read()->getFieldName(
+                babelwires::IdentifierRegistry::Authority::isAuthoritative);
+            EXPECT_EQ(babelwires::IdentifierRegistry::read()->getFieldName(
                           *projectData.m_elements[0]->m_modifiers[0]->m_pathToFeature.getStep(0).asField()),
                       "Updated field name");
         }
@@ -198,7 +198,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 }
 
 TEST(ProjectBundleTest, factoryMetadata) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestProjectData projectData;
 
@@ -228,7 +228,7 @@ TEST(ProjectBundleTest, factoryMetadata) {
 
 TEST(ProjectBundleTest, filePathResolution) {
     testUtils::TestLogWithListener log;
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     std::filesystem::path root = std::filesystem::canonical(std::filesystem::temp_directory_path());

@@ -10,22 +10,22 @@
 babelwires::RegisteredIdentifiers
 babelwires::detail::getIdentifiers(const babelwires::IdentifiersSource& source) {
     RegisteredIdentifiers identifiers;
-    babelwires::FieldNameRegistry::WriteAccess fieldNameRegistry = babelwires::FieldNameRegistry::write();
+    babelwires::IdentifierRegistry::WriteAccess identifierRegistry = babelwires::IdentifierRegistry::write();
     identifiers.reserve(source.size());
     for (const auto& t : source) {
-        identifiers.emplace_back(fieldNameRegistry->addFieldName(std::get<0>(t), std::get<1>(t), std::get<2>(t),
-                                                                 FieldNameRegistry::Authority::isAuthoritative));
+        identifiers.emplace_back(identifierRegistry->addFieldName(std::get<0>(t), std::get<1>(t), std::get<2>(t),
+                                                                 IdentifierRegistry::Authority::isAuthoritative));
     };
     return identifiers;
 }
 
 bool babelwires::detail::testIdentifiers(const babelwires::IdentifiersSource& source,
                                               const babelwires::RegisteredIdentifiers& ids) {
-    babelwires::FieldNameRegistry::ReadAccess fieldNameRegistry = babelwires::FieldNameRegistry::read();
+    babelwires::IdentifierRegistry::ReadAccess identifierRegistry = babelwires::IdentifierRegistry::read();
     auto sourceIt = source.begin();
     auto idsIt = ids.begin();
     while ((sourceIt != source.end()) && (idsIt != ids.end())) {
-        if (babelwires::FieldNameRegistry::read()->getFieldName(*idsIt) != std::get<1>(*sourceIt)) {
+        if (babelwires::IdentifierRegistry::read()->getFieldName(*idsIt) != std::get<1>(*sourceIt)) {
             return false;
         }
         ++sourceIt;

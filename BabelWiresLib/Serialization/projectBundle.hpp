@@ -64,7 +64,7 @@ namespace babelwires {
       public:
         // Used by tests.
 
-        const FieldNameRegistry& getFieldNameRegistry() const { return m_fieldNameRegistry; }
+        const IdentifierRegistry& getFieldNameRegistry() const { return m_fieldNameRegistry; }
 
         const ProjectData& getProjectData() const { return m_projectData; }
 
@@ -78,7 +78,7 @@ namespace babelwires {
         ProjectData m_projectData;
 
         /// Field metadata.
-        FieldNameRegistry m_fieldNameRegistry;
+        IdentifierRegistry m_fieldNameRegistry;
 
         /// Information about the factories.
         FactoryMetadata m_factoryMetadata;

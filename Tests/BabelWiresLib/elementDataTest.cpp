@@ -114,7 +114,7 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
 }
 
 TEST(ElementDataTest, sourceFileDataCreateElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     // Create a test file.
@@ -233,7 +233,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
         data.createFeatureElement(context.m_projectContext, context.m_log, 10);
@@ -322,7 +322,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
         data.createFeatureElement(context.m_projectContext, context.m_log, 10);

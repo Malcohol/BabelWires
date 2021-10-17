@@ -3,9 +3,9 @@
 #include "BabelWiresLib/Project/FeatureElements/failedFeature.hpp"
 
 libTestUtils::TestFailedFeature::TestFailedFeature() {
-    addField(std::make_unique<RecordFeature>(), babelwires::FieldNameRegistry::write()->addFieldName(
+    addField(std::make_unique<RecordFeature>(), babelwires::IdentifierRegistry::write()->addFieldName(
                                                     "Failed", "Failed", "00000000-1111-2222-3333-800000000888",
-                                                    babelwires::FieldNameRegistry::Authority::isAuthoritative));
+                                                    babelwires::IdentifierRegistry::Authority::isAuthoritative));
 }
 
 libTestUtils::TestFeatureElementData::TestFeatureElementData() {

@@ -55,19 +55,19 @@ namespace {
 } // namespace
 
 libTestUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtraInt)
-    : m_intId(babelwires::FieldNameRegistry::write()->addFieldName(
-          s_intIdInitializer, s_intFieldName, s_intUuid, babelwires::FieldNameRegistry::Authority::isAuthoritative))
-    , m_arrayId(babelwires::FieldNameRegistry::write()->addFieldName(
+    : m_intId(babelwires::IdentifierRegistry::write()->addFieldName(
+          s_intIdInitializer, s_intFieldName, s_intUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_arrayId(babelwires::IdentifierRegistry::write()->addFieldName(
           s_arrayIdInitializer, s_arrayFieldName, s_arrayUuid,
-          babelwires::FieldNameRegistry::Authority::isAuthoritative))
-    , m_recordId(babelwires::FieldNameRegistry::write()->addFieldName(
+          babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_recordId(babelwires::IdentifierRegistry::write()->addFieldName(
           s_recordIdInitializer, s_recordFieldName, s_recordUuid,
-          babelwires::FieldNameRegistry::Authority::isAuthoritative))
-    , m_int2Id(babelwires::FieldNameRegistry::write()->addFieldName(
-          s_int2IdInitializer, s_int2FieldName, s_int2Uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative))
-    , m_extraIntId(babelwires::FieldNameRegistry::write()->addFieldName(
+          babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_int2Id(babelwires::IdentifierRegistry::write()->addFieldName(
+          s_int2IdInitializer, s_int2FieldName, s_int2Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_extraIntId(babelwires::IdentifierRegistry::write()->addFieldName(
           s_extraIntIdInitializer, s_extraIntFieldName, s_extraIntUuid,
-          babelwires::FieldNameRegistry::Authority::isAuthoritative))
+          babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_intValueLimit(intValueLimit) {
     auto intFeaturePtr = std::make_unique<LimitedIntFeature>(m_intValueLimit);
     m_intFeature = intFeaturePtr.get();

@@ -149,7 +149,7 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
     testUtils::TestLogWithListener testLog;
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     intMod.applyIfLocal(testLog, &recordFeature);
     EXPECT_TRUE(intMod.isFailed());
@@ -179,7 +179,7 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
     testUtils::TestLogWithListener testLog;
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     arrayMod.applyIfLocal(testLog, &recordFeature);
     EXPECT_FALSE(arrayMod.isFailed());
@@ -230,7 +230,7 @@ TEST(ModifierTest, arraySizeModifierFailure) {
     testUtils::TestLogWithListener testLog;
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     arrayMod.applyIfLocal(testLog, &recordFeature);
     EXPECT_TRUE(arrayMod.isFailed());
@@ -242,7 +242,7 @@ TEST(ModifierTest, arraySizeModifierFailure) {
 }
 
 TEST(ModifierTest, connectionModifierSuccess) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -300,7 +300,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
     connectionMod.setOwner(&owner);
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     EXPECT_EQ(targetFeature->get(), 0);
     connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
@@ -333,7 +333,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
     connectionMod.setOwner(&owner);
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     EXPECT_EQ(targetFeature->get(), 0);
     connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
@@ -346,7 +346,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
 }
 
 TEST(ModifierTest, connectionModifierSourcePathFailure) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -386,7 +386,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 }
 
 TEST(ModifierTest, connectionModifierApplicationFailure) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext projectContext;
 
     libTestUtils::TestFeatureElementData elementData;

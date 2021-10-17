@@ -24,7 +24,7 @@ namespace babelwires {
     /// Other dependencies not included here:
     /// * The user log is provided separately, because I want finer control of its use. (TODO Review this.)
     /// * The debug log, because that is needed everywhere.
-    /// * The FieldNameRegistry, because I judged it too painful to pass around.
+    /// * The IdentifierRegistry, because I judged it too painful to pass around.
     struct ProjectContext {
         SourceFileFormatRegistry& m_sourceFileFormatReg;
         TargetFileFormatRegistry& m_targetFileFormatReg;

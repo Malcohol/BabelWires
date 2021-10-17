@@ -25,14 +25,14 @@ namespace babelwires {
     /// Singletons are usually a mistake and for the most part, "dependency injection" has been used to provide
     /// the project with its dependencies. However, passing the registry through to every use of FeaturePath was
     /// just too painful, so a singleton was adopted in this case.
-    class FieldNameRegistry : public Serializable {
+    class IdentifierRegistry : public Serializable {
       public:
-        SERIALIZABLE(FieldNameRegistry, "fieldMetadata", void, 1);
-        FieldNameRegistry();
-        FieldNameRegistry(FieldNameRegistry&&);
-        FieldNameRegistry& operator=(FieldNameRegistry&&);
+        SERIALIZABLE(IdentifierRegistry, "fieldMetadata", void, 1);
+        IdentifierRegistry();
+        IdentifierRegistry(IdentifierRegistry&&);
+        IdentifierRegistry& operator=(IdentifierRegistry&&);
 
-        virtual ~FieldNameRegistry();
+        virtual ~IdentifierRegistry();
 
         enum class Authority {
             /// We're registering a field in code.
@@ -62,7 +62,7 @@ namespace babelwires {
         /// Information stored about a field.
         using ValueType = std::tuple<Identifier, const std::string*, const Uuid*>;
 
-        /// Extract the information about a field from a local FieldNameRegistry.
+        /// Extract the information about a field from a local IdentifierRegistry.
         /// This can throw a ParseException if the contents are invalid.
         ValueType getDeserializedFieldData(Identifier identifier) const;
 
@@ -73,32 +73,32 @@ namespace babelwires {
         /// This holds a lock, so ensure its lifetime is minimal.
         class ReadAccess {
           public:
-            ReadAccess(std::shared_mutex* mutex, const FieldNameRegistry* registry);
+            ReadAccess(std::shared_mutex* mutex, const IdentifierRegistry* registry);
             ReadAccess(ReadAccess&& other);
             ~ReadAccess();
-            const FieldNameRegistry* operator->() const { return m_registry; }
+            const IdentifierRegistry* operator->() const { return m_registry; }
 
           private:
             std::shared_mutex* m_mutex;
-            const FieldNameRegistry* m_registry;
+            const IdentifierRegistry* m_registry;
         };
 
         /// Access the contents of the singleton instance within the scope of this object.
         /// This holds a lock, so ensure its lifetime is minimal.
         class WriteAccess {
           public:
-            WriteAccess(std::shared_mutex* mutex, FieldNameRegistry* registry);
+            WriteAccess(std::shared_mutex* mutex, IdentifierRegistry* registry);
             WriteAccess(WriteAccess&& other);
             ~WriteAccess();
-            FieldNameRegistry* operator->() const { return m_registry; }
+            IdentifierRegistry* operator->() const { return m_registry; }
 
           private:
             std::shared_mutex* m_mutex;
-            FieldNameRegistry* m_registry;
+            IdentifierRegistry* m_registry;
         };
 
         /// Swap the singleton instance with the provided object.
-        static FieldNameRegistry* swapInstance(FieldNameRegistry* reg);
+        static IdentifierRegistry* swapInstance(IdentifierRegistry* reg);
 
         /// Gain read access to the registry.
         static ReadAccess read();
@@ -145,29 +145,29 @@ namespace babelwires {
 
       private:
         /// Lifetime of this is managed externally.
-        static FieldNameRegistry* s_singletonInstance;
+        static IdentifierRegistry* s_singletonInstance;
 
         /// A mutex that controls access to the singleton's contents.
         static std::shared_mutex s_mutex;
     };
 
-    /// Creates a FieldNameRegistry and sets it to be the singleton instance.
-    class FieldNameRegistryScope {
+    /// Creates a IdentifierRegistry and sets it to be the singleton instance.
+    class IdentifierRegistryScope {
       public:
-        FieldNameRegistryScope();
-        ~FieldNameRegistryScope();
+        IdentifierRegistryScope();
+        ~IdentifierRegistryScope();
 
       private:
-        FieldNameRegistry m_currentInstance;
-        FieldNameRegistry* m_previousInstance;
+        IdentifierRegistry m_currentInstance;
+        IdentifierRegistry* m_previousInstance;
     };
 
 } // namespace babelwires
 
-class babelwires::FieldNameRegistry::const_iterator {
+class babelwires::IdentifierRegistry::const_iterator {
   public:
-    using InnerIterator = decltype(babelwires::FieldNameRegistry::m_uuidToInstanceDataMap)::const_iterator;
-    using ValueType = FieldNameRegistry::ValueType;
+    using InnerIterator = decltype(babelwires::IdentifierRegistry::m_uuidToInstanceDataMap)::const_iterator;
+    using ValueType = IdentifierRegistry::ValueType;
 
     const_iterator(InnerIterator it)
         : m_it(it) {}

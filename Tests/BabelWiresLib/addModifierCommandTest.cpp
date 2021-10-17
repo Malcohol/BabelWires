@@ -11,7 +11,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
 TEST(AddModifierCommandTest, executeAndUndo) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -51,7 +51,7 @@ TEST(AddModifierCommandTest, executeAndUndo) {
 }
 
 TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -99,7 +99,7 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
 }
 
 TEST(AddModifierCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     babelwires::IntValueAssignmentData modData;
@@ -113,7 +113,7 @@ TEST(AddModifierCommandTest, failSafelyNoElement) {
 }
 
 TEST(AddModifierCommandTest, failSafelyNoTarget) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     babelwires::IntValueAssignmentData modData;

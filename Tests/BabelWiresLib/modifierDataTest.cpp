@@ -232,7 +232,7 @@ TEST(ModifierDataTest, assignFromFeatureApply) {
     EXPECT_THROW(data.apply(&srcIntFeature, &notIntFeature, true), babelwires::ModelException);
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::StandardArrayFeature<babelwires::IntFeature> notValueFeature;
     EXPECT_THROW(data.apply(&notValueFeature, &targetIntFeature, true), babelwires::ModelException);

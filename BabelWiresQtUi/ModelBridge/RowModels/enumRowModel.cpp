@@ -26,16 +26,16 @@ const babelwires::EnumFeature& babelwires::EnumRowModel::getEnumFeature() const 
 QVariant babelwires::EnumRowModel::getValueDisplayData() const {
     const babelwires::EnumFeature& enumFeature = getEnumFeature();
     const Identifier value = enumFeature.get();
-    return QString(FieldNameRegistry::read()->getFieldName(value).c_str());
+    return QString(IdentifierRegistry::read()->getFieldName(value).c_str());
 }
 
 QWidget* babelwires::EnumRowModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     const babelwires::EnumFeature& enumFeature = getEnumFeature();
     auto dropDownBox = std::make_unique<DropDownValueEditor>(parent, index);
     {
-        FieldNameRegistry::ReadAccess fieldNameRegistry = FieldNameRegistry::read();
+        IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
         for (auto enumValue : enumFeature.getEnum().getEnumValues()) {
-            dropDownBox->addItem(fieldNameRegistry->getFieldName(enumValue).c_str());
+            dropDownBox->addItem(identifierRegistry->getFieldName(enumValue).c_str());
         }
     }
     return dropDownBox.release();
