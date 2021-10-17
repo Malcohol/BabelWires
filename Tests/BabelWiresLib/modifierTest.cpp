@@ -3,7 +3,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"
 #include "BabelWiresLib/Features/stringFeature.hpp"
@@ -66,12 +66,12 @@ TEST(ModifierTest, clone) {
 TEST(ModifierTest, localApplySuccess) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::RecordFeature* childRecordFeature =
         recordFeature.addField(std::make_unique<babelwires::RecordFeature>(), id0);
 
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(2);
     babelwires::IntFeature* intFeature = childRecordFeature->addField(std::make_unique<babelwires::IntFeature>(), id1);
 
@@ -98,12 +98,12 @@ TEST(ModifierTest, localApplySuccess) {
 TEST(ModifierTest, localApplyFailureWrongType) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::RecordFeature* childRecordFeature =
         recordFeature.addField(std::make_unique<babelwires::RecordFeature>(), id0);
 
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(2);
     babelwires::StringFeature* stringFeature =
         childRecordFeature->addField(std::make_unique<babelwires::StringFeature>(), id1);
@@ -130,7 +130,7 @@ TEST(ModifierTest, localApplyFailureWrongType) {
 TEST(ModifierTest, localApplyFailureNoTarget) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::RecordFeature* childRecordFeature =
         recordFeature.addField(std::make_unique<babelwires::RecordFeature>(), id0);
@@ -149,7 +149,7 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
     testUtils::TestLogWithListener testLog;
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     intMod.applyIfLocal(testLog, &recordFeature);
     EXPECT_TRUE(intMod.isFailed());
@@ -160,7 +160,7 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
 TEST(ModifierTest, arraySizeModifierSuccess) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::ArrayFeature* arrayFeature =
         recordFeature.addField(std::make_unique<babelwires::StandardArrayFeature<babelwires::IntFeature>>(), id0);
@@ -179,7 +179,7 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
     testUtils::TestLogWithListener testLog;
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     arrayMod.applyIfLocal(testLog, &recordFeature);
     EXPECT_FALSE(arrayMod.isFailed());
@@ -210,7 +210,7 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
 TEST(ModifierTest, arraySizeModifierFailure) {
     babelwires::RecordFeature recordFeature;
 
-    babelwires::FieldIdentifier id0("aa");
+    babelwires::Identifier id0("aa");
     id0.setDiscriminator(1);
     babelwires::ArrayFeature* arrayFeature =
         recordFeature.addField(std::make_unique<babelwires::StandardArrayFeature<babelwires::IntFeature>>(), id0);
@@ -230,7 +230,7 @@ TEST(ModifierTest, arraySizeModifierFailure) {
     testUtils::TestLogWithListener testLog;
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     arrayMod.applyIfLocal(testLog, &recordFeature);
     EXPECT_TRUE(arrayMod.isFailed());
@@ -242,7 +242,7 @@ TEST(ModifierTest, arraySizeModifierFailure) {
 }
 
 TEST(ModifierTest, connectionModifierSuccess) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -255,7 +255,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
     const babelwires::ElementId sourceId = projectContext.m_project.addFeatureElement(elementData);
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
@@ -282,7 +282,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
     libTestUtils::TestProjectContext projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
@@ -300,7 +300,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
     connectionMod.setOwner(&owner);
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     EXPECT_EQ(targetFeature->get(), 0);
     connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
@@ -315,7 +315,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
     libTestUtils::TestProjectContext projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
@@ -333,7 +333,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
     connectionMod.setOwner(&owner);
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     EXPECT_EQ(targetFeature->get(), 0);
     connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
@@ -346,7 +346,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
 }
 
 TEST(ModifierTest, connectionModifierSourcePathFailure) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -359,7 +359,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
     const babelwires::ElementId sourceId = projectContext.m_project.addFeatureElement(elementData);
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
@@ -386,7 +386,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 }
 
 TEST(ModifierTest, connectionModifierApplicationFailure) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -399,7 +399,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     const babelwires::ElementId sourceId = projectContext.m_project.addFeatureElement(elementData);
 
     babelwires::RecordFeature targetRecordFeature;
-    babelwires::FieldIdentifier id1("bb");
+    babelwires::Identifier id1("bb");
     id1.setDiscriminator(1);
     babelwires::StringFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::StringFeature>(), id1);

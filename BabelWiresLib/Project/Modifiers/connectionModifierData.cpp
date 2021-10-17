@@ -83,8 +83,8 @@ std::unique_ptr<babelwires::Modifier> babelwires::ConnectionModifierData::create
     return std::make_unique<babelwires::ConnectionModifier>(clone());
 }
 
-void babelwires::ConnectionModifierData::visitFields(FieldVisitor& visitor) {
-    ModifierData::visitFields(visitor);
+void babelwires::ConnectionModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
+    ModifierData::visitIdentifiers(visitor);
     for (auto& s : m_pathToSourceFeature) {
         if (s.isField()) {
             visitor(s.getField());

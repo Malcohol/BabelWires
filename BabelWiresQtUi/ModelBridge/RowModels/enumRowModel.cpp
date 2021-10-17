@@ -9,7 +9,7 @@
 
 #include "BabelWiresLib/Enums/enum.hpp"
 #include "BabelWiresLib/Features/enumFeature.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 
 #include "BabelWiresQtUi/ModelBridge/ValueEditors/dropDownValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
@@ -25,17 +25,17 @@ const babelwires::EnumFeature& babelwires::EnumRowModel::getEnumFeature() const 
 
 QVariant babelwires::EnumRowModel::getValueDisplayData() const {
     const babelwires::EnumFeature& enumFeature = getEnumFeature();
-    const FieldIdentifier value = enumFeature.get();
-    return QString(FieldNameRegistry::read()->getFieldName(value).c_str());
+    const Identifier value = enumFeature.get();
+    return QString(IdentifierRegistry::read()->getName(value).c_str());
 }
 
 QWidget* babelwires::EnumRowModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     const babelwires::EnumFeature& enumFeature = getEnumFeature();
     auto dropDownBox = std::make_unique<DropDownValueEditor>(parent, index);
     {
-        FieldNameRegistry::ReadAccess fieldNameRegistry = FieldNameRegistry::read();
+        IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
         for (auto enumValue : enumFeature.getEnum().getEnumValues()) {
-            dropDownBox->addItem(fieldNameRegistry->getFieldName(enumValue).c_str());
+            dropDownBox->addItem(identifierRegistry->getName(enumValue).c_str());
         }
     }
     return dropDownBox.release();
@@ -43,7 +43,7 @@ QWidget* babelwires::EnumRowModel::createEditor(QWidget* parent, const QModelInd
 
 void babelwires::EnumRowModel::setEditorData(QWidget* editor) const {
     const babelwires::EnumFeature& enumFeature = getEnumFeature();
-    const FieldIdentifier value = enumFeature.get();
+    const Identifier value = enumFeature.get();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
     unsigned int currentIndex = enumFeature.getEnum().getIndexFromIdentifier(value);
@@ -53,13 +53,13 @@ void babelwires::EnumRowModel::setEditorData(QWidget* editor) const {
 std::unique_ptr<babelwires::ModifierData> babelwires::EnumRowModel::createModifierFromEditor(QWidget* editor) const {
     const babelwires::EnumFeature& enumFeature = getEnumFeature();
     const babelwires::Enum::EnumValues& values = enumFeature.getEnum().getEnumValues();
-    const FieldIdentifier value = enumFeature.get();
+    const Identifier value = enumFeature.get();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
     const int newIndex = dropDownBox->currentIndex();
     assert(newIndex >= 0);
     assert(newIndex < values.size());
-    const FieldIdentifier newValue = values[newIndex];
+    const Identifier newValue = values[newIndex];
     if (value != newValue) {
         auto modifier = std::make_unique<babelwires::EnumValueAssignmentData>();
         modifier->m_pathToFeature = babelwires::FeaturePath(&enumFeature);

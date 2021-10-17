@@ -4,8 +4,8 @@
 #include "Tests/TestUtils/testLog.hpp"
 
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "BabelWiresLib/Features/Path/fieldName.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"
@@ -15,302 +15,10 @@
 #include "Common/Serialization/XML/xmlSerializer.hpp"
 #include "Common/exceptions.hpp"
 
-TEST(FeaturePathTest, fieldIdentifiers) {
-    babelwires::FieldIdentifier hello("Hello");
-    EXPECT_EQ(hello.getDiscriminator(), 0);
-    hello.setDiscriminator(17);
-
-    std::string helloStr = "Hello";
-    babelwires::FieldIdentifier hello1(helloStr);
-    hello1.setDiscriminator(27);
-
-    // The "code" does not include the discriminator.
-    EXPECT_EQ(hello.getDataAsCode(), hello1.getDataAsCode());
-    EXPECT_LE(hello.getDataAsCode(), hello1.getDataAsCode());
-    EXPECT_FALSE(hello.getDataAsCode() < hello1.getDataAsCode());
-
-    // Discriminators are not used to distinguish fields.
-    EXPECT_EQ(hello, hello1);
-    std::hash<babelwires::FieldIdentifier> fieldHasher;
-    EXPECT_EQ(fieldHasher(hello), fieldHasher(hello1));
-
-    babelwires::FieldIdentifier goodbye("Byebye");
-    goodbye.setDiscriminator(17);
-    EXPECT_NE(hello, goodbye);
-
-    // Only copy over unset discriminators. Reason:
-    // If a field in a file has no discriminator, it will be updated by the project after opening.
-    // However, if a field in a file already carries discrimintors, which don't resolve via their UUID,
-    // we assume that they should be respected and not modified, even if they match fields.
-
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), 27);
-
-    hello1.setDiscriminator(0);
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), hello.getDiscriminator());
-}
-
-// For sanity's sake, the identifiers are ordered alphabetically.
-TEST(FeaturePathTest, fieldIdentifiersOrder) {
-    babelwires::FieldIdentifier zero("A000");
-    babelwires::FieldIdentifier ten("A10");
-    babelwires::FieldIdentifier ant("ant");
-    babelwires::FieldIdentifier antelope("antlpe");
-    babelwires::FieldIdentifier Emu("Emu");
-    babelwires::FieldIdentifier emu("emu");
-    babelwires::FieldIdentifier Ibex("Ibex");
-    babelwires::FieldIdentifier zebra("zebra");
-
-    EXPECT_LT(zero, ten);
-    EXPECT_LT(ten, Emu);
-    EXPECT_LT(Emu, Ibex);
-    EXPECT_LT(Ibex, ant);
-    EXPECT_LT(ant, antelope);
-    EXPECT_LT(antelope, emu);
-    EXPECT_LT(emu, zebra);
-}
-
-TEST(FeaturePathTest, fieldIdentifierStringOutput) {
-    babelwires::FieldIdentifier hello("Hello");
-    {
-        std::ostringstream os;
-        os << hello;
-        EXPECT_EQ(os.str(), "Hello");
-    }
-    {
-        hello.setDiscriminator(15);
-        std::ostringstream os;
-        os << hello;
-        EXPECT_EQ(os.str(), "Hello`15");
-    }
-}
-
-TEST(FeaturePathTest, fieldIdentifierSerialization) {
-    babelwires::FieldIdentifier hello("Hello");
-    EXPECT_EQ(hello.serializeToString(), "Hello");
-
-    hello.setDiscriminator(81);
-    EXPECT_EQ(hello.serializeToString(), "Hello`81");
-}
-
-TEST(FeaturePathTest, fieldIdentifierDeserialization) {
-    const babelwires::FieldIdentifier hello = babelwires::FieldIdentifier::deserializeFromString("Hello");
-    EXPECT_EQ(hello, "Hello");
-    EXPECT_EQ(hello.getDiscriminator(), 0);
-
-    const babelwires::FieldIdentifier hello1 = babelwires::FieldIdentifier::deserializeFromString("Hello`12");
-    EXPECT_EQ(hello1, "Hello");
-    EXPECT_EQ(hello1.getDiscriminator(), 12);
-
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("H"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("H`1"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("HE`11"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("Hel`111"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("Hell`111"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("Hello`111"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("Hell33"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("He(33)`10"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("Hello`255"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("Helloo`65500"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("."));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("^-.-^"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("(%[EE"));
-    EXPECT_NO_THROW(babelwires::FieldIdentifier::deserializeFromString("^-.-^`3"));
-
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString(""), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString("02"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString("12"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString("`12"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString("2Hello"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString("Hællo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString("Hello'111"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString("Helloooo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString("Helloo`65535"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FieldIdentifier::deserializeFromString("Hell`100000"), babelwires::ParseException);
-}
-
-TEST(FeaturePathTest, featureNameRegistrySameNames) {
-    testUtils::TestLog log;
-
-    babelwires::FieldNameRegistry fieldNameRegistry;
-
-    babelwires::FieldIdentifier hello("Hello");
-    EXPECT_EQ(hello.getDiscriminator(), 0);
-
-    babelwires::Uuid uuid("00000000-1111-2222-3333-000000000001");
-
-    const babelwires::FieldIdentifier id = fieldNameRegistry.addFieldName(
-        hello, "Hello World", uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(hello, id);
-    EXPECT_NE(id.getDiscriminator(), 0);
-    EXPECT_EQ(fieldNameRegistry.getFieldName(id), "Hello World");
-
-    babelwires::FieldIdentifier hello2("Hello");
-    babelwires::Uuid uuid2("00000000-1111-2222-3333-000000000002");
-
-    const babelwires::FieldIdentifier id2 = fieldNameRegistry.addFieldName(
-        hello2, "Hello World 2", uuid2, babelwires::FieldNameRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(hello, id);
-    EXPECT_NE(id2.getDiscriminator(), 0);
-    EXPECT_NE(id2.getDiscriminator(), id.getDiscriminator());
-    EXPECT_EQ(fieldNameRegistry.getFieldName(id2), "Hello World 2");
-}
-
-TEST(FeaturePathTest, featureNameRegistryAuthoritativeFirst) {
-    testUtils::TestLog log;
-
-    babelwires::FieldNameRegistry fieldNameRegistry;
-
-    babelwires::FieldIdentifier hello("Hello");
-    EXPECT_EQ(hello.getDiscriminator(), 0);
-
-    babelwires::Uuid uuid("00000000-1111-2222-3333-000000000001");
-
-    const babelwires::FieldIdentifier id = fieldNameRegistry.addFieldName(
-        hello, "Hello World", uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(hello, id);
-    EXPECT_NE(id.getDiscriminator(), 0);
-    EXPECT_EQ(fieldNameRegistry.getFieldName(id), "Hello World");
-
-    // A provisional name updates to match an authoritative one.
-    babelwires::FieldIdentifier hello1("Hello");
-    EXPECT_EQ(hello, hello1);
-    const babelwires::FieldIdentifier id1 = fieldNameRegistry.addFieldName(
-        hello1, "Hello World 1", uuid, babelwires::FieldNameRegistry::Authority::isProvisional);
-    EXPECT_EQ(id1, hello1);
-    EXPECT_EQ(id1.getDiscriminator(), id.getDiscriminator());
-    EXPECT_EQ(fieldNameRegistry.getFieldName(id1), "Hello World");
-}
-
-TEST(FeaturePathTest, featureNameRegistryProvisionalFirst) {
-    testUtils::TestLog log;
-
-    babelwires::FieldNameRegistry fieldNameRegistry;
-
-    babelwires::FieldIdentifier hello("Hello");
-    EXPECT_EQ(hello.getDiscriminator(), 0);
-
-    babelwires::Uuid uuid("00000000-1111-2222-3333-000000000001");
-
-    const babelwires::FieldIdentifier id = fieldNameRegistry.addFieldName(
-        hello, "Hello World", uuid, babelwires::FieldNameRegistry::Authority::isProvisional);
-    EXPECT_EQ(hello, id);
-    EXPECT_NE(id.getDiscriminator(), 0);
-    EXPECT_EQ(fieldNameRegistry.getFieldName(id), "Hello World");
-
-    // A provisional name updates to match an authorative one.
-    babelwires::FieldIdentifier hello1("Hello");
-    EXPECT_EQ(hello, hello1);
-    const babelwires::FieldIdentifier id1 = fieldNameRegistry.addFieldName(
-        hello1, "Hello World 2", uuid, babelwires::FieldNameRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(id1, hello1);
-    EXPECT_EQ(id1.getDiscriminator(), id.getDiscriminator());
-
-    // The original ID will now obtain the new _authoritative_ name.
-    EXPECT_EQ(fieldNameRegistry.getFieldName(id), "Hello World 2");
-}
-
-TEST(FeaturePathTest, featureNameRegistrySerializationDeserialization) {
-    testUtils::TestLog log;
-    std::string serializedContents;
-
-    babelwires::FieldIdentifier id0("hello");
-    babelwires::FieldIdentifier id1("byebye");
-    const std::string name0 = "Name 0";
-    const std::string name1 = "Name 1";
-    {
-        babelwires::FieldNameRegistry fieldNameRegistry;
-
-        const babelwires::Uuid uuid0("00000000-1111-2222-3333-000000000001");
-        const babelwires::Uuid uuid1("00000000-1111-2222-3333-000000000002");
-
-        id0 = fieldNameRegistry.addFieldName(id0, name0, uuid0,
-                                             babelwires::FieldNameRegistry::Authority::isAuthoritative);
-        id1 =
-            fieldNameRegistry.addFieldName(id1, name1, uuid1, babelwires::FieldNameRegistry::Authority::isProvisional);
-
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(fieldNameRegistry);
-        std::ostringstream os;
-        serializer.write(os);
-        serializedContents = std::move(os.str());
-    }
-
-    {
-        babelwires::AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto fieldNameRegPtr = deserializer.deserializeObject<babelwires::FieldNameRegistry>();
-        ASSERT_NE(fieldNameRegPtr, nullptr);
-        deserializer.finalize();
-
-        EXPECT_EQ(fieldNameRegPtr->getFieldName(id0), name0);
-        EXPECT_EQ(fieldNameRegPtr->getFieldName(id1), name1);
-    }
-}
-
-TEST(FeaturePathTest, implicitFieldNameRegistration) {
-    testUtils::TestLog log;
-
-    // Work with a temporary global registry.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
-
-    int discriminator = 0;
-    for (int i = 0; i < 3; ++i) {
-        // Repeating this line of code should be a NOOP.
-        babelwires::FieldIdentifier hello = FIELD_NAME("hello", "Hello world", "00000000-1111-2222-3333-000000000001");
-        EXPECT_EQ(hello, "hello");
-        EXPECT_NE(hello.getDiscriminator(), 0);
-        if (discriminator != 0) {
-            EXPECT_EQ(hello.getDiscriminator(), discriminator);
-        }
-        discriminator = hello.getDiscriminator();
-
-        EXPECT_EQ(babelwires::FieldNameRegistry::read()->getFieldName(hello), "Hello world");
-    }
-}
-
-TEST(FeaturePathTest, implicitFieldNameRegistrationVector) {
-    testUtils::TestLog log;
-
-    // Work with a temporary global registry.
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
-
-    const babelwires::FieldIdentifiersSource source = {
-        {"hello", "Hello world", "00000000-1111-2222-3333-000000000001"},
-        {"byebye", "Goodbye world", "00000000-1111-2222-3333-000000000002"}};
-
-    int hello_discriminator = 0;
-    int goodbye_discriminator = 0;
-    for (int i = 0; i < 3; ++i) {
-        // Repeating this line of code should be a NOOP.
-        babelwires::RegisteredFieldIdentifiers ids = FIELD_NAME_VECTOR(source);
-        EXPECT_EQ(ids.size(), 2);
-
-        babelwires::FieldIdentifier hello = ids[0];
-        EXPECT_EQ(hello, "hello");
-        EXPECT_NE(hello.getDiscriminator(), 0);
-        if (hello_discriminator != 0) {
-            EXPECT_EQ(hello.getDiscriminator(), hello_discriminator);
-        }
-        hello_discriminator = hello.getDiscriminator();
-        EXPECT_EQ(babelwires::FieldNameRegistry::read()->getFieldName(hello), "Hello world");
-
-        babelwires::FieldIdentifier goodbye = ids[1];
-        EXPECT_EQ(goodbye, "byebye");
-        EXPECT_NE(goodbye.getDiscriminator(), 0);
-        if (goodbye_discriminator != 0) {
-            EXPECT_EQ(goodbye.getDiscriminator(), goodbye_discriminator);
-        }
-        goodbye_discriminator = goodbye.getDiscriminator();
-        EXPECT_EQ(babelwires::FieldNameRegistry::read()->getFieldName(goodbye), "Goodbye world");
-    }
-}
-
 TEST(FeaturePathTest, pathStepOps) {
-    babelwires::FieldIdentifier hello("Hello");
-    babelwires::FieldIdentifier hello1("Hello");
-    babelwires::FieldIdentifier goodbye("Byebye");
+    babelwires::Identifier hello("Hello");
+    babelwires::Identifier hello1("Hello");
+    babelwires::Identifier goodbye("Byebye");
 
     babelwires::PathStep helloStep(hello);
     babelwires::PathStep hello1Step(hello1);
@@ -340,7 +48,7 @@ TEST(FeaturePathTest, pathStepOps) {
 }
 
 TEST(FeaturePathTest, pathStepDiscriminator) {
-    babelwires::PathStep helloStep(babelwires::FieldIdentifier("Hello"));
+    babelwires::PathStep helloStep(babelwires::Identifier("Hello"));
 
     helloStep.asField()->setDiscriminator(12);
     EXPECT_EQ(helloStep.asField()->getDiscriminator(), 12);
@@ -365,13 +73,13 @@ TEST(FeaturePathTest, pathStepDeserialization) {
     babelwires::PathStep step(0);
     EXPECT_NO_THROW(step = babelwires::PathStep::deserializeFromString("Hello"));
     EXPECT_TRUE(step.isField());
-    EXPECT_EQ(step.getField(), babelwires::FieldIdentifier("Hello"));
+    EXPECT_EQ(step.getField(), babelwires::Identifier("Hello"));
     EXPECT_EQ(step.getField().getDiscriminator(), 0);
 
     babelwires::PathStep step1(0);
     EXPECT_NO_THROW(step1 = babelwires::PathStep::deserializeFromString("Hello`2"));
     EXPECT_TRUE(step1.isField());
-    EXPECT_EQ(step1.getField(), babelwires::FieldIdentifier("Hello"));
+    EXPECT_EQ(step1.getField(), babelwires::Identifier("Hello"));
     EXPECT_EQ(step1.getField().getDiscriminator(), 2);
 
     babelwires::PathStep step2("Erm");
@@ -437,7 +145,7 @@ TEST(FeaturePathTest, pathIteration) {
 
 TEST(FeaturePathTest, pathFollow) {
     testUtils::TestLog log;
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     libTestUtils::TestRecordFeature testRecordFeature;
 
@@ -479,7 +187,7 @@ TEST(FeaturePathTest, pathFollow) {
 
 TEST(FeaturePathTest, pathResolve) {
     testUtils::TestLog log;
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::FeaturePath pathToInt;
     babelwires::FeaturePath pathToArray;
@@ -538,7 +246,7 @@ TEST(FeaturePathTest, pathResolve) {
 
 TEST(FeaturePathTest, pathTryFollow) {
     testUtils::TestLog log;
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     libTestUtils::TestRecordFeature testRecordFeature;
 
@@ -562,7 +270,7 @@ TEST(FeaturePathTest, pathTryFollow) {
 
 TEST(FeaturePathTest, pathFollowFail) {
     testUtils::TestLog log;
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::FeaturePath pathToNonField;
     babelwires::FeaturePath pathToNonIndex;

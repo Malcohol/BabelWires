@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/setExpandedCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
@@ -10,7 +10,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
 TEST(SetExpandedCommandTest, executeAndUndoTrue) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -41,7 +41,7 @@ TEST(SetExpandedCommandTest, executeAndUndoTrue) {
 }
 
 TEST(SetExpandedCommandTest, executeAndUndoFalse) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -75,7 +75,7 @@ TEST(SetExpandedCommandTest, executeAndUndoFalse) {
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::SetExpandedCommand command("Test command", 51,
                                            babelwires::FeaturePath::deserializeFromString("qqq/zzz"), true);
@@ -85,7 +85,7 @@ TEST(SetExpandedCommandTest, failSafelyNoElement) {
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoFeature) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::SetExpandedCommand command("Test command", 51,
                                            babelwires::FeaturePath::deserializeFromString("qqq/zzz"), true);
@@ -101,7 +101,7 @@ TEST(SetExpandedCommandTest, failSafelyNoFeature) {
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoCompound) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::SetExpandedCommand command("Test command", 51, libTestUtils::TestRecordFeature::s_pathToInt2, true);
 

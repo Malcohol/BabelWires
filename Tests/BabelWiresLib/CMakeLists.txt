@@ -17,7 +17,7 @@ SET( LIB_TESTS_SRCS
     featurePathTest.cpp
     featureTest.cpp
     filePathTest.cpp
-    valueNamesTest.cpp
+    identifierTest.cpp
     editTreeTest.cpp
     modifierDataTest.cpp
     modifierTest.cpp
@@ -49,6 +49,7 @@ SET( LIB_TESTS_SRCS
     TestUtils/testProjectData.cpp
     TestUtils/testRecord.cpp
     TestUtils/testFeatureWithOptionals.cpp
+    valueNamesTest.cpp
    )
 
 ADD_EXECUTABLE( babelWiresTests ${LIB_TESTS_SRCS} )

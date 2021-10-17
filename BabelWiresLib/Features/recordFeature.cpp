@@ -9,7 +9,7 @@
 
 #include "BabelWiresLib/Features/modelExceptions.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 
 #include "Common/Utilities/hash.hpp"
 #include "Common/types.hpp"
@@ -33,7 +33,7 @@ const babelwires::Feature* babelwires::RecordFeature::doGetFeature(int i) const 
     return m_fields.at(i).m_feature.get();
 }
 
-babelwires::FieldIdentifier babelwires::RecordFeature::getFieldIdentifier(int i) const {
+babelwires::Identifier babelwires::RecordFeature::getFieldIdentifier(int i) const {
     return m_fields.at(i).m_identifier;
 }
 
@@ -51,7 +51,7 @@ namespace {
     template <typename R>
     typename babelwires::CopyConst<R, babelwires::Feature>::type*
     tryGetChildFromStepT(R* record, const babelwires::PathStep& step) {
-        if (const babelwires::FieldIdentifier* field = step.asField()) {
+        if (const babelwires::Identifier* field = step.asField()) {
             const int childIndex = record->getChildIndexFromStep(*field);
             if (childIndex >= 0) {
                 return record->getFeature(childIndex);
@@ -70,9 +70,9 @@ const babelwires::Feature* babelwires::RecordFeature::tryGetChildFromStep(const 
     return tryGetChildFromStepT(this, step);
 }
 
-int babelwires::RecordFeature::getChildIndexFromStep(const FieldIdentifier& identifier) const {
+int babelwires::RecordFeature::getChildIndexFromStep(const Identifier& identifier) const {
     for (int i = 0; i < getNumFeatures(); ++i) {
-        FieldIdentifier f = getFieldIdentifier(i);
+        Identifier f = getFieldIdentifier(i);
         if (f == identifier) {
             // Since step has resolved, ensure it gets the correct discriminator.
             f.copyDiscriminatorTo(identifier);
@@ -94,7 +94,7 @@ void babelwires::RecordFeature::addFieldInternal(Field f, int index) {
     setChanged(Changes::StructureChanged);
 }
 
-babelwires::RecordFeature::FieldAndIndex babelwires::RecordFeature::removeField(FieldIdentifier identifier) {
+babelwires::RecordFeature::FieldAndIndex babelwires::RecordFeature::removeField(Identifier identifier) {
     int i;
     for (i = 0; i < m_fields.size(); ++i) {
         if (identifier == m_fields[i].m_identifier) {

@@ -3,7 +3,7 @@
 #include "BabelWiresLib/Commands/removeElementCommand.hpp"
 
 #include "BabelWiresLib/Commands/moveElementCommand.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
@@ -21,7 +21,7 @@
 #include "Tests/TestUtils/tempFilePath.hpp"
 
 TEST(RemoveElementCommandTest, executeAndUndo) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestProjectData projectData;
@@ -83,7 +83,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
 }
 
 TEST(RemoveElementCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     babelwires::IntValueAssignmentData modData;
@@ -97,7 +97,7 @@ TEST(RemoveElementCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveElementCommandTest, subsumption) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId element1Id =

@@ -19,11 +19,11 @@ namespace babelwires {
     class RecordFeature : public CompoundFeature {
       public:
         /// The identifier must be already be registered with a field name.
-        /// Fields are normally give names using the FIELD_NAME macro in fieldName.h.
+        /// Fields are normally give names using the REGISTERED_ID macro in fieldName.h.
         /// The identifier need only be unique in the Record.
-        template <typename T> T* addField(std::unique_ptr<T> f, const FieldIdentifier& identifier);
+        template <typename T> T* addField(std::unique_ptr<T> f, const Identifier& identifier);
 
-        FieldIdentifier getFieldIdentifier(int index) const;
+        Identifier getFieldIdentifier(int index) const;
 
         virtual int getNumFeatures() const override;
         virtual PathStep getStepToChild(const Feature* child) const override;
@@ -32,7 +32,7 @@ namespace babelwires {
 
         /// Returns -1 if not found.
         /// Sets the descriminator of identifier on a match.
-        int getChildIndexFromStep(const FieldIdentifier& identifier) const;
+        int getChildIndexFromStep(const Identifier& identifier) const;
 
       protected:
         virtual void doSetToDefault() override;
@@ -43,7 +43,7 @@ namespace babelwires {
 
         /// The per-field data.
         struct Field {
-            FieldIdentifier m_identifier;
+            Identifier m_identifier;
             std::unique_ptr<Feature> m_feature;
         };
 
@@ -53,7 +53,7 @@ namespace babelwires {
             int m_index = -1;
         };
 
-        FieldAndIndex removeField(FieldIdentifier identifier);
+        FieldAndIndex removeField(Identifier identifier);
 
       protected:
         std::vector<Field> m_fields;

@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/ProjectExtra/projectObserver.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 #include "BabelWiresLib/Project/project.hpp"
@@ -63,7 +63,7 @@ namespace {
 
 namespace {
     void testFeatureElementAdded(bool shouldIgnore) {
-        babelwires::FieldNameRegistryScope fieldNameRegistry;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         babelwires::ProjectObserver projectObserver(context.m_project);
@@ -105,7 +105,7 @@ TEST(ProjectObserverTest, featureElementAddedIgnore) {
 
 namespace {
     void testFeatureElementRemoved(bool shouldIgnore) {
-        babelwires::FieldNameRegistryScope fieldNameRegistry;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         const babelwires::ElementId elementId =
@@ -153,7 +153,7 @@ TEST(ProjectObserverTest, featureElementRemovedIgnore) {
 
 namespace {
     void testFeatureElementMoved(bool shouldIgnore) {
-        babelwires::FieldNameRegistryScope fieldNameRegistry;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         const babelwires::ElementId elementId =
@@ -202,7 +202,7 @@ TEST(ProjectObserverTest, featureElementMovedIgnore) {
 
 namespace {
     void testFeatureElementsResized(bool shouldIgnore) {
-        babelwires::FieldNameRegistryScope fieldNameRegistry;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         const babelwires::ElementId elementId =
@@ -251,7 +251,7 @@ TEST(ProjectObserverTest, featureElementResizedIgnore) {
 
 namespace {
     void testConnectionAdded(bool shouldIgnore, bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
-        babelwires::FieldNameRegistryScope fieldNameRegistry;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         libTestUtils::TestFeatureElementData sourceElementData;
@@ -350,7 +350,7 @@ TEST(ProjectObserverTest, connectionAddedBothTruncatedIgnore) {
 
 namespace {
     void testConnectionRemoved(bool shouldIgnore, bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
-        babelwires::FieldNameRegistryScope fieldNameRegistry;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         libTestUtils::TestFeatureElementData sourceElementData;
@@ -447,7 +447,7 @@ TEST(ProjectObserverTest, connectionRemovedBothTruncatedIgnore) {
 }
 
 TEST(ProjectObserverTest, featureElementContentsChanged) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestFeatureElementData sourceElementData;

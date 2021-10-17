@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/addEntryToArrayCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
 
@@ -11,7 +11,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -63,7 +63,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
 }
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -103,7 +103,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
 }
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -157,7 +157,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
 }
 
 TEST(AddEntryToArrayCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::AddEntryToArrayCommand command("Test command", 51,
                                                babelwires::FeaturePath::deserializeFromString("qqq/zzz"), -1);
@@ -167,7 +167,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyNoElement) {
 }
 
 TEST(AddEntryToArrayCommandTest, failSafelyNoArray) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::AddEntryToArrayCommand command("Test command", 51,
                                                babelwires::FeaturePath::deserializeFromString("qqq/zzz"), -1);
@@ -183,7 +183,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyNoArray) {
 }
 
 TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
@@ -203,7 +203,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
 }
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());

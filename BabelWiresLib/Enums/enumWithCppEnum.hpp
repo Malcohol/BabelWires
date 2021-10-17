@@ -8,8 +8,8 @@
 #pragma once
 
 #include "BabelWiresLib/Enums/enum.hpp"
-#include "BabelWiresLib/Features/Path/fieldName.hpp"
 #include "BabelWiresLib/Features/enumFeature.hpp"
+#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
 
 // Implementation detail.
 #define ENUM_SELECT_FIRST_ARGUMENT(A, B, C) A,
@@ -21,10 +21,10 @@
 ///    X(Bar, "Bar value", "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
 #define ENUM_DEFINE_CPP_ENUM(Y)                                                                                        \
     enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) };                                                                \
-    Value getValueFromIdentifier(babelwires::FieldIdentifier id) const {                                               \
+    Value getValueFromIdentifier(babelwires::Identifier id) const {                                                    \
         return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
     }                                                                                                                  \
-    babelwires::FieldIdentifier getIdentifierFromValue(Value value) {                                                  \
+    babelwires::Identifier getIdentifierFromValue(Value value) {                                                       \
         return getIdentifierFromIndex(static_cast<unsigned int>(value));                                               \
     }
 
@@ -34,11 +34,11 @@
 /// This defines a static which should be placed in a .cpp where the Enum will be constructed.
 #define ENUM_DEFINE_ENUM_VALUE_SOURCE(Y)                                                                               \
     namespace {                                                                                                        \
-        const babelwires::FieldIdentifiersSource s_enum_##Y = {Y(ENUM_ARGUMENTS_AS_INITIALIZERS)};                     \
+        const babelwires::IdentifiersSource s_enum_##Y = {Y(ENUM_ARGUMENTS_AS_INITIALIZERS)};                          \
     }
 
 /// This should be used in the Enum constructor
-#define ENUM_IDENTIFIER_VECTOR(Y) FIELD_NAME_VECTOR(s_enum_##Y)
+#define ENUM_IDENTIFIER_VECTOR(Y) REGISTERED_ID_VECTOR(s_enum_##Y)
 
 namespace babelwires {
     /// This provides convenience methods which allow the contained value of an EnumFeature

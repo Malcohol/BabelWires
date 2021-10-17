@@ -32,7 +32,7 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
         /// Call the visitor on all the FieldIdentifiers in the element.
-        void visitFields(FieldVisitor& visitor) override;
+        void visitIdentifiers(IdentifierVisitor& visitor) override;
 
         /// Call the visitor on all the FilePaths in the element.
         /// This base implementation does nothing.

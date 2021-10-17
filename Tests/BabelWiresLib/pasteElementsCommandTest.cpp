@@ -3,7 +3,7 @@
 #include "BabelWiresLib/Commands/pasteElementsCommand.hpp"
 
 #include "BabelWiresLib/Commands/moveElementCommand.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
@@ -21,7 +21,7 @@
 #include "Tests/TestUtils/tempFilePath.hpp"
 
 TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestProjectData projectData;
@@ -75,7 +75,7 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
 }
 
 TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestProjectData originalProjectData;
@@ -192,7 +192,7 @@ namespace {
     // will get wired back up.
     // If you paste into a different project, however, these connections are ignored.
     void testSourceElementsOutsideProjectData(bool isPastingIntoSameProject) {
-        babelwires::FieldNameRegistryScope fieldNameRegistry;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         babelwires::ElementId sourceElementId =

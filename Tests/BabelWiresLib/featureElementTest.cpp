@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/Path/fieldName.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
@@ -14,7 +14,7 @@
 #include "Tests/TestUtils/testLog.hpp"
 
 TEST(FeatureElementTest, basicAccessors) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
 
@@ -30,7 +30,7 @@ TEST(FeatureElementTest, basicAccessors) {
 }
 
 TEST(FeatureElementTest, labels) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
 
@@ -42,7 +42,7 @@ TEST(FeatureElementTest, labels) {
 }
 
 TEST(FeatureElementTest, uiData) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
     featureElementData.m_uiData.m_uiPosition = babelwires::UiPosition{23, -29};
@@ -61,7 +61,7 @@ TEST(FeatureElementTest, uiData) {
 }
 
 TEST(FeatureElementTest, modifiers) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
 
@@ -167,7 +167,7 @@ TEST(FeatureElementTest, modifiers) {
 }
 
 TEST(FeatureElementTest, expandedPaths) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
 
@@ -224,7 +224,7 @@ TEST(FeatureElementTest, expandedPaths) {
 }
 
 TEST(FeatureElementTest, extractElementData) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
 
@@ -303,7 +303,7 @@ TEST(FeatureElementTest, extractElementData) {
 }
 
 TEST(FeatureElementTest, removedModifiers) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
 
@@ -363,7 +363,7 @@ TEST(FeatureElementTest, removedModifiers) {
 }
 
 TEST(FeatureElementTest, failure) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
 
@@ -384,7 +384,7 @@ TEST(FeatureElementTest, failure) {
 }
 
 TEST(FeatureElementTest, simpleChanges) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
 
@@ -490,7 +490,7 @@ TEST(FeatureElementTest, simpleChanges) {
 }
 
 TEST(FeatureElementTest, isInDependencyLoop) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     libTestUtils::TestFeatureElementData featureElementData;
 

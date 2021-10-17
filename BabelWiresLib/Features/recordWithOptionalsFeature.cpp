@@ -9,7 +9,7 @@ void babelwires::RecordWithOptionalsFeature::addOptionalFieldInternal(FieldAndIn
     m_inactiveFields.emplace_back(std::move(f));
 }
 
-void babelwires::RecordWithOptionalsFeature::activateField(FieldIdentifier identifier) {
+void babelwires::RecordWithOptionalsFeature::activateField(Identifier identifier) {
     const auto it = std::find_if(m_inactiveFields.begin(), m_inactiveFields.end(),
                                  [identifier](const FieldAndIndex& f) { return f.m_identifier == identifier; });
     if(it == m_inactiveFields.end()) {
@@ -20,7 +20,7 @@ void babelwires::RecordWithOptionalsFeature::activateField(FieldIdentifier ident
     m_inactiveFields.erase(it);
 }
 
-void babelwires::RecordWithOptionalsFeature::deactivateField(FieldIdentifier identifier) {
+void babelwires::RecordWithOptionalsFeature::deactivateField(Identifier identifier) {
     if (!isOptional(identifier) || !isActivated(identifier)) {
         throw ModelException() << "The field " << identifier << " is not an active optional field, so it cannot be deactivated";
     }
@@ -35,16 +35,16 @@ void babelwires::RecordWithOptionalsFeature::deactivateField(FieldIdentifier ide
     m_inactiveFields.insert(insertionPoint, std::move(f));
 }
 
-bool babelwires::RecordWithOptionalsFeature::isOptional(FieldIdentifier identifier) const {
+bool babelwires::RecordWithOptionalsFeature::isOptional(Identifier identifier) const {
     return std::find(m_optionalFields.begin(), m_optionalFields.end(), identifier) != m_optionalFields.end();
 }
 
-bool babelwires::RecordWithOptionalsFeature::isActivated(FieldIdentifier identifier) const {
+bool babelwires::RecordWithOptionalsFeature::isActivated(Identifier identifier) const {
     assert(isOptional(identifier) && "The identifier does not identify an optional field");
     return tryGetChildFromStep(PathStep(identifier));
 }
 
-const std::vector<babelwires::FieldIdentifier>& babelwires::RecordWithOptionalsFeature::getOptionalFields() const {
+const std::vector<babelwires::Identifier>& babelwires::RecordWithOptionalsFeature::getOptionalFields() const {
     return m_optionalFields;
 }
 

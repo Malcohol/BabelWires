@@ -4,7 +4,7 @@
 #include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
@@ -19,7 +19,7 @@ namespace {
 } // namespace
 
 TEST(TargetFileElementTest, targetFileDataCreateElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     std::ostringstream tempFileName;
@@ -75,7 +75,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
 }
 
 TEST(TargetFileElementTest, changeFile) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     // Create a test file.

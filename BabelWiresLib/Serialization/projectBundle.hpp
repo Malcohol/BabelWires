@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/FileFormat/filePath.hpp"
 #include "BabelWiresLib/Project/projectData.hpp"
 
@@ -41,8 +41,8 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
       private:
-        /// Ensure the fields in the projectData refer to the context independent m_fieldNameRegistry.
-        void interpretFieldsInCurrentContext();
+        /// Ensure the fields in the projectData refer to the context independent m_identifierRegistry.
+        void interpretIdentifiersInCurrentContext();
 
         /// Ensure the filePaths in the projectData are made relative to the m_projectFilePath.
         void interpretFilePathsInCurrentProjectPath();
@@ -51,7 +51,7 @@ namespace babelwires {
         void captureCurrentFactoryMetadata();
 
         /// Ensure the fields in the projectData refer to the global FileNameRegistry.
-        void resolveFieldsAgainstCurrentContext();
+        void resolveIdentifiersAgainstCurrentContext();
 
         /// Update the filePaths in the projectData, in terms of the given pathToProjectFile.
         void resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToProjectFile,
@@ -64,7 +64,7 @@ namespace babelwires {
       public:
         // Used by tests.
 
-        const FieldNameRegistry& getFieldNameRegistry() const { return m_fieldNameRegistry; }
+        const IdentifierRegistry& getIdentifierRegistry() const { return m_identifierRegistry; }
 
         const ProjectData& getProjectData() const { return m_projectData; }
 
@@ -77,8 +77,8 @@ namespace babelwires {
         /// The data.
         ProjectData m_projectData;
 
-        /// Field metadata.
-        FieldNameRegistry m_fieldNameRegistry;
+        /// Identifier metadata.
+        IdentifierRegistry m_identifierRegistry;
 
         /// Information about the factories.
         FactoryMetadata m_factoryMetadata;

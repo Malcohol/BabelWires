@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/moveElementCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
@@ -10,7 +10,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
 TEST(MoveElementCommandTest, executeAndUndo) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -44,7 +44,7 @@ TEST(MoveElementCommandTest, executeAndUndo) {
 }
 
 TEST(MoveElementCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     babelwires::IntValueAssignmentData modData;
@@ -58,7 +58,7 @@ TEST(MoveElementCommandTest, failSafelyNoElement) {
 }
 
 TEST(MoveElementCommandTest, subsumeMoves) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -96,7 +96,7 @@ TEST(MoveElementCommandTest, subsumeMoves) {
 }
 
 TEST(MoveElementCommandTest, subsumeMovesDelay) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestFeatureElementData elementData;

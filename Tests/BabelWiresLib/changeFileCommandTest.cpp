@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/changeFileCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
 #include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
@@ -17,7 +17,7 @@
 
 namespace {
     void testSourceFileChange(bool source1Present, bool source2Present) {
-        babelwires::FieldNameRegistryScope fieldNameRegistry;
+        babelwires::IdentifierRegistryScope identifierRegistry;
         libTestUtils::TestProjectContext context;
 
         testUtils::TempFilePath filePath1("foo" + libTestUtils::TestSourceFileFormat::getFileExtension());
@@ -98,7 +98,7 @@ TEST(ChangeFileCommandTest, executeAndUndoSourceMissing1and2) {
 }
 
 TEST(ChangeFileCommandTest, executeAndUndoTarget) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     std::string filePath1("foo" + libTestUtils::TestSourceFileFormat::getFileExtension());
@@ -138,7 +138,7 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
 }
 
 TEST(ChangeFileCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     std::string filePath2("erm" + libTestUtils::TestSourceFileFormat::getFileExtension());
@@ -150,7 +150,7 @@ TEST(ChangeFileCommandTest, failSafelyNoElement) {
 
 // Not sure how this could happen.
 TEST(ChangeFileCommandTest, failSafelyNotAFileElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());

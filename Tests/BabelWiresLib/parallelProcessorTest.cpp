@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
-#include <BabelWiresLib/Features/Path/fieldNameRegistry.hpp>
+#include <BabelWiresLib/Identifiers/identifierRegistry.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include "BabelWiresLib/Features/featureMixins.hpp"
@@ -14,12 +14,12 @@ namespace {
 
     struct TestParallelProcessor : babelwires::ParallelProcessor<LimitedIntFeature, LimitedIntFeature> {
         TestParallelProcessor() {
-            const babelwires::FieldIdentifier intId = babelwires::FieldNameRegistry::write()->addFieldName(
+            const babelwires::Identifier intId = babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
                 "foo", "foo", "ec463f45-098d-4170-9890-d5a2db2e7658",
-                babelwires::FieldNameRegistry::Authority::isAuthoritative);
-            const babelwires::FieldIdentifier arrayId = babelwires::FieldNameRegistry::write()->addFieldName(
+                babelwires::IdentifierRegistry::Authority::isAuthoritative);
+            const babelwires::Identifier arrayId = babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
                 "array", "array", "d607ccca-7cc3-4d17-940e-3ca87467f064",
-                babelwires::FieldNameRegistry::Authority::isAuthoritative);
+                babelwires::IdentifierRegistry::Authority::isAuthoritative);
             m_intValue = m_inputFeature->addField(std::make_unique<babelwires::IntFeature>(), intId);
             addArrayFeature(arrayId);
         }
@@ -43,7 +43,7 @@ namespace {
 } // namespace
 
 TEST(ParallelProcessorTest, updateOutputOnChanges) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestLog log;
 
     TestParallelProcessor processor;
@@ -92,7 +92,7 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
 }
 
 TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     // Use the log to determine when the processEntry method is called.
     testUtils::TestLogWithListener log;
 
@@ -167,7 +167,7 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
 }
 
 TEST(ParallelProcessorTest, testFailure) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     // Use the log to determine when the processEntry method is called.
     testUtils::TestLogWithListener log;
 

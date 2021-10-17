@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/Path/pathStep.hpp"
 #include "BabelWiresLib/Features/features.hpp"
 #include "BabelWiresLib/Features/modelExceptions.hpp"
@@ -45,7 +45,7 @@ void babelwires::FeaturePath::popStep() {
 }
 
 std::ostream& babelwires::operator<<(std::ostream& os, const FeaturePath& p) {
-    const FieldNameRegistry::ReadAccess fieldNameRegistry = FieldNameRegistry::read();
+    const IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
     const int numSteps = p.getNumSteps();
     if (numSteps) {
         const char* delimiter = "";
@@ -55,7 +55,7 @@ std::ostream& babelwires::operator<<(std::ostream& os, const FeaturePath& p) {
 
             const PathStep step = p.getStep(i);
             if (step.isField()) {
-                os << fieldNameRegistry->getFieldName(step.getField());
+                os << identifierRegistry->getName(step.getField());
             } else {
                 os << "[" << step.getIndex() << "]";
             }

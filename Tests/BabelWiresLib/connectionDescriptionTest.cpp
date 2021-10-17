@@ -60,7 +60,7 @@ TEST(ConnectionDescriptionTest, equalityAndHash) {
 }
 
 TEST(ConnectionDescriptionTest, getCommands) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId sourceId = 12;

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/Path/fieldName.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
@@ -77,7 +77,7 @@ struct FeatureElementConnectionTest : ::testing::Test {
         return modifier->asConnectionModifier();
     }
 
-    babelwires::FieldNameRegistryScope m_fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope m_fieldNameRegistryScope;
     libTestUtils::TestProjectContext m_context;
     babelwires::FeaturePath m_arrayPath;
     babelwires::FeaturePath m_arrayElemPath;

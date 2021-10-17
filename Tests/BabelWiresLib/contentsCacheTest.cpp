@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/Path/fieldName.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
 #include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
@@ -340,7 +340,7 @@ namespace {
 } // namespace
 
 TEST(ContentsCacheTest, inputFeatureOnly) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestLog log;
 
     babelwires::EditTree editTree;
@@ -354,7 +354,7 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
 }
 
 TEST(ContentsCacheTest, outputFeatureOnly) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestLog log;
 
     babelwires::EditTree editTree;
@@ -367,7 +367,7 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
 }
 
 TEST(ContentsCacheTest, inputAndOutputFeature) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestLog log;
 
     babelwires::EditTree editTree;
@@ -383,7 +383,7 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
 }
 
 TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestLog log;
 
     babelwires::EditTree editTree;
@@ -460,7 +460,7 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
 }
 
 TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestLog log;
 
     babelwires::EditTree editTree;
@@ -632,7 +632,7 @@ namespace {
 } // namespace
 
 TEST(ContentsCacheTest, inputFileFeatureOnly) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestLog log;
 
     babelwires::EditTree editTree;
@@ -647,7 +647,7 @@ TEST(ContentsCacheTest, inputFileFeatureOnly) {
 }
 
 TEST(ContentsCacheTest, outputFileFeatureOnly) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestLog log;
 
     babelwires::EditTree editTree;
@@ -661,7 +661,7 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
 }
 
 TEST(ContentsCacheTest, inputAndOutputFileFeature) {
-    babelwires::FieldNameRegistryScope fieldNameRegistryScope;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestLog log;
 
     babelwires::EditTree editTree;

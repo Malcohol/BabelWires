@@ -3,14 +3,14 @@
 #include "BabelWiresLib/Commands/addElementCommand.hpp"
 
 #include "BabelWiresLib/Commands/moveElementCommand.hpp"
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 
 TEST(AddElementCommandTest, executeAndUndo) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     babelwires::AddElementCommand command("Test command", std::make_unique<libTestUtils::TestFeatureElementData>());
@@ -37,7 +37,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 }
 
 TEST(AddElementCommandTest, subsumeMoves) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     babelwires::AddElementCommand addCommand("Test command", std::make_unique<libTestUtils::TestFeatureElementData>());

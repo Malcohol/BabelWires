@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/deactivateOptionalCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
 #include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
@@ -14,7 +14,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 
 TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId =
@@ -128,9 +128,9 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
-    babelwires::FieldIdentifier opId("flerm");
+    babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
     babelwires::DeactivateOptionalCommand command("Test command", 51,
                                                   libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, opId);
@@ -140,9 +140,9 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoElement) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
-    babelwires::FieldIdentifier opId("flerm");
+    babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
     babelwires::DeactivateOptionalCommand command("Test command", 51,
                                                   babelwires::FeaturePath::deserializeFromString("qqq/zzz"), opId);
@@ -158,7 +158,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId =
@@ -167,7 +167,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
     const auto* element = context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
 
-    babelwires::FieldIdentifier opId("flerm");
+    babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
     babelwires::DeactivateOptionalCommand command("Test command", elementId,
                                                   libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, opId);
@@ -176,7 +176,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId =
@@ -196,7 +196,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId =

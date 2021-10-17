@@ -42,11 +42,11 @@ SET( BABELWIRESLIB_SRCS
 	Features/enumFeature.cpp
 	Features/numericFeature.cpp
 	Features/stringFeature.cpp
-	Features/Path/fieldIdentifier.cpp
 	Features/Path/featurePath.cpp
-	Features/Path/fieldNameRegistry.cpp
-	Features/Path/fieldName.cpp
 	Features/Path/pathStep.cpp
+	Identifiers/identifier.cpp
+	Identifiers/identifierRegistry.cpp
+	Identifiers/registeredIdentifier.cpp
 	Features/Utilities/featureXml.cpp
 	Serialization/projectSerialization.cpp
 	Serialization/projectBundle.cpp

@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/removeModifierCommand.hpp"
 
-#include "BabelWiresLib/Features/Path/fieldNameRegistry.hpp"
+#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
 #include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
@@ -15,7 +15,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp"
 
 TEST(RemoveModifierCommandTest, executeAndUndoArray) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestFeatureElementData elementData;
@@ -112,7 +112,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 
 TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
 {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
@@ -213,7 +213,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
 }
 
 TEST(RemoveModifierCommandTest, failSafelyNoElement) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::RemoveModifierCommand command("Test command", 51,
                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
@@ -223,7 +223,7 @@ TEST(RemoveModifierCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveModifierCommandTest, failSafelyNoModifier) {
-    babelwires::FieldNameRegistryScope fieldNameRegistry;
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::RemoveModifierCommand command("Test command", 51,
                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
