@@ -92,7 +92,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         {
             // Bit of a hack, but this lets us iterate through the registry.
             // TODO Perhaps just make iteration public
-            const babelwires::IdentifierRegistry& testRegistry = bundle2.getFieldNameRegistry();
+            const babelwires::IdentifierRegistry& testRegistry = bundle2.getIdentifierRegistry();
 
             // These have no duplicates in the bundle.
             const int recordIntDiscriminator = 1;

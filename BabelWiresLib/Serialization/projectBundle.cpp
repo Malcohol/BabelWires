@@ -39,23 +39,23 @@ babelwires::ProjectBundle::ProjectBundle() = default;
 babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile, ProjectData&& projectData)
     : m_projectData(std::move(projectData))
     , m_projectFilePath(pathToProjectFile) {
-    interpretFieldsInCurrentContext();
+    interpretIdentifiersInCurrentContext();
     interpretFilePathsInCurrentProjectPath();
     captureCurrentFactoryMetadata();
 }
 
 babelwires::ProjectData babelwires::ProjectBundle::resolveAgainstCurrentContext(const ProjectContext& context, const std::filesystem::path& pathToProjectFile,
                                           UserLogger& userLogger) && {
-    resolveFieldsAgainstCurrentContext();
+    resolveIdentifiersAgainstCurrentContext();
     resolveFilePathsAgainstCurrentProjectPath(pathToProjectFile, userLogger);
     adaptDataToCurrentFactories(context, userLogger);
     return std::move(m_projectData);
 }
 
-void babelwires::ProjectBundle::interpretFieldsInCurrentContext() {
+void babelwires::ProjectBundle::interpretIdentifiersInCurrentContext() {
     IdentifierRegistry::ReadAccess sourceRegistry = IdentifierRegistry::read();
     try {
-        convertProjectData(m_projectData, sourceRegistry, &m_fieldNameRegistry,
+        convertProjectData(m_projectData, sourceRegistry, &m_identifierRegistry,
                            IdentifierRegistry::Authority::isTemporary);
     } catch (const ParseException&) {
         assert(false && "A field with a discriminator did not resolve.");
@@ -79,9 +79,9 @@ void babelwires::ProjectBundle::captureCurrentFactoryMetadata() {
     }
 }
 
-void babelwires::ProjectBundle::resolveFieldsAgainstCurrentContext() {
+void babelwires::ProjectBundle::resolveIdentifiersAgainstCurrentContext() {
     IdentifierRegistry::WriteAccess targetRegistry = IdentifierRegistry::write();
-    convertProjectData(m_projectData, &m_fieldNameRegistry, targetRegistry,
+    convertProjectData(m_projectData, &m_identifierRegistry, targetRegistry,
                        IdentifierRegistry::Authority::isProvisional);
 }
 
@@ -124,7 +124,7 @@ namespace {
 void babelwires::ProjectBundle::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("filePath", m_projectFilePath);
     serializer.serializeObject(m_projectData);
-    serializer.serializeObject(m_fieldNameRegistry);
+    serializer.serializeObject(m_identifierRegistry);
     std::vector<FactoryInfoPair> factoryMetadata;
     for (const auto& [k, v] : m_factoryMetadata) {
         FactoryInfoPair metadata;
@@ -138,7 +138,7 @@ void babelwires::ProjectBundle::serializeContents(Serializer& serializer) const 
 void babelwires::ProjectBundle::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("filePath", m_projectFilePath, babelwires::Deserializer::IsOptional::Optional);
     m_projectData = std::move(*deserializer.deserializeObject<ProjectData>(ProjectData::serializationType));
-    m_fieldNameRegistry =
+    m_identifierRegistry =
         std::move(*deserializer.deserializeObject<IdentifierRegistry>(IdentifierRegistry::serializationType));
     for (auto it = deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"); it.isValid(); ++it) {
         auto fm = it.getObject();
