@@ -19,7 +19,7 @@ namespace babelwires {
     /// TODO: Allow the user to create maps between Integers and Enums or Enums and Enums.
     class Enum : public RegistryEntry {
       public:
-        /// The set of values. We use FieldIdentifiers to get versionable serialization support.
+        /// The set of values. We use Identifiers to get versionable serialization support.
         /// Note: This matches the result of REGISTERED_ID_VECTOR.
         using EnumValues = std::vector<Identifier>;
 
