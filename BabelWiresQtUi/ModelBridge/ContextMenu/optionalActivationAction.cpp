@@ -16,7 +16,7 @@
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::FeaturePath pathToRecord,
                                                                Identifier optional, bool isActivated)
-    : FeatureContextMenuAction(IdentifierRegistry::read()->getFieldName(optional).c_str())
+    : FeatureContextMenuAction(IdentifierRegistry::read()->getName(optional).c_str())
     , m_pathToRecord(std::move(pathToRecord))
     , m_optional(optional)
     , m_isActivated(isActivated) {
@@ -29,7 +29,7 @@ void babelwires::OptionalActivationAction::actionTriggered(babelwires::FeatureMo
     ProjectBridge& projectBridge = model.getProjectBridge();
     const ElementId elementId = model.getElementId();
     std::unique_ptr<Command> command;
-    std::string fieldName = IdentifierRegistry::read()->getFieldName(m_optional).c_str();
+    std::string fieldName = IdentifierRegistry::read()->getName(m_optional).c_str();
     if (!m_isActivated) {
         command = std::make_unique<ActivateOptionalCommand>("Activate optional field " + fieldName, elementId, m_pathToRecord, m_optional);
     } else {

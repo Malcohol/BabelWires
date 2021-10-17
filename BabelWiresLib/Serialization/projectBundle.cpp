@@ -25,8 +25,8 @@ namespace {
                 newId.setDiscriminator(0);
                 // This can throw, but an exception here is only meaningful in the loading case.
                 // In the saving case, the exception is caught and triggers an assertion.
-                babelwires::IdentifierRegistry::ValueType fieldData = sourceReg->getDeserializedFieldData(sourceId);
-                newId = targetReg->addFieldName(newId, *std::get<1>(fieldData), *std::get<2>(fieldData), authority);
+                babelwires::IdentifierRegistry::ValueType fieldData = sourceReg->getDeserializedIdentifierData(sourceId);
+                newId = targetReg->addIdentifierWithMetadata(newId, *std::get<1>(fieldData), *std::get<2>(fieldData), authority);
                 sourceId.setDiscriminator(newId.getDiscriminator());
             }
         };

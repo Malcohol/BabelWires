@@ -20,7 +20,7 @@ namespace {
 
 libTestUtils::TestFileFeature::TestFileFeature()
     : babelwires::FileFeature(s_fileFormatId)
-    , m_intChildId(babelwires::IdentifierRegistry::write()->addFieldName(
+    , m_intChildId(babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
           s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     m_intChildFeature =

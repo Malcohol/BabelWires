@@ -27,7 +27,7 @@ void babelwires::EnumFeature::set(Identifier id) {
     const Enum::EnumValues& values = m_enum.getEnumValues();
     const auto it = std::find(values.begin(), values.end(), id);
     if (it == values.end()) {
-        throw ModelException() << "The value \"" << IdentifierRegistry::read()->getFieldName(id) << "\" is not a valid value for the enum \"" << m_enum.getName() << "\" enum.";
+        throw ModelException() << "The value \"" << IdentifierRegistry::read()->getName(id) << "\" is not a valid value for the enum \"" << m_enum.getName() << "\" enum.";
     }
     if (id != m_value) {
         setChanged(Changes::ValueChanged);

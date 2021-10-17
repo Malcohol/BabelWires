@@ -1,6 +1,6 @@
 /**
- * A singleton which ensures that fieldIdentifiers are unique in the project.
- *
+ * A singleton that associates global metadata with identifiers.
+ * 
  * (C) 2021 Malcolm Tyrrell
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
@@ -42,11 +42,11 @@ void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deseriali
     m_authority = Authority::isProvisional;
 }
 
-babelwires::Identifier babelwires::IdentifierRegistry::addFieldName(babelwires::Identifier identifier,
+babelwires::Identifier babelwires::IdentifierRegistry::addIdentifierWithMetadata(babelwires::Identifier identifier,
                                                                         const std::string& name, const Uuid& uuid,
                                                                         Authority authority) {
     const Identifier::Discriminator discriminator = identifier.getDiscriminator();
-    assert((discriminator == 0) && "The field already has a discriminator: Did you already register it?");
+    assert((discriminator == 0) && "The identifier already has a discriminator: Did you already register it?");
 
     const auto it = m_uuidToInstanceDataMap.find(uuid);
     if (it == m_uuidToInstanceDataMap.end()) {
@@ -58,12 +58,12 @@ babelwires::Identifier babelwires::IdentifierRegistry::addFieldName(babelwires::
         auto [uit, _] = m_uuidToInstanceDataMap.insert(
             std::pair(uuid, std::make_unique<InstanceData>(name, uuid, identifier, authority)));
 
-        Data& data = m_fieldData[identifier];
+        Data& data = m_instanceDatasFromIdentifier[identifier];
 
-        const int newDiscriminator = data.m_fieldNames.size() + 1;
+        const int newDiscriminator = data.m_instanceDatas.size() + 1;
         // I could fail safe here, but it seems very unlikely to happen. If it does, then the system needs a rethink.
-        assert((newDiscriminator <= Identifier::c_maxDiscriminator) && "Too many duplicate field identifiers");
-        data.m_fieldNames.emplace_back(uit->second.get());
+        assert((newDiscriminator <= Identifier::c_maxDiscriminator) && "Too many duplicate identifiers");
+        data.m_instanceDatas.emplace_back(uit->second.get());
         identifier.setDiscriminator(newDiscriminator);
         uit->second->m_identifier = identifier;
     } else {
@@ -72,11 +72,11 @@ babelwires::Identifier babelwires::IdentifierRegistry::addFieldName(babelwires::
             // Since we're loading from a file or saving into a temporary registry, just take whatever is in memory.
             identifier = instanceData.m_identifier;
         } else {
-            // We may be registering from code at some point after the field has been registered from a file.
+            // We may be registering from code at some point after the identifier has been registered from a file.
             // In this case, update the stored data.
             assert((((instanceData.m_authority == Authority::isProvisional) ||
                      ((instanceData.m_identifier == identifier) && instanceData.m_fieldName == name))) &&
-                   "Uuid is registered twice from code with inconsistent field data");
+                   "Uuid is registered twice from code with inconsistent data");
             logDebug() << "Authoritatively updating Identifier " << identifier << " as \"" << name << "\"";
             instanceData.m_fieldName = name;
             instanceData.m_authority = authority;
@@ -94,11 +94,11 @@ babelwires::IdentifierRegistry::getInstanceData(Identifier identifier) const {
     const babelwires::Identifier::Discriminator index = identifier.getDiscriminator();
     if (index > 0) {
         identifier.setDiscriminator(0);
-        const auto& it = m_fieldData.find(identifier);
-        if (it != m_fieldData.end()) {
+        const auto& it = m_instanceDatasFromIdentifier.find(identifier);
+        if (it != m_instanceDatasFromIdentifier.end()) {
             const Data& data = it->second;
-            if (index <= data.m_fieldNames.size()) {
-                return data.m_fieldNames[index - 1];
+            if (index <= data.m_instanceDatas.size()) {
+                return data.m_instanceDatas[index - 1];
             }
         }
     }
@@ -106,16 +106,16 @@ babelwires::IdentifierRegistry::getInstanceData(Identifier identifier) const {
 }
 
 babelwires::IdentifierRegistry::ValueType
-babelwires::IdentifierRegistry::getDeserializedFieldData(Identifier identifier) const {
+babelwires::IdentifierRegistry::getDeserializedIdentifierData(Identifier identifier) const {
     if (const babelwires::IdentifierRegistry::InstanceData* data = getInstanceData(identifier)) {
         return ValueType{identifier, &data->m_fieldName, &data->m_uuid};
     }
     throw ParseException() << "Identifier \"" << identifier
-                           << "\" not found in the field metadata. Note that unregistered fields (those with no "
+                           << "\" not found in the identifier metadata. Note that unregistered fields (those with no "
                               "discriminator) are allowed";
 }
 
-std::string babelwires::IdentifierRegistry::getFieldName(babelwires::Identifier identifier) const {
+std::string babelwires::IdentifierRegistry::getName(babelwires::Identifier identifier) const {
     if (const InstanceData* data = getInstanceData(identifier)) {
         return data->m_fieldName;
     }
@@ -221,23 +221,23 @@ void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deseriali
 
         const Identifier::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
         if (discriminator == 0) {
-            throw ParseException() << "A field in the field metadata had no discriminator";
+            throw ParseException() << "An identifier in the identifier metadata had no discriminator";
         }
 
         auto [uit, wasInserted] = m_uuidToInstanceDataMap.insert(
             std::pair<Uuid, std::unique_ptr<InstanceData>>(instanceData->m_uuid, std::move(instanceDataPtr)));
         if (!wasInserted) {
-            throw ParseException() << "A field with the uuid \"" << uit->first << "\" was duplicated";
+            throw ParseException() << "An identifier with uuid \"" << uit->first << "\" was duplicated";
         }
 
-        Data& data = m_fieldData[instanceData->m_identifier];
+        Data& data = m_instanceDatasFromIdentifier[instanceData->m_identifier];
 
-        data.m_fieldNames.resize(discriminator);
-        if (data.m_fieldNames[discriminator - 1]) {
-            throw ParseException() << "The field name registry already has an identifier \""
+        data.m_instanceDatas.resize(discriminator);
+        if (data.m_instanceDatas[discriminator - 1]) {
+            throw ParseException() << "The identifier registry already has an identifier \""
                                    << instanceData->m_identifier << "\"";
         }
-        data.m_fieldNames[discriminator - 1] = uit->second.get();
+        data.m_instanceDatas[discriminator - 1] = uit->second.get();
     }
 }
 

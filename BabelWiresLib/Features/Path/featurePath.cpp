@@ -55,7 +55,7 @@ std::ostream& babelwires::operator<<(std::ostream& os, const FeaturePath& p) {
 
             const PathStep step = p.getStep(i);
             if (step.isField()) {
-                os << identifierRegistry->getFieldName(step.getField());
+                os << identifierRegistry->getName(step.getField());
             } else {
                 os << "[" << step.getIndex() << "]";
             }

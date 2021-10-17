@@ -75,7 +75,7 @@ namespace {
                 for (int i = 0; i < record->getNumFeatures(); ++i) {
                     FeaturePath pathToChild = path;
                     pathToChild.pushStep(PathStep(record->getFieldIdentifier(i)));
-                    addInputFeatureToCache(m_fieldNameRegistry->getFieldName(record->getFieldIdentifier(i)),
+                    addInputFeatureToCache(m_fieldNameRegistry->getName(record->getFieldIdentifier(i)),
                                            record->getFeature(i), std::move(pathToChild), thisIndex);
                 }
             }
@@ -114,7 +114,7 @@ namespace {
                 for (int i = 0; i < record->getNumFeatures(); ++i) {
                     FeaturePath pathToChild = path;
                     pathToChild.pushStep(PathStep(record->getFieldIdentifier(i)));
-                    addOutputFeatureToCache(m_fieldNameRegistry->getFieldName(record->getFieldIdentifier(i)),
+                    addOutputFeatureToCache(m_fieldNameRegistry->getName(record->getFieldIdentifier(i)),
                                             record->getFeature(i), std::move(pathToChild), thisIndex);
                 }
             }
@@ -163,12 +163,12 @@ namespace {
                     const int outputChildIndex = outputFeature->getChildIndexFromStep(stepToChild);
                     pathToChild.pushStep(PathStep(stepToChild));
                     if (outputChildIndex >= 0) {
-                        addFeatureToCache(m_fieldNameRegistry->getFieldName(inputFeature->getFieldIdentifier(i)),
+                        addFeatureToCache(m_fieldNameRegistry->getName(inputFeature->getFieldIdentifier(i)),
                                           inputFeature->getFeature(i), outputFeature->getFeature(outputChildIndex),
                                           std::move(pathToChild), thisIndex);
                         outputIndicesHandled.insert(outputChildIndex);
                     } else {
-                        addInputFeatureToCache(m_fieldNameRegistry->getFieldName(inputFeature->getFieldIdentifier(i)),
+                        addInputFeatureToCache(m_fieldNameRegistry->getName(inputFeature->getFieldIdentifier(i)),
                                                inputFeature->getFeature(i), std::move(pathToChild), thisIndex);
                     }
                 }
@@ -176,7 +176,7 @@ namespace {
                     if (outputIndicesHandled.find(i) == outputIndicesHandled.end()) {
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(outputFeature->getFieldIdentifier(i)));
-                        addOutputFeatureToCache(m_fieldNameRegistry->getFieldName(outputFeature->getFieldIdentifier(i)),
+                        addOutputFeatureToCache(m_fieldNameRegistry->getName(outputFeature->getFieldIdentifier(i)),
                                                 outputFeature->getFeature(i), std::move(pathToChild), thisIndex);
                     }
                 }

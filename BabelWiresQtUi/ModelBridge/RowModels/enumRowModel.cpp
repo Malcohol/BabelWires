@@ -26,7 +26,7 @@ const babelwires::EnumFeature& babelwires::EnumRowModel::getEnumFeature() const 
 QVariant babelwires::EnumRowModel::getValueDisplayData() const {
     const babelwires::EnumFeature& enumFeature = getEnumFeature();
     const Identifier value = enumFeature.get();
-    return QString(IdentifierRegistry::read()->getFieldName(value).c_str());
+    return QString(IdentifierRegistry::read()->getName(value).c_str());
 }
 
 QWidget* babelwires::EnumRowModel::createEditor(QWidget* parent, const QModelIndex& index) const {
@@ -35,7 +35,7 @@ QWidget* babelwires::EnumRowModel::createEditor(QWidget* parent, const QModelInd
     {
         IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
         for (auto enumValue : enumFeature.getEnum().getEnumValues()) {
-            dropDownBox->addItem(identifierRegistry->getFieldName(enumValue).c_str());
+            dropDownBox->addItem(identifierRegistry->getName(enumValue).c_str());
         }
     }
     return dropDownBox.release();

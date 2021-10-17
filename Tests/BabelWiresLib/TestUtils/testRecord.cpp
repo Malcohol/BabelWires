@@ -55,17 +55,17 @@ namespace {
 } // namespace
 
 libTestUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtraInt)
-    : m_intId(babelwires::IdentifierRegistry::write()->addFieldName(
+    : m_intId(babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
           s_intIdInitializer, s_intFieldName, s_intUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_arrayId(babelwires::IdentifierRegistry::write()->addFieldName(
+    , m_arrayId(babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
           s_arrayIdInitializer, s_arrayFieldName, s_arrayUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_recordId(babelwires::IdentifierRegistry::write()->addFieldName(
+    , m_recordId(babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
           s_recordIdInitializer, s_recordFieldName, s_recordUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_int2Id(babelwires::IdentifierRegistry::write()->addFieldName(
+    , m_int2Id(babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
           s_int2IdInitializer, s_int2FieldName, s_int2Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_extraIntId(babelwires::IdentifierRegistry::write()->addFieldName(
+    , m_extraIntId(babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
           s_extraIntIdInitializer, s_extraIntFieldName, s_extraIntUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_intValueLimit(intValueLimit) {

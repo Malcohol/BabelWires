@@ -1,5 +1,5 @@
 /**
- * A singleton which ensures that fieldIdentifiers are unique in the project.
+ * A singleton that associates global metadata with identifiers.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -20,7 +20,7 @@
 
 namespace babelwires {
 
-    /// Associates field names with field identifiers.
+    /// A singleton that associates global metadata with identifiers.
     /// This has support for acting as a "thread-safe singleton".
     /// Singletons are usually a mistake and for the most part, "dependency injection" has been used to provide
     /// the project with its dependencies. However, passing the registry through to every use of FeaturePath was
@@ -35,10 +35,10 @@ namespace babelwires {
         virtual ~IdentifierRegistry();
 
         enum class Authority {
-            /// We're registering a field in code.
+            /// We're registering an identifier in code.
             isAuthoritative,
 
-            /// We're registering a field from deserialized data.
+            /// We're registering an identifier from deserialized data.
             isProvisional,
 
             /// We're populating a temporary registry.
@@ -47,11 +47,11 @@ namespace babelwires {
 
         /// Give the Identifier a unique index so it can be later used to look-up the name.
         /// Returns a Identifier with a modified discriminator.
-        Identifier addFieldName(Identifier identifier, const std::string& name, const Uuid& uuid,
+        Identifier addIdentifierWithMetadata(Identifier identifier, const std::string& name, const Uuid& uuid,
                                      Authority authority);
 
         /// Get the name from the given identifier.
-        std::string getFieldName(Identifier identifier) const;
+        std::string getName(Identifier identifier) const;
 
       public:
         // For use during serialization/deserialization:
@@ -59,12 +59,12 @@ namespace babelwires {
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
 
-        /// Information stored about a field.
+        /// Information stored about an identifier.
         using ValueType = std::tuple<Identifier, const std::string*, const Uuid*>;
 
-        /// Extract the information about a field from a local IdentifierRegistry.
+        /// Extract the information about an identifier from a local IdentifierRegistry.
         /// This can throw a ParseException if the contents are invalid.
-        ValueType getDeserializedFieldData(Identifier identifier) const;
+        ValueType getDeserializedIdentifierData(Identifier identifier) const;
 
       public:
         // Singleton stuff:
@@ -133,15 +133,15 @@ namespace babelwires {
       private:
         friend const_iterator;
 
-        /// Look up the instance data associated with a field.
+        /// Look up the instance data associated with a uuid.
         std::unordered_map<Uuid, std::unique_ptr<InstanceData>> m_uuidToInstanceDataMap;
 
         struct Data {
-            std::vector<InstanceData*> m_fieldNames;
+            std::vector<InstanceData*> m_instanceDatas;
         };
 
-        /// For each field, we can index associated data.
-        std::unordered_map<Identifier, Data> m_fieldData;
+        /// For each identifier, we can index associated data.
+        std::unordered_map<Identifier, Data> m_instanceDatasFromIdentifier;
 
       private:
         /// Lifetime of this is managed externally.
