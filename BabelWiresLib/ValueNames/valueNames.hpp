@@ -36,8 +36,9 @@ namespace babelwires {
       protected:
         virtual int getFirstValue() const = 0;
         virtual bool getNextValueWithName(int& value) const = 0;
-        virtual bool doGetValueForName(const std::string& name, int& valueOut) const = 0;
         virtual bool doGetNameForValue(int value, std::string& nameOut) const = 0;
+        // This method isn't needed for array entries.
+        virtual bool doGetValueForName(const std::string& name, int& valueOut) const = 0;
     };
 
 } // namespace babelwires

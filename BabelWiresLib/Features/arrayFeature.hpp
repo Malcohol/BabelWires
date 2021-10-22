@@ -11,8 +11,10 @@
 #include "Common/types.hpp"
 
 namespace babelwires {
+    class ValueNames;
 
     /// An dynamically-sized sequence of features.
+    /// Because "element" is used elsewhere, I'm fixed on "entry" for the contents.
     class ArrayFeature : public CompoundFeature {
       public:
         /// Get the valid size range of this array.
@@ -38,6 +40,10 @@ namespace babelwires {
         /// This is not deep, and the contents of the entries which survive are not
         /// effected.
         void copyStructureFrom(const ArrayFeature& other);
+
+        /// If particular indices have a specific meaning, they can be given names.
+        /// The default implementation returns nullptr.
+        virtual const ValueNames* getEntryNames() const;
 
       protected:
         virtual void doSetToDefault() override;

@@ -2,7 +2,7 @@
  * An ArrayFeature can contain a dynamically-sized sequence of features.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Features/arrayFeature.hpp"
@@ -160,4 +160,8 @@ void babelwires::ArrayFeature::copyStructureFrom(const ArrayFeature& other) {
     }
     m_entries.swap(newEntries);
     m_nextId = other.m_nextId;
+}
+
+const babelwires::ValueNames* babelwires::ArrayFeature::getEntryNames() const {
+    return nullptr;
 }
