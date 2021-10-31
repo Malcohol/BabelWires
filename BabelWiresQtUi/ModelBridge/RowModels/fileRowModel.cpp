@@ -16,8 +16,6 @@
 #include "BabelWiresLib/FileFormat/fileFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
 
-#include <QComboBox>
-#include <QSpinBox>
 #include <QString>
 
 #include <cassert>

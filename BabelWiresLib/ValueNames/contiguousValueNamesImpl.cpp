@@ -25,7 +25,7 @@ babelwires::ContiguousValueNamesImpl::ContiguousValueNamesImpl(Names names, int 
     : m_names(std::move(names))
     , m_valueFromNames(initializeValueFromNamesMap(m_names, offset))
     , m_offset(offset) {
-    assert((m_names.size() > 0) && "You can't construct a ContiguousValueNamesImpl with no value name pairs");
+    assert((m_names.size() > 0) && "You can't construct a ContiguousValueNamesImpl with no names");
 }
 
 int babelwires::ContiguousValueNamesImpl::getFirstValue() const {

@@ -102,7 +102,6 @@ TEST(ValueNames, contiguousGetNameForValue) {
     EXPECT_FALSE(names.getNameForValue(7, name));
 }
 
-
 TEST(ValueNames, contiguousGetValueForName) {
     babelwires::ContiguousValueNamesImpl names({ "four", "five", "six"}, 4);
 
