@@ -13,6 +13,7 @@
 #include "BabelWiresLib/FileFormat/fileFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
+#include "BabelWiresLib/ValueNames/valueNames.hpp"
 
 #include <unordered_set>
 
@@ -29,7 +30,16 @@ babelwires::ContentsCache::ContentsCache(const EditTree& edits)
     : m_edits(edits) {}
 
 namespace {
-    std::string getArrayEntryLabel(int i) { return "[" + std::to_string(i) + "]"; }
+    std::string getArrayEntryLabel(int i, const babelwires::ValueNames* names) {
+        std::ostringstream os;
+        os << "[" << i << "]";
+        std::string name;
+        if (names && names->getNameForValue(i, name))
+        {
+            os << " (" << name << ")";
+        } 
+        return os.str();
+    }
 
     using namespace babelwires;
 
@@ -84,10 +94,11 @@ namespace {
         void addInputArrayFeatureToCache(const babelwires::ArrayFeature* array, const FeaturePath& path,
                                          std::uint8_t thisIndex) {
             if (setAndGetCompoundIsExpanded(thisIndex, path, array->getNumFeatures())) {
+                const babelwires::ValueNames *const entryNames = array->getEntryNames();
                 for (int i = 0; i < array->getNumFeatures(); ++i) {
                     FeaturePath pathToChild = path;
                     pathToChild.pushStep(PathStep(i));
-                    addInputFeatureToCache(getArrayEntryLabel(i), array->getFeature(i), std::move(pathToChild),
+                    addInputFeatureToCache(getArrayEntryLabel(i, entryNames), array->getFeature(i), std::move(pathToChild),
                                            thisIndex);
                 }
             }
@@ -123,10 +134,11 @@ namespace {
         void addOutputArrayFeatureToCache(const babelwires::ArrayFeature* array, const FeaturePath& path,
                                           std::uint8_t thisIndex) {
             if (setAndGetCompoundIsExpanded(thisIndex, path, array->getNumFeatures())) {
+                const babelwires::ValueNames *const entryNames = array->getEntryNames();
                 for (int i = 0; i < array->getNumFeatures(); ++i) {
                     FeaturePath pathToChild = path;
                     pathToChild.pushStep(PathStep(i));
-                    addOutputFeatureToCache(getArrayEntryLabel(i), array->getFeature(i), std::move(pathToChild),
+                    addOutputFeatureToCache(getArrayEntryLabel(i, entryNames), array->getFeature(i), std::move(pathToChild),
                                             thisIndex);
                 }
             }
@@ -189,21 +201,25 @@ namespace {
                                             inputFeature->getNumFeatures() + outputFeature->getNumFeatures())) {
                 int i = 0;
                 for (; i < std::min(inputFeature->getNumFeatures(), outputFeature->getNumFeatures()); ++i) {
+                    const babelwires::ValueNames* entryNames = inputFeature->getEntryNames();
+                    entryNames = entryNames ? entryNames : outputFeature->getEntryNames();
                     FeaturePath pathToChild = path;
                     pathToChild.pushStep(PathStep(i));
-                    addFeatureToCache(getArrayEntryLabel(i), inputFeature->getFeature(i), outputFeature->getFeature(i),
+                    addFeatureToCache(getArrayEntryLabel(i, entryNames), inputFeature->getFeature(i), outputFeature->getFeature(i),
                                       std::move(pathToChild), thisIndex);
                 }
                 for (; i < inputFeature->getNumFeatures(); ++i) {
+                    const babelwires::ValueNames *const entryNames = inputFeature->getEntryNames();
                     FeaturePath pathToChild = path;
                     pathToChild.pushStep(PathStep(i));
-                    addInputFeatureToCache(getArrayEntryLabel(i), inputFeature->getFeature(i), std::move(pathToChild),
+                    addInputFeatureToCache(getArrayEntryLabel(i, entryNames), inputFeature->getFeature(i), std::move(pathToChild),
                                            thisIndex);
                 }
                 for (; i < outputFeature->getNumFeatures(); ++i) {
+                    const babelwires::ValueNames *const entryNames = outputFeature->getEntryNames();
                     FeaturePath pathToChild = path;
                     pathToChild.pushStep(PathStep(i));
-                    addOutputFeatureToCache(getArrayEntryLabel(i), outputFeature->getFeature(i), std::move(pathToChild),
+                    addOutputFeatureToCache(getArrayEntryLabel(i, entryNames), outputFeature->getFeature(i), std::move(pathToChild),
                                             thisIndex);
                 }
             }

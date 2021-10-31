@@ -1,5 +1,5 @@
 /**
- * An EnumFeature exposes an enum in the project.
+ * An EnumFeature exposes an enum in the project, and allows the user to make a choice from a set of named values.
  *
  * (C) 2021 Malcolm Tyrrell
  *

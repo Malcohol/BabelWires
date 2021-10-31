@@ -8,21 +8,12 @@
 #include "BabelWiresQtUi/ModelBridge/RowModels/intRowModel.hpp"
 
 #include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresLib/ValueNames/valueNames.hpp"
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/comboBoxValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/ValueEditors/spinBoxValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
 #include <QString>
 
 #include <cassert>
-
-namespace {
-    QString getNamedValueString(int value, const std::string& name) {
-
-        return QString("%1 (%2)").arg(name.c_str()).arg(value);
-    }
-}
 
 const babelwires::IntFeature& babelwires::IntRowModel::getIntFeature() const {
     assert(getInputThenOutputFeature()->as<const babelwires::IntFeature>() && "Wrong type of feature stored");
@@ -32,72 +23,31 @@ const babelwires::IntFeature& babelwires::IntRowModel::getIntFeature() const {
 QVariant babelwires::IntRowModel::getValueDisplayData() const {
     const babelwires::IntFeature& intFeature = getIntFeature();
     const int value = intFeature.get();
-    if (const babelwires::ValueNames* valueNames = intFeature.getValueNames()) {
-        std::string name;
-        if (valueNames->getNameForValue(value, name)) {
-            return getNamedValueString(value, name);
-        }
-    }
-    return QString("%1").arg(value);
+    return SpinBoxValueEditor::getNamedValueString(intFeature.getValueNames(), value);
 }
 
 QWidget* babelwires::IntRowModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     const babelwires::IntFeature& intFeature = getIntFeature();
-    if (const babelwires::ValueNames* valueNames = intFeature.getValueNames()) {
-        const auto range = intFeature.getRange();
-        auto comboBox = std::make_unique<ComboBoxValueEditor>(parent, index);
-        for (auto valueName : *valueNames) {
-            if (range.contains(std::get<0>(valueName))) {
-                comboBox->addItem(getNamedValueString(std::get<0>(valueName), std::get<1>(valueName)));
-            }
-        }
-        return comboBox.release();
-    } else {
-        auto spinBox = std::make_unique<SpinBoxValueEditor>(parent, index);
-        auto range = intFeature.getRange();
-        spinBox->setRange(range.m_min, range.m_max);
-        return spinBox.release();
-    }
+    auto spinBox = std::make_unique<SpinBoxValueEditor>(parent, index, intFeature.getValueNames());
+    auto range = intFeature.getRange();
+    spinBox->setRange(range.m_min, range.m_max);
+    return spinBox.release();
 }
 
 void babelwires::IntRowModel::setEditorData(QWidget* editor) const {
     const babelwires::IntFeature& intFeature = getIntFeature();
     const int value = intFeature.get();
-    if (const babelwires::ValueNames* valueNames = intFeature.getValueNames()) {
-        auto comboBox = qobject_cast<ComboBoxValueEditor*>(editor);
-        assert(comboBox && "Unexpected editor");
-        std::string name;
-        if (valueNames->getNameForValue(value, name)) {
-            comboBox->setCurrentText(QString(name.c_str()));
-        } else {
-            comboBox->setCurrentText(QString::number(value));
-        }
-    } else {
-        auto spinBox = qobject_cast<SpinBoxValueEditor*>(editor);
-        assert(spinBox && "Unexpected editor");
-        spinBox->setValue(value);
-    }
+    auto spinBox = qobject_cast<SpinBoxValueEditor*>(editor);
+    assert(spinBox && "Unexpected editor");
+    spinBox->setValue(value);
 }
 
 std::unique_ptr<babelwires::ModifierData> babelwires::IntRowModel::createModifierFromEditor(QWidget* editor) const {
     const babelwires::IntFeature& intFeature = getIntFeature();
     int value = intFeature.get();
-    if (const babelwires::ValueNames* valueNames = intFeature.getValueNames()) {
-        auto comboBox = dynamic_cast<ComboBoxValueEditor*>(editor);
-        assert(comboBox && "Unexpected editor");
-        bool success;
-        const QString currentText = comboBox->currentText();
-        int newValue = currentText.toInt(&success);
-        if (success) {
-            value = newValue;
-        } else if (valueNames->getValueForName(currentText.toStdString(), newValue)) {
-            value = newValue;
-        }
-    } else {
-        const QSpinBox* spinBox = dynamic_cast<const QSpinBox*>(editor);
-        assert(spinBox && "Unexpected editor");
-        value = spinBox->value();
-    }
+    const QSpinBox* spinBox = dynamic_cast<const QSpinBox*>(editor);
+    assert(spinBox && "Unexpected editor");
+    value = spinBox->value();
     if ((value != intFeature.get()) && intFeature.getRange().contains(value)) {
         auto modifier = std::make_unique<babelwires::IntValueAssignmentData>();
         modifier->m_pathToFeature = babelwires::FeaturePath(&intFeature);

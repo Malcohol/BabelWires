@@ -1,5 +1,5 @@
 /**
- * An interface for objects which associate values and human-friendly names.
+ * An interface for objects which associate some values with human-friendly names.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -12,8 +12,13 @@
 
 namespace babelwires {
 
-    /// An interface for objects which associate values and human-friendly names.
-    // TODO Generalize this so value types other than integers can have special values (also, consider using for enums).
+    /// An interface for objects which associate some values with human-friendly names.
+    /// This can be used for values of IntFeatures and entries of ArrayFeature.
+    /// If you are assigning a name to every value of an IntFeature, then perhaps you should
+    /// use an EnumFeature. It depends on whether the user should care about the particular 
+    /// integer value (use IntFeature with ValueNames) or whether they just care that an option
+    /// has been selected from a set (use EnumFeature).
+    // TODO Can this be generalized this so value types other than integers can have names?
     class ValueNames {
       public:
         bool getValueForName(const std::string& name, int& valueOut) const;
@@ -36,8 +41,9 @@ namespace babelwires {
       protected:
         virtual int getFirstValue() const = 0;
         virtual bool getNextValueWithName(int& value) const = 0;
-        virtual bool doGetValueForName(const std::string& name, int& valueOut) const = 0;
         virtual bool doGetNameForValue(int value, std::string& nameOut) const = 0;
+        // This method isn't needed for array entries.
+        virtual bool doGetValueForName(const std::string& name, int& valueOut) const = 0;
     };
 
 } // namespace babelwires

@@ -15,31 +15,13 @@
 
 namespace babelwires {
 
-    class SparseValueNamesImpl : public ValueNames {
-      public:
-        typedef std::map<int, std::string> NameFromValuesMap;
-        typedef std::unordered_map<std::string, int> ValueFromNamesMap;
-
-        SparseValueNamesImpl(const NameFromValuesMap& nameFromValues);
-
-      protected:
-        virtual int getFirstValue() const override;
-        virtual bool getNextValueWithName(int& value) const override;
-        virtual bool doGetValueForName(const std::string& name, int& valueOut) const override;
-        virtual bool doGetNameForValue(int value, std::string& nameOut) const override;
-
-      private:
-        const NameFromValuesMap& m_nameFromValues;
-        const ValueFromNamesMap m_valueFromNames;
-    };
-
     class ContiguousValueNamesImpl : public ValueNames {
       public:
         typedef std::vector<std::string> Names;
         typedef std::unordered_map<std::string, int> ValueFromNamesMap;
 
         /// Offset is subtracted from values to give indices.
-        ContiguousValueNamesImpl(const Names& nameFromValues, int offset = 0);
+        ContiguousValueNamesImpl(Names names, int offset = 0);
 
       protected:
         virtual int getFirstValue() const override;
@@ -48,7 +30,7 @@ namespace babelwires {
         virtual bool doGetNameForValue(int value, std::string& nameOut) const override;
 
       private:
-        const Names& m_names;
+        const Names m_names;
         const ValueFromNamesMap m_valueFromNames;
         int m_offset;
     };
