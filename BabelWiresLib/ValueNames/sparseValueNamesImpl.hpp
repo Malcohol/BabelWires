@@ -20,7 +20,7 @@ namespace babelwires {
         typedef std::map<int, std::string> NameFromValuesMap;
         typedef std::unordered_map<std::string, int> ValueFromNamesMap;
 
-        SparseValueNamesImpl(const NameFromValuesMap& nameFromValues);
+        SparseValueNamesImpl(NameFromValuesMap nameFromValues);
 
       protected:
         virtual int getFirstValue() const override;
@@ -29,7 +29,7 @@ namespace babelwires {
         virtual bool doGetNameForValue(int value, std::string& nameOut) const override;
 
       private:
-        const NameFromValuesMap& m_nameFromValues;
+        const NameFromValuesMap m_nameFromValues;
         const ValueFromNamesMap m_valueFromNames;
     };
 

@@ -21,10 +21,10 @@ namespace {
     }
 } // namespace
 
-babelwires::SparseValueNamesImpl::SparseValueNamesImpl(const NameFromValuesMap& nameFromValues)
-    : m_nameFromValues(nameFromValues)
-    , m_valueFromNames(initializeValueFromNamesMap(nameFromValues)) {
-    assert((nameFromValues.size() > 0) && "You can't construct a SparseValueNamesImpl with no value name pairs");
+babelwires::SparseValueNamesImpl::SparseValueNamesImpl(NameFromValuesMap nameFromValues)
+    : m_nameFromValues(std::move(nameFromValues))
+    , m_valueFromNames(initializeValueFromNamesMap(m_nameFromValues)) {
+    assert((m_nameFromValues.size() > 0) && "You can't construct a SparseValueNamesImpl with no value name pairs");
 }
 
 int babelwires::SparseValueNamesImpl::getFirstValue() const {
