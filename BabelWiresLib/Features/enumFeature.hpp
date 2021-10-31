@@ -1,5 +1,5 @@
 /**
- * An EnumFeature exposes an enum in the project.
+ * An EnumFeature exposes an enum in the project, and allows the user to make a choice from a set of named values.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -16,8 +16,12 @@ namespace babelwires {
     class Enum;
 
     /// A feature offering a choice from a set of named values.
-    /// Note: This differs from ValueNames which allow names or hints to be given to specific integer values.
-    /// TODO: Do we still need ValueNames?
+    /// The user should care only about the selected value, and not about the particular index, which is
+    /// an implementation detail and could change in future.
+    /// If the mapping between names and their index is meaningful to the user, consider using an IntFeature
+    /// with ValueNames.
+    /// The particular advantage of an EnumFeature is that values can be reordered and new values can be added
+    /// without requiring versioning code to adapt old serialized data.
     class EnumFeature : public ValueFeature {
       public:
         EnumFeature(const Enum& e);
