@@ -21,11 +21,11 @@ namespace {
     }
 } // namespace
 
-babelwires::ContiguousValueNamesImpl::ContiguousValueNamesImpl(const Names& names, int offset)
-    : m_names(names)
-    , m_valueFromNames(initializeValueFromNamesMap(names, offset))
+babelwires::ContiguousValueNamesImpl::ContiguousValueNamesImpl(Names names, int offset)
+    : m_names(std::move(names))
+    , m_valueFromNames(initializeValueFromNamesMap(m_names, offset))
     , m_offset(offset) {
-    assert((names.size() > 0) && "You can't construct a ContiguousValueNamesImpl with no value name pairs");
+    assert((m_names.size() > 0) && "You can't construct a ContiguousValueNamesImpl with no value name pairs");
 }
 
 int babelwires::ContiguousValueNamesImpl::getFirstValue() const {
