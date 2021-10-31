@@ -69,7 +69,8 @@ SET( BABELWIRESLIB_SRCS
 	Commands/resizeElementCommand.cpp
 	Commands/setArraySizeCommand.cpp
 	ValueNames/valueNames.cpp
-	ValueNames/valueNamesImpl.cpp
+	ValueNames/sparseValueNamesImpl.cpp
+	ValueNames/contiguousValueNamesImpl.cpp
    )
 
 ADD_LIBRARY( BabelWiresLib ${BABELWIRESLIB_SRCS} )

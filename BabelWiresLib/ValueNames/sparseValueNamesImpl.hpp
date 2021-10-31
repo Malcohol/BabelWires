@@ -33,24 +33,4 @@ namespace babelwires {
         const ValueFromNamesMap m_valueFromNames;
     };
 
-    class ContiguousValueNamesImpl : public ValueNames {
-      public:
-        typedef std::vector<std::string> Names;
-        typedef std::unordered_map<std::string, int> ValueFromNamesMap;
-
-        /// Offset is subtracted from values to give indices.
-        ContiguousValueNamesImpl(const Names& nameFromValues, int offset = 0);
-
-      protected:
-        virtual int getFirstValue() const override;
-        virtual bool getNextValueWithName(int& value) const override;
-        virtual bool doGetValueForName(const std::string& name, int& valueOut) const override;
-        virtual bool doGetNameForValue(int value, std::string& nameOut) const override;
-
-      private:
-        const Names& m_names;
-        const ValueFromNamesMap m_valueFromNames;
-        int m_offset;
-    };
-
 } // namespace babelwires

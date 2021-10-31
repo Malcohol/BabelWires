@@ -76,3 +76,4 @@ TEST(ValueNames, valueNames) {
     EXPECT_TRUE(names.getValueForName("twelve", value));
     EXPECT_EQ(value, 12);
 }
+
