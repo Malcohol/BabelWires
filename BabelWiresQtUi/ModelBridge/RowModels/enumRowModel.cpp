@@ -9,7 +9,7 @@
 
 #include "BabelWiresLib/Enums/enum.hpp"
 #include "BabelWiresLib/Features/enumFeature.hpp"
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 #include "BabelWiresQtUi/ModelBridge/ValueEditors/dropDownValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"

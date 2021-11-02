@@ -1,6 +1,6 @@
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/featureMixins.hpp"
 
 #include "Common/IO/fileDataSource.hpp"

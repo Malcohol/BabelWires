@@ -44,9 +44,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/stringFeature.cpp
 	Features/Path/featurePath.cpp
 	Features/Path/pathStep.cpp
-	Identifiers/identifier.cpp
-	Identifiers/identifierRegistry.cpp
-	Identifiers/registeredIdentifier.cpp
 	Features/Utilities/featureXml.cpp
 	Serialization/projectSerialization.cpp
 	Serialization/projectBundle.cpp

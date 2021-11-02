@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"

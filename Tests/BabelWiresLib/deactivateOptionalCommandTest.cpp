@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/deactivateOptionalCommand.hpp"
 
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
 #include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"

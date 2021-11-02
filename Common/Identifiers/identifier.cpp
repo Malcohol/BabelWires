@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Identifiers/identifier.hpp"
+#include "Common/Identifiers/identifier.hpp"
 
 #include "Common/exceptions.hpp"
 

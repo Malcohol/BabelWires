@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Serialization/projectSerialization.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"

@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/registeredIdentifier.hpp"
 
 babelwires::RegisteredIdentifiers
 babelwires::detail::getIdentifiers(const babelwires::IdentifiersSource& source) {

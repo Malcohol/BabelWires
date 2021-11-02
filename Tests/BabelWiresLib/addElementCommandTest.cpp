@@ -3,7 +3,7 @@
 #include "BabelWiresLib/Commands/addElementCommand.hpp"
 
 #include "BabelWiresLib/Commands/moveElementCommand.hpp"
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"

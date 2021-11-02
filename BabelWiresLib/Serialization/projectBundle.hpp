@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/FileFormat/filePath.hpp"
 #include "BabelWiresLib/Project/projectData.hpp"
 

@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/setExpandedCommand.hpp"
 
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"

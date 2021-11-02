@@ -17,7 +17,6 @@ SET( LIB_TESTS_SRCS
     featurePathTest.cpp
     featureTest.cpp
     filePathTest.cpp
-    identifierTest.cpp
     editTreeTest.cpp
     modifierDataTest.cpp
     modifierTest.cpp

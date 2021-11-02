@@ -7,7 +7,7 @@
  **/
 #include "BabelWiresLib/Project/FeatureElements/failedFeature.hpp"
 
-#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/registeredIdentifier.hpp"
 
 babelwires::FailedFeature::FailedFeature() {
     addField(std::make_unique<RecordFeature>(), REGISTERED_ID("Failed", "Failed", "2d9667c0-0829-48ec-a952-5ba96cb5693f"));

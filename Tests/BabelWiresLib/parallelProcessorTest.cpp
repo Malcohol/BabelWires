@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
-#include <BabelWiresLib/Identifiers/identifierRegistry.hpp>
+#include <Common/Identifiers/identifierRegistry.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include "BabelWiresLib/Features/featureMixins.hpp"

@@ -7,6 +7,7 @@ SET( COMMON_TESTS_SRCS
    enumFlagsTest.cpp
    exceptionTest.cpp
    hashUtilTest.cpp
+   identifierTest.cpp
    logTest.cpp
    multiKeyMapTest.cpp
    outFileStreamTest.cpp

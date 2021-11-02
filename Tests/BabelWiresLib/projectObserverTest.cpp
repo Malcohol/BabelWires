@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/ProjectExtra/projectObserver.hpp"
 
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 #include "BabelWiresLib/Project/project.hpp"

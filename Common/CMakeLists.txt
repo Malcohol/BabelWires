@@ -5,6 +5,9 @@ SET( COMMON_SRCS
 	Audio/fileAudioDest.cpp
 	Audio/fileAudioSource.cpp
 	exceptions.cpp
+	Identifiers/identifier.cpp
+	Identifiers/identifierRegistry.cpp
+	Identifiers/registeredIdentifier.cpp
 	types.cpp
 	Cloning/cloneable.cpp
 	Registry/registry.cpp

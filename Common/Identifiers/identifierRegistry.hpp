@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Identifiers/identifier.hpp"
+#include "Common/Identifiers/identifier.hpp"
 
 #include "Common/Serialization/serializable.hpp"
 #include "Common/uuid.hpp"
