@@ -6,9 +6,9 @@
 namespace {
     struct TestRegistryEntry : public babelwires::FileTypeEntry {
       public:
-        TestRegistryEntry(std::string identifier, std::string name, babelwires::VersionNumber version,
+        TestRegistryEntry(babelwires::LongIdentifier identifier, babelwires::VersionNumber version,
                           Extensions extensions, int payload)
-            : FileTypeEntry(std::move(identifier), std::move(name), version, std::move(extensions))
+            : FileTypeEntry(identifier, version, std::move(extensions))
             , m_payload(payload) {}
 
         int m_payload;
@@ -33,8 +33,11 @@ TEST(RegistryTest, base) {
 
     EXPECT_EQ(registry.getEntryByIdentifier("test"), nullptr);
 
+    babelwires::LongIdentifier entryId = "test";
+    entryId.setDiscriminator(1);
+
     registry.addEntry(
-        std::make_unique<TestRegistryEntry>("test", "Test", 1, TestRegistryEntry::Extensions{"test"}, 15));
+        std::make_unique<TestRegistryEntry>(entryId, 1, TestRegistryEntry::Extensions{"test"}, 15));
 
     ASSERT_NE(registry.getEntryByIdentifier("test"), nullptr);
     EXPECT_NE(&registry.getRegisteredEntry("test"), nullptr);
@@ -51,7 +54,10 @@ TEST(RegistryTest, base) {
     EXPECT_EQ(registry.getEntryByFileName("oom.test.test2"), nullptr);
     EXPECT_EQ(registry.getEntryByFileName("foo.test2"), nullptr);
 
-    registry.addEntry(std::make_unique<TestRegistryEntry>("test2", "Test2", 1,
+    babelwires::LongIdentifier entryId2 = "test2";
+    entryId2.setDiscriminator(1);
+
+    registry.addEntry(std::make_unique<TestRegistryEntry>(entryId2, 1,
                                                           TestRegistryEntry::Extensions{"test2", "TEST_2"}, -144));
 
     ASSERT_NE(registry.getEntryByIdentifier("test2"), nullptr);
@@ -69,8 +75,11 @@ TEST(RegistryTest, base) {
     EXPECT_EQ(registry.getEntryByFileName("oom.test.test2")->getName(), "Test2");
     EXPECT_EQ(registry.getEntryByFileName("oom.test.test2")->m_payload, -144);
 
+    babelwires::LongIdentifier entryId3 = "test3";
+    entryId3.setDiscriminator(1);
+    
     registry.addEntry(
-        std::make_unique<TestRegistryEntry>("test3", "Test3", 1, TestRegistryEntry::Extensions{"foo", "bar"}, 23));
+        std::make_unique<TestRegistryEntry>(entryId3, 1, TestRegistryEntry::Extensions{"foo", "bar"}, 23));
 
     EXPECT_TRUE(testUtils::areEqualSets(registry.getFileExtensions(),
                                         TestRegistryEntry::Extensions{"test", "test2", "test_2", "foo", "bar"}));

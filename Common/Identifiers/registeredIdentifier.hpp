@@ -38,6 +38,8 @@ namespace babelwires {
         return f;                                                                                                      \
     }(IDENTIFIER, NAME, UUID))
 
+#define REGISTERED_LONGID(IDENTIFIER, NAME, UUID) REGISTERED_ID(IDENTIFIER, NAME, UUID)
+
 /// This macro offers a convenient way of registering a vector of field identifiers.
 /// This expression evaluates to a const RegisteredIdentifiers& vector, which has been populated from the
 /// IdentifiersSource array. The registration happens only the first time it is called.

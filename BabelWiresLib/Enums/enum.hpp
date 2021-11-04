@@ -23,10 +23,10 @@ namespace babelwires {
         /// Note: This matches the result of REGISTERED_ID_VECTOR.
         using EnumValues = std::vector<Identifier>;
 
-        /// Enums can be registered in a registry, so they need an identifier, name and version.
+        /// Enums can be registered in a registry, so they need their own identifier and version.
         /// They also need a set of values and a way of identifying the default.
         /// The values object can be the "output" of the REGISTERED_ID_VECTOR macro.
-        Enum(std::string identifier, std::string name, VersionNumber version, const EnumValues& values,
+        Enum(LongIdentifier identifier, VersionNumber version, const EnumValues& values,
              unsigned int indexOfDefaultValue);
 
         /// Get the set of available enum values.
@@ -51,9 +51,9 @@ namespace babelwires {
     /// when it has been registered in the EnumRegistry.
     template <typename E> class RegisteredEnum : public Enum {
       public:
-        RegisteredEnum(std::string identifier, std::string name, VersionNumber version, const EnumValues& values,
+        RegisteredEnum(LongIdentifier identifier, VersionNumber version, const EnumValues& values,
                        unsigned int indexOfDefaultValue)
-            : Enum(std::move(identifier), std::move(name), version, values, indexOfDefaultValue) {}
+            : Enum(identifier, version, values, indexOfDefaultValue) {}
 
         /// Get the instance of this class which is registered in the EnumRegistered.
         static const E* getRegisteredInstance() { return s_registeredInstance; }

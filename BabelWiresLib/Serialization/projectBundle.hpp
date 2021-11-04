@@ -69,7 +69,7 @@ namespace babelwires {
         const ProjectData& getProjectData() const { return m_projectData; }
 
         /// Information about the factories used by the projectData.
-        using FactoryMetadata = std::map<std::string, VersionNumber>;
+        using FactoryMetadata = std::map<Identifier, VersionNumber>;
 
         const FactoryMetadata& getFactoryMetadata() const { return m_factoryMetadata; }
 
@@ -77,11 +77,11 @@ namespace babelwires {
         /// The data.
         ProjectData m_projectData;
 
-        /// Identifier metadata.
-        IdentifierRegistry m_identifierRegistry;
-
         /// Information about the factories.
         FactoryMetadata m_factoryMetadata;
+
+        /// Identifier metadata.
+        IdentifierRegistry m_identifierRegistry;
 
         /// Absolute path to the project, when saved.
         /// FilePaths in the projectData are stored in relative form whenever possible.

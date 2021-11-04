@@ -8,7 +8,8 @@
 #pragma once
 
 #include "Common/exceptions.hpp"
-#include "Common/types.hpp"
+//#include "Common/types.hpp"
+#include "Common/Identifiers/identifier.hpp"
 
 #include "Common/types.hpp"
 #include <algorithm>
@@ -18,20 +19,21 @@
 #include <vector>
 
 namespace babelwires {
+    using LongIdentifier = Identifier;
 
     /// The expected base class of any entry stored in a registry.
     class RegistryEntry {
       public:
-        RegistryEntry(std::string identifier, std::string name, VersionNumber version);
+        RegistryEntry(LongIdentifier identifier, VersionNumber version);
         virtual ~RegistryEntry();
 
         /// Return an identifier which uniquely identifies the entry.
         /// The identifier should never be changed.
-        const std::string& getIdentifier() const;
+        Identifier getIdentifier() const;
 
         /// The name of the entry, which can be displayed to the user and is permitted to change
         /// over time.
-        const std::string& getName() const;
+        std::string getName() const;
 
         /// Get the version of this entry.
         VersionNumber getVersion() const;
@@ -40,8 +42,7 @@ namespace babelwires {
         virtual void onRegistered();
 
       private:
-        std::string m_identifier;
-        std::string m_name;
+        LongIdentifier m_identifier;
         VersionNumber m_version;
     };
 
@@ -63,11 +64,11 @@ namespace babelwires {
 
         /// Find an entry by an internal key which should be stable between
         /// versions of the program.
-        const RegistryEntry* getEntryByIdentifier(std::string_view identifier) const;
+        const RegistryEntry* getEntryByIdentifier(LongIdentifier identifier) const;
 
         /// Find an entry which is expected to be present.
         /// Will throw an RegistryException if the entry is not found.
-        const RegistryEntry& getRegisteredEntry(std::string_view identifier) const;
+        const RegistryEntry& getRegisteredEntry(LongIdentifier identifier) const;
 
       protected:
         virtual void validateNewEntry(const RegistryEntry* newEntry) const;
@@ -94,11 +95,11 @@ namespace babelwires {
 
         /// Find an entry by an internal key which should be stable between
         /// versions of the program.
-        const ENTRY* getEntryByIdentifier(std::string_view identifier) const;
+        const ENTRY* getEntryByIdentifier(LongIdentifier identifier) const;
 
         /// Find an entry which is expected to be present.
         /// Will throw an RegistryException if the entry is not found.
-        const ENTRY& getRegisteredEntry(std::string_view identifier) const;
+        const ENTRY& getRegisteredEntry(LongIdentifier identifier) const;
 
       public:
         class Iterator;

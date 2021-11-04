@@ -15,14 +15,12 @@ void babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::addEntry(std::unique_ptr<ENT
 }
 
 template <typename ENTRY, typename UNTYPED_REGISTRY>
-const ENTRY* babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::getEntryByIdentifier(std::string_view identifier) const {
-    assert(!identifier.empty() && "You can't query the registry with the empty string.");
+const ENTRY* babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::getEntryByIdentifier(LongIdentifier identifier) const {
     return static_cast<const ENTRY*>(m_untypedRegistry.getEntryByIdentifier(identifier));
 }
 
 template <typename ENTRY, typename UNTYPED_REGISTRY>
-const ENTRY& babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::getRegisteredEntry(std::string_view identifier) const {
-    assert(!identifier.empty() && "You can't query the registry with the empty string.");
+const ENTRY& babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::getRegisteredEntry(LongIdentifier identifier) const {
     return static_cast<const ENTRY&>(m_untypedRegistry.getRegisteredEntry(identifier));
 }
 

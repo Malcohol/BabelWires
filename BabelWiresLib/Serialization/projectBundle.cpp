@@ -107,7 +107,7 @@ void babelwires::ProjectBundle::adaptDataToCurrentFactories(const ProjectContext
 namespace {
     struct FactoryInfoPair : babelwires::Serializable {
         SERIALIZABLE(FactoryInfoPair, "factory", void, 1);
-        std::string m_factoryIdentifier;
+        babelwires::Identifier m_factoryIdentifier = "nofact";
         babelwires::VersionNumber m_factoryVersion;
 
         void serializeContents(babelwires::Serializer& serializer) const override {

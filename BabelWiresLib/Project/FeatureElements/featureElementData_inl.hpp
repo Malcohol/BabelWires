@@ -1,7 +1,7 @@
 template<typename REGISTRY>
 bool babelwires::ElementData::checkFactoryVersionCommon(const REGISTRY& reg,
                                                         UserLogger& userLogger,
-                                                        const std::string factoryIdentifier,
+                                                        Identifier factoryIdentifier,
                                                         VersionNumber& thisVersion) {
     if (const auto* entry = reg.getEntryByIdentifier(factoryIdentifier)) {
         const VersionNumber registeredVersion = entry->getVersion();

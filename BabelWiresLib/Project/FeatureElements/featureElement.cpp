@@ -85,6 +85,12 @@ void babelwires::FeatureElement::setFactoryName(std::string factoryName) {
     m_factoryName = std::move(factoryName);
 }
 
+void babelwires::FeatureElement::setFactoryName(Identifier identifier) {
+    std::ostringstream os;
+    os << identifier;
+    m_factoryName = os.str();
+}
+
 babelwires::Modifier* babelwires::FeatureElement::findModifier(const FeaturePath& featurePath) {
     return m_edits.findModifier(featurePath);
 }

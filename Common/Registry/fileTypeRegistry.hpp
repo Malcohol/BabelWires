@@ -18,7 +18,7 @@ namespace babelwires {
 
         /// Extensions are stored in lower case, regardless of what is passed in.
         /// Extensions should not include the ".".
-        FileTypeEntry(std::string identifier, std::string name, VersionNumber version, Extensions extensions);
+        FileTypeEntry(LongIdentifier identifier, VersionNumber version, Extensions extensions);
 
         const Extensions& getFileExtensions() const { return m_extensions; }
 
