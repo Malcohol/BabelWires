@@ -159,6 +159,8 @@ namespace babelwires {
         static_assert(sizeof(Data) == sizeof(m_code));
     };
 
+    using LongIdentifier = Identifier;
+
 } // namespace babelwires
 
 namespace std {

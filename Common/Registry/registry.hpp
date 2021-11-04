@@ -19,7 +19,6 @@
 #include <vector>
 
 namespace babelwires {
-    using LongIdentifier = Identifier;
 
     /// The expected base class of any entry stored in a registry.
     class RegistryEntry {
