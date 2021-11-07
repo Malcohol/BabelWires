@@ -2,6 +2,8 @@
 
 #include "Common/Serialization/automaticDeserializationRegistry.hpp"
 
+#include <string>
+
 namespace testUtils {
     /// Registry which extends AutomaticDeserializationRegistry with explicit registration.
     struct TestDeserializationRegistry : babelwires::AutomaticDeserializationRegistry {
