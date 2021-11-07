@@ -28,7 +28,7 @@ namespace babelwires {
 
         /// Return an identifier which uniquely identifies the entry.
         /// The identifier should never be changed.
-        Identifier getIdentifier() const;
+        LongIdentifier getIdentifier() const;
 
         /// The name of the entry, which can be displayed to the user and is permitted to change
         /// over time.

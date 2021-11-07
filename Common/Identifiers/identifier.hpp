@@ -160,7 +160,7 @@ namespace babelwires {
         }
 
         /// Helper method which uses the integer sequence to map getDataAsCode over the m_code array.
-        template <size_t... INSEQ> auto getTupleOfCodesFromIndexSequence(std::index_sequence<INSEQ...>) {
+        template <size_t... INSEQ> auto getTupleOfCodesFromIndexSequence(std::index_sequence<INSEQ...>) const {
             return std::make_tuple(getDataAsCode<INSEQ>()...);
         }
 
@@ -169,7 +169,8 @@ namespace babelwires {
         auto getTupleOfCodes() const { return getTupleOfCodesFromIndexSequence(std::make_index_sequence<NUM_BLOCKS>{}); }
 
         /// Helper method to build a hash out of the codes.
-        std::size_t getHashFromIndexSequence(std::index_sequence<INSEQ...>) {
+        template <size_t... INSEQ>
+        std::size_t getHashFromIndexSequence(std::index_sequence<INSEQ...>) const {
             return hash::mixtureOf(getDataAsCode<INSEQ>()...);
         }
 
@@ -200,8 +201,8 @@ namespace babelwires {
 
 namespace std {
     template <int NUM_BLOCKS> struct hash<babelwires::IdentifierBase<NUM_BLOCKS>> {
-        std::size_t operator()(const babelwires::IdentifierBase& identifier) const {
-            return identfier.getHashFromIndexSequence(std::make_index_sequence<NUM_BLOCKS>{});
+        std::size_t operator()(const babelwires::IdentifierBase<NUM_BLOCKS>& identifier) const {
+            return identifier.getHashFromIndexSequence(std::make_index_sequence<NUM_BLOCKS>{});
         }
     };
 } // namespace std

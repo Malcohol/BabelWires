@@ -11,7 +11,8 @@
 
 #include <charconv>
 
-babelwires::Identifier::Identifier(std::string_view str) {
+template <int NUM_BLOCKS>
+babelwires::IdentifierBase<NUM_BLOCKS>::IdentifierBase(std::string_view str) {
     const size_t len = str.size();
     assert((len > 0) && "Identifiers may not be empty");
     assert((len <= N) && "str is too long.");
@@ -23,7 +24,8 @@ babelwires::Identifier::Identifier(std::string_view str) {
     std::fill(m_data.m_chars, m_data.m_chars + N - len, 0);
 }
 
-babelwires::Identifier babelwires::Identifier::deserializeFromString(std::string_view str) {
+template <int NUM_BLOCKS> 
+babelwires::IdentifierBase<NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::deserializeFromString(std::string_view str) {
     Discriminator discriminator = 0;
     std::size_t idEnd = str.find(s_discriminatorDelimiter);
     if (idEnd != std::string_view::npos) {
@@ -50,7 +52,8 @@ babelwires::Identifier babelwires::Identifier::deserializeFromString(std::string
     return f;
 }
 
-void babelwires::Identifier::writeToStream(std::ostream& os) const {
+template <int NUM_BLOCKS> 
+void babelwires::IdentifierBase<NUM_BLOCKS>::writeToStream(std::ostream& os) const {
     for (int i = N - 1; i >= 0; --i) {
         if (m_data.m_chars[i] == '\0') {
             break;
@@ -63,13 +66,15 @@ void babelwires::Identifier::writeToStream(std::ostream& os) const {
 }
 
 /// Return a human-readable version of the identifier.
-std::string babelwires::Identifier::serializeToString() const {
+template <int NUM_BLOCKS>
+std::string babelwires::IdentifierBase<NUM_BLOCKS>::serializeToString() const {
     std::ostringstream oss;
     writeToStream(oss);
     return oss.str();
 }
 
-bool babelwires::Identifier::validate(const char* chars, size_t n) {
+template <int NUM_BLOCKS>
+bool babelwires::IdentifierBase<NUM_BLOCKS>::validate(const char* chars, size_t n) {
     assert(n >= 0);
     assert(n <= N);
     if ((chars[0] == '\0') || (n == 0)) {
@@ -92,7 +97,8 @@ bool babelwires::Identifier::validate(const char* chars, size_t n) {
     return true;
 }
 
-void babelwires::Identifier::copyDiscriminatorToInternal(const Identifier& other) const {
+template <int NUM_BLOCKS>
+void babelwires::IdentifierBase<NUM_BLOCKS>::copyDiscriminatorToInternal(const IdentifierBase& other) const {
     assert(other.getDiscriminator() == 0);
     other.setDiscriminator(getDiscriminator());
 }

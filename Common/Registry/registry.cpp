@@ -17,7 +17,7 @@ babelwires::RegistryEntry::RegistryEntry(LongIdentifier identifier, VersionNumbe
 
 babelwires::RegistryEntry::~RegistryEntry() = default;
 
-babelwires::Identifier babelwires::RegistryEntry::getIdentifier() const {
+babelwires::LongIdentifier babelwires::RegistryEntry::getIdentifier() const {
     return m_identifier;
 }
 
