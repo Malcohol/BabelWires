@@ -18,16 +18,16 @@ namespace babelwires {
     // TODO: abandon this and do all special casing in the UI.
     class FileFeature : public RecordFeature {
       public:
-        FileFeature(Identifier fileFormatIdentifier);
+        FileFeature(LongIdentifier fileFormatIdentifier);
 
         /// Return the identifier of the file format which knows how to load and save this type of feature.
         // TODO No longer used.
-        Identifier getFileFormatIdentifier() const;
+        LongIdentifier getFileFormatIdentifier() const;
 
       private:
         /// The file format which knows how to load or save this type of feature.
         // TODO This is no longer used. Everywhere that needs it, can obtain it from the element.
-        Identifier m_factoryIdentifier;
+        LongIdentifier m_factoryIdentifier;
     };
 
 } // namespace babelwires

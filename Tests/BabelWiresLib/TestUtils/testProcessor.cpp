@@ -29,9 +29,9 @@ babelwires::RecordFeature* libTestUtils::TestProcessor::getOutputFeature() {
 }
 
 libTestUtils::TestProcessorFactory::TestProcessorFactory()
-    : ProcessorFactory(getThisIdentifier(), getThisIdentifier(), 2) {}
+    : ProcessorFactory(REGISTERED_LONGID("testProcessor", "Test processor", "714b6684-ad20-43e6-abda-c0d308586bf4"), 2) {}
 
-std::string libTestUtils::TestProcessorFactory::getThisIdentifier() {
+babelwires::LongIdentifier libTestUtils::TestProcessorFactory::getThisIdentifier() {
     return "testProcessor";
 }
 

@@ -7,8 +7,8 @@
  **/
 #include "BabelWiresLib/Serialization/projectBundle.hpp"
 
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 #include "BabelWiresLib/FileFormat/filePath.hpp"
+#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Common/exceptions.hpp"
 
@@ -16,20 +16,39 @@
 #include "Common/Serialization/serializer.hpp"
 
 namespace {
-    template <typename SOURCE_REG, typename TARGET_REG>
-    void convertProjectData(babelwires::ProjectData& projectData, SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
-                            babelwires::IdentifierRegistry::Authority authority) {
-        babelwires::IdentifierVisitor visitor = [&](babelwires::Identifier& sourceId) {
+    template <typename SOURCE_REG, typename TARGET_REG> struct IdentifierVisitor : babelwires::IdentifierVisitor {
+        IdentifierVisitor(const SOURCE_REG& sourceReg, TARGET_REG& targetReg,
+                            babelwires::IdentifierRegistry::Authority authority)
+            : m_sourceReg(sourceReg)
+            , m_targetReg(targetReg)
+            , m_authority(authority) {}
+
+        template <typename IDENTIFIER> void visit(IDENTIFIER sourceId) {
             if (sourceId.getDiscriminator() != 0) {
-                babelwires::Identifier newId = sourceId;
+                IDENTIFIER newId = sourceId;
                 newId.setDiscriminator(0);
                 // This can throw, but an exception here is only meaningful in the loading case.
                 // In the saving case, the exception is caught and triggers an assertion.
-                babelwires::IdentifierRegistry::ValueType fieldData = sourceReg->getDeserializedIdentifierData(sourceId);
-                newId = targetReg->addIdentifierWithMetadata(newId, *std::get<1>(fieldData), *std::get<2>(fieldData), authority);
+                babelwires::IdentifierRegistry::ValueType fieldData =
+                    m_sourceReg->getDeserializedIdentifierData(sourceId);
+                newId = m_targetReg->addIdentifierWithMetadata(newId, *std::get<1>(fieldData), *std::get<2>(fieldData),
+                                                             m_authority);
                 sourceId.setDiscriminator(newId.getDiscriminator());
             }
-        };
+        }
+
+        void operator()(babelwires::Identifier& identifier) override { visit(identifier); }
+        void operator()(babelwires::LongIdentifier& identifier) override { visit(identifier); }
+
+        const SOURCE_REG& m_sourceReg;
+        TARGET_REG& m_targetReg;
+        babelwires::IdentifierRegistry::Authority m_authority;
+    };
+
+    template <typename SOURCE_REG, typename TARGET_REG>
+    void convertProjectData(babelwires::ProjectData& projectData, SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
+                            babelwires::IdentifierRegistry::Authority authority) {
+        IdentifierVisitor<SOURCE_REG, TARGET_REG> visitor(sourceReg, targetReg, authority);
         projectData.visitIdentifiers(visitor);
     }
 } // namespace
@@ -44,8 +63,8 @@ babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile
     captureCurrentFactoryMetadata();
 }
 
-babelwires::ProjectData babelwires::ProjectBundle::resolveAgainstCurrentContext(const ProjectContext& context, const std::filesystem::path& pathToProjectFile,
-                                          UserLogger& userLogger) && {
+babelwires::ProjectData babelwires::ProjectBundle::resolveAgainstCurrentContext(
+    const ProjectContext& context, const std::filesystem::path& pathToProjectFile, UserLogger& userLogger) && {
     resolveIdentifiersAgainstCurrentContext();
     resolveFilePathsAgainstCurrentProjectPath(pathToProjectFile, userLogger);
     adaptDataToCurrentFactories(context, userLogger);
@@ -65,7 +84,9 @@ void babelwires::ProjectBundle::interpretIdentifiersInCurrentContext() {
 void babelwires::ProjectBundle::interpretFilePathsInCurrentProjectPath() {
     if (!m_projectFilePath.empty()) {
         const std::filesystem::path projectPath = m_projectFilePath;
-        babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.interpretRelativeTo(projectPath.parent_path()); };
+        babelwires::FilePathVisitor visitor = [&](FilePath& filePath) {
+            filePath.interpretRelativeTo(projectPath.parent_path());
+        };
         m_projectData.visitFilePaths(visitor);
     }
 }
@@ -87,9 +108,13 @@ void babelwires::ProjectBundle::resolveIdentifiersAgainstCurrentContext() {
 
 void babelwires::ProjectBundle::resolveFilePathsAgainstCurrentProjectPath(
     const std::filesystem::path& pathToProjectFile, UserLogger& userLogger) {
-    const std::filesystem::path newBase = pathToProjectFile.empty() ? std::filesystem::path() : pathToProjectFile.parent_path();
-    const std::filesystem::path oldBase = m_projectFilePath.empty() ? std::filesystem::path() : std::filesystem::path(m_projectFilePath).parent_path();
-    babelwires::FilePathVisitor visitor = [&](FilePath& filePath) { filePath.resolveRelativeTo(newBase, oldBase, userLogger); };
+    const std::filesystem::path newBase =
+        pathToProjectFile.empty() ? std::filesystem::path() : pathToProjectFile.parent_path();
+    const std::filesystem::path oldBase =
+        m_projectFilePath.empty() ? std::filesystem::path() : std::filesystem::path(m_projectFilePath).parent_path();
+    babelwires::FilePathVisitor visitor = [&](FilePath& filePath) {
+        filePath.resolveRelativeTo(newBase, oldBase, userLogger);
+    };
     m_projectData.visitFilePaths(visitor);
 }
 
@@ -107,7 +132,7 @@ void babelwires::ProjectBundle::adaptDataToCurrentFactories(const ProjectContext
 namespace {
     struct FactoryInfoPair : babelwires::Serializable {
         SERIALIZABLE(FactoryInfoPair, "factory", void, 1);
-        babelwires::Identifier m_factoryIdentifier = "nofact";
+        babelwires::LongIdentifier m_factoryIdentifier = "nofact";
         babelwires::VersionNumber m_factoryVersion;
 
         void serializeContents(babelwires::Serializer& serializer) const override {

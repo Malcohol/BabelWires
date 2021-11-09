@@ -13,9 +13,9 @@
 #include <cassert>
 #include <cstring>
 #include <functional>
+#include <limits>
 #include <string>
 #include <string_view>
-#include <limits>
 
 namespace babelwires {
 
@@ -57,7 +57,7 @@ namespace babelwires {
     /// * They cannot be the discriminator delimiter "`"
     ///
     /// NUM_BLOCKS is the number of std::uint64_t which store the contents.
-    template <int NUM_BLOCKS> union IdentifierBase {
+    template <unsigned int NUM_BLOCKS> union IdentifierBase {
       public:
         /// The maximum number of characters which can be contained.
         static constexpr unsigned int N = (NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
@@ -86,6 +86,19 @@ namespace babelwires {
 
         /// Construct an identifier from a non-static string.
         IdentifierBase(std::string_view str);
+
+        template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS <= NUM_BLOCKS), int> = 0>
+        IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
+            constexpr unsigned int M = (OTHER_NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
+            constexpr unsigned int D = N - M;
+            m_data.m_discriminator = other.m_data.m_discriminator;
+            std::copy(other.m_data.m_chars, other.m_data.m_chars + M, m_data.m_chars + D);
+            std::fill(m_data.m_chars, m_data.m_chars + D, 0);
+        }
+
+        template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS > NUM_BLOCKS), int> = 0>
+        explicit IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
+        }
 
         /// Return a serializable version of the identifier.
         std::string serializeToString() const;
@@ -146,7 +159,8 @@ namespace babelwires {
 
         void writeToStream(std::ostream& os) const;
 
-        // Comparisons and hash calculations are based on the integer representation, but we need to mask out the discriminator.
+        // Comparisons and hash calculations are based on the integer representation, but we need to mask out the
+        // discriminator.
 
         /// Get an integer corresponding to the textual part of the identifier, and not the discriminator.
         // TODO Big-endian indexing would take from the other end.
@@ -155,7 +169,8 @@ namespace babelwires {
             return m_code[0] & 0xffffffffffff0000;
         }
 
-        template <unsigned int M, typename std::enable_if_t<(M < NUM_BLOCKS - 1), int> = 0> std::uint64_t getDataAsCode() const {
+        template <unsigned int M, typename std::enable_if_t<(M < NUM_BLOCKS - 1), int> = 0>
+        std::uint64_t getDataAsCode() const {
             return m_code[NUM_BLOCKS - 1 - M];
         }
 
@@ -166,16 +181,18 @@ namespace babelwires {
 
         /// Helper method to build a tuple of codes.
         /// The order of codes ensures lexicographic sorting of the texture contents.
-        auto getTupleOfCodes() const { return getTupleOfCodesFromIndexSequence(std::make_index_sequence<NUM_BLOCKS>{}); }
+        auto getTupleOfCodes() const {
+            return getTupleOfCodesFromIndexSequence(std::make_index_sequence<NUM_BLOCKS>{});
+        }
 
         /// Helper method to build a hash out of the codes.
-        template <size_t... INSEQ>
-        std::size_t getHashFromIndexSequence(std::index_sequence<INSEQ...>) const {
+        template <size_t... INSEQ> std::size_t getHashFromIndexSequence(std::index_sequence<INSEQ...>) const {
             return hash::mixtureOf(getDataAsCode<INSEQ>()...);
         }
 
       private:
         friend struct std::hash<babelwires::IdentifierBase<NUM_BLOCKS>>;
+        template <unsigned int OTHER_NUM_BLOCKS> friend union IdentifierBase;
 
       private:
         // A union of these.
@@ -188,7 +205,7 @@ namespace babelwires {
 
         /// An integer equivalent to the contents of the identifier.
         /// Used for efficient comparison.
-        std::uint64_t m_code[NUM_BLOCKS];
+        std::array<std::uint64_t, NUM_BLOCKS> m_code;
 
         static_assert(sizeof(Data) == sizeof(m_code));
     };
@@ -200,9 +217,11 @@ namespace babelwires {
 } // namespace babelwires
 
 namespace std {
-    template <int NUM_BLOCKS> struct hash<babelwires::IdentifierBase<NUM_BLOCKS>> {
+    template <unsigned int NUM_BLOCKS> struct hash<babelwires::IdentifierBase<NUM_BLOCKS>> {
         std::size_t operator()(const babelwires::IdentifierBase<NUM_BLOCKS>& identifier) const {
             return identifier.getHashFromIndexSequence(std::make_index_sequence<NUM_BLOCKS>{});
         }
     };
 } // namespace std
+
+#include <Common/Identifiers/identifier_inl.hpp>

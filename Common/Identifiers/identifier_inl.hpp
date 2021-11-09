@@ -5,13 +5,11 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Identifiers/identifier.hpp"
-
-#include "Common/exceptions.hpp"
+#include <Common/exceptions.hpp>
 
 #include <charconv>
 
-template <int NUM_BLOCKS>
+template <unsigned int NUM_BLOCKS>
 babelwires::IdentifierBase<NUM_BLOCKS>::IdentifierBase(std::string_view str) {
     const size_t len = str.size();
     assert((len > 0) && "Identifiers may not be empty");
@@ -24,7 +22,7 @@ babelwires::IdentifierBase<NUM_BLOCKS>::IdentifierBase(std::string_view str) {
     std::fill(m_data.m_chars, m_data.m_chars + N - len, 0);
 }
 
-template <int NUM_BLOCKS> 
+template <unsigned int NUM_BLOCKS> 
 babelwires::IdentifierBase<NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::deserializeFromString(std::string_view str) {
     Discriminator discriminator = 0;
     std::size_t idEnd = str.find(s_discriminatorDelimiter);
@@ -47,12 +45,12 @@ babelwires::IdentifierBase<NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::d
     {
         throw ParseException() << "The string \"" << str << "\" has a discriminator which is too large";
     }
-    Identifier f(str);
+    IdentifierBase<NUM_BLOCKS> f(str);
     f.setDiscriminator(discriminator);
     return f;
 }
 
-template <int NUM_BLOCKS> 
+template <unsigned int NUM_BLOCKS> 
 void babelwires::IdentifierBase<NUM_BLOCKS>::writeToStream(std::ostream& os) const {
     for (int i = N - 1; i >= 0; --i) {
         if (m_data.m_chars[i] == '\0') {
@@ -66,14 +64,14 @@ void babelwires::IdentifierBase<NUM_BLOCKS>::writeToStream(std::ostream& os) con
 }
 
 /// Return a human-readable version of the identifier.
-template <int NUM_BLOCKS>
+template <unsigned int NUM_BLOCKS>
 std::string babelwires::IdentifierBase<NUM_BLOCKS>::serializeToString() const {
     std::ostringstream oss;
     writeToStream(oss);
     return oss.str();
 }
 
-template <int NUM_BLOCKS>
+template <unsigned int NUM_BLOCKS>
 bool babelwires::IdentifierBase<NUM_BLOCKS>::validate(const char* chars, size_t n) {
     assert(n >= 0);
     assert(n <= N);
@@ -97,7 +95,7 @@ bool babelwires::IdentifierBase<NUM_BLOCKS>::validate(const char* chars, size_t 
     return true;
 }
 
-template <int NUM_BLOCKS>
+template <unsigned int NUM_BLOCKS>
 void babelwires::IdentifierBase<NUM_BLOCKS>::copyDiscriminatorToInternal(const IdentifierBase& other) const {
     assert(other.getDiscriminator() == 0);
     other.setDiscriminator(getDiscriminator());

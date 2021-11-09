@@ -19,11 +19,6 @@ TEST(IdentifierTest, identifiers) {
     babelwires::Identifier hello1(helloStr);
     hello1.setDiscriminator(27);
 
-    // The "code" does not include the discriminator.
-    EXPECT_EQ(hello.getDataAsCode(), hello1.getDataAsCode());
-    EXPECT_LE(hello.getDataAsCode(), hello1.getDataAsCode());
-    EXPECT_FALSE(hello.getDataAsCode() < hello1.getDataAsCode());
-
     // Discriminators are not used to distinguish fields.
     EXPECT_EQ(hello, hello1);
     std::hash<babelwires::Identifier> fieldHasher;

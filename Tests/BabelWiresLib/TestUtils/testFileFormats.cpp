@@ -4,6 +4,7 @@
 #include "BabelWiresLib/Features/featureMixins.hpp"
 
 #include "Common/IO/fileDataSource.hpp"
+#include "Common/Identifiers/registeredIdentifier.hpp"
 
 #include "Common/exceptions.hpp"
 
@@ -20,14 +21,14 @@ namespace {
 
 libTestUtils::TestFileFeature::TestFileFeature()
     : babelwires::FileFeature(s_fileFormatId)
-    , m_intChildId(babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
+    , m_intChildId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     m_intChildFeature =
         addField(std::make_unique<babelwires::HasStaticRange<babelwires::IntFeature, 0, 255>>(), m_intChildId);
 }
 
-std::string libTestUtils::TestSourceFileFormat::getThisIdentifier() {
+babelwires::LongIdentifier libTestUtils::TestSourceFileFormat::getThisIdentifier() {
     return s_fileFormatId;
 }
 
@@ -36,7 +37,7 @@ std::string libTestUtils::TestSourceFileFormat::getFileExtension() {
 }
 
 libTestUtils::TestSourceFileFormat::TestSourceFileFormat()
-    : SourceFileFormat(s_fileFormatId, s_fileFormatId, 1, {s_fileFormatId}) {}
+    : SourceFileFormat(REGISTERED_LONGID(s_fileFormatId, s_fileFormatId, "f557b89a-2499-465a-a605-5ef7f69284c4"), 1, {s_fileFormatId}) {}
 
 std::string libTestUtils::TestSourceFileFormat::getManufacturerName() const {
     return s_manufacturer;
@@ -86,9 +87,9 @@ void libTestUtils::TestSourceFileFormat::writeToTestFile(const std::filesystem::
 }
 
 libTestUtils::TestTargetFileFormat::TestTargetFileFormat()
-    : TargetFileFormat(s_factoryFormatId, s_factoryFormatId, 3, {s_fileFormatId}) {}
+    : TargetFileFormat(REGISTERED_LONGID(s_factoryFormatId, s_factoryFormatId, "a9a603aa-9d83-4f12-ac35-de0056d5a568"), 3, {s_fileFormatId}) {}
 
-std::string libTestUtils::TestTargetFileFormat::getThisIdentifier() {
+babelwires::LongIdentifier libTestUtils::TestTargetFileFormat::getThisIdentifier() {
     return s_factoryFormatId;
 }
 

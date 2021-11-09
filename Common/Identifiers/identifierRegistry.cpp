@@ -22,7 +22,7 @@ babelwires::IdentifierRegistry::InstanceData::InstanceData()
     , m_identifier("Invald")
     , m_authority(Authority::isProvisional) {}
 
-babelwires::IdentifierRegistry::InstanceData::InstanceData(std::string fieldName, Uuid uuid, Identifier identifier,
+babelwires::IdentifierRegistry::InstanceData::InstanceData(std::string fieldName, Uuid uuid, LongIdentifier identifier,
                                                           Authority authority)
     : m_fieldName(std::move(fieldName))
     , m_uuid(std::move(uuid))
@@ -42,7 +42,7 @@ void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deseriali
     m_authority = Authority::isProvisional;
 }
 
-babelwires::Identifier babelwires::IdentifierRegistry::addIdentifierWithMetadata(babelwires::Identifier identifier,
+babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWithMetadata(babelwires::LongIdentifier identifier,
                                                                         const std::string& name, const Uuid& uuid,
                                                                         Authority authority) {
     const Identifier::Discriminator discriminator = identifier.getDiscriminator();
@@ -89,8 +89,14 @@ babelwires::Identifier babelwires::IdentifierRegistry::addIdentifierWithMetadata
     return identifier;
 }
 
+babelwires::Identifier babelwires::IdentifierRegistry::addShortIdentifierWithMetadata(babelwires::Identifier identifier,
+                                                                        const std::string& name, const Uuid& uuid,
+                                                                        Authority authority) {
+return identifier;
+                                                                        }
+
 const babelwires::IdentifierRegistry::InstanceData*
-babelwires::IdentifierRegistry::getInstanceData(Identifier identifier) const {
+babelwires::IdentifierRegistry::getInstanceData(LongIdentifier identifier) const {
     const babelwires::Identifier::Discriminator index = identifier.getDiscriminator();
     if (index > 0) {
         identifier.setDiscriminator(0);
@@ -106,7 +112,7 @@ babelwires::IdentifierRegistry::getInstanceData(Identifier identifier) const {
 }
 
 babelwires::IdentifierRegistry::ValueType
-babelwires::IdentifierRegistry::getDeserializedIdentifierData(Identifier identifier) const {
+babelwires::IdentifierRegistry::getDeserializedIdentifierData(LongIdentifier identifier) const {
     if (const babelwires::IdentifierRegistry::InstanceData* data = getInstanceData(identifier)) {
         return ValueType{identifier, &data->m_fieldName, &data->m_uuid};
     }
@@ -115,7 +121,7 @@ babelwires::IdentifierRegistry::getDeserializedIdentifierData(Identifier identif
                               "discriminator) are allowed";
 }
 
-std::string babelwires::IdentifierRegistry::getName(babelwires::Identifier identifier) const {
+std::string babelwires::IdentifierRegistry::getName(LongIdentifier identifier) const {
     if (const InstanceData* data = getInstanceData(identifier)) {
         return data->m_fieldName;
     }
@@ -200,8 +206,8 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
     // We'd like the table sorted by identifier.
     // The default ordering for identifiers is unaware of disciminators.
     std::sort(contents.begin(), contents.end(), [](const auto* a, const auto* b) {
-        const babelwires::Identifier idA = a->m_identifier;
-        const babelwires::Identifier idB = b->m_identifier;
+        const babelwires::LongIdentifier idA = a->m_identifier;
+        const babelwires::LongIdentifier idB = b->m_identifier;
         if (idA < idB) {
             return true;
         } else if (idB < idA) {

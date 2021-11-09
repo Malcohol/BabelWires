@@ -32,7 +32,7 @@ TEST(EnumTest, registeredEnum) {
 
     struct TestEnum : babelwires::RegisteredEnum<TestEnum> {
         TestEnum(babelwires::Enum::EnumValues& values)
-            : RegisteredEnum<TestEnum>("TestEnum", "Test Enum", 1, values, 1) {}
+            : RegisteredEnum<TestEnum>("TestEnum", 1, values, 1) {}
     };
 
     EXPECT_EQ(TestEnum::getRegisteredInstance(), nullptr);
@@ -50,7 +50,7 @@ ENUM_DEFINE_ENUM_VALUE_SOURCE(TEST_ENUM_VALUES);
 TEST(EnumTest, enumWithCppEnum) {
     struct TestEnum : babelwires::RegisteredEnum<TestEnum> {
         TestEnum()
-            : RegisteredEnum<TestEnum>("TestEnum", "Test Enum", 1, ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
+            : RegisteredEnum<TestEnum>("TestEnum", 1, ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
         
         ENUM_DEFINE_CPP_ENUM(TEST_ENUM_VALUES);
     };

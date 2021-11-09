@@ -41,7 +41,7 @@ namespace {
 
     /// Returns AudioDest and AudioSource which can be identifed by their baseNumChannels.
     struct TestAudioInterface : babelwires::AudioInterface {
-        TestAudioInterface(std::string name, int baseNumChannels)
+        TestAudioInterface(std::string_view name, int baseNumChannels)
             : babelwires::AudioInterface(name, 1)
             , m_name(std::move(name))
             , m_baseNumChannels(baseNumChannels) {}
