@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Common/Utilities/hash.hpp"
+#include "Common/exceptions.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -98,7 +99,10 @@ namespace babelwires {
 
         template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS > NUM_BLOCKS), int> = 0>
         explicit IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
-            // TODO
+            if (other.m_data.m_chars[N] != '\0') {
+                throw ParseException() << "The contents of identifier '" << other << "' are too long";
+            }
+            std::copy(other.m_data.m_chars, other.m_data.m_chars + N, m_data.m_chars);
         }
 
         /// Return a human-readable version of the identifier, not including the disciminator.
