@@ -38,7 +38,7 @@ TEST(FeatureElementTest, labels) {
 
     EXPECT_NE(featureElement->getLabel().find("66"), std::string::npos);
     // The test element uses the data's identifier as a factory name.
-    EXPECT_NE(featureElement->getLabel().find(featureElementData.m_factoryIdentifier), std::string::npos);
+    EXPECT_NE(featureElement->getLabel().find(featureElementData.m_factoryIdentifier.toString()), std::string::npos);
 }
 
 TEST(FeatureElementTest, uiData) {

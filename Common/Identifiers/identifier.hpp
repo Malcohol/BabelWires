@@ -98,7 +98,11 @@ namespace babelwires {
 
         template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS > NUM_BLOCKS), int> = 0>
         explicit IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
+            // TODO
         }
+
+        /// Return a human-readable version of the identifier, not including the disciminator.
+        std::string toString() const;
 
         /// Return a serializable version of the identifier.
         std::string serializeToString() const;
@@ -125,7 +129,7 @@ namespace babelwires {
         }
 
         friend std::ostream& operator<<(std::ostream& os, const IdentifierBase& identifier) {
-            identifier.writeToStream(os);
+            identifier.writeTextToStream(os);
             return os;
         }
 
@@ -157,7 +161,7 @@ namespace babelwires {
 
         void copyDiscriminatorToInternal(const IdentifierBase& other) const;
 
-        void writeToStream(std::ostream& os) const;
+        void writeTextToStream(std::ostream& os) const;
 
         // Comparisons and hash calculations are based on the integer representation, but we need to mask out the
         // discriminator.

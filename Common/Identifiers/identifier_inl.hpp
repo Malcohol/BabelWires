@@ -51,24 +51,31 @@ babelwires::IdentifierBase<NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::d
 }
 
 template <unsigned int NUM_BLOCKS> 
-void babelwires::IdentifierBase<NUM_BLOCKS>::writeToStream(std::ostream& os) const {
+void babelwires::IdentifierBase<NUM_BLOCKS>::writeTextToStream(std::ostream& os) const {
     for (int i = N - 1; i >= 0; --i) {
         if (m_data.m_chars[i] == '\0') {
             break;
         }
         os << m_data.m_chars[i];
     }
-    if (m_data.m_discriminator > 0) {
-        os << s_discriminatorDelimiter << static_cast<int>(m_data.m_discriminator);
-    }
+}
+
+template <unsigned int NUM_BLOCKS> 
+std::string babelwires::IdentifierBase<NUM_BLOCKS>::toString() const {
+    std::ostringstream os;
+    writeTextToStream(os);
+    return os.str();
 }
 
 /// Return a human-readable version of the identifier.
 template <unsigned int NUM_BLOCKS>
 std::string babelwires::IdentifierBase<NUM_BLOCKS>::serializeToString() const {
-    std::ostringstream oss;
-    writeToStream(oss);
-    return oss.str();
+    std::ostringstream os;
+    writeTextToStream(os);
+    if (m_data.m_discriminator > 0) {
+        os << s_discriminatorDelimiter << static_cast<int>(m_data.m_discriminator);
+    }
+    return os.str();
 }
 
 template <unsigned int NUM_BLOCKS>

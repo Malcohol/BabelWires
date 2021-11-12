@@ -10,9 +10,16 @@ babelwires::Enum::EnumValues testUtils::getTestEnumValues() {
 }
 
 namespace {
+    // Avoid registering the enum
+    babelwires::LongIdentifier getEnumId() {
+        babelwires::LongIdentifier longId("TestEnum");
+        longId.setDiscriminator(1);
+        return longId;
+    }
+
     babelwires::Enum::EnumValues g_values = testUtils::getTestEnumValues();
 }
 
 testUtils::TestEnum::TestEnum()
-    : babelwires::Enum("TestEnum", "Test Enum", 1, g_values, 1)
+    : babelwires::Enum(getEnumId(), 1, g_values, 1)
 {}
