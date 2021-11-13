@@ -72,7 +72,7 @@ std::string babelwires::FeaturePath::serializeToString() const {
     for (int i = 0; i < getNumSteps(); ++i) {
         os << delimiter;
         delimiter = s_pathDelimiterString;
-        os << getStep(i);
+        os << getStep(i).serializeToString();
     }
     return os.str();
 }

@@ -21,9 +21,11 @@ void babelwires::PathStep::writeToStream(std::ostream& os) const {
 }
 
 std::string babelwires::PathStep::serializeToString() const {
-    std::ostringstream oss;
-    oss << *this;
-    return oss.str();
+    if (const Identifier* f = asField()) {
+        return f->serializeToString();
+    } else {
+        return std::to_string(getIndex());
+    }
 }
 
 babelwires::PathStep babelwires::PathStep::deserializeFromString(std::string_view str) {
