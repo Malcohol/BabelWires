@@ -88,6 +88,7 @@ namespace babelwires {
         /// Construct an identifier from a non-static string.
         IdentifierBase(std::string_view str);
 
+        /// Short to long constructor. Always succeeds.
         template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS <= NUM_BLOCKS), int> = 0>
         IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
             constexpr unsigned int M = (OTHER_NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
@@ -97,12 +98,16 @@ namespace babelwires {
             std::fill(m_data.m_chars, m_data.m_chars + D, 0);
         }
 
+        /// Long to short constructor. Can throw a parse exception if the contents are too long.
         template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS > NUM_BLOCKS), int> = 0>
         explicit IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
-            if (other.m_data.m_chars[N] != '\0') {
+            constexpr unsigned int M = (OTHER_NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
+            constexpr unsigned int D = M - N;
+            if (other.m_data.m_chars[D - 1] != '\0') {
                 throw ParseException() << "The contents of identifier '" << other << "' are too long";
             }
-            std::copy(other.m_data.m_chars, other.m_data.m_chars + N, m_data.m_chars);
+            m_data.m_discriminator = other.m_data.m_discriminator;
+            std::copy(other.m_data.m_chars + D, other.m_data.m_chars + M, m_data.m_chars);
         }
 
         /// Return a human-readable version of the identifier, not including the disciminator.

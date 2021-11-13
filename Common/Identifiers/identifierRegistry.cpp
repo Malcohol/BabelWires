@@ -1,8 +1,8 @@
 /**
  * A singleton that associates global metadata with identifiers.
- * 
+ *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "Common/Identifiers/identifierRegistry.hpp"
@@ -23,7 +23,7 @@ babelwires::IdentifierRegistry::InstanceData::InstanceData()
     , m_authority(Authority::isProvisional) {}
 
 babelwires::IdentifierRegistry::InstanceData::InstanceData(std::string fieldName, Uuid uuid, LongIdentifier identifier,
-                                                          Authority authority)
+                                                           Authority authority)
     : m_fieldName(std::move(fieldName))
     , m_uuid(std::move(uuid))
     , m_identifier(identifier)
@@ -42,9 +42,8 @@ void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deseriali
     m_authority = Authority::isProvisional;
 }
 
-babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWithMetadata(babelwires::LongIdentifier identifier,
-                                                                        const std::string& name, const Uuid& uuid,
-                                                                        Authority authority) {
+babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWithMetadata(
+    babelwires::LongIdentifier identifier, const std::string& name, const Uuid& uuid, Authority authority) {
     const Identifier::Discriminator discriminator = identifier.getDiscriminator();
     assert((discriminator == 0) && "The identifier already has a discriminator: Did you already register it?");
 
@@ -90,10 +89,19 @@ babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWith
 }
 
 babelwires::Identifier babelwires::IdentifierRegistry::addShortIdentifierWithMetadata(babelwires::Identifier identifier,
-                                                                        const std::string& name, const Uuid& uuid,
-                                                                        Authority authority) {
-return identifier;
-                                                                        }
+                                                                                      const std::string& name,
+                                                                                      const Uuid& uuid,
+                                                                                      Authority authority) {
+#ifndef NDEBUG
+    try {
+#endif
+        return Identifier(addLongIdentifierWithMetadata(identifier, name, uuid, authority));
+#ifndef NDEBUG
+    } catch (const ParseException&) {
+        assert(false && "A long identifier was previously registered with this uuid");
+    }
+#endif
+}
 
 const babelwires::IdentifierRegistry::InstanceData*
 babelwires::IdentifierRegistry::getInstanceData(LongIdentifier identifier) const {
