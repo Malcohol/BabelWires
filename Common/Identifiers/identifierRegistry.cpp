@@ -133,8 +133,7 @@ std::string babelwires::IdentifierRegistry::getName(LongIdentifier identifier) c
     if (const InstanceData* data = getInstanceData(identifier)) {
         return data->m_fieldName;
     }
-    // TODO
-    return identifier.serializeToString();
+    return identifier.toString();
 }
 
 std::shared_mutex babelwires::IdentifierRegistry::s_mutex;
