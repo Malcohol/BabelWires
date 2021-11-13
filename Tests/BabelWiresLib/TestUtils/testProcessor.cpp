@@ -29,7 +29,10 @@ babelwires::RecordFeature* libTestUtils::TestProcessor::getOutputFeature() {
 }
 
 libTestUtils::TestProcessorFactory::TestProcessorFactory()
-    : ProcessorFactory(REGISTERED_LONGID("testProcessor", "Test processor", "714b6684-ad20-43e6-abda-c0d308586bf4"), 2) {}
+    : ProcessorFactory(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+                           "testProcessor", "Test processor", "714b6684-ad20-43e6-abda-c0d308586bf4",
+                           babelwires::IdentifierRegistry::Authority::isAuthoritative),
+                       2) {}
 
 babelwires::LongIdentifier libTestUtils::TestProcessorFactory::getThisIdentifier() {
     return "testProcessor";

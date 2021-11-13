@@ -2,6 +2,9 @@
 
 #include "BabelWiresLib/Commands/commandManager.hpp"
 #include "BabelWiresLib/Commands/commands.hpp"
+
+#include "Common/Identifiers/identifierRegistry.hpp"
+
 #include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 
 namespace {
@@ -41,6 +44,7 @@ namespace {
 } // namespace
 
 TEST(CommandManagerTest, undoRedoSinceCommand) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::CommandManager commandManager(context.m_project, context.m_log);
 
@@ -108,6 +112,7 @@ TEST(CommandManagerTest, undoRedoSinceCommand) {
 }
 
 TEST(CommandManagerTest, undoRedoWithTwoCommands) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::CommandManager commandManager(context.m_project, context.m_log);
 
@@ -205,6 +210,7 @@ TEST(CommandManagerTest, undoRedoWithTwoCommands) {
 }
 
 TEST(CommandManagerTest, failedCommand) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::CommandManager commandManager(context.m_project, context.m_log);
 
@@ -262,6 +268,7 @@ TEST(CommandManagerTest, failedCommand) {
 }
 
 TEST(CommandManagerTest, subsumption) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::CommandManager commandManager(context.m_project, context.m_log);
 
@@ -296,6 +303,7 @@ TEST(CommandManagerTest, subsumption) {
 }
 
 TEST(CommandManagerTest, clear) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
     babelwires::CommandManager commandManager(context.m_project, context.m_log);
 

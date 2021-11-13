@@ -1,7 +1,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 
-#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/featureMixins.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 #include "Common/IO/fileDataSource.hpp"
 #include "Common/Identifiers/registeredIdentifier.hpp"
@@ -37,7 +37,10 @@ std::string libTestUtils::TestSourceFileFormat::getFileExtension() {
 }
 
 libTestUtils::TestSourceFileFormat::TestSourceFileFormat()
-    : SourceFileFormat(REGISTERED_LONGID(s_fileFormatId, s_fileFormatId, "f557b89a-2499-465a-a605-5ef7f69284c4"), 1, {s_fileFormatId}) {}
+    : SourceFileFormat(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+                           s_fileFormatId, s_fileFormatId, "f557b89a-2499-465a-a605-5ef7f69284c4",
+                           babelwires::IdentifierRegistry::Authority::isAuthoritative),
+                       1, {s_fileFormatId}) {}
 
 std::string libTestUtils::TestSourceFileFormat::getManufacturerName() const {
     return s_manufacturer;
@@ -74,7 +77,7 @@ char libTestUtils::TestSourceFileFormat::getFileData(const std::filesystem::path
 
 std::unique_ptr<babelwires::FileFeature>
 libTestUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource,
-                                           babelwires::UserLogger& userLogger) const {
+                                                 babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
     auto newFeature = std::make_unique<TestFileFeature>();
     newFeature->m_intChildFeature->set(value);
@@ -87,7 +90,10 @@ void libTestUtils::TestSourceFileFormat::writeToTestFile(const std::filesystem::
 }
 
 libTestUtils::TestTargetFileFormat::TestTargetFileFormat()
-    : TargetFileFormat(REGISTERED_LONGID(s_factoryFormatId, s_factoryFormatId, "a9a603aa-9d83-4f12-ac35-de0056d5a568"), 3, {s_fileFormatId}) {}
+    : TargetFileFormat(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+                           s_factoryFormatId, s_factoryFormatId, "a9a603aa-9d83-4f12-ac35-de0056d5a568",
+                           babelwires::IdentifierRegistry::Authority::isAuthoritative),
+                       3, {s_fileFormatId}) {}
 
 babelwires::LongIdentifier libTestUtils::TestTargetFileFormat::getThisIdentifier() {
     return s_factoryFormatId;
@@ -106,7 +112,7 @@ std::unique_ptr<babelwires::FileFeature> libTestUtils::TestTargetFileFormat::cre
 }
 
 void libTestUtils::TestTargetFileFormat::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
-                                                       babelwires::UserLogger& userLogger) const {
+                                                     babelwires::UserLogger& userLogger) const {
     const TestFileFeature& testFileFeature = *fileFeature.as<TestFileFeature>();
     os << s_fileFormatId << char(testFileFeature.m_intChildFeature->get());
 }

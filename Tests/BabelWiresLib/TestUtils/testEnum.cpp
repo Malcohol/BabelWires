@@ -1,5 +1,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testEnum.hpp"
 
+#include "Tests/TestUtils/testIdentifiers.hpp"
+
 babelwires::Enum::EnumValues testUtils::getTestEnumValues() {
     babelwires::Enum::EnumValues values = {"Foo", "Bar", "Erm"};
     // We need to set the discriminators to avoid the assertions about the entries not being registered.
@@ -10,16 +12,9 @@ babelwires::Enum::EnumValues testUtils::getTestEnumValues() {
 }
 
 namespace {
-    // Avoid registering the enum
-    babelwires::LongIdentifier getEnumId() {
-        babelwires::LongIdentifier longId("TestEnum");
-        longId.setDiscriminator(1);
-        return longId;
-    }
-
     babelwires::Enum::EnumValues g_values = testUtils::getTestEnumValues();
 }
 
 testUtils::TestEnum::TestEnum()
-    : babelwires::Enum(getEnumId(), 1, g_values, 1)
+    : babelwires::Enum(getTestRegisteredLongIdentifier("TestEnum"), 1, g_values, 1)
 {}

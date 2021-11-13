@@ -2,6 +2,7 @@ SET( TEST_UTILS_SRCS
    testLog.cpp
    tempFilePath.cpp
    testDeserializationRegistry.cpp
+   testIdentifiers.cpp
    )
 
 ADD_LIBRARY( testUtils ${TEST_UTILS_SRCS} )
