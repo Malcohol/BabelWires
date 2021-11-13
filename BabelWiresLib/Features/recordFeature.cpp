@@ -83,8 +83,8 @@ int babelwires::RecordFeature::getChildIndexFromStep(const Identifier& identifie
 }
 
 void babelwires::RecordFeature::addFieldInternal(Field f, int index) {
-    // TODO assert no identifier or name clashes.
-    assert(f.m_identifier.getDiscriminator() != 0);
+    assert((f.m_identifier.getDiscriminator() != 0) && "Only registered identfiers can be used as field identifiers");
+    assert((tryGetChildFromStep(PathStep(f.m_identifier)) == nullptr) && "There's an alredy a field with that field identifier");
     f.m_feature->setOwner(this);
     if (index == -1) {
         m_fields.emplace_back(std::move(f));

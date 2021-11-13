@@ -1,7 +1,10 @@
 #include <gtest/gtest.h>
 
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "Common/Registry/fileTypeRegistry.hpp"
+
 #include "Tests/TestUtils/equalSets.hpp"
+#include "Tests/TestUtils/testLog.hpp"
 
 namespace {
     struct TestRegistryEntry : public babelwires::FileTypeEntry {
@@ -17,27 +20,30 @@ namespace {
     using TestRegistry = babelwires::FileTypeRegistry<TestRegistryEntry>;
 } // namespace
 
+// Briefly test the equalSets function.
+TEST(RegistryTest, testEqualSets) {
+    ASSERT_TRUE(testUtils::areEqualSets(TestRegistryEntry::Extensions{}, TestRegistryEntry::Extensions{}));
+    ASSERT_FALSE(testUtils::areEqualSets(TestRegistryEntry::Extensions{"a"}, TestRegistryEntry::Extensions{}));
+    ASSERT_FALSE(testUtils::areEqualSets(TestRegistryEntry::Extensions{}, TestRegistryEntry::Extensions{"b"}));
+    ASSERT_TRUE(testUtils::areEqualSets(TestRegistryEntry::Extensions{"aa", "b", "ccc"},
+                                        TestRegistryEntry::Extensions{"b", "aa", "ccc"}));
+    ASSERT_FALSE(testUtils::areEqualSets(TestRegistryEntry::Extensions{"aa", "b", "ccc"},
+                                         TestRegistryEntry::Extensions{"aa", "b", "ccc", "d"}));
+}
+
 TEST(RegistryTest, base) {
-    // Briefly test equalSets.
-    {
-        ASSERT_TRUE(testUtils::areEqualSets(TestRegistryEntry::Extensions{}, TestRegistryEntry::Extensions{}));
-        ASSERT_FALSE(testUtils::areEqualSets(TestRegistryEntry::Extensions{"a"}, TestRegistryEntry::Extensions{}));
-        ASSERT_FALSE(testUtils::areEqualSets(TestRegistryEntry::Extensions{}, TestRegistryEntry::Extensions{"b"}));
-        ASSERT_TRUE(testUtils::areEqualSets(TestRegistryEntry::Extensions{"aa", "b", "ccc"},
-                                            TestRegistryEntry::Extensions{"b", "aa", "ccc"}));
-        ASSERT_FALSE(testUtils::areEqualSets(TestRegistryEntry::Extensions{"aa", "b", "ccc"},
-                                             TestRegistryEntry::Extensions{"aa", "b", "ccc", "d"}));
-    }
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestLog log;
 
     TestRegistry registry("Test registry");
 
     EXPECT_EQ(registry.getEntryByIdentifier("test"), nullptr);
 
-    babelwires::LongIdentifier entryId = "test";
-    entryId.setDiscriminator(1);
+    const babelwires::LongIdentifier entryId = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+        "test", "Test", "00000000-1111-2222-3333-444444444444",
+        babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
-    registry.addEntry(
-        std::make_unique<TestRegistryEntry>(entryId, 1, TestRegistryEntry::Extensions{"test"}, 15));
+    registry.addEntry(std::make_unique<TestRegistryEntry>(entryId, 1, TestRegistryEntry::Extensions{"test"}, 15));
 
     ASSERT_NE(registry.getEntryByIdentifier("test"), nullptr);
     EXPECT_NE(&registry.getRegisteredEntry("test"), nullptr);
@@ -54,11 +60,12 @@ TEST(RegistryTest, base) {
     EXPECT_EQ(registry.getEntryByFileName("oom.test.test2"), nullptr);
     EXPECT_EQ(registry.getEntryByFileName("foo.test2"), nullptr);
 
-    babelwires::LongIdentifier entryId2 = "test2";
-    entryId2.setDiscriminator(1);
+    const babelwires::LongIdentifier entryId2 = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+        "test2", "Test2", "00000000-1111-2222-3333-555555555555",
+        babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
-    registry.addEntry(std::make_unique<TestRegistryEntry>(entryId2, 1,
-                                                          TestRegistryEntry::Extensions{"test2", "TEST_2"}, -144));
+    registry.addEntry(
+        std::make_unique<TestRegistryEntry>(entryId2, 1, TestRegistryEntry::Extensions{"test2", "TEST_2"}, -144));
 
     ASSERT_NE(registry.getEntryByIdentifier("test2"), nullptr);
     EXPECT_NE(&registry.getRegisteredEntry("test2"), nullptr);
@@ -75,9 +82,10 @@ TEST(RegistryTest, base) {
     EXPECT_EQ(registry.getEntryByFileName("oom.test.test2")->getName(), "Test2");
     EXPECT_EQ(registry.getEntryByFileName("oom.test.test2")->m_payload, -144);
 
-    babelwires::LongIdentifier entryId3 = "test3";
-    entryId3.setDiscriminator(1);
-    
+    const babelwires::LongIdentifier entryId3 = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+        "test3", "Test3", "00000000-1111-2222-3333-666666666666",
+        babelwires::IdentifierRegistry::Authority::isAuthoritative);
+
     registry.addEntry(
         std::make_unique<TestRegistryEntry>(entryId3, 1, TestRegistryEntry::Extensions{"foo", "bar"}, 23));
 
