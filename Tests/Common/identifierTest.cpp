@@ -148,10 +148,10 @@ TEST(IdentifierTest, longIdentifiers) {
 }
 
 TEST(IdentifierTest, longIdentifierOrder) {
-    babelwires::LongIdentifier zero("A000_000_000_000");
+    babelwires::LongIdentifier zero("A000");
     babelwires::LongIdentifier ten("A10");
     babelwires::LongIdentifier ant("ant");
-    babelwires::LongIdentifier antelope("antelope");
+    babelwires::LongIdentifier antelope("antelopes");
     babelwires::LongIdentifier Emu("Emu");
     babelwires::LongIdentifier emu("emu");
     babelwires::LongIdentifier Ibex("Ibex");
@@ -164,6 +164,15 @@ TEST(IdentifierTest, longIdentifierOrder) {
     EXPECT_LT(ant, antelope);
     EXPECT_LT(antelope, emu);
     EXPECT_LT(emu, zebra);
+
+    babelwires::LongIdentifier hello0("aggggggggggggggggggggg");
+    babelwires::LongIdentifier hello1("ggggggggggaggggggggggg");
+    babelwires::LongIdentifier hello2("ggggggggggggggggggggga");
+    babelwires::LongIdentifier hello3("gggggggggggggggggggggg");
+
+    EXPECT_LT(hello0, hello1);
+    EXPECT_LT(hello1, hello2);
+    EXPECT_LT(hello2, hello3);
 }
 
 TEST(IdentifierTest, longIdentifierStringOutput) {
