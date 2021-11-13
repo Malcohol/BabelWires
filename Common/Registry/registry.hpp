@@ -2,7 +2,7 @@
  * A Registry is a container which is used in various places for registering factories.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -23,6 +23,8 @@ namespace babelwires {
     /// The expected base class of any entry stored in a registry.
     class RegistryEntry {
       public:
+        /// An identifier is used to uniquely identify the entry.
+        /// Typically, it will be obtained via the REGISTERED_LONGID macro.
         RegistryEntry(LongIdentifier identifier, VersionNumber version);
         virtual ~RegistryEntry();
 
@@ -61,13 +63,16 @@ namespace babelwires {
         /// Transfer ownership to the registry.
         void addEntry(std::unique_ptr<RegistryEntry> newEntry);
 
-        /// Find an entry by an internal key which should be stable between
-        /// versions of the program.
-        const RegistryEntry* getEntryByIdentifier(LongIdentifier identifier) const;
+        /// Find an entry by an internal key which should be stable between versions of the program.
+        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
+        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
+        const RegistryEntry* getEntryByIdentifier(const LongIdentifier& identifier) const;
 
         /// Find an entry which is expected to be present.
         /// Will throw an RegistryException if the entry is not found.
-        const RegistryEntry& getRegisteredEntry(LongIdentifier identifier) const;
+        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
+        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
+        const RegistryEntry& getRegisteredEntry(const LongIdentifier& identifier) const;
 
       protected:
         virtual void validateNewEntry(const RegistryEntry* newEntry) const;
@@ -94,11 +99,15 @@ namespace babelwires {
 
         /// Find an entry by an internal key which should be stable between
         /// versions of the program.
-        const ENTRY* getEntryByIdentifier(LongIdentifier identifier) const;
+        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
+        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
+        const ENTRY* getEntryByIdentifier(const LongIdentifier& identifier) const;
 
         /// Find an entry which is expected to be present.
         /// Will throw an RegistryException if the entry is not found.
-        const ENTRY& getRegisteredEntry(LongIdentifier identifier) const;
+        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
+        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
+        const ENTRY& getRegisteredEntry(const LongIdentifier& identifier) const;
 
       public:
         class Iterator;

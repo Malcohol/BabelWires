@@ -149,7 +149,6 @@ namespace {
 void babelwires::ProjectBundle::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("filePath", m_projectFilePath);
     serializer.serializeObject(m_projectData);
-    serializer.serializeObject(m_identifierRegistry);
     std::vector<FactoryInfoPair> factoryMetadata;
     for (const auto& [k, v] : m_factoryMetadata) {
         FactoryInfoPair metadata;
@@ -158,15 +157,16 @@ void babelwires::ProjectBundle::serializeContents(Serializer& serializer) const 
         factoryMetadata.emplace_back(metadata);
     }
     serializer.serializeArray("factoryMetadata", factoryMetadata);
+    serializer.serializeObject(m_identifierRegistry);
 }
 
 void babelwires::ProjectBundle::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("filePath", m_projectFilePath, babelwires::Deserializer::IsOptional::Optional);
     m_projectData = std::move(*deserializer.deserializeObject<ProjectData>(ProjectData::serializationType));
-    m_identifierRegistry =
-        std::move(*deserializer.deserializeObject<IdentifierRegistry>(IdentifierRegistry::serializationType));
     for (auto it = deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"); it.isValid(); ++it) {
         auto fm = it.getObject();
         m_factoryMetadata.insert(std::make_pair(std::move(fm->m_factoryIdentifier), fm->m_factoryVersion));
     }
+    m_identifierRegistry =
+        std::move(*deserializer.deserializeObject<IdentifierRegistry>(IdentifierRegistry::serializationType));
 }

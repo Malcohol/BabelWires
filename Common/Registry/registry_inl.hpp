@@ -15,12 +15,12 @@ void babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::addEntry(std::unique_ptr<ENT
 }
 
 template <typename ENTRY, typename UNTYPED_REGISTRY>
-const ENTRY* babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::getEntryByIdentifier(LongIdentifier identifier) const {
+const ENTRY* babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::getEntryByIdentifier(const LongIdentifier& identifier) const {
     return static_cast<const ENTRY*>(m_untypedRegistry.getEntryByIdentifier(identifier));
 }
 
 template <typename ENTRY, typename UNTYPED_REGISTRY>
-const ENTRY& babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::getRegisteredEntry(LongIdentifier identifier) const {
+const ENTRY& babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::getRegisteredEntry(const LongIdentifier& identifier) const {
     return static_cast<const ENTRY&>(m_untypedRegistry.getRegisteredEntry(identifier));
 }
 

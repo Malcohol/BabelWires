@@ -45,9 +45,11 @@ void babelwires::UntypedRegistry::addEntry(std::unique_ptr<RegistryEntry> newEnt
     m_entries.push_back(std::move(newEntry));
 }
 
-const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifier(LongIdentifier identifier) const {
+const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifier(const LongIdentifier& identifier) const {
     for (auto&& f : m_entries) {
         if (identifier == f->getIdentifier()) {
+            // resolve the identifier if it is currently unresolved.
+            f->getIdentifier().copyDiscriminatorTo(identifier);
             return f.get();
         }
     }
@@ -63,7 +65,7 @@ const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByName(std
     return nullptr;
 }
 
-const babelwires::RegistryEntry& babelwires::UntypedRegistry::getRegisteredEntry(LongIdentifier identifier) const {
+const babelwires::RegistryEntry& babelwires::UntypedRegistry::getRegisteredEntry(const LongIdentifier& identifier) const {
     const RegistryEntry* const entry = getEntryByIdentifier(identifier);
     if (!entry) {
         throw RegistryException() << "No entry called \"" << identifier << "\" was found in the " << m_registryName;

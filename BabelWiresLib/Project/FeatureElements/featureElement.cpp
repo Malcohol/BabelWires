@@ -16,6 +16,7 @@
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Common/types.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 #include <algorithm>
 
@@ -86,7 +87,7 @@ void babelwires::FeatureElement::setFactoryName(std::string factoryName) {
 }
 
 void babelwires::FeatureElement::setFactoryName(LongIdentifier identifier) {
-    m_factoryName = identifier.toString();
+    m_factoryName = IdentifierRegistry::read()->getName(identifier);
 }
 
 babelwires::Modifier* babelwires::FeatureElement::findModifier(const FeaturePath& featurePath) {

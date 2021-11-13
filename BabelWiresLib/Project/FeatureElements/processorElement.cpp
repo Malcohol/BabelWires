@@ -22,7 +22,7 @@
 babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, UserLogger& userLogger,
                                                const ProcessorElementData& data, ElementId newId)
     : FeatureElement(data, newId) {
-    auto elementData = getElementData();
+    const ElementData& elementData = getElementData();
     try {
         const ProcessorFactory& factory = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
         setProcessor(factory.createNewProcessor());
