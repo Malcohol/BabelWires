@@ -23,7 +23,7 @@ namespace {
             , m_targetReg(targetReg)
             , m_authority(authority) {}
 
-        template <typename IDENTIFIER> void visit(IDENTIFIER sourceId) {
+        template <typename IDENTIFIER> void visit(IDENTIFIER& sourceId) {
             if (sourceId.getDiscriminator() != 0) {
                 IDENTIFIER newId = sourceId;
                 newId.setDiscriminator(0);
