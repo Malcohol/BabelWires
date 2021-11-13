@@ -279,6 +279,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
 }
 
 TEST(ModifierTest, connectionModifierTargetPathFailure) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
@@ -299,9 +300,6 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
     TestOwner owner;
     connectionMod.setOwner(&owner);
 
-    // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::IdentifierRegistryScope identifierRegistry;
-
     EXPECT_EQ(targetFeature->get(), 0);
     connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
     EXPECT_TRUE(connectionMod.isFailed());
@@ -312,6 +310,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
 }
 
 TEST(ModifierTest, connectionModifierSourceIdFailure) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
@@ -331,9 +330,6 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
     babelwires::ConnectionModifier connectionMod(std::move(assignFromData));
     TestOwner owner;
     connectionMod.setOwner(&owner);
-
-    // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     EXPECT_EQ(targetFeature->get(), 0);
     connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
