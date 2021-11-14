@@ -38,8 +38,8 @@ namespace babelwires {
         /// This base implementation does nothing.
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        /// A randomly assigned ID which uniquely identifies this project.
-        ProjectId m_projectId = INVALID_PROJECT_ID;
+        /// A globally unique ID which identifies this project.
+        ProjectId m_projectId;
 
         std::vector<std::unique_ptr<ElementData>> m_elements;
     };

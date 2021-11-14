@@ -15,7 +15,7 @@
 libTestUtils::TestProjectData::TestProjectData()
     : m_sourceFilePath(std::string("testSourceFile") + libTestUtils::TestSourceFileFormat::getFileExtension())
     , m_targetFilePath(std::string("testTargetFile") + libTestUtils::TestSourceFileFormat::getFileExtension()) {
-    m_projectId = 1243;
+    m_projectId = "12431243-1243-1243-1243-124312431243";
     {
         babelwires::TargetFileElementData data;
         data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();

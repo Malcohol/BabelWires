@@ -7,14 +7,16 @@
  **/
 #pragma once
 
+#include <Common/uuid.hpp>
+
 #include <cstdint>
 #include <functional>
 namespace babelwires {
-    enum { INVALID_PROJECT_ID = 0, INVALID_ELEMENT_ID = 0 };
-
-    /// Each new project is assigned a random ID.
-    using ProjectId = std::uint16_t;
+    enum { INVALID_ELEMENT_ID = 0 };
 
     /// Each element in a project is assigned a consecutive ID.
     using ElementId = std::uint16_t;
+
+    /// Each new project is assigned a random ID.
+    using ProjectId = Uuid;
 } // namespace babelwires

@@ -18,7 +18,7 @@ babelwires::IdentifierRegistry::~IdentifierRegistry() = default;
 babelwires::IdentifierRegistry& babelwires::IdentifierRegistry::operator=(IdentifierRegistry&&) = default;
 
 babelwires::IdentifierRegistry::InstanceData::InstanceData()
-    : m_uuid("00000000-0000-0000-0000-000000000000")
+    : m_uuid()
     , m_identifier("Invald")
     , m_authority(Authority::isProvisional) {}
 
