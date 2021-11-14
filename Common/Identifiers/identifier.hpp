@@ -17,6 +17,7 @@
 #include <limits>
 #include <string>
 #include <string_view>
+#include <array>
 
 namespace babelwires {
 
