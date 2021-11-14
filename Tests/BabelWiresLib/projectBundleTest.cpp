@@ -10,6 +10,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProjectData.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+
 #include "Tests/TestUtils/testLog.hpp"
 #include "Tests/TestUtils/tempFilePath.hpp"
 
@@ -306,4 +307,42 @@ TEST(ProjectBundleTest, filePathResolution) {
             EXPECT_EQ(elementData->m_filePath, scenario.m_expectedResolvedPath);
         }
     }
+}
+
+TEST(ProjectBundleTest, factoryIdentifiers) {
+    testUtils::TestLog log;
+    babelwires::IdentifierRegistryScope identifierRegistry;
+
+    // Prepopulate the identifierRegistry with clashing factory identifier.
+    // I don't expect duplicate factory identifiers, but this will make it easier to test
+    babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(libTestUtils::TestProcessorFactory::getThisIdentifier(),
+                                                             "Other test processor", "41000000-1111-2222-3333-888888888888",
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(libTestUtils::TestSourceFileFormat::getThisIdentifier(),
+                                                             "Other test source factory", "41000000-1111-2222-3333-999999999999",
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(libTestUtils::TestTargetFileFormat::getThisIdentifier(),
+                                                             "Other test target factory", "41000000-1111-2222-3333-aaaaaaaaaaaa",
+                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
+
+    libTestUtils::TestProjectData projectData;
+
+    EXPECT_EQ(projectData.m_elements[0]->m_factoryIdentifier.getDiscriminator(), 0);
+    EXPECT_EQ(projectData.m_elements[1]->m_factoryIdentifier.getDiscriminator(), 0);
+    EXPECT_EQ(projectData.m_elements[2]->m_factoryIdentifier.getDiscriminator(), 0);
+
+    libTestUtils::TestProjectContext context;
+    context.m_projectContext.m_targetFileFormatReg.getEntryByIdentifier(projectData.m_elements[0]->m_factoryIdentifier);
+    context.m_projectContext.m_processorReg.getEntryByIdentifier(projectData.m_elements[1]->m_factoryIdentifier);
+    context.m_projectContext.m_sourceFileFormatReg.getEntryByIdentifier(projectData.m_elements[2]->m_factoryIdentifier);
+
+    EXPECT_EQ(projectData.m_elements[0]->m_factoryIdentifier.getDiscriminator(), 2);
+    EXPECT_EQ(projectData.m_elements[1]->m_factoryIdentifier.getDiscriminator(), 2);
+    EXPECT_EQ(projectData.m_elements[2]->m_factoryIdentifier.getDiscriminator(), 2);
+
+    babelwires::ProjectBundle bundle(std::filesystem::current_path(), std::move(projectData));
+   
+    EXPECT_EQ(bundle.getProjectData().m_elements[0]->m_factoryIdentifier.getDiscriminator(), 1);
+    EXPECT_EQ(bundle.getProjectData().m_elements[1]->m_factoryIdentifier.getDiscriminator(), 1);
+    EXPECT_EQ(bundle.getProjectData().m_elements[2]->m_factoryIdentifier.getDiscriminator(), 1);
 }
