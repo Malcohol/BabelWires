@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Commands/removeModifierCommand.hpp"
 
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 

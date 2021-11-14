@@ -7,9 +7,9 @@
 #include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
-
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
+
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
@@ -221,6 +221,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
 }
 
 TEST(ElementDataTest, targetFileDataCreateElement) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     babelwires::TargetFileElementData data;
@@ -232,8 +233,6 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
 
     const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
-
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
         data.createFeatureElement(context.m_projectContext, context.m_log, 10);
@@ -311,6 +310,7 @@ TEST(ElementDataTest, processorDataSerialize) {
 }
 
 TEST(ElementDataTest, processorDataCreateElement) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     libTestUtils::TestProjectContext context;
 
     babelwires::ProcessorElementData data;
@@ -321,8 +321,6 @@ TEST(ElementDataTest, processorDataCreateElement) {
 
     const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
-
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
         data.createFeatureElement(context.m_projectContext, context.m_log, 10);

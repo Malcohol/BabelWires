@@ -97,6 +97,7 @@ void babelwires::ElementData::deserializeUiData(Deserializer& deserializer) {
 }
 
 void babelwires::ElementData::visitIdentifiers(IdentifierVisitor& visitor) {
+    visitor(m_factoryIdentifier);
     for (auto& m : m_modifiers) {
         m->visitIdentifiers(visitor);
     }

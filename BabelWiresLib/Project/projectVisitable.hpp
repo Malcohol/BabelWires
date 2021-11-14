@@ -8,13 +8,18 @@
  **/
 #pragma once
 
+#include <Common/Identifiers/identifier.hpp>
+
 #include <functional>
 
 namespace babelwires {
-    union Identifier;
+    struct IdentifierVisitor {
+        virtual ~IdentifierVisitor() = default;
+        virtual void operator()(Identifier& identifier) = 0;
+        virtual void operator()(LongIdentifier& identifier) = 0;
+    };
+    
     class FilePath;
-
-    using IdentifierVisitor = std::function<void(Identifier&)>;
     using FilePathVisitor = std::function<void(FilePath&)>;
 
     /// An interface for classes storing project data, allowing them to expose certain data

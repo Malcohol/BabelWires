@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
@@ -38,7 +38,7 @@ TEST(FeatureElementTest, labels) {
 
     EXPECT_NE(featureElement->getLabel().find("66"), std::string::npos);
     // The test element uses the data's identifier as a factory name.
-    EXPECT_NE(featureElement->getLabel().find(featureElementData.m_factoryIdentifier), std::string::npos);
+    EXPECT_NE(featureElement->getLabel().find(featureElementData.m_factoryIdentifier.toString()), std::string::npos);
 }
 
 TEST(FeatureElementTest, uiData) {

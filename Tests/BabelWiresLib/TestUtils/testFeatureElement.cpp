@@ -3,13 +3,13 @@
 #include "BabelWiresLib/Project/FeatureElements/failedFeature.hpp"
 
 libTestUtils::TestFailedFeature::TestFailedFeature() {
-    addField(std::make_unique<RecordFeature>(), babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(
+    addField(std::make_unique<RecordFeature>(), babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
                                                     "Failed", "Failed", "00000000-1111-2222-3333-800000000888",
                                                     babelwires::IdentifierRegistry::Authority::isAuthoritative));
 }
 
 libTestUtils::TestFeatureElementData::TestFeatureElementData() {
-    m_factoryIdentifier = "TestFeatureElementFactory";
+    m_factoryIdentifier = "TestFactory";
     m_factoryVersion = 1;
 }
 

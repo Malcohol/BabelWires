@@ -7,9 +7,9 @@
  **/
 #include "BabelWiresLib/FileFormat/fileFeature.hpp"
 
-babelwires::FileFeature::FileFeature(std::string fileFormatIdentifier)
+babelwires::FileFeature::FileFeature(LongIdentifier fileFormatIdentifier)
     : m_factoryIdentifier(fileFormatIdentifier) {}
 
-std::string babelwires::FileFeature::getFileFormatIdentifier() const {
+babelwires::LongIdentifier babelwires::FileFeature::getFileFormatIdentifier() const {
     return m_factoryIdentifier;
 }

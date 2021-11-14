@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/Path/pathStep.hpp"
 #include "BabelWiresLib/Features/features.hpp"
 #include "BabelWiresLib/Features/modelExceptions.hpp"
@@ -72,7 +72,7 @@ std::string babelwires::FeaturePath::serializeToString() const {
     for (int i = 0; i < getNumSteps(); ++i) {
         os << delimiter;
         delimiter = s_pathDelimiterString;
-        os << getStep(i);
+        os << getStep(i).serializeToString();
     }
     return os.str();
 }

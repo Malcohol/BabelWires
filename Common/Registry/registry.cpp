@@ -7,22 +7,23 @@
  **/
 #include "Common/Registry/registry.hpp"
 
-babelwires::RegistryEntry::RegistryEntry(std::string identifier, std::string name, VersionNumber version)
-    : m_identifier(std::move(identifier))
-    , m_name(std::move(name))
+#include "Common/Identifiers/identifierRegistry.hpp"
+
+babelwires::RegistryEntry::RegistryEntry(LongIdentifier identifier, VersionNumber version)
+    : m_identifier(identifier)
     , m_version(version) {
     assert((version > 0) && "0 is not a valid version");
 }
 
 babelwires::RegistryEntry::~RegistryEntry() = default;
 
-const std::string& babelwires::RegistryEntry::getIdentifier() const {
+babelwires::LongIdentifier babelwires::RegistryEntry::getIdentifier() const {
     return m_identifier;
 }
 
 /// The name of the entry, which can be displayed to the user and is permitted to change.
-const std::string& babelwires::RegistryEntry::getName() const {
-    return m_name;
+std::string babelwires::RegistryEntry::getName() const {
+    return IdentifierRegistry::read()->getName(m_identifier);
 }
 
 babelwires::VersionNumber babelwires::RegistryEntry::getVersion() const {
@@ -35,18 +36,20 @@ babelwires::UntypedRegistry::UntypedRegistry(std::string registryName)
     : m_registryName(std::move(registryName)) {}
 
 void babelwires::UntypedRegistry::addEntry(std::unique_ptr<RegistryEntry> newEntry) {
+    assert((newEntry->getIdentifier().getDiscriminator() != 0) && "A registered entry must have a registered identifier");
     assert((getEntryByIdentifier(newEntry->getIdentifier()) == nullptr) &&
            "Format with that identifier already registered.");
     assert((getEntryByName(newEntry->getName()) == nullptr) && "Format with that name already registered.");
-    assert(isValidIdentifier(newEntry->getIdentifier().c_str()) && "Invalid identifier used for registry entry");
     validateNewEntry(newEntry.get());
     newEntry->onRegistered();
     m_entries.push_back(std::move(newEntry));
 }
 
-const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifier(std::string_view identifier) const {
+const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifier(const LongIdentifier& identifier) const {
     for (auto&& f : m_entries) {
         if (identifier == f->getIdentifier()) {
+            // resolve the identifier if it is currently unresolved.
+            f->getIdentifier().copyDiscriminatorTo(identifier);
             return f.get();
         }
     }
@@ -62,7 +65,7 @@ const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByName(std
     return nullptr;
 }
 
-const babelwires::RegistryEntry& babelwires::UntypedRegistry::getRegisteredEntry(std::string_view identifier) const {
+const babelwires::RegistryEntry& babelwires::UntypedRegistry::getRegisteredEntry(const LongIdentifier& identifier) const {
     const RegistryEntry* const entry = getEntryByIdentifier(identifier);
     if (!entry) {
         throw RegistryException() << "No entry called \"" << identifier << "\" was found in the " << m_registryName;

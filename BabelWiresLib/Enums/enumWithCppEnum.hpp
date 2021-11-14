@@ -9,7 +9,7 @@
 
 #include "BabelWiresLib/Enums/enum.hpp"
 #include "BabelWiresLib/Features/enumFeature.hpp"
-#include "BabelWiresLib/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/registeredIdentifier.hpp"
 
 // Implementation detail.
 #define ENUM_SELECT_FIRST_ARGUMENT(A, B, C) A,

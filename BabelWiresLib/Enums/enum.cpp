@@ -1,8 +1,8 @@
 #include "BabelWiresLib/Enums/enum.hpp"
 
-babelwires::Enum::Enum(std::string identifier, std::string name, VersionNumber version, const EnumValues& values,
+babelwires::Enum::Enum(LongIdentifier identifier, VersionNumber version, const EnumValues& values,
                        unsigned int indexOfDefaultValue)
-    : RegistryEntry(std::move(identifier), std::move(name), version)
+    : RegistryEntry(identifier, version)
     , m_values(values)
     , m_indexOfDefaultValue(indexOfDefaultValue) {
 #ifndef NDEBUG

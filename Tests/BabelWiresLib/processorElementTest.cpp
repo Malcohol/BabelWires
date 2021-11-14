@@ -4,7 +4,7 @@
 #include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
 
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"

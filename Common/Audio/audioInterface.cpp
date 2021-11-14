@@ -13,8 +13,8 @@
 
 #include <sstream>
 
-babelwires::AudioInterface::AudioInterface(std::string identifier, std::string name, VersionNumber version)
-    : RegistryEntry(std::move(identifier), std::move(name), version) {}
+babelwires::AudioInterface::AudioInterface(LongIdentifier identifier, VersionNumber version)
+    : RegistryEntry(identifier, version) {}
 
 babelwires::AudioInterfaceRegistry::AudioInterfaceRegistry()
     : Registry<AudioInterface>("Audio Interface Registry") {}
@@ -46,7 +46,7 @@ std::vector<std::string> babelwires::AudioInterfaceRegistry::getDestinationNames
     for (auto it = begin(); it != end(); ++it) {
         auto interfaceDestinations = it->getDestinationNames();
         for (auto dit : interfaceDestinations) {
-            names.emplace_back(addPrefix(it->getIdentifier(), dit));
+            names.emplace_back(addPrefix(it->getName(), dit));
         }
     }
     return names;
@@ -76,7 +76,7 @@ std::vector<std::string> babelwires::AudioInterfaceRegistry::getSourceNames() co
     for (auto it = begin(); it != end(); ++it) {
         auto interfaceSourceNames = it->getSourceNames();
         for (auto sit : interfaceSourceNames) {
-            names.emplace_back(addPrefix(it->getIdentifier(), sit));
+            names.emplace_back(addPrefix(it->getName(), sit));
         }
     }
     return names;

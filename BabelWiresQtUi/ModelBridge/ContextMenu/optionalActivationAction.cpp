@@ -12,7 +12,7 @@
 
 #include "BabelWiresLib/Commands/activateOptionalCommand.hpp"
 #include "BabelWiresLib/Commands/deactivateOptionalCommand.hpp"
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::FeaturePath pathToRecord,
                                                                Identifier optional, bool isActivated)

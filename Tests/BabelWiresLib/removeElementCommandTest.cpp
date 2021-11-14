@@ -3,7 +3,7 @@
 #include "BabelWiresLib/Commands/removeElementCommand.hpp"
 
 #include "BabelWiresLib/Commands/moveElementCommand.hpp"
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"

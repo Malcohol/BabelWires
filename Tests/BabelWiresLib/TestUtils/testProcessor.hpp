@@ -29,7 +29,7 @@ namespace libTestUtils {
     struct TestProcessorFactory : babelwires::ProcessorFactory {
         TestProcessorFactory();
 
-        static std::string getThisIdentifier();
+        static babelwires::LongIdentifier getThisIdentifier();
 
         std::unique_ptr<babelwires::Processor> createNewProcessor() const override;
     };

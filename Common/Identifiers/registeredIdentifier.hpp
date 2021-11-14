@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include <cassert>
 
 namespace babelwires {
@@ -29,7 +29,18 @@ namespace babelwires {
 /// called.
 #define REGISTERED_ID(IDENTIFIER, NAME, UUID)                                                                          \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
-        static babelwires::Identifier f = babelwires::IdentifierRegistry::write()->addIdentifierWithMetadata(          \
+        static babelwires::Identifier f = babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(     \
+            id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
+        assert(                                                                                                        \
+            (babelwires::IdentifierRegistry::read()->getName(f) == name) &&                                            \
+            "Each usage of this macro should register a single fieldIdentifier."                                       \
+            " Do not use it in cases where the same code can be called a second time with a different identifier.");   \
+        return f;                                                                                                      \
+    }(IDENTIFIER, NAME, UUID))
+
+#define REGISTERED_LONGID(IDENTIFIER, NAME, UUID)                                                                      \
+    ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
+        static babelwires::LongIdentifier f = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(  \
             id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
         assert(                                                                                                        \
             (babelwires::IdentifierRegistry::read()->getName(f) == name) &&                                            \

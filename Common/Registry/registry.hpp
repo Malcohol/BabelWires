@@ -2,13 +2,14 @@
  * A Registry is a container which is used in various places for registering factories.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
 #include "Common/exceptions.hpp"
-#include "Common/types.hpp"
+//#include "Common/types.hpp"
+#include "Common/Identifiers/identifier.hpp"
 
 #include "Common/types.hpp"
 #include <algorithm>
@@ -22,16 +23,18 @@ namespace babelwires {
     /// The expected base class of any entry stored in a registry.
     class RegistryEntry {
       public:
-        RegistryEntry(std::string identifier, std::string name, VersionNumber version);
+        /// An identifier is used to uniquely identify the entry.
+        /// Typically, it will be obtained via the REGISTERED_LONGID macro.
+        RegistryEntry(LongIdentifier identifier, VersionNumber version);
         virtual ~RegistryEntry();
 
         /// Return an identifier which uniquely identifies the entry.
         /// The identifier should never be changed.
-        const std::string& getIdentifier() const;
+        LongIdentifier getIdentifier() const;
 
         /// The name of the entry, which can be displayed to the user and is permitted to change
         /// over time.
-        const std::string& getName() const;
+        std::string getName() const;
 
         /// Get the version of this entry.
         VersionNumber getVersion() const;
@@ -40,8 +43,7 @@ namespace babelwires {
         virtual void onRegistered();
 
       private:
-        std::string m_identifier;
-        std::string m_name;
+        LongIdentifier m_identifier;
         VersionNumber m_version;
     };
 
@@ -61,13 +63,16 @@ namespace babelwires {
         /// Transfer ownership to the registry.
         void addEntry(std::unique_ptr<RegistryEntry> newEntry);
 
-        /// Find an entry by an internal key which should be stable between
-        /// versions of the program.
-        const RegistryEntry* getEntryByIdentifier(std::string_view identifier) const;
+        /// Find an entry by an internal key which should be stable between versions of the program.
+        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
+        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
+        const RegistryEntry* getEntryByIdentifier(const LongIdentifier& identifier) const;
 
         /// Find an entry which is expected to be present.
         /// Will throw an RegistryException if the entry is not found.
-        const RegistryEntry& getRegisteredEntry(std::string_view identifier) const;
+        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
+        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
+        const RegistryEntry& getRegisteredEntry(const LongIdentifier& identifier) const;
 
       protected:
         virtual void validateNewEntry(const RegistryEntry* newEntry) const;
@@ -94,11 +99,15 @@ namespace babelwires {
 
         /// Find an entry by an internal key which should be stable between
         /// versions of the program.
-        const ENTRY* getEntryByIdentifier(std::string_view identifier) const;
+        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
+        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
+        const ENTRY* getEntryByIdentifier(const LongIdentifier& identifier) const;
 
         /// Find an entry which is expected to be present.
         /// Will throw an RegistryException if the entry is not found.
-        const ENTRY& getRegisteredEntry(std::string_view identifier) const;
+        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
+        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
+        const ENTRY& getRegisteredEntry(const LongIdentifier& identifier) const;
 
       public:
         class Iterator;

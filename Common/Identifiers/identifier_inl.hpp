@@ -2,16 +2,45 @@
  * An identifier uniquely identifies an object in some local context (e.g. a field in a record) and globally.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Identifiers/identifier.hpp"
-
-#include "Common/exceptions.hpp"
+#include <Common/exceptions.hpp>
 
 #include <charconv>
 
-babelwires::Identifier::Identifier(std::string_view str) {
+template <unsigned int NUM_BLOCKS>
+typename babelwires::IdentifierBase<NUM_BLOCKS>::Discriminator
+babelwires::IdentifierBase<NUM_BLOCKS>::getDiscriminator() const {
+    return m_data.m_discriminator;
+}
+
+template <unsigned int NUM_BLOCKS>
+void babelwires::IdentifierBase<NUM_BLOCKS>::setDiscriminator(Discriminator index) const {
+    m_data.m_discriminator = index;
+}
+
+template <unsigned int NUM_BLOCKS>
+void babelwires::IdentifierBase<NUM_BLOCKS>::copyDiscriminatorTo(const IdentifierBase& other) const {
+    if (other.getDiscriminator() == 0) {
+        assert(other.getDiscriminator() == 0);
+        other.setDiscriminator(getDiscriminator());
+    }
+}
+
+template <unsigned int NUM_BLOCKS>
+template <size_t... INSEQ>
+auto babelwires::IdentifierBase<NUM_BLOCKS>::getTupleOfCodesFromIndexSequence(std::index_sequence<INSEQ...>) const {
+    return std::make_tuple(getDataAsCode<INSEQ>()...);
+}
+
+template <unsigned int NUM_BLOCKS>
+template <size_t... INSEQ>
+std::size_t babelwires::IdentifierBase<NUM_BLOCKS>::getHashFromIndexSequence(std::index_sequence<INSEQ...>) const {
+    return hash::mixtureOf(getDataAsCode<INSEQ>()...);
+}
+
+template <unsigned int NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::IdentifierBase(std::string_view str) {
     const size_t len = str.size();
     assert((len > 0) && "Identifiers may not be empty");
     assert((len <= N) && "str is too long.");
@@ -23,7 +52,9 @@ babelwires::Identifier::Identifier(std::string_view str) {
     std::fill(m_data.m_chars, m_data.m_chars + N - len, 0);
 }
 
-babelwires::Identifier babelwires::Identifier::deserializeFromString(std::string_view str) {
+template <unsigned int NUM_BLOCKS>
+babelwires::IdentifierBase<NUM_BLOCKS>
+babelwires::IdentifierBase<NUM_BLOCKS>::deserializeFromString(std::string_view str) {
     Discriminator discriminator = 0;
     std::size_t idEnd = str.find(s_discriminatorDelimiter);
     if (idEnd != std::string_view::npos) {
@@ -41,35 +72,40 @@ babelwires::Identifier babelwires::Identifier::deserializeFromString(std::string
     if (!validate(str.data(), str.size())) {
         throw ParseException() << "The string \"" << str << "\" is not a valid identifier";
     }
-    if (discriminator > c_maxDiscriminator)
-    {
+    if (discriminator > c_maxDiscriminator) {
         throw ParseException() << "The string \"" << str << "\" has a discriminator which is too large";
     }
-    Identifier f(str);
+    IdentifierBase<NUM_BLOCKS> f(str);
     f.setDiscriminator(discriminator);
     return f;
 }
 
-void babelwires::Identifier::writeToStream(std::ostream& os) const {
+template <unsigned int NUM_BLOCKS>
+void babelwires::IdentifierBase<NUM_BLOCKS>::writeTextToStream(std::ostream& os) const {
     for (int i = N - 1; i >= 0; --i) {
         if (m_data.m_chars[i] == '\0') {
             break;
         }
         os << m_data.m_chars[i];
     }
+}
+
+template <unsigned int NUM_BLOCKS> std::string babelwires::IdentifierBase<NUM_BLOCKS>::toString() const {
+    std::ostringstream os;
+    writeTextToStream(os);
+    return os.str();
+}
+
+template <unsigned int NUM_BLOCKS> std::string babelwires::IdentifierBase<NUM_BLOCKS>::serializeToString() const {
+    std::ostringstream os;
+    writeTextToStream(os);
     if (m_data.m_discriminator > 0) {
         os << s_discriminatorDelimiter << static_cast<int>(m_data.m_discriminator);
     }
+    return os.str();
 }
 
-/// Return a human-readable version of the identifier.
-std::string babelwires::Identifier::serializeToString() const {
-    std::ostringstream oss;
-    writeToStream(oss);
-    return oss.str();
-}
-
-bool babelwires::Identifier::validate(const char* chars, size_t n) {
+template <unsigned int NUM_BLOCKS> bool babelwires::IdentifierBase<NUM_BLOCKS>::validate(const char* chars, size_t n) {
     assert(n >= 0);
     assert(n <= N);
     if ((chars[0] == '\0') || (n == 0)) {
@@ -90,9 +126,4 @@ bool babelwires::Identifier::validate(const char* chars, size_t n) {
         }
     }
     return true;
-}
-
-void babelwires::Identifier::copyDiscriminatorToInternal(const Identifier& other) const {
-    assert(other.getDiscriminator() == 0);
-    other.setDiscriminator(getDiscriminator());
 }

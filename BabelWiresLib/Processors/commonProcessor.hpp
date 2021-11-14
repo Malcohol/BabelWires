@@ -29,8 +29,8 @@ namespace babelwires {
     /// A convenient base class for processor factories.
     template <typename PROCESSOR> class CommonProcessorFactory : public ProcessorFactory {
       public:
-        CommonProcessorFactory(std::string identifier, std::string name, VersionNumber version)
-            : ProcessorFactory(std::move(identifier), std::move(name), version) {}
+        CommonProcessorFactory(LongIdentifier identifier, VersionNumber version)
+            : ProcessorFactory(identifier, version) {}
 
         virtual std::unique_ptr<babelwires::Processor> createNewProcessor() const override {
             return std::make_unique<PROCESSOR>();

@@ -1,11 +1,11 @@
 /**
  * A singleton that associates global metadata with identifiers.
- * 
+ *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Identifiers/identifierRegistry.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 #include "Common/Log/debugLogger.hpp"
 #include "Common/Serialization/deserializer.hpp"
@@ -22,8 +22,8 @@ babelwires::IdentifierRegistry::InstanceData::InstanceData()
     , m_identifier("Invald")
     , m_authority(Authority::isProvisional) {}
 
-babelwires::IdentifierRegistry::InstanceData::InstanceData(std::string fieldName, Uuid uuid, Identifier identifier,
-                                                          Authority authority)
+babelwires::IdentifierRegistry::InstanceData::InstanceData(std::string fieldName, Uuid uuid, LongIdentifier identifier,
+                                                           Authority authority)
     : m_fieldName(std::move(fieldName))
     , m_uuid(std::move(uuid))
     , m_identifier(identifier)
@@ -42,9 +42,8 @@ void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deseriali
     m_authority = Authority::isProvisional;
 }
 
-babelwires::Identifier babelwires::IdentifierRegistry::addIdentifierWithMetadata(babelwires::Identifier identifier,
-                                                                        const std::string& name, const Uuid& uuid,
-                                                                        Authority authority) {
+babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWithMetadata(
+    babelwires::LongIdentifier identifier, const std::string& name, const Uuid& uuid, Authority authority) {
     const Identifier::Discriminator discriminator = identifier.getDiscriminator();
     assert((discriminator == 0) && "The identifier already has a discriminator: Did you already register it?");
 
@@ -89,8 +88,23 @@ babelwires::Identifier babelwires::IdentifierRegistry::addIdentifierWithMetadata
     return identifier;
 }
 
+babelwires::Identifier babelwires::IdentifierRegistry::addShortIdentifierWithMetadata(babelwires::Identifier identifier,
+                                                                                      const std::string& name,
+                                                                                      const Uuid& uuid,
+                                                                                      Authority authority) {
+#ifndef NDEBUG
+    try {
+#endif
+        return Identifier(addLongIdentifierWithMetadata(identifier, name, uuid, authority));
+#ifndef NDEBUG
+    } catch (const ParseException&) {
+        assert(false && "A long identifier was previously registered with this uuid");
+    }
+#endif
+}
+
 const babelwires::IdentifierRegistry::InstanceData*
-babelwires::IdentifierRegistry::getInstanceData(Identifier identifier) const {
+babelwires::IdentifierRegistry::getInstanceData(LongIdentifier identifier) const {
     const babelwires::Identifier::Discriminator index = identifier.getDiscriminator();
     if (index > 0) {
         identifier.setDiscriminator(0);
@@ -106,7 +120,7 @@ babelwires::IdentifierRegistry::getInstanceData(Identifier identifier) const {
 }
 
 babelwires::IdentifierRegistry::ValueType
-babelwires::IdentifierRegistry::getDeserializedIdentifierData(Identifier identifier) const {
+babelwires::IdentifierRegistry::getDeserializedIdentifierData(LongIdentifier identifier) const {
     if (const babelwires::IdentifierRegistry::InstanceData* data = getInstanceData(identifier)) {
         return ValueType{identifier, &data->m_fieldName, &data->m_uuid};
     }
@@ -115,12 +129,11 @@ babelwires::IdentifierRegistry::getDeserializedIdentifierData(Identifier identif
                               "discriminator) are allowed";
 }
 
-std::string babelwires::IdentifierRegistry::getName(babelwires::Identifier identifier) const {
+std::string babelwires::IdentifierRegistry::getName(LongIdentifier identifier) const {
     if (const InstanceData* data = getInstanceData(identifier)) {
         return data->m_fieldName;
     }
-    // TODO
-    return identifier.serializeToString();
+    return identifier.toString();
 }
 
 std::shared_mutex babelwires::IdentifierRegistry::s_mutex;
@@ -200,8 +213,8 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
     // We'd like the table sorted by identifier.
     // The default ordering for identifiers is unaware of disciminators.
     std::sort(contents.begin(), contents.end(), [](const auto* a, const auto* b) {
-        const babelwires::Identifier idA = a->m_identifier;
-        const babelwires::Identifier idB = b->m_identifier;
+        const babelwires::LongIdentifier idA = a->m_identifier;
+        const babelwires::LongIdentifier idB = b->m_identifier;
         if (idA < idB) {
             return true;
         } else if (idB < idA) {

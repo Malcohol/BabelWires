@@ -3,8 +3,10 @@
 #include "Common/Audio/audioDest.hpp"
 #include "Common/Audio/audioInterface.hpp"
 #include "Common/Audio/audioSource.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 #include "Tests/TestUtils/equalSets.hpp"
+#include "Tests/TestUtils/testIdentifiers.hpp"
 
 #include <cassert>
 
@@ -42,8 +44,8 @@ namespace {
     /// Returns AudioDest and AudioSource which can be identifed by their baseNumChannels.
     struct TestAudioInterface : babelwires::AudioInterface {
         TestAudioInterface(std::string name, int baseNumChannels)
-            : babelwires::AudioInterface(name, name, 1)
-            , m_name(std::move(name))
+            : babelwires::AudioInterface(testUtils::getTestRegisteredLongIdentifier(name), 1)
+            , m_name(name)
             , m_baseNumChannels(baseNumChannels) {}
 
         std::vector<std::string> getDestinationNames() const override {
@@ -84,6 +86,7 @@ namespace {
 } // namespace
 
 TEST(AudioInterfaceRegistryTest, destinationsAndSources) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::AudioInterfaceRegistry reg;
 
     EXPECT_TRUE(reg.getDestinationNames().empty());

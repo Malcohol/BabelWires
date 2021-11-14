@@ -159,6 +159,7 @@ namespace babelwires {
         void setInternalFailure(std::string reasonForFailure);
 
         void setFactoryName(std::string factoryName);
+        void setFactoryName(LongIdentifier identifier);
 
         friend Modifier;
         friend ConnectionModifier;

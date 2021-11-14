@@ -9,9 +9,9 @@
 
 #include <cctype>
 
-babelwires::FileTypeEntry::FileTypeEntry(std::string identifier, std::string name, VersionNumber version,
+babelwires::FileTypeEntry::FileTypeEntry(LongIdentifier identifier, VersionNumber version,
                                          Extensions extensions)
-    : RegistryEntry(std::move(identifier), std::move(name), version)
+    : RegistryEntry(identifier, version)
     , m_extensions(std::move(extensions)) {
     for (auto& x : m_extensions) {
         assert(!x.empty());

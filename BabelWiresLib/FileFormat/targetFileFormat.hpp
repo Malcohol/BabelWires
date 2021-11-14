@@ -25,7 +25,7 @@ namespace babelwires {
     /// Factories which can create FileFeatures in a default state, and write those features as files.
     class TargetFileFormat : public FileTypeEntry, ProductInfo {
       public:
-        TargetFileFormat(std::string identifier, std::string name, VersionNumber version, Extensions extensions);
+        TargetFileFormat(LongIdentifier identifier, VersionNumber version, Extensions extensions);
         virtual std::unique_ptr<FileFeature> createNewFeature() const = 0;
         virtual void writeToFile(const FileFeature& fileFeature, std::ostream& os, UserLogger& userLogger) const = 0;
     };
