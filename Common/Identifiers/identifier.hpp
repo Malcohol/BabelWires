@@ -152,24 +152,19 @@ namespace babelwires {
             std::numeric_limits<IdentifierBase::Discriminator>::max() - 10;
 
         /// Get the discriminator (which distinguishes between identifiers with the same textual content).
-        Discriminator getDiscriminator() const { return m_data.m_discriminator; }
+        Discriminator getDiscriminator() const;
 
         /// Set the discriminator (which distinguishes between identifiers with the same textual content).
-        void setDiscriminator(Discriminator index) const { m_data.m_discriminator = index; }
+        void setDiscriminator(Discriminator index) const;
 
         /// If other doesn't have a discriminator set, set its discriminator to the discrimintor of this.
-        void copyDiscriminatorTo(const IdentifierBase& other) const {
-            if (other.getDiscriminator() == 0) {
-                copyDiscriminatorToInternal(other);
-            }
-        }
+        void copyDiscriminatorTo(const IdentifierBase& other) const;
 
       private:
         /// Called by the constructors to ensure the data is valid.
         static bool validate(const char* chars, size_t n);
 
-        void copyDiscriminatorToInternal(const IdentifierBase& other) const;
-
+        /// Write the textual portion of the identifier to the stream.
         void writeTextToStream(std::ostream& os) const;
 
         // Comparisons and hash calculations are based on the integer representation, but we need to mask out the
@@ -188,9 +183,7 @@ namespace babelwires {
         }
 
         /// Helper method which uses the integer sequence to map getDataAsCode over the m_code array.
-        template <size_t... INSEQ> auto getTupleOfCodesFromIndexSequence(std::index_sequence<INSEQ...>) const {
-            return std::make_tuple(getDataAsCode<INSEQ>()...);
-        }
+        template <size_t... INSEQ> auto getTupleOfCodesFromIndexSequence(std::index_sequence<INSEQ...>) const;
 
         /// Helper method to build a tuple of codes.
         /// The order of codes ensures lexicographic sorting of the texture contents.
@@ -199,9 +192,7 @@ namespace babelwires {
         }
 
         /// Helper method to build a hash out of the codes.
-        template <size_t... INSEQ> std::size_t getHashFromIndexSequence(std::index_sequence<INSEQ...>) const {
-            return hash::mixtureOf(getDataAsCode<INSEQ>()...);
-        }
+        template <size_t... INSEQ> std::size_t getHashFromIndexSequence(std::index_sequence<INSEQ...>) const;
 
       private:
         friend struct std::hash<babelwires::IdentifierBase<NUM_BLOCKS>>;
