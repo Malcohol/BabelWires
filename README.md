@@ -14,11 +14,11 @@ BabelWires itself has no domain specific code, but provides the bulk of the doma
 The defining use-case is [SeqWires](https://github.com/Malcohol/SeqWires), which supports the conversion of music sequence data between various music sequencer formats.
 
 The framework provides:
-* a generic way of representing data in a tree of self-describing data structures (Feature)
-* abstractions for source and target formats (SourceFileFormat and TargetFileFormat)
-* an abstraction for processing data (Processor)
-* a data structure describing a graph of wired nodes (Project)
-* a version-aware serialization system.
+* a generic way of representing data in a tree of self-describing data structures ([Feature](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/features.hpp))
+* abstractions for source and target formats ([SourceFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/sourceFileFormat.hpp) and [TargetFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/targetFileFormat.hpp))
+* an abstraction for processing data ([Processor](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Processors/processor.hpp))
+* a data structure describing a graph of wired nodes ([Project](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Project/project.hpp))
+* a version-aware [serialization system](https://github.com/Malcohol/BabelWires/blob/main/Common/Serialization/serializable.hpp).
 * a Qt-based application UI for manipulating projects. (Note: The underlying data management layer has no dependency on the UI or UI framework.)
 * a first-class concept of failure, allowing the project to cope with structural changes to the imported data. 
 
