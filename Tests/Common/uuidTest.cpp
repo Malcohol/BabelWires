@@ -9,12 +9,8 @@
 using namespace babelwires;
 
 TEST(UuidTest, basicOperations) {
-    Uuid zero;
-    EXPECT_TRUE(zero.isZero());
-
     const char sourceUuidText[] = "2b67299c-0f27-46d4-a8bf-8a97e1557f8f";
     Uuid uuid(sourceUuidText);
-    EXPECT_FALSE(uuid.isZero());
     EXPECT_EQ(uuid, Uuid(sourceUuidText));
     EXPECT_NE(uuid, Uuid("f0049bdd-0444-446f-8889-e2194e89cfd7"));
     {
@@ -35,23 +31,4 @@ TEST(UuidTest, badParsing) {
              "916d86a6-1d48-4bce-a83f-8deb375x9552", "916d86a6-1d48-4bce-a83f-8deb375a955298"}) {
         EXPECT_THROW(Uuid::deserializeFromString(s), ParseException);
     }
-}
-
-TEST(UuidTest, randomize) {
-    std::default_random_engine randomEngine(1445);
-
-    Uuid uuid;
-    uuid.randomize(randomEngine);
-    EXPECT_FALSE(uuid.isZero());
-
-    Uuid uuid2;
-    uuid2.randomize(randomEngine);
-    EXPECT_FALSE(uuid2.isZero());
-    // Statistical!
-    EXPECT_NE(uuid, uuid2);
-
-    Uuid uuid3;
-    randomEngine.seed(1445);
-    uuid3.randomize(randomEngine);
-    EXPECT_EQ(uuid, uuid3);
 }

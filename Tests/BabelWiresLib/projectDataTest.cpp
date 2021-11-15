@@ -32,7 +32,7 @@ TEST(ProjectDataTest, serialization) {
     auto dataPtr = deserializer.deserializeObject<babelwires::ProjectData>();
     deserializer.finalize();
 
-    EXPECT_EQ(dataPtr->m_projectId, "12431243-1243-1243-1243-124312431243");
+    EXPECT_EQ(dataPtr->m_projectId, 1243);
     ASSERT_EQ(dataPtr->m_elements.size(), 3);
     {
         const babelwires::ElementData* data = dataPtr->m_elements[0].get();

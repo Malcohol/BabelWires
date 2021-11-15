@@ -242,7 +242,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
 void babelwires::Project::setProjectData(const ProjectData& projectData) {
     clear();
 
-    if (!projectData.m_projectId.isZero()) {
+    if (projectData.m_projectId != INVALID_PROJECT_ID) {
         m_projectId = projectData.m_projectId;
     }
     std::vector<FeatureElement*> elementsAdded;
@@ -581,7 +581,8 @@ void babelwires::Project::setElementContentsSize(ElementId elementId, const UiSi
 }
 
 void babelwires::Project::randomizeProjectId() {
-    m_projectId.randomize(m_context.m_randomEngine);
+    m_projectId =
+        std::uniform_int_distribution<ProjectId>(1, std::numeric_limits<ProjectId>::max())(m_context.m_randomEngine);
 }
 
 babelwires::ProjectId babelwires::Project::getProjectId() const {

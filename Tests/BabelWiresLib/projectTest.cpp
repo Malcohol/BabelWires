@@ -47,7 +47,7 @@ TEST(ProjectTest, projectId) {
     // The test context has a built-in newly constructed project.
     const babelwires::ProjectId projectId = context.m_project.getProjectId();
 
-    EXPECT_FALSE(projectId.isZero());
+    EXPECT_NE(projectId, babelwires::INVALID_PROJECT_ID);
 
     babelwires::Project project2(context.m_projectContext, context.m_log);
 
@@ -57,7 +57,7 @@ TEST(ProjectTest, projectId) {
 
     context.m_project.clear();
 
-    EXPECT_FALSE(context.m_project.getProjectId().isZero());
+    EXPECT_NE(context.m_project.getProjectId(), babelwires::INVALID_PROJECT_ID);
     EXPECT_NE(context.m_project.getProjectId(), projectId);
     EXPECT_NE(context.m_project.getProjectId(), project2Id);
 }
