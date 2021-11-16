@@ -11,6 +11,7 @@
 #include <string>
 #include <string_view>
 #include <ostream>
+#include <random>
 
 namespace babelwires {
 
@@ -19,6 +20,9 @@ namespace babelwires {
     /// the required textual format.
     class Uuid {
       public:
+        /// Initializes the uuid to the zero pattern.
+        Uuid();
+
         /// This asserts the uuidText is in the correct form:
         /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
         Uuid(std::string uuidText);
@@ -27,6 +31,12 @@ namespace babelwires {
         /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
         Uuid(const char* uuidText)
             : Uuid(std::string(uuidText)) {}
+
+        /// Is the Uuid all zeros?
+        bool isZero() const;
+
+        /// Set the Uuid to a random, non-zero value.
+        void randomize(std::default_random_engine& randomEngine);
 
         std::string serializeToString() const { return m_text; }
 
