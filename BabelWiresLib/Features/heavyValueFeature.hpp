@@ -5,6 +5,8 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
+#pragma once
+
 #include "BabelWiresLib/Features/features.hpp"
 
 #include <memory>
