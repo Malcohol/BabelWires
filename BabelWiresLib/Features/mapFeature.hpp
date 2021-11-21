@@ -20,8 +20,8 @@ namespace babelwires {
 
       private:
         /// Empty means all types are allowed.
-        std::unordered_set<LongIdentifier> m_allowedSourceTypes;
+        std::unordered_set<LongIdentifier> m_allowedSourceIds;
         /// Empty means all types are allowed.
-        std::unordered_set<LongIdentifier> m_allowedTargetTypes;
+        std::unordered_set<LongIdentifier> m_allowedTargetIds;
     };
 } // namespace babelwires

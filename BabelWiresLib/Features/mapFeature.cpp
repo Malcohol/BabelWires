@@ -15,13 +15,13 @@ std::string babelwires::MapFeature::doGetValueType() const {
 }
 
 void babelwires::MapFeature::onBeforeSetValue(const Map& newValue) const {
-    const LongIdentifier& newSourceType = newValue.getSourceType();
-    const LongIdentifier& newTargetType = newValue.getTargetType();
+    const LongIdentifier& newSourceType = newValue.getSourceId();
+    const LongIdentifier& newTargetType = newValue.getTargetId();
 
-    if (!m_allowedSourceTypes.empty() && (m_allowedSourceTypes.find(newSourceType) == m_allowedSourceTypes.end())) {
+    if (!m_allowedSourceIds.empty() && (m_allowedSourceIds.find(newSourceType) == m_allowedSourceIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newSourceType) << "\" is not a permitted source type for this map feature";
     }
-    if (!m_allowedTargetTypes.empty() && (m_allowedTargetTypes.find(newTargetType) == m_allowedTargetTypes.end())) {
+    if (!m_allowedTargetIds.empty() && (m_allowedTargetIds.find(newTargetType) == m_allowedTargetIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newTargetType) << "\" is not a permitted target type for this map feature";
     }
 }
