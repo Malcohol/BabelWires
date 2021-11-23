@@ -17,11 +17,8 @@
 namespace babelwires {
     class MapEntry;
 
-    // TODO
-    LongIdentifier getIntTypeId();
-
     /// 
-    class Map : public Serializable, ProjectVisitable {
+    class Map : public Serializable, public ProjectVisitable {
       public:
         SERIALIZABLE(Map, "map", void, 1);
 
@@ -47,6 +44,10 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
+
+      private:
+        /// Check that the entries types match the source and target ids.
+        bool validateNewEntry(const MapEntry& newEntry) const;
 
       private:
         LongIdentifier m_sourceId;

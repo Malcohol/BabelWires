@@ -8,6 +8,7 @@
 #pragma once
 
 #include "BabelWiresLib/Project/projectVisitable.hpp"
+#include "BabelWiresLib/Maps/typeSystem.hpp"
 
 #include "Common/Serialization/serializable.hpp"
 #include "Common/Cloning/cloneable.hpp"
@@ -24,6 +25,8 @@ namespace babelwires {
         virtual ~MapEntry() = default;
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const MapEntry& other) const = 0;
+        virtual KnownType getSourceType() const = 0;
+        virtual KnownType getTargetType() const = 0;
     };
 } // namespace babelwires
 

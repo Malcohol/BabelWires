@@ -15,7 +15,6 @@ namespace babelwires {
     /// A map entry with a single source value of discrete type.
     template <typename SOURCE_TYPE, typename TARGET_TYPE> class DiscreteMapEntry : public MapEntry {
       public:
-        CLONEABLE(DiscreteMapEntry);
         SOURCE_TYPE m_sourceValue;
         TARGET_TYPE m_targetValue;
         std::size_t getHash() const override;
@@ -29,7 +28,10 @@ namespace babelwires {
 
     class EnumEnumMapEntry : public DiscreteMapEntry<Identifier, Identifier> {
       public:
+        CLONEABLE(EnumEnumMapEntry);
         SERIALIZABLE(EnumEnumMapEntry, "enumEnum", 1);
+        KnownType getSourceType() const override { return KnownType::Enum; }
+        KnownType getTargetType() const override { return KnownType::Enum; }
     };
 } // namespace babelwires
 

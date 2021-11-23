@@ -8,22 +8,18 @@
 #include <BabelWiresLib/Maps/map.hpp>
 
 #include <BabelWiresLib/Maps/mapEntry.hpp>
+#include <BabelWiresLib/Maps/typeSystem.hpp>
 
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializer.hpp"
-#include <Common/Identifiers/registeredIdentifier.hpp>
-
-babelwires::LongIdentifier babelwires::getIntTypeId() {
-    return REGISTERED_LONGID("int", "Integer", "76f26102-b217-45ac-82cd-20a8d0bf6ae7");
-}
 
 babelwires::Map::Map()
-    : m_sourceId(getIntTypeId())
-    , m_targetId(getIntTypeId()) {}
+    : m_sourceId(getBuiltInTypeId(KnownType::Int))
+    , m_targetId(getBuiltInTypeId(KnownType::Int)) {}
 
 babelwires::Map::Map(const Map& other)
-    : m_sourceId(getIntTypeId())
-    , m_targetId(getIntTypeId()) {
+    : m_sourceId(other.m_sourceId)
+    , m_targetId(other.m_targetId) {
     for (const auto& e : other.m_mapEntries) {
         m_mapEntries.emplace_back(e->clone());
     }
@@ -71,7 +67,18 @@ std::size_t babelwires::Map::getHash() const {
     return h;
 }
 
+bool babelwires::Map::validateNewEntry(const MapEntry& newEntry) const {
+    if (getTypeFromIdentifier(m_sourceId) != newEntry.getSourceType()) {
+        return false;
+    }
+    if (getTypeFromIdentifier(m_targetId) != newEntry.getTargetType()) {
+        return false;
+    }
+    return true;
+}
+
 void babelwires::Map::addMapEntry(std::unique_ptr<MapEntry> newEntry) {
+    assert(validateNewEntry(*newEntry));
     m_mapEntries.emplace_back(std::move(newEntry));
 }
 
@@ -86,7 +93,11 @@ void babelwires::Map::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("m_targetId", m_targetId);
     auto it = deserializer.deserializeArray<MapEntry>("entries");
     while (it.isValid()) {
-        m_mapEntries.emplace_back(std::move(it.getObject()));
+        std::unique_ptr<MapEntry> newEntry = it.getObject();
+        if (!validateNewEntry(*newEntry)) {
+            throw ParseException() << "The map entry was invalid"; 
+        }
+        m_mapEntries.emplace_back(std::move(newEntry));
         ++it;
     }
 }
