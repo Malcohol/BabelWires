@@ -20,6 +20,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/connectionModifier.cpp
 	Project/Modifiers/connectionModifierData.cpp
 	Project/Modifiers/activateOptionalsModifierData.cpp
+	Project/Modifiers/mapValueAssignmentData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp
 	ProjectExtra/projectObserver.cpp

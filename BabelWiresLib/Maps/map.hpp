@@ -8,6 +8,8 @@
 #pragma once
 
 #include <Common/Identifiers/identifier.hpp>
+#include "Common/Serialization/serializable.hpp"
+#include "BabelWiresLib/Project/projectVisitable.hpp"
 
 #include <vector>
 #include <memory>
@@ -19,9 +21,12 @@ namespace babelwires {
     LongIdentifier getIntTypeId();
 
     /// 
-    class Map {
+    class Map : public Serializable, ProjectVisitable {
       public:
+        SERIALIZABLE(Map, "map", void, 1);
+
         Map();
+        Map(const Map& other);
         Map(Map&& other);
         virtual ~Map();
 
@@ -31,12 +36,17 @@ namespace babelwires {
         void setSourceId(LongIdentifier sourceId);
         void setTargetId(LongIdentifier targetId);
 
-        void addMapEntry(std::unique_ptr<MapEntry> indexToValue);
+        void addMapEntry(std::unique_ptr<MapEntry> newEntry);
 
         bool operator==(const Map& other) const;
         bool operator!=(const Map& other) const;
 
         std::size_t getHash() const;
+
+        void serializeContents(Serializer& serializer) const override;
+        void deserializeContents(Deserializer& deserializer) override;
+        void visitIdentifiers(IdentifierVisitor& visitor) override;
+        void visitFilePaths(FilePathVisitor& visitor) override;
 
       private:
         LongIdentifier m_sourceId;

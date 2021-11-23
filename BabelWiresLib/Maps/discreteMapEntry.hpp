@@ -13,11 +13,23 @@
 
 namespace babelwires {
     /// A map entry with a single source value of discrete type.
-    template <typename SOURCE_TYPE, typename TARGET_TYPE> struct DiscreteMapEntry {
+    template <typename SOURCE_TYPE, typename TARGET_TYPE> class DiscreteMapEntry : public MapEntry {
+      public:
+        CLONEABLE(DiscreteMapEntry);
         SOURCE_TYPE m_sourceValue;
         TARGET_TYPE m_targetValue;
         std::size_t getHash() const override;
         bool operator==(const MapEntry& other) const override;
+
+        void serializeContents(Serializer& serializer) const override;
+        void deserializeContents(Deserializer& deserializer) override;
+        void visitIdentifiers(IdentifierVisitor& visitor) override;
+        void visitFilePaths(FilePathVisitor& visitor) override;
+    };
+
+    class EnumEnumMapEntry : public DiscreteMapEntry<Identifier, Identifier> {
+      public:
+        SERIALIZABLE(EnumEnumMapEntry, "enumEnum", 1);
     };
 } // namespace babelwires
 
