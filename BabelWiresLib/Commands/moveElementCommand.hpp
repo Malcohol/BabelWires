@@ -9,11 +9,14 @@
 
 #include "BabelWiresLib/Commands/commands.hpp"
 #include "BabelWiresLib/Project/uiPosition.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
 
 #include <map>
 #include <optional>
 
 namespace babelwires {
+    class Project;
 
     /// The command which changes the UiPosition of a FeatureElement.
     class MoveElementCommand : public SimpleCommand<Project> {

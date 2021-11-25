@@ -22,10 +22,10 @@ namespace babelwires {
     template <typename COMMAND_TARGET> class Command;
 
     /// Manages commands for undo/redo, and has a "cursor" which can be used
-    /// to know when the project has changed from its last saved state.
+    /// to know when the target has changed from its last saved state.
     template <typename COMMAND_TARGET> class CommandManager {
       public:
-        CommandManager(COMMAND_TARGET& project, UserLogger& userLogger);
+        CommandManager(COMMAND_TARGET& target, UserLogger& userLogger);
         virtual ~CommandManager();
 
         /// Returns true if the command could be executed, in which case ownership is moved to
@@ -46,7 +46,7 @@ namespace babelwires {
         /// Set the cursor to the current position.
         void setCursor();
 
-        /// Is the project still in the state it was when the cursor was last set.
+        /// Is the target still in the state it was when the cursor was last set.
         bool isAtCursor() const;
 
       protected:
@@ -62,11 +62,11 @@ namespace babelwires {
         Signal<> signal_undoStateChanged;
 
       private:
-        COMMAND_TARGET& m_project;
+        COMMAND_TARGET& m_target;
         UserLogger& m_userLogger;
         std::vector<std::unique_ptr<Command<COMMAND_TARGET>>> m_commandHistory;
         int m_indexOfAppliedCommand = -1;
-        // The index in the command history corresponding to command performed when the project was last saved, or -1.
+        // The index in the command history corresponding to command performed when the target was last saved, or -1.
         int m_indexOfCursor = -1;
     };
 

@@ -9,16 +9,14 @@
 
 #include "BabelWiresLib/Commands/commandManager.hpp"
 #include "BabelWiresLib/Commands/commands.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Project/projectData.hpp"
 
 #include "Common/Log/debugLogger.hpp"
 #include "Common/Log/userLogger.hpp"
 
 #include <cassert>
 
-template<typename COMMAND_TARGET> babelwires::CommandManager<COMMAND_TARGET>::CommandManager(COMMAND_TARGET& project, UserLogger& userLogger)
-    : m_project(project)
+template<typename COMMAND_TARGET> babelwires::CommandManager<COMMAND_TARGET>::CommandManager(COMMAND_TARGET& target, UserLogger& userLogger)
+    : m_target(target)
     , m_userLogger(userLogger) {}
 
 template<typename COMMAND_TARGET> babelwires::CommandManager<COMMAND_TARGET>::~CommandManager() = default;
@@ -32,9 +30,9 @@ template<typename COMMAND_TARGET> bool babelwires::CommandManager<COMMAND_TARGET
         logDebug() << "Executing subsumed command \"" << command->getName() << "\"";
     }
 
-    if (!command->initializeAndExecute(m_project)) {
+    if (!command->initializeAndExecute(m_target)) {
         m_userLogger.logError() << "Could not execute command \"" << command->getName()
-                                << "\": the project must have changed";
+                                << "\": the system must have changed";
         // Clear redo stack.
         assert(((int)m_commandHistory.size() > m_indexOfAppliedCommand) && "m_indexOfAppliedCommand out of range");
         m_commandHistory.resize(m_indexOfAppliedCommand + 1);
@@ -74,7 +72,7 @@ template<typename COMMAND_TARGET> void babelwires::CommandManager<COMMAND_TARGET
     assert(canUndo() && "Call should be preceeded by canUndo");
     auto& command = m_commandHistory.at(m_indexOfAppliedCommand);
     m_userLogger.logInfo() << "Undoing command \"" << command->getName() << "\"";
-    command->undo(m_project);
+    command->undo(m_target);
     --m_indexOfAppliedCommand;
     signal_undoStateChanged.fire();
 }
@@ -84,7 +82,7 @@ template<typename COMMAND_TARGET> void babelwires::CommandManager<COMMAND_TARGET
     ++m_indexOfAppliedCommand;
     auto& command = m_commandHistory.at(m_indexOfAppliedCommand);
     m_userLogger.logInfo() << "Redoing command \"" << command->getName() << "\"";
-    command->execute(m_project);
+    command->execute(m_target);
     signal_undoStateChanged.fire();
 }
 

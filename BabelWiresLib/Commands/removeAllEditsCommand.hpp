@@ -8,8 +8,12 @@
 #pragma once
 
 #include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
 
 namespace babelwires {
+    class Project;
+    class ModifierData;
 
     /// Remove all modifiers and expanded paths at and beneath a given feature.
     class RemoveAllEditsCommand : public SimpleCommand<Project> {

@@ -9,8 +9,11 @@
 #pragma once
 
 #include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
 
 namespace babelwires {
+    class Project;
 
     /// Add an element to an array feature.
     class AddEntryToArrayCommand : public SimpleCommand<Project> {

@@ -8,8 +8,11 @@
 #pragma once
 
 #include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
 
 namespace babelwires {
+    class Project;
 
     /// Set the size of an array feature.
     class SetArraySizeCommand : public CompoundCommand<Project> {

@@ -12,7 +12,7 @@
 #include "BabelWiresLib/Commands/commands.hpp"
 
 namespace babelwires {
-
+    class Project;
     struct ConnectionModifierData;
 
     /// ConnectionDescription is a self-contained description of a connection.

@@ -8,10 +8,13 @@
 #pragma once
 
 #include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
 
 #include <filesystem>
 
 namespace babelwires {
+    class Project;
 
     /// Change the source file of a FileElement.
     class ChangeFileCommand : public SimpleCommand<Project> {

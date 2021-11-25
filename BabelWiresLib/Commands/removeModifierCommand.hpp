@@ -8,8 +8,12 @@
 #pragma once
 
 #include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
 
 namespace babelwires {
+    class Project;
+    class ModifierData;
 
     /// Remove a modifier from a feature element.
     /// This will not remove modifiers on array elements affected by removing

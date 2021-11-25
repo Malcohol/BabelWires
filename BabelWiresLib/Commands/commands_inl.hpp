@@ -1,3 +1,10 @@
+/**
+ * Commands define undoable ways of mutating the a COMMAND_TARGET.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 
 template <typename COMMAND_TARGET>
 babelwires::Command<COMMAND_TARGET>::Command(std::string commandName)
@@ -38,9 +45,9 @@ babelwires::SimpleCommand<COMMAND_TARGET>::SimpleCommand(std::string commandName
     : Command<COMMAND_TARGET>(std::move(commandName)) {}
 
 template <typename COMMAND_TARGET>
-bool babelwires::SimpleCommand<COMMAND_TARGET>::initializeAndExecute(Project& project) {
-    if (initialize(project)) {
-        this->template execute(project);
+bool babelwires::SimpleCommand<COMMAND_TARGET>::initializeAndExecute(COMMAND_TARGET& target) {
+    if (initialize(target)) {
+        this->template execute(target);
         return true;
     }
     return false;
@@ -56,17 +63,17 @@ void babelwires::CompoundCommand<COMMAND_TARGET>::addSubCommand(std::unique_ptr<
 }
 
 template <typename COMMAND_TARGET>
-bool babelwires::CompoundCommand<COMMAND_TARGET>::initializeAndExecute(Project& project) {
+bool babelwires::CompoundCommand<COMMAND_TARGET>::initializeAndExecute(COMMAND_TARGET& target) {
     int i = 0;
     for (; i < m_subCommands.size(); ++i) {
-        if (!m_subCommands[i]->initializeAndExecute(project)) {
+        if (!m_subCommands[i]->initializeAndExecute(target)) {
             break;
         }
     }
     if (i < m_subCommands.size()) {
         // Not all subcommands succeeded, so restore the initial state.
         for (--i; i >= 0; --i) {
-            m_subCommands[i]->undo(project);
+            m_subCommands[i]->undo(target);
         }
         return false;
     }
@@ -74,14 +81,14 @@ bool babelwires::CompoundCommand<COMMAND_TARGET>::initializeAndExecute(Project& 
 }
 
 template <typename COMMAND_TARGET>
-void babelwires::CompoundCommand<COMMAND_TARGET>::execute(Project& project) const {
+void babelwires::CompoundCommand<COMMAND_TARGET>::execute(COMMAND_TARGET& target) const {
     for (auto&& subCommand : m_subCommands) {
-        subCommand->execute(project);
+        subCommand->execute(target);
     }
 }
 
 template <typename COMMAND_TARGET>
-void babelwires::CompoundCommand<COMMAND_TARGET>::undo(Project& project) const {
+void babelwires::CompoundCommand<COMMAND_TARGET>::undo(COMMAND_TARGET& target) const {
     std::for_each(m_subCommands.rbegin(), m_subCommands.rend(),
-                  [&project](const auto& subCommand) { subCommand->undo(project); });
+                  [&target](const auto& subCommand) { subCommand->undo(target); });
 }

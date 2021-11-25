@@ -9,8 +9,11 @@
 #pragma once
 
 #include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
 
 namespace babelwires {
+    class Project;
 
     /// Deactivate an optional in a RecordWithOptionalsFeature
     class DeactivateOptionalCommand : public CompoundCommand<Project> {

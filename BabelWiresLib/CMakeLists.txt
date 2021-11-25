@@ -33,6 +33,7 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/filePath.cpp
 	Maps/map.cpp
 	Maps/typeSystem.cpp
+	Maps/Commands/addEntryToMapCommand.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp

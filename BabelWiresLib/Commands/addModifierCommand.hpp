@@ -9,8 +9,12 @@
 #pragma once
 
 #include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
 
 namespace babelwires {
+    class Project;
+    class ModifierData;
 
     /// Add a modifier to a feature element.
     class AddModifierCommand : public SimpleCommand<Project> {

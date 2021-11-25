@@ -9,10 +9,14 @@
 
 #include "BabelWiresLib/Commands/commands.hpp"
 #include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
+#include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/projectIds.hpp"
 
 #include <unordered_set>
 
 namespace babelwires {
+    class Project;
+    class ElementData;
 
     /// Remove a feature element or a connection or a mixture of both from the project.
     /// All the connections of a feature element are always removed when it is.
