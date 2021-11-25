@@ -10,6 +10,7 @@
 #include "BabelWiresLib/Project/projectIds.hpp"
 #include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
 #include "BabelWiresLib/ProjectExtra/projectObserver.hpp"
+#include "BabelWiresLib/Commands/commandManager.hpp"
 
 #include "BabelWiresQtUi/ModelBridge/Internal/flowSceneConnectionInfo.hpp"
 
@@ -31,10 +32,8 @@ namespace babelwires {
 
     class Project;
     struct ProjectContext;
-    class CommandManager;
     class ConnectionModifier;
     class FeatureElement;
-    class Command;
     class ModifyModelScope;
     class AccessModelScope;
     struct UiPosition;
@@ -49,7 +48,7 @@ namespace babelwires {
         Q_OBJECT
 
       public:
-        ProjectBridge(Project& project, CommandManager& commandManager, UiProjectContext& projectContext);
+        ProjectBridge(Project& project, CommandManager<Project>& commandManager, UiProjectContext& projectContext);
         virtual ~ProjectBridge();
 
         /// Connect this object's slots to the signals provided by the flow scene.
@@ -64,7 +63,7 @@ namespace babelwires {
 
         /// The command will be executed when Qt is idle.
         /// Only one command can be scheduled.
-        void scheduleCommand(std::unique_ptr<Command> command);
+        void scheduleCommand(std::unique_ptr<Command<Project>> command);
 
         /// Execute an AddElementCommand now.
         /// This special case allows the new node to be constructed knowing its corresponding model element.
@@ -143,7 +142,7 @@ namespace babelwires {
         friend ModifyModelScope;
 
         Project& m_project;
-        CommandManager& m_commandManager;
+        CommandManager<Project>& m_commandManager;
         UiProjectContext& m_projectContext;
 
         QtNodes::FlowScene* m_flowScene = nullptr;
@@ -180,7 +179,7 @@ namespace babelwires {
         /// Most commands are scheduled to run when the UI is idle, rather than performed synchronously.
         /// One reason is that the processing of some commands modify the UI, causing inconsistencies
         /// and crashes.
-        std::unique_ptr<Command> m_scheduledCommand;
+        std::unique_ptr<Command<Project>> m_scheduledCommand;
 
         bool m_newNodesShouldBeSelected = false;
     };

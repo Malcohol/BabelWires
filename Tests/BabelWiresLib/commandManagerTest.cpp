@@ -2,15 +2,16 @@
 
 #include "BabelWiresLib/Commands/commandManager.hpp"
 #include "BabelWiresLib/Commands/commands.hpp"
+#include "BabelWiresLib/Project/project.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 namespace {
-    struct TestCommand : babelwires::Command {
+    struct TestCommand : babelwires::Command<babelwires::Project> {
         TestCommand(std::string commandName, bool shouldApply, bool isSubsumable = false)
-            : Command(std::move(commandName))
+            : Command<babelwires::Project>(std::move(commandName))
             , m_shouldApply(shouldApply)
             , m_isSubsumable(isSubsumable) {}
 
@@ -54,7 +55,7 @@ TEST(CommandManagerTest, undoRedoSinceCommand) {
 
     TestCommand* testCommand = new TestCommand("perform test command", true);
     {
-        std::unique_ptr<babelwires::Command> testCommandPtr(testCommand);
+        std::unique_ptr<babelwires::Command<babelwires::Project>> testCommandPtr(testCommand);
         commandManager.executeAndStealCommand(testCommandPtr);
         // Expect stolen
         EXPECT_EQ(testCommandPtr, nullptr);
@@ -118,7 +119,7 @@ TEST(CommandManagerTest, undoRedoWithTwoCommands) {
 
     TestCommand* testCommand = new TestCommand("perform first test command", true);
     {
-        std::unique_ptr<babelwires::Command> testCommandPtr(testCommand);
+        std::unique_ptr<babelwires::Command<babelwires::Project>> testCommandPtr(testCommand);
         commandManager.executeAndStealCommand(testCommandPtr);
     }
     ASSERT_EQ(testCommand->m_eventTrace.size(), 1);
@@ -126,7 +127,7 @@ TEST(CommandManagerTest, undoRedoWithTwoCommands) {
 
     TestCommand* testCommand2 = new TestCommand("perform second test command", true);
     {
-        std::unique_ptr<babelwires::Command> testCommandPtr(testCommand2);
+        std::unique_ptr<babelwires::Command<babelwires::Project>> testCommandPtr(testCommand2);
         commandManager.executeAndStealCommand(testCommandPtr);
     }
     ASSERT_EQ(testCommand2->m_eventTrace.size(), 1);
@@ -216,7 +217,7 @@ TEST(CommandManagerTest, failedCommand) {
 
     TestCommand* failedCommand = new TestCommand("attempt impossible command", false);
     {
-        std::unique_ptr<babelwires::Command> failedCommandPtr(failedCommand);
+        std::unique_ptr<babelwires::Command<babelwires::Project>> failedCommandPtr(failedCommand);
         commandManager.executeAndStealCommand(failedCommandPtr);
         // The command did not get stolen.
         ASSERT_NE(failedCommandPtr, nullptr);
@@ -232,13 +233,13 @@ TEST(CommandManagerTest, failedCommand) {
     EXPECT_TRUE(commandManager.isAtCursor());
 
     {
-        std::unique_ptr<babelwires::Command> testCommandPtr =
+        std::unique_ptr<babelwires::Command<babelwires::Project>> testCommandPtr =
             std::make_unique<TestCommand>("perform test command", true);
         commandManager.executeAndStealCommand(testCommandPtr);
     }
     commandManager.setCursor();
     {
-        std::unique_ptr<babelwires::Command> testCommandPtr =
+        std::unique_ptr<babelwires::Command<babelwires::Project>> testCommandPtr =
             std::make_unique<TestCommand>("perform another test command", true);
         commandManager.executeAndStealCommand(testCommandPtr);
     }
@@ -252,7 +253,7 @@ TEST(CommandManagerTest, failedCommand) {
 
     TestCommand* failedCommand2 = new TestCommand("attempt another impossible command", false);
     {
-        std::unique_ptr<babelwires::Command> failedCommandPtr(failedCommand2);
+        std::unique_ptr<babelwires::Command<babelwires::Project>> failedCommandPtr(failedCommand2);
         commandManager.executeAndStealCommand(failedCommandPtr);
         // The command did not get stolen.
         ASSERT_NE(failedCommandPtr, nullptr);
@@ -274,7 +275,7 @@ TEST(CommandManagerTest, subsumption) {
 
     TestCommand* testCommand = new TestCommand("perform test command", true);
     {
-        std::unique_ptr<babelwires::Command> testCommandPtr(testCommand);
+        std::unique_ptr<babelwires::Command<babelwires::Project>> testCommandPtr(testCommand);
         commandManager.executeAndStealCommand(testCommandPtr);
     }
 
@@ -284,7 +285,7 @@ TEST(CommandManagerTest, subsumption) {
 
     TestCommand* subsumableCommand = new TestCommand("subsumable command", true, true);
     {
-        std::unique_ptr<babelwires::Command> subsumableCommandPtr(subsumableCommand);
+        std::unique_ptr<babelwires::Command<babelwires::Project>> subsumableCommandPtr(subsumableCommand);
         commandManager.executeAndStealCommand(subsumableCommandPtr);
         // Expect stolen.
         EXPECT_EQ(subsumableCommandPtr, nullptr);
@@ -308,12 +309,12 @@ TEST(CommandManagerTest, clear) {
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     {
-        std::unique_ptr<babelwires::Command> testCommandPtr =
+        std::unique_ptr<babelwires::Command<babelwires::Project>> testCommandPtr =
             std::make_unique<TestCommand>("perform first test command", true);
         commandManager.executeAndStealCommand(testCommandPtr);
     }
     {
-        std::unique_ptr<babelwires::Command> testCommandPtr =
+        std::unique_ptr<babelwires::Command<babelwires::Project>> testCommandPtr =
             std::make_unique<TestCommand>("perform second test command", true);
         commandManager.executeAndStealCommand(testCommandPtr);
     }

@@ -13,7 +13,7 @@
 namespace babelwires {
 
     /// Deactivate an optional in a RecordWithOptionalsFeature
-    class DeactivateOptionalCommand : public CompoundCommand {
+    class DeactivateOptionalCommand : public CompoundCommand<Project> {
       public:
         DeactivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                Identifier optional);

@@ -12,7 +12,7 @@
 namespace babelwires {
 
     /// Remove all failed modifiers at or beneath the given path.
-    class RemoveFailedModifiersCommand : public CompoundCommand {
+    class RemoveFailedModifiersCommand : public CompoundCommand<Project> {
       public:
         RemoveFailedModifiersCommand(std::string commandName, ElementId targetId, FeaturePath featurePath);
 

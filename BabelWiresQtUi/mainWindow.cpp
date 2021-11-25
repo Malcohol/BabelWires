@@ -248,7 +248,7 @@ void babelwires::MainWindow::createDockWidgets(UnifiedLog& log) {
 
 void babelwires::MainWindow::onUndoStateChanged() {
     AccessModelScope scope(m_projectBridge);
-    const babelwires::CommandManager& commandManager = scope.getCommandManager();
+    const babelwires::CommandManager<Project>& commandManager = scope.getCommandManager();
 
     if (commandManager.canUndo()) {
         m_undoAction->setEnabled(true);

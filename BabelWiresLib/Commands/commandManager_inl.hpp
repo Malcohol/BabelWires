@@ -17,13 +17,13 @@
 
 #include <cassert>
 
-babelwires::CommandManager::CommandManager(Project& project, UserLogger& userLogger)
+template<typename COMMAND_TARGET> babelwires::CommandManager<COMMAND_TARGET>::CommandManager(COMMAND_TARGET& project, UserLogger& userLogger)
     : m_project(project)
     , m_userLogger(userLogger) {}
 
-babelwires::CommandManager::~CommandManager() = default;
+template<typename COMMAND_TARGET> babelwires::CommandManager<COMMAND_TARGET>::~CommandManager() = default;
 
-bool babelwires::CommandManager::executeAndStealCommand(std::unique_ptr<Command>& command) {
+template<typename COMMAND_TARGET> bool babelwires::CommandManager<COMMAND_TARGET>::executeAndStealCommand(std::unique_ptr<Command<COMMAND_TARGET>>& command) {
     const bool shouldSubsume = hasLastCommand() && getLastCommand().shouldSubsume(*command, true);
     if (!shouldSubsume) {
         m_userLogger.logInfo() << "Executing command \"" << command->getName() << "\"";
@@ -62,15 +62,15 @@ bool babelwires::CommandManager::executeAndStealCommand(std::unique_ptr<Command>
     return true;
 }
 
-bool babelwires::CommandManager::canUndo() const {
+template<typename COMMAND_TARGET> bool babelwires::CommandManager<COMMAND_TARGET>::canUndo() const {
     return 0 <= m_indexOfAppliedCommand;
 }
 
-bool babelwires::CommandManager::canRedo() const {
+template<typename COMMAND_TARGET> bool babelwires::CommandManager<COMMAND_TARGET>::canRedo() const {
     return m_indexOfAppliedCommand + 1 < m_commandHistory.size();
 }
 
-void babelwires::CommandManager::undo() {
+template<typename COMMAND_TARGET> void babelwires::CommandManager<COMMAND_TARGET>::undo() {
     assert(canUndo() && "Call should be preceeded by canUndo");
     auto& command = m_commandHistory.at(m_indexOfAppliedCommand);
     m_userLogger.logInfo() << "Undoing command \"" << command->getName() << "\"";
@@ -79,7 +79,7 @@ void babelwires::CommandManager::undo() {
     signal_undoStateChanged.fire();
 }
 
-void babelwires::CommandManager::redo() {
+template<typename COMMAND_TARGET> void babelwires::CommandManager<COMMAND_TARGET>::redo() {
     assert(canRedo() && "Call should be preceeded by canRedo");
     ++m_indexOfAppliedCommand;
     auto& command = m_commandHistory.at(m_indexOfAppliedCommand);
@@ -88,42 +88,42 @@ void babelwires::CommandManager::redo() {
     signal_undoStateChanged.fire();
 }
 
-std::string babelwires::CommandManager::getDescriptionOfUndoableCommand() const {
+template<typename COMMAND_TARGET> std::string babelwires::CommandManager<COMMAND_TARGET>::getDescriptionOfUndoableCommand() const {
     assert(canUndo() && "Call should be preceeded by canUndo");
     return m_commandHistory.at(m_indexOfAppliedCommand)->getName();
 }
 
-std::string babelwires::CommandManager::getDescriptionOfRedoableCommand() const {
+template<typename COMMAND_TARGET> std::string babelwires::CommandManager<COMMAND_TARGET>::getDescriptionOfRedoableCommand() const {
     assert(canRedo() && "Call should be preceeded by canRedo");
     return m_commandHistory.at(m_indexOfAppliedCommand + 1)->getName();
 }
 
-void babelwires::CommandManager::clear() {
+template<typename COMMAND_TARGET> void babelwires::CommandManager<COMMAND_TARGET>::clear() {
     m_commandHistory.clear();
     m_indexOfAppliedCommand = -1;
     m_indexOfCursor = -1;
     signal_undoStateChanged.fire();
 }
 
-void babelwires::CommandManager::setCursor() {
+template<typename COMMAND_TARGET> void babelwires::CommandManager<COMMAND_TARGET>::setCursor() {
     m_indexOfCursor = m_indexOfAppliedCommand;
     signal_undoStateChanged.fire();
 }
 
-bool babelwires::CommandManager::isAtCursor() const {
+template<typename COMMAND_TARGET> bool babelwires::CommandManager<COMMAND_TARGET>::isAtCursor() const {
     return m_indexOfCursor == m_indexOfAppliedCommand;
 }
 
-bool babelwires::CommandManager::hasLastCommand() const {
+template<typename COMMAND_TARGET> bool babelwires::CommandManager<COMMAND_TARGET>::hasLastCommand() const {
     return canUndo() && !canRedo();
 }
 
-babelwires::Command& babelwires::CommandManager::getLastCommand() {
+template<typename COMMAND_TARGET> babelwires::Command<COMMAND_TARGET>& babelwires::CommandManager<COMMAND_TARGET>::getLastCommand() {
     assert(hasLastCommand() && "No last command");
     return *m_commandHistory.back();
 }
 
-const babelwires::Command& babelwires::CommandManager::getLastCommand() const {
+template<typename COMMAND_TARGET> const babelwires::Command<COMMAND_TARGET>& babelwires::CommandManager<COMMAND_TARGET>::getLastCommand() const {
     assert(hasLastCommand() && "No last command");
     return *m_commandHistory.back();
 }

@@ -13,7 +13,7 @@
 namespace babelwires {
 
     /// Add a modifier to a feature element.
-    class AddModifierCommand : public SimpleCommand {
+    class AddModifierCommand : public SimpleCommand<Project> {
       public:
         AddModifierCommand(std::string commandName, ElementId targetId, std::unique_ptr<ModifierData> modifierToAdd);
 

@@ -83,14 +83,14 @@ void babelwires::Map::addMapEntry(std::unique_ptr<MapEntry> newEntry) {
 }
 
 void babelwires::Map::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("m_sourceId", m_sourceId);
-    serializer.serializeValue("m_targetId", m_targetId);
+    serializer.serializeValue("sourceId", m_sourceId);
+    serializer.serializeValue("targetId", m_targetId);
     serializer.serializeArray("entries", m_mapEntries);
 }
 
 void babelwires::Map::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("m_sourceId", m_sourceId);
-    deserializer.deserializeValue("m_targetId", m_targetId);
+    deserializer.deserializeValue("sourceId", m_sourceId);
+    deserializer.deserializeValue("targetId", m_targetId);
     auto it = deserializer.deserializeArray<MapEntry>("entries");
     while (it.isValid()) {
         std::unique_ptr<MapEntry> newEntry = it.getObject();

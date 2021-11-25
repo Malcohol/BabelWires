@@ -9,11 +9,11 @@
 
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
 #include "BabelWiresLib/Project/projectIds.hpp"
+#include "BabelWiresLib/Commands/commands.hpp"
 
 namespace babelwires {
 
     struct ConnectionModifierData;
-    class Command;
 
     /// ConnectionDescription is a self-contained description of a connection.
     /// The project does not use this (instead it uses a ConnectionModifier stored at the target FeatureElement).
@@ -26,10 +26,10 @@ namespace babelwires {
         ConnectionDescription& operator=(ConnectionDescription&& other);
 
         /// Create a command which would add this connection.
-        std::unique_ptr<babelwires::Command> getConnectionCommand() const;
+        std::unique_ptr<babelwires::Command<Project>> getConnectionCommand() const;
 
         /// Create a command which would remove this connection.
-        std::unique_ptr<babelwires::Command> getDisconnectionCommand() const;
+        std::unique_ptr<babelwires::Command<Project>> getDisconnectionCommand() const;
 
         bool operator==(const ConnectionDescription& other) const;
         bool operator!=(const ConnectionDescription& other) const;

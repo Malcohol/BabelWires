@@ -16,7 +16,7 @@
 namespace babelwires {
 
     /// The command which changes the UiPosition of a FeatureElement.
-    class MoveElementCommand : public SimpleCommand {
+    class MoveElementCommand : public SimpleCommand<Project> {
       public:
         MoveElementCommand(std::string commandName, ElementId elementId, UiPosition newPosition);
 

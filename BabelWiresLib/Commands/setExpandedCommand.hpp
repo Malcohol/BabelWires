@@ -11,7 +11,7 @@
 
 namespace babelwires {
 
-    class SetExpandedCommand : public SimpleCommand {
+    class SetExpandedCommand : public SimpleCommand<Project> {
       public:
         SetExpandedCommand(std::string commandName, ElementId elementId, FeaturePath pathToCompound, bool expanded);
 

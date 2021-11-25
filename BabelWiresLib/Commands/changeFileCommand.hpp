@@ -14,7 +14,7 @@
 namespace babelwires {
 
     /// Change the source file of a FileElement.
-    class ChangeFileCommand : public SimpleCommand {
+    class ChangeFileCommand : public SimpleCommand<Project> {
       public:
         ChangeFileCommand(std::string commandName, ElementId elementId, std::filesystem::path newFilePath);
 

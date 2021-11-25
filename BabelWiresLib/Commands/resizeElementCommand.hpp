@@ -15,7 +15,7 @@
 
 namespace babelwires {
 
-    class ResizeElementCommand : public SimpleCommand {
+    class ResizeElementCommand : public SimpleCommand<Project> {
       public:
         ResizeElementCommand(std::string commandName, ElementId elementId, UiSize newSize);
 

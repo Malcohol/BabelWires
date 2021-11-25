@@ -14,7 +14,7 @@ namespace babelwires {
     /// Remove a modifier from a feature element.
     /// This will not remove modifiers on array elements affected by removing
     /// an array size modifier. See RemoveModifierCommand.
-    class RemoveSimpleModifierCommand : public SimpleCommand {
+    class RemoveSimpleModifierCommand : public SimpleCommand<Project> {
       public:
         RemoveSimpleModifierCommand(std::string commandName, ElementId targetId, FeaturePath featurePath);
         virtual bool initialize(const Project& project) override;
@@ -34,7 +34,7 @@ namespace babelwires {
     };
 
     /// Remove the modifier, and restore any other modifiers removed when an array's size changes.
-    class RemoveModifierCommand : public CompoundCommand {
+    class RemoveModifierCommand : public CompoundCommand<Project> {
       public:
         RemoveModifierCommand(std::string commandName, ElementId targetId, FeaturePath featurePath);
 

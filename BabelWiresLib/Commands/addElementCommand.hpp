@@ -13,7 +13,7 @@
 namespace babelwires {
 
     /// Add a feature element to the project.
-    class AddElementCommand : public SimpleCommand {
+    class AddElementCommand : public SimpleCommand<Project> {
       public:
         AddElementCommand(std::string commandName, std::unique_ptr<ElementData> elementToAdd);
 

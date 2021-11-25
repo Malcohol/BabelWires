@@ -52,7 +52,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/rootFeature.cpp
 	Serialization/projectBundle.cpp
 	Commands/activateOptionalCommand.cpp
-	Commands/commands.cpp
 	Commands/addElementCommand.cpp
 	Commands/deactivateOptionalCommand.cpp
 	Commands/removeElementCommand.cpp
@@ -63,7 +62,6 @@ SET( BABELWIRESLIB_SRCS
 	Commands/removeEntryFromArrayCommand.cpp
 	Commands/changeFileCommand.cpp
 	Commands/pasteElementsCommand.cpp
-	Commands/commandManager.cpp
 	Commands/setExpandedCommand.cpp
 	Commands/removeAllEditsCommand.cpp
 	Commands/removeFailedModifiersCommand.cpp

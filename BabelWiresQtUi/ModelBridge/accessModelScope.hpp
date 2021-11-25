@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include "BabelWiresLib/Project/project.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
 namespace babelwires {
@@ -18,7 +19,7 @@ namespace babelwires {
         AccessModelScope(ProjectBridge& bridge);
         virtual ~AccessModelScope();
 
-        const CommandManager& getCommandManager();
+        const CommandManager<Project>& getCommandManager();
         const Project& getProject();
 
       protected:

@@ -12,7 +12,7 @@
 namespace babelwires {
 
     /// Set the size of an array feature.
-    class SetArraySizeCommand : public CompoundCommand {
+    class SetArraySizeCommand : public CompoundCommand<Project> {
       public:
         SetArraySizeCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                     int newSize);

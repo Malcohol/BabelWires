@@ -21,7 +21,7 @@ namespace babelwires {
     /// This class is designed to allow that to happen in any order, by having the
     /// first command to subsume all the rest, and then have the combined operation
     /// executed in a consistent way.
-    class RemoveElementCommand : public SimpleCommand {
+    class RemoveElementCommand : public SimpleCommand<Project> {
       public:
         /// A default constructed object cannot be initiatialized until addElementToRemove
         /// is called or it subsumes a command with data.

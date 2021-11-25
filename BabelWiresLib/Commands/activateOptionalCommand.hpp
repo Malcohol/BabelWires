@@ -13,7 +13,7 @@
 namespace babelwires {
 
     /// Activate an optional in a RecordWithOptionalsFeature
-    class ActivateOptionalCommand : public SimpleCommand {
+    class ActivateOptionalCommand : public SimpleCommand<Project> {
       public:
         ActivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                Identifier optional);
