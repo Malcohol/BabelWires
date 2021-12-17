@@ -23,7 +23,7 @@ bool babelwires::AddEntryToMapCommand::initialize(const Map& map) {
         return false;
     }
 
-    if (map.validateNewEntry(*m_newEntry)) {
+    if (!map.validateNewEntry(*m_newEntry)) {
         return false;
     }
 
