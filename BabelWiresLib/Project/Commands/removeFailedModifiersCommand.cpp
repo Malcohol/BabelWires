@@ -5,9 +5,9 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Commands/removeFailedModifiersCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp"
 
-#include "BabelWiresLib/Commands/removeModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeModifierCommand.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"

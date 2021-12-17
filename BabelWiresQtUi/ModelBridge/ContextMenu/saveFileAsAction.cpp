@@ -13,7 +13,7 @@
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
-#include "BabelWiresLib/Commands/changeFileCommand.hpp"
+#include "BabelWiresLib/Project/Commands/changeFileCommand.hpp"
 #include "BabelWiresLib/Commands/commandManager.hpp"
 #include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
 #include "BabelWiresLib/Project/project.hpp"

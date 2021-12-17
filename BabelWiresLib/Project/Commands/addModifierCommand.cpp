@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWiresLib/Commands/addModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
 
 #include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"

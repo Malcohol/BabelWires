@@ -12,7 +12,7 @@
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 
-#include "BabelWiresLib/Commands/changeFileCommand.hpp"
+#include "BabelWiresLib/Project/Commands/changeFileCommand.hpp"
 #include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
 #include "Common/Registry/fileTypeRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"

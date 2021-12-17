@@ -5,10 +5,10 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Commands/removeModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeModifierCommand.hpp"
 
-#include "BabelWiresLib/Commands/removeEntryFromArrayCommand.hpp"
-#include "BabelWiresLib/Commands/deactivateOptionalCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp"
+#include "BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
 #include "BabelWiresLib/Features/rootFeature.hpp"

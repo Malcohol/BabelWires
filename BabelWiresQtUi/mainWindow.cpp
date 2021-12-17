@@ -17,8 +17,8 @@
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
 #include "BabelWiresLib/Commands/commandManager.hpp"
-#include "BabelWiresLib/Commands/pasteElementsCommand.hpp"
-#include "BabelWiresLib/Commands/removeElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/pasteElementsCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeElementCommand.hpp"
 #include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
 #include "BabelWiresLib/FileFormat/targetFileFormat.hpp"
 #include "BabelWiresLib/Processors/processorFactory.hpp"

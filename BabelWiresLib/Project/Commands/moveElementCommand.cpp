@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Commands/moveElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/moveElementCommand.hpp"
 
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/project.hpp"

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/addEntryToArrayCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addEntryToArrayCommand.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"

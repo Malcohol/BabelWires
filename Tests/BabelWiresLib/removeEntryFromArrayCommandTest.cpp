@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/removeEntryFromArrayCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"

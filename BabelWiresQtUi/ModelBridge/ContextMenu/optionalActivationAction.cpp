@@ -10,8 +10,8 @@
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWiresLib/Commands/activateOptionalCommand.hpp"
-#include "BabelWiresLib/Commands/deactivateOptionalCommand.hpp"
+#include "BabelWiresLib/Project/Commands/activateOptionalCommand.hpp"
+#include "BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::FeaturePath pathToRecord,

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/removeModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeModifierCommand.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"

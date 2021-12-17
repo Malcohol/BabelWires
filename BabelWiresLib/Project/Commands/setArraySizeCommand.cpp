@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Commands/setArraySizeCommand.hpp"
+#include "BabelWiresLib/Project/Commands/setArraySizeCommand.hpp"
 
-#include "BabelWiresLib/Commands/removeAllEditsCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"

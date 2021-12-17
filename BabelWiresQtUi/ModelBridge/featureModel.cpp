@@ -16,10 +16,10 @@
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
-#include "BabelWiresLib/Commands/addModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
 #include "BabelWiresLib/Commands/commandManager.hpp"
 #include "BabelWiresLib/Commands/commands.hpp"
-#include "BabelWiresLib/Commands/setExpandedCommand.hpp"
+#include "BabelWiresLib/Project/Commands/setExpandedCommand.hpp"
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
 #include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"

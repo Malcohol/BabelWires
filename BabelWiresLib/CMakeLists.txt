@@ -52,22 +52,22 @@ SET( BABELWIRESLIB_SRCS
 	Features/Utilities/featureXml.cpp
 	Features/rootFeature.cpp
 	Serialization/projectBundle.cpp
-	Commands/activateOptionalCommand.cpp
-	Commands/addElementCommand.cpp
-	Commands/deactivateOptionalCommand.cpp
-	Commands/removeElementCommand.cpp
-	Commands/moveElementCommand.cpp
-	Commands/addModifierCommand.cpp
-	Commands/removeModifierCommand.cpp
-	Commands/addEntryToArrayCommand.cpp
-	Commands/removeEntryFromArrayCommand.cpp
-	Commands/changeFileCommand.cpp
-	Commands/pasteElementsCommand.cpp
-	Commands/setExpandedCommand.cpp
-	Commands/removeAllEditsCommand.cpp
-	Commands/removeFailedModifiersCommand.cpp
-	Commands/resizeElementCommand.cpp
-	Commands/setArraySizeCommand.cpp
+	Project/Commands/activateOptionalCommand.cpp
+	Project/Commands/addElementCommand.cpp
+	Project/Commands/deactivateOptionalCommand.cpp
+	Project/Commands/removeElementCommand.cpp
+	Project/Commands/moveElementCommand.cpp
+	Project/Commands/addModifierCommand.cpp
+	Project/Commands/removeModifierCommand.cpp
+	Project/Commands/addEntryToArrayCommand.cpp
+	Project/Commands/removeEntryFromArrayCommand.cpp
+	Project/Commands/changeFileCommand.cpp
+	Project/Commands/pasteElementsCommand.cpp
+	Project/Commands/setExpandedCommand.cpp
+	Project/Commands/removeAllEditsCommand.cpp
+	Project/Commands/removeFailedModifiersCommand.cpp
+	Project/Commands/resizeElementCommand.cpp
+	Project/Commands/setArraySizeCommand.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp
 	ValueNames/contiguousValueNamesImpl.cpp

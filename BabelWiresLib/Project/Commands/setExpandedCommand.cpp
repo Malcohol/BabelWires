@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Commands/setExpandedCommand.hpp"
+#include "BabelWiresLib/Project/Commands/setExpandedCommand.hpp"
 
 #include "BabelWiresLib/Features/features.hpp"
 #include "BabelWiresLib/Features/rootFeature.hpp"

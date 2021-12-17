@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWiresLib/Commands/activateOptionalCommand.hpp"
+#include "BabelWiresLib/Project/Commands/activateOptionalCommand.hpp"
 
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"

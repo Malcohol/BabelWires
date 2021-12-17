@@ -11,7 +11,7 @@
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 
-#include "BabelWiresLib/Commands/addElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addElementCommand.hpp"
 #include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWiresLib/Project/project.hpp"

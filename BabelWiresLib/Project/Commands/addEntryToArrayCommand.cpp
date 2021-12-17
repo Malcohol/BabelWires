@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWiresLib/Commands/addEntryToArrayCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addEntryToArrayCommand.hpp"
 
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/rootFeature.hpp"

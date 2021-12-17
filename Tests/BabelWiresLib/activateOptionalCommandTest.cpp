@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/activateOptionalCommand.hpp"
+#include "BabelWiresLib/Project/Commands/activateOptionalCommand.hpp"
 
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"

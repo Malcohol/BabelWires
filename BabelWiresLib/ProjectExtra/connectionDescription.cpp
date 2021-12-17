@@ -7,8 +7,8 @@
  **/
 #include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
 
-#include "BabelWiresLib/Commands/addModifierCommand.hpp"
-#include "BabelWiresLib/Commands/removeElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeElementCommand.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Common/Utilities/hash.hpp"
