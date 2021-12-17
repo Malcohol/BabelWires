@@ -30,6 +30,22 @@ babelwires::Map::Map(Map&& other)
     , m_targetId(other.m_targetId)
     , m_mapEntries(std::move(other.m_mapEntries)) {}
 
+babelwires::Map& babelwires::Map::operator=(const Map& other) {
+    m_sourceId = other.m_sourceId;
+    m_targetId = other.m_targetId;
+    for (const auto& e : other.m_mapEntries) {
+        m_mapEntries.emplace_back(e->clone());
+    }
+    return *this;
+}
+
+babelwires::Map& babelwires::Map::operator=(Map&& other) {
+    m_sourceId = other.m_sourceId;
+    m_targetId = other.m_targetId;
+    m_mapEntries = std::move(other.m_mapEntries);
+    return *this;
+}
+
 babelwires::Map::~Map() = default;
 
 babelwires::LongIdentifier babelwires::Map::getSourceId() const {

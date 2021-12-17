@@ -1,6 +1,7 @@
 SET( BABELWIRESQTUI_SRCS
     uiMain.cpp
     mainWindow.cpp
+    MapEditor/mapEditor.cpp
     ModelBridge/sourceFileNodeFactory.cpp
     ModelBridge/targetFileNodeFactory.cpp
     ModelBridge/processorNodeFactory.cpp

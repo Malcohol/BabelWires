@@ -25,6 +25,8 @@ namespace babelwires {
         Map();
         Map(const Map& other);
         Map(Map&& other);
+        Map& operator=(const Map& other);
+        Map& operator=(Map&& other);
         virtual ~Map();
 
         LongIdentifier getSourceId() const;
