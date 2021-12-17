@@ -67,6 +67,14 @@ std::size_t babelwires::Map::getHash() const {
     return h;
 }
 
+unsigned int babelwires::Map::getNumMapEntries() const {
+    return m_mapEntries.size();
+}
+
+const babelwires::MapEntry& babelwires::Map::getMapEntry(unsigned int index) const {
+    return *m_mapEntries[index];
+}
+
 bool babelwires::Map::validateNewEntry(const MapEntry& newEntry) const {
     if (getTypeFromIdentifier(m_sourceId) != newEntry.getSourceType()) {
         return false;
@@ -77,9 +85,15 @@ bool babelwires::Map::validateNewEntry(const MapEntry& newEntry) const {
     return true;
 }
 
-void babelwires::Map::addMapEntry(std::unique_ptr<MapEntry> newEntry) {
-    assert(validateNewEntry(*newEntry));
-    m_mapEntries.emplace_back(std::move(newEntry));
+void babelwires::Map::addMapEntry(std::unique_ptr<MapEntry> newEntry, unsigned int index) {
+    assert(validateNewEntry(*newEntry) && "The new map entry is not valid for this map");
+    assert((index <= m_mapEntries.size()) && "index to add is out of range") ;
+    m_mapEntries.emplace(m_mapEntries.begin() + index, std::move(newEntry));
+}
+
+void babelwires::Map::removeMapEntry(unsigned int index) {
+    assert((index < m_mapEntries.size()) && "The index to remove is out of range");
+    m_mapEntries.erase(m_mapEntries.begin() + index);
 }
 
 void babelwires::Map::serializeContents(Serializer& serializer) const {

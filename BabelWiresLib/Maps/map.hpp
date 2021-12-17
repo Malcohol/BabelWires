@@ -33,7 +33,11 @@ namespace babelwires {
         void setSourceId(LongIdentifier sourceId);
         void setTargetId(LongIdentifier targetId);
 
-        void addMapEntry(std::unique_ptr<MapEntry> newEntry);
+        unsigned int getNumMapEntries() const;
+        const MapEntry& getMapEntry(unsigned int index) const;
+
+        void addMapEntry(std::unique_ptr<MapEntry> newEntry, unsigned int index);
+        void removeMapEntry(unsigned int index);
 
         bool operator==(const Map& other) const;
         bool operator!=(const Map& other) const;
@@ -45,7 +49,6 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-      private:
         /// Check that the entries types match the source and target ids.
         bool validateNewEntry(const MapEntry& newEntry) const;
 
