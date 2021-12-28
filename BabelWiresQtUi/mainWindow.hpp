@@ -2,7 +2,7 @@
  * The MainWindow of the application.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -36,6 +36,11 @@ namespace babelwires {
       public:
         MainWindow(ProjectBridge& projectBridge, UnifiedLog& log);
         ~MainWindow();
+
+        template <typename EDITOR, typename... ARGS> void createEditor(ARGS&&... args) {
+            // For now, use a floating window.
+            EDITOR* editor = new EDITOR(nullptr, m_projectBridge, m_userLogger, std::forward<ARGS>(args)...);
+        }
 
       private:
         void createActions();

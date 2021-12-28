@@ -40,6 +40,7 @@ namespace babelwires {
     class AddElementCommand;
     struct UiProjectContext;
     struct ProjectData;
+    class MainWindow;
 
     /// Class which controls the interaction between the UI and the project.
     /// To access or modify the model, use the friend classes AccessModelScope
@@ -77,6 +78,11 @@ namespace babelwires {
         /// when processing changes from the project should be selected.
         /// The flag is cleared after processing.
         void selectNewNodes();
+
+        /// Get a pointer to the main window, which is needed when creating editors for values such as maps.
+        MainWindow* getMainWindow() const;
+
+        void setMainWindow(MainWindow* mainWindow);
 
       signals:
         void nodeSelectionChanged(int numNodesSelected);
@@ -146,6 +152,8 @@ namespace babelwires {
         UiProjectContext& m_projectContext;
 
         QtNodes::FlowScene* m_flowScene = nullptr;
+
+        MainWindow* m_mainWindow = nullptr;
 
         /// We use an explicit state variable.
         enum class State {

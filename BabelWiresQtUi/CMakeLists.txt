@@ -11,17 +11,18 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/featureModel.cpp
     ModelBridge/modifyModelScope.cpp
     ModelBridge/accessModelScope.cpp
-    ModelBridge/RowModels/rowModel.cpp
-    ModelBridge/RowModels/intRowModel.cpp
-    ModelBridge/RowModels/stringRowModel.cpp
-    ModelBridge/RowModels/rationalRowModel.cpp
     ModelBridge/RowModels/arrayRowModel.cpp
     ModelBridge/RowModels/enumRowModel.cpp
     ModelBridge/RowModels/fileRowModel.cpp
+    ModelBridge/RowModels/intRowModel.cpp
+    ModelBridge/RowModels/mapRowModel.cpp
+    ModelBridge/RowModels/rationalRowModel.cpp
     ModelBridge/RowModels/recordWithOptionalsRowModel.cpp
-    ModelBridge/RowModels/rowModelWithRichText.cpp
+    ModelBridge/RowModels/rowModel.cpp
     ModelBridge/RowModels/rowModelDispatcher.cpp
     ModelBridge/RowModels/rowModelRegistry.cpp
+    ModelBridge/RowModels/rowModelWithRichText.cpp
+    ModelBridge/RowModels/stringRowModel.cpp
     ModelBridge/ValueEditors/dropDownValueEditor.cpp
     ModelBridge/ValueEditors/spinBoxValueEditor.cpp
     ModelBridge/ValueEditors/lineEditValueEditor.cpp
@@ -37,6 +38,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/removeFailedModifiersAction.cpp
     ModelBridge/ContextMenu/optionalActivationAction.cpp
     ModelBridge/ContextMenu/setArraySizeAction.cpp
+    ModelBridge/ContextMenu/editMapAction.cpp
     Utilities/fileDialogs.cpp
     LogWindow/logWindow.cpp
 )

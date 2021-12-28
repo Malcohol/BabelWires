@@ -87,6 +87,14 @@ const babelwires::UiProjectContext& babelwires::ProjectBridge::getContext() cons
     return m_projectContext;
 }
 
+babelwires::MainWindow* babelwires::ProjectBridge::getMainWindow() const {
+    return m_mainWindow;
+}
+
+void babelwires::ProjectBridge::setMainWindow(MainWindow* mainWindow) {
+    m_mainWindow = mainWindow;
+}
+
 void babelwires::ProjectBridge::onNodeCreated(QtNodes::Node& n) {
     switch (m_state) {
         case State::WaitingForNewNode: {

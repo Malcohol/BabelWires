@@ -15,6 +15,7 @@
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModelRegistry.hpp"
 #include "BabelWiresQtUi/ModelBridge/RowModels/stringRowModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/RowModels/enumRowModel.hpp"
+#include "BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp"
 
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 
@@ -23,6 +24,7 @@
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
 #include "BabelWiresLib/Features/stringFeature.hpp"
 #include "BabelWiresLib/Features/enumFeature.hpp"
+#include "BabelWiresLib/Features/mapFeature.hpp"
 #include "BabelWiresLib/FileFormat/fileFeature.hpp"
 
 babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowModelRegistry,
@@ -53,6 +55,9 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     } else if (feature->as<const babelwires::RecordWithOptionalsFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::RecordWithOptionalsRowModel));
         new (m_rowModel) babelwires::RecordWithOptionalsRowModel();
+    } else if (feature->as<const babelwires::MapFeature>()) {
+        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::MapRowModel));
+        new (m_rowModel) babelwires::MapRowModel();
     } else {
         // The base row model is used.
     }

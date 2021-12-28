@@ -6,6 +6,10 @@
 #include <BabelWires/BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 #include <BabelWires/BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
                                  ElementId elementWithMap, FeaturePath pathToMap)
     : QWidget(parent)
@@ -14,6 +18,26 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
     , m_pathToMap(pathToMap)
     , m_commandManager(m_map, userLogger) {
         // TODO Start adding widgets
+        QLayout* mainLayout = new QVBoxLayout();
+        setLayout(mainLayout);
+
+        QWidget* topButtons = new QWidget(this);
+        mainLayout->addWidget(topButtons);
+
+        QLayout* topButtonsLayout = new QHBoxLayout();
+        topButtons->setLayout(topButtonsLayout);
+
+        {
+            QLabel* label = new QLabel(topButtons);
+            label->setText("Flerm");
+            topButtonsLayout->addWidget(label);
+        }
+        {
+            QLabel* label = new QLabel(topButtons);
+            label->setText("Erg");
+            topButtonsLayout->addWidget(label);
+        }
+        show();
     }
 
 void babelwires::MapEditor::applyMapToProject() {
