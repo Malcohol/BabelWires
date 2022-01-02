@@ -1,5 +1,5 @@
 /**
- * ValueEditors are type-specific UIs that allow values to be edited.
+ * ComplexValueEditors are type-specific UIs that allow values to be edited.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -17,27 +17,27 @@ namespace babelwires {
     class UserLogger;
 
     /// Data sufficient to describe the value the editor should be editing.
-    struct ValueEditorData {
+    struct ComplexValueEditorData {
         ElementId m_elementId;
         FeaturePath m_pathToValue;
 
         std::size_t getHash() const;
 
-        inline friend bool operator==(const ValueEditorData& a, const ValueEditorData& b) { 
+        inline friend bool operator==(const ComplexValueEditorData& a, const ComplexValueEditorData& b) { 
             return (a.m_elementId == b.m_elementId) && (a.m_pathToValue == b.m_pathToValue);
         }
 
-        friend std::ostream& operator<<(std::ostream& os, const ValueEditorData& data) {
+        friend std::ostream& operator<<(std::ostream& os, const ComplexValueEditorData& data) {
             return os << data.m_elementId << ": " << data.m_pathToValue;
         }
     };
 
     /// Base class of widgets which provide type-specific UIs for editing values.
-    class ValueEditor : public QWidget {
+    class ComplexValueEditor : public QWidget {
         public:
-            ValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ValueEditorData& data);
+            ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data);
 
-            const ValueEditorData& getData() const;
+            const ComplexValueEditorData& getData() const;
 
         protected:
             ProjectBridge& getProjectBridge();
@@ -50,14 +50,14 @@ namespace babelwires {
             UserLogger& m_userLogger;
 
             /// 
-            ValueEditorData m_data;
+            ComplexValueEditorData m_data;
 
     };
 
 } // namespace babelwires
 
 namespace std {
-    template <> struct hash<babelwires::ValueEditorData> {
-        inline std::size_t operator()(const babelwires::ValueEditorData& data) const { return data.getHash(); }
+    template <> struct hash<babelwires::ComplexValueEditorData> {
+        inline std::size_t operator()(const babelwires::ComplexValueEditorData& data) const { return data.getHash(); }
     };
 } // namespace std

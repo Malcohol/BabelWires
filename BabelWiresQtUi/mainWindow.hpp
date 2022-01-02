@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ValueEditors/valueEditor.hpp"
-#include "BabelWiresQtUi/ValueEditors/valueEditorFactory.hpp"
+#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp"
+#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditorFactory.hpp"
 
 #include "BabelWiresLib/Project/projectData.hpp"
 #include "BabelWiresLib/Project/uiPosition.hpp"
@@ -37,7 +37,7 @@ namespace babelwires {
         MainWindow(ProjectBridge& projectBridge, UnifiedLog& log);
         ~MainWindow();
 
-        void openEditorForValue(const ValueEditorData& data);
+        void openEditorForValue(const ComplexValueEditorData& data);
 
       private:
         void createActions();
@@ -123,9 +123,9 @@ namespace babelwires {
 
         SignalSubscription m_undoStateChangedSubscription;
 
-        ValueEditorFactory m_valueEditorFactory;
+        ComplexValueEditorFactory m_valueEditorFactory;
         
-        std::unordered_map<ValueEditorData, ValueEditor*> m_openValueEditors;
+        std::unordered_map<ComplexValueEditorData, ComplexValueEditor*> m_openValueEditors;
     };
 
 } // namespace babelwires

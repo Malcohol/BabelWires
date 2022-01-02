@@ -548,11 +548,11 @@ QString babelwires::MainWindow::getClipboardMimetype() const {
     return QString("BabelWires/elements");
 }
 
-void babelwires::MainWindow::openEditorForValue(const ValueEditorData& data) {
+void babelwires::MainWindow::openEditorForValue(const ComplexValueEditorData& data) {
     auto it = m_openValueEditors.find(data);
     if (it == m_openValueEditors.end()) {
         try {
-            ValueEditor* newEditor = m_valueEditorFactory.createEditor(this, m_projectBridge, m_userLogger, data);
+            ComplexValueEditor* newEditor = m_valueEditorFactory.createEditor(this, m_projectBridge, m_userLogger, data);
             auto [nit, _] = m_openValueEditors.insert({data, newEditor});
             it = nit;
         }

@@ -40,9 +40,9 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/setArraySizeAction.cpp
     ModelBridge/ContextMenu/openValueEditorAction.cpp
     Utilities/fileDialogs.cpp
-    ValueEditors/valueEditor.cpp
-    ValueEditors/valueEditorFactory.cpp
-    ValueEditors/mapEditor.cpp
+    ComplexValueEditors/complexValueEditor.cpp
+    ComplexValueEditors/complexValueEditorFactory.cpp
+    ComplexValueEditors/mapEditor.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

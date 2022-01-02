@@ -12,7 +12,7 @@
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
-#include "BabelWiresQtUi/ValueEditors/mapEditor.hpp"
+#include "BabelWiresQtUi/ComplexValueEditors/mapEditor.hpp"
 #include "BabelWiresQtUi/mainWindow.hpp"
 
 #include "BabelWiresLib/Features/recordFeature.hpp"

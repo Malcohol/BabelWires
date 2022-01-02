@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ValueEditors/mapEditor.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/mapEditor.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
@@ -17,8 +17,8 @@
 #include <QLabel>
 
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
-                                 const ValueEditorData& data)
-    : ValueEditor(parent, projectBridge, userLogger, data)
+                                 const ComplexValueEditorData& data)
+    : ComplexValueEditor(parent, projectBridge, userLogger, data)
     , m_commandManager(m_map, userLogger) {
         QLayout* mainLayout = new QVBoxLayout();
         setLayout(mainLayout);

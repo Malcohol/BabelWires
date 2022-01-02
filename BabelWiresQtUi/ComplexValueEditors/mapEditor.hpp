@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ValueEditors/valueEditor.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
 #include <BabelWiresLib/Maps/map.hpp>
 #include <BabelWiresLib/Commands/commandManager.hpp>
@@ -19,10 +19,10 @@
 namespace babelwires {
     class ProjectBridge;
 
-    class MapEditor : public ValueEditor {
+    class MapEditor : public ComplexValueEditor {
         public:
             /// data - Enough information to restore the state of a MapEditor.
-            MapEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& m_logger, const ValueEditorData& data);
+            MapEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& m_logger, const ComplexValueEditorData& data);
 
             /// Resets the map editor to the state of the given map.
             void setEditorMap(const Map& map);

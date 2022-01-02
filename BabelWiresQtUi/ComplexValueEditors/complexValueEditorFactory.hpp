@@ -1,5 +1,5 @@
 /**
- * A ValueEditorFactory creates the appropriate ValueEditor for a value.
+ * A ComplexValueEditorFactory creates the appropriate ComplexValueEditor for a value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ValueEditors/valueEditor.hpp"
+#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp"
 
 #include "BabelWiresLib/Project/projectIds.hpp"
 
@@ -17,9 +17,9 @@ namespace babelwires {
     class ProjectBridge;
  
     /// Constructs the correct type of editor to open.
-    class ValueEditorFactory {
+    class ComplexValueEditorFactory {
       public:
         /// This will throw a ModelException if it does not make sense to open an editor for the value at data.
-        ValueEditor* createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ValueEditorData& data);
+        ComplexValueEditor* createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data);
     };
 }

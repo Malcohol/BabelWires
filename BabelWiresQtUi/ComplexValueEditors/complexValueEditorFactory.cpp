@@ -1,21 +1,21 @@
 /**
- * A ValueEditorFactory creates the appropriate ValueEditor for a value.
+ * A ComplexValueEditorFactory creates the appropriate ComplexValueEditor for a value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ValueEditors/valueEditorFactory.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorFactory.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/ValueEditors/mapEditor.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/mapEditor.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
-babelwires::ValueEditor* babelwires::ValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ValueEditorData& data) {
+babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data) {
     AccessModelScope scope(projectBridge);
     const Project& project = scope.getProject();
 
