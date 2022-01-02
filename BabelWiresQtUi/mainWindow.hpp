@@ -88,6 +88,8 @@ namespace babelwires {
         QString getDialogProjectFormat() const;
         QString getClipboardMimetype() const;
 
+        void closeAllValueEditors();
+
       public slots:
         void onShowMainToolbar(bool show);
         void onShowLogWindow(bool show);

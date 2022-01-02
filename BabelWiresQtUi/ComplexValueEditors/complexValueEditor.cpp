@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
+#include <QCloseEvent>
+
 babelwires::ComplexValueEditor::ComplexValueEditor(QWidget* parent, ProjectBridge& projectBridge,
                                                    UserLogger& userLogger, const ComplexValueEditorData& data)
     : QWidget(parent)
@@ -24,4 +26,5 @@ babelwires::ProjectBridge& babelwires::ComplexValueEditor::getProjectBridge() {
 
 void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
     emit editorClosing();
+    event->accept();
 }

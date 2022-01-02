@@ -491,6 +491,7 @@ void babelwires::MainWindow::closeEvent(QCloseEvent* event) {
     if (maybeSave()) {
         m_userLogger.logInfo() << "Close";
         event->accept();
+        closeAllValueEditors();
     } else {
         event->ignore();
     }
@@ -572,4 +573,11 @@ void babelwires::MainWindow::onValueEditorClose() {
     auto it = m_openValueEditors.find(editorWhichIsClosing->getData());
     assert((it != m_openValueEditors.end())  && "Received an editorClosing signal from an unknown sender");
     m_openValueEditors.erase(it);
+}
+
+void babelwires::MainWindow::closeAllValueEditors() {
+    auto openValueEditorsCopy = m_openValueEditors;
+    for (auto& [_, editor] : openValueEditorsCopy) {
+        editor->close();
+    }
 }
