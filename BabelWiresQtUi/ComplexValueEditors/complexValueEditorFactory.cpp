@@ -35,6 +35,7 @@ babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEdi
         throw ModelException() << "There is no value at that location.";
     }
 
+    // For now, assume ComplexValueEditors are all built-in, so we don't need a registry.
     if (valueFeature->as<MapFeature>()) {
         // TODO: For now use a floating window.
         return new MapEditor(nullptr, projectBridge, userLogger, data);
