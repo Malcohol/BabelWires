@@ -20,13 +20,19 @@ namespace babelwires {
 
     /// Base class of widgets which provide type-specific UIs for editing values.
     class ComplexValueEditor : public QWidget {
+        Q_OBJECT
+
         public:
             ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data);
 
             const ComplexValueEditorData& getData() const;
 
+        signals:
+            void editorClosing();
+
         protected:
             ProjectBridge& getProjectBridge();
+            void closeEvent(QCloseEvent* event) override;
 
         private:
             /// Needed when making changes to the project.

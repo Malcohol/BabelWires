@@ -59,6 +59,7 @@ namespace babelwires {
         void saveAllTargets();
         void onNodeSelectionChanged(int numNodesSelected);
         void onClipboardChanged();
+        void onValueEditorClose();
 
       private:
         /// Let the user save any unchanged changes before performing the operation.

@@ -555,10 +555,21 @@ void babelwires::MainWindow::openEditorForValue(const ComplexValueEditorData& da
             ComplexValueEditor* newEditor = m_valueEditorFactory.createEditor(this, m_projectBridge, m_userLogger, data);
             auto [nit, _] = m_openValueEditors.insert({data, newEditor});
             it = nit;
+            QObject::connect(newEditor, &ComplexValueEditor::editorClosing, this, &MainWindow::onValueEditorClose);
         }
         catch (ModelException& e) {
+            // TODO: Depends on context. A failed user action should report an error.
             m_userLogger.logWarning() << "Could not open an editor for " << data << ": " << e.what();
+            return;
         }
     }
     // Bring to front?
+}
+
+void babelwires::MainWindow::onValueEditorClose() {
+    ComplexValueEditor* editorWhichIsClosing = qobject_cast<ComplexValueEditor*>(sender());
+    assert((editorWhichIsClosing != nullptr) && "Received an editorClosing signal with no appropriate sender");
+    auto it = m_openValueEditors.find(editorWhichIsClosing->getData());
+    assert((it != m_openValueEditors.end())  && "Received an editorClosing signal from an unknown sender");
+    m_openValueEditors.erase(it);
 }

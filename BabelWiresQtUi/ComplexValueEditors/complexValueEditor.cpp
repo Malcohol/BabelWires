@@ -7,8 +7,12 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
-babelwires::ComplexValueEditor::ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data)
-    : QWidget(parent), m_projectBridge(projectBridge), m_userLogger(userLogger), m_data(data) {}
+babelwires::ComplexValueEditor::ComplexValueEditor(QWidget* parent, ProjectBridge& projectBridge,
+                                                   UserLogger& userLogger, const ComplexValueEditorData& data)
+    : QWidget(parent)
+    , m_projectBridge(projectBridge)
+    , m_userLogger(userLogger)
+    , m_data(data) {}
 
 const babelwires::ComplexValueEditorData& babelwires::ComplexValueEditor::getData() const {
     return m_data;
@@ -16,4 +20,8 @@ const babelwires::ComplexValueEditorData& babelwires::ComplexValueEditor::getDat
 
 babelwires::ProjectBridge& babelwires::ComplexValueEditor::getProjectBridge() {
     return m_projectBridge;
+}
+
+void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
+    emit editorClosing();
 }
