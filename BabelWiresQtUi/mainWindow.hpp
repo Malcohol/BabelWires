@@ -7,6 +7,9 @@
  **/
 #pragma once
 
+#include "BabelWiresQtUi/ValueEditors/valueEditor.hpp"
+#include "BabelWiresQtUi/ValueEditors/valueEditorFactory.hpp"
+
 #include "BabelWiresLib/Project/projectData.hpp"
 #include "BabelWiresLib/Project/uiPosition.hpp"
 
@@ -15,16 +18,13 @@
 #include <QMainWindow>
 
 #include <memory>
+#include <unordered_map>
 
 class QToolBar;
 
 namespace babelwires {
     class UnifiedLog;
     struct UserLogger;
-} // namespace babelwires
-
-namespace babelwires {
-
     class ProjectBridge;
     struct ProjectData;
     class LogWindow;
@@ -37,10 +37,7 @@ namespace babelwires {
         MainWindow(ProjectBridge& projectBridge, UnifiedLog& log);
         ~MainWindow();
 
-        template <typename EDITOR, typename... ARGS> void createEditor(ARGS&&... args) {
-            // For now, use a floating window.
-            EDITOR* editor = new EDITOR(nullptr, m_projectBridge, m_userLogger, std::forward<ARGS>(args)...);
-        }
+        void openEditorForValue(const ValueEditorData& data);
 
       private:
         void createActions();
@@ -125,6 +122,10 @@ namespace babelwires {
         QString m_currentProjectFileName;
 
         SignalSubscription m_undoStateChangedSubscription;
+
+        ValueEditorFactory m_valueEditorFactory;
+        
+        std::unordered_map<ValueEditorData, ValueEditor*> m_openValueEditors;
     };
 
 } // namespace babelwires

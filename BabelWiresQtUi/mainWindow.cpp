@@ -27,6 +27,7 @@
 #include "BabelWiresLib/Project/projectData.hpp"
 #include "BabelWiresLib/ProjectExtra/projectUtilities.hpp"
 #include "BabelWiresLib/Serialization/projectSerialization.hpp"
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
 #include "Common/Log/unifiedLog.hpp"
 #include "Common/exceptions.hpp"
@@ -545,4 +546,19 @@ QString babelwires::MainWindow::getDialogProjectFormat() const {
 QString babelwires::MainWindow::getClipboardMimetype() const {
     // This doesn't need to be application specific.
     return QString("BabelWires/elements");
+}
+
+void babelwires::MainWindow::openEditorForValue(const ValueEditorData& data) {
+    auto it = m_openValueEditors.find(data);
+    if (it == m_openValueEditors.end()) {
+        try {
+            ValueEditor* newEditor = m_valueEditorFactory.createEditor(this, m_projectBridge, m_userLogger, data);
+            auto [nit, _] = m_openValueEditors.insert({data, newEditor});
+            it = nit;
+        }
+        catch (ModelException& e) {
+            m_userLogger.logWarning() << "Could not open an editor for " << data << ": " << e.what();
+        }
+    }
+    // Bring to front?
 }

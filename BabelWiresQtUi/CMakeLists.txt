@@ -1,7 +1,7 @@
 SET( BABELWIRESQTUI_SRCS
     uiMain.cpp
     mainWindow.cpp
-    MapEditor/mapEditor.cpp
+    LogWindow/logWindow.cpp
     ModelBridge/sourceFileNodeFactory.cpp
     ModelBridge/targetFileNodeFactory.cpp
     ModelBridge/processorNodeFactory.cpp
@@ -38,9 +38,11 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/removeFailedModifiersAction.cpp
     ModelBridge/ContextMenu/optionalActivationAction.cpp
     ModelBridge/ContextMenu/setArraySizeAction.cpp
-    ModelBridge/ContextMenu/editMapAction.cpp
+    ModelBridge/ContextMenu/openValueEditorAction.cpp
     Utilities/fileDialogs.cpp
-    LogWindow/logWindow.cpp
+    ValueEditors/valueEditor.cpp
+    ValueEditors/valueEditorFactory.cpp
+    ValueEditors/mapEditor.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

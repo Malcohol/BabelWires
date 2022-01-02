@@ -1,5 +1,11 @@
-
-#include <BabelWiresQtUi/MapEditor/mapEditor.hpp>
+/**
+ * Editor for editing map values.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#include <BabelWiresQtUi/ValueEditors/mapEditor.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
@@ -11,13 +17,9 @@
 #include <QLabel>
 
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
-                                 ElementId elementWithMap, FeaturePath pathToMap)
-    : QWidget(parent)
-    , m_projectBridge(projectBridge)
-    , m_elementWithMap(elementWithMap)
-    , m_pathToMap(pathToMap)
+                                 const ValueEditorData& data)
+    : ValueEditor(parent, projectBridge, userLogger, data)
     , m_commandManager(m_map, userLogger) {
-        // TODO Start adding widgets
         QLayout* mainLayout = new QVBoxLayout();
         setLayout(mainLayout);
 
@@ -43,10 +45,10 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 void babelwires::MapEditor::applyMapToProject() {
     auto modifierData = std::make_unique<MapValueAssignmentData>();
     modifierData->m_map = m_map;
-    modifierData->m_pathToFeature = m_pathToMap;
+    modifierData->m_pathToFeature = getData().m_pathToValue;
 
-    auto setValueCommand = std::make_unique<AddModifierCommand>("Set map value", m_elementWithMap, std::move(modifierData));
-    m_projectBridge.scheduleCommand(std::move(setValueCommand));
+    auto setValueCommand = std::make_unique<AddModifierCommand>("Set map value", getData().m_elementId, std::move(modifierData));
+    getProjectBridge().scheduleCommand(std::move(setValueCommand));
 }
 
 void babelwires::MapEditor::setEditorMap(const Map& map) {

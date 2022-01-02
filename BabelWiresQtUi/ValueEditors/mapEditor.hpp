@@ -1,4 +1,13 @@
+/**
+ * Editor for editing map values.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
 
+#include <BabelWiresQtUi/ValueEditors/valueEditor.hpp>
 
 #include <BabelWiresLib/Maps/map.hpp>
 #include <BabelWiresLib/Commands/commandManager.hpp>
@@ -10,11 +19,10 @@
 namespace babelwires {
     class ProjectBridge;
 
-    class MapEditor : public QWidget {
+    class MapEditor : public ValueEditor {
         public:
-            /// elementWithMap - the element in the project carrying the map we're editing.
-            /// pathToMap - the path within the element at which the map exists.
-            MapEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& m_logger, ElementId elementWithMap, FeaturePath pathToMap);
+            /// data - Enough information to restore the state of a MapEditor.
+            MapEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& m_logger, const ValueEditorData& data);
 
             /// Resets the map editor to the state of the given map.
             void setEditorMap(const Map& map);
@@ -23,15 +31,6 @@ namespace babelwires {
             void applyMapToProject();
 
         private:
-            /// Needed when making changes to the project.
-            ProjectBridge& m_projectBridge;
-
-            /// The element in the project carrying the map we're editing.
-            ElementId m_elementWithMap;
-
-            /// The path within the element at which the map exists.
-            FeaturePath m_pathToMap;
-
             /// A local copy of the map being edited.
             Map m_map;
 

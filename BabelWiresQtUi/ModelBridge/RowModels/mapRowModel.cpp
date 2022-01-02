@@ -8,7 +8,7 @@
 #include "BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp"
 
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/editMapAction.hpp"
+#include "BabelWiresQtUi/ModelBridge/ContextMenu/openValueEditorAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
 #include "BabelWiresLib/Features/mapFeature.hpp"
@@ -32,7 +32,7 @@ void babelwires::MapRowModel::getContextMenuActions(
     RowModel::getContextMenuActions(actionsOut);
     if (hasInputFeature()) {
         const babelwires::MapFeature& mapFeature = getMapFeature();
-        auto editAction = std::make_unique<EditMapAction>(m_contentsCacheEntry->getPath());
+        auto editAction = std::make_unique<OpenValueEditorAction>("Open map editor", m_contentsCacheEntry->getPath());
         actionsOut.emplace_back(std::move(editAction));
     }
 }
