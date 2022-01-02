@@ -41,6 +41,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/openValueEditorAction.cpp
     Utilities/fileDialogs.cpp
     ComplexValueEditors/complexValueEditor.cpp
+    ComplexValueEditors/complexValueEditorData.cpp
     ComplexValueEditors/complexValueEditorFactory.cpp
     ComplexValueEditors/mapEditor.cpp
 )

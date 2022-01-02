@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorData.hpp>
+
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 
@@ -15,22 +17,6 @@
 namespace babelwires {
     class ProjectBridge;
     class UserLogger;
-
-    /// Data sufficient to describe the value the editor should be editing.
-    struct ComplexValueEditorData {
-        ElementId m_elementId;
-        FeaturePath m_pathToValue;
-
-        std::size_t getHash() const;
-
-        inline friend bool operator==(const ComplexValueEditorData& a, const ComplexValueEditorData& b) { 
-            return (a.m_elementId == b.m_elementId) && (a.m_pathToValue == b.m_pathToValue);
-        }
-
-        friend std::ostream& operator<<(std::ostream& os, const ComplexValueEditorData& data) {
-            return os << data.m_elementId << ": " << data.m_pathToValue;
-        }
-    };
 
     /// Base class of widgets which provide type-specific UIs for editing values.
     class ComplexValueEditor : public QWidget {
