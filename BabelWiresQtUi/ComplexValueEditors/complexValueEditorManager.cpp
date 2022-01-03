@@ -12,12 +12,12 @@
 #include <Common/Log/userLogger.hpp>
 
 void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data) {
-    auto it = m_openValueEditors.find(data);
+    auto it = std::find_if(m_openValueEditors.begin(), m_openValueEditors.end(), [&data](const ComplexValueEditor* editor){ return data == editor->getData(); });
     if (it == m_openValueEditors.end()) {
         try {
             ComplexValueEditor* newEditor = m_valueEditorFactory.createEditor(parent, projectBridge, userLogger, data);
-            auto [nit, _] = m_openValueEditors.insert({data, newEditor});
-            it = nit;
+            m_openValueEditors.emplace_back(newEditor);
+            it = m_openValueEditors.end() - 1;
             QObject::connect(newEditor, &ComplexValueEditor::editorClosing, this, &ComplexValueEditorManager::onValueEditorClose);
         }
         catch (ModelException& e) {
@@ -26,20 +26,20 @@ void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, 
             return;
         }
     }
-    it->second->raise();
+    (*it)->raise();
 }
 
 void babelwires::ComplexValueEditorManager::onValueEditorClose() {
     ComplexValueEditor* editorWhichIsClosing = qobject_cast<ComplexValueEditor*>(sender());
     assert((editorWhichIsClosing != nullptr) && "Received an editorClosing signal with no appropriate sender");
-    auto it = m_openValueEditors.find(editorWhichIsClosing->getData());
+    auto it = std::find(m_openValueEditors.begin(), m_openValueEditors.end(), editorWhichIsClosing);
     assert((it != m_openValueEditors.end())  && "Received an editorClosing signal from an unknown sender");
     m_openValueEditors.erase(it);
 }
 
 void babelwires::ComplexValueEditorManager::closeAllValueEditors() {
     auto openValueEditorsCopy = m_openValueEditors;
-    for (auto& [_, editor] : openValueEditorsCopy) {
+    for (auto* editor : openValueEditorsCopy) {
         editor->close();
     }
     assert(m_openValueEditors.empty() && "The editors should have removed themselves");

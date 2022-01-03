@@ -29,6 +29,8 @@ namespace babelwires {
       private:
         ComplexValueEditorFactory m_valueEditorFactory;
 
-        std::unordered_map<ComplexValueEditorData, ComplexValueEditor*> m_openValueEditors;
+        /// Use a vector to preserve the order of creation.
+        /// It's very unlikely this will every be large, so no need for map.
+        std::vector<ComplexValueEditor*> m_openValueEditors;
     };
 } // namespace babelwires
