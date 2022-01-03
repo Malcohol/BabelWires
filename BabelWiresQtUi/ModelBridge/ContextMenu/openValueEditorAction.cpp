@@ -30,5 +30,5 @@ void babelwires::OpenValueEditorAction::actionTriggered(babelwires::FeatureModel
     ProjectBridge& projectBridge = model.getProjectBridge();
     const ElementId elementId = model.getElementId();
 
-    model.getProjectBridge().getMainWindow()->openEditorForValue({ elementId, m_pathToMap });
+    model.getProjectBridge().getMainWindow()->openEditorForValue(ComplexValueEditorData{ elementId, m_pathToMap });
 }

@@ -19,7 +19,7 @@ babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEdi
     AccessModelScope scope(projectBridge);
     const Project& project = scope.getProject();
 
-    const FeatureElement* element = project.getFeatureElement(data.m_elementId);
+    const FeatureElement* element = project.getFeatureElement(data.getElementId());
 
     if (!element) {
         throw ModelException() << "The element does not exist.";
@@ -30,7 +30,7 @@ babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEdi
         throw ModelException() << "The element does not have editable features.";
     }
 
-    const ValueFeature* const valueFeature = data.m_pathToValue.tryFollow(*inputFeature)->as<ValueFeature>();
+    const ValueFeature* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<ValueFeature>();
     if (!valueFeature) {
         throw ModelException() << "There is no value at that location.";
     }
