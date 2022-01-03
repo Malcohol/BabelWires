@@ -43,6 +43,7 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/complexValueEditor.cpp
     ComplexValueEditors/complexValueEditorData.cpp
     ComplexValueEditors/complexValueEditorFactory.cpp
+    ComplexValueEditors/complexValueEditorManager.cpp
     ComplexValueEditors/mapEditor.cpp
 )
 

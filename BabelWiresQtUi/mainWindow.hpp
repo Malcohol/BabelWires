@@ -7,8 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp"
-#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditorFactory.hpp"
+#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditorManager.hpp"
 
 #include "BabelWiresLib/Project/projectData.hpp"
 #include "BabelWiresLib/Project/uiPosition.hpp"
@@ -59,7 +58,6 @@ namespace babelwires {
         void saveAllTargets();
         void onNodeSelectionChanged(int numNodesSelected);
         void onClipboardChanged();
-        void onValueEditorClose();
 
       private:
         /// Let the user save any unchanged changes before performing the operation.
@@ -87,8 +85,6 @@ namespace babelwires {
         QString getProjectExtension() const;
         QString getDialogProjectFormat() const;
         QString getClipboardMimetype() const;
-
-        void closeAllValueEditors();
 
       public slots:
         void onShowMainToolbar(bool show);
@@ -126,9 +122,7 @@ namespace babelwires {
 
         SignalSubscription m_undoStateChangedSubscription;
 
-        ComplexValueEditorFactory m_valueEditorFactory;
-        
-        std::unordered_map<ComplexValueEditorData, ComplexValueEditor*> m_openValueEditors;
+        ComplexValueEditorManager m_valueEditorManager;
     };
 
 } // namespace babelwires
