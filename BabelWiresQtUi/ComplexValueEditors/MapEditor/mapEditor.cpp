@@ -8,6 +8,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 
 #include <BabelWires/BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 #include <BabelWires/BabelWiresLib/Project/Commands/addModifierCommand.hpp>
@@ -29,6 +30,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         QLayout* topButtonsLayout = new QHBoxLayout();
         topButtons->setLayout(topButtonsLayout);
 
+
         {
             QLabel* label = new QLabel(topButtons);
             label->setText("Flerm");
@@ -49,6 +51,11 @@ void babelwires::MapEditor::applyMapToProject() {
 
     auto setValueCommand = std::make_unique<AddModifierCommand>("Set map value", getData().getElementId(), std::move(modifierData));
     getProjectBridge().scheduleCommand(std::move(setValueCommand));
+}
+
+void babelwires::MapEditor::updateMapFromProject() {
+    AccessModelScope scope(getProjectBridge());
+
 }
 
 void babelwires::MapEditor::setEditorMap(const Map& map) {

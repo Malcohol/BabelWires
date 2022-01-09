@@ -50,3 +50,9 @@ namespace babelwires {
         FeaturePath m_pathToValue;
     };
 }
+
+namespace std {
+    template <> struct hash<babelwires::ComplexValueEditorData> {
+        inline std::size_t operator()(const babelwires::ComplexValueEditorData& data) const { return data.getHash(); }
+    };
+} // namespace std

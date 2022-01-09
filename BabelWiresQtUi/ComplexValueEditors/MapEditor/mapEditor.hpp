@@ -30,6 +30,9 @@ namespace babelwires {
             /// Apply the state of this map to the project.
             void applyMapToProject();
 
+        protected:
+            void updateMapFromProject();
+
         private:
             /// A local copy of the map being edited.
             Map m_map;

@@ -17,6 +17,8 @@
 namespace babelwires {
     class ProjectBridge;
     class UserLogger;
+    class ValueFeature;
+    class AccessModelScope;
 
     /// Base class of widgets which provide type-specific UIs for editing values.
     class ComplexValueEditor : public QWidget {
@@ -26,6 +28,15 @@ namespace babelwires {
             ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data);
 
             const ComplexValueEditorData& getData() const;
+
+            /// Convenience Function: Get the ValueFeature referred to by the data.
+            /// Throws if there is no corresponding value feature
+            /// Note: This returns const because editors never modify features directly.
+            static const ValueFeature& getValueFeature(AccessModelScope& scope, const ComplexValueEditorData& data);
+
+            /// Convenience Function: Try to get the ValueFeature referred to by the data, or return nullptr.
+            /// Note: This returns const because editors never modify features directly.
+            static const ValueFeature* tryGetValueFeature(AccessModelScope& scope, const ComplexValueEditorData& data);
 
         signals:
             void editorClosing();
@@ -47,9 +58,3 @@ namespace babelwires {
     };
 
 } // namespace babelwires
-
-namespace std {
-    template <> struct hash<babelwires::ComplexValueEditorData> {
-        inline std::size_t operator()(const babelwires::ComplexValueEditorData& data) const { return data.getHash(); }
-    };
-} // namespace std
