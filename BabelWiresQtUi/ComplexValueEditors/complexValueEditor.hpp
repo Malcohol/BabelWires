@@ -29,14 +29,17 @@ namespace babelwires {
 
             const ComplexValueEditorData& getData() const;
 
-            /// Convenience Function: Get the ValueFeature referred to by the data.
-            /// Throws if there is no corresponding value feature
+            /// Convenience Function: Get the ValueFeature referred to by the data, or assert.
             /// Note: This returns const because editors never modify features directly.
             static const ValueFeature& getValueFeature(AccessModelScope& scope, const ComplexValueEditorData& data);
 
-            /// Convenience Function: Try to get the ValueFeature referred to by the data, or return nullptr.
+            /// Convenience Function: Get the ValueFeature referred to by the data, or return nullptr.
             /// Note: This returns const because editors never modify features directly.
             static const ValueFeature* tryGetValueFeature(AccessModelScope& scope, const ComplexValueEditorData& data);
+
+            /// Convenience Function: Get the ValueFeature referred to by the data, or throw a ModelException.
+            /// Note: This returns const because editors never modify features directly.
+            static const ValueFeature& getValueFeatureOrThrow(AccessModelScope& scope, const ComplexValueEditorData& data);
 
         signals:
             void editorClosing();

@@ -35,7 +35,7 @@ void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
     event->accept();
 }
 
-const babelwires::ValueFeature& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope, const ComplexValueEditorData& data) {
+const babelwires::ValueFeature& babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, const ComplexValueEditorData& data) {
     const Project& project = scope.getProject();
 
     const FeatureElement* element = project.getFeatureElement(data.getElementId());
@@ -75,4 +75,10 @@ const babelwires::ValueFeature* babelwires::ComplexValueEditor::tryGetValueFeatu
         return nullptr;
     }
     return valueFeature;  
+}
+
+const babelwires::ValueFeature& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope, const ComplexValueEditorData& data) {
+    const ValueFeature* const valueFeature = tryGetValueFeature(scope, data);
+    assert(valueFeature && "There was not value feature");
+    return *valueFeature;
 }

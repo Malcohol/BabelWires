@@ -18,6 +18,7 @@
 
 namespace babelwires {
     class ProjectBridge;
+    class MapFeature;
 
     class MapEditor : public ComplexValueEditor {
         public:
@@ -30,7 +31,11 @@ namespace babelwires {
             /// Apply the state of this map to the project.
             void applyMapToProject();
 
+            /// Get the MapFeature or throw.
+            const MapFeature& getMapFeature(AccessModelScope& scope);
+
         protected:
+
             void updateMapFromProject();
 
         private:

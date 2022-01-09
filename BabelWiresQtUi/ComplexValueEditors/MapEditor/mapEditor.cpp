@@ -10,8 +10,10 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 
-#include <BabelWires/BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
-#include <BabelWires/BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Features/mapFeature.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -29,7 +31,6 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 
         QLayout* topButtonsLayout = new QHBoxLayout();
         topButtons->setLayout(topButtonsLayout);
-
 
         {
             QLabel* label = new QLabel(topButtons);
@@ -53,13 +54,19 @@ void babelwires::MapEditor::applyMapToProject() {
     getProjectBridge().scheduleCommand(std::move(setValueCommand));
 }
 
+const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) {
+    const ValueFeature& valueFeature = ComplexValueEditor::getValueFeature(scope, getData());
+    const MapFeature* mapFeature = valueFeature.as<MapFeature>();
+    assert(mapFeature && "The value feature was not map feature");
+    return *mapFeature;
+}
+
 void babelwires::MapEditor::updateMapFromProject() {
     AccessModelScope scope(getProjectBridge());
-
+    const MapFeature& mapFeature = getMapFeature(scope);
+    setEditorMap(mapFeature.get());
 }
 
 void babelwires::MapEditor::setEditorMap(const Map& map) {
-    // TODO Reset command manager? Add a command for this?
     m_map = map;
 }
-
