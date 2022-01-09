@@ -26,6 +26,8 @@ namespace babelwires {
         ElementId getElementId() const;
         const FeaturePath& getPathToValue() const;
 
+      public:
+        // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
         std::size_t getHash() const;
 
         inline friend bool operator==(const ComplexValueEditorData& a, const ComplexValueEditorData& b) { 
@@ -36,6 +38,7 @@ namespace babelwires {
             return os << data.m_elementId << ": " << data.m_pathToValue;
         }
 
+      public:
         // Serialization.
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;

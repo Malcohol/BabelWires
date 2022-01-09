@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ComplexValueEditors/mapEditor.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
