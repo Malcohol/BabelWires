@@ -65,7 +65,7 @@ namespace babelwires {
         static constexpr unsigned int N = (NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
 
         /// Constructor from a string literal.
-        template <unsigned int M, typename std::enable_if_t<(2 < M) && (M <= N), int> = 0>
+        template <unsigned int M, typename std::enable_if_t<(1 < M) && (M <= N), int> = 0>
         IdentifierBase(const char (&str)[M]) {
             assert(validate(str, M - 1) && "The identifier is invalid");
             // TODO Big endian.
@@ -82,8 +82,8 @@ namespace babelwires {
             std::reverse_copy(str, str + N, m_data.m_chars);
         }
 
-        /// Statically exclude literals which are too short or too long.
-        template <unsigned int M, typename std::enable_if_t<(1 == M) || (M > N + 1), int> = 0>
+        /// Statically exclude literals which are too long.
+        template <unsigned int M, typename std::enable_if_t<(M > N + 1), int> = 0>
         IdentifierBase(const char (&str)[M]) = delete;
 
         /// Construct an identifier from a non-static string.
