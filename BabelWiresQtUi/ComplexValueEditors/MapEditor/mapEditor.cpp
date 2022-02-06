@@ -16,9 +16,12 @@
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
+
+#include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDialogButtonBox>
 
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
                                  const ComplexValueEditorData& data)
@@ -36,21 +39,28 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         AccessModelScope scope(getProjectBridge());
         const MapFeature& mapFeature = getMapFeature(scope);
 
-        {
-            QLabel* label = new QLabel(topButtons);
-            label->setText("Source type: ");
-            topButtonsLayout->addWidget(label);
-        }
+        topButtonsLayout->addWidget(new QLabel("Source type: ", topButtons));
         TypeWidget* sourceTypes = new TypeWidget(topButtons, projectBridge, mapFeature.getAllowedSourceIds());
         topButtonsLayout->addWidget(sourceTypes);
 
-        {
-            QLabel* label = new QLabel(topButtons);
-            label->setText("Target type: ");
-            topButtonsLayout->addWidget(label);
-        }
+        topButtonsLayout->addWidget(new QLabel("Target type: ", topButtons));
         TypeWidget* targetTypes = new TypeWidget(topButtons, projectBridge, mapFeature.getAllowedTargetIds());
         topButtonsLayout->addWidget(targetTypes);
+
+        auto contentsButtons = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults
+                                     | QDialogButtonBox::Save
+                                     | QDialogButtonBox::Open
+                                     );
+
+        mainLayout->addWidget(contentsButtons);
+
+        auto bottomButtons = new QDialogButtonBox( QDialogButtonBox::Apply
+                                     | QDialogButtonBox::Close
+                                     );
+        connect(bottomButtons->button(QDialogButtonBox::Apply), &QAbstractButton::clicked, this, &MapEditor::applyMapToProject);
+        connect(bottomButtons, &QDialogButtonBox::rejected, this, &MapEditor::close);
+
+        mainLayout->addWidget(bottomButtons);
 
         show();
     }
