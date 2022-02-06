@@ -14,6 +14,12 @@ std::string babelwires::MapFeature::doGetValueType() const {
     return "map";
 }
 
+babelwires::MapFeature::MapFeature(TypeSet allowedSourceIds, TypeSet allowedTargetIds) 
+    : m_allowedSourceIds(std::move(allowedSourceIds))
+    , m_allowedTargetIds(std::move(allowedTargetIds))
+{
+}
+
 void babelwires::MapFeature::onBeforeSetValue(const Map& newValue) const {
     const LongIdentifier& newSourceType = newValue.getSourceId();
     const LongIdentifier& newTargetType = newValue.getTargetId();
@@ -24,4 +30,12 @@ void babelwires::MapFeature::onBeforeSetValue(const Map& newValue) const {
     if (!m_allowedTargetIds.empty() && (m_allowedTargetIds.find(newTargetType) == m_allowedTargetIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newTargetType) << "\" is not a permitted target type for this map feature";
     }
+}
+
+const std::unordered_set<babelwires::LongIdentifier>& babelwires::MapFeature::getAllowedSourceIds() const {
+    return m_allowedSourceIds;
+}
+
+const std::unordered_set<babelwires::LongIdentifier>& babelwires::MapFeature::getAllowedTargetIds() const {
+    return m_allowedTargetIds;
 }

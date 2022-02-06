@@ -9,6 +9,7 @@
 
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
 
 #include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
@@ -32,16 +33,25 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         QLayout* topButtonsLayout = new QHBoxLayout();
         topButtons->setLayout(topButtonsLayout);
 
+        AccessModelScope scope(getProjectBridge());
+        const MapFeature& mapFeature = getMapFeature(scope);
+
         {
             QLabel* label = new QLabel(topButtons);
-            label->setText("Flerm");
+            label->setText("Source type: ");
             topButtonsLayout->addWidget(label);
         }
+        TypeWidget* sourceTypes = new TypeWidget(topButtons, projectBridge, mapFeature.getAllowedSourceIds());
+        topButtonsLayout->addWidget(sourceTypes);
+
         {
             QLabel* label = new QLabel(topButtons);
-            label->setText("Erg");
+            label->setText("Target type: ");
             topButtonsLayout->addWidget(label);
         }
+        TypeWidget* targetTypes = new TypeWidget(topButtons, projectBridge, mapFeature.getAllowedTargetIds());
+        topButtonsLayout->addWidget(targetTypes);
+
         show();
     }
 

@@ -14,14 +14,23 @@
 
 namespace babelwires {
     class MapFeature : public HeavyValueFeature<Map> {
+      public:
+        using TypeSet = std::unordered_set<LongIdentifier>;
+
+        MapFeature(TypeSet allowedSourceIds, TypeSet allowedTargetIds);
+
       protected:
         std::string doGetValueType() const override;
         void onBeforeSetValue(const Map& newValue) const override;
 
+      public:
+        const TypeSet& getAllowedSourceIds() const;
+        const TypeSet& getAllowedTargetIds() const;
+
       private:
         /// Empty means all types are allowed.
-        std::unordered_set<LongIdentifier> m_allowedSourceIds;
+        TypeSet m_allowedSourceIds;
         /// Empty means all types are allowed.
-        std::unordered_set<LongIdentifier> m_allowedTargetIds;
+        TypeSet m_allowedTargetIds;
     };
 } // namespace babelwires
