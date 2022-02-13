@@ -144,7 +144,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
             EXPECT_NE(recordInt2Disciminator, fileIntChildDiscriminator);
 
             libTestUtils::TestProjectData::testProjectDataAndDisciminators(
-                bundle2.getProjectData(), recordIntDiscriminator, recordArrayDiscriminator, recordRecordDiscriminator,
+                bundle2.getData(), recordIntDiscriminator, recordArrayDiscriminator, recordRecordDiscriminator,
                 recordInt2Disciminator, fileIntChildDiscriminator);
         }
         bundle = std::move(bundle2);
@@ -342,7 +342,7 @@ TEST(ProjectBundleTest, factoryIdentifiers) {
 
     babelwires::ProjectBundle bundle(std::filesystem::current_path(), std::move(projectData));
    
-    EXPECT_EQ(bundle.getProjectData().m_elements[0]->m_factoryIdentifier.getDiscriminator(), 1);
-    EXPECT_EQ(bundle.getProjectData().m_elements[1]->m_factoryIdentifier.getDiscriminator(), 1);
-    EXPECT_EQ(bundle.getProjectData().m_elements[2]->m_factoryIdentifier.getDiscriminator(), 1);
+    EXPECT_EQ(bundle.getData().m_elements[0]->m_factoryIdentifier.getDiscriminator(), 1);
+    EXPECT_EQ(bundle.getData().m_elements[1]->m_factoryIdentifier.getDiscriminator(), 1);
+    EXPECT_EQ(bundle.getData().m_elements[2]->m_factoryIdentifier.getDiscriminator(), 1);
 }
