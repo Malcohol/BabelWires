@@ -19,11 +19,10 @@
 
 namespace babelwires {
     /// A DataBundle carries data which is independent of the current system, and carries metadata sufficient
-    /// to version it (i.e. load it into a system which has changed since the data was saved).
-    /// Some virtual methods are provided so subclasses can carry additional metadata. To give control over the
-    /// file structure, this additional metadata can optionally be serialized outside instead of inside the data
-    /// payload. The subclass must implement the ProjectVisitable implementation so the data and possibly the
-    /// additional metadata get visited.
+    /// to load it into a system which may not be identical to the system in which it was saved.
+    /// This base class handles metadata for identifiers and paths, although the subclass must implement the
+    /// ProjectVisitable interface so the data (and possibly additional metadata) get visited.
+    /// Some virtual methods are provided so subclasses can provide support for additional metadata.
     template <typename DATA> class DataBundle : public Serializable, public ProjectVisitable {
       public:
         SERIALIZABLE_ABSTRACT(DataBundle, "dataBundle", void);
@@ -83,21 +82,22 @@ namespace babelwires {
         void resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToProjectFile,
                                                        UserLogger& userLogger);
 
+        /// Convert identifiers, relative to the sourceReg, to identifiers, relative to the targetReg.
         template <typename SOURCE_REG, typename TARGET_REG>
-        void convertData(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
+        void convertIdentifiers(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
                          babelwires::IdentifierRegistry::Authority authority);
 
       private:
-        /// The data.
+        /// The data payload.
         DATA m_data;
 
         /// Identifier metadata.
         IdentifierRegistry m_identifierRegistry;
 
-        /// Absolute path to the project, when saved.
+        /// Absolute path to the file when saved.
         /// FilePaths in the data are stored in relative form whenever possible.
         /// Having this allows us to reconstruct their absolute paths in case the relative path
-        /// from the project as loaded does not exist.
+        /// from the file as loaded does not exist.
         FilePath m_projectFilePath;
     };
 

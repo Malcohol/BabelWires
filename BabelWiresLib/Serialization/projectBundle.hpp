@@ -33,6 +33,7 @@ namespace babelwires {
         const FactoryMetadata& getFactoryMetadata() const { return m_factoryMetadata; }
 
       protected:
+        /// Populate the factoryMetadata.
         void interpretAdditionalMetadataInCurrentContext() override;
 
         /// The versions of the factories in the stored ProjectData from the factory meta-data are updated.

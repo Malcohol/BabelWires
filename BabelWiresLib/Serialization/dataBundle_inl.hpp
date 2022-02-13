@@ -60,7 +60,7 @@ DATA babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const ProjectCon
 
 template <typename DATA>
 template <typename SOURCE_REG, typename TARGET_REG>
-void babelwires::DataBundle<DATA>::convertData(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
+void babelwires::DataBundle<DATA>::convertIdentifiers(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
                     babelwires::IdentifierRegistry::Authority authority) {
     Detail::IdentifierVisitor<SOURCE_REG, TARGET_REG> visitor(sourceReg, targetReg, authority);
     visitIdentifiers(visitor);
@@ -69,7 +69,7 @@ void babelwires::DataBundle<DATA>::convertData(SOURCE_REG&& sourceReg, TARGET_RE
 template <typename DATA> void babelwires::DataBundle<DATA>::interpretIdentifiersInCurrentContext() {
     IdentifierRegistry::ReadAccess sourceRegistry = IdentifierRegistry::read();
     try {
-        convertData(sourceRegistry, &m_identifierRegistry, IdentifierRegistry::Authority::isTemporary);
+        convertIdentifiers(sourceRegistry, &m_identifierRegistry, IdentifierRegistry::Authority::isTemporary);
     } catch (const ParseException&) {
         assert(false && "A field with a discriminator did not resolve.");
     }
@@ -87,7 +87,7 @@ template <typename DATA> void babelwires::DataBundle<DATA>::interpretFilePathsIn
 
 template <typename DATA> void babelwires::DataBundle<DATA>::resolveIdentifiersAgainstCurrentContext() {
     IdentifierRegistry::WriteAccess targetRegistry = IdentifierRegistry::write();
-    convertData(&m_identifierRegistry, targetRegistry, IdentifierRegistry::Authority::isProvisional);
+    convertIdentifiers(&m_identifierRegistry, targetRegistry, IdentifierRegistry::Authority::isProvisional);
 }
 
 template <typename DATA>
