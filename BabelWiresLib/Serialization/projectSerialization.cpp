@@ -58,6 +58,7 @@ babelwires::ProjectData babelwires::ProjectSerialization::loadFromString(const s
 void babelwires::ProjectSerialization::internal::saveToStream(std::ostream& os, const std::filesystem::path& pathToProjectFile, ProjectData projectData) {
     XmlSerializer serializer;
     ProjectBundle bundle(pathToProjectFile, std::move(projectData));
+    bundle.interpretInCurrentContext();
     serializer.serializeObject(bundle);
     serializer.write(os);
 }

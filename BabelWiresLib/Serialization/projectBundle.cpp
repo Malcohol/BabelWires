@@ -14,6 +14,9 @@
 
 babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile, ProjectData&& projectData)
     : DataBundle(std::move(pathToProjectFile), std::move(projectData)) {
+}
+
+void babelwires::ProjectBundle::interpretAdditionalMetadataInCurrentContext() {
     // Capture current factory metadata
     for (const auto& element : getData().m_elements) {
         VersionNumber& storedVersion = m_factoryMetadata[element->m_factoryIdentifier];
@@ -67,4 +70,20 @@ void babelwires::ProjectBundle::deserializeAdditionalMetadata(Deserializer& dese
         auto fm = it.getObject();
         m_factoryMetadata.insert(std::make_pair(std::move(fm->m_factoryIdentifier), fm->m_factoryVersion));
     }
+}
+
+void babelwires::ProjectBundle::visitIdentifiers(IdentifierVisitor& visitor) {
+    getData().visitIdentifiers(visitor);
+    // Visit the identifiers in the factory metadata.
+    decltype(m_factoryMetadata) newMap;
+    for (const auto& [k, v] : m_factoryMetadata) {
+        LongIdentifier newKey = k;
+        visitor(newKey);
+        newMap.insert(std::pair(newKey, v));
+    }
+    m_factoryMetadata.swap(newMap);
+}
+
+void babelwires::ProjectBundle::visitFilePaths(FilePathVisitor& visitor) {
+    getData().visitFilePaths(visitor);
 }

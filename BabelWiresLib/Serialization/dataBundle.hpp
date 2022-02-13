@@ -7,12 +7,13 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/FileFormat/filePath.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Project/projectVisitable.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Serialization/serializable.hpp>
 #include <Common/Log/userLogger.hpp>
+#include <Common/Serialization/serializable.hpp>
 
 #include <filesystem>
 
@@ -21,8 +22,9 @@ namespace babelwires {
     /// to version it (i.e. load it into a system which has changed since the data was saved).
     /// Some virtual methods are provided so subclasses can carry additional metadata. To give control over the
     /// file structure, this additional metadata can optionally be serialized outside instead of inside the data
-    /// payload.
-    template <typename DATA> class DataBundle : public Serializable {
+    /// payload. The subclass must implement the ProjectVisitable implementation so the data and possibly the
+    /// additional metadata get visited.
+    template <typename DATA> class DataBundle : public Serializable, public ProjectVisitable {
       public:
         SERIALIZABLE_ABSTRACT(DataBundle, "dataBundle", void);
         DataBundle() = default;
@@ -33,8 +35,12 @@ namespace babelwires {
         DataBundle& operator=(DataBundle&&) = default;
 
         /// Construct a bundle from data.
-        /// The data is modified to make the bundle independent of the current system.
+        /// This object takes ownership of the data.
         DataBundle(std::filesystem::path pathToProjectFile, DATA&& data);
+
+        /// Should be called before saving to make the bundle independent of the current system
+        // TODO Should probably take the context as a parameter.
+        void interpretInCurrentContext();
 
         /// Returns the contained data, modified so it corresponds the current system.
         /// This object is invalidated after calling this.
@@ -49,21 +55,11 @@ namespace babelwires {
 
         const IdentifierRegistry& getIdentifierRegistry() const { return m_identifierRegistry; }
 
-      private:
-        /// Ensure the fields in the data refer to the context independent m_identifierRegistry.
-        void interpretIdentifiersInCurrentContext();
-
-        /// Ensure the filePaths in the data are made relative to the m_projectFilePath.
-        void interpretFilePathsInCurrentProjectPath();
-
-        /// Ensure the fields in the data refer to the global FileNameRegistry.
-        void resolveIdentifiersAgainstCurrentContext();
-
-        /// Update the filePaths in the data, in terms of the given pathToProjectFile.
-        void resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToProjectFile,
-                                                       UserLogger& userLogger);
-
       protected:
+        /// Gives the subclass the opportunity to populate the additional metadata, or at least
+        /// make it independent of the current system.
+        virtual void interpretAdditionalMetadataInCurrentContext() {}
+
         /// If the subclass needs to do any additional resolution, it can do it here.
         virtual void adaptDataToAdditionalMetadata(const ProjectContext& context, UserLogger& userLogger) {}
 
@@ -72,6 +68,24 @@ namespace babelwires {
 
         /// Allows the subclass to put additional metadata at the same level as the metadata handled by this class.
         virtual void deserializeAdditionalMetadata(Deserializer& deserializer) {}
+
+      private:
+        /// Ensure the identifiers in the data refer to the context independent m_identifierRegistry.
+        void interpretIdentifiersInCurrentContext();
+
+        /// Ensure the filePaths in the data are made relative to the m_projectFilePath.
+        void interpretFilePathsInCurrentProjectPath();
+
+        /// Ensure the identifiers in the data refer to the global IdentifierRegistry.
+        void resolveIdentifiersAgainstCurrentContext();
+
+        /// Update the filePaths in the data, in terms of the given pathToProjectFile.
+        void resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToProjectFile,
+                                                       UserLogger& userLogger);
+
+        template <typename SOURCE_REG, typename TARGET_REG>
+        void convertData(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
+                         babelwires::IdentifierRegistry::Authority authority);
 
       private:
         /// The data.

@@ -1,5 +1,3 @@
-#include <BabelWiresLib/Project/projectVisitable.hpp>
-
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
@@ -34,13 +32,6 @@ namespace babelwires {
             TARGET_REG& m_targetReg;
             babelwires::IdentifierRegistry::Authority m_authority;
         };
-
-        template <typename DATA, typename SOURCE_REG, typename TARGET_REG>
-        void convertData(DATA& data, SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
-                         babelwires::IdentifierRegistry::Authority authority) {
-            IdentifierVisitor<SOURCE_REG, TARGET_REG> visitor(sourceReg, targetReg, authority);
-            data.visitIdentifiers(visitor);
-        }
     } // namespace Detail
 } // namespace babelwires
 
@@ -48,8 +39,13 @@ template <typename DATA>
 babelwires::DataBundle<DATA>::DataBundle(std::filesystem::path pathToProjectFile, DATA&& data)
     : m_data(std::move(data))
     , m_projectFilePath(pathToProjectFile) {
+}
+
+template <typename DATA>
+void babelwires::DataBundle<DATA>::interpretInCurrentContext() {
     interpretIdentifiersInCurrentContext();
     interpretFilePathsInCurrentProjectPath();
+    interpretAdditionalMetadataInCurrentContext();
 }
 
 template <typename DATA>
@@ -62,10 +58,18 @@ DATA babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const ProjectCon
     return std::move(m_data);
 }
 
+template <typename DATA>
+template <typename SOURCE_REG, typename TARGET_REG>
+void babelwires::DataBundle<DATA>::convertData(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
+                    babelwires::IdentifierRegistry::Authority authority) {
+    Detail::IdentifierVisitor<SOURCE_REG, TARGET_REG> visitor(sourceReg, targetReg, authority);
+    visitIdentifiers(visitor);
+}
+
 template <typename DATA> void babelwires::DataBundle<DATA>::interpretIdentifiersInCurrentContext() {
     IdentifierRegistry::ReadAccess sourceRegistry = IdentifierRegistry::read();
     try {
-        Detail::convertData(m_data, sourceRegistry, &m_identifierRegistry, IdentifierRegistry::Authority::isTemporary);
+        convertData(sourceRegistry, &m_identifierRegistry, IdentifierRegistry::Authority::isTemporary);
     } catch (const ParseException&) {
         assert(false && "A field with a discriminator did not resolve.");
     }
@@ -77,13 +81,13 @@ template <typename DATA> void babelwires::DataBundle<DATA>::interpretFilePathsIn
         babelwires::FilePathVisitor visitor = [&](FilePath& filePath) {
             filePath.interpretRelativeTo(projectPath.parent_path());
         };
-        m_data.visitFilePaths(visitor);
+        visitFilePaths(visitor);
     }
 }
 
 template <typename DATA> void babelwires::DataBundle<DATA>::resolveIdentifiersAgainstCurrentContext() {
     IdentifierRegistry::WriteAccess targetRegistry = IdentifierRegistry::write();
-    Detail::convertData(m_data, &m_identifierRegistry, targetRegistry, IdentifierRegistry::Authority::isProvisional);
+    convertData(&m_identifierRegistry, targetRegistry, IdentifierRegistry::Authority::isProvisional);
 }
 
 template <typename DATA>
@@ -96,7 +100,7 @@ void babelwires::DataBundle<DATA>::resolveFilePathsAgainstCurrentProjectPath(con
     babelwires::FilePathVisitor visitor = [&](FilePath& filePath) {
         filePath.resolveRelativeTo(newBase, oldBase, userLogger);
     };
-    m_data.visitFilePaths(visitor);
+    visitFilePaths(visitor);
 }
 
 template <typename DATA> void babelwires::DataBundle<DATA>::serializeContents(Serializer& serializer) const {

@@ -89,6 +89,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
         // Test the construction of a bundle from a projectData.
         babelwires::ProjectBundle bundle2(std::filesystem::current_path(), std::move(projectData));
+        bundle2.interpretInCurrentContext();
 
         {
             // Bit of a hack, but this lets us iterate through the registry.
@@ -211,6 +212,7 @@ TEST(ProjectBundleTest, factoryMetadata) {
     projectData.m_elements[2]->m_factoryVersion = 3;
 
     babelwires::ProjectBundle bundle(std::filesystem::current_path(), std::move(projectData));
+    bundle.interpretInCurrentContext();
 
     ASSERT_EQ(bundle.getFactoryMetadata().size(), 3);
     EXPECT_EQ(bundle.getFactoryMetadata().find(libTestUtils::TestTargetFileFormat::getThisIdentifier())->second, 1);
@@ -341,6 +343,7 @@ TEST(ProjectBundleTest, factoryIdentifiers) {
     EXPECT_EQ(projectData.m_elements[2]->m_factoryIdentifier.getDiscriminator(), 2);
 
     babelwires::ProjectBundle bundle(std::filesystem::current_path(), std::move(projectData));
+    bundle.interpretInCurrentContext();
    
     EXPECT_EQ(bundle.getData().m_elements[0]->m_factoryIdentifier.getDiscriminator(), 1);
     EXPECT_EQ(bundle.getData().m_elements[1]->m_factoryIdentifier.getDiscriminator(), 1);
