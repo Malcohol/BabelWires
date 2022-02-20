@@ -25,6 +25,8 @@ namespace babelwires {
     /// Some virtual methods are provided so subclasses can provide support for additional metadata.
     template <typename DATA> class DataBundle : public Serializable, public ProjectVisitable {
       public:
+        using Data = DATA;
+
         SERIALIZABLE_ABSTRACT(DataBundle, "dataBundle", void);
         DataBundle() = default;
         DataBundle(const DataBundle&) = delete;
