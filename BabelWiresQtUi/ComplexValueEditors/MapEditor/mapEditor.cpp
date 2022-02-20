@@ -16,15 +16,15 @@
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Maps/mapSerialization.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
-#include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp> 
+#include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 
 #include <QDialogButtonBox>
+#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QMessageBox>
-#include <QFileDialog>
 
 #define MAP_FILE_EXTENSION ".bw_map"
 #define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
@@ -58,17 +58,24 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Save | QDialogButtonBox::Open);
 
     mainLayout->addWidget(contentsButtons);
+    auto bottomButtons =
+        new QDialogButtonBox(QDialogButtonBox::Close);
+    QPushButton* reloadButton = new QPushButton(style()->standardIcon(QStyle::SP_BrowserReload), "Refresh from project");
+    QPushButton* applyButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogOkButton), "Apply to project");
+    bottomButtons->addButton(reloadButton, QDialogButtonBox::ButtonRole::ResetRole);
+    bottomButtons->addButton(applyButton, QDialogButtonBox::ButtonRole::ApplyRole);
+    mainLayout->addWidget(bottomButtons);
 
-    auto bottomButtons = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Close);
-    connect(bottomButtons->button(QDialogButtonBox::Apply), &QAbstractButton::clicked, this,
-            &MapEditor::applyMapToProject);
-    connect(bottomButtons, &QDialogButtonBox::rejected, this, &MapEditor::close);
     connect(contentsButtons->button(QDialogButtonBox::Save), &QAbstractButton::clicked, this,
             &MapEditor::saveMapToFile);
     connect(contentsButtons->button(QDialogButtonBox::Open), &QAbstractButton::clicked, this,
             &MapEditor::loadMapFromFile);
 
-    mainLayout->addWidget(bottomButtons);
+    connect(applyButton, &QAbstractButton::clicked, this,
+            &MapEditor::applyMapToProject);
+    connect(reloadButton, &QAbstractButton::clicked, this,
+            &MapEditor::updateMapFromProject);
+    connect(bottomButtons, &QDialogButtonBox::rejected, this, &MapEditor::close);
 
     show();
 }
@@ -77,6 +84,9 @@ void babelwires::MapEditor::applyMapToProject() {
     auto modifierData = std::make_unique<MapValueAssignmentData>();
     modifierData->m_map = m_map;
     modifierData->m_pathToFeature = getData().getPathToValue();
+
+    // TODO This should be synchronous in order to warn the user clearly if it did not happen.
+    // Otherwise a big edit could be lost without warning.
 
     auto setValueCommand =
         std::make_unique<AddModifierCommand>("Set map value", getData().getElementId(), std::move(modifierData));
@@ -90,22 +100,36 @@ const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelSc
     return *mapFeature;
 }
 
+const babelwires::MapFeature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) {
+    const ValueFeature* valueFeature = ComplexValueEditor::tryGetValueFeature(scope, getData());
+    if (valueFeature) {
+        const MapFeature* mapFeature = valueFeature->as<MapFeature>();
+        if (mapFeature) {
+            return mapFeature;
+        }
+    }
+    return nullptr;
+}
+
 void babelwires::MapEditor::updateMapFromProject() {
     AccessModelScope scope(getProjectBridge());
-    const MapFeature& mapFeature = getMapFeature(scope);
-    setEditorMap(mapFeature.get());
+    const MapFeature* mapFeature = tryGetMapFeature(scope);
+    if (mapFeature) {
+        getUserLogger().logInfo() << "Refreshing the map from the project";
+        setEditorMap(mapFeature->get());
+    } else {
+        warnThatMapNoLongerInProject("Cannot refresh the map.");
+    }
 }
 
 void babelwires::MapEditor::setEditorMap(const Map& map) {
     m_map = map;
 }
 
-void babelwires::MapEditor::saveMapToFile() 
-{
+void babelwires::MapEditor::saveMapToFile() {
     QString dialogCaption = tr("Save project as");
     QString dialogFormats = tr("Map (*" MAP_FILE_EXTENSION ")");
-    QString filePath = QFileDialog::getSaveFileName(this, dialogCaption,
-                                                    m_lastSaveFilePath, dialogFormats);
+    QString filePath = QFileDialog::getSaveFileName(this, dialogCaption, m_lastSaveFilePath, dialogFormats);
     if (!filePath.isNull()) {
         const QString ext = MAP_FILE_EXTENSION;
         if (!filePath.endsWith(ext)) {
@@ -138,15 +162,13 @@ bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
 void babelwires::MapEditor::loadMapFromFile() {
     QString dialogCaption = tr("Load map from file");
     QString dialogFormats = tr(MAP_FORMAT_STRING);
-    QString filePath = QFileDialog::getOpenFileName(this, dialogCaption,
-                                                    m_lastSaveFilePath, dialogFormats);
+    QString filePath = QFileDialog::getOpenFileName(this, dialogCaption, m_lastSaveFilePath, dialogFormats);
     if (!filePath.isNull()) {
         while (1) {
             try {
                 std::string filePathStr = filePath.toStdString();
                 getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
-                Map map = MapSerialization::loadFromFile(
-                    filePathStr, getProjectBridge().getContext(), getUserLogger());
+                Map map = MapSerialization::loadFromFile(filePathStr, getProjectBridge().getContext(), getUserLogger());
                 m_map = map;
                 m_lastSaveFilePath = filePath;
                 return;
@@ -154,11 +176,17 @@ void babelwires::MapEditor::loadMapFromFile() {
                 getUserLogger().logError() << "The map could not be loaded: " << e.what();
                 QString message = e.what();
                 if (QMessageBox::warning(this, tr("The map could not be loaded."), message,
-                                            QMessageBox::Retry | QMessageBox::Cancel,
-                                            QMessageBox::Retry) == QMessageBox::Cancel) {
+                                         QMessageBox::Retry | QMessageBox::Cancel,
+                                         QMessageBox::Retry) == QMessageBox::Cancel) {
                     return;
                 }
             }
         }
     }
+}
+
+void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& operationDescription) {
+    std::ostringstream contents;
+    contents << "The map \"" << getData() << "\" is no longer in the project.\n" << operationDescription;
+    QMessageBox::warning(this, "Map no longer in project", QString(contents.str().c_str()));
 }

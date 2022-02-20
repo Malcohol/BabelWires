@@ -33,6 +33,7 @@ namespace babelwires {
 
             /// Get the MapFeature or throw.
             const MapFeature& getMapFeature(AccessModelScope& scope);
+            const MapFeature* tryGetMapFeature(AccessModelScope& scope);
 
         protected:
 
@@ -41,6 +42,9 @@ namespace babelwires {
             void saveMapToFile();
             bool trySaveMapToFile(const QString& filePath);
             void loadMapFromFile();
+
+            /// Warn the user on apply or discard that the map is no longer in the project.
+            void warnThatMapNoLongerInProject(const std::string& operationDescription);
 
         private:
             /// A local copy of the map being edited.
