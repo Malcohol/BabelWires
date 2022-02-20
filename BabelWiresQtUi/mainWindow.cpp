@@ -50,6 +50,7 @@
 
 namespace {
     constexpr char s_initialFilePath[] = "Untitled";
+    // TODO: This needs to be set by the enclosing application.
     constexpr char s_dialogProjectFormat[] = "Seqwires project (*.seqwires)";
 
     std::shared_ptr<QtNodes::DataModelRegistry> registerDataModels(babelwires::ProjectBridge& projectBridge) {

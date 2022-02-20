@@ -46,6 +46,7 @@ namespace babelwires {
 
         protected:
             ProjectBridge& getProjectBridge();
+            UserLogger& getUserLogger();
             void closeEvent(QCloseEvent* event) override;
 
         private:

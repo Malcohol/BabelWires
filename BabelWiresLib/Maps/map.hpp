@@ -20,7 +20,7 @@ namespace babelwires {
     /// 
     class Map : public Serializable, public ProjectVisitable {
       public:
-        SERIALIZABLE(Map, "map", void, 1);
+        SERIALIZABLE(Map, "mapData", void, 1);
 
         Map();
         Map(const Map& other);

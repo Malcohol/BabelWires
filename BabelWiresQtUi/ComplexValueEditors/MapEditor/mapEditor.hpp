@@ -38,12 +38,17 @@ namespace babelwires {
 
             void updateMapFromProject();
 
+            void saveMap();
+            bool trySaveMap(const QString& filePath);
+
         private:
             /// A local copy of the map being edited.
             Map m_map;
 
             /// Manages changes to the map.
             CommandManager<Map> m_commandManager;
+
+            QString m_lastSaveFilePath;
     };
 
 }
