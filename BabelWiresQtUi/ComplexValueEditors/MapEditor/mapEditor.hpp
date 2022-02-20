@@ -38,8 +38,9 @@ namespace babelwires {
 
             void updateMapFromProject();
 
-            void saveMap();
-            bool trySaveMap(const QString& filePath);
+            void saveMapToFile();
+            bool trySaveMapToFile(const QString& filePath);
+            void loadMapFromFile();
 
         private:
             /// A local copy of the map being edited.

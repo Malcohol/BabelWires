@@ -121,7 +121,7 @@ void babelwires::Map::serializeContents(Serializer& serializer) const {
 void babelwires::Map::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("sourceId", m_sourceId);
     deserializer.deserializeValue("targetId", m_targetId);
-    auto it = deserializer.deserializeArray<MapEntry>("entries");
+    auto it = deserializer.deserializeArray<MapEntry>("entries", Deserializer::IsOptional::Optional);
     while (it.isValid()) {
         std::unique_ptr<MapEntry> newEntry = it.getObject();
         if (!validateNewEntry(*newEntry)) {

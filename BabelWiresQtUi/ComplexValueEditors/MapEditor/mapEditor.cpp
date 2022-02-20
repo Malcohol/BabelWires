@@ -10,12 +10,13 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Maps/mapSerialization.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
-#include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
+#include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp> 
 
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
@@ -24,6 +25,9 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QFileDialog>
+
+#define MAP_FILE_EXTENSION ".bw_map"
+#define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
 
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
                                  const ComplexValueEditorData& data)
@@ -59,7 +63,9 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             &MapEditor::applyMapToProject);
     connect(bottomButtons, &QDialogButtonBox::rejected, this, &MapEditor::close);
     connect(contentsButtons->button(QDialogButtonBox::Save), &QAbstractButton::clicked, this,
-            &MapEditor::saveMap);
+            &MapEditor::saveMapToFile);
+    connect(contentsButtons->button(QDialogButtonBox::Open), &QAbstractButton::clicked, this,
+            &MapEditor::loadMapFromFile);
 
     mainLayout->addWidget(bottomButtons);
 
@@ -79,7 +85,7 @@ void babelwires::MapEditor::applyMapToProject() {
 const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) {
     const ValueFeature& valueFeature = ComplexValueEditor::getValueFeature(scope, getData());
     const MapFeature* mapFeature = valueFeature.as<MapFeature>();
-    assert(mapFeature && "The value feature was not map feature");
+    assert(mapFeature && "The value feature was not a map feature");
     return *mapFeature;
 }
 
@@ -93,23 +99,23 @@ void babelwires::MapEditor::setEditorMap(const Map& map) {
     m_map = map;
 }
 
-void babelwires::MapEditor::saveMap() 
+void babelwires::MapEditor::saveMapToFile() 
 {
     QString dialogCaption = tr("Save project as");
-    QString dialogFormats = tr("Map (*.bw_map)");
+    QString dialogFormats = tr("Map (*" MAP_FILE_EXTENSION ")");
     QString filePath = QFileDialog::getSaveFileName(this, dialogCaption,
                                                     m_lastSaveFilePath, dialogFormats);
     if (!filePath.isNull()) {
-        const QString ext = ".bw_map";
+        const QString ext = MAP_FILE_EXTENSION;
         if (!filePath.endsWith(ext)) {
             filePath += ext;
         }
-        trySaveMap(filePath);
+        trySaveMapToFile(filePath);
         m_lastSaveFilePath = filePath;
     }
 }
 
-bool babelwires::MapEditor::trySaveMap(const QString& filePath) {
+bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
     while (1) {
         try {
             std::string filePathStr = filePath.toStdString();
@@ -123,6 +129,34 @@ bool babelwires::MapEditor::trySaveMap(const QString& filePath) {
                                      QMessageBox::Retry | QMessageBox::Cancel,
                                      QMessageBox::Retry) == QMessageBox::Cancel) {
                 return false;
+            }
+        }
+    }
+}
+
+void babelwires::MapEditor::loadMapFromFile() {
+    QString dialogCaption = tr("Load map from file");
+    QString dialogFormats = tr(MAP_FORMAT_STRING);
+    QString filePath = QFileDialog::getOpenFileName(this, dialogCaption,
+                                                    m_lastSaveFilePath, dialogFormats);
+    if (!filePath.isNull()) {
+        while (1) {
+            try {
+                std::string filePathStr = filePath.toStdString();
+                getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
+                Map map = MapSerialization::loadFromFile(
+                    filePathStr, getProjectBridge().getContext(), getUserLogger());
+                m_map = map;
+                m_lastSaveFilePath = filePath;
+                return;
+            } catch (FileIoException& e) {
+                getUserLogger().logError() << "The map could not be loaded: " << e.what();
+                QString message = e.what();
+                if (QMessageBox::warning(this, tr("The map could not be loaded."), message,
+                                            QMessageBox::Retry | QMessageBox::Cancel,
+                                            QMessageBox::Retry) == QMessageBox::Cancel) {
+                    return;
+                }
             }
         }
     }
