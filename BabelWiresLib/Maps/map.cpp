@@ -72,6 +72,9 @@ bool babelwires::Map::operator==(const Map& other) const {
 }
 
 bool babelwires::Map::operator!=(const Map& other) const {
+    if ((m_sourceId != other.m_sourceId) || (m_targetId != other.m_targetId)) {
+        return true;
+    }
     return m_mapEntries != other.m_mapEntries;
 }
 

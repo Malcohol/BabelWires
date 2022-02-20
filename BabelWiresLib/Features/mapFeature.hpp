@@ -10,18 +10,19 @@
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
 #include <BabelWiresLib/Maps/map.hpp>
 
-#include <unordered_set>
-
 namespace babelwires {
     class MapFeature : public HeavyValueFeature<Map> {
       public:
-        using TypeSet = std::unordered_set<LongIdentifier>;
+        using TypeSet = std::vector<LongIdentifier>;
 
+        /// If the sets are empty, any types are allowed.
+        /// If the sets are not empty, then the first type is taken to be the default.
         MapFeature(TypeSet allowedSourceIds, TypeSet allowedTargetIds);
 
       protected:
         std::string doGetValueType() const override;
         void onBeforeSetValue(const Map& newValue) const override;
+        void doSetToDefault() override;
 
       public:
         const TypeSet& getAllowedSourceIds() const;

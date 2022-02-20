@@ -24,18 +24,34 @@ void babelwires::MapFeature::onBeforeSetValue(const Map& newValue) const {
     const LongIdentifier& newSourceType = newValue.getSourceId();
     const LongIdentifier& newTargetType = newValue.getTargetId();
 
-    if (!m_allowedSourceIds.empty() && (m_allowedSourceIds.find(newSourceType) == m_allowedSourceIds.end())) {
+    if (!m_allowedSourceIds.empty() && (std::find(m_allowedSourceIds.begin(), m_allowedSourceIds.end(), newSourceType) == m_allowedSourceIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newSourceType) << "\" is not a permitted source type for this map feature";
     }
-    if (!m_allowedTargetIds.empty() && (m_allowedTargetIds.find(newTargetType) == m_allowedTargetIds.end())) {
+    if (!m_allowedTargetIds.empty() && (std::find(m_allowedTargetIds.begin(), m_allowedTargetIds.end(), newTargetType) == m_allowedTargetIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newTargetType) << "\" is not a permitted target type for this map feature";
     }
 }
 
-const std::unordered_set<babelwires::LongIdentifier>& babelwires::MapFeature::getAllowedSourceIds() const {
+const babelwires::MapFeature::TypeSet& babelwires::MapFeature::getAllowedSourceIds() const {
     return m_allowedSourceIds;
 }
 
-const std::unordered_set<babelwires::LongIdentifier>& babelwires::MapFeature::getAllowedTargetIds() const {
+const babelwires::MapFeature::TypeSet& babelwires::MapFeature::getAllowedTargetIds() const {
     return m_allowedTargetIds;
+}
+
+#include <iostream>
+
+void babelwires::MapFeature::doSetToDefault() {
+    Map map;
+    if (!m_allowedSourceIds.empty()) {
+        map.setSourceId(m_allowedSourceIds[0]);
+    }
+    if (!m_allowedTargetIds.empty()) {
+        map.setTargetId(m_allowedTargetIds[0]);
+    }
+    std::cerr << "Source " << map.getSourceId() << "\n";
+    std::cerr << "Target " << map.getTargetId() << "\n";
+
+    set(std::move(map));
 }

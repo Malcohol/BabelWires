@@ -44,6 +44,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 
     AccessModelScope scope(getProjectBridge());
     const MapFeature& mapFeature = getMapFeature(scope);
+    setEditorMap(mapFeature.get());
 
     topButtonsLayout->addWidget(new QLabel("Source type: ", topButtons));
     TypeWidget* sourceTypes = new TypeWidget(topButtons, projectBridge, mapFeature.getAllowedSourceIds());
