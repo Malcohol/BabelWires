@@ -25,6 +25,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QGroupBox>
 
 #define MAP_FILE_EXTENSION ".bw_map"
 #define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
@@ -37,46 +38,69 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
     QLayout* mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
 
-    QWidget* topButtons = new QWidget(this);
-    mainLayout->addWidget(topButtons);
+    {
+        auto contentsButtons = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults);
+        {
+            QPushButton* saveButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogSaveButton), "Save to file");
+            contentsButtons->addButton(saveButton, QDialogButtonBox::ButtonRole::AcceptRole);
+            connect(saveButton, &QAbstractButton::clicked, this, &MapEditor::saveMapToFile);
+        }
+        {
+            QPushButton* loadButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogOpenButton), "Load from file");
+            contentsButtons->addButton(loadButton, QDialogButtonBox::ButtonRole::AcceptRole);
+            connect(loadButton, &QAbstractButton::clicked, this, &MapEditor::loadMapFromFile);
+        }
+        mainLayout->addWidget(contentsButtons);
+    }
 
-    QLayout* topButtonsLayout = new QHBoxLayout();
-    topButtons->setLayout(topButtonsLayout);
+    {
+        QGroupBox* contents = new QGroupBox("Contents", this);
+        mainLayout->addWidget(contents);
+        QLayout* contentsLayout = new QVBoxLayout();
+        contents->setLayout(contentsLayout);
 
-    AccessModelScope scope(getProjectBridge());
-    const MapFeature& mapFeature = getMapFeature(scope);
-    setEditorMap(mapFeature.get());
+        QWidget* typeBar = new QWidget(this);
+        contentsLayout->addWidget(typeBar);
 
-    topButtonsLayout->addWidget(new QLabel("Source type: ", topButtons));
-    TypeWidget* sourceTypes = new TypeWidget(topButtons, projectBridge, mapFeature.getAllowedSourceIds());
-    topButtonsLayout->addWidget(sourceTypes);
+        QLayout* typeBarLayout = new QHBoxLayout();
+        typeBar->setLayout(typeBarLayout);
 
-    topButtonsLayout->addWidget(new QLabel("Target type: ", topButtons));
-    TypeWidget* targetTypes = new TypeWidget(topButtons, projectBridge, mapFeature.getAllowedTargetIds());
-    topButtonsLayout->addWidget(targetTypes);
+        {
+            AccessModelScope scope(getProjectBridge());
+            const MapFeature& mapFeature = getMapFeature(scope);
+            setEditorMap(mapFeature.get());
+            {
+                typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
+                TypeWidget* sourceTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedSourceIds());
+                typeBarLayout->addWidget(sourceTypes);
+            }
+            {
+                typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
+                TypeWidget* targetTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedTargetIds());
+                typeBarLayout->addWidget(targetTypes);
+            }
+            
+        }
+    }
 
-    auto contentsButtons =
-        new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Save | QDialogButtonBox::Open);
+    {
+        auto bottomButtons = new QDialogButtonBox(QDialogButtonBox::Close);
+        {
+            QPushButton* refreshButton =
+                new QPushButton(style()->standardIcon(QStyle::SP_BrowserReload), "Refresh from project");
+            bottomButtons->addButton(refreshButton, QDialogButtonBox::ButtonRole::ResetRole);
+            connect(refreshButton, &QAbstractButton::clicked, this, &MapEditor::updateMapFromProject);
+        }
+        {
+            QPushButton* applyButton =
+                new QPushButton(style()->standardIcon(QStyle::SP_DialogOkButton), "Apply to project");
+            bottomButtons->addButton(applyButton, QDialogButtonBox::ButtonRole::ApplyRole);
+            connect(applyButton, &QAbstractButton::clicked, this, &MapEditor::applyMapToProject);
+        }
+        connect(bottomButtons, &QDialogButtonBox::rejected, this, &MapEditor::close);
 
-    mainLayout->addWidget(contentsButtons);
-    auto bottomButtons =
-        new QDialogButtonBox(QDialogButtonBox::Close);
-    QPushButton* reloadButton = new QPushButton(style()->standardIcon(QStyle::SP_BrowserReload), "Refresh from project");
-    QPushButton* applyButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogOkButton), "Apply to project");
-    bottomButtons->addButton(reloadButton, QDialogButtonBox::ButtonRole::ResetRole);
-    bottomButtons->addButton(applyButton, QDialogButtonBox::ButtonRole::ApplyRole);
-    mainLayout->addWidget(bottomButtons);
-
-    connect(contentsButtons->button(QDialogButtonBox::Save), &QAbstractButton::clicked, this,
-            &MapEditor::saveMapToFile);
-    connect(contentsButtons->button(QDialogButtonBox::Open), &QAbstractButton::clicked, this,
-            &MapEditor::loadMapFromFile);
-
-    connect(applyButton, &QAbstractButton::clicked, this,
-            &MapEditor::applyMapToProject);
-    connect(reloadButton, &QAbstractButton::clicked, this,
-            &MapEditor::updateMapFromProject);
-    connect(bottomButtons, &QDialogButtonBox::rejected, this, &MapEditor::close);
+        mainLayout->addWidget(bottomButtons);
+    }
 
     show();
 }
