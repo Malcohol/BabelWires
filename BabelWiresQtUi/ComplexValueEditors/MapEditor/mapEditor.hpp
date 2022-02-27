@@ -46,6 +46,9 @@ namespace babelwires {
             /// Warn the user on apply or discard that the map is no longer in the project.
             void warnThatMapNoLongerInProject(const std::string& operationDescription);
 
+            /// Get a suitable title for the window carrying this widget.
+            QString getTitle() const;
+
         private:
             /// A local copy of the map being edited.
             Map m_map;

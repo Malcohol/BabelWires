@@ -35,7 +35,7 @@ namespace babelwires {
         }
 
         friend std::ostream& operator<<(std::ostream& os, const ComplexValueEditorData& data) {
-            return os << data.m_elementId << ": " << data.m_pathToValue;
+            return os << "\"" << data.m_pathToValue << " @ node " << data.m_elementId << "\"";
         }
 
       public:

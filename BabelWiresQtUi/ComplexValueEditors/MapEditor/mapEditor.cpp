@@ -33,6 +33,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
                                  const ComplexValueEditorData& data)
     : ComplexValueEditor(parent, projectBridge, userLogger, data)
     , m_commandManager(m_map, userLogger) {
+    setWindowTitle(getTitle());
     QLayout* mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
 
@@ -184,8 +185,14 @@ void babelwires::MapEditor::loadMapFromFile() {
     }
 }
 
+QString babelwires::MapEditor::getTitle() const {
+    std::ostringstream contents;
+    contents << getData() << " - Map Editor";
+    return contents.str().c_str();
+}
+
 void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& operationDescription) {
     std::ostringstream contents;
-    contents << "The map \"" << getData() << "\" is no longer in the project.\n" << operationDescription;
+    contents << "The map " << getData() << " is no longer in the project.\n" << operationDescription;
     QMessageBox::warning(this, "Map no longer in project", QString(contents.str().c_str()));
 }
