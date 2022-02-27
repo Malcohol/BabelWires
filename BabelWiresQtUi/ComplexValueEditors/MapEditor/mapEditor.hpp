@@ -19,6 +19,8 @@
 namespace babelwires {
     class ProjectBridge;
     class MapFeature;
+    class MapModel;
+    class MapView;
 
     class MapEditor : public ComplexValueEditor {
         public:
@@ -57,6 +59,9 @@ namespace babelwires {
             CommandManager<Map> m_commandManager;
 
             QString m_lastSaveFilePath;
+
+            MapView* m_mapView;
+            MapModel* m_mapModel;
     };
 
 }

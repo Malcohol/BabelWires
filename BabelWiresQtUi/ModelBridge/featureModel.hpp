@@ -29,10 +29,10 @@ namespace babelwires {
       public:
         FeatureView(ElementId elementId, ProjectBridge& projectBridge);
 
-        /// The default size is too big when there's three or fewer rows.
+        /// The default size is too big when there are three or fewer rows.
         QSize sizeHint() const override;
 
-        /// The default size is too big when there's three or fewer rows.
+        /// The default size is too big when there are three or fewer rows.
         QSize minimumSizeHint() const override;
 
       private:
@@ -46,10 +46,10 @@ namespace babelwires {
       public:
         FeatureModel(QObject* parent, ElementId elementId, ProjectBridge& projectBridge);
 
-        virtual int rowCount(const QModelIndex& /*parent*/) const override;
-        virtual int columnCount(const QModelIndex& /*parent*/) const override;
-        virtual QVariant data(const QModelIndex& index, int role) const override;
-        virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& /*parent*/) const override;
+        int columnCount(const QModelIndex& /*parent*/) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
 
         /// Access the associated FeatureElement.
         const FeatureElement* getFeatureElement(AccessModelScope& scope) const;

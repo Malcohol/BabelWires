@@ -46,6 +46,7 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/complexValueEditorManager.cpp
     ComplexValueEditors/MapEditor/mapEditor.cpp
     ComplexValueEditors/MapEditor/typeWidget.cpp
+    ComplexValueEditors/MapEditor/mapModel.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

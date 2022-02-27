@@ -11,6 +11,7 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
@@ -79,8 +80,12 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
                 TypeWidget* targetTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedTargetIds());
                 typeBarLayout->addWidget(targetTypes);
             }
-            
+            // TODO Connect type widgets.
         }
+        m_mapView = new MapView;
+        m_mapModel = new MapModel(m_mapView, m_map);
+        m_mapView->setModel(m_mapModel);
+        contentsLayout->addWidget(m_mapView);
     }
 
     {
