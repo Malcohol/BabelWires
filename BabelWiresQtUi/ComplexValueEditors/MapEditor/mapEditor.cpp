@@ -41,7 +41,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
     {
         auto contentsButtons = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults);
         {
-            QPushButton* saveButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogSaveButton), "Save to file");
+            QPushButton* saveButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogSaveButton), "Save copy to file");
             contentsButtons->addButton(saveButton, QDialogButtonBox::ButtonRole::AcceptRole);
             connect(saveButton, &QAbstractButton::clicked, this, &MapEditor::saveMapToFile);
         }
@@ -54,7 +54,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
     }
 
     {
-        QGroupBox* contents = new QGroupBox("Contents", this);
+        QGroupBox* contents = new QGroupBox("Map contents", this);
         mainLayout->addWidget(contents);
         QLayout* contentsLayout = new QVBoxLayout();
         contents->setLayout(contentsLayout);
