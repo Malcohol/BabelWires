@@ -85,12 +85,11 @@ void babelwires::MapEditor::applyMapToProject() {
     modifierData->m_map = m_map;
     modifierData->m_pathToFeature = getData().getPathToValue();
 
-    // TODO This should be synchronous in order to warn the user clearly if it did not happen.
-    // Otherwise a big edit could be lost without warning.
-
     auto setValueCommand =
         std::make_unique<AddModifierCommand>("Set map value", getData().getElementId(), std::move(modifierData));
-    getProjectBridge().scheduleCommand(std::move(setValueCommand));
+    if (!getProjectBridge().executeCommandSynchronously(std::move(setValueCommand))) {
+        warnThatMapNoLongerInProject("Cannot apply the map.");
+    }
 }
 
 const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) {

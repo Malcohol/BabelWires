@@ -66,6 +66,14 @@ namespace babelwires {
         /// Only one command can be scheduled.
         void scheduleCommand(std::unique_ptr<Command<Project>> command);
 
+        /// Execute an Command now.
+        /// Almost always prefer scheduleCommand: this should only be used if explicit notification is
+        /// needed when the command fails.
+        /// For example, when a complex editor fails to apply its contents to the project, we want to
+        /// very explicitly notify the user so they do not lose lots of work.
+        /// Returns true if the command succeeded.
+        bool executeCommandSynchronously(std::unique_ptr<Command<Project>> command);
+
         /// Execute an AddElementCommand now.
         /// This special case allows the new node to be constructed knowing its corresponding model element.
         /// Returns true if the command succeeded.

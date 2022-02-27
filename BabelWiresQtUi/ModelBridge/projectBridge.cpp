@@ -467,6 +467,12 @@ void babelwires::ProjectBridge::onIdle() {
     }
 }
 
+bool babelwires::ProjectBridge::executeCommandSynchronously(std::unique_ptr<Command<Project>> command) {
+    ModifyModelScope scope(*this);
+    std::unique_ptr<Command<Project>> commandPtr = std::move(command);
+    return scope.getCommandManager().executeAndStealCommand(commandPtr);
+}
+
 bool babelwires::ProjectBridge::executeAddElementCommand(std::unique_ptr<AddElementCommand> command) {
     ModifyModelScope scope(*this);
     AddElementCommand& addElementCommand = *command;
