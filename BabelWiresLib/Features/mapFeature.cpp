@@ -40,8 +40,6 @@ const babelwires::MapFeature::TypeSet& babelwires::MapFeature::getAllowedTargetI
     return m_allowedTargetIds;
 }
 
-#include <iostream>
-
 void babelwires::MapFeature::doSetToDefault() {
     Map map;
     if (!m_allowedSourceIds.empty()) {
@@ -50,8 +48,5 @@ void babelwires::MapFeature::doSetToDefault() {
     if (!m_allowedTargetIds.empty()) {
         map.setTargetId(m_allowedTargetIds[0]);
     }
-    std::cerr << "Source " << map.getSourceId() << "\n";
-    std::cerr << "Target " << map.getTargetId() << "\n";
-
     set(std::move(map));
 }
