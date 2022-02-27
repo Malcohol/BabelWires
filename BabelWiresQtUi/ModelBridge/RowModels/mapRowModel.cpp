@@ -21,9 +21,9 @@ const babelwires::MapFeature& babelwires::MapRowModel::getMapFeature() const {
 }
 
 QVariant babelwires::MapRowModel::getValueDisplayData() const {
-    const babelwires::MapFeature& mapFeature = getMapFeature();
-//    const int numFeatures = mapFeature.getNumFeatures();
-//    return QString("(count: %1)").arg(numFeatures);
+    if (m_contentsCacheEntry->hasLocalModifier()) {
+        return QString("(Local map value)");
+    }
     return {};
 }
 
