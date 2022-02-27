@@ -50,8 +50,6 @@
 
 namespace {
     constexpr char s_initialFilePath[] = "Untitled";
-    // TODO: This needs to be set by the enclosing application.
-    constexpr char s_dialogProjectFormat[] = "Seqwires project (*.seqwires)";
 
     std::shared_ptr<QtNodes::DataModelRegistry> registerDataModels(babelwires::ProjectBridge& projectBridge) {
         auto ret = std::make_shared<QtNodes::DataModelRegistry>();
@@ -278,9 +276,8 @@ void babelwires::MainWindow::onUndoStateChanged() {
 void babelwires::MainWindow::openProject() {
     if (maybeSave()) {
         QString dialogCaption = tr("Open project");
-        QString dialogFormats = tr(s_dialogProjectFormat);
         QString filePath = QFileDialog::getOpenFileName(m_projectBridge.getFlowGraphWidget(), dialogCaption,
-                                                        m_currentProjectDir, dialogFormats);
+                                                        m_currentProjectDir, getDialogProjectFormat());
         if (!filePath.isNull()) {
             {
                 logDebug() << "Clearing project before open project";
@@ -353,9 +350,8 @@ void babelwires::MainWindow::saveProject() {
 
 void babelwires::MainWindow::saveProjectAs() {
     QString dialogCaption = tr("Save project as");
-    QString dialogFormats = tr(s_dialogProjectFormat);
     QString filePath = QFileDialog::getSaveFileName(m_projectBridge.getFlowGraphWidget(), dialogCaption,
-                                                    m_currentProjectDir, dialogFormats);
+                                                    m_currentProjectDir, getDialogProjectFormat());
     if (!filePath.isNull()) {
         const QString ext = getProjectExtension();
         if (!filePath.endsWith(ext)) {
@@ -542,7 +538,7 @@ QString babelwires::MainWindow::getProjectExtension() const {
 }
 
 QString babelwires::MainWindow::getDialogProjectFormat() const {
-    return QString("%1 project (*.$2)").arg(getApplicationTitle(), getProjectExtension());
+    return QString("%1 project (*%2)").arg(getApplicationTitle(), getProjectExtension());
 }
 
 QString babelwires::MainWindow::getClipboardMimetype() const {
