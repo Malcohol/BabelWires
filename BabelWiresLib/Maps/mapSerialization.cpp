@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Maps/mapSerialization.hpp>
 
-babelwires::MapBundle::MapBundle(std::filesystem::path pathToProjectFile, MapData&& map)
-    : DataBundle(std::move(pathToProjectFile), std::move(map)) {}
+babelwires::MapBundle::MapBundle(std::filesystem::path pathToFile, MapData&& map)
+    : DataBundle(std::move(pathToFile), std::move(map)) {}
 
 void babelwires::MapBundle::visitIdentifiers(IdentifierVisitor& visitor) {
     getData().visitIdentifiers(visitor);

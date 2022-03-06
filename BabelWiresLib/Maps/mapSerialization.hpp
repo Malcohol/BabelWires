@@ -21,9 +21,9 @@ namespace babelwires {
         MapBundle(MapBundle&&) = default;
         MapBundle& operator=(MapBundle&&) = default;
 
-        /// Construct a bundle from projectData.
+        /// Construct a bundle from mapData.
         /// The map is modified to make the bundle independent of the current system.
-        MapBundle(std::filesystem::path pathToProjectFile, MapData&& map);
+        MapBundle(std::filesystem::path pathToFile, MapData&& map);
 
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
