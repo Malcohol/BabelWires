@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Maps/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 
 babelwires::MapEntryData::~MapEntryData() = default;
 

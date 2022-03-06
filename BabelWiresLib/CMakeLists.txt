@@ -37,7 +37,7 @@ SET( BABELWIRESLIB_SRCS
 	Maps/Commands/removeEntryFromMapCommand.cpp
 	Maps/mapSerialization.cpp
 	Maps/mapData.cpp
-	Maps/mapEntryData.cpp
+	Maps/MapEntries/mapEntryData.cpp
 	Maps/mapProjectEntry.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp

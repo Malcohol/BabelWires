@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Maps/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 
 #include <Common/Utilities/hash.hpp>
 
@@ -35,4 +35,4 @@ namespace babelwires {
     };
 } // namespace babelwires
 
-#include <BabelWiresLib/Maps/discreteMapEntry_inl.hpp>
+#include <BabelWiresLib/Maps/MapEntries/discreteMapEntry_inl.hpp>

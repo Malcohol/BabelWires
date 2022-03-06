@@ -10,7 +10,7 @@
 
 #include "BabelWiresLib/Maps/mapProject.hpp"
 #include "BabelWiresLib/Maps/mapProjectEntry.hpp"
-#include "BabelWiresLib/Maps/mapEntryData.hpp"
+#include "BabelWiresLib/Maps/MapEntries/mapEntryData.hpp"
 
 #include <cassert>
 

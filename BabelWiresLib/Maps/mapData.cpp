@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Maps/mapData.hpp>
 
-#include <BabelWiresLib/Maps/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Maps/typeSystem.hpp>
 
 #include "Common/Serialization/deserializer.hpp"

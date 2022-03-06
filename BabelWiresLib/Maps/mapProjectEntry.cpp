@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 
-#include <BabelWiresLib/Maps/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 
 babelwires::MapProjectEntry::MapProjectEntry(std::unique_ptr<MapEntryData> data)
     : m_data(std::move(data)) {}
