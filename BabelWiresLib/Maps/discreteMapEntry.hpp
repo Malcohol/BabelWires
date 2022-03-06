@@ -7,13 +7,13 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Maps/mapEntry.hpp>
+#include <BabelWiresLib/Maps/mapEntryData.hpp>
 
 #include <Common/Utilities/hash.hpp>
 
 namespace babelwires {
     /// A map entry with a single source value of discrete type.
-    template <typename SOURCE_TYPE, typename TARGET_TYPE> class DiscreteMapEntry : public MapEntry {
+    template <typename SOURCE_TYPE, typename TARGET_TYPE> class DiscreteMapEntry : public MapEntryData {
       public:
         SOURCE_TYPE m_sourceValue;
         TARGET_TYPE m_targetValue;

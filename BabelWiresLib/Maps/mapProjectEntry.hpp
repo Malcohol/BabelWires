@@ -17,13 +17,13 @@
 namespace babelwires {
     class MapEntryData;
 
-    class MapEntry : public Cloneable {
+    class MapProjectEntry : public Cloneable {
       public:
-        CLONEABLE(MapEntry);
-        MapEntry(std::unique_ptr<MapEntryData> data);
-        MapEntry(std::unique_ptr<MapEntryData> data, std::string reasonForFailure);
-        MapEntry(const MapEntry& other);
-        virtual ~MapEntry();
+        CLONEABLE(MapProjectEntry);
+        MapProjectEntry(std::unique_ptr<MapEntryData> data);
+        MapProjectEntry(std::unique_ptr<MapEntryData> data, std::string reasonForFailure);
+        MapProjectEntry(const MapProjectEntry& other);
+        virtual ~MapProjectEntry();
         
         const MapEntryData& getData() const;
       public:

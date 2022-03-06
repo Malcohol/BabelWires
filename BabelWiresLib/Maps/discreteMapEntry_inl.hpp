@@ -11,7 +11,6 @@ bool babelwires::DiscreteMapEntry::operator==(const MapEntry& other) const {
 
 template <typename SOURCE_TYPE, typename TARGET_TYPE>
 void babelwires::DiscreteMapEntry::serializeContents(Serializer& serializer) const {
-    // TODO: Don't serialize enum index!!!
     serializer.serializeValue("source", m_sourceValue);
     serializer.serializeValue("target", m_targetValue);
 }

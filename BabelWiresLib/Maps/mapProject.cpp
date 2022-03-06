@@ -1,5 +1,5 @@
 /**
- * A Map defines a how values between two types.
+ * The MapProject carries an enriched version of the data in a MapData and has support for editing.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Maps/mapProject.hpp>
 
 #include <BabelWiresLib/Maps/mapEntryData.hpp>
-#include <BabelWiresLib/Maps/mapEntry.hpp>
+#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 #include <BabelWiresLib/Maps/typeSystem.hpp>
 
 #include "Common/Serialization/deserializer.hpp"
@@ -83,7 +83,7 @@ unsigned int babelwires::MapProject::getNumMapEntries() const {
     return m_mapEntries.size();
 }
 
-const babelwires::MapEntry& babelwires::MapProject::getMapEntry(unsigned int index) const {
+const babelwires::MapProjectEntry& babelwires::MapProject::getMapEntry(unsigned int index) const {
     return *m_mapEntries[index];
 }
 
@@ -94,7 +94,7 @@ bool babelwires::MapProject::validateNewEntry(const MapEntryData& newEntry) cons
 void babelwires::MapProject::addMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index) {
     assert(validateNewEntry(*newEntry) && "The new map entry is not valid for this map");
     assert((index <= m_mapEntries.size()) && "index to add is out of range") ;
-    m_mapEntries.emplace(m_mapEntries.begin() + index, std::make_unique<MapEntry>(std::move(newEntry)));
+    m_mapEntries.emplace(m_mapEntries.begin() + index, std::make_unique<MapProjectEntry>(std::move(newEntry)));
 }
 
 void babelwires::MapProject::removeMapEntry(unsigned int index) {
@@ -119,9 +119,9 @@ void babelwires::MapProject::setMapData(const MapData& data) {
     for (const auto& mapEntryData : data.m_mapEntries) {
         const std::string reasonForFailure = MapData::validateEntryData(data.getSourceId(), data.getTargetId(), *mapEntryData);
         if (reasonForFailure.empty()) {
-            m_mapEntries.emplace_back(std::make_unique<MapEntry>(mapEntryData->clone(), reasonForFailure));
+            m_mapEntries.emplace_back(std::make_unique<MapProjectEntry>(mapEntryData->clone(), reasonForFailure));
         } else {
-            m_mapEntries.emplace_back(std::make_unique<MapEntry>(mapEntryData->clone()));
+            m_mapEntries.emplace_back(std::make_unique<MapProjectEntry>(mapEntryData->clone()));
         }
     }
 }

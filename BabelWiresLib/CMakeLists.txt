@@ -38,7 +38,7 @@ SET( BABELWIRESLIB_SRCS
 	Maps/mapSerialization.cpp
 	Maps/mapData.cpp
 	Maps/mapEntryData.cpp
-	Maps/mapEntry.cpp
+	Maps/mapProjectEntry.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp

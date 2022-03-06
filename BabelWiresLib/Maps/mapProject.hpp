@@ -1,5 +1,5 @@
 /**
- * A Map defines a how values between two types.
+ * The MapProject carries an enriched version of the data in a MapData and has support for editing.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -17,10 +17,10 @@
 #include <memory>
 
 namespace babelwires {
-    class MapEntry;
+    class MapProjectEntry;
     class MapEntryData;
 
-    /// 
+    /// The MapProject carries an enriched version of the data in a MapData and has support for editing.
     class MapProject {
       public:
         MapProject();
@@ -40,7 +40,7 @@ namespace babelwires {
         void setMapData(const MapData& data);
 
         unsigned int getNumMapEntries() const;
-        const MapEntry& getMapEntry(unsigned int index) const;
+        const MapProjectEntry& getMapEntry(unsigned int index) const;
 
         void addMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index);
         void removeMapEntry(unsigned int index);
@@ -54,6 +54,6 @@ namespace babelwires {
       private:
         LongIdentifier m_sourceId;
         LongIdentifier m_targetId;
-        std::vector<std::unique_ptr<MapEntry>> m_mapEntries;
+        std::vector<std::unique_ptr<MapProjectEntry>> m_mapEntries;
     };
 }
