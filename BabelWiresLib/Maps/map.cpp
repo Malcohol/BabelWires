@@ -7,6 +7,7 @@
  **/
 #include <BabelWiresLib/Maps/map.hpp>
 
+#include <BabelWiresLib/Maps/mapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapEntry.hpp>
 #include <BabelWiresLib/Maps/typeSystem.hpp>
 
@@ -78,14 +79,6 @@ bool babelwires::Map::operator!=(const Map& other) const {
     return m_mapEntries != other.m_mapEntries;
 }
 
-std::size_t babelwires::Map::getHash() const {
-    std::size_t h = hash::mixtureOf(m_sourceId, m_targetId);
-    for (const auto& e : m_mapEntries) {
-        hash::mixInto(h, *e);
-    }
-    return h;
-}
-
 unsigned int babelwires::Map::getNumMapEntries() const {
     return m_mapEntries.size();
 }
@@ -94,20 +87,14 @@ const babelwires::MapEntry& babelwires::Map::getMapEntry(unsigned int index) con
     return *m_mapEntries[index];
 }
 
-bool babelwires::Map::validateNewEntry(const MapEntry& newEntry) const {
-    if (getTypeFromIdentifier(m_sourceId) != newEntry.getSourceType()) {
-        return false;
-    }
-    if (getTypeFromIdentifier(m_targetId) != newEntry.getTargetType()) {
-        return false;
-    }
-    return true;
+bool babelwires::Map::validateNewEntry(const MapEntryData& newEntry) const {
+    return MapData::validateEntryData(m_sourceId, m_targetId, newEntry).empty();
 }
 
-void babelwires::Map::addMapEntry(std::unique_ptr<MapEntry> newEntry, unsigned int index) {
+void babelwires::Map::addMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index) {
     assert(validateNewEntry(*newEntry) && "The new map entry is not valid for this map");
     assert((index <= m_mapEntries.size()) && "index to add is out of range") ;
-    m_mapEntries.emplace(m_mapEntries.begin() + index, std::move(newEntry));
+    m_mapEntries.emplace(m_mapEntries.begin() + index, std::make_unique<MapEntry>(std::move(newEntry)));
 }
 
 void babelwires::Map::removeMapEntry(unsigned int index) {
@@ -115,36 +102,26 @@ void babelwires::Map::removeMapEntry(unsigned int index) {
     m_mapEntries.erase(m_mapEntries.begin() + index);
 }
 
-void babelwires::Map::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("sourceId", m_sourceId);
-    serializer.serializeValue("targetId", m_targetId);
-    serializer.serializeArray("entries", m_mapEntries);
+babelwires::MapData babelwires::Map::extractMapData() const {
+    babelwires::MapData mapData;
+    mapData.setSourceId(m_sourceId);
+    mapData.setTargetId(m_targetId);
+    for (const auto& mapEntry : m_mapEntries) {
+        mapData.emplaceBack(mapEntry->getData().clone());
+    }
+    return mapData;
 }
 
-void babelwires::Map::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("sourceId", m_sourceId);
-    deserializer.deserializeValue("targetId", m_targetId);
-    auto it = deserializer.deserializeArray<MapEntry>("entries", Deserializer::IsOptional::Optional);
-    while (it.isValid()) {
-        std::unique_ptr<MapEntry> newEntry = it.getObject();
-        if (!validateNewEntry(*newEntry)) {
-            throw ParseException() << "The map entry was invalid"; 
+void babelwires::Map::setMapData(const MapData& data) {
+    setSourceId(data.getSourceId());
+    setTargetId(data.getTargetId());
+    m_mapEntries.clear();
+    for (const auto& mapEntryData : data.m_mapEntries) {
+        const std::string reasonForFailure = MapData::validateEntryData(data.getSourceId(), data.getTargetId(), *mapEntryData);
+        if (reasonForFailure.empty()) {
+            m_mapEntries.emplace_back(std::make_unique<MapEntry>(mapEntryData->clone(), reasonForFailure));
+        } else {
+            m_mapEntries.emplace_back(std::make_unique<MapEntry>(mapEntryData->clone()));
         }
-        m_mapEntries.emplace_back(std::move(newEntry));
-        ++it;
-    }
-}
-
-void babelwires::Map::visitIdentifiers(IdentifierVisitor& visitor) {
-    visitor(m_sourceId);
-    visitor(m_targetId);
-    for (const auto& e : m_mapEntries) {
-        e->visitIdentifiers(visitor);
-    }
-}
-
-void babelwires::Map::visitFilePaths(FilePathVisitor& visitor) {
-    for (const auto& e : m_mapEntries) {
-        e->visitFilePaths(visitor);
     }
 }

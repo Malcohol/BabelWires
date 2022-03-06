@@ -12,7 +12,7 @@
 
 namespace babelwires {
     class Map;
-    class MapEntry;
+    class MapEntryData;
 
     /// Add an element to an array feature.
     class RemoveEntryFromMapCommand : public SimpleCommand<Map> {
@@ -25,7 +25,7 @@ namespace babelwires {
 
       private:
         unsigned int m_indexOfEntryToRemove;
-        std::unique_ptr<MapEntry> m_removedEntry;
+        std::unique_ptr<MapEntryData> m_removedEntry;
     };
 
 } // namespace babelwires

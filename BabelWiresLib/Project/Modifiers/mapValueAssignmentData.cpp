@@ -15,7 +15,7 @@
 
 void babelwires::MapValueAssignmentData::apply(Feature* targetFeature) const {
     if (MapFeature* mapFeature = targetFeature->as<MapFeature>()) {
-        mapFeature->set(m_map);
+        mapFeature->set(m_mapData);
     } else {
         throw babelwires::ModelException() << "Could not assign a map value to a non-map feature";
     }
@@ -23,15 +23,15 @@ void babelwires::MapValueAssignmentData::apply(Feature* targetFeature) const {
 
 void babelwires::MapValueAssignmentData::serializeContents(Serializer& serializer) const {
     // inline the contents of m_map.
-    m_map.serializeContents(serializer);
+    m_mapData.serializeContents(serializer);
 }
 
 void babelwires::MapValueAssignmentData::deserializeContents(Deserializer& deserializer) {
     // the contents of m_map are expected to be inlined.
-    m_map.deserializeContents(deserializer);
+    m_mapData.deserializeContents(deserializer);
 }
 
 void babelwires::MapValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {
     ModifierData::visitIdentifiers(visitor);
-    visitor(m_map);
+    visitor(m_mapData);
 }

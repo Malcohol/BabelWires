@@ -9,11 +9,11 @@
 #include "BabelWiresLib/Maps/Commands/addEntryToMapCommand.hpp"
 
 #include "BabelWiresLib/Maps/map.hpp"
-#include "BabelWiresLib/Maps/mapEntry.hpp"
+#include "BabelWiresLib/Maps/mapEntryData.hpp"
 
 #include <cassert>
 
-babelwires::AddEntryToMapCommand::AddEntryToMapCommand(std::string commandName, std::unique_ptr<MapEntry> newEntry, unsigned int indexOfNewEntry)
+babelwires::AddEntryToMapCommand::AddEntryToMapCommand(std::string commandName, std::unique_ptr<MapEntryData> newEntry, unsigned int indexOfNewEntry)
     : SimpleCommand(commandName)
     , m_newEntry(std::move(newEntry))
     , m_indexOfNewEntry(indexOfNewEntry) {}

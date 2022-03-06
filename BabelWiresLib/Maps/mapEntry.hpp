@@ -10,28 +10,25 @@
 #include "BabelWiresLib/Project/projectVisitable.hpp"
 #include "BabelWiresLib/Maps/typeSystem.hpp"
 
-#include "Common/Serialization/serializable.hpp"
 #include "Common/Cloning/cloneable.hpp"
 
 #include <Common/types.hpp>
 
 namespace babelwires {
-    class MapEntry : public Serializable, public Cloneable, public ProjectVisitable {
-      public:
-        DOWNCASTABLE_TYPE_HIERARCHY(MapEntry);
-        CLONEABLE_ABSTRACT(MapEntry);
-        SERIALIZABLE_ABSTRACT(MapEntry, "mapEntry", void);
+    class MapEntryData;
 
-        virtual ~MapEntry() = default;
-        virtual std::size_t getHash() const = 0;
-        virtual bool operator==(const MapEntry& other) const = 0;
-        virtual KnownType getSourceType() const = 0;
-        virtual KnownType getTargetType() const = 0;
+    class MapEntry : public Cloneable {
+      public:
+        CLONEABLE(MapEntry);
+        MapEntry(std::unique_ptr<MapEntryData> data);
+        MapEntry(std::unique_ptr<MapEntryData> data, std::string reasonForFailure);
+        MapEntry(const MapEntry& other);
+        virtual ~MapEntry();
+        
+        const MapEntryData& getData() const;
+      public:
+        std::unique_ptr<MapEntryData> m_data;
+        std::string m_reasonForFailure;
     };
 } // namespace babelwires
 
-namespace std {
-    template <> struct hash<babelwires::MapEntry> {
-        inline std::size_t operator()(const babelwires::MapEntry& entry) const { return entry.getHash(); }
-    };
-} // namespace std

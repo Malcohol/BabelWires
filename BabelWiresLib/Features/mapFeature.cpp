@@ -20,7 +20,7 @@ babelwires::MapFeature::MapFeature(TypeSet allowedSourceIds, TypeSet allowedTarg
 {
 }
 
-void babelwires::MapFeature::onBeforeSetValue(const Map& newValue) const {
+void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     const LongIdentifier& newSourceType = newValue.getSourceId();
     const LongIdentifier& newTargetType = newValue.getTargetId();
 
@@ -29,6 +29,9 @@ void babelwires::MapFeature::onBeforeSetValue(const Map& newValue) const {
     }
     if (!m_allowedTargetIds.empty() && (std::find(m_allowedTargetIds.begin(), m_allowedTargetIds.end(), newTargetType) == m_allowedTargetIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newTargetType) << "\" is not a permitted target type for this map feature";
+    }
+    if (newValue.hasInvalidEntries()) {
+        throw ModelException() << "The map has invalid entries";
     }
 }
 
@@ -41,12 +44,12 @@ const babelwires::MapFeature::TypeSet& babelwires::MapFeature::getAllowedTargetI
 }
 
 void babelwires::MapFeature::doSetToDefault() {
-    Map map;
+    MapData mapData;
     if (!m_allowedSourceIds.empty()) {
-        map.setSourceId(m_allowedSourceIds[0]);
+        mapData.setSourceId(m_allowedSourceIds[0]);
     }
     if (!m_allowedTargetIds.empty()) {
-        map.setTargetId(m_allowedTargetIds[0]);
+        mapData.setTargetId(m_allowedTargetIds[0]);
     }
-    set(std::move(map));
+    set(std::move(mapData));
 }

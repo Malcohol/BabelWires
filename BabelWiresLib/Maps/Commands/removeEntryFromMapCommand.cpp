@@ -10,6 +10,7 @@
 
 #include "BabelWiresLib/Maps/map.hpp"
 #include "BabelWiresLib/Maps/mapEntry.hpp"
+#include "BabelWiresLib/Maps/mapEntryData.hpp"
 
 #include <cassert>
 
@@ -22,7 +23,7 @@ bool babelwires::RemoveEntryFromMapCommand::initialize(const Map& map) {
         return false;
     }
 
-    m_removedEntry = map.getMapEntry(m_indexOfEntryToRemove).clone();
+    m_removedEntry = map.getMapEntry(m_indexOfEntryToRemove).getData().clone();
 
     return true;
 }

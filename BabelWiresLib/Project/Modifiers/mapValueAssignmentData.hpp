@@ -8,7 +8,7 @@
 #pragma once
 
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Maps/map.hpp"
+#include "BabelWiresLib/Maps/mapData.hpp"
 
 namespace babelwires {
     struct MapValueAssignmentData : LocalModifierData {
@@ -19,6 +19,6 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
-        Map m_map;
+        MapData m_mapData;
     };
 } // namespace babelwires

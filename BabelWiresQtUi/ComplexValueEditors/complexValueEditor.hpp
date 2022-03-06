@@ -29,6 +29,8 @@ namespace babelwires {
 
             const ComplexValueEditorData& getData() const;
 
+            // TODO Why are these static?
+
             /// Convenience Function: Get the ValueFeature referred to by the data, or assert.
             /// Note: This returns const because editors never modify features directly.
             static const ValueFeature& getValueFeature(AccessModelScope& scope, const ComplexValueEditorData& data);

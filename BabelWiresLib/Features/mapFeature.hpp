@@ -1,5 +1,5 @@
 /**
- * A MapFeature allows the user to define a mapping between types (ints or enums).
+ * A MapFeature describes a mapping between types (ints or enums).
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -8,10 +8,12 @@
 #pragma once
 
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
-#include <BabelWiresLib/Maps/map.hpp>
+#include <BabelWiresLib/Maps/mapData.hpp>
 
 namespace babelwires {
-    class MapFeature : public HeavyValueFeature<Map> {
+    /// A MapFeature describes a mapping between types (ints or enums).
+    /// All the entries in the MapData of a MapFeature are expected to be valid.
+    class MapFeature : public HeavyValueFeature<MapData> {
       public:
         using TypeSet = std::vector<LongIdentifier>;
 
@@ -21,7 +23,7 @@ namespace babelwires {
 
       protected:
         std::string doGetValueType() const override;
-        void onBeforeSetValue(const Map& newValue) const override;
+        void onBeforeSetValue(const MapData& newValue) const override;
         void doSetToDefault() override;
 
       public:

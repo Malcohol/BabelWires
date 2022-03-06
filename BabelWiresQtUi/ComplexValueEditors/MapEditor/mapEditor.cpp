@@ -18,6 +18,8 @@
 #include <BabelWiresLib/Maps/mapSerialization.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -69,7 +71,8 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         {
             AccessModelScope scope(getProjectBridge());
             const MapFeature& mapFeature = getMapFeature(scope);
-            setEditorMap(mapFeature.get());
+            const MapData& mapData = getMapDataFromProject(scope);
+            setEditorMap(mapData);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
                 TypeWidget* sourceTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedSourceIds());
@@ -112,7 +115,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 
 void babelwires::MapEditor::applyMapToProject() {
     auto modifierData = std::make_unique<MapValueAssignmentData>();
-    modifierData->m_map = m_map;
+    modifierData->m_mapData = m_map.extractMapData();
     modifierData->m_pathToFeature = getData().getPathToValue();
 
     auto setValueCommand =
@@ -122,14 +125,22 @@ void babelwires::MapEditor::applyMapToProject() {
     }
 }
 
-const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) {
+const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) const {
     const ValueFeature& valueFeature = ComplexValueEditor::getValueFeature(scope, getData());
     const MapFeature* mapFeature = valueFeature.as<MapFeature>();
     assert(mapFeature && "The value feature was not a map feature");
     return *mapFeature;
 }
 
-const babelwires::MapFeature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) {
+const babelwires::MapData& babelwires::MapEditor::getMapDataFromProject(AccessModelScope& scope) const {
+    const MapValueAssignmentData *const mapModifier = tryGetMapValueAssignmentData(scope);
+    if (mapModifier) {
+        return mapModifier->m_mapData;
+    }
+    return getMapFeature(scope).get();
+}
+
+const babelwires::MapFeature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {
     const ValueFeature* valueFeature = ComplexValueEditor::tryGetValueFeature(scope, getData());
     if (valueFeature) {
         const MapFeature* mapFeature = valueFeature->as<MapFeature>();
@@ -140,19 +151,50 @@ const babelwires::MapFeature* babelwires::MapEditor::tryGetMapFeature(AccessMode
     return nullptr;
 }
 
+const babelwires::MapValueAssignmentData* babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
+    const FeatureElement *const element = scope.getProject().getFeatureElement(getData().getElementId());
+
+    if (!element) {
+        return nullptr;
+    }
+
+    const Modifier *const modifier = element->findModifier(getData().getPathToValue());
+
+    if (!modifier) {
+        return nullptr;
+    }
+
+    return modifier->getModifierData().as<MapValueAssignmentData>();
+}
+
+const babelwires::MapData* babelwires::MapEditor::tryGetMapDataFromProject(AccessModelScope& scope) const {
+    const MapValueAssignmentData *const mapModifier = tryGetMapValueAssignmentData(scope);
+
+    if (mapModifier) {
+        return &mapModifier->m_mapData;
+    }
+
+    const babelwires::MapFeature *const mapFeature = tryGetMapFeature(scope);
+    if (!mapFeature) {
+        return nullptr;
+    }
+
+    return &mapFeature->get();
+}
+
 void babelwires::MapEditor::updateMapFromProject() {
     AccessModelScope scope(getProjectBridge());
-    const MapFeature* mapFeature = tryGetMapFeature(scope);
-    if (mapFeature) {
+    const MapData* mapDataFromProject = tryGetMapDataFromProject(scope);
+    if (mapDataFromProject) {
         getUserLogger().logInfo() << "Refreshing the map from the project";
-        setEditorMap(mapFeature->get());
+        setEditorMap(*mapDataFromProject);
     } else {
         warnThatMapNoLongerInProject("Cannot refresh the map.");
     }
 }
 
-void babelwires::MapEditor::setEditorMap(const Map& map) {
-    m_map = map;
+void babelwires::MapEditor::setEditorMap(const MapData& map) {
+    m_map.setMapData(map);
 }
 
 void babelwires::MapEditor::saveMapToFile() {
@@ -174,7 +216,7 @@ bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
         try {
             std::string filePathStr = filePath.toStdString();
             getUserLogger().logInfo() << "Save map to \"" << filePathStr << '"';
-            MapSerialization::saveToFile(filePathStr, m_map);
+            MapSerialization::saveToFile(filePathStr, m_map.extractMapData());
             return true;
         } catch (FileIoException& e) {
             getUserLogger().logError() << "The map could not be saved: " << e.what();
@@ -197,8 +239,8 @@ void babelwires::MapEditor::loadMapFromFile() {
             try {
                 std::string filePathStr = filePath.toStdString();
                 getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
-                Map map = MapSerialization::loadFromFile(filePathStr, getProjectBridge().getContext(), getUserLogger());
-                m_map = map;
+                MapData mapData = MapSerialization::loadFromFile(filePathStr, getProjectBridge().getContext(), getUserLogger());
+                setEditorMap(mapData);
                 m_lastSaveFilePath = filePath;
                 return;
             } catch (FileIoException& e) {
