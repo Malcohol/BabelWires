@@ -24,7 +24,7 @@ babelwires::MapView::MapView() {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
-babelwires::MapModel::MapModel(QObject* parent, Map& map)
+babelwires::MapModel::MapModel(QObject* parent, MapProject& map)
     : QAbstractTableModel(parent)
     , m_map(map) {}
 

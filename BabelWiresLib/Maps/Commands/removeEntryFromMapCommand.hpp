@@ -11,17 +11,17 @@
 #include "BabelWiresLib/Commands/commands.hpp"
 
 namespace babelwires {
-    class Map;
+    class MapProject;
     class MapEntryData;
 
     /// Add an element to an array feature.
-    class RemoveEntryFromMapCommand : public SimpleCommand<Map> {
+    class RemoveEntryFromMapCommand : public SimpleCommand<MapProject> {
       public:
         RemoveEntryFromMapCommand(std::string commandName, unsigned int indexOfEntryToRemove);
 
-        virtual bool initialize(const Map& map) override;
-        virtual void execute(Map& map) const override;
-        virtual void undo(Map& map) const override;
+        virtual bool initialize(const MapProject& map) override;
+        virtual void execute(MapProject& map) const override;
+        virtual void undo(MapProject& map) const override;
 
       private:
         unsigned int m_indexOfEntryToRemove;

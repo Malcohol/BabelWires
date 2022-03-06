@@ -21,14 +21,14 @@ namespace babelwires {
     class MapEntryData;
 
     /// 
-    class Map {
+    class MapProject {
       public:
-        Map();
-        Map(const Map& other);
-        Map(Map&& other);
-        Map& operator=(const Map& other);
-        Map& operator=(Map&& other);
-        virtual ~Map();
+        MapProject();
+        MapProject(const MapProject& other);
+        MapProject(MapProject&& other);
+        MapProject& operator=(const MapProject& other);
+        MapProject& operator=(MapProject&& other);
+        virtual ~MapProject();
 
         LongIdentifier getSourceId() const;
         LongIdentifier getTargetId() const;
@@ -45,8 +45,8 @@ namespace babelwires {
         void addMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index);
         void removeMapEntry(unsigned int index);
 
-        bool operator==(const Map& other) const;
-        bool operator!=(const Map& other) const;
+        bool operator==(const MapProject& other) const;
+        bool operator!=(const MapProject& other) const;
 
         /// Check that the entries types match the source and target ids.
         bool validateNewEntry(const MapEntryData& newEntry) const;

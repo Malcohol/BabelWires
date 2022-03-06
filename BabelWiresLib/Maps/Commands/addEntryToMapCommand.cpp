@@ -18,7 +18,7 @@ babelwires::AddEntryToMapCommand::AddEntryToMapCommand(std::string commandName, 
     , m_newEntry(std::move(newEntry))
     , m_indexOfNewEntry(indexOfNewEntry) {}
 
-bool babelwires::AddEntryToMapCommand::initialize(const Map& map) {
+bool babelwires::AddEntryToMapCommand::initialize(const MapProject& map) {
     if (m_indexOfNewEntry > map.getNumMapEntries()) {
         return false;
     }
@@ -30,10 +30,10 @@ bool babelwires::AddEntryToMapCommand::initialize(const Map& map) {
     return true;
 }
 
-void babelwires::AddEntryToMapCommand::execute(Map& map) const {
+void babelwires::AddEntryToMapCommand::execute(MapProject& map) const {
     map.addMapEntry(m_newEntry->clone(), m_indexOfNewEntry);
 }
 
-void babelwires::AddEntryToMapCommand::undo(Map& map) const {
+void babelwires::AddEntryToMapCommand::undo(MapProject& map) const {
     map.removeMapEntry(m_indexOfNewEntry);
 }

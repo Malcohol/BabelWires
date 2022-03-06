@@ -18,7 +18,7 @@ babelwires::RemoveEntryFromMapCommand::RemoveEntryFromMapCommand(std::string com
     : SimpleCommand(commandName)
     , m_indexOfEntryToRemove(indexOfEntryToRemove) {}
 
-bool babelwires::RemoveEntryFromMapCommand::initialize(const Map& map) {
+bool babelwires::RemoveEntryFromMapCommand::initialize(const MapProject& map) {
     if (m_indexOfEntryToRemove >= map.getNumMapEntries()) {
         return false;
     }
@@ -28,10 +28,10 @@ bool babelwires::RemoveEntryFromMapCommand::initialize(const Map& map) {
     return true;
 }
 
-void babelwires::RemoveEntryFromMapCommand::execute(Map& map) const {
+void babelwires::RemoveEntryFromMapCommand::execute(MapProject& map) const {
     map.removeMapEntry(m_indexOfEntryToRemove);
 }
 
-void babelwires::RemoveEntryFromMapCommand::undo(Map& map) const {
+void babelwires::RemoveEntryFromMapCommand::undo(MapProject& map) const {
     map.addMapEntry(m_removedEntry->clone(), m_indexOfEntryToRemove);
 }

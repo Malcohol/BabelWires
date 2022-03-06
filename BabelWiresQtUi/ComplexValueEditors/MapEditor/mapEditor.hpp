@@ -67,10 +67,10 @@ namespace babelwires {
 
         private:
             /// A local copy of the map being edited.
-            Map m_map;
+            MapProject m_map;
 
             /// Manages changes to the map.
-            CommandManager<Map> m_commandManager;
+            CommandManager<MapProject> m_commandManager;
 
             QString m_lastSaveFilePath;
 
