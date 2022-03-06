@@ -8,7 +8,7 @@
 
 #include "BabelWiresLib/Maps/Commands/addEntryToMapCommand.hpp"
 
-#include "BabelWiresLib/Maps/map.hpp"
+#include "BabelWiresLib/Maps/mapProject.hpp"
 #include "BabelWiresLib/Maps/mapEntryData.hpp"
 
 #include <cassert>

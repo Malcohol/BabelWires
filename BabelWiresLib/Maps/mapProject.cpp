@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Maps/map.hpp>
+#include <BabelWiresLib/Maps/mapProject.hpp>
 
 #include <BabelWiresLib/Maps/mapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapEntry.hpp>

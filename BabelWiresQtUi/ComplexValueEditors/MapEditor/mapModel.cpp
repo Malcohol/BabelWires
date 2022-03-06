@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
-#include <BabelWiresLib/Maps/map.hpp>
+#include <BabelWiresLib/Maps/mapProject.hpp>
 
 #include <QtWidgets/QHeaderView>
 

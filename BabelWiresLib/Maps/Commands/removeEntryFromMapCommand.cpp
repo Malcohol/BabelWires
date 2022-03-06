@@ -8,7 +8,7 @@
 
 #include "BabelWiresLib/Maps/Commands/removeEntryFromMapCommand.hpp"
 
-#include "BabelWiresLib/Maps/map.hpp"
+#include "BabelWiresLib/Maps/mapProject.hpp"
 #include "BabelWiresLib/Maps/mapEntry.hpp"
 #include "BabelWiresLib/Maps/mapEntryData.hpp"
 
