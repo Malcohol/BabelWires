@@ -8,7 +8,7 @@
  **/
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
@@ -50,19 +50,19 @@ void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
 
 babelwires::FeatureElement::~FeatureElement() = default;
 
-babelwires::RecordFeature* babelwires::FeatureElement::getOutputFeature() {
+babelwires::RootFeature* babelwires::FeatureElement::getOutputFeature() {
     return nullptr;
 }
 
-const babelwires::RecordFeature* babelwires::FeatureElement::getOutputFeature() const {
+const babelwires::RootFeature* babelwires::FeatureElement::getOutputFeature() const {
     return const_cast<babelwires::FeatureElement*>(this)->getOutputFeature();
 }
 
-babelwires::RecordFeature* babelwires::FeatureElement::getInputFeature() {
+babelwires::RootFeature* babelwires::FeatureElement::getInputFeature() {
     return nullptr;
 }
 
-const babelwires::RecordFeature* babelwires::FeatureElement::getInputFeature() const {
+const babelwires::RootFeature* babelwires::FeatureElement::getInputFeature() const {
     return const_cast<babelwires::FeatureElement*>(this)->getInputFeature();
 }
 

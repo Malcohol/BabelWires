@@ -7,10 +7,10 @@
  **/
 #include "BabelWiresLib/Processors/processor.hpp"
 
-const babelwires::RecordFeature* babelwires::Processor::getInputFeature() const {
+const babelwires::RootFeature* babelwires::Processor::getInputFeature() const {
     return const_cast<Processor*>(this)->getInputFeature();
 }
 
-const babelwires::RecordFeature* babelwires::Processor::getOutputFeature() const {
+const babelwires::RootFeature* babelwires::Processor::getOutputFeature() const {
     return const_cast<Processor*>(this)->getOutputFeature();
 }

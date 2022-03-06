@@ -3,7 +3,7 @@
  * They expose input and output Features, and carry edits.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -30,6 +30,7 @@ namespace babelwires {
     struct UiPosition;
     struct UiSize;
     struct ProjectContext;
+    class RootFeature;
 
     /// The fundimental constituent of the project.
     /// FeatureElements expose input and output Features, and carry edits.
@@ -47,11 +48,11 @@ namespace babelwires {
         /// Get a description of the failure.
         std::string getReasonForFailure() const;
 
-        virtual RecordFeature* getInputFeature();
-        virtual RecordFeature* getOutputFeature();
+        virtual RootFeature* getInputFeature();
+        virtual RootFeature* getOutputFeature();
 
-        const RecordFeature* getInputFeature() const;
-        const RecordFeature* getOutputFeature() const;
+        const RootFeature* getInputFeature() const;
+        const RootFeature* getOutputFeature() const;
 
         /// Get a description of the type of element (e.g. format name).
         virtual std::string getLabel() const;
@@ -90,39 +91,39 @@ namespace babelwires {
         void process(UserLogger& userLogger);
 
         // clang-format off
-	/// Describes the way an element may have changed.
-	enum class Changes : unsigned int
-	{
-		NothingChanged                 = 0b000000000000000000,
+        /// Describes the way an element may have changed.
+        enum class Changes : unsigned int
+        {
+          NothingChanged                 = 0b000000000000000000,
 
-		FeatureValueChanged            = 0b000000000000000001,
-		FeatureStructureChanged        = 0b000000000000000010,
-		FeatureChangesMask             = 0b000000000000000011,
+          FeatureValueChanged            = 0b000000000000000001,
+          FeatureStructureChanged        = 0b000000000000000010,
+          FeatureChangesMask             = 0b000000000000000011,
 
-		FeatureElementIsNew            = 0b000000000000000100,
-		FeatureElementFailed           = 0b000000000000001000,
-		FeatureElementRecovered        = 0b000000000000010000,
-		FeatureElementLabelChanged     = 0b000000000000100000,
-		FeatureElementChangesMask      = 0b000000000000111100,
+          FeatureElementIsNew            = 0b000000000000000100,
+          FeatureElementFailed           = 0b000000000000001000,
+          FeatureElementRecovered        = 0b000000000000010000,
+          FeatureElementLabelChanged     = 0b000000000000100000,
+          FeatureElementChangesMask      = 0b000000000000111100,
 
-		ModifierAdded                  = 0b000000000001000000,
-		ModifierRemoved                = 0b000000000010000000,
-		ModifierFailed                 = 0b000000000100000000,
-		ModifierRecovered              = 0b000000001000000000,
-		ModifierConnected              = 0b000000010000000000,
-		ModifierDisconnected           = 0b000000100000000000,
-		ModifierMoved                  = 0b000001000000000000,
-		ModifierChangesMask            = 0b000001111111000000,
+          ModifierAdded                  = 0b000000000001000000,
+          ModifierRemoved                = 0b000000000010000000,
+          ModifierFailed                 = 0b000000000100000000,
+          ModifierRecovered              = 0b000000001000000000,
+          ModifierConnected              = 0b000000010000000000,
+          ModifierDisconnected           = 0b000000100000000000,
+          ModifierMoved                  = 0b000001000000000000,
+          ModifierChangesMask            = 0b000001111111000000,
 
-		UiPositionChanged              = 0b000010000000000000,
-		UiSizeChanged                  = 0b000100000000000000,
+          UiPositionChanged              = 0b000010000000000000,
+          UiSizeChanged                  = 0b000100000000000000,
 
-		FileChanged                    = 0b001000000000000000,
+          FileChanged                    = 0b001000000000000000,
 
-		CompoundExpandedOrCollapsed    = 0b010000000000000000,
+          CompoundExpandedOrCollapsed    = 0b010000000000000000,
 
-		SomethingChanged               = 0b111111111111111111
-	};
+          SomethingChanged               = 0b111111111111111111
+        };
         // clang-format on
 
         /// Query the feature element for changes.

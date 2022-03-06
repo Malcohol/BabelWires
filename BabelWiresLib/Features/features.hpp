@@ -23,6 +23,7 @@
 namespace babelwires {
 
     class CompoundFeature;
+    struct ProjectContext;
 
     /// A feature is a self-describing data-structure which stores the data in the model.
     /// Features are structured in a tree, which also defines ownership.
@@ -59,6 +60,10 @@ namespace babelwires {
         /// Get a hash of the feature contents _of a feature of this type_.
         /// This is not required to distinguish the contents of features of different types.
         std::size_t getHash() const;
+
+        /// Get a reference to the ProjectContext from the RootFeature at the root of the feature
+        /// hierarchy. Asserts if there is no root.
+        const ProjectContext& getProjectContext() const;
 
       protected:
         /// Set the isChanged flag and that of all parents.

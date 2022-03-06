@@ -28,7 +28,7 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const SourceFileElementData& getElementData() const;
 
-        virtual RecordFeature* getOutputFeature() override;
+        virtual RootFeature* getOutputFeature() override;
         using FileElement::getOutputFeature;
 
         virtual std::filesystem::path getFilePath() const override;
@@ -38,12 +38,12 @@ namespace babelwires {
         virtual bool reload(const ProjectContext& context, UserLogger& userLogger) override;
 
       protected:
-        void setFeature(std::unique_ptr<RecordFeature> feature);
+        void setFeature(std::unique_ptr<RootFeature> feature);
         virtual void doProcess(UserLogger& userLogger) override;
         SourceFileElementData& getElementData();
 
       private:
-        std::unique_ptr<RecordFeature> m_feature;
+        std::unique_ptr<RootFeature> m_feature;
     };
 
 } // namespace babelwires

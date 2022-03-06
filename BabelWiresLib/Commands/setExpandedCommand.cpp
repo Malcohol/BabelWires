@@ -8,7 +8,7 @@
 #include "BabelWiresLib/Commands/setExpandedCommand.hpp"
 
 #include "BabelWiresLib/Features/features.hpp"
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 

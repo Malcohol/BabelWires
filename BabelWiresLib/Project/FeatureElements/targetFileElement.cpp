@@ -8,6 +8,7 @@
 #include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
 
 #include "BabelWiresLib/Features/modelExceptions.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/FileFormat/fileFeature.hpp"
 #include "BabelWiresLib/FileFormat/targetFileFormat.hpp"
 #include "BabelWiresLib/Project/FeatureElements/failedFeature.hpp"
@@ -31,16 +32,16 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
         const TargetFileFormat& factory =
             context.m_targetFileFormatReg.getRegisteredEntry(elementData.m_factoryIdentifier);
         setFactoryName(factory.getName());
-        setFeature(factory.createNewFeature());
+        setFeature(factory.createNewFeature(context));
     } catch (const RegistryException& e) {
         setInternalFailure(e.what());
         // This is the wrong kind of identifier, but it shouldn't matter because this failure is unrecoverable.
-        setFeature(std::make_unique<FailedFeature>());
+        setFeature(std::make_unique<FailedFeature>(context));
         userLogger.logError() << "Failed to create target feature id=" << elementData.m_id << ": " << e.what();
     } catch (const BaseException& e) {
         setInternalFailure(e.what());
         // This is the wrong kind of identifier, but it shouldn't matter because this failure is unrecoverable.
-        setFeature(std::make_unique<FileFeature>(elementData.m_factoryIdentifier));
+        setFeature(std::make_unique<FileFeature>(context, elementData.m_factoryIdentifier));
         userLogger.logError() << "Failed to create target feature \"" << elementData.m_factoryIdentifier
                               << "\": " << e.what();
     }
@@ -54,11 +55,11 @@ babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData
     return static_cast<TargetFileElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::RecordFeature* babelwires::TargetFileElement::getInputFeature() {
+babelwires::RootFeature* babelwires::TargetFileElement::getInputFeature() {
     return m_feature.get();
 }
 
-void babelwires::TargetFileElement::setFeature(std::unique_ptr<RecordFeature> feature) {
+void babelwires::TargetFileElement::setFeature(std::unique_ptr<RootFeature> feature) {
     m_contentsCache.setFeatures(feature.get(), nullptr);
     m_feature = std::move(feature);
 }

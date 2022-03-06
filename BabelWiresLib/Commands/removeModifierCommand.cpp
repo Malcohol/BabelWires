@@ -11,6 +11,7 @@
 #include "BabelWiresLib/Commands/deactivateOptionalCommand.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"

@@ -8,7 +8,7 @@
 #include "BabelWiresLib/Commands/removeEntryFromArrayCommand.hpp"
 
 #include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"

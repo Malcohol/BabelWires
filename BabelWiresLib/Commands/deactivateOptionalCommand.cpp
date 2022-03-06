@@ -9,6 +9,7 @@
 #include "BabelWiresLib/Commands/deactivateOptionalCommand.hpp"
 
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"

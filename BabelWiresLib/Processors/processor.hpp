@@ -7,13 +7,9 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/recordFeature.hpp"
-
 namespace babelwires {
     struct UserLogger;
-}
-
-namespace babelwires {
+    class RootFeature;
 
     /// Defines a processing operation from an input feature to an output feature.
     /// This should not store any state.
@@ -24,10 +20,10 @@ namespace babelwires {
         /// Implementation of process are allowed to throw. If they do, the ProcessorElement will be marked as failed,
         /// the exception will be logged, and the output feature will be set to default.
         virtual void process(UserLogger& userLogger) = 0;
-        virtual RecordFeature* getInputFeature() = 0;
-        virtual RecordFeature* getOutputFeature() = 0;
-        const RecordFeature* getInputFeature() const;
-        const RecordFeature* getOutputFeature() const;
+        virtual RootFeature* getInputFeature() = 0;
+        virtual RootFeature* getOutputFeature() = 0;
+        const RootFeature* getInputFeature() const;
+        const RootFeature* getOutputFeature() const;
     };
 
 } // namespace babelwires
