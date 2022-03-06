@@ -1,5 +1,5 @@
 /**
- * MapEntries define a relationship between values.
+ * A MapProjectEntry wraps MapEntryData and augments it with features relevant for editing.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -17,6 +17,7 @@
 namespace babelwires {
     class MapEntryData;
 
+    /// A MapProjectEntry wraps MapEntryData and augments it with features relevant for editing.
     class MapProjectEntry : public Cloneable {
       public:
         CLONEABLE(MapProjectEntry);
@@ -28,6 +29,7 @@ namespace babelwires {
         const MapEntryData& getData() const;
       public:
         std::unique_ptr<MapEntryData> m_data;
+        /// This is empty if the entry is valid.
         std::string m_reasonForFailure;
     };
 } // namespace babelwires

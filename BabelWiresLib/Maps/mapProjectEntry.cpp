@@ -1,5 +1,5 @@
 /**
- * MapEntries define a relationship between values.
+ * A MapProjectEntry wraps MapEntryData and augments it with features relevant for editing.
  *
  * (C) 2021 Malcolm Tyrrell
  *
