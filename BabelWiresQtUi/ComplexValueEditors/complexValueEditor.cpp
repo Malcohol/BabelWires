@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/recordFeature.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <QCloseEvent>
