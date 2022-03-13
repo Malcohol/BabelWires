@@ -9,7 +9,7 @@
 #include "Common/Identifiers/registeredIdentifier.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 
-namespace libTestUtils {
+namespace testUtils {
     /// A record with a small feature hierarchy.
     struct TestRootFeature : babelwires::RootFeature {
         // Contained ints have an imposed value limit.
@@ -67,4 +67,4 @@ namespace libTestUtils {
         static const babelwires::FeaturePath s_pathToInt2;
         static const babelwires::FeaturePath s_pathToExtraInt;
     };
-} // namespace libTestUtils
+} // namespace testUtils

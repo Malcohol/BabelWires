@@ -16,49 +16,49 @@
 
 TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
-    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
-    const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
     {
         babelwires::ArraySizeModifierData arrayInitialization;
-        arrayInitialization.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray;
+        arrayInitialization.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray;
         arrayInitialization.m_size = 3;
         testEnvironment.m_project.addModifier(elementId, arrayInitialization);
     }
     {
         babelwires::ConnectionModifierData inputConnection;
-        inputConnection.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
-        inputConnection.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
+        inputConnection.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
+        inputConnection.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        outputConnection.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToArray_2;
+        outputConnection.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        outputConnection.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToArray_2;
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
     testEnvironment.m_project.process();
 
     const auto* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(targetId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
+        return element->getInputFeature()->as<const testUtils::TestRootFeature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element, targetElement]() {
         const babelwires::Modifier* inputConnection =
-            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1);
+            element->findModifier(testUtils::TestRootFeature::s_pathToArray_1);
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(libTestUtils::TestRootFeature::s_pathToInt2);
+            targetElement->findModifier(testUtils::TestRootFeature::s_pathToInt2);
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
@@ -79,7 +79,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
     checkModifiers();
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
-                                                    libTestUtils::TestRootFeature::s_pathToArray, 5);
+                                                    testUtils::TestRootFeature::s_pathToArray, 5);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -106,49 +106,49 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
 
 TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
-    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
-    const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
     {
         babelwires::ArraySizeModifierData arrayInitialization;
-        arrayInitialization.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray;
+        arrayInitialization.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray;
         arrayInitialization.m_size = 5;
         testEnvironment.m_project.addModifier(elementId, arrayInitialization);
     }
     {
         babelwires::ConnectionModifierData inputConnection;
-        inputConnection.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_3;
-        inputConnection.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
+        inputConnection.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_3;
+        inputConnection.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        outputConnection.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToArray_4;
+        outputConnection.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        outputConnection.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToArray_4;
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
     testEnvironment.m_project.process();
 
     const auto* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(targetId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
+        return element->getInputFeature()->as<const testUtils::TestRootFeature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element, targetElement](bool isCommandExecuted) {
         const babelwires::Modifier* inputConnection =
-            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_3);
+            element->findModifier(testUtils::TestRootFeature::s_pathToArray_3);
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(libTestUtils::TestRootFeature::s_pathToInt2);
+            targetElement->findModifier(testUtils::TestRootFeature::s_pathToInt2);
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
@@ -176,7 +176,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
     checkModifiers(false);
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
-                                                    libTestUtils::TestRootFeature::s_pathToArray, 3);
+                                                    testUtils::TestRootFeature::s_pathToArray, 3);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -203,21 +203,21 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
 
 TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
     testEnvironment.m_project.process();
 
     const auto* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
+        return element->getInputFeature()->as<const testUtils::TestRootFeature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element](bool isCommandExecuted) {
         const babelwires::Modifier* arrayModifier =
-            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray);
+            element->findModifier(testUtils::TestRootFeature::s_pathToArray);
         if (isCommandExecuted) {
             EXPECT_NE(arrayModifier, nullptr);
         } else {
@@ -231,7 +231,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
     checkModifiers(false);
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
-                                                    libTestUtils::TestRootFeature::s_pathToArray, 4);
+                                                    testUtils::TestRootFeature::s_pathToArray, 4);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -258,7 +258,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
 
 TEST(SetArraySizeCommandTest, failSafelyNoElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
     babelwires::SetArraySizeCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"), 4);
 
@@ -268,11 +268,11 @@ TEST(SetArraySizeCommandTest, failSafelyNoElement) {
 
 TEST(SetArraySizeCommandTest, failSafelyNoArray) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
     babelwires::SetArraySizeCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"), 4);
 
-    libTestUtils::TestFeatureElementData elementData;
+    testUtils::TestFeatureElementData elementData;
     elementData.m_id = 51;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
@@ -284,20 +284,20 @@ TEST(SetArraySizeCommandTest, failSafelyNoArray) {
 
 TEST(SetArraySizeCommandTest, failSafelyOutOfRange) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
     const auto* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    const auto* inputFeature = element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
+    const auto* inputFeature = element->getInputFeature()->as<const testUtils::TestRootFeature>();
     ASSERT_NE(inputFeature, nullptr);
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
-                                                    libTestUtils::TestRootFeature::s_pathToArray, 12);
+                                                    testUtils::TestRootFeature::s_pathToArray, 12);
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }

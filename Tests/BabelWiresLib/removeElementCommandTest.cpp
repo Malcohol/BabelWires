@@ -22,23 +22,23 @@
 
 TEST(RemoveElementCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
-    libTestUtils::TestProjectData projectData;
+    testUtils::TestProjectData projectData;
 
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
-    libTestUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
+    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
     testEnvironment.m_project.setProjectData(projectData);
     testEnvironment.m_project.process();
 
-    EXPECT_NE(testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId), nullptr);
+    EXPECT_NE(testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId), nullptr);
 
     const auto checkElements = [&testEnvironment](bool isCommandExecuted) {
         const babelwires::FeatureElement* processor =
-            testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
+            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
         if (isCommandExecuted) {
             ASSERT_EQ(processor, nullptr);
         } else {
@@ -46,10 +46,10 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
         }
 
         const babelwires::FeatureElement* targetElement =
-            testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
+            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
         const babelwires::Modifier* targetModifier =
-            targetElement->getEdits().findModifier(libTestUtils::TestFileFeature::s_pathToIntChild);
+            targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild);
         if (isCommandExecuted) {
             ASSERT_EQ(targetModifier, nullptr);
         } else {
@@ -60,7 +60,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
 
     checkElements(false);
 
-    babelwires::RemoveElementCommand command("Test command", libTestUtils::TestProjectData::c_processorId);
+    babelwires::RemoveElementCommand command("Test command", testUtils::TestProjectData::c_processorId);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -84,7 +84,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
 
 TEST(RemoveElementCommandTest, failSafelyNoElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
@@ -98,17 +98,17 @@ TEST(RemoveElementCommandTest, failSafelyNoElement) {
 
 TEST(RemoveElementCommandTest, subsumption) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId element1Id =
-        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
     const babelwires::ElementId element2Id =
-        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = element1Id;
 
         testEnvironment.m_project.addModifier(element2Id, modData);
@@ -137,7 +137,7 @@ TEST(RemoveElementCommandTest, subsumption) {
     {
         const babelwires::Modifier* modifier = testEnvironment.m_project.getFeatureElement(element2Id)
                                                    ->getEdits()
-                                                   .findModifier(libTestUtils::TestRootFeature::s_pathToInt2);
+                                                   .findModifier(testUtils::TestRootFeature::s_pathToInt2);
         EXPECT_NE(modifier, nullptr);
         EXPECT_FALSE(modifier->isFailed());
     }

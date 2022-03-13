@@ -2,7 +2,7 @@
 
 #include "BabelWiresLib/Project/projectData.hpp"
 
-namespace libTestUtils {
+namespace testUtils {
     /// A source file wired to a processor wired to a target file.
     /// The file features are TestFileFeatures.
     /// The processor is a TestProcessor, which carries TestRecordFeatures as input and output.
@@ -40,4 +40,4 @@ namespace libTestUtils {
         std::string m_sourceFilePath;
         std::string m_targetFilePath;
     };
-} // namespace libTestUtils
+} // namespace testUtils

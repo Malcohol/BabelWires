@@ -26,7 +26,7 @@ namespace {
     };
 } // namespace
 
-libTestUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtraInt)
+testUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtraInt)
     : m_intId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_intIdInitializer, s_intFieldName, s_intUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_arrayId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(

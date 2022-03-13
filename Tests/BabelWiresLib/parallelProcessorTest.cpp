@@ -44,7 +44,7 @@ namespace {
 
 TEST(ParallelProcessorTest, updateOutputOnChanges) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     TestParallelProcessor processor(testEnvironment.m_projectContext);
     processor.getInputFeature()->setToDefault();
@@ -94,7 +94,7 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
 TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     // Use the testEnvironment's log to determine when the processEntry method is called.
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     TestParallelProcessor processor(testEnvironment.m_projectContext);
     processor.getInputFeature()->setToDefault();
@@ -169,7 +169,7 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
 TEST(ParallelProcessorTest, testFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     // Use the testEnvironment's log to determine when the processEntry method is called.
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     TestParallelProcessor processor(testEnvironment.m_projectContext);
     processor.getInputFeature()->setToDefault();

@@ -2,33 +2,33 @@
 
 #include "BabelWiresLib/Features/featureMixins.hpp"
 
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToInt =
-    babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRootFeature::s_intIdInitializer);
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToArray =
-    babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRootFeature::s_arrayIdInitializer);
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToArray_0 =
-    babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) +
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToInt =
+    babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_intIdInitializer);
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray =
+    babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_arrayIdInitializer);
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_0 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
                                                    "/0");
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToArray_1 =
-    babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) +
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_1 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
                                                    "/1");
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToArray_2 =
-    babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) +
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_2 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
                                                    "/2");
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToArray_3 =
-    babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) +
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_3 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
                                                    "/3");
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToArray_4 =
-    babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) +
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_4 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
                                                    "/4");
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToRecord =
-    babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRootFeature::s_recordIdInitializer);
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToInt2 =
-    babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestRootFeature::s_recordIdInitializer) +
-                                                   "/" + libTestUtils::TestRootFeature::s_int2IdInitializer);
-const babelwires::FeaturePath libTestUtils::TestRootFeature::s_pathToExtraInt =
-    babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestRootFeature::s_recordIdInitializer) +
-                                                   "/" + libTestUtils::TestRootFeature::s_extraIntIdInitializer);
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToRecord =
+    babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_recordIdInitializer);
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToInt2 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_recordIdInitializer) +
+                                                   "/" + testUtils::TestRootFeature::s_int2IdInitializer);
+const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToExtraInt =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_recordIdInitializer) +
+                                                   "/" + testUtils::TestRootFeature::s_extraIntIdInitializer);
 
 namespace {
     struct LimitedIntFeature : babelwires::IntFeature {
@@ -54,7 +54,7 @@ namespace {
     };
 } // namespace
 
-libTestUtils::TestRootFeature::TestRootFeature(const babelwires::ProjectContext& context, int intValueLimit, bool addExtraInt)
+testUtils::TestRootFeature::TestRootFeature(const babelwires::ProjectContext& context, int intValueLimit, bool addExtraInt)
     : RootFeature(context)
     , m_intId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_intIdInitializer, s_intFieldName, s_intUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))

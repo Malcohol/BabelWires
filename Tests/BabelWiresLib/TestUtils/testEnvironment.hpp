@@ -10,7 +10,7 @@
 #include "BabelWiresLib/Project/project.hpp"
 #include "BabelWiresLib/Project/projectContext.hpp"
 
-namespace libTestUtils {
+namespace testUtils {
     struct TestEnvironment {
         TestEnvironment();
 
@@ -25,4 +25,4 @@ namespace libTestUtils {
 
         babelwires::Project m_project;
     };
-} // namespace libTestUtils
+} // namespace testUtils

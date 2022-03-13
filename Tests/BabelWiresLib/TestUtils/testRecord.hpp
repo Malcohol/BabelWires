@@ -8,7 +8,7 @@
 #include "Common/Identifiers/registeredIdentifier.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 
-namespace libTestUtils {
+namespace testUtils {
     /// A record with a small feature hierarchy.
     struct TestRecordFeature : babelwires::RecordFeature {
         // Contained ints have an imposed value limit.
@@ -54,4 +54,4 @@ namespace libTestUtils {
         // This is used to test failed applications.
         int m_intValueLimit;
     };
-} // namespace libTestUtils
+} // namespace testUtils

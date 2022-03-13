@@ -2,7 +2,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
 
-libTestUtils::TestEnvironment::TestEnvironment()
+testUtils::TestEnvironment::TestEnvironment()
     // Try to ensure the tests are deterministic by fixing the random seed.
     : m_projectContext{m_sourceFileFormatReg, m_targetFileFormatReg, m_processorReg, m_deserializationReg, m_enumReg,
                        std::default_random_engine(0x123456789abcdeful)}

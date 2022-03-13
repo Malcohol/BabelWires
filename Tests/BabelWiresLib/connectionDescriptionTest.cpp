@@ -61,31 +61,31 @@ TEST(ConnectionDescriptionTest, equalityAndHash) {
 
 TEST(ConnectionDescriptionTest, getCommands) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceId = 12;
     const babelwires::ElementId targetId = 14;
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
-    connectionData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
+    connectionData.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
+    connectionData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
     connectionData.m_sourceId = sourceId;
 
     babelwires::ConnectionDescription connection(14, connectionData);
 
     {
-        libTestUtils::TestFeatureElementData sourceElementData;
+        testUtils::TestFeatureElementData sourceElementData;
         sourceElementData.m_id = sourceId;
         testEnvironment.m_project.addFeatureElement(sourceElementData);
     }
     {
-        libTestUtils::TestFeatureElementData targetElementData;
+        testUtils::TestFeatureElementData targetElementData;
         targetElementData.m_id = targetId;
         testEnvironment.m_project.addFeatureElement(targetElementData);
     }
 
-    const libTestUtils::TestFeatureElement* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<libTestUtils::TestFeatureElement>();
+    const testUtils::TestFeatureElement* targetElement =
+        testEnvironment.m_project.getFeatureElement(targetId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(targetElement, nullptr);
 
     testEnvironment.m_project.process();
@@ -95,7 +95,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
 
     const auto checkModifier = [&testEnvironment, targetElement, &connectionData](bool isAdded) {
         const babelwires::Modifier* modifier =
-            targetElement->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1);
+            targetElement->findModifier(testUtils::TestRootFeature::s_pathToArray_1);
         if (isAdded) {
             ASSERT_NE(modifier, nullptr);
             const babelwires::ConnectionModifier* connection =

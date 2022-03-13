@@ -20,14 +20,14 @@ namespace {
 
 TEST(TargetFileElementTest, targetFileDataCreateElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     std::ostringstream tempFileName;
-    tempFileName << "foo." << libTestUtils::TestSourceFileFormat::getFileExtension();
+    tempFileName << "foo." << testUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath(tempFileName.str());
 
     babelwires::TargetFileElementData data;
-    data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
+    data.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
@@ -41,7 +41,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
     EXPECT_EQ(targetFileElement->getFilePath(), tempFilePath.m_filePath);
     EXPECT_EQ(targetFileElement->getSupportedFileOperations(), babelwires::FileElement::FileOperations::save);
     EXPECT_NE(targetFileElement->getFileFormatInformation(testEnvironment.m_projectContext), nullptr);
-    EXPECT_EQ(targetFileElement->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), libTestUtils::TestTargetFileFormat::getThisIdentifier());
+    EXPECT_EQ(targetFileElement->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), testUtils::TestTargetFileFormat::getThisIdentifier());
 
     EXPECT_TRUE(endsWithStar(targetFileElement->getLabel()));
     EXPECT_TRUE(targetFileElement->save(testEnvironment.m_projectContext, testEnvironment.m_log));
@@ -50,7 +50,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
     targetFileElement->clearChanges();
 
     const babelwires::FeaturePath pathToInt =
-        babelwires::FeaturePath::deserializeFromString(libTestUtils::TestFileFeature::s_intChildInitializer);
+        babelwires::FeaturePath::deserializeFromString(testUtils::TestFileFeature::s_intChildInitializer);
 
     {
         babelwires::IntValueAssignmentData intMod;
@@ -76,19 +76,19 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
 
 TEST(TargetFileElementTest, changeFile) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
     std::ostringstream tempFileName1;
-    tempFileName1 << "foo1." << libTestUtils::TestSourceFileFormat::getFileExtension();
+    tempFileName1 << "foo1." << testUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath1(tempFileName1.str());
 
     std::ostringstream tempFileName2;
-    tempFileName2 << "foo2." << libTestUtils::TestSourceFileFormat::getFileExtension();
+    tempFileName2 << "foo2." << testUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath2(tempFileName2.str());
 
     babelwires::TargetFileElementData data;
-    data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
+    data.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
 

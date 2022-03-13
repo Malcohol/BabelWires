@@ -11,9 +11,9 @@
 
 TEST(AddElementCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
-    babelwires::AddElementCommand command("Test command", std::make_unique<libTestUtils::TestFeatureElementData>());
+    babelwires::AddElementCommand command("Test command", std::make_unique<testUtils::TestFeatureElementData>());
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -23,7 +23,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     const babelwires::FeatureElement* newElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(newElement, nullptr);
-    EXPECT_NE(newElement->as<libTestUtils::TestFeatureElement>(), nullptr);
+    EXPECT_NE(newElement->as<testUtils::TestFeatureElement>(), nullptr);
 
     command.undo(testEnvironment.m_project);
 
@@ -33,14 +33,14 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     const babelwires::FeatureElement* restoredElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(restoredElement, nullptr);
-    EXPECT_NE(restoredElement->as<libTestUtils::TestFeatureElement>(), nullptr);
+    EXPECT_NE(restoredElement->as<testUtils::TestFeatureElement>(), nullptr);
 }
 
 TEST(AddElementCommandTest, subsumeMoves) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
-    babelwires::AddElementCommand addCommand("Test command", std::make_unique<libTestUtils::TestFeatureElementData>());
+    babelwires::AddElementCommand addCommand("Test command", std::make_unique<testUtils::TestFeatureElementData>());
 
     EXPECT_TRUE(addCommand.initializeAndExecute(testEnvironment.m_project));
 
@@ -55,7 +55,7 @@ TEST(AddElementCommandTest, subsumeMoves) {
     addCommand.undo(testEnvironment.m_project);
     addCommand.execute(testEnvironment.m_project);
     const auto* element =
-        testEnvironment.m_project.getFeatureElement(addCommand.getElementId())->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(addCommand.getElementId())->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
     EXPECT_EQ(element->getUiPosition().m_y, 88);

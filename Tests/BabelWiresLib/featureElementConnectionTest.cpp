@@ -15,29 +15,29 @@
 struct FeatureElementConnectionTest : ::testing::Test {
   protected:
     void SetUp() override {
-        libTestUtils::TestFeatureElementData featureElementData;
+        testUtils::TestFeatureElementData featureElementData;
         featureElementData.m_intValueLimit = 255;
 
         auto featureElement = featureElementData.createFeatureElement(m_context.m_projectContext, m_context.m_log, 66);
-        m_featureElement = std::unique_ptr<libTestUtils::TestFeatureElement>(
-            featureElement.release()->as<libTestUtils::TestFeatureElement>());
+        m_featureElement = std::unique_ptr<testUtils::TestFeatureElement>(
+            featureElement.release()->as<testUtils::TestFeatureElement>());
         ASSERT_TRUE(m_featureElement);
         m_featureElement->clearChanges();
 
         m_arrayPath =
-            babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRecordFeature::s_arrayIdInitializer);
+            babelwires::FeaturePath::deserializeFromString(testUtils::TestRecordFeature::s_arrayIdInitializer);
         m_arrayElemPath = babelwires::FeaturePath::deserializeFromString(
-            std::string(libTestUtils::TestRecordFeature::s_arrayIdInitializer) + "/3");
+            std::string(testUtils::TestRecordFeature::s_arrayIdInitializer) + "/3");
         m_arrayElemPath2 = babelwires::FeaturePath::deserializeFromString(
-            std::string(libTestUtils::TestRecordFeature::s_arrayIdInitializer) + "/1");
+            std::string(testUtils::TestRecordFeature::s_arrayIdInitializer) + "/1");
 
         // Add a feature element to the project to which connections can be made.
-        libTestUtils::TestFeatureElementData sourceElementData;
+        testUtils::TestFeatureElementData sourceElementData;
         // The ints in the source can carry higher values than those in the target.
         sourceElementData.m_intValueLimit = 1000;
         m_sourceId = m_context.m_project.addFeatureElement(sourceElementData);
         m_sourceElement =
-            m_context.m_project.getFeatureElement(m_sourceId)->as<libTestUtils::TestFeatureElement>();
+            m_context.m_project.getFeatureElement(m_sourceId)->as<testUtils::TestFeatureElement>();
         ASSERT_TRUE(m_sourceElement);
 
         m_arrayInitData.m_pathToFeature = m_arrayPath;
@@ -78,14 +78,14 @@ struct FeatureElementConnectionTest : ::testing::Test {
     }
 
     babelwires::IdentifierRegistryScope m_fieldNameRegistryScope;
-    libTestUtils::TestEnvironment m_context;
+    testUtils::TestEnvironment m_context;
     babelwires::FeaturePath m_arrayPath;
     babelwires::FeaturePath m_arrayElemPath;
     babelwires::FeaturePath m_arrayElemPath2;
 
     babelwires::ElementId m_sourceId;
-    std::unique_ptr<libTestUtils::TestFeatureElement> m_featureElement;
-    libTestUtils::TestFeatureElement* m_sourceElement;
+    std::unique_ptr<testUtils::TestFeatureElement> m_featureElement;
+    testUtils::TestFeatureElement* m_sourceElement;
 
     babelwires::ConnectionModifierData m_assignData;
     babelwires::ArraySizeModifierData m_arrayInitData;

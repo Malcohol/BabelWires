@@ -5,7 +5,7 @@
 
 #include "Tests/BabelWiresLib/TestUtils/testRootFeature.hpp"
 
-namespace libTestUtils {
+namespace testUtils {
     struct TestRecordFeature;
 
     /// Carries a TestRecord for input and output.
@@ -36,4 +36,4 @@ namespace libTestUtils {
         std::unique_ptr<babelwires::Processor> createNewProcessor(const babelwires::ProjectContext& projectContext) const override;
     };
 
-} // namespace libTestUtils
+} // namespace testUtils

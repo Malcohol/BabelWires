@@ -16,10 +16,10 @@
 
 TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;
-    data.m_factoryIdentifier = libTestUtils::TestProcessorFactory::getThisIdentifier();
+    data.m_factoryIdentifier = testUtils::TestProcessorFactory::getThisIdentifier();
     data.m_factoryVersion = 1;
 
     auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
@@ -29,13 +29,13 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     babelwires::ProcessorElement* processorElement = static_cast<babelwires::ProcessorElement*>(featureElement.get());
 
     const babelwires::RecordFeature* outputFeature = processorElement->getOutputFeature();
-    ASSERT_TRUE(outputFeature->as<const libTestUtils::TestRootFeature>());
-    const libTestUtils::TestRootFeature* outputTestRecordFeature =
-        static_cast<const libTestUtils::TestRootFeature*>(outputFeature);
+    ASSERT_TRUE(outputFeature->as<const testUtils::TestRootFeature>());
+    const testUtils::TestRootFeature* outputTestRecordFeature =
+        static_cast<const testUtils::TestRootFeature*>(outputFeature);
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
 
-    const babelwires::FeaturePath arraySettingIntPath = libTestUtils::TestRootFeature::s_pathToInt;
-    const babelwires::FeaturePath valueSettingIntPath = libTestUtils::TestRootFeature::s_pathToInt2;
+    const babelwires::FeaturePath arraySettingIntPath = testUtils::TestRootFeature::s_pathToInt;
+    const babelwires::FeaturePath valueSettingIntPath = testUtils::TestRootFeature::s_pathToInt2;
 
     babelwires::IntValueAssignmentData valueSettingData;
     valueSettingData.m_pathToFeature = valueSettingIntPath;

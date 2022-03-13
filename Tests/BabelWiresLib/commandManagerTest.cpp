@@ -45,7 +45,7 @@ namespace {
 
 TEST(CommandManagerTest, undoRedoSinceCommand) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_FALSE(commandManager.canUndo());
@@ -113,7 +113,7 @@ TEST(CommandManagerTest, undoRedoSinceCommand) {
 
 TEST(CommandManagerTest, undoRedoWithTwoCommands) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     TestCommand* testCommand = new TestCommand("perform first test command", true);
@@ -211,7 +211,7 @@ TEST(CommandManagerTest, undoRedoWithTwoCommands) {
 
 TEST(CommandManagerTest, failedCommand) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     TestCommand* failedCommand = new TestCommand("attempt impossible command", false);
@@ -269,7 +269,7 @@ TEST(CommandManagerTest, failedCommand) {
 
 TEST(CommandManagerTest, subsumption) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     TestCommand* testCommand = new TestCommand("perform test command", true);
@@ -304,7 +304,7 @@ TEST(CommandManagerTest, subsumption) {
 
 TEST(CommandManagerTest, clear) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     {

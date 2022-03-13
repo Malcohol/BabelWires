@@ -6,9 +6,15 @@
 
 TEST(RootFeatureTest, rootedFeature) {
     babelwires::IdentifierRegistryScope identifierRegistry;
+<<<<<<< HEAD
     libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestRootFeature rootedFeature(testEnvironment.m_projectContext);
+=======
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::TestRootFeature rootedFeature(testEnvironment.m_projectContext);
+>>>>>>> 435b963 (libTestUtils -> testUtils)
 
     const babelwires::RootFeature* rootFeature = babelwires::RootFeature::tryGetRootFeatureAt(*rootedFeature.m_intFeature2);
     EXPECT_NE(rootFeature, nullptr);
@@ -19,9 +25,15 @@ TEST(RootFeatureTest, rootedFeature) {
 
 TEST(RootFeatureTest, unrootedFeature) {
     babelwires::IdentifierRegistryScope identifierRegistry;
+<<<<<<< HEAD
     libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestRecordFeature unrootedFeature;
+=======
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::TestRecordFeature unrootedFeature;
+>>>>>>> 435b963 (libTestUtils -> testUtils)
 
     const babelwires::RootFeature* rootFeature = babelwires::RootFeature::tryGetRootFeatureAt(*unrootedFeature.m_intFeature2);
     EXPECT_EQ(rootFeature, nullptr);

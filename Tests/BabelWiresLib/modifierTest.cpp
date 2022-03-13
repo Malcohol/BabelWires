@@ -243,10 +243,10 @@ TEST(ModifierTest, arraySizeModifierFailure) {
 
 TEST(ModifierTest, connectionModifierSuccess) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment projectContext;
 
-    libTestUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = libTestUtils::TestRootFeature::s_pathToInt;
+    testUtils::TestFeatureElementData elementData;
+    const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
     babelwires::IntValueAssignmentData sourceData;
     sourceData.m_pathToFeature = sourcePath;
     sourceData.m_value = 100;
@@ -280,7 +280,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
 
 TEST(ModifierTest, connectionModifierTargetPathFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
     babelwires::Identifier id1("bb");
@@ -311,7 +311,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
 
 TEST(ModifierTest, connectionModifierSourceIdFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
     babelwires::Identifier id1("bb");
@@ -343,10 +343,10 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
 
 TEST(ModifierTest, connectionModifierSourcePathFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment projectContext;
 
-    libTestUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = libTestUtils::TestRootFeature::s_pathToInt;
+    testUtils::TestFeatureElementData elementData;
+    const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
     babelwires::IntValueAssignmentData sourceData;
     sourceData.m_pathToFeature = sourcePath;
     sourceData.m_value = 100;
@@ -383,10 +383,10 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 
 TEST(ModifierTest, connectionModifierApplicationFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment projectContext;
 
-    libTestUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = libTestUtils::TestRootFeature::s_pathToInt;
+    testUtils::TestFeatureElementData elementData;
+    const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
     babelwires::IntValueAssignmentData sourceData;
     sourceData.m_pathToFeature = sourcePath;
     sourceData.m_value = 100;

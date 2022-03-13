@@ -15,8 +15,8 @@
 
 TEST(FeatureElementTest, basicAccessors) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
 
     auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 54);
 
@@ -24,15 +24,15 @@ TEST(FeatureElementTest, basicAccessors) {
     EXPECT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->getInputFeature());
     EXPECT_TRUE(featureElement->getOutputFeature());
-    EXPECT_TRUE(featureElement->getInputFeature()->as<const libTestUtils::TestRootFeature>());
-    EXPECT_TRUE(featureElement->getOutputFeature()->as<const libTestUtils::TestRootFeature>());
+    EXPECT_TRUE(featureElement->getInputFeature()->as<const testUtils::TestRootFeature>());
+    EXPECT_TRUE(featureElement->getOutputFeature()->as<const testUtils::TestRootFeature>());
     EXPECT_EQ(featureElement->getElementId(), 54);
 }
 
 TEST(FeatureElementTest, labels) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
 
     auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
 
@@ -43,8 +43,8 @@ TEST(FeatureElementTest, labels) {
 
 TEST(FeatureElementTest, uiData) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
     featureElementData.m_uiData.m_uiPosition = babelwires::UiPosition{23, -29};
     featureElementData.m_uiData.m_uiSize = babelwires::UiSize{120};
 
@@ -62,11 +62,11 @@ TEST(FeatureElementTest, uiData) {
 
 TEST(FeatureElementTest, modifiers) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
 
     const babelwires::FeaturePath arrayPath =
-        babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRecordFeature::s_arrayIdInitializer);
+        babelwires::FeaturePath::deserializeFromString(testUtils::TestRecordFeature::s_arrayIdInitializer);
     const babelwires::FeaturePath arrayElemPath = babelwires::FeaturePath::deserializeFromString("array/3");
     const babelwires::FeaturePath arrayElemPath2 = babelwires::FeaturePath::deserializeFromString("array/4");
     const babelwires::FeaturePath failedPath = babelwires::FeaturePath::deserializeFromString("foo/bar");
@@ -121,8 +121,8 @@ TEST(FeatureElementTest, modifiers) {
     }
     const babelwires::RecordFeature* const recordFeature = featureElement->getInputFeature();
     ASSERT_TRUE(recordFeature);
-    const libTestUtils::TestRootFeature* const testRecordFeature =
-        recordFeature->as<const libTestUtils::TestRootFeature>();
+    const testUtils::TestRootFeature* const testRecordFeature =
+        recordFeature->as<const testUtils::TestRootFeature>();
     ASSERT_TRUE(testRecordFeature);
     EXPECT_EQ(testRecordFeature->m_arrayFeature->getNumFeatures(), 5);
     ASSERT_TRUE(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3)->as<const babelwires::IntFeature>());
@@ -168,15 +168,15 @@ TEST(FeatureElementTest, modifiers) {
 
 TEST(FeatureElementTest, expandedPaths) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
 
     const babelwires::FeaturePath arrayPath =
-        babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRootFeature::s_arrayIdInitializer);
+        babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_arrayIdInitializer);
     const babelwires::FeaturePath arrayElemPath = babelwires::FeaturePath::deserializeFromString(
-        std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) + "/3");
+        std::string(testUtils::TestRootFeature::s_arrayIdInitializer) + "/3");
     const babelwires::FeaturePath arrayElemPath2 = babelwires::FeaturePath::deserializeFromString(
-        std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) + "/4");
+        std::string(testUtils::TestRootFeature::s_arrayIdInitializer) + "/4");
     const babelwires::FeaturePath fooBar = babelwires::FeaturePath::deserializeFromString("foo/bar");
 
     featureElementData.m_expandedPaths.emplace_back(arrayElemPath);
@@ -225,15 +225,15 @@ TEST(FeatureElementTest, expandedPaths) {
 
 TEST(FeatureElementTest, extractElementData) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
 
     const babelwires::FeaturePath arrayPath =
-        babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRootFeature::s_arrayIdInitializer);
+        babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_arrayIdInitializer);
     const babelwires::FeaturePath arrayElemPath = babelwires::FeaturePath::deserializeFromString(
-        std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) + "/3");
+        std::string(testUtils::TestRootFeature::s_arrayIdInitializer) + "/3");
     const babelwires::FeaturePath arrayElemPath2 = babelwires::FeaturePath::deserializeFromString(
-        std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) + "/4");
+        std::string(testUtils::TestRootFeature::s_arrayIdInitializer) + "/4");
     const babelwires::FeaturePath failedPath = babelwires::FeaturePath::deserializeFromString("foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
@@ -304,13 +304,13 @@ TEST(FeatureElementTest, extractElementData) {
 
 TEST(FeatureElementTest, removedModifiers) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
 
     const babelwires::FeaturePath arrayPath =
-        babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRootFeature::s_arrayIdInitializer);
+        babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_arrayIdInitializer);
     const babelwires::FeaturePath arrayElemPath = babelwires::FeaturePath::deserializeFromString(
-        std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) + "/3");
+        std::string(testUtils::TestRootFeature::s_arrayIdInitializer) + "/3");
     const babelwires::FeaturePath failedPath = babelwires::FeaturePath::deserializeFromString("foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
@@ -364,15 +364,15 @@ TEST(FeatureElementTest, removedModifiers) {
 
 TEST(FeatureElementTest, failure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
 
     auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<libTestUtils::TestFeatureElement>());
-    libTestUtils::TestFeatureElement* testFeatureElement =
-        static_cast<libTestUtils::TestFeatureElement*>(featureElement.get());
+    ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
+    testUtils::TestFeatureElement* testFeatureElement =
+        static_cast<testUtils::TestFeatureElement*>(featureElement.get());
 
     testFeatureElement->simulateFailure(testEnvironment.m_projectContext);
     EXPECT_TRUE(featureElement->isFailed());
@@ -385,8 +385,8 @@ TEST(FeatureElementTest, failure) {
 
 TEST(FeatureElementTest, simpleChanges) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
 
     auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementIsNew));
@@ -395,9 +395,9 @@ TEST(FeatureElementTest, simpleChanges) {
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
     const babelwires::FeaturePath arrayPath =
-        babelwires::FeaturePath::deserializeFromString(libTestUtils::TestRootFeature::s_arrayIdInitializer);
+        babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_arrayIdInitializer);
     const babelwires::FeaturePath arrayElemPath = babelwires::FeaturePath::deserializeFromString(
-        std::string(libTestUtils::TestRootFeature::s_arrayIdInitializer) + "/3");
+        std::string(testUtils::TestRootFeature::s_arrayIdInitializer) + "/3");
 
     {
         featureElement->clearChanges();
@@ -473,16 +473,16 @@ TEST(FeatureElementTest, simpleChanges) {
     }
     {
         featureElement->clearChanges();
-        ASSERT_TRUE(featureElement->as<libTestUtils::TestFeatureElement>());
-        static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateFailure(testEnvironment.m_projectContext);
+        ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
+        static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateFailure(testEnvironment.m_projectContext);
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
     }
     {
         featureElement->clearChanges();
-        ASSERT_TRUE(featureElement->as<libTestUtils::TestFeatureElement>());
-        static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery(testEnvironment.m_projectContext);
+        ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
+        static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery(testEnvironment.m_projectContext);
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
@@ -491,13 +491,13 @@ TEST(FeatureElementTest, simpleChanges) {
 
 TEST(FeatureElementTest, isInDependencyLoop) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestFeatureElementData featureElementData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestFeatureElementData featureElementData;
 
     auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<libTestUtils::TestFeatureElement>());
+    ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
 
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(true);
@@ -513,7 +513,7 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
     EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
-    static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateFailure(testEnvironment.m_projectContext);
+    static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateFailure(testEnvironment.m_projectContext);
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(true);
 
@@ -532,10 +532,10 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     // Don't think we need to note any change.
     // EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
-    static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery(testEnvironment.m_projectContext);
+    static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery(testEnvironment.m_projectContext);
     featureElement->setInDependencyLoop(true);
     featureElement->clearChanges();
-    static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateFailure(testEnvironment.m_projectContext);
+    static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateFailure(testEnvironment.m_projectContext);
 
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
@@ -543,7 +543,7 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
     featureElement->clearChanges();
-    static_cast<libTestUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery(testEnvironment.m_projectContext);
+    static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery(testEnvironment.m_projectContext);
 
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));

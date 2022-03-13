@@ -19,25 +19,25 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
     {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestEnvironment testEnvironment;
+        testUtils::TestEnvironment testEnvironment;
         
         // Ensure some of the test record's discriminators are not default.
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_intIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,
                                                              "test int", "41000000-1111-2222-3333-800000000001",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_intIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,
                                                              "test int 1", "42000000-1111-2222-3333-800000000001",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_intIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,
                                                              "test int 2", "43000000-1111-2222-3333-800000000001",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_arrayIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_arrayIdInitializer,
                                                              "test array", "41000000-1111-2222-3333-800000000002",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_arrayIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_arrayIdInitializer,
                                                              "test array 1", "42000000-1111-2222-3333-800000000002",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_recordIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_recordIdInitializer,
                                                              "test record", "41000000-1111-2222-3333-800000000003",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
@@ -49,8 +49,8 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
         // Confirm that not all the discriminators in a test record are default.
         {
-            libTestUtils::TestRecordFeature testRecord;
-            libTestUtils::TestFileFeature testFileFeature(testEnvironment.m_projectContext);
+            testUtils::TestRecordFeature testRecord;
+            testUtils::TestFileFeature testFileFeature(testEnvironment.m_projectContext);
             EXPECT_EQ(babelwires::FeaturePath(testRecord.m_intFeature).getLastStep().asField()->getDiscriminator(), 4);
             EXPECT_EQ(babelwires::FeaturePath(testRecord.m_arrayFeature).getLastStep().asField()->getDiscriminator(),
                       3);
@@ -62,8 +62,8 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
                 2);
 
             // Sanity check that the ids are unaffected by the registration re-running.
-            libTestUtils::TestRecordFeature testRecord2;
-            libTestUtils::TestFileFeature testFileFeature2(testEnvironment.m_projectContext);
+            testUtils::TestRecordFeature testRecord2;
+            testUtils::TestFileFeature testFileFeature2(testEnvironment.m_projectContext);
             EXPECT_EQ(babelwires::FeaturePath(testRecord2.m_intFeature).getLastStep().asField()->getDiscriminator(), 4);
             EXPECT_EQ(babelwires::FeaturePath(testRecord2.m_arrayFeature).getLastStep().asField()->getDiscriminator(),
                       3);
@@ -76,14 +76,14 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
                 2);
         }
 
-        libTestUtils::TestProjectData projectData;
+        testUtils::TestProjectData projectData;
 
         // Resolve the paths, to ensure their field discriminators map to the registered fields.
         {
             // First confirm that the paths in the project data are as expected and have not yet been resolved
-            libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 0, 0, 0, 0, 0);
+            testUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 0, 0, 0, 0, 0);
             projectData.resolvePathsInCurrentContext(testEnvironment.m_projectContext);
-            libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 4, 3, 2, 1, 2);
+            testUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 4, 3, 2, 1, 2);
         }
 
         // Test the construction of a bundle from a projectData.
@@ -111,27 +111,27 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
                 const babelwires::LongIdentifier& fieldIdentifier = std::get<0>(v);
                 const std::string& fieldName = *std::get<1>(v);
                 const babelwires::Uuid& uuid = *std::get<2>(v);
-                if (uuid == libTestUtils::TestRecordFeature::s_intUuid) {
-                    EXPECT_EQ(fieldName, libTestUtils::TestRecordFeature::s_intFieldName);
-                    EXPECT_EQ(fieldIdentifier, libTestUtils::TestRecordFeature::s_intIdInitializer);
+                if (uuid == testUtils::TestRecordFeature::s_intUuid) {
+                    EXPECT_EQ(fieldName, testUtils::TestRecordFeature::s_intFieldName);
+                    EXPECT_EQ(fieldIdentifier, testUtils::TestRecordFeature::s_intIdInitializer);
                     EXPECT_EQ(fieldIdentifier.getDiscriminator(), recordIntDiscriminator);
-                } else if (uuid == libTestUtils::TestRecordFeature::s_arrayUuid) {
-                    EXPECT_EQ(fieldName, libTestUtils::TestRecordFeature::s_arrayFieldName);
-                    EXPECT_EQ(fieldIdentifier, libTestUtils::TestRecordFeature::s_arrayIdInitializer);
+                } else if (uuid == testUtils::TestRecordFeature::s_arrayUuid) {
+                    EXPECT_EQ(fieldName, testUtils::TestRecordFeature::s_arrayFieldName);
+                    EXPECT_EQ(fieldIdentifier, testUtils::TestRecordFeature::s_arrayIdInitializer);
                     EXPECT_EQ(fieldIdentifier.getDiscriminator(), recordArrayDiscriminator);
-                } else if (uuid == libTestUtils::TestRecordFeature::s_recordUuid) {
-                    EXPECT_EQ(fieldName, libTestUtils::TestRecordFeature::s_recordFieldName);
-                    EXPECT_EQ(fieldIdentifier, libTestUtils::TestRecordFeature::s_recordIdInitializer);
+                } else if (uuid == testUtils::TestRecordFeature::s_recordUuid) {
+                    EXPECT_EQ(fieldName, testUtils::TestRecordFeature::s_recordFieldName);
+                    EXPECT_EQ(fieldIdentifier, testUtils::TestRecordFeature::s_recordIdInitializer);
                     EXPECT_EQ(fieldIdentifier.getDiscriminator(), recordRecordDiscriminator);
-                } else if (uuid == libTestUtils::TestRecordFeature::s_int2Uuid) {
-                    EXPECT_EQ(fieldName, libTestUtils::TestRecordFeature::s_int2FieldName);
-                    EXPECT_EQ(fieldIdentifier, libTestUtils::TestRecordFeature::s_int2IdInitializer);
+                } else if (uuid == testUtils::TestRecordFeature::s_int2Uuid) {
+                    EXPECT_EQ(fieldName, testUtils::TestRecordFeature::s_int2FieldName);
+                    EXPECT_EQ(fieldIdentifier, testUtils::TestRecordFeature::s_int2IdInitializer);
                     recordInt2Disciminator = fieldIdentifier.getDiscriminator();
                     EXPECT_GE(recordInt2Disciminator, 1);
                     EXPECT_LE(recordInt2Disciminator, 2);
-                } else if (uuid == libTestUtils::TestFileFeature::s_intChildUuid) {
-                    EXPECT_EQ(fieldName, libTestUtils::TestFileFeature::s_intChildFieldName);
-                    EXPECT_EQ(fieldIdentifier, libTestUtils::TestFileFeature::s_intChildInitializer);
+                } else if (uuid == testUtils::TestFileFeature::s_intChildUuid) {
+                    EXPECT_EQ(fieldName, testUtils::TestFileFeature::s_intChildFieldName);
+                    EXPECT_EQ(fieldIdentifier, testUtils::TestFileFeature::s_intChildInitializer);
                     fileIntChildDiscriminator = fieldIdentifier.getDiscriminator();
                     EXPECT_GE(fileIntChildDiscriminator, 1);
                     EXPECT_LE(fileIntChildDiscriminator, 2);
@@ -143,7 +143,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
             EXPECT_EQ(unrecognizedEntries, 0);
             EXPECT_NE(recordInt2Disciminator, fileIntChildDiscriminator);
 
-            libTestUtils::TestProjectData::testProjectDataAndDisciminators(
+            testUtils::TestProjectData::testProjectDataAndDisciminators(
                 bundle2.getData(), recordIntDiscriminator, recordArrayDiscriminator, recordRecordDiscriminator,
                 recordInt2Disciminator, fileIntChildDiscriminator);
         }
@@ -152,27 +152,27 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
     {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestEnvironment testEnvironment;
+        testUtils::TestEnvironment testEnvironment;
 
         // Slightly different arrangement and UUIDs to the above (not that it should matter)
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_intIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,
                                                              "test int", "51000000-1111-2222-3333-800000000001",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_arrayIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_arrayIdInitializer,
                                                              "test array", "51000000-1111-2222-3333-800000000002",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_recordIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_recordIdInitializer,
                                                              "test record 1", "51000000-1111-2222-3333-800000000003",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_recordIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_recordIdInitializer,
                                                              "test record 2", "52000000-1111-2222-3333-800000000003",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_recordIdInitializer,
+        babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(testUtils::TestRecordFeature::s_recordIdInitializer,
                                                              "test record 3", "53000000-1111-2222-3333-800000000003",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
         // Ensure the record's fieldIdentifiers are registered, but don't do the same for the file feature.
-        libTestUtils::TestRecordFeature testRecord;
+        testUtils::TestRecordFeature testRecord;
 
         // Also register some irrelevant field names.
         babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata("Flum", "Flum", "51000000-1111-2222-3333-800000000100",
@@ -183,13 +183,13 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         babelwires::ProjectData projectData =
             std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
 
-        libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 2, 2, 4, 1, 2);
+        testUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 2, 2, 4, 1, 2);
 
         // Confirm that the resolved data is provisional.
         {
             babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
-                libTestUtils::TestFileFeature::s_intChildInitializer, "Updated field name",
-                libTestUtils::TestFileFeature::s_intChildUuid,
+                testUtils::TestFileFeature::s_intChildInitializer, "Updated field name",
+                testUtils::TestFileFeature::s_intChildUuid,
                 babelwires::IdentifierRegistry::Authority::isAuthoritative);
             EXPECT_EQ(babelwires::IdentifierRegistry::read()->getName(
                           *projectData.m_elements[0]->m_modifiers[0]->m_pathToFeature.getStep(0).asField()),
@@ -200,8 +200,8 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
 TEST(ProjectBundleTest, factoryMetadata) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
-    libTestUtils::TestProjectData projectData;
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestProjectData projectData;
 
     // Older than registered.
     projectData.m_elements[0]->m_factoryVersion = 1;
@@ -214,9 +214,9 @@ TEST(ProjectBundleTest, factoryMetadata) {
     bundle.interpretInCurrentContext();
 
     ASSERT_EQ(bundle.getFactoryMetadata().size(), 3);
-    EXPECT_EQ(bundle.getFactoryMetadata().find(libTestUtils::TestTargetFileFormat::getThisIdentifier())->second, 1);
-    EXPECT_EQ(bundle.getFactoryMetadata().find(libTestUtils::TestProcessorFactory::getThisIdentifier())->second, 2);
-    EXPECT_EQ(bundle.getFactoryMetadata().find(libTestUtils::TestSourceFileFormat::getThisIdentifier())->second, 3);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestTargetFileFormat::getThisIdentifier())->second, 1);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestProcessorFactory::getThisIdentifier())->second, 2);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestSourceFileFormat::getThisIdentifier())->second, 3);
 
     babelwires::ProjectData resolvedData =
         std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
@@ -231,7 +231,7 @@ TEST(ProjectBundleTest, factoryMetadata) {
 TEST(ProjectBundleTest, filePathResolution) {
     testUtils::TestLogWithListener log;
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
 
     std::filesystem::path root = std::filesystem::canonical(std::filesystem::temp_directory_path());
 
@@ -316,23 +316,23 @@ TEST(ProjectBundleTest, factoryIdentifiers) {
 
     // Prepopulate the identifierRegistry with clashing factory identifier.
     // I don't expect duplicate factory identifiers, but this will make it easier to test
-    babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(libTestUtils::TestProcessorFactory::getThisIdentifier(),
+    babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(testUtils::TestProcessorFactory::getThisIdentifier(),
                                                              "Other test processor", "41000000-1111-2222-3333-888888888888",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(libTestUtils::TestSourceFileFormat::getThisIdentifier(),
+    babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(testUtils::TestSourceFileFormat::getThisIdentifier(),
                                                              "Other test source factory", "41000000-1111-2222-3333-999999999999",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(libTestUtils::TestTargetFileFormat::getThisIdentifier(),
+    babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(testUtils::TestTargetFileFormat::getThisIdentifier(),
                                                              "Other test target factory", "41000000-1111-2222-3333-aaaaaaaaaaaa",
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
-    libTestUtils::TestProjectData projectData;
+    testUtils::TestProjectData projectData;
 
     EXPECT_EQ(projectData.m_elements[0]->m_factoryIdentifier.getDiscriminator(), 0);
     EXPECT_EQ(projectData.m_elements[1]->m_factoryIdentifier.getDiscriminator(), 0);
     EXPECT_EQ(projectData.m_elements[2]->m_factoryIdentifier.getDiscriminator(), 0);
 
-    libTestUtils::TestEnvironment testEnvironment;
+    testUtils::TestEnvironment testEnvironment;
     testEnvironment.m_projectContext.m_targetFileFormatReg.getEntryByIdentifier(projectData.m_elements[0]->m_factoryIdentifier);
     testEnvironment.m_projectContext.m_processorReg.getEntryByIdentifier(projectData.m_elements[1]->m_factoryIdentifier);
     testEnvironment.m_projectContext.m_sourceFileFormatReg.getEntryByIdentifier(projectData.m_elements[2]->m_factoryIdentifier);

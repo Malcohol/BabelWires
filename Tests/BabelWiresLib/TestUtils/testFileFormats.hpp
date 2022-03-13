@@ -6,7 +6,7 @@
 
 #include <filesystem>
 
-namespace libTestUtils {
+namespace testUtils {
 
     /// A record with an int feature at path "aaa".
     struct TestFileFeature : babelwires::FileFeature {
@@ -58,4 +58,4 @@ namespace libTestUtils {
                          babelwires::UserLogger& userLogger) const override;
     };
 
-} // namespace libTestUtils
+} // namespace testUtils

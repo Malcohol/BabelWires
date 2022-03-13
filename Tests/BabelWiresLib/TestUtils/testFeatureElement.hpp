@@ -6,7 +6,7 @@
 
 #include "Tests/BabelWiresLib/TestUtils/testRootFeature.hpp"
 
-namespace libTestUtils {
+namespace testUtils {
     struct TestFailedFeature : babelwires::RootFeature {
         TestFailedFeature(const babelwires::ProjectContext& context);
     };
@@ -53,4 +53,4 @@ namespace libTestUtils {
 
         std::unique_ptr<babelwires::RootFeature> m_feature;
     };
-} // namespace libTestUtils
+} // namespace testUtils

@@ -10,8 +10,8 @@
 
 #include <fstream>
 
-const babelwires::FeaturePath libTestUtils::TestFileFeature::s_pathToIntChild =
-    babelwires::FeaturePath::deserializeFromString(libTestUtils::TestFileFeature::s_intChildInitializer);
+const babelwires::FeaturePath testUtils::TestFileFeature::s_pathToIntChild =
+    babelwires::FeaturePath::deserializeFromString(testUtils::TestFileFeature::s_intChildInitializer);
 namespace {
     const char s_fileFormatId[] = "testFileFormat";
     const char s_factoryFormatId[] = "testFactoryFormat";
@@ -19,7 +19,7 @@ namespace {
     const char s_product[] = "Test Product";
 } // namespace
 
-libTestUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext& context)
+testUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext& context)
     : babelwires::FileFeature(context, s_fileFormatId)
     , m_intChildId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
@@ -28,25 +28,25 @@ libTestUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext&
         addField(std::make_unique<babelwires::HasStaticRange<babelwires::IntFeature, 0, 255>>(), m_intChildId);
 }
 
-babelwires::LongIdentifier libTestUtils::TestSourceFileFormat::getThisIdentifier() {
+babelwires::LongIdentifier testUtils::TestSourceFileFormat::getThisIdentifier() {
     return s_fileFormatId;
 }
 
-std::string libTestUtils::TestSourceFileFormat::getFileExtension() {
+std::string testUtils::TestSourceFileFormat::getFileExtension() {
     return s_fileFormatId;
 }
 
-libTestUtils::TestSourceFileFormat::TestSourceFileFormat()
+testUtils::TestSourceFileFormat::TestSourceFileFormat()
     : SourceFileFormat(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
                            s_fileFormatId, s_fileFormatId, "f557b89a-2499-465a-a605-5ef7f69284c4",
                            babelwires::IdentifierRegistry::Authority::isAuthoritative),
                        1, {s_fileFormatId}) {}
 
-std::string libTestUtils::TestSourceFileFormat::getManufacturerName() const {
+std::string testUtils::TestSourceFileFormat::getManufacturerName() const {
     return s_manufacturer;
 }
 
-std::string libTestUtils::TestSourceFileFormat::getProductName() const {
+std::string testUtils::TestSourceFileFormat::getProductName() const {
     return s_product;
 }
 
@@ -70,13 +70,13 @@ namespace {
     }
 } // namespace
 
-char libTestUtils::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
+char testUtils::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
     babelwires::FileDataSource dataSource(path);
     return getFileDataInternal(dataSource);
 }
 
 std::unique_ptr<babelwires::FileFeature>
-libTestUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource, const babelwires::ProjectContext& projectContext, 
+testUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource, const babelwires::ProjectContext& projectContext, 
                                                  babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
     auto newFeature = std::make_unique<TestFileFeature>(projectContext);
@@ -84,34 +84,34 @@ libTestUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSou
     return newFeature;
 }
 
-void libTestUtils::TestSourceFileFormat::writeToTestFile(const std::filesystem::path& path, char testData) {
+void testUtils::TestSourceFileFormat::writeToTestFile(const std::filesystem::path& path, char testData) {
     std::ofstream fs(path);
     fs << s_fileFormatId << testData;
 }
 
-libTestUtils::TestTargetFileFormat::TestTargetFileFormat()
+testUtils::TestTargetFileFormat::TestTargetFileFormat()
     : TargetFileFormat(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
                            s_factoryFormatId, s_factoryFormatId, "a9a603aa-9d83-4f12-ac35-de0056d5a568",
                            babelwires::IdentifierRegistry::Authority::isAuthoritative),
                        3, {s_fileFormatId}) {}
 
-babelwires::LongIdentifier libTestUtils::TestTargetFileFormat::getThisIdentifier() {
+babelwires::LongIdentifier testUtils::TestTargetFileFormat::getThisIdentifier() {
     return s_factoryFormatId;
 }
 
-std::string libTestUtils::TestTargetFileFormat::getManufacturerName() const {
+std::string testUtils::TestTargetFileFormat::getManufacturerName() const {
     return s_manufacturer;
 }
 
-std::string libTestUtils::TestTargetFileFormat::getProductName() const {
+std::string testUtils::TestTargetFileFormat::getProductName() const {
     return s_product;
 }
 
-std::unique_ptr<babelwires::FileFeature> libTestUtils::TestTargetFileFormat::createNewFeature(const babelwires::ProjectContext& projectContext) const {
+std::unique_ptr<babelwires::FileFeature> testUtils::TestTargetFileFormat::createNewFeature(const babelwires::ProjectContext& projectContext) const {
     return std::make_unique<TestFileFeature>(projectContext);
 }
 
-void libTestUtils::TestTargetFileFormat::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
+void testUtils::TestTargetFileFormat::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
                                                      babelwires::UserLogger& userLogger) const {
     const TestFileFeature& testFileFeature = *fileFeature.as<TestFileFeature>();
     os << s_fileFormatId << char(testFileFeature.m_intChildFeature->get());
