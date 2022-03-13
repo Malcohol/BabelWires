@@ -19,7 +19,7 @@ namespace {
         std::ofstream tempFile(path);
 
         auto fileFormat = std::make_unique<libTestUtils::TestTargetFileFormat>();
-        auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>();
+        auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>(context.m_projectContext);
         fileFeature->m_intChildFeature->set(value);
         fileFormat->writeToFile(*fileFeature, tempFile, context.m_log);
     }

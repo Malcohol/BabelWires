@@ -4,16 +4,19 @@
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
 #include "Common/Identifiers/registeredIdentifier.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 
+#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+
 namespace libTestUtils {
     /// A record with a small feature hierarchy.
-    struct TestRecordFeature : babelwires::RecordFeature {
+    struct TestRootFeature : babelwires::RootFeature {
         // Contained ints have an imposed value limit.
         // This is used to test failed applications.
-        TestRecordFeature(int intValueLimit = 255, bool addExtraInt = false);
+        TestRootFeature(const babelwires::ProjectContext& context, int intValueLimit = 255, bool addExtraInt = false);
 
         static constexpr char s_intIdInitializer[] = "int0";
         static constexpr char s_arrayIdInitializer[] = "array";
@@ -34,6 +37,7 @@ namespace libTestUtils {
         static constexpr char s_int2Uuid[] = "00000000-1111-2222-3333-800000000004";
         static constexpr char s_extraIntUuid[] = "00000000-1111-2222-3333-800000000005";
 
+        TestRecordFeature m_recordFeature;
         babelwires::Identifier m_intId;
         babelwires::Identifier m_arrayId;
         babelwires::Identifier m_recordId;

@@ -125,7 +125,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
         std::ofstream tempFile(tempFilePath);
 
         auto targetFileFormat = std::make_unique<libTestUtils::TestTargetFileFormat>();
-        auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>();
+        auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>(context.m_projectContext);
         fileFeature->m_intChildFeature->set(14);
         targetFileFormat->writeToFile(*fileFeature, tempFile, context.m_log);
     }
@@ -334,8 +334,8 @@ TEST(ElementDataTest, processorDataCreateElement) {
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(featureElement->getElementData().as<babelwires::ProcessorElementData>());
 
-    const libTestUtils::TestRecordFeature* inputFeature =
-        static_cast<const libTestUtils::TestRecordFeature*>(featureElement->getInputFeature());
+    const libTestUtils::TestRootFeature* inputFeature =
+        static_cast<const libTestUtils::TestRootFeature*>(featureElement->getInputFeature());
 
     EXPECT_EQ(inputFeature->m_intFeature->get(), 12);
 

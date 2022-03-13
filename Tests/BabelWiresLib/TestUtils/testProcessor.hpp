@@ -3,6 +3,8 @@
 #include "BabelWiresLib/Processors/processorFactory.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 
+#include "Tests/BabelWiresLib/TestUtils/testRootFeature.hpp"
+
 namespace libTestUtils {
     struct TestRecordFeature;
 
@@ -20,8 +22,8 @@ namespace libTestUtils {
         void process(babelwires::UserLogger& userLogger) override;
         babelwires::RootFeature* getInputFeature() override;
         babelwires::RootFeature* getOutputFeature() override;
-        std::unique_ptr<TestRecordFeature> m_inputFeature;
-        std::unique_ptr<TestRecordFeature> m_outputFeature;
+        std::unique_ptr<TestRootFeature> m_inputFeature;
+        std::unique_ptr<TestRootFeature> m_outputFeature;
     };
 
     /// Constructs test processors.

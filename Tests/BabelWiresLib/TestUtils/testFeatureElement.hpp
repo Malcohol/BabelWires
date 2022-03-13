@@ -4,7 +4,7 @@
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testRootFeature.hpp"
 
 namespace libTestUtils {
     struct TestFailedFeature : babelwires::RootFeature {
@@ -52,7 +52,7 @@ namespace libTestUtils {
         void simulateRecovery();
 
         babelwires::RootFeature* m_feature;
-        std::unique_ptr<babelwires::RootFeature> m_actualFeature;
+        std::unique_ptr<TestRootFeature> m_actualFeature;
         std::unique_ptr<TestFailedFeature> m_failedFeature;
     };
 } // namespace libTestUtils

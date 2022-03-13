@@ -72,7 +72,7 @@ bool libTestUtils::TestFeatureElementWithOptionalsData::checkFactoryVersion(cons
 
 std::unique_ptr<babelwires::FeatureElement> libTestUtils::TestFeatureElementWithOptionalsData::doCreateFeatureElement(
     const babelwires::ProjectContext& context, babelwires::UserLogger& userLogger, babelwires::ElementId newId) const {
-    return std::make_unique<TestFeatureElementWithOptionals>(*this, newId);
+    return std::make_unique<TestFeatureElementWithOptionals>(context, *this, newId);
 }
 
 void libTestUtils::TestFeatureElementWithOptionalsData::serializeContents(babelwires::Serializer& serializer) const {}

@@ -40,7 +40,7 @@ libTestUtils::TestFeatureElement::TestFeatureElement(const babelwires::ProjectCo
                                                      const TestFeatureElementData& data, babelwires::ElementId newId)
     : FeatureElement(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
-    m_actualFeature = std::make_unique<TestRecordFeature>(
+    m_actualFeature = std::make_unique<TestRootFeature>(context,
         static_cast<const TestFeatureElementData*>(&getElementData())->m_intValueLimit);
     m_failedFeature = std::make_unique<TestFailedFeature>(context);
     m_feature = m_actualFeature.get();

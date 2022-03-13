@@ -6,8 +6,8 @@
 #include "BabelWiresLib/Features/featureMixins.hpp"
 
 libTestUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& context) {
-    m_inputFeature = std::make_unique<TestRecordFeature>();
-    m_outputFeature = std::make_unique<TestRecordFeature>();
+    m_inputFeature = std::make_unique<TestRootFeature>(context);
+    m_outputFeature = std::make_unique<TestRootFeature>(context);
 }
 
 void libTestUtils::TestProcessor::process(babelwires::UserLogger& userLogger) {
