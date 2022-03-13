@@ -1,15 +1,17 @@
 #pragma once
 
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "Common/Identifiers/registeredIdentifier.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
+
+#include "Common/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 namespace libTestUtils {
     /// A record with a small feature hierarchy.
-    struct TestRecordFeature : babelwires::RecordFeature {
+    struct TestRecordFeature : babelwires::RootFeature {
         // Contained ints have an imposed value limit.
         // This is used to test failed applications.
         TestRecordFeature(int intValueLimit = 255, bool addExtraInt = false);

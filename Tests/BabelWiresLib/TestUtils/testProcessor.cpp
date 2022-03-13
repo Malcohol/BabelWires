@@ -5,7 +5,7 @@
 
 #include "BabelWiresLib/Features/featureMixins.hpp"
 
-libTestUtils::TestProcessor::TestProcessor() {
+libTestUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& context) {
     m_inputFeature = std::make_unique<TestRecordFeature>();
     m_outputFeature = std::make_unique<TestRecordFeature>();
 }
@@ -20,11 +20,11 @@ void libTestUtils::TestProcessor::process(babelwires::UserLogger& userLogger) {
     }
 }
 
-babelwires::RecordFeature* libTestUtils::TestProcessor::getInputFeature() {
+babelwires::RootFeature* libTestUtils::TestProcessor::getInputFeature() {
     return m_inputFeature.get();
 }
 
-babelwires::RecordFeature* libTestUtils::TestProcessor::getOutputFeature() {
+babelwires::RootFeature* libTestUtils::TestProcessor::getOutputFeature() {
     return m_outputFeature.get();
 }
 
@@ -38,6 +38,6 @@ babelwires::LongIdentifier libTestUtils::TestProcessorFactory::getThisIdentifier
     return "testProcessor";
 }
 
-std::unique_ptr<babelwires::Processor> libTestUtils::TestProcessorFactory::createNewProcessor() const {
-    return std::make_unique<TestProcessor>();
+std::unique_ptr<babelwires::Processor> libTestUtils::TestProcessorFactory::createNewProcessor(const babelwires::ProjectContext& projectContext) const {
+    return std::make_unique<TestProcessor>(projectContext);
 }

@@ -37,7 +37,7 @@ TEST(ProjectTest, setAndExtractProjectData) {
 
     babelwires::ProjectData extractedData = context.m_project.extractProjectData();
 
-    libTestUtils::TestProjectData::testProjectData(extractedData);
+    libTestUtils::TestProjectData::testProjectData(context.m_projectContext, extractedData);
 }
 
 TEST(ProjectTest, projectId) {

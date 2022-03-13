@@ -4,12 +4,12 @@
 #include "Tests/TestUtils/testLog.hpp"
 
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "Common/Identifiers/registeredIdentifier.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"
 
+#include "Common/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "Common/Log/unifiedLog.hpp"
 #include "Common/Serialization/XML/xmlDeserializer.hpp"
 #include "Common/Serialization/XML/xmlSerializer.hpp"

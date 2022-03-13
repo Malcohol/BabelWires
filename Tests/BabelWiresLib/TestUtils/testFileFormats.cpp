@@ -19,8 +19,8 @@ namespace {
     const char s_product[] = "Test Product";
 } // namespace
 
-libTestUtils::TestFileFeature::TestFileFeature()
-    : babelwires::FileFeature(s_fileFormatId)
+libTestUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext& context)
+    : babelwires::FileFeature(context, s_fileFormatId)
     , m_intChildId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
@@ -76,10 +76,10 @@ char libTestUtils::TestSourceFileFormat::getFileData(const std::filesystem::path
 }
 
 std::unique_ptr<babelwires::FileFeature>
-libTestUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource,
+libTestUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource, const babelwires::ProjectContext& projectContext, 
                                                  babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
-    auto newFeature = std::make_unique<TestFileFeature>();
+    auto newFeature = std::make_unique<TestFileFeature>(projectContext);
     newFeature->m_intChildFeature->set(value);
     return newFeature;
 }
@@ -107,8 +107,8 @@ std::string libTestUtils::TestTargetFileFormat::getProductName() const {
     return s_product;
 }
 
-std::unique_ptr<babelwires::FileFeature> libTestUtils::TestTargetFileFormat::createNewFeature() const {
-    return std::make_unique<TestFileFeature>();
+std::unique_ptr<babelwires::FileFeature> libTestUtils::TestTargetFileFormat::createNewFeature(const babelwires::ProjectContext& projectContext) const {
+    return std::make_unique<TestFileFeature>(projectContext);
 }
 
 void libTestUtils::TestTargetFileFormat::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,

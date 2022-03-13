@@ -16,7 +16,7 @@ TEST(ProjectSerializationTest, saveLoadStringSameContext) {
     libTestUtils::TestProjectContext context;
 
     libTestUtils::TestProjectData testProjectData;
-    testProjectData.resolvePathsInCurrentContext();
+    testProjectData.resolvePathsInCurrentContext(context.m_projectContext);
 
     // TODO: FilePaths not properly handled here.
     const std::string serializedContents = babelwires::ProjectSerialization::saveToString(std::filesystem::current_path(), std::move(testProjectData));
@@ -25,7 +25,7 @@ TEST(ProjectSerializationTest, saveLoadStringSameContext) {
         babelwires::ProjectSerialization::loadFromString(serializedContents, context.m_projectContext, std::filesystem::current_path(), context.m_log);
 
     libTestUtils::TestRecordFeature testRecord;
-    libTestUtils::TestFileFeature testFileFeature;
+    libTestUtils::TestFileFeature testFileFeature(context.m_projectContext);
 
     libTestUtils::TestProjectData::testProjectDataAndDisciminators(
         loadedData, testRecord.m_intId.getDiscriminator(), testRecord.m_arrayId.getDiscriminator(),
@@ -40,7 +40,7 @@ TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
         libTestUtils::TestProjectContext context;
 
         libTestUtils::TestProjectData testProjectData;
-        testProjectData.resolvePathsInCurrentContext();
+        testProjectData.resolvePathsInCurrentContext(context.m_projectContext);
 
         serializedContents = babelwires::ProjectSerialization::saveToString(std::filesystem::current_path(), std::move(testProjectData));
     }
@@ -53,7 +53,7 @@ TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
             serializedContents, context.m_projectContext, std::filesystem::current_path(), context.m_log);
 
         libTestUtils::TestRecordFeature testRecord;
-        libTestUtils::TestFileFeature testFileFeature;
+        libTestUtils::TestFileFeature testFileFeature(context.m_projectContext);
 
         libTestUtils::TestProjectData::testProjectDataAndDisciminators(
             loadedData, testRecord.m_intId.getDiscriminator(), testRecord.m_arrayId.getDiscriminator(),
@@ -69,7 +69,7 @@ TEST(ProjectSerializationTest, saveLoadFile) {
         libTestUtils::TestProjectContext context;
 
         libTestUtils::TestProjectData testProjectData;
-        testProjectData.resolvePathsInCurrentContext();
+        testProjectData.resolvePathsInCurrentContext(context.m_projectContext);
 
         babelwires::ProjectSerialization::saveToFile(tempFile, std::move(testProjectData));
     }
@@ -81,6 +81,6 @@ TEST(ProjectSerializationTest, saveLoadFile) {
         babelwires::ProjectData loadedData =
             babelwires::ProjectSerialization::loadFromFile(tempFile, context.m_projectContext, context.m_log);
 
-        libTestUtils::TestProjectData::testProjectData(loadedData);
+        libTestUtils::TestProjectData::testProjectData(context.m_projectContext, loadedData);
     }
 }

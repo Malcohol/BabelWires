@@ -3,9 +3,10 @@
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"

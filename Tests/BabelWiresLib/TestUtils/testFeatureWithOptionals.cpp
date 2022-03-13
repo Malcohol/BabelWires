@@ -16,8 +16,9 @@ const babelwires::FeaturePath libTestUtils::TestFeatureWithOptionals::s_pathToOp
 const babelwires::FeaturePath libTestUtils::TestFeatureWithOptionals::s_pathToOp1_Array_1 = babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestFeatureWithOptionals::s_subrecordIdInitializer) + "/" + libTestUtils::TestFeatureWithOptionals::s_op1IdInitializer + "/" + libTestUtils::TestRecordFeature::s_arrayIdInitializer + "/1");
 const babelwires::FeaturePath libTestUtils::TestFeatureWithOptionals::s_pathToOp1_Int2 = babelwires::FeaturePath::deserializeFromString(std::string(libTestUtils::TestFeatureWithOptionals::s_subrecordIdInitializer) + "/" + libTestUtils::TestFeatureWithOptionals::s_op1IdInitializer + "/" + libTestUtils::TestRecordFeature::s_recordIdInitializer + "/" + libTestUtils::TestRecordFeature::s_int2IdInitializer);
 
-libTestUtils::TestFeatureWithOptionals::TestFeatureWithOptionals()
-    : m_subrecordId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+libTestUtils::TestFeatureWithOptionals::TestFeatureWithOptionals(const babelwires::ProjectContext& context)
+    : RootFeature(context)
+    , m_subrecordId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_subrecordIdInitializer, s_subrecordFieldName, s_subrecordUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_ff0Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_ff0IdInitializer, s_ff0FieldName, s_ff0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
@@ -78,21 +79,21 @@ void libTestUtils::TestFeatureElementWithOptionalsData::serializeContents(babelw
 
 void libTestUtils::TestFeatureElementWithOptionalsData::deserializeContents(babelwires::Deserializer& deserializer) {}
 
-libTestUtils::TestFeatureElementWithOptionals::TestFeatureElementWithOptionals()
-    : TestFeatureElementWithOptionals(TestFeatureElementWithOptionalsData(), 10) {}
+libTestUtils::TestFeatureElementWithOptionals::TestFeatureElementWithOptionals(const babelwires::ProjectContext& context)
+    : TestFeatureElementWithOptionals(context, TestFeatureElementWithOptionalsData(), 10) {}
 
-libTestUtils::TestFeatureElementWithOptionals::TestFeatureElementWithOptionals(const TestFeatureElementWithOptionalsData& data, babelwires::ElementId newId)
+libTestUtils::TestFeatureElementWithOptionals::TestFeatureElementWithOptionals(const babelwires::ProjectContext& context, const TestFeatureElementWithOptionalsData& data, babelwires::ElementId newId)
     : FeatureElement(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
-    m_feature = std::make_unique<TestFeatureWithOptionals>();
+    m_feature = std::make_unique<TestFeatureWithOptionals>(context);
 }
 
 void libTestUtils::TestFeatureElementWithOptionals::doProcess(babelwires::UserLogger&) {}
 
-babelwires::RecordFeature* libTestUtils::TestFeatureElementWithOptionals::getInputFeature() {
+babelwires::RootFeature* libTestUtils::TestFeatureElementWithOptionals::getInputFeature() {
     return m_feature.get();
 }
 
-babelwires::RecordFeature* libTestUtils::TestFeatureElementWithOptionals::getOutputFeature() {
+babelwires::RootFeature* libTestUtils::TestFeatureElementWithOptionals::getOutputFeature() {
     return m_feature.get();
 }

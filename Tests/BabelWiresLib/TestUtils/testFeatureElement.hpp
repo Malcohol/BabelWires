@@ -1,14 +1,14 @@
 #pragma once
 
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
 namespace libTestUtils {
-    struct TestFailedFeature : babelwires::RecordFeature {
-        TestFailedFeature();
+    struct TestFailedFeature : babelwires::RootFeature {
+        TestFailedFeature(const babelwires::ProjectContext& context);
     };
 
     ///
@@ -39,18 +39,20 @@ namespace libTestUtils {
     };
 
     struct TestFeatureElement : babelwires::FeatureElement {
-        TestFeatureElement();
-        TestFeatureElement(const TestFeatureElementData& data, babelwires::ElementId newId);
+        TestFeatureElement(const babelwires::ProjectContext& context);
+        TestFeatureElement(const babelwires::ProjectContext& context, const TestFeatureElementData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;
 
-        babelwires::RecordFeature* getInputFeature() override;
-        babelwires::RecordFeature* getOutputFeature() override;
+        babelwires::RootFeature* getInputFeature() override;
+        babelwires::RootFeature* getOutputFeature() override;
         using babelwires::FeatureElement::getInputFeature;
         using babelwires::FeatureElement::getOutputFeature;
 
         void simulateFailure();
         void simulateRecovery();
 
-        std::unique_ptr<babelwires::RecordFeature> m_feature;
+        babelwires::RootFeature* m_feature;
+        std::unique_ptr<babelwires::RootFeature> m_actualFeature;
+        std::unique_ptr<TestFailedFeature> m_failedFeature;
     };
 } // namespace libTestUtils

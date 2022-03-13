@@ -11,6 +11,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 
 libTestUtils::TestProjectData::TestProjectData()
     : m_sourceFilePath(std::string("testSourceFile") + libTestUtils::TestSourceFileFormat::getFileExtension())
@@ -126,9 +127,9 @@ void libTestUtils::TestProjectData::testProjectDataAndDisciminators(
     EXPECT_EQ(sortedElements[2]->m_expandedPaths.size(), 0);
 }
 
-void libTestUtils::TestProjectData::testProjectData(const babelwires::ProjectData& projectData) {
+void libTestUtils::TestProjectData::testProjectData(const babelwires::ProjectContext& context, const babelwires::ProjectData& projectData) {
     libTestUtils::TestRecordFeature testRecord;
-    libTestUtils::TestFileFeature testFileFeature;
+    libTestUtils::TestFileFeature testFileFeature(context);
 
     libTestUtils::TestProjectData::testProjectDataAndDisciminators(
         projectData, testRecord.m_intId.getDiscriminator(), testRecord.m_arrayId.getDiscriminator(),
@@ -136,9 +137,9 @@ void libTestUtils::TestProjectData::testProjectData(const babelwires::ProjectDat
         testFileFeature.m_intChildId.getDiscriminator());
 }
 
-void libTestUtils::TestProjectData::resolvePathsInCurrentContext() {
+void libTestUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::ProjectContext& context) {
     libTestUtils::TestRecordFeature testRecord;
-    libTestUtils::TestFileFeature testFileFeature;
+    libTestUtils::TestFileFeature testFileFeature(context);
 
     // These have side-effects on the mutable field discriminators in the paths.
     auto modData0 = m_elements[0]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();

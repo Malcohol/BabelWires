@@ -13,7 +13,7 @@
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Commands/changeFileCommand.hpp"
 #include "BabelWiresLib/Commands/commandManager.hpp"

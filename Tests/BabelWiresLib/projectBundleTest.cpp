@@ -11,7 +11,6 @@
 #include "Tests/BabelWiresLib/TestUtils/testProjectData.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
-#include "Tests/TestUtils/testLog.hpp"
 #include "Tests/TestUtils/tempFilePath.hpp"
 
 TEST(ProjectBundleTest, fieldIdsInPaths) {
@@ -19,7 +18,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
     babelwires::ProjectBundle bundle;
 
     {
-        testUtils::TestLog log;
+        libTestUtils::TestProjectContext context;
         babelwires::IdentifierRegistryScope identifierRegistry;
 
         // Ensure some of the test record's discriminators are not default.
@@ -51,7 +50,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         // Confirm that not all the discriminators in a test record are default.
         {
             libTestUtils::TestRecordFeature testRecord;
-            libTestUtils::TestFileFeature testFileFeature;
+            libTestUtils::TestFileFeature testFileFeature(context.m_projectContext);
             EXPECT_EQ(babelwires::FeaturePath(testRecord.m_intFeature).getLastStep().asField()->getDiscriminator(), 4);
             EXPECT_EQ(babelwires::FeaturePath(testRecord.m_arrayFeature).getLastStep().asField()->getDiscriminator(),
                       3);
@@ -64,7 +63,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
             // Sanity check that the ids are unaffected by the registration re-running.
             libTestUtils::TestRecordFeature testRecord2;
-            libTestUtils::TestFileFeature testFileFeature2;
+            libTestUtils::TestFileFeature testFileFeature2(context.m_projectContext);
             EXPECT_EQ(babelwires::FeaturePath(testRecord2.m_intFeature).getLastStep().asField()->getDiscriminator(), 4);
             EXPECT_EQ(babelwires::FeaturePath(testRecord2.m_arrayFeature).getLastStep().asField()->getDiscriminator(),
                       3);
@@ -83,7 +82,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         {
             // First confirm that the paths in the project data are as expected and have not yet been resolved
             libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 0, 0, 0, 0, 0);
-            projectData.resolvePathsInCurrentContext();
+            projectData.resolvePathsInCurrentContext(context.m_projectContext);
             libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 4, 3, 2, 1, 2);
         }
 
@@ -153,7 +152,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
     {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext projectContext;
+        libTestUtils::TestProjectContext context;
 
         // Slightly different arrangement and UUIDs to the above (not that it should matter)
         babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_intIdInitializer,
@@ -182,7 +181,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
         babelwires::ProjectData projectData =
-            std::move(bundle).resolveAgainstCurrentContext(projectContext.m_projectContext, std::filesystem::current_path(), projectContext.m_log);
+            std::move(bundle).resolveAgainstCurrentContext(context.m_projectContext, std::filesystem::current_path(), context.m_log);
 
         libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 2, 2, 4, 1, 2);
 

@@ -1,17 +1,18 @@
 #include <gtest/gtest.h>
 
-#include "Common/Identifiers/registeredIdentifier.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
 #include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
+
+#include "Common/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testModifier.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
-
-#include "Tests/TestUtils/testLog.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
 
 namespace {
     std::unique_ptr<libTestUtils::LocalTestModifier> createModifier(babelwires::FeaturePath path, int x,
@@ -220,7 +221,7 @@ namespace {
         }
     }
 
-    void testModifierBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
+    void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
                                libTestUtils::TestRecordFeature* inputFeature,
                                libTestUtils::TestRecordFeature* outputFeature) {
         ASSERT_TRUE(inputFeature);
@@ -270,7 +271,7 @@ namespace {
         }
         // Add a failing modifier to the array
         {
-            libTestUtils::TestFeatureElement owner;
+            libTestUtils::TestFeatureElement owner(context);
             auto modifier = createModifier(libTestUtils::TestRecordFeature::s_pathToArray_0, 2000, &owner);
             modifier->simulateFailure();
             editTree.addModifier(std::move(modifier));
@@ -341,7 +342,7 @@ namespace {
 
 TEST(ContentsCacheTest, inputFeatureOnly) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    libTestUtils::TestProjectContext context;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
@@ -350,7 +351,7 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
     inputFeature.setToDefault();
 
     testCommonBehaviour(cache, editTree, &inputFeature, nullptr);
-    testModifierBehaviour(cache, editTree, &inputFeature, nullptr);
+    testModifierBehaviour(context.m_projectContext, cache, editTree, &inputFeature, nullptr);
 }
 
 TEST(ContentsCacheTest, outputFeatureOnly) {
@@ -368,7 +369,7 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
 
 TEST(ContentsCacheTest, inputAndOutputFeature) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    libTestUtils::TestProjectContext context;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
@@ -379,7 +380,7 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
     outputFeature.setToDefault();
 
     testCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
-    testModifierBehaviour(cache, editTree, &inputFeature, &outputFeature);
+    testModifierBehaviour(context.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
 }
 
 TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
@@ -461,7 +462,7 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
 
 TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    libTestUtils::TestProjectContext context;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
@@ -476,7 +477,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
 
     // Adding a hidden failed modifier whose parent is logically the root requires us to present
     // a root entry to the user, so the UI functionality for failed modifiers has somewhere to live.
-    libTestUtils::TestFeatureElement owner;
+    libTestUtils::TestFeatureElement owner(context.m_projectContext);
     auto modifierPtr = createModifier(babelwires::FeaturePath::deserializeFromString("flarg"), 2000, &owner);
     modifierPtr->simulateFailure();
     auto modifier = modifierPtr.get();
@@ -594,7 +595,7 @@ namespace {
         }
     }
 
-    void testModifierBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
+    void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
                                libTestUtils::TestFileFeature* inputFeature,
                                libTestUtils::TestFileFeature* outputFeature) {
         ASSERT_TRUE(inputFeature);
@@ -602,7 +603,7 @@ namespace {
         // Adding a hidden failed modifier whose parent is logically the root.
         // In this case, there's already an entry for the root, so no new
         // artificial entry need be added.
-        libTestUtils::TestFeatureElement owner;
+        libTestUtils::TestFeatureElement owner(context);
         auto modifierPtr = createModifier(babelwires::FeaturePath::deserializeFromString("flarg"), 2000, &owner);
         modifierPtr->simulateFailure();
         auto modifier = modifierPtr.get();
@@ -633,27 +634,27 @@ namespace {
 
 TEST(ContentsCacheTest, inputFileFeatureOnly) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    libTestUtils::TestProjectContext context;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestFileFeature inputFeature;
+    libTestUtils::TestFileFeature inputFeature(context.m_projectContext);
     inputFeature.setToDefault();
 
     cache.setFeatures(&inputFeature, nullptr);
     testFileCommonBehaviour(cache, editTree, &inputFeature, nullptr);
-    testModifierBehaviour(cache, editTree, &inputFeature, nullptr);
+    testModifierBehaviour(context.m_projectContext, cache, editTree, &inputFeature, nullptr);
 }
 
 TEST(ContentsCacheTest, outputFileFeatureOnly) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    libTestUtils::TestProjectContext context;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestFileFeature outputFeature;
+    libTestUtils::TestFileFeature outputFeature(context.m_projectContext);
     outputFeature.setToDefault();
 
     cache.setFeatures(nullptr, &outputFeature);
@@ -662,17 +663,17 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
 
 TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    libTestUtils::TestProjectContext context;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestFileFeature inputFeature;
-    libTestUtils::TestFileFeature outputFeature;
+    libTestUtils::TestFileFeature inputFeature(context.m_projectContext);
+    libTestUtils::TestFileFeature outputFeature(context.m_projectContext);
     inputFeature.setToDefault();
     outputFeature.setToDefault();
 
     cache.setFeatures(&inputFeature, &outputFeature);
     testFileCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
-    testModifierBehaviour(cache, editTree, &inputFeature, &outputFeature);
+    testModifierBehaviour(context.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
 }
