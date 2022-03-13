@@ -36,6 +36,7 @@ SET( LIB_TESTS_SRCS
     removeSimpleModifierCommandTest.cpp
     removeModifierCommandTest.cpp
     resizeElementCommandTest.cpp
+    rootFeatureTest.cpp
     setArraySizeCommandTest.cpp
     setExpandedCommandTest.cpp
     sourceFileElementTest.cpp

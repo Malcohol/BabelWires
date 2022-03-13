@@ -61,10 +61,6 @@ namespace babelwires {
         /// This is not required to distinguish the contents of features of different types.
         std::size_t getHash() const;
 
-        /// Get a reference to the ProjectContext from the RootFeature at the root of the feature
-        /// hierarchy. Asserts if there is no root.
-        const ProjectContext& getProjectContext() const;
-
       protected:
         /// Set the isChanged flag and that of all parents.
         void setChanged(Changes changes);

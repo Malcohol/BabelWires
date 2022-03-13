@@ -18,8 +18,12 @@ namespace babelwires {
       public:
         RootFeature(const ProjectContext& projectContext);
 
-        /// Get the project context carried by this object.
-        const ProjectContext& getProjectContextAtRoot() const;
+        /// Return the RootFeature if feature has a RootFeature as its root.
+        static const RootFeature* tryGetRootFeatureAt(const Feature& feature);
+
+        /// Get a reference to the ProjectContext from the RootFeature at the root of the feature
+        /// hierarchy. Asserts if there is no root.
+        static const ProjectContext& getProjectContextAt(const Feature& feature);
 
       private:
         const ProjectContext& m_projectContext;

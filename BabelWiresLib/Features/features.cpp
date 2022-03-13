@@ -59,18 +59,6 @@ std::size_t babelwires::Feature::getHash() const {
     return doGetHash();
 }
 
-const babelwires::ProjectContext& babelwires::Feature::getProjectContext() const {
-    const Feature* current;
-    const Feature* owner = this;
-    do {
-        current = owner;
-        owner = current->getOwner();
-    } while (owner);
-    const RootFeature *const rootFeature = current->as<RootFeature>();
-    assert(rootFeature && "You cannot only call getProjectContext in a feature hierarchy with a RootFeature at its root");
-    return rootFeature->getProjectContextAtRoot();
-}
-
 std::string babelwires::ValueFeature::getValueType() const {
     // Future proofing, while I consider this approach.
     assert((doGetValueType().size() <= 4) && "The value type must be 4 characters or shorter");
