@@ -21,28 +21,28 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     libTestUtils::TestFeatureElementData elementData;
     {
         babelwires::ArraySizeModifierData arrayInitialization;
-        arrayInitialization.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray;
+        arrayInitialization.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray;
         arrayInitialization.m_size = 5;
         elementData.m_modifiers.emplace_back(arrayInitialization.clone());
     }
     {
         // This is in the default size of the array, so should be unaffected.
         babelwires::IntValueAssignmentData intAssignment;
-        intAssignment.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
+        intAssignment.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
         intAssignment.m_value = 12;
         elementData.m_modifiers.emplace_back(intAssignment.clone());
     }
     {
         // Failed.
         babelwires::ConnectionModifierData inputConnection;
-        inputConnection.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_3;
-        inputConnection.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        inputConnection.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_3;
+        inputConnection.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         inputConnection.m_sourceId = 57;
         elementData.m_modifiers.emplace_back(inputConnection.clone());
     }
     {
         babelwires::IntValueAssignmentData intAssignment2;
-        intAssignment2.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_4;
+        intAssignment2.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_4;
         intAssignment2.m_value = 18;
         elementData.m_modifiers.emplace_back(intAssignment2.clone());
     }
@@ -55,17 +55,17 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     };
     const auto checkModifiers = [&context, element](bool isCommandExecuted) {
         const babelwires::Modifier* arrayInitialization =
-            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray);
+            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray);
         const babelwires::Modifier* intAssignment =
-            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_1);
+            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1);
         const babelwires::Modifier* inputConnection =
-            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_3);
+            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_3);
         const babelwires::Modifier* intAssignment2 =
-            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_4);
+            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_4);
         int numModifiersAtElement = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
             ++numModifiersAtElement;
@@ -90,7 +90,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     checkModifiers(false);
 
     babelwires::RemoveModifierCommand command("Test command", elementId,
-                                              libTestUtils::TestRecordFeature::s_pathToArray);
+                                              libTestUtils::TestRootFeature::s_pathToArray);
 
     EXPECT_EQ(command.getName(), "Test command");
 

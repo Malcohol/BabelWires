@@ -18,9 +18,9 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
     babelwires::ProjectBundle bundle;
 
     {
-        libTestUtils::TestProjectContext context;
         babelwires::IdentifierRegistryScope identifierRegistry;
-
+        libTestUtils::TestProjectContext context;
+        
         // Ensure some of the test record's discriminators are not default.
         babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_intIdInitializer,
                                                              "test int", "41000000-1111-2222-3333-800000000001",

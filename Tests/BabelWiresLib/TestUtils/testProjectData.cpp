@@ -26,7 +26,7 @@ libTestUtils::TestProjectData::TestProjectData()
             babelwires::ConnectionModifierData modData;
             modData.m_pathToFeature = libTestUtils::TestFileFeature::s_pathToIntChild;
             modData.m_sourceId = c_processorId;
-            modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToArray_3;
+            modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToArray_3;
             data.m_modifiers.emplace_back(modData.clone());
         }
         m_elements.emplace_back(data.clone());
@@ -37,18 +37,18 @@ libTestUtils::TestProjectData::TestProjectData()
         data.m_id = c_processorId;
         {
             babelwires::ConnectionModifierData modData;
-            modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt;
+            modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt;
             modData.m_sourceId = c_sourceElementId;
             modData.m_pathToSourceFeature = libTestUtils::TestFileFeature::s_pathToIntChild;
             data.m_modifiers.emplace_back(modData.clone());
         }
         {
             babelwires::IntValueAssignmentData modData;
-            modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+            modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
             modData.m_value = 44;
             data.m_modifiers.emplace_back(modData.clone());
         }
-        data.m_expandedPaths.emplace_back(libTestUtils::TestRecordFeature::s_pathToArray);
+        data.m_expandedPaths.emplace_back(libTestUtils::TestRootFeature::s_pathToArray);
         m_elements.emplace_back(data.clone());
     }
     {

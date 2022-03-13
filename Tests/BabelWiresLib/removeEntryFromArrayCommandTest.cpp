@@ -23,21 +23,21 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     const babelwires::ElementId targetId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     {
         babelwires::ArraySizeModifierData arrayInitialization;
-        arrayInitialization.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray;
+        arrayInitialization.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray;
         arrayInitialization.m_size = 5;
         context.m_project.addModifier(elementId, arrayInitialization);
     }
     {
         babelwires::ConnectionModifierData inputConnection;
-        inputConnection.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-        inputConnection.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        inputConnection.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
+        inputConnection.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         inputConnection.m_sourceId = sourceId;
         context.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
-        outputConnection.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
+        outputConnection.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
+        outputConnection.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
         outputConnection.m_sourceId = elementId;
         context.m_project.addModifier(targetId, outputConnection);
     }
@@ -51,14 +51,14 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     };
 
     const auto checkModifiers = [&context, element, targetElement](bool isCommandExecuted) {
         const babelwires::Modifier* inputConnection =
-            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_1);
+            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1);
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(libTestUtils::TestRecordFeature::s_pathToInt2);
+            targetElement->findModifier(libTestUtils::TestRootFeature::s_pathToInt2);
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
@@ -85,7 +85,7 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 5);
 
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
-                                                    libTestUtils::TestRecordFeature::s_pathToArray, 1, 1);
+                                                    libTestUtils::TestRootFeature::s_pathToArray, 1, 1);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -146,12 +146,12 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    const auto* inputFeature = element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+    const auto* inputFeature = element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     ASSERT_NE(inputFeature, nullptr);
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
 
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
-                                                    libTestUtils::TestRecordFeature::s_pathToArray, 3, 1);
+                                                    libTestUtils::TestRootFeature::s_pathToArray, 3, 1);
 
     EXPECT_FALSE(command.initializeAndExecute(context.m_project));
 }

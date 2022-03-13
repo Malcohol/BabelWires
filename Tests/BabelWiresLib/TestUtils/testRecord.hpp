@@ -53,17 +53,5 @@ namespace libTestUtils {
         // Contained ints have an imposed value limit.
         // This is used to test failed applications.
         int m_intValueLimit;
-
-        // For convenience
-        static const babelwires::FeaturePath s_pathToInt;
-        static const babelwires::FeaturePath s_pathToArray;
-        static const babelwires::FeaturePath s_pathToArray_0;
-        static const babelwires::FeaturePath s_pathToArray_1;
-        static const babelwires::FeaturePath s_pathToArray_2;
-        static const babelwires::FeaturePath s_pathToArray_3;
-        static const babelwires::FeaturePath s_pathToArray_4;
-        static const babelwires::FeaturePath s_pathToRecord;
-        static const babelwires::FeaturePath s_pathToInt2;
-        static const babelwires::FeaturePath s_pathToExtraInt;
     };
 } // namespace libTestUtils

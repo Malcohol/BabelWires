@@ -9,8 +9,6 @@
 #include "Common/Identifiers/registeredIdentifier.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
-
 namespace libTestUtils {
     /// A record with a small feature hierarchy.
     struct TestRootFeature : babelwires::RootFeature {
@@ -37,7 +35,6 @@ namespace libTestUtils {
         static constexpr char s_int2Uuid[] = "00000000-1111-2222-3333-800000000004";
         static constexpr char s_extraIntUuid[] = "00000000-1111-2222-3333-800000000005";
 
-        TestRecordFeature m_recordFeature;
         babelwires::Identifier m_intId;
         babelwires::Identifier m_arrayId;
         babelwires::Identifier m_recordId;

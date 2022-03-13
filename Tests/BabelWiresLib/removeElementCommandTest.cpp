@@ -107,8 +107,8 @@ TEST(RemoveElementCommandTest, subsumption) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
-        modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = element1Id;
 
         context.m_project.addModifier(element2Id, modData);
@@ -137,7 +137,7 @@ TEST(RemoveElementCommandTest, subsumption) {
     {
         const babelwires::Modifier* modifier = context.m_project.getFeatureElement(element2Id)
                                                    ->getEdits()
-                                                   .findModifier(libTestUtils::TestRecordFeature::s_pathToInt2);
+                                                   .findModifier(libTestUtils::TestRootFeature::s_pathToInt2);
         EXPECT_NE(modifier, nullptr);
         EXPECT_FALSE(modifier->isFailed());
     }

@@ -19,14 +19,14 @@ TEST(AddModifierCommandTest, executeAndUndo) {
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
     EXPECT_NE(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_EQ(element->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2), nullptr);
+    EXPECT_EQ(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
     babelwires::IntValueAssignmentData modData;
-    modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+    modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
     modData.m_value = 86;
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
@@ -39,15 +39,15 @@ TEST(AddModifierCommandTest, executeAndUndo) {
 
     command.execute(context.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2), nullptr);
+    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
     command.undo(context.m_project);
     EXPECT_NE(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_EQ(element->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2), nullptr);
+    EXPECT_EQ(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
     command.execute(context.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2), nullptr);
+    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 }
 
 TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
@@ -57,7 +57,7 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
     libTestUtils::TestFeatureElementData elementData;
     {
         babelwires::IntValueAssignmentData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_value = 77;
         elementData.m_modifiers.emplace_back(modData.clone());
     }
@@ -67,14 +67,14 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 77);
-    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2), nullptr);
+    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
     babelwires::IntValueAssignmentData modData;
-    modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+    modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
     modData.m_value = 86;
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
@@ -87,15 +87,15 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
 
     command.execute(context.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2), nullptr);
+    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
     command.undo(context.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 77);
-    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2), nullptr);
+    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
     command.execute(context.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2), nullptr);
+    EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 }
 
 TEST(AddModifierCommandTest, failSafelyNoElement) {

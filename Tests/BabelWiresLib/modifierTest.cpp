@@ -246,7 +246,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
     libTestUtils::TestProjectContext projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = libTestUtils::TestRecordFeature::s_pathToInt;
+    const babelwires::FeaturePath sourcePath = libTestUtils::TestRootFeature::s_pathToInt;
     babelwires::IntValueAssignmentData sourceData;
     sourceData.m_pathToFeature = sourcePath;
     sourceData.m_value = 100;
@@ -346,7 +346,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
     libTestUtils::TestProjectContext projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = libTestUtils::TestRecordFeature::s_pathToInt;
+    const babelwires::FeaturePath sourcePath = libTestUtils::TestRootFeature::s_pathToInt;
     babelwires::IntValueAssignmentData sourceData;
     sourceData.m_pathToFeature = sourcePath;
     sourceData.m_value = 100;
@@ -386,7 +386,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     libTestUtils::TestProjectContext projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = libTestUtils::TestRecordFeature::s_pathToInt;
+    const babelwires::FeaturePath sourcePath = libTestUtils::TestRootFeature::s_pathToInt;
     babelwires::IntValueAssignmentData sourceData;
     sourceData.m_pathToFeature = sourcePath;
     sourceData.m_value = 100;

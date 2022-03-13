@@ -21,22 +21,22 @@ namespace {
         {
             // Will fail.
             babelwires::IntValueAssignmentData intAssignment;
-            intAssignment.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_4;
+            intAssignment.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_4;
             intAssignment.m_value = 12;
             elementData.m_modifiers.emplace_back(intAssignment.clone());
         }
         {
             // OK
             babelwires::ArraySizeModifierData arrayInitialization;
-            arrayInitialization.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray;
+            arrayInitialization.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray;
             arrayInitialization.m_size = 3;
             elementData.m_modifiers.emplace_back(arrayInitialization.clone());
         }
         {
             // Will fail.
             babelwires::ConnectionModifierData inputConnection;
-            inputConnection.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
-            inputConnection.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+            inputConnection.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
+            inputConnection.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
             inputConnection.m_sourceId = 57;
             elementData.m_modifiers.emplace_back(inputConnection.clone());
         }
@@ -50,11 +50,11 @@ namespace {
 
         const auto checkModifiers = [&context, element, isWholeRecord](bool isCommandExecuted) {
             const babelwires::Modifier* intAssignment =
-                element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_4);
+                element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_4);
             const babelwires::Modifier* arrayInitialization =
-                element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray);
+                element->findModifier(libTestUtils::TestRootFeature::s_pathToArray);
             const babelwires::Modifier* inputConnection =
-                element->findModifier(libTestUtils::TestRecordFeature::s_pathToInt2);
+                element->findModifier(libTestUtils::TestRootFeature::s_pathToInt2);
             int numModifiersAtElement = 0;
             int numModifiersAtTarget = 0;
             for (const auto* m : element->getEdits().modifierRange()) {
@@ -84,7 +84,7 @@ namespace {
         checkModifiers(false);
 
         const babelwires::FeaturePath commandPath =
-            isWholeRecord ? babelwires::FeaturePath() : libTestUtils::TestRecordFeature::s_pathToArray;
+            isWholeRecord ? babelwires::FeaturePath() : libTestUtils::TestRootFeature::s_pathToArray;
         babelwires::RemoveFailedModifiersCommand command("Test command", elementId, commandPath);
 
         EXPECT_EQ(command.getName(), "Test command");

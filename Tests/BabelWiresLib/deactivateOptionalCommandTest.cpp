@@ -44,13 +44,13 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     {
         babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_pathToFeature = libTestUtils::TestFeatureWithOptionals::s_pathToOp1_Array_1;
-        inputConnection.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        inputConnection.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         inputConnection.m_sourceId = sourceId;
         context.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        outputConnection.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         outputConnection.m_pathToSourceFeature = libTestUtils::TestFeatureWithOptionals::s_pathToOp1_Int2;
         outputConnection.m_sourceId = elementId;
         context.m_project.addModifier(targetId, outputConnection);
@@ -63,7 +63,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
         const babelwires::Modifier* inputConnection =
             element->findModifier(libTestUtils::TestFeatureWithOptionals::s_pathToOp1_Array_1);
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(libTestUtils::TestRecordFeature::s_pathToInt2);
+            targetElement->findModifier(libTestUtils::TestRootFeature::s_pathToInt2);
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {

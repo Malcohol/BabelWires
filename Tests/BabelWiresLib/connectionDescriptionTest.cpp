@@ -67,8 +67,8 @@ TEST(ConnectionDescriptionTest, getCommands) {
     const babelwires::ElementId targetId = 14;
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-    connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+    connectionData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
+    connectionData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
     connectionData.m_sourceId = sourceId;
 
     babelwires::ConnectionDescription connection(14, connectionData);
@@ -95,7 +95,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
 
     const auto checkModifier = [&context, targetElement, &connectionData](bool isAdded) {
         const babelwires::Modifier* modifier =
-            targetElement->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_1);
+            targetElement->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1);
         if (isAdded) {
             ASSERT_NE(modifier, nullptr);
             const babelwires::ConnectionModifier* connection =

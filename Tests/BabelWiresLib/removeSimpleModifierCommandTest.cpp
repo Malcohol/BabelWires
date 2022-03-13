@@ -17,7 +17,7 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
     libTestUtils::TestFeatureElementData elementData;
     {
         babelwires::IntValueAssignmentData intAssignment;
-        intAssignment.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
+        intAssignment.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
         intAssignment.m_value = 12;
         elementData.m_modifiers.emplace_back(intAssignment.clone());
     }
@@ -31,7 +31,7 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
 
     const auto checkModifiers = [&context, element](bool isCommandExecuted) {
         const babelwires::Modifier* intAssignment =
-            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_1);
+            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1);
         int numModifiersAtElement = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
             ++numModifiersAtElement;
@@ -48,7 +48,7 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
     checkModifiers(false);
 
     babelwires::RemoveSimpleModifierCommand command("Test command", elementId,
-                                                    libTestUtils::TestRecordFeature::s_pathToArray_1);
+                                                    libTestUtils::TestRootFeature::s_pathToArray_1);
 
     EXPECT_EQ(command.getName(), "Test command");
 

@@ -18,13 +18,13 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     const libTestUtils::TestFeatureElement* element =
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
-    const libTestUtils::TestRecordFeature* inputFeature =
-        element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+    const libTestUtils::TestRootFeature* inputFeature =
+        element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     ASSERT_NE(inputFeature, nullptr);
 
     const auto checkModifiers = [element](bool isCommandExecuted) {
         const babelwires::Modifier* arrayModifier =
-            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray);
+            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray);
         if (isCommandExecuted) {
             EXPECT_NE(arrayModifier, nullptr);
         } else {
@@ -36,7 +36,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     checkModifiers(false);
 
     babelwires::AddEntryToArrayCommand command("Test command", elementId,
-                                               libTestUtils::TestRecordFeature::s_pathToArray, 1);
+                                               libTestUtils::TestRootFeature::s_pathToArray, 1);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -71,7 +71,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
 
@@ -79,7 +79,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
 
     // 2 is not a current entry, and therefore means "at end".
     babelwires::AddEntryToArrayCommand command("Test command", elementId,
-                                               libTestUtils::TestRecordFeature::s_pathToArray, 2);
+                                               libTestUtils::TestRootFeature::s_pathToArray, 2);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -112,17 +112,17 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
     ASSERT_NE(element, nullptr);
     {
         babelwires::ArraySizeModifierData arrayInitialization;
-        arrayInitialization.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray;
+        arrayInitialization.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray;
         arrayInitialization.m_size = 3;
         context.m_project.addModifier(elementId, arrayInitialization);
     }
-    const libTestUtils::TestRecordFeature* inputFeature =
-        element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+    const libTestUtils::TestRootFeature* inputFeature =
+        element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     ASSERT_NE(inputFeature, nullptr);
 
     const auto checkModifiers = [element](bool isCommandExecuted) {
         const babelwires::Modifier* arrayModifier =
-            element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray);
+            element->findModifier(libTestUtils::TestRootFeature::s_pathToArray);
         EXPECT_NE(arrayModifier, nullptr);
     };
 
@@ -130,7 +130,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
     checkModifiers(false);
 
     babelwires::AddEntryToArrayCommand command("Test command", elementId,
-                                               libTestUtils::TestRecordFeature::s_pathToArray, 1);
+                                               libTestUtils::TestRootFeature::s_pathToArray, 1);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -192,12 +192,12 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    const auto* inputFeature = element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+    const auto* inputFeature = element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     ASSERT_NE(inputFeature, nullptr);
     EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
 
     babelwires::AddEntryToArrayCommand command("Test command", elementId,
-                                               libTestUtils::TestRecordFeature::s_pathToArray, 3);
+                                               libTestUtils::TestRootFeature::s_pathToArray, 3);
 
     EXPECT_FALSE(command.initialize(context.m_project));
 }
@@ -211,7 +211,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+        return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     };
     ASSERT_NE(getInputFeature(), nullptr);
 
@@ -222,7 +222,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
 
     // insert at the end
     babelwires::AddEntryToArrayCommand command("Test command", elementId,
-                                               libTestUtils::TestRecordFeature::s_pathToArray, 2);
+                                               libTestUtils::TestRootFeature::s_pathToArray, 2);
 
     context.m_project.process();
     EXPECT_TRUE(command.initialize(context.m_project));

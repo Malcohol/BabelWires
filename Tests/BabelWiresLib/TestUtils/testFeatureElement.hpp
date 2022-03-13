@@ -48,11 +48,9 @@ namespace libTestUtils {
         using babelwires::FeatureElement::getInputFeature;
         using babelwires::FeatureElement::getOutputFeature;
 
-        void simulateFailure();
-        void simulateRecovery();
+        void simulateFailure(const babelwires::ProjectContext& context);
+        void simulateRecovery(const babelwires::ProjectContext& context);
 
-        babelwires::RootFeature* m_feature;
-        std::unique_ptr<TestRootFeature> m_actualFeature;
-        std::unique_ptr<TestFailedFeature> m_failedFeature;
+        std::unique_ptr<babelwires::RootFeature> m_feature;
     };
 } // namespace libTestUtils

@@ -101,7 +101,7 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
+    const babelwires::FeaturePath pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
     EXPECT_EQ(element->findModifier(pathToFeature), nullptr);
 
     babelwires::IntValueAssignmentData modData;
@@ -134,8 +134,8 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
         context.m_project.getFeatureElement(targetElementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(targetElement, nullptr);
 
-    const babelwires::FeaturePath pathToTargetFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-    const babelwires::FeaturePath pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToArray_0;
+    const babelwires::FeaturePath pathToTargetFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
+    const babelwires::FeaturePath pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToArray_0;
 
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
     babelwires::ConnectionModifierData modData;
@@ -163,7 +163,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
         context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToArray = libTestUtils::TestRecordFeature::s_pathToArray;
+    const babelwires::FeaturePath pathToArray = libTestUtils::TestRootFeature::s_pathToArray;
     EXPECT_EQ(element->findModifier(pathToArray), nullptr);
 
     context.m_project.process();
@@ -209,36 +209,36 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     ASSERT_NE(element, nullptr);
 
     babelwires::IntValueAssignmentData modData;
-    modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
+    modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
     modData.m_value = 702;
     context.m_project.addModifier(elementId, modData);
 
-    const babelwires::FeaturePath pathToArray = libTestUtils::TestRecordFeature::s_pathToArray;
+    const babelwires::FeaturePath pathToArray = libTestUtils::TestRootFeature::s_pathToArray;
     EXPECT_EQ(element->findModifier(pathToArray), nullptr);
 
     context.m_project.process();
 
     // Add after.
     context.m_project.addArrayEntries(elementId, pathToArray, 2, 2, true);
-    EXPECT_NE(element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_1), nullptr);
+    EXPECT_NE(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1), nullptr);
 
     context.m_project.process();
 
     // Add before.
     context.m_project.addArrayEntries(elementId, pathToArray, 1, 3, true);
-    EXPECT_EQ(element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_1), nullptr);
-    EXPECT_NE(element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_4), nullptr);
+    EXPECT_EQ(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1), nullptr);
+    EXPECT_NE(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_4), nullptr);
 
     context.m_project.process();
 
     // Remove after
     context.m_project.removeArrayEntries(elementId, pathToArray, 5, 1, true);
-    EXPECT_NE(element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_4), nullptr);
+    EXPECT_NE(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_4), nullptr);
 
     // Remove before.
     context.m_project.process();
     context.m_project.removeArrayEntries(elementId, pathToArray, 0, 2, true);
-    EXPECT_NE(element->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_2), nullptr);
+    EXPECT_NE(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_2), nullptr);
 
     // We don't test removal of modifiers, because responsibility for doing this is left to the
     // commands. (In fact, add/removeArrayEntries already does more than it should.)
@@ -260,16 +260,16 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
         context.m_project.getFeatureElement(targetElementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(targetElement, nullptr);
 
-    const babelwires::FeaturePath pathToTargetFeature = libTestUtils::TestRecordFeature::s_pathToInt;
+    const babelwires::FeaturePath pathToTargetFeature = libTestUtils::TestRootFeature::s_pathToInt;
 
-    const babelwires::FeaturePath pathToArray = libTestUtils::TestRecordFeature::s_pathToArray;
+    const babelwires::FeaturePath pathToArray = libTestUtils::TestRootFeature::s_pathToArray;
     EXPECT_EQ(sourceElement->findModifier(pathToArray), nullptr);
 
     {
         babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = pathToTargetFeature;
         modData.m_sourceId = sourceElementId;
-        modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
+        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
         context.m_project.addModifier(targetElementId, modData);
     }
     const babelwires::ConnectionModifierData& connectionData = 
@@ -279,24 +279,24 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 
     // The new elements are after the modifier, so it should be in the same place.
     context.m_project.addArrayEntries(sourceElementId, pathToArray, 2, 2, true);
-    EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRecordFeature::s_pathToArray_1);
+    EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRootFeature::s_pathToArray_1);
 
     context.m_project.process();
 
     // The new elements should mean the modifier moved.
     context.m_project.addArrayEntries(sourceElementId, pathToArray, 1, 3, true);
-    EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRecordFeature::s_pathToArray_4);
+    EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRootFeature::s_pathToArray_4);
 
     context.m_project.process();
 
     // Remove after
     context.m_project.removeArrayEntries(sourceElementId, pathToArray, 5, 1, true);
-    EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRecordFeature::s_pathToArray_4);
+    EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRootFeature::s_pathToArray_4);
 
     // Remove before.
     context.m_project.process();
     context.m_project.removeArrayEntries(sourceElementId, pathToArray, 0, 2, true);
-    EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRecordFeature::s_pathToArray_2);
+    EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRootFeature::s_pathToArray_2);
 
     // We don't test removal of modifiers, because responsibility for doing this is left to the
     // commands. (In fact, add/removeArrayEntries already does more than it should.)
@@ -472,11 +472,11 @@ TEST(ProjectTest, process) {
     const babelwires::FeatureElement* processor =
         context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
-    const libTestUtils::TestRecordFeature* processorInput =
-        processor->getInputFeature()->as<const libTestUtils::TestRecordFeature>();
+    const libTestUtils::TestRootFeature* processorInput =
+        processor->getInputFeature()->as<const libTestUtils::TestRootFeature>();
     ASSERT_NE(processorInput, nullptr);
-    const libTestUtils::TestRecordFeature* processorOutput =
-        processor->getOutputFeature()->as<const libTestUtils::TestRecordFeature>();
+    const libTestUtils::TestRootFeature* processorOutput =
+        processor->getOutputFeature()->as<const libTestUtils::TestRootFeature>();
     ASSERT_NE(processorOutput, nullptr);
 
     const babelwires::FeatureElement* targetElement =
@@ -496,7 +496,7 @@ TEST(ProjectTest, process) {
 
     // Removing this modifier will mean the output array is shorter than the modifier at the target requires.
     context.m_project.removeModifier(libTestUtils::TestProjectData::c_processorId,
-                                     libTestUtils::TestRecordFeature::s_pathToInt);
+                                     libTestUtils::TestRootFeature::s_pathToInt);
     context.m_project.process();
     EXPECT_TRUE(targetElement->findModifier(libTestUtils::TestFileFeature::s_pathToIntChild)->isFailed());
     EXPECT_EQ(targetInput->m_intChildFeature->get(), 0);
@@ -507,7 +507,7 @@ TEST(ProjectTest, process) {
         procData.m_factoryIdentifier = libTestUtils::TestProcessorFactory::getThisIdentifier();
 
         babelwires::IntValueAssignmentData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_value = 5;
         procData.m_modifiers.emplace_back(modData.clone());
 
@@ -516,9 +516,9 @@ TEST(ProjectTest, process) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt;
         modData.m_sourceId = newProcId;
-        modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         context.m_project.addModifier(libTestUtils::TestProjectData::c_processorId, modData);
     }
     context.m_project.process();
@@ -544,16 +544,16 @@ TEST(ProjectTest, dependencyLoop) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId2;
-        modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         context.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId3;
-        modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         context.m_project.addModifier(elementId2, modData);
     }
 
@@ -568,9 +568,9 @@ TEST(ProjectTest, dependencyLoop) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId1;
-        modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         context.m_project.addModifier(elementId3, modData);
     }
 
@@ -583,7 +583,7 @@ TEST(ProjectTest, dependencyLoop) {
     EXPECT_TRUE(element2->isInDependencyLoop());
     EXPECT_TRUE(element3->isInDependencyLoop());
 
-    context.m_project.removeModifier(elementId2, libTestUtils::TestRecordFeature::s_pathToInt2);
+    context.m_project.removeModifier(elementId2, libTestUtils::TestRootFeature::s_pathToInt2);
     context.m_project.process();
 
     EXPECT_FALSE(element1->isFailed());
@@ -617,16 +617,16 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId2;
-        modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         context.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId4;
-        modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         context.m_project.addModifier(elementId3, modData);
     }
 
@@ -643,14 +643,14 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId1;
-        modData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         context.m_project.addModifier(elementId2, modData);
     }
     {
         babelwires::IntValueAssignmentData modData;
-        modData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_value = 16;
         context.m_project.addModifier(elementId4, modData);
     }
@@ -666,10 +666,10 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     EXPECT_FALSE(element3->isInDependencyLoop());
     EXPECT_FALSE(element4->isInDependencyLoop());
 
-    ASSERT_NE(element3->getOutputFeature()->as<libTestUtils::TestRecordFeature>(), nullptr);
-    EXPECT_EQ(element3->getOutputFeature()->as<libTestUtils::TestRecordFeature>()->m_intFeature2->get(), 16);              
+    ASSERT_NE(element3->getOutputFeature()->as<libTestUtils::TestRootFeature>(), nullptr);
+    EXPECT_EQ(element3->getOutputFeature()->as<libTestUtils::TestRootFeature>()->m_intFeature2->get(), 16);              
 
-    context.m_project.removeModifier(elementId2, libTestUtils::TestRecordFeature::s_pathToInt2);
+    context.m_project.removeModifier(elementId2, libTestUtils::TestRootFeature::s_pathToInt2);
     context.m_project.process();
 
     EXPECT_FALSE(element1->isFailed());

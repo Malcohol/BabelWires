@@ -256,13 +256,13 @@ namespace {
 
         libTestUtils::TestFeatureElementData sourceElementData;
         if (sourceRecordIsExpanded) {
-            sourceElementData.m_expandedPaths.emplace_back(libTestUtils::TestRecordFeature::s_pathToRecord);
+            sourceElementData.m_expandedPaths.emplace_back(libTestUtils::TestRootFeature::s_pathToRecord);
         }
         const babelwires::ElementId sourceElementId = context.m_project.addFeatureElement(sourceElementData);
 
         libTestUtils::TestFeatureElementData targetElementData;
         if (targetArrayIsExpanded) {
-            targetElementData.m_expandedPaths.emplace_back(libTestUtils::TestRecordFeature::s_pathToArray);
+            targetElementData.m_expandedPaths.emplace_back(libTestUtils::TestRootFeature::s_pathToArray);
         }
         const babelwires::ElementId targetElementId = context.m_project.addFeatureElement(targetElementData);
 
@@ -274,8 +274,8 @@ namespace {
 
         // The connection we add.
         babelwires::ConnectionModifierData connectionData;
-        connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-        connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        connectionData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
+        connectionData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         connectionData.m_sourceId = sourceElementId;
 
         // The connection we expect to observe.
@@ -355,20 +355,20 @@ namespace {
 
         libTestUtils::TestFeatureElementData sourceElementData;
         if (sourceRecordIsExpanded) {
-            sourceElementData.m_expandedPaths.emplace_back(libTestUtils::TestRecordFeature::s_pathToRecord);
+            sourceElementData.m_expandedPaths.emplace_back(libTestUtils::TestRootFeature::s_pathToRecord);
         }
         const babelwires::ElementId sourceElementId = context.m_project.addFeatureElement(sourceElementData);
 
         // The connection we will remove.
         babelwires::ConnectionModifierData connectionData;
-        connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-        connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        connectionData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
+        connectionData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         connectionData.m_sourceId = sourceElementId;
 
         libTestUtils::TestFeatureElementData targetElementData;
         targetElementData.m_modifiers.emplace_back(connectionData.clone());
         if (targetArrayIsExpanded) {
-            targetElementData.m_expandedPaths.emplace_back(libTestUtils::TestRecordFeature::s_pathToArray);
+            targetElementData.m_expandedPaths.emplace_back(libTestUtils::TestRootFeature::s_pathToArray);
         }
         const babelwires::ElementId targetElementId = context.m_project.addFeatureElement(targetElementData);
 
@@ -454,8 +454,8 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
     const babelwires::ElementId sourceElementId = context.m_project.addFeatureElement(sourceElementData);
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-    connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+    connectionData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
+    connectionData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
     connectionData.m_sourceId = sourceElementId;
 
     libTestUtils::TestFeatureElementData targetElementData;
@@ -469,7 +469,7 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
     ObservedChanges observedChanges(projectObserver);
 
     babelwires::IntValueAssignmentData intData;
-    intData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+    intData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
     intData.m_value = 14;
     context.m_project.addModifier(sourceElementId, intData);
 

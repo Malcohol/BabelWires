@@ -29,13 +29,13 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     babelwires::ProcessorElement* processorElement = static_cast<babelwires::ProcessorElement*>(featureElement.get());
 
     const babelwires::RecordFeature* outputFeature = processorElement->getOutputFeature();
-    ASSERT_TRUE(outputFeature->as<const libTestUtils::TestRecordFeature>());
-    const libTestUtils::TestRecordFeature* outputTestRecordFeature =
-        static_cast<const libTestUtils::TestRecordFeature*>(outputFeature);
+    ASSERT_TRUE(outputFeature->as<const libTestUtils::TestRootFeature>());
+    const libTestUtils::TestRootFeature* outputTestRecordFeature =
+        static_cast<const libTestUtils::TestRootFeature*>(outputFeature);
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
 
-    const babelwires::FeaturePath arraySettingIntPath = libTestUtils::TestRecordFeature::s_pathToInt;
-    const babelwires::FeaturePath valueSettingIntPath = libTestUtils::TestRecordFeature::s_pathToInt2;
+    const babelwires::FeaturePath arraySettingIntPath = libTestUtils::TestRootFeature::s_pathToInt;
+    const babelwires::FeaturePath valueSettingIntPath = libTestUtils::TestRootFeature::s_pathToInt2;
 
     babelwires::IntValueAssignmentData valueSettingData;
     valueSettingData.m_pathToFeature = valueSettingIntPath;

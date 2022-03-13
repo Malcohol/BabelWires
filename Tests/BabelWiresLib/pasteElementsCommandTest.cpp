@@ -53,8 +53,8 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
         ASSERT_NE(targetElement, nullptr);
 
         // Confirm that some modifiers were pasted too.
-        ASSERT_NE(processor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt), nullptr);
-        EXPECT_FALSE(processor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt)->isFailed());
+        ASSERT_NE(processor->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt), nullptr);
+        EXPECT_FALSE(processor->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt)->isFailed());
         ASSERT_NE(targetElement->getEdits().findModifier(libTestUtils::TestFileFeature::s_pathToIntChild), nullptr);
         EXPECT_FALSE(
             targetElement->getEdits().findModifier(libTestUtils::TestFileFeature::s_pathToIntChild)->isFailed());
@@ -101,8 +101,8 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
         const babelwires::FeatureElement* targetElement =
             context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
-        ASSERT_NE(processor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt), nullptr);
-        EXPECT_FALSE(processor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt)->isFailed());
+        ASSERT_NE(processor->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt), nullptr);
+        EXPECT_FALSE(processor->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt)->isFailed());
     };
 
     babelwires::PasteElementsCommand command("Test command", std::move(projectData));
@@ -160,7 +160,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
             EXPECT_NE(newProcessor, nullptr);
             EXPECT_NE(newTargetElement, nullptr);
             const babelwires::Modifier* modifier =
-                newProcessor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt);
+                newProcessor->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt);
             ASSERT_NE(modifier, nullptr);
             EXPECT_FALSE(modifier->isFailed());
             const babelwires::ConnectionModifierData* modData =
@@ -210,8 +210,8 @@ namespace {
 
         {
             babelwires::ConnectionModifierData modifierData;
-            modifierData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
-            modifierData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+            modifierData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
+            modifierData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
             modifierData.m_sourceId = sourceElementId;
             libTestUtils::TestFeatureElementData elementData;
             elementData.m_modifiers.emplace_back(modifierData.clone());
@@ -232,7 +232,7 @@ namespace {
             ASSERT_NE(newElement, nullptr);
 
             const babelwires::Modifier* modifier =
-                newElement->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2);
+                newElement->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2);
             if (isPastingIntoSameProject) {
                 ASSERT_NE(modifier, nullptr);
                 EXPECT_FALSE(modifier->isFailed());
