@@ -3,7 +3,9 @@
 #include "BabelWiresLib/Processors/processorFactory.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 
-namespace libTestUtils {
+#include "Tests/BabelWiresLib/TestUtils/testRootFeature.hpp"
+
+namespace testUtils {
     struct TestRecordFeature;
 
     /// Carries a TestRecord for input and output.
@@ -15,13 +17,13 @@ namespace libTestUtils {
     // about adding and removing array elements via the project. It might be better if
     // the input had no array at all.
     struct TestProcessor : babelwires::Processor {
-        TestProcessor();
+        TestProcessor(const babelwires::ProjectContext& context);
 
         void process(babelwires::UserLogger& userLogger) override;
-        babelwires::RecordFeature* getInputFeature() override;
-        babelwires::RecordFeature* getOutputFeature() override;
-        std::unique_ptr<TestRecordFeature> m_inputFeature;
-        std::unique_ptr<TestRecordFeature> m_outputFeature;
+        babelwires::RootFeature* getInputFeature() override;
+        babelwires::RootFeature* getOutputFeature() override;
+        std::unique_ptr<TestRootFeature> m_inputFeature;
+        std::unique_ptr<TestRootFeature> m_outputFeature;
     };
 
     /// Constructs test processors.
@@ -31,7 +33,7 @@ namespace libTestUtils {
 
         static babelwires::LongIdentifier getThisIdentifier();
 
-        std::unique_ptr<babelwires::Processor> createNewProcessor() const override;
+        std::unique_ptr<babelwires::Processor> createNewProcessor(const babelwires::ProjectContext& projectContext) const override;
     };
 
-} // namespace libTestUtils
+} // namespace testUtils

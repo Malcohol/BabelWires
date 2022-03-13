@@ -8,7 +8,7 @@
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 #include "Tests/TestUtils/equalSets.hpp"
 
@@ -64,19 +64,19 @@ namespace {
 namespace {
     void testFeatureElementAdded(bool shouldIgnore) {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        testUtils::TestEnvironment testEnvironment;
 
-        babelwires::ProjectObserver projectObserver(context.m_project);
+        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
         ObservedChanges observedChanges(projectObserver);
 
         const babelwires::ElementId elementId =
-            context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+            testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
         if (shouldIgnore) {
             projectObserver.ignoreAddedElement(elementId);
         }
 
-        context.m_project.process();
+        testEnvironment.m_project.process();
         projectObserver.interpretChangesAndFireSignals();
 
         if (shouldIgnore) {
@@ -106,19 +106,19 @@ TEST(ProjectObserverTest, featureElementAddedIgnore) {
 namespace {
     void testFeatureElementRemoved(bool shouldIgnore) {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        testUtils::TestEnvironment testEnvironment;
 
         const babelwires::ElementId elementId =
-            context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+            testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
-        context.m_project.process();
-        context.m_project.clearChanges();
+        testEnvironment.m_project.process();
+        testEnvironment.m_project.clearChanges();
 
-        babelwires::ProjectObserver projectObserver(context.m_project);
+        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
         ObservedChanges observedChanges(projectObserver);
 
-        context.m_project.removeElement(elementId);
-        context.m_project.process();
+        testEnvironment.m_project.removeElement(elementId);
+        testEnvironment.m_project.process();
 
         if (shouldIgnore) {
             projectObserver.ignoreRemovedElement(elementId);
@@ -154,20 +154,20 @@ TEST(ProjectObserverTest, featureElementRemovedIgnore) {
 namespace {
     void testFeatureElementMoved(bool shouldIgnore) {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        testUtils::TestEnvironment testEnvironment;
 
         const babelwires::ElementId elementId =
-            context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+            testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
-        context.m_project.clearChanges();
+        testEnvironment.m_project.clearChanges();
 
-        babelwires::ProjectObserver projectObserver(context.m_project);
+        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
         ObservedChanges observedChanges(projectObserver);
 
         babelwires::UiPosition newPosition{15, 72};
 
-        context.m_project.setElementPosition(elementId, newPosition);
-        context.m_project.process();
+        testEnvironment.m_project.setElementPosition(elementId, newPosition);
+        testEnvironment.m_project.process();
 
         if (shouldIgnore) {
             projectObserver.ignoreMovedElement(elementId);
@@ -203,20 +203,20 @@ TEST(ProjectObserverTest, featureElementMovedIgnore) {
 namespace {
     void testFeatureElementsResized(bool shouldIgnore) {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        testUtils::TestEnvironment testEnvironment;
 
         const babelwires::ElementId elementId =
-            context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+            testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
-        context.m_project.clearChanges();
+        testEnvironment.m_project.clearChanges();
 
-        babelwires::ProjectObserver projectObserver(context.m_project);
+        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
         ObservedChanges observedChanges(projectObserver);
 
         babelwires::UiSize newSize{81};
 
-        context.m_project.setElementContentsSize(elementId, newSize);
-        context.m_project.process();
+        testEnvironment.m_project.setElementContentsSize(elementId, newSize);
+        testEnvironment.m_project.process();
 
         if (shouldIgnore) {
             projectObserver.ignoreResizedElement(elementId);
@@ -252,30 +252,30 @@ TEST(ProjectObserverTest, featureElementResizedIgnore) {
 namespace {
     void testConnectionAdded(bool shouldIgnore, bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        testUtils::TestEnvironment testEnvironment;
 
-        libTestUtils::TestFeatureElementData sourceElementData;
+        testUtils::TestFeatureElementData sourceElementData;
         if (sourceRecordIsExpanded) {
-            sourceElementData.m_expandedPaths.emplace_back(libTestUtils::TestRecordFeature::s_pathToRecord);
+            sourceElementData.m_expandedPaths.emplace_back(testUtils::TestRootFeature::s_pathToRecord);
         }
-        const babelwires::ElementId sourceElementId = context.m_project.addFeatureElement(sourceElementData);
+        const babelwires::ElementId sourceElementId = testEnvironment.m_project.addFeatureElement(sourceElementData);
 
-        libTestUtils::TestFeatureElementData targetElementData;
+        testUtils::TestFeatureElementData targetElementData;
         if (targetArrayIsExpanded) {
-            targetElementData.m_expandedPaths.emplace_back(libTestUtils::TestRecordFeature::s_pathToArray);
+            targetElementData.m_expandedPaths.emplace_back(testUtils::TestRootFeature::s_pathToArray);
         }
-        const babelwires::ElementId targetElementId = context.m_project.addFeatureElement(targetElementData);
+        const babelwires::ElementId targetElementId = testEnvironment.m_project.addFeatureElement(targetElementData);
 
-        context.m_project.process();
-        context.m_project.clearChanges();
+        testEnvironment.m_project.process();
+        testEnvironment.m_project.clearChanges();
 
-        babelwires::ProjectObserver projectObserver(context.m_project);
+        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
         ObservedChanges observedChanges(projectObserver);
 
         // The connection we add.
         babelwires::ConnectionModifierData connectionData;
-        connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-        connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        connectionData.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
+        connectionData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
         connectionData.m_sourceId = sourceElementId;
 
         // The connection we expect to observe.
@@ -287,9 +287,9 @@ namespace {
             connectionDescription.m_pathToTargetFeature.truncate(1);
         }
 
-        context.m_project.addModifier(targetElementId, connectionData);
+        testEnvironment.m_project.addModifier(targetElementId, connectionData);
 
-        context.m_project.process();
+        testEnvironment.m_project.process();
 
         if (shouldIgnore) {
             projectObserver.ignoreAddedConnection(connectionDescription);
@@ -351,31 +351,31 @@ TEST(ProjectObserverTest, connectionAddedBothTruncatedIgnore) {
 namespace {
     void testConnectionRemoved(bool shouldIgnore, bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        testUtils::TestEnvironment testEnvironment;
 
-        libTestUtils::TestFeatureElementData sourceElementData;
+        testUtils::TestFeatureElementData sourceElementData;
         if (sourceRecordIsExpanded) {
-            sourceElementData.m_expandedPaths.emplace_back(libTestUtils::TestRecordFeature::s_pathToRecord);
+            sourceElementData.m_expandedPaths.emplace_back(testUtils::TestRootFeature::s_pathToRecord);
         }
-        const babelwires::ElementId sourceElementId = context.m_project.addFeatureElement(sourceElementData);
+        const babelwires::ElementId sourceElementId = testEnvironment.m_project.addFeatureElement(sourceElementData);
 
         // The connection we will remove.
         babelwires::ConnectionModifierData connectionData;
-        connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-        connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+        connectionData.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
+        connectionData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
         connectionData.m_sourceId = sourceElementId;
 
-        libTestUtils::TestFeatureElementData targetElementData;
+        testUtils::TestFeatureElementData targetElementData;
         targetElementData.m_modifiers.emplace_back(connectionData.clone());
         if (targetArrayIsExpanded) {
-            targetElementData.m_expandedPaths.emplace_back(libTestUtils::TestRecordFeature::s_pathToArray);
+            targetElementData.m_expandedPaths.emplace_back(testUtils::TestRootFeature::s_pathToArray);
         }
-        const babelwires::ElementId targetElementId = context.m_project.addFeatureElement(targetElementData);
+        const babelwires::ElementId targetElementId = testEnvironment.m_project.addFeatureElement(targetElementData);
 
-        context.m_project.process();
-        context.m_project.clearChanges();
+        testEnvironment.m_project.process();
+        testEnvironment.m_project.clearChanges();
 
-        babelwires::ProjectObserver projectObserver(context.m_project);
+        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
         ObservedChanges observedChanges(projectObserver);
 
         // The connection we expect to observe.
@@ -387,9 +387,9 @@ namespace {
             connectionDescription.m_pathToTargetFeature.truncate(1);
         }
 
-        context.m_project.removeModifier(targetElementId, connectionData.m_pathToFeature);
+        testEnvironment.m_project.removeModifier(targetElementId, connectionData.m_pathToFeature);
 
-        context.m_project.process();
+        testEnvironment.m_project.process();
 
         if (shouldIgnore) {
             projectObserver.ignoreRemovedConnection(connectionDescription);
@@ -448,32 +448,32 @@ TEST(ProjectObserverTest, connectionRemovedBothTruncatedIgnore) {
 
 TEST(ProjectObserverTest, featureElementContentsChanged) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    testUtils::TestEnvironment testEnvironment;
 
-    libTestUtils::TestFeatureElementData sourceElementData;
-    const babelwires::ElementId sourceElementId = context.m_project.addFeatureElement(sourceElementData);
+    testUtils::TestFeatureElementData sourceElementData;
+    const babelwires::ElementId sourceElementId = testEnvironment.m_project.addFeatureElement(sourceElementData);
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-    connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+    connectionData.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
+    connectionData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
     connectionData.m_sourceId = sourceElementId;
 
-    libTestUtils::TestFeatureElementData targetElementData;
+    testUtils::TestFeatureElementData targetElementData;
     targetElementData.m_modifiers.emplace_back(connectionData.clone());
-    const babelwires::ElementId targetElementId = context.m_project.addFeatureElement(targetElementData);
+    const babelwires::ElementId targetElementId = testEnvironment.m_project.addFeatureElement(targetElementData);
 
-    context.m_project.process();
-    context.m_project.clearChanges();
+    testEnvironment.m_project.process();
+    testEnvironment.m_project.clearChanges();
 
-    babelwires::ProjectObserver projectObserver(context.m_project);
+    babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
     ObservedChanges observedChanges(projectObserver);
 
     babelwires::IntValueAssignmentData intData;
-    intData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+    intData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
     intData.m_value = 14;
-    context.m_project.addModifier(sourceElementId, intData);
+    testEnvironment.m_project.addModifier(sourceElementId, intData);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     projectObserver.interpretChangesAndFireSignals();
 

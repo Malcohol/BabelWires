@@ -3,14 +3,16 @@
 #include <gtest/gtest.h>
 
 #include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
 
-namespace libTestUtils {
+#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+
+namespace testUtils {
     /// A record with optional fields.
-    struct TestFeatureWithOptionals : babelwires::RecordFeature {
-        TestFeatureWithOptionals();
+    struct TestFeatureWithOptionals : babelwires::RootFeature {
+        TestFeatureWithOptionals(const babelwires::ProjectContext& context);
 
         static constexpr char s_subrecordIdInitializer[] = "subrd";
         static constexpr char s_ff0IdInitializer[] = "ff0";
@@ -38,9 +40,9 @@ namespace libTestUtils {
 
         babelwires::RecordWithOptionalsFeature* m_subrecord;
         babelwires::IntFeature* m_ff0Feature;
-        libTestUtils::TestRecordFeature* m_ff1Feature;
+        testUtils::TestRecordFeature* m_ff1Feature;
         babelwires::IntFeature* m_op0Feature;
-        libTestUtils::TestRecordFeature* m_op1Feature;
+        testUtils::TestRecordFeature* m_op1Feature;
 
         // For convenience
         static const babelwires::FeaturePath s_pathToSubrecord;
@@ -56,12 +58,14 @@ namespace libTestUtils {
     struct TestFeatureElementWithOptionalsData : babelwires::ElementData {
         CLONEABLE(TestFeatureElementWithOptionalsData);
         CUSTOM_CLONEABLE(TestFeatureElementWithOptionalsData);
-        SERIALIZABLE(TestFeatureElementWithOptionalsData, "TestFeatureElementWithOptionalsData", babelwires::ElementData, 1);
+        SERIALIZABLE(TestFeatureElementWithOptionalsData, "TestFeatureElementWithOptionalsData",
+                     babelwires::ElementData, 1);
 
         // By default, create a TestRecordFeature.
         TestFeatureElementWithOptionalsData();
         TestFeatureElementWithOptionalsData(const TestFeatureElementWithOptionalsData& other) = default;
-        TestFeatureElementWithOptionalsData(const TestFeatureElementWithOptionalsData& other, babelwires::ShallowCloneContext);
+        TestFeatureElementWithOptionalsData(const TestFeatureElementWithOptionalsData& other,
+                                            babelwires::ShallowCloneContext);
 
         // Dummy implementations.
         void serializeContents(babelwires::Serializer& serializer) const override;
@@ -76,16 +80,16 @@ namespace libTestUtils {
     };
 
     struct TestFeatureElementWithOptionals : babelwires::FeatureElement {
-        TestFeatureElementWithOptionals();
-        TestFeatureElementWithOptionals(const TestFeatureElementWithOptionalsData& data, babelwires::ElementId newId);
+        TestFeatureElementWithOptionals(const babelwires::ProjectContext& context);
+        TestFeatureElementWithOptionals(const babelwires::ProjectContext& context, const TestFeatureElementWithOptionalsData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;
 
-        babelwires::RecordFeature* getInputFeature() override;
-        babelwires::RecordFeature* getOutputFeature() override;
+        babelwires::RootFeature* getInputFeature() override;
+        babelwires::RootFeature* getOutputFeature() override;
         using babelwires::FeatureElement::getInputFeature;
         using babelwires::FeatureElement::getOutputFeature;
 
-        std::unique_ptr<libTestUtils::TestFeatureWithOptionals> m_feature;
+        std::unique_ptr<testUtils::TestFeatureWithOptionals> m_feature;
     };
 
-} // namespace libTestUtils
+} // namespace testUtils

@@ -11,19 +11,20 @@
 #include "BabelWiresLib/Processors/processorFactory.hpp"
 
 namespace babelwires {
+    struct ProjectContext;
 
     /// A convenient base class for most processors which provides a default constructed recordFeature for input and
     /// output features.
     class CommonProcessor : public Processor {
       public:
-        CommonProcessor();
+        CommonProcessor(const ProjectContext& projectContext);
 
-        virtual babelwires::RecordFeature* getInputFeature() override;
-        virtual babelwires::RecordFeature* getOutputFeature() override;
+        virtual babelwires::RootFeature* getInputFeature() override;
+        virtual babelwires::RootFeature* getOutputFeature() override;
 
       protected:
-        std::unique_ptr<babelwires::RecordFeature> m_inputFeature;
-        std::unique_ptr<babelwires::RecordFeature> m_outputFeature;
+        std::unique_ptr<babelwires::RootFeature> m_inputFeature;
+        std::unique_ptr<babelwires::RootFeature> m_outputFeature;
     };
 
     /// A convenient base class for processor factories.
@@ -32,8 +33,8 @@ namespace babelwires {
         CommonProcessorFactory(LongIdentifier identifier, VersionNumber version)
             : ProcessorFactory(identifier, version) {}
 
-        virtual std::unique_ptr<babelwires::Processor> createNewProcessor() const override {
-            return std::make_unique<PROCESSOR>();
+        std::unique_ptr<babelwires::Processor> createNewProcessor(const ProjectContext& projectContext) const override {
+            return std::make_unique<PROCESSOR>(projectContext);
         }
     };
 

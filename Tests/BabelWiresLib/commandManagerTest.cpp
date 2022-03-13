@@ -5,7 +5,7 @@
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 namespace {
     struct TestCommand : babelwires::Command {
@@ -45,8 +45,8 @@ namespace {
 
 TEST(CommandManagerTest, undoRedoSinceCommand) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
-    babelwires::CommandManager commandManager(context.m_project, context.m_log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_FALSE(commandManager.canUndo());
     EXPECT_FALSE(commandManager.canRedo());
@@ -113,8 +113,8 @@ TEST(CommandManagerTest, undoRedoSinceCommand) {
 
 TEST(CommandManagerTest, undoRedoWithTwoCommands) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
-    babelwires::CommandManager commandManager(context.m_project, context.m_log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     TestCommand* testCommand = new TestCommand("perform first test command", true);
     {
@@ -211,8 +211,8 @@ TEST(CommandManagerTest, undoRedoWithTwoCommands) {
 
 TEST(CommandManagerTest, failedCommand) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
-    babelwires::CommandManager commandManager(context.m_project, context.m_log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     TestCommand* failedCommand = new TestCommand("attempt impossible command", false);
     {
@@ -224,8 +224,8 @@ TEST(CommandManagerTest, failedCommand) {
         EXPECT_TRUE(failedCommand->m_eventTrace.empty());
     }
 
-    context.m_log.hasSubstringIgnoreCase("Executing command \"attempt impossible command\"");
-    context.m_log.hasSubstringIgnoreCase("Could not execute command \"attempt impossible command\"");
+    testEnvironment.m_log.hasSubstringIgnoreCase("Executing command \"attempt impossible command\"");
+    testEnvironment.m_log.hasSubstringIgnoreCase("Could not execute command \"attempt impossible command\"");
 
     EXPECT_FALSE(commandManager.canUndo());
     EXPECT_FALSE(commandManager.canRedo());
@@ -269,8 +269,8 @@ TEST(CommandManagerTest, failedCommand) {
 
 TEST(CommandManagerTest, subsumption) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
-    babelwires::CommandManager commandManager(context.m_project, context.m_log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     TestCommand* testCommand = new TestCommand("perform test command", true);
     {
@@ -304,8 +304,8 @@ TEST(CommandManagerTest, subsumption) {
 
 TEST(CommandManagerTest, clear) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
-    babelwires::CommandManager commandManager(context.m_project, context.m_log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
     {
         std::unique_ptr<babelwires::Command> testCommandPtr =

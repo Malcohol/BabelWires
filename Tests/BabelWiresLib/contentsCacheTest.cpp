@@ -1,32 +1,33 @@
 #include <gtest/gtest.h>
 
-#include "Common/Identifiers/registeredIdentifier.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
 #include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
+
+#include "Common/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testModifier.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
-
-#include "Tests/TestUtils/testLog.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testRootFeature.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 namespace {
-    std::unique_ptr<libTestUtils::LocalTestModifier> createModifier(babelwires::FeaturePath path, int x,
+    std::unique_ptr<testUtils::LocalTestModifier> createModifier(babelwires::FeaturePath path, int x,
                                                                     babelwires::FeatureElement* owner = nullptr) {
         auto data = std::make_unique<babelwires::IntValueAssignmentData>();
         data->m_pathToFeature = std::move(path);
         data->m_value = x;
-        auto modPtr = std::make_unique<libTestUtils::LocalTestModifier>(std::move(data));
+        auto modPtr = std::make_unique<testUtils::LocalTestModifier>(std::move(data));
         modPtr->setOwner(owner);
         return modPtr;
     }
 
-    void checkFirstIntEntry(const babelwires::ContentsCacheEntry* entry, libTestUtils::TestRecordFeature* inputFeature,
-                            libTestUtils::TestRecordFeature* outputFeature) {
-        EXPECT_EQ(entry->getLabel(), libTestUtils::TestRecordFeature::s_intFieldName);
+    void checkFirstIntEntry(const babelwires::ContentsCacheEntry* entry, testUtils::TestRootFeature* inputFeature,
+                            testUtils::TestRootFeature* outputFeature) {
+        EXPECT_EQ(entry->getLabel(), testUtils::TestRootFeature::s_intFieldName);
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature->m_intFeature);
         } else {
@@ -37,14 +38,14 @@ namespace {
         } else {
             EXPECT_FALSE(entry->getOutputFeature());
         }
-        EXPECT_EQ(entry->getPath(), libTestUtils::TestRecordFeature::s_pathToInt);
+        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToInt);
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
     }
 
-    void checkArrayEntry(const babelwires::ContentsCacheEntry* entry, libTestUtils::TestRecordFeature* inputFeature,
-                         libTestUtils::TestRecordFeature* outputFeature) {
-        EXPECT_EQ(entry->getLabel(), libTestUtils::TestRecordFeature::s_arrayFieldName);
+    void checkArrayEntry(const babelwires::ContentsCacheEntry* entry, testUtils::TestRootFeature* inputFeature,
+                         testUtils::TestRootFeature* outputFeature) {
+        EXPECT_EQ(entry->getLabel(), testUtils::TestRootFeature::s_arrayFieldName);
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature->m_arrayFeature);
         } else {
@@ -55,13 +56,13 @@ namespace {
         } else {
             EXPECT_FALSE(entry->getOutputFeature());
         }
-        EXPECT_EQ(entry->getPath(), libTestUtils::TestRecordFeature::s_pathToArray);
+        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToArray);
         EXPECT_TRUE(entry->isExpandable());
     }
 
-    void checkSubRecordEntry(const babelwires::ContentsCacheEntry* entry, libTestUtils::TestRecordFeature* inputFeature,
-                             libTestUtils::TestRecordFeature* outputFeature) {
-        EXPECT_EQ(entry->getLabel(), libTestUtils::TestRecordFeature::s_recordFieldName);
+    void checkSubRecordEntry(const babelwires::ContentsCacheEntry* entry, testUtils::TestRootFeature* inputFeature,
+                             testUtils::TestRootFeature* outputFeature) {
+        EXPECT_EQ(entry->getLabel(), testUtils::TestRootFeature::s_recordFieldName);
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature->m_subRecordFeature);
         } else {
@@ -72,13 +73,13 @@ namespace {
         } else {
             EXPECT_FALSE(entry->getOutputFeature());
         }
-        EXPECT_EQ(entry->getPath(), libTestUtils::TestRecordFeature::s_pathToRecord);
+        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToRecord);
         EXPECT_TRUE(entry->isExpandable());
     }
 
-    void checkSecondIntEntry(const babelwires::ContentsCacheEntry* entry, libTestUtils::TestRecordFeature* inputFeature,
-                             libTestUtils::TestRecordFeature* outputFeature) {
-        EXPECT_EQ(entry->getLabel(), libTestUtils::TestRecordFeature::s_int2FieldName);
+    void checkSecondIntEntry(const babelwires::ContentsCacheEntry* entry, testUtils::TestRootFeature* inputFeature,
+                             testUtils::TestRootFeature* outputFeature) {
+        EXPECT_EQ(entry->getLabel(), testUtils::TestRootFeature::s_int2FieldName);
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature->m_intFeature2);
         } else {
@@ -89,14 +90,14 @@ namespace {
         } else {
             EXPECT_FALSE(entry->getOutputFeature());
         }
-        EXPECT_EQ(entry->getPath(), libTestUtils::TestRecordFeature::s_pathToInt2);
+        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToInt2);
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
     }
 
     void checkFirstArrayEntry(const babelwires::ContentsCacheEntry* entry,
-                              libTestUtils::TestRecordFeature* inputFeature,
-                              libTestUtils::TestRecordFeature* outputFeature) {
+                              testUtils::TestRootFeature* inputFeature,
+                              testUtils::TestRootFeature* outputFeature) {
         EXPECT_EQ(entry->getLabel(), "[0]");
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature->m_elem0);
@@ -108,14 +109,14 @@ namespace {
         } else {
             EXPECT_FALSE(entry->getOutputFeature());
         }
-        EXPECT_EQ(entry->getPath(), libTestUtils::TestRecordFeature::s_pathToArray_0);
+        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToArray_0);
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
     }
 
     void checkSecondArrayEntry(const babelwires::ContentsCacheEntry* entry,
-                               libTestUtils::TestRecordFeature* inputFeature,
-                               libTestUtils::TestRecordFeature* outputFeature) {
+                               testUtils::TestRootFeature* inputFeature,
+                               testUtils::TestRootFeature* outputFeature) {
         EXPECT_EQ(entry->getLabel(), "[1]");
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature->m_elem1);
@@ -127,7 +128,7 @@ namespace {
         } else {
             EXPECT_FALSE(entry->getOutputFeature());
         }
-        EXPECT_EQ(entry->getPath(), libTestUtils::TestRecordFeature::s_pathToArray_1);
+        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToArray_1);
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
     }
@@ -141,8 +142,8 @@ namespace {
     }
 
     void testCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                             libTestUtils::TestRecordFeature* inputFeature,
-                             libTestUtils::TestRecordFeature* outputFeature) {
+                             testUtils::TestRootFeature* inputFeature,
+                             testUtils::TestRootFeature* outputFeature) {
         cache.setFeatures(inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 3);
         {
@@ -161,7 +162,7 @@ namespace {
             checkUnmodified(entry);
         }
         // Expand the record
-        editTree.setExpanded(libTestUtils::TestRecordFeature::s_pathToRecord, true);
+        editTree.setExpanded(testUtils::TestRootFeature::s_pathToRecord, true);
         cache.setFeatures(inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 4);
         {
@@ -185,7 +186,7 @@ namespace {
             checkUnmodified(entry);
         }
         // Expand the array
-        editTree.setExpanded(libTestUtils::TestRecordFeature::s_pathToArray, true);
+        editTree.setExpanded(testUtils::TestRootFeature::s_pathToArray, true);
         cache.setFeatures(inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 6);
         {
@@ -220,13 +221,13 @@ namespace {
         }
     }
 
-    void testModifierBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                               libTestUtils::TestRecordFeature* inputFeature,
-                               libTestUtils::TestRecordFeature* outputFeature) {
+    void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
+                               testUtils::TestRootFeature* inputFeature,
+                               testUtils::TestRootFeature* outputFeature) {
         ASSERT_TRUE(inputFeature);
 
         // Add a modifier to the first int
-        editTree.addModifier(createModifier(libTestUtils::TestRecordFeature::s_pathToInt, 12));
+        editTree.addModifier(createModifier(testUtils::TestRootFeature::s_pathToInt, 12));
         cache.updateModifierCache();
         ASSERT_EQ(cache.getNumRows(), 6);
         checkUnmodified(cache.getEntry(1));
@@ -244,7 +245,7 @@ namespace {
             EXPECT_TRUE(entry->hasSubmodifiers());
         }
         // Add a submodifier to the array
-        editTree.addModifier(createModifier(libTestUtils::TestRecordFeature::s_pathToArray_1, 120));
+        editTree.addModifier(createModifier(testUtils::TestRootFeature::s_pathToArray_1, 120));
         cache.updateModifierCache();
         ASSERT_EQ(cache.getNumRows(), 6);
         {
@@ -270,8 +271,8 @@ namespace {
         }
         // Add a failing modifier to the array
         {
-            libTestUtils::TestFeatureElement owner;
-            auto modifier = createModifier(libTestUtils::TestRecordFeature::s_pathToArray_0, 2000, &owner);
+            testUtils::TestFeatureElement owner(context);
+            auto modifier = createModifier(testUtils::TestRootFeature::s_pathToArray_0, 2000, &owner);
             modifier->simulateFailure();
             editTree.addModifier(std::move(modifier));
         }
@@ -299,7 +300,7 @@ namespace {
         checkUnmodified(cache.getEntry(5));
 
         // Collapse the array
-        editTree.setExpanded(libTestUtils::TestRecordFeature::s_pathToArray, false);
+        editTree.setExpanded(testUtils::TestRootFeature::s_pathToArray, false);
         cache.setFeatures(inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 4);
         {
@@ -312,7 +313,7 @@ namespace {
             EXPECT_TRUE(entry->hasFailedHiddenModifiers());
         }
         // Remove the failing modifier
-        editTree.removeModifier(editTree.findModifier(libTestUtils::TestRecordFeature::s_pathToArray_0));
+        editTree.removeModifier(editTree.findModifier(testUtils::TestRootFeature::s_pathToArray_0));
         cache.updateModifierCache();
         ASSERT_EQ(cache.getNumRows(), 4);
         {
@@ -324,7 +325,7 @@ namespace {
             EXPECT_TRUE(entry->hasHiddenModifier());
             EXPECT_FALSE(entry->hasFailedHiddenModifiers());
         }
-        editTree.removeModifier(editTree.findModifier(libTestUtils::TestRecordFeature::s_pathToArray_1));
+        editTree.removeModifier(editTree.findModifier(testUtils::TestRootFeature::s_pathToArray_1));
         cache.updateModifierCache();
         ASSERT_EQ(cache.getNumRows(), 4);
         {
@@ -341,26 +342,26 @@ namespace {
 
 TEST(ContentsCacheTest, inputFeatureOnly) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestRecordFeature inputFeature;
+    testUtils::TestRootFeature inputFeature(testEnvironment.m_projectContext);
     inputFeature.setToDefault();
 
     testCommonBehaviour(cache, editTree, &inputFeature, nullptr);
-    testModifierBehaviour(cache, editTree, &inputFeature, nullptr);
+    testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, nullptr);
 }
 
 TEST(ContentsCacheTest, outputFeatureOnly) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestRecordFeature outputFeature;
+    testUtils::TestRootFeature outputFeature(testEnvironment.m_projectContext);
     outputFeature.setToDefault();
 
     testCommonBehaviour(cache, editTree, nullptr, &outputFeature);
@@ -368,29 +369,29 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
 
 TEST(ContentsCacheTest, inputAndOutputFeature) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestRecordFeature inputFeature;
-    libTestUtils::TestRecordFeature outputFeature;
+    testUtils::TestRootFeature inputFeature(testEnvironment.m_projectContext);
+    testUtils::TestRootFeature outputFeature(testEnvironment.m_projectContext);
     inputFeature.setToDefault();
     outputFeature.setToDefault();
 
     testCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
-    testModifierBehaviour(cache, editTree, &inputFeature, &outputFeature);
+    testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
 }
 
 TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestRecordFeature inputFeature(255, true);
-    libTestUtils::TestRecordFeature outputFeature;
+    testUtils::TestRootFeature inputFeature(testEnvironment.m_projectContext, 255, true);
+    testUtils::TestRootFeature outputFeature(testEnvironment.m_projectContext);
     inputFeature.setToDefault();
     outputFeature.setToDefault();
 
@@ -399,11 +400,11 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     cache.setFeatures(&inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 3);
 
-    editTree.setExpanded(libTestUtils::TestRecordFeature::s_pathToRecord, true);
+    editTree.setExpanded(testUtils::TestRootFeature::s_pathToRecord, true);
     cache.setFeatures(&inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 5);
 
-    editTree.setExpanded(libTestUtils::TestRecordFeature::s_pathToArray, true);
+    editTree.setExpanded(testUtils::TestRootFeature::s_pathToArray, true);
     cache.setFeatures(&inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 8);
 
@@ -432,7 +433,7 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
         EXPECT_EQ(entry->getLabel(), "[2]");
         EXPECT_FALSE(entry->getInputFeature());
         EXPECT_EQ(entry->getOutputFeature(), outputFeature.m_arrayFeature->getFeature(2));
-        EXPECT_EQ(entry->getPath(), libTestUtils::TestRecordFeature::s_pathToArray_2);
+        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToArray_2);
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
         checkUnmodified(entry);
@@ -449,10 +450,10 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     }
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
-        EXPECT_EQ(entry->getLabel(), libTestUtils::TestRecordFeature::s_extraIntFieldName);
+        EXPECT_EQ(entry->getLabel(), testUtils::TestRootFeature::s_extraIntFieldName);
         EXPECT_FALSE(entry->getOutputFeature());
         EXPECT_EQ(entry->getInputFeature(), inputFeature.m_extraIntFeature);
-        EXPECT_EQ(entry->getPath(), libTestUtils::TestRecordFeature::s_pathToExtraInt);
+        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToExtraInt);
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
         checkUnmodified(entry);
@@ -461,13 +462,13 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
 
 TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestRecordFeature inputFeature;
-    libTestUtils::TestRecordFeature outputFeature;
+    testUtils::TestRootFeature inputFeature(testEnvironment.m_projectContext);
+    testUtils::TestRootFeature outputFeature(testEnvironment.m_projectContext);
     inputFeature.setToDefault();
     outputFeature.setToDefault();
 
@@ -476,7 +477,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
 
     // Adding a hidden failed modifier whose parent is logically the root requires us to present
     // a root entry to the user, so the UI functionality for failed modifiers has somewhere to live.
-    libTestUtils::TestFeatureElement owner;
+    testUtils::TestFeatureElement owner(testEnvironment.m_projectContext);
     auto modifierPtr = createModifier(babelwires::FeaturePath::deserializeFromString("flarg"), 2000, &owner);
     modifierPtr->simulateFailure();
     auto modifier = modifierPtr.get();
@@ -542,8 +543,8 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
 }
 
 namespace {
-    void checkFileRootEntry(const babelwires::ContentsCacheEntry* entry, libTestUtils::TestFileFeature* inputFeature,
-                            libTestUtils::TestFileFeature* outputFeature) {
+    void checkFileRootEntry(const babelwires::ContentsCacheEntry* entry, testUtils::TestFileFeature* inputFeature,
+                            testUtils::TestFileFeature* outputFeature) {
         EXPECT_EQ(entry->getLabel(), "File");
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature);
@@ -560,9 +561,9 @@ namespace {
         EXPECT_FALSE(entry->isExpanded());
     }
 
-    void checkFileIntEntry(const babelwires::ContentsCacheEntry* entry, libTestUtils::TestFileFeature* inputFeature,
-                           libTestUtils::TestFileFeature* outputFeature) {
-        EXPECT_EQ(entry->getLabel(), libTestUtils::TestFileFeature::s_intChildFieldName);
+    void checkFileIntEntry(const babelwires::ContentsCacheEntry* entry, testUtils::TestFileFeature* inputFeature,
+                           testUtils::TestFileFeature* outputFeature) {
+        EXPECT_EQ(entry->getLabel(), testUtils::TestFileFeature::s_intChildFieldName);
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature->m_intChildFeature);
         } else {
@@ -573,14 +574,14 @@ namespace {
         } else {
             EXPECT_FALSE(entry->getOutputFeature());
         }
-        EXPECT_EQ(entry->getPath(), libTestUtils::TestFileFeature::s_pathToIntChild);
+        EXPECT_EQ(entry->getPath(), testUtils::TestFileFeature::s_pathToIntChild);
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
     }
 
     void testFileCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                                 libTestUtils::TestFileFeature* inputFeature,
-                                 libTestUtils::TestFileFeature* outputFeature) {
+                                 testUtils::TestFileFeature* inputFeature,
+                                 testUtils::TestFileFeature* outputFeature) {
         ASSERT_EQ(cache.getNumRows(), 2);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -594,15 +595,15 @@ namespace {
         }
     }
 
-    void testModifierBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                               libTestUtils::TestFileFeature* inputFeature,
-                               libTestUtils::TestFileFeature* outputFeature) {
+    void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
+                               testUtils::TestFileFeature* inputFeature,
+                               testUtils::TestFileFeature* outputFeature) {
         ASSERT_TRUE(inputFeature);
 
         // Adding a hidden failed modifier whose parent is logically the root.
         // In this case, there's already an entry for the root, so no new
         // artificial entry need be added.
-        libTestUtils::TestFeatureElement owner;
+        testUtils::TestFeatureElement owner(context);
         auto modifierPtr = createModifier(babelwires::FeaturePath::deserializeFromString("flarg"), 2000, &owner);
         modifierPtr->simulateFailure();
         auto modifier = modifierPtr.get();
@@ -633,27 +634,27 @@ namespace {
 
 TEST(ContentsCacheTest, inputFileFeatureOnly) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestFileFeature inputFeature;
+    testUtils::TestFileFeature inputFeature(testEnvironment.m_projectContext);
     inputFeature.setToDefault();
 
     cache.setFeatures(&inputFeature, nullptr);
     testFileCommonBehaviour(cache, editTree, &inputFeature, nullptr);
-    testModifierBehaviour(cache, editTree, &inputFeature, nullptr);
+    testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, nullptr);
 }
 
 TEST(ContentsCacheTest, outputFileFeatureOnly) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestFileFeature outputFeature;
+    testUtils::TestFileFeature outputFeature(testEnvironment.m_projectContext);
     outputFeature.setToDefault();
 
     cache.setFeatures(nullptr, &outputFeature);
@@ -662,17 +663,17 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
 
 TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    libTestUtils::TestFileFeature inputFeature;
-    libTestUtils::TestFileFeature outputFeature;
+    testUtils::TestFileFeature inputFeature(testEnvironment.m_projectContext);
+    testUtils::TestFileFeature outputFeature(testEnvironment.m_projectContext);
     inputFeature.setToDefault();
     outputFeature.setToDefault();
 
     cache.setFeatures(&inputFeature, &outputFeature);
     testFileCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
-    testModifierBehaviour(cache, editTree, &inputFeature, &outputFeature);
+    testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
 }

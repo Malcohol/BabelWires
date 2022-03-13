@@ -1,6 +1,6 @@
 #include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
 
-namespace libTestUtils {
+namespace testUtils {
     struct LocalTestModifier : babelwires::LocalModifier {
         LocalTestModifier(std::unique_ptr<babelwires::LocalModifierData> modifierData)
             : LocalModifier(std::move(modifierData)) {}
@@ -12,4 +12,4 @@ namespace libTestUtils {
 
         void simulateRecovery() { setSucceeded(); }
     };
-} // namespace libTestUtils
+} // namespace testUtils

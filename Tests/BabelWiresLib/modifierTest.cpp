@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
@@ -243,10 +243,10 @@ TEST(ModifierTest, arraySizeModifierFailure) {
 
 TEST(ModifierTest, connectionModifierSuccess) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    testUtils::TestEnvironment projectContext;
 
-    libTestUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = libTestUtils::TestRecordFeature::s_pathToInt;
+    testUtils::TestFeatureElementData elementData;
+    const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
     babelwires::IntValueAssignmentData sourceData;
     sourceData.m_pathToFeature = sourcePath;
     sourceData.m_value = 100;
@@ -280,7 +280,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
 
 TEST(ModifierTest, connectionModifierTargetPathFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    testUtils::TestEnvironment projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
     babelwires::Identifier id1("bb");
@@ -311,7 +311,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
 
 TEST(ModifierTest, connectionModifierSourceIdFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    testUtils::TestEnvironment projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
     babelwires::Identifier id1("bb");
@@ -343,10 +343,10 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
 
 TEST(ModifierTest, connectionModifierSourcePathFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    testUtils::TestEnvironment projectContext;
 
-    libTestUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = libTestUtils::TestRecordFeature::s_pathToInt;
+    testUtils::TestFeatureElementData elementData;
+    const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
     babelwires::IntValueAssignmentData sourceData;
     sourceData.m_pathToFeature = sourcePath;
     sourceData.m_value = 100;
@@ -383,10 +383,10 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 
 TEST(ModifierTest, connectionModifierApplicationFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    testUtils::TestEnvironment projectContext;
 
-    libTestUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = libTestUtils::TestRecordFeature::s_pathToInt;
+    testUtils::TestFeatureElementData elementData;
+    const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
     babelwires::IntValueAssignmentData sourceData;
     sourceData.m_pathToFeature = sourcePath;
     sourceData.m_value = 100;

@@ -4,16 +4,17 @@
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
 #include "Common/Identifiers/registeredIdentifier.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 
 namespace testUtils {
     /// A record with a small feature hierarchy.
-    struct TestRecordFeature : babelwires::RecordFeature {
+    struct TestRootFeature : babelwires::RootFeature {
         // Contained ints have an imposed value limit.
         // This is used to test failed applications.
-        TestRecordFeature(int intValueLimit = 255, bool addExtraInt = false);
+        TestRootFeature(const babelwires::ProjectContext& context, int intValueLimit = 255, bool addExtraInt = false);
 
         static constexpr char s_intIdInitializer[] = "int0";
         static constexpr char s_arrayIdInitializer[] = "array";
@@ -53,5 +54,17 @@ namespace testUtils {
         // Contained ints have an imposed value limit.
         // This is used to test failed applications.
         int m_intValueLimit;
+
+        // For convenience
+        static const babelwires::FeaturePath s_pathToInt;
+        static const babelwires::FeaturePath s_pathToArray;
+        static const babelwires::FeaturePath s_pathToArray_0;
+        static const babelwires::FeaturePath s_pathToArray_1;
+        static const babelwires::FeaturePath s_pathToArray_2;
+        static const babelwires::FeaturePath s_pathToArray_3;
+        static const babelwires::FeaturePath s_pathToArray_4;
+        static const babelwires::FeaturePath s_pathToRecord;
+        static const babelwires::FeaturePath s_pathToInt2;
+        static const babelwires::FeaturePath s_pathToExtraInt;
     };
 } // namespace testUtils

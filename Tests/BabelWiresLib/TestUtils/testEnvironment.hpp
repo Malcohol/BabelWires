@@ -10,9 +10,9 @@
 #include "BabelWiresLib/Project/project.hpp"
 #include "BabelWiresLib/Project/projectContext.hpp"
 
-namespace libTestUtils {
-    struct TestProjectContext {
-        TestProjectContext();
+namespace testUtils {
+    struct TestEnvironment {
+        TestEnvironment();
 
         babelwires::TargetFileFormatRegistry m_targetFileFormatReg;
         babelwires::SourceFileFormatRegistry m_sourceFileFormatReg;
@@ -25,4 +25,4 @@ namespace libTestUtils {
 
         babelwires::Project m_project;
     };
-} // namespace libTestUtils
+} // namespace testUtils

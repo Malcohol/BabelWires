@@ -36,21 +36,14 @@ SET( LIB_TESTS_SRCS
     removeSimpleModifierCommandTest.cpp
     removeModifierCommandTest.cpp
     resizeElementCommandTest.cpp
+    rootFeatureTest.cpp
     setArraySizeCommandTest.cpp
     setExpandedCommandTest.cpp
     sourceFileElementTest.cpp
     targetFileElementTest.cpp
-    TestUtils/testEnum.cpp
-    TestUtils/testFeatureElement.cpp
-    TestUtils/testFileFormats.cpp
-    TestUtils/testProcessor.cpp
-    TestUtils/testProjectContext.cpp
-    TestUtils/testProjectData.cpp
-    TestUtils/testRecord.cpp
-    TestUtils/testFeatureWithOptionals.cpp
     valueNamesTest.cpp
    )
 
 ADD_EXECUTABLE( babelWiresTests ${LIB_TESTS_SRCS} )
 TARGET_INCLUDE_DIRECTORIES( babelWiresTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
-TARGET_LINK_LIBRARIES(babelWiresTests Common testUtils BabelWiresLib gtest)
+TARGET_LINK_LIBRARIES(babelWiresTests Common testUtils BabelWiresLib libTestUtils gtest)

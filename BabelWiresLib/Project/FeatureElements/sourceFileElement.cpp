@@ -33,11 +33,11 @@ babelwires::SourceFileElementData& babelwires::SourceFileElement::getElementData
     return static_cast<SourceFileElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::RecordFeature* babelwires::SourceFileElement::getOutputFeature() {
+babelwires::RootFeature* babelwires::SourceFileElement::getOutputFeature() {
     return m_feature.get();
 }
 
-void babelwires::SourceFileElement::setFeature(std::unique_ptr<RecordFeature> feature) {
+void babelwires::SourceFileElement::setFeature(std::unique_ptr<RootFeature> feature) {
     m_contentsCache.setFeatures(nullptr, feature.get());
     m_feature = std::move(feature);
 }
@@ -86,7 +86,7 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
         }
 
         FileDataSource file(data.m_filePath);
-        setFeature(format.loadFromFile(file, userLogger));
+        setFeature(format.loadFromFile(file, context, userLogger));
         clearInternalFailure();
         return true;
     } catch (const RegistryException& e) {
@@ -94,12 +94,12 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
         setFactoryName(data.m_factoryIdentifier);
         setInternalFailure(e.what());
         // A dummy feature
-        setFeature(std::make_unique<FailedFeature>());
+        setFeature(std::make_unique<FailedFeature>(context));
     } catch (const BaseException& e) {
         userLogger.logError() << "Source File Feature id=" << data.m_id << " could not be loaded: " << e.what();
         setInternalFailure(e.what());
         // A dummy file feature which allows the user to change the file via the context menu.
-        setFeature(std::make_unique<FileFeature>(data.m_factoryIdentifier));
+        setFeature(std::make_unique<FileFeature>(context, data.m_factoryIdentifier));
     }
     return false;
 }

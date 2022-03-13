@@ -12,6 +12,7 @@
 #include "BabelWiresLib/Features/featureMixins.hpp"
 #include "BabelWiresLib/Features/modelExceptions.hpp"
 #include "BabelWiresLib/Processors/commonProcessor.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
 namespace babelwires {
     constexpr int s_maxParallelFeatures = 16;
@@ -32,6 +33,8 @@ namespace babelwires {
     template <typename INPUT_ENTRY_FEATURE, typename OUTPUT_ENTRY_FEATURE>
     class ParallelProcessor : public CommonProcessor {
       public:
+        ParallelProcessor(const ProjectContext& projectContext) : CommonProcessor(projectContext) {}
+
         using InputEntryFeature = INPUT_ENTRY_FEATURE;
         using OutputEntryFeature = OUTPUT_ENTRY_FEATURE;
         using InputArrayFeature = HasStaticSizeRange<StandardArrayFeature<InputEntryFeature>, 1, s_maxParallelFeatures>;

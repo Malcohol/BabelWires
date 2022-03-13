@@ -7,7 +7,7 @@
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
 TEST(ConnectionDescriptionTest, equalityAndHash) {
@@ -61,41 +61,41 @@ TEST(ConnectionDescriptionTest, equalityAndHash) {
 
 TEST(ConnectionDescriptionTest, getCommands) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceId = 12;
     const babelwires::ElementId targetId = 14;
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToArray_1;
-    connectionData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+    connectionData.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
+    connectionData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
     connectionData.m_sourceId = sourceId;
 
     babelwires::ConnectionDescription connection(14, connectionData);
 
     {
-        libTestUtils::TestFeatureElementData sourceElementData;
+        testUtils::TestFeatureElementData sourceElementData;
         sourceElementData.m_id = sourceId;
-        context.m_project.addFeatureElement(sourceElementData);
+        testEnvironment.m_project.addFeatureElement(sourceElementData);
     }
     {
-        libTestUtils::TestFeatureElementData targetElementData;
+        testUtils::TestFeatureElementData targetElementData;
         targetElementData.m_id = targetId;
-        context.m_project.addFeatureElement(targetElementData);
+        testEnvironment.m_project.addFeatureElement(targetElementData);
     }
 
-    const libTestUtils::TestFeatureElement* targetElement =
-        context.m_project.getFeatureElement(targetId)->as<libTestUtils::TestFeatureElement>();
+    const testUtils::TestFeatureElement* targetElement =
+        testEnvironment.m_project.getFeatureElement(targetId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(targetElement, nullptr);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     auto connectionCommand = connection.getConnectionCommand();
     auto disconnectionCommand = connection.getDisconnectionCommand();
 
-    const auto checkModifier = [&context, targetElement, &connectionData](bool isAdded) {
+    const auto checkModifier = [&testEnvironment, targetElement, &connectionData](bool isAdded) {
         const babelwires::Modifier* modifier =
-            targetElement->findModifier(libTestUtils::TestRecordFeature::s_pathToArray_1);
+            targetElement->findModifier(testUtils::TestRootFeature::s_pathToArray_1);
         if (isAdded) {
             ASSERT_NE(modifier, nullptr);
             const babelwires::ConnectionModifier* connection =
@@ -111,13 +111,13 @@ TEST(ConnectionDescriptionTest, getCommands) {
 
     checkModifier(false);
 
-    EXPECT_TRUE(connectionCommand->initializeAndExecute(context.m_project));
-    context.m_project.process();
+    EXPECT_TRUE(connectionCommand->initializeAndExecute(testEnvironment.m_project));
+    testEnvironment.m_project.process();
 
     checkModifier(true);
 
-    EXPECT_TRUE(disconnectionCommand->initializeAndExecute(context.m_project));
-    context.m_project.process();
+    EXPECT_TRUE(disconnectionCommand->initializeAndExecute(testEnvironment.m_project));
+    testEnvironment.m_project.process();
 
     checkModifier(false);
 }

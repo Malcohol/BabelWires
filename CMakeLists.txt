@@ -61,4 +61,4 @@ add_subdirectory(extern/nodeeditor)
 add_subdirectory(Tests/TestUtils)
 add_subdirectory(Tests/Common)
 add_subdirectory(Tests/BabelWiresLib)
-
+add_subdirectory(Tests/BabelWiresLib/TestUtils)

@@ -4,12 +4,12 @@
 #include "Tests/TestUtils/testLog.hpp"
 
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "Common/Identifiers/registeredIdentifier.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"
 
+#include "Common/Identifiers/registeredIdentifier.hpp"
+#include "Common/Identifiers/identifierRegistry.hpp"
 #include "Common/Log/unifiedLog.hpp"
 #include "Common/Serialization/XML/xmlDeserializer.hpp"
 #include "Common/Serialization/XML/xmlSerializer.hpp"
@@ -147,7 +147,7 @@ TEST(FeaturePathTest, pathFollow) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
-    libTestUtils::TestRecordFeature testRecordFeature;
+    testUtils::TestRecordFeature testRecordFeature;
 
     // Now set up some paths.
     babelwires::FeaturePath pathToRecord(&testRecordFeature);
@@ -196,17 +196,17 @@ TEST(FeaturePathTest, pathResolve) {
     babelwires::FeaturePath pathToSubRecord;
     babelwires::FeaturePath pathToInt2;
 
-    pathToInt.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_intIdInitializer));
-    pathToArray.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_arrayIdInitializer));
-    pathToElem0.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_arrayIdInitializer));
+    pathToInt.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_intIdInitializer));
+    pathToArray.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_arrayIdInitializer));
+    pathToElem0.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_arrayIdInitializer));
     pathToElem0.pushStep(babelwires::PathStep(0));
-    pathToElem1.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_arrayIdInitializer));
+    pathToElem1.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_arrayIdInitializer));
     pathToElem1.pushStep(babelwires::PathStep(1));
-    pathToSubRecord.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_recordIdInitializer));
-    pathToInt2.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_recordIdInitializer));
-    pathToInt2.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_int2IdInitializer));
+    pathToSubRecord.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_recordIdInitializer));
+    pathToInt2.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_recordIdInitializer));
+    pathToInt2.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_int2IdInitializer));
 
-    libTestUtils::TestRecordFeature testRecordFeature;
+    testUtils::TestRecordFeature testRecordFeature;
 
     EXPECT_EQ(pathToInt.getStep(0).getField().getDiscriminator(), 0);
     EXPECT_EQ(pathToArray.getStep(0).getField().getDiscriminator(), 0);
@@ -248,7 +248,7 @@ TEST(FeaturePathTest, pathTryFollow) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
-    libTestUtils::TestRecordFeature testRecordFeature;
+    testUtils::TestRecordFeature testRecordFeature;
 
     // Now set up some paths.
     babelwires::FeaturePath pathToRecord(&testRecordFeature);
@@ -280,14 +280,14 @@ TEST(FeaturePathTest, pathFollowFail) {
 
     pathToNonField.pushStep(babelwires::PathStep("Forb"));
     pathToNonIndex.pushStep(babelwires::PathStep(0));
-    pathOffEndOfArray.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_arrayIdInitializer));
+    pathOffEndOfArray.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_arrayIdInitializer));
     pathOffEndOfArray.pushStep(babelwires::PathStep(5));
-    pathValueAsRecord.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_int2IdInitializer));
+    pathValueAsRecord.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_int2IdInitializer));
     pathValueAsRecord.pushStep(babelwires::PathStep("flerm"));
-    pathValueAsArray.pushStep(babelwires::PathStep(libTestUtils::TestRecordFeature::s_int2IdInitializer));
+    pathValueAsArray.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_int2IdInitializer));
     pathValueAsArray.pushStep(babelwires::PathStep(12));
 
-    libTestUtils::TestRecordFeature testRecordFeature;
+    testUtils::TestRecordFeature testRecordFeature;
 
     EXPECT_THROW(pathToNonField.follow(testRecordFeature), babelwires::ModelException);
     EXPECT_THROW(pathToNonIndex.follow(testRecordFeature), babelwires::ModelException);

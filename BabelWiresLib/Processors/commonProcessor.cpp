@@ -6,15 +6,16 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Processors/commonProcessor.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
-babelwires::CommonProcessor::CommonProcessor()
-    : m_inputFeature(std::make_unique<babelwires::RecordFeature>())
-    , m_outputFeature(std::make_unique<babelwires::RecordFeature>()) {}
+babelwires::CommonProcessor::CommonProcessor(const ProjectContext& projectContext)
+    : m_inputFeature(std::make_unique<babelwires::RootFeature>(projectContext))
+    , m_outputFeature(std::make_unique<babelwires::RootFeature>(projectContext)) {}
 
-babelwires::RecordFeature* babelwires::CommonProcessor::getInputFeature() {
+babelwires::RootFeature* babelwires::CommonProcessor::getInputFeature() {
     return m_inputFeature.get();
 }
 
-babelwires::RecordFeature* babelwires::CommonProcessor::getOutputFeature() {
+babelwires::RootFeature* babelwires::CommonProcessor::getOutputFeature() {
     return m_outputFeature.get();
 }

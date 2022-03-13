@@ -7,42 +7,42 @@
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 TEST(AddElementCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    testUtils::TestEnvironment testEnvironment;
 
-    babelwires::AddElementCommand command("Test command", std::make_unique<libTestUtils::TestFeatureElementData>());
+    babelwires::AddElementCommand command("Test command", std::make_unique<testUtils::TestFeatureElementData>());
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    EXPECT_TRUE(command.initialize(context.m_project));
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
 
-    const babelwires::FeatureElement* newElement = context.m_project.getFeatureElement(command.getElementId());
+    const babelwires::FeatureElement* newElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(newElement, nullptr);
-    EXPECT_NE(newElement->as<libTestUtils::TestFeatureElement>(), nullptr);
+    EXPECT_NE(newElement->as<testUtils::TestFeatureElement>(), nullptr);
 
-    command.undo(context.m_project);
+    command.undo(testEnvironment.m_project);
 
-    EXPECT_EQ(context.m_project.getFeatureElement(command.getElementId()), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(command.getElementId()), nullptr);
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
 
-    const babelwires::FeatureElement* restoredElement = context.m_project.getFeatureElement(command.getElementId());
+    const babelwires::FeatureElement* restoredElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(restoredElement, nullptr);
-    EXPECT_NE(restoredElement->as<libTestUtils::TestFeatureElement>(), nullptr);
+    EXPECT_NE(restoredElement->as<testUtils::TestFeatureElement>(), nullptr);
 }
 
 TEST(AddElementCommandTest, subsumeMoves) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    testUtils::TestEnvironment testEnvironment;
 
-    babelwires::AddElementCommand addCommand("Test command", std::make_unique<libTestUtils::TestFeatureElementData>());
+    babelwires::AddElementCommand addCommand("Test command", std::make_unique<testUtils::TestFeatureElementData>());
 
-    EXPECT_TRUE(addCommand.initializeAndExecute(context.m_project));
+    EXPECT_TRUE(addCommand.initializeAndExecute(testEnvironment.m_project));
 
     auto moveCommand = std::make_unique<babelwires::MoveElementCommand>("Test Move", addCommand.getElementId(),
                                                                         babelwires::UiPosition{14, 88});
@@ -52,10 +52,10 @@ TEST(AddElementCommandTest, subsumeMoves) {
     addCommand.subsume(std::move(moveCommand));
 
     // Confirm that the move was subsumed
-    addCommand.undo(context.m_project);
-    addCommand.execute(context.m_project);
+    addCommand.undo(testEnvironment.m_project);
+    addCommand.execute(testEnvironment.m_project);
     const auto* element =
-        context.m_project.getFeatureElement(addCommand.getElementId())->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(addCommand.getElementId())->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
     EXPECT_EQ(element->getUiPosition().m_y, 88);

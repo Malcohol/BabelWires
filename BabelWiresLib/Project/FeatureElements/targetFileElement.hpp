@@ -29,7 +29,7 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const TargetFileElementData& getElementData() const;
 
-        virtual RecordFeature* getInputFeature() override;
+        virtual RootFeature* getInputFeature() override;
 
         virtual std::filesystem::path getFilePath() const override;
         virtual void setFilePath(std::filesystem::path newFilePath) override;
@@ -42,7 +42,7 @@ namespace babelwires {
         virtual std::string getLabel() const override;
 
       protected:
-        void setFeature(std::unique_ptr<RecordFeature> feature);
+        void setFeature(std::unique_ptr<RootFeature> feature);
         virtual void doProcess(UserLogger& userLogger) override;
         TargetFileElementData& getElementData();
 
@@ -50,7 +50,7 @@ namespace babelwires {
         void updateSaveHash();
 
       private:
-        std::unique_ptr<RecordFeature> m_feature;
+        std::unique_ptr<RootFeature> m_feature;
 
         /// The current hash of the feature and filePath.
         std::size_t m_saveHash = 1;

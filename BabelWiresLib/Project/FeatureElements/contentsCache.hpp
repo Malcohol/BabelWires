@@ -20,6 +20,7 @@ namespace babelwires {
     class CompoundFeature;
     class RecordFeature;
     class ArrayFeature;
+    class RootFeature;
     class EditTree;
 
     /// The information cached about a single row in the contents of a feature element.
@@ -92,7 +93,7 @@ namespace babelwires {
         ContentsCache(const EditTree& edits);
 
         /// Build the cache with the given input and output features.
-        void setFeatures(const babelwires::Feature* inputFeature, const babelwires::Feature* outputFeature);
+        void setFeatures(const RootFeature* inputFeature, const RootFeature* outputFeature);
 
         /// Update the part of the cache concerning modifiers.
         void updateModifierCache();

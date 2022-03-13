@@ -231,11 +231,12 @@ namespace {
     };
 } // namespace
 
-void babelwires::ContentsCache::setFeatures(const babelwires::Feature* inputFeature,
-                                            const babelwires::Feature* outputFeature) {
+void babelwires::ContentsCache::setFeatures(const RootFeature* inputFeature,
+                                            const RootFeature* outputFeature) {
     m_rows.clear();
     ContentsCacheBuilder builder(m_rows, m_edits);
     const babelwires::Feature* const rootFeature = inputFeature ? inputFeature : outputFeature;
+    // TODO Instead of this hack, make the extra "file" row a UI feature.
     const char* rootLabel = rootFeature->as<const babelwires::FileFeature>() ? "File" : "Root";
     if (inputFeature && outputFeature) {
         builder.addFeatureToCache(rootLabel, inputFeature, outputFeature, FeaturePath(),

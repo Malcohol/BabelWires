@@ -14,6 +14,7 @@ namespace babelwires {
     struct ProjectContext;
     struct ProcessorElementData;
     class Processor;
+    class RootFeature;
 
     class ProcessorElement : public FeatureElement {
       public:
@@ -23,8 +24,8 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const ProcessorElementData& getElementData() const;
 
-        virtual RecordFeature* getInputFeature() override;
-        virtual RecordFeature* getOutputFeature() override;
+        virtual RootFeature* getInputFeature() override;
+        virtual RootFeature* getOutputFeature() override;
 
       protected:
         void setProcessor(std::unique_ptr<Processor> processor);
@@ -34,7 +35,7 @@ namespace babelwires {
         std::unique_ptr<Processor> m_processor;
 
         /// Non-null when the defined processor could not be constructed.
-        std::unique_ptr<babelwires::RecordFeature> m_sharedDummyFeature;
+        std::unique_ptr<babelwires::RootFeature> m_sharedDummyFeature;
     };
 
 } // namespace babelwires

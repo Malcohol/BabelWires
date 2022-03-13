@@ -8,6 +8,7 @@
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/localModifier.hpp"

@@ -10,7 +10,7 @@
 #include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
 #include "BabelWiresLib/Project/projectContext.hpp"
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
 #include "Common/Log/userLogger.hpp"
 #include "Common/Serialization/deserializer.hpp"

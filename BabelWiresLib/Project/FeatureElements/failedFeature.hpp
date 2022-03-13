@@ -7,13 +7,13 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
 namespace babelwires {
 
     /// A dummy feature to use when the contents of FeatureElement cannot be properly initialized.
-    struct FailedFeature : RecordFeature {
-        FailedFeature();
+    struct FailedFeature : RootFeature {
+        FailedFeature(const ProjectContext& projectContext);
     };
 
 } // namespace babelwires

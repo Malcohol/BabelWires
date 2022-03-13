@@ -14,7 +14,7 @@
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProjectData.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
@@ -22,99 +22,99 @@
 
 TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    testUtils::TestEnvironment testEnvironment;
 
-    libTestUtils::TestProjectData projectData;
+    testUtils::TestProjectData projectData;
 
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
-    libTestUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
+    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
     babelwires::PasteElementsCommand command("Test command", std::move(projectData));
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    EXPECT_TRUE(command.initialize(context.m_project));
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
 
-    command.execute(context.m_project);
-    context.m_project.process();
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
-    const auto checkForProjectData = [&context]() {
+    const auto checkForProjectData = [&testEnvironment]() {
         // If there are no clashes, expect the IDs in the data to be respected.
         const babelwires::FeatureElement* sourceElement =
-            context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId);
+            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
         EXPECT_NE(sourceElement, nullptr);
         const babelwires::FeatureElement* processor =
-            context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
+            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
         ASSERT_NE(processor, nullptr);
         const babelwires::FeatureElement* targetElement =
-            context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
+            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
 
         // Confirm that some modifiers were pasted too.
-        ASSERT_NE(processor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt), nullptr);
-        EXPECT_FALSE(processor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt)->isFailed());
-        ASSERT_NE(targetElement->getEdits().findModifier(libTestUtils::TestFileFeature::s_pathToIntChild), nullptr);
+        ASSERT_NE(processor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt), nullptr);
+        EXPECT_FALSE(processor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt)->isFailed());
+        ASSERT_NE(targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild), nullptr);
         EXPECT_FALSE(
-            targetElement->getEdits().findModifier(libTestUtils::TestFileFeature::s_pathToIntChild)->isFailed());
+            targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild)->isFailed());
     };
     checkForProjectData();
 
-    command.undo(context.m_project);
-    context.m_project.process();
+    command.undo(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
-    EXPECT_EQ(context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId), nullptr);
-    EXPECT_EQ(context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId), nullptr);
-    EXPECT_EQ(context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId), nullptr);
 
-    command.execute(context.m_project);
-    context.m_project.process();
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     checkForProjectData();
 }
 
 TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    testUtils::TestEnvironment testEnvironment;
 
-    libTestUtils::TestProjectData originalProjectData;
-    context.m_project.setProjectData(originalProjectData);
+    testUtils::TestProjectData originalProjectData;
+    testEnvironment.m_project.setProjectData(originalProjectData);
 
-    libTestUtils::TestProjectData projectData;
+    testUtils::TestProjectData projectData;
 
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     // It's OK for sources to be duplicated. It's not so great for targets, but it won't affect this test.
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
     originalProjectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
-    libTestUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
+    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
     {
         // Confirm the original data applied as expected.
         const babelwires::FeatureElement* sourceElement =
-            context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId);
+            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
         EXPECT_NE(sourceElement, nullptr);
         const babelwires::FeatureElement* processor =
-            context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
+            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
         ASSERT_NE(processor, nullptr);
         const babelwires::FeatureElement* targetElement =
-            context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
+            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
-        ASSERT_NE(processor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt), nullptr);
-        EXPECT_FALSE(processor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt)->isFailed());
+        ASSERT_NE(processor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt), nullptr);
+        EXPECT_FALSE(processor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt)->isFailed());
     };
 
     babelwires::PasteElementsCommand command("Test command", std::move(projectData));
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    EXPECT_TRUE(command.initialize(context.m_project));
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
 
-    command.execute(context.m_project);
-    context.m_project.process();
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
-    const auto checkForProjectData = [&context](bool isAfterCommandExecuted) {
+    const auto checkForProjectData = [&testEnvironment](bool isAfterCommandExecuted) {
         const babelwires::FeatureElement* originalSourceElement = nullptr;
         const babelwires::FeatureElement* originalProcessor = nullptr;
         const babelwires::FeatureElement* originalTargetElement = nullptr;
@@ -122,9 +122,9 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
         const babelwires::FeatureElement* newProcessor = nullptr;
         const babelwires::FeatureElement* newTargetElement = nullptr;
 
-        for (const auto& pair : context.m_project.getElements()) {
+        for (const auto& pair : testEnvironment.m_project.getElements()) {
             if (pair.second->as<babelwires::SourceFileElement>()) {
-                if (pair.first == libTestUtils::TestProjectData::c_sourceElementId) {
+                if (pair.first == testUtils::TestProjectData::c_sourceElementId) {
                     EXPECT_EQ(originalSourceElement, nullptr);
                     originalSourceElement = pair.second.get();
                 } else {
@@ -132,7 +132,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
                     newSourceElement = pair.second.get();
                 }
             } else if (pair.second->as<babelwires::ProcessorElement>()) {
-                if (pair.first == libTestUtils::TestProjectData::c_processorId) {
+                if (pair.first == testUtils::TestProjectData::c_processorId) {
                     EXPECT_EQ(originalProcessor, nullptr);
                     originalProcessor = pair.second.get();
                 } else {
@@ -140,7 +140,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
                     newProcessor = pair.second.get();
                 }
             } else if (pair.second->as<babelwires::TargetFileElement>()) {
-                if (pair.first == libTestUtils::TestProjectData::c_targetElementId) {
+                if (pair.first == testUtils::TestProjectData::c_targetElementId) {
                     EXPECT_EQ(originalTargetElement, nullptr);
                     originalTargetElement = pair.second.get();
                 } else {
@@ -160,7 +160,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
             EXPECT_NE(newProcessor, nullptr);
             EXPECT_NE(newTargetElement, nullptr);
             const babelwires::Modifier* modifier =
-                newProcessor->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt);
+                newProcessor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt);
             ASSERT_NE(modifier, nullptr);
             EXPECT_FALSE(modifier->isFailed());
             const babelwires::ConnectionModifierData* modData =
@@ -176,13 +176,13 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
 
     checkForProjectData(true);
 
-    command.undo(context.m_project);
-    context.m_project.process();
+    command.undo(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     checkForProjectData(false);
 
-    command.execute(context.m_project);
-    context.m_project.process();
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     checkForProjectData(true);
 }
@@ -193,27 +193,27 @@ namespace {
     // If you paste into a different project, however, these connections are ignored.
     void testSourceElementsOutsideProjectData(bool isPastingIntoSameProject) {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        testUtils::TestEnvironment testEnvironment;
 
         babelwires::ElementId sourceElementId =
-            context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+            testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
         const babelwires::ElementId newElementId = sourceElementId + 1;
-        EXPECT_EQ(context.m_project.getFeatureElement(newElementId), nullptr);
+        EXPECT_EQ(testEnvironment.m_project.getFeatureElement(newElementId), nullptr);
 
         // Create project data with an input elementId matching the element in the project.
         babelwires::ProjectData projectData;
 
         if (isPastingIntoSameProject) {
-            projectData.m_projectId = context.m_project.getProjectId();
+            projectData.m_projectId = testEnvironment.m_project.getProjectId();
         }
 
         {
             babelwires::ConnectionModifierData modifierData;
-            modifierData.m_pathToFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
-            modifierData.m_pathToSourceFeature = libTestUtils::TestRecordFeature::s_pathToInt2;
+            modifierData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+            modifierData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
             modifierData.m_sourceId = sourceElementId;
-            libTestUtils::TestFeatureElementData elementData;
+            testUtils::TestFeatureElementData elementData;
             elementData.m_modifiers.emplace_back(modifierData.clone());
             elementData.m_id = newElementId;
             projectData.m_elements.emplace_back(elementData.clone());
@@ -221,18 +221,18 @@ namespace {
 
         babelwires::PasteElementsCommand command("Test command", std::move(projectData));
 
-        EXPECT_TRUE(command.initialize(context.m_project));
+        EXPECT_TRUE(command.initialize(testEnvironment.m_project));
 
-        command.execute(context.m_project);
-        context.m_project.process();
+        command.execute(testEnvironment.m_project);
+        testEnvironment.m_project.process();
 
-        const auto checkForProjectData = [&context, newElementId, isPastingIntoSameProject]() {
+        const auto checkForProjectData = [&testEnvironment, newElementId, isPastingIntoSameProject]() {
             // The newElementId, should be available.
-            const babelwires::FeatureElement* newElement = context.m_project.getFeatureElement(newElementId);
+            const babelwires::FeatureElement* newElement = testEnvironment.m_project.getFeatureElement(newElementId);
             ASSERT_NE(newElement, nullptr);
 
             const babelwires::Modifier* modifier =
-                newElement->getEdits().findModifier(libTestUtils::TestRecordFeature::s_pathToInt2);
+                newElement->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2);
             if (isPastingIntoSameProject) {
                 ASSERT_NE(modifier, nullptr);
                 EXPECT_FALSE(modifier->isFailed());
@@ -243,13 +243,13 @@ namespace {
 
         checkForProjectData();
 
-        command.undo(context.m_project);
-        context.m_project.process();
+        command.undo(testEnvironment.m_project);
+        testEnvironment.m_project.process();
 
-        EXPECT_EQ(context.m_project.getFeatureElement(newElementId), nullptr);
+        EXPECT_EQ(testEnvironment.m_project.getFeatureElement(newElementId), nullptr);
 
-        command.execute(context.m_project);
-        context.m_project.process();
+        command.execute(testEnvironment.m_project);
+        testEnvironment.m_project.process();
 
         checkForProjectData();
     }

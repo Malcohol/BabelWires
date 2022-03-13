@@ -8,7 +8,7 @@
 
 #include "BabelWiresLib/Commands/addModifierCommand.hpp"
 
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"

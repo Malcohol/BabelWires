@@ -6,11 +6,11 @@
 
 #include <filesystem>
 
-namespace libTestUtils {
+namespace testUtils {
 
     /// A record with an int feature at path "aaa".
     struct TestFileFeature : babelwires::FileFeature {
-        TestFileFeature();
+        TestFileFeature(const babelwires::ProjectContext& context);
 
         /// The id of the child feature.
         /// Deliberately match the field in TestRecordFeature.
@@ -38,7 +38,7 @@ namespace libTestUtils {
         TestSourceFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::FileFeature> loadFromFile(babelwires::DataSource& dataSource,
+        std::unique_ptr<babelwires::FileFeature> loadFromFile(babelwires::DataSource& dataSource, const babelwires::ProjectContext& projectContext,
                                                               babelwires::UserLogger& userLogger) const override;
 
         static char getFileData(const std::filesystem::path& path);
@@ -53,9 +53,9 @@ namespace libTestUtils {
         TestTargetFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::FileFeature> createNewFeature() const override;
+        std::unique_ptr<babelwires::FileFeature> createNewFeature(const babelwires::ProjectContext& projectContext) const override;
         void writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
                          babelwires::UserLogger& userLogger) const override;
     };
 
-} // namespace libTestUtils
+} // namespace testUtils

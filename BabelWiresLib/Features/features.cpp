@@ -6,8 +6,10 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Features/features.hpp"
+
 #include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
 #include "BabelWiresLib/Features/modelExceptions.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
 babelwires::Feature::~Feature() {}
 

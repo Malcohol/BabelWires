@@ -3,46 +3,47 @@
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
+#include "BabelWiresLib/Features/numericFeature.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
 #include "Tests/TestUtils/tempFilePath.hpp"
 
 TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;
-    data.m_factoryIdentifier = libTestUtils::TestProcessorFactory::getThisIdentifier();
+    data.m_factoryIdentifier = testUtils::TestProcessorFactory::getThisIdentifier();
     data.m_factoryVersion = 1;
 
-    auto featureElement = data.createFeatureElement(context.m_projectContext, context.m_log, 10);
+    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::ProcessorElement>());
     babelwires::ProcessorElement* processorElement = static_cast<babelwires::ProcessorElement*>(featureElement.get());
 
     const babelwires::RecordFeature* outputFeature = processorElement->getOutputFeature();
-    ASSERT_TRUE(outputFeature->as<const libTestUtils::TestRecordFeature>());
-    const libTestUtils::TestRecordFeature* outputTestRecordFeature =
-        static_cast<const libTestUtils::TestRecordFeature*>(outputFeature);
+    ASSERT_TRUE(outputFeature->as<const testUtils::TestRootFeature>());
+    const testUtils::TestRootFeature* outputTestRecordFeature =
+        static_cast<const testUtils::TestRootFeature*>(outputFeature);
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
 
-    const babelwires::FeaturePath arraySettingIntPath = libTestUtils::TestRecordFeature::s_pathToInt;
-    const babelwires::FeaturePath valueSettingIntPath = libTestUtils::TestRecordFeature::s_pathToInt2;
+    const babelwires::FeaturePath arraySettingIntPath = testUtils::TestRootFeature::s_pathToInt;
+    const babelwires::FeaturePath valueSettingIntPath = testUtils::TestRootFeature::s_pathToInt2;
 
     babelwires::IntValueAssignmentData valueSettingData;
     valueSettingData.m_pathToFeature = valueSettingIntPath;
     valueSettingData.m_value = 4;
 
     processorElement->clearChanges();
-    processorElement->addModifier(context.m_log, valueSettingData);
-    processorElement->process(context.m_log);
+    processorElement->addModifier(testEnvironment.m_log, valueSettingData);
+    processorElement->process(testEnvironment.m_log);
 
     // The default.
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
@@ -57,8 +58,8 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     arraySettingData.m_value = 4;
 
     processorElement->clearChanges();
-    processorElement->addModifier(context.m_log, arraySettingData);
-    processorElement->process(context.m_log);
+    processorElement->addModifier(testEnvironment.m_log, arraySettingData);
+    processorElement->process(testEnvironment.m_log);
 
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 6);
     EXPECT_FALSE(processorElement->isFailed());
@@ -73,8 +74,8 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
 
     processorElement->clearChanges();
     processorElement->removeModifier(processorElement->findModifier(arraySettingIntPath));
-    processorElement->addModifier(context.m_log, badArraySettingData);
-    processorElement->process(context.m_log);
+    processorElement->addModifier(testEnvironment.m_log, badArraySettingData);
+    processorElement->process(testEnvironment.m_log);
 
     EXPECT_TRUE(processorElement->isFailed());
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
@@ -86,8 +87,8 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
 
     processorElement->clearChanges();
     processorElement->removeModifier(processorElement->findModifier(arraySettingIntPath));
-    processorElement->addModifier(context.m_log, arraySettingData);
-    processorElement->process(context.m_log);
+    processorElement->addModifier(testEnvironment.m_log, arraySettingData);
+    processorElement->process(testEnvironment.m_log);
 
     EXPECT_FALSE(processorElement->isFailed());
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 6);

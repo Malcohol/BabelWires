@@ -25,12 +25,12 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
     const ElementData& elementData = getElementData();
     try {
         const ProcessorFactory& factory = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
-        setProcessor(factory.createNewProcessor());
+        setProcessor(factory.createNewProcessor(context));
         setFactoryName(factory.getName());
     } catch (const BaseException& e) {
         setFactoryName(elementData.m_factoryIdentifier);
         setInternalFailure(e.what());
-        m_sharedDummyFeature = std::make_unique<babelwires::FailedFeature>();
+        m_sharedDummyFeature = std::make_unique<babelwires::FailedFeature>(context);
         userLogger.logError() << "Failed to create processor id=" << elementData.m_id << ": " << e.what();
     }
 }
@@ -39,7 +39,7 @@ const babelwires::ProcessorElementData& babelwires::ProcessorElement::getElement
     return static_cast<const ProcessorElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::RecordFeature* babelwires::ProcessorElement::getOutputFeature() {
+babelwires::RootFeature* babelwires::ProcessorElement::getOutputFeature() {
     if (m_processor) {
         return m_processor->getOutputFeature();
     } else {
@@ -47,7 +47,7 @@ babelwires::RecordFeature* babelwires::ProcessorElement::getOutputFeature() {
     }
 }
 
-babelwires::RecordFeature* babelwires::ProcessorElement::getInputFeature() {
+babelwires::RootFeature* babelwires::ProcessorElement::getInputFeature() {
     if (m_processor) {
         return m_processor->getInputFeature();
     } else {
