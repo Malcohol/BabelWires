@@ -5,7 +5,7 @@
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 namespace {
     struct TestCommand : babelwires::Command {

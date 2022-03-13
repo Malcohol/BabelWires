@@ -3,7 +3,7 @@ SET( LIB_TEST_UTILS_SRCS
     testFeatureElement.cpp
     testFileFormats.cpp
     testProcessor.cpp
-    testProjectContext.cpp
+    testEnvironment.cpp
     testProjectData.cpp
     testRecord.cpp
     testFeatureWithOptionals.cpp

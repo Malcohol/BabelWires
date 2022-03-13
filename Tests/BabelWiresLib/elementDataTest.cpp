@@ -13,7 +13,7 @@
 
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
 #include "Tests/TestUtils/tempFilePath.hpp"

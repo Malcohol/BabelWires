@@ -11,7 +11,7 @@
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;

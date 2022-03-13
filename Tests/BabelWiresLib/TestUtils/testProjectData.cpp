@@ -11,7 +11,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 libTestUtils::TestProjectData::TestProjectData()
     : m_sourceFilePath(std::string("testSourceFile") + libTestUtils::TestSourceFileFormat::getFileExtension())

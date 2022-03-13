@@ -7,7 +7,7 @@
 #include "BabelWiresLib/Project/project.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 TEST(AddElementCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;

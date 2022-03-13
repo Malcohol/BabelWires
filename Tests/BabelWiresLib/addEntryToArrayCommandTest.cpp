@@ -7,7 +7,7 @@
 #include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {

@@ -14,7 +14,7 @@
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testProjectData.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
 

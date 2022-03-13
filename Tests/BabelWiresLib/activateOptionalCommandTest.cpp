@@ -9,7 +9,7 @@
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp"
 
 TEST(ActivateOptionalsCommandTest, executeAndUndo) {

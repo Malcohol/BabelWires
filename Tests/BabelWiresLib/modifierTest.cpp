@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"

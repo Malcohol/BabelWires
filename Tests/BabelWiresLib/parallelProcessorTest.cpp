@@ -7,7 +7,7 @@
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include "BabelWiresLib/Features/featureMixins.hpp"
 
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 namespace {
     using LimitedIntFeature = babelwires::HasStaticRange<babelwires::IntFeature, -20, 20>;

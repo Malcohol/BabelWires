@@ -12,7 +12,7 @@
 #include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testModifier.hpp"
 #include "Tests/BabelWiresLib/TestUtils/testRootFeature.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectContext.hpp"
+#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
 
 namespace {
     std::unique_ptr<libTestUtils::LocalTestModifier> createModifier(babelwires::FeaturePath path, int x,
