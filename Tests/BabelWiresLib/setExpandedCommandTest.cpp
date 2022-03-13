@@ -11,12 +11,12 @@
 
 TEST(SetExpandedCommandTest, executeAndUndoTrue) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     babelwires::SetExpandedCommand command("Test command", elementId, libTestUtils::TestRootFeature::s_pathToArray,
@@ -26,31 +26,31 @@ TEST(SetExpandedCommandTest, executeAndUndoTrue) {
 
     EXPECT_FALSE(element->isExpanded(libTestUtils::TestRootFeature::s_pathToArray));
 
-    EXPECT_TRUE(command.initialize(context.m_project));
-    command.execute(context.m_project);
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
+    command.execute(testEnvironment.m_project);
 
     EXPECT_TRUE(element->isExpanded(libTestUtils::TestRootFeature::s_pathToArray));
 
-    command.undo(context.m_project);
+    command.undo(testEnvironment.m_project);
 
     EXPECT_FALSE(element->isExpanded(libTestUtils::TestRootFeature::s_pathToArray));
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
 
     EXPECT_TRUE(element->isExpanded(libTestUtils::TestRootFeature::s_pathToArray));
 }
 
 TEST(SetExpandedCommandTest, executeAndUndoFalse) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestFeatureElementData elementData;
     elementData.m_expandedPaths.emplace_back(libTestUtils::TestRootFeature::s_pathToArray);
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
 
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     babelwires::SetExpandedCommand command("Test command", elementId, libTestUtils::TestRootFeature::s_pathToArray,
@@ -60,57 +60,57 @@ TEST(SetExpandedCommandTest, executeAndUndoFalse) {
 
     EXPECT_TRUE(element->isExpanded(libTestUtils::TestRootFeature::s_pathToArray));
 
-    EXPECT_TRUE(command.initialize(context.m_project));
-    command.execute(context.m_project);
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
+    command.execute(testEnvironment.m_project);
 
     EXPECT_FALSE(element->isExpanded(libTestUtils::TestRootFeature::s_pathToArray));
 
-    command.undo(context.m_project);
+    command.undo(testEnvironment.m_project);
 
     EXPECT_TRUE(element->isExpanded(libTestUtils::TestRootFeature::s_pathToArray));
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
 
     EXPECT_FALSE(element->isExpanded(libTestUtils::TestRootFeature::s_pathToArray));
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
     babelwires::SetExpandedCommand command("Test command", 51,
                                            babelwires::FeaturePath::deserializeFromString("qqq/zzz"), true);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoFeature) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
     babelwires::SetExpandedCommand command("Test command", 51,
                                            babelwires::FeaturePath::deserializeFromString("qqq/zzz"), true);
 
     libTestUtils::TestFeatureElementData elementData;
     elementData.m_id = 51;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     EXPECT_EQ(elementId, 51);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoCompound) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
     babelwires::SetExpandedCommand command("Test command", 51, libTestUtils::TestRootFeature::s_pathToInt2, true);
 
     libTestUtils::TestFeatureElementData elementData;
     elementData.m_id = 51;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     EXPECT_EQ(elementId, 51);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }

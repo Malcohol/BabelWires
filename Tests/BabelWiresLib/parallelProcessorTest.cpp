@@ -44,9 +44,9 @@ namespace {
 
 TEST(ParallelProcessorTest, updateOutputOnChanges) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    TestParallelProcessor processor(context.m_projectContext);
+    TestParallelProcessor processor(testEnvironment.m_projectContext);
     processor.getInputFeature()->setToDefault();
     processor.getOutputFeature()->setToDefault();
 
@@ -69,34 +69,34 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 0);
 
     processor.m_intValue->set(1);
-    processor.process(context.m_log);
+    processor.process(testEnvironment.m_log);
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 1);
 
     processor.getInputFeature()->clearChanges();
     getInputArrayEntry(0)->set(2);
-    processor.process(context.m_log);
+    processor.process(testEnvironment.m_log);
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 3);
 
     processor.getInputFeature()->clearChanges();
     inputArrayFeature->addEntry();
-    processor.process(context.m_log);
+    processor.process(testEnvironment.m_log);
     EXPECT_EQ(outputArrayFeature->getNumFeatures(), 2);
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 3);
     EXPECT_EQ(getOutputArrayEntry(1)->get(), 1);
 
     processor.getInputFeature()->clearChanges();
     inputArrayFeature->removeEntry(0);
-    processor.process(context.m_log);
+    processor.process(testEnvironment.m_log);
     EXPECT_EQ(outputArrayFeature->getNumFeatures(), 1);
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 1);
 }
 
 TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    // Use the context's log to determine when the processEntry method is called.
-    libTestUtils::TestProjectContext context;
+    // Use the testEnvironment's log to determine when the processEntry method is called.
+    libTestUtils::TestEnvironment testEnvironment;
 
-    TestParallelProcessor processor(context.m_projectContext);
+    TestParallelProcessor processor(testEnvironment.m_projectContext);
     processor.getInputFeature()->setToDefault();
     processor.getOutputFeature()->setToDefault();
 
@@ -116,62 +116,62 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     inputArrayFeature->addEntry();
     getInputArrayEntry(0)->set(5);
     getInputArrayEntry(1)->set(6);
-    processor.process(context.m_log);
+    processor.process(testEnvironment.m_log);
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 9);
     EXPECT_EQ(getOutputArrayEntry(1)->get(), 10);
 
     processor.getInputFeature()->clearChanges();
-    context.m_log.clear();
-    EXPECT_EQ(context.m_log.getLogContents(), "");
+    testEnvironment.m_log.clear();
+    EXPECT_EQ(testEnvironment.m_log.getLogContents(), "");
    
-    processor.process(context.m_log);
-    EXPECT_EQ(context.m_log.getLogContents(), "");
+    processor.process(testEnvironment.m_log);
+    EXPECT_EQ(testEnvironment.m_log.getLogContents(), "");
     
     processor.getInputFeature()->clearChanges();
-    context.m_log.clear();
+    testEnvironment.m_log.clear();
     getInputArrayEntry(0)->set(7);
-    processor.process(context.m_log);
+    processor.process(testEnvironment.m_log);
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 11);
     EXPECT_EQ(getOutputArrayEntry(1)->get(), 10);
-    EXPECT_TRUE(findPath(context.m_log.getLogContents(), getInputArrayEntry(0)));
-    EXPECT_FALSE(findPath(context.m_log.getLogContents(), getInputArrayEntry(1)));
+    EXPECT_TRUE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(0)));
+    EXPECT_FALSE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(1)));
 
     processor.getInputFeature()->clearChanges();
-    context.m_log.clear();
+    testEnvironment.m_log.clear();
     inputArrayFeature->addEntry();
-    processor.process(context.m_log);
+    processor.process(testEnvironment.m_log);
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 11);
     EXPECT_EQ(getOutputArrayEntry(1)->get(), 10);
     EXPECT_EQ(getOutputArrayEntry(2)->get(), 4);
-    EXPECT_FALSE(findPath(context.m_log.getLogContents(), getInputArrayEntry(0)));
-    EXPECT_FALSE(findPath(context.m_log.getLogContents(), getInputArrayEntry(1)));
-    EXPECT_TRUE(findPath(context.m_log.getLogContents(), getInputArrayEntry(2)));
+    EXPECT_FALSE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(0)));
+    EXPECT_FALSE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(1)));
+    EXPECT_TRUE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(2)));
     
     processor.getInputFeature()->clearChanges();
-    context.m_log.clear();
+    testEnvironment.m_log.clear();
     inputArrayFeature->removeEntry(1);
-    processor.process(context.m_log);
+    processor.process(testEnvironment.m_log);
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 11);
     EXPECT_EQ(getOutputArrayEntry(1)->get(), 4);
-    EXPECT_FALSE(findPath(context.m_log.getLogContents(), getInputArrayEntry(0)));
-    EXPECT_FALSE(findPath(context.m_log.getLogContents(), getInputArrayEntry(1)));
+    EXPECT_FALSE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(0)));
+    EXPECT_FALSE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(1)));
 
     processor.getInputFeature()->clearChanges();
-    context.m_log.clear();
+    testEnvironment.m_log.clear();
     processor.m_intValue->set(2);
-    processor.process(context.m_log);
+    processor.process(testEnvironment.m_log);
     EXPECT_EQ(getOutputArrayEntry(0)->get(), 9);
     EXPECT_EQ(getOutputArrayEntry(1)->get(), 2);
-    EXPECT_TRUE(findPath(context.m_log.getLogContents(), getInputArrayEntry(0)));
-    EXPECT_TRUE(findPath(context.m_log.getLogContents(), getInputArrayEntry(1)));
+    EXPECT_TRUE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(0)));
+    EXPECT_TRUE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(1)));
 }
 
 TEST(ParallelProcessorTest, testFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    // Use the context's log to determine when the processEntry method is called.
-    libTestUtils::TestProjectContext context;
+    // Use the testEnvironment's log to determine when the processEntry method is called.
+    libTestUtils::TestEnvironment testEnvironment;
 
-    TestParallelProcessor processor(context.m_projectContext);
+    TestParallelProcessor processor(testEnvironment.m_projectContext);
     processor.getInputFeature()->setToDefault();
     processor.getOutputFeature()->setToDefault();
 
@@ -192,7 +192,7 @@ TEST(ParallelProcessorTest, testFailure) {
     getInputArrayEntry(0)->set(17);
     getInputArrayEntry(1)->set(6);
     try {
-        processor.process(context.m_log);
+        processor.process(testEnvironment.m_log);
         EXPECT_FALSE(true);
     } catch (const std::exception& e) {
         EXPECT_TRUE(findPath(e.what(), getInputArrayEntry(0)));

@@ -22,7 +22,7 @@
 
 TEST(RemoveElementCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestProjectData projectData;
 
@@ -31,14 +31,14 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
     libTestUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
-    context.m_project.setProjectData(projectData);
-    context.m_project.process();
+    testEnvironment.m_project.setProjectData(projectData);
+    testEnvironment.m_project.process();
 
-    EXPECT_NE(context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId), nullptr);
+    EXPECT_NE(testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId), nullptr);
 
-    const auto checkElements = [&context](bool isCommandExecuted) {
+    const auto checkElements = [&testEnvironment](bool isCommandExecuted) {
         const babelwires::FeatureElement* processor =
-            context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
+            testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
         if (isCommandExecuted) {
             ASSERT_EQ(processor, nullptr);
         } else {
@@ -46,7 +46,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
         }
 
         const babelwires::FeatureElement* targetElement =
-            context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
+            testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
         const babelwires::Modifier* targetModifier =
             targetElement->getEdits().findModifier(libTestUtils::TestFileFeature::s_pathToIntChild);
@@ -64,27 +64,27 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    EXPECT_TRUE(command.initialize(context.m_project));
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
 
-    command.execute(context.m_project);
-    context.m_project.process();
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     checkElements(true);
 
-    command.undo(context.m_project);
-    context.m_project.process();
+    command.undo(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     checkElements(false);
 
-    command.execute(context.m_project);
-    context.m_project.process();
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     checkElements(true);
 }
 
 TEST(RemoveElementCommandTest, failSafelyNoElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
@@ -92,18 +92,18 @@ TEST(RemoveElementCommandTest, failSafelyNoElement) {
 
     babelwires::RemoveElementCommand command("Test command", 57);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 TEST(RemoveElementCommandTest, subsumption) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId element1Id =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const babelwires::ElementId element2Id =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     {
         babelwires::ConnectionModifierData modData;
@@ -111,10 +111,10 @@ TEST(RemoveElementCommandTest, subsumption) {
         modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = element1Id;
 
-        context.m_project.addModifier(element2Id, modData);
+        testEnvironment.m_project.addModifier(element2Id, modData);
     }
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     babelwires::RemoveElementCommand firstCommand("Test command", element1Id);
 
@@ -123,28 +123,28 @@ TEST(RemoveElementCommandTest, subsumption) {
     EXPECT_TRUE(firstCommand.shouldSubsume(*secondCommand, false));
     firstCommand.subsume(std::move(secondCommand));
 
-    EXPECT_TRUE(firstCommand.initializeAndExecute(context.m_project));
+    EXPECT_TRUE(firstCommand.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_EQ(context.m_project.getFeatureElement(element1Id), nullptr);
-    EXPECT_EQ(context.m_project.getFeatureElement(element2Id), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(element1Id), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(element2Id), nullptr);
 
     // Confirm that the move was subsumed
-    firstCommand.undo(context.m_project);
-    context.m_project.process();
+    firstCommand.undo(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
-    EXPECT_NE(context.m_project.getFeatureElement(element1Id), nullptr);
-    EXPECT_NE(context.m_project.getFeatureElement(element2Id), nullptr);
+    EXPECT_NE(testEnvironment.m_project.getFeatureElement(element1Id), nullptr);
+    EXPECT_NE(testEnvironment.m_project.getFeatureElement(element2Id), nullptr);
     {
-        const babelwires::Modifier* modifier = context.m_project.getFeatureElement(element2Id)
+        const babelwires::Modifier* modifier = testEnvironment.m_project.getFeatureElement(element2Id)
                                                    ->getEdits()
                                                    .findModifier(libTestUtils::TestRootFeature::s_pathToInt2);
         EXPECT_NE(modifier, nullptr);
         EXPECT_FALSE(modifier->isFailed());
     }
 
-    firstCommand.execute(context.m_project);
-    context.m_project.process();
+    firstCommand.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
-    EXPECT_EQ(context.m_project.getFeatureElement(element1Id), nullptr);
-    EXPECT_EQ(context.m_project.getFeatureElement(element2Id), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(element1Id), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(element2Id), nullptr);
 }

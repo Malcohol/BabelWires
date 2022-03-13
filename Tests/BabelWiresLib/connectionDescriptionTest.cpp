@@ -61,7 +61,7 @@ TEST(ConnectionDescriptionTest, equalityAndHash) {
 
 TEST(ConnectionDescriptionTest, getCommands) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceId = 12;
     const babelwires::ElementId targetId = 14;
@@ -76,24 +76,24 @@ TEST(ConnectionDescriptionTest, getCommands) {
     {
         libTestUtils::TestFeatureElementData sourceElementData;
         sourceElementData.m_id = sourceId;
-        context.m_project.addFeatureElement(sourceElementData);
+        testEnvironment.m_project.addFeatureElement(sourceElementData);
     }
     {
         libTestUtils::TestFeatureElementData targetElementData;
         targetElementData.m_id = targetId;
-        context.m_project.addFeatureElement(targetElementData);
+        testEnvironment.m_project.addFeatureElement(targetElementData);
     }
 
     const libTestUtils::TestFeatureElement* targetElement =
-        context.m_project.getFeatureElement(targetId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(targetId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(targetElement, nullptr);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     auto connectionCommand = connection.getConnectionCommand();
     auto disconnectionCommand = connection.getDisconnectionCommand();
 
-    const auto checkModifier = [&context, targetElement, &connectionData](bool isAdded) {
+    const auto checkModifier = [&testEnvironment, targetElement, &connectionData](bool isAdded) {
         const babelwires::Modifier* modifier =
             targetElement->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1);
         if (isAdded) {
@@ -111,13 +111,13 @@ TEST(ConnectionDescriptionTest, getCommands) {
 
     checkModifier(false);
 
-    EXPECT_TRUE(connectionCommand->initializeAndExecute(context.m_project));
-    context.m_project.process();
+    EXPECT_TRUE(connectionCommand->initializeAndExecute(testEnvironment.m_project));
+    testEnvironment.m_project.process();
 
     checkModifier(true);
 
-    EXPECT_TRUE(disconnectionCommand->initializeAndExecute(context.m_project));
-    context.m_project.process();
+    EXPECT_TRUE(disconnectionCommand->initializeAndExecute(testEnvironment.m_project));
+    testEnvironment.m_project.process();
 
     checkModifier(false);
 }

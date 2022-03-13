@@ -11,8 +11,8 @@
 #include "BabelWiresLib/Project/projectContext.hpp"
 
 namespace libTestUtils {
-    struct TestProjectContext {
-        TestProjectContext();
+    struct TestEnvironment {
+        TestEnvironment();
 
         babelwires::TargetFileFormatRegistry m_targetFileFormatReg;
         babelwires::SourceFileFormatRegistry m_sourceFileFormatReg;

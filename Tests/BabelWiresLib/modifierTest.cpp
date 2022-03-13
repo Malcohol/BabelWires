@@ -243,7 +243,7 @@ TEST(ModifierTest, arraySizeModifierFailure) {
 
 TEST(ModifierTest, connectionModifierSuccess) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    libTestUtils::TestEnvironment projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = libTestUtils::TestRootFeature::s_pathToInt;
@@ -280,7 +280,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
 
 TEST(ModifierTest, connectionModifierTargetPathFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    libTestUtils::TestEnvironment projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
     babelwires::Identifier id1("bb");
@@ -311,7 +311,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
 
 TEST(ModifierTest, connectionModifierSourceIdFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    libTestUtils::TestEnvironment projectContext;
 
     babelwires::RecordFeature targetRecordFeature;
     babelwires::Identifier id1("bb");
@@ -343,7 +343,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
 
 TEST(ModifierTest, connectionModifierSourcePathFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    libTestUtils::TestEnvironment projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = libTestUtils::TestRootFeature::s_pathToInt;
@@ -383,7 +383,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 
 TEST(ModifierTest, connectionModifierApplicationFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext projectContext;
+    libTestUtils::TestEnvironment projectContext;
 
     libTestUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = libTestUtils::TestRootFeature::s_pathToInt;

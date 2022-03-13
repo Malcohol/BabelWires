@@ -12,7 +12,7 @@
 
 TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestFeatureElementData elementData;
     {
@@ -22,14 +22,14 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
         elementData.m_modifiers.emplace_back(intAssignment.clone());
     }
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
-    context.m_project.process();
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+    testEnvironment.m_project.process();
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    const auto checkModifiers = [&context, element](bool isCommandExecuted) {
+    const auto checkModifiers = [&testEnvironment, element](bool isCommandExecuted) {
         const babelwires::Modifier* intAssignment =
             element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1);
         int numModifiersAtElement = 0;
@@ -52,41 +52,41 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    EXPECT_TRUE(command.initializeAndExecute(context.m_project));
+    EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 
     checkModifiers(true);
 
-    command.undo(context.m_project);
+    command.undo(testEnvironment.m_project);
 
     checkModifiers(false);
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
 
     checkModifiers(true);
 }
 
 TEST(RemoveSimpleModifierCommandTest, failSafelyNoElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
     babelwires::RemoveSimpleModifierCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initializeAndExecute(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }
 
 TEST(RemoveSimpleModifierCommandTest, failSafelyNoModifier) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
     babelwires::RemoveSimpleModifierCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
 
     libTestUtils::TestFeatureElementData elementData;
     elementData.m_id = 51;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     EXPECT_EQ(elementId, 51);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initializeAndExecute(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }

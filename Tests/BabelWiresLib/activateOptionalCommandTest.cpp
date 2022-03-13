@@ -14,11 +14,11 @@
 
 TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
     const libTestUtils::TestFeatureElementWithOptionals* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
         element->getInputFeature()->as<libTestUtils::TestFeatureWithOptionals>();
@@ -29,11 +29,11 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    context.m_project.process();
-    EXPECT_TRUE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
 
-    command.execute(context.m_project);
-    context.m_project.process();
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     EXPECT_TRUE(inputFeature->m_subrecord->isActivated(inputFeature->m_op1Id));
     EXPECT_EQ(inputFeature->m_subrecord->getNumFeatures(), 3);
@@ -43,15 +43,15 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
         EXPECT_NE(modifier->getModifierData().as<babelwires::ActivateOptionalsModifierData>(), nullptr);
     }
 
-    command.undo(context.m_project);
-    context.m_project.process();
+    command.undo(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     EXPECT_FALSE(inputFeature->m_subrecord->isActivated(inputFeature->m_op1Id));
     EXPECT_EQ(inputFeature->m_subrecord->getNumFeatures(), 2);
     EXPECT_EQ(element->getEdits().findModifier(libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord), nullptr);
 
-    command.execute(context.m_project);
-    context.m_project.process();
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     EXPECT_TRUE(inputFeature->m_subrecord->isActivated(inputFeature->m_op1Id));
     EXPECT_EQ(inputFeature->m_subrecord->getNumFeatures(), 3);
@@ -65,19 +65,19 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
 
 TEST(ActivateOptionalsCommandTest, failSafelyNoElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
     babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
     babelwires::ActivateOptionalCommand command("Test command", 51,
                                                libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, opId);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
     babelwires::Identifier opId("flerm");
     opId.setDiscriminator(1);
     babelwires::ActivateOptionalCommand command("Test command", 51,
@@ -86,21 +86,21 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
     libTestUtils::TestFeatureElementWithOptionalsData elementData;
     elementData.m_id = 51;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     EXPECT_EQ(elementId, 51);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
 
     babelwires::Identifier opId("flerm");
@@ -108,17 +108,17 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
     babelwires::ActivateOptionalCommand command("Test command", elementId,
                                                libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, opId);
 
-    EXPECT_FALSE(command.initialize(context.m_project));
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
@@ -128,17 +128,17 @@ TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     babelwires::ActivateOptionalCommand command("Test command", elementId,
                                                libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, inputFeature->m_ff0Id);
 
-    EXPECT_FALSE(command.initialize(context.m_project));
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const libTestUtils::TestFeatureWithOptionals* inputFeature =
@@ -150,5 +150,5 @@ TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
     babelwires::ActivateOptionalCommand command("Test command", elementId,
                                                libTestUtils::TestFeatureWithOptionals::s_pathToSubrecord, inputFeature->m_op0Id);
 
-    EXPECT_FALSE(command.initialize(context.m_project));
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }

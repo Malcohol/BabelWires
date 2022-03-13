@@ -11,14 +11,14 @@
 
 TEST(MoveElementCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestFeatureElementData elementData;
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
@@ -26,18 +26,18 @@ TEST(MoveElementCommandTest, executeAndUndo) {
     babelwires::MoveElementCommand command("Test command", elementId, babelwires::UiPosition{100, 12});
     EXPECT_EQ(command.getName(), "Test command");
 
-    EXPECT_TRUE(command.initialize(context.m_project));
-    command.execute(context.m_project);
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
+    command.execute(testEnvironment.m_project);
 
     EXPECT_EQ(element->getUiPosition().m_x, 100);
     EXPECT_EQ(element->getUiPosition().m_y, 12);
 
-    command.undo(context.m_project);
+    command.undo(testEnvironment.m_project);
 
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
 
     EXPECT_EQ(element->getUiPosition().m_x, 100);
     EXPECT_EQ(element->getUiPosition().m_y, 12);
@@ -45,7 +45,7 @@ TEST(MoveElementCommandTest, executeAndUndo) {
 
 TEST(MoveElementCommandTest, failSafelyNoElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
@@ -53,27 +53,27 @@ TEST(MoveElementCommandTest, failSafelyNoElement) {
 
     babelwires::MoveElementCommand command("Test command", 57, babelwires::UiPosition{100, 12});
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 TEST(MoveElementCommandTest, subsumeMoves) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestFeatureElementData elementData;
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
 
     babelwires::MoveElementCommand firstCommand("Test command", elementId, babelwires::UiPosition{100, 12});
 
-    EXPECT_TRUE(firstCommand.initializeAndExecute(context.m_project));
+    EXPECT_TRUE(firstCommand.initializeAndExecute(testEnvironment.m_project));
 
     auto secondCommand =
         std::make_unique<babelwires::MoveElementCommand>("Test Move", elementId, babelwires::UiPosition{14, 88});
@@ -83,12 +83,12 @@ TEST(MoveElementCommandTest, subsumeMoves) {
     firstCommand.subsume(std::move(secondCommand));
 
     // Confirm that the move was subsumed
-    firstCommand.undo(context.m_project);
+    firstCommand.undo(testEnvironment.m_project);
 
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
 
-    firstCommand.execute(context.m_project);
+    firstCommand.execute(testEnvironment.m_project);
 
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
@@ -97,21 +97,21 @@ TEST(MoveElementCommandTest, subsumeMoves) {
 
 TEST(MoveElementCommandTest, subsumeMovesDelay) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestFeatureElementData elementData;
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
 
     babelwires::MoveElementCommand firstCommand("Test command", elementId, babelwires::UiPosition{100, 12});
 
-    EXPECT_TRUE(firstCommand.initializeAndExecute(context.m_project));
+    EXPECT_TRUE(firstCommand.initializeAndExecute(testEnvironment.m_project));
 
     auto secondCommand =
         std::make_unique<babelwires::MoveElementCommand>("Test Move", elementId, babelwires::UiPosition{14, 88});

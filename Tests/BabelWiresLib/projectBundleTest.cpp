@@ -19,7 +19,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
     {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        libTestUtils::TestEnvironment testEnvironment;
         
         // Ensure some of the test record's discriminators are not default.
         babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_intIdInitializer,
@@ -50,7 +50,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         // Confirm that not all the discriminators in a test record are default.
         {
             libTestUtils::TestRecordFeature testRecord;
-            libTestUtils::TestFileFeature testFileFeature(context.m_projectContext);
+            libTestUtils::TestFileFeature testFileFeature(testEnvironment.m_projectContext);
             EXPECT_EQ(babelwires::FeaturePath(testRecord.m_intFeature).getLastStep().asField()->getDiscriminator(), 4);
             EXPECT_EQ(babelwires::FeaturePath(testRecord.m_arrayFeature).getLastStep().asField()->getDiscriminator(),
                       3);
@@ -63,7 +63,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
             // Sanity check that the ids are unaffected by the registration re-running.
             libTestUtils::TestRecordFeature testRecord2;
-            libTestUtils::TestFileFeature testFileFeature2(context.m_projectContext);
+            libTestUtils::TestFileFeature testFileFeature2(testEnvironment.m_projectContext);
             EXPECT_EQ(babelwires::FeaturePath(testRecord2.m_intFeature).getLastStep().asField()->getDiscriminator(), 4);
             EXPECT_EQ(babelwires::FeaturePath(testRecord2.m_arrayFeature).getLastStep().asField()->getDiscriminator(),
                       3);
@@ -82,7 +82,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         {
             // First confirm that the paths in the project data are as expected and have not yet been resolved
             libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 0, 0, 0, 0, 0);
-            projectData.resolvePathsInCurrentContext(context.m_projectContext);
+            projectData.resolvePathsInCurrentContext(testEnvironment.m_projectContext);
             libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 4, 3, 2, 1, 2);
         }
 
@@ -152,7 +152,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
     {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        libTestUtils::TestEnvironment testEnvironment;
 
         // Slightly different arrangement and UUIDs to the above (not that it should matter)
         babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(libTestUtils::TestRecordFeature::s_intIdInitializer,
@@ -181,7 +181,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
                                                              babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
         babelwires::ProjectData projectData =
-            std::move(bundle).resolveAgainstCurrentContext(context.m_projectContext, std::filesystem::current_path(), context.m_log);
+            std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
 
         libTestUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 2, 2, 4, 1, 2);
 
@@ -200,7 +200,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 
 TEST(ProjectBundleTest, factoryMetadata) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
     libTestUtils::TestProjectData projectData;
 
     // Older than registered.
@@ -219,19 +219,19 @@ TEST(ProjectBundleTest, factoryMetadata) {
     EXPECT_EQ(bundle.getFactoryMetadata().find(libTestUtils::TestSourceFileFormat::getThisIdentifier())->second, 3);
 
     babelwires::ProjectData resolvedData =
-        std::move(bundle).resolveAgainstCurrentContext(context.m_projectContext, std::filesystem::current_path(), context.m_log);
+        std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
 
-    EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase(
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(
         "Data for the factory \"testFactoryFormat\" (testFactoryFormat) corresponds to an old version (1)"));
-    EXPECT_FALSE(context.m_log.hasSubstringIgnoreCase("Data for the factory \"testProcessor\""));
-    EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase(
+    EXPECT_FALSE(testEnvironment.m_log.hasSubstringIgnoreCase("Data for the factory \"testProcessor\""));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(
         "Data for the factory \"testFileFormat\" (testFileFormat) has an unknown version (3)"));
 }
 
 TEST(ProjectBundleTest, filePathResolution) {
     testUtils::TestLogWithListener log;
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     std::filesystem::path root = std::filesystem::canonical(std::filesystem::temp_directory_path());
 
@@ -254,11 +254,11 @@ TEST(ProjectBundleTest, filePathResolution) {
     // Based on the tests in FilePathTest.
     // Because we interpret / resolve on the same platform, some of those tests do not carry over.
     std::vector<TestScenario> scenarios = {
-        // Same context.
+        // Same testEnvironment.
         TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo/Bar", root / "Foo/Bar", root / "Foo/Bar/Bar.boo"},
-        // Same context.
+        // Same testEnvironment.
         TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Foo", root / "Foo/Bar/Bar.boo"},
-        // Same context, file doesn't exist.
+        // Same testEnvironment, file doesn't exist.
         TestScenario{root / "Flerm/Bar/Bar.boo", root / "Flerm", root / "Flerm", root / "Flerm/Bar/Bar.boo"},
         // New exists, old doesn't.
         TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Flerm", root / "Foo/Bar/Bar.boo"},
@@ -294,7 +294,7 @@ TEST(ProjectBundleTest, filePathResolution) {
         }
 
         babelwires::ProjectData projectData;
-        projectData = std::move(bundle).resolveAgainstCurrentContext(context.m_projectContext, scenario.m_newBase, log);
+        projectData = std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, scenario.m_newBase, log);
         
         ASSERT_EQ(projectData.m_elements.size(), 2);
         {
@@ -332,10 +332,10 @@ TEST(ProjectBundleTest, factoryIdentifiers) {
     EXPECT_EQ(projectData.m_elements[1]->m_factoryIdentifier.getDiscriminator(), 0);
     EXPECT_EQ(projectData.m_elements[2]->m_factoryIdentifier.getDiscriminator(), 0);
 
-    libTestUtils::TestProjectContext context;
-    context.m_projectContext.m_targetFileFormatReg.getEntryByIdentifier(projectData.m_elements[0]->m_factoryIdentifier);
-    context.m_projectContext.m_processorReg.getEntryByIdentifier(projectData.m_elements[1]->m_factoryIdentifier);
-    context.m_projectContext.m_sourceFileFormatReg.getEntryByIdentifier(projectData.m_elements[2]->m_factoryIdentifier);
+    libTestUtils::TestEnvironment testEnvironment;
+    testEnvironment.m_projectContext.m_targetFileFormatReg.getEntryByIdentifier(projectData.m_elements[0]->m_factoryIdentifier);
+    testEnvironment.m_projectContext.m_processorReg.getEntryByIdentifier(projectData.m_elements[1]->m_factoryIdentifier);
+    testEnvironment.m_projectContext.m_sourceFileFormatReg.getEntryByIdentifier(projectData.m_elements[2]->m_factoryIdentifier);
 
     EXPECT_EQ(projectData.m_elements[0]->m_factoryIdentifier.getDiscriminator(), 2);
     EXPECT_EQ(projectData.m_elements[1]->m_factoryIdentifier.getDiscriminator(), 2);

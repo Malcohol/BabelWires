@@ -20,7 +20,7 @@ namespace {
 
 TEST(TargetFileElementTest, targetFileDataCreateElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     std::ostringstream tempFileName;
     tempFileName << "foo." << libTestUtils::TestSourceFileFormat::getFileExtension();
@@ -31,7 +31,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
-    auto featureElement = data.createFeatureElement(context.m_projectContext, context.m_log, 10);
+    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::TargetFileElement>());
@@ -40,11 +40,11 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
 
     EXPECT_EQ(targetFileElement->getFilePath(), tempFilePath.m_filePath);
     EXPECT_EQ(targetFileElement->getSupportedFileOperations(), babelwires::FileElement::FileOperations::save);
-    EXPECT_NE(targetFileElement->getFileFormatInformation(context.m_projectContext), nullptr);
-    EXPECT_EQ(targetFileElement->getFileFormatInformation(context.m_projectContext)->getIdentifier(), libTestUtils::TestTargetFileFormat::getThisIdentifier());
+    EXPECT_NE(targetFileElement->getFileFormatInformation(testEnvironment.m_projectContext), nullptr);
+    EXPECT_EQ(targetFileElement->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), libTestUtils::TestTargetFileFormat::getThisIdentifier());
 
     EXPECT_TRUE(endsWithStar(targetFileElement->getLabel()));
-    EXPECT_TRUE(targetFileElement->save(context.m_projectContext, context.m_log));
+    EXPECT_TRUE(targetFileElement->save(testEnvironment.m_projectContext, testEnvironment.m_log));
     EXPECT_FALSE(endsWithStar(targetFileElement->getLabel()));
 
     targetFileElement->clearChanges();
@@ -56,27 +56,27 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
         babelwires::IntValueAssignmentData intMod;
         intMod.m_pathToFeature = pathToInt;
         intMod.m_value = 30;
-        targetFileElement->addModifier(context.m_log, intMod);
+        targetFileElement->addModifier(testEnvironment.m_log, intMod);
     }
 
-    targetFileElement->process(context.m_log);
+    targetFileElement->process(testEnvironment.m_log);
 
     // Note: There's a small chance this will fail because hash collisions. If it does, change the intMod.m_value above.
     EXPECT_TRUE(endsWithStar(targetFileElement->getLabel()));
-    EXPECT_TRUE(targetFileElement->save(context.m_projectContext, context.m_log));
+    EXPECT_TRUE(targetFileElement->save(testEnvironment.m_projectContext, testEnvironment.m_log));
     EXPECT_FALSE(endsWithStar(targetFileElement->getLabel()));
 
     targetFileElement->removeModifier(targetFileElement->findModifier(pathToInt));
-    targetFileElement->process(context.m_log);
+    targetFileElement->process(testEnvironment.m_log);
 
     EXPECT_TRUE(endsWithStar(targetFileElement->getLabel()));
-    EXPECT_TRUE(targetFileElement->save(context.m_projectContext, context.m_log));
+    EXPECT_TRUE(targetFileElement->save(testEnvironment.m_projectContext, testEnvironment.m_log));
     EXPECT_FALSE(endsWithStar(targetFileElement->getLabel()));
 }
 
 TEST(TargetFileElementTest, changeFile) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
     std::ostringstream tempFileName1;
@@ -92,19 +92,19 @@ TEST(TargetFileElementTest, changeFile) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
 
-    auto featureElement = data.createFeatureElement(context.m_projectContext, context.m_log, 10);
+    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::TargetFileElement>());
     babelwires::TargetFileElement* targetFileElement =
         static_cast<babelwires::TargetFileElement*>(featureElement.get());
 
-    EXPECT_TRUE(targetFileElement->save(context.m_projectContext, context.m_log));
+    EXPECT_TRUE(targetFileElement->save(testEnvironment.m_projectContext, testEnvironment.m_log));
     EXPECT_FALSE(endsWithStar(targetFileElement->getLabel()));
 
     targetFileElement->clearChanges();
     targetFileElement->setFilePath(tempFilePath2.m_filePath);
-    targetFileElement->process(context.m_log);
+    targetFileElement->process(testEnvironment.m_log);
 
     EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FileChanged));
     EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementLabelChanged));
@@ -113,7 +113,7 @@ TEST(TargetFileElementTest, changeFile) {
 
     targetFileElement->clearChanges();
     targetFileElement->setFilePath(tempFilePath1.m_filePath);
-    targetFileElement->process(context.m_log);
+    targetFileElement->process(testEnvironment.m_log);
 
     // setFilePath is not expected to trigger a reload.
     EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FileChanged));

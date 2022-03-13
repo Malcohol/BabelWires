@@ -21,7 +21,7 @@
 
 TEST(ProjectTest, setAndExtractProjectData) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestProjectData projectData;
 
@@ -31,54 +31,54 @@ TEST(ProjectTest, setAndExtractProjectData) {
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
     libTestUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
-    context.m_project.setProjectData(projectData);
+    testEnvironment.m_project.setProjectData(projectData);
     // Processing ensures the featurePaths get resolved.
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
-    babelwires::ProjectData extractedData = context.m_project.extractProjectData();
+    babelwires::ProjectData extractedData = testEnvironment.m_project.extractProjectData();
 
-    libTestUtils::TestProjectData::testProjectData(context.m_projectContext, extractedData);
+    libTestUtils::TestProjectData::testProjectData(testEnvironment.m_projectContext, extractedData);
 }
 
 TEST(ProjectTest, projectId) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    // The test context has a built-in newly constructed project.
-    const babelwires::ProjectId projectId = context.m_project.getProjectId();
+    // The test testEnvironment has a built-in newly constructed project.
+    const babelwires::ProjectId projectId = testEnvironment.m_project.getProjectId();
 
     EXPECT_NE(projectId, babelwires::INVALID_PROJECT_ID);
 
-    babelwires::Project project2(context.m_projectContext, context.m_log);
+    babelwires::Project project2(testEnvironment.m_projectContext, testEnvironment.m_log);
 
     const babelwires::ProjectId project2Id = project2.getProjectId();
 
     EXPECT_NE(projectId, project2Id);
 
-    context.m_project.clear();
+    testEnvironment.m_project.clear();
 
-    EXPECT_NE(context.m_project.getProjectId(), babelwires::INVALID_PROJECT_ID);
-    EXPECT_NE(context.m_project.getProjectId(), projectId);
-    EXPECT_NE(context.m_project.getProjectId(), project2Id);
+    EXPECT_NE(testEnvironment.m_project.getProjectId(), babelwires::INVALID_PROJECT_ID);
+    EXPECT_NE(testEnvironment.m_project.getProjectId(), projectId);
+    EXPECT_NE(testEnvironment.m_project.getProjectId(), project2Id);
 }
 
 TEST(ProjectTest, addGetAndRemoveElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
-    const babelwires::FeatureElement* element = context.m_project.getFeatureElement(elementId);
+    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     EXPECT_NE(element, nullptr);
     EXPECT_NE(element->as<libTestUtils::TestFeatureElement>(), nullptr);
     EXPECT_TRUE(element->isChanged(babelwires::FeatureElement::Changes::FeatureElementIsNew));
 
-    context.m_project.removeElement(elementId);
+    testEnvironment.m_project.removeElement(elementId);
 
-    const babelwires::FeatureElement* element2 = context.m_project.getFeatureElement(elementId);
+    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId);
     EXPECT_EQ(element2, nullptr);
 
-    const auto& removedElements = context.m_project.getRemovedElements();
+    const auto& removedElements = testEnvironment.m_project.getRemovedElements();
 
     EXPECT_EQ(removedElements.size(), 1);
     const auto it = removedElements.find(elementId);
@@ -86,19 +86,19 @@ TEST(ProjectTest, addGetAndRemoveElement) {
     EXPECT_EQ(it->first, elementId);
     EXPECT_EQ(it->second.get(), element);
 
-    context.m_project.clearChanges();
+    testEnvironment.m_project.clearChanges();
 
-    EXPECT_EQ(context.m_project.getRemovedElements().size(), 0);
+    EXPECT_EQ(testEnvironment.m_project.getRemovedElements().size(), 0);
 }
 
 TEST(ProjectTest, addAndRemoveLocalModifier) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::FeaturePath pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
@@ -108,30 +108,30 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
     modData.m_pathToFeature = pathToFeature;
     modData.m_value = 199;
 
-    context.m_project.addModifier(elementId, modData);
+    testEnvironment.m_project.addModifier(elementId, modData);
 
     const babelwires::Modifier* const modifier = element->findModifier(pathToFeature);
     EXPECT_NE(modifier, nullptr);
     EXPECT_TRUE(modifier->isChanged(babelwires::Modifier::Changes::ModifierIsNew));
 
-    context.m_project.removeModifier(elementId, pathToFeature);
+    testEnvironment.m_project.removeModifier(elementId, pathToFeature);
     EXPECT_EQ(element->findModifier(pathToFeature), nullptr);
 }
 
 TEST(ProjectTest, addAndRemoveConnectionModifier) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceElementId =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const libTestUtils::TestFeatureElement* sourceElement =
-        context.m_project.getFeatureElement(sourceElementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(sourceElementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(sourceElement, nullptr);
 
     const babelwires::ElementId targetElementId =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const libTestUtils::TestFeatureElement* targetElement =
-        context.m_project.getFeatureElement(targetElementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(targetElementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(targetElement, nullptr);
 
     const babelwires::FeaturePath pathToTargetFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
@@ -143,32 +143,32 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
     modData.m_sourceId = sourceElementId;
     modData.m_pathToSourceFeature = pathToSourceFeature;
 
-    context.m_project.addModifier(targetElementId, modData);
+    testEnvironment.m_project.addModifier(targetElementId, modData);
 
     const babelwires::Modifier* const modifier = targetElement->findModifier(pathToTargetFeature);
     EXPECT_NE(modifier, nullptr);
     EXPECT_TRUE(modifier->isChanged(babelwires::Modifier::Changes::ModifierIsNew));
 
-    context.m_project.removeModifier(targetElementId, pathToTargetFeature);
+    testEnvironment.m_project.removeModifier(targetElementId, pathToTargetFeature);
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::FeaturePath pathToArray = libTestUtils::TestRootFeature::s_pathToArray;
     EXPECT_EQ(element->findModifier(pathToArray), nullptr);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
     // You can add at the end.
-    context.m_project.addArrayEntries(elementId, pathToArray, 2, 2, true);
+    testEnvironment.m_project.addArrayEntries(elementId, pathToArray, 2, 2, true);
     {
         const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
@@ -176,68 +176,68 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
         EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size, 4);
     }
 
-    context.m_project.process();
-    context.m_project.addArrayEntries(elementId, pathToArray, 1, 2, true);
+    testEnvironment.m_project.process();
+    testEnvironment.m_project.addArrayEntries(elementId, pathToArray, 1, 2, true);
     {
         const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
         EXPECT_EQ(modifier->getModifierData().as<babelwires::ArraySizeModifierData>()->m_size, 6);
     }
 
-    context.m_project.process();
-    context.m_project.removeArrayEntries(elementId, pathToArray, 2, 2, true);
+    testEnvironment.m_project.process();
+    testEnvironment.m_project.removeArrayEntries(elementId, pathToArray, 2, 2, true);
     {
         const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
         EXPECT_EQ(modifier->getModifierData().as<babelwires::ArraySizeModifierData>()->m_size, 4);
     }
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
     // The false means the modifier will be removed.
-    context.m_project.removeArrayEntries(elementId, pathToArray, 2, 2, false);
+    testEnvironment.m_project.removeArrayEntries(elementId, pathToArray, 2, 2, false);
     EXPECT_EQ(element->findModifier(pathToArray), nullptr);
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     babelwires::IntValueAssignmentData modData;
     modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
     modData.m_value = 702;
-    context.m_project.addModifier(elementId, modData);
+    testEnvironment.m_project.addModifier(elementId, modData);
 
     const babelwires::FeaturePath pathToArray = libTestUtils::TestRootFeature::s_pathToArray;
     EXPECT_EQ(element->findModifier(pathToArray), nullptr);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     // Add after.
-    context.m_project.addArrayEntries(elementId, pathToArray, 2, 2, true);
+    testEnvironment.m_project.addArrayEntries(elementId, pathToArray, 2, 2, true);
     EXPECT_NE(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1), nullptr);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     // Add before.
-    context.m_project.addArrayEntries(elementId, pathToArray, 1, 3, true);
+    testEnvironment.m_project.addArrayEntries(elementId, pathToArray, 1, 3, true);
     EXPECT_EQ(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_1), nullptr);
     EXPECT_NE(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_4), nullptr);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     // Remove after
-    context.m_project.removeArrayEntries(elementId, pathToArray, 5, 1, true);
+    testEnvironment.m_project.removeArrayEntries(elementId, pathToArray, 5, 1, true);
     EXPECT_NE(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_4), nullptr);
 
     // Remove before.
-    context.m_project.process();
-    context.m_project.removeArrayEntries(elementId, pathToArray, 0, 2, true);
+    testEnvironment.m_project.process();
+    testEnvironment.m_project.removeArrayEntries(elementId, pathToArray, 0, 2, true);
     EXPECT_NE(element->findModifier(libTestUtils::TestRootFeature::s_pathToArray_2), nullptr);
 
     // We don't test removal of modifiers, because responsibility for doing this is left to the
@@ -246,18 +246,18 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
 
 TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceElementId =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const libTestUtils::TestFeatureElement* sourceElement =
-        context.m_project.getFeatureElement(sourceElementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(sourceElementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(sourceElement, nullptr);
 
     const babelwires::ElementId targetElementId =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const libTestUtils::TestFeatureElement* targetElement =
-        context.m_project.getFeatureElement(targetElementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(targetElementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(targetElement, nullptr);
 
     const babelwires::FeaturePath pathToTargetFeature = libTestUtils::TestRootFeature::s_pathToInt;
@@ -270,32 +270,32 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
         modData.m_pathToFeature = pathToTargetFeature;
         modData.m_sourceId = sourceElementId;
         modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToArray_1;
-        context.m_project.addModifier(targetElementId, modData);
+        testEnvironment.m_project.addModifier(targetElementId, modData);
     }
     const babelwires::ConnectionModifierData& connectionData = 
         *targetElement->findModifier(pathToTargetFeature)->getModifierData().as<babelwires::ConnectionModifierData>();
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     // The new elements are after the modifier, so it should be in the same place.
-    context.m_project.addArrayEntries(sourceElementId, pathToArray, 2, 2, true);
+    testEnvironment.m_project.addArrayEntries(sourceElementId, pathToArray, 2, 2, true);
     EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRootFeature::s_pathToArray_1);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     // The new elements should mean the modifier moved.
-    context.m_project.addArrayEntries(sourceElementId, pathToArray, 1, 3, true);
+    testEnvironment.m_project.addArrayEntries(sourceElementId, pathToArray, 1, 3, true);
     EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRootFeature::s_pathToArray_4);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     // Remove after
-    context.m_project.removeArrayEntries(sourceElementId, pathToArray, 5, 1, true);
+    testEnvironment.m_project.removeArrayEntries(sourceElementId, pathToArray, 5, 1, true);
     EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRootFeature::s_pathToArray_4);
 
     // Remove before.
-    context.m_project.process();
-    context.m_project.removeArrayEntries(sourceElementId, pathToArray, 0, 2, true);
+    testEnvironment.m_project.process();
+    testEnvironment.m_project.removeArrayEntries(sourceElementId, pathToArray, 0, 2, true);
     EXPECT_EQ(connectionData.m_pathToSourceFeature, libTestUtils::TestRootFeature::s_pathToArray_2);
 
     // We don't test removal of modifiers, because responsibility for doing this is left to the
@@ -304,29 +304,29 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 
 TEST(ProjectTest, uiProperties) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestFeatureElementData testFeatureData;
     testFeatureData.m_uiData.m_uiPosition.m_x = 8;
     testFeatureData.m_uiData.m_uiPosition.m_y = 2;
     testFeatureData.m_uiData.m_uiSize.m_width = 77;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(testFeatureData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testFeatureData);
 
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     EXPECT_EQ(element->getUiPosition().m_x, 8);
     EXPECT_EQ(element->getUiPosition().m_y, 2);
     EXPECT_EQ(element->getUiSize().m_width, 77);
-    context.m_project.setElementPosition(elementId, babelwires::UiPosition{10, 12});
+    testEnvironment.m_project.setElementPosition(elementId, babelwires::UiPosition{10, 12});
 
     EXPECT_EQ(element->getUiPosition().m_x, 10);
     EXPECT_EQ(element->getUiPosition().m_y, 12);
     EXPECT_EQ(element->getUiSize().m_width, 77);
 
-    context.m_project.setElementContentsSize(elementId, babelwires::UiSize{66});
+    testEnvironment.m_project.setElementContentsSize(elementId, babelwires::UiSize{66});
 
     EXPECT_EQ(element->getUiPosition().m_x, 10);
     EXPECT_EQ(element->getUiPosition().m_y, 12);
@@ -335,41 +335,41 @@ TEST(ProjectTest, uiProperties) {
 
 TEST(ProjectTest, elementIds) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     EXPECT_NE(elementId, babelwires::INVALID_ELEMENT_ID);
     ASSERT_NE(elementId, 3);
 
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     libTestUtils::TestFeatureElementData elementData;
     elementData.m_id = 3;
 
-    const babelwires::ElementId elementId1 = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId1 = testEnvironment.m_project.addFeatureElement(elementData);
     EXPECT_EQ(elementId1, 3);
 
     const libTestUtils::TestFeatureElement* element1 =
-        context.m_project.getFeatureElement(elementId1)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId1)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element1, nullptr);
     EXPECT_EQ(element1->getElementData().m_id, elementId1);
     EXPECT_NE(element, element1);
 
-    const babelwires::ElementId elementId2 = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId2 = testEnvironment.m_project.addFeatureElement(elementData);
     EXPECT_NE(elementId2, babelwires::INVALID_ELEMENT_ID);
     EXPECT_NE(elementId2, elementId1);
 
     const libTestUtils::TestFeatureElement* element2 =
-        context.m_project.getFeatureElement(elementId2)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId2)->as<libTestUtils::TestFeatureElement>();
     EXPECT_NE(element2, nullptr);
     EXPECT_NE(element1, element2);
 }
 
 TEST(ProjectTest, reloadSource) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     testUtils::TempFilePath tempFilePath("testSource." + libTestUtils::TestSourceFileFormat::getFileExtension());
 
@@ -379,9 +379,9 @@ TEST(ProjectTest, reloadSource) {
     sourceFileData.m_filePath = tempFilePath;
     sourceFileData.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(sourceFileData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(sourceFileData);
     const babelwires::FeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getOutputFeature(), nullptr);
     ASSERT_NE(element->getOutputFeature()->as<const libTestUtils::TestFileFeature>(), nullptr);
@@ -390,27 +390,27 @@ TEST(ProjectTest, reloadSource) {
 
     libTestUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 88);
 
-    context.m_project.tryToReloadSource(elementId);
+    testEnvironment.m_project.tryToReloadSource(elementId);
     EXPECT_EQ(static_cast<const libTestUtils::TestFileFeature*>(element->getOutputFeature())->m_intChildFeature->get(),
               88);
 
     libTestUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 55);
 
-    context.m_project.tryToReloadAllSources();
+    testEnvironment.m_project.tryToReloadAllSources();
     EXPECT_EQ(static_cast<const libTestUtils::TestFileFeature*>(element->getOutputFeature())->m_intChildFeature->get(),
               55);
 
     tempFilePath.tryRemoveFile();
 
-    context.m_log.clear();
-    context.m_project.tryToReloadSource(elementId);
+    testEnvironment.m_log.clear();
+    testEnvironment.m_project.tryToReloadSource(elementId);
     EXPECT_TRUE(element->isFailed());
-    context.m_log.hasSubstringIgnoreCase("could not be loaded");
+    testEnvironment.m_log.hasSubstringIgnoreCase("could not be loaded");
 }
 
 TEST(ProjectTest, saveTarget) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     testUtils::TempFilePath tempFilePath("testTarget." + libTestUtils::TestSourceFileFormat::getFileExtension());
 
@@ -418,9 +418,9 @@ TEST(ProjectTest, saveTarget) {
     targetFileData.m_filePath = tempFilePath;
     targetFileData.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(targetFileData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(targetFileData);
     babelwires::FeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getInputFeature(), nullptr);
     auto* inputFeature = element->getInputFeature()->as<libTestUtils::TestFileFeature>();
@@ -428,28 +428,28 @@ TEST(ProjectTest, saveTarget) {
 
     inputFeature->m_intChildFeature->set(47);
 
-    context.m_project.tryToSaveTarget(elementId);
+    testEnvironment.m_project.tryToSaveTarget(elementId);
 
     EXPECT_EQ(libTestUtils::TestSourceFileFormat::getFileData(tempFilePath), 47);
 
     inputFeature->m_intChildFeature->set(30);
-    context.m_project.tryToSaveTarget(elementId);
+    testEnvironment.m_project.tryToSaveTarget(elementId);
     EXPECT_EQ(libTestUtils::TestSourceFileFormat::getFileData(tempFilePath), 30);
 
     inputFeature->m_intChildFeature->set(79);
-    context.m_project.tryToSaveAllTargets();
+    testEnvironment.m_project.tryToSaveAllTargets();
     EXPECT_EQ(libTestUtils::TestSourceFileFormat::getFileData(tempFilePath), 79);
 
     std::ofstream lockThisStream(tempFilePath);
 
-    context.m_log.clear();
-    context.m_project.tryToSaveTarget(elementId);
-    context.m_log.hasSubstringIgnoreCase("Cannot write output");
+    testEnvironment.m_log.clear();
+    testEnvironment.m_project.tryToSaveTarget(elementId);
+    testEnvironment.m_log.hasSubstringIgnoreCase("Cannot write output");
 }
 
 TEST(ProjectTest, process) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestProjectData projectData;
 
@@ -459,18 +459,18 @@ TEST(ProjectTest, process) {
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
     libTestUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
-    context.m_project.setProjectData(projectData);
-    context.m_project.process();
+    testEnvironment.m_project.setProjectData(projectData);
+    testEnvironment.m_project.process();
 
     const babelwires::FeatureElement* sourceElement =
-        context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId);
+        testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
     const libTestUtils::TestFileFeature* sourceOutput =
         sourceElement->getOutputFeature()->as<const libTestUtils::TestFileFeature>();
     ASSERT_NE(sourceOutput, nullptr);
 
     const babelwires::FeatureElement* processor =
-        context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
+        testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
     const libTestUtils::TestRootFeature* processorInput =
         processor->getInputFeature()->as<const libTestUtils::TestRootFeature>();
@@ -480,7 +480,7 @@ TEST(ProjectTest, process) {
     ASSERT_NE(processorOutput, nullptr);
 
     const babelwires::FeatureElement* targetElement =
-        context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
+        testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
     const libTestUtils::TestFileFeature* targetInput =
         targetElement->getInputFeature()->as<const libTestUtils::TestFileFeature>();
@@ -490,14 +490,14 @@ TEST(ProjectTest, process) {
     EXPECT_EQ(targetInput->m_intChildFeature->get(), 6);
 
     libTestUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 4);
-    context.m_project.tryToReloadSource(libTestUtils::TestProjectData::c_sourceElementId);
-    context.m_project.process();
+    testEnvironment.m_project.tryToReloadSource(libTestUtils::TestProjectData::c_sourceElementId);
+    testEnvironment.m_project.process();
     EXPECT_EQ(targetInput->m_intChildFeature->get(), 7);
 
     // Removing this modifier will mean the output array is shorter than the modifier at the target requires.
-    context.m_project.removeModifier(libTestUtils::TestProjectData::c_processorId,
+    testEnvironment.m_project.removeModifier(libTestUtils::TestProjectData::c_processorId,
                                      libTestUtils::TestRootFeature::s_pathToInt);
-    context.m_project.process();
+    testEnvironment.m_project.process();
     EXPECT_TRUE(targetElement->findModifier(libTestUtils::TestFileFeature::s_pathToIntChild)->isFailed());
     EXPECT_EQ(targetInput->m_intChildFeature->get(), 0);
 
@@ -511,7 +511,7 @@ TEST(ProjectTest, process) {
         modData.m_value = 5;
         procData.m_modifiers.emplace_back(modData.clone());
 
-        newProcId = context.m_project.addFeatureElement(procData);
+        newProcId = testEnvironment.m_project.addFeatureElement(procData);
     }
 
     {
@@ -519,45 +519,45 @@ TEST(ProjectTest, process) {
         modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt;
         modData.m_sourceId = newProcId;
         modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        context.m_project.addModifier(libTestUtils::TestProjectData::c_processorId, modData);
+        testEnvironment.m_project.addModifier(libTestUtils::TestProjectData::c_processorId, modData);
     }
-    context.m_project.process();
+    testEnvironment.m_project.process();
     EXPECT_EQ(targetInput->m_intChildFeature->get(), 8);
 }
 
 TEST(ProjectTest, dependencyLoop) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId1 =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const babelwires::ElementId elementId2 =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const babelwires::ElementId elementId3 =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
-    const babelwires::FeatureElement* element1 = context.m_project.getFeatureElement(elementId1);
-    const babelwires::FeatureElement* element2 = context.m_project.getFeatureElement(elementId2);
-    const babelwires::FeatureElement* element3 = context.m_project.getFeatureElement(elementId3);
+    const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
+    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
+    const babelwires::FeatureElement* element3 = testEnvironment.m_project.getFeatureElement(elementId3);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     {
         babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId2;
         modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        context.m_project.addModifier(elementId1, modData);
+        testEnvironment.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId3;
         modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        context.m_project.addModifier(elementId2, modData);
+        testEnvironment.m_project.addModifier(elementId2, modData);
     }
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     EXPECT_FALSE(element1->isFailed());
     EXPECT_FALSE(element2->isFailed());
@@ -571,10 +571,10 @@ TEST(ProjectTest, dependencyLoop) {
         modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId1;
         modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        context.m_project.addModifier(elementId3, modData);
+        testEnvironment.m_project.addModifier(elementId3, modData);
     }
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     EXPECT_TRUE(element1->isFailed());
     EXPECT_TRUE(element2->isFailed());
@@ -583,8 +583,8 @@ TEST(ProjectTest, dependencyLoop) {
     EXPECT_TRUE(element2->isInDependencyLoop());
     EXPECT_TRUE(element3->isInDependencyLoop());
 
-    context.m_project.removeModifier(elementId2, libTestUtils::TestRootFeature::s_pathToInt2);
-    context.m_project.process();
+    testEnvironment.m_project.removeModifier(elementId2, libTestUtils::TestRootFeature::s_pathToInt2);
+    testEnvironment.m_project.process();
 
     EXPECT_FALSE(element1->isFailed());
     EXPECT_FALSE(element2->isFailed());
@@ -597,40 +597,40 @@ TEST(ProjectTest, dependencyLoop) {
 // Check that one dependency loop does not prevent other elements from processing correctly.
 TEST(ProjectTest, dependencyLoopAndProcessing) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId1 =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const babelwires::ElementId elementId2 =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const babelwires::ElementId elementId3 =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const babelwires::ElementId elementId4 =
-        context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
-    const babelwires::FeatureElement* element1 = context.m_project.getFeatureElement(elementId1);
-    const babelwires::FeatureElement* element2 = context.m_project.getFeatureElement(elementId2);
-    const babelwires::FeatureElement* element3 = context.m_project.getFeatureElement(elementId3);
-    const babelwires::FeatureElement* element4 = context.m_project.getFeatureElement(elementId4);
+    const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
+    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
+    const babelwires::FeatureElement* element3 = testEnvironment.m_project.getFeatureElement(elementId3);
+    const babelwires::FeatureElement* element4 = testEnvironment.m_project.getFeatureElement(elementId4);
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     {
         babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId2;
         modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        context.m_project.addModifier(elementId1, modData);
+        testEnvironment.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
         modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId4;
         modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        context.m_project.addModifier(elementId3, modData);
+        testEnvironment.m_project.addModifier(elementId3, modData);
     }
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     EXPECT_FALSE(element1->isFailed());
     EXPECT_FALSE(element2->isFailed());
@@ -646,16 +646,16 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
         modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_sourceId = elementId1;
         modData.m_pathToSourceFeature = libTestUtils::TestRootFeature::s_pathToInt2;
-        context.m_project.addModifier(elementId2, modData);
+        testEnvironment.m_project.addModifier(elementId2, modData);
     }
     {
         babelwires::IntValueAssignmentData modData;
         modData.m_pathToFeature = libTestUtils::TestRootFeature::s_pathToInt2;
         modData.m_value = 16;
-        context.m_project.addModifier(elementId4, modData);
+        testEnvironment.m_project.addModifier(elementId4, modData);
     }
 
-    context.m_project.process();
+    testEnvironment.m_project.process();
 
     EXPECT_TRUE(element1->isFailed());
     EXPECT_TRUE(element2->isFailed());
@@ -669,8 +669,8 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     ASSERT_NE(element3->getOutputFeature()->as<libTestUtils::TestRootFeature>(), nullptr);
     EXPECT_EQ(element3->getOutputFeature()->as<libTestUtils::TestRootFeature>()->m_intFeature2->get(), 16);              
 
-    context.m_project.removeModifier(elementId2, libTestUtils::TestRootFeature::s_pathToInt2);
-    context.m_project.process();
+    testEnvironment.m_project.removeModifier(elementId2, libTestUtils::TestRootFeature::s_pathToInt2);
+    testEnvironment.m_project.process();
 
     EXPECT_FALSE(element1->isFailed());
     EXPECT_FALSE(element2->isFailed());
@@ -684,23 +684,23 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 
 TEST(ProjectTest, updateWithAvailableIds) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     std::vector<babelwires::ElementId> idsToCheck0 = {libTestUtils::TestProjectData::c_sourceElementId,
                                                       libTestUtils::TestProjectData::c_processorId,
                                                       libTestUtils::TestProjectData::c_targetElementId};
-    context.m_project.updateWithAvailableIds(idsToCheck0);
+    testEnvironment.m_project.updateWithAvailableIds(idsToCheck0);
     EXPECT_EQ(idsToCheck0[0], libTestUtils::TestProjectData::c_sourceElementId);
     EXPECT_EQ(idsToCheck0[1], libTestUtils::TestProjectData::c_processorId);
     EXPECT_EQ(idsToCheck0[2], libTestUtils::TestProjectData::c_targetElementId);
 
     libTestUtils::TestProjectData projectData;
-    context.m_project.setProjectData(projectData);
+    testEnvironment.m_project.setProjectData(projectData);
 
     std::vector<babelwires::ElementId> idsToCheck1 = {libTestUtils::TestProjectData::c_sourceElementId,
                                                       libTestUtils::TestProjectData::c_processorId,
                                                       libTestUtils::TestProjectData::c_targetElementId};
-    context.m_project.updateWithAvailableIds(idsToCheck1);
+    testEnvironment.m_project.updateWithAvailableIds(idsToCheck1);
     EXPECT_NE(idsToCheck1[0], libTestUtils::TestProjectData::c_sourceElementId);
     EXPECT_NE(idsToCheck1[1], libTestUtils::TestProjectData::c_processorId);
     EXPECT_NE(idsToCheck1[2], libTestUtils::TestProjectData::c_targetElementId);
@@ -711,13 +711,13 @@ TEST(ProjectTest, updateWithAvailableIds) {
     for (int i = 0; i < 3; ++i) {
         libTestUtils::TestFeatureElementData data;
         data.m_id = idsToCheck1[i];
-        EXPECT_EQ(context.m_project.addFeatureElement(data), idsToCheck1[i]);
+        EXPECT_EQ(testEnvironment.m_project.addFeatureElement(data), idsToCheck1[i]);
     }
 
     std::vector<babelwires::ElementId> idsToCheck2 = {libTestUtils::TestProjectData::c_sourceElementId,
                                                       libTestUtils::TestProjectData::c_processorId,
                                                       libTestUtils::TestProjectData::c_targetElementId};
-    context.m_project.updateWithAvailableIds(idsToCheck2);
+    testEnvironment.m_project.updateWithAvailableIds(idsToCheck2);
     EXPECT_NE(idsToCheck2[0], libTestUtils::TestProjectData::c_sourceElementId);
     EXPECT_NE(idsToCheck2[1], libTestUtils::TestProjectData::c_processorId);
     EXPECT_NE(idsToCheck2[2], libTestUtils::TestProjectData::c_targetElementId);
@@ -731,7 +731,7 @@ TEST(ProjectTest, updateWithAvailableIds) {
 
 TEST(ProjectTest, processWithFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestProjectData projectData;
     // Ensure this element fails completely.
@@ -743,23 +743,23 @@ TEST(ProjectTest, processWithFailure) {
     projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
     libTestUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
-    context.m_project.setProjectData(projectData);
-    context.m_project.process();
+    testEnvironment.m_project.setProjectData(projectData);
+    testEnvironment.m_project.process();
 
     const babelwires::FeatureElement* sourceElement =
-        context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId);
+        testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
     const libTestUtils::TestFileFeature* sourceOutput =
         sourceElement->getOutputFeature()->as<const libTestUtils::TestFileFeature>();
     ASSERT_NE(sourceOutput, nullptr);
 
     const babelwires::FeatureElement* processor =
-        context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
+        testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
     ASSERT_TRUE(processor->isFailed());
 
     const babelwires::FeatureElement* targetElement =
-        context.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
+        testEnvironment.m_project.getFeatureElement(libTestUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
     const libTestUtils::TestFileFeature* targetInput =
         targetElement->getInputFeature()->as<const libTestUtils::TestFileFeature>();

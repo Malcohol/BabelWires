@@ -115,7 +115,7 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
 
 TEST(ElementDataTest, sourceFileDataCreateElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
     std::ostringstream tempFileName;
@@ -125,9 +125,9 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
         std::ofstream tempFile(tempFilePath);
 
         auto targetFileFormat = std::make_unique<libTestUtils::TestTargetFileFormat>();
-        auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>(context.m_projectContext);
+        auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>(testEnvironment.m_projectContext);
         fileFeature->m_intChildFeature->set(14);
-        targetFileFormat->writeToFile(*fileFeature, tempFile, context.m_log);
+        targetFileFormat->writeToFile(*fileFeature, tempFile, testEnvironment.m_log);
     }
 
     // Create sourceFileData which expect to be able to load the file.
@@ -140,7 +140,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
-        data.createFeatureElement(context.m_projectContext, context.m_log, 10);
+        data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
@@ -222,7 +222,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
 
 TEST(ElementDataTest, targetFileDataCreateElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     babelwires::TargetFileElementData data;
     data.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
@@ -235,7 +235,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
-        data.createFeatureElement(context.m_projectContext, context.m_log, 10);
+        data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
@@ -311,7 +311,7 @@ TEST(ElementDataTest, processorDataSerialize) {
 
 TEST(ElementDataTest, processorDataCreateElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;
     data.m_factoryIdentifier = libTestUtils::TestProcessorFactory::getThisIdentifier();
@@ -323,7 +323,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
-        data.createFeatureElement(context.m_projectContext, context.m_log, 10);
+        data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());

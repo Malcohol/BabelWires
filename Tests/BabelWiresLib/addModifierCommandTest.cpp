@@ -12,11 +12,11 @@
 
 TEST(AddModifierCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
         return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
@@ -33,26 +33,26 @@ TEST(AddModifierCommandTest, executeAndUndo) {
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    context.m_project.process();
-    EXPECT_TRUE(command.initialize(context.m_project));
-    context.m_project.process();
+    testEnvironment.m_project.process();
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
+    testEnvironment.m_project.process();
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
     EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
-    command.undo(context.m_project);
+    command.undo(testEnvironment.m_project);
     EXPECT_NE(getInputFeature()->m_intFeature2->get(), 86);
     EXPECT_EQ(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
     EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 }
 
 TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     libTestUtils::TestFeatureElementData elementData;
     {
@@ -62,9 +62,9 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
         elementData.m_modifiers.emplace_back(modData.clone());
     }
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const libTestUtils::TestFeatureElement* element =
-        context.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<libTestUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
     const auto getInputFeature = [element]() {
         return element->getInputFeature()->as<const libTestUtils::TestRootFeature>();
@@ -81,26 +81,26 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    context.m_project.process();
-    EXPECT_TRUE(command.initialize(context.m_project));
-    context.m_project.process();
+    testEnvironment.m_project.process();
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
+    testEnvironment.m_project.process();
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
     EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
-    command.undo(context.m_project);
+    command.undo(testEnvironment.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 77);
     EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 
-    command.execute(context.m_project);
+    command.execute(testEnvironment.m_project);
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
     EXPECT_NE(element->getEdits().findModifier(libTestUtils::TestRootFeature::s_pathToInt2), nullptr);
 }
 
 TEST(AddModifierCommandTest, failSafelyNoElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
@@ -108,13 +108,13 @@ TEST(AddModifierCommandTest, failSafelyNoElement) {
 
     babelwires::AddModifierCommand command("Test command", 51, modData.clone());
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 TEST(AddModifierCommandTest, failSafelyNoTarget) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
@@ -125,9 +125,9 @@ TEST(AddModifierCommandTest, failSafelyNoTarget) {
     libTestUtils::TestFeatureElementData elementData;
     elementData.m_id = 51;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     EXPECT_EQ(elementId, 51);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }

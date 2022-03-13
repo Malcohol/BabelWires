@@ -15,26 +15,26 @@
 #include <fstream>
 
 namespace {
-    void createTestFile(libTestUtils::TestProjectContext& context, const std::filesystem::path& path, int value = 14) {
+    void createTestFile(libTestUtils::TestEnvironment& testEnvironment, const std::filesystem::path& path, int value = 14) {
         std::ofstream tempFile(path);
 
         auto fileFormat = std::make_unique<libTestUtils::TestTargetFileFormat>();
-        auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>(context.m_projectContext);
+        auto fileFeature = std::make_unique<libTestUtils::TestFileFeature>(testEnvironment.m_projectContext);
         fileFeature->m_intChildFeature->set(value);
-        fileFormat->writeToFile(*fileFeature, tempFile, context.m_log);
+        fileFormat->writeToFile(*fileFeature, tempFile, testEnvironment.m_log);
     }
 } // namespace
 
 TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
     std::ostringstream tempFileName;
     tempFileName << "foo." << libTestUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath(tempFileName.str());
 
-    createTestFile(context, tempFilePath);
+    createTestFile(testEnvironment, tempFilePath);
 
     // Create sourceFileData which expect to be able to load the file.
     babelwires::SourceFileElementData data;
@@ -42,7 +42,7 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
-    auto featureElement = data.createFeatureElement(context.m_projectContext, context.m_log, 10);
+    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::SourceFileElement>());
@@ -51,31 +51,31 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
 
     EXPECT_EQ(sourceFileElement->getFilePath(), tempFilePath.m_filePath);
     EXPECT_EQ(sourceFileElement->getSupportedFileOperations(), babelwires::FileElement::FileOperations::reload);
-    EXPECT_NE(sourceFileElement->getFileFormatInformation(context.m_projectContext), nullptr);
-    EXPECT_EQ(sourceFileElement->getFileFormatInformation(context.m_projectContext)->getIdentifier(), libTestUtils::TestSourceFileFormat::getThisIdentifier());
+    EXPECT_NE(sourceFileElement->getFileFormatInformation(testEnvironment.m_projectContext), nullptr);
+    EXPECT_EQ(sourceFileElement->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), libTestUtils::TestSourceFileFormat::getThisIdentifier());
 
     std::filesystem::remove(tempFilePath);
 
     sourceFileElement->clearChanges();
-    context.m_log.clear();
-    EXPECT_FALSE(sourceFileElement->reload(context.m_projectContext, context.m_log));
+    testEnvironment.m_log.clear();
+    EXPECT_FALSE(sourceFileElement->reload(testEnvironment.m_projectContext, testEnvironment.m_log));
 
     EXPECT_TRUE(sourceFileElement->isFailed());
     std::ostringstream pathInError;
     pathInError << tempFilePath.m_filePath;
-    EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase(pathInError.str()));
-    EXPECT_TRUE(context.m_log.hasSubstringIgnoreCase("could not be loaded"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(pathInError.str()));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("could not be loaded"));
     EXPECT_TRUE(sourceFileElement->getReasonForFailure().find(pathInError.str()) != std::string::npos);
 
     EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
     EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
     EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
-    createTestFile(context, tempFilePath);
+    createTestFile(testEnvironment, tempFilePath);
 
     sourceFileElement->clearChanges();
-    context.m_log.clear();
-    EXPECT_TRUE(sourceFileElement->reload(context.m_projectContext, context.m_log));
+    testEnvironment.m_log.clear();
+    EXPECT_TRUE(sourceFileElement->reload(testEnvironment.m_projectContext, testEnvironment.m_log));
 
     EXPECT_FALSE(sourceFileElement->isFailed());
     EXPECT_TRUE(sourceFileElement->getReasonForFailure().empty());
@@ -87,7 +87,7 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
 
 TEST(SourceFileElementTest, changeFile) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
     std::ostringstream tempFileName1;
@@ -98,8 +98,8 @@ TEST(SourceFileElementTest, changeFile) {
     tempFileName2 << "foo2." << libTestUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath2(tempFileName2.str());
 
-    createTestFile(context, tempFilePath1, 18);
-    createTestFile(context, tempFilePath2, 24);
+    createTestFile(testEnvironment, tempFilePath1, 18);
+    createTestFile(testEnvironment, tempFilePath2, 24);
 
     // Create sourceFileData which expect to be able to load the file.
     babelwires::SourceFileElementData data;
@@ -107,7 +107,7 @@ TEST(SourceFileElementTest, changeFile) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
 
-    auto featureElement = data.createFeatureElement(context.m_projectContext, context.m_log, 10);
+    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::SourceFileElement>());

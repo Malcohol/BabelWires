@@ -18,7 +18,7 @@
 namespace {
     void testSourceFileChange(bool source1Present, bool source2Present) {
         babelwires::IdentifierRegistryScope identifierRegistry;
-        libTestUtils::TestProjectContext context;
+        libTestUtils::TestEnvironment testEnvironment;
 
         testUtils::TempFilePath filePath1("foo" + libTestUtils::TestSourceFileFormat::getFileExtension());
         testUtils::TempFilePath filePath2("erm" + libTestUtils::TestSourceFileFormat::getFileExtension());
@@ -34,9 +34,9 @@ namespace {
         elementData.m_filePath = filePath1;
         elementData.m_factoryIdentifier = libTestUtils::TestSourceFileFormat::getThisIdentifier();
 
-        const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+        const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
         const auto* element =
-            context.m_project.getFeatureElement(elementId)->as<babelwires::SourceFileElement>();
+            testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::SourceFileElement>();
         ASSERT_NE(element, nullptr);
 
         const auto getOutputFeature = [element]() {
@@ -53,26 +53,26 @@ namespace {
 
         EXPECT_EQ(command.getName(), "Test command");
 
-        context.m_project.process();
-        EXPECT_TRUE(command.initialize(context.m_project));
-        command.execute(context.m_project);
-        context.m_project.process();
+        testEnvironment.m_project.process();
+        EXPECT_TRUE(command.initialize(testEnvironment.m_project));
+        command.execute(testEnvironment.m_project);
+        testEnvironment.m_project.process();
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
             EXPECT_EQ(getOutputFeature()->m_intChildFeature->get(), 'q');
         }
 
-        command.undo(context.m_project);
-        context.m_project.process();
+        command.undo(testEnvironment.m_project);
+        testEnvironment.m_project.process();
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
         if (source1Present) {
             EXPECT_EQ(getOutputFeature()->m_intChildFeature->get(), 'x');
         }
 
-        command.execute(context.m_project);
-        context.m_project.process();
+        command.execute(testEnvironment.m_project);
+        testEnvironment.m_project.process();
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
@@ -99,7 +99,7 @@ TEST(ChangeFileCommandTest, executeAndUndoSourceMissing1and2) {
 
 TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     std::string filePath1("foo" + libTestUtils::TestSourceFileFormat::getFileExtension());
     std::string filePath2("erm" + libTestUtils::TestSourceFileFormat::getFileExtension());
@@ -108,9 +108,9 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     elementData.m_filePath = filePath1;
     elementData.m_factoryIdentifier = libTestUtils::TestTargetFileFormat::getThisIdentifier();
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const auto* element =
-        context.m_project.getFeatureElement(elementId)->as<babelwires::TargetFileElement>();
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::TargetFileElement>();
     ASSERT_NE(element, nullptr);
 
     EXPECT_EQ(element->getFilePath(), filePath1);
@@ -119,45 +119,45 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    context.m_project.process();
-    EXPECT_TRUE(command.initialize(context.m_project));
-    command.execute(context.m_project);
-    context.m_project.process();
+    testEnvironment.m_project.process();
+    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     EXPECT_EQ(element->getFilePath(), filePath2);
 
-    command.undo(context.m_project);
-    context.m_project.process();
+    command.undo(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     EXPECT_EQ(element->getFilePath(), filePath1);
 
-    command.execute(context.m_project);
-    context.m_project.process();
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
     EXPECT_EQ(element->getFilePath(), filePath2);
 }
 
 TEST(ChangeFileCommandTest, failSafelyNoElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
     std::string filePath2("erm" + libTestUtils::TestSourceFileFormat::getFileExtension());
     babelwires::ChangeFileCommand command("Test command", 57, filePath2);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
 // Not sure how this could happen.
 TEST(ChangeFileCommandTest, failSafelyNotAFileElement) {
     babelwires::IdentifierRegistryScope identifierRegistry;
-    libTestUtils::TestProjectContext context;
+    libTestUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = context.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(libTestUtils::TestFeatureElementData());
 
     std::string filePath2("erm" + libTestUtils::TestSourceFileFormat::getFileExtension());
     babelwires::ChangeFileCommand command("Test command", elementId, filePath2);
 
-    context.m_project.process();
-    EXPECT_FALSE(command.initialize(context.m_project));
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
