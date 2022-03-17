@@ -9,13 +9,14 @@
 
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Maps/typeSystem.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializer.hpp"
 
 babelwires::MapData::MapData()
-    : m_sourceId(getBuiltInTypeId(KnownType::Int))
-    , m_targetId(getBuiltInTypeId(KnownType::Int)) {}
+    : m_sourceId(TypeSystem::getBuiltInTypeId(TypeSystem::Kind::Int))
+    , m_targetId(TypeSystem::getBuiltInTypeId(TypeSystem::Kind::Int)) {}
 
 babelwires::MapData::MapData(const MapData& other)
     : m_sourceId(other.m_sourceId)
@@ -94,19 +95,23 @@ const babelwires::MapEntryData& babelwires::MapData::getMapEntry(unsigned int in
     return *m_mapEntries[index];
 }
 
-std::string babelwires::MapData::validateEntryData(LongIdentifier sourceId, LongIdentifier targetId, const MapEntryData& entryData) {
-    if (getTypeFromIdentifier(sourceId) != entryData.getSourceType()) {
+std::string babelwires::MapData::validateEntryData(const ProjectContext& context, LongIdentifier sourceId, LongIdentifier targetId, const MapEntryData& entryData) {
+    TypeSystem typeSystem(context.m_enumRegistry);
+    assert(typeSystem.getTypeFromIdentifier(sourceId) != TypeSystem::Kind::NotAKind);
+    assert(typeSystem.getTypeFromIdentifier(targetId) != TypeSystem::Kind::NotAKind);
+
+    if (!entryData.isSourceValid(typeSystem, sourceId)) {
         return "The source type does not match";
     }
-    if (getTypeFromIdentifier(targetId) != entryData.getTargetType()) {
+    if (!entryData.isTargetValid(typeSystem, targetId)) {
         return "The target type does not match";
     }
     return {};
 }
 
-bool babelwires::MapData::hasInvalidEntries() const {
+bool babelwires::MapData::hasInvalidEntries(const ProjectContext& context) const {
     for (const auto& entry : m_mapEntries ) {
-        if (!validateEntryData(m_sourceId, m_targetId, *entry).empty()) {
+        if (!validateEntryData(context, m_sourceId, m_targetId, *entry).empty()) {
             return true;
         }
     }

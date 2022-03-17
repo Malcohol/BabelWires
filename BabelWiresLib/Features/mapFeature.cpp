@@ -6,7 +6,9 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Features/mapFeature.hpp"
+
 #include "BabelWiresLib/Features/modelExceptions.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 
@@ -30,7 +32,7 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     if (!m_allowedTargetIds.empty() && (std::find(m_allowedTargetIds.begin(), m_allowedTargetIds.end(), newTargetType) == m_allowedTargetIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newTargetType) << "\" is not a permitted target type for this map feature";
     }
-    if (newValue.hasInvalidEntries()) {
+    if (newValue.hasInvalidEntries(babelwires::RootFeature::getProjectContextAt(*this))) {
         throw ModelException() << "The map has invalid entries";
     }
 }

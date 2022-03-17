@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 
+#include <BabelWiresLib/Maps/typeSystem.hpp>
+
 #include <Common/Utilities/hash.hpp>
 
 namespace babelwires {
@@ -24,14 +26,20 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
+
+        bool isSourceValid(const TypeSystem& typeSystem, LongIdentifier sourceTypeId) const {
+          return typeSystem.isAValue(m_sourceValue, sourceTypeId);
+        }
+
+        bool isTargetValid(const TypeSystem& typeSystem, LongIdentifier targetTypeId) const {
+          return typeSystem.isAValue(m_targetValue, targetTypeId);
+        }
     };
 
     class EnumEnumMapEntry : public DiscreteMapEntry<Identifier, Identifier> {
       public:
         CLONEABLE(EnumEnumMapEntry);
         SERIALIZABLE(EnumEnumMapEntry, "enumEnum", 1);
-        KnownType getSourceType() const override { return KnownType::Enum; }
-        KnownType getTargetType() const override { return KnownType::Enum; }
     };
 } // namespace babelwires
 

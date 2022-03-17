@@ -36,6 +36,7 @@
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
                                  const ComplexValueEditorData& data)
     : ComplexValueEditor(parent, projectBridge, userLogger, data)
+    , m_map(projectBridge.getContext())
     , m_commandManager(m_map, userLogger) {
     setWindowTitle(getTitle());
     QLayout* mainLayout = new QVBoxLayout();

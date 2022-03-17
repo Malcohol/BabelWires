@@ -141,7 +141,7 @@ namespace {
 } // namespace
 
 // TODO These assume that the operation should always apply to output features.
-// If this assumption is valid, we may need to make the stated assumptions about how input/output paths match tighter.
+// If this assumption is not valid, we may need to make the stated assumptions about how input/output paths match tighter.
 
 void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath& pathToArray, int indexOfNewElement,
                                           int numEntriesToAdd, bool ensureModifier) {

@@ -41,6 +41,9 @@ namespace babelwires {
         /// Get the identifier within EnumValues at the given index.
         Identifier getIdentifierFromIndex(unsigned int index);
 
+        /// Is the identifier one of the values in the enum?
+        bool isAValue(Identifier id) const;
+
       private:
         const EnumValues& m_values;
         unsigned int m_indexOfDefaultValue;

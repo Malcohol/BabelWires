@@ -14,38 +14,10 @@
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializer.hpp"
 
-babelwires::MapProject::MapProject()
-    : m_sourceId(getBuiltInTypeId(KnownType::Int))
-    , m_targetId(getBuiltInTypeId(KnownType::Int)) {}
-
-babelwires::MapProject::MapProject(const MapProject& other)
-    : m_sourceId(other.m_sourceId)
-    , m_targetId(other.m_targetId) {
-    for (const auto& e : other.m_mapEntries) {
-        m_mapEntries.emplace_back(e->clone());
-    }
-}
-
-babelwires::MapProject::MapProject(MapProject&& other)
-    : m_sourceId(other.m_sourceId)
-    , m_targetId(other.m_targetId)
-    , m_mapEntries(std::move(other.m_mapEntries)) {}
-
-babelwires::MapProject& babelwires::MapProject::operator=(const MapProject& other) {
-    m_sourceId = other.m_sourceId;
-    m_targetId = other.m_targetId;
-    for (const auto& e : other.m_mapEntries) {
-        m_mapEntries.emplace_back(e->clone());
-    }
-    return *this;
-}
-
-babelwires::MapProject& babelwires::MapProject::operator=(MapProject&& other) {
-    m_sourceId = other.m_sourceId;
-    m_targetId = other.m_targetId;
-    m_mapEntries = std::move(other.m_mapEntries);
-    return *this;
-}
+babelwires::MapProject::MapProject(const ProjectContext& ProjectContext)
+    : m_projectContext(ProjectContext)
+    , m_sourceId(TypeSystem::getBuiltInTypeId(TypeSystem::Kind::Int))
+    , m_targetId(TypeSystem::getBuiltInTypeId(TypeSystem::Kind::Int)) {}
 
 babelwires::MapProject::~MapProject() = default;
 
@@ -88,7 +60,7 @@ const babelwires::MapProjectEntry& babelwires::MapProject::getMapEntry(unsigned 
 }
 
 bool babelwires::MapProject::validateNewEntry(const MapEntryData& newEntry) const {
-    return MapData::validateEntryData(m_sourceId, m_targetId, newEntry).empty();
+    return MapData::validateEntryData(m_projectContext, m_sourceId, m_targetId, newEntry).empty();
 }
 
 void babelwires::MapProject::addMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index) {
@@ -117,7 +89,7 @@ void babelwires::MapProject::setMapData(const MapData& data) {
     setTargetId(data.getTargetId());
     m_mapEntries.clear();
     for (const auto& mapEntryData : data.m_mapEntries) {
-        const std::string reasonForFailure = MapData::validateEntryData(data.getSourceId(), data.getTargetId(), *mapEntryData);
+        const std::string reasonForFailure = MapData::validateEntryData(m_projectContext, data.getSourceId(), data.getTargetId(), *mapEntryData);
         if (reasonForFailure.empty()) {
             m_mapEntries.emplace_back(std::make_unique<MapProjectEntry>(mapEntryData->clone(), reasonForFailure));
         } else {

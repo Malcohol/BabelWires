@@ -23,7 +23,6 @@
 namespace babelwires {
 
     class CompoundFeature;
-    struct ProjectContext;
 
     /// A feature is a self-describing data-structure which stores the data in the model.
     /// Features are structured in a tree, which also defines ownership.

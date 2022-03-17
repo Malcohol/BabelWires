@@ -66,7 +66,7 @@ namespace babelwires {
             const MapValueAssignmentData* tryGetMapValueAssignmentData(AccessModelScope& scope) const;
 
         private:
-            /// A local copy of the map being edited.
+            /// Manages the map data being edited.
             MapProject m_map;
 
             /// Manages changes to the map.

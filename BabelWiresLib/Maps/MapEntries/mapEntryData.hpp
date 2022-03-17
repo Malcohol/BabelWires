@@ -16,6 +16,8 @@
 #include <Common/types.hpp>
 
 namespace babelwires {
+    class TypeSystem;
+
     class MapEntryData : public Serializable, public Cloneable, public ProjectVisitable {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(MapEntryData);
@@ -25,8 +27,9 @@ namespace babelwires {
         virtual ~MapEntryData();
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const MapEntryData& other) const = 0;
-        virtual KnownType getSourceType() const = 0;
-        virtual KnownType getTargetType() const = 0;
+
+        virtual bool isSourceValid(const TypeSystem& typeSystem, LongIdentifier sourceTypeId) const = 0;
+        virtual bool isTargetValid(const TypeSystem& typeSystem, LongIdentifier targetTypeId) const = 0;
     };
 } // namespace babelwires
 

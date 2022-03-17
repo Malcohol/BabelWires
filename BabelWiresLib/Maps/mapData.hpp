@@ -16,6 +16,7 @@
 
 namespace babelwires {
     class MapEntryData;
+    class ProjectContext;
 
     /// The data held by a map.
     /// To support scenarios such as deserialization after an awkward versioning step, or copy and
@@ -55,8 +56,8 @@ namespace babelwires {
         void visitFilePaths(FilePathVisitor& visitor) override;
 
         /// Check that the entries types match the source and target ids.
-        static std::string validateEntryData(LongIdentifier sourceId, LongIdentifier targetId, const MapEntryData& entryData);
-        bool hasInvalidEntries() const;
+        static std::string validateEntryData(const ProjectContext& context, LongIdentifier sourceId, LongIdentifier targetId, const MapEntryData& entryData);
+        bool hasInvalidEntries(const ProjectContext& context) const;
 
       public:
         LongIdentifier m_sourceId;

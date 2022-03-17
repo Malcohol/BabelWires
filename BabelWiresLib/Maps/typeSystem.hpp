@@ -10,20 +10,25 @@
 #include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {
+    class EnumRegistry;
 
-    // Sketch
-    // TODO Could a built-in be provided by a plugin? How would we support this?
-    enum class KnownType {
-        // The built-in types
-        Int,
+    class TypeSystem {
+      public:
+        TypeSystem(const EnumRegistry& enumRegistry);
 
-        // All other types are assumed to be enums.
-        Enum
+        /// Built-in types.
+        enum class Kind { Int, Enum, NotAKind };
+
+        /// Asserts that the type is a builtIn.
+        static LongIdentifier getBuiltInTypeId(Kind type);
+
+        Kind getTypeFromIdentifier(LongIdentifier id) const;
+
+        bool isAValue(Identifier id, LongIdentifier type) const;
+        bool isAValue(int value, LongIdentifier type) const;
+
+      private:
+        const EnumRegistry& m_enumRegistry;
     };
 
-    ///
-    LongIdentifier getBuiltInTypeId(KnownType type);
-
-    /// Assumes any non-built in type is an enum.
-    KnownType getTypeFromIdentifier(LongIdentifier id);
 } // namespace babelwires

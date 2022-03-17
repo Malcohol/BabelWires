@@ -33,5 +33,11 @@ babelwires::Identifier babelwires::Enum::getIdentifierFromIndex(unsigned int ind
     return values[index];
 }
 
+bool babelwires::Enum::isAValue(babelwires::Identifier id) const {
+    const EnumValues& values = getEnumValues();
+    const auto it = std::find(values.begin(), values.end(), id);
+    return it != values.end();
+}
+
 babelwires::EnumRegistry::EnumRegistry()
     : Registry("Enum registry") {}

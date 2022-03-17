@@ -23,11 +23,7 @@ namespace babelwires {
     /// The MapProject carries an enriched version of the data in a MapData and has support for editing.
     class MapProject {
       public:
-        MapProject();
-        MapProject(const MapProject& other);
-        MapProject(MapProject&& other);
-        MapProject& operator=(const MapProject& other);
-        MapProject& operator=(MapProject&& other);
+        MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
         LongIdentifier getSourceId() const;
@@ -52,6 +48,7 @@ namespace babelwires {
         bool validateNewEntry(const MapEntryData& newEntry) const;
 
       private:
+        const ProjectContext& m_projectContext;
         LongIdentifier m_sourceId;
         LongIdentifier m_targetId;
         std::vector<std::unique_ptr<MapProjectEntry>> m_mapEntries;
