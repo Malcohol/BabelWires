@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Maps/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <BabelWiresLib/Enums/enum.hpp>
 

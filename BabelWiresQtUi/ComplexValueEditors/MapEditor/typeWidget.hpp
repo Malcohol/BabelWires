@@ -9,7 +9,7 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
-#include <BabelWiresLib/Maps/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Features/mapFeature.hpp>
 
 #include <QComboBox>

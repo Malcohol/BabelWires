@@ -32,7 +32,7 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/fileFeature.cpp
 	FileFormat/filePath.cpp
 	Maps/mapProject.cpp
-	Maps/typeSystem.cpp
+	TypeSystem/typeSystem.cpp
 	Maps/Commands/addEntryToMapCommand.cpp
 	Maps/Commands/removeEntryFromMapCommand.cpp
 	Maps/mapSerialization.cpp

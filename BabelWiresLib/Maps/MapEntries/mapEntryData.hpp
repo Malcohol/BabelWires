@@ -8,7 +8,7 @@
 #pragma once
 
 #include "BabelWiresLib/Project/projectVisitable.hpp"
-#include "BabelWiresLib/Maps/typeSystem.hpp"
+#include "BabelWiresLib/TypeSystem/typeSystem.hpp"
 
 #include "Common/Serialization/serializable.hpp"
 #include "Common/Cloning/cloneable.hpp"
