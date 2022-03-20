@@ -24,7 +24,7 @@ namespace babelwires {
     /// ModifierData carry the data sufficient to reconstruct a Modifier.
     struct ModifierData : Cloneable, Serializable, ProjectVisitable {
         CLONEABLE_ABSTRACT(ModifierData);
-        SERIALIZABLE_ABSTRACT(ModifierData, "ModifierData", void);
+        SERIALIZABLE_ABSTRACT(ModifierData, void);
         DOWNCASTABLE_TYPE_HIERARCHY(ModifierData);
 
         /// Identifies the feature being modified.
@@ -49,7 +49,7 @@ namespace babelwires {
     /// Base class for ModifierData which construct LocalModifiers.
     struct LocalModifierData : ModifierData {
         CLONEABLE_ABSTRACT(LocalModifierData);
-        SERIALIZABLE_ABSTRACT(LocalModifierData, "LocalModifierData", ModifierData);
+        SERIALIZABLE_ABSTRACT(LocalModifierData, ModifierData);
 
         /// Perform the modification on the target feature, or throw.
         virtual void apply(Feature* targetFeature) const = 0;

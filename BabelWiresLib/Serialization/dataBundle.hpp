@@ -27,7 +27,7 @@ namespace babelwires {
       public:
         using Data = DATA;
 
-        SERIALIZABLE_ABSTRACT(DataBundle, "dataBundle", void);
+        SERIALIZABLE_ABSTRACT(DataBundle, void);
         DataBundle() = default;
         DataBundle(const DataBundle&) = delete;
         DataBundle(DataBundle&&) = default;
