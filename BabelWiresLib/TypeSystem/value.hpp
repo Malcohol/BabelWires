@@ -14,8 +14,9 @@
 #include <Common/Cloning/cloneable.hpp>
 
 namespace babelwires {
-    class TypeSystem;
+    class Type;
 
+    // TODO: Could this be unified with ValueFeature, or could they share code?
     class Value : public Serializable, public Cloneable, public ProjectVisitable {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Value);
@@ -23,7 +24,7 @@ namespace babelwires {
         SERIALIZABLE_ABSTRACT(Value, void);
 
         /// 
-        virtual bool isValid(const TypeSystem& typeSystem, LongIdentifier type) const = 0;
+        virtual bool isValid(const Type& type) const = 0;
         virtual std::size_t getHash() const = 0;
     };
 } // namespace babelwires

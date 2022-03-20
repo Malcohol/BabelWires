@@ -1,5 +1,7 @@
 #include <BabelWiresLib/TypeSystem/enumValue.hpp>
 
+#include <BabelWiresLib/Enums/enum.hpp>
+
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
@@ -18,8 +20,9 @@ void babelwires::EnumValue::set(Identifier value) {
     m_value = value;
 }
 
-bool babelwires::EnumValue::isValid(const TypeSystem& typeSystem, LongIdentifier type) const {
-    return true;
+bool babelwires::EnumValue::isValid(const Type& type) const {
+    const Enum& e = type.is<Enum>();
+    return e.isAValue(m_value);
 }
 
 void babelwires::EnumValue::serializeContents(Serializer& serializer) const {

@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/intType.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include "Common/Serialization/deserializer.hpp"
@@ -96,22 +97,35 @@ const babelwires::MapEntryData& babelwires::MapData::getMapEntry(unsigned int in
 }
 
 std::string babelwires::MapData::validateEntryData(const ProjectContext& context, LongIdentifier sourceId, LongIdentifier targetId, const MapEntryData& entryData) {
-    if (!entryData.isSourceValid(context.m_typeSystem, sourceId)) {
-        return "The source type does not match";
+    const Type* sourceType = context.m_typeSystem.getEntryByIdentifier(sourceId);
+    if (!sourceType) {
+        return "The source type is unknown";
     }
-    if (!entryData.isTargetValid(context.m_typeSystem, targetId)) {
-        return "The target type does not match";
+    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(targetId);
+    if (!targetType) {
+        return "The target type is unknown";
+    }    
+    if (!entryData.isValid(*sourceType, *targetType)) {
+        return "The entry is invalid";
     }
     return {};
 }
 
 bool babelwires::MapData::isValid(const ProjectContext& context) const {
-    for (const auto& entry : m_mapEntries ) {
-        if (!validateEntryData(context, m_sourceId, m_targetId, *entry).empty()) {
-            return true;
+    const Type* sourceType = context.m_typeSystem.getEntryByIdentifier(m_sourceId);
+    if (!sourceType) {
+        return false;
+    }
+    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_sourceId);
+    if (!targetType) {
+        return false;
+    }    
+    for (const auto& entryData : m_mapEntries ) {
+        if (!entryData->isValid(*sourceType, *targetType)) {
+            return false;
         }
     }
-    return false;
+    return true;
 }
 
 void babelwires::MapData::emplaceBack(std::unique_ptr<MapEntryData> newEntry) {

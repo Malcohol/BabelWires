@@ -22,7 +22,6 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
-        bool isSourceValid(const TypeSystem& typeSystem, LongIdentifier sourceTypeId) const override;
-        bool isTargetValid(const TypeSystem& typeSystem, LongIdentifier targetTypeId) const override;
+        bool isValid(const Type& sourceType, const Type& targetType) const override;
     };
 }

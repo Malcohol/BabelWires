@@ -8,7 +8,7 @@
 #pragma once
 
 #include "BabelWiresLib/Project/projectVisitable.hpp"
-#include "BabelWiresLib/TypeSystem/typeSystem.hpp"
+#include "BabelWiresLib/TypeSystem/type.hpp"
 
 #include "Common/Serialization/serializable.hpp"
 #include "Common/Cloning/cloneable.hpp"
@@ -16,7 +16,7 @@
 #include <Common/types.hpp>
 
 namespace babelwires {
-    class TypeSystem;
+    class Type;
 
     class MapEntryData : public Serializable, public Cloneable, public ProjectVisitable {
       public:
@@ -27,9 +27,7 @@ namespace babelwires {
         virtual ~MapEntryData();
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const MapEntryData& other) const = 0;
-
-        virtual bool isSourceValid(const TypeSystem& typeSystem, LongIdentifier sourceTypeId) const = 0;
-        virtual bool isTargetValid(const TypeSystem& typeSystem, LongIdentifier targetTypeId) const = 0;
+        virtual bool isValid(const Type& sourceType, const Type& targetType) const = 0;
     };
 } // namespace babelwires
 

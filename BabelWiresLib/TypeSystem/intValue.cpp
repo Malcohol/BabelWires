@@ -1,5 +1,7 @@
 #include <BabelWiresLib/TypeSystem/intValue.hpp>
 
+#include <BabelWiresLib/TypeSystem/intType.hpp>
+
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
@@ -12,8 +14,8 @@ void babelwires::IntValue::set(int value) {
     m_value = value;
 }
 
-bool babelwires::IntValue::isValid(const TypeSystem& typeSystem, LongIdentifier type) const {
-    return true;
+bool babelwires::IntValue::isValid(const Type& type) const {
+    return type.getIdentifier() == IntType::getThisIdentifier();
 }
 
 void babelwires::IntValue::serializeContents(Serializer& serializer) const {

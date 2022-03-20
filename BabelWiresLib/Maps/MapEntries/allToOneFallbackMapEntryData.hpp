@@ -21,7 +21,6 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        bool isSourceValid(const TypeSystem& typeSystem, LongIdentifier sourceTypeId) const override;
-        bool isTargetValid(const TypeSystem& typeSystem, LongIdentifier targetTypeId) const override;
+        bool isValid(const Type& sourceType, const Type& targetType) const override;
     };
 } // namespace babelwires

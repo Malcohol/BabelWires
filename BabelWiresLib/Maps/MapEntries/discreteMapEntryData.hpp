@@ -15,19 +15,20 @@
 
 namespace babelwires {
     /// A map entry with a single source value of discrete type.
-    class DiscreteMapEntry : public MapEntryData {
+    class DiscreteMapEntryData : public MapEntryData {
       public:
-        Value m_sourceValue;
-        Value m_targetValue;
         std::size_t getHash() const override;
-        bool operator==(const MapEntry& other) const override;
+        bool operator==(const MapEntryData& other) const override;
 
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        bool isSourceValid(const TypeSystem& typeSystem, LongIdentifier sourceTypeId) const;
-        bool isTargetValid(const TypeSystem& typeSystem, LongIdentifier targetTypeId) const;
+        bool isValid(const Type& sourceType, const Type& targetType) const override;
+
+      private:
+        std::unique_ptr<Value> m_sourceValue;
+        std::unique_ptr<Value> m_targetValue;
     };
 } // namespace babelwires
