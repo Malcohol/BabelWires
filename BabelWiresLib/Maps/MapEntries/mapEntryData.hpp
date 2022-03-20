@@ -22,7 +22,7 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(MapEntryData);
         CLONEABLE_ABSTRACT(MapEntryData);
-        SERIALIZABLE_ABSTRACT(MapEntryData, "mapEntry", void);
+        SERIALIZABLE_ABSTRACT(MapEntryData, void);
 
         virtual ~MapEntryData();
         virtual std::size_t getHash() const = 0;

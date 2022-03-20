@@ -33,6 +33,10 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/filePath.cpp
 	Maps/mapProject.cpp
 	TypeSystem/typeSystem.cpp
+	TypeSystem/intType.cpp
+	TypeSystem/intValue.cpp
+	TypeSystem/enumValue.cpp
+	TypeSystem/type.cpp
 	Maps/Commands/addEntryToMapCommand.cpp
 	Maps/Commands/removeEntryFromMapCommand.cpp
 	Maps/mapSerialization.cpp
@@ -76,6 +80,7 @@ SET( BABELWIRESLIB_SRCS
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp
 	ValueNames/contiguousValueNamesImpl.cpp
+	libRegistration.cpp
    )
 
 ADD_LIBRARY( BabelWiresLib ${BABELWIRESLIB_SRCS} )

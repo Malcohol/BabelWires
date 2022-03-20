@@ -2,6 +2,8 @@
 
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
@@ -27,25 +29,6 @@ TEST(EnumTest, basic) {
     EXPECT_EQ(testEnum.getIdentifierFromIndex(2).getDiscriminator(), 3);
 }
 
-TEST(EnumTest, registeredEnum) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestLog log;
-    babelwires::EnumRegistry enumReg;
-    babelwires::Enum::EnumValues values = testUtils::getTestEnumValues();
-
-    struct TestEnum : babelwires::RegisteredEnum<TestEnum> {
-        TestEnum(babelwires::Enum::EnumValues& values)
-            : RegisteredEnum<TestEnum>(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
-                                           "TestEnum", "TestEnum", "aaaaaaaa-1111-2222-3333-444444444444",
-                                           babelwires::IdentifierRegistry::Authority::isAuthoritative),
-                                       1, values, 1) {}
-    };
-
-    EXPECT_EQ(TestEnum::getRegisteredInstance(), nullptr);
-    enumReg.addEntry(std::make_unique<TestEnum>(values));
-    EXPECT_NE(TestEnum::getRegisteredInstance(), nullptr);
-}
-
 #define TEST_ENUM_VALUES(X)                                                                                            \
     X(Foo, "Foo value", "00000000-1111-2222-3333-444444444444")                                                        \
     X(Bar, "Bar value", "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")                                                        \
@@ -54,12 +37,15 @@ TEST(EnumTest, registeredEnum) {
 ENUM_DEFINE_ENUM_VALUE_SOURCE(TEST_ENUM_VALUES);
 
 TEST(EnumTest, enumWithCppEnum) {
-    struct TestEnum : babelwires::RegisteredEnum<TestEnum> {
+    struct TestEnum : babelwires::Enum {
         TestEnum()
-            : RegisteredEnum<TestEnum>(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+            : Enum(getThisIdentifier(), 1, ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
+
+        static babelwires::LongIdentifier getThisIdentifier() {
+            return babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
                                            "TestEnum", "TestEnum", "aaaaaaaa-1111-2222-3333-444444444444",
-                                           babelwires::IdentifierRegistry::Authority::isAuthoritative),
-                                       1, ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
+                                           babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        }
 
         ENUM_DEFINE_CPP_ENUM(TEST_ENUM_VALUES);
     };

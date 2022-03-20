@@ -9,14 +9,23 @@
 
 #include "BabelWiresLib/Enums/enum.hpp"
 #include "BabelWiresLib/Features/modelExceptions.hpp"
+#include "BabelWiresLib/Features/rootFeature.hpp"
+#include "BabelWiresLib/Project/projectContext.hpp"
+#include "BabelWiresLib/TypeSystem/typeSystem.hpp"
+
 #include "Common/Identifiers/identifierRegistry.hpp"
 
-babelwires::EnumFeature::EnumFeature(const Enum& e)
+babelwires::EnumFeature::EnumFeature(LongIdentifier e)
     : m_enum(e)
-    , m_value(e.getEnumValues()[e.getIndexOfDefaultValue()]) {}
+    , m_value("unset") {}
 
 const babelwires::Enum& babelwires::EnumFeature::getEnum() const {
-    return m_enum;
+    const ProjectContext& projectContext = RootFeature::getProjectContextAt(*this);
+    const Type* type = projectContext.m_typeSystem.getEntryByIdentifier(m_enum);
+    assert(type && "The enum to set is not of a known type");
+    const Enum* e = type->as<Enum>();
+    assert(type && "The type of the enum to set is not an enum");
+    return *e;
 }
 
 babelwires::Identifier babelwires::EnumFeature::get() const {
@@ -24,10 +33,11 @@ babelwires::Identifier babelwires::EnumFeature::get() const {
 }
 
 void babelwires::EnumFeature::set(Identifier id) {
-    const Enum::EnumValues& values = m_enum.getEnumValues();
+    const Enum& e = getEnum();
+    const Enum::EnumValues& values = e.getEnumValues();
     const auto it = std::find(values.begin(), values.end(), id);
     if (it == values.end()) {
-        throw ModelException() << "The value \"" << IdentifierRegistry::read()->getName(id) << "\" is not a valid value for the enum \"" << m_enum.getName() << "\" enum.";
+        throw ModelException() << "The value \"" << IdentifierRegistry::read()->getName(id) << "\" is not a valid value for the enum \"" << e.getName() << "\" enum.";
     }
     if (id != m_value) {
         setChanged(Changes::ValueChanged);
@@ -36,7 +46,12 @@ void babelwires::EnumFeature::set(Identifier id) {
 }
 
 void babelwires::EnumFeature::doSetToDefault() {
-    m_value = m_enum.getEnumValues()[m_enum.getIndexOfDefaultValue()];
+    const Enum& e = getEnum();
+    const Identifier defaultValue = e.getIdentifierFromIndex(e.getIndexOfDefaultValue());
+    if (defaultValue != m_value) {
+        setChanged(Changes::ValueChanged);
+        m_value = defaultValue;
+    }
 }
 
 std::size_t babelwires::EnumFeature::doGetHash() const {

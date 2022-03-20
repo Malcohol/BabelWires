@@ -9,15 +9,15 @@
 
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/intType.hpp>
 
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializer.hpp"
 
 babelwires::MapProject::MapProject(const ProjectContext& ProjectContext)
     : m_projectContext(ProjectContext)
-    , m_sourceId(TypeSystem::getBuiltInTypeId(TypeSystem::Kind::Int))
-    , m_targetId(TypeSystem::getBuiltInTypeId(TypeSystem::Kind::Int)) {}
+    , m_sourceId(IntType::getThisIdentifier())
+    , m_targetId(IntType::getThisIdentifier()) {}
 
 babelwires::MapProject::~MapProject() = default;
 

@@ -13,11 +13,12 @@
 #include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {
-    class Type;
 
-    class TypeSystem : public Registry<Type> {
+    class Type : public RegistryEntry {
       public:
-        TypeSystem();
+        DOWNCASTABLE_TYPE_HIERARCHY(Type);
+        Type(LongIdentifier identifier, VersionNumber version);
+        virtual std::unique_ptr<Value> createValue() const = 0;
     };
 
-} // namespace babelwires
+}

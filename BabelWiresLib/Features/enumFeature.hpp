@@ -24,8 +24,9 @@ namespace babelwires {
     /// without requiring versioning code to adapt old serialized data.
     class EnumFeature : public ValueFeature {
       public:
-        EnumFeature(const Enum& e);
+        EnumFeature(LongIdentifier e);
 
+        /// This only works if the enum is in a hierarchy rooted in a RootFeature.
         const Enum& getEnum() const;
 
         /// Get the current value of the feature.
@@ -42,18 +43,18 @@ namespace babelwires {
 
       protected:
         ///
-        const Enum& m_enum;
+        LongIdentifier m_enum;
 
         ///
         Identifier m_value;
     };
 
     /// EnumFeature for RegisteredEnums, which can be conveniently constructed, since it assumes the Enum it
-    /// references has been registered in the EnumRegistry.
+    /// references has been registered in the TypeSystem.
     template <typename E> class RegisteredEnumFeature : public EnumFeature {
       public:
         RegisteredEnumFeature()
-            : EnumFeature(*E::getRegisteredInstance()) {}
+            : EnumFeature(E::getThisIdentifier()) {}
     };
 
 } // namespace babelwires

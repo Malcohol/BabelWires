@@ -8,15 +8,15 @@
 #include <BabelWiresLib/Maps/mapData.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/intType.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializer.hpp"
 
 babelwires::MapData::MapData()
-    : m_sourceId(TypeSystem::getBuiltInTypeId(TypeSystem::Kind::Int))
-    , m_targetId(TypeSystem::getBuiltInTypeId(TypeSystem::Kind::Int)) {}
+    : m_sourceId(IntType::getThisIdentifier())
+    , m_targetId(IntType::getThisIdentifier()) {}
 
 babelwires::MapData::MapData(const MapData& other)
     : m_sourceId(other.m_sourceId)
@@ -96,20 +96,16 @@ const babelwires::MapEntryData& babelwires::MapData::getMapEntry(unsigned int in
 }
 
 std::string babelwires::MapData::validateEntryData(const ProjectContext& context, LongIdentifier sourceId, LongIdentifier targetId, const MapEntryData& entryData) {
-    TypeSystem typeSystem(context.m_enumRegistry);
-    assert(typeSystem.getTypeFromIdentifier(sourceId) != TypeSystem::Kind::NotAKind);
-    assert(typeSystem.getTypeFromIdentifier(targetId) != TypeSystem::Kind::NotAKind);
-
-    if (!entryData.isSourceValid(typeSystem, sourceId)) {
+    if (!entryData.isSourceValid(context.m_typeSystem, sourceId)) {
         return "The source type does not match";
     }
-    if (!entryData.isTargetValid(typeSystem, targetId)) {
+    if (!entryData.isTargetValid(context.m_typeSystem, targetId)) {
         return "The target type does not match";
     }
     return {};
 }
 
-bool babelwires::MapData::hasInvalidEntries(const ProjectContext& context) const {
+bool babelwires::MapData::isValid(const ProjectContext& context) const {
     for (const auto& entry : m_mapEntries ) {
         if (!validateEntryData(context, m_sourceId, m_targetId, *entry).empty()) {
             return true;

@@ -7,8 +7,6 @@
 #include "BabelWiresLib/Features/recordFeature.hpp"
 #include "BabelWiresLib/Features/stringFeature.hpp"
 
-#include "Tests/BabelWiresLib/TestUtils/testEnum.hpp"
-
 TEST(FeatureTest, intFeature) {
     babelwires::IntFeature intFeature;
     EXPECT_EQ(intFeature.getOwner(), nullptr);
@@ -631,68 +629,4 @@ TEST(FeatureTest, heavyValueAssign) {
     EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::SomethingChanged));
     EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::ValueChanged));
     EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::StructureChanged));
-}
-
-TEST(FeatureTest, enumFeature) {
-    const babelwires::Enum::EnumValues enumValues = testUtils::getTestEnumValues();
-    testUtils::TestEnum testEnum;
-    babelwires::EnumFeature enumFeature(testEnum);
-
-    enumFeature.setToDefault();
-    EXPECT_EQ(enumFeature.get(), enumValues[1]);
-
-    enumFeature.set(enumValues[0]);
-    EXPECT_EQ(enumFeature.get(), enumValues[0]);
-
-    babelwires::EnumFeature enumFeature2(testEnum);
-    enumFeature2.setToDefault();
-    enumFeature2.assign(enumFeature);
-    EXPECT_EQ(enumFeature2.get(), enumValues[0]);
-}
-
-TEST(FeatureTest, enumFeatureChanges) {
-    const babelwires::Enum::EnumValues enumValues = testUtils::getTestEnumValues();
-    testUtils::TestEnum testEnum;
-    babelwires::EnumFeature enumFeature(testEnum);
-
-    // After construction, everything has changed.
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    enumFeature.clearChanges();
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    enumFeature.setToDefault();
-    // Don't assume anything about the constructed value, so don't test for value changed.
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    enumFeature.set(enumValues[0]);
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    enumFeature.clearChanges();
-    enumFeature.set(enumValues[0]);
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-}
-
-TEST(FeatureTest, enumFeatureHash) {
-    const babelwires::Enum::EnumValues enumValues = testUtils::getTestEnumValues();
-    testUtils::TestEnum testEnum;
-    babelwires::EnumFeature enumFeature(testEnum);
-
-    enumFeature.set(enumValues[0]);
-    const std::size_t hashAt0 = enumFeature.getHash();
-
-    enumFeature.set(enumValues[2]);
-    const std::size_t hashAt2 = enumFeature.getHash();
-
-    // There's a small chance that this test will trigger a false positive. If so, convert the test to be more
-    // statistical.
-    EXPECT_NE(hashAt0, hashAt2);
 }

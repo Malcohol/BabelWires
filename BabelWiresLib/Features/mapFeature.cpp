@@ -32,8 +32,8 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     if (!m_allowedTargetIds.empty() && (std::find(m_allowedTargetIds.begin(), m_allowedTargetIds.end(), newTargetType) == m_allowedTargetIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newTargetType) << "\" is not a permitted target type for this map feature";
     }
-    if (newValue.hasInvalidEntries(babelwires::RootFeature::getProjectContextAt(*this))) {
-        throw ModelException() << "The map has invalid entries";
+    if (newValue.isValid(babelwires::RootFeature::getProjectContextAt(*this))) {
+        throw ModelException() << "The map is not valid";
     }
 }
 

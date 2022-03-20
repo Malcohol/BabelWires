@@ -1,0 +1,33 @@
+/**
+ * TODO
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <BabelWiresLib/TypeSystem/value.hpp>
+
+namespace babelwires {
+
+    class IntValue : public Value {
+      public:
+        CLONEABLE(IntValue);
+        SERIALIZABLE(IntValue, "int", Value, 1);
+
+        int get() const;
+        void set(int value);
+
+        bool isValid(const TypeSystem& typeSystem, LongIdentifier type) const override;
+        void serializeContents(Serializer& serializer) const override;
+        void deserializeContents(Deserializer& deserializer) override;
+        void visitIdentifiers(IdentifierVisitor& visitor) override;
+        void visitFilePaths(FilePathVisitor& visitor) override;
+        std::size_t getHash() const override;
+
+      private:
+        int m_value;
+    };
+
+} // namespace babelwires

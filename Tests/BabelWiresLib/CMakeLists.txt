@@ -12,6 +12,7 @@ SET( LIB_TESTS_SRCS
     deactivateOptionalCommandTest.cpp
     elementDataTest.cpp
     enumTest.cpp
+    enumFeatureTest.cpp
     featureElementConnectionTest.cpp
     featureElementTest.cpp
     featurePathTest.cpp

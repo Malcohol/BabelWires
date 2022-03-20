@@ -55,9 +55,9 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        /// Check that the entries types match the source and target ids.
+        /// Check that the entries' types match the source and target ids.
         static std::string validateEntryData(const ProjectContext& context, LongIdentifier sourceId, LongIdentifier targetId, const MapEntryData& entryData);
-        bool hasInvalidEntries(const ProjectContext& context) const;
+        bool isValid(const ProjectContext& context) const;
 
       public:
         LongIdentifier m_sourceId;

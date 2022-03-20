@@ -8,17 +8,17 @@
 #pragma once
 
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
-
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/value.hpp>
 
 #include <Common/Utilities/hash.hpp>
 
 namespace babelwires {
     /// A map entry with a single source value of discrete type.
-    template <typename SOURCE_TYPE, typename TARGET_TYPE> class DiscreteMapEntry : public MapEntryData {
+    class DiscreteMapEntry : public MapEntryData {
       public:
-        SOURCE_TYPE m_sourceValue;
-        TARGET_TYPE m_targetValue;
+        Value m_sourceValue;
+        Value m_targetValue;
         std::size_t getHash() const override;
         bool operator==(const MapEntry& other) const override;
 
@@ -27,20 +27,7 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        bool isSourceValid(const TypeSystem& typeSystem, LongIdentifier sourceTypeId) const {
-          return typeSystem.isAValue(m_sourceValue, sourceTypeId);
-        }
-
-        bool isTargetValid(const TypeSystem& typeSystem, LongIdentifier targetTypeId) const {
-          return typeSystem.isAValue(m_targetValue, targetTypeId);
-        }
-    };
-
-    class EnumEnumMapEntry : public DiscreteMapEntry<Identifier, Identifier> {
-      public:
-        CLONEABLE(EnumEnumMapEntry);
-        SERIALIZABLE(EnumEnumMapEntry, "enumEnum", 1);
+        bool isSourceValid(const TypeSystem& typeSystem, LongIdentifier sourceTypeId) const;
+        bool isTargetValid(const TypeSystem& typeSystem, LongIdentifier targetTypeId) const;
     };
 } // namespace babelwires
-
-#include <BabelWiresLib/Maps/MapEntries/discreteMapEntry_inl.hpp>

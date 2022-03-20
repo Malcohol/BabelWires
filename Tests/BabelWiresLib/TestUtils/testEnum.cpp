@@ -15,6 +15,10 @@ namespace {
     babelwires::Enum::EnumValues g_values = testUtils::getTestEnumValues();
 }
 
+babelwires::LongIdentifier testUtils::TestEnum::getThisIdentifier() {
+    return getTestRegisteredLongIdentifier("TestEnum");
+}
+
 testUtils::TestEnum::TestEnum()
-    : babelwires::Enum(getTestRegisteredLongIdentifier("TestEnum"), 1, g_values, 1)
+    : babelwires::Enum(getThisIdentifier(), 1, g_values, 1)
 {}

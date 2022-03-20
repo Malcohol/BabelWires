@@ -49,12 +49,12 @@ namespace babelwires {
       public:
         /// Get the stored value as a C++ enum value.
         typename E::Value getAsValue() const {
-            return static_cast<const E&>(this->m_enum).getValueFromIdentifier(this->m_value);
+            return static_cast<const E&>(this->getEnum()).getValueFromIdentifier(this->m_value);
         }
 
         /// Set the value using a C++ enum value.
         void setFromValue(typename E::Value value) {
-            set(static_cast<const E*>(this->m_enum)->getIdentifierFromValue(value));
+            set(static_cast<const E*>(this->getEnum())->getIdentifierFromValue(value));
         }
     };
 } // namespace babelwires

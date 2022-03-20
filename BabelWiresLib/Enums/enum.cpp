@@ -1,8 +1,10 @@
 #include "BabelWiresLib/Enums/enum.hpp"
 
+#include <BabelWiresLib/TypeSystem/enumValue.hpp>
+
 babelwires::Enum::Enum(LongIdentifier identifier, VersionNumber version, const EnumValues& values,
                        unsigned int indexOfDefaultValue)
-    : RegistryEntry(identifier, version)
+    : Type(identifier, version)
     , m_values(values)
     , m_indexOfDefaultValue(indexOfDefaultValue) {
 #ifndef NDEBUG
@@ -27,7 +29,7 @@ unsigned int babelwires::Enum::getIndexFromIdentifier(babelwires::Identifier id)
     return it - values.begin();
 }
 
-babelwires::Identifier babelwires::Enum::getIdentifierFromIndex(unsigned int index) {
+babelwires::Identifier babelwires::Enum::getIdentifierFromIndex(unsigned int index) const {
     const EnumValues& values = getEnumValues();
     assert(index < values.size());
     return values[index];
@@ -39,5 +41,6 @@ bool babelwires::Enum::isAValue(babelwires::Identifier id) const {
     return it != values.end();
 }
 
-babelwires::EnumRegistry::EnumRegistry()
-    : Registry("Enum registry") {}
+std::unique_ptr<babelwires::Value> babelwires::Enum::createValue() const {
+    return std::make_unique<EnumValue>(getIdentifierFromIndex(getIndexOfDefaultValue()));
+}
