@@ -2,7 +2,7 @@
  * An interface for classes which support serialization/deserialization.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -37,17 +37,17 @@ namespace babelwires {
     };
 
 /// For abstract classes whose subtypes can be serialized.
-#define SERIALIZABLE_ABSTRACT(T, TYPENAME, PARENT)                                                                     \
+#define SERIALIZABLE_ABSTRACT(T, PARENT)                                                                               \
     using SerializableParent = PARENT;                                                                                 \
-    static constexpr char serializationType[] = TYPENAME;                                                              \
-    static constexpr void* getSerializationTag() { return babelwires::Detail::getSerializationTag<T>(); }              \
-    std::string_view getSerializationType() const override { return serializationType; }
+    static constexpr void* getSerializationTag() { return babelwires::Detail::getSerializationTag<T>(); }
 
 /// For concrete classes which can be serialized and deserialized.
 /// A class must provide implementations of serializeContents and deserializeContents.
 // TODO Macro tricks to make PARENT and VERSION optional.
 #define SERIALIZABLE(T, TYPENAME, PARENT, VERSION)                                                                     \
-    SERIALIZABLE_ABSTRACT(T, TYPENAME, PARENT);                                                                        \
+    SERIALIZABLE_ABSTRACT(T, PARENT);                                                                        \
+    std::string_view getSerializationType() const override { return serializationType; }                               \
+    static constexpr char serializationType[] = TYPENAME;                                                              \
     static constexpr int serializationVersion = VERSION;                                                               \
     static_assert(VERSION != 0, "Version must be greater than 0");                                                     \
     babelwires::VersionNumber getSerializationVersion() const override {                                               \

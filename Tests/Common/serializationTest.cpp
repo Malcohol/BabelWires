@@ -233,7 +233,7 @@ TEST(SerializationTest, versioningCurrent) {
 
 namespace {
     struct Base : babelwires::Serializable {
-        SERIALIZABLE_ABSTRACT(Base, "Base", void);
+        SERIALIZABLE_ABSTRACT(Base, void);
     };
 
     struct Concrete0 : Base {
@@ -247,7 +247,7 @@ namespace {
     };
 
     struct Intermediate : Base {
-        SERIALIZABLE_ABSTRACT(Intermediate, "Intermediate", Base);
+        SERIALIZABLE_ABSTRACT(Intermediate, Base);
     };
 
     struct Intermediate2 : Intermediate {};
