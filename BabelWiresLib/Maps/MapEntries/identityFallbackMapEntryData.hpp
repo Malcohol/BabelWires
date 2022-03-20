@@ -13,15 +13,12 @@ namespace babelwires {
     /// FallbackMapEntries are the last entry in a map, and define what happens to previously unmapped source values.
     class IdentityFallbackMapEntryData : public FallbackMapEntryData {
       public:
-        std::size_t getHash() const override {
-            // "Id Fallback" (an arbitrary hash value)
-            return 0x1DFA77BC;
-        }
+        std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        void visitIdentifiers(IdentifierVisitor& visitor) override;
+        void visitFilePaths(FilePathVisitor& visitor) override;
         bool isValid(const Type& sourceType, const Type& targetType) const override;
     };
 }

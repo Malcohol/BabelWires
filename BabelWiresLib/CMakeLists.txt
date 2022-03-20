@@ -43,8 +43,8 @@ SET( BABELWIRESLIB_SRCS
 	Maps/mapData.cpp
 	Maps/MapEntries/mapEntryData.cpp
 	Maps/MapEntries/discreteMapEntryData.cpp
-	#Maps/MapEntries/fallbackMapEntryData.cpp
-	#Maps/MapEntries/allToOneFallbackMapEntryData.cpp
+	Maps/MapEntries/identityFallbackMapEntryData.cpp
+	Maps/MapEntries/allToOneFallbackMapEntryData.cpp
 	Maps/mapProjectEntry.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp

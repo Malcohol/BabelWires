@@ -12,15 +12,17 @@
 
 namespace babelwires {
 
-    class AllToOneFallbackMapEntryData : public FallbackMapEntryData<void, SOURCE_AND_TARGET_TYPE> {
+    class AllToOneFallbackMapEntryData : public FallbackMapEntryData {
       public:
-        Value m_targetValue;
-
+        std::size_t getHash() const override;
+        bool operator==(const MapEntryData& other) const override;
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
         bool isValid(const Type& sourceType, const Type& targetType) const override;
+      private:
+        std::unique_ptr<Value> m_targetValue;
     };
 } // namespace babelwires
