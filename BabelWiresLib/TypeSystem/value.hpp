@@ -26,5 +26,6 @@ namespace babelwires {
         /// 
         virtual bool isValid(const Type& type) const = 0;
         virtual std::size_t getHash() const = 0;
+        virtual bool operator==(const Value& other) const = 0;
     };
 } // namespace babelwires

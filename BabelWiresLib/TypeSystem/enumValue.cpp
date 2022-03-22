@@ -40,6 +40,11 @@ void babelwires::EnumValue::visitIdentifiers(IdentifierVisitor& visitor) {
 void babelwires::EnumValue::visitFilePaths(FilePathVisitor& visitor) {}
 
 std::size_t babelwires::EnumValue::getHash() const {
-    // TODO
-    return 0;
+    // eeee - Arbitrary discriminator.
+    return hash::mixtureOf(0xeeee, m_value);
+}
+
+bool babelwires::EnumValue::operator==(const Value& other) const {
+    const EnumValue* otherValue = other.as<EnumValue>();
+    return otherValue && (m_value == otherValue->m_value);
 }

@@ -25,6 +25,7 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
         std::size_t getHash() const override;
+        bool operator==(const Value& other) const override;
 
       private:
         int m_value;

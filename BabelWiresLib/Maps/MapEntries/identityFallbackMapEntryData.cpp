@@ -16,8 +16,7 @@ std::size_t babelwires::IdentityFallbackMapEntryData::getHash() const {
 }
 
 bool babelwires::IdentityFallbackMapEntryData::operator==(const MapEntryData& other) const {
-    // TODO return (m_sourceValue == other.m_sourceValue) && (m_targetValue == other.m_targetValue);
-    return true;
+    return other.as<IdentityFallbackMapEntryData>();
 }
 
 void babelwires::IdentityFallbackMapEntryData::serializeContents(Serializer& serializer) const {

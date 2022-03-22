@@ -33,6 +33,11 @@ void babelwires::IntValue::visitIdentifiers(IdentifierVisitor& visitor) {
 void babelwires::IntValue::visitFilePaths(FilePathVisitor& visitor) {}
 
 std::size_t babelwires::IntValue::getHash() const {
-    // TODO
-    return 0;
+    // 1111 - Arbitrary discriminator
+    return hash::mixtureOf(0x1111, m_value);
+}
+
+bool babelwires::IntValue::operator==(const Value& other) const {
+    const IntValue* otherValue = other.as<IntValue>();
+    return otherValue && (m_value == otherValue->m_value);
 }

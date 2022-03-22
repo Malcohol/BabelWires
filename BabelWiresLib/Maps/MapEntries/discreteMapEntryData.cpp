@@ -16,8 +16,8 @@ std::size_t babelwires::DiscreteMapEntryData::getHash() const {
 }
 
 bool babelwires::DiscreteMapEntryData::operator==(const MapEntryData& other) const {
-    // TODO return (m_sourceValue == other.m_sourceValue) && (m_targetValue == other.m_targetValue);
-    return true;
+    const DiscreteMapEntryData* otherData = other.as<DiscreteMapEntryData>();
+    return otherData && (m_sourceValue == otherData->m_sourceValue) && (m_targetValue == otherData->m_targetValue);
 }
 
 void babelwires::DiscreteMapEntryData::serializeContents(Serializer& serializer) const {
