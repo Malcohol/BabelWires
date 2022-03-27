@@ -32,6 +32,9 @@ namespace babelwires {
         void setSourceId(LongIdentifier sourceId);
         void setTargetId(LongIdentifier targetId);
 
+        const Type* getSourceType() const;
+        const Type* getTargetType() const;
+
         MapData extractMapData() const;
         void setMapData(const MapData& data);
 

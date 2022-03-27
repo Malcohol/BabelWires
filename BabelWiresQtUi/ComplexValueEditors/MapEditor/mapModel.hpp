@@ -18,6 +18,7 @@ namespace babelwires {
     class DiscreteMapEntryData;
     class MapEntryData;
     class Value;
+    class Type;
     
     class MapView : public QTableView {
         Q_OBJECT
@@ -39,7 +40,7 @@ namespace babelwires {
         QVariant getMapEntryDisplayData(const DiscreteMapEntryData& entry, int column) const;
         QVariant getMapEntryDisplayData(const AllToOneFallbackMapEntryData& entry, int column) const;
         QVariant getMapEntryDisplayData(const IdentityFallbackMapEntryData& entry, int column) const;
-        QVariant getMapEntryDisplayData(const Value& value) const;
+        QVariant getMapEntryDisplayData(const Type& type, const Value& value) const;
 
       private:
         MapProject& m_map;

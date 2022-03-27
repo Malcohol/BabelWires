@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
+#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModelDispatcher.hpp>
+
 #include <BabelWiresLib/Maps/mapProject.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
@@ -42,10 +44,10 @@ int babelwires::MapModel::columnCount(const QModelIndex& /*parent*/) const {
 
 QVariant babelwires::MapModel::getMapEntryDisplayData(const DiscreteMapEntryData& entry, int column) const {
     if (column == 0) {
-        return getMapEntryDisplayData(*entry.getSourceValue());
+        return getMapEntryDisplayData(*m_map.getSourceType(), *entry.getSourceValue());
     } else {
         assert(column == 1);
-        return getMapEntryDisplayData(*entry.getTargetValue());
+        return getMapEntryDisplayData(*m_map.getTargetType(), *entry.getTargetValue());
     }
 }
 
@@ -54,7 +56,7 @@ QVariant babelwires::MapModel::getMapEntryDisplayData(const AllToOneFallbackMapE
         return "*";
     } else {
         assert(column == 1);
-        return getMapEntryDisplayData(*entry.getTargetValue());
+        return getMapEntryDisplayData(*m_map.getTargetType(), *entry.getTargetValue());
     }
 }
 
@@ -67,8 +69,9 @@ QVariant babelwires::MapModel::getMapEntryDisplayData(const IdentityFallbackMapE
     }
 }
 
-QVariant babelwires::MapModel::getMapEntryDisplayData(const Value& value) const {
-    return "Value";
+QVariant babelwires::MapModel::getMapEntryDisplayData(const Type& type, const Value& value) const {
+    ValueModelDispatcher valueModel(type, value);
+    return valueModel->getDisplayData();
 }
 
 

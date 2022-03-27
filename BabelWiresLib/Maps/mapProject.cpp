@@ -38,6 +38,14 @@ void babelwires::MapProject::setTargetId(LongIdentifier targetId) {
     m_targetId = targetId;
 }
 
+const babelwires::Type* babelwires::MapProject::getSourceType() const {
+    return m_projectContext.m_typeSystem.getEntryByIdentifier(m_sourceId);
+}
+
+const babelwires::Type* babelwires::MapProject::getTargetType() const {
+    return m_projectContext.m_typeSystem.getEntryByIdentifier(m_targetId);
+}
+
 bool babelwires::MapProject::operator==(const MapProject& other) const {
     if ((m_sourceId != other.m_sourceId) || (m_targetId != other.m_targetId)) {
         return false;
@@ -61,11 +69,11 @@ const babelwires::MapProjectEntry& babelwires::MapProject::getMapEntry(unsigned 
 }
 
 bool babelwires::MapProject::validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const {
-    const Type *const sourceType = m_projectContext.m_typeSystem.getEntryByIdentifier(m_sourceId);
+    const Type *const sourceType = getSourceType();
     if (!sourceType) {
         return false;
     }
-    const Type *const targetType = m_projectContext.m_typeSystem.getEntryByIdentifier(m_targetId);
+    const Type *const targetType = getTargetType();
     if (!targetType) {
         return false;
     }
@@ -100,8 +108,8 @@ void babelwires::MapProject::setMapData(const MapData& data) {
     setTargetId(data.getTargetId());
     m_mapEntries.clear();
     std::string commonReason;
-    const Type *const sourceType = m_projectContext.m_typeSystem.getEntryByIdentifier(m_sourceId);
-    const Type *const targetType = m_projectContext.m_typeSystem.getEntryByIdentifier(m_targetId);
+    const Type *const sourceType = getSourceType();
+    const Type *const targetType = getTargetType();
     if (!sourceType && !targetType) {
         commonReason = "Neither source nor target type are known";
     } else if (!sourceType) {
