@@ -14,6 +14,16 @@ namespace babelwires {
 
     class AllToOneFallbackMapEntryData : public FallbackMapEntryData {
       public:
+        CLONEABLE(AllToOneFallbackMapEntryData);
+        SERIALIZABLE(AllToOneFallbackMapEntryData, "allToOneMaplet", FallbackMapEntryData, 1);
+
+        AllToOneFallbackMapEntryData();
+        AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other);
+        AllToOneFallbackMapEntryData(AllToOneFallbackMapEntryData&& other);
+
+        const Value* getValue() const;
+        void setValue(std::unique_ptr<Value> value);
+
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
         void serializeContents(Serializer& serializer) const override;
@@ -22,6 +32,7 @@ namespace babelwires {
         void visitFilePaths(FilePathVisitor& visitor) override;
 
         bool isValid(const Type& sourceType, const Type& targetType) const override;
+
       private:
         std::unique_ptr<Value> m_targetValue;
     };

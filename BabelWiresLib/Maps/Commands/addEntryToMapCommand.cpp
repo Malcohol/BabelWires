@@ -19,11 +19,12 @@ babelwires::AddEntryToMapCommand::AddEntryToMapCommand(std::string commandName, 
     , m_indexOfNewEntry(indexOfNewEntry) {}
 
 bool babelwires::AddEntryToMapCommand::initialize(const MapProject& map) {
-    if (m_indexOfNewEntry > map.getNumMapEntries()) {
+    // You can't "add" to the last entry, since it should be always be a fallback entry.
+    if (m_indexOfNewEntry >= map.getNumMapEntries()) {
         return false;
     }
 
-    if (!map.validateNewEntry(*m_newEntry)) {
+    if (!map.validateNewEntry(*m_newEntry, false)) {
         return false;
     }
 

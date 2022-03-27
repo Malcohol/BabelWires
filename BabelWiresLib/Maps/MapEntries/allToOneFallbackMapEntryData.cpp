@@ -10,6 +10,24 @@
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
+babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData() = default;
+
+babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other) {
+    m_targetValue = other.m_targetValue->clone();
+}
+
+babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(AllToOneFallbackMapEntryData&& other) {
+    m_targetValue = std::move(other.m_targetValue);
+}
+
+const babelwires::Value* babelwires::AllToOneFallbackMapEntryData::getValue() const {
+    return m_targetValue.get();
+}
+
+void babelwires::AllToOneFallbackMapEntryData::setValue(std::unique_ptr<Value> value) {
+    m_targetValue = std::move(value);
+}
+
 std::size_t babelwires::AllToOneFallbackMapEntryData::getHash() const {
     // "AllToOne" - arbitrary discriminator
     return hash::mixtureOf(0xa7721, m_targetValue->getHash());

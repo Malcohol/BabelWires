@@ -19,7 +19,8 @@ babelwires::RemoveEntryFromMapCommand::RemoveEntryFromMapCommand(std::string com
     , m_indexOfEntryToRemove(indexOfEntryToRemove) {}
 
 bool babelwires::RemoveEntryFromMapCommand::initialize(const MapProject& map) {
-    if (m_indexOfEntryToRemove >= map.getNumMapEntries()) {
+    // You can't remove the last entry, since that should always be a fallback entry.
+    if (m_indexOfEntryToRemove >= map.getNumMapEntries() - 1) {
         return false;
     }
 

@@ -29,8 +29,7 @@ babelwires::MapModel::MapModel(QObject* parent, MapProject& map)
     , m_map(map) {}
 
 int babelwires::MapModel::rowCount(const QModelIndex& /*parent*/) const {
-    return 25;
-    //return m_map.getNumMapEntries();
+    return m_map.getNumMapEntries();
 }
 
 int babelwires::MapModel::columnCount(const QModelIndex& /*parent*/) const {

@@ -17,6 +17,7 @@
 namespace babelwires {
     class MapEntryData;
     class ProjectContext;
+    class Type;
 
     /// The data held by a map.
     /// To support scenarios such as deserialization after an awkward versioning step, or copy and
@@ -43,6 +44,9 @@ namespace babelwires {
         unsigned int getNumMapEntries() const;
         const MapEntryData& getMapEntry(unsigned int index) const;
 
+        /// The entries have a single fallback which maps everything to the default target value.
+        void setEntriesToDefault(const ProjectContext& context);
+
         void emplaceBack(std::unique_ptr<MapEntryData> newEntry);
 
         bool operator==(const MapData& other) const;
@@ -55,10 +59,10 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        /// Check that the entries' types match the source and target ids.
-        static std::string validateEntryData(const ProjectContext& context, LongIdentifier sourceId, LongIdentifier targetId, const MapEntryData& entryData);
-
         bool isValid(const ProjectContext& context) const;
+
+        /// Check that the entries' types match the source and target ids.
+        static std::string validateEntryData(const Type& sourceType, const Type& targetType, const MapEntryData& entryData, bool isLastEntry);
 
       public:
         LongIdentifier m_sourceId;

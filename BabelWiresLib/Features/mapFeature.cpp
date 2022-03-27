@@ -53,5 +53,6 @@ void babelwires::MapFeature::doSetToDefault() {
     if (!m_allowedTargetIds.empty()) {
         mapData.setTargetId(m_allowedTargetIds[0]);
     }
+    mapData.setEntriesToDefault(RootFeature::getProjectContextAt(*this));
     set(std::move(mapData));
 }

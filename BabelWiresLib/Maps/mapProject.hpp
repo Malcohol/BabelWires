@@ -45,7 +45,7 @@ namespace babelwires {
         bool operator!=(const MapProject& other) const;
 
         /// Check that the entries types match the source and target ids.
-        bool validateNewEntry(const MapEntryData& newEntry) const;
+        bool validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const;
 
       private:
         const ProjectContext& m_projectContext;

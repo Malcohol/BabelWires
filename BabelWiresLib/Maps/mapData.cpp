@@ -7,13 +7,14 @@
  **/
 #include <BabelWiresLib/Maps/mapData.hpp>
 
+#include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/intType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
-#include "Common/Serialization/deserializer.hpp"
-#include "Common/Serialization/serializer.hpp"
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 babelwires::MapData::MapData()
     : m_sourceId(IntType::getThisIdentifier())
@@ -96,16 +97,12 @@ const babelwires::MapEntryData& babelwires::MapData::getMapEntry(unsigned int in
     return *m_mapEntries[index];
 }
 
-std::string babelwires::MapData::validateEntryData(const ProjectContext& context, LongIdentifier sourceId, LongIdentifier targetId, const MapEntryData& entryData) {
-    const Type* sourceType = context.m_typeSystem.getEntryByIdentifier(sourceId);
-    if (!sourceType) {
-        return "The source type is unknown";
+std::string babelwires::MapData::validateEntryData(const Type& sourceType, const Type& targetType,
+                                                   const MapEntryData& entryData, bool isLastEntry) {
+    if (isLastEntry != (entryData.as<FallbackMapEntryData>() != nullptr)) {
+        return isLastEntry ? "The last entry must be a fallback entry" : "A fallback entry can only be at the end of a map";
     }
-    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(targetId);
-    if (!targetType) {
-        return "The target type is unknown";
-    }    
-    if (!entryData.isValid(*sourceType, *targetType)) {
+    if (!entryData.isValid(sourceType, targetType)) {
         return "The entry is invalid";
     }
     return {};
@@ -119,9 +116,10 @@ bool babelwires::MapData::isValid(const ProjectContext& context) const {
     const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_sourceId);
     if (!targetType) {
         return false;
-    }    
-    for (const auto& entryData : m_mapEntries ) {
-        if (!entryData->isValid(*sourceType, *targetType)) {
+    }
+    for (unsigned int i = 0; i < m_mapEntries.size(); ++i) {
+        const auto& entryData = m_mapEntries[i];
+        if (!validateEntryData(*sourceType, *targetType, *entryData, (i == m_mapEntries.size() - 1)).empty()) {
             return false;
         }
     }
@@ -160,5 +158,15 @@ void babelwires::MapData::visitIdentifiers(IdentifierVisitor& visitor) {
 void babelwires::MapData::visitFilePaths(FilePathVisitor& visitor) {
     for (const auto& e : m_mapEntries) {
         e->visitFilePaths(visitor);
+    }
+}
+
+void babelwires::MapData::setEntriesToDefault(const ProjectContext& context) {
+    m_mapEntries.clear();
+    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_targetId);
+    if (targetType) {
+        auto fallback = std::make_unique<AllToOneFallbackMapEntryData>();
+        fallback->setValue(targetType->createValue());
+        m_mapEntries.emplace_back(std::move(fallback));
     }
 }
