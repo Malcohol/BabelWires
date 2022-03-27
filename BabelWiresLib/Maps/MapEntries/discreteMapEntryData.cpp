@@ -20,6 +20,22 @@ bool babelwires::DiscreteMapEntryData::operator==(const MapEntryData& other) con
     return otherData && (m_sourceValue == otherData->m_sourceValue) && (m_targetValue == otherData->m_targetValue);
 }
 
+const babelwires::Value* babelwires::DiscreteMapEntryData::getSourceValue() const {
+    return m_sourceValue.get();
+}
+
+void babelwires::DiscreteMapEntryData::setSourceValue(std::unique_ptr<Value> value) {
+    m_sourceValue = std::move(value);
+}
+
+const babelwires::Value* babelwires::DiscreteMapEntryData::getTargetValue() const {
+    return m_targetValue.get();
+}
+
+void babelwires::DiscreteMapEntryData::setTargetValue(std::unique_ptr<Value> value) {
+    m_targetValue = std::move(value);
+}
+
 void babelwires::DiscreteMapEntryData::serializeContents(Serializer& serializer) const {
     serializer.serializeObject(*m_sourceValue, "source");
     serializer.serializeObject(*m_targetValue, "target");

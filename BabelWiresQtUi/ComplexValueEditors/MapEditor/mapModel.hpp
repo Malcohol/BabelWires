@@ -13,7 +13,12 @@
 
 namespace babelwires {
     class MapProject;
-
+    class AllToOneFallbackMapEntryData;
+    class IdentityFallbackMapEntryData;
+    class DiscreteMapEntryData;
+    class MapEntryData;
+    class Value;
+    
     class MapView : public QTableView {
         Q_OBJECT
       public:
@@ -28,6 +33,14 @@ namespace babelwires {
         int columnCount(const QModelIndex& /*parent*/) const override;
         QVariant data(const QModelIndex& index, int role) const override;
         //Qt::ItemFlags flags(const QModelIndex& index) const override;
+
+      private:
+        QVariant getMapEntryDisplayDataDispatcher(const MapEntryData& entry, int column) const;
+        QVariant getMapEntryDisplayData(const DiscreteMapEntryData& entry, int column) const;
+        QVariant getMapEntryDisplayData(const AllToOneFallbackMapEntryData& entry, int column) const;
+        QVariant getMapEntryDisplayData(const IdentityFallbackMapEntryData& entry, int column) const;
+        QVariant getMapEntryDisplayData(const Value& value) const;
+
       private:
         MapProject& m_map;
     };

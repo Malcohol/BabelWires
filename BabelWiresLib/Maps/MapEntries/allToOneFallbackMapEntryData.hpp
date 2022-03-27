@@ -21,8 +21,8 @@ namespace babelwires {
         AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other);
         AllToOneFallbackMapEntryData(AllToOneFallbackMapEntryData&& other);
 
-        const Value* getValue() const;
-        void setValue(std::unique_ptr<Value> value);
+        const Value* getTargetValue() const;
+        void setTargetValue(std::unique_ptr<Value> value);
 
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;

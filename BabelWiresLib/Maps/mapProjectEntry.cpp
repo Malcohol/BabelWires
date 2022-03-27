@@ -25,3 +25,7 @@ babelwires::MapProjectEntry::~MapProjectEntry() = default;
 const babelwires::MapEntryData& babelwires::MapProjectEntry::getData() const {
     return *m_data;
 }
+
+const std::string& babelwires::MapProjectEntry::getReasonForFailure() const {
+    return m_reasonForFailure;
+}

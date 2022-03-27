@@ -20,6 +20,11 @@ namespace babelwires {
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
 
+        const Value* getSourceValue() const;
+        void setSourceValue(std::unique_ptr<Value> value);
+        const Value* getTargetValue() const;
+        void setTargetValue(std::unique_ptr<Value> value);
+
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;

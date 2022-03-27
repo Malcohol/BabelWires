@@ -20,11 +20,11 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(AllToOneF
     m_targetValue = std::move(other.m_targetValue);
 }
 
-const babelwires::Value* babelwires::AllToOneFallbackMapEntryData::getValue() const {
+const babelwires::Value* babelwires::AllToOneFallbackMapEntryData::getTargetValue() const {
     return m_targetValue.get();
 }
 
-void babelwires::AllToOneFallbackMapEntryData::setValue(std::unique_ptr<Value> value) {
+void babelwires::AllToOneFallbackMapEntryData::setTargetValue(std::unique_ptr<Value> value) {
     m_targetValue = std::move(value);
 }
 

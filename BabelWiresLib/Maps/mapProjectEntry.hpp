@@ -27,6 +27,11 @@ namespace babelwires {
         virtual ~MapProjectEntry();
         
         const MapEntryData& getData() const;
+        
+        /// Get a description of the failure.
+        /// Returns the empty string if the entry is valid.
+        const std::string& getReasonForFailure() const;
+
       public:
         std::unique_ptr<MapEntryData> m_data;
         /// This is empty if the entry is valid.
