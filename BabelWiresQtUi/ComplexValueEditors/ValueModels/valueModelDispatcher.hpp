@@ -12,7 +12,7 @@
 namespace babelwires {
     class ValueModelDispatcher {
       public:
-        ValueModelDispatcher(/*const ValueModelRegistry& valueModelRegistry, */ const Type& type, const Value& value);
+        void init(/*const ValueModelRegistry& valueModelRegistry, */ const Type& type, const Value& value);
 
         const ValueModel* operator->() const { return m_valueModel; }
 

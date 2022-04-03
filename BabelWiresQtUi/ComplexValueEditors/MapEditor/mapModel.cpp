@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModelDispatcher.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 
 #include <BabelWiresLib/Maps/mapProject.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
@@ -42,57 +42,17 @@ int babelwires::MapModel::columnCount(const QModelIndex& /*parent*/) const {
     return 2;
 }
 
-QVariant babelwires::MapModel::getMapEntryDisplayData(const DiscreteMapEntryData& entry, int column) const {
-    if (column == 0) {
-        return getMapEntryDisplayData(*m_map.getSourceType(), *entry.getSourceValue());
-    } else {
-        assert(column == 1);
-        return getMapEntryDisplayData(*m_map.getTargetType(), *entry.getTargetValue());
-    }
-}
-
-QVariant babelwires::MapModel::getMapEntryDisplayData(const AllToOneFallbackMapEntryData& entry, int column) const {
-    if (column == 0) {
-        return "*";
-    } else {
-        assert(column == 1);
-        return getMapEntryDisplayData(*m_map.getTargetType(), *entry.getTargetValue());
-    }
-}
-
-QVariant babelwires::MapModel::getMapEntryDisplayData(const IdentityFallbackMapEntryData& entry, int column) const {
-    if (column == 0) {
-        return "*";
-    } else {
-        assert(column == 1);
-        return "= same";
-    }
-}
-
-QVariant babelwires::MapModel::getMapEntryDisplayData(const Type& type, const Value& value) const {
-    ValueModelDispatcher valueModel(type, value);
-    return valueModel->getDisplayData();
-}
-
-
-QVariant babelwires::MapModel::getMapEntryDisplayDataDispatcher(const MapEntryData& entry, int column) const {
-    // There isn't an open-ended set of map entry types; I'm just using inheritance for convenience.
-    if (const auto* discreteEntry = entry.as<DiscreteMapEntryData>()) {
-        return getMapEntryDisplayData(*discreteEntry, column);
-    } else if (const auto* allToOneEntry = entry.as<AllToOneFallbackMapEntryData>()) {
-        return getMapEntryDisplayData(*allToOneEntry, column);
-    } else if (const auto* identityEntry = entry.as<IdentityFallbackMapEntryData>()) {
-        return getMapEntryDisplayData(*identityEntry, column);
-    } else {
-        assert(false && "Unknown map entry type");
-    }
-}
-
 QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     const MapProjectEntry& entry = m_map.getMapEntry(index.row());
+    
+    MapEntryModelDispatcher mapEntryModel;
+    mapEntryModel.init(*m_map.getSourceType(), *m_map.getTargetType(), entry.getData());
+
+    unsigned int column = static_cast<unsigned int>(index.column());
+
     switch (role) {
         case Qt::DisplayRole: {
-            return getMapEntryDisplayDataDispatcher(entry.getData(), index.column());
+            return mapEntryModel->getDisplayData(column);
         }
         case Qt::ToolTipRole: {
             const std::string& reasonForFailure = entry.getReasonForFailure();

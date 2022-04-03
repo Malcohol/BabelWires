@@ -11,7 +11,7 @@
 
 #include <BabelWiresLib/Enums/enum.hpp>
 
-babelwires::ValueModelDispatcher::ValueModelDispatcher(const Type& type, const Value& value) {
+void babelwires::ValueModelDispatcher::init(const Type& type, const Value& value) {
     m_valueModel = &m_valueModelStorage;
     if (type.as<Enum>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::EnumValueModel));
