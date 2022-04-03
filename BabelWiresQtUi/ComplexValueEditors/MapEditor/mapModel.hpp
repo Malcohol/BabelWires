@@ -34,6 +34,12 @@ namespace babelwires {
         int columnCount(const QModelIndex& /*parent*/) const override;
         QVariant data(const QModelIndex& index, int role) const override;
         //Qt::ItemFlags flags(const QModelIndex& index) const override;
+        
+        /// May return null or a new menu.
+        QMenu* getContextMenu(const QModelIndex& index);
+
+        MapProject& getMapProject();
+        const MapProject& getMapProject() const;
 
       private:
         MapProject& m_map;

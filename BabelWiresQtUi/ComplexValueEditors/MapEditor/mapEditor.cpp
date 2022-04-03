@@ -29,6 +29,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QMenu>
 
 #define MAP_FILE_EXTENSION ".bw_map"
 #define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
@@ -88,8 +89,11 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         }
         m_mapView = new MapView;
         m_mapModel = new MapModel(m_mapView, m_map);
-        m_mapView->setModel(m_mapModel);
+        m_mapView->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(m_mapView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onCustomContextMenuRequested(QPoint)));
         contentsLayout->addWidget(m_mapView);
+        //connect(m_mapView, SIGNAL(clicked(const QModelIndex&)), m_mapModel, SLOT(onClicked(const QModelIndex&)));
+        m_mapView->setModel(m_mapModel);
     }
 
     {
@@ -267,4 +271,17 @@ void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& oper
     std::ostringstream contents;
     contents << "The map " << getData() << " is no longer in the project.\n" << operationDescription;
     QMessageBox::warning(this, "Map no longer in project", QString(contents.str().c_str()));
+}
+
+void babelwires::MapEditor::onCustomContextMenuRequested(const QPoint& pos) {
+    QModelIndex index = m_mapView->indexAt(pos);
+    QMenu* const menu = m_mapModel->getContextMenu(index);
+    if (menu) {
+        // 
+        menu->setParent(this);
+        // There is probably a more correct way of doing this.
+        const QPoint globalPos = m_mapView->mapToGlobal(pos);
+        const QPoint scenePos = mapFromGlobal(globalPos);
+        menu->popup(scenePos);
+    }
 }

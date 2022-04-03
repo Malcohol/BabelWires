@@ -8,25 +8,27 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
+#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 
+#include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/identityFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProject.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
-#include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/identityFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
 
 #include <QtWidgets/QHeaderView>
+#include <QMenu>
 
 babelwires::MapView::MapView() {
-    // setEditTriggers(QAbstractItemView::AllEditTriggers);
+    setEditTriggers(QAbstractItemView::AllEditTriggers);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     verticalHeader()->setVisible(false);
-    //verticalHeader()->setStretchLastSection(true);
-    //verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // verticalHeader()->setStretchLastSection(true);
+    // verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     horizontalHeader()->setVisible(false);
     horizontalHeader()->setStretchLastSection(true);
     horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
@@ -43,12 +45,11 @@ int babelwires::MapModel::columnCount(const QModelIndex& /*parent*/) const {
 }
 
 QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
-    const MapProjectEntry& entry = m_map.getMapEntry(index.row());
-    
+    const unsigned int row = static_cast<unsigned int>(index.row());
+    const unsigned int column = static_cast<unsigned int>(index.column());
+    const MapProjectEntry& entry = m_map.getMapEntry(row);
     MapEntryModelDispatcher mapEntryModel;
-    mapEntryModel.init(*m_map.getSourceType(), *m_map.getTargetType(), entry);
-
-    unsigned int column = static_cast<unsigned int>(index.column());
+    mapEntryModel.init(*m_map.getSourceType(), *m_map.getTargetType(), entry, row);
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -71,4 +72,31 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
         }
     }
     return {};
+}
+
+QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
+    const unsigned int row = static_cast<unsigned int>(index.row());
+    const unsigned int column = static_cast<unsigned int>(index.column());
+    const MapProjectEntry& entry = m_map.getMapEntry(row);
+    MapEntryModelDispatcher mapEntryModel;
+    mapEntryModel.init(*m_map.getSourceType(), *m_map.getTargetType(), entry, row);
+
+    std::vector<std::unique_ptr<ContextMenuAction>> actions;
+    mapEntryModel->getContextMenuActions(actions);
+    if (!actions.empty()) {
+        ContextMenu* menu = new ContextMenu(*this, index);
+        for (auto&& action : actions) {
+            menu->addContextMenuAction(action.release());
+        }
+        return menu;
+    }
+    return nullptr;
+}
+
+babelwires::MapProject& babelwires::MapModel::getMapProject() {
+    return m_map;
+}
+
+const babelwires::MapProject& babelwires::MapModel::getMapProject() const {
+    return m_map;
 }

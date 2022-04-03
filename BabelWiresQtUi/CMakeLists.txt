@@ -55,6 +55,9 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/MapEntryModels/discreteMapEntryModel.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/allToOneFallbackMapEntryModel.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/identityFallbackMapEntryModel.cpp
+    ComplexValueEditors/MapEditor/MapContextMenuActions/addEntryMapContextMenuAction.cpp
+    ContextMenu/contextMenu.cpp
+    ContextMenu/contextMenuAction.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

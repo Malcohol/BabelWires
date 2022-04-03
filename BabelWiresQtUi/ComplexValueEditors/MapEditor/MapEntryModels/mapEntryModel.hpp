@@ -11,6 +11,8 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModelDispatcher.hpp>
 
+#include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
+
 namespace babelwires {
     class Type;
     class MapProjectEntry;
@@ -21,6 +23,11 @@ namespace babelwires {
       public:
         virtual void init();
         virtual QVariant getDisplayData(unsigned int column) const;
+
+        /// Add any context actions which should appear in the context menu for this row.
+        /// Subclasses overriding this should use super-calls to collect standard actions.
+        virtual void getContextMenuActions(std::vector<std::unique_ptr<ContextMenuAction>>& actionsOut) const;
+
         /*
         virtual bool isItemEditable() const;
         virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
@@ -33,6 +40,7 @@ namespace babelwires {
         const Type* m_sourceType;
         const Type* m_targetType; 
         const MapProjectEntry* m_mapProjectEntry;
+        unsigned int m_row = 0;
 
         // If needed, a ValueModelDispatcher for the map entry source.
         ValueModelDispatcher m_sourceValueModel;
