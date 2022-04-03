@@ -8,11 +8,12 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/discreteMapEntryModel.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
+#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 
 const babelwires::DiscreteMapEntryData& babelwires::DiscreteMapEntryModel::getDiscreteMapEntryData() const {
-    assert(m_mapEntry);
-    assert(m_mapEntry->as<DiscreteMapEntryData>());
-    return static_cast<const babelwires::DiscreteMapEntryData&>(*m_mapEntry);
+    assert(m_mapProjectEntry);
+    assert(m_mapProjectEntry->getData().as<DiscreteMapEntryData>());
+    return static_cast<const babelwires::DiscreteMapEntryData&>(m_mapProjectEntry->getData());
 }
 
 void babelwires::DiscreteMapEntryModel::init() {

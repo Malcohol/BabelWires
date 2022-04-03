@@ -12,7 +12,3 @@ void babelwires::MapEntryModel::init() {}
 QVariant babelwires::MapEntryModel::getDisplayData(unsigned int column) const {
     return {};
 }
-
-const babelwires::MapEntryData& babelwires::MapEntryModel::getMapEntry() const {
-    return *m_mapEntry;
-}

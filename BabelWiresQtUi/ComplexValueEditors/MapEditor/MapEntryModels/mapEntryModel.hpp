@@ -13,7 +13,7 @@
 
 namespace babelwires {
     class Type;
-    class MapEntryData;
+    class MapProjectEntry;
 
     /// MapEntryModels provide the UI specifics for MapEntries.
     /// The class should always be constructed via the MapEntryModelDispatcher.
@@ -29,13 +29,10 @@ namespace babelwires {
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
         */
-      protected:
-        const MapEntryData& getMapEntry() const;
-
       public:
         const Type* m_sourceType;
         const Type* m_targetType; 
-        const MapEntryData* m_mapEntry;
+        const MapProjectEntry* m_mapProjectEntry;
 
         // If needed, a ValueModelDispatcher for the map entry source.
         ValueModelDispatcher m_sourceValueModel;

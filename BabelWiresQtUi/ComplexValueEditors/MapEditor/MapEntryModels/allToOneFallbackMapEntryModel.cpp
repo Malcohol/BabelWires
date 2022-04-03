@@ -8,11 +8,12 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/allToOneFallbackMapEntryModel.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 
 const babelwires::AllToOneFallbackMapEntryData& babelwires::AllToOneFallbackMapEntryModel::getAllToOneFallbackMapEntryData() const {
-    assert(m_mapEntry);
-    assert(m_mapEntry->as<AllToOneFallbackMapEntryData>());
-    return static_cast<const babelwires::AllToOneFallbackMapEntryData&>(*m_mapEntry);
+    assert(m_mapProjectEntry);
+    assert(m_mapProjectEntry->getData().as<AllToOneFallbackMapEntryData>());
+    return static_cast<const babelwires::AllToOneFallbackMapEntryData&>(m_mapProjectEntry->getData());
 }
 
 void babelwires::AllToOneFallbackMapEntryModel::init() {

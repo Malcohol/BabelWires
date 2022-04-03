@@ -46,7 +46,7 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     const MapProjectEntry& entry = m_map.getMapEntry(index.row());
     
     MapEntryModelDispatcher mapEntryModel;
-    mapEntryModel.init(*m_map.getSourceType(), *m_map.getTargetType(), entry.getData());
+    mapEntryModel.init(*m_map.getSourceType(), *m_map.getTargetType(), entry);
 
     unsigned int column = static_cast<unsigned int>(index.column());
 
