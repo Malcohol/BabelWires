@@ -12,7 +12,7 @@
 #include <QTableView>
 
 namespace babelwires {
-    class MapProject;
+    class MapEditor;
     class AllToOneFallbackMapEntryData;
     class IdentityFallbackMapEntryData;
     class DiscreteMapEntryData;
@@ -29,7 +29,7 @@ namespace babelwires {
     class MapModel : public QAbstractTableModel {
         Q_OBJECT
       public:
-        MapModel(QObject* parent, MapProject& map);
+        MapModel(QObject* parent, MapEditor& mapEditor);
         int rowCount(const QModelIndex& /*parent*/) const override;
         int columnCount(const QModelIndex& /*parent*/) const override;
         QVariant data(const QModelIndex& index, int role) const override;
@@ -38,10 +38,10 @@ namespace babelwires {
         /// May return null or a new menu.
         QMenu* getContextMenu(const QModelIndex& index);
 
-        MapProject& getMapProject();
-        const MapProject& getMapProject() const;
+        MapEditor& getMapEditor();
+        const MapEditor& getMapEditor() const;
 
       private:
-        MapProject& m_map;
+        MapEditor& m_mapEditor;
     };
 }

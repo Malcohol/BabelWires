@@ -7,8 +7,32 @@
  **/
 #include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
 
+#include <BabelWiresLib/Project/projectContext.hpp>
+
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
+
+babelwires::DiscreteMapEntryData::DiscreteMapEntryData() = default;
+
+babelwires::DiscreteMapEntryData::DiscreteMapEntryData(const DiscreteMapEntryData& other) {
+    m_sourceValue = other.m_sourceValue->clone();
+    m_targetValue = other.m_targetValue->clone();
+}
+
+babelwires::DiscreteMapEntryData::DiscreteMapEntryData(DiscreteMapEntryData&& other) {
+    m_sourceValue = std::move(other.m_sourceValue);
+    m_targetValue = std::move(other.m_targetValue);
+}
+
+babelwires::DiscreteMapEntryData::DiscreteMapEntryData(const ProjectContext& context, LongIdentifier sourceTypeId, LongIdentifier targetTypeId) {
+    const Type* sourceType = context.m_typeSystem.getEntryByIdentifier(sourceTypeId);
+    assert(sourceType && "You cannot construct a DiscreteMapEntryData entry with an unknown source type");
+    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(targetTypeId);
+    assert(targetType && "You cannot construct a DiscreteMapEntryData entry with an unknown target type");
+
+    m_sourceValue = sourceType->createValue();
+    m_targetValue = targetType->createValue();
+}
 
 std::size_t babelwires::DiscreteMapEntryData::getHash() const {
     // "Discrete" - arbitrary discriminator

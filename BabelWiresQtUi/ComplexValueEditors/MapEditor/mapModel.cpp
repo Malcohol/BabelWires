@@ -9,6 +9,7 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
@@ -32,12 +33,12 @@ babelwires::MapView::MapView() {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
-babelwires::MapModel::MapModel(QObject* parent, MapProject& map)
+babelwires::MapModel::MapModel(QObject* parent, MapEditor& mapEditor)
     : QAbstractTableModel(parent)
-    , m_map(map) {}
+    , m_mapEditor(mapEditor) {}
 
 int babelwires::MapModel::rowCount(const QModelIndex& /*parent*/) const {
-    return m_map.getNumMapEntries();
+    return m_mapEditor.getMapProject().getNumMapEntries();
 }
 
 int babelwires::MapModel::columnCount(const QModelIndex& /*parent*/) const {
@@ -47,9 +48,10 @@ int babelwires::MapModel::columnCount(const QModelIndex& /*parent*/) const {
 QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     const unsigned int row = static_cast<unsigned int>(index.row());
     const unsigned int column = static_cast<unsigned int>(index.column());
-    const MapProjectEntry& entry = m_map.getMapEntry(row);
+    const MapProject& mapProject = m_mapEditor.getMapProject();
+    const MapProjectEntry& entry = mapProject.getMapEntry(row);
     MapEntryModelDispatcher mapEntryModel;
-    mapEntryModel.init(*m_map.getSourceType(), *m_map.getTargetType(), entry, row);
+    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row);
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -77,9 +79,10 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
 QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
     const unsigned int row = static_cast<unsigned int>(index.row());
     const unsigned int column = static_cast<unsigned int>(index.column());
-    const MapProjectEntry& entry = m_map.getMapEntry(row);
+    const MapProject& mapProject = m_mapEditor.getMapProject();
+    const MapProjectEntry& entry = mapProject.getMapEntry(row);
     MapEntryModelDispatcher mapEntryModel;
-    mapEntryModel.init(*m_map.getSourceType(), *m_map.getTargetType(), entry, row);
+    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row);
 
     std::vector<std::unique_ptr<ContextMenuAction>> actions;
     mapEntryModel->getContextMenuActions(actions);
@@ -93,10 +96,10 @@ QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
     return nullptr;
 }
 
-babelwires::MapProject& babelwires::MapModel::getMapProject() {
-    return m_map;
+babelwires::MapEditor& babelwires::MapModel::getMapEditor() {
+    return m_mapEditor;
 }
 
-const babelwires::MapProject& babelwires::MapModel::getMapProject() const {
-    return m_map;
+const babelwires::MapEditor& babelwires::MapModel::getMapEditor() const {
+    return m_mapEditor;
 }

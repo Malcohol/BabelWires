@@ -50,6 +50,10 @@ namespace babelwires {
         /// Otherwise return the data of the mapFeature.
         const MapData* tryGetMapDataFromProject(AccessModelScope& scope) const;
 
+        const MapProject& getMapProject() const;
+
+        void executeCommand(std::unique_ptr<Command<MapProject>> command);
+
       protected:
         void updateMapFromProject();
 

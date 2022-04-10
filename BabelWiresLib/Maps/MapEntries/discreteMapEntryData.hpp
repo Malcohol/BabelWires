@@ -14,9 +14,18 @@
 #include <Common/Utilities/hash.hpp>
 
 namespace babelwires {
+    class ProjectContext;
+
     /// A map entry with a single source value of discrete type.
     class DiscreteMapEntryData : public MapEntryData {
       public:
+        CLONEABLE(DiscreteMapEntryData);
+        SERIALIZABLE(DiscreteMapEntryData, "oneToOne", MapEntryData, 1);
+        DiscreteMapEntryData();
+        DiscreteMapEntryData(const ProjectContext& context, LongIdentifier sourceTypeId, LongIdentifier targetTypeId);
+        DiscreteMapEntryData(const DiscreteMapEntryData& other);
+        DiscreteMapEntryData(DiscreteMapEntryData&& other);
+
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
 

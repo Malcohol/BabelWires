@@ -50,6 +50,8 @@ namespace babelwires {
         /// Check that the entries types match the source and target ids.
         bool validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const;
 
+        const ProjectContext& getProjectContext() const;
+
       private:
         const ProjectContext& m_projectContext;
         LongIdentifier m_sourceId;

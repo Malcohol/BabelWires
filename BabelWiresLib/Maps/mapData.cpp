@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Maps/mapData.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/intType.hpp>

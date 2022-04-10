@@ -7,29 +7,29 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Maps/mapSerialization.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
-#include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
+#include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QMenu>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QGroupBox>
-#include <QMenu>
 
 #define MAP_FILE_EXTENSION ".bw_map"
 #define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
@@ -46,12 +46,14 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
     {
         auto contentsButtons = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults);
         {
-            QPushButton* saveButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogSaveButton), "Save copy to file");
+            QPushButton* saveButton =
+                new QPushButton(style()->standardIcon(QStyle::SP_DialogSaveButton), "Save copy to file");
             contentsButtons->addButton(saveButton, QDialogButtonBox::ButtonRole::AcceptRole);
             connect(saveButton, &QAbstractButton::clicked, this, &MapEditor::saveMapToFile);
         }
         {
-            QPushButton* loadButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogOpenButton), "Load from file");
+            QPushButton* loadButton =
+                new QPushButton(style()->standardIcon(QStyle::SP_DialogOpenButton), "Load from file");
             contentsButtons->addButton(loadButton, QDialogButtonBox::ButtonRole::AcceptRole);
             connect(loadButton, &QAbstractButton::clicked, this, &MapEditor::loadMapFromFile);
         }
@@ -88,11 +90,12 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             // TODO Connect type widgets.
         }
         m_mapView = new MapView;
-        m_mapModel = new MapModel(m_mapView, m_map);
+        m_mapModel = new MapModel(m_mapView, *this);
         m_mapView->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(m_mapView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onCustomContextMenuRequested(QPoint)));
+        connect(m_mapView, SIGNAL(customContextMenuRequested(QPoint)), this,
+                SLOT(onCustomContextMenuRequested(QPoint)));
         contentsLayout->addWidget(m_mapView);
-        //connect(m_mapView, SIGNAL(clicked(const QModelIndex&)), m_mapModel, SLOT(onClicked(const QModelIndex&)));
+        // connect(m_mapView, SIGNAL(clicked(const QModelIndex&)), m_mapModel, SLOT(onClicked(const QModelIndex&)));
         m_mapView->setModel(m_mapModel);
     }
 
@@ -138,7 +141,7 @@ const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelSc
 }
 
 const babelwires::MapData& babelwires::MapEditor::getMapDataFromProject(AccessModelScope& scope) const {
-    const MapValueAssignmentData *const mapModifier = tryGetMapValueAssignmentData(scope);
+    const MapValueAssignmentData* const mapModifier = tryGetMapValueAssignmentData(scope);
     if (mapModifier) {
         return mapModifier->m_mapData;
     }
@@ -156,14 +159,15 @@ const babelwires::MapFeature* babelwires::MapEditor::tryGetMapFeature(AccessMode
     return nullptr;
 }
 
-const babelwires::MapValueAssignmentData* babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
-    const FeatureElement *const element = scope.getProject().getFeatureElement(getData().getElementId());
+const babelwires::MapValueAssignmentData*
+babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
+    const FeatureElement* const element = scope.getProject().getFeatureElement(getData().getElementId());
 
     if (!element) {
         return nullptr;
     }
 
-    const Modifier *const modifier = element->findModifier(getData().getPathToValue());
+    const Modifier* const modifier = element->findModifier(getData().getPathToValue());
 
     if (!modifier) {
         return nullptr;
@@ -173,13 +177,13 @@ const babelwires::MapValueAssignmentData* babelwires::MapEditor::tryGetMapValueA
 }
 
 const babelwires::MapData* babelwires::MapEditor::tryGetMapDataFromProject(AccessModelScope& scope) const {
-    const MapValueAssignmentData *const mapModifier = tryGetMapValueAssignmentData(scope);
+    const MapValueAssignmentData* const mapModifier = tryGetMapValueAssignmentData(scope);
 
     if (mapModifier) {
         return &mapModifier->m_mapData;
     }
 
-    const babelwires::MapFeature *const mapFeature = tryGetMapFeature(scope);
+    const babelwires::MapFeature* const mapFeature = tryGetMapFeature(scope);
     if (!mapFeature) {
         return nullptr;
     }
@@ -244,7 +248,8 @@ void babelwires::MapEditor::loadMapFromFile() {
             try {
                 std::string filePathStr = filePath.toStdString();
                 getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
-                MapData mapData = MapSerialization::loadFromFile(filePathStr, getProjectBridge().getContext(), getUserLogger());
+                MapData mapData =
+                    MapSerialization::loadFromFile(filePathStr, getProjectBridge().getContext(), getUserLogger());
                 setEditorMap(mapData);
                 m_lastSaveFilePath = filePath;
                 return;
@@ -277,11 +282,21 @@ void babelwires::MapEditor::onCustomContextMenuRequested(const QPoint& pos) {
     QModelIndex index = m_mapView->indexAt(pos);
     QMenu* const menu = m_mapModel->getContextMenu(index);
     if (menu) {
-        // 
+        //
         menu->setParent(this);
         // There is probably a more correct way of doing this.
         const QPoint globalPos = m_mapView->mapToGlobal(pos);
         const QPoint scenePos = mapFromGlobal(globalPos);
         menu->popup(scenePos);
+    }
+}
+
+const babelwires::MapProject& babelwires::MapEditor::getMapProject() const {
+    return m_map;
+}
+
+void babelwires::MapEditor::executeCommand(std::unique_ptr<Command<MapProject>> command) {
+    if (m_commandManager.executeAndStealCommand(command)) {
+        repaint();
     }
 }
