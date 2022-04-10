@@ -118,6 +118,25 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         mainLayout->addWidget(bottomButtons);
     }
 
+    {
+        m_undoAction = std::make_unique<QAction>(QIcon::fromTheme("edit-undo"), tr("&Undo"), this);
+        m_undoAction->setShortcuts(QKeySequence::Undo);
+        m_undoAction->setEnabled(false);
+        //m_undoAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+        connect(m_undoAction.get(), &QAction::triggered, this, &MapEditor::undo);
+        addAction(m_undoAction.get());
+
+        m_redoAction = std::make_unique<QAction>(QIcon::fromTheme("edit-redo"), tr("&Redo"), this);
+        m_redoAction->setShortcuts(QKeySequence::Redo);
+        m_redoAction->setEnabled(false);
+        //m_redoAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+        connect(m_redoAction.get(), &QAction::triggered, this, &MapEditor::redo);
+        addAction(m_redoAction.get());
+
+        m_undoStateChangedSubscription =
+            m_commandManager.signal_undoStateChanged.subscribe([this]() { onUndoStateChanged(); });
+    }
+
     show();
 }
 
@@ -131,6 +150,9 @@ void babelwires::MapEditor::applyMapToProject() {
     if (!getProjectBridge().executeCommandSynchronously(std::move(setValueCommand))) {
         warnThatMapNoLongerInProject("Cannot apply the map.");
     } else {
+        // Note: We take the position that once the map has been applied to the project, it's equivalent to
+        // a document being saved in a document editor. When the map editor is closed, we check whether the
+        // data was applied in the current state. We do not check that the value in the project still matches.
         m_commandManager.setCursor();
     }
 }
@@ -321,4 +343,36 @@ bool babelwires::MapEditor::maybeApply() {
         }
     }
     return true;
+}
+
+void babelwires::MapEditor::undo() {
+    m_commandManager.undo();
+    // This is a bit blunt.
+    m_mapModel->layoutChanged();
+}
+
+void babelwires::MapEditor::redo() {
+    m_commandManager.redo();
+    // This is a bit blunt.
+    m_mapModel->layoutChanged();
+}
+
+void babelwires::MapEditor::onUndoStateChanged() {
+    if (m_commandManager.canUndo()) {
+        m_undoAction->setEnabled(true);
+        QString text = tr("Undo \"") + m_commandManager.getDescriptionOfUndoableCommand().c_str() + '"';
+        m_undoAction->setText(text);
+    } else {
+        m_undoAction->setEnabled(false);
+        m_undoAction->setText(tr("Undo"));
+    }
+
+    if (m_commandManager.canRedo()) {
+        m_redoAction->setEnabled(true);
+        QString text = tr("Redo \"") + m_commandManager.getDescriptionOfRedoableCommand().c_str() + '"';
+        m_redoAction->setText(text);
+    } else {
+        m_redoAction->setEnabled(false);
+        m_redoAction->setText(tr("Redo"));
+    }
 }

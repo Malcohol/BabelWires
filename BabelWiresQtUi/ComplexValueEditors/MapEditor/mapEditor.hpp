@@ -56,7 +56,7 @@ namespace babelwires {
 
       protected:
         bool maybeApply() override;
-
+        
         void updateMapFromProject();
 
         void saveMapToFile();
@@ -75,6 +75,13 @@ namespace babelwires {
       public slots:
         void onCustomContextMenuRequested(const QPoint& pos);
 
+      private slots:
+        void undo();
+        void redo();
+
+      private:
+        void onUndoStateChanged();
+
       private:
         /// Manages the map data being edited.
         MapProject m_map;
@@ -83,6 +90,10 @@ namespace babelwires {
         CommandManager<MapProject> m_commandManager;
 
         QString m_lastSaveFilePath;
+
+        std::unique_ptr<QAction> m_undoAction;
+        std::unique_ptr<QAction> m_redoAction;
+        SignalSubscription m_undoStateChangedSubscription;
 
         MapView* m_mapView;
         MapModel* m_mapModel;
