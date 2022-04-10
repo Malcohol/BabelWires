@@ -130,6 +130,8 @@ void babelwires::MapEditor::applyMapToProject() {
         std::make_unique<AddModifierCommand>("Set map value", getData().getElementId(), std::move(modifierData));
     if (!getProjectBridge().executeCommandSynchronously(std::move(setValueCommand))) {
         warnThatMapNoLongerInProject("Cannot apply the map.");
+    } else {
+        m_commandManager.setCursor();
     }
 }
 
@@ -300,4 +302,23 @@ void babelwires::MapEditor::executeCommand(std::unique_ptr<Command<MapProject>> 
         // This is a bit blunt.
         m_mapModel->layoutChanged();
     }
+}
+
+bool babelwires::MapEditor::maybeApply() {
+    if (!m_commandManager.isAtCursor()) {
+        while (1) {
+            switch (QMessageBox::warning(
+                this, tr("The map editor has unapplied changes."), tr("Do you want to apply them now?"),
+                QMessageBox::Apply | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Apply)) {
+                case QMessageBox::Apply:
+                    applyMapToProject();
+                    return true;
+                case QMessageBox::Discard:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+    return true;
 }

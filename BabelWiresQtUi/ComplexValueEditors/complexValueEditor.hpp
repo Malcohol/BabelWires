@@ -51,6 +51,11 @@ namespace babelwires {
             UserLogger& getUserLogger();
             void closeEvent(QCloseEvent* event) override;
 
+            /// Let the user apply any unchanged changes before performing the operation.
+            /// Returns true if the save was successful, or if the user is willing to
+            /// discard the changes.
+            virtual bool maybeApply() = 0;
+
         private:
             /// Needed when making changes to the project.
             ProjectBridge& m_projectBridge;

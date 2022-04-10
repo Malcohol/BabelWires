@@ -27,7 +27,7 @@ namespace babelwires {
       Q_OBJECT
       public:
         /// data - Enough information to restore the state of a MapEditor.
-        MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& m_logger,
+        MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
                   const ComplexValueEditorData& data);
 
         /// Resets the map editor to the state of the given map.
@@ -55,6 +55,8 @@ namespace babelwires {
         void executeCommand(std::unique_ptr<Command<MapProject>> command);
 
       protected:
+        bool maybeApply() override;
+
         void updateMapFromProject();
 
         void saveMapToFile();
