@@ -17,7 +17,7 @@
 #include <BabelWiresLib/Maps/MapEntries/identityFallbackMapEntryData.hpp>
 
 void babelwires::MapEntryModelDispatcher::init(const Type& sourceType, const Type& targetType,
-                                               const MapProjectEntry& entry, unsigned int row) {
+                                               const MapProjectEntry& entry, unsigned int row, bool isLastRow) {
     m_rowModel = &m_rowModelStorage;
     const MapEntryData& entryData = entry.getData();
     if (entryData.as<DiscreteMapEntryData>()) {
@@ -36,5 +36,6 @@ void babelwires::MapEntryModelDispatcher::init(const Type& sourceType, const Typ
     m_rowModel->m_targetType = &targetType;
     m_rowModel->m_mapProjectEntry = &entry;
     m_rowModel->m_row = row;
+    m_rowModel->m_isLastRow = isLastRow;
     m_rowModel->init();
 }

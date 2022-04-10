@@ -41,6 +41,7 @@ namespace babelwires {
         const Type* m_targetType; 
         const MapProjectEntry* m_mapProjectEntry;
         unsigned int m_row = 0;
+        bool m_isLastRow = false;
 
         // If needed, a ValueModelDispatcher for the map entry source.
         ValueModelDispatcher m_sourceValueModel;

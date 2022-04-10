@@ -51,7 +51,8 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     const MapProject& mapProject = m_mapEditor.getMapProject();
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
     MapEntryModelDispatcher mapEntryModel;
-    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row);
+    const bool isLastRow = (row == mapProject.getNumMapEntries() - 1);
+    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row, isLastRow);
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -82,7 +83,8 @@ QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
     const MapProject& mapProject = m_mapEditor.getMapProject();
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
     MapEntryModelDispatcher mapEntryModel;
-    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row);
+    const bool isLastRow = (row == mapProject.getNumMapEntries() - 1);
+    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row, isLastRow);
 
     std::vector<std::unique_ptr<ContextMenuAction>> actions;
     mapEntryModel->getContextMenuActions(actions);

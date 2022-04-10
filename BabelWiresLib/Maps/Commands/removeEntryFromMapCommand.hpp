@@ -18,6 +18,7 @@ namespace babelwires {
     class RemoveEntryFromMapCommand : public SimpleCommand<MapProject> {
       public:
         RemoveEntryFromMapCommand(std::string commandName, unsigned int indexOfEntryToRemove);
+        ~RemoveEntryFromMapCommand();
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;

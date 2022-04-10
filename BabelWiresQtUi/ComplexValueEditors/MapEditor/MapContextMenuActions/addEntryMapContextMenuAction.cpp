@@ -15,7 +15,7 @@
 
 babelwires::AddEntryMapContextMenuAction::AddEntryMapContextMenuAction(const QString& text,
                                                                        unsigned int indexOfNewEntry)
-    : ContextMenuAction("Add entry above"), m_indexOfNewEntry(indexOfNewEntry) {}
+    : ContextMenuAction(text), m_indexOfNewEntry(indexOfNewEntry) {}
 
 void babelwires::AddEntryMapContextMenuAction::actionTriggered(QAbstractItemModel& model,
                                                                const QModelIndex& index) const {
@@ -25,5 +25,5 @@ void babelwires::AddEntryMapContextMenuAction::actionTriggered(QAbstractItemMode
     const MapProject& mapProject = mapEditor.getMapProject();
 
     auto newEntry = std::make_unique<DiscreteMapEntryData>(mapProject.getProjectContext(), mapProject.getSourceId(), mapProject.getTargetId());
-    mapEditor.executeCommand(std::make_unique<AddEntryToMapCommand>("Add entry above", std::move(newEntry), index.row()));
+    mapEditor.executeCommand(std::make_unique<AddEntryToMapCommand>("Add entry above", std::move(newEntry), m_indexOfNewEntry));
 }
