@@ -297,6 +297,7 @@ const babelwires::MapProject& babelwires::MapEditor::getMapProject() const {
 
 void babelwires::MapEditor::executeCommand(std::unique_ptr<Command<MapProject>> command) {
     if (m_commandManager.executeAndStealCommand(command)) {
-        repaint();
+        // This is a bit blunt.
+        m_mapModel->layoutChanged();
     }
 }
