@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/valueEditorCommonBase.hpp"
+#include "BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp"
 #include <QComboBox>
 
 namespace babelwires {

@@ -7,7 +7,7 @@
  **/
 #include "BabelWiresQtUi/ModelBridge/RowModels/stringRowModel.hpp"
 
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/lineEditValueEditor.hpp"
+#include "BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp"
 
 #include "BabelWiresLib/Features/stringFeature.hpp"
 

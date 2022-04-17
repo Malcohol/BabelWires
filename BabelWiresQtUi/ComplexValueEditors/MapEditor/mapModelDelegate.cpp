@@ -9,7 +9,7 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/ValueEditors/valueEditorCommonBase.hpp>
+#include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 
 babelwires::MapModelDelegate::MapModelDelegate(QObject* parent)
     : QStyledItemDelegate(parent) {}

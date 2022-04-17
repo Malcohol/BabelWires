@@ -9,7 +9,7 @@
 
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp"
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/valueEditorCommonBase.hpp"
+#include "BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp"
 #include "BabelWiresQtUi/ModelBridge/accessModelScope.hpp"
 #include "BabelWiresQtUi/ModelBridge/modifyModelScope.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"

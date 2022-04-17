@@ -8,7 +8,7 @@
 #include "BabelWiresQtUi/ModelBridge/RowModels/intRowModel.hpp"
 
 #include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/spinBoxValueEditor.hpp"
+#include "BabelWiresQtUi/ValueEditors/spinBoxValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
 #include <QString>

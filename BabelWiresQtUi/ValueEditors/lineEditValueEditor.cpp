@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/lineEditValueEditor.hpp"
+#include "BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 

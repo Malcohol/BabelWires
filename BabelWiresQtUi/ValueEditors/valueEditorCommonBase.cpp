@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ModelBridge/ValueEditors/valueEditorCommonBase.hpp>
+#include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 
 babelwires::ValueEditorCommonSignals::ValueEditorCommonSignals(QObject* parent)
     : QObject(parent) {}

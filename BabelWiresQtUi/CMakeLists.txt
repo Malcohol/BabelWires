@@ -24,10 +24,10 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/RowModels/rowModelRegistry.cpp
     ModelBridge/RowModels/rowModelWithRichText.cpp
     ModelBridge/RowModels/stringRowModel.cpp
-    ModelBridge/ValueEditors/dropDownValueEditor.cpp
-    ModelBridge/ValueEditors/spinBoxValueEditor.cpp
-    ModelBridge/ValueEditors/lineEditValueEditor.cpp
-    ModelBridge/ValueEditors/valueEditorCommonBase.cpp
+    ValueEditors/dropDownValueEditor.cpp
+    ValueEditors/spinBoxValueEditor.cpp
+    ValueEditors/lineEditValueEditor.cpp
+    ValueEditors/valueEditorCommonBase.cpp
     ModelBridge/Internal/flowSceneConnectionInfo.cpp
     ModelBridge/ContextMenu/featureContextMenu.cpp
     ModelBridge/ContextMenu/removeModifierAction.cpp

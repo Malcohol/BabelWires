@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/dropDownValueEditor.hpp"
+#include "BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp"
