@@ -16,10 +16,9 @@ namespace babelwires {
     class ValueModel {
       public:
         virtual QVariant getDisplayData() const;
+        virtual QWidget* createEditor(const QModelIndex& index, QWidget* parent) const = 0;
+        virtual void setEditorData(QWidget* editor) const = 0;
         /*
-        virtual bool isItemEditable() const;
-        virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
-        virtual void setEditorData(QWidget* editor) const;
         virtual bool hasCustomPainting() const;
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;

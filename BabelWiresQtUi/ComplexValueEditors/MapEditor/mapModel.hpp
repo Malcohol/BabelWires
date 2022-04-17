@@ -19,6 +19,7 @@ namespace babelwires {
     class MapEntryData;
     class Value;
     class Type;
+    class MapEntryModelDispatcher;
     
     class MapView : public QTableView {
         Q_OBJECT
@@ -40,6 +41,9 @@ namespace babelwires {
 
         MapEditor& getMapEditor();
         const MapEditor& getMapEditor() const;
+
+      public:
+        void initMapEntryModelDispatcher(const QModelIndex& index, MapEntryModelDispatcher& mapEntryModel) const;
 
       private:
         MapEditor& m_mapEditor;

@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
@@ -45,14 +45,23 @@ int babelwires::MapModel::columnCount(const QModelIndex& /*parent*/) const {
     return 2;
 }
 
+void babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index, MapEntryModelDispatcher& mapEntryModel) const {
+    const unsigned int row = static_cast<unsigned int>(index.row());
+    const unsigned int column = static_cast<unsigned int>(index.column());
+    const MapProject& mapProject = m_mapEditor.getMapProject();
+    const MapProjectEntry& entry = mapProject.getMapEntry(row);
+    const bool isLastRow = (row == mapProject.getNumMapEntries() - 1);
+    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row, isLastRow);
+}
+
 QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     const unsigned int row = static_cast<unsigned int>(index.row());
     const unsigned int column = static_cast<unsigned int>(index.column());
     const MapProject& mapProject = m_mapEditor.getMapProject();
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
+
     MapEntryModelDispatcher mapEntryModel;
-    const bool isLastRow = (row == mapProject.getNumMapEntries() - 1);
-    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row, isLastRow);
+    initMapEntryModelDispatcher(index, mapEntryModel);
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -78,13 +87,8 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
 }
 
 QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
-    const unsigned int row = static_cast<unsigned int>(index.row());
-    const unsigned int column = static_cast<unsigned int>(index.column());
-    const MapProject& mapProject = m_mapEditor.getMapProject();
-    const MapProjectEntry& entry = mapProject.getMapEntry(row);
     MapEntryModelDispatcher mapEntryModel;
-    const bool isLastRow = (row == mapProject.getNumMapEntries() - 1);
-    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row, isLastRow);
+    initMapEntryModelDispatcher(index, mapEntryModel);
 
     std::vector<std::unique_ptr<ContextMenuAction>> actions;
     mapEntryModel->getContextMenuActions(actions);

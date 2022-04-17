@@ -31,3 +31,18 @@ QVariant babelwires::AllToOneFallbackMapEntryModel::getDisplayData(unsigned int 
             assert(false);
     }
 }
+
+bool babelwires::AllToOneFallbackMapEntryModel::isItemEditable(unsigned int column) const {
+    return (column == 1);
+}
+
+QWidget* babelwires::AllToOneFallbackMapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
+    unsigned int column = static_cast<unsigned int>(index.column());
+    assert(isItemEditable(column) && "That column isn't editable" );
+    m_targetValueModel->createEditor(index, parent);
+}
+
+void babelwires::AllToOneFallbackMapEntryModel::setEditorData(unsigned int column, QWidget* editor) const {
+    assert(isItemEditable(column) && "That column isn't editable" );
+    m_targetValueModel->setEditorData(editor);
+}

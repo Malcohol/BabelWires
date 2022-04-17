@@ -2,7 +2,7 @@
  * FeatureModel is the QAbstractTableModel which represents the data in a FeatureElement.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
@@ -16,11 +16,11 @@
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
-#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
 #include "BabelWiresLib/Commands/commandManager.hpp"
 #include "BabelWiresLib/Commands/commands.hpp"
-#include "BabelWiresLib/Project/Commands/setExpandedCommand.hpp"
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
+#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/setExpandedCommand.hpp"
 #include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
 #include "BabelWiresLib/Project/project.hpp"
@@ -265,7 +265,7 @@ QWidget* babelwires::FeatureModelDelegate::createEditor(QWidget* parent, const Q
     RowModelDispatcher rowModel(m_projectBridge.getContext().m_rowModelReg, entry, element);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable feature");
-    QWidget* result = rowModel->createEditor(parent, index);
+    QWidget* const result = rowModel->createEditor(parent, index);
 
     if (!result) {
         return QStyledItemDelegate::createEditor(parent, option, index);

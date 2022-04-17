@@ -33,3 +33,30 @@ QVariant babelwires::DiscreteMapEntryModel::getDisplayData(unsigned int column) 
     }
 }
 
+bool babelwires::DiscreteMapEntryModel::isItemEditable(unsigned int column) const {
+    return true;
+}
+
+
+QWidget* babelwires::DiscreteMapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
+    unsigned int column = static_cast<unsigned int>(index.column());
+    switch (column) {
+        case 0:
+            return m_sourceValueModel->createEditor(index, parent);
+        case 1:
+            return m_targetValueModel->createEditor(index, parent);
+        default:
+            assert(false && "That column isn't editable");
+    }
+}
+
+void babelwires::DiscreteMapEntryModel::setEditorData(unsigned int column, QWidget* editor) const {
+    switch (column) {
+        case 0:
+            return m_sourceValueModel->setEditorData(editor);
+        case 1:
+            return m_targetValueModel->setEditorData(editor);
+        default:
+            assert(false && "That column isn't editable");
+    }
+}

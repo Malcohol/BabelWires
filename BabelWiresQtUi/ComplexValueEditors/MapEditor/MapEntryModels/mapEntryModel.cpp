@@ -27,3 +27,17 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<std::unique_pt
     }
     actionsOut.emplace_back(std::move(removeEntry));
 }
+
+
+bool babelwires::MapEntryModel::isItemEditable(unsigned int column) const {
+    return false;
+}
+
+QWidget* babelwires::MapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
+    assert(false && "This item isn't editable");
+    return nullptr;
+}
+
+void babelwires::MapEntryModel::setEditorData(unsigned int column, QWidget* editor) const {
+    assert(false && "This item isn't editable");
+}

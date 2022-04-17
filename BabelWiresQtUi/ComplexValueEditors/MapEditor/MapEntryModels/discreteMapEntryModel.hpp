@@ -17,10 +17,11 @@ namespace babelwires {
       public:
         void init() override;
         QVariant getDisplayData(unsigned int column) const override;
+
+        bool isItemEditable(unsigned int column) const override;
+        QWidget* createEditor(const QModelIndex& index, QWidget* parent) const override;
+        void setEditorData(unsigned int column, QWidget* editor) const override;
         /*
-        virtual bool isItemEditable() const;
-        virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
-        virtual void setEditorData(QWidget* editor) const;
         virtual bool hasCustomPainting() const;
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;

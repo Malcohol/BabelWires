@@ -81,7 +81,6 @@ namespace babelwires {
         Q_OBJECT
       public:
         /// Construct a delegate to handle the editing of features.
-        /// The elementId is that of the FeatureElement.
         FeatureModelDelegate(QObject* parent, ProjectBridge& projectBridge);
 
         virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option,

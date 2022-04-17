@@ -28,10 +28,16 @@ namespace babelwires {
         /// Subclasses overriding this should use super-calls to collect standard actions.
         virtual void getContextMenuActions(std::vector<std::unique_ptr<ContextMenuAction>>& actionsOut) const;
 
+        /// The default returns false.
+        virtual bool isItemEditable(unsigned int column) const;
+
+        /// The default asserts.
+        virtual QWidget* createEditor(const QModelIndex& index, QWidget* parent) const;
+        
+        /// The default asserts.
+        virtual void setEditorData(unsigned int column, QWidget* editor) const;
+        
         /*
-        virtual bool isItemEditable() const;
-        virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
-        virtual void setEditorData(QWidget* editor) const;
         virtual bool hasCustomPainting() const;
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
