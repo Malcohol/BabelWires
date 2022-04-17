@@ -9,6 +9,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/projectBridge.cpp
     ModelBridge/elementNodeModel.cpp
     ModelBridge/featureModel.cpp
+    ModelBridge/featureModelDelegate.cpp
     ModelBridge/modifyModelScope.cpp
     ModelBridge/accessModelScope.cpp
     ModelBridge/RowModels/arrayRowModel.cpp
