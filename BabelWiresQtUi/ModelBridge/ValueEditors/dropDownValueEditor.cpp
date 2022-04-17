@@ -8,6 +8,7 @@
 #include "BabelWiresQtUi/ModelBridge/ValueEditors/dropDownValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include "BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp"
 
 #include <QLineEdit>
 
