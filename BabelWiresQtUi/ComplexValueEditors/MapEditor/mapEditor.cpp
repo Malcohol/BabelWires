@@ -12,6 +12,7 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModelDelegate.hpp>
 
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
@@ -42,7 +43,6 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
     setWindowTitle(getTitle());
     QLayout* mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
-
     {
         auto contentsButtons = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults);
         {
@@ -92,6 +92,9 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         m_mapView = new MapView;
         m_mapModel = new MapModel(m_mapView, *this);
         m_mapView->setContextMenuPolicy(Qt::CustomContextMenu);
+        auto delegate = new MapModelDelegate(this);
+        m_mapView->setItemDelegate(delegate);
+
         connect(m_mapView, SIGNAL(customContextMenuRequested(QPoint)), this,
                 SLOT(onCustomContextMenuRequested(QPoint)));
         contentsLayout->addWidget(m_mapView);

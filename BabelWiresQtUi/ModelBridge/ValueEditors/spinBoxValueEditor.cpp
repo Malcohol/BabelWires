@@ -54,8 +54,8 @@ babelwires::SpinBoxValueEditor::SpinBoxValueEditor(QWidget* parent, const QModel
     : ValueEditorCommonBase(parent, index)
     , m_valueNames(valueNames) {
     // Commit on select.
-    QObject::connect(this, QOverload<int>::of(&QSpinBox::valueChanged), RowModel::getDelegateFromParentWidget(parent),
-                     &FeatureModelDelegate::commitEditorValue);
+    QObject::connect(this, QOverload<int>::of(&QSpinBox::valueChanged), 
+                        this, [this]() { emit m_signals->editorHasChanged(this); });
 }
 
 void babelwires::SpinBoxValueEditor::setFeatureIsModified(bool isModified) {

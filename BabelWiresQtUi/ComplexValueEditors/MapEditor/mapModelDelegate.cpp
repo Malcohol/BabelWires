@@ -10,6 +10,9 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
+babelwires::MapModelDelegate::MapModelDelegate(QObject* parent)
+    : QStyledItemDelegate(parent) {}
+
 QWidget* babelwires::MapModelDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option,
                                                     const QModelIndex& index) const {
     const MapModel* const mapModel = qobject_cast<const MapModel*>(index.model());
@@ -50,5 +53,5 @@ void babelwires::MapModelDelegate::setModelData(QWidget* editor, QAbstractItemMo
     const MapModel* const mapModel = qobject_cast<const MapModel*>(index.model());
     assert(mapModel && "Unexpected model");
 
-    //TODO
+    // TODO
 }

@@ -109,3 +109,16 @@ babelwires::MapEditor& babelwires::MapModel::getMapEditor() {
 const babelwires::MapEditor& babelwires::MapModel::getMapEditor() const {
     return m_mapEditor;
 }
+
+Qt::ItemFlags babelwires::MapModel::flags(const QModelIndex& index) const {
+    Qt::ItemFlags flags = Qt::ItemIsEnabled;
+
+    MapEntryModelDispatcher mapEntryModel;
+    initMapEntryModelDispatcher(index, mapEntryModel);
+
+    const unsigned int column = static_cast<unsigned int>(index.column());
+    if (mapEntryModel->isItemEditable(column)) {
+        flags = flags | Qt::ItemIsEditable;
+    }
+    return flags;
+}

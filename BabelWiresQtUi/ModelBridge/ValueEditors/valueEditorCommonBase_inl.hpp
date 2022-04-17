@@ -7,7 +7,8 @@
  **/
 template <typename T>
 babelwires::ValueEditorCommonBase<T>::ValueEditorCommonBase(QWidget* parent, const QModelIndex& index)
-    : T(parent) {
+    : T(parent)
+    , m_signals(new ValueEditorCommonSignals(static_cast<T*>(this))) {
     // Store a reference to the interface this class implements via a property in the QObject.
     QVariant property;
     property.setValue(static_cast<ValueEditorInterface*>(this));
@@ -17,6 +18,11 @@ babelwires::ValueEditorCommonBase<T>::ValueEditorCommonBase(QWidget* parent, con
 template <typename T>
 QMetaObject::Connection& babelwires::ValueEditorCommonBase<T>::getValuesChangedConnection() {
     return m_valuesChangedConnection;
+}
+
+template <typename T>
+babelwires::ValueEditorCommonSignals* babelwires::ValueEditorCommonBase<T>::getValueEditorSignals() {
+    return m_signals;
 }
 
 template <typename T> babelwires::ValueEditorCommonBase<T>::~ValueEditorCommonBase() {

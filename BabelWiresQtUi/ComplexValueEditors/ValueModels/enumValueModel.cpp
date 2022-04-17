@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/enumValueModel.hpp>
 
+#include "BabelWiresQtUi/ModelBridge/ValueEditors/dropDownValueEditor.hpp"
+
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/TypeSystem/enumValue.hpp>
 
@@ -24,7 +26,15 @@ QVariant babelwires::EnumValueModel::getDisplayData() const {
 }
 
 QWidget* babelwires::EnumValueModel::createEditor(const QModelIndex& index, QWidget* parent) const {
-    return nullptr;
+    const Enum *const e = m_type->as<Enum>();
+    auto dropDownBox = std::make_unique<DropDownValueEditor>(parent, index);
+    {
+        IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
+        for (auto enumValue : e->getEnumValues()) {
+            dropDownBox->addItem(identifierRegistry->getName(enumValue).c_str());
+        }
+    }
+    return dropDownBox.release();
 }
 
 void babelwires::EnumValueModel::setEditorData(QWidget* editor) const {

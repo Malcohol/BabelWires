@@ -15,9 +15,10 @@
 babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent, const QModelIndex& index)
     : ValueEditorCommonBase(parent, index) {
     setSizeAdjustPolicy(QComboBox::SizeAdjustPolicy::AdjustToMinimumContentsLengthWithIcon);
-    // Commit on select.
+
     QObject::connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged),
-                     RowModel::getDelegateFromParentWidget(parent), &FeatureModelDelegate::commitEditorValue);
+                        this, [this]() { emit m_signals->editorHasChanged(this); });
+
 }
 
 void babelwires::DropDownValueEditor::setFeatureIsModified(bool isModified) {

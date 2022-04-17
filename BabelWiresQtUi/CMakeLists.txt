@@ -27,6 +27,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ValueEditors/dropDownValueEditor.cpp
     ModelBridge/ValueEditors/spinBoxValueEditor.cpp
     ModelBridge/ValueEditors/lineEditValueEditor.cpp
+    ModelBridge/ValueEditors/valueEditorCommonBase.cpp
     ModelBridge/Internal/flowSceneConnectionInfo.cpp
     ModelBridge/ContextMenu/featureContextMenu.cpp
     ModelBridge/ContextMenu/removeModifierAction.cpp
