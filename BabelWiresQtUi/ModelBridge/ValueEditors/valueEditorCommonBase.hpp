@@ -10,12 +10,10 @@
 class QModelIndex;
 class QWidget;
 
+#include <QObject>
 #include <QMetaObject>
 #include <QMetaType>
-
-#include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp"
+#include <QVariant>
 
 namespace babelwires {
 
@@ -25,6 +23,9 @@ namespace babelwires {
     struct ValueEditorInterface {
         /// Typical implementations will set text to bold.
         virtual void setFeatureIsModified(bool isModified) = 0;
+
+        /// Get somewhere to store the connection between the model and the delegate for this editor.
+        virtual QMetaObject::Connection& getValuesChangedConnection() = 0;
 
         /// The interface is found in the QObject properties with this key.
         static constexpr char s_propertyName[] = "ValueEditorInterface";
@@ -40,8 +41,10 @@ namespace babelwires {
         ValueEditorCommonBase(QWidget* parent, const QModelIndex& index);
         ~ValueEditorCommonBase();
 
+        QMetaObject::Connection& getValuesChangedConnection() override;
+
       private:
-        /// Connects the FeatureModel::valuesMayHaveChanged signal to a slot which calls FeatureDelegate::setEditorData.
+        /// Stores the connection between the model and delegate for this editor.
         QMetaObject::Connection m_valuesChangedConnection;
     };
 

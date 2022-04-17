@@ -57,13 +57,25 @@ QWidget* babelwires::FeatureModelDelegate::createEditor(QWidget* parent, const Q
     RowModelDispatcher rowModel(m_projectBridge.getContext().m_rowModelReg, entry, element);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable feature");
-    QWidget* const result = rowModel->createEditor(parent, index);
+    QWidget* const editor = rowModel->createEditor(parent, index);
 
-    if (!result) {
+    if (editor) {
+        QVariant property = editor->property(ValueEditorInterface::s_propertyName);
+        if (property.isValid()) {
+            ValueEditorInterface* interface = qvariant_cast<ValueEditorInterface*>(property);
+
+            // Update the editor if the model changes.
+            interface->getValuesChangedConnection() = QObject::connect(
+                RowModel::getModelFromParentWidget(parent), &FeatureModel::valuesMayHaveChanged,
+                [editor, parent, index]() { emit RowModel::getDelegateFromParentWidget(parent)->setEditorData(editor, index); });
+        }
+    }
+
+    if (!editor) {
         return QStyledItemDelegate::createEditor(parent, option, index);
     }
 
-    return result;
+    return editor;
 }
 
 void babelwires::FeatureModelDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const {
