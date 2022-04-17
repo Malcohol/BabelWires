@@ -42,9 +42,16 @@ namespace babelwires {
         MapEditor& getMapEditor();
         const MapEditor& getMapEditor() const;
 
+      public slots:
+        /// Trigger when the model has changed.
+        void valuesChanged();
+
       public:
         void initMapEntryModelDispatcher(const QModelIndex& index, MapEntryModelDispatcher& mapEntryModel) const;
 
+      signals:
+        void valuesMayHaveChanged() const;
+        
       private:
         MapEditor& m_mapEditor;
     };

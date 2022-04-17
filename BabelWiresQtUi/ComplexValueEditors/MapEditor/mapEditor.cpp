@@ -231,7 +231,7 @@ void babelwires::MapEditor::updateMapFromProject() {
 
 void babelwires::MapEditor::setEditorMap(const MapData& map) {
     m_map.setMapData(map);
-    m_mapModel->layoutChanged();
+    m_mapModel->valuesChanged();
 }
 
 void babelwires::MapEditor::saveMapToFile() {
@@ -325,8 +325,7 @@ const babelwires::MapProject& babelwires::MapEditor::getMapProject() const {
 
 void babelwires::MapEditor::executeCommand(std::unique_ptr<Command<MapProject>> command) {
     if (m_commandManager.executeAndStealCommand(command)) {
-        // This is a bit blunt.
-        m_mapModel->layoutChanged();
+        m_mapModel->valuesChanged();
     }
 }
 
@@ -351,14 +350,12 @@ bool babelwires::MapEditor::maybeApply() {
 
 void babelwires::MapEditor::undo() {
     m_commandManager.undo();
-    // This is a bit blunt.
-    m_mapModel->layoutChanged();
+    m_mapModel->valuesChanged();
 }
 
 void babelwires::MapEditor::redo() {
     m_commandManager.redo();
-    // This is a bit blunt.
-    m_mapModel->layoutChanged();
+    m_mapModel->valuesChanged();
 }
 
 void babelwires::MapEditor::onUndoStateChanged() {

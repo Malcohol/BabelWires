@@ -9,6 +9,7 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/ValueEditors/valueEditorCommonBase.hpp>
 
 babelwires::MapModelDelegate::MapModelDelegate(QObject* parent)
     : QStyledItemDelegate(parent) {}
@@ -24,13 +25,30 @@ QWidget* babelwires::MapModelDelegate::createEditor(QWidget* parent, const QStyl
     assert(mapEntryModel->isItemEditable(static_cast<unsigned int>(index.column())) &&
            "We should not be trying to create an editor for a non-editable feature");
 
-    QWidget* const result = mapEntryModel->createEditor(index, parent);
+    QWidget* const editor = mapEntryModel->createEditor(index, parent);
 
-    if (!result) {
+    if (editor) {
+        QVariant property = editor->property(ValueEditorInterface::s_propertyName);
+        if (property.isValid()) {
+            ValueEditorInterface* interface = qvariant_cast<ValueEditorInterface*>(property);
+
+            // Update the editor if the model changes.
+            interface->getValuesChangedConnection() = QObject::connect(
+                mapModel, &MapModel::valuesMayHaveChanged,
+                [this, editor, parent, index]() { emit setEditorData(editor, index); });
+
+            ValueEditorCommonSignals* ValueEditorCommonSignals = interface->getValueEditorSignals();
+            // Update the model if the editor changes.
+            QObject::connect(ValueEditorCommonSignals, &ValueEditorCommonSignals::editorHasChanged,
+                     this, &MapModelDelegate::commitData);
+        }
+    }
+
+    if (!editor) {
         return QStyledItemDelegate::createEditor(parent, option, index);
     }
 
-    return result;
+    return editor;
 }
 
 void babelwires::MapModelDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const {

@@ -66,13 +66,13 @@ QWidget* babelwires::FeatureModelDelegate::createEditor(QWidget* parent, const Q
 
             // Update the editor if the model changes.
             interface->getValuesChangedConnection() = QObject::connect(
-                RowModel::getModelFromParentWidget(parent), &FeatureModel::valuesMayHaveChanged,
-                [editor, parent, index]() { emit RowModel::getDelegateFromParentWidget(parent)->setEditorData(editor, index); });
+                model, &FeatureModel::valuesMayHaveChanged,
+                [this, editor, parent, index]() { emit setEditorData(editor, index); });
 
             ValueEditorCommonSignals* ValueEditorCommonSignals = interface->getValueEditorSignals();
             // Update the model if the editor changes.
             QObject::connect(ValueEditorCommonSignals, &ValueEditorCommonSignals::editorHasChanged,
-                     RowModel::getDelegateFromParentWidget(parent), &FeatureModelDelegate::commitData);
+                     this, &FeatureModelDelegate::commitData);
         }
     }
 

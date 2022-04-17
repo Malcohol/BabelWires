@@ -122,3 +122,8 @@ Qt::ItemFlags babelwires::MapModel::flags(const QModelIndex& index) const {
     }
     return flags;
 }
+
+void babelwires::MapModel::valuesChanged() {
+    layoutChanged();
+    emit valuesMayHaveChanged();
+}

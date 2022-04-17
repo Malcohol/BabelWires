@@ -83,12 +83,6 @@ namespace babelwires {
       public:
         bool isFeatureModified() const;
 
-        /// Obtain the delegate, given the parent of a row model.
-        static FeatureModelDelegate* getDelegateFromParentWidget(QWidget* widget);
-
-        /// Obtain the model, given the parent of a row model.
-        static FeatureModel* getModelFromParentWidget(QWidget* widget);
-
       protected:
         bool hasInputFeature() const;
         const Feature* getInputFeature() const;
