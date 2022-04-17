@@ -22,3 +22,11 @@ QVariant babelwires::EnumValueModel::getDisplayData() const {
     const Identifier value = v->get();
     return QString(IdentifierRegistry::read()->getName(value).c_str());    
 }
+
+QWidget* babelwires::EnumValueModel::createEditor(const QModelIndex& index, QWidget* parent) const {
+    return nullptr;
+}
+
+void babelwires::EnumValueModel::setEditorData(QWidget* editor) const {
+
+}
