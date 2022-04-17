@@ -15,6 +15,7 @@ class QWidget;
 
 #include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include "BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp"
 
 namespace babelwires {
 

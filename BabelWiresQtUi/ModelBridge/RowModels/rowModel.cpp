@@ -12,6 +12,7 @@
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/removeFailedModifiersAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include "BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp"
 
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
