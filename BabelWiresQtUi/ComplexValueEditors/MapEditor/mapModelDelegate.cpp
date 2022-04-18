@@ -81,8 +81,9 @@ void babelwires::MapModelDelegate::setModelData(QWidget* editor, QAbstractItemMo
     unsigned int column = static_cast<unsigned int>(index.column());
     unsigned int row = static_cast<unsigned int>(index.row());
 
-    std::unique_ptr<MapEntryData> replacementData = mapEntryModel->createReplacementDataFromEditor(column, editor);
-    std::string editType = (column == 0) ? "key" : "value";
-    auto command = std::make_unique<ReplaceMapEntryCommand>("Set map entry " + editType, std::move(replacementData), row);
-    mapModel->getMapEditor().executeCommand(std::move(command));
+    if (std::unique_ptr<MapEntryData> replacementData = mapEntryModel->createReplacementDataFromEditor(column, editor)) {
+        std::string editType = (column == 0) ? "key" : "value";
+        auto command = std::make_unique<ReplaceMapEntryCommand>("Set map entry " + editType, std::move(replacementData), row);
+        mapModel->getMapEditor().executeCommand(std::move(command));
+    }
 }
