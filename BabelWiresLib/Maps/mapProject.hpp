@@ -43,6 +43,7 @@ namespace babelwires {
 
         void addMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index);
         void removeMapEntry(unsigned int index);
+        void replaceMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index);
 
         bool operator==(const MapProject& other) const;
         bool operator!=(const MapProject& other) const;

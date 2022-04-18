@@ -39,8 +39,7 @@ namespace babelwires {
         /// May return null or a new menu.
         QMenu* getContextMenu(const QModelIndex& index);
 
-        MapEditor& getMapEditor();
-        const MapEditor& getMapEditor() const;
+        MapEditor& getMapEditor() const;
 
       public slots:
         /// Trigger when the model has changed.

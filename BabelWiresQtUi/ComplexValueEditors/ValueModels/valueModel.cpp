@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModel.hpp>
 
+#include <BabelWiresLib/TypeSystem/value.hpp>
+
 QVariant babelwires::ValueModel::getDisplayData() const {
     return {};
 }
@@ -26,4 +28,9 @@ QWidget* babelwires::ValueModel::createEditor(const QModelIndex& index, QWidget*
 
 void babelwires::ValueModel::setEditorData(QWidget* editor) const {
     assert(false && "This method must be overridden in subclasses");
+}
+
+std::unique_ptr<babelwires::Value> babelwires::ValueModel::getValueFromEditor(QWidget* editor) const {
+    assert(false && "This method must be overridden in subclasses");
+    return {};
 }

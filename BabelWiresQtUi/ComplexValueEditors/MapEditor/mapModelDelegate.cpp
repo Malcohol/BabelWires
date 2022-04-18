@@ -9,7 +9,11 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
+
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/Commands/replaceMapEntryCommand.hpp>
 
 babelwires::MapModelDelegate::MapModelDelegate(QObject* parent)
     : QStyledItemDelegate(parent) {}
@@ -70,6 +74,15 @@ void babelwires::MapModelDelegate::setModelData(QWidget* editor, QAbstractItemMo
                                                 const QModelIndex& index) const {
     const MapModel* const mapModel = qobject_cast<const MapModel*>(index.model());
     assert(mapModel && "Unexpected model");
+    
+    MapEntryModelDispatcher mapEntryModel;
+    mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
-    // TODO
+    unsigned int column = static_cast<unsigned int>(index.column());
+    unsigned int row = static_cast<unsigned int>(index.row());
+
+    std::unique_ptr<MapEntryData> replacementData = mapEntryModel->createReplacementDataFromEditor(column, editor);
+    std::string editType = (column == 0) ? "key" : "value";
+    auto command = std::make_unique<ReplaceMapEntryCommand>("Set map entry " + editType, std::move(replacementData), row);
+    mapModel->getMapEditor().executeCommand(std::move(command));
 }

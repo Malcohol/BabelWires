@@ -16,6 +16,7 @@
 namespace babelwires {
     class Type;
     class MapProjectEntry;
+    class MapEntryData;
 
     /// MapEntryModels provide the UI specifics for MapEntries.
     /// The class should always be constructed via the MapEntryModelDispatcher.
@@ -37,6 +38,8 @@ namespace babelwires {
         /// The default asserts.
         virtual void setEditorData(unsigned int column, QWidget* editor) const;
         
+        virtual std::unique_ptr<MapEntryData> createReplacementDataFromEditor(unsigned int column, QWidget* editor) const;
+
         /*
         virtual bool hasCustomPainting() const;
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;

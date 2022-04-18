@@ -10,7 +10,8 @@
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 
-const babelwires::AllToOneFallbackMapEntryData& babelwires::AllToOneFallbackMapEntryModel::getAllToOneFallbackMapEntryData() const {
+const babelwires::AllToOneFallbackMapEntryData&
+babelwires::AllToOneFallbackMapEntryModel::getAllToOneFallbackMapEntryData() const {
     assert(m_mapProjectEntry);
     assert(m_mapProjectEntry->getData().as<AllToOneFallbackMapEntryData>());
     return static_cast<const babelwires::AllToOneFallbackMapEntryData&>(m_mapProjectEntry->getData());
@@ -38,11 +39,21 @@ bool babelwires::AllToOneFallbackMapEntryModel::isItemEditable(unsigned int colu
 
 QWidget* babelwires::AllToOneFallbackMapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
     unsigned int column = static_cast<unsigned int>(index.column());
-    assert(isItemEditable(column) && "That column isn't editable" );
-    m_targetValueModel->createEditor(index, parent);
+    assert(isItemEditable(column) && "That column isn't editable");
+    return m_targetValueModel->createEditor(index, parent);
 }
 
 void babelwires::AllToOneFallbackMapEntryModel::setEditorData(unsigned int column, QWidget* editor) const {
-    assert(isItemEditable(column) && "That column isn't editable" );
+    assert(isItemEditable(column) && "That column isn't editable");
     m_targetValueModel->setEditorData(editor);
+}
+
+std::unique_ptr<babelwires::MapEntryData>
+babelwires::AllToOneFallbackMapEntryModel::createReplacementDataFromEditor(unsigned int column, QWidget* editor) const {
+    assert(isItemEditable(column) && "That column isn't editable");
+
+    std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
+    babelwires::AllToOneFallbackMapEntryData* currentAllToOneData = currentData->as<AllToOneFallbackMapEntryData>();
+    currentAllToOneData->setTargetValue(m_targetValueModel->getValueFromEditor(editor));
+    return currentData;
 }

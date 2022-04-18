@@ -102,11 +102,7 @@ QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
     return nullptr;
 }
 
-babelwires::MapEditor& babelwires::MapModel::getMapEditor() {
-    return m_mapEditor;
-}
-
-const babelwires::MapEditor& babelwires::MapModel::getMapEditor() const {
+babelwires::MapEditor& babelwires::MapModel::getMapEditor() const {
     return m_mapEditor;
 }
 

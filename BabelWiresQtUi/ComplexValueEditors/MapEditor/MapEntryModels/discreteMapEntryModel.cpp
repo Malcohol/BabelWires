@@ -60,3 +60,19 @@ void babelwires::DiscreteMapEntryModel::setEditorData(unsigned int column, QWidg
             assert(false && "That column isn't editable");
     }
 }
+
+std::unique_ptr<babelwires::MapEntryData> babelwires::DiscreteMapEntryModel::createReplacementDataFromEditor(unsigned int column, QWidget* editor) const {
+     std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
+     babelwires::DiscreteMapEntryData* currentDiscreteData = currentData->as<DiscreteMapEntryData>();
+     switch (column) {
+        case 0:
+            currentDiscreteData->setSourceValue(m_sourceValueModel->getValueFromEditor(editor));
+            break;
+        case 1:
+            currentDiscreteData->setTargetValue(m_targetValueModel->getValueFromEditor(editor));
+            break;
+        default:
+            assert(false && "That column isn't editable");
+    }
+    return currentData;
+}

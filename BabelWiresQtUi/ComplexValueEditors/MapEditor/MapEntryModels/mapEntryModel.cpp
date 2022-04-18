@@ -41,3 +41,8 @@ QWidget* babelwires::MapEntryModel::createEditor(const QModelIndex& index, QWidg
 void babelwires::MapEntryModel::setEditorData(unsigned int column, QWidget* editor) const {
     assert(false && "This item isn't editable");
 }
+
+std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryModel::createReplacementDataFromEditor(unsigned int column, QWidget* editor) const {
+    assert(false && "This item isn't editable");
+    return {};    
+}

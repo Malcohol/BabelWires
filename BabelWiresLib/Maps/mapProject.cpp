@@ -93,6 +93,12 @@ void babelwires::MapProject::removeMapEntry(unsigned int index) {
     m_mapEntries.erase(m_mapEntries.begin() + index);
 }
 
+void babelwires::MapProject::replaceMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index) {
+    assert((index < m_mapEntries.size()) && "index to replace is out of range");
+    assert(validateNewEntry(*newEntry, (index == m_mapEntries.size() - 1)) && "The new map entry is not valid for this map");
+    m_mapEntries[index] = std::make_unique<MapProjectEntry>(std::move(newEntry));
+}
+
 babelwires::MapData babelwires::MapProject::extractMapData() const {
     babelwires::MapData mapData;
     mapData.setSourceId(m_sourceId);
