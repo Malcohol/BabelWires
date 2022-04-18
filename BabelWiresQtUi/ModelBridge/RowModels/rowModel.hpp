@@ -62,7 +62,7 @@ namespace babelwires {
 
         /// Given that the user has committed the edit, return a new modifier corresponding
         /// to that edit.
-        virtual std::unique_ptr<babelwires::ModifierData> createModifierFromEditor(QWidget* editor) const;
+        virtual std::unique_ptr<ModifierData> createModifierFromEditor(QWidget* editor) const;
 
         /// Returns true if this RowModel overrides paint and sizeHint.
         /// The default implementation returns false.
