@@ -54,6 +54,8 @@ namespace babelwires {
 
         void executeCommand(std::unique_ptr<Command<MapProject>> command);
 
+        void setToDefault();
+
       protected:
         bool maybeApply() override;
         

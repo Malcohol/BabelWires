@@ -21,6 +21,7 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Maps/Commands/setMapToDefaultCommand.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -44,7 +45,12 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
     QLayout* mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
     {
-        auto contentsButtons = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults);
+        auto contentsButtons = new QDialogButtonBox();
+        {
+            QPushButton* defaultButton = new QPushButton(style()->standardIcon(QStyle::SP_RestoreDefaultsButton), "Restore defaults");
+            contentsButtons->addButton(defaultButton, QDialogButtonBox::ButtonRole::ResetRole);
+            connect(defaultButton, &QAbstractButton::clicked, this, &MapEditor::setToDefault);
+        }
         {
             QPushButton* saveButton =
                 new QPushButton(style()->standardIcon(QStyle::SP_DialogSaveButton), "Save copy to file");
@@ -376,4 +382,8 @@ void babelwires::MapEditor::onUndoStateChanged() {
         m_redoAction->setEnabled(false);
         m_redoAction->setText(tr("Redo"));
     }
+}
+
+void babelwires::MapEditor::setToDefault() {
+    executeCommand(std::make_unique<SetMapToDefaultCommand>("Restore default map"));
 }
