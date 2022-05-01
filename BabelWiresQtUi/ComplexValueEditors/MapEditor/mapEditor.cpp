@@ -82,6 +82,8 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             AccessModelScope scope(getProjectBridge());
             const MapFeature& mapFeature = getMapFeature(scope);
             const MapData& mapData = getMapDataFromProject(scope);
+            m_map.setAllowedSourceIds(mapFeature.getAllowedSourceIds());
+            m_map.setAllowedTargetIds(mapFeature.getAllowedTargetIds());
             m_map.setMapData(mapData);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));

@@ -22,6 +22,24 @@ babelwires::MapProject::MapProject(const ProjectContext& ProjectContext)
 
 babelwires::MapProject::~MapProject() = default;
 
+void babelwires::MapProject::setAllowedSourceIds(const TypeIdSet& typeSet) {
+    // TODO Revalidate data
+    m_allowedSourceIds = typeSet;
+}
+
+void babelwires::MapProject::setAllowedTargetIds(const TypeIdSet& typeSet) {
+    // TODO Revalidate data
+    m_allowedTargetIds = typeSet;
+}
+
+const babelwires::TypeIdSet& babelwires::MapProject::getAllowedSourceIds() const {
+    return m_allowedSourceIds;
+}
+
+const babelwires::TypeIdSet& babelwires::MapProject::getAllowedTargetIds() const {
+    return m_allowedTargetIds;
+}
+
 babelwires::LongIdentifier babelwires::MapProject::getSourceId() const {
     return m_sourceId;
 }
@@ -31,10 +49,12 @@ babelwires::LongIdentifier babelwires::MapProject::getTargetId() const {
 }
 
 void babelwires::MapProject::setSourceId(LongIdentifier sourceId) {
+    assert(m_allowedSourceIds.empty() || (std::find(m_allowedSourceIds.begin(), m_allowedSourceIds.end(), sourceId) != m_allowedSourceIds.end()));
     m_sourceId = sourceId;
 }
 
 void babelwires::MapProject::setTargetId(LongIdentifier targetId) {
+    assert(m_allowedTargetIds.empty() || (std::find(m_allowedTargetIds.begin(), m_allowedTargetIds.end(), targetId) != m_allowedTargetIds.end()));
     m_targetId = targetId;
 }
 
@@ -138,3 +158,20 @@ const babelwires::ProjectContext& babelwires::MapProject::getProjectContext() co
     return m_projectContext;
 }
 
+/// Convenience method which returns the first allowed source type id or int.
+babelwires::LongIdentifier babelwires::MapProject::getDefaultSourceId() const {
+    if (m_allowedSourceIds.empty()) {
+        return IntType::getThisIdentifier();
+    } else {
+        return m_allowedSourceIds[0];
+    }
+}
+
+/// Convenience method which returns the first allowed target type id or int.
+babelwires::LongIdentifier babelwires::MapProject::getDefaultTargetId() const {
+    if (m_allowedTargetIds.empty()) {
+        return IntType::getThisIdentifier();
+    } else {
+        return m_allowedTargetIds[0];
+    }
+}

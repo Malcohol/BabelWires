@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/Maps/mapData.hpp>
+#include <BabelWiresLib/TypeSystem/typeIdSet.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Serialization/serializable.hpp>
@@ -26,6 +27,12 @@ namespace babelwires {
         MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
+        void setAllowedSourceIds(const TypeIdSet& typeSet);
+        void setAllowedTargetIds(const TypeIdSet& typeSet);
+
+        const TypeIdSet& getAllowedSourceIds() const;
+        const TypeIdSet& getAllowedTargetIds() const;
+       
         LongIdentifier getSourceId() const;
         LongIdentifier getTargetId() const;
 
@@ -53,8 +60,18 @@ namespace babelwires {
 
         const ProjectContext& getProjectContext() const;
 
+        /// Convenience method which returns the first allowed source type id or int.
+        LongIdentifier getDefaultSourceId() const;
+
+        /// Convenience method which returns the first allowed target type id or int.
+        LongIdentifier getDefaultTargetId() const;
+
       private:
         const ProjectContext& m_projectContext;
+        /// Empty means all types are allowed.
+        TypeIdSet m_allowedSourceIds;
+        /// Empty means all types are allowed.
+        TypeIdSet m_allowedTargetIds;
         LongIdentifier m_sourceId;
         LongIdentifier m_targetId;
         std::vector<std::unique_ptr<MapProjectEntry>> m_mapEntries;
