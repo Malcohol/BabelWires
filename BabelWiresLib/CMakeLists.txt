@@ -39,6 +39,7 @@ SET( BABELWIRESLIB_SRCS
 	Maps/Commands/addEntryToMapCommand.cpp
 	Maps/Commands/removeEntryFromMapCommand.cpp
 	Maps/Commands/replaceMapEntryCommand.cpp
+	Maps/Commands/setMapToDefaultCommand.cpp
 	Maps/mapProject.cpp
 	Maps/mapSerialization.cpp
 	Maps/mapData.cpp

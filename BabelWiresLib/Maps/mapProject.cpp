@@ -137,3 +137,4 @@ void babelwires::MapProject::setMapData(const MapData& data) {
 const babelwires::ProjectContext& babelwires::MapProject::getProjectContext() const {
     return m_projectContext;
 }
+
