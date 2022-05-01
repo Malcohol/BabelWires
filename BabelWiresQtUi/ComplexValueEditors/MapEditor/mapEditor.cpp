@@ -349,13 +349,15 @@ bool babelwires::MapEditor::maybeApply() {
 }
 
 void babelwires::MapEditor::undo() {
-    m_commandManager.undo();
+    m_mapView->selectionModel()->clear();
     m_mapModel->valuesChanged();
+    m_commandManager.undo();
 }
 
 void babelwires::MapEditor::redo() {
-    m_commandManager.redo();
+    m_mapView->selectionModel()->clear();
     m_mapModel->valuesChanged();
+    m_commandManager.redo();
 }
 
 void babelwires::MapEditor::onUndoStateChanged() {

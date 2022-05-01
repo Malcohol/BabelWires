@@ -36,10 +36,9 @@ QWidget* babelwires::MapModelDelegate::createEditor(QWidget* parent, const QStyl
         if (property.isValid()) {
             ValueEditorInterface* interface = qvariant_cast<ValueEditorInterface*>(property);
 
-            // Update the editor if the model changes.
             interface->getValuesChangedConnection() = QObject::connect(
-                mapModel, &MapModel::valuesMayHaveChanged,
-                [this, editor, parent, index]() { emit setEditorData(editor, index); });
+                mapModel, &MapModel::valuesMayHaveChanged, this,
+                    [this, editor]() { const_cast<MapModelDelegate*>(this)->closeEditor(editor); } );
 
             ValueEditorCommonSignals* ValueEditorCommonSignals = interface->getValueEditorSignals();
             // Update the model if the editor changes.
