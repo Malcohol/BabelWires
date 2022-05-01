@@ -53,6 +53,7 @@ babelwires::SpinBoxValueEditor::SpinBoxValueEditor(QWidget* parent, const QModel
                                                    const ValueNames* valueNames)
     : ValueEditorCommonBase(parent, index)
     , m_valueNames(valueNames) {
+    setContextMenuPolicy(Qt::NoContextMenu);
     // Commit on select.
     QObject::connect(this, QOverload<int>::of(&QSpinBox::valueChanged), 
                         this, [this]() { emit m_signals->editorHasChanged(this); });

@@ -15,7 +15,7 @@
 babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent, const QModelIndex& index)
     : ValueEditorCommonBase(parent, index) {
     setSizeAdjustPolicy(QComboBox::SizeAdjustPolicy::AdjustToMinimumContentsLengthWithIcon);
-
+    setContextMenuPolicy(Qt::NoContextMenu);
     QObject::connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged),
                         this, [this]() { emit m_signals->editorHasChanged(this); });
 
