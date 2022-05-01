@@ -16,7 +16,7 @@ std::string babelwires::MapFeature::doGetValueType() const {
     return "map";
 }
 
-babelwires::MapFeature::MapFeature(TypeSet allowedSourceIds, TypeSet allowedTargetIds) 
+babelwires::MapFeature::MapFeature(TypeIdSet allowedSourceIds, TypeIdSet allowedTargetIds) 
     : m_allowedSourceIds(std::move(allowedSourceIds))
     , m_allowedTargetIds(std::move(allowedTargetIds))
 {
@@ -37,11 +37,11 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     }
 }
 
-const babelwires::MapFeature::TypeSet& babelwires::MapFeature::getAllowedSourceIds() const {
+const babelwires::TypeIdSet& babelwires::MapFeature::getAllowedSourceIds() const {
     return m_allowedSourceIds;
 }
 
-const babelwires::MapFeature::TypeSet& babelwires::MapFeature::getAllowedTargetIds() const {
+const babelwires::TypeIdSet& babelwires::MapFeature::getAllowedTargetIds() const {
     return m_allowedTargetIds;
 }
 

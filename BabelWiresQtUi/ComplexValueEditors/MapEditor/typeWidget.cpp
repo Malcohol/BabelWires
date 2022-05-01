@@ -5,7 +5,7 @@
 
 #include <BabelWiresLib/Enums/enum.hpp>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, ProjectBridge& projectBridge, const MapFeature::TypeSet& typeIds)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, ProjectBridge& projectBridge, const TypeIdSet& typeIds)
     : QComboBox(parent) {
     std::vector<std::string> typeNames;
     const UiProjectContext& context = projectBridge.getContext();

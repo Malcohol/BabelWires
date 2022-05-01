@@ -23,6 +23,6 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        TypeWidget(QWidget* parent, ProjectBridge& projectBridge, const MapFeature::TypeSet& typeIds);
+        TypeWidget(QWidget* parent, ProjectBridge& projectBridge, const TypeIdSet& typeIds);
     };
 }
