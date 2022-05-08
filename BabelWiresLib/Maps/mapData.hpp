@@ -35,11 +35,11 @@ namespace babelwires {
         MapData& operator=(MapData&& other);
         virtual ~MapData();
 
-        LongIdentifier getSourceId() const;
-        LongIdentifier getTargetId() const;
+        LongIdentifier getSourceTypeId() const;
+        LongIdentifier getTargetTypeId() const;
 
-        void setSourceId(LongIdentifier sourceId);
-        void setTargetId(LongIdentifier targetId);
+        void setSourceTypeId(LongIdentifier sourceId);
+        void setTargetTypeId(LongIdentifier targetId);
 
         unsigned int getNumMapEntries() const;
         const MapEntryData& getMapEntry(unsigned int index) const;

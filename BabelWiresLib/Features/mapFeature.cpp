@@ -23,8 +23,8 @@ babelwires::MapFeature::MapFeature(TypeIdSet allowedSourceIds, TypeIdSet allowed
 }
 
 void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
-    const LongIdentifier& newSourceType = newValue.getSourceId();
-    const LongIdentifier& newTargetType = newValue.getTargetId();
+    const LongIdentifier& newSourceType = newValue.getSourceTypeId();
+    const LongIdentifier& newTargetType = newValue.getTargetTypeId();
 
     if (!m_allowedSourceIds.empty() && (std::find(m_allowedSourceIds.begin(), m_allowedSourceIds.end(), newSourceType) == m_allowedSourceIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newSourceType) << "\" is not a permitted source type for this map feature";
@@ -48,10 +48,10 @@ const babelwires::TypeIdSet& babelwires::MapFeature::getAllowedTargetIds() const
 void babelwires::MapFeature::doSetToDefault() {
     MapData mapData;
     if (!m_allowedSourceIds.empty()) {
-        mapData.setSourceId(m_allowedSourceIds[0]);
+        mapData.setSourceTypeId(m_allowedSourceIds[0]);
     }
     if (!m_allowedTargetIds.empty()) {
-        mapData.setTargetId(m_allowedTargetIds[0]);
+        mapData.setTargetTypeId(m_allowedTargetIds[0]);
     }
     mapData.setEntriesToDefault(RootFeature::getProjectContextAt(*this));
     set(std::move(mapData));

@@ -40,20 +40,20 @@ const babelwires::TypeIdSet& babelwires::MapProject::getAllowedTargetIds() const
     return m_allowedTargetIds;
 }
 
-babelwires::LongIdentifier babelwires::MapProject::getSourceId() const {
+babelwires::LongIdentifier babelwires::MapProject::getSourceTypeId() const {
     return m_sourceId;
 }
 
-babelwires::LongIdentifier babelwires::MapProject::getTargetId() const {
+babelwires::LongIdentifier babelwires::MapProject::getTargetTypeId() const {
     return m_targetId;
 }
 
-void babelwires::MapProject::setSourceId(LongIdentifier sourceId) {
+void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
     assert(m_allowedSourceIds.empty() || (std::find(m_allowedSourceIds.begin(), m_allowedSourceIds.end(), sourceId) != m_allowedSourceIds.end()));
     m_sourceId = sourceId;
 }
 
-void babelwires::MapProject::setTargetId(LongIdentifier targetId) {
+void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
     assert(m_allowedTargetIds.empty() || (std::find(m_allowedTargetIds.begin(), m_allowedTargetIds.end(), targetId) != m_allowedTargetIds.end()));
     m_targetId = targetId;
 }
@@ -121,8 +121,8 @@ void babelwires::MapProject::replaceMapEntry(std::unique_ptr<MapEntryData> newEn
 
 babelwires::MapData babelwires::MapProject::extractMapData() const {
     babelwires::MapData mapData;
-    mapData.setSourceId(m_sourceId);
-    mapData.setTargetId(m_targetId);
+    mapData.setSourceTypeId(m_sourceId);
+    mapData.setTargetTypeId(m_targetId);
     for (const auto& mapEntry : m_mapEntries) {
         mapData.emplaceBack(mapEntry->getData().clone());
     }
@@ -130,8 +130,8 @@ babelwires::MapData babelwires::MapProject::extractMapData() const {
 }
 
 void babelwires::MapProject::setMapData(const MapData& data) {
-    setSourceId(data.getSourceId());
-    setTargetId(data.getTargetId());
+    setSourceTypeId(data.getSourceTypeId());
+    setTargetTypeId(data.getTargetTypeId());
     m_mapEntries.clear();
     std::string commonReason;
     const Type *const sourceType = getSourceType();

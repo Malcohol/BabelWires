@@ -52,19 +52,19 @@ babelwires::MapData& babelwires::MapData::operator=(MapData&& other) {
 
 babelwires::MapData::~MapData() = default;
 
-babelwires::LongIdentifier babelwires::MapData::getSourceId() const {
+babelwires::LongIdentifier babelwires::MapData::getSourceTypeId() const {
     return m_sourceId;
 }
 
-babelwires::LongIdentifier babelwires::MapData::getTargetId() const {
+babelwires::LongIdentifier babelwires::MapData::getTargetTypeId() const {
     return m_targetId;
 }
 
-void babelwires::MapData::setSourceId(LongIdentifier sourceId) {
+void babelwires::MapData::setSourceTypeId(LongIdentifier sourceId) {
     m_sourceId = sourceId;
 }
 
-void babelwires::MapData::setTargetId(LongIdentifier targetId) {
+void babelwires::MapData::setTargetTypeId(LongIdentifier targetId) {
     m_targetId = targetId;
 }
 

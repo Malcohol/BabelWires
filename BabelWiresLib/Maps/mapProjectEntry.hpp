@@ -32,7 +32,7 @@ namespace babelwires {
         /// Returns the empty string if the entry is valid.
         const std::string& getReasonForFailure() const;
 
-      public:
+      private:
         std::unique_ptr<MapEntryData> m_data;
         /// This is empty if the entry is valid.
         std::string m_reasonForFailure;

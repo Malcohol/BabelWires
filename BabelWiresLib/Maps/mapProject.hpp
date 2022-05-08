@@ -33,11 +33,11 @@ namespace babelwires {
         const TypeIdSet& getAllowedSourceIds() const;
         const TypeIdSet& getAllowedTargetIds() const;
        
-        LongIdentifier getSourceId() const;
-        LongIdentifier getTargetId() const;
+        LongIdentifier getSourceTypeId() const;
+        LongIdentifier getTargetTypeId() const;
 
-        void setSourceId(LongIdentifier sourceId);
-        void setTargetId(LongIdentifier targetId);
+        void setSourceTypeId(LongIdentifier sourceId);
+        void setTargetTypeId(LongIdentifier targetId);
 
         const Type* getSourceType() const;
         const Type* getTargetType() const;
