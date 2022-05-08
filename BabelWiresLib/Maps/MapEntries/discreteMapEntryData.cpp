@@ -9,8 +9,8 @@
 
 #include <BabelWiresLib/Project/projectContext.hpp>
 
-#include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 babelwires::DiscreteMapEntryData::DiscreteMapEntryData() = default;
 
@@ -24,7 +24,8 @@ babelwires::DiscreteMapEntryData::DiscreteMapEntryData(DiscreteMapEntryData&& ot
     m_targetValue = std::move(other.m_targetValue);
 }
 
-babelwires::DiscreteMapEntryData::DiscreteMapEntryData(const ProjectContext& context, LongIdentifier sourceTypeId, LongIdentifier targetTypeId) {
+babelwires::DiscreteMapEntryData::DiscreteMapEntryData(const ProjectContext& context, LongIdentifier sourceTypeId,
+                                                       LongIdentifier targetTypeId) {
     const Type* sourceType = context.m_typeSystem.getEntryByIdentifier(sourceTypeId);
     assert(sourceType && "You cannot construct a DiscreteMapEntryData entry with an unknown source type");
     const Type* targetType = context.m_typeSystem.getEntryByIdentifier(targetTypeId);
@@ -80,6 +81,16 @@ void babelwires::DiscreteMapEntryData::visitFilePaths(FilePathVisitor& visitor) 
     m_targetValue->visitFilePaths(visitor);
 }
 
-bool babelwires::DiscreteMapEntryData::isValid(const Type& sourceType, const Type& targetType) const  {
-    return m_sourceValue->isValid(sourceType) && m_targetValue->isValid(targetType);
+babelwires::Result babelwires::DiscreteMapEntryData::validate(const Type& sourceType,
+                                                                              const Type& targetType) const {
+    const bool sourceTypeIsValid = m_sourceValue->isValid(sourceType);
+    const bool targetTypeIsValid = m_targetValue->isValid(targetType);
+    if (!sourceTypeIsValid && !targetTypeIsValid) {
+        return "Neither source nor target values are valid.";
+    } else if (!sourceTypeIsValid) {
+        return "The source value isn't valid.";
+    } else if (!targetTypeIsValid) {
+        return "The target value isn't valid.";
+    }
+    return {};
 }

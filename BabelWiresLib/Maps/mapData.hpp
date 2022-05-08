@@ -7,9 +7,11 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/Project/projectVisitable.hpp>
+
 #include <Common/Identifiers/identifier.hpp>
-#include "Common/Serialization/serializable.hpp"
-#include "BabelWiresLib/Project/projectVisitable.hpp"
+#include <Common/Serialization/serializable.hpp>
+#include <Common/Utilities/result.hpp>
 
 #include <vector>
 #include <memory>
@@ -62,7 +64,7 @@ namespace babelwires {
         bool isValid(const ProjectContext& context) const;
 
         /// Check that the entries' types match the source and target ids.
-        static std::string validateEntryData(const Type& sourceType, const Type& targetType, const MapEntryData& entryData, bool isLastEntry);
+        static Result validateEntryData(const Type& sourceType, const Type& targetType, const MapEntryData& entryData, bool isLastEntry);
 
       public:
         LongIdentifier m_sourceTypeId;

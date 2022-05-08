@@ -7,11 +7,11 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/projectVisitable.hpp"
-#include "BabelWiresLib/TypeSystem/typeSystem.hpp"
+#include <BabelWiresLib/Project/projectVisitable.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-#include "Common/Cloning/cloneable.hpp"
-
+#include <Common/Cloning/cloneable.hpp>
+#include <Common/Utilities/result.hpp>
 #include <Common/types.hpp>
 
 namespace babelwires {
@@ -22,20 +22,20 @@ namespace babelwires {
       public:
         CLONEABLE(MapProjectEntry);
         MapProjectEntry(std::unique_ptr<MapEntryData> data);
-        MapProjectEntry(std::unique_ptr<MapEntryData> data, std::string reasonForFailure);
+        MapProjectEntry(std::unique_ptr<MapEntryData> data, Result validity);
         MapProjectEntry(const MapProjectEntry& other);
         virtual ~MapProjectEntry();
-        
+
         const MapEntryData& getData() const;
-        
-        /// Get a description of the failure.
-        /// Returns the empty string if the entry is valid.
-        const std::string& getReasonForFailure() const;
+
+        /// Get the validity of the entry.
+        Result getValidity() const;
+
+        void validate(const Type& sourceType, const Type& targetType);
 
       private:
         std::unique_ptr<MapEntryData> m_data;
         /// This is empty if the entry is valid.
-        std::string m_reasonForFailure;
+        Result m_validityOfEntry;
     };
 } // namespace babelwires
-

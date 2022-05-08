@@ -68,15 +68,16 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
             return mapEntryModel->getDisplayData(column);
         }
         case Qt::ToolTipRole: {
-            const std::string& reasonForFailure = entry.getReasonForFailure();
-            if (!reasonForFailure.empty()) {
-                return QString(reasonForFailure.c_str());
+            Result validity = entry.getValidity();
+            if (!validity) {
+                return QString(validity.getReasonWhyFailed().c_str());
             } else {
                 return {};
             }
         }
         case Qt::BackgroundRole: {
-            if (entry.getReasonForFailure().empty()) {
+            Result validity = entry.getValidity();
+            if (!validity) {
                 return QBrush(QColor(255, 255, 255));
             } else {
                 return QBrush(QColor(255, 0, 0));

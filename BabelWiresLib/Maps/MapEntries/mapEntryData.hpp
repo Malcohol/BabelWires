@@ -10,8 +10,9 @@
 #include "BabelWiresLib/Project/projectVisitable.hpp"
 #include "BabelWiresLib/TypeSystem/type.hpp"
 
-#include "Common/Serialization/serializable.hpp"
 #include "Common/Cloning/cloneable.hpp"
+#include "Common/Serialization/serializable.hpp"
+#include "Common/Utilities/result.hpp"
 
 #include <Common/types.hpp>
 
@@ -27,7 +28,7 @@ namespace babelwires {
         virtual ~MapEntryData();
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const MapEntryData& other) const = 0;
-        virtual bool isValid(const Type& sourceType, const Type& targetType) const = 0;
+        virtual Result validate(const Type& sourceType, const Type& targetType) const = 0;
     };
 } // namespace babelwires
 

@@ -13,6 +13,7 @@
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Serialization/serializable.hpp>
+#include <Common/Utilities/result.hpp>
 
 #include <vector>
 #include <memory>
@@ -56,7 +57,7 @@ namespace babelwires {
         bool operator!=(const MapProject& other) const;
 
         /// Check that the entries types match the source and target ids.
-        bool validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const;
+        Result validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const;
 
         const ProjectContext& getProjectContext() const;
 

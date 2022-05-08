@@ -12,13 +12,13 @@
 babelwires::MapProjectEntry::MapProjectEntry(std::unique_ptr<MapEntryData> data)
     : m_data(std::move(data)) {}
 
-babelwires::MapProjectEntry::MapProjectEntry(std::unique_ptr<MapEntryData> data, std::string reasonForFailure)
+babelwires::MapProjectEntry::MapProjectEntry(std::unique_ptr<MapEntryData> data, Result validity)
     : m_data(std::move(data))
-    , m_reasonForFailure(std::move(reasonForFailure)) {}
+    , m_validityOfEntry(std::move(validity)) {}
 
 babelwires::MapProjectEntry::MapProjectEntry(const MapProjectEntry& other)
     : m_data(other.m_data->clone())
-    , m_reasonForFailure(other.m_reasonForFailure) {}
+    , m_validityOfEntry(other.m_validityOfEntry) {}
 
 babelwires::MapProjectEntry::~MapProjectEntry() = default;
 
@@ -26,6 +26,10 @@ const babelwires::MapEntryData& babelwires::MapProjectEntry::getData() const {
     return *m_data;
 }
 
-const std::string& babelwires::MapProjectEntry::getReasonForFailure() const {
-    return m_reasonForFailure;
+babelwires::Result babelwires::MapProjectEntry::getValidity() const {
+    return m_validityOfEntry;
+}
+
+void babelwires::MapProjectEntry::validate(const Type& sourceType, const Type& targetType) {
+    m_validityOfEntry = getData().validate(sourceType, targetType);
 }

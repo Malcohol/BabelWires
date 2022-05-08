@@ -31,7 +31,7 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        bool isValid(const Type& sourceType, const Type& targetType) const override;
+        Result validate(const Type& sourceType, const Type& targetType) const override;
 
       private:
         std::unique_ptr<Value> m_targetValue;

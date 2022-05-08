@@ -51,6 +51,10 @@ babelwires::LongIdentifier babelwires::MapProject::getTargetTypeId() const {
 void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
     assert(m_allowedSourceTypeIds.empty() || (std::find(m_allowedSourceTypeIds.begin(), m_allowedSourceTypeIds.end(), sourceId) != m_allowedSourceTypeIds.end()));
     m_sourceTypeId = sourceId;
+
+    for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
+
+    }
 }
 
 void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
@@ -88,16 +92,16 @@ const babelwires::MapProjectEntry& babelwires::MapProject::getMapEntry(unsigned 
     return *m_mapEntries[index];
 }
 
-bool babelwires::MapProject::validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const {
+babelwires::Result babelwires::MapProject::validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const {
     const Type *const sourceType = getSourceType();
     if (!sourceType) {
-        return false;
+        return "No source type has been selected";
     }
     const Type *const targetType = getTargetType();
     if (!targetType) {
-        return false;
+        return "No target type has been selected";
     }
-    return MapData::validateEntryData(*sourceType, *targetType, newEntry, isLastEntry).empty();
+    return MapData::validateEntryData(*sourceType, *targetType, newEntry, isLastEntry);
 }
 
 void babelwires::MapProject::addMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index) {
@@ -145,12 +149,8 @@ void babelwires::MapProject::setMapData(const MapData& data) {
     }
     for (unsigned int i = 0; i < data.m_mapEntries.size(); ++i) {
         const auto& mapEntryData = data.m_mapEntries[i];
-        const std::string reasonForFailure = MapData::validateEntryData(*sourceType, *targetType, *mapEntryData, (i == data.m_mapEntries.size() - 1));
-        if (reasonForFailure.empty()) {
-            m_mapEntries.emplace_back(std::make_unique<MapProjectEntry>(mapEntryData->clone(), reasonForFailure));
-        } else {
-            m_mapEntries.emplace_back(std::make_unique<MapProjectEntry>(mapEntryData->clone()));
-        }
+        Result validity = MapData::validateEntryData(*sourceType, *targetType, *mapEntryData, (i == data.m_mapEntries.size() - 1));
+        m_mapEntries.emplace_back(std::make_unique<MapProjectEntry>(mapEntryData->clone(), validity));
     }
 }
 
