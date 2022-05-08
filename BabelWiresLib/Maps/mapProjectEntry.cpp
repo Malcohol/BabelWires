@@ -12,10 +12,6 @@
 babelwires::MapProjectEntry::MapProjectEntry(std::unique_ptr<MapEntryData> data)
     : m_data(std::move(data)) {}
 
-babelwires::MapProjectEntry::MapProjectEntry(std::unique_ptr<MapEntryData> data, Result validity)
-    : m_data(std::move(data))
-    , m_validityOfEntry(std::move(validity)) {}
-
 babelwires::MapProjectEntry::MapProjectEntry(const MapProjectEntry& other)
     : m_data(other.m_data->clone())
     , m_validityOfEntry(other.m_validityOfEntry) {}
@@ -30,6 +26,7 @@ babelwires::Result babelwires::MapProjectEntry::getValidity() const {
     return m_validityOfEntry;
 }
 
-void babelwires::MapProjectEntry::validate(const Type& sourceType, const Type& targetType) {
-    m_validityOfEntry = getData().validate(sourceType, targetType);
+void babelwires::MapProjectEntry::validate(const TypeSystem& typeSystem, LongIdentifier sourceTypeId,
+                                           LongIdentifier targetTypeId, bool isLastEntry) {
+    m_validityOfEntry = getData().validate(typeSystem, sourceTypeId, targetTypeId, isLastEntry);
 }

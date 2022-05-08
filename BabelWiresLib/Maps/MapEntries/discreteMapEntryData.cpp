@@ -81,8 +81,7 @@ void babelwires::DiscreteMapEntryData::visitFilePaths(FilePathVisitor& visitor) 
     m_targetValue->visitFilePaths(visitor);
 }
 
-babelwires::Result babelwires::DiscreteMapEntryData::validate(const Type& sourceType,
-                                                                              const Type& targetType) const {
+babelwires::Result babelwires::DiscreteMapEntryData::doValidate(const Type& sourceType, const Type& targetType) const {
     const bool sourceTypeIsValid = m_sourceValue->isValid(sourceType);
     const bool targetTypeIsValid = m_targetValue->isValid(targetType);
     if (!sourceTypeIsValid && !targetTypeIsValid) {

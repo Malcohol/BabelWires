@@ -54,7 +54,7 @@ void babelwires::AllToOneFallbackMapEntryData::visitFilePaths(FilePathVisitor& v
     m_targetValue->visitFilePaths(visitor);
 }
 
-babelwires::Result babelwires::AllToOneFallbackMapEntryData::validate(const Type& sourceType, const Type& targetType) const  {
+babelwires::Result babelwires::AllToOneFallbackMapEntryData::doValidate(const Type& sourceType, const Type& targetType) const  {
     const bool targetTypeIsValid = m_targetValue->isValid(targetType);
     if (!targetTypeIsValid) {
         return "The target value isn't valid.";

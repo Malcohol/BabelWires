@@ -38,8 +38,9 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
-
-        Result validate(const Type& sourceType, const Type& targetType) const override;
+      
+      protected:
+        Result doValidate(const Type& sourceType, const Type& targetType) const override;
 
       private:
         std::unique_ptr<Value> m_sourceValue;

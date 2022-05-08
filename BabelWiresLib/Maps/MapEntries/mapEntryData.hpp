@@ -17,7 +17,7 @@
 #include <Common/types.hpp>
 
 namespace babelwires {
-    class Type;
+    class TypeSystem;
 
     class MapEntryData : public Serializable, public Cloneable, public ProjectVisitable {
       public:
@@ -28,7 +28,11 @@ namespace babelwires {
         virtual ~MapEntryData();
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const MapEntryData& other) const = 0;
-        virtual Result validate(const Type& sourceType, const Type& targetType) const = 0;
+        
+        Result validate(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, bool isLastEntry) const;
+
+      protected:
+        virtual Result doValidate(const Type& sourceType, const Type& targetType) const = 0;
     };
 } // namespace babelwires
 

@@ -53,15 +53,17 @@ void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
     m_sourceTypeId = sourceId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
-        const Type *const sourceType = getSourceType();
-        const Type *const targetType = getTargetType();
-        m_mapEntries[i]->validate(*sourceType, *targetType);
+        m_mapEntries[i]->validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, (i == m_mapEntries.size() - 1));
     }
 }
 
 void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
     assert(m_allowedTargetTypeIds.empty() || (std::find(m_allowedTargetTypeIds.begin(), m_allowedTargetTypeIds.end(), targetId) != m_allowedTargetTypeIds.end()));
     m_targetTypeId = targetId;
+
+    for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
+        m_mapEntries[i]->validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, (i == m_mapEntries.size() - 1));
+    }
 }
 
 const babelwires::Type* babelwires::MapProject::getSourceType() const {
@@ -95,22 +97,15 @@ const babelwires::MapProjectEntry& babelwires::MapProject::getMapEntry(unsigned 
 }
 
 babelwires::Result babelwires::MapProject::validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const {
-    const Type *const sourceType = getSourceType();
-    if (!sourceType) {
-        return "No source type has been selected";
-    }
-    const Type *const targetType = getTargetType();
-    if (!targetType) {
-        return "No target type has been selected";
-    }
-    return MapData::validateEntryData(*sourceType, *targetType, newEntry, isLastEntry);
+    return newEntry.validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, isLastEntry);
 }
 
-void babelwires::MapProject::addMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index) {
+void babelwires::MapProject::addMapEntry(std::unique_ptr<MapEntryData> newEntryData, unsigned int index) {
     assert((index < m_mapEntries.size()) && "You cannot add the last entry of a map. It needs to be a fallback entry.");
-    assert(validateNewEntry(*newEntry, false) && "The new map entry is not valid for this map");
     assert((index <= m_mapEntries.size()) && "index to add is out of range") ;
-    m_mapEntries.emplace(m_mapEntries.begin() + index, std::make_unique<MapProjectEntry>(std::move(newEntry)));
+    auto newEntry = std::make_unique<MapProjectEntry>(std::move(newEntryData));
+    newEntry->validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, false);
+    m_mapEntries.emplace(m_mapEntries.begin() + index, std::move(newEntry) );
 }
 
 void babelwires::MapProject::removeMapEntry(unsigned int index) {
@@ -119,10 +114,12 @@ void babelwires::MapProject::removeMapEntry(unsigned int index) {
     m_mapEntries.erase(m_mapEntries.begin() + index);
 }
 
-void babelwires::MapProject::replaceMapEntry(std::unique_ptr<MapEntryData> newEntry, unsigned int index) {
+void babelwires::MapProject::replaceMapEntry(std::unique_ptr<MapEntryData> newEntryData, unsigned int index) {
     assert((index < m_mapEntries.size()) && "index to replace is out of range");
-    assert(validateNewEntry(*newEntry, (index == m_mapEntries.size() - 1)) && "The new map entry is not valid for this map");
-    m_mapEntries[index] = std::make_unique<MapProjectEntry>(std::move(newEntry));
+    const bool isLastEntry = (index == m_mapEntries.size() - 1);
+    auto newEntry = std::make_unique<MapProjectEntry>(std::move(newEntryData));
+    newEntry->validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, isLastEntry);
+    m_mapEntries[index] = std::move(newEntry);
 }
 
 babelwires::MapData babelwires::MapProject::extractMapData() const {
@@ -139,20 +136,12 @@ void babelwires::MapProject::setMapData(const MapData& data) {
     setSourceTypeId(data.getSourceTypeId());
     setTargetTypeId(data.getTargetTypeId());
     m_mapEntries.clear();
-    std::string commonReason;
-    const Type *const sourceType = getSourceType();
-    const Type *const targetType = getTargetType();
-    if (!sourceType && !targetType) {
-        commonReason = "Neither source nor target type are known";
-    } else if (!sourceType) {
-        commonReason = "The source type is unknown";
-    } else if (!targetType) {
-        commonReason = "The target type is unknown";
-    }
     for (unsigned int i = 0; i < data.m_mapEntries.size(); ++i) {
         const auto& mapEntryData = data.m_mapEntries[i];
-        Result validity = MapData::validateEntryData(*sourceType, *targetType, *mapEntryData, (i == data.m_mapEntries.size() - 1));
-        m_mapEntries.emplace_back(std::make_unique<MapProjectEntry>(mapEntryData->clone(), validity));
+        auto mapEntry = std::make_unique<MapProjectEntry>(mapEntryData->clone());
+        const bool isLastEntry = (i == m_mapEntries.size() - 1);
+        mapEntry->validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, isLastEntry);
+        m_mapEntries.emplace_back(std::move(mapEntry));
     }
 }
 

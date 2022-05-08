@@ -98,26 +98,11 @@ const babelwires::MapEntryData& babelwires::MapData::getMapEntry(unsigned int in
     return *m_mapEntries[index];
 }
 
-babelwires::Result babelwires::MapData::validateEntryData(const Type& sourceType, const Type& targetType,
-                                                   const MapEntryData& entryData, bool isLastEntry) {
-    if (isLastEntry != (entryData.as<FallbackMapEntryData>() != nullptr)) {
-        return isLastEntry ? "The last entry must be a fallback entry" : "A fallback entry can only be at the end of a map";
-    }
-    return entryData.validate(sourceType, targetType);
-}
-
 bool babelwires::MapData::isValid(const ProjectContext& context) const {
-    const Type* sourceType = context.m_typeSystem.getEntryByIdentifier(m_sourceTypeId);
-    if (!sourceType) {
-        return false;
-    }
-    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_sourceTypeId);
-    if (!targetType) {
-        return false;
-    }
     for (unsigned int i = 0; i < m_mapEntries.size(); ++i) {
         const auto& entryData = m_mapEntries[i];
-        if (!validateEntryData(*sourceType, *targetType, *entryData, (i == m_mapEntries.size() - 1))) {
+        if (!entryData->validate(context.m_typeSystem, m_sourceTypeId, m_targetTypeId, (i == m_mapEntries.size() - 1)))
+        {
             return false;
         }
     }

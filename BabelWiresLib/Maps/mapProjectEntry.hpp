@@ -22,7 +22,6 @@ namespace babelwires {
       public:
         CLONEABLE(MapProjectEntry);
         MapProjectEntry(std::unique_ptr<MapEntryData> data);
-        MapProjectEntry(std::unique_ptr<MapEntryData> data, Result validity);
         MapProjectEntry(const MapProjectEntry& other);
         virtual ~MapProjectEntry();
 
@@ -31,7 +30,7 @@ namespace babelwires {
         /// Get the validity of the entry.
         Result getValidity() const;
 
-        void validate(const Type& sourceType, const Type& targetType);
+        void validate(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, bool isLastEntry);
 
       private:
         std::unique_ptr<MapEntryData> m_data;
