@@ -26,13 +26,13 @@ namespace babelwires {
         void doSetToDefault() override;
 
       public:
-        const TypeIdSet& getAllowedSourceIds() const;
-        const TypeIdSet& getAllowedTargetIds() const;
+        const TypeIdSet& getAllowedSourceTypeIds() const;
+        const TypeIdSet& getAllowedTargetTypeIds() const;
 
       private:
         /// Empty means all types are allowed.
-        TypeIdSet m_allowedSourceIds;
+        TypeIdSet m_allowedSourceTypeIds;
         /// Empty means all types are allowed.
-        TypeIdSet m_allowedTargetIds;
+        TypeIdSet m_allowedTargetTypeIds;
     };
 } // namespace babelwires

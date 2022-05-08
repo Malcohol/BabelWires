@@ -27,11 +27,11 @@ namespace babelwires {
         MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
-        void setAllowedSourceIds(const TypeIdSet& typeSet);
-        void setAllowedTargetIds(const TypeIdSet& typeSet);
+        void setAllowedSourceTypeIds(const TypeIdSet& typeSet);
+        void setAllowedTargetTypeIds(const TypeIdSet& typeSet);
 
-        const TypeIdSet& getAllowedSourceIds() const;
-        const TypeIdSet& getAllowedTargetIds() const;
+        const TypeIdSet& getAllowedSourceTypeIds() const;
+        const TypeIdSet& getAllowedTargetTypeIds() const;
        
         LongIdentifier getSourceTypeId() const;
         LongIdentifier getTargetTypeId() const;
@@ -69,11 +69,11 @@ namespace babelwires {
       private:
         const ProjectContext& m_projectContext;
         /// Empty means all types are allowed.
-        TypeIdSet m_allowedSourceIds;
+        TypeIdSet m_allowedSourceTypeIds;
         /// Empty means all types are allowed.
-        TypeIdSet m_allowedTargetIds;
-        LongIdentifier m_sourceId;
-        LongIdentifier m_targetId;
+        TypeIdSet m_allowedTargetTypeIds;
+        LongIdentifier m_sourceTypeId;
+        LongIdentifier m_targetTypeId;
         std::vector<std::unique_ptr<MapProjectEntry>> m_mapEntries;
     };
 }

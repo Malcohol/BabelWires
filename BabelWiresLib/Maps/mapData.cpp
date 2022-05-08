@@ -18,25 +18,25 @@
 #include <Common/Serialization/serializer.hpp>
 
 babelwires::MapData::MapData()
-    : m_sourceId(IntType::getThisIdentifier())
-    , m_targetId(IntType::getThisIdentifier()) {}
+    : m_sourceTypeId(IntType::getThisIdentifier())
+    , m_targetTypeId(IntType::getThisIdentifier()) {}
 
 babelwires::MapData::MapData(const MapData& other)
-    : m_sourceId(other.m_sourceId)
-    , m_targetId(other.m_targetId) {
+    : m_sourceTypeId(other.m_sourceTypeId)
+    , m_targetTypeId(other.m_targetTypeId) {
     for (const auto& e : other.m_mapEntries) {
         m_mapEntries.emplace_back(e->clone());
     }
 }
 
 babelwires::MapData::MapData(MapData&& other)
-    : m_sourceId(other.m_sourceId)
-    , m_targetId(other.m_targetId)
+    : m_sourceTypeId(other.m_sourceTypeId)
+    , m_targetTypeId(other.m_targetTypeId)
     , m_mapEntries(std::move(other.m_mapEntries)) {}
 
 babelwires::MapData& babelwires::MapData::operator=(const MapData& other) {
-    m_sourceId = other.m_sourceId;
-    m_targetId = other.m_targetId;
+    m_sourceTypeId = other.m_sourceTypeId;
+    m_targetTypeId = other.m_targetTypeId;
     for (const auto& e : other.m_mapEntries) {
         m_mapEntries.emplace_back(e->clone());
     }
@@ -44,8 +44,8 @@ babelwires::MapData& babelwires::MapData::operator=(const MapData& other) {
 }
 
 babelwires::MapData& babelwires::MapData::operator=(MapData&& other) {
-    m_sourceId = other.m_sourceId;
-    m_targetId = other.m_targetId;
+    m_sourceTypeId = other.m_sourceTypeId;
+    m_targetTypeId = other.m_targetTypeId;
     m_mapEntries = std::move(other.m_mapEntries);
     return *this;
 }
@@ -53,37 +53,37 @@ babelwires::MapData& babelwires::MapData::operator=(MapData&& other) {
 babelwires::MapData::~MapData() = default;
 
 babelwires::LongIdentifier babelwires::MapData::getSourceTypeId() const {
-    return m_sourceId;
+    return m_sourceTypeId;
 }
 
 babelwires::LongIdentifier babelwires::MapData::getTargetTypeId() const {
-    return m_targetId;
+    return m_targetTypeId;
 }
 
 void babelwires::MapData::setSourceTypeId(LongIdentifier sourceId) {
-    m_sourceId = sourceId;
+    m_sourceTypeId = sourceId;
 }
 
 void babelwires::MapData::setTargetTypeId(LongIdentifier targetId) {
-    m_targetId = targetId;
+    m_targetTypeId = targetId;
 }
 
 bool babelwires::MapData::operator==(const MapData& other) const {
-    if ((m_sourceId != other.m_sourceId) || (m_targetId != other.m_targetId)) {
+    if ((m_sourceTypeId != other.m_sourceTypeId) || (m_targetTypeId != other.m_targetTypeId)) {
         return false;
     }
     return m_mapEntries == other.m_mapEntries;
 }
 
 bool babelwires::MapData::operator!=(const MapData& other) const {
-    if ((m_sourceId != other.m_sourceId) || (m_targetId != other.m_targetId)) {
+    if ((m_sourceTypeId != other.m_sourceTypeId) || (m_targetTypeId != other.m_targetTypeId)) {
         return true;
     }
     return m_mapEntries != other.m_mapEntries;
 }
 
 std::size_t babelwires::MapData::getHash() const {
-    std::size_t h = hash::mixtureOf(m_sourceId, m_targetId);
+    std::size_t h = hash::mixtureOf(m_sourceTypeId, m_targetTypeId);
     for (const auto& e : m_mapEntries) {
         hash::mixInto(h, *e);
     }
@@ -110,11 +110,11 @@ std::string babelwires::MapData::validateEntryData(const Type& sourceType, const
 }
 
 bool babelwires::MapData::isValid(const ProjectContext& context) const {
-    const Type* sourceType = context.m_typeSystem.getEntryByIdentifier(m_sourceId);
+    const Type* sourceType = context.m_typeSystem.getEntryByIdentifier(m_sourceTypeId);
     if (!sourceType) {
         return false;
     }
-    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_sourceId);
+    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_sourceTypeId);
     if (!targetType) {
         return false;
     }
@@ -132,14 +132,14 @@ void babelwires::MapData::emplaceBack(std::unique_ptr<MapEntryData> newEntry) {
 }
 
 void babelwires::MapData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("sourceId", m_sourceId);
-    serializer.serializeValue("targetId", m_targetId);
+    serializer.serializeValue("sourceId", m_sourceTypeId);
+    serializer.serializeValue("targetId", m_targetTypeId);
     serializer.serializeArray("entries", m_mapEntries);
 }
 
 void babelwires::MapData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("sourceId", m_sourceId);
-    deserializer.deserializeValue("targetId", m_targetId);
+    deserializer.deserializeValue("sourceId", m_sourceTypeId);
+    deserializer.deserializeValue("targetId", m_targetTypeId);
     auto it = deserializer.deserializeArray<MapEntryData>("entries", Deserializer::IsOptional::Optional);
     while (it.isValid()) {
         std::unique_ptr<MapEntryData> newEntry = it.getObject();
@@ -149,8 +149,8 @@ void babelwires::MapData::deserializeContents(Deserializer& deserializer) {
 }
 
 void babelwires::MapData::visitIdentifiers(IdentifierVisitor& visitor) {
-    visitor(m_sourceId);
-    visitor(m_targetId);
+    visitor(m_sourceTypeId);
+    visitor(m_targetTypeId);
     for (const auto& e : m_mapEntries) {
         e->visitIdentifiers(visitor);
     }
@@ -164,7 +164,7 @@ void babelwires::MapData::visitFilePaths(FilePathVisitor& visitor) {
 
 void babelwires::MapData::setEntriesToDefault(const ProjectContext& context) {
     m_mapEntries.clear();
-    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_targetId);
+    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_targetTypeId);
     if (targetType) {
         auto fallback = std::make_unique<AllToOneFallbackMapEntryData>();
         fallback->setTargetValue(targetType->createValue());

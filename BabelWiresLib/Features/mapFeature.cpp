@@ -17,8 +17,8 @@ std::string babelwires::MapFeature::doGetValueType() const {
 }
 
 babelwires::MapFeature::MapFeature(TypeIdSet allowedSourceIds, TypeIdSet allowedTargetIds) 
-    : m_allowedSourceIds(std::move(allowedSourceIds))
-    , m_allowedTargetIds(std::move(allowedTargetIds))
+    : m_allowedSourceTypeIds(std::move(allowedSourceIds))
+    , m_allowedTargetTypeIds(std::move(allowedTargetIds))
 {
 }
 
@@ -26,10 +26,10 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     const LongIdentifier& newSourceType = newValue.getSourceTypeId();
     const LongIdentifier& newTargetType = newValue.getTargetTypeId();
 
-    if (!m_allowedSourceIds.empty() && (std::find(m_allowedSourceIds.begin(), m_allowedSourceIds.end(), newSourceType) == m_allowedSourceIds.end())) {
+    if (!m_allowedSourceTypeIds.empty() && (std::find(m_allowedSourceTypeIds.begin(), m_allowedSourceTypeIds.end(), newSourceType) == m_allowedSourceTypeIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newSourceType) << "\" is not a permitted source type for this map feature";
     }
-    if (!m_allowedTargetIds.empty() && (std::find(m_allowedTargetIds.begin(), m_allowedTargetIds.end(), newTargetType) == m_allowedTargetIds.end())) {
+    if (!m_allowedTargetTypeIds.empty() && (std::find(m_allowedTargetTypeIds.begin(), m_allowedTargetTypeIds.end(), newTargetType) == m_allowedTargetTypeIds.end())) {
         throw ModelException() << "The type \"" << IdentifierRegistry::read()->getName(newTargetType) << "\" is not a permitted target type for this map feature";
     }
     if (!newValue.isValid(babelwires::RootFeature::getProjectContextAt(*this))) {
@@ -37,21 +37,21 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     }
 }
 
-const babelwires::TypeIdSet& babelwires::MapFeature::getAllowedSourceIds() const {
-    return m_allowedSourceIds;
+const babelwires::TypeIdSet& babelwires::MapFeature::getAllowedSourceTypeIds() const {
+    return m_allowedSourceTypeIds;
 }
 
-const babelwires::TypeIdSet& babelwires::MapFeature::getAllowedTargetIds() const {
-    return m_allowedTargetIds;
+const babelwires::TypeIdSet& babelwires::MapFeature::getAllowedTargetTypeIds() const {
+    return m_allowedTargetTypeIds;
 }
 
 void babelwires::MapFeature::doSetToDefault() {
     MapData mapData;
-    if (!m_allowedSourceIds.empty()) {
-        mapData.setSourceTypeId(m_allowedSourceIds[0]);
+    if (!m_allowedSourceTypeIds.empty()) {
+        mapData.setSourceTypeId(m_allowedSourceTypeIds[0]);
     }
-    if (!m_allowedTargetIds.empty()) {
-        mapData.setTargetTypeId(m_allowedTargetIds[0]);
+    if (!m_allowedTargetTypeIds.empty()) {
+        mapData.setTargetTypeId(m_allowedTargetTypeIds[0]);
     }
     mapData.setEntriesToDefault(RootFeature::getProjectContextAt(*this));
     set(std::move(mapData));

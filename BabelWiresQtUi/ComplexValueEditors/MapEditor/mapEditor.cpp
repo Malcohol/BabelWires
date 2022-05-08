@@ -82,17 +82,17 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             AccessModelScope scope(getProjectBridge());
             const MapFeature& mapFeature = getMapFeature(scope);
             const MapData& mapData = getMapDataFromProject(scope);
-            m_map.setAllowedSourceIds(mapFeature.getAllowedSourceIds());
-            m_map.setAllowedTargetIds(mapFeature.getAllowedTargetIds());
+            m_map.setAllowedSourceTypeIds(mapFeature.getAllowedSourceTypeIds());
+            m_map.setAllowedTargetTypeIds(mapFeature.getAllowedTargetTypeIds());
             m_map.setMapData(mapData);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
-                TypeWidget* sourceTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedSourceIds());
+                TypeWidget* sourceTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedSourceTypeIds());
                 typeBarLayout->addWidget(sourceTypes);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
-                TypeWidget* targetTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedTargetIds());
+                TypeWidget* targetTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedTargetTypeIds());
                 typeBarLayout->addWidget(targetTypes);
             }
             // TODO Connect type widgets.

@@ -65,8 +65,8 @@ namespace babelwires {
         static std::string validateEntryData(const Type& sourceType, const Type& targetType, const MapEntryData& entryData, bool isLastEntry);
 
       public:
-        LongIdentifier m_sourceId;
-        LongIdentifier m_targetId;
+        LongIdentifier m_sourceTypeId;
+        LongIdentifier m_targetTypeId;
         std::vector<std::unique_ptr<MapEntryData>> m_mapEntries;
     };
 }

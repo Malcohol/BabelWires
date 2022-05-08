@@ -17,64 +17,64 @@
 
 babelwires::MapProject::MapProject(const ProjectContext& ProjectContext)
     : m_projectContext(ProjectContext)
-    , m_sourceId(IntType::getThisIdentifier())
-    , m_targetId(IntType::getThisIdentifier()) {}
+    , m_sourceTypeId(IntType::getThisIdentifier())
+    , m_targetTypeId(IntType::getThisIdentifier()) {}
 
 babelwires::MapProject::~MapProject() = default;
 
-void babelwires::MapProject::setAllowedSourceIds(const TypeIdSet& typeSet) {
+void babelwires::MapProject::setAllowedSourceTypeIds(const TypeIdSet& typeSet) {
     // TODO Revalidate data
-    m_allowedSourceIds = typeSet;
+    m_allowedSourceTypeIds = typeSet;
 }
 
-void babelwires::MapProject::setAllowedTargetIds(const TypeIdSet& typeSet) {
+void babelwires::MapProject::setAllowedTargetTypeIds(const TypeIdSet& typeSet) {
     // TODO Revalidate data
-    m_allowedTargetIds = typeSet;
+    m_allowedTargetTypeIds = typeSet;
 }
 
-const babelwires::TypeIdSet& babelwires::MapProject::getAllowedSourceIds() const {
-    return m_allowedSourceIds;
+const babelwires::TypeIdSet& babelwires::MapProject::getAllowedSourceTypeIds() const {
+    return m_allowedSourceTypeIds;
 }
 
-const babelwires::TypeIdSet& babelwires::MapProject::getAllowedTargetIds() const {
-    return m_allowedTargetIds;
+const babelwires::TypeIdSet& babelwires::MapProject::getAllowedTargetTypeIds() const {
+    return m_allowedTargetTypeIds;
 }
 
 babelwires::LongIdentifier babelwires::MapProject::getSourceTypeId() const {
-    return m_sourceId;
+    return m_sourceTypeId;
 }
 
 babelwires::LongIdentifier babelwires::MapProject::getTargetTypeId() const {
-    return m_targetId;
+    return m_targetTypeId;
 }
 
 void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
-    assert(m_allowedSourceIds.empty() || (std::find(m_allowedSourceIds.begin(), m_allowedSourceIds.end(), sourceId) != m_allowedSourceIds.end()));
-    m_sourceId = sourceId;
+    assert(m_allowedSourceTypeIds.empty() || (std::find(m_allowedSourceTypeIds.begin(), m_allowedSourceTypeIds.end(), sourceId) != m_allowedSourceTypeIds.end()));
+    m_sourceTypeId = sourceId;
 }
 
 void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
-    assert(m_allowedTargetIds.empty() || (std::find(m_allowedTargetIds.begin(), m_allowedTargetIds.end(), targetId) != m_allowedTargetIds.end()));
-    m_targetId = targetId;
+    assert(m_allowedTargetTypeIds.empty() || (std::find(m_allowedTargetTypeIds.begin(), m_allowedTargetTypeIds.end(), targetId) != m_allowedTargetTypeIds.end()));
+    m_targetTypeId = targetId;
 }
 
 const babelwires::Type* babelwires::MapProject::getSourceType() const {
-    return m_projectContext.m_typeSystem.getEntryByIdentifier(m_sourceId);
+    return m_projectContext.m_typeSystem.getEntryByIdentifier(m_sourceTypeId);
 }
 
 const babelwires::Type* babelwires::MapProject::getTargetType() const {
-    return m_projectContext.m_typeSystem.getEntryByIdentifier(m_targetId);
+    return m_projectContext.m_typeSystem.getEntryByIdentifier(m_targetTypeId);
 }
 
 bool babelwires::MapProject::operator==(const MapProject& other) const {
-    if ((m_sourceId != other.m_sourceId) || (m_targetId != other.m_targetId)) {
+    if ((m_sourceTypeId != other.m_sourceTypeId) || (m_targetTypeId != other.m_targetTypeId)) {
         return false;
     }
     return m_mapEntries == other.m_mapEntries;
 }
 
 bool babelwires::MapProject::operator!=(const MapProject& other) const {
-    if ((m_sourceId != other.m_sourceId) || (m_targetId != other.m_targetId)) {
+    if ((m_sourceTypeId != other.m_sourceTypeId) || (m_targetTypeId != other.m_targetTypeId)) {
         return true;
     }
     return m_mapEntries != other.m_mapEntries;
@@ -121,8 +121,8 @@ void babelwires::MapProject::replaceMapEntry(std::unique_ptr<MapEntryData> newEn
 
 babelwires::MapData babelwires::MapProject::extractMapData() const {
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(m_sourceId);
-    mapData.setTargetTypeId(m_targetId);
+    mapData.setSourceTypeId(m_sourceTypeId);
+    mapData.setTargetTypeId(m_targetTypeId);
     for (const auto& mapEntry : m_mapEntries) {
         mapData.emplaceBack(mapEntry->getData().clone());
     }
@@ -160,18 +160,18 @@ const babelwires::ProjectContext& babelwires::MapProject::getProjectContext() co
 
 /// Convenience method which returns the first allowed source type id or int.
 babelwires::LongIdentifier babelwires::MapProject::getDefaultSourceId() const {
-    if (m_allowedSourceIds.empty()) {
+    if (m_allowedSourceTypeIds.empty()) {
         return IntType::getThisIdentifier();
     } else {
-        return m_allowedSourceIds[0];
+        return m_allowedSourceTypeIds[0];
     }
 }
 
 /// Convenience method which returns the first allowed target type id or int.
 babelwires::LongIdentifier babelwires::MapProject::getDefaultTargetId() const {
-    if (m_allowedTargetIds.empty()) {
+    if (m_allowedTargetTypeIds.empty()) {
         return IntType::getThisIdentifier();
     } else {
-        return m_allowedTargetIds[0];
+        return m_allowedTargetTypeIds[0];
     }
 }
