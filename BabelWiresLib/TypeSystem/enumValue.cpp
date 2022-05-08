@@ -21,8 +21,10 @@ void babelwires::EnumValue::set(Identifier value) {
 }
 
 bool babelwires::EnumValue::isValid(const Type& type) const {
-    const Enum& e = type.is<Enum>();
-    return e.isAValue(m_value);
+    if (const Enum* e = type.as<Enum>()) {
+        return e->isAValue(m_value);
+    }
+    return false;
 }
 
 void babelwires::EnumValue::serializeContents(Serializer& serializer) const {

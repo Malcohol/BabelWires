@@ -33,7 +33,7 @@ void babelwires::IdentityFallbackMapEntryData::visitFilePaths(FilePathVisitor& v
 
 babelwires::Result babelwires::IdentityFallbackMapEntryData::validate(const Type& sourceType, const Type& targetType) const {
     if (sourceType.getIdentifier() != targetType.getIdentifier()) {
-        return "The source and target types do not match. You cannot use an identity maplet as a fallback.";
+        return "The source and target types do not match, so identity maplet can't be used as a fallback.";
     }
     return {};
 }

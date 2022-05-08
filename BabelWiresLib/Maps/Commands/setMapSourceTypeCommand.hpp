@@ -1,5 +1,5 @@
 /**
- * The command which sets a map to its default state.
+ * The command which sets the source type of a map.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -8,23 +8,26 @@
 
 #pragma once
 
-#include "BabelWiresLib/Commands/commands.hpp"
+#include <BabelWiresLib/Commands/commands.hpp>
+
+#include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {
     class MapProject;
     class MapData;
 
     /// Add an element to an array feature.
-    class SetMapToDefaultCommand : public SimpleCommand<MapProject> {
+    class SetMapSourceTypeCommand : public SimpleCommand<MapProject> {
       public:
-        SetMapToDefaultCommand(std::string commandName);
+        SetMapSourceTypeCommand(std::string commandName, LongIdentifier newSourceTypeId);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
         virtual void undo(MapProject& map) const override;
 
       private:
-        std::unique_ptr<MapData> m_oldContents;
+        LongIdentifier m_newSourceTypeId;
+        LongIdentifier m_oldSourceTypeId = "NotSet";
     };
 
 } // namespace babelwires

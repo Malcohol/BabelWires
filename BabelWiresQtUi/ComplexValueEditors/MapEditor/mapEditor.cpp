@@ -22,6 +22,7 @@
 #include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Maps/Commands/setMapToDefaultCommand.hpp>
+#include <BabelWiresLib/Maps/Commands/setMapSourceTypeCommand.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -87,15 +88,19 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             m_map.setMapData(mapData);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
-                TypeWidget* sourceTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedSourceTypeIds());
-                typeBarLayout->addWidget(sourceTypes);
+                m_sourceTypeWidget = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedSourceTypeIds());
+                typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
-                TypeWidget* targetTypes = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedTargetTypeIds());
-                typeBarLayout->addWidget(targetTypes);
+                m_targetTypeWidget = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedTargetTypeIds());
+                typeBarLayout->addWidget(m_targetTypeWidget);
             }
-            // TODO Connect type widgets.
+            //connect(m_sourceTypeWidget, SIGNAL(TypeWidget::currentIndexChanged(int)), this, SLOT(MapEditor::setSourceTypeFromWidget()));
+            // TODO ownership of lambda
+            connect(m_sourceTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this, 
+                [this]() { MapEditor::setSourceTypeFromWidget(); });
+            
         }
         m_mapView = new MapView;
         m_mapModel = new MapModel(m_mapView, *this);
@@ -359,11 +364,15 @@ bool babelwires::MapEditor::maybeApply() {
 void babelwires::MapEditor::undo() {
     m_mapModel->valuesChanged();
     m_commandManager.undo();
+    m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
+    m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
 }
 
 void babelwires::MapEditor::redo() {
     m_mapModel->valuesChanged();
     m_commandManager.redo();
+    m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
+    m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
 }
 
 void babelwires::MapEditor::onUndoStateChanged() {
@@ -388,4 +397,12 @@ void babelwires::MapEditor::onUndoStateChanged() {
 
 void babelwires::MapEditor::setToDefault() {
     executeCommand(std::make_unique<SetMapToDefaultCommand>("Restore default map"));
+}
+
+void babelwires::MapEditor::setSourceTypeFromWidget() {
+    const LongIdentifier newSourceTypeId = m_sourceTypeWidget->getTypeId();
+    executeCommand(std::make_unique<SetMapSourceTypeCommand>("Set map source type", newSourceTypeId));
+}
+
+void babelwires::MapEditor::setTargetTypeFromWidget() {
 }

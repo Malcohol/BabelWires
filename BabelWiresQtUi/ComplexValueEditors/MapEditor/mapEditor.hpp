@@ -22,6 +22,7 @@ namespace babelwires {
     class MapModel;
     class MapView;
     class MapValueAssignmentData;
+    class TypeWidget;
 
     class MapEditor : public ComplexValueEditor {
       Q_OBJECT
@@ -80,6 +81,8 @@ namespace babelwires {
       private slots:
         void undo();
         void redo();
+        void setSourceTypeFromWidget();
+        void setTargetTypeFromWidget();
 
       private:
         void onUndoStateChanged();
@@ -99,6 +102,9 @@ namespace babelwires {
 
         MapView* m_mapView;
         MapModel* m_mapModel;
+
+        TypeWidget* m_sourceTypeWidget;
+        TypeWidget* m_targetTypeWidget;
     };
 
 } // namespace babelwires

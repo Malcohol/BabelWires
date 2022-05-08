@@ -1,5 +1,5 @@
 /**
- * The command which adds entries to arrays.
+ * The command which sets a map to its default state
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,8 +11,6 @@
 #include "BabelWiresLib/Maps/MapEntries/mapEntryData.hpp"
 #include "BabelWiresLib/Maps/mapProject.hpp"
 #include "BabelWiresLib/Maps/mapProjectEntry.hpp"
-
-#include <cassert>
 
 babelwires::SetMapToDefaultCommand::SetMapToDefaultCommand(std::string commandName)
     : SimpleCommand(commandName) {}

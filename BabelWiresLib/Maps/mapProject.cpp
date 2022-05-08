@@ -53,7 +53,9 @@ void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
     m_sourceTypeId = sourceId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
-
+        const Type *const sourceType = getSourceType();
+        const Type *const targetType = getTargetType();
+        m_mapEntries[i]->validate(*sourceType, *targetType);
     }
 }
 

@@ -9,12 +9,10 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeIdSet.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Features/mapFeature.hpp>
 
 #include <QComboBox>
-
-#include <unordered_set>
 
 namespace babelwires {
     class ProjectBridge;
@@ -23,6 +21,12 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        TypeWidget(QWidget* parent, ProjectBridge& projectBridge, const TypeIdSet& typeIds);
+        TypeWidget(QWidget* parent, ProjectBridge& projectBridge, TypeIdSet typeIds);
+
+        LongIdentifier getTypeId() const;
+        void setTypeId(LongIdentifier id);
+
+      private:
+        TypeIdSet m_typeIds;
     };
 }
