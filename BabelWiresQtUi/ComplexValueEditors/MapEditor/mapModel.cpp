@@ -49,7 +49,7 @@ void babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index,
     const unsigned int row = static_cast<unsigned int>(index.row());
     const unsigned int column = static_cast<unsigned int>(index.column());
     const MapProject& mapProject = m_mapEditor.getMapProject();
-    const MapProjectEntry& entry = mapProject.getMapEntry(row);
+    const MapProjectEntry* entry = (row < mapProject.getNumMapEntries()) ? &mapProject.getMapEntry(row) : nullptr;
     const bool isLastRow = (row == mapProject.getNumMapEntries() - 1);
     mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row, isLastRow);
 }
