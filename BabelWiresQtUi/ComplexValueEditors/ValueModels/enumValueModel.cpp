@@ -1,5 +1,5 @@
 /**
- * Model for IntValues.
+ * Model for EnumValues.
  *
  * (C) 2021 Malcolm Tyrrell
  *
