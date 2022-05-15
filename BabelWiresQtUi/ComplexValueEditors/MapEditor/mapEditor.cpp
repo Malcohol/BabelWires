@@ -23,6 +23,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Maps/Commands/setMapToDefaultCommand.hpp>
 #include <BabelWiresLib/Maps/Commands/setMapSourceTypeCommand.hpp>
+#include <BabelWiresLib/Maps/Commands/setMapTargetTypeCommand.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -96,11 +97,10 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
                 m_targetTypeWidget = new TypeWidget(typeBar, projectBridge, mapFeature.getAllowedTargetTypeIds());
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }
-            //connect(m_sourceTypeWidget, SIGNAL(TypeWidget::currentIndexChanged(int)), this, SLOT(MapEditor::setSourceTypeFromWidget()));
-            // TODO ownership of lambda
             connect(m_sourceTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this, 
                 [this]() { MapEditor::setSourceTypeFromWidget(); });
-            
+            connect(m_targetTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this, 
+                [this]() { MapEditor::setTargetTypeFromWidget(); });
         }
         m_mapView = new MapView;
         m_mapModel = new MapModel(m_mapView, *this);
@@ -407,4 +407,8 @@ void babelwires::MapEditor::setSourceTypeFromWidget() {
 }
 
 void babelwires::MapEditor::setTargetTypeFromWidget() {
+    const LongIdentifier newTargetTypeId = m_targetTypeWidget->getTypeId();
+    if (newTargetTypeId != m_map.getTargetTypeId()) {
+        executeCommand(std::make_unique<SetMapTargetTypeCommand>("Set map target type", newTargetTypeId));
+    }
 }
