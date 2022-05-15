@@ -30,5 +30,6 @@ babelwires::LongIdentifier babelwires::TypeWidget::getTypeId() const {
 void babelwires::TypeWidget::setTypeId(LongIdentifier id) {
     auto it = std::find(m_typeIds.begin(), m_typeIds.end(), id);
     assert(it != m_typeIds.end());
-    setCurrentIndex(it - m_typeIds.begin());
+    const int newIndex = it - m_typeIds.begin();
+    setCurrentIndex(newIndex);
 }

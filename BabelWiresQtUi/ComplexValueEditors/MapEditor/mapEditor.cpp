@@ -138,14 +138,14 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         m_undoAction = std::make_unique<QAction>(QIcon::fromTheme("edit-undo"), tr("&Undo"), this);
         m_undoAction->setShortcuts(QKeySequence::Undo);
         m_undoAction->setEnabled(false);
-        //m_undoAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+        m_undoAction->setShortcutContext(Qt::WindowShortcut);
         connect(m_undoAction.get(), &QAction::triggered, this, &MapEditor::undo);
         addAction(m_undoAction.get());
 
         m_redoAction = std::make_unique<QAction>(QIcon::fromTheme("edit-redo"), tr("&Redo"), this);
         m_redoAction->setShortcuts(QKeySequence::Redo);
         m_redoAction->setEnabled(false);
-        //m_redoAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+        m_redoAction->setShortcutContext(Qt::WindowShortcut);
         connect(m_redoAction.get(), &QAction::triggered, this, &MapEditor::redo);
         addAction(m_redoAction.get());
 
@@ -401,7 +401,9 @@ void babelwires::MapEditor::setToDefault() {
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {
     const LongIdentifier newSourceTypeId = m_sourceTypeWidget->getTypeId();
-    executeCommand(std::make_unique<SetMapSourceTypeCommand>("Set map source type", newSourceTypeId));
+    if (newSourceTypeId != m_map.getSourceTypeId()) {
+        executeCommand(std::make_unique<SetMapSourceTypeCommand>("Set map source type", newSourceTypeId));
+    }
 }
 
 void babelwires::MapEditor::setTargetTypeFromWidget() {
