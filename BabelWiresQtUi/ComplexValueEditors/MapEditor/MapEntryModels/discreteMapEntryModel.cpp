@@ -91,3 +91,15 @@ babelwires::DiscreteMapEntryModel::createReplacementDataFromEditor(unsigned int 
     }
     return {};
 }
+
+bool babelwires::DiscreteMapEntryModel::validateEditor(QWidget* editor, unsigned int column) const {
+    assert(isItemEditable(column) && "That column isn't editable");
+    switch (column) {
+        case 0:
+            return m_sourceValueModel->validateEditor(editor);
+        case 1:
+            return m_targetValueModel->validateEditor(editor);
+        default:
+            assert(false && "That column isn't editable");
+    }
+}

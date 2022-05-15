@@ -61,3 +61,8 @@ babelwires::AllToOneFallbackMapEntryModel::createReplacementDataFromEditor(unsig
     }
     return {};
 }
+
+bool babelwires::AllToOneFallbackMapEntryModel::validateEditor(QWidget* editor, unsigned int column) const {
+    assert(isItemEditable(column) && "That column isn't editable");
+    return m_targetValueModel->validateEditor(editor);
+}

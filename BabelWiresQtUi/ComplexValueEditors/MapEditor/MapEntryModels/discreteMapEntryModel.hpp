@@ -22,6 +22,7 @@ namespace babelwires {
         QWidget* createEditor(const QModelIndex& index, QWidget* parent) const override;
         void setEditorData(unsigned int column, QWidget* editor) const override;
         std::unique_ptr<MapEntryData> createReplacementDataFromEditor(unsigned int column, QWidget* editor) const override;
+        bool validateEditor(QWidget* editor, unsigned int column) const override;
 
         /*
         virtual bool hasCustomPainting() const;

@@ -362,15 +362,15 @@ bool babelwires::MapEditor::maybeApply() {
 }
 
 void babelwires::MapEditor::undo() {
-    m_mapModel->valuesChanged();
     m_commandManager.undo();
+    m_mapModel->valuesChanged();
     m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
     m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
 }
 
 void babelwires::MapEditor::redo() {
-    m_mapModel->valuesChanged();
     m_commandManager.redo();
+    m_mapModel->valuesChanged();
     m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
     m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
 }

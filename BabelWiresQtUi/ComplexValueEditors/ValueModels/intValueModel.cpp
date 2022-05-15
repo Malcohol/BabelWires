@@ -48,3 +48,7 @@ std::unique_ptr<babelwires::Value> babelwires::IntValueModel::createValueFromEdi
 bool babelwires::IntValueModel::isItemEditable() const {
     return m_value->as<IntValue>();
 }
+
+bool babelwires::IntValueModel::validateEditor(QWidget* editor) const {
+    return qobject_cast<SpinBoxValueEditor*>(editor);
+}

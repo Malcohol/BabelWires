@@ -26,6 +26,8 @@ namespace babelwires {
         //virtual bool eventFilter(QObject* object, QEvent* event) override;
         //virtual QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
+        void checkEditorIsValid(QWidget* editor, const QModelIndex& index) const;
+
       //public slots:
         /// When wired to a slot in a row model editor, the editor commits its current value.
         //void commitEditorValue();

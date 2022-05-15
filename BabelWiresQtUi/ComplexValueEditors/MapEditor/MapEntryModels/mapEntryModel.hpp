@@ -40,6 +40,9 @@ namespace babelwires {
         
         virtual std::unique_ptr<MapEntryData> createReplacementDataFromEditor(unsigned int column, QWidget* editor) const;
 
+        /// Check whether the editor is valid.
+        virtual bool validateEditor(QWidget* editor, unsigned int column) const;
+
         /*
         virtual bool hasCustomPainting() const;
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;

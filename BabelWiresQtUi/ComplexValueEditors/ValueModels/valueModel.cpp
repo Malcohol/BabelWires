@@ -38,3 +38,7 @@ std::unique_ptr<babelwires::Value> babelwires::ValueModel::createValueFromEditor
 bool babelwires::ValueModel::isItemEditable() const {
     return false;
 }
+
+bool babelwires::ValueModel::validateEditor(QWidget* editor) const {
+    return false;
+}

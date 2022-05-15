@@ -37,8 +37,8 @@ QWidget* babelwires::MapModelDelegate::createEditor(QWidget* parent, const QStyl
             ValueEditorInterface* interface = qvariant_cast<ValueEditorInterface*>(property);
 
             interface->getValuesChangedConnection() = QObject::connect(
-                mapModel, &MapModel::valuesAboutToChange, this,
-                    [this, editor]() { const_cast<MapModelDelegate*>(this)->closeEditor(editor); } );
+                mapModel, &MapModel::valuesMayHaveChanged, this,
+                    [this, editor, index]() { checkEditorIsValid(editor, index); } );
 
             ValueEditorCommonSignals* ValueEditorCommonSignals = interface->getValueEditorSignals();
             // Update the model if the editor changes.
@@ -84,5 +84,21 @@ void babelwires::MapModelDelegate::setModelData(QWidget* editor, QAbstractItemMo
         std::string editType = (column == 0) ? "key" : "value";
         auto command = std::make_unique<ReplaceMapEntryCommand>("Set map entry " + editType, std::move(replacementData), row);
         mapModel->getMapEditor().executeCommand(std::move(command));
+    }
+}
+
+void babelwires::MapModelDelegate::checkEditorIsValid(QWidget* editor, const QModelIndex& index) const {
+        const MapModel* const mapModel = qobject_cast<const MapModel*>(index.model());
+    assert(mapModel && "Unexpected model");
+    
+    MapEntryModelDispatcher mapEntryModel;
+    mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
+
+    unsigned int column = static_cast<unsigned int>(index.column());
+
+    if (mapEntryModel->isItemEditable(column) && mapEntryModel->validateEditor(editor, column)) {
+        setEditorData(editor, index);
+    } else {
+        const_cast<MapModelDelegate*>(this)->closeEditor(editor);
     }
 }

@@ -49,7 +49,7 @@ namespace babelwires {
         void initMapEntryModelDispatcher(const QModelIndex& index, MapEntryModelDispatcher& mapEntryModel) const;
 
       signals:
-        void valuesAboutToChange() const;
+        void valuesMayHaveChanged() const;
         
       private:
         MapEditor& m_mapEditor;

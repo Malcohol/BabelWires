@@ -46,3 +46,7 @@ std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryModel::createRepla
     assert(false && "This item isn't editable");
     return {};    
 }
+
+bool babelwires::MapEntryModel::validateEditor(QWidget* editor, unsigned int column) const {
+    return false;
+}

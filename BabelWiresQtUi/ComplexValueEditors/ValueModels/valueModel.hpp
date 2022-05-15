@@ -22,6 +22,7 @@ namespace babelwires {
         virtual void setEditorData(QWidget* editor) const;
         virtual std::unique_ptr<Value> createValueFromEditorIfDifferent(QWidget* editor) const;
         virtual bool isItemEditable() const;
+        virtual bool validateEditor(QWidget* editor) const;
         /*
         virtual bool hasCustomPainting() const;
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;

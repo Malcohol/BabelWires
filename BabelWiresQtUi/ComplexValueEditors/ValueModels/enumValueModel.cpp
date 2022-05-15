@@ -61,3 +61,7 @@ std::unique_ptr<babelwires::Value> babelwires::EnumValueModel::createValueFromEd
 bool babelwires::EnumValueModel::isItemEditable() const {
     return m_value->as<EnumValue>();
 }
+
+bool babelwires::EnumValueModel::validateEditor(QWidget* editor) const {
+    return qobject_cast<DropDownValueEditor*>(editor);
+}
