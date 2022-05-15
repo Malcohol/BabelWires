@@ -34,9 +34,15 @@ QVariant babelwires::DiscreteMapEntryModel::getDisplayData(unsigned int column) 
 }
 
 bool babelwires::DiscreteMapEntryModel::isItemEditable(unsigned int column) const {
-    return true;
+    switch (column) {
+        case 0:
+            return m_sourceValueModel->isItemEditable();
+        case 1:
+            return m_targetValueModel->isItemEditable();
+        default:
+            assert(false);
+    }
 }
-
 
 QWidget* babelwires::DiscreteMapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
     unsigned int column = static_cast<unsigned int>(index.column());
@@ -61,8 +67,9 @@ void babelwires::DiscreteMapEntryModel::setEditorData(unsigned int column, QWidg
     }
 }
 
-std::unique_ptr<babelwires::MapEntryData> babelwires::DiscreteMapEntryModel::createReplacementDataFromEditor(unsigned int column, QWidget* editor) const {
-     switch (column) {
+std::unique_ptr<babelwires::MapEntryData>
+babelwires::DiscreteMapEntryModel::createReplacementDataFromEditor(unsigned int column, QWidget* editor) const {
+    switch (column) {
         case 0:
             if (std::unique_ptr<Value> newValue = m_sourceValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();

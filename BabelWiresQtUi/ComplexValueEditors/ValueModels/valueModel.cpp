@@ -10,7 +10,7 @@
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
 QVariant babelwires::ValueModel::getDisplayData() const {
-    return {};
+    return QString(m_value->toString().c_str());
 }
 
 const babelwires::Value* babelwires::ValueModel::getValue() const {
@@ -33,4 +33,8 @@ void babelwires::ValueModel::setEditorData(QWidget* editor) const {
 std::unique_ptr<babelwires::Value> babelwires::ValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     assert(false && "This method must be overridden in subclasses");
     return {};
+}
+
+bool babelwires::ValueModel::isItemEditable() const {
+    return false;
 }

@@ -4,6 +4,7 @@
 
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
+#include <Common/Identifiers/identifierRegistry.hpp>
 
 babelwires::EnumValue::EnumValue()
     : m_value("unset") {}
@@ -49,4 +50,8 @@ std::size_t babelwires::EnumValue::getHash() const {
 bool babelwires::EnumValue::operator==(const Value& other) const {
     const EnumValue* otherValue = other.as<EnumValue>();
     return otherValue && (m_value == otherValue->m_value);
+}
+
+std::string babelwires::EnumValue::toString() const {
+    return IdentifierRegistry::read()->getName(m_value);
 }

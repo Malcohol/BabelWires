@@ -51,6 +51,7 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/mapModel.cpp
     ComplexValueEditors/MapEditor/mapModelDelegate.cpp
     ComplexValueEditors/ValueModels/enumValueModel.cpp
+    ComplexValueEditors/ValueModels/intValueModel.cpp
     ComplexValueEditors/ValueModels/valueModel.cpp
     ComplexValueEditors/ValueModels/valueModelDispatcher.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.cpp

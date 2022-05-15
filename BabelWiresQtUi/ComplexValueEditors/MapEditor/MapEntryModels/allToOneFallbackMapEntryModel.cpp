@@ -34,7 +34,7 @@ QVariant babelwires::AllToOneFallbackMapEntryModel::getDisplayData(unsigned int 
 }
 
 bool babelwires::AllToOneFallbackMapEntryModel::isItemEditable(unsigned int column) const {
-    return (column == 1);
+    return (column == 1) && m_targetValueModel->isItemEditable();
 }
 
 QWidget* babelwires::AllToOneFallbackMapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {

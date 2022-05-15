@@ -11,11 +11,11 @@
 
 namespace babelwires {
 
-    class EnumValueModel : ValueModel {
+    class IntValueModel : ValueModel {
       public:
+        bool isItemEditable() const override;
         QWidget* createEditor(const QModelIndex& index, QWidget* parent) const override;
         void setEditorData(QWidget* editor) const override;
         std::unique_ptr<Value> createValueFromEditorIfDifferent(QWidget* editor) const override;
-        bool isItemEditable() const override;
     };
 } // namespace babelwires

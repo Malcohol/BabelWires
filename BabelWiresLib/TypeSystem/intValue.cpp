@@ -41,3 +41,7 @@ bool babelwires::IntValue::operator==(const Value& other) const {
     const IntValue* otherValue = other.as<IntValue>();
     return otherValue && (m_value == otherValue->m_value);
 }
+
+std::string babelwires::IntValue::toString() const {
+    return std::to_string(m_value);
+}

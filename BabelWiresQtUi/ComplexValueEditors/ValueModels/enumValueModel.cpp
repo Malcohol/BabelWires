@@ -14,17 +14,6 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-QVariant babelwires::EnumValueModel::getDisplayData() const {
-    // const Enum* e = m_type->as<Enum>();
-    // assert(e && "Expecting an enum here");
-
-    const EnumValue* v = getValue()->as<EnumValue>();
-    assert(v && "Expecting an enum here");
-
-    const Identifier value = v->get();
-    return QString(IdentifierRegistry::read()->getName(value).c_str());
-}
-
 QWidget* babelwires::EnumValueModel::createEditor(const QModelIndex& index, QWidget* parent) const {
     const Enum* const e = m_type->as<Enum>();
     auto dropDownBox = std::make_unique<DropDownValueEditor>(parent, index);
@@ -67,4 +56,8 @@ std::unique_ptr<babelwires::Value> babelwires::EnumValueModel::createValueFromEd
         return newEnumValue;
     }
     return {};
+}
+
+bool babelwires::EnumValueModel::isItemEditable() const {
+    return m_value->as<EnumValue>();
 }
