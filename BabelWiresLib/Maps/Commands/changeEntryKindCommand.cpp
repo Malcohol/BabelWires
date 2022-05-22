@@ -27,13 +27,12 @@ bool babelwires::ChangeEntryKindCommand::initialize(const MapProject& map) {
         return false;
     }
 
-    const bool isFallback =
-        (m_kind == MapEntryData::Kind::Fallback_AllToOne) || (m_kind == MapEntryData::Kind::Fallback_AllToSame);
+    const bool isFallback = MapEntryData::isFallback(m_kind);
     const bool isLastEntry = (m_indexOfEntry == (numEntries - 1));
     if (isFallback != isLastEntry) {
         return false;
     }
-    
+
     m_replacedEntry = map.getMapEntry(m_indexOfEntry).getData().clone();
 
     m_newEntry = MapEntryData::create(map.getProjectContext().m_typeSystem, map.getSourceTypeId(),
