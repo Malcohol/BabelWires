@@ -35,7 +35,7 @@ babelwires::UserLogger& babelwires::ComplexValueEditor::getUserLogger() {
 }
 
 void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
-    if (maybeApply()) {
+    if (maybeApplyToProject()) {
         emit editorClosing();
         getUserLogger().logInfo() << "Close map editor";
         event->accept();

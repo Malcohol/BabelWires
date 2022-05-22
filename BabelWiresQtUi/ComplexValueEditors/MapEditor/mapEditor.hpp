@@ -58,7 +58,7 @@ namespace babelwires {
         void setToDefault();
 
       protected:
-        bool maybeApply() override;
+        bool maybeApplyToProject() override;
         
         void updateMapFromProject();
 

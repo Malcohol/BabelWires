@@ -344,7 +344,7 @@ void babelwires::MapEditor::executeCommand(std::unique_ptr<Command<MapProject>> 
     }
 }
 
-bool babelwires::MapEditor::maybeApply() {
+bool babelwires::MapEditor::maybeApplyToProject() {
     if (!m_commandManager.isAtCursor()) {
         while (1) {
             switch (QMessageBox::warning(
