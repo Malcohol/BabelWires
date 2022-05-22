@@ -15,7 +15,7 @@ namespace babelwires {
     class MapEditor;
     class AllToOneFallbackMapEntryData;
     class IdentityFallbackMapEntryData;
-    class DiscreteMapEntryData;
+    class OneToOneMapEntryData;
     class MapEntryData;
     class Value;
     class Type;

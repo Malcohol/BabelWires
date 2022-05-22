@@ -16,7 +16,7 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData() = defau
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const TypeSystem& typeSystem, LongIdentifier targetTypeId) {
     const Type* targetType = typeSystem.getEntryByIdentifier(targetTypeId);
-    assert(targetType && "You cannot construct a DiscreteMapEntryData entry with an unknown target type");
+    assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
 
     m_targetValue = targetType->createValue();
 }

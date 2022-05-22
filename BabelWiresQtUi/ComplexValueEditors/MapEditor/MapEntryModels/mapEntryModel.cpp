@@ -12,7 +12,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapContextMenuActions/removeEntryMapContextMenuAction.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/identityFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 

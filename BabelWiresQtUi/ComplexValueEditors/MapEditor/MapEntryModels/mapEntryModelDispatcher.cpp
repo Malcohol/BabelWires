@@ -7,12 +7,12 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/discreteMapEntryModel.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/oneToOneMapEntryModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/allToOneFallbackMapEntryModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/identityFallbackMapEntryModel.hpp>
 
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
-#include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/identityFallbackMapEntryData.hpp>
 
@@ -21,9 +21,9 @@ void babelwires::MapEntryModelDispatcher::init(const Type& sourceType, const Typ
     m_rowModel = &m_rowModelStorage;
     if (entry != nullptr) {
         const MapEntryData& entryData = entry->getData();
-        if (entryData.as<DiscreteMapEntryData>()) {
-            static_assert(sizeof(babelwires::MapEntryModel) == sizeof(babelwires::DiscreteMapEntryModel));
-            new (m_rowModel) babelwires::DiscreteMapEntryModel();
+        if (entryData.as<OneToOneMapEntryData>()) {
+            static_assert(sizeof(babelwires::MapEntryModel) == sizeof(babelwires::OneToOneMapEntryModel));
+            new (m_rowModel) babelwires::OneToOneMapEntryModel();
         } else if (entryData.as<AllToOneFallbackMapEntryData>()) {
             static_assert(sizeof(babelwires::MapEntryModel) == sizeof(babelwires::AllToOneFallbackMapEntryModel));
             new (m_rowModel) babelwires::AllToOneFallbackMapEntryModel();

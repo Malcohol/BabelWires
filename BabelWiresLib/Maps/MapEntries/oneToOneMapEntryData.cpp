@@ -5,83 +5,83 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-babelwires::DiscreteMapEntryData::DiscreteMapEntryData() = default;
+babelwires::OneToOneMapEntryData::OneToOneMapEntryData() = default;
 
-babelwires::DiscreteMapEntryData::DiscreteMapEntryData(const DiscreteMapEntryData& other) {
+babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const OneToOneMapEntryData& other) {
     m_sourceValue = other.m_sourceValue->clone();
     m_targetValue = other.m_targetValue->clone();
 }
 
-babelwires::DiscreteMapEntryData::DiscreteMapEntryData(DiscreteMapEntryData&& other) {
+babelwires::OneToOneMapEntryData::OneToOneMapEntryData(OneToOneMapEntryData&& other) {
     m_sourceValue = std::move(other.m_sourceValue);
     m_targetValue = std::move(other.m_targetValue);
 }
 
-babelwires::DiscreteMapEntryData::DiscreteMapEntryData(const TypeSystem& typeSystem, LongIdentifier sourceTypeId,
+babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const TypeSystem& typeSystem, LongIdentifier sourceTypeId,
                                                        LongIdentifier targetTypeId) {
     const Type* sourceType = typeSystem.getEntryByIdentifier(sourceTypeId);
-    assert(sourceType && "You cannot construct a DiscreteMapEntryData entry with an unknown source type");
+    assert(sourceType && "You cannot construct a OneToOneMapEntryData entry with an unknown source type");
     const Type* targetType = typeSystem.getEntryByIdentifier(targetTypeId);
-    assert(targetType && "You cannot construct a DiscreteMapEntryData entry with an unknown target type");
+    assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
 
     m_sourceValue = sourceType->createValue();
     m_targetValue = targetType->createValue();
 }
 
-std::size_t babelwires::DiscreteMapEntryData::getHash() const {
+std::size_t babelwires::OneToOneMapEntryData::getHash() const {
     // "Discrete" - arbitrary discriminator
     return hash::mixtureOf(0xd15c4e7e, m_sourceValue->getHash(), m_targetValue->getHash());
 }
 
-bool babelwires::DiscreteMapEntryData::operator==(const MapEntryData& other) const {
-    const DiscreteMapEntryData* otherData = other.as<DiscreteMapEntryData>();
+bool babelwires::OneToOneMapEntryData::operator==(const MapEntryData& other) const {
+    const OneToOneMapEntryData* otherData = other.as<OneToOneMapEntryData>();
     return otherData && (m_sourceValue == otherData->m_sourceValue) && (m_targetValue == otherData->m_targetValue);
 }
 
-const babelwires::Value* babelwires::DiscreteMapEntryData::getSourceValue() const {
+const babelwires::Value* babelwires::OneToOneMapEntryData::getSourceValue() const {
     return m_sourceValue.get();
 }
 
-void babelwires::DiscreteMapEntryData::setSourceValue(std::unique_ptr<Value> value) {
+void babelwires::OneToOneMapEntryData::setSourceValue(std::unique_ptr<Value> value) {
     m_sourceValue = std::move(value);
 }
 
-const babelwires::Value* babelwires::DiscreteMapEntryData::getTargetValue() const {
+const babelwires::Value* babelwires::OneToOneMapEntryData::getTargetValue() const {
     return m_targetValue.get();
 }
 
-void babelwires::DiscreteMapEntryData::setTargetValue(std::unique_ptr<Value> value) {
+void babelwires::OneToOneMapEntryData::setTargetValue(std::unique_ptr<Value> value) {
     m_targetValue = std::move(value);
 }
 
-void babelwires::DiscreteMapEntryData::serializeContents(Serializer& serializer) const {
+void babelwires::OneToOneMapEntryData::serializeContents(Serializer& serializer) const {
     serializer.serializeObject(*m_sourceValue, "source");
     serializer.serializeObject(*m_targetValue, "target");
 }
 
-void babelwires::DiscreteMapEntryData::deserializeContents(Deserializer& deserializer) {
+void babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deserializer) {
     m_sourceValue = deserializer.deserializeObject<Value>("source");
     m_targetValue = deserializer.deserializeObject<Value>("target");
 }
 
-void babelwires::DiscreteMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {
+void babelwires::OneToOneMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {
     m_sourceValue->visitIdentifiers(visitor);
     m_targetValue->visitIdentifiers(visitor);
 }
 
-void babelwires::DiscreteMapEntryData::visitFilePaths(FilePathVisitor& visitor) {
+void babelwires::OneToOneMapEntryData::visitFilePaths(FilePathVisitor& visitor) {
     m_sourceValue->visitFilePaths(visitor);
     m_targetValue->visitFilePaths(visitor);
 }
 
-babelwires::Result babelwires::DiscreteMapEntryData::doValidate(const Type& sourceType, const Type& targetType) const {
+babelwires::Result babelwires::OneToOneMapEntryData::doValidate(const Type& sourceType, const Type& targetType) const {
     const bool sourceTypeIsValid = m_sourceValue->isValid(sourceType);
     const bool targetTypeIsValid = m_targetValue->isValid(targetType);
     if (!sourceTypeIsValid && !targetTypeIsValid) {
@@ -94,6 +94,6 @@ babelwires::Result babelwires::DiscreteMapEntryData::doValidate(const Type& sour
     return {};
 }
 
-babelwires::MapEntryData::Kind babelwires::DiscreteMapEntryData::getKind() const {
+babelwires::MapEntryData::Kind babelwires::OneToOneMapEntryData::getKind() const {
     return Kind::DiscreteEntry;
 }

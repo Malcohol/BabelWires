@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 
 #include <BabelWiresLib/Maps/Commands/addEntryToMapCommand.hpp>
-#include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 babelwires::AddEntryMapContextMenuAction::AddEntryMapContextMenuAction(const QString& text,
@@ -25,6 +25,6 @@ void babelwires::AddEntryMapContextMenuAction::actionTriggered(QAbstractItemMode
     MapEditor& mapEditor = mapModel->getMapEditor();
     const MapProject& mapProject = mapEditor.getMapProject();
 
-    auto newEntry = std::make_unique<DiscreteMapEntryData>(mapProject.getProjectContext().m_typeSystem, mapProject.getSourceTypeId(), mapProject.getTargetTypeId());
+    auto newEntry = std::make_unique<OneToOneMapEntryData>(mapProject.getProjectContext().m_typeSystem, mapProject.getSourceTypeId(), mapProject.getTargetTypeId());
     mapEditor.executeCommand(std::make_unique<AddEntryToMapCommand>("Add entry above", std::move(newEntry), m_indexOfNewEntry));
 }

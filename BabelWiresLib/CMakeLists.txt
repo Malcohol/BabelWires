@@ -47,7 +47,7 @@ SET( BABELWIRESLIB_SRCS
 	Maps/mapSerialization.cpp
 	Maps/mapData.cpp
 	Maps/MapEntries/mapEntryData.cpp
-	Maps/MapEntries/discreteMapEntryData.cpp
+	Maps/MapEntries/oneToOneMapEntryData.cpp
 	Maps/MapEntries/identityFallbackMapEntryData.cpp
 	Maps/MapEntries/allToOneFallbackMapEntryData.cpp
 	Maps/mapProjectEntry.cpp

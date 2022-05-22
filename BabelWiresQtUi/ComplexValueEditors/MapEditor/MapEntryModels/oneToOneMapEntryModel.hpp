@@ -1,5 +1,5 @@
 /**
- * The DiscreteMapEntryModel provides the specific UI for a MapEntry with DiscreteMapEntryData.
+ * The OneToOneMapEntryModel provides the specific UI for a MapEntry with OneToOneMapEntryData.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -10,10 +10,10 @@
 #include "BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.hpp"
 
 namespace babelwires {
-    class DiscreteMapEntryData;
+    class OneToOneMapEntryData;
 
-    /// The DiscreteMapEntryModel provides the specific UI for a MapEntry with DiscreteMapEntryData.
-    class DiscreteMapEntryModel : public MapEntryModel {
+    /// The OneToOneMapEntryModel provides the specific UI for a MapEntry with OneToOneMapEntryData.
+    class OneToOneMapEntryModel : public MapEntryModel {
       public:
         void init() override;
         QVariant getDisplayData(unsigned int column) const override;
@@ -31,6 +31,6 @@ namespace babelwires {
         */
 
       private:
-        const DiscreteMapEntryData& getDiscreteMapEntryData() const;
+        const OneToOneMapEntryData& getOneToOneMapEntryData() const;
     };
 } // namespace babelwires

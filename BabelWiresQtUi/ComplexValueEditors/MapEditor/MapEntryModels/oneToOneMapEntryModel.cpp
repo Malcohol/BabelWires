@@ -1,28 +1,28 @@
 /**
- * The DiscreteMapEntryModel provides the specific UI for a MapEntry with DiscreteMapEntryData.
+ * The OneToOneMapEntryModel provides the specific UI for a MapEntry with OneToOneMapEntryData.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/discreteMapEntryModel.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/oneToOneMapEntryModel.hpp>
 
-#include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 
-const babelwires::DiscreteMapEntryData& babelwires::DiscreteMapEntryModel::getDiscreteMapEntryData() const {
+const babelwires::OneToOneMapEntryData& babelwires::OneToOneMapEntryModel::getOneToOneMapEntryData() const {
     assert(m_mapProjectEntry);
-    assert(m_mapProjectEntry->getData().as<DiscreteMapEntryData>());
-    return static_cast<const babelwires::DiscreteMapEntryData&>(m_mapProjectEntry->getData());
+    assert(m_mapProjectEntry->getData().as<OneToOneMapEntryData>());
+    return static_cast<const babelwires::OneToOneMapEntryData&>(m_mapProjectEntry->getData());
 }
 
-void babelwires::DiscreteMapEntryModel::init() {
-    const DiscreteMapEntryData& discreteMapEntry = getDiscreteMapEntryData();
+void babelwires::OneToOneMapEntryModel::init() {
+    const OneToOneMapEntryData& discreteMapEntry = getOneToOneMapEntryData();
     m_sourceValueModel.init(*m_sourceType, *discreteMapEntry.getSourceValue());
     m_targetValueModel.init(*m_targetType, *discreteMapEntry.getTargetValue());
 }
 
-QVariant babelwires::DiscreteMapEntryModel::getDisplayData(unsigned int column) const {
+QVariant babelwires::OneToOneMapEntryModel::getDisplayData(unsigned int column) const {
     switch (column) {
         case 0:
             return m_sourceValueModel->getDisplayData();
@@ -33,7 +33,7 @@ QVariant babelwires::DiscreteMapEntryModel::getDisplayData(unsigned int column) 
     }
 }
 
-bool babelwires::DiscreteMapEntryModel::isItemEditable(unsigned int column) const {
+bool babelwires::OneToOneMapEntryModel::isItemEditable(unsigned int column) const {
     switch (column) {
         case 0:
             return m_sourceValueModel->isItemEditable();
@@ -44,7 +44,7 @@ bool babelwires::DiscreteMapEntryModel::isItemEditable(unsigned int column) cons
     }
 }
 
-QWidget* babelwires::DiscreteMapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
+QWidget* babelwires::OneToOneMapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
     unsigned int column = static_cast<unsigned int>(index.column());
     switch (column) {
         case 0:
@@ -56,7 +56,7 @@ QWidget* babelwires::DiscreteMapEntryModel::createEditor(const QModelIndex& inde
     }
 }
 
-void babelwires::DiscreteMapEntryModel::setEditorData(unsigned int column, QWidget* editor) const {
+void babelwires::OneToOneMapEntryModel::setEditorData(unsigned int column, QWidget* editor) const {
     switch (column) {
         case 0:
             return m_sourceValueModel->setEditorData(editor);
@@ -68,12 +68,12 @@ void babelwires::DiscreteMapEntryModel::setEditorData(unsigned int column, QWidg
 }
 
 std::unique_ptr<babelwires::MapEntryData>
-babelwires::DiscreteMapEntryModel::createReplacementDataFromEditor(unsigned int column, QWidget* editor) const {
+babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(unsigned int column, QWidget* editor) const {
     switch (column) {
         case 0:
             if (std::unique_ptr<Value> newValue = m_sourceValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
-                babelwires::DiscreteMapEntryData* currentDiscreteData = currentData->as<DiscreteMapEntryData>();
+                babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
                 currentDiscreteData->setSourceValue(std::move(newValue));
                 return currentData;
             }
@@ -81,7 +81,7 @@ babelwires::DiscreteMapEntryModel::createReplacementDataFromEditor(unsigned int 
         case 1:
             if (std::unique_ptr<Value> newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
-                babelwires::DiscreteMapEntryData* currentDiscreteData = currentData->as<DiscreteMapEntryData>();
+                babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
                 currentDiscreteData->setTargetValue(std::move(newValue));
                 return currentData;
             }
@@ -92,7 +92,7 @@ babelwires::DiscreteMapEntryModel::createReplacementDataFromEditor(unsigned int 
     return {};
 }
 
-bool babelwires::DiscreteMapEntryModel::validateEditor(QWidget* editor, unsigned int column) const {
+bool babelwires::OneToOneMapEntryModel::validateEditor(QWidget* editor, unsigned int column) const {
     assert(isItemEditable(column) && "That column isn't editable");
     switch (column) {
         case 0:

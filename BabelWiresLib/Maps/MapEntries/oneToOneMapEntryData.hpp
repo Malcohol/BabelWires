@@ -16,14 +16,14 @@ namespace babelwires {
     class TypeSystem;
 
     /// A map entry with a single source value of discrete type.
-    class DiscreteMapEntryData : public MapEntryData {
+    class OneToOneMapEntryData : public MapEntryData {
       public:
-        CLONEABLE(DiscreteMapEntryData);
-        SERIALIZABLE(DiscreteMapEntryData, "oneToOne", MapEntryData, 1);
-        DiscreteMapEntryData();
-        DiscreteMapEntryData(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId);
-        DiscreteMapEntryData(const DiscreteMapEntryData& other);
-        DiscreteMapEntryData(DiscreteMapEntryData&& other);
+        CLONEABLE(OneToOneMapEntryData);
+        SERIALIZABLE(OneToOneMapEntryData, "oneToOne", MapEntryData, 1);
+        OneToOneMapEntryData();
+        OneToOneMapEntryData(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId);
+        OneToOneMapEntryData(const OneToOneMapEntryData& other);
+        OneToOneMapEntryData(OneToOneMapEntryData&& other);
 
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
