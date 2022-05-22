@@ -41,3 +41,20 @@ std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const
     assert(false && "Invalid kind");
     return {};
 }
+
+bool babelwires::MapEntryData::isFallback(Kind kind) {
+    return (kind == Kind::Fallback_AllToOne) || (kind == Kind::Fallback_AllToSame);
+}
+
+std::string babelwires::MapEntryData::getKindName(Kind kind) {
+    switch (kind) {
+        case Kind::DiscreteEntry:
+            return "One to One";
+        case Kind::Fallback_AllToOne:
+            return "All to One";
+        case Kind::Fallback_AllToSame:
+            return "All to Same";
+    }
+    assert(false && "Invalid kind");
+    return {};
+}

@@ -35,8 +35,15 @@ namespace babelwires {
         enum class Kind {
             DiscreteEntry,
             Fallback_AllToOne,
-            Fallback_AllToSame
+            Fallback_AllToSame,
+
+            NUM_KINDS
         };
+
+        virtual Kind getKind() const = 0;
+
+        static std::string getKindName(Kind kind);
+        static bool isFallback(Kind kind);
 
         /// Create a MapEntryData of the given kind.
         static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, Kind kind);

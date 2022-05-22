@@ -70,3 +70,7 @@ babelwires::Result babelwires::AllToOneFallbackMapEntryData::doValidate(const Ty
     }
     return {};
 }
+
+babelwires::MapEntryData::Kind babelwires::AllToOneFallbackMapEntryData::getKind() const {
+    return Kind::Fallback_AllToOne;
+}

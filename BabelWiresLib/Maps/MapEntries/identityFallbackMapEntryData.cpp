@@ -37,3 +37,7 @@ babelwires::Result babelwires::IdentityFallbackMapEntryData::doValidate(const Ty
     }
     return {};
 }
+
+babelwires::MapEntryData::Kind babelwires::IdentityFallbackMapEntryData::getKind() const {
+    return Kind::Fallback_AllToSame;
+}

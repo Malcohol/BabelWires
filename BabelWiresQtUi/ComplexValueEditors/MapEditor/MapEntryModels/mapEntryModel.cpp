@@ -30,30 +30,15 @@ void babelwires::MapEntryModel::getContextMenuActions(
         actionsOut.emplace_back(std::make_unique<AddEntryMapContextMenuAction>("Add entry below", m_row + 1));
     auto& removeEntry =
         actionsOut.emplace_back(std::make_unique<RemoveEntryMapContextMenuAction>("Remove entry", m_row));
-    auto& oneToOne = actionsOut.emplace_back(std::make_unique<ChangeEntryKindContextMenuAction>(
-        "Change entry type to \"One to One\"", MapEntryData::Kind::DiscreteEntry, m_row));
-    auto& allToOne = actionsOut.emplace_back(std::make_unique<ChangeEntryKindContextMenuAction>(
-        "Change entry type to \"All to One\"", MapEntryData::Kind::Fallback_AllToOne, m_row));
-    auto& allToSame = actionsOut.emplace_back(std::make_unique<ChangeEntryKindContextMenuAction>(
-        "Change entry type to \"All to Same\"", MapEntryData::Kind::Fallback_AllToSame, m_row));
 
     const MapEntryData& data = m_mapProjectEntry->getData();
-    if (m_isLastRow) {
-        oneToOne->setDisabled(true);
-        if (data.as<FallbackMapEntryData>()) {
-            addEntryBelow->setDisabled(true);
-            removeEntry->setDisabled(true);
-            if (data.as<IdentityFallbackMapEntryData>()) {
-                allToSame->setDisabled(true);
-            } else if (data.as<AllToOneFallbackMapEntryData>()) {
-                allToOne->setDisabled(true);
-            }
-        }
-    } else {
-        allToOne->setDisabled(true);
-        allToSame->setDisabled(true);
-        if (data.as<DiscreteMapEntryData>()) {
-            oneToOne->setDisabled(true);
+
+    for (int i = 0; i < static_cast<int>(MapEntryData::Kind::NUM_KINDS); ++i) {
+        const MapEntryData::Kind kind = static_cast<MapEntryData::Kind>(i);
+        const auto actionName = QString("Change entry type to \"%1\"").arg(MapEntryData::getKindName(kind).c_str());
+        auto& action = actionsOut.emplace_back(std::make_unique<ChangeEntryKindContextMenuAction>(actionName, kind, m_row));
+        if ((kind == data.getKind()) || (m_isLastRow != MapEntryData::isFallback(kind))) {
+            action->setDisabled(true);
         }
     }
 }

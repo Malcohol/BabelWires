@@ -93,3 +93,7 @@ babelwires::Result babelwires::DiscreteMapEntryData::doValidate(const Type& sour
     }
     return {};
 }
+
+babelwires::MapEntryData::Kind babelwires::DiscreteMapEntryData::getKind() const {
+    return Kind::DiscreteEntry;
+}

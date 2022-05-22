@@ -33,6 +33,8 @@ namespace babelwires {
         const Value* getTargetValue() const;
         void setTargetValue(std::unique_ptr<Value> value);
 
+        Kind getKind() const override;
+
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
