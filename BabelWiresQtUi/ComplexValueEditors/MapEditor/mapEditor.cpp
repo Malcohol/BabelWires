@@ -323,12 +323,7 @@ void babelwires::MapEditor::onCustomContextMenuRequested(const QPoint& pos) {
     QModelIndex index = m_mapView->indexAt(pos);
     QMenu* const menu = m_mapModel->getContextMenu(index);
     if (menu) {
-        //
-        menu->setParent(this);
-        // There is probably a more correct way of doing this.
-        const QPoint globalPos = m_mapView->mapToGlobal(pos);
-        const QPoint scenePos = mapFromGlobal(globalPos);
-        menu->popup(scenePos);
+        menu->popup(m_mapView->mapToGlobal(pos));
     }
 }
 

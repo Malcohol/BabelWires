@@ -128,13 +128,7 @@ void babelwires::ElementNodeModel::customContextMenuRequested(const QPoint& pos)
     QModelIndex index = m_view->indexAt(pos);
     QMenu* const menu = m_model->getContextMenu(index);
     if (menu) {
-        QWidget* const sceneWidget = m_projectBridge.getFlowGraphWidget();
-        // We make the scene the parent of the menu. Otherwise it gets clipped within the node.
-        menu->setParent(sceneWidget);
-        // There is probably a more correct way of doing this.
-        const QPoint globalPos = m_view->mapToGlobal(pos);
-        const QPoint scenePos = sceneWidget->mapFromGlobal(globalPos);
-        menu->popup(scenePos);
+        menu->popup(m_view->mapToGlobal(pos));
     }
 }
 
