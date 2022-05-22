@@ -244,8 +244,15 @@ void babelwires::MapEditor::updateMapFromProject() {
 
 void babelwires::MapEditor::setEditorMap(const MapData& map) {
     m_map.setMapData(map);
-    m_mapModel->valuesChanged();
+    updateUiAfterChange();
 }
+
+void babelwires::MapEditor::updateUiAfterChange() const {
+    m_mapModel->valuesChanged();
+    m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
+    m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
+}
+
 
 void babelwires::MapEditor::saveMapToFile() {
     QString dialogCaption = tr("Save project as");
@@ -333,9 +340,7 @@ const babelwires::MapProject& babelwires::MapEditor::getMapProject() const {
 
 void babelwires::MapEditor::executeCommand(std::unique_ptr<Command<MapProject>> command) {
     if (m_commandManager.executeAndStealCommand(command)) {
-        m_mapModel->valuesChanged();
-        m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
-        m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
+        updateUiAfterChange();
     }
 }
 
@@ -360,16 +365,12 @@ bool babelwires::MapEditor::maybeApplyToProject() {
 
 void babelwires::MapEditor::undo() {
     m_commandManager.undo();
-    m_mapModel->valuesChanged();
-    m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
-    m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
+    updateUiAfterChange();
 }
 
 void babelwires::MapEditor::redo() {
     m_commandManager.redo();
-    m_mapModel->valuesChanged();
-    m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
-    m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
+    updateUiAfterChange();
 }
 
 void babelwires::MapEditor::onUndoStateChanged() {

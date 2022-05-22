@@ -75,6 +75,8 @@ namespace babelwires {
         /// Try to find a MapValueAssignment in the project which applies to the mapFeature.
         const MapValueAssignmentData* tryGetMapValueAssignmentData(AccessModelScope& scope) const;
 
+        void updateUiAfterChange() const;
+
       public slots:
         void onCustomContextMenuRequested(const QPoint& pos);
 
