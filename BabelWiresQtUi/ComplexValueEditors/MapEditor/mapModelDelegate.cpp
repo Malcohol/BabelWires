@@ -99,6 +99,7 @@ void babelwires::MapModelDelegate::checkEditorIsValid(QWidget* editor, const QMo
     if (mapEntryModel->isItemEditable(column) && mapEntryModel->validateEditor(editor, column)) {
         setEditorData(editor, index);
     } else {
+        // This closes an editor without causing it to commit its value.
         const_cast<MapModelDelegate*>(this)->closeEditor(editor);
     }
 }

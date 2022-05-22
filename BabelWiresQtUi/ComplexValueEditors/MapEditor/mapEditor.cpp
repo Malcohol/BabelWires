@@ -339,6 +339,8 @@ const babelwires::MapProject& babelwires::MapEditor::getMapProject() const {
 void babelwires::MapEditor::executeCommand(std::unique_ptr<Command<MapProject>> command) {
     if (m_commandManager.executeAndStealCommand(command)) {
         m_mapModel->valuesChanged();
+        m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
+        m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
     }
 }
 
