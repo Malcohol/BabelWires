@@ -10,7 +10,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/identityFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
 
 babelwires::MapEntryData::~MapEntryData() = default;
 
@@ -36,7 +36,7 @@ std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const
         case Kind::Fallback_AllToOne:
             return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeId);
         case Kind::Fallback_AllToSame:
-            return std::make_unique<IdentityFallbackMapEntryData>();
+            return std::make_unique<AllToSameFallbackMapEntryData>();
     }
     assert(false && "Invalid kind");
     return {};

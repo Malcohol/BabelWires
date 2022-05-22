@@ -1,5 +1,5 @@
 /**
- * The IdentityFallbackMapEntryModel provides the specific UI for a MapEntry with IdentityFallbackMapEntryData.
+ * The AllToSameFallbackMapEntryModel provides the specific UI for a MapEntry with AllToSameFallbackMapEntryData.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -10,10 +10,10 @@
 #include "BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.hpp"
 
 namespace babelwires {
-    class IdentityFallbackMapEntryData;
+    class AllToSameFallbackMapEntryData;
 
-    /// The IdentityFallbackMapEntryModel provides the specific UI for a MapEntry with IdentityFallbackMapEntryData.
-    class IdentityFallbackMapEntryModel : public MapEntryModel {
+    /// The AllToSameFallbackMapEntryModel provides the specific UI for a MapEntry with AllToSameFallbackMapEntryData.
+    class AllToSameFallbackMapEntryModel : public MapEntryModel {
       public:
         QVariant getDisplayData(unsigned int column) const override;
         /*

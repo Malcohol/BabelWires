@@ -9,12 +9,12 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/oneToOneMapEntryModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/allToOneFallbackMapEntryModel.hpp>
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/identityFallbackMapEntryModel.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/allToSameFallbackMapEntryModel.hpp>
 
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/identityFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
 
 void babelwires::MapEntryModelDispatcher::init(const Type& sourceType, const Type& targetType,
                                                const MapProjectEntry* entry, unsigned int row, bool isLastRow) {
@@ -27,9 +27,9 @@ void babelwires::MapEntryModelDispatcher::init(const Type& sourceType, const Typ
         } else if (entryData.as<AllToOneFallbackMapEntryData>()) {
             static_assert(sizeof(babelwires::MapEntryModel) == sizeof(babelwires::AllToOneFallbackMapEntryModel));
             new (m_rowModel) babelwires::AllToOneFallbackMapEntryModel();
-        } else if (entryData.as<IdentityFallbackMapEntryData>()) {
-            static_assert(sizeof(babelwires::MapEntryModel) == sizeof(babelwires::IdentityFallbackMapEntryModel));
-            new (m_rowModel) babelwires::IdentityFallbackMapEntryModel();
+        } else if (entryData.as<AllToSameFallbackMapEntryData>()) {
+            static_assert(sizeof(babelwires::MapEntryModel) == sizeof(babelwires::AllToSameFallbackMapEntryModel));
+            new (m_rowModel) babelwires::AllToSameFallbackMapEntryModel();
         } else {
             // The base row model is used.
         }

@@ -1,5 +1,5 @@
 /**
- * IdentityFallbackMapEntryData map everything in the source to itself.
+ * AllToSameFallbackMapEntryData map everything in the source to itself.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,10 +11,10 @@
 
 namespace babelwires {
     /// FallbackMapEntries are the last entry in a map, and define what happens to previously unmapped source values.
-    class IdentityFallbackMapEntryData : public FallbackMapEntryData {
+    class AllToSameFallbackMapEntryData : public FallbackMapEntryData {
       public:
-        CLONEABLE(IdentityFallbackMapEntryData);
-        SERIALIZABLE(IdentityFallbackMapEntryData, "allToSame", FallbackMapEntryData, 1);
+        CLONEABLE(AllToSameFallbackMapEntryData);
+        SERIALIZABLE(AllToSameFallbackMapEntryData, "allToSame", FallbackMapEntryData, 1);
 
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
