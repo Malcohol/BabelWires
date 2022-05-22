@@ -32,12 +32,15 @@ void babelwires::MapEntryModel::getContextMenuActions(
         actionsOut.emplace_back(std::make_unique<RemoveEntryMapContextMenuAction>("Remove entry", m_row));
 
     const MapEntryData& data = m_mapProjectEntry->getData();
+    const MapEntryData::Kind currentKind = data.getKind();
+
+    actionsOut.emplace_back(std::make_unique<ChangeEntryKindContextMenuAction>("Reset entry", currentKind, m_row));
 
     for (int i = 0; i < static_cast<int>(MapEntryData::Kind::NUM_KINDS); ++i) {
         const MapEntryData::Kind kind = static_cast<MapEntryData::Kind>(i);
         const auto actionName = QString("Change entry type to \"%1\"").arg(MapEntryData::getKindName(kind).c_str());
         auto& action = actionsOut.emplace_back(std::make_unique<ChangeEntryKindContextMenuAction>(actionName, kind, m_row));
-        if ((kind == data.getKind()) || (m_isLastRow != MapEntryData::isFallback(kind))) {
+        if ((kind == currentKind) || (m_isLastRow != MapEntryData::isFallback(kind))) {
             action->setDisabled(true);
         }
     }
