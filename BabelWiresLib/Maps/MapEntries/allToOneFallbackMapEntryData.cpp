@@ -7,10 +7,19 @@
  **/
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData() = default;
+
+babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const TypeSystem& typeSystem, LongIdentifier targetTypeId) {
+    const Type* targetType = typeSystem.getEntryByIdentifier(targetTypeId);
+    assert(targetType && "You cannot construct a DiscreteMapEntryData entry with an unknown target type");
+
+    m_targetValue = targetType->createValue();
+}
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other) {
     m_targetValue = other.m_targetValue->clone();

@@ -1,5 +1,5 @@
 /**
- * This action adds an entry above the current item.
+ * This action removes the entry at the current item.
  *
  * (C) 2021 Malcolm Tyrrell
  *

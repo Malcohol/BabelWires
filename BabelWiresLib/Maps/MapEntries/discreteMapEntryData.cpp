@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
 
-#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
@@ -24,11 +24,11 @@ babelwires::DiscreteMapEntryData::DiscreteMapEntryData(DiscreteMapEntryData&& ot
     m_targetValue = std::move(other.m_targetValue);
 }
 
-babelwires::DiscreteMapEntryData::DiscreteMapEntryData(const ProjectContext& context, LongIdentifier sourceTypeId,
+babelwires::DiscreteMapEntryData::DiscreteMapEntryData(const TypeSystem& typeSystem, LongIdentifier sourceTypeId,
                                                        LongIdentifier targetTypeId) {
-    const Type* sourceType = context.m_typeSystem.getEntryByIdentifier(sourceTypeId);
+    const Type* sourceType = typeSystem.getEntryByIdentifier(sourceTypeId);
     assert(sourceType && "You cannot construct a DiscreteMapEntryData entry with an unknown source type");
-    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(targetTypeId);
+    const Type* targetType = typeSystem.getEntryByIdentifier(targetTypeId);
     assert(targetType && "You cannot construct a DiscreteMapEntryData entry with an unknown target type");
 
     m_sourceValue = sourceType->createValue();

@@ -8,6 +8,9 @@
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Maps/MapEntries/discreteMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/identityFallbackMapEntryData.hpp>
 
 babelwires::MapEntryData::~MapEntryData() = default;
 
@@ -24,4 +27,17 @@ babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSyst
     //   return isLastEntry ? "The last entry must be a fallback entry" : "A fallback entry can only be at the end of a map";
     //}
     return doValidate(*sourceType, *targetType);
+}
+
+std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, Kind kind) {
+    switch (kind) {
+        case Kind::DiscreteEntry:
+            return std::make_unique<DiscreteMapEntryData>(typeSystem, sourceTypeId, targetTypeId);
+        case Kind::Fallback_AllToOne:
+            return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeId);
+        case Kind::Fallback_AllToSame:
+            return std::make_unique<IdentityFallbackMapEntryData>();
+    }
+    assert(false && "Invalid kind");
+    return {};
 }

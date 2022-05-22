@@ -1,5 +1,5 @@
 /**
- * This action adds an entry above the current item.
+ * This action removes the entry at the current item.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -15,7 +15,6 @@
 
 namespace babelwires {
 
-    /// Base class of context menu items in the context menu.
     class RemoveEntryMapContextMenuAction : public ContextMenuAction {
         Q_OBJECT
       public:

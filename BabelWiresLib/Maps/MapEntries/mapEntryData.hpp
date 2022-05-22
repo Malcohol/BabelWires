@@ -31,6 +31,16 @@ namespace babelwires {
         
         Result validate(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, bool isLastEntry) const;
 
+        /// MapEntryData subclasses have a fixed hierarchy.
+        enum class Kind {
+            DiscreteEntry,
+            Fallback_AllToOne,
+            Fallback_AllToSame
+        };
+
+        /// Create a MapEntryData of the given kind.
+        static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, Kind kind);
+
       protected:
         virtual Result doValidate(const Type& sourceType, const Type& targetType) const = 0;
     };

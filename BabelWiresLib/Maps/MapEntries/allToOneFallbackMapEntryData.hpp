@@ -18,6 +18,7 @@ namespace babelwires {
         SERIALIZABLE(AllToOneFallbackMapEntryData, "allToOne", FallbackMapEntryData, 1);
 
         AllToOneFallbackMapEntryData();
+        AllToOneFallbackMapEntryData(const TypeSystem& typeSystem, LongIdentifier targetTypeId);
         AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other);
         AllToOneFallbackMapEntryData(AllToOneFallbackMapEntryData&& other);
 

@@ -61,6 +61,7 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/MapEntryModels/identityFallbackMapEntryModel.cpp
     ComplexValueEditors/MapEditor/MapContextMenuActions/addEntryMapContextMenuAction.cpp
     ComplexValueEditors/MapEditor/MapContextMenuActions/removeEntryMapContextMenuAction.cpp
+    ComplexValueEditors/MapEditor/MapContextMenuActions/changeEntryKindContextMenuAction.cpp
     ContextMenu/contextMenu.cpp
     ContextMenu/contextMenuAction.cpp
 )

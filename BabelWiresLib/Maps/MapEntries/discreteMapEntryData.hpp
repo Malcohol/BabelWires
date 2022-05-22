@@ -8,13 +8,12 @@
 #pragma once
 
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
 #include <Common/Utilities/hash.hpp>
 
 namespace babelwires {
-    class ProjectContext;
+    class TypeSystem;
 
     /// A map entry with a single source value of discrete type.
     class DiscreteMapEntryData : public MapEntryData {
@@ -22,7 +21,7 @@ namespace babelwires {
         CLONEABLE(DiscreteMapEntryData);
         SERIALIZABLE(DiscreteMapEntryData, "oneToOne", MapEntryData, 1);
         DiscreteMapEntryData();
-        DiscreteMapEntryData(const ProjectContext& context, LongIdentifier sourceTypeId, LongIdentifier targetTypeId);
+        DiscreteMapEntryData(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId);
         DiscreteMapEntryData(const DiscreteMapEntryData& other);
         DiscreteMapEntryData(DiscreteMapEntryData&& other);
 
