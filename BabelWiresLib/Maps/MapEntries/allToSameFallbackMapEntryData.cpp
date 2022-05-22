@@ -33,11 +33,11 @@ void babelwires::AllToSameFallbackMapEntryData::visitFilePaths(FilePathVisitor& 
 
 babelwires::Result babelwires::AllToSameFallbackMapEntryData::doValidate(const Type& sourceType, const Type& targetType) const {
     if (sourceType.getIdentifier() != targetType.getIdentifier()) {
-        return "The source and target types do not match, so identity maplet can't be used as a fallback.";
+        return "The source and target types do not match, so an \"All to Same\" mapping can't be used.";
     }
     return {};
 }
 
 babelwires::MapEntryData::Kind babelwires::AllToSameFallbackMapEntryData::getKind() const {
-    return Kind::Fallback_AllToSame;
+    return Kind::AllToSame;
 }

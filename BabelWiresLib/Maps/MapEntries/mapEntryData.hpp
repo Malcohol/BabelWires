@@ -33,9 +33,9 @@ namespace babelwires {
 
         /// MapEntryData subclasses have a fixed hierarchy.
         enum class Kind {
-            DiscreteEntry,
-            Fallback_AllToOne,
-            Fallback_AllToSame,
+            OneToOne,
+            AllToOne,
+            AllToSame,
 
             NUM_KINDS
         };

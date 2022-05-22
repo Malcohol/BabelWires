@@ -95,5 +95,5 @@ babelwires::Result babelwires::OneToOneMapEntryData::doValidate(const Type& sour
 }
 
 babelwires::MapEntryData::Kind babelwires::OneToOneMapEntryData::getKind() const {
-    return Kind::DiscreteEntry;
+    return Kind::OneToOne;
 }

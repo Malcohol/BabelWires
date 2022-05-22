@@ -31,11 +31,11 @@ babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSyst
 
 std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, Kind kind) {
     switch (kind) {
-        case Kind::DiscreteEntry:
+        case Kind::OneToOne:
             return std::make_unique<OneToOneMapEntryData>(typeSystem, sourceTypeId, targetTypeId);
-        case Kind::Fallback_AllToOne:
+        case Kind::AllToOne:
             return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeId);
-        case Kind::Fallback_AllToSame:
+        case Kind::AllToSame:
             return std::make_unique<AllToSameFallbackMapEntryData>();
     }
     assert(false && "Invalid kind");
@@ -43,16 +43,16 @@ std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const
 }
 
 bool babelwires::MapEntryData::isFallback(Kind kind) {
-    return (kind == Kind::Fallback_AllToOne) || (kind == Kind::Fallback_AllToSame);
+    return (kind == Kind::AllToOne) || (kind == Kind::AllToSame);
 }
 
 std::string babelwires::MapEntryData::getKindName(Kind kind) {
     switch (kind) {
-        case Kind::DiscreteEntry:
+        case Kind::OneToOne:
             return "One to One";
-        case Kind::Fallback_AllToOne:
+        case Kind::AllToOne:
             return "All to One";
-        case Kind::Fallback_AllToSame:
+        case Kind::AllToSame:
             return "All to Same";
     }
     assert(false && "Invalid kind");
