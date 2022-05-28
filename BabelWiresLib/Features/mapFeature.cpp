@@ -5,12 +5,12 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Features/mapFeature.hpp"
+#include <BabelWiresLib/Features/mapFeature.hpp>
 
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/Features/rootFeature.hpp"
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
 std::string babelwires::MapFeature::doGetValueType() const {
     return "map";

@@ -1,5 +1,5 @@
 /**
- * TODO
+ * A Value is an abstract class for objects which carry a single, usually simple value.
  *
  * (C) 2021 Malcolm Tyrrell
  *

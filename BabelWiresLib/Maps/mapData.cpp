@@ -148,8 +148,6 @@ void babelwires::MapData::setEntriesToDefault(const ProjectContext& context) {
     m_mapEntries.clear();
     const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_targetTypeId);
     if (targetType) {
-        auto fallback = std::make_unique<AllToOneFallbackMapEntryData>();
-        fallback->setTargetValue(targetType->createValue());
-        m_mapEntries.emplace_back(std::move(fallback));
+        m_mapEntries.emplace_back(std::make_unique<AllToOneFallbackMapEntryData>(context.m_typeSystem, m_targetTypeId));
     }
 }
