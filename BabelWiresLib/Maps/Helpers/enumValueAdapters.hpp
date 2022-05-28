@@ -28,7 +28,7 @@ namespace babelwires {
     struct EnumToValueValueAdapter {
         ENUM m_enum;
 
-        unsigned int operator() (const Value& value) const {
+        typename ENUM::Value operator() (const Value& value) const {
             const auto& enumValue = value.is<EnumValue>();
             return m_enum.getValueFromIdentifier(enumValue.get());
         }

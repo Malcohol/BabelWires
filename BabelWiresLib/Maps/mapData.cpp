@@ -95,6 +95,7 @@ unsigned int babelwires::MapData::getNumMapEntries() const {
 }
 
 const babelwires::MapEntryData& babelwires::MapData::getMapEntry(unsigned int index) const {
+    assert(index < m_mapEntries.size() && "Index to getMapEntry out of range");
     return *m_mapEntries[index];
 }
 
