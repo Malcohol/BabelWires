@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Maps/Helpers/valueAdapter.hpp>
-#include <BabelWiresLib/Maps/Helpers/mapApplicatorBase.hpp>
+#include <BabelWiresLib/Maps/Helpers/mapApplicatorFallbackHelper.hpp>
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapData.hpp>
@@ -17,10 +17,10 @@
 
 namespace babelwires {
     /// Converts MapData to a native C++ function based on a std::unordered_map.
-    template <typename T, typename U> class UnorderedMapApplicator : MapApplicatorBase<T, U> {
+    template <typename T, typename U> class UnorderedMapApplicator {
       public:
         UnorderedMapApplicator(const MapData& mapData, const ValueAdapter<T>& sourceAdapter,
-                               const ValueAdapter<U>& targetAdapter) : MapApplicatorBase<T,U>(mapData, targetAdapter) {
+                               const ValueAdapter<U>& targetAdapter) : m_fallbackHelper(mapData, targetAdapter) {
             for (unsigned int i = 0; i < mapData.getNumMapEntries() - 1; ++i) {
                 const MapEntryData& entryData = mapData.getMapEntry(i);
                 switch (entryData.getKind()) {
@@ -45,6 +45,7 @@ namespace babelwires {
         }
 
       private:
+        MapApplicatorFallbackHelper<T, U> m_fallbackHelper;
         std::unordered_map<T, U> m_map;
     };
 } // namespace babelwires

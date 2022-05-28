@@ -9,17 +9,18 @@
 
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/Maps/Helpers/enumValueAdapters.hpp>
-#include <BabelWiresLib/Maps/Helpers/mapApplicatorBase.hpp>
+#include <BabelWiresLib/Maps/Helpers/mapApplicatorFallbackHelper.hpp>
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapData.hpp>
 
 namespace babelwires {
     /// Converts MapData with a EnumWithCppEnum for a source type to another value type, using an array.
-    template <typename ENUM, typename U> class EnumSourceMapApplicator : MapApplicatorBase<typename ENUM::Value, U> {
+    template <typename ENUM, typename U> class EnumSourceMapApplicator {
       public:
-        EnumSourceMapApplicator(const MapData& mapData, const ENUM& sourceEnumType, const ValueAdapter<U>& targetAdapter) : MapApplicatorBase<typename ENUM::Value, U>(mapData, targetAdapter) {
+        EnumSourceMapApplicator(const MapData& mapData, const ENUM& sourceEnumType, const ValueAdapter<U>& targetAdapter) {
+            MapApplicatorFallbackHelper<typename ENUM::Value, U> fallbackHelper(mapData, targetAdapter);
             for (unsigned int i = 0; i < static_cast<unsigned int>(ENUM::Value::NUM_VALUES); ++i) {
-                m_array[i] = this->getFallback(static_cast<typename ENUM::Value>(i));
+                m_array[i] = fallbackHelper.getFallback(static_cast<typename ENUM::Value>(i));
             }
             const EnumToValueValueAdapter<ENUM> sourceAdapter{sourceEnumType};
 

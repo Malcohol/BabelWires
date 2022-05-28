@@ -15,9 +15,9 @@
 
 namespace babelwires {
     /// A helper which handles fallbacks for MapApplicators.
-    template <typename T, typename U> class MapApplicatorBase {
+    template <typename T, typename U> class MapApplicatorFallbackHelper {
       public:
-        MapApplicatorBase(const MapData& mapData, const ValueAdapter<U>& targetAdapter) {
+        MapApplicatorFallbackHelper(const MapData& mapData, const ValueAdapter<U>& targetAdapter) {
             const MapEntryData& fallbackEntryData = mapData.getMapEntry(mapData.getNumMapEntries() - 1);
             switch (fallbackEntryData.getKind()) {
                 case MapEntryData::Kind::AllToOne: {
@@ -34,7 +34,6 @@ namespace babelwires {
             }
         }
 
-      protected:
         template <typename V = T> std::enable_if_t<std::is_same_v<V, U>, U> getFallback(const T& t) const {
             if (m_fallbackIsIdentity) {
                 return t;
