@@ -17,13 +17,14 @@
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Maps/mapSerialization.hpp>
-#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Maps/Commands/setMapToDefaultCommand.hpp>
 #include <BabelWiresLib/Maps/Commands/setMapSourceTypeCommand.hpp>
 #include <BabelWiresLib/Maps/Commands/setMapTargetTypeCommand.hpp>
+#include <BabelWiresLib/Maps/Commands/setMapCommand.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -236,7 +237,7 @@ void babelwires::MapEditor::updateMapFromProject() {
     const MapData* mapDataFromProject = tryGetMapDataFromProject(scope);
     if (mapDataFromProject) {
         getUserLogger().logInfo() << "Refreshing the map from the project";
-        setEditorMap(*mapDataFromProject);
+        executeCommand(std::make_unique<SetMapCommand>("Refresh the map from the project", mapDataFromProject->clone()));
     } else {
         warnThatMapNoLongerInProject("Cannot refresh the map.");
     }

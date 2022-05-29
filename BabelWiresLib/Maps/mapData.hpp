@@ -12,6 +12,7 @@
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Serialization/serializable.hpp>
 #include <Common/Utilities/result.hpp>
+#include <Common/Cloning/cloneable.hpp>
 
 #include <vector>
 #include <memory>
@@ -26,9 +27,10 @@ namespace babelwires {
     /// paste from similar but non-identical types, entries are not presumed to be valid.
     /// However, an assignment of MapData to a MapFeature will fail if there are
     /// invalid entries.
-    class MapData : public Serializable, public ProjectVisitable {
+    class MapData : public Serializable, public Cloneable, public ProjectVisitable {
       public:
         SERIALIZABLE(MapData, "mapData", void, 1);
+        CLONEABLE(MapData);
 
         MapData();
         MapData(const MapData& other);
