@@ -16,7 +16,7 @@
 
 namespace babelwires {
     class Project;
-    class ElementData;
+    struct ElementData;
 
     /// Remove a feature element or a connection or a mixture of both from the project.
     /// All the connections of a feature element are always removed when it is.

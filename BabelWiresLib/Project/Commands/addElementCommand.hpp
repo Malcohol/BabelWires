@@ -14,7 +14,7 @@
 
 namespace babelwires {
     class Project;
-    class ElementData;
+    struct ElementData;
 
     /// Add a feature element to the project.
     class AddElementCommand : public SimpleCommand<Project> {

@@ -19,7 +19,7 @@
 
 namespace babelwires {
     class MapEntryData;
-    class ProjectContext;
+    struct ProjectContext;
     class Type;
 
     /// The data held by a map.

@@ -26,7 +26,7 @@ unsigned int babelwires::Enum::getIndexFromIdentifier(babelwires::Identifier id)
     const EnumValues& values = getEnumValues();
     const auto it = std::find(values.begin(), values.end(), id);
     assert((it != values.end()) && "id not found in enum");
-    return it - values.begin();
+    return static_cast<unsigned int>(it - values.begin());
 }
 
 babelwires::Identifier babelwires::Enum::getIdentifierFromIndex(unsigned int index) const {

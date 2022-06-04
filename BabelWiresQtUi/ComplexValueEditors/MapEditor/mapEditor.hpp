@@ -21,7 +21,7 @@ namespace babelwires {
     class MapFeature;
     class MapModel;
     class MapView;
-    class MapValueAssignmentData;
+    struct MapValueAssignmentData;
     class TypeWidget;
 
     class MapEditor : public ComplexValueEditor {

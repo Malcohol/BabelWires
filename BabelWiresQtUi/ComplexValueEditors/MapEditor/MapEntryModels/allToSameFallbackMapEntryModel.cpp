@@ -16,6 +16,7 @@ QVariant babelwires::AllToSameFallbackMapEntryModel::getDisplayData(unsigned int
             return "= same";
         default:
             assert(false);
+            return {};
     }
 }
 

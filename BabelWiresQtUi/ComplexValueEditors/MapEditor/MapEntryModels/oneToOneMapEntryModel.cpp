@@ -30,6 +30,7 @@ QVariant babelwires::OneToOneMapEntryModel::getDisplayData(unsigned int column) 
             return m_targetValueModel->getDisplayData();
         default:
             assert(false);
+            return {};
     }
 }
 
@@ -41,6 +42,7 @@ bool babelwires::OneToOneMapEntryModel::isItemEditable(unsigned int column) cons
             return m_targetValueModel->isItemEditable();
         default:
             assert(false);
+            return false;
     }
 }
 
@@ -53,6 +55,7 @@ QWidget* babelwires::OneToOneMapEntryModel::createEditor(const QModelIndex& inde
             return m_targetValueModel->createEditor(index, parent);
         default:
             assert(false && "That column isn't editable");
+            return nullptr;
     }
 }
 
@@ -88,8 +91,8 @@ babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(unsigned int 
             break;
         default:
             assert(false && "That column isn't editable");
+            return {};
     }
-    return {};
 }
 
 bool babelwires::OneToOneMapEntryModel::validateEditor(QWidget* editor, unsigned int column) const {
@@ -101,5 +104,6 @@ bool babelwires::OneToOneMapEntryModel::validateEditor(QWidget* editor, unsigned
             return m_targetValueModel->validateEditor(editor);
         default:
             assert(false && "That column isn't editable");
+            return false;
     }
 }

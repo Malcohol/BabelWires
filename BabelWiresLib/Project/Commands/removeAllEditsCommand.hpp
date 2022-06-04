@@ -13,7 +13,7 @@
 
 namespace babelwires {
     class Project;
-    class ModifierData;
+    struct ModifierData;
 
     /// Remove all modifiers and expanded paths at and beneath a given feature.
     class RemoveAllEditsCommand : public SimpleCommand<Project> {

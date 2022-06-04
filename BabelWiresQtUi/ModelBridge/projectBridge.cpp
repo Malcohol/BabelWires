@@ -535,5 +535,5 @@ void babelwires::ProjectBridge::selectNewNodes() {
 }
 
 void babelwires::ProjectBridge::onSelectionChanged() {
-    emit nodeSelectionChanged(m_flowScene->selectedNodes().size());
+    emit nodeSelectionChanged(static_cast<int>(m_flowScene->selectedNodes().size()));
 }

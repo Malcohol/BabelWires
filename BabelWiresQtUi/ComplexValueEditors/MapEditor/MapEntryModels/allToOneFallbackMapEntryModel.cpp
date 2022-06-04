@@ -30,6 +30,7 @@ QVariant babelwires::AllToOneFallbackMapEntryModel::getDisplayData(unsigned int 
             return m_targetValueModel->getDisplayData();
         default:
             assert(false);
+            return {};
     }
 }
 

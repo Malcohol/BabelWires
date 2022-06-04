@@ -16,7 +16,7 @@
 
 namespace babelwires {
     class ProjectBridge;
-    class UserLogger;
+    struct UserLogger;
     class ValueFeature;
     class AccessModelScope;
 

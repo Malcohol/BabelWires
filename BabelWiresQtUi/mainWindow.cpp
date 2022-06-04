@@ -397,7 +397,7 @@ babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
 void babelwires::MainWindow::writeToClipboard(ProjectData projectData) {
     std::string asString = ProjectSerialization::saveToString(getFullFilePath().toStdString(), std::move(projectData));
 
-    QByteArray contents(asString.c_str(), asString.size());
+    QByteArray contents(asString.c_str(), static_cast<int>(asString.size()));
     auto mimedata = std::make_unique<QMimeData>();
     mimedata->setData(getClipboardMimetype(), contents);
     QApplication::clipboard()->setMimeData(mimedata.release());

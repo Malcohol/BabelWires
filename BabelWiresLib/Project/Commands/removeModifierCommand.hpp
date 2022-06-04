@@ -13,7 +13,7 @@
 
 namespace babelwires {
     class Project;
-    class ModifierData;
+    struct ModifierData;
 
     /// Remove a modifier from a feature element.
     /// This will not remove modifiers on array elements affected by removing

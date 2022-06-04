@@ -12,7 +12,7 @@
 
 namespace babelwires {
     class ProjectBridge;
-    class UserLogger;
+    struct UserLogger;
 
     class ComplexValueEditorManager : public QObject {
         Q_OBJECT

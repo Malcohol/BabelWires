@@ -14,7 +14,7 @@
 
 namespace babelwires {
     class Project;
-    class ModifierData;
+    struct ModifierData;
 
     /// Add a modifier to a feature element.
     class AddModifierCommand : public SimpleCommand<Project> {
