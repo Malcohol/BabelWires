@@ -47,7 +47,7 @@ babelwires::SimpleCommand<COMMAND_TARGET>::SimpleCommand(std::string commandName
 template <typename COMMAND_TARGET>
 bool babelwires::SimpleCommand<COMMAND_TARGET>::initializeAndExecute(COMMAND_TARGET& target) {
     if (initialize(target)) {
-        this->template execute(target);
+        this->execute(target);
         return true;
     }
     return false;

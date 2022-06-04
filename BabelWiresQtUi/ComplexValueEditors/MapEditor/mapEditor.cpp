@@ -49,8 +49,8 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
     setLayout(mainLayout);
     {
         auto contentsButtons = new QDialogButtonBox();
-        {
-            QPushButton* defaultButton = new QPushButton(style()->standardIcon(QStyle::SP_RestoreDefaultsButton), "Restore defaults");
+    {
+            QPushButton* defaultButton = new QPushButton("Restore defaults");
             contentsButtons->addButton(defaultButton, QDialogButtonBox::ButtonRole::ResetRole);
             connect(defaultButton, &QAbstractButton::clicked, this, &MapEditor::setToDefault);
         }
