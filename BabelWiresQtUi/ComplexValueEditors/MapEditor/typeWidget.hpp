@@ -21,10 +21,17 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        enum class Variance { strict, covariant, contravariant };
+        enum class TypeFlexibility { 
+          /// Only allow the given type to be selected.
+          strict, 
+          /// Allow the type and its subtypes to be selected
+          allowSubtypes,
+          /// Allow the type and its supertypes to be selected
+          allowSupertypes 
+        };
 
         /// If a type identifier is not provided, all types are allowed.
-        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId, Variance variance);
+        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId, TypeFlexibility flexibility);
 
         LongIdentifier getTypeId() const;
         void setTypeId(LongIdentifier id);

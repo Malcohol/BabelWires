@@ -8,19 +8,19 @@
 #include <cassert>
 
 babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId,
-                                   Variance variance)
+                                   TypeFlexibility flexibility)
     : QComboBox(parent) {
     std::vector<LongIdentifier> typeIds;
     if (typeId.has_value()) {
-        switch (variance) {
-            case Variance::strict:
+        switch (flexibility) {
+            case TypeFlexibility::strict:
                 typeIds.emplace_back(*typeId);
                 break;
-            case Variance::contravariant:
-                typeSystem.addAllSupertypes(*typeId, typeIds);
-                break;
-            case Variance::covariant:
+            case TypeFlexibility::allowSubtypes:
                 typeSystem.addAllSubtypes(*typeId, typeIds);
+                break;
+            case TypeFlexibility::allowSupertypes:
+                typeSystem.addAllSupertypes(*typeId, typeIds);
                 break;
         }
     } else {
