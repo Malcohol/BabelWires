@@ -31,28 +31,6 @@ void babelwires::UntypedTypeSystemRegistry::validateNewEntry(RegistryEntry* newE
 babelwires::TypeSystem::TypeSystem()
     : Registry("Type system") {}
 
-bool babelwires::TypeSystem::isSubType(const Type* subtype, const Type* supertype) const {
-    const Type* current = subtype;
-    while (current && (current != supertype)) {
-        current = current->getParent();
-    }
-    return current;
-}
-
-void babelwires::TypeSystem::addAllSubtypes(const Type* type, TypeSet& subtypes) const {
-    subtypes.emplace_back(type);
-    for (auto& childId : type->getChildren()) {
-        addAllSubtypes(childId, subtypes);
-    }
-}
-
-void babelwires::TypeSystem::addAllSupertypes(const Type* type, TypeSet& supertypes) const {
-    supertypes.emplace_back(type);
-    if (type->getParent()) {
-        addAllSubtypes(type->getParent(), supertypes);
-    }
-}
-
 bool babelwires::TypeSystem::isSubType(LongIdentifier subtypeId, LongIdentifier supertypeId) const {
     const Type *const subtype = getEntryByIdentifier(subtypeId);
     assert(subtype && "The subtypeId was an unregistered type");

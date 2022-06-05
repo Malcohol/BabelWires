@@ -32,3 +32,11 @@ void babelwires::Type::setParent(const Type* parent) {
 const babelwires::Type* babelwires::Type::getParent() const {
     return m_parent;
 }
+
+bool babelwires::Type::isSubType(const Type* supertype) const {
+    const Type* current = this;
+    while (current && (current != supertype)) {
+        current = current->getParent();
+    }
+    return current;
+}
