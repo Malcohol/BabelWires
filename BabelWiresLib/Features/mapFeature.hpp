@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
 #include <BabelWiresLib/Maps/mapData.hpp>
-#include <BabelWiresLib/TypeSystem/typeIdSet.hpp>
 
 namespace babelwires {
     /// A MapFeature describes a mapping between types (ints or enums).
@@ -18,7 +17,7 @@ namespace babelwires {
       public:
         /// If the sets are empty, any types are allowed.
         /// If the sets are not empty, then the first type is taken to be the default.
-        MapFeature(TypeIdSet allowedSourceIds, TypeIdSet allowedTargetIds);
+        MapFeature(LongIdentifier sourceId, LongIdentifier targetId);
 
       protected:
         std::string doGetValueType() const override;
@@ -26,13 +25,13 @@ namespace babelwires {
         void doSetToDefault() override;
 
       public:
-        const TypeIdSet& getAllowedSourceTypeIds() const;
-        const TypeIdSet& getAllowedTargetTypeIds() const;
+        LongIdentifier getSourceTypeId() const;
+        LongIdentifier getTargetTypeId() const;
 
       private:
         /// Empty means all types are allowed.
-        TypeIdSet m_allowedSourceTypeIds;
+        LongIdentifier m_sourceTypeId;
         /// Empty means all types are allowed.
-        TypeIdSet m_allowedTargetTypeIds;
+        LongIdentifier m_targetTypeId;
     };
 } // namespace babelwires

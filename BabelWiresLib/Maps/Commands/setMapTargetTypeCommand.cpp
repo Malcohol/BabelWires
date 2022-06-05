@@ -17,8 +17,9 @@ babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string command
     , m_newTargetTypeId(newTargetTypeId) {}
 
 bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
-    TypeIdSet types = map.getAllowedTargetTypeIds();
-    if (std::find(types.begin(), types.end(), m_newTargetTypeId) == types.end()) {
+    const LongIdentifier allowedTargetType = map.getAllowedTargetTypeId();
+    // TODO covariance
+    if (allowedTargetType != m_newTargetTypeId) {
         return false;
     }
     m_oldTargetTypeId = map.getTargetTypeId();

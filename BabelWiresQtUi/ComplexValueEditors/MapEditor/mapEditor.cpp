@@ -87,17 +87,17 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             const TypeSystem& typeSystem = context.m_typeSystem;
             const MapFeature& mapFeature = getMapFeature(scope);
             const MapData& mapData = getMapDataFromProject(scope);
-            m_map.setAllowedSourceTypeIds(mapFeature.getAllowedSourceTypeIds());
-            m_map.setAllowedTargetTypeIds(mapFeature.getAllowedTargetTypeIds());
+            m_map.setAllowedSourceTypeId(mapFeature.getSourceTypeId());
+            m_map.setAllowedTargetTypeId(mapFeature.getTargetTypeId());
             m_map.setMapData(mapData);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
-                m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, mapFeature.getAllowedSourceTypeIds());
+                m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeId(), TypeWidget::Variance::contravariant);
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
-                m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, mapFeature.getAllowedTargetTypeIds());
+                m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeId(), TypeWidget::Variance::covariant);
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }
             connect(m_sourceTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this, 

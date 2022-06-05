@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/Maps/mapData.hpp>
-#include <BabelWiresLib/TypeSystem/typeIdSet.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Serialization/serializable.hpp>
@@ -28,11 +27,11 @@ namespace babelwires {
         MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
-        void setAllowedSourceTypeIds(const TypeIdSet& typeSet);
-        void setAllowedTargetTypeIds(const TypeIdSet& typeSet);
+        void setAllowedSourceTypeId(LongIdentifier sourceTypeId);
+        void setAllowedTargetTypeId(LongIdentifier targetTypeId);
 
-        const TypeIdSet& getAllowedSourceTypeIds() const;
-        const TypeIdSet& getAllowedTargetTypeIds() const;
+        LongIdentifier getAllowedSourceTypeId() const;
+        LongIdentifier getAllowedTargetTypeId() const;
        
         LongIdentifier getSourceTypeId() const;
         LongIdentifier getTargetTypeId() const;
@@ -61,18 +60,12 @@ namespace babelwires {
 
         const ProjectContext& getProjectContext() const;
 
-        /// Convenience method which returns the first allowed source type id or int.
-        LongIdentifier getDefaultSourceId() const;
-
-        /// Convenience method which returns the first allowed target type id or int.
-        LongIdentifier getDefaultTargetId() const;
-
       private:
         const ProjectContext& m_projectContext;
         /// Empty means all types are allowed.
-        TypeIdSet m_allowedSourceTypeIds;
+        LongIdentifier m_allowedSourceTypeId;
         /// Empty means all types are allowed.
-        TypeIdSet m_allowedTargetTypeIds;
+        LongIdentifier m_allowedTargetTypeId;
         LongIdentifier m_sourceTypeId;
         LongIdentifier m_targetTypeId;
         std::vector<std::unique_ptr<MapProjectEntry>> m_mapEntries;

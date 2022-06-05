@@ -17,27 +17,29 @@
 
 babelwires::MapProject::MapProject(const ProjectContext& ProjectContext)
     : m_projectContext(ProjectContext)
+    , m_allowedSourceTypeId(IntType::getThisIdentifier())
+    , m_allowedTargetTypeId(IntType::getThisIdentifier())
     , m_sourceTypeId(IntType::getThisIdentifier())
     , m_targetTypeId(IntType::getThisIdentifier()) {}
 
 babelwires::MapProject::~MapProject() = default;
 
-void babelwires::MapProject::setAllowedSourceTypeIds(const TypeIdSet& typeSet) {
+void babelwires::MapProject::setAllowedSourceTypeId(LongIdentifier sourceTypeId) {
     // TODO Revalidate data
-    m_allowedSourceTypeIds = typeSet;
+    m_allowedSourceTypeId = sourceTypeId;
 }
 
-void babelwires::MapProject::setAllowedTargetTypeIds(const TypeIdSet& typeSet) {
+void babelwires::MapProject::setAllowedTargetTypeId(LongIdentifier targetTypeId) {
     // TODO Revalidate data
-    m_allowedTargetTypeIds = typeSet;
+    m_allowedTargetTypeId = targetTypeId;
 }
 
-const babelwires::TypeIdSet& babelwires::MapProject::getAllowedSourceTypeIds() const {
-    return m_allowedSourceTypeIds;
+babelwires::LongIdentifier babelwires::MapProject::getAllowedSourceTypeId() const {
+    return m_allowedSourceTypeId;
 }
 
-const babelwires::TypeIdSet& babelwires::MapProject::getAllowedTargetTypeIds() const {
-    return m_allowedTargetTypeIds;
+babelwires::LongIdentifier babelwires::MapProject::getAllowedTargetTypeId() const {
+    return m_allowedTargetTypeId;
 }
 
 babelwires::LongIdentifier babelwires::MapProject::getSourceTypeId() const {
@@ -49,7 +51,8 @@ babelwires::LongIdentifier babelwires::MapProject::getTargetTypeId() const {
 }
 
 void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
-    assert(m_allowedSourceTypeIds.empty() || (std::find(m_allowedSourceTypeIds.begin(), m_allowedSourceTypeIds.end(), sourceId) != m_allowedSourceTypeIds.end()));
+    // TODO SUBTYPE
+
     m_sourceTypeId = sourceId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
@@ -58,7 +61,8 @@ void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
 }
 
 void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
-    assert(m_allowedTargetTypeIds.empty() || (std::find(m_allowedTargetTypeIds.begin(), m_allowedTargetTypeIds.end(), targetId) != m_allowedTargetTypeIds.end()));
+    // TODO SUBTYPE
+    
     m_targetTypeId = targetId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
@@ -147,22 +151,4 @@ void babelwires::MapProject::setMapData(const MapData& data) {
 
 const babelwires::ProjectContext& babelwires::MapProject::getProjectContext() const {
     return m_projectContext;
-}
-
-/// Convenience method which returns the first allowed source type id or int.
-babelwires::LongIdentifier babelwires::MapProject::getDefaultSourceId() const {
-    if (m_allowedSourceTypeIds.empty()) {
-        return IntType::getThisIdentifier();
-    } else {
-        return m_allowedSourceTypeIds[0];
-    }
-}
-
-/// Convenience method which returns the first allowed target type id or int.
-babelwires::LongIdentifier babelwires::MapProject::getDefaultTargetId() const {
-    if (m_allowedTargetTypeIds.empty()) {
-        return IntType::getThisIdentifier();
-    } else {
-        return m_allowedTargetTypeIds[0];
-    }
 }

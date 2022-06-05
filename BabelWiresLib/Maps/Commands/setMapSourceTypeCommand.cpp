@@ -17,8 +17,9 @@ babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string command
     , m_newSourceTypeId(newSourceTypeId) {}
 
 bool babelwires::SetMapSourceTypeCommand::initialize(const MapProject& map) {
-    TypeIdSet types = map.getAllowedSourceTypeIds();
-    if (std::find(types.begin(), types.end(), m_newSourceTypeId) == types.end()) {
+    const LongIdentifier allowedSourceType = map.getAllowedSourceTypeId();
+    // TODO Contravariance
+    if (allowedSourceType != m_newSourceTypeId) {
         return false;
     }
     m_oldSourceTypeId = map.getSourceTypeId();

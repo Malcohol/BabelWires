@@ -2,21 +2,34 @@
 
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <cassert>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, TypeIdSet typeIds)
-    : QComboBox(parent)
-    , m_typeIds(std::move(typeIds)) {
-    std::vector<std::string> typeNames;
-    for (const auto& e : m_typeIds) {
-        typeNames.emplace_back(typeSystem.getEntryByIdentifier(e)->getName());
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId, Variance variance)
+    : QComboBox(parent) {
+    std::vector<LongIdentifier> typeIds;
+    if (typeId.has_value()) {
+        typeIds.emplace_back(*typeId);
+        // TODO Subtypes / variance
+    } else {
+        // TODO All types.
     }
-    std::sort(typeNames.begin(), typeNames.end());
-    for (const auto& name : typeNames) {
-        addItem(name.c_str());
+
+    std::vector<std::tuple<std::string, LongIdentifier>> sortedNames;
+    sortedNames.reserve(typeIds.size()); 
+
+    for (const auto& typeId : typeIds) {
+        sortedNames.emplace_back(std::tuple{typeSystem.getEntryByIdentifier(typeId)->getName(), typeId});
+    }
+    std::sort(sortedNames.begin(), sortedNames.end());
+
+    m_typeIds.swap(typeIds);
+    m_typeIds.clear();
+    for (const auto& name : sortedNames) {
+        addItem(std::get<0>(name).c_str());
+        m_typeIds.emplace_back(std::get<1>(name));
     }
 }
 

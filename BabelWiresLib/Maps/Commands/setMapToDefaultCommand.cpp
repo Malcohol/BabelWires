@@ -22,8 +22,8 @@ bool babelwires::SetMapToDefaultCommand::initialize(const MapProject& map) {
 
 void babelwires::SetMapToDefaultCommand::execute(MapProject& map) const {
     MapData defaultMap;
-    defaultMap.setSourceTypeId(map.getDefaultSourceId());
-    defaultMap.setTargetTypeId(map.getDefaultTargetId());
+    defaultMap.setSourceTypeId(map.getAllowedSourceTypeId());
+    defaultMap.setTargetTypeId(map.getAllowedTargetTypeId());
     defaultMap.setEntriesToDefault(map.getProjectContext());
     map.setMapData(defaultMap);
 }

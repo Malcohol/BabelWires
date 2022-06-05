@@ -9,10 +9,10 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeIdSet.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <QComboBox>
+#include <optional>
 
 namespace babelwires {
     class TypeSystem;
@@ -21,12 +21,15 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, TypeIdSet typeIds);
+        enum class Variance { strict, covariant, contravariant };
+
+        /// If a type identifier is not provided, all types are allowed.
+        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId, Variance variance);
 
         LongIdentifier getTypeId() const;
         void setTypeId(LongIdentifier id);
 
       private:
-        TypeIdSet m_typeIds;
+        std::vector<LongIdentifier> m_typeIds;
     };
 }
