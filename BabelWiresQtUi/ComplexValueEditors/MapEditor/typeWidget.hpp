@@ -15,13 +15,13 @@
 #include <QComboBox>
 
 namespace babelwires {
-    class ProjectBridge;
+    class TypeSystem;
     class MapFeature;
 
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        TypeWidget(QWidget* parent, ProjectBridge& projectBridge, TypeIdSet typeIds);
+        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, TypeIdSet typeIds);
 
         LongIdentifier getTypeId() const;
         void setTypeId(LongIdentifier id);

@@ -1,18 +1,16 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Enums/enum.hpp>
 
 #include <cassert>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, ProjectBridge& projectBridge, TypeIdSet typeIds)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, TypeIdSet typeIds)
     : QComboBox(parent)
     , m_typeIds(std::move(typeIds)) {
     std::vector<std::string> typeNames;
-    const UiProjectContext& context = projectBridge.getContext();
-    const TypeSystem& typeSystem = context.m_typeSystem;
     for (const auto& e : m_typeIds) {
         typeNames.emplace_back(typeSystem.getEntryByIdentifier(e)->getName());
     }
