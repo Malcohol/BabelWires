@@ -56,6 +56,17 @@ const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifi
     return nullptr;
 }
 
+babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifierNonConst(const LongIdentifier& identifier) const {
+    for (auto&& f : m_entries) {
+        if (identifier == f->getIdentifier()) {
+            // resolve the identifier if it is currently unresolved.
+            f->getIdentifier().copyDiscriminatorTo(identifier);
+            return f.get();
+        }
+    }
+    return nullptr;
+}
+
 const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByName(std::string_view name) const {
     for (auto&& f : m_entries) {
         if (name == f->getName()) {

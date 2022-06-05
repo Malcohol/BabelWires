@@ -51,22 +51,24 @@ babelwires::LongIdentifier babelwires::MapProject::getTargetTypeId() const {
 }
 
 void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
-    // TODO SUBTYPE
+    const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
+    assert(typeSystem.isSubType(m_allowedSourceTypeId, sourceId));
 
     m_sourceTypeId = sourceId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
-        m_mapEntries[i]->validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, (i == m_mapEntries.size() - 1));
+        m_mapEntries[i]->validate(typeSystem, m_sourceTypeId, m_targetTypeId, (i == m_mapEntries.size() - 1));
     }
 }
 
 void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
-    // TODO SUBTYPE
+    const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
+    assert(typeSystem.isSubType(targetId, m_allowedTargetTypeId));
     
     m_targetTypeId = targetId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
-        m_mapEntries[i]->validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, (i == m_mapEntries.size() - 1));
+        m_mapEntries[i]->validate(typeSystem, m_sourceTypeId, m_targetTypeId, (i == m_mapEntries.size() - 1));
     }
 }
 

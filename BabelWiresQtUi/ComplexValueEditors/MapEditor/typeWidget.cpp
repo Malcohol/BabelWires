@@ -7,18 +7,28 @@
 
 #include <cassert>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId, Variance variance)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId,
+                                   Variance variance)
     : QComboBox(parent) {
     std::vector<LongIdentifier> typeIds;
     if (typeId.has_value()) {
-        typeIds.emplace_back(*typeId);
-        // TODO Subtypes / variance
+        switch (variance) {
+            case Variance::strict:
+                typeIds.emplace_back(*typeId);
+                break;
+            case Variance::contravariant:
+                typeIds = typeSystem.getAllSubtypes(*typeId);
+                break;
+            case Variance::covariant:
+                typeIds = typeSystem.getAllSupertypes(*typeId);
+                break;
+        }
     } else {
         // TODO All types.
     }
 
     std::vector<std::tuple<std::string, LongIdentifier>> sortedNames;
-    sortedNames.reserve(typeIds.size()); 
+    sortedNames.reserve(typeIds.size());
 
     for (const auto& typeId : typeIds) {
         sortedNames.emplace_back(std::tuple{typeSystem.getEntryByIdentifier(typeId)->getName(), typeId});

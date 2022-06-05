@@ -15,9 +15,26 @@
 namespace babelwires {
     class Type;
 
-    class TypeSystem : public Registry<Type> {
+    class UntypedTypeSystemRegistry : public UntypedRegistry 
+    {
+      public:
+        UntypedTypeSystemRegistry(std::string registryName);
+      protected:
+        void validateNewEntry(const RegistryEntry* newEntry) const override;
+    };
+
+    class TypeSystem : public Registry<Type, UntypedTypeSystemRegistry> {
       public:
         TypeSystem();
+
+        /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
+        bool isSubType(LongIdentifier subtypeId, LongIdentifier supertypeId) const;
+
+        /// Return all the subtypes of type, including type.
+        std::vector<LongIdentifier> getAllSubtypes(LongIdentifier typeId) const;
+
+        /// Return all the supertypes, including type.
+        std::vector<LongIdentifier> getAllSupertypes(LongIdentifier typeId) const;
     };
 
 } // namespace babelwires
