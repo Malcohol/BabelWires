@@ -68,3 +68,10 @@ babelwires::MapEntryModel::createReplacementDataFromEditor(Column column, QWidge
 bool babelwires::MapEntryModel::validateEditor(QWidget* editor, Column column) const {
     return false;
 }
+
+babelwires::MapEntryModel::Column babelwires::MapEntryModel::indexToColumn(const QModelIndex& index)
+{
+    assert(index.column() >= 0);
+    assert(index.column() < 2);
+    return static_cast<Column>(index.column());
+}

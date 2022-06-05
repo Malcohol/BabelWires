@@ -26,7 +26,7 @@ QWidget* babelwires::MapModelDelegate::createEditor(QWidget* parent, const QStyl
     MapEntryModelDispatcher mapEntryModel;
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
-    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
+    const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
     assert(mapEntryModel->isItemEditable(column) &&
            "We should not be trying to create an editor for a non-editable feature");
 
@@ -62,7 +62,7 @@ void babelwires::MapModelDelegate::setEditorData(QWidget* editor, const QModelIn
     MapEntryModelDispatcher mapEntryModel;
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
-    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
+    const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
 
     assert(mapEntryModel->isItemEditable(column) &&
            "We should not be trying to create an editor for a non-editable feature");
@@ -78,7 +78,7 @@ void babelwires::MapModelDelegate::setModelData(QWidget* editor, QAbstractItemMo
     MapEntryModelDispatcher mapEntryModel;
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
-    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
+    const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
     unsigned int row = static_cast<unsigned int>(index.row());
 
     if (std::unique_ptr<MapEntryData> replacementData = mapEntryModel->createReplacementDataFromEditor(column, editor)) {
@@ -95,7 +95,7 @@ void babelwires::MapModelDelegate::checkEditorIsValid(QWidget* editor, const QMo
     MapEntryModelDispatcher mapEntryModel;
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
-    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
+    const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
 
     if (mapEntryModel->isItemEditable(column) && mapEntryModel->validateEditor(editor, column)) {
         setEditorData(editor, index);

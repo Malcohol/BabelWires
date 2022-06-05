@@ -55,6 +55,9 @@ namespace babelwires {
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
         */
+
+        static Column indexToColumn(const QModelIndex& index);
+
       public:
         const Type* m_sourceType;
         const Type* m_targetType; 
