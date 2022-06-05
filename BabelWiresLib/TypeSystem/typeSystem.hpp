@@ -30,11 +30,13 @@ namespace babelwires {
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
         bool isSubType(LongIdentifier subtypeId, LongIdentifier supertypeId) const;
 
+        using TypeIdSet = std::vector<LongIdentifier>;
+
         /// Return all the subtypes of type, including type.
-        std::vector<LongIdentifier> getAllSubtypes(LongIdentifier typeId) const;
+        void addAllSubtypes(LongIdentifier typeId, TypeIdSet& subtypes) const;
 
         /// Return all the supertypes, including type.
-        std::vector<LongIdentifier> getAllSupertypes(LongIdentifier typeId) const;
+        void addAllSupertypes(LongIdentifier typeId, TypeIdSet& supertypes) const;
     };
 
 } // namespace babelwires

@@ -36,6 +36,8 @@ namespace babelwires {
         const std::vector<LongIdentifier>& getChildren() const;
       private:
         std::optional<LongIdentifier> m_parentTypeId;
+
+        // Set after registration
         std::vector<LongIdentifier> m_children;
     };
 

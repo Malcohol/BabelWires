@@ -44,33 +44,20 @@ bool babelwires::TypeSystem::isSubType(LongIdentifier subtypeId, LongIdentifier 
     return true;
 }
 
-std::vector<babelwires::LongIdentifier> babelwires::TypeSystem::getAllSubtypes(LongIdentifier typeId) const {
-    std::vector<babelwires::LongIdentifier> subtypes;
+void babelwires::TypeSystem::addAllSubtypes(LongIdentifier typeId, TypeIdSet& subtypes) const {
     subtypes.emplace_back(typeId);
-    for (std::size_t index = 0; index < subtypes.size(); ++index)
-    {
-        const LongIdentifier currentId = subtypes[index];
-        const Type *const current = getEntryByIdentifier(currentId);
-        assert(current && "Encountered an unregistered type");
-        const auto& children = current->getChildren();
-        std::copy(children.begin(), children.end(), std::back_inserter(subtypes));
+    const Type *const current = getEntryByIdentifier(typeId);
+    assert(current && "Encountered an unregistered type");
+    for (auto& childId : current->getChildren()) {
+        addAllSubtypes(childId, subtypes);
     }
-    return subtypes;
 }
 
-std::vector<babelwires::LongIdentifier> babelwires::TypeSystem::getAllSupertypes(LongIdentifier typeId) const {
-    std::vector<babelwires::LongIdentifier> supertypes;
+void babelwires::TypeSystem::addAllSupertypes(LongIdentifier typeId, TypeIdSet& supertypes) const {
     supertypes.emplace_back(typeId);
-    LongIdentifier currentId = typeId;
-    LongIdentifier parentId = typeId;
-    do
-    {
-        currentId = parentId;
-        const Type *const current = getEntryByIdentifier(currentId);
-        assert(current && "Encountered an unregistered type");
-        if (current->getParentTypeId()) {
-            parentId = *current->getParentTypeId();
-        }
-    } while (parentId != currentId);
-    return supertypes;
+    const Type *const current = getEntryByIdentifier(typeId);
+    assert(current && "Encountered an unregistered type");
+    if (current->getParentTypeId()) {
+        addAllSubtypes(*current->getParentTypeId(), supertypes);
+    }
 }
