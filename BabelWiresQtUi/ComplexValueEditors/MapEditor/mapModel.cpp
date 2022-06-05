@@ -114,8 +114,12 @@ Qt::ItemFlags babelwires::MapModel::flags(const QModelIndex& index) const {
     initMapEntryModelDispatcher(index, mapEntryModel);
 
     const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
-    if (mapEntryModel->isItemEditable(column)) {
-        flags = flags | Qt::ItemIsEditable;
+    const unsigned int row = static_cast<unsigned int>(index.row());
+    if (m_mapEditor.getMapProject().getMapEntry(row).getValidity())
+    {
+        if (mapEntryModel->isItemEditable(column)) {
+            flags = flags | Qt::ItemIsEditable;
+        }
     }
     return flags;
 }
