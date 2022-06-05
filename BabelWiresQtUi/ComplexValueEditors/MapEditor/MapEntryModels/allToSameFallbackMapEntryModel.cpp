@@ -7,11 +7,11 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/allToSameFallbackMapEntryModel.hpp>
 
-QVariant babelwires::AllToSameFallbackMapEntryModel::getDisplayData(unsigned int column) const {
+QVariant babelwires::AllToSameFallbackMapEntryModel::getDisplayData(Column column) const {
     switch (column) {
-        case 0:
+        case Column::sourceValue:
             return "*";
-        case 1:
+        case Column::targetValue:
             // TODO Need better.
             return "= same";
         default:

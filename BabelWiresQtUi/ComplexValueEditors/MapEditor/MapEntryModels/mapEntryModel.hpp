@@ -23,25 +23,32 @@ namespace babelwires {
     class MapEntryModel {
       public:
         virtual void init();
-        virtual QVariant getDisplayData(unsigned int column) const;
+
+        enum class Column
+        {
+          sourceValue = 0,
+          targetValue = 1
+        };
+
+        virtual QVariant getDisplayData(Column column) const;
 
         /// Add any context actions which should appear in the context menu for this row.
         /// Subclasses overriding this should use super-calls to collect standard actions.
         virtual void getContextMenuActions(std::vector<std::unique_ptr<ContextMenuAction>>& actionsOut) const;
 
         /// The default returns false.
-        virtual bool isItemEditable(unsigned int column) const;
+        virtual bool isItemEditable(Column column) const;
 
         /// The default asserts.
         virtual QWidget* createEditor(const QModelIndex& index, QWidget* parent) const;
         
         /// The default asserts.
-        virtual void setEditorData(unsigned int column, QWidget* editor) const;
+        virtual void setEditorData(Column column, QWidget* editor) const;
         
-        virtual std::unique_ptr<MapEntryData> createReplacementDataFromEditor(unsigned int column, QWidget* editor) const;
+        virtual std::unique_ptr<MapEntryData> createReplacementDataFromEditor(Column column, QWidget* editor) const;
 
         /// Check whether the editor is valid.
-        virtual bool validateEditor(QWidget* editor, unsigned int column) const;
+        virtual bool validateEditor(QWidget* editor, Column column) const;
 
         /*
         virtual bool hasCustomPainting() const;

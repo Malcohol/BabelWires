@@ -56,7 +56,7 @@ void babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index,
 
 QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     const unsigned int row = static_cast<unsigned int>(index.row());
-    const unsigned int column = static_cast<unsigned int>(index.column());
+    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
     const MapProject& mapProject = m_mapEditor.getMapProject();
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
 
@@ -113,7 +113,7 @@ Qt::ItemFlags babelwires::MapModel::flags(const QModelIndex& index) const {
     MapEntryModelDispatcher mapEntryModel;
     initMapEntryModelDispatcher(index, mapEntryModel);
 
-    const unsigned int column = static_cast<unsigned int>(index.column());
+    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
     if (mapEntryModel->isItemEditable(column)) {
         flags = flags | Qt::ItemIsEditable;
     }

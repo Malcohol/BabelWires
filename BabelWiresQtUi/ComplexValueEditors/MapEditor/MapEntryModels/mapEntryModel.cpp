@@ -18,7 +18,7 @@
 
 void babelwires::MapEntryModel::init() {}
 
-QVariant babelwires::MapEntryModel::getDisplayData(unsigned int column) const {
+QVariant babelwires::MapEntryModel::getDisplayData(Column column) const {
     return {};
 }
 
@@ -46,7 +46,7 @@ void babelwires::MapEntryModel::getContextMenuActions(
     }
 }
 
-bool babelwires::MapEntryModel::isItemEditable(unsigned int column) const {
+bool babelwires::MapEntryModel::isItemEditable(Column column) const {
     return false;
 }
 
@@ -55,16 +55,16 @@ QWidget* babelwires::MapEntryModel::createEditor(const QModelIndex& index, QWidg
     return nullptr;
 }
 
-void babelwires::MapEntryModel::setEditorData(unsigned int column, QWidget* editor) const {
+void babelwires::MapEntryModel::setEditorData(Column column, QWidget* editor) const {
     assert(false && "This item isn't editable");
 }
 
 std::unique_ptr<babelwires::MapEntryData>
-babelwires::MapEntryModel::createReplacementDataFromEditor(unsigned int column, QWidget* editor) const {
+babelwires::MapEntryModel::createReplacementDataFromEditor(Column column, QWidget* editor) const {
     assert(false && "This item isn't editable");
     return {};
 }
 
-bool babelwires::MapEntryModel::validateEditor(QWidget* editor, unsigned int column) const {
+bool babelwires::MapEntryModel::validateEditor(QWidget* editor, Column column) const {
     return false;
 }

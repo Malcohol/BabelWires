@@ -22,11 +22,11 @@ void babelwires::OneToOneMapEntryModel::init() {
     m_targetValueModel.init(*m_targetType, *discreteMapEntry.getTargetValue());
 }
 
-QVariant babelwires::OneToOneMapEntryModel::getDisplayData(unsigned int column) const {
+QVariant babelwires::OneToOneMapEntryModel::getDisplayData(Column column) const {
     switch (column) {
-        case 0:
+        case Column::sourceValue:
             return m_sourceValueModel->getDisplayData();
-        case 1:
+        case Column::targetValue:
             return m_targetValueModel->getDisplayData();
         default:
             assert(false);
@@ -34,11 +34,11 @@ QVariant babelwires::OneToOneMapEntryModel::getDisplayData(unsigned int column) 
     }
 }
 
-bool babelwires::OneToOneMapEntryModel::isItemEditable(unsigned int column) const {
+bool babelwires::OneToOneMapEntryModel::isItemEditable(Column column) const {
     switch (column) {
-        case 0:
+        case Column::sourceValue:
             return m_sourceValueModel->isItemEditable();
-        case 1:
+        case Column::targetValue:
             return m_targetValueModel->isItemEditable();
         default:
             assert(false);
@@ -47,11 +47,13 @@ bool babelwires::OneToOneMapEntryModel::isItemEditable(unsigned int column) cons
 }
 
 QWidget* babelwires::OneToOneMapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
-    unsigned int column = static_cast<unsigned int>(index.column());
+    assert(index.column() >= 0);
+    assert(index.column() < 2);
+    const Column column = static_cast<Column>(index.column());
     switch (column) {
-        case 0:
+        case Column::sourceValue:
             return m_sourceValueModel->createEditor(index, parent);
-        case 1:
+        case Column::targetValue:
             return m_targetValueModel->createEditor(index, parent);
         default:
             assert(false && "That column isn't editable");
@@ -59,11 +61,11 @@ QWidget* babelwires::OneToOneMapEntryModel::createEditor(const QModelIndex& inde
     }
 }
 
-void babelwires::OneToOneMapEntryModel::setEditorData(unsigned int column, QWidget* editor) const {
+void babelwires::OneToOneMapEntryModel::setEditorData(Column column, QWidget* editor) const {
     switch (column) {
-        case 0:
+        case Column::sourceValue:
             return m_sourceValueModel->setEditorData(editor);
-        case 1:
+        case Column::targetValue:
             return m_targetValueModel->setEditorData(editor);
         default:
             assert(false && "That column isn't editable");
@@ -71,9 +73,9 @@ void babelwires::OneToOneMapEntryModel::setEditorData(unsigned int column, QWidg
 }
 
 std::unique_ptr<babelwires::MapEntryData>
-babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(unsigned int column, QWidget* editor) const {
+babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(Column column, QWidget* editor) const {
     switch (column) {
-        case 0:
+        case Column::sourceValue:
             if (std::unique_ptr<Value> newValue = m_sourceValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
                 babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
@@ -81,7 +83,7 @@ babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(unsigned int 
                 return currentData;
             }
             break;
-        case 1:
+        case Column::targetValue:
             if (std::unique_ptr<Value> newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
                 babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
@@ -91,16 +93,16 @@ babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(unsigned int 
             break;
         default:
             assert(false && "That column isn't editable");
-            return {};
     }
+    return {};
 }
 
-bool babelwires::OneToOneMapEntryModel::validateEditor(QWidget* editor, unsigned int column) const {
+bool babelwires::OneToOneMapEntryModel::validateEditor(QWidget* editor, Column column) const {
     assert(isItemEditable(column) && "That column isn't editable");
     switch (column) {
-        case 0:
+        case Column::sourceValue:
             return m_sourceValueModel->validateEditor(editor);
-        case 1:
+        case Column::targetValue:
             return m_targetValueModel->validateEditor(editor);
         default:
             assert(false && "That column isn't editable");

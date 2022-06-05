@@ -26,7 +26,8 @@ QWidget* babelwires::MapModelDelegate::createEditor(QWidget* parent, const QStyl
     MapEntryModelDispatcher mapEntryModel;
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
-    assert(mapEntryModel->isItemEditable(static_cast<unsigned int>(index.column())) &&
+    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
+    assert(mapEntryModel->isItemEditable(column) &&
            "We should not be trying to create an editor for a non-editable feature");
 
     QWidget* const editor = mapEntryModel->createEditor(index, parent);
@@ -61,7 +62,7 @@ void babelwires::MapModelDelegate::setEditorData(QWidget* editor, const QModelIn
     MapEntryModelDispatcher mapEntryModel;
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
-    unsigned int column = static_cast<unsigned int>(index.column());
+    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
 
     assert(mapEntryModel->isItemEditable(column) &&
            "We should not be trying to create an editor for a non-editable feature");
@@ -77,11 +78,11 @@ void babelwires::MapModelDelegate::setModelData(QWidget* editor, QAbstractItemMo
     MapEntryModelDispatcher mapEntryModel;
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
-    unsigned int column = static_cast<unsigned int>(index.column());
+    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
     unsigned int row = static_cast<unsigned int>(index.row());
 
     if (std::unique_ptr<MapEntryData> replacementData = mapEntryModel->createReplacementDataFromEditor(column, editor)) {
-        std::string editType = (column == 0) ? "key" : "value";
+        const std::string editType = (column == MapEntryModel::Column::sourceValue) ? "key" : "value";
         auto command = std::make_unique<ReplaceMapEntryCommand>("Set map entry " + editType, std::move(replacementData), row);
         mapModel->getMapEditor().executeCommand(std::move(command));
     }
@@ -94,7 +95,7 @@ void babelwires::MapModelDelegate::checkEditorIsValid(QWidget* editor, const QMo
     MapEntryModelDispatcher mapEntryModel;
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
-    unsigned int column = static_cast<unsigned int>(index.column());
+    const MapEntryModel::Column column = static_cast<MapEntryModel::Column>(index.column());
 
     if (mapEntryModel->isItemEditable(column) && mapEntryModel->validateEditor(editor, column)) {
         setEditorData(editor, index);
