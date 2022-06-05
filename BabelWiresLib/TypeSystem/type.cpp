@@ -14,10 +14,21 @@ std::optional<babelwires::LongIdentifier> babelwires::Type::getParentTypeId() co
     return m_parentTypeId;
 }
 
-void babelwires::Type::addChild(LongIdentifier child) {
+void babelwires::Type::addChild(const Type* child) {
     m_children.emplace_back(child);
 }
 
-const std::vector<babelwires::LongIdentifier>& babelwires::Type::getChildren() const {
+const std::vector<const babelwires::Type*>& babelwires::Type::getChildren() const {
     return m_children;
+}
+
+void babelwires::Type::setParent(const Type* parent) {
+    assert(m_parentTypeId);
+    assert(parent->getIdentifier() == *m_parentTypeId);
+    verifyParent(*parent);
+    m_parent = parent;
+}
+
+const babelwires::Type* babelwires::Type::getParent() const {
+    return m_parent;
 }

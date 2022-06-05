@@ -22,7 +22,7 @@ babelwires::FileTypeEntry::FileTypeEntry(LongIdentifier identifier, VersionNumbe
 babelwires::UntypedFileTypeRegistry::UntypedFileTypeRegistry(std::string registryName)
     : UntypedRegistry(std::move(registryName)) {}
 
-void babelwires::UntypedFileTypeRegistry::validateNewEntry(const RegistryEntry* newEntry) const {
+void babelwires::UntypedFileTypeRegistry::validateNewEntry(RegistryEntry* newEntry) const {
     // Super-call.
     UntypedRegistry::validateNewEntry(newEntry);
 

@@ -84,4 +84,4 @@ const babelwires::RegistryEntry& babelwires::UntypedRegistry::getRegisteredEntry
     return *entry;
 }
 
-void babelwires::UntypedRegistry::validateNewEntry(const RegistryEntry* newEntry) const {}
+void babelwires::UntypedRegistry::validateNewEntry(RegistryEntry* newEntry) const {}

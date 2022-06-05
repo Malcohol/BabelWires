@@ -39,7 +39,7 @@ namespace babelwires {
         const RegistryEntry* getEntryByFileName(std::string_view fileName) const;
 
       protected:
-        virtual void validateNewEntry(const RegistryEntry* newEntry) const override;
+        virtual void validateNewEntry(RegistryEntry* newEntry) const override;
 
         const RegistryEntry* getEntryByExtension(std::string extension) const;
     };
