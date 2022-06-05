@@ -24,8 +24,12 @@ namespace babelwires {
         /// Enums can be registered in a registry, so they need their own identifier and version.
         /// They also need a set of values and a way of identifying the default.
         /// The values object can be the "output" of the REGISTERED_ID_VECTOR macro.
-        Enum(LongIdentifier identifier, VersionNumber version, const EnumValues& values,
-             unsigned int indexOfDefaultValue);
+        /// If parentTypeId is provided, then the parent type must itself be an enum, and must have
+        /// values which include all the values of this enum. The values in that case are not required
+        /// to be registered identifiers, since they will be resolved against the values in the parent.
+        /// If parentTypeId is not provided, then the values must all be registered identifiers.
+        Enum(LongIdentifier identifier, VersionNumber version, EnumValues values,
+             unsigned int indexOfDefaultValue, std::optional<LongIdentifier> parentTypeId = {});
 
         /// Get the set of available enum values.
         const EnumValues& getEnumValues() const;
@@ -40,12 +44,16 @@ namespace babelwires {
         Identifier getIdentifierFromIndex(unsigned int index) const;
 
         /// Is the identifier one of the values in the enum?
-        bool isAValue(Identifier id) const;
+        /// This can resolve the discriminator in the identifier.
+        bool isAValue(const Identifier& id) const;
 
         std::unique_ptr<Value> createValue() const override;
 
+      protected:
+        virtual bool verifyParent(const Type& parentType) const;
+
       private:
-        const EnumValues& m_values;
+        EnumValues m_values;
         unsigned int m_indexOfDefaultValue;
     };
 } // namespace babelwires

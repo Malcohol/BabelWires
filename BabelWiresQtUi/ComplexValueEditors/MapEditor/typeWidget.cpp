@@ -17,10 +17,10 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
                 typeIds.emplace_back(*typeId);
                 break;
             case Variance::contravariant:
-                typeSystem.addAllSubtypes(*typeId, typeIds);
+                typeSystem.addAllSupertypes(*typeId, typeIds);
                 break;
             case Variance::covariant:
-                typeSystem.addAllSupertypes(*typeId, typeIds);
+                typeSystem.addAllSubtypes(*typeId, typeIds);
                 break;
         }
     } else {

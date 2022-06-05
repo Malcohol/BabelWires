@@ -11,6 +11,8 @@
 #include "BabelWiresLib/Maps/MapEntries/mapEntryData.hpp"
 #include "BabelWiresLib/Maps/mapProject.hpp"
 #include "BabelWiresLib/Maps/mapProjectEntry.hpp"
+#include "BabelWiresLib/Project/projectContext.hpp"
+#include "BabelWiresLib/TypeSystem/typeSystem.hpp"
 
 babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string commandName, LongIdentifier newSourceTypeId)
     : SimpleCommand(commandName)
@@ -18,8 +20,9 @@ babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string command
 
 bool babelwires::SetMapSourceTypeCommand::initialize(const MapProject& map) {
     const LongIdentifier allowedSourceType = map.getAllowedSourceTypeId();
-    // TODO Contravariance
-    if (allowedSourceType != m_newSourceTypeId) {
+    const ProjectContext& context = map.getProjectContext();
+    const TypeSystem& typeSystem = context.m_typeSystem;
+    if (!typeSystem.isSubType(allowedSourceType, m_newSourceTypeId)) {
         return false;
     }
     m_oldSourceTypeId = map.getSourceTypeId();

@@ -11,6 +11,8 @@
 #include "BabelWiresLib/Maps/MapEntries/mapEntryData.hpp"
 #include "BabelWiresLib/Maps/mapProject.hpp"
 #include "BabelWiresLib/Maps/mapProjectEntry.hpp"
+#include "BabelWiresLib/Project/projectContext.hpp"
+#include "BabelWiresLib/TypeSystem/typeSystem.hpp"
 
 babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string commandName, LongIdentifier newTargetTypeId)
     : SimpleCommand(commandName)
@@ -18,8 +20,9 @@ babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string command
 
 bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
     const LongIdentifier allowedTargetType = map.getAllowedTargetTypeId();
-    // TODO covariance
-    if (allowedTargetType != m_newTargetTypeId) {
+    const ProjectContext& context = map.getProjectContext();
+    const TypeSystem& typeSystem = context.m_typeSystem;
+    if (!typeSystem.isSubType(m_newTargetTypeId, allowedTargetType)) {
         return false;
     }
     m_oldTargetTypeId = map.getTargetTypeId();

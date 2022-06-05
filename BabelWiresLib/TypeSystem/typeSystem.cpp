@@ -24,7 +24,7 @@ void babelwires::UntypedTypeSystemRegistry::validateNewEntry(RegistryEntry* newE
         Type *const parentType = static_cast<Type*>(getEntryByIdentifierNonConst(parentTypeId));
         assert(parentType && "Parent type not known. Parent types must be registered before their children");
         newType->setParent(parentType);
-        parentType->addChild(parentType);
+        parentType->addChild(newType);
     }
 }
 
@@ -44,7 +44,7 @@ bool babelwires::TypeSystem::isSubType(LongIdentifier subtypeId, LongIdentifier 
 namespace {
     void addAllSubtypesHelper(const babelwires::Type* type, babelwires::TypeSystem::TypeIdSet& subtypes) {
         subtypes.emplace_back(type->getIdentifier());
-        for (auto& childId : type->getChildren()) {
+        for (const auto& childId : type->getChildren()) {
             addAllSubtypesHelper(childId, subtypes);
         }
     }
@@ -52,7 +52,7 @@ namespace {
     void addAllSupertypesHelper(const babelwires::Type* type, babelwires::TypeSystem::TypeIdSet& supertypes) {
         supertypes.emplace_back(type->getIdentifier());
         if (type->getParent()) {
-            addAllSubtypesHelper(type->getParent(), supertypes);
+            addAllSupertypesHelper(type->getParent(), supertypes);
         }
     }
 }
