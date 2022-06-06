@@ -31,11 +31,11 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     const ProjectContext& context = babelwires::RootFeature::getProjectContextAt(*this);
     const TypeSystem& typeSystem = context.m_typeSystem;
 
-    const bool contravariance = typeSystem.isSubType(m_sourceTypeId, newSourceType);
+    const bool relatedSource = typeSystem.isRelatedType(m_sourceTypeId, newSourceType);
     const bool covariance = typeSystem.isSubType(newTargetType, m_targetTypeId);
-    if (!contravariance && !covariance) {
+    if (!relatedSource && !covariance) {
         throw ModelException() << "Neither the source nor the target types of the map are valid for this feature";
-    } else if (!contravariance) {
+    } else if (!relatedSource) {
         throw ModelException() << "The source type of the map is not valid for this feature";
     } else if (!covariance) {
         throw ModelException() << "The target type of the map is not valid for this feature";

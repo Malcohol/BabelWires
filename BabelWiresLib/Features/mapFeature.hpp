@@ -11,8 +11,15 @@
 #include <BabelWiresLib/Maps/mapData.hpp>
 
 namespace babelwires {
-    /// A MapFeature describes a mapping between types (ints or enums).
+    /// A MapFeature describes a mapping between types.
     /// All the entries in the MapData of a MapFeature are expected to be valid.
+    ///
+    /// Type theory note: Maps have a fallback behaviour and therefore their source
+    /// types do not have to treated contravariantly. Instead, map values can be used if
+    /// they have a "related" source type (i.e. in a subtype or supertype relationship).
+    /// Maps with unrelated source types wouldn't be useful, so I judged it better to
+    /// exclude them.
+    /// Target types are treated in the usual covariant way.
     class MapFeature : public HeavyValueFeature<MapData> {
       public:
         /// If the sets are empty, any types are allowed.

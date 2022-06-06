@@ -52,7 +52,7 @@ babelwires::LongIdentifier babelwires::MapProject::getTargetTypeId() const {
 
 void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    assert(typeSystem.isSubType(m_allowedSourceTypeId, sourceId));
+    assert(typeSystem.isRelatedType(sourceId, m_allowedSourceTypeId));
 
     m_sourceTypeId = sourceId;
 

@@ -41,18 +41,27 @@ bool babelwires::TypeSystem::isSubType(LongIdentifier subtypeId, LongIdentifier 
     return current;
 }
 
+bool babelwires::TypeSystem::isRelatedType(LongIdentifier typeAId, LongIdentifier typeBId) const {
+    const Type *const typeA = getEntryByIdentifier(typeAId);
+    assert(typeA && "The typeAId was an unregistered type");
+    const Type *const typeB = getEntryByIdentifier(typeBId);
+    assert(typeB && "The typeBId was an unregistered type");
+    return typeA->isSubType(typeB) || typeB->isSubType(typeA);
+}
+
 namespace {
     void addAllSubtypesHelper(const babelwires::Type* type, babelwires::TypeSystem::TypeIdSet& subtypes) {
-        subtypes.emplace_back(type->getIdentifier());
-        for (const auto& childId : type->getChildren()) {
-            addAllSubtypesHelper(childId, subtypes);
+        for (const auto& child : type->getChildren()) {
+            subtypes.emplace_back(child->getIdentifier());
+            addAllSubtypesHelper(child, subtypes);
         }
     }
 
     void addAllSupertypesHelper(const babelwires::Type* type, babelwires::TypeSystem::TypeIdSet& supertypes) {
-        supertypes.emplace_back(type->getIdentifier());
-        if (type->getParent()) {
-            addAllSupertypesHelper(type->getParent(), supertypes);
+        const babelwires::Type *const parent = type->getParent();
+        if (parent) {
+            supertypes.emplace_back(parent->getIdentifier());
+            addAllSupertypesHelper(parent, supertypes);
         }
     }
 }
@@ -60,11 +69,21 @@ namespace {
 void babelwires::TypeSystem::addAllSubtypes(LongIdentifier typeId, TypeIdSet& subtypes) const {
     const Type *const type = getEntryByIdentifier(typeId);
     assert(type && "Encountered an unregistered type");
+    subtypes.emplace_back(typeId);
     addAllSubtypesHelper(type, subtypes);
 }
 
 void babelwires::TypeSystem::addAllSupertypes(LongIdentifier typeId, TypeIdSet& supertypes) const {
     const Type *const type = getEntryByIdentifier(typeId);
     assert(type && "Encountered an unregistered type");
+    supertypes.emplace_back(typeId);
     addAllSupertypesHelper(type, supertypes);
+}
+
+void babelwires::TypeSystem::addAllRelatedTypes(LongIdentifier typeId, TypeIdSet& relatedTypes) const {
+    const Type *const type = getEntryByIdentifier(typeId);
+    assert(type && "Encountered an unregistered type");
+    relatedTypes.emplace_back(typeId);
+    addAllSubtypesHelper(type, relatedTypes);
+    addAllSupertypesHelper(type, relatedTypes);
 }

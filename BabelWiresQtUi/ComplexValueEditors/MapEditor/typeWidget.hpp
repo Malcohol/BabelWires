@@ -27,7 +27,9 @@ namespace babelwires {
           /// Allow the type and its subtypes to be selected
           allowSubtypes,
           /// Allow the type and its supertypes to be selected
-          allowSupertypes 
+          allowSupertypes,
+          /// Allow the type, its subtypes and its supertypes to be selected
+          allowRelatedTypes 
         };
 
         /// If a type identifier is not provided, all types are allowed.

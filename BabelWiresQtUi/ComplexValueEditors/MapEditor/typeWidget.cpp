@@ -22,6 +22,9 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
             case TypeFlexibility::allowSupertypes:
                 typeSystem.addAllSupertypes(*typeId, typeIds);
                 break;
+            case TypeFlexibility::allowRelatedTypes:
+                typeSystem.addAllRelatedTypes(*typeId, typeIds);
+                break;
         }
     } else {
         // TODO All types.
