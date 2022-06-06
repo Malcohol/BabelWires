@@ -15,6 +15,8 @@
 
 namespace babelwires {
     /// Converts MapData with a EnumWithCppEnum for a source type to another value type, using an array.
+    /// This can also be used where the subtype of such an enum is expected, by using the supertype as ENUM.
+    /// The extra values will not get used when the map is applied.
     template <typename ENUM, typename U> class EnumSourceMapApplicator {
       public:
         EnumSourceMapApplicator(const MapData& mapData, const ENUM& sourceEnumType, const ValueAdapter<U>& targetAdapter) {
@@ -40,7 +42,9 @@ namespace babelwires {
 
       public:
         U operator[](const typename ENUM::Value& t) const {
-            return m_array[static_cast<unsigned int>(t)];
+            const unsigned int index = static_cast<unsigned int>(t);
+            assert(index < static_cast<unsigned int>(ENUM::Value::NUM_VALUES) && "Enum queried with out-of-range value");
+            return m_array[index];
         }
 
       private:
