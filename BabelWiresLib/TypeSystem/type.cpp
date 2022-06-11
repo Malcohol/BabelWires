@@ -15,6 +15,7 @@ std::optional<babelwires::LongIdentifier> babelwires::Type::getParentTypeId() co
 }
 
 void babelwires::Type::addChild(const Type* child) {
+    assert(child);
     m_children.emplace_back(child);
 }
 
@@ -23,6 +24,7 @@ const std::vector<const babelwires::Type*>& babelwires::Type::getChildren() cons
 }
 
 void babelwires::Type::setParent(const Type* parent) {
+    assert(parent);
     assert(m_parentTypeId);
     assert(parent->getIdentifier() == *m_parentTypeId);
     verifyParent(*parent);
@@ -33,9 +35,9 @@ const babelwires::Type* babelwires::Type::getParent() const {
     return m_parent;
 }
 
-bool babelwires::Type::isSubType(const Type* supertype) const {
+bool babelwires::Type::isSubType(const Type& supertype) const {
     const Type* current = this;
-    while (current && (current != supertype)) {
+    while (current && (current != &supertype)) {
         current = current->getParent();
     }
     return current;

@@ -46,7 +46,7 @@ bool babelwires::TypeSystem::isRelatedType(LongIdentifier typeAId, LongIdentifie
     assert(typeA && "The typeAId was an unregistered type");
     const Type *const typeB = getEntryByIdentifier(typeBId);
     assert(typeB && "The typeBId was an unregistered type");
-    return typeA->isSubType(typeB) || typeB->isSubType(typeA);
+    return typeA->isSubType(*typeB) || typeB->isSubType(*typeA);
 }
 
 namespace {

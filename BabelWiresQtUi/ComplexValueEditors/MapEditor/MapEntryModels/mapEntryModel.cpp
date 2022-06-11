@@ -31,6 +31,12 @@ void babelwires::MapEntryModel::getContextMenuActions(
     auto& removeEntry =
         actionsOut.emplace_back(std::make_unique<RemoveEntryMapContextMenuAction>("Remove entry", m_row));
 
+    if (m_isLastRow)
+    {
+        addEntryBelow->setDisabled(true);
+        removeEntry->setDisabled(true);
+    }
+
     const MapEntryData& data = m_mapProjectEntry->getData();
     const MapEntryData::Kind currentKind = data.getKind();
 

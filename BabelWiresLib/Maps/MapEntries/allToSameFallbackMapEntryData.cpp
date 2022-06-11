@@ -32,8 +32,8 @@ void babelwires::AllToSameFallbackMapEntryData::visitFilePaths(FilePathVisitor& 
 }
 
 babelwires::Result babelwires::AllToSameFallbackMapEntryData::doValidate(const Type& sourceType, const Type& targetType) const {
-    if (sourceType.getIdentifier() != targetType.getIdentifier()) {
-        return "The source and target types do not match, so an \"All to Same\" mapping can't be used.";
+    if (!sourceType.isSubType(targetType)) {
+        return "An \"All to Same\" mapping can't be used when the source type is not a subtype of the target type.";
     }
     return {};
 }

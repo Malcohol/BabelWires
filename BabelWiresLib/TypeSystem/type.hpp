@@ -37,7 +37,7 @@ namespace babelwires {
         const std::vector<const Type*>& getChildren() const;
 
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
-        bool isSubType(const Type* supertype) const;
+        bool isSubType(const Type& supertype) const;
 
       protected:
         /// Confirm that the parent when resolved in the type system is the expected parent.
