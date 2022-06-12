@@ -17,7 +17,7 @@ TEST(FeatureTest, enumFeature) {
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::EnumFeature& enumFeature = *rootFeature.addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()), testUtils::getTestRegisteredIdentifier("aaa"));
 
-    const babelwires::Enum::EnumValues enumValues = testUtils::getTestEnumValues();
+    const babelwires::Enum::EnumValues enumValues = testUtils::g_enumValues;
 
     enumFeature.setToDefault();
     EXPECT_EQ(enumFeature.get(), enumValues[1]);
@@ -39,7 +39,7 @@ TEST(FeatureTest, enumFeatureChanges) {
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::EnumFeature& enumFeature = *rootFeature.addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()), testUtils::getTestRegisteredIdentifier("flerm"));
 
-    const babelwires::Enum::EnumValues enumValues = testUtils::getTestEnumValues();
+    const babelwires::Enum::EnumValues enumValues = testUtils::g_enumValues;
 
     // After construction, everything has changed.
     EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -75,7 +75,7 @@ TEST(FeatureTest, enumFeatureHash) {
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::EnumFeature& enumFeature = *rootFeature.addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()), testUtils::getTestRegisteredIdentifier("flerm"));
 
-    const babelwires::Enum::EnumValues enumValues = testUtils::getTestEnumValues();
+    const babelwires::Enum::EnumValues enumValues = testUtils::g_enumValues;
 
     enumFeature.set(enumValues[0]);
     const std::size_t hashAt0 = enumFeature.getHash();

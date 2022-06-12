@@ -42,6 +42,7 @@ SET( LIB_TESTS_SRCS
     setExpandedCommandTest.cpp
     sourceFileElementTest.cpp
     targetFileElementTest.cpp
+    typeSystemTest.cpp
     valueNamesTest.cpp
    )
 

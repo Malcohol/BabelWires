@@ -8,6 +8,7 @@ SET( LIB_TEST_UTILS_SRCS
     testRecord.cpp
     testFeatureWithOptionals.cpp
     testRootFeature.cpp
+    testValueAndType.cpp
    )
 
 ADD_LIBRARY( libTestUtils ${LIB_TEST_UTILS_SRCS} )
