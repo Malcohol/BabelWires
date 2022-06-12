@@ -2,6 +2,8 @@
 
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
+#include <Common/Serialization/serializer.hpp>
+#include <Common/Serialization/deserializer.hpp>
 
 bool  testUtils::TestValue::isValid(const babelwires::Type& type) const{
     return type.as<TestType>();
@@ -29,10 +31,11 @@ void testUtils::TestValue::visitIdentifiers(babelwires::IdentifierVisitor& visit
 void testUtils::TestValue::visitFilePaths(babelwires::FilePathVisitor& visitor){}
 
 void testUtils::TestValue::serializeContents(babelwires::Serializer& serializer) const{
-    // TODO
+    serializer.serializeValue("value", m_value);
 }
+
 void testUtils::TestValue::deserializeContents(babelwires::Deserializer& deserializer){
-    // TODO
+    deserializer.deserializeValue("value", m_value);
 }
 
 babelwires::LongIdentifier testUtils::TestType::getThisIdentifier() {
