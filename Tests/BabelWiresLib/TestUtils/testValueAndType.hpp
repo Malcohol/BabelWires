@@ -20,6 +20,7 @@ namespace testUtils {
         std::string m_value;
     };
 
+    /// The Type of TestValues.
     class TestType : public babelwires::Type {
       public:
         TestType();

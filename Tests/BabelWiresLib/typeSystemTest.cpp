@@ -12,7 +12,6 @@
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 TEST(TypeSystemTest, isSubTypes) {
-    testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
@@ -67,7 +66,6 @@ TEST(TypeSystemTest, isSubTypes) {
 }
 
 TEST(TypeSystemTest, isRelatedTypes) {
-    testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
@@ -123,7 +121,6 @@ TEST(TypeSystemTest, isRelatedTypes) {
 }
 
 TEST(TypeSystemTest, addAllSubTypes) {
-    testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
@@ -169,7 +166,6 @@ TEST(TypeSystemTest, addAllSubTypes) {
 }
 
 TEST(TypeSystemTest, addAllSupertypes) {
-    testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
@@ -222,7 +218,6 @@ TEST(TypeSystemTest, addAllSupertypes) {
 }
 
 TEST(TypeSystemTest, addAllRelatedTypes) {
-    testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;

@@ -3,6 +3,8 @@
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -27,6 +29,13 @@ TEST(EnumTest, basic) {
     EXPECT_EQ(testEnum.getIdentifierFromIndex(0).getDiscriminator(), 1);
     EXPECT_EQ(testEnum.getIdentifierFromIndex(1).getDiscriminator(), 2);
     EXPECT_EQ(testEnum.getIdentifierFromIndex(2).getDiscriminator(), 3);
+
+    EXPECT_TRUE(testEnum.isAValue("Foo"));
+    EXPECT_TRUE(testEnum.isAValue("Bar"));
+    EXPECT_TRUE(testEnum.isAValue("Erm"));
+    EXPECT_TRUE(testEnum.isAValue("Oom"));
+    EXPECT_TRUE(testEnum.isAValue("Boo"));
+    EXPECT_FALSE(testEnum.isAValue("Flerm"));
 }
 
 #define TEST_ENUM_VALUES(X)                                                                                            \
@@ -63,4 +72,49 @@ TEST(EnumTest, enumWithCppEnum) {
     EXPECT_EQ(testEnum.getIdentifierFromValue(TestEnum::Value::Foo).getDiscriminator(), 1);
     EXPECT_EQ(testEnum.getIdentifierFromValue(TestEnum::Value::Bar).getDiscriminator(), 1);
     EXPECT_EQ(testEnum.getIdentifierFromValue(TestEnum::Value::Erm).getDiscriminator(), 1);
+}
+
+
+TEST(EnumTest, createValue) {
+    testUtils::TestEnum testEnum;
+    
+    auto value = testEnum.createValue();
+    EXPECT_TRUE(value);
+    auto enumValue = value->as<babelwires::EnumValue>();
+    EXPECT_TRUE(enumValue);
+    EXPECT_TRUE(value->isValid(testEnum));
+    EXPECT_EQ(enumValue->get(), "Bar");
+
+    enumValue->set("Foo");
+    EXPECT_TRUE(value->isValid(testEnum));
+    enumValue->set("Flerm");
+    EXPECT_FALSE(value->isValid(testEnum));
+}
+
+TEST(EnumTest, subEnum) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+
+    babelwires::TypeSystem typeSystem;
+
+    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    // Have to register Sub-Enums in the TypeSystem or they don't work.
+    typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+
+    const auto& testEnum = typeSystem.getRegisteredEntry(testUtils::TestEnum::getThisIdentifier());
+    const auto& testSubEnum = typeSystem.getRegisteredEntry(testUtils::TestSubEnum::getThisIdentifier());
+
+    auto value = testSubEnum.createValue();
+    EXPECT_TRUE(value);
+    auto enumValue = value->as<babelwires::EnumValue>();
+    EXPECT_TRUE(enumValue);
+    EXPECT_TRUE(value->isValid(testEnum));
+    EXPECT_TRUE(value->isValid(testSubEnum));
+
+    enumValue->set("Foo");
+    EXPECT_TRUE(value->isValid(testEnum));
+    EXPECT_FALSE(value->isValid(testSubEnum));
+    
+    enumValue->set("Flerm");
+    EXPECT_FALSE(value->isValid(testEnum));
+    EXPECT_FALSE(value->isValid(testSubEnum));
 }
