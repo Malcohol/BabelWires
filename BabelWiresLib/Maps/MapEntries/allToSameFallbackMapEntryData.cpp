@@ -35,7 +35,7 @@ babelwires::Result babelwires::AllToSameFallbackMapEntryData::doValidate(const T
     if (!sourceType.isSubType(targetType)) {
         return "An \"All to Same\" mapping can't be used when the source type is not a subtype of the target type.";
     }
-    return {};
+    return Result::success;
 }
 
 babelwires::MapEntryData::Kind babelwires::AllToSameFallbackMapEntryData::getKind() const {

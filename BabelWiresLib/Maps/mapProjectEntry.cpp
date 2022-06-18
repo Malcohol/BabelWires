@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 
 babelwires::MapProjectEntry::MapProjectEntry(std::unique_ptr<MapEntryData> data)
-    : m_data(std::move(data)) {}
+    : m_data(std::move(data)), m_validityOfEntry(Result::success) {}
 
 babelwires::MapProjectEntry::MapProjectEntry(const MapProjectEntry& other)
     : m_data(other.m_data->clone())

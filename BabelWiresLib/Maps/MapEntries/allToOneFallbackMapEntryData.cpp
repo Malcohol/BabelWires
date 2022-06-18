@@ -68,7 +68,7 @@ babelwires::Result babelwires::AllToOneFallbackMapEntryData::doValidate(const Ty
     if (!targetTypeIsValid) {
         return "The target value isn't valid.";
     }
-    return {};
+    return Result::success;
 }
 
 babelwires::MapEntryData::Kind babelwires::AllToOneFallbackMapEntryData::getKind() const {

@@ -91,7 +91,7 @@ babelwires::Result babelwires::OneToOneMapEntryData::doValidate(const Type& sour
     } else if (!targetTypeIsValid) {
         return "The target value isn't valid.";
     }
-    return {};
+    return Result::success;
 }
 
 babelwires::MapEntryData::Kind babelwires::OneToOneMapEntryData::getKind() const {
