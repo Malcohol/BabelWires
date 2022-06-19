@@ -88,6 +88,7 @@ void babelwires::OneToOneMapEntryData::serializeContents(Serializer& serializer)
 }
 
 void babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deserializer) {
+    // TODO: If refactoring to a constructor, can remove the null handling in == and clone.
     m_sourceValue = deserializer.deserializeObject<Value>("source");
     m_targetValue = deserializer.deserializeObject<Value>("target");
 }
