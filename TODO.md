@@ -29,6 +29,7 @@ Processors:
 * Provide basic processors for standard types (+, *, etc)
 
 Refactor: 
+* Consider replacing virtual deserialize() method by deserializing constructor
 * Move some of the logic in doProcess up into FeatureElement.
 * Split featureElementData into separate files - replace any dynamic casts.
 * Split Features & Import/Export out from the project lib. 

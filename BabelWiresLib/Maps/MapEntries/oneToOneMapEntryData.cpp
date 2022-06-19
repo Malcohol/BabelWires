@@ -15,8 +15,8 @@
 babelwires::OneToOneMapEntryData::OneToOneMapEntryData() = default;
 
 babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const OneToOneMapEntryData& other) {
-    m_sourceValue = other.m_sourceValue->clone();
-    m_targetValue = other.m_targetValue->clone();
+    m_sourceValue = other.m_sourceValue ? other.m_sourceValue->clone() : nullptr;
+    m_targetValue = other.m_targetValue ? other.m_targetValue->clone() : nullptr;
 }
 
 babelwires::OneToOneMapEntryData::OneToOneMapEntryData(OneToOneMapEntryData&& other) {
@@ -42,7 +42,28 @@ std::size_t babelwires::OneToOneMapEntryData::getHash() const {
 
 bool babelwires::OneToOneMapEntryData::operator==(const MapEntryData& other) const {
     const OneToOneMapEntryData* otherData = other.as<OneToOneMapEntryData>();
-    return otherData && (m_sourceValue == otherData->m_sourceValue) && (m_targetValue == otherData->m_targetValue);
+    if (!otherData) {
+        return false;
+    }
+    if (m_sourceValue == nullptr) {
+        if (otherData->m_sourceValue != nullptr) {
+            return false;
+        }
+    } else {
+        if ((otherData->m_sourceValue == nullptr) || (*m_sourceValue != *otherData->m_sourceValue)) {
+            return false;
+        }
+    }
+    if (m_targetValue == nullptr) {
+        if (otherData->m_targetValue != nullptr) {
+            return false;
+        }
+    } else {
+        if ((otherData->m_targetValue == nullptr) || (*m_targetValue != *otherData->m_targetValue)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 const babelwires::Value* babelwires::OneToOneMapEntryData::getSourceValue() const {

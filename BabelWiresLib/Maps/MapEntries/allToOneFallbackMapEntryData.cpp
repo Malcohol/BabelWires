@@ -22,7 +22,7 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const Typ
 }
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other) {
-    m_targetValue = other.m_targetValue->clone();
+    m_targetValue = other.m_targetValue ? other.m_targetValue->clone() : nullptr;
 }
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(AllToOneFallbackMapEntryData&& other) {
@@ -44,7 +44,19 @@ std::size_t babelwires::AllToOneFallbackMapEntryData::getHash() const {
 
 bool babelwires::AllToOneFallbackMapEntryData::operator==(const MapEntryData& other) const {
     const AllToOneFallbackMapEntryData* otherData = other.as<AllToOneFallbackMapEntryData>();
-    return otherData && (m_targetValue == otherData->m_targetValue);
+    if (!otherData) {
+        return false;
+    }
+    if (m_targetValue == nullptr) {
+        if (otherData->m_targetValue != nullptr) {
+            return false;
+        }
+    } else {
+        if ((otherData->m_targetValue == nullptr) || (*m_targetValue != *otherData->m_targetValue)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void babelwires::AllToOneFallbackMapEntryData::serializeContents(Serializer& serializer) const {

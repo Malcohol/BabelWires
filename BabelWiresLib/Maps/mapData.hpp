@@ -68,6 +68,7 @@ namespace babelwires {
       public:
         LongIdentifier m_sourceTypeId;
         LongIdentifier m_targetTypeId;
+        /// All non-null.
         std::vector<std::unique_ptr<MapEntryData>> m_mapEntries;
     };
 }

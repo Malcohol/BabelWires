@@ -30,5 +30,7 @@ namespace babelwires {
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const Value& other) const = 0;
         virtual std::string toString() const = 0;
+
+        bool operator!= (const Value& other) const { return !(*this == other); }
     };
 } // namespace babelwires

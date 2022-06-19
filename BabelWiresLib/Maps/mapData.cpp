@@ -8,8 +8,8 @@
 #include <BabelWiresLib/Maps/mapData.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
@@ -69,14 +69,12 @@ bool babelwires::MapData::operator==(const MapData& other) const {
     if ((m_sourceTypeId != other.m_sourceTypeId) || (m_targetTypeId != other.m_targetTypeId)) {
         return false;
     }
-    return m_mapEntries == other.m_mapEntries;
+    return std::equal(m_mapEntries.begin(), m_mapEntries.end(), other.m_mapEntries.begin(), other.m_mapEntries.end(),
+               [](const auto& a, const auto& b) { return (*a == *b); });
 }
 
 bool babelwires::MapData::operator!=(const MapData& other) const {
-    if ((m_sourceTypeId != other.m_sourceTypeId) || (m_targetTypeId != other.m_targetTypeId)) {
-        return true;
-    }
-    return m_mapEntries != other.m_mapEntries;
+    return !(*this == other);
 }
 
 std::size_t babelwires::MapData::getHash() const {
@@ -99,8 +97,8 @@ const babelwires::MapEntryData& babelwires::MapData::getMapEntry(unsigned int in
 bool babelwires::MapData::isValid(const ProjectContext& context) const {
     for (unsigned int i = 0; i < m_mapEntries.size(); ++i) {
         const auto& entryData = m_mapEntries[i];
-        if (!entryData->validate(context.m_typeSystem, m_sourceTypeId, m_targetTypeId, (i == m_mapEntries.size() - 1)))
-        {
+        if (!entryData->validate(context.m_typeSystem, m_sourceTypeId, m_targetTypeId,
+                                 (i == m_mapEntries.size() - 1))) {
             return false;
         }
     }
@@ -108,6 +106,7 @@ bool babelwires::MapData::isValid(const ProjectContext& context) const {
 }
 
 void babelwires::MapData::emplaceBack(std::unique_ptr<MapEntryData> newEntry) {
+    assert((newEntry != nullptr) && "Null entry added to map");
     m_mapEntries.emplace_back(std::move(newEntry));
 }
 
