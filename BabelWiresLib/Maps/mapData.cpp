@@ -11,15 +11,12 @@
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/TypeSystem/intType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-babelwires::MapData::MapData()
-    : m_sourceTypeId(IntType::getThisIdentifier())
-    , m_targetTypeId(IntType::getThisIdentifier()) {}
+babelwires::MapData::MapData() = default;
 
 babelwires::MapData::MapData(const MapData& other)
     : m_sourceTypeId(other.m_sourceTypeId)

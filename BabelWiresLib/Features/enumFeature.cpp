@@ -16,8 +16,7 @@
 #include "Common/Identifiers/identifierRegistry.hpp"
 
 babelwires::EnumFeature::EnumFeature(LongIdentifier e)
-    : m_enum(e)
-    , m_value("unset") {}
+    : m_enum(e) {}
 
 const babelwires::Enum& babelwires::EnumFeature::getEnum() const {
     const ProjectContext& projectContext = RootFeature::getProjectContextAt(*this);
@@ -37,7 +36,8 @@ void babelwires::EnumFeature::set(Identifier id) {
     const Enum::EnumValues& values = e.getEnumValues();
     const auto it = std::find(values.begin(), values.end(), id);
     if (it == values.end()) {
-        throw ModelException() << "The value \"" << IdentifierRegistry::read()->getName(id) << "\" is not a valid value for the enum \"" << e.getName() << "\" enum.";
+        throw ModelException() << "The value \"" << IdentifierRegistry::read()->getName(id)
+                               << "\" is not a valid value for the enum \"" << e.getName() << "\" enum.";
     }
     if (id != m_value) {
         setChanged(Changes::ValueChanged);

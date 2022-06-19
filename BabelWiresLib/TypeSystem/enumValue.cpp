@@ -6,8 +6,7 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-babelwires::EnumValue::EnumValue()
-    : m_value("unset") {}
+babelwires::EnumValue::EnumValue() = default;
 
 babelwires::EnumValue::EnumValue(Identifier value)
     : m_value(value) {}
