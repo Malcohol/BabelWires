@@ -1,8 +1,9 @@
 /**
- * The Deserializer supports the loading of serialized data, where the particular representation (e.g. XML) of data is abstracted.
+ * The Deserializer supports the loading of serialized data, where the particular representation (e.g. XML) of data is
+ *abstracted.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -18,7 +19,6 @@
 #include <string_view>
 
 namespace babelwires {
-
 
     class Deserializer : public SerializerDeserializerCommon {
       public:
@@ -64,6 +64,24 @@ namespace babelwires {
                 value = V::deserializeFromString(asString);
             }
             return ret;
+        }
+
+        /// An alternative form for values which cannot be default constructed.
+        template <typename V>
+        std::enable_if_t<IsSerializableValue<V>::value, V>
+        deserializeValue(std::string_view key) {
+            std::string asString;
+            deserializeValue(key, asString);
+            return V::deserializeFromString(asString);
+        }
+
+        /// The same shape is available for the standard types, for convenience.
+        template <typename V>
+        std::enable_if_t<std::is_default_constructible<V>::value, V>
+        deserializeValue(std::string_view key) {
+            V v;
+            deserializedValue(key, v);
+            return v;
         }
 
         /// Deserialize a child object of type T.

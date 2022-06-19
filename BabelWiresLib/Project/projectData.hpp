@@ -29,7 +29,7 @@ namespace babelwires {
 
         // Serialization.
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        ProjectData(Deserializer& deserializer);
 
         /// Call the visitor on all the FieldIdentifiers in the element.
         void visitIdentifiers(IdentifierVisitor& visitor) override;

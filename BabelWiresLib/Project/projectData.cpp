@@ -17,7 +17,7 @@ void babelwires::ProjectData::serializeContents(Serializer& serializer) const {
     serializer.serializeArray("elements", m_elements);
 }
 
-void babelwires::ProjectData::deserializeContents(Deserializer& deserializer) {
+babelwires::ProjectData::ProjectData(Deserializer& deserializer) {
     deserializer.deserializeValue("id", m_projectId, Deserializer::IsOptional::Optional);
     auto it = deserializer.deserializeArray<ElementData>("elements");
     while (it.isValid()) {

@@ -2,7 +2,7 @@
  * ModifierDatas carry the data sufficient to reconstruct a Modifier.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -26,6 +26,8 @@ namespace babelwires {
         CLONEABLE_ABSTRACT(ModifierData);
         SERIALIZABLE_ABSTRACT(ModifierData, void);
         DOWNCASTABLE_TYPE_HIERARCHY(ModifierData);
+        ModifierData() = default;
+        ModifierData(Deserializer& deserializer);
 
         /// Identifies the feature being modified.
         FeaturePath m_pathToFeature;
@@ -44,12 +46,16 @@ namespace babelwires {
         /// (There is currently no scenario where a modifier references a filepath, but
         /// this is just here for future proofing.)
         void visitFilePaths(FilePathVisitor& visitor) override;
+
+        void serializeContents(Serializer& serializer) const override;
     };
 
     /// Base class for ModifierData which construct LocalModifiers.
     struct LocalModifierData : ModifierData {
         CLONEABLE_ABSTRACT(LocalModifierData);
         SERIALIZABLE_ABSTRACT(LocalModifierData, ModifierData);
+        LocalModifierData() = default;
+        LocalModifierData(Deserializer& deserializer);
 
         /// Perform the modification on the target feature, or throw.
         virtual void apply(Feature* targetFeature) const = 0;
@@ -63,7 +69,8 @@ namespace babelwires {
         CLONEABLE(IntValueAssignmentData);
         SERIALIZABLE(IntValueAssignmentData, "assignInt", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        IntValueAssignmentData() = default;
+        IntValueAssignmentData(Deserializer& deserializer);
 
         int m_value = 0;
     };
@@ -74,7 +81,8 @@ namespace babelwires {
         CLONEABLE(RationalValueAssignmentData);
         SERIALIZABLE(RationalValueAssignmentData, "assignRational", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        RationalValueAssignmentData() = default;
+        RationalValueAssignmentData(Deserializer& deserializer);
 
         Rational m_value = 0;
     };
@@ -85,7 +93,8 @@ namespace babelwires {
         CLONEABLE(StringValueAssignmentData);
         SERIALIZABLE(StringValueAssignmentData, "assignString", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        StringValueAssignmentData() = default;
+        StringValueAssignmentData(Deserializer& deserializer);
 
         std::string m_value;
     };
@@ -96,9 +105,10 @@ namespace babelwires {
         CLONEABLE(EnumValueAssignmentData);
         SERIALIZABLE(EnumValueAssignmentData, "assignEnum", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        EnumValueAssignmentData() = default;
+        EnumValueAssignmentData(Deserializer& deserializer);
         void visitIdentifiers(IdentifierVisitor& visitor) override;
-        
+
         Identifier m_value = "Fixme";
     };
 } // namespace babelwires

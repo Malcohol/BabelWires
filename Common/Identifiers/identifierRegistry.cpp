@@ -34,8 +34,8 @@ void babelwires::IdentifierRegistry::InstanceData::serializeContents(Serializer&
     serializer.serializeValue("uuid", m_uuid);
 }
 
-void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("id", m_identifier);
+babelwires::IdentifierRegistry::InstanceData::InstanceData(Deserializer& deserializer)
+    : m_identifier(deserializer.deserializeValue<LongIdentifier>("id")) {
     deserializer.deserializeValue("name", m_fieldName);
     deserializer.deserializeValue("uuid", m_uuid);
     m_authority = Authority::isProvisional;
@@ -225,7 +225,7 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
     serializer.serializeArray("identifiers", contents);
 }
 
-void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
+babelwires::IdentifierRegistry::IdentifierRegistry(Deserializer& deserializer) {
     for (auto it = deserializer.deserializeArray<InstanceData>("identifiers", Deserializer::IsOptional::Optional);
          it.isValid(); ++it) {
         std::unique_ptr<InstanceData> instanceDataPtr = it.getObject();

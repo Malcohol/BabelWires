@@ -29,7 +29,7 @@ namespace babelwires {
         bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) override;
 
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        TargetFileElementData(Deserializer& deserializer);
         void visitFilePaths(FilePathVisitor& visitor) override;
 
         /// The file containing the data.

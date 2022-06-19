@@ -26,6 +26,8 @@ namespace babelwires {
         /// The projectData is modified to make the bundle independent of the current system.
         ProjectBundle(std::filesystem::path pathToProjectFile, ProjectData&& projectData);
 
+        ProjectBundle(Deserializer& deserializer);
+
       public:
         /// Information about the factories used by the projectData.
         using FactoryMetadata = std::map<LongIdentifier, VersionNumber>;
@@ -41,7 +43,6 @@ namespace babelwires {
         void adaptDataToAdditionalMetadata(const ProjectContext& context, UserLogger& userLogger) override;
 
         void serializeAdditionalMetadata(Serializer& serializer) const override;
-        void deserializeAdditionalMetadata(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 

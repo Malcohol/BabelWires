@@ -2,17 +2,17 @@
  * ProcessorElementData describes the construction of a SourceFileFeature.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
 
+#include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Processors/processor.hpp"
 #include "BabelWiresLib/Processors/processorFactory.hpp"
 #include "BabelWiresLib/Processors/processorFactoryRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
 #include "BabelWiresLib/Project/projectContext.hpp"
-#include "BabelWiresLib/Features/rootFeature.hpp"
 
 #include "Common/Log/userLogger.hpp"
 #include "Common/Serialization/deserializer.hpp"
@@ -28,7 +28,7 @@ bool babelwires::ProcessorElementData::checkFactoryVersion(const ProjectContext&
 
 std::unique_ptr<babelwires::FeatureElement>
 babelwires::ProcessorElementData::doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
-                                                  ElementId newId) const {
+                                                         ElementId newId) const {
     return std::make_unique<ProcessorElement>(context, userLogger, *this, newId);
 }
 
@@ -38,8 +38,8 @@ void babelwires::ProcessorElementData::serializeContents(Serializer& serializer)
     serializeUiData(serializer);
 }
 
-void babelwires::ProcessorElementData::deserializeContents(Deserializer& deserializer) {
-    getCommonKeyValuePairs(deserializer);
+babelwires::ProcessorElementData::ProcessorElementData(Deserializer& deserializer)
+    : ElementData(deserializer) {
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }

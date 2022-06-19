@@ -45,7 +45,7 @@ namespace {
             serializer.serializeValue("version", m_version);
         }
 
-        void deserializeContents(babelwires::Deserializer& deserializer) override {
+        SerializationMetadata(babelwires::Deserializer& deserializer) {
             deserializer.deserializeValue("type", m_type);
             deserializer.deserializeValue("version", m_version);
         }
