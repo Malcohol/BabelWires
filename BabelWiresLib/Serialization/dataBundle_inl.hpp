@@ -110,10 +110,9 @@ template <typename DATA> void babelwires::DataBundle<DATA>::serializeContents(Se
     serializer.serializeObject(m_identifierRegistry);
 }
 
-template <typename DATA> void babelwires::DataBundle<DATA>::deserializeContents(Deserializer& deserializer) {
+template <typename DATA> babelwires::DataBundle<DATA>::DataBundle(Deserializer& deserializer) {
     deserializer.deserializeValue("filePath", m_projectFilePath, babelwires::Deserializer::IsOptional::Optional);
     m_data = std::move(*deserializer.deserializeObject<DATA>(DATA::serializationType));
-    deserializeAdditionalMetadata(deserializer);
     m_identifierRegistry =
         std::move(*deserializer.deserializeObject<IdentifierRegistry>(IdentifierRegistry::serializationType));
 }

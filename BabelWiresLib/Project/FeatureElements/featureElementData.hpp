@@ -37,7 +37,8 @@ namespace babelwires {
     struct UiData : Serializable {
         SERIALIZABLE(UiData, "uiData", void, 1);
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        UiData() = default;
+        UiData(Deserializer& deserializer);
 
         /// The position this element is at in the UI.
         UiPosition m_uiPosition;
@@ -105,7 +106,7 @@ namespace babelwires {
 
         /// For use when serializing subclasses.
         void addCommonKeyValuePairs(Serializer& serializer) const;
-        void getCommonKeyValuePairs(Deserializer& deserializer);
+        ElementData(Deserializer& deserializer);
 
         /// For use when serializing subclasses.
         void serializeModifiers(Serializer& serializer) const;

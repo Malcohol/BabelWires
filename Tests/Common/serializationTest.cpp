@@ -18,7 +18,8 @@ namespace {
             serializer.serializeValueArray("array", m_array);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
+        A() = default;
+        A(Deserializer& deserializer) {
             deserializer.deserializeValue("x", m_x);
             for (auto it = deserializer.deserializeValueArray<std::string>("array", Deserializer::IsOptional::Optional);
                  it.isValid(); ++it) {
@@ -69,7 +70,8 @@ namespace {
             serializer.serializeArray("arrayOfAs", m_arrayOfAs);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
+        B() = default;
+        B(Deserializer& deserializer) {
             if (std::unique_ptr<A> a = deserializer.deserializeObject<A>()) {
                 m_a = std::move(*a);
             }
@@ -131,7 +133,8 @@ namespace {
 
             void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-            void deserializeContents(Deserializer& deserializer) override { deserializer.deserializeValue("x", m_x); }
+            C() = default;
+            C(Deserializer& deserializer) { deserializer.deserializeValue("x", m_x); }
 
             // A refactor will split this into a sign and an unsigened int.
             int m_x = 0;
@@ -149,7 +152,8 @@ namespace {
                 serializer.serializeValue("x", m_x);
             }
 
-            void deserializeContents(Deserializer& deserializer) override {
+            C() = default;
+            C(Deserializer& deserializer) {
                 const int version = deserializer.getTypeVersion("C");
                 if (version == 1) {
                     int oldInt = 0;
@@ -241,7 +245,8 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-        void deserializeContents(Deserializer& deserializer) override { deserializer.deserializeValue("x", m_x); }
+        Concrete0() = default;
+        Concrete0(Deserializer& deserializer) { deserializer.deserializeValue("x", m_x); }
 
         int m_x = 0;
     };
@@ -257,7 +262,8 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("s", m_s); }
 
-        void deserializeContents(Deserializer& deserializer) override { deserializer.deserializeValue("s", m_s); }
+        Concrete1() = default;
+        Concrete1(Deserializer& deserializer) { deserializer.deserializeValue("s", m_s); }
 
         std::string m_s;
     };
@@ -269,8 +275,8 @@ namespace {
             serializer.serializeValue("u32", m_u32);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            Concrete1::deserializeContents(deserializer);
+        Concrete2() = default;
+        Concrete2(Deserializer& deserializer) : Concrete1(deserializer) {
             deserializer.deserializeValue("u32", m_u32);
         }
 
@@ -299,7 +305,8 @@ namespace {
             serializer.serializeArray("objects", m_objects);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
+        Main() = default;
+        Main(Deserializer& deserializer) {
             m_base = deserializer.deserializeObject<Base>("base", babelwires::Deserializer::IsOptional::Optional);
             m_concrete0 =
                 deserializer.deserializeObject<Concrete0>("concrete0", babelwires::Deserializer::IsOptional::Optional);

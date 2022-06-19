@@ -29,12 +29,11 @@ std::unique_ptr<babelwires::Modifier> babelwires::ArraySizeModifierData::createM
 }
 
 void babelwires::ArraySizeModifierData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    ModifierData::serializeContents(serializer);
     serializer.serializeValue("size", m_size);
 }
 
-void babelwires::ArraySizeModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+babelwires::ArraySizeModifierData::ArraySizeModifierData(Deserializer& deserializer) : LocalModifierData(deserializer) {
     deserializer.deserializeValue("size", m_size);
 }
 

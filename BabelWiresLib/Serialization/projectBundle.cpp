@@ -47,7 +47,8 @@ namespace {
             serializer.serializeValue("id", m_factoryIdentifier);
             serializer.serializeValue("version", m_factoryVersion);
         }
-        void deserializeContents(babelwires::Deserializer& deserializer) override {
+        FactoryInfoPair() = default;
+        FactoryInfoPair(babelwires::Deserializer& deserializer) {
             deserializer.deserializeValue("id", m_factoryIdentifier);
             deserializer.deserializeValue("version", m_factoryVersion);
         }
@@ -65,7 +66,7 @@ void babelwires::ProjectBundle::serializeAdditionalMetadata(Serializer& serializ
     serializer.serializeArray("factoryMetadata", factoryMetadata);
 }
 
-void babelwires::ProjectBundle::deserializeAdditionalMetadata(Deserializer& deserializer) {
+babelwires::ProjectBundle::ProjectBundle(Deserializer& deserializer) : DataBundle(deserializer) {
     for (auto it = deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"); it.isValid(); ++it) {
         auto fm = it.getObject();
         m_factoryMetadata.insert(std::make_pair(std::move(fm->m_factoryIdentifier), fm->m_factoryVersion));

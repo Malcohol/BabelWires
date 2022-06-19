@@ -27,7 +27,7 @@ void babelwires::UiData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("width", m_uiSize.m_width);
 }
 
-void babelwires::UiData::deserializeContents(Deserializer& deserializer) {
+babelwires::UiData::UiData(Deserializer& deserializer) {
     deserializer.deserializeValue("x", m_uiPosition.m_x);
     deserializer.deserializeValue("y", m_uiPosition.m_y);
     deserializer.deserializeValue("width", m_uiSize.m_width);
@@ -62,7 +62,8 @@ void babelwires::ElementData::addCommonKeyValuePairs(Serializer& serializer) con
     // Factory versions are handled by the projectBundle.
 }
 
-void babelwires::ElementData::getCommonKeyValuePairs(Deserializer& deserializer) {
+babelwires::ElementData::ElementData(Deserializer& deserializer)
+{
     deserializer.deserializeValue("id", m_id);
     deserializer.deserializeValue("factory", m_factoryIdentifier);
     // Factory versions are handled by the projectBundle.

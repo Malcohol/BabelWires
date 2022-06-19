@@ -49,7 +49,7 @@ namespace babelwires {
                                           UserLogger& userLogger) &&;
 
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        DataBundle(Deserializer& deserializer);
 
         const DATA& getData() const { return m_data; }
         DATA& getData() { return m_data; }
@@ -66,9 +66,6 @@ namespace babelwires {
 
         /// Allows the subclass to put additional metadata at the same level as the metadata handled by this class.
         virtual void serializeAdditionalMetadata(Serializer& serializer) const {}
-
-        /// Allows the subclass to put additional metadata at the same level as the metadata handled by this class.
-        virtual void deserializeAdditionalMetadata(Deserializer& deserializer) {}
 
       private:
         /// Ensure the identifiers in the data refer to the context independent m_identifierRegistry.

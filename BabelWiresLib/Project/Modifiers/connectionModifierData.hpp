@@ -23,7 +23,8 @@ namespace babelwires {
         CLONEABLE(ConnectionModifierData);
         SERIALIZABLE(ConnectionModifierData, "assignFrom", ModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        ConnectionModifierData() = default;
+        ConnectionModifierData(Deserializer& deserializer);
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
         ElementId m_sourceId;

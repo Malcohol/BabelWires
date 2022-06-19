@@ -68,7 +68,7 @@ namespace babelwires {
         // For use during serialization/deserialization:
 
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        IdentifierRegistry(Deserializer& deserializer);
 
         /// Information stored about an identifier.
         using ValueType = std::tuple<LongIdentifier, const std::string*, const Uuid*>;
@@ -130,7 +130,7 @@ namespace babelwires {
             InstanceData(std::string fieldName, Uuid uuid, LongIdentifier identifier, Authority authority);
 
             void serializeContents(Serializer& serializer) const override;
-            void deserializeContents(Deserializer& deserializer) override;
+            InstanceData(Deserializer& deserializer);
 
             std::string m_fieldName;
             Uuid m_uuid;

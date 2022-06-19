@@ -2,15 +2,15 @@
  * ModifierDatas carry the data sufficient to reconstruct a Modifier.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
 
 #include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
+#include "BabelWiresLib/Features/enumFeature.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/stringFeature.hpp"
-#include "BabelWiresLib/Features/enumFeature.hpp"
 #include "BabelWiresLib/FileFormat/fileFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
@@ -24,6 +24,14 @@ babelwires::Feature* babelwires::ModifierData::getTargetFeature(Feature* contain
     return &m_pathToFeature.follow(*container);
 }
 
+void babelwires::ModifierData::serializeContents(Serializer& serializer) const {
+    serializer.serializeValue("path", m_pathToFeature);
+}
+
+babelwires::ModifierData::ModifierData(Deserializer& deserializer) {
+    deserializer.deserializeValue("path", m_pathToFeature);
+}
+
 void babelwires::ModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
     for (auto& s : m_pathToFeature) {
         if (s.isField()) {
@@ -32,8 +40,10 @@ void babelwires::ModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
     }
 }
 
-void babelwires::ModifierData::visitFilePaths(FilePathVisitor& visitor) {
-}
+void babelwires::ModifierData::visitFilePaths(FilePathVisitor& visitor) {}
+
+babelwires::LocalModifierData::LocalModifierData(Deserializer& deserializer)
+    : ModifierData(deserializer) {}
 
 std::unique_ptr<babelwires::Modifier> babelwires::LocalModifierData::createModifier() const {
     return std::make_unique<babelwires::LocalModifier>(clone());
@@ -48,12 +58,11 @@ void babelwires::IntValueAssignmentData::apply(Feature* targetFeature) const {
 }
 
 void babelwires::IntValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    LocalModifierData::serializeContents(serializer);
     serializer.serializeValue("value", m_value);
 }
 
-void babelwires::IntValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+babelwires::IntValueAssignmentData::IntValueAssignmentData(Deserializer& deserializer) : LocalModifierData(deserializer) {
     deserializer.deserializeValue("value", m_value);
 }
 
@@ -66,12 +75,11 @@ void babelwires::RationalValueAssignmentData::apply(Feature* targetFeature) cons
 }
 
 void babelwires::RationalValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    LocalModifierData::serializeContents(serializer);
     serializer.serializeValue("value", m_value);
 }
 
-void babelwires::RationalValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+babelwires::RationalValueAssignmentData::RationalValueAssignmentData(Deserializer& deserializer) : LocalModifierData(deserializer) {
     deserializer.deserializeValue("value", m_value);
 }
 
@@ -84,12 +92,11 @@ void babelwires::StringValueAssignmentData::apply(Feature* targetFeature) const 
 }
 
 void babelwires::StringValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    LocalModifierData::serializeContents(serializer);
     serializer.serializeValue("value", m_value);
 }
 
-void babelwires::StringValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+babelwires::StringValueAssignmentData::StringValueAssignmentData(Deserializer& deserializer) : LocalModifierData(deserializer) {
     deserializer.deserializeValue("value", m_value);
 }
 
@@ -102,12 +109,11 @@ void babelwires::EnumValueAssignmentData::apply(Feature* targetFeature) const {
 }
 
 void babelwires::EnumValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    LocalModifierData::serializeContents(serializer);
     serializer.serializeValue("value", m_value);
 }
 
-void babelwires::EnumValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+babelwires::EnumValueAssignmentData::EnumValueAssignmentData(Deserializer& deserializer) : LocalModifierData(deserializer) {
     deserializer.deserializeValue("value", m_value);
 }
 

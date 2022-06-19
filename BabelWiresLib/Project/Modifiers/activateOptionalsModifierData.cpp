@@ -11,7 +11,7 @@ void babelwires::ActivateOptionalsModifierData::serializeContents(Serializer& se
     serializer.serializeValueArray("optionals", m_selectedOptionals, "activate");
 }
 
-void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
+babelwires::ActivateOptionalsModifierData::ActivateOptionalsModifierData(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_pathToFeature);
     for (auto it = deserializer.deserializeValueArray<Identifier>("optionals", Deserializer::IsOptional::Optional,
                                                                    "activate");

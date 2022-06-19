@@ -2,19 +2,19 @@
  * ConnectionModifierData used to assign a ValueFeature within a container to a value from another element.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
+#include "BabelWiresLib/Features/modelExceptions.hpp"
+#include "BabelWiresLib/Features/recordFeature.hpp"
 #include "BabelWiresLib/Features/rootFeature.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
 #include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
 #include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/Features/recordFeature.hpp"
 
 #include "Common/Serialization/deserializer.hpp"
 #include "Common/Serialization/serializer.hpp"
@@ -49,7 +49,7 @@ const babelwires::Feature* babelwires::ConnectionModifierData::getSourceFeature(
 }
 
 void babelwires::ConnectionModifierData::apply(const Feature* sourceFeature, Feature* targetFeature,
-                                              bool applyEvenIfSourceUnchanged) const {
+                                               bool applyEvenIfSourceUnchanged) const {
     if (!(applyEvenIfSourceUnchanged || sourceFeature->isChanged(Feature::Changes::ValueChanged))) {
         return;
     }
@@ -69,13 +69,13 @@ void babelwires::ConnectionModifierData::apply(const Feature* sourceFeature, Fea
 }
 
 void babelwires::ConnectionModifierData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    ModifierData::serializeContents(serializer);
     serializer.serializeValue("sourceId", m_sourceId);
     serializer.serializeValue("sourcePath", m_pathToSourceFeature);
 }
 
-void babelwires::ConnectionModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+babelwires::ConnectionModifierData::ConnectionModifierData(Deserializer& deserializer)
+    : ModifierData(deserializer) {
     deserializer.deserializeValue("sourceId", m_sourceId);
     deserializer.deserializeValue("sourcePath", m_pathToSourceFeature);
 }

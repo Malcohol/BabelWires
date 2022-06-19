@@ -31,7 +31,7 @@ std::unique_ptr<babelwires::FeatureElement> testUtils::TestFeatureElementData::d
 
 void testUtils::TestFeatureElementData::serializeContents(babelwires::Serializer& serializer) const {}
 
-void testUtils::TestFeatureElementData::deserializeContents(babelwires::Deserializer& deserializer) {}
+testUtils::TestFeatureElementData::TestFeatureElementData(babelwires::Deserializer& deserializer) {}
 
 testUtils::TestFeatureElement::TestFeatureElement(const babelwires::ProjectContext& context)
     : TestFeatureElement(context, TestFeatureElementData(), 10) {}

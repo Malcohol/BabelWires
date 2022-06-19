@@ -77,7 +77,7 @@ std::unique_ptr<babelwires::FeatureElement> testUtils::TestFeatureElementWithOpt
 
 void testUtils::TestFeatureElementWithOptionalsData::serializeContents(babelwires::Serializer& serializer) const {}
 
-void testUtils::TestFeatureElementWithOptionalsData::deserializeContents(babelwires::Deserializer& deserializer) {}
+testUtils::TestFeatureElementWithOptionalsData::TestFeatureElementWithOptionalsData(babelwires::Deserializer& deserializer) {}
 
 testUtils::TestFeatureElementWithOptionals::TestFeatureElementWithOptionals(const babelwires::ProjectContext& context)
     : TestFeatureElementWithOptionals(context, TestFeatureElementWithOptionalsData(), 10) {}
