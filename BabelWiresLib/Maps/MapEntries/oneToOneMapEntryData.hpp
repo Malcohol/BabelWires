@@ -20,7 +20,6 @@ namespace babelwires {
       public:
         CLONEABLE(OneToOneMapEntryData);
         SERIALIZABLE(OneToOneMapEntryData, "oneToOne", MapEntryData, 1);
-        OneToOneMapEntryData();
         OneToOneMapEntryData(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId);
         OneToOneMapEntryData(const OneToOneMapEntryData& other);
         OneToOneMapEntryData(OneToOneMapEntryData&& other);
@@ -43,8 +42,13 @@ namespace babelwires {
       protected:
         Result doValidate(const Type& sourceType, const Type& targetType) const override;
 
+        /// Needed for deserialization.
+        OneToOneMapEntryData();
+
       private:
+        /// Non-null
         std::unique_ptr<Value> m_sourceValue;
+        /// Non-null
         std::unique_ptr<Value> m_targetValue;
     };
 } // namespace babelwires

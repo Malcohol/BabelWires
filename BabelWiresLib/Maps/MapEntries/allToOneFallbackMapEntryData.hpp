@@ -17,7 +17,6 @@ namespace babelwires {
         CLONEABLE(AllToOneFallbackMapEntryData);
         SERIALIZABLE(AllToOneFallbackMapEntryData, "allToOne", FallbackMapEntryData, 1);
 
-        AllToOneFallbackMapEntryData();
         AllToOneFallbackMapEntryData(const TypeSystem& typeSystem, LongIdentifier targetTypeId);
         AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other);
         AllToOneFallbackMapEntryData(AllToOneFallbackMapEntryData&& other);
@@ -38,7 +37,11 @@ namespace babelwires {
       protected:
         Result doValidate(const Type& sourceType, const Type& targetType) const override;
 
+        /// Needed for deserialization.
+        AllToOneFallbackMapEntryData();
+        
       private:
+        /// Non-null
         std::unique_ptr<Value> m_targetValue;
     };
 } // namespace babelwires
