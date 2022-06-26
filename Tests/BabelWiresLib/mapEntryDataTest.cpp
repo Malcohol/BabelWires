@@ -88,10 +88,9 @@ TEST(MapEntryDataTest, equalityByKind) {
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    const babelwires::OneToOneMapEntryData oneToOne(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestEnum::getThisIdentifier());
-    babelwires::AllToOneFallbackMapEntryData allToOne(
-        typeSystem, testUtils::TestEnum::getThisIdentifier());
+    const babelwires::OneToOneMapEntryData oneToOne(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                                    testUtils::TestEnum::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, testUtils::TestEnum::getThisIdentifier());
     babelwires::AllToSameFallbackMapEntryData allToSame;
 
     EXPECT_EQ(oneToOne, oneToOne);
@@ -109,11 +108,11 @@ TEST(MapEntryDataTest, oneToOneEqualitySameTypes) {
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    babelwires::OneToOneMapEntryData oneToOneA(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                               testUtils::TestType::getThisIdentifier());
 
-    babelwires::OneToOneMapEntryData oneToOneB(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                               testUtils::TestType::getThisIdentifier());
 
     EXPECT_EQ(oneToOneA, oneToOneB);
 
@@ -139,17 +138,17 @@ TEST(MapEntryDataTest, oneToOneEqualityDifferentTypes) {
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    babelwires::OneToOneMapEntryData oneToOneA(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                               testUtils::TestType::getThisIdentifier());
 
-    babelwires::OneToOneMapEntryData oneToOneB(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestEnum::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                               testUtils::TestEnum::getThisIdentifier());
 
-    babelwires::OneToOneMapEntryData oneToOneC(
-        typeSystem, testUtils::TestEnum::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneC(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                               testUtils::TestType::getThisIdentifier());
 
-    babelwires::OneToOneMapEntryData oneToOneD(
-        typeSystem, testUtils::TestEnum::getThisIdentifier(), testUtils::TestEnum::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneD(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                               testUtils::TestEnum::getThisIdentifier());
 
     EXPECT_NE(oneToOneA, oneToOneB);
     EXPECT_NE(oneToOneA, oneToOneC);
@@ -172,11 +171,9 @@ TEST(MapEntryDataTest, allToOneEqualitySameTypes) {
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    babelwires::AllToOneFallbackMapEntryData allToOneA(
-        typeSystem, testUtils::TestType::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, testUtils::TestType::getThisIdentifier());
 
-    babelwires::AllToOneFallbackMapEntryData allToOneB(
-        typeSystem, testUtils::TestType::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, testUtils::TestType::getThisIdentifier());
 
     EXPECT_EQ(allToOneA, allToOneB);
 
@@ -196,26 +193,23 @@ TEST(MapEntryDataTest, allToOneEqualityDifferentTypes) {
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    babelwires::AllToOneFallbackMapEntryData allToOneA(
-        typeSystem, testUtils::TestType::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, testUtils::TestType::getThisIdentifier());
 
-    babelwires::AllToOneFallbackMapEntryData allToOneB(
-        typeSystem, testUtils::TestEnum::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, testUtils::TestEnum::getThisIdentifier());
 
     EXPECT_NE(allToOneA, allToOneB);
     EXPECT_NE(allToOneB, allToOneA);
 }
 
-TEST(MapEntryDataTest, hashNyKind) {
+TEST(MapEntryDataTest, hashByKind) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    const babelwires::OneToOneMapEntryData oneToOne(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestEnum::getThisIdentifier());
-    babelwires::AllToOneFallbackMapEntryData allToOne(
-        typeSystem, testUtils::TestEnum::getThisIdentifier());
+    const babelwires::OneToOneMapEntryData oneToOne(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                                    testUtils::TestEnum::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, testUtils::TestEnum::getThisIdentifier());
     babelwires::AllToSameFallbackMapEntryData allToSame;
 
     const auto oneToOneHash = oneToOne.getHash();
@@ -233,11 +227,11 @@ TEST(MapEntryDataTest, oneToOneHashSameTypes) {
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    babelwires::OneToOneMapEntryData oneToOneA(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                               testUtils::TestType::getThisIdentifier());
 
-    babelwires::OneToOneMapEntryData oneToOneB(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                               testUtils::TestType::getThisIdentifier());
 
     EXPECT_EQ(oneToOneA.getHash(), oneToOneB.getHash());
 
@@ -263,17 +257,17 @@ TEST(MapEntryDataTest, oneToOneHashDifferentTypes) {
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    babelwires::OneToOneMapEntryData oneToOneA(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                               testUtils::TestType::getThisIdentifier());
 
-    babelwires::OneToOneMapEntryData oneToOneB(
-        typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestEnum::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                               testUtils::TestEnum::getThisIdentifier());
 
-    babelwires::OneToOneMapEntryData oneToOneC(
-        typeSystem, testUtils::TestEnum::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneC(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                               testUtils::TestType::getThisIdentifier());
 
-    babelwires::OneToOneMapEntryData oneToOneD(
-        typeSystem, testUtils::TestEnum::getThisIdentifier(), testUtils::TestEnum::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOneD(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                               testUtils::TestEnum::getThisIdentifier());
 
     EXPECT_NE(oneToOneA.getHash(), oneToOneB.getHash());
     EXPECT_NE(oneToOneA.getHash(), oneToOneC.getHash());
@@ -296,11 +290,9 @@ TEST(MapEntryDataTest, allToOneHashSameTypes) {
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    babelwires::AllToOneFallbackMapEntryData allToOneA(
-        typeSystem, testUtils::TestType::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, testUtils::TestType::getThisIdentifier());
 
-    babelwires::AllToOneFallbackMapEntryData allToOneB(
-        typeSystem, testUtils::TestType::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, testUtils::TestType::getThisIdentifier());
 
     EXPECT_EQ(allToOneA.getHash(), allToOneB.getHash());
 
@@ -320,13 +312,117 @@ TEST(MapEntryDataTest, allToOneHashDifferentTypes) {
     typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
-    babelwires::AllToOneFallbackMapEntryData allToOneA(
-        typeSystem, testUtils::TestType::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, testUtils::TestType::getThisIdentifier());
 
-    babelwires::AllToOneFallbackMapEntryData allToOneB(
-        typeSystem, testUtils::TestEnum::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, testUtils::TestEnum::getThisIdentifier());
 
     EXPECT_NE(allToOneA.getHash(), allToOneB.getHash());
     EXPECT_NE(allToOneB.getHash(), allToOneA.getHash());
+}
+
+TEST(MapEntryDataTest, oneToOneValidate) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::OneToOneMapEntryData oneToOne(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                              testUtils::TestEnum::getThisIdentifier());
+
+    EXPECT_FALSE(oneToOne.validate(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                  testUtils::TestType::getThisIdentifier(), false));
+    EXPECT_TRUE(oneToOne.validate(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                   testUtils::TestEnum::getThisIdentifier(), false));
+    EXPECT_FALSE(oneToOne.validate(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                   testUtils::TestType::getThisIdentifier(), false));
+    EXPECT_FALSE(oneToOne.validate(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                   testUtils::TestEnum::getThisIdentifier(), false));
+
+    EXPECT_FALSE(oneToOne.validate(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                   testUtils::TestEnum::getThisIdentifier(), true));
+}
+
+TEST(MapEntryDataTest, allToOneValidate) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, testUtils::TestType::getThisIdentifier());
+
+    EXPECT_TRUE(allToOne.validate(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                  testUtils::TestType::getThisIdentifier(), true));
+    EXPECT_FALSE(allToOne.validate(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                   testUtils::TestEnum::getThisIdentifier(), true));
+    EXPECT_TRUE(allToOne.validate(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                   testUtils::TestType::getThisIdentifier(), true));
+    EXPECT_FALSE(allToOne.validate(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                   testUtils::TestEnum::getThisIdentifier(), true));
+
+    EXPECT_FALSE(allToOne.validate(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                   testUtils::TestType::getThisIdentifier(), false));
+}
+
+TEST(MapEntryDataTest, allToSameValidate) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::AllToSameFallbackMapEntryData allToSame;
+
+    EXPECT_TRUE(allToSame.validate(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                  testUtils::TestType::getThisIdentifier(), true));
+    EXPECT_FALSE(allToSame.validate(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                   testUtils::TestEnum::getThisIdentifier(), true));
+    EXPECT_FALSE(allToSame.validate(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                   testUtils::TestType::getThisIdentifier(), true));
+    EXPECT_TRUE(allToSame.validate(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                   testUtils::TestEnum::getThisIdentifier(), true));
+
+    EXPECT_FALSE(allToSame.validate(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                   testUtils::TestType::getThisIdentifier(), false));
+}
+
+TEST(MapEntryDataTest, oneToOneGetAndSetValues) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::OneToOneMapEntryData oneToOne(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                              testUtils::TestEnum::getThisIdentifier());
+
+    testUtils::TestValue sourceValue;
+    sourceValue.m_value = "source";
+
+    oneToOne.setSourceValue(sourceValue.clone());
+    const auto sourceValueFromData = oneToOne.getSourceValue()->as<testUtils::TestValue>();
+    ASSERT_NE(sourceValueFromData, nullptr);
+    EXPECT_EQ(sourceValueFromData->m_value, sourceValue.m_value);
+
+    babelwires::EnumValue targetValue;
+    targetValue.set("Foo");
+    oneToOne.setTargetValue(targetValue.clone());
+    const auto targetValueFromData = oneToOne.getTargetValue()->as<babelwires::EnumValue>();
+    ASSERT_NE(targetValueFromData, nullptr);
+    EXPECT_EQ(targetValueFromData->get(), targetValue.get());
+}
+
+TEST(MapEntryDataTest, allToOneGetAndSetValues) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, testUtils::TestType::getThisIdentifier());
+
+    testUtils::TestValue targetValue;
+    targetValue.m_value = "source";
+
+    allToOne.setTargetValue(targetValue.clone());
+    const auto targetValueFromData = allToOne.getTargetValue()->as<testUtils::TestValue>();
+    ASSERT_NE(targetValueFromData, nullptr);
+    EXPECT_EQ(targetValueFromData->m_value, targetValue.m_value);
 }
 
