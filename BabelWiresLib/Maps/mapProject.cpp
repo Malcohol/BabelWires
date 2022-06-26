@@ -145,7 +145,7 @@ void babelwires::MapProject::setMapData(const MapData& data) {
     for (unsigned int i = 0; i < data.m_mapEntries.size(); ++i) {
         const auto& mapEntryData = data.m_mapEntries[i];
         auto mapEntry = std::make_unique<MapProjectEntry>(mapEntryData->clone());
-        const bool isLastEntry = (i == m_mapEntries.size() - 1);
+        const bool isLastEntry = (i == data.m_mapEntries.size() - 1);
         mapEntry->validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, isLastEntry);
         m_mapEntries.emplace_back(std::move(mapEntry));
     }

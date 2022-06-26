@@ -23,9 +23,9 @@ babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSyst
     if (!targetType) {
         return "The target type is not recognized";
     }
-    //if (isLastEntry != (this->as<FallbackMapEntryData>() != nullptr)) {
-    //   return isLastEntry ? "The last entry must be a fallback entry" : "A fallback entry can only be at the end of a map";
-    //}
+    if (isLastEntry != isFallback(getKind())) {
+       return isLastEntry ? "The last entry must be a fallback entry" : "A fallback entry can only be at the end of a map";
+    }
     return doValidate(*sourceType, *targetType);
 }
 

@@ -237,6 +237,25 @@ TEST(MapDataTest, setEntriesToDefault2) {
     EXPECT_EQ(*testValue, testUtils::TestValue());
 }
 
+TEST(MapDataTest, isValid) {
+    babelwires::MapData mapData;
+
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
+    mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
+
+    EXPECT_TRUE(mapData.isValid(typeSystem));
+
+    mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
+
+    EXPECT_FALSE(mapData.isValid(typeSystem));
+}
+
 TEST(MapDataTest, serializationTest) {
     std::string serializedContents;
     {
@@ -281,3 +300,4 @@ TEST(MapDataTest, serializationTest) {
 
     EXPECT_EQ(dataPtr->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::AllToSame);
 }
+
