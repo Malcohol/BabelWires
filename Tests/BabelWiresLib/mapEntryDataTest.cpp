@@ -426,3 +426,179 @@ TEST(MapEntryDataTest, allToOneGetAndSetValues) {
     EXPECT_EQ(targetValueFromData->m_value, targetValue.m_value);
 }
 
+TEST(MapEntryDataTest, oneToOneSerialize) {
+    std::string serializedContents;
+    {
+        babelwires::IdentifierRegistryScope identifierRegistry;
+        babelwires::TypeSystem typeSystem;
+        typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+        typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+        babelwires::OneToOneMapEntryData oneToOne(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                              testUtils::TestEnum::getThisIdentifier());
+
+        testUtils::TestValue sourceValue;
+        sourceValue.m_value = "test serialization";
+
+        oneToOne.setSourceValue(sourceValue.clone());
+
+        babelwires::EnumValue targetValue;
+        targetValue.set("Foo");
+        oneToOne.setTargetValue(targetValue.clone());
+
+        babelwires::XmlSerializer serializer;
+        serializer.serializeObject(oneToOne);
+        std::ostringstream os;
+        serializer.write(os);
+        serializedContents = std::move(os.str());
+    }
+    testUtils::TestLog log;
+    babelwires::AutomaticDeserializationRegistry deserializationReg;
+    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+    auto dataPtr = deserializer.deserializeObject<babelwires::OneToOneMapEntryData>();
+    deserializer.finalize();
+
+    ASSERT_NE(dataPtr, nullptr);
+    const auto *const sourceValue = dataPtr->getSourceValue();
+    const auto *const targetValue = dataPtr->getTargetValue();
+    ASSERT_NE(sourceValue, nullptr);
+    ASSERT_NE(targetValue, nullptr);
+
+    const auto *const sourceValueFromData = sourceValue->as<testUtils::TestValue>();
+    ASSERT_NE(sourceValueFromData, nullptr);
+    EXPECT_EQ(sourceValueFromData->m_value, "test serialization");
+
+    const auto *const targetValueFromData = targetValue->as<babelwires::EnumValue>();
+    ASSERT_NE(targetValueFromData, nullptr);
+    EXPECT_EQ(targetValueFromData->get(), "Foo");
+}
+
+TEST(MapEntryDataTest, allToOneSerialize) {
+    std::string serializedContents;
+    {
+        babelwires::IdentifierRegistryScope identifierRegistry;
+        babelwires::TypeSystem typeSystem;
+        typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+        babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, testUtils::TestType::getThisIdentifier());
+
+        testUtils::TestValue targetValue;
+        targetValue.m_value = "test serialization";
+
+        allToOne.setTargetValue(targetValue.clone());
+
+        babelwires::XmlSerializer serializer;
+        serializer.serializeObject(allToOne);
+        std::ostringstream os;
+        serializer.write(os);
+        serializedContents = std::move(os.str());
+    }
+    testUtils::TestLog log;
+    babelwires::AutomaticDeserializationRegistry deserializationReg;
+    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+    auto dataPtr = deserializer.deserializeObject<babelwires::AllToOneFallbackMapEntryData>();
+    deserializer.finalize();
+
+    ASSERT_NE(dataPtr, nullptr);
+    const auto *const targetValue = dataPtr->getTargetValue();
+    ASSERT_NE(targetValue, nullptr);
+
+    const auto *const targetValueFromData = targetValue->as<testUtils::TestValue>();
+    ASSERT_NE(targetValueFromData, nullptr);
+    EXPECT_EQ(targetValueFromData->m_value, "test serialization");
+}
+
+TEST(MapEntryDataTest, allToSameSerialize) {
+    std::string serializedContents;
+    {
+        babelwires::IdentifierRegistryScope identifierRegistry;
+        babelwires::TypeSystem typeSystem;
+        typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+        babelwires::AllToSameFallbackMapEntryData allToSame;
+
+        babelwires::XmlSerializer serializer;
+        serializer.serializeObject(allToSame);
+        std::ostringstream os;
+        serializer.write(os);
+        serializedContents = std::move(os.str());
+    }
+    testUtils::TestLog log;
+    babelwires::AutomaticDeserializationRegistry deserializationReg;
+    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+    auto dataPtr = deserializer.deserializeObject<babelwires::AllToSameFallbackMapEntryData>();
+    deserializer.finalize();
+
+    ASSERT_NE(dataPtr, nullptr);
+}
+
+
+TEST(MapEntryDataTest, oneToOneClone) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::OneToOneMapEntryData oneToOne(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                            testUtils::TestEnum::getThisIdentifier());
+
+    testUtils::TestValue sourceValue;
+    sourceValue.m_value = "test serialization";
+
+    oneToOne.setSourceValue(sourceValue.clone());
+
+    babelwires::EnumValue targetValue;
+    targetValue.set("Foo");
+    oneToOne.setTargetValue(targetValue.clone());
+
+    auto dataPtr = oneToOne.clone();
+
+    ASSERT_NE(dataPtr, nullptr);
+    const auto *const sourceValueInClone = dataPtr->getSourceValue();
+    const auto *const targetValueInClone = dataPtr->getTargetValue();
+    ASSERT_NE(sourceValueInClone, nullptr);
+    ASSERT_NE(targetValueInClone, nullptr);
+
+    const auto *const sourceValueFromData = sourceValueInClone->as<testUtils::TestValue>();
+    ASSERT_NE(sourceValueFromData, nullptr);
+    EXPECT_EQ(sourceValueFromData->m_value, "test serialization");
+
+    const auto *const targetValueFromData = targetValueInClone->as<babelwires::EnumValue>();
+    ASSERT_NE(targetValueFromData, nullptr);
+    EXPECT_EQ(targetValueFromData->get(), "Foo");
+}
+
+TEST(MapEntryDataTest, allToOneClone) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, testUtils::TestType::getThisIdentifier());
+
+    testUtils::TestValue targetValue;
+    targetValue.m_value = "test serialization";
+
+    allToOne.setTargetValue(targetValue.clone());
+
+    auto dataPtr = allToOne.clone();
+
+    ASSERT_NE(dataPtr, nullptr);
+    const auto *const targetValueInClone = dataPtr->getTargetValue();
+    ASSERT_NE(targetValueInClone, nullptr);
+
+    const auto *const targetValueFromData = targetValueInClone->as<testUtils::TestValue>();
+    ASSERT_NE(targetValueFromData, nullptr);
+    EXPECT_EQ(targetValueFromData->m_value, "test serialization");
+}
+
+TEST(MapEntryDataTest, allToSameClone) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+    babelwires::AllToSameFallbackMapEntryData allToSame;
+
+    auto dataPtr = allToSame.clone();
+
+    ASSERT_NE(dataPtr, nullptr);
+}
