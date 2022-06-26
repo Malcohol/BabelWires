@@ -20,6 +20,7 @@ SET( LIB_TESTS_SRCS
     filePathTest.cpp
     editTreeTest.cpp
     mapDataTest.cpp
+    mapEntryDataTest.cpp
     modifierDataTest.cpp
     modifierTest.cpp
     moveElementCommandTest.cpp
