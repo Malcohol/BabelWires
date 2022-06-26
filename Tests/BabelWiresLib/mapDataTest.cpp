@@ -237,7 +237,7 @@ TEST(MapDataTest, setEntriesToDefault2) {
     EXPECT_EQ(*testValue, testUtils::TestValue());
 }
 
-TEST(MapDataTest, isValid) {
+TEST(MapDataTest, isInvalid_validMap) {
     babelwires::MapData mapData;
 
     babelwires::IdentifierRegistryScope identifierRegistry;
@@ -251,6 +251,52 @@ TEST(MapDataTest, isValid) {
 
     EXPECT_TRUE(mapData.isValid(typeSystem));
 
+    // This will invalidate the previous entry, since a fallback is only permitted at the end.
+    mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
+
+    EXPECT_FALSE(mapData.isValid(typeSystem));
+}
+
+TEST(MapDataTest, isInvalid_outOfPlaceFallback) {
+    babelwires::MapData mapData;
+
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
+    mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
+    mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
+
+    EXPECT_FALSE(mapData.isValid(typeSystem));
+}
+
+TEST(MapDataTest, isInvalid_noFallback) {
+    babelwires::MapData mapData;
+
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
+
+    EXPECT_FALSE(mapData.isValid(typeSystem));
+}
+
+TEST(MapDataTest, isValid_typeMismatch) {
+    babelwires::MapData mapData;
+
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+    mapData.setSourceTypeId(testTypeId1);
+    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
     EXPECT_FALSE(mapData.isValid(typeSystem));
