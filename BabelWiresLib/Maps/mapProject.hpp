@@ -20,6 +20,7 @@
 namespace babelwires {
     class MapProjectEntry;
     class MapEntryData;
+    struct ProjectContext;
 
     /// The MapProject carries an enriched version of the data in a MapData and has support for editing.
     class MapProject {

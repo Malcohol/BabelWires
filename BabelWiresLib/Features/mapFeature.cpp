@@ -41,7 +41,7 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
         throw ModelException() << "The target type of the map is not valid for this feature";
     }
 
-    if (!newValue.isValid(context)) {
+    if (!newValue.isValid(context.m_typeSystem)) {
         throw ModelException() << "The map is not valid";
     }
 }
@@ -58,6 +58,6 @@ void babelwires::MapFeature::doSetToDefault() {
     MapData mapData;
     mapData.setSourceTypeId(m_sourceTypeId);
     mapData.setTargetTypeId(m_targetTypeId);
-    mapData.setEntriesToDefault(RootFeature::getProjectContextAt(*this));
+    mapData.setEntriesToDefault(RootFeature::getProjectContextAt(*this).m_typeSystem);
     set(std::move(mapData));
 }

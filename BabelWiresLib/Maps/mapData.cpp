@@ -94,10 +94,10 @@ const babelwires::MapEntryData& babelwires::MapData::getMapEntry(unsigned int in
     return *m_mapEntries[index];
 }
 
-bool babelwires::MapData::isValid(const ProjectContext& context) const {
+bool babelwires::MapData::isValid(const TypeSystem& typeSystem) const {
     for (unsigned int i = 0; i < m_mapEntries.size(); ++i) {
         const auto& entryData = m_mapEntries[i];
-        if (!entryData->validate(context.m_typeSystem, m_sourceTypeId, m_targetTypeId,
+        if (!entryData->validate(typeSystem, m_sourceTypeId, m_targetTypeId,
                                  (i == m_mapEntries.size() - 1))) {
             return false;
         }
@@ -141,10 +141,10 @@ void babelwires::MapData::visitFilePaths(FilePathVisitor& visitor) {
     }
 }
 
-void babelwires::MapData::setEntriesToDefault(const ProjectContext& context) {
+void babelwires::MapData::setEntriesToDefault(const TypeSystem& typeSystem) {
     m_mapEntries.clear();
-    const Type* targetType = context.m_typeSystem.getEntryByIdentifier(m_targetTypeId);
+    const Type* targetType = typeSystem.getEntryByIdentifier(m_targetTypeId);
     if (targetType) {
-        m_mapEntries.emplace_back(std::make_unique<AllToOneFallbackMapEntryData>(context.m_typeSystem, m_targetTypeId));
+        m_mapEntries.emplace_back(std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, m_targetTypeId));
     }
 }

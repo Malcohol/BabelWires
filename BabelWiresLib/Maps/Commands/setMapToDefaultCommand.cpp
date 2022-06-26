@@ -11,6 +11,7 @@
 #include "BabelWiresLib/Maps/MapEntries/mapEntryData.hpp"
 #include "BabelWiresLib/Maps/mapProject.hpp"
 #include "BabelWiresLib/Maps/mapProjectEntry.hpp"
+#include <BabelWiresLib/Project/projectContext.hpp>
 
 babelwires::SetMapToDefaultCommand::SetMapToDefaultCommand(std::string commandName)
     : SimpleCommand(commandName) {}
@@ -24,7 +25,7 @@ void babelwires::SetMapToDefaultCommand::execute(MapProject& map) const {
     MapData defaultMap;
     defaultMap.setSourceTypeId(map.getAllowedSourceTypeId());
     defaultMap.setTargetTypeId(map.getAllowedTargetTypeId());
-    defaultMap.setEntriesToDefault(map.getProjectContext());
+    defaultMap.setEntriesToDefault(map.getProjectContext().m_typeSystem);
     map.setMapData(defaultMap);
 }
 

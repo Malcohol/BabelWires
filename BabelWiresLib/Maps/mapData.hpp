@@ -19,7 +19,7 @@
 
 namespace babelwires {
     class MapEntryData;
-    struct ProjectContext;
+    class TypeSystem;
     class Type;
 
     /// The data held by a map.
@@ -49,7 +49,7 @@ namespace babelwires {
         const MapEntryData& getMapEntry(unsigned int index) const;
 
         /// The entries have a single fallback which maps everything to the default target value.
-        void setEntriesToDefault(const ProjectContext& context);
+        void setEntriesToDefault(const TypeSystem& typeSystem);
 
         void emplaceBack(std::unique_ptr<MapEntryData> newEntry);
 
@@ -63,7 +63,7 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        bool isValid(const ProjectContext& context) const;
+        bool isValid(const TypeSystem& typeSystem) const;
 
       public:
         LongIdentifier m_sourceTypeId;
