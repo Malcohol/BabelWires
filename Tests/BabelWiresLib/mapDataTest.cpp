@@ -153,6 +153,8 @@ TEST(MapDataTest, equality) {
 }
 
 TEST(MapDataTest, getHash) {
+    // NOTE: There's a small chance that this test will fail due a hash collision.
+
     babelwires::MapData mapData;
     babelwires::MapData mapData2;
 
@@ -191,3 +193,45 @@ TEST(MapDataTest, getHash) {
 
     EXPECT_NE(mapData.getHash(), mapData2.getHash());
 }
+
+TEST(MapDataTest, setEntriesToDefault) {
+    babelwires::MapData mapData;
+    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+ 
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+    mapData.setEntriesToDefault(typeSystem);
+
+    EXPECT_EQ(mapData.getNumMapEntries(), 1);
+    EXPECT_EQ(mapData.getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    const auto* testValue = mapData.getMapEntry(0).as<babelwires::AllToOneFallbackMapEntryData>()->getTargetValue();
+    ASSERT_NE(testValue, nullptr);
+    EXPECT_EQ(*testValue, testUtils::TestValue());
+}
+
+TEST(MapDataTest, setEntriesToDefault2) {
+    babelwires::MapData mapData;
+    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+ 
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+    mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
+    mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
+    mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
+    EXPECT_EQ(mapData.getNumMapEntries(), 3);
+
+    mapData.setEntriesToDefault(typeSystem);
+
+    EXPECT_EQ(mapData.getNumMapEntries(), 1);
+    EXPECT_EQ(mapData.getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    const auto* testValue = mapData.getMapEntry(0).as<babelwires::AllToOneFallbackMapEntryData>()->getTargetValue();
+    ASSERT_NE(testValue, nullptr);
+    EXPECT_EQ(*testValue, testUtils::TestValue());
+}
+

@@ -8,6 +8,7 @@ namespace testUtils {
       public:
         CLONEABLE(TestValue);
         SERIALIZABLE(TestValue, "testValue", void, 1);
+        TestValue();
         bool isValid(const babelwires::Type& type) const override;
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;

@@ -5,7 +5,9 @@
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
-bool  testUtils::TestValue::isValid(const babelwires::Type& type) const{
+testUtils::TestValue::TestValue() : m_value("test value value") {}
+
+bool testUtils::TestValue::isValid(const babelwires::Type& type) const{
     return type.as<TestType>();
 }
 
