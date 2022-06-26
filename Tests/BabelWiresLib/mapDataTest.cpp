@@ -6,6 +6,8 @@
 #include <BabelWiresLib/Maps/mapData.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
@@ -235,3 +237,47 @@ TEST(MapDataTest, setEntriesToDefault2) {
     EXPECT_EQ(*testValue, testUtils::TestValue());
 }
 
+TEST(MapDataTest, serializationTest) {
+    std::string serializedContents;
+    {
+        babelwires::MapData mapData;
+        mapData.setSourceTypeId(testTypeId1);
+        mapData.setTargetTypeId(testTypeId2);
+    
+        babelwires::IdentifierRegistryScope identifierRegistry;
+        babelwires::TypeSystem typeSystem;
+        typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+        // Note: We want to be able to serialize when entries do not match the types, as in this case.
+        auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+        auto entrySourceValue = std::make_unique<testUtils::TestValue>();
+        entrySourceValue->m_value = "test mapData serialization";
+        entryData->setSourceValue(std::move(entrySourceValue));
+        mapData.emplaceBack(std::move(entryData));
+        mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
+
+        babelwires::XmlSerializer serializer;
+        serializer.serializeObject(mapData);
+        std::ostringstream os;
+        serializer.write(os);
+        serializedContents = std::move(os.str());
+    }
+    testUtils::TestLog log;
+    babelwires::AutomaticDeserializationRegistry deserializationReg;
+    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+    auto dataPtr = deserializer.deserializeObject<babelwires::MapData>();
+    deserializer.finalize();
+
+    ASSERT_NE(dataPtr, nullptr);
+    EXPECT_EQ(dataPtr->m_sourceTypeId, testTypeId1);
+    EXPECT_EQ(dataPtr->m_targetTypeId, testTypeId2);
+    EXPECT_EQ(dataPtr->getNumMapEntries(), 2);
+    EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::OneToOne);
+    const auto *const sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
+    ASSERT_NE(sourceValue, nullptr);
+    const auto *const sourceAsTestValue = sourceValue->as<testUtils::TestValue>();
+    ASSERT_NE(sourceAsTestValue, nullptr);
+    EXPECT_EQ(sourceAsTestValue->m_value, "test mapData serialization");
+
+    EXPECT_EQ(dataPtr->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::AllToSame);
+}

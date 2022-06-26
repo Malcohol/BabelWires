@@ -7,7 +7,7 @@ namespace testUtils {
     class TestValue : public babelwires::Value {
       public:
         CLONEABLE(TestValue);
-        SERIALIZABLE(TestValue, "testValue", void, 1);
+        SERIALIZABLE(TestValue, "testValue", babelwires::Value, 1);
         TestValue();
         bool isValid(const babelwires::Type& type) const override;
         std::size_t getHash() const override;
