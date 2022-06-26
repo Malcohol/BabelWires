@@ -347,3 +347,37 @@ TEST(MapDataTest, serializationTest) {
     EXPECT_EQ(dataPtr->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::AllToSame);
 }
 
+
+TEST(MapDataTest, cloneTest) {
+    babelwires::MapData mapData;
+    mapData.setSourceTypeId(testTypeId1);
+    mapData.setTargetTypeId(testTypeId2);
+
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+
+    // Note: We want to be able to clone when entries do not match the types, as in this case.
+    auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
+    auto entrySourceValue = std::make_unique<testUtils::TestValue>();
+    auto entryDataPtr = entryData.get();
+    auto entrySourceValuePtr = entrySourceValue.get();
+    entrySourceValue->m_value = "test mapData serialization";
+    entryData->setSourceValue(std::move(entrySourceValue));
+    mapData.emplaceBack(std::move(entryData));
+    mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
+
+    auto cloneMapData = mapData.clone();
+
+    ASSERT_NE(cloneMapData, nullptr);
+    EXPECT_EQ(cloneMapData->m_sourceTypeId, testTypeId1);
+    EXPECT_EQ(cloneMapData->m_targetTypeId, testTypeId2);
+    EXPECT_EQ(cloneMapData->getNumMapEntries(), 2);
+    EXPECT_EQ(cloneMapData->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::OneToOne);
+    const auto *const clonedEntryData = cloneMapData->getMapEntry(0).as<babelwires::OneToOneMapEntryData>();
+    ASSERT_NE(clonedEntryData, nullptr);
+    EXPECT_NE(clonedEntryData, entryDataPtr);
+    EXPECT_EQ(*clonedEntryData, *entryDataPtr);
+    EXPECT_EQ(cloneMapData->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::AllToSame);
+}
+
