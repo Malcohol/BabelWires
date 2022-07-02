@@ -22,8 +22,6 @@ namespace babelwires {
     /// Target types are treated in the usual covariant way.
     class MapFeature : public HeavyValueFeature<MapData> {
       public:
-        /// If the sets are empty, any types are allowed.
-        /// If the sets are not empty, then the first type is taken to be the default.
         MapFeature(LongIdentifier sourceId, LongIdentifier targetId);
 
       protected:

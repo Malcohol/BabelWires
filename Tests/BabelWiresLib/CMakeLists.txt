@@ -21,6 +21,7 @@ SET( LIB_TESTS_SRCS
     editTreeTest.cpp
     mapDataTest.cpp
     mapEntryDataTest.cpp
+    mapFeatureTest.cpp
     modifierDataTest.cpp
     modifierTest.cpp
     moveElementCommandTest.cpp
