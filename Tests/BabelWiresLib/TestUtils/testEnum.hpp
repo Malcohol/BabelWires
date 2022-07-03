@@ -19,7 +19,7 @@ namespace testUtils {
     /// Note: The identifiers are not actually registered in the identifierRegistry.
     extern const babelwires::Enum::EnumValues g_enumValues;
 
-    // Foo, Bar, Erm, Oom, Boo
+// Foo, Bar, Erm, Oom, Boo
     struct TestEnum : babelwires::Enum {
         TestEnum();
 

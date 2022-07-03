@@ -23,6 +23,7 @@ SET( LIB_TESTS_SRCS
     mapEntryDataTest.cpp
     mapFeatureTest.cpp
     mapHelperTest.cpp
+    mapProjectTest.cpp
     modifierDataTest.cpp
     modifierTest.cpp
     moveElementCommandTest.cpp

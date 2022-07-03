@@ -80,20 +80,6 @@ const babelwires::Type* babelwires::MapProject::getTargetType() const {
     return m_projectContext.m_typeSystem.getEntryByIdentifier(m_targetTypeId);
 }
 
-bool babelwires::MapProject::operator==(const MapProject& other) const {
-    if ((m_sourceTypeId != other.m_sourceTypeId) || (m_targetTypeId != other.m_targetTypeId)) {
-        return false;
-    }
-    return m_mapEntries == other.m_mapEntries;
-}
-
-bool babelwires::MapProject::operator!=(const MapProject& other) const {
-    if ((m_sourceTypeId != other.m_sourceTypeId) || (m_targetTypeId != other.m_targetTypeId)) {
-        return true;
-    }
-    return m_mapEntries != other.m_mapEntries;
-}
-
 unsigned int babelwires::MapProject::getNumMapEntries() const {
     return m_mapEntries.size();
 }
