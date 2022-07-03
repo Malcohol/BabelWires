@@ -17,6 +17,7 @@
 
 namespace babelwires {
     /// Converts MapData to a native C++ function based on a std::unordered_map.
+    /// NOTE: In the cases where the MapData allows an AllToSame fallback, T and U must be the same.
     template <typename T, typename U> class UnorderedMapApplicator {
       public:
         UnorderedMapApplicator(const MapData& mapData, const ValueAdapter<T>& sourceAdapter,
@@ -41,7 +42,7 @@ namespace babelwires {
             if (it != m_map.end()) {
                 return it->second;
             }
-            return this->getFallback(t);
+            return m_fallbackHelper.getFallback(t);
         }
 
       private:

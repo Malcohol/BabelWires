@@ -13,7 +13,7 @@
 namespace babelwires {
 
     /// Convert an EnumValue to a unsigned int corresponding to the index of the enum entry.
-    /// Note: Be very careful with this if the native enum can change over the lifetime of the application.
+    /// Note: Be very careful with this if the enum could change in the future.
     struct EnumToIndexValueAdapter {
         Enum m_enum;
 

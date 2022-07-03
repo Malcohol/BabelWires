@@ -15,6 +15,8 @@
 
 namespace babelwires {
     /// A helper which handles fallbacks for MapApplicators.
+    /// NOTE: In the cases where the MapData allows an AllToSame fallback, T and U must be the same.
+    /// (It would be possible to provide MapApplicators without this limitation, but it's pretty awkward.)
     template <typename T, typename U> class MapApplicatorFallbackHelper {
       public:
         MapApplicatorFallbackHelper(const MapData& mapData, const ValueAdapter<U>& targetAdapter) {
@@ -26,7 +28,13 @@ namespace babelwires {
                     break;
                 }
                 case MapEntryData::Kind::AllToSame:
-                    // TODO Assert if types are wrong.
+#ifndef NDEBUG
+                {
+                    constexpr bool sourceAndTargetAreSame = std::is_same_v<T, U>;
+                    assert(sourceAndTargetAreSame && "You cannot use a mapApplicator with an AllToSame fallback if the "
+                                                     "native source and target types do not agree");
+                }
+#endif
                     m_fallbackIsIdentity = true;
                     break;
                 default:

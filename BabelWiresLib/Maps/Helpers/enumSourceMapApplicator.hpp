@@ -17,6 +17,7 @@ namespace babelwires {
     /// Converts MapData with a EnumWithCppEnum for a source type to another value type, using an array.
     /// This can also be used where the subtype of such an enum is expected, by using the supertype as ENUM.
     /// The extra values will not get used when the map is applied.
+    /// NOTE: In the cases where the MapData allows AllToSame, U must be the same as ENUM.
     template <typename ENUM, typename U> class EnumSourceMapApplicator {
       public:
         EnumSourceMapApplicator(const MapData& mapData, const ENUM& sourceEnumType, const ValueAdapter<U>& targetAdapter) {
