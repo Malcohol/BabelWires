@@ -178,7 +178,7 @@ TEST(MapProjectTest, modifyMapData) {
     EXPECT_EQ(mapProject.getMapEntry(1).getData(), allToOne2);
 }
 
-TEST(MapProjectTest, changeTypes) {
+TEST(MapProjectTest, typeChangeAndValidity) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
@@ -235,4 +235,46 @@ TEST(MapProjectTest, changeTypes) {
 
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
+}
+
+TEST(MapProjectTest, modifyValidity) {
+     babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment environment;
+    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+
+    babelwires::MapProject mapProject(environment.m_projectContext);
+
+    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
+                                              testUtils::TestSubEnum::getThisIdentifier());
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
+                                                      testUtils::TestSubEnum::getThisIdentifier());
+
+    babelwires::MapData mapData;
+    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeId(testUtils::TestSubEnum::getThisIdentifier());
+    mapData.emplaceBack(oneToOne.clone());
+    mapData.emplaceBack(allToOne.clone());
+
+    mapProject.setMapData(mapData);
+
+    // Wrong types
+    babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                               testUtils::TestSubEnum::getThisIdentifier());
+
+    mapProject.addMapEntry(oneToOne2.clone(), 0);
+
+    EXPECT_FALSE(mapProject.getMapEntry(0).getValidity());
+
+    // Only fallbacks allowed in the last position.
+    babelwires::OneToOneMapEntryData oneToOne3(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
+                                               testUtils::TestSubEnum::getThisIdentifier());
+
+    mapProject.replaceMapEntry(oneToOne3.clone(), 2);
+
+    EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
 }

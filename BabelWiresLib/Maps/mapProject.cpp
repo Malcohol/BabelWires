@@ -9,29 +9,25 @@
 
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
-#include <BabelWiresLib/TypeSystem/intType.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/intType.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-babelwires::MapProject::MapProject(const ProjectContext& ProjectContext)
-    : m_projectContext(ProjectContext)
-    , m_allowedSourceTypeId(IntType::getThisIdentifier())
-    , m_allowedTargetTypeId(IntType::getThisIdentifier())
-    , m_sourceTypeId(IntType::getThisIdentifier())
-    , m_targetTypeId(IntType::getThisIdentifier()) {}
+babelwires::MapProject::MapProject(const ProjectContext& projectContext)
+    : m_projectContext(projectContext) {}
 
 babelwires::MapProject::~MapProject() = default;
 
 void babelwires::MapProject::setAllowedSourceTypeId(LongIdentifier sourceTypeId) {
-    // TODO Revalidate data
     m_allowedSourceTypeId = sourceTypeId;
+    setSourceTypeId(sourceTypeId);
 }
 
 void babelwires::MapProject::setAllowedTargetTypeId(LongIdentifier targetTypeId) {
-    // TODO Revalidate data
     m_allowedTargetTypeId = targetTypeId;
+    setTargetTypeId(targetTypeId);
 }
 
 babelwires::LongIdentifier babelwires::MapProject::getAllowedSourceTypeId() const {
@@ -64,7 +60,7 @@ void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
 void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
     assert(typeSystem.isSubType(targetId, m_allowedTargetTypeId));
-    
+
     m_targetTypeId = targetId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
@@ -94,14 +90,15 @@ babelwires::Result babelwires::MapProject::validateNewEntry(const MapEntryData& 
 
 void babelwires::MapProject::addMapEntry(std::unique_ptr<MapEntryData> newEntryData, unsigned int index) {
     assert((index < m_mapEntries.size()) && "You cannot add the last entry of a map. It needs to be a fallback entry.");
-    assert((index <= m_mapEntries.size()) && "index to add is out of range") ;
+    assert((index <= m_mapEntries.size()) && "index to add is out of range");
     auto newEntry = std::make_unique<MapProjectEntry>(std::move(newEntryData));
     newEntry->validate(m_projectContext.m_typeSystem, m_sourceTypeId, m_targetTypeId, false);
-    m_mapEntries.emplace(m_mapEntries.begin() + index, std::move(newEntry) );
+    m_mapEntries.emplace(m_mapEntries.begin() + index, std::move(newEntry));
 }
 
 void babelwires::MapProject::removeMapEntry(unsigned int index) {
-    assert((index != m_mapEntries.size() - 1) && "You cannot remove the last entry of a map. It needs to be a fallback entry");
+    assert((index != m_mapEntries.size() - 1) &&
+           "You cannot remove the last entry of a map. It needs to be a fallback entry");
     assert((index < m_mapEntries.size()) && "The index to remove is out of range");
     m_mapEntries.erase(m_mapEntries.begin() + index);
 }
