@@ -56,6 +56,11 @@ namespace babelwires {
         /// Check that the entries types match the source and target ids.
         Result validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const;
 
+        /// Get the validity of the source type (considered with respect to the allowed source type)
+        const Result& getSourceTypeValidity() const;
+        /// Get the validity of the target type (considered with respect to the allowed target type)
+        const Result& getTargetTypeValidity() const;
+
         const ProjectContext& getProjectContext() const;
 
       private:
@@ -66,6 +71,10 @@ namespace babelwires {
         LongIdentifier m_allowedTargetTypeId;
         LongIdentifier m_sourceTypeId;
         LongIdentifier m_targetTypeId;
+
+        Result m_sourceTypeValidity;
+        Result m_targetTypeValidity;
+
         std::vector<std::unique_ptr<MapProjectEntry>> m_mapEntries;
     };
 }

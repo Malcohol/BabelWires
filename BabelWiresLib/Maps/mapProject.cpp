@@ -16,7 +16,9 @@
 #include <Common/Serialization/serializer.hpp>
 
 babelwires::MapProject::MapProject(const ProjectContext& projectContext)
-    : m_projectContext(projectContext) {}
+    : m_projectContext(projectContext)
+    , m_sourceTypeValidity(Result::Success())
+    , m_targetTypeValidity(Result::Success()) {}
 
 babelwires::MapProject::~MapProject() = default;
 
@@ -48,7 +50,17 @@ babelwires::LongIdentifier babelwires::MapProject::getTargetTypeId() const {
 
 void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    assert(typeSystem.isRelatedType(sourceId, m_allowedSourceTypeId));
+    const Type& allowedType = typeSystem.getRegisteredEntry(m_allowedSourceTypeId);
+    const Type *const sourceType = typeSystem.getEntryByIdentifier(sourceId);
+    if (!sourceType) {
+        // TODO Add type name.
+        m_sourceTypeValidity = "The source type is not recognized.";
+    } else if (!sourceType->isRelatedType(allowedType)) {
+        // TODO Add type name.
+        m_sourceTypeValidity = "The source type is not valid here.";
+    } else {
+        m_sourceTypeValidity = Result::Success();
+    }
 
     m_sourceTypeId = sourceId;
 
@@ -59,7 +71,17 @@ void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
 
 void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    assert(typeSystem.isSubType(targetId, m_allowedTargetTypeId));
+    const Type& allowedType = typeSystem.getRegisteredEntry(m_allowedTargetTypeId);
+    const Type *const targetType = typeSystem.getEntryByIdentifier(targetId);
+    if (!targetType) {
+        // TODO Add type name.
+        m_targetTypeValidity = "The target type is not recognized.";
+    } else if (!targetType->isSubType(allowedType)) {
+        // TODO Add type name.
+        m_targetTypeValidity = "The target type is not valid here.";
+    } else {
+        m_targetTypeValidity = Result::Success();
+    }
 
     m_targetTypeId = targetId;
 
@@ -136,4 +158,12 @@ void babelwires::MapProject::setMapData(const MapData& data) {
 
 const babelwires::ProjectContext& babelwires::MapProject::getProjectContext() const {
     return m_projectContext;
+}
+
+const babelwires::Result& babelwires::MapProject::getSourceTypeValidity() const {
+    return m_sourceTypeValidity;
+}
+
+const babelwires::Result& babelwires::MapProject::getTargetTypeValidity() const {
+    return m_targetTypeValidity;
 }

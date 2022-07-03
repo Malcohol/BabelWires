@@ -22,9 +22,6 @@ bool babelwires::SetMapSourceTypeCommand::initialize(const MapProject& map) {
     const LongIdentifier allowedSourceType = map.getAllowedSourceTypeId();
     const ProjectContext& context = map.getProjectContext();
     const TypeSystem& typeSystem = context.m_typeSystem;
-    if (!typeSystem.isRelatedType(m_newSourceTypeId, allowedSourceType)) {
-        return false;
-    }
     m_oldSourceTypeId = map.getSourceTypeId();
     return true;
 }

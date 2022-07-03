@@ -22,9 +22,6 @@ bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
     const LongIdentifier allowedTargetType = map.getAllowedTargetTypeId();
     const ProjectContext& context = map.getProjectContext();
     const TypeSystem& typeSystem = context.m_typeSystem;
-    if (!typeSystem.isSubType(m_newTargetTypeId, allowedTargetType)) {
-        return false;
-    }
     m_oldTargetTypeId = map.getTargetTypeId();
     return true;
 }

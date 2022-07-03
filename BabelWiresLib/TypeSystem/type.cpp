@@ -49,3 +49,7 @@ bool babelwires::Type::isSubType(const Type& supertype) const {
     }
     return current;
 }
+
+bool babelwires::Type::isRelatedType(const Type& otherType) const {
+    return isSubType(otherType) || otherType.isSubType(*this);
+}

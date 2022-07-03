@@ -38,7 +38,22 @@ namespace babelwires {
         LongIdentifier getTypeId() const;
         void setTypeId(LongIdentifier id);
 
+        /// Add an item for a type which should not be allowed.
+        void addBadItemIfNotPresent(LongIdentifier id);
+
+        /// If a badItem was added, remove it.
+        void removeBadItemIfPresent();
+
+      private:
+        int getBadItemIndex() const;
+        void clearBadItem();
+
+        void onCurrentIndexChanged(int index);
+
       private:
         std::vector<LongIdentifier> m_typeIds;
+        bool m_hasBadItem;
+        QString m_defaultStyleSheet;
+        QString m_badStyleSheet;
     };
 }

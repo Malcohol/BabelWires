@@ -13,6 +13,11 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
+namespace {
+    const babelwires::LongIdentifier testTypeId1 = "TestType1";
+    const babelwires::LongIdentifier testTypeId2 = "TestType2";
+} // namespace
+
 TEST(MapProjectTest, mapProjectEntry) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
@@ -83,6 +88,43 @@ TEST(MapProjectTest, types) {
               environment.m_typeSystem.getEntryByIdentifier(testUtils::TestType::getThisIdentifier()));
     EXPECT_EQ(mapProject.getTargetType(),
               environment.m_typeSystem.getEntryByIdentifier(testUtils::TestEnum::getThisIdentifier()));
+}
+
+TEST(MapProjectTest, badTypes) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment environment;
+    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::MapProject mapProject(environment.m_projectContext);
+
+    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+
+    EXPECT_TRUE(mapProject.getSourceTypeValidity());
+    EXPECT_TRUE(mapProject.getTargetTypeValidity());
+
+    mapProject.setSourceTypeId(testUtils::TestEnum::getThisIdentifier());
+
+    EXPECT_FALSE(mapProject.getSourceTypeValidity());
+    EXPECT_TRUE(mapProject.getTargetTypeValidity());
+
+    mapProject.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+
+    EXPECT_FALSE(mapProject.getSourceTypeValidity());
+    EXPECT_FALSE(mapProject.getTargetTypeValidity());
+
+    mapProject.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapProject.setTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    
+    EXPECT_TRUE(mapProject.getSourceTypeValidity());
+    EXPECT_TRUE(mapProject.getTargetTypeValidity());
+
+    mapProject.setSourceTypeId(testTypeId1);
+    mapProject.setTargetTypeId(testTypeId2);
+
+    EXPECT_FALSE(mapProject.getSourceTypeValidity());
+    EXPECT_FALSE(mapProject.getTargetTypeValidity());
 }
 
 TEST(MapProjectTest, setAndExtractMapData) {
@@ -277,4 +319,32 @@ TEST(MapProjectTest, modifyValidity) {
     mapProject.replaceMapEntry(oneToOne3.clone(), 2);
 
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
+}
+
+TEST(MapProjectTest, badMap) {
+     babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment environment;
+    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::MapProject mapProject(environment.m_projectContext);
+
+    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+
+    babelwires::MapData mapData;
+    mapData.setSourceTypeId(testTypeId1);
+    mapData.setTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+
+    mapProject.setMapData(mapData);
+
+    EXPECT_FALSE(mapProject.getSourceTypeValidity());
+    EXPECT_TRUE(mapProject.getTargetTypeValidity());
+
+    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeId(testTypeId2);
+    mapProject.setMapData(mapData);
+
+    EXPECT_TRUE(mapProject.getSourceTypeValidity());
+    EXPECT_FALSE(mapProject.getTargetTypeValidity());
 }

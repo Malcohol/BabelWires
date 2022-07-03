@@ -77,6 +77,8 @@ namespace babelwires {
 
         void updateUiAfterChange() const;
 
+        void updateTypeOptions() const;
+
       public slots:
         void onCustomContextMenuRequested(const QPoint& pos);
 

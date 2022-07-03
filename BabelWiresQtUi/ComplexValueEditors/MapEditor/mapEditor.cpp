@@ -255,10 +255,19 @@ void babelwires::MapEditor::setEditorMap(const MapData& map) {
 
 void babelwires::MapEditor::updateUiAfterChange() const {
     m_mapModel->valuesChanged();
+    if (m_map.getSourceTypeValidity()) {
+        m_sourceTypeWidget->removeBadItemIfPresent();
+    } else {
+        m_sourceTypeWidget->addBadItemIfNotPresent(m_map.getSourceTypeId());
+    }
+    if (m_map.getTargetTypeValidity()) {
+        m_targetTypeWidget->removeBadItemIfPresent();
+    } else {
+        m_targetTypeWidget->addBadItemIfNotPresent(m_map.getTargetTypeId());
+    }
     m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
     m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
 }
-
 
 void babelwires::MapEditor::saveMapToFile() {
     QString dialogCaption = tr("Save project as");
