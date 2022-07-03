@@ -1,3 +1,10 @@
+/**
+ * Holds a single value of an enum.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include <BabelWiresLib/TypeSystem/enumValue.hpp>
 
 #include <BabelWiresLib/Enums/enum.hpp>

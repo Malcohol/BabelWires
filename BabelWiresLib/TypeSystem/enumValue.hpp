@@ -1,5 +1,5 @@
 /**
- * TODO
+ * Holds a single value of an enum.
  *
  * (C) 2021 Malcolm Tyrrell
  *

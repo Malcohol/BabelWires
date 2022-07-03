@@ -1,5 +1,5 @@
 /**
- * TODO
+ * A type describes a valid set of values.
  *
  * (C) 2021 Malcolm Tyrrell
  *

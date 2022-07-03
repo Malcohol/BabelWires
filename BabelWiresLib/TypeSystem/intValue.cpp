@@ -1,3 +1,10 @@
+/**
+ * Holds a single value of integer type.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include <BabelWiresLib/TypeSystem/intValue.hpp>
 
 #include <BabelWiresLib/TypeSystem/intType.hpp>

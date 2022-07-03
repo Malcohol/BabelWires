@@ -1,5 +1,5 @@
 /**
- * TODO
+ * The TypeSystem manages the set of types and the relationship between them.
  *
  * (C) 2021 Malcolm Tyrrell
  *

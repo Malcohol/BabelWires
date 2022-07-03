@@ -1,5 +1,5 @@
 /**
- * TODO
+ * The type of integers.
  *
  * (C) 2021 Malcolm Tyrrell
  *
