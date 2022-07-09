@@ -40,6 +40,7 @@ SET( LIB_TESTS_SRCS
     recordWithOptionalsFeatureTest.cpp
     removeElementCommandTest.cpp
     removeEntryFromArrayCommandTest.cpp
+    removeEntryFromMapCommandTest.cpp
     removeFailedModifiersCommandTest.cpp
     removeSimpleModifierCommandTest.cpp
     removeModifierCommandTest.cpp
