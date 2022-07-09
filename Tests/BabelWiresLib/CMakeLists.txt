@@ -5,6 +5,7 @@ SET( LIB_TESTS_SRCS
     addElementCommandTest.cpp
     addEntryToArrayCommandTest.cpp
     addModifierCommandTest.cpp
+    addEntryToMapCommandTest.cpp
     changeFileCommandTest.cpp
     commandManagerTest.cpp
     connectionDescriptionTest.cpp
