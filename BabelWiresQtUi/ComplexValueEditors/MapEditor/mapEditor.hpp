@@ -95,6 +95,9 @@ namespace babelwires {
         /// Manages the map data being edited.
         MapProject m_map;
 
+        /// Stores the default map value (obtained from the feature).
+        MapData m_defaultMapValue;
+
         /// Manages changes to the map.
         CommandManager<MapProject> m_commandManager;
 

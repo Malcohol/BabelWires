@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Maps/mapData.hpp>
 
-#include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
@@ -143,8 +142,4 @@ void babelwires::MapData::visitFilePaths(FilePathVisitor& visitor) {
 
 void babelwires::MapData::setEntriesToDefault(const TypeSystem& typeSystem) {
     m_mapEntries.clear();
-    const Type* targetType = typeSystem.getEntryByIdentifier(m_targetTypeId);
-    if (targetType) {
-        m_mapEntries.emplace_back(std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, m_targetTypeId));
-    }
 }

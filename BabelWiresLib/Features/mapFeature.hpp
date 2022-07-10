@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
 #include <BabelWiresLib/Maps/mapData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 
 namespace babelwires {
     /// A MapFeature describes a mapping between types.
@@ -24,10 +25,17 @@ namespace babelwires {
       public:
         MapFeature(LongIdentifier sourceId, LongIdentifier targetId);
 
+        /// Get the default map value used by this feature.
+        virtual MapData getDefaultMapData() const;
+
       protected:
         std::string doGetValueType() const override;
         void onBeforeSetValue(const MapData& newValue) const override;
         void doSetToDefault() override;
+
+        /// Convenience method for subclasses that want to override getDefaultMapData, letting them
+        /// easily return a default with the appropriate kind of fallback.
+        MapData getStandardDefaultMapData(MapEntryData::Kind fallbackKind) const;
 
       public:
         LongIdentifier getSourceTypeId() const;

@@ -9,8 +9,9 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -18,11 +19,9 @@ std::string babelwires::MapFeature::doGetValueType() const {
     return "map";
 }
 
-babelwires::MapFeature::MapFeature(LongIdentifier sourceTypeId, LongIdentifier targetTargetId) 
+babelwires::MapFeature::MapFeature(LongIdentifier sourceTypeId, LongIdentifier targetTargetId)
     : m_sourceTypeId(std::move(sourceTypeId))
-    , m_targetTypeId(std::move(targetTargetId))
-{
-}
+    , m_targetTypeId(std::move(targetTargetId)) {}
 
 void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     const LongIdentifier& newSourceType = newValue.getSourceTypeId();
@@ -54,10 +53,21 @@ babelwires::LongIdentifier babelwires::MapFeature::getTargetTypeId() const {
     return m_targetTypeId;
 }
 
-void babelwires::MapFeature::doSetToDefault() {
+babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryData::Kind fallbackKind) const {
+    assert(MapEntryData::isFallback(fallbackKind) && "Only a fallback kind is expected here");
+
     MapData mapData;
     mapData.setSourceTypeId(m_sourceTypeId);
     mapData.setTargetTypeId(m_targetTypeId);
-    mapData.setEntriesToDefault(RootFeature::getProjectContextAt(*this).m_typeSystem);
-    set(std::move(mapData));
+    const TypeSystem& typeSystem = RootFeature::getProjectContextAt(*this).m_typeSystem;
+    mapData.emplaceBack(MapEntryData::create(typeSystem, m_sourceTypeId, m_targetTypeId, fallbackKind));
+    return mapData;
+}
+
+babelwires::MapData babelwires::MapFeature::getDefaultMapData() const {
+    return getStandardDefaultMapData(MapEntryData::Kind::AllToOne);
+}
+
+void babelwires::MapFeature::doSetToDefault() {
+    set(getDefaultMapData());
 }

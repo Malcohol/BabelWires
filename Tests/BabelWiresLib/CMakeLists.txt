@@ -52,7 +52,6 @@ SET( LIB_TESTS_SRCS
     setMapCommandTest.cpp
     setMapSourceTypeCommandTest.cpp
     setMapTargetTypeCommandTest.cpp
-    setMapToDefaultCommandTest.cpp
     sourceFileElementTest.cpp
     targetFileElementTest.cpp
     typeTest.cpp

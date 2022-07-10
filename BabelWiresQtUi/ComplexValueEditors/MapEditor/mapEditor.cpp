@@ -8,23 +8,22 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModelDelegate.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModelDelegate.hpp>
 
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Maps/Commands/setMapCommand.hpp>
+#include <BabelWiresLib/Maps/Commands/setMapSourceTypeCommand.hpp>
+#include <BabelWiresLib/Maps/Commands/setMapTargetTypeCommand.hpp>
 #include <BabelWiresLib/Maps/mapSerialization.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
-#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapToDefaultCommand.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapSourceTypeCommand.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapTargetTypeCommand.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapCommand.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -49,7 +48,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
     setLayout(mainLayout);
     {
         auto contentsButtons = new QDialogButtonBox();
-    {
+        {
             QPushButton* defaultButton = new QPushButton("Restore defaults");
             contentsButtons->addButton(defaultButton, QDialogButtonBox::ButtonRole::ResetRole);
             connect(defaultButton, &QAbstractButton::clicked, this, &MapEditor::setToDefault);
@@ -86,27 +85,30 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             const UiProjectContext& context = projectBridge.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
             const MapFeature& mapFeature = getMapFeature(scope);
+            m_defaultMapValue = mapFeature.getDefaultMapData();
             const MapData& mapData = getMapDataFromProject(scope);
             m_map.setAllowedSourceTypeId(mapFeature.getSourceTypeId());
             m_map.setAllowedTargetTypeId(mapFeature.getTargetTypeId());
             m_map.setMapData(mapData);
             {
                 /// We do not treat the selection of source type in the usual (contravariant) way.
-                /// Although type correct, it's not useful to allow supertypes, since the extra values will never be used.
-                /// Subtypes are permitted, since the fallback guarantees the map is well-defined.
+                /// Although type correct, it's not useful to allow supertypes, since the extra values will never be
+                /// used. Subtypes are permitted, since the fallback guarantees the map is well-defined.
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
-                m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeId(), TypeWidget::TypeFlexibility::allowSubtypes);
+                m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeId(),
+                                                    TypeWidget::TypeFlexibility::allowSubtypes);
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
-                m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeId(), TypeWidget::TypeFlexibility::allowSubtypes);
+                m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeId(),
+                                                    TypeWidget::TypeFlexibility::allowSubtypes);
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }
-            connect(m_sourceTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this, 
-                [this]() { MapEditor::setSourceTypeFromWidget(); });
-            connect(m_targetTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this, 
-                [this]() { MapEditor::setTargetTypeFromWidget(); });
+            connect(m_sourceTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+                    [this]() { MapEditor::setSourceTypeFromWidget(); });
+            connect(m_targetTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+                    [this]() { MapEditor::setTargetTypeFromWidget(); });
         }
         m_mapView = new MapView;
         m_mapModel = new MapModel(m_mapView, *this);
@@ -242,7 +244,8 @@ void babelwires::MapEditor::updateMapFromProject() {
     const MapData* mapDataFromProject = tryGetMapDataFromProject(scope);
     if (mapDataFromProject) {
         getUserLogger().logInfo() << "Refreshing the map from the project";
-        executeCommand(std::make_unique<SetMapCommand>("Refresh the map from the project", mapDataFromProject->clone()));
+        executeCommand(
+            std::make_unique<SetMapCommand>("Refresh the map from the project", mapDataFromProject->clone()));
     } else {
         warnThatMapNoLongerInProject("Cannot refresh the map.");
     }
@@ -409,7 +412,7 @@ void babelwires::MapEditor::onUndoStateChanged() {
 }
 
 void babelwires::MapEditor::setToDefault() {
-    executeCommand(std::make_unique<SetMapToDefaultCommand>("Restore default map"));
+    executeCommand(std::make_unique<SetMapCommand>("Restore default map", m_defaultMapValue.clone()));
 }
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {
