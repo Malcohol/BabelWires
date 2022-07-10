@@ -49,6 +49,7 @@ SET( LIB_TESTS_SRCS
     rootFeatureTest.cpp
     setArraySizeCommandTest.cpp
     setExpandedCommandTest.cpp
+    setMapCommandTest.cpp
     sourceFileElementTest.cpp
     targetFileElementTest.cpp
     typeTest.cpp
