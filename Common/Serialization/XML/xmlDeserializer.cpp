@@ -233,8 +233,9 @@ std::unique_ptr<babelwires::Deserializer::AbstractIterator> babelwires::XmlDeser
 void babelwires::XmlDeserializer::addContextDescription(ParseException& e) const {
     const tinyxml2::XMLNode* const node = getCurrentNode();
     if (!m_xmlContext.empty()) {
-        const tinyxml2::XMLElement* const element = getCurrentElement();
-        e << " in element <" << element->Name() << ">";
+        if (const tinyxml2::XMLElement* const element = m_xmlContext.back().m_element) {
+            e << " in element <" << element->Name() << ">";
+        }
     }
     e << " at line " << node->GetLineNum();
 }
