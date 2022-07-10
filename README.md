@@ -13,6 +13,10 @@ Users can create graphs of these nodes, defining how the source data is imported
 BabelWires itself has no domain specific code, but provides the bulk of the domain agnostic code needed to construct this kind of application.
 The defining use-case is [SeqWires](https://github.com/Malcohol/SeqWires), which supports the conversion of music sequence data between various music sequencer formats.
 
+Here's a screenshot of SeqWires:
+
+![Screenshot showing several nodes wired together](Docs/screenshot.png "SeqWires screenshot showing several nodes wired together")
+
 The framework provides:
 * a generic way of representing data in a tree of self-describing data structures ([Feature](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/features.hpp))
 * abstractions for source and target formats ([SourceFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/sourceFileFormat.hpp) and [TargetFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/targetFileFormat.hpp))
@@ -20,7 +24,11 @@ The framework provides:
 * a data structure describing a graph of wired nodes ([Project](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Project/project.hpp))
 * a version-aware [serialization system](https://github.com/Malcohol/BabelWires/blob/main/Common/Serialization/serializable.hpp).
 * a Qt-based application UI for manipulating projects. (Note: The underlying data management layer has no dependency on the UI or UI framework.)
-* a first-class concept of failure, allowing the project to cope with structural changes to the imported data. 
+* A generic way of defining maps between source and target values ([MapData](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Maps/mapData.hpp)). 
+* a first-class concept of failure, allowing the project to cope with structural changes to the imported data.
+
+Here's a screenshot of the MapEditor defining a map between two types:
+![Screenshot showing the MapEditor](Docs/mapEditor.png "Screenshot of the MapEditor")
 
 ## Status
 
@@ -28,10 +36,6 @@ The framework provides:
 
 BabelWires is under active development, but please do not expect development to be rapid.
 I have very limited time to devote to this.
-
-Here's a screenshot of SeqWires:
-
-![Screenshot showing several nodes wired together](Docs/screenshot.png "SeqWires screenshot showing several nodes wired together")
 
 ## Downloading and Building
 
