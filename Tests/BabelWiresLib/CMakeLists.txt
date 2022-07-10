@@ -44,6 +44,7 @@ SET( LIB_TESTS_SRCS
     removeFailedModifiersCommandTest.cpp
     removeSimpleModifierCommandTest.cpp
     removeModifierCommandTest.cpp
+    replaceMapEntryCommandTest.cpp
     resizeElementCommandTest.cpp
     rootFeatureTest.cpp
     setArraySizeCommandTest.cpp
