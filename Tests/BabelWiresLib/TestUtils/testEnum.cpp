@@ -3,11 +3,11 @@
 #include "Tests/TestUtils/testIdentifiers.hpp"
 
 const babelwires::Enum::EnumValues testUtils::g_enumValues = {
-        getTestRegisteredIdentifier("Foo", 1),
-        getTestRegisteredIdentifier("Bar", 2),
-        getTestRegisteredIdentifier("Erm", 3),
-        getTestRegisteredIdentifier("Oom", 4),
-        getTestRegisteredIdentifier("Boo", 5),
+        testUtils::getTestRegisteredIdentifier("Foo", 1),
+        testUtils::getTestRegisteredIdentifier("Bar", 2),
+        testUtils::getTestRegisteredIdentifier("Erm", 3),
+        testUtils::getTestRegisteredIdentifier("Oom", 4),
+        testUtils::getTestRegisteredIdentifier("Boo", 5),
     };
 
 babelwires::LongIdentifier testUtils::TestEnum::getThisIdentifier() {
