@@ -36,9 +36,9 @@ namespace babelwires {
 } // namespace babelwires
 
 template <typename DATA>
-babelwires::DataBundle<DATA>::DataBundle(std::filesystem::path pathToProjectFile, DATA&& data)
+babelwires::DataBundle<DATA>::DataBundle(std::filesystem::path pathToFile, DATA&& data)
     : m_data(std::move(data))
-    , m_projectFilePath(pathToProjectFile) {
+    , m_pathToFile(pathToFile) {
 }
 
 template <typename DATA>
@@ -50,10 +50,10 @@ void babelwires::DataBundle<DATA>::interpretInCurrentContext() {
 
 template <typename DATA>
 DATA babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const ProjectContext& context,
-                                                                      const std::filesystem::path& pathToProjectFile,
+                                                                      const std::filesystem::path& pathToFile,
                                                                       UserLogger& userLogger) && {
     resolveIdentifiersAgainstCurrentContext();
-    resolveFilePathsAgainstCurrentProjectPath(pathToProjectFile, userLogger);
+    resolveFilePathsAgainstCurrentProjectPath(pathToFile, userLogger);
     adaptDataToAdditionalMetadata(context, userLogger);
     return std::move(m_data);
 }
@@ -76,8 +76,8 @@ template <typename DATA> void babelwires::DataBundle<DATA>::interpretIdentifiers
 }
 
 template <typename DATA> void babelwires::DataBundle<DATA>::interpretFilePathsInCurrentProjectPath() {
-    if (!m_projectFilePath.empty()) {
-        const std::filesystem::path projectPath = m_projectFilePath;
+    if (!m_pathToFile.empty()) {
+        const std::filesystem::path projectPath = m_pathToFile;
         babelwires::FilePathVisitor visitor = [&](FilePath& filePath) {
             filePath.interpretRelativeTo(projectPath.parent_path());
         };
@@ -91,12 +91,12 @@ template <typename DATA> void babelwires::DataBundle<DATA>::resolveIdentifiersAg
 }
 
 template <typename DATA>
-void babelwires::DataBundle<DATA>::resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToProjectFile,
+void babelwires::DataBundle<DATA>::resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToFile,
                                                                        UserLogger& userLogger) {
     const std::filesystem::path newBase =
-        pathToProjectFile.empty() ? std::filesystem::path() : pathToProjectFile.parent_path();
+        pathToFile.empty() ? std::filesystem::path() : pathToFile.parent_path();
     const std::filesystem::path oldBase =
-        m_projectFilePath.empty() ? std::filesystem::path() : std::filesystem::path(m_projectFilePath).parent_path();
+        m_pathToFile.empty() ? std::filesystem::path() : std::filesystem::path(m_pathToFile).parent_path();
     babelwires::FilePathVisitor visitor = [&](FilePath& filePath) {
         filePath.resolveRelativeTo(newBase, oldBase, userLogger);
     };
@@ -104,14 +104,14 @@ void babelwires::DataBundle<DATA>::resolveFilePathsAgainstCurrentProjectPath(con
 }
 
 template <typename DATA> void babelwires::DataBundle<DATA>::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("filePath", m_projectFilePath);
+    serializer.serializeValue("filePath", m_pathToFile);
     serializer.serializeObject(m_data);
     serializeAdditionalMetadata(serializer);
     serializer.serializeObject(m_identifierRegistry);
 }
 
 template <typename DATA> void babelwires::DataBundle<DATA>::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("filePath", m_projectFilePath, babelwires::Deserializer::IsOptional::Optional);
+    deserializer.deserializeValue("filePath", m_pathToFile, babelwires::Deserializer::IsOptional::Optional);
     m_data = std::move(*deserializer.deserializeObject<DATA>(DATA::serializationType));
     deserializeAdditionalMetadata(deserializer);
     m_identifierRegistry =

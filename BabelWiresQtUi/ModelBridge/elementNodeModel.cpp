@@ -6,6 +6,12 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresQtUi/ModelBridge/elementNodeModel.hpp"
+
+#include "BabelWiresQtUi/ModelBridge/accessModelScope.hpp"
+#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
+#include "BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp"
+
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
 #include "BabelWiresLib/Features/numericFeature.hpp"
 #include "BabelWiresLib/Features/recordFeature.hpp"
@@ -14,9 +20,6 @@
 #include "BabelWiresLib/Project/Modifiers/modifier.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 #include "BabelWiresLib/Project/uiPosition.hpp"
-#include "BabelWiresQtUi/ModelBridge/accessModelScope.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
 #include <cassert>
 
@@ -125,13 +128,7 @@ void babelwires::ElementNodeModel::customContextMenuRequested(const QPoint& pos)
     QModelIndex index = m_view->indexAt(pos);
     QMenu* const menu = m_model->getContextMenu(index);
     if (menu) {
-        QWidget* const sceneWidget = m_projectBridge.getFlowGraphWidget();
-        // We make the scene the parent of the menu. Otherwise it gets clipped within the node.
-        menu->setParent(sceneWidget);
-        // There is probably a more correct way of doing this.
-        const QPoint globalPos = m_view->mapToGlobal(pos);
-        const QPoint scenePos = sceneWidget->mapFromGlobal(globalPos);
-        menu->popup(scenePos);
+        menu->popup(m_view->mapToGlobal(pos));
     }
 }
 

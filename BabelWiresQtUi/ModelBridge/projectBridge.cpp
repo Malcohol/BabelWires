@@ -11,11 +11,11 @@
 #include "BabelWiresQtUi/ModelBridge/modifyModelScope.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
-#include "BabelWiresLib/Commands/addElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addElementCommand.hpp"
 #include "BabelWiresLib/Commands/commandManager.hpp"
-#include "BabelWiresLib/Commands/moveElementCommand.hpp"
-#include "BabelWiresLib/Commands/removeElementCommand.hpp"
-#include "BabelWiresLib/Commands/resizeElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/moveElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/resizeElementCommand.hpp"
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
@@ -32,7 +32,7 @@
 
 #include <cassert>
 
-babelwires::ProjectBridge::ProjectBridge(Project& project, CommandManager& commandManager,
+babelwires::ProjectBridge::ProjectBridge(Project& project, CommandManager<Project>& commandManager,
                                          UiProjectContext& projectContext)
     : m_project(project)
     , m_commandManager(commandManager)
@@ -85,6 +85,14 @@ void babelwires::ProjectBridge::connectToFlowScene(QtNodes::FlowScene& flowScene
 
 const babelwires::UiProjectContext& babelwires::ProjectBridge::getContext() const {
     return m_projectContext;
+}
+
+babelwires::MainWindow* babelwires::ProjectBridge::getMainWindow() const {
+    return m_mainWindow;
+}
+
+void babelwires::ProjectBridge::setMainWindow(MainWindow* mainWindow) {
+    m_mainWindow = mainWindow;
 }
 
 void babelwires::ProjectBridge::onNodeCreated(QtNodes::Node& n) {
@@ -352,7 +360,7 @@ void babelwires::ProjectBridge::onConnectionDisconnected(const QtNodes::Connecti
 
 void babelwires::ProjectBridge::onConnectionAdjusted(const QtNodes::Connection& c) {
     AccessModelScope scope(*this);
-    auto command = std::make_unique<CompoundCommand>("Adjust connection");
+    auto command = std::make_unique<CompoundCommand<Project>>("Adjust connection");
 
     auto it = m_connectedConnections.find0(&c);
     assert((it != m_connectedConnections.end()) && "Cannot adjust a connection we don't know about");
@@ -440,7 +448,7 @@ void babelwires::ProjectBridge::processAndHandleModelChanges() {
     m_newNodesShouldBeSelected = false;
 }
 
-void babelwires::ProjectBridge::scheduleCommand(std::unique_ptr<Command> command) {
+void babelwires::ProjectBridge::scheduleCommand(std::unique_ptr<Command<Project>> command) {
     if (m_scheduledCommand) {
         assert(m_scheduledCommand->shouldSubsume(*command, false) && "Commands scheduled together should subsume");
         m_scheduledCommand->subsume(std::move(command));
@@ -454,15 +462,21 @@ void babelwires::ProjectBridge::scheduleCommand(std::unique_ptr<Command> command
 void babelwires::ProjectBridge::onIdle() {
     if (m_scheduledCommand) {
         ModifyModelScope scope(*this);
-        std::unique_ptr<Command> scheduledCommand = std::move(m_scheduledCommand);
+        std::unique_ptr<Command<Project>> scheduledCommand = std::move(m_scheduledCommand);
         scope.getCommandManager().executeAndStealCommand(scheduledCommand);
     }
+}
+
+bool babelwires::ProjectBridge::executeCommandSynchronously(std::unique_ptr<Command<Project>> command) {
+    ModifyModelScope scope(*this);
+    std::unique_ptr<Command<Project>> commandPtr = std::move(command);
+    return scope.getCommandManager().executeAndStealCommand(commandPtr);
 }
 
 bool babelwires::ProjectBridge::executeAddElementCommand(std::unique_ptr<AddElementCommand> command) {
     ModifyModelScope scope(*this);
     AddElementCommand& addElementCommand = *command;
-    std::unique_ptr<Command> commandPtr = std::move(command);
+    std::unique_ptr<Command<Project>> commandPtr = std::move(command);
     if (!scope.getCommandManager().executeAndStealCommand(commandPtr)) {
         return false;
     }
@@ -521,5 +535,5 @@ void babelwires::ProjectBridge::selectNewNodes() {
 }
 
 void babelwires::ProjectBridge::onSelectionChanged() {
-    emit nodeSelectionChanged(m_flowScene->selectedNodes().size());
+    emit nodeSelectionChanged(static_cast<int>(m_flowScene->selectedNodes().size()));
 }

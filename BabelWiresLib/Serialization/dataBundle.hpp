@@ -37,7 +37,7 @@ namespace babelwires {
 
         /// Construct a bundle from data.
         /// This object takes ownership of the data.
-        DataBundle(std::filesystem::path pathToProjectFile, DATA&& data);
+        DataBundle(std::filesystem::path pathToFile, DATA&& data);
 
         /// Should be called before saving to make the bundle independent of the current system
         // TODO Should probably take the context as a parameter.
@@ -45,7 +45,7 @@ namespace babelwires {
 
         /// Returns the contained data, modified so it corresponds the current system.
         /// This object is invalidated after calling this.
-        DATA resolveAgainstCurrentContext(const ProjectContext& context, const std::filesystem::path& pathToProjectFile,
+        DATA resolveAgainstCurrentContext(const ProjectContext& context, const std::filesystem::path& pathToFile,
                                           UserLogger& userLogger) &&;
 
         void serializeContents(Serializer& serializer) const override;
@@ -74,14 +74,14 @@ namespace babelwires {
         /// Ensure the identifiers in the data refer to the context independent m_identifierRegistry.
         void interpretIdentifiersInCurrentContext();
 
-        /// Ensure the filePaths in the data are made relative to the m_projectFilePath.
+        /// Ensure the filePaths in the data are made relative to the m_pathToFile.
         void interpretFilePathsInCurrentProjectPath();
 
         /// Ensure the identifiers in the data refer to the global IdentifierRegistry.
         void resolveIdentifiersAgainstCurrentContext();
 
         /// Update the filePaths in the data, in terms of the given pathToProjectFile.
-        void resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToProjectFile,
+        void resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToFile,
                                                        UserLogger& userLogger);
 
         /// Convert identifiers, relative to the sourceReg, to identifiers, relative to the targetReg.
@@ -100,7 +100,7 @@ namespace babelwires {
         /// FilePaths in the data are stored in relative form whenever possible.
         /// Having this allows us to reconstruct their absolute paths in case the relative path
         /// from the file as loaded does not exist.
-        FilePath m_projectFilePath;
+        FilePath m_pathToFile;
     };
 
 } // namespace babelwires

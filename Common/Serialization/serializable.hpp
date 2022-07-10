@@ -39,14 +39,18 @@ namespace babelwires {
 /// For abstract classes whose subtypes can be serialized.
 #define SERIALIZABLE_ABSTRACT(T, PARENT)                                                                               \
     using SerializableParent = PARENT;                                                                                 \
-    static constexpr void* getSerializationTag() { return babelwires::Detail::getSerializationTag<T>(); }
+    static constexpr void* getSerializationTag() {                                                                     \
+        return babelwires::Detail::getSerializationTag<T>();                                                           \
+    }
 
 /// For concrete classes which can be serialized and deserialized.
 /// A class must provide implementations of serializeContents and deserializeContents.
 // TODO Macro tricks to make PARENT and VERSION optional.
 #define SERIALIZABLE(T, TYPENAME, PARENT, VERSION)                                                                     \
-    SERIALIZABLE_ABSTRACT(T, PARENT);                                                                        \
-    std::string_view getSerializationType() const override { return serializationType; }                               \
+    SERIALIZABLE_ABSTRACT(T, PARENT);                                                                                  \
+    std::string_view getSerializationType() const override {                                                           \
+        return serializationType;                                                                                      \
+    }                                                                                                                  \
     static constexpr char serializationType[] = TYPENAME;                                                              \
     static constexpr int serializationVersion = VERSION;                                                               \
     static_assert(VERSION != 0, "Version must be greater than 0");                                                     \
@@ -59,7 +63,8 @@ namespace babelwires {
         return &babelwires::Detail::SerializableConcrete<T>::s_registryEntry;                                          \
     }                                                                                                                  \
     static T* deserializingFactory(babelwires::Deserializer& deserializer) {                                           \
-        auto newObject = std::make_unique<T>();                                                                        \
+        /* make_unique requires a public default constructor. */                                                       \
+        std::unique_ptr<T> newObject(new T());                                                                         \
         newObject->deserializeContents(deserializer);                                                                  \
         return newObject.release();                                                                                    \
     }

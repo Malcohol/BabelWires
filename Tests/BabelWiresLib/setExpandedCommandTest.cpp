@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/setExpandedCommand.hpp"
+#include "BabelWiresLib/Project/Commands/setExpandedCommand.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"

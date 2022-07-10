@@ -5,6 +5,8 @@ SET( LIB_TESTS_SRCS
     addElementCommandTest.cpp
     addEntryToArrayCommandTest.cpp
     addModifierCommandTest.cpp
+    addEntryToMapCommandTest.cpp
+    changeEntryKindCommandTest.cpp
     changeFileCommandTest.cpp
     commandManagerTest.cpp
     connectionDescriptionTest.cpp
@@ -12,12 +14,18 @@ SET( LIB_TESTS_SRCS
     deactivateOptionalCommandTest.cpp
     elementDataTest.cpp
     enumTest.cpp
+    enumFeatureTest.cpp
     featureElementConnectionTest.cpp
     featureElementTest.cpp
     featurePathTest.cpp
     featureTest.cpp
     filePathTest.cpp
     editTreeTest.cpp
+    mapDataTest.cpp
+    mapEntryDataTest.cpp
+    mapFeatureTest.cpp
+    mapHelperTest.cpp
+    mapProjectTest.cpp
     modifierDataTest.cpp
     modifierTest.cpp
     moveElementCommandTest.cpp
@@ -32,15 +40,22 @@ SET( LIB_TESTS_SRCS
     recordWithOptionalsFeatureTest.cpp
     removeElementCommandTest.cpp
     removeEntryFromArrayCommandTest.cpp
+    removeEntryFromMapCommandTest.cpp
     removeFailedModifiersCommandTest.cpp
     removeSimpleModifierCommandTest.cpp
     removeModifierCommandTest.cpp
+    replaceMapEntryCommandTest.cpp
     resizeElementCommandTest.cpp
     rootFeatureTest.cpp
     setArraySizeCommandTest.cpp
     setExpandedCommandTest.cpp
+    setMapCommandTest.cpp
+    setMapSourceTypeCommandTest.cpp
+    setMapTargetTypeCommandTest.cpp
     sourceFileElementTest.cpp
     targetFileElementTest.cpp
+    typeTest.cpp
+    typeSystemTest.cpp
     valueNamesTest.cpp
    )
 

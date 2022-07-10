@@ -2,20 +2,21 @@
  * ConnectionDescription is a self-contained description of a connection, useful for clients of the project.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
 
-#include "BabelWiresLib/Commands/addModifierCommand.hpp"
-#include "BabelWiresLib/Commands/removeElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeElementCommand.hpp"
 #include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
 
 #include "Common/Utilities/hash.hpp"
 
 #include <cassert>
 
-std::unique_ptr<babelwires::Command> babelwires::ConnectionDescription::getConnectionCommand() const {
+std::unique_ptr<babelwires::Command<babelwires::Project>>
+babelwires::ConnectionDescription::getConnectionCommand() const {
     auto modifier = std::make_unique<babelwires::ConnectionModifierData>();
     modifier->m_sourceId = m_sourceId;
     modifier->m_pathToFeature = m_pathToTargetFeature;
@@ -23,7 +24,8 @@ std::unique_ptr<babelwires::Command> babelwires::ConnectionDescription::getConne
     return std::make_unique<babelwires::AddModifierCommand>("Add connection", m_targetId, std::move(modifier));
 }
 
-std::unique_ptr<babelwires::Command> babelwires::ConnectionDescription::getDisconnectionCommand() const {
+std::unique_ptr<babelwires::Command<babelwires::Project>>
+babelwires::ConnectionDescription::getDisconnectionCommand() const {
     return std::make_unique<RemoveElementCommand>("Remove connection", *this);
 }
 

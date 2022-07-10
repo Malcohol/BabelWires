@@ -7,7 +7,7 @@
  **/
 #include "BabelWiresQtUi/ModelBridge/RowModels/rationalRowModel.hpp"
 
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/lineEditValueEditor.hpp"
+#include "BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp"
 
 #include "BabelWiresLib/Features/numericFeature.hpp"
 

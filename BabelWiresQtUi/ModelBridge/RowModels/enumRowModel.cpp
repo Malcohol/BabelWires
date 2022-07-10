@@ -11,7 +11,7 @@
 #include "BabelWiresLib/Features/enumFeature.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 
-#include "BabelWiresQtUi/ModelBridge/ValueEditors/dropDownValueEditor.hpp"
+#include "BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 
 #include <QString>

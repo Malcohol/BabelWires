@@ -20,6 +20,6 @@ babelwires::Project& babelwires::ModifyModelScope::getProject() {
     return m_projectBridge.m_project;
 }
 
-babelwires::CommandManager& babelwires::ModifyModelScope::getCommandManager() {
+babelwires::CommandManager<babelwires::Project>& babelwires::ModifyModelScope::getCommandManager() {
     return m_projectBridge.m_commandManager;
 }

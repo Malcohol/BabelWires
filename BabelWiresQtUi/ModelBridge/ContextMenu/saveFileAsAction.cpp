@@ -13,7 +13,7 @@
 #include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
-#include "BabelWiresLib/Commands/changeFileCommand.hpp"
+#include "BabelWiresLib/Project/Commands/changeFileCommand.hpp"
 #include "BabelWiresLib/Commands/commandManager.hpp"
 #include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
 #include "BabelWiresLib/Project/project.hpp"
@@ -50,7 +50,7 @@ void babelwires::SaveFileAsAction::actionTriggered(babelwires::FeatureModel& mod
     if (!newFilePath.isEmpty()) {
         // This is synchronous, but that's probably appropriate for saving.
         ModifyModelScope scope(projectBridge);
-        std::unique_ptr<Command> commandPtr =
+        std::unique_ptr<Command<Project>> commandPtr =
             std::make_unique<ChangeFileCommand>("Change file path", elementId, newFilePath.toStdString());
         if (scope.getCommandManager().executeAndStealCommand(commandPtr)) {
             scope.getProject().tryToSaveTarget(elementId);

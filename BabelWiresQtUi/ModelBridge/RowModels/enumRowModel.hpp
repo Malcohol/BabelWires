@@ -24,10 +24,10 @@ namespace babelwires {
 
         virtual void setEditorData(QWidget* editor) const override;
 
-        virtual std::unique_ptr<babelwires::ModifierData> createModifierFromEditor(QWidget* editor) const override;
+        virtual std::unique_ptr<ModifierData> createModifierFromEditor(QWidget* editor) const override;
 
       public:
-        const babelwires::EnumFeature& getEnumFeature() const;
+        const EnumFeature& getEnumFeature() const;
     };
 
 } // namespace babelwires

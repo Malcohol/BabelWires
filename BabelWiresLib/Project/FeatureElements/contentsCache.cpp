@@ -321,12 +321,14 @@ void babelwires::ContentsCache::updateModifierFlags() {
             if (editIt != m_edits.end()) {
                 if (const Modifier* modifier = editIt.getModifier()) {
                     currentRow.m_hasModifier = true;
+                    currentRow.m_hasLocalModifier = !modifier->asConnectionModifier();
                     currentRow.m_hasFailedModifier = modifier->isFailed();
                 } else {
                     currentRow.m_hasModifier = false;
                 }
             } else {
                 currentRow.m_hasModifier = false;
+                currentRow.m_hasLocalModifier = false;
                 currentRow.m_hasFailedModifier = false;
             }
         }

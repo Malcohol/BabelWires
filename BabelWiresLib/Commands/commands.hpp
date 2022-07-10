@@ -1,16 +1,13 @@
 /**
- * Commands define undoable ways of mutating the project.
+ * Commands define undoable ways of mutating the a COMMAND_TARGET.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-
 #pragma once
 
 #include "BabelWiresLib/Commands/commandTimestamp.hpp"
-#include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "BabelWiresLib/Project/projectIds.hpp"
 
 #include "Common/types.hpp"
 
@@ -18,16 +15,12 @@
 #include <memory>
 #include <ostream>
 #include <string>
+#include <algorithm>
+#include <cassert>
 
 namespace babelwires {
-
-    class Project;
-    struct ElementData;
-    struct TargetFileElementData;
-    struct ConnectionModifierData;
-    struct ModifierData;
-
-    /// Commands define undoable ways of mutating the project.
+    /// Commands define undoable ways of mutating the a COMMAND_TARGET.
+    template<typename COMMAND_TARGET>
     class Command {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Command);
@@ -42,19 +35,19 @@ namespace babelwires {
 
         /// Query the system to populate the data in the command, and
         /// execute it.
-        /// Returns false if the command cannot be initialized (because the project
+        /// Returns false if the command cannot be initialized (because the COMMAND_TARGET
         /// is not in the expected state).
         /// When false is returned, the system should be unaffected.
         /// See command for execute about how commands should achieve their effect.
-        virtual bool initializeAndExecute(Project& project) = 0;
+        virtual bool initializeAndExecute(COMMAND_TARGET& target) = 0;
 
         /// Perform the command.
         /// Note: A command should not modify feature contents directly. Instead, it should add or remove modifiers to achieve that effect.
-        virtual void execute(Project& project) const = 0;
+        virtual void execute(COMMAND_TARGET& target) const = 0;
 
         /// When the system is in the state just after the execution of the command,
         /// restore the system to the state just prior.
-        virtual void undo(Project& project) const = 0;
+        virtual void undo(COMMAND_TARGET& target) const = 0;
 
         /// Should the subsequentCommand be subsumed into this one, to appear as one command?
         /// Subsumption may be attempted before and after the commands are executed, and
@@ -88,31 +81,35 @@ namespace babelwires {
 
     /// A simple command can be initialized without affecting the state of the system,
     /// so it has three virtual methods to override: initialize, execute and undo.
-    class SimpleCommand : public Command {
+    template<typename COMMAND_TARGET>
+    class SimpleCommand : public Command<COMMAND_TARGET> {
       public:
         SimpleCommand(std::string commandName);
 
         /// Call initialize and then execute.
-        virtual bool initializeAndExecute(Project& project) override final;
+        virtual bool initializeAndExecute(COMMAND_TARGET& target) override final;
 
-        /// Query the project to capture and store a description of the undo operation.
+        /// Query the target to capture and store a description of the undo operation.
         /// Return false if the command cannot be initialized.
-        virtual bool initialize(const Project& project) = 0;
+        virtual bool initialize(const COMMAND_TARGET& target) = 0;
     };
 
     /// A compound command is composed of subcommands.
-    class CompoundCommand : public Command {
+    template<typename COMMAND_TARGET>
+    class CompoundCommand : public Command<COMMAND_TARGET> {
       public:
         CompoundCommand(std::string commandName);
 
-        void addSubCommand(std::unique_ptr<Command> subCommand);
+        void addSubCommand(std::unique_ptr<Command<COMMAND_TARGET>> subCommand);
 
-        virtual bool initializeAndExecute(Project& project) override;
-        virtual void execute(Project& project) const override;
-        virtual void undo(Project& project) const override;
+        virtual bool initializeAndExecute(COMMAND_TARGET& target) override;
+        virtual void execute(COMMAND_TARGET& target) const override;
+        virtual void undo(COMMAND_TARGET& target) const override;
 
       private:
-        std::vector<std::unique_ptr<Command>> m_subCommands;
+        std::vector<std::unique_ptr<Command<COMMAND_TARGET>>> m_subCommands;
     };
 
 } // namespace babelwires
+
+#include "BabelWiresLib/Commands/commands_inl.hpp"

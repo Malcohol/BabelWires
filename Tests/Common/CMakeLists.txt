@@ -14,6 +14,7 @@ SET( COMMON_TESTS_SRCS
    pointerRangeTest.cpp
    rationalTest.cpp
    registryTest.cpp
+   resultTest.cpp
    serializationTest.cpp
    signalTest.cpp
    streamEventHolderTest.cpp

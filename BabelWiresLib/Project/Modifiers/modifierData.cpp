@@ -79,7 +79,7 @@ void babelwires::StringValueAssignmentData::apply(Feature* targetFeature) const 
     if (StringFeature* stringFeature = targetFeature->as<StringFeature>()) {
         stringFeature->set(m_value);
     } else {
-        throw babelwires::ModelException() << "Could not assign a string to a non-string field";
+        throw babelwires::ModelException() << "Could not assign a string to a non-string feature";
     }
 }
 
@@ -97,7 +97,7 @@ void babelwires::EnumValueAssignmentData::apply(Feature* targetFeature) const {
     if (EnumFeature* enumFeature = targetFeature->as<EnumFeature>()) {
         enumFeature->set(m_value);
     } else {
-        throw babelwires::ModelException() << "Could not assign an enum value to a non-enum field";
+        throw babelwires::ModelException() << "Could not assign an enum value to a non-enum feature";
     }
 }
 

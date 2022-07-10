@@ -28,6 +28,7 @@ struct babelwires::Ui::Impl {
         CommandManager commandManager(project, m_log);
         ProjectBridge projectBridge(project, commandManager, m_projectContext);
         MainWindow mainWidget(projectBridge, m_log);
+        projectBridge.setMainWindow(&mainWidget);
 
         m_app.exec();
     }

@@ -10,8 +10,8 @@
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWiresLib/Commands/activateOptionalCommand.hpp"
-#include "BabelWiresLib/Commands/deactivateOptionalCommand.hpp"
+#include "BabelWiresLib/Project/Commands/activateOptionalCommand.hpp"
+#include "BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::FeaturePath pathToRecord,
@@ -28,7 +28,7 @@ void babelwires::OptionalActivationAction::actionTriggered(babelwires::FeatureMo
                                                            const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const ElementId elementId = model.getElementId();
-    std::unique_ptr<Command> command;
+    std::unique_ptr<Command<Project>> command;
     std::string fieldName = IdentifierRegistry::read()->getName(m_optional).c_str();
     if (!m_isActivated) {
         command = std::make_unique<ActivateOptionalCommand>("Activate optional field " + fieldName, elementId, m_pathToRecord, m_optional);

@@ -11,7 +11,7 @@
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWiresLib/Commands/removeModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeModifierCommand.hpp"
 #include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"

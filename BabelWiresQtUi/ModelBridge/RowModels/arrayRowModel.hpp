@@ -23,7 +23,7 @@ namespace babelwires {
         getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const override;
 
       public:
-        const babelwires::ArrayFeature& getArrayFeature() const;
+        const ArrayFeature& getArrayFeature() const;
     };
 
 } // namespace babelwires

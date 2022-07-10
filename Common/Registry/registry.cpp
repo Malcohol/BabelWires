@@ -21,7 +21,6 @@ babelwires::LongIdentifier babelwires::RegistryEntry::getIdentifier() const {
     return m_identifier;
 }
 
-/// The name of the entry, which can be displayed to the user and is permitted to change.
 std::string babelwires::RegistryEntry::getName() const {
     return IdentifierRegistry::read()->getName(m_identifier);
 }
@@ -56,6 +55,17 @@ const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifi
     return nullptr;
 }
 
+babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifierNonConst(const LongIdentifier& identifier) const {
+    for (auto&& f : m_entries) {
+        if (identifier == f->getIdentifier()) {
+            // resolve the identifier if it is currently unresolved.
+            f->getIdentifier().copyDiscriminatorTo(identifier);
+            return f.get();
+        }
+    }
+    return nullptr;
+}
+
 const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByName(std::string_view name) const {
     for (auto&& f : m_entries) {
         if (name == f->getName()) {
@@ -73,4 +83,4 @@ const babelwires::RegistryEntry& babelwires::UntypedRegistry::getRegisteredEntry
     return *entry;
 }
 
-void babelwires::UntypedRegistry::validateNewEntry(const RegistryEntry* newEntry) const {}
+void babelwires::UntypedRegistry::validateNewEntry(RegistryEntry* newEntry) const {}

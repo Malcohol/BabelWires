@@ -17,8 +17,8 @@
 #include "BabelWiresQtUi/uiProjectContext.hpp"
 
 #include "BabelWiresLib/Commands/commandManager.hpp"
-#include "BabelWiresLib/Commands/pasteElementsCommand.hpp"
-#include "BabelWiresLib/Commands/removeElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/pasteElementsCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeElementCommand.hpp"
 #include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
 #include "BabelWiresLib/FileFormat/targetFileFormat.hpp"
 #include "BabelWiresLib/Processors/processorFactory.hpp"
@@ -27,6 +27,7 @@
 #include "BabelWiresLib/Project/projectData.hpp"
 #include "BabelWiresLib/ProjectExtra/projectUtilities.hpp"
 #include "BabelWiresLib/Serialization/projectSerialization.hpp"
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
 #include "Common/Log/unifiedLog.hpp"
 #include "Common/exceptions.hpp"
@@ -49,7 +50,6 @@
 
 namespace {
     constexpr char s_initialFilePath[] = "Untitled";
-    constexpr char s_dialogProjectFormat[] = "Seqwires project (*.seqwires)";
 
     std::shared_ptr<QtNodes::DataModelRegistry> registerDataModels(babelwires::ProjectBridge& projectBridge) {
         auto ret = std::make_shared<QtNodes::DataModelRegistry>();
@@ -248,7 +248,7 @@ void babelwires::MainWindow::createDockWidgets(UnifiedLog& log) {
 
 void babelwires::MainWindow::onUndoStateChanged() {
     AccessModelScope scope(m_projectBridge);
-    const babelwires::CommandManager& commandManager = scope.getCommandManager();
+    const babelwires::CommandManager<Project>& commandManager = scope.getCommandManager();
 
     if (commandManager.canUndo()) {
         m_undoAction->setEnabled(true);
@@ -276,9 +276,8 @@ void babelwires::MainWindow::onUndoStateChanged() {
 void babelwires::MainWindow::openProject() {
     if (maybeSave()) {
         QString dialogCaption = tr("Open project");
-        QString dialogFormats = tr(s_dialogProjectFormat);
         QString filePath = QFileDialog::getOpenFileName(m_projectBridge.getFlowGraphWidget(), dialogCaption,
-                                                        m_currentProjectDir, dialogFormats);
+                                                        m_currentProjectDir, getDialogProjectFormat());
         if (!filePath.isNull()) {
             {
                 logDebug() << "Clearing project before open project";
@@ -351,9 +350,8 @@ void babelwires::MainWindow::saveProject() {
 
 void babelwires::MainWindow::saveProjectAs() {
     QString dialogCaption = tr("Save project as");
-    QString dialogFormats = tr(s_dialogProjectFormat);
     QString filePath = QFileDialog::getSaveFileName(m_projectBridge.getFlowGraphWidget(), dialogCaption,
-                                                    m_currentProjectDir, dialogFormats);
+                                                    m_currentProjectDir, getDialogProjectFormat());
     if (!filePath.isNull()) {
         const QString ext = getProjectExtension();
         if (!filePath.endsWith(ext)) {
@@ -399,7 +397,7 @@ babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
 void babelwires::MainWindow::writeToClipboard(ProjectData projectData) {
     std::string asString = ProjectSerialization::saveToString(getFullFilePath().toStdString(), std::move(projectData));
 
-    QByteArray contents(asString.c_str(), asString.size());
+    QByteArray contents(asString.c_str(), static_cast<int>(asString.size()));
     auto mimedata = std::make_unique<QMimeData>();
     mimedata->setData(getClipboardMimetype(), contents);
     QApplication::clipboard()->setMimeData(mimedata.release());
@@ -490,6 +488,7 @@ void babelwires::MainWindow::closeEvent(QCloseEvent* event) {
     if (maybeSave()) {
         m_userLogger.logInfo() << "Close";
         event->accept();
+        m_valueEditorManager.closeAllValueEditors();
     } else {
         event->ignore();
     }
@@ -539,10 +538,14 @@ QString babelwires::MainWindow::getProjectExtension() const {
 }
 
 QString babelwires::MainWindow::getDialogProjectFormat() const {
-    return QString("%1 project (*.$2)").arg(getApplicationTitle(), getProjectExtension());
+    return QString("%1 project (*%2)").arg(getApplicationTitle(), getProjectExtension());
 }
 
 QString babelwires::MainWindow::getClipboardMimetype() const {
     // This doesn't need to be application specific.
     return QString("BabelWires/elements");
+}
+
+void babelwires::MainWindow::openEditorForValue(const ComplexValueEditorData& data) {
+    m_valueEditorManager.openEditorForValue(this, m_projectBridge, m_userLogger, data);
 }

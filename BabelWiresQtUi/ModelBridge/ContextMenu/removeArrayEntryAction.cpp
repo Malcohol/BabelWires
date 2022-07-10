@@ -10,7 +10,7 @@
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWiresLib/Commands/removeEntryFromArrayCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
 
 babelwires::RemoveArrayEntryAction::RemoveArrayEntryAction(babelwires::FeaturePath pathToArray,

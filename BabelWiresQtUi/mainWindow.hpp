@@ -2,10 +2,12 @@
  * The MainWindow of the application.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
+
+#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditorManager.hpp"
 
 #include "BabelWiresLib/Project/projectData.hpp"
 #include "BabelWiresLib/Project/uiPosition.hpp"
@@ -15,16 +17,13 @@
 #include <QMainWindow>
 
 #include <memory>
+#include <unordered_map>
 
 class QToolBar;
 
 namespace babelwires {
     class UnifiedLog;
     struct UserLogger;
-} // namespace babelwires
-
-namespace babelwires {
-
     class ProjectBridge;
     struct ProjectData;
     class LogWindow;
@@ -36,6 +35,8 @@ namespace babelwires {
       public:
         MainWindow(ProjectBridge& projectBridge, UnifiedLog& log);
         ~MainWindow();
+
+        void openEditorForValue(const ComplexValueEditorData& data);
 
       private:
         void createActions();
@@ -120,6 +121,8 @@ namespace babelwires {
         QString m_currentProjectFileName;
 
         SignalSubscription m_undoStateChangedSubscription;
+
+        ComplexValueEditorManager m_valueEditorManager;
     };
 
 } // namespace babelwires

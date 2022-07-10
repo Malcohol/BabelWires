@@ -10,7 +10,7 @@
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWiresLib/Commands/addEntryToArrayCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addEntryToArrayCommand.hpp"
 
 babelwires::InsertArrayEntryAction::InsertArrayEntryAction(const QString& text, babelwires::FeaturePath pathToArray, int indexOfNewEntry)
     : FeatureContextMenuAction(text)

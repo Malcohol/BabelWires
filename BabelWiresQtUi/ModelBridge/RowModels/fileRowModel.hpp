@@ -25,8 +25,8 @@ namespace babelwires {
         getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const override;
 
       public:
-        const babelwires::FileFeature& getFileFeature() const;
-        const babelwires::FileElement& getFileElement() const;
+        const FileFeature& getFileFeature() const;
+        const FileElement& getFileElement() const;
     };
 
 } // namespace babelwires

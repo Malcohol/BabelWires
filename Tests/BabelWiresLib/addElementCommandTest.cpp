@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/addElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addElementCommand.hpp"
 
-#include "BabelWiresLib/Commands/moveElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/moveElementCommand.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/project.hpp"
 

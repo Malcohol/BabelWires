@@ -1,6 +1,7 @@
 SET( BABELWIRESQTUI_SRCS
     uiMain.cpp
     mainWindow.cpp
+    LogWindow/logWindow.cpp
     ModelBridge/sourceFileNodeFactory.cpp
     ModelBridge/targetFileNodeFactory.cpp
     ModelBridge/processorNodeFactory.cpp
@@ -8,22 +9,25 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/projectBridge.cpp
     ModelBridge/elementNodeModel.cpp
     ModelBridge/featureModel.cpp
+    ModelBridge/featureModelDelegate.cpp
     ModelBridge/modifyModelScope.cpp
     ModelBridge/accessModelScope.cpp
-    ModelBridge/RowModels/rowModel.cpp
-    ModelBridge/RowModels/intRowModel.cpp
-    ModelBridge/RowModels/stringRowModel.cpp
-    ModelBridge/RowModels/rationalRowModel.cpp
     ModelBridge/RowModels/arrayRowModel.cpp
     ModelBridge/RowModels/enumRowModel.cpp
     ModelBridge/RowModels/fileRowModel.cpp
+    ModelBridge/RowModels/intRowModel.cpp
+    ModelBridge/RowModels/mapRowModel.cpp
+    ModelBridge/RowModels/rationalRowModel.cpp
     ModelBridge/RowModels/recordWithOptionalsRowModel.cpp
-    ModelBridge/RowModels/rowModelWithRichText.cpp
+    ModelBridge/RowModels/rowModel.cpp
     ModelBridge/RowModels/rowModelDispatcher.cpp
     ModelBridge/RowModels/rowModelRegistry.cpp
-    ModelBridge/ValueEditors/dropDownValueEditor.cpp
-    ModelBridge/ValueEditors/spinBoxValueEditor.cpp
-    ModelBridge/ValueEditors/lineEditValueEditor.cpp
+    ModelBridge/RowModels/rowModelWithRichText.cpp
+    ModelBridge/RowModels/stringRowModel.cpp
+    ValueEditors/dropDownValueEditor.cpp
+    ValueEditors/spinBoxValueEditor.cpp
+    ValueEditors/lineEditValueEditor.cpp
+    ValueEditors/valueEditorCommonBase.cpp
     ModelBridge/Internal/flowSceneConnectionInfo.cpp
     ModelBridge/ContextMenu/featureContextMenu.cpp
     ModelBridge/ContextMenu/removeModifierAction.cpp
@@ -36,8 +40,30 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/removeFailedModifiersAction.cpp
     ModelBridge/ContextMenu/optionalActivationAction.cpp
     ModelBridge/ContextMenu/setArraySizeAction.cpp
+    ModelBridge/ContextMenu/openValueEditorAction.cpp
     Utilities/fileDialogs.cpp
-    LogWindow/logWindow.cpp
+    ComplexValueEditors/complexValueEditor.cpp
+    ComplexValueEditors/complexValueEditorData.cpp
+    ComplexValueEditors/complexValueEditorFactory.cpp
+    ComplexValueEditors/complexValueEditorManager.cpp
+    ComplexValueEditors/MapEditor/mapEditor.cpp
+    ComplexValueEditors/MapEditor/typeWidget.cpp
+    ComplexValueEditors/MapEditor/mapModel.cpp
+    ComplexValueEditors/MapEditor/mapModelDelegate.cpp
+    ComplexValueEditors/ValueModels/enumValueModel.cpp
+    ComplexValueEditors/ValueModels/intValueModel.cpp
+    ComplexValueEditors/ValueModels/valueModel.cpp
+    ComplexValueEditors/ValueModels/valueModelDispatcher.cpp
+    ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.cpp
+    ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.cpp
+    ComplexValueEditors/MapEditor/MapEntryModels/oneToOneMapEntryModel.cpp
+    ComplexValueEditors/MapEditor/MapEntryModels/allToOneFallbackMapEntryModel.cpp
+    ComplexValueEditors/MapEditor/MapEntryModels/allToSameFallbackMapEntryModel.cpp
+    ComplexValueEditors/MapEditor/MapContextMenuActions/addEntryMapContextMenuAction.cpp
+    ComplexValueEditors/MapEditor/MapContextMenuActions/removeEntryMapContextMenuAction.cpp
+    ComplexValueEditors/MapEditor/MapContextMenuActions/changeEntryKindContextMenuAction.cpp
+    ContextMenu/contextMenu.cpp
+    ContextMenu/contextMenuAction.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

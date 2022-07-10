@@ -10,7 +10,7 @@
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
 #include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
 
-#include "BabelWiresLib/Commands/removeFailedModifiersCommand.hpp"
+#include "BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
 
 #include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"

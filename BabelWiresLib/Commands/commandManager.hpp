@@ -3,7 +3,7 @@
  * if a file has changed since it was last saved.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -19,20 +19,19 @@ namespace babelwires {
 
 namespace babelwires {
 
-    class Project;
-    class Command;
+    template <typename COMMAND_TARGET> class Command;
 
     /// Manages commands for undo/redo, and has a "cursor" which can be used
-    /// to know when the project has changed from its last saved state.
-    class CommandManager {
+    /// to know when the target has changed from its last saved state.
+    template <typename COMMAND_TARGET> class CommandManager {
       public:
-        CommandManager(Project& project, UserLogger& userLogger);
+        CommandManager(COMMAND_TARGET& target, UserLogger& userLogger);
         virtual ~CommandManager();
 
         /// Returns true if the command could be executed, in which case ownership is moved to
         /// the command manager. If the command could not be executed, then ownership is left
         /// with the caller.
-        bool executeAndStealCommand(std::unique_ptr<Command>& command);
+        bool executeAndStealCommand(std::unique_ptr<Command<COMMAND_TARGET>>& command);
 
         bool canUndo() const;
         bool canRedo() const;
@@ -47,7 +46,7 @@ namespace babelwires {
         /// Set the cursor to the current position.
         void setCursor();
 
-        /// Is the project still in the state it was when the cursor was last set.
+        /// Is the target still in the state it was when the cursor was last set.
         bool isAtCursor() const;
 
       protected:
@@ -56,19 +55,21 @@ namespace babelwires {
 
         /// Get the last command performed.
         /// This is not allowed after an undo.
-        Command& getLastCommand();
-        const Command& getLastCommand() const;
+        Command<COMMAND_TARGET>& getLastCommand();
+        const Command<COMMAND_TARGET>& getLastCommand() const;
 
       public: // Signals
         Signal<> signal_undoStateChanged;
 
       private:
-        Project& m_project;
+        COMMAND_TARGET& m_target;
         UserLogger& m_userLogger;
-        std::vector<std::unique_ptr<Command>> m_commandHistory;
+        std::vector<std::unique_ptr<Command<COMMAND_TARGET>>> m_commandHistory;
         int m_indexOfAppliedCommand = -1;
-        // The index in the command history corresponding to command performed when the project was last saved, or -1.
+        // The index in the command history corresponding to command performed when the target was last saved, or -1.
         int m_indexOfCursor = -1;
     };
 
 } // namespace babelwires
+
+#include <BabelWiresLib/Commands/commandManager_inl.hpp>

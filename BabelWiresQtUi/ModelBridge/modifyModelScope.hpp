@@ -19,7 +19,7 @@ namespace babelwires {
         ModifyModelScope(ProjectBridge& bridge);
         virtual ~ModifyModelScope();
 
-        CommandManager& getCommandManager();
+        CommandManager<Project>& getCommandManager();
         Project& getProject();
 
       private:

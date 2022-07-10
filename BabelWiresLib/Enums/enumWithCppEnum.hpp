@@ -19,12 +19,13 @@
 /// #define MY_ENUM(X)                                                 \
 ///    X(Foo, "Foo value", "00000000-1111-2222-3333-444444444444")     \
 ///    X(Bar, "Bar value", "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+/// For coding convenience, NUM_VALUES and NotAValue entries are provided.
 #define ENUM_DEFINE_CPP_ENUM(Y)                                                                                        \
-    enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) };                                                                \
+    enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) NUM_VALUES, NotAValue = NUM_VALUES };                             \
     Value getValueFromIdentifier(babelwires::Identifier id) const {                                                    \
         return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
     }                                                                                                                  \
-    babelwires::Identifier getIdentifierFromValue(Value value) {                                                       \
+    babelwires::Identifier getIdentifierFromValue(Value value) const {                                                 \
         return getIdentifierFromIndex(static_cast<unsigned int>(value));                                               \
     }
 
@@ -48,12 +49,12 @@ namespace babelwires {
       public:
         /// Get the stored value as a C++ enum value.
         typename E::Value getAsValue() const {
-            return static_cast<const E&>(this->m_enum).getValueFromIdentifier(this->m_value);
+            return static_cast<const E&>(this->getEnum()).getValueFromIdentifier(this->m_value);
         }
 
         /// Set the value using a C++ enum value.
         void setFromValue(typename E::Value value) {
-            set(static_cast<const E*>(this->m_enum)->getIdentifierFromValue(value));
+            set(static_cast<const E*>(this->getEnum())->getIdentifierFromValue(value));
         }
     };
 } // namespace babelwires

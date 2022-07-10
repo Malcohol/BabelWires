@@ -16,6 +16,6 @@ const babelwires::Project& babelwires::AccessModelScope::getProject() {
     return m_projectBridge.m_project;
 }
 
-const babelwires::CommandManager& babelwires::AccessModelScope::getCommandManager() {
+const babelwires::CommandManager<babelwires::Project>& babelwires::AccessModelScope::getCommandManager() {
     return m_projectBridge.m_commandManager;
 }

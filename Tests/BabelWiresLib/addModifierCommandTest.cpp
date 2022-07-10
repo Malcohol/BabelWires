@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/addModifierCommand.hpp"
+#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/Modifiers/modifierData.hpp"

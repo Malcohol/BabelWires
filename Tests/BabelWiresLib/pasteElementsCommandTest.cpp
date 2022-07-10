@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/pasteElementsCommand.hpp"
+#include "BabelWiresLib/Project/Commands/pasteElementsCommand.hpp"
 
-#include "BabelWiresLib/Commands/moveElementCommand.hpp"
+#include "BabelWiresLib/Project/Commands/moveElementCommand.hpp"
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
 #include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"

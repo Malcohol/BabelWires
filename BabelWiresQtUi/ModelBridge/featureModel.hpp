@@ -29,10 +29,10 @@ namespace babelwires {
       public:
         FeatureView(ElementId elementId, ProjectBridge& projectBridge);
 
-        /// The default size is too big when there's three or fewer rows.
+        /// The default size is too big when there are three or fewer rows.
         QSize sizeHint() const override;
 
-        /// The default size is too big when there's three or fewer rows.
+        /// The default size is too big when there are three or fewer rows.
         QSize minimumSizeHint() const override;
 
       private:
@@ -46,10 +46,10 @@ namespace babelwires {
       public:
         FeatureModel(QObject* parent, ElementId elementId, ProjectBridge& projectBridge);
 
-        virtual int rowCount(const QModelIndex& /*parent*/) const override;
-        virtual int columnCount(const QModelIndex& /*parent*/) const override;
-        virtual QVariant data(const QModelIndex& index, int role) const override;
-        virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& /*parent*/) const override;
+        int columnCount(const QModelIndex& /*parent*/) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
 
         /// Access the associated FeatureElement.
         const FeatureElement* getFeatureElement(AccessModelScope& scope) const;
@@ -75,30 +75,6 @@ namespace babelwires {
       private:
         ProjectBridge& m_projectBridge;
         ElementId m_elementId;
-    };
-
-    class FeatureModelDelegate : public QStyledItemDelegate {
-        Q_OBJECT
-      public:
-        /// Construct a delegate to handle the editing of features.
-        /// The elementId is that of the FeatureElement.
-        FeatureModelDelegate(QObject* parent, ProjectBridge& projectBridge);
-
-        virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option,
-                                      const QModelIndex& index) const override;
-        virtual void setEditorData(QWidget* editor, const QModelIndex& index) const override;
-        virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
-        virtual void paint(QPainter* painter, const QStyleOptionViewItem& option,
-                           const QModelIndex& index) const override;
-        virtual bool eventFilter(QObject* object, QEvent* event) override;
-        virtual QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-
-      public slots:
-        /// When wired to a slot in a row model editor, the editor commits its current value.
-        void commitEditorValue();
-
-      private:
-        ProjectBridge& m_projectBridge;
     };
 
 } // namespace babelwires

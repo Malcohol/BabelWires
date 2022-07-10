@@ -20,6 +20,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/connectionModifier.cpp
 	Project/Modifiers/connectionModifierData.cpp
 	Project/Modifiers/activateOptionalsModifierData.cpp
+	Project/Modifiers/mapValueAssignmentData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp
 	ProjectExtra/projectObserver.cpp
@@ -30,6 +31,26 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
 	FileFormat/filePath.cpp
+	TypeSystem/typeSystem.cpp
+	TypeSystem/intType.cpp
+	TypeSystem/intValue.cpp
+	TypeSystem/enumValue.cpp
+	TypeSystem/type.cpp
+	Maps/Commands/addEntryToMapCommand.cpp
+	Maps/Commands/removeEntryFromMapCommand.cpp
+	Maps/Commands/replaceMapEntryCommand.cpp
+	Maps/Commands/setMapSourceTypeCommand.cpp
+	Maps/Commands/setMapTargetTypeCommand.cpp
+	Maps/Commands/changeEntryKindCommand.cpp
+	Maps/Commands/setMapCommand.cpp
+	Maps/mapProject.cpp
+	Maps/mapSerialization.cpp
+	Maps/mapData.cpp
+	Maps/MapEntries/mapEntryData.cpp
+	Maps/MapEntries/oneToOneMapEntryData.cpp
+	Maps/MapEntries/allToSameFallbackMapEntryData.cpp
+	Maps/MapEntries/allToOneFallbackMapEntryData.cpp
+	Maps/mapProjectEntry.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
@@ -42,32 +63,32 @@ SET( BABELWIRESLIB_SRCS
 	Features/enumFeature.cpp
 	Features/numericFeature.cpp
 	Features/stringFeature.cpp
+	Features/mapFeature.cpp
 	Features/Path/featurePath.cpp
 	Features/Path/pathStep.cpp
 	Features/Utilities/featureXml.cpp
 	Features/rootFeature.cpp
 	Serialization/projectBundle.cpp
-	Commands/activateOptionalCommand.cpp
-	Commands/commands.cpp
-	Commands/addElementCommand.cpp
-	Commands/deactivateOptionalCommand.cpp
-	Commands/removeElementCommand.cpp
-	Commands/moveElementCommand.cpp
-	Commands/addModifierCommand.cpp
-	Commands/removeModifierCommand.cpp
-	Commands/addEntryToArrayCommand.cpp
-	Commands/removeEntryFromArrayCommand.cpp
-	Commands/changeFileCommand.cpp
-	Commands/pasteElementsCommand.cpp
-	Commands/commandManager.cpp
-	Commands/setExpandedCommand.cpp
-	Commands/removeAllEditsCommand.cpp
-	Commands/removeFailedModifiersCommand.cpp
-	Commands/resizeElementCommand.cpp
-	Commands/setArraySizeCommand.cpp
+	Project/Commands/activateOptionalCommand.cpp
+	Project/Commands/addElementCommand.cpp
+	Project/Commands/deactivateOptionalCommand.cpp
+	Project/Commands/removeElementCommand.cpp
+	Project/Commands/moveElementCommand.cpp
+	Project/Commands/addModifierCommand.cpp
+	Project/Commands/removeModifierCommand.cpp
+	Project/Commands/addEntryToArrayCommand.cpp
+	Project/Commands/removeEntryFromArrayCommand.cpp
+	Project/Commands/changeFileCommand.cpp
+	Project/Commands/pasteElementsCommand.cpp
+	Project/Commands/setExpandedCommand.cpp
+	Project/Commands/removeAllEditsCommand.cpp
+	Project/Commands/removeFailedModifiersCommand.cpp
+	Project/Commands/resizeElementCommand.cpp
+	Project/Commands/setArraySizeCommand.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp
 	ValueNames/contiguousValueNamesImpl.cpp
+	libRegistration.cpp
    )
 
 ADD_LIBRARY( BabelWiresLib ${BABELWIRESLIB_SRCS} )

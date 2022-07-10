@@ -75,8 +75,11 @@ namespace babelwires {
         const RegistryEntry& getRegisteredEntry(const LongIdentifier& identifier) const;
 
       protected:
-        virtual void validateNewEntry(const RegistryEntry* newEntry) const;
+        virtual void validateNewEntry(RegistryEntry* newEntry) const;
         const RegistryEntry* getEntryByName(std::string_view name) const;
+
+        /// Protected non-const version available to subclasses.
+        RegistryEntry* getEntryByIdentifierNonConst(const LongIdentifier& identifier) const;
 
       protected:
         std::string m_registryName;

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/changeFileCommand.hpp"
+#include "BabelWiresLib/Project/Commands/changeFileCommand.hpp"
 
 #include "Common/Identifiers/identifierRegistry.hpp"
 #include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"

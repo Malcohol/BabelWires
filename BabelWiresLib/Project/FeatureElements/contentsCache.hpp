@@ -35,6 +35,7 @@ namespace babelwires {
         bool isExpandable() const { return m_isExpandable; }
         bool isExpanded() const { return m_isExpanded; }
         bool hasModifier() const { return m_hasModifier; }
+        bool hasLocalModifier() const { return m_hasLocalModifier; }
         bool hasFailedModifier() const { return m_hasFailedModifier; }
         bool hasHiddenModifier() const { return m_hasHiddenModifiers; }
         bool hasFailedHiddenModifiers() const { return m_hasFailedHiddenModifiers; }
@@ -61,6 +62,9 @@ namespace babelwires {
 
         /// Is this entry modified?
         bool m_hasModifier = false;
+
+        /// The modifier is a local edit (as opposed to a ConnectionModifier)
+        bool m_hasLocalModifier = false;
 
         /// Has that modifier failed?
         bool m_hasFailedModifier = false;

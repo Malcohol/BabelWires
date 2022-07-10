@@ -12,6 +12,7 @@
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/removeFailedModifiersAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp"
 #include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include "BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp"
 
 #include "BabelWiresLib/Features/Path/featurePath.hpp"
 #include "BabelWiresLib/Features/arrayFeature.hpp"
@@ -155,20 +156,4 @@ void babelwires::RowModel::getContextMenuActions(
             }
         }
     }
-}
-
-babelwires::FeatureModelDelegate* babelwires::RowModel::getDelegateFromParentWidget(QWidget* widget) {
-    babelwires::FeatureView* view = qobject_cast<babelwires::FeatureView*>(widget->parent());
-    assert(view && "Grandparent widgets are expected to be FeatureViews");
-    babelwires::FeatureModelDelegate* delegate = qobject_cast<babelwires::FeatureModelDelegate*>(view->itemDelegate());
-    assert(delegate && "FeatureViews should have a FeatureModelDelegate");
-    return delegate;
-}
-
-babelwires::FeatureModel* babelwires::RowModel::getModelFromParentWidget(QWidget* widget) {
-    babelwires::FeatureView* view = qobject_cast<babelwires::FeatureView*>(widget->parent());
-    assert(view && "Grandparent widgets are expected to be FeatureViews");
-    babelwires::FeatureModel* model = qobject_cast<babelwires::FeatureModel*>(view->model());
-    assert(model && "FeatureViews should have a FeatureModel");
-    return model;
 }
