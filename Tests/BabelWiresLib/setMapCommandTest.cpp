@@ -55,6 +55,8 @@ TEST(SetMapCommandTest, executeAndUndo) {
                                               testUtils::TestType::getThisIdentifier());
 
     babelwires::MapData mapData2;
+    mapData2.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData2.setTargetTypeId(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue.clone());
@@ -116,11 +118,16 @@ TEST(SetMapCommandTest, invalidOldMap) {
     EXPECT_EQ(mapProject.getMapEntry(0).getData(), oneToOne);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
     EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
+    EXPECT_FALSE(mapProject.getMapEntry(1).getValidity());
+    EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());
 
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
 
     babelwires::MapData mapData2;
+    mapData2.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData2.setTargetTypeId(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue.clone());
@@ -137,6 +144,8 @@ TEST(SetMapCommandTest, invalidOldMap) {
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
     EXPECT_EQ(mapProject.getMapEntry(0).getData(), oneToOne2);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
+    EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
 
     command.undo(mapProject);
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
@@ -144,6 +153,9 @@ TEST(SetMapCommandTest, invalidOldMap) {
     EXPECT_EQ(mapProject.getMapEntry(0).getData(), oneToOne);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
     EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
+    EXPECT_FALSE(mapProject.getMapEntry(1).getValidity());
+    EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());
 }
 
 TEST(SetMapCommandTest, invalidNewMap) {
@@ -180,11 +192,15 @@ TEST(SetMapCommandTest, invalidNewMap) {
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
     EXPECT_EQ(mapProject.getMapEntry(0).getData(), oneToOne);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
+    EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
 
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
 
     babelwires::MapData mapData2;
+    mapData2.setSourceTypeId(testUtils::TestType::getThisIdentifier());
+    mapData2.setTargetTypeId(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue.clone());
@@ -203,6 +219,9 @@ TEST(SetMapCommandTest, invalidNewMap) {
     EXPECT_EQ(mapProject.getMapEntry(0).getData(), oneToOne2);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
     EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
+    EXPECT_FALSE(mapProject.getMapEntry(1).getValidity());
+    EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());
 
     command.undo(mapProject);
 
@@ -210,5 +229,7 @@ TEST(SetMapCommandTest, invalidNewMap) {
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
     EXPECT_EQ(mapProject.getMapEntry(0).getData(), oneToOne);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
+    EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
 }
 
