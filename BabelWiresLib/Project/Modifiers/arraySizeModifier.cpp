@@ -5,13 +5,13 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp"
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 
-#include "Common/Log/userLogger.hpp"
+#include <Common/Log/userLogger.hpp>
 
 #include <cassert>
 

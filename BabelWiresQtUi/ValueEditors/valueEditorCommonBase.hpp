@@ -73,4 +73,4 @@ namespace babelwires {
 /// Register pointers-to-ValueEditorInterface as something which can be stored in a QVariant.
 Q_DECLARE_METATYPE(babelwires::ValueEditorInterface*);
 
-#include "BabelWiresQtUi/ValueEditors/valueEditorCommonBase_inl.hpp"
+#include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase_inl.hpp>

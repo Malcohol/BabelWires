@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 
 #include <QVariant>
 

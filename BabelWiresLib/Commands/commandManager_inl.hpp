@@ -7,11 +7,11 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWiresLib/Commands/commandManager.hpp"
-#include "BabelWiresLib/Commands/commands.hpp"
+#include <BabelWiresLib/Commands/commandManager.hpp>
+#include <BabelWiresLib/Commands/commands.hpp>
 
-#include "Common/Log/debugLogger.hpp"
-#include "Common/Log/userLogger.hpp"
+#include <Common/Log/debugLogger.hpp>
+#include <Common/Log/userLogger.hpp>
 
 #include <cassert>
 

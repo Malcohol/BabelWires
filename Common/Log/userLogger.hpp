@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/Log/log.hpp"
+#include <Common/Log/log.hpp>
 
 namespace babelwires {
 

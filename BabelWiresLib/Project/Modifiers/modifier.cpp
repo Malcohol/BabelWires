@@ -5,15 +5,15 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
  
-#include "BabelWiresLib/Features/features.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
+#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 
-#include "Common/Log/userLogger.hpp"
+#include <Common/Log/userLogger.hpp>
 
 #include <cassert>
 

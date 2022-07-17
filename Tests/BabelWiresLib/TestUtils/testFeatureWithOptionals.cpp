@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp>
 
 const babelwires::FeaturePath testUtils::TestFeatureWithOptionals::s_pathToSubrecord =
     babelwires::FeaturePath::deserializeFromString(testUtils::TestFeatureWithOptionals::s_subrecordIdInitializer);

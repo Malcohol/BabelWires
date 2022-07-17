@@ -5,12 +5,12 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Commands/setExpandedCommand.hpp"
+#include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
 
-#include "BabelWiresLib/Features/features.hpp"
-#include "BabelWiresLib/Features/rootFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
 #include <cassert>
 

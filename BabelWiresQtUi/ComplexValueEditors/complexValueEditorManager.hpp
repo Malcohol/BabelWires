@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp"
-#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditorFactory.hpp"
+#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorFactory.hpp>
 
 namespace babelwires {
     class ProjectBridge;

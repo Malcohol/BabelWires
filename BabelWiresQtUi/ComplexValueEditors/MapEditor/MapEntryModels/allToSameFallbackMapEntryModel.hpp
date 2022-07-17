@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.hpp"
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.hpp>
 
 namespace babelwires {
     class AllToSameFallbackMapEntryData;

@@ -5,15 +5,15 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Serialization/projectSerialization.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
-#include "BabelWiresLib/Serialization/projectBundle.hpp"
+#include <BabelWiresLib/Serialization/projectSerialization.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Serialization/projectBundle.hpp>
 
-#include "Common/IO/outFileStream.hpp"
-#include "Common/Serialization/XML/xmlDeserializer.hpp"
-#include "Common/Serialization/XML/xmlSerializer.hpp"
-#include "Common/exceptions.hpp"
+#include <Common/IO/outFileStream.hpp>
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
+#include <Common/exceptions.hpp>
 
 #include <fstream>
 

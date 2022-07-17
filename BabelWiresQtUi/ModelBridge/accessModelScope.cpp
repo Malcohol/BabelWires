@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/accessModelScope.hpp"
+#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 
 babelwires::AccessModelScope::AccessModelScope(ProjectBridge& bridge)
     : m_projectBridge(bridge) {}

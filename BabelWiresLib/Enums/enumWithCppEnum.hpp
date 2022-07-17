@@ -7,9 +7,10 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Enums/enum.hpp"
-#include "BabelWiresLib/Features/enumFeature.hpp"
-#include "Common/Identifiers/registeredIdentifier.hpp"
+#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Features/enumFeature.hpp>
+
+#include <Common/Identifiers/registeredIdentifier.hpp>
 
 // Implementation detail.
 #define ENUM_SELECT_FIRST_ARGUMENT(A, B, C) A,

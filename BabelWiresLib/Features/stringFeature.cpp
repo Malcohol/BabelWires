@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Features/stringFeature.hpp"
+#include <BabelWiresLib/Features/stringFeature.hpp>
 
 std::string babelwires::StringFeature::get() const {
     return m_value;

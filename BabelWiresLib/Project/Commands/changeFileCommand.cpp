@@ -5,10 +5,10 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Commands/changeFileCommand.hpp"
+#include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 
-#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
 #include <cassert>
 

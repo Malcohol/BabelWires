@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/FeatureElements/failedFeature.hpp"
+#include <BabelWiresLib/Project/FeatureElements/failedFeature.hpp>
 
-#include "Common/Identifiers/registeredIdentifier.hpp"
+#include <Common/Identifiers/registeredIdentifier.hpp>
 
 babelwires::FailedFeature::FailedFeature(const ProjectContext& projectContext)
     : RootFeature(projectContext) {

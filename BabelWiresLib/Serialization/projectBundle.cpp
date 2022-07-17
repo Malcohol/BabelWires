@@ -5,12 +5,12 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Serialization/projectBundle.hpp"
+#include <BabelWiresLib/Serialization/projectBundle.hpp>
 
-#include "BabelWiresLib/FileFormat/filePath.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <BabelWiresLib/FileFormat/filePath.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include "Common/exceptions.hpp"
+#include <Common/exceptions.hpp>
 
 babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile, ProjectData&& projectData)
     : DataBundle(std::move(pathToProjectFile), std::move(projectData)) {

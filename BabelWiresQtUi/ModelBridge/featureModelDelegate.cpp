@@ -5,23 +5,23 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp"
+#include <BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
-#include "BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp"
-#include "BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp"
-#include "BabelWiresQtUi/ModelBridge/accessModelScope.hpp"
-#include "BabelWiresQtUi/ModelBridge/modifyModelScope.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/uiProjectContext.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
+#include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
+#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include "BabelWiresLib/Commands/commands.hpp"
-#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
+#include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <QApplication>
 #include <QBrush>

@@ -5,8 +5,9 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/IO/dataSource.hpp"
-#include "Common/exceptions.hpp"
+#include <Common/IO/dataSource.hpp>
+
+#include <Common/exceptions.hpp>
 
 #include <cassert>
 

@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Log/log.hpp"
+#include <Common/Log/log.hpp>
 
 babelwires::Log::Message& babelwires::Log::Message::operator=(const Message& other) {
     m_contents = other.m_contents;

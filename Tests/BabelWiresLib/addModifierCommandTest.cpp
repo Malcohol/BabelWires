@@ -1,14 +1,15 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(AddModifierCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;

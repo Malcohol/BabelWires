@@ -5,17 +5,17 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
 
-#include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
-#include "BabelWiresLib/Features/rootFeature.hpp"
+#include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
 
-#include "Common/Log/userLogger.hpp"
-#include "Common/Serialization/deserializer.hpp"
-#include "Common/Serialization/serializer.hpp"
-#include "Common/exceptions.hpp"
+#include <Common/Log/userLogger.hpp>
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
+#include <Common/exceptions.hpp>
 
 babelwires::SourceFileElementData::SourceFileElementData(const SourceFileElementData& other, ShallowCloneContext c)
     : ElementData(other, c)

@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Signal/signalSubscription.hpp"
+#include <Common/Signal/signalSubscription.hpp>
 
 babelwires::SignalSubscription::SignalSubscription(std::shared_ptr<Handle> handle)
     : m_handle(std::move(handle)) {}

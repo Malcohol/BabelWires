@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Processors/processor.hpp"
-#include "BabelWiresLib/Processors/processorFactory.hpp"
+#include <BabelWiresLib/Processors/processor.hpp>
+#include <BabelWiresLib/Processors/processorFactory.hpp>
 
 namespace babelwires {
     struct ProjectContext;

@@ -5,9 +5,9 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/uiPosition.hpp"
+#include <BabelWiresLib/Project/uiPosition.hpp>
 
-#include "Common/Utilities/hash.hpp"
+#include <Common/Utilities/hash.hpp>
 
 bool babelwires::UiPosition::operator==(const UiPosition& other) const {
     return (m_x == other.m_x) && (m_y == other.m_y);

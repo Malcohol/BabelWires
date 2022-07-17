@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/commands.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(ConnectionDescriptionTest, equalityAndHash) {
     const babelwires::FeaturePath path0 = babelwires::FeaturePath::deserializeFromString("a/b");

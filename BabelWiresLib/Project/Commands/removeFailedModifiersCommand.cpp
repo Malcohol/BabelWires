@@ -5,14 +5,14 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp"
+#include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
 
-#include "BabelWiresLib/Project/Commands/removeModifierCommand.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
 babelwires::RemoveFailedModifiersCommand::RemoveFailedModifiersCommand(std::string commandName, ElementId targetId,
                                                                        FeaturePath featurePath)

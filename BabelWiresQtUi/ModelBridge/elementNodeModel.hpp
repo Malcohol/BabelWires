@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/projectIds.hpp"
-#include "BabelWiresQtUi/ModelBridge/baseNodeModel.hpp"
+#include <BabelWiresLib/Project/projectIds.hpp>
+#include <BabelWiresQtUi/ModelBridge/baseNodeModel.hpp>
 
 namespace babelwires {
     class Feature;

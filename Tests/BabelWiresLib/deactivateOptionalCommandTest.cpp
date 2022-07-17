@@ -1,17 +1,18 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp"
+#include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
-#include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;

@@ -1,6 +1,13 @@
-#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
+/**
+ * A RecordWithOptionalsFeature is a Record feature with subfeatures which can be inactive.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 
-#include "BabelWiresLib/Features/modelExceptions.hpp"
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
 #include <algorithm>
 

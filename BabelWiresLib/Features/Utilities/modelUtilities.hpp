@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "BabelWiresLib/Features/features.hpp"
+#include <BabelWiresLib/Features/features.hpp>
 
-#include "Common/types.hpp"
+#include <Common/types.hpp>
 
 namespace babelwires {
     /// Convenience functions supporting ranged for loop.
@@ -20,4 +20,4 @@ namespace babelwires {
     template <typename COMPOUND_FEATURE> SubFeaturesRange<COMPOUND_FEATURE> subfeatures(COMPOUND_FEATURE& container);
 } // namespace babelwires
 
-#include "BabelWiresLib/Features/Utilities/modelUtilities_inl.hpp"
+#include <BabelWiresLib/Features/Utilities/modelUtilities_inl.hpp>

@@ -5,14 +5,14 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/RowModels/arrayRowModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/arrayRowModel.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/setArraySizeAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/setArraySizeAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 
 const babelwires::ArrayFeature& babelwires::ArrayRowModel::getArrayFeature() const {
     assert(getInputThenOutputFeature()->as<const babelwires::ArrayFeature>() &&

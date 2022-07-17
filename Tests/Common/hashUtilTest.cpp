@@ -1,4 +1,5 @@
-#include "Common/Utilities/hash.hpp"
+#include <Common/Utilities/hash.hpp>
+
 #include <gtest/gtest.h>
 
 TEST(Hash, mixInto) {

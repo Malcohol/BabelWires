@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Log/debugLogger.hpp"
+#include <Common/Log/debugLogger.hpp>
 
 babelwires::DebugLogger* babelwires::DebugLogger::g_debugLogger;
 

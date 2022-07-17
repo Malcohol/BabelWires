@@ -5,24 +5,25 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
-#include "BabelWiresQtUi/ModelBridge/elementNodeModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/modifyModelScope.hpp"
-#include "BabelWiresQtUi/uiProjectContext.hpp"
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include "BabelWiresLib/Project/Commands/addElementCommand.hpp"
-#include "BabelWiresLib/Commands/commandManager.hpp"
-#include "BabelWiresLib/Project/Commands/moveElementCommand.hpp"
-#include "BabelWiresLib/Project/Commands/removeElementCommand.hpp"
-#include "BabelWiresLib/Project/Commands/resizeElementCommand.hpp"
-#include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Project/projectData.hpp"
-#include "BabelWiresLib/Project/uiPosition.hpp"
+#include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
+
+#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/Commands/commandManager.hpp>
+#include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/resizeElementCommand.hpp>
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/projectData.hpp>
+#include <BabelWiresLib/Project/uiPosition.hpp>
 
 #include <nodes/Connection>
 #include <nodes/FlowScene>

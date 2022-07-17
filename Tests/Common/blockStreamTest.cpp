@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Common/BlockStream/blockStream.hpp"
+#include <Common/BlockStream/blockStream.hpp>
 
 TEST(BlockStream, Simple) {
     babelwires::BlockStream stream;

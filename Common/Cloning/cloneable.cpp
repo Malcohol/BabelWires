@@ -5,6 +5,6 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Cloning/cloneable.hpp"
+#include <Common/Cloning/cloneable.hpp>
 
 babelwires::Cloneable::~Cloneable() {}

@@ -5,14 +5,14 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 
-#include "Common/Log/userLogger.hpp"
+#include <Common/Log/userLogger.hpp>
 
 #include <cassert>
 

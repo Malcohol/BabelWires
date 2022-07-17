@@ -5,6 +5,6 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Audio/audioSource.hpp"
+#include <Common/Audio/audioSource.hpp>
 
 babelwires::AudioSource::~AudioSource() {}

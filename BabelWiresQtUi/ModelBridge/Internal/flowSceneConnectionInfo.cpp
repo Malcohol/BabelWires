@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/Internal/flowSceneConnectionInfo.hpp"
+#include <BabelWiresQtUi/ModelBridge/Internal/flowSceneConnectionInfo.hpp>
 
 babelwires::FlowSceneConnectionInfo::FlowSceneConnectionInfo(const QtNodes::Connection& c)
     : m_inNode(c.getNode(QtNodes::PortType::In))

@@ -7,9 +7,9 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "Common/Cloning/cloneable.hpp"
-#include "Common/Utilities/enumFlags.hpp"
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <Common/Cloning/cloneable.hpp>
+#include <Common/Utilities/enumFlags.hpp>
 
 #include <memory>
 

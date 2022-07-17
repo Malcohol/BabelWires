@@ -5,32 +5,32 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/mainWindow.hpp"
+#include <BabelWiresQtUi/mainWindow.hpp>
 
-#include "BabelWiresQtUi/LogWindow/logWindow.hpp"
-#include "BabelWiresQtUi/ModelBridge/accessModelScope.hpp"
-#include "BabelWiresQtUi/ModelBridge/modifyModelScope.hpp"
-#include "BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
-#include "BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp"
-#include "BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp"
-#include "BabelWiresQtUi/uiProjectContext.hpp"
+#include <BabelWiresQtUi/LogWindow/logWindow.hpp>
+#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp>
+#include <BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include "BabelWiresLib/Commands/commandManager.hpp"
-#include "BabelWiresLib/Project/Commands/pasteElementsCommand.hpp"
-#include "BabelWiresLib/Project/Commands/removeElementCommand.hpp"
-#include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
-#include "BabelWiresLib/FileFormat/targetFileFormat.hpp"
-#include "BabelWiresLib/Processors/processorFactory.hpp"
-#include "BabelWiresLib/Processors/processorFactoryRegistry.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Project/projectData.hpp"
-#include "BabelWiresLib/ProjectExtra/projectUtilities.hpp"
-#include "BabelWiresLib/Serialization/projectSerialization.hpp"
+#include <BabelWiresLib/Commands/commandManager.hpp>
+#include <BabelWiresLib/Project/Commands/pasteElementsCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
+#include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
+#include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
+#include <BabelWiresLib/Processors/processorFactory.hpp>
+#include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/projectData.hpp>
+#include <BabelWiresLib/ProjectExtra/projectUtilities.hpp>
+#include <BabelWiresLib/Serialization/projectSerialization.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
-#include "Common/Log/unifiedLog.hpp"
-#include "Common/exceptions.hpp"
+#include <Common/Log/unifiedLog.hpp>
+#include <Common/exceptions.hpp>
 
 #include <nodes/DataModelRegistry>
 #include <nodes/FlowScene>

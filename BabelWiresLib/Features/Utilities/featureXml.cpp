@@ -1,10 +1,12 @@
-#include "BabelWiresLib/Features/Utilities/featureXml.hpp"
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Features/features.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresLib/Features/stringFeature.hpp"
-#include "BabelWiresLib/FileFormat/fileFeature.hpp"
-#include "BabelWiresLib/ValueNames/valueNames.hpp"
+#include <BabelWiresLib/Features/Utilities/featureXml.hpp>
+
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/FileFormat/fileFeature.hpp>
+#include <BabelWiresLib/ValueNames/valueNames.hpp>
+
 #include <tinyxml2.h>
 
 namespace {

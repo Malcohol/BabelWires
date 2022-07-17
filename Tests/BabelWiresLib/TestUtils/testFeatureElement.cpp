@@ -1,6 +1,6 @@
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 
-#include "BabelWiresLib/Project/FeatureElements/failedFeature.hpp"
+#include <BabelWiresLib/Project/FeatureElements/failedFeature.hpp>
 
 testUtils::TestFailedFeature::TestFailedFeature(const babelwires::ProjectContext& context)
     : RootFeature(context) {

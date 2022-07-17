@@ -5,12 +5,14 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp"
-#include "BabelWiresLib/Project/Commands/addElementCommand.hpp"
-#include "BabelWiresLib/Processors/processorFactory.hpp"
-#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
-#include "BabelWiresQtUi/ModelBridge/elementNodeModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
+#include <BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp>
+
+#include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+
+#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/Processors/processorFactory.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
 
 #include <QtWidgets/QFileDialog>
 #include <nodes/FlowScene>

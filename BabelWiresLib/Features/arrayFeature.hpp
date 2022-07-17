@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/features.hpp"
-#include "Common/types.hpp"
+#include <BabelWiresLib/Features/features.hpp>
+#include <Common/types.hpp>
 
 namespace babelwires {
     class ValueNames;

@@ -5,19 +5,19 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
+#include <BabelWiresLib/Project/FeatureElements/processorElement.hpp>
 
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/Processors/processor.hpp"
-#include "BabelWiresLib/Processors/processorFactory.hpp"
-#include "BabelWiresLib/Processors/processorFactoryRegistry.hpp"
-#include "BabelWiresLib/Project/FeatureElements/failedFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Processors/processor.hpp>
+#include <BabelWiresLib/Processors/processorFactory.hpp>
+#include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
+#include <BabelWiresLib/Project/FeatureElements/failedFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 
-#include "Common/Log/userLogger.hpp"
+#include <Common/Log/userLogger.hpp>
 
 babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, UserLogger& userLogger,
                                                const ProcessorElementData& data, ElementId newId)

@@ -5,20 +5,20 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/insertArrayEntryAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/removeArrayEntryAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/removeFailedModifiersAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/insertArrayEntryAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeArrayEntryAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeFailedModifiersAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp>
 
-#include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
 #include <QBrush>
 

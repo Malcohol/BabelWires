@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/types.hpp"
+#include <Common/types.hpp>
 #include <ostream>
 
 namespace babelwires {

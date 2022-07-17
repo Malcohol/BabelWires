@@ -7,9 +7,9 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Commands/commandTimestamp.hpp"
+#include <BabelWiresLib/Commands/commandTimestamp.hpp>
 
-#include "Common/types.hpp"
+#include <Common/types.hpp>
 
 #include <chrono>
 #include <memory>
@@ -112,4 +112,4 @@ namespace babelwires {
 
 } // namespace babelwires
 
-#include "BabelWiresLib/Commands/commands_inl.hpp"
+#include <BabelWiresLib/Commands/commands_inl.hpp>

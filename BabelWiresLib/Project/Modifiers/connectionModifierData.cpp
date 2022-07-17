@@ -5,19 +5,19 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
-#include "BabelWiresLib/Features/rootFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Features/recordFeature.hpp>
 
-#include "Common/Serialization/deserializer.hpp"
-#include "Common/Serialization/serializer.hpp"
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 const babelwires::Feature* babelwires::ConnectionModifierData::getSourceFeature(const Project& project) const {
     const FeatureElement* sourceElement = project.getFeatureElement(m_sourceId);

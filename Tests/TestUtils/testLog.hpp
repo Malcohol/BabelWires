@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Common/Log/ostreamLogListener.hpp"
-#include "Common/Log/unifiedLog.hpp"
+#include <Common/Log/ostreamLogListener.hpp>
+#include <Common/Log/unifiedLog.hpp>
 
 #include <sstream>
 

@@ -5,18 +5,18 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/modifyModelScope.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
-#include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
-#include "BabelWiresQtUi/uiProjectContext.hpp"
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include "BabelWiresLib/Project/Commands/changeFileCommand.hpp"
-#include "BabelWiresLib/Commands/commandManager.hpp"
-#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
+#include <BabelWiresLib/Commands/commandManager.hpp>
+#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
 babelwires::SaveFileAsAction::SaveFileAsAction()
     : FeatureContextMenuAction(tr("Save file as\u2026")) {}

@@ -5,27 +5,26 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/RowModels/arrayRowModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/RowModels/fileRowModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/RowModels/intRowModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/RowModels/rationalRowModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/RowModels/recordWithOptionalsRowModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/RowModels/rowModelRegistry.hpp"
-#include "BabelWiresQtUi/ModelBridge/RowModels/stringRowModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/RowModels/enumRowModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/arrayRowModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/fileRowModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/intRowModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/rationalRowModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/recordWithOptionalsRowModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/rowModelRegistry.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/stringRowModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/enumRowModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp>
 
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
-#include "BabelWiresLib/Features/stringFeature.hpp"
-#include "BabelWiresLib/Features/enumFeature.hpp"
-#include "BabelWiresLib/Features/mapFeature.hpp"
-#include "BabelWiresLib/FileFormat/fileFeature.hpp"
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Features/enumFeature.hpp>
+#include <BabelWiresLib/Features/mapFeature.hpp>
+#include <BabelWiresLib/FileFormat/fileFeature.hpp>
 
 babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowModelRegistry,
                                                    const babelwires::ContentsCacheEntry* entry,

@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/TypeSystem/type.hpp"
+#include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <vector>
 

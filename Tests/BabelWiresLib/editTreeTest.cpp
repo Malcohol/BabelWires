@@ -1,15 +1,15 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include "Tests/TestUtils/equalSets.hpp"
+#include <Tests/TestUtils/equalSets.hpp>
 
 namespace {
     std::unique_ptr<babelwires::Modifier> createModifier(babelwires::FeaturePath path, int x,

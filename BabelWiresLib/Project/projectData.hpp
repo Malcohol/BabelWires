@@ -7,9 +7,9 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
+#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
-#include "Common/Serialization/serializable.hpp"
+#include <Common/Serialization/serializable.hpp>
 
 namespace babelwires {
 

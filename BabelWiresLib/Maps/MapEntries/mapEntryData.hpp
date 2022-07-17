@@ -7,12 +7,12 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/projectVisitable.hpp"
-#include "BabelWiresLib/TypeSystem/type.hpp"
+#include <BabelWiresLib/Project/projectVisitable.hpp>
+#include <BabelWiresLib/TypeSystem/type.hpp>
 
-#include "Common/Cloning/cloneable.hpp"
-#include "Common/Serialization/serializable.hpp"
-#include "Common/Utilities/result.hpp"
+#include <Common/Cloning/cloneable.hpp>
+#include <Common/Serialization/serializable.hpp>
+#include <Common/Utilities/result.hpp>
 
 #include <Common/types.hpp>
 

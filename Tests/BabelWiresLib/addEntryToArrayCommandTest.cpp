@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/Commands/addEntryToArrayCommand.hpp"
+#include <BabelWiresLib/Project/Commands/addEntryToArrayCommand.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     babelwires::IdentifierRegistryScope identifierRegistry;

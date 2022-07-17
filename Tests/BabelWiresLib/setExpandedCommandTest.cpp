@@ -1,13 +1,14 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/Commands/setExpandedCommand.hpp"
+#include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/project.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(SetExpandedCommandTest, executeAndUndoTrue) {
     babelwires::IdentifierRegistryScope identifierRegistry;

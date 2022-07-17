@@ -1,16 +1,17 @@
 #include <gtest/gtest.h>
 
-#include "Common/Identifiers/registeredIdentifier.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
-#include "Tests/TestUtils/testLog.hpp"
+#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <Common/Identifiers/identifierRegistry.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/TestUtils/testLog.hpp>
 
 struct FeatureElementConnectionTest : ::testing::Test {
   protected:

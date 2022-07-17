@@ -1,21 +1,22 @@
 #include <gtest/gtest.h>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectData.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
-#include "Tests/TestUtils/tempFilePath.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
+
+#include <Tests/TestUtils/tempFilePath.hpp>
 
 #include <fstream>
 

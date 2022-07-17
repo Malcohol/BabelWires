@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Common/BlockStream/streamEventHolder.hpp"
+#include <Common/BlockStream/streamEventHolder.hpp>
 
 namespace {
     struct TestEvent : babelwires::StreamEvent {

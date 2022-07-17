@@ -5,7 +5,8 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/exceptions.hpp"
+#include <Common/exceptions.hpp>
+
 #include <sstream>
 
 babelwires::BaseException::~BaseException() {}

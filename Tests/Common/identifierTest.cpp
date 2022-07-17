@@ -1,14 +1,13 @@
 #include <gtest/gtest.h>
 
-#include "Tests/TestUtils/testLog.hpp"
+#include <Tests/TestUtils/testLog.hpp>
 
-#include "Common/Identifiers/registeredIdentifier.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
-
-#include "Common/Log/unifiedLog.hpp"
-#include "Common/Serialization/XML/xmlDeserializer.hpp"
-#include "Common/Serialization/XML/xmlSerializer.hpp"
-#include "Common/exceptions.hpp"
+#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Log/unifiedLog.hpp>
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
+#include <Common/exceptions.hpp>
 
 TEST(IdentifierTest, identifiers) {
     babelwires::Identifier hello("Hello");

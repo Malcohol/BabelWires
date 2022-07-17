@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
-#include "Common/Utilities/hash.hpp"
-#include "Common/Serialization/serializer.hpp"
-#include "Common/Serialization/deserializer.hpp"
+#include <Common/Utilities/hash.hpp>
+#include <Common/Serialization/serializer.hpp>
+#include <Common/Serialization/deserializer.hpp>
 
 babelwires::ComplexValueEditorData::ComplexValueEditorData(ElementId elementId, FeaturePath pathToValue)
     : m_elementId(elementId)

@@ -5,14 +5,14 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/openValueEditorAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/openValueEditorAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
-#include "BabelWiresLib/Features/mapFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
+#include <BabelWiresLib/Features/mapFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 
 const babelwires::MapFeature& babelwires::MapRowModel::getMapFeature() const {
     assert(getInputThenOutputFeature()->as<const babelwires::MapFeature>() &&

@@ -6,11 +6,11 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWiresLib/Maps/Commands/replaceMapEntryCommand.hpp"
+#include <BabelWiresLib/Maps/Commands/replaceMapEntryCommand.hpp>
 
-#include "BabelWiresLib/Maps/mapProject.hpp"
-#include "BabelWiresLib/Maps/MapEntries/mapEntryData.hpp"
-#include "BabelWiresLib/Maps/mapProjectEntry.hpp"
+#include <BabelWiresLib/Maps/mapProject.hpp>
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 
 #include <cassert>
 

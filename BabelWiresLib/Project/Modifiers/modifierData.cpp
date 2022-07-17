@@ -5,20 +5,20 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
-#include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresLib/Features/stringFeature.hpp"
-#include "BabelWiresLib/Features/enumFeature.hpp"
-#include "BabelWiresLib/FileFormat/fileFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Features/enumFeature.hpp>
+#include <BabelWiresLib/FileFormat/fileFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
-#include "Common/Serialization/deserializer.hpp"
-#include "Common/Serialization/serializer.hpp"
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 babelwires::Feature* babelwires::ModifierData::getTargetFeature(Feature* container) const {
     return &m_pathToFeature.follow(*container);

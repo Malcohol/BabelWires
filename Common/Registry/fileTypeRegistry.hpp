@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/Registry/registry.hpp"
+#include <Common/Registry/registry.hpp>
 
 namespace babelwires {
 
@@ -60,4 +60,4 @@ namespace babelwires {
 
 } // namespace babelwires
 
-#include "Common/Registry/fileTypeRegistry_inl.hpp"
+#include <Common/Registry/fileTypeRegistry_inl.hpp>

@@ -5,16 +5,16 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/RowModels/fileRowModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/fileRowModel.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/changeSourceFileAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/reloadFileAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/changeSourceFileAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/reloadFileAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
-#include "BabelWiresLib/FileFormat/fileFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
+#include <BabelWiresLib/FileFormat/fileFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
 
 #include <QString>
 

@@ -1,4 +1,5 @@
-#include "Common/Signal/signal.hpp"
+#include <Common/Signal/signal.hpp>
+
 #include <gtest/gtest.h>
 
 namespace {

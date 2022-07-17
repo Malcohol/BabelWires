@@ -1,6 +1,6 @@
-#include "Tests/BabelWiresLib/TestUtils/testEnum.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 
-#include "Tests/TestUtils/testIdentifiers.hpp"
+#include <Tests/TestUtils/testIdentifiers.hpp>
 
 const babelwires::Enum::EnumValues testUtils::g_enumValues = {
         testUtils::getTestRegisteredIdentifier("Foo", 1),

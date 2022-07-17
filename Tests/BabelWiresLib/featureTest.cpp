@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Features/featureMixins.hpp"
-#include "BabelWiresLib/Features/heavyValueFeature.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresLib/Features/recordFeature.hpp"
-#include "BabelWiresLib/Features/stringFeature.hpp"
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/featureMixins.hpp>
+#include <BabelWiresLib/Features/heavyValueFeature.hpp>
+#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/recordFeature.hpp>
+#include <BabelWiresLib/Features/stringFeature.hpp>
 
 TEST(FeatureTest, intFeature) {
     babelwires::IntFeature intFeature;

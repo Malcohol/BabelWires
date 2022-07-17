@@ -5,8 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Processors/commonProcessor.hpp"
-#include "BabelWiresLib/Features/rootFeature.hpp"
+#include <BabelWiresLib/Processors/commonProcessor.hpp>
+
+#include <BabelWiresLib/Features/rootFeature.hpp>
 
 babelwires::CommonProcessor::CommonProcessor(const ProjectContext& projectContext)
     : m_inputFeature(std::make_unique<babelwires::RootFeature>(projectContext))

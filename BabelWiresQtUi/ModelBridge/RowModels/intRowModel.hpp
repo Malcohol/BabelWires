@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 
 namespace babelwires {
 

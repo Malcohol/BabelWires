@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/Signal/signalSubscription.hpp"
+#include <Common/Signal/signalSubscription.hpp>
 
 #include <functional>
 #include <memory>

@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/Log/log.hpp"
+#include <Common/Log/log.hpp>
 
 #include <cassert>
 
@@ -34,4 +34,4 @@ namespace babelwires {
 
 } // namespace babelwires
 
-#include "debugLogger_inl.hpp"
+#include <Common/Log/debugLogger_inl.hpp>

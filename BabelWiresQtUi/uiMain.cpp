@@ -5,17 +5,18 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/uiMain.hpp"
+#include <BabelWiresQtUi/uiMain.hpp>
+
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/mainWindow.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
+
+#include <BabelWiresLib/Commands/commandManager.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+
+#include <Common/Log/unifiedLog.hpp>
 
 #include <QtWidgets/QApplication>
-
-#include "BabelWiresLib/Commands/commandManager.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
-#include "BabelWiresQtUi/mainWindow.hpp"
-#include "BabelWiresQtUi/uiProjectContext.hpp"
-
-#include "Common/Log/unifiedLog.hpp"
 
 struct babelwires::Ui::Impl {
     Impl(int& argc, char** argv, babelwires::UiProjectContext& projectContext, UnifiedLog& log)

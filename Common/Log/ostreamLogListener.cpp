@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Log/ostreamLogListener.hpp"
+#include <Common/Log/ostreamLogListener.hpp>
 
 #include <cassert>
 #include <ctime>

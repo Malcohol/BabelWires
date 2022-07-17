@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/Serialization/automaticDeserializationRegistry.hpp"
+#include <Common/Serialization/automaticDeserializationRegistry.hpp>
 
 #include <string>
 

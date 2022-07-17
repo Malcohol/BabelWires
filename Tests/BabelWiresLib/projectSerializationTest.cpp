@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Serialization/projectSerialization.hpp"
+#include <BabelWiresLib/Serialization/projectSerialization.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectData.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
-#include "Tests/TestUtils/tempFilePath.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
-#include "Tests/TestUtils/testLog.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/TestUtils/tempFilePath.hpp>
+
+#include <Tests/TestUtils/testLog.hpp>
 
 TEST(ProjectSerializationTest, saveLoadStringSameContext) {
     babelwires::IdentifierRegistryScope identifierRegistry;

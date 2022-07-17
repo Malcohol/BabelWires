@@ -1,21 +1,23 @@
 #include <gtest/gtest.h>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
+#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/recordFeature.hpp>
+#include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresLib/Features/recordFeature.hpp"
-#include "BabelWiresLib/Features/stringFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+
 
 namespace {
     struct TestOwner : babelwires::FeatureElement {

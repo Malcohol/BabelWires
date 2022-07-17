@@ -5,9 +5,9 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
+#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
 
-#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
+#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
 #include <cassert>
 

@@ -5,12 +5,12 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Serialization/XML/xmlSerializer.hpp"
+#include <Common/Serialization/XML/xmlSerializer.hpp>
+
+#include <Common/Serialization/XML/xmlCommon.h>
 
 #include <cassert>
 #include <string>
-
-#include "Common/Serialization/XML/xmlCommon.h"
 
 tinyxml2::XMLElement* babelwires::XmlSerializer::getCurrentElement() {
     assert(!m_xmlContext.empty() && "There is no current element.");

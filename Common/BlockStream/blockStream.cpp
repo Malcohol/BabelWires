@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/BlockStream/blockStream.hpp"
+#include <Common/BlockStream/blockStream.hpp>
 
 babelwires::BlockStream::BlockStream(const BlockStream& other) {
     for (const auto& event : other) {

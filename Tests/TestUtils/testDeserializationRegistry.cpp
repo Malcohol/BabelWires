@@ -1,4 +1,4 @@
-#include "Tests/TestUtils/testDeserializationRegistry.hpp"
+#include <Tests/TestUtils/testDeserializationRegistry.hpp>
 
 void testUtils::TestDeserializationRegistry::registerEntry(std::string_view typeName, const Entry* entry) {
     m_nameToEntry.insert(std::make_pair(std::string(typeName), entry));

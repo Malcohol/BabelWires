@@ -1,16 +1,17 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
+#include <BabelWiresLib/Features/numericFeature.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
-#include "Tests/TestUtils/tempFilePath.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+
+#include <Tests/TestUtils/tempFilePath.hpp>
 
 #include <fstream>
 

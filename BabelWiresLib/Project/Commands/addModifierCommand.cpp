@@ -6,13 +6,13 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
-#include "BabelWiresLib/Features/rootFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
 babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, ElementId targetId,
                                                    std::unique_ptr<ModifierData> modifierToAdd)

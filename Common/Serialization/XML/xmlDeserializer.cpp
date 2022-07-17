@@ -5,9 +5,9 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Serialization/XML/xmlDeserializer.hpp"
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
 
-#include "Common/Serialization/XML/xmlCommon.h"
+#include <Common/Serialization/XML/xmlCommon.h>
 #include <cassert>
 #include <sstream>
 

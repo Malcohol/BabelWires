@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 namespace babelwires {
     /// Data used to select a set of optionals in a RecordWithOptionalsFeature

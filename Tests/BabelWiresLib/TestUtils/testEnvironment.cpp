@@ -1,6 +1,6 @@
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 
 testUtils::TestEnvironment::TestEnvironment()
     // Try to ensure the tests are deterministic by fixing the random seed.

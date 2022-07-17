@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/projectData.hpp"
-#include "BabelWiresLib/Project/projectIds.hpp"
+#include <BabelWiresLib/Project/projectData.hpp>
+#include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <map>
 #include <memory>

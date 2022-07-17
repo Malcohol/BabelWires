@@ -5,14 +5,13 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Features/recordFeature.hpp"
+#include <BabelWiresLib/Features/recordFeature.hpp>
 
-#include "BabelWiresLib/Features/modelExceptions.hpp"
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-
-#include "Common/Utilities/hash.hpp"
-#include "Common/types.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Utilities/hash.hpp>
+#include <Common/types.hpp>
 
 int babelwires::RecordFeature::getNumFeatures() const {
     return m_fields.size();

@@ -7,9 +7,9 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp"
+#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
-#include "BabelWiresLib/Project/projectIds.hpp"
+#include <BabelWiresLib/Project/projectIds.hpp>
 
 namespace babelwires {
     class UnifiedLog;

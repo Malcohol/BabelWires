@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Features/numericFeature.hpp"
+#include <BabelWiresLib/Features/numericFeature.hpp>
 
 const babelwires::ValueNames* babelwires::IntFeature::getValueNames() const {
     return nullptr;

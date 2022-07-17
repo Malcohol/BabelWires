@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Serialization/dataBundle.hpp"
-#include "BabelWiresLib/Project/projectData.hpp"
+#include <BabelWiresLib/Serialization/dataBundle.hpp>
+#include <BabelWiresLib/Project/projectData.hpp>
 
 #include <map>
 

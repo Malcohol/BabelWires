@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/Serialization/deserializationRegistry.hpp"
+#include <Common/Serialization/deserializationRegistry.hpp>
 
 namespace babelwires {
 

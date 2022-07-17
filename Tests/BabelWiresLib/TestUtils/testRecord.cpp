@@ -1,6 +1,6 @@
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
-#include "BabelWiresLib/Features/featureMixins.hpp"
+#include <BabelWiresLib/Features/featureMixins.hpp>
 
 namespace {
     struct LimitedIntFeature : babelwires::IntFeature {

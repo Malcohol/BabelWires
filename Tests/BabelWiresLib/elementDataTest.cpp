@@ -1,25 +1,23 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
+#include <BabelWiresLib/Features/numericFeature.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
-
-#include "Tests/TestUtils/tempFilePath.hpp"
-
-#include "Common/Serialization/XML/xmlDeserializer.hpp"
-#include "Common/Serialization/XML/xmlSerializer.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/TestUtils/tempFilePath.hpp>
 
 #include <fstream>
 

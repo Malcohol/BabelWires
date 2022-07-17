@@ -5,16 +5,16 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
-#include "Common/Serialization/deserializer.hpp"
-#include "Common/Serialization/serializer.hpp"
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
     if (ArrayFeature* array = targetFeature->as<ArrayFeature>()) {

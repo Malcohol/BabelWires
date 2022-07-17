@@ -1,4 +1,11 @@
-#include "BabelWiresLib/Enums/enum.hpp"
+/**
+ * An Enum defines a set of options.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#include <BabelWiresLib/Enums/enum.hpp>
 
 #include <BabelWiresLib/TypeSystem/enumValue.hpp>
 

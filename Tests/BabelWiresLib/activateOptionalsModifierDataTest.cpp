@@ -1,15 +1,15 @@
 #include <gtest/gtest.h>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
-#include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 
-#include "Common/Serialization/XML/xmlDeserializer.hpp"
-#include "Common/Serialization/XML/xmlSerializer.hpp"
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
 
-#include "Tests/TestUtils/testLog.hpp"
-#include "Tests/TestUtils/equalSets.hpp"
+#include <Tests/TestUtils/testLog.hpp>
+#include <Tests/TestUtils/equalSets.hpp>
 
 TEST(ActivateOptionalsModifierDataTest, apply) {
     babelwires::ActivateOptionalsModifierData data;

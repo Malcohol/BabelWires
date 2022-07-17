@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "Common/IO/outFileStream.hpp"
+#include <Common/IO/outFileStream.hpp>
 
-#include "Tests/TestUtils/tempFilePath.hpp"
+#include <Tests/TestUtils/tempFilePath.hpp>
 #include <string>
 
 TEST(OutFileStreamTest, basics) {

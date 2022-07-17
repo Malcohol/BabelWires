@@ -5,13 +5,13 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
+#include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 
-#include "BabelWiresLib/Project/Commands/addModifierCommand.hpp"
-#include "BabelWiresLib/Project/Commands/removeElementCommand.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include "Common/Utilities/hash.hpp"
+#include <Common/Utilities/hash.hpp>
 
 #include <cassert>
 

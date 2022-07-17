@@ -5,6 +5,6 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Audio/audioDest.hpp"
+#include <Common/Audio/audioDest.hpp>
 
 babelwires::AudioDest::~AudioDest() {}

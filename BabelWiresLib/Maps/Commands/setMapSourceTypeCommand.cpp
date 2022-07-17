@@ -6,13 +6,13 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWiresLib/Maps/Commands/setMapSourceTypeCommand.hpp"
+#include <BabelWiresLib/Maps/Commands/setMapSourceTypeCommand.hpp>
 
-#include "BabelWiresLib/Maps/MapEntries/mapEntryData.hpp"
-#include "BabelWiresLib/Maps/mapProject.hpp"
-#include "BabelWiresLib/Maps/mapProjectEntry.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
-#include "BabelWiresLib/TypeSystem/typeSystem.hpp"
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/mapProject.hpp>
+#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string commandName, LongIdentifier newSourceTypeId)
     : SimpleCommand(commandName)

@@ -1,4 +1,4 @@
-#include "Tests/TestUtils/testLog.hpp"
+#include <Tests/TestUtils/testLog.hpp>
 
 #include <cassert>
 #include <algorithm>

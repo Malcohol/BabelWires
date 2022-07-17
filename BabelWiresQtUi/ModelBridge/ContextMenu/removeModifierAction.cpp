@@ -5,17 +5,17 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/accessModelScope.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
+#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include "BabelWiresLib/Project/Commands/removeModifierCommand.hpp"
-#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
+#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
 babelwires::RemoveModifierAction::RemoveModifierAction()
     : FeatureContextMenuAction(tr("Remove modifier")) {}

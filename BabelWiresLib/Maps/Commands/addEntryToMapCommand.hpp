@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "BabelWiresLib/Commands/commands.hpp"
+#include <BabelWiresLib/Commands/commands.hpp>
 
 namespace babelwires {
     class MapProject;

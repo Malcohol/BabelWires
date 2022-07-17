@@ -5,11 +5,11 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Audio/audioInterface.hpp"
-#include "Common/Audio/audioDest.hpp"
-#include "Common/Audio/audioSource.hpp"
+#include <Common/Audio/audioInterface.hpp>
 
-#include "Common/Log/debugLogger.hpp"
+#include <Common/Audio/audioDest.hpp>
+#include <Common/Audio/audioSource.hpp>
+#include <Common/Log/debugLogger.hpp>
 
 #include <sstream>
 

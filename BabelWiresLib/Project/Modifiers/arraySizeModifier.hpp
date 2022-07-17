@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 
 namespace babelwires {
 

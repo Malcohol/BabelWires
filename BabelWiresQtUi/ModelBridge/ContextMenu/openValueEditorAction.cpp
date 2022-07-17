@@ -5,12 +5,12 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/openValueEditorAction.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/openValueEditorAction.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
-#include "BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp"
-#include "BabelWiresQtUi/mainWindow.hpp"
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
+#include <BabelWiresQtUi/mainWindow.hpp>
 
 
 babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, babelwires::FeaturePath pathToArray)

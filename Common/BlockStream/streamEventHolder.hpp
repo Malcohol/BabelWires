@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/BlockStream/streamEvent.hpp"
+#include <Common/BlockStream/streamEvent.hpp>
 
 namespace babelwires {
     /// A container for a single mutable StreamEvent.

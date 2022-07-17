@@ -1,6 +1,7 @@
-#include "Common/Serialization/XML/xmlDeserializer.hpp"
-#include "Common/Serialization/XML/xmlSerializer.hpp"
-#include "Tests/TestUtils/testLog.hpp"
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
+
+#include <Tests/TestUtils/testLog.hpp>
 
 #include <gtest/gtest.h>
 

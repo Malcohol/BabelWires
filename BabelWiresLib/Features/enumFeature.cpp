@@ -5,15 +5,15 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Features/enumFeature.hpp"
+#include <BabelWiresLib/Features/enumFeature.hpp>
 
-#include "BabelWiresLib/Enums/enum.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/Features/rootFeature.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
-#include "BabelWiresLib/TypeSystem/typeSystem.hpp"
+#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
 babelwires::EnumFeature::EnumFeature(LongIdentifier e)
     : m_enum(e) {}

@@ -5,11 +5,11 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/RowModels/rationalRowModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/rationalRowModel.hpp>
 
-#include "BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp"
+#include <BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp>
 
-#include "BabelWiresLib/Features/numericFeature.hpp"
+#include <BabelWiresLib/Features/numericFeature.hpp>
 
 #include <QString>
 #include <QValidator>

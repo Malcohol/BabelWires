@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/enumValueModel.hpp>
 
-#include "BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp"
+#include <BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp>
 
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/TypeSystem/enumValue.hpp>

@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/features.hpp"
+#include <BabelWiresLib/Features/features.hpp>
 #include <cassert>
 
 namespace babelwires {
@@ -30,4 +30,4 @@ namespace babelwires {
 
 } // namespace babelwires
 
-#include "BabelWiresLib/Features/featureMixins_inl.hpp"
+#include <BabelWiresLib/Features/featureMixins_inl.hpp>

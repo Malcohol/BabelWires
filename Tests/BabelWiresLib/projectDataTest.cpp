@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
-#include "BabelWiresLib/Project/projectData.hpp"
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
+#include <BabelWiresLib/Project/projectData.hpp>
 
-#include "Common/Serialization/XML/xmlDeserializer.hpp"
-#include "Common/Serialization/XML/xmlSerializer.hpp"
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectData.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
 
-#include "Tests/TestUtils/testLog.hpp"
+#include <Tests/TestUtils/testLog.hpp>
 
 TEST(ProjectDataTest, serialization) {
     std::string serializedContents;

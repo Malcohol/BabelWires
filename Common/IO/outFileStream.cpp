@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/IO/outFileStream.hpp"
+#include <Common/IO/outFileStream.hpp>
 
 #include <cassert>
 

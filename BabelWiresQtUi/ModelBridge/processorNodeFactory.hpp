@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ModelBridge/baseNodeModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/baseNodeModel.hpp>
 
 namespace babelwires {
     class ProjectBridge;

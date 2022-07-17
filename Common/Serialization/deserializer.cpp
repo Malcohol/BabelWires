@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Serialization/deserializer.hpp"
+#include <Common/Serialization/deserializer.hpp>
 
 babelwires::Deserializer::Deserializer(UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry)
     : m_userLogger(userLogger)

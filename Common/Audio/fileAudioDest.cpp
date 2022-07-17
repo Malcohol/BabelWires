@@ -5,14 +5,15 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Audio/fileAudioDest.hpp"
+#include <Common/Audio/fileAudioDest.hpp>
 
-#include "Common/Identifiers/registeredIdentifier.hpp"
-#include "Common/exceptions.hpp"
-#include <assert.h>
-#include <stdexcept>
+#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <Common/exceptions.hpp>
 
 #include <sndfile.h>
+
+#include <assert.h>
+#include <stdexcept>
 
 namespace {
 

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "BabelWiresLib/Features/rootFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testRootFeature.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testRootFeature.hpp>
 
 namespace testUtils {
     struct TestFailedFeature : babelwires::RootFeature {

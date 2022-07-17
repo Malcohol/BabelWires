@@ -7,10 +7,10 @@
  **/
 #pragma once
 
-#include "Common/Utilities/enumFlags.hpp"
-#include "Common/types.hpp"
+#include <Common/Utilities/enumFlags.hpp>
+#include <Common/types.hpp>
 
-#include "BabelWiresLib/Features/Path/pathStep.hpp"
+#include <BabelWiresLib/Features/Path/pathStep.hpp>
 
 #include <cassert>
 #include <functional>

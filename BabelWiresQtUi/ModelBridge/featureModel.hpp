@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/projectIds.hpp"
+#include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <QAbstractTableModel>
 #include <QAction>

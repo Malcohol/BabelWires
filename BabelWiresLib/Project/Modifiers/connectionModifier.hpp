@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
 namespace babelwires {
     struct UserLogger;

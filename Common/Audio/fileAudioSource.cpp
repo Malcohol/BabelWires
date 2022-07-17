@@ -5,11 +5,12 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Audio/fileAudioSource.hpp"
-#include <assert.h>
-#include <stdexcept>
+#include <Common/Audio/fileAudioSource.hpp>
 
 #include <sndfile.h>
+
+#include <assert.h>
+#include <stdexcept>
 
 struct babelwires::FileAudioSource::Impl {
     Impl(const char* fileName) {

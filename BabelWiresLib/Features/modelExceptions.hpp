@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/exceptions.hpp"
+#include <Common/exceptions.hpp>
 
 namespace babelwires {
     /// The base exception class which can be fired when interacting with the model.

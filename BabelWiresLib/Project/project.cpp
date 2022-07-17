@@ -5,30 +5,30 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/project.hpp>
 
-#include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "BabelWiresLib/FileFormat/fileFeature.hpp"
-#include "BabelWiresLib/Processors/processor.hpp"
-#include "BabelWiresLib/Processors/processorFactory.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
-#include "BabelWiresLib/Project/projectContext.hpp"
-#include "BabelWiresLib/Project/projectData.hpp"
-#include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
-#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
+#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/FileFormat/fileFeature.hpp>
+#include <BabelWiresLib/Processors/processor.hpp>
+#include <BabelWiresLib/Processors/processorFactory.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Project/projectData.hpp>
+#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 
-#include "Common/IO/fileDataSource.hpp"
-#include "Common/Log/userLogger.hpp"
-#include "Common/exceptions.hpp"
+#include <Common/IO/fileDataSource.hpp>
+#include <Common/Log/userLogger.hpp>
+#include <Common/exceptions.hpp>
 
 #include <algorithm>
 #include <cassert>

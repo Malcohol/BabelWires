@@ -5,10 +5,11 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
+#include <BabelWiresLib/Features/arrayFeature.hpp>
 
-#include "Common/Utilities/hash.hpp"
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+
+#include <Common/Utilities/hash.hpp>
 
 #include <limits>
 

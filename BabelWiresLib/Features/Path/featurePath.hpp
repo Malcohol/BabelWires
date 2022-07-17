@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/Path/pathStep.hpp"
+#include <BabelWiresLib/Features/Path/pathStep.hpp>
 
 #include <memory>
 #include <ostream>

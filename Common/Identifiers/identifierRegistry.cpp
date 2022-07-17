@@ -5,12 +5,12 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
-#include "Common/Log/debugLogger.hpp"
-#include "Common/Serialization/deserializer.hpp"
-#include "Common/Serialization/serializer.hpp"
-#include "Common/exceptions.hpp"
+#include <Common/Log/debugLogger.hpp>
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
+#include <Common/exceptions.hpp>
 
 babelwires::IdentifierRegistry::IdentifierRegistry() = default;
 babelwires::IdentifierRegistry::IdentifierRegistry(IdentifierRegistry&&) = default;

@@ -1,10 +1,17 @@
-#include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
+/**
+ * ActivateOptionalsModifierData is used to select a set of optionals in a RecordWithOptionalsFeature
+ *
+ * (C) 2021 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 
-#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
-#include "Common/Serialization/deserializer.hpp"
-#include "Common/Serialization/serializer.hpp"
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 void babelwires::ActivateOptionalsModifierData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_pathToFeature);

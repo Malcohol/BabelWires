@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
-#include "BabelWiresLib/FileFormat/filePath.hpp"
+#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/FileFormat/filePath.hpp>
 
 #include <memory>
 #include <string>

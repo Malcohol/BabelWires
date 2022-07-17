@@ -8,10 +8,10 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/projectIds.hpp"
-#include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
+#include <BabelWiresLib/Project/projectIds.hpp>
+#include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 
-#include "Common/Signal/signal.hpp"
+#include <Common/Signal/signal.hpp>
 
 #include <unordered_set>
 

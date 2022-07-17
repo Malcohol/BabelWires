@@ -5,15 +5,17 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Features/recordFeature.hpp"
-#include "BabelWiresLib/FileFormat/fileFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
-#include "BabelWiresLib/ValueNames/valueNames.hpp"
+#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
+
+#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/recordFeature.hpp>
+#include <BabelWiresLib/FileFormat/fileFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/ValueNames/valueNames.hpp>
+
+#include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <unordered_set>
 

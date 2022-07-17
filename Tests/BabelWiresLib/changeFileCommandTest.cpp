@@ -1,19 +1,19 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/Commands/changeFileCommand.hpp"
+#include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/TestUtils/tempFilePath.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/TestUtils/tempFilePath.hpp>
 
 namespace {
     void testSourceFileChange(bool source1Present, bool source2Present) {

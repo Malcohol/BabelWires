@@ -2,12 +2,13 @@
 
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
-#include "BabelWiresLib/Features/featureMixins.hpp"
+#include <BabelWiresLib/Features/featureMixins.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 namespace {
     using LimitedIntFeature = babelwires::HasStaticRange<babelwires::IntFeature, -20, 20>;

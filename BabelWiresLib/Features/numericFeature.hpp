@@ -7,9 +7,9 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/features.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
-#include "Common/Math/rational.hpp"
+#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <Common/Math/rational.hpp>
 
 namespace babelwires {
 
@@ -61,4 +61,4 @@ namespace babelwires {
 
 } // namespace babelwires
 
-#include "BabelWiresLib/Features/numericFeature_inl.hpp"
+#include <BabelWiresLib/Features/numericFeature_inl.hpp>

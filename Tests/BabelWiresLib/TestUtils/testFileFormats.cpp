@@ -1,12 +1,11 @@
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 
-#include "BabelWiresLib/Features/featureMixins.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <BabelWiresLib/Features/featureMixins.hpp>
 
-#include "Common/IO/fileDataSource.hpp"
-#include "Common/Identifiers/registeredIdentifier.hpp"
-
-#include "Common/exceptions.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/IO/fileDataSource.hpp>
+#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <Common/exceptions.hpp>
 
 #include <fstream>
 

@@ -5,12 +5,12 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Commands/pasteElementsCommand.hpp"
+#include <BabelWiresLib/Project/Commands/pasteElementsCommand.hpp>
 
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Project/projectData.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/projectData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
 #include <cassert>
 #include <unordered_set>

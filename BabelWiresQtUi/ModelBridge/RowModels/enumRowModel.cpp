@@ -5,14 +5,15 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/RowModels/enumRowModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/enumRowModel.hpp>
 
-#include "BabelWiresLib/Enums/enum.hpp"
-#include "BabelWiresLib/Features/enumFeature.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
-#include "BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Features/enumFeature.hpp>
+
+#include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <QString>
 

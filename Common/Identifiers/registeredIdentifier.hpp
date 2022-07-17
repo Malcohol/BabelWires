@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 #include <cassert>
 
 namespace babelwires {

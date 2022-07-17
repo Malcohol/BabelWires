@@ -6,10 +6,10 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWiresLib/Maps/Commands/addEntryToMapCommand.hpp"
+#include <BabelWiresLib/Maps/Commands/addEntryToMapCommand.hpp>
 
-#include "BabelWiresLib/Maps/mapProject.hpp"
-#include "BabelWiresLib/Maps/MapEntries/mapEntryData.hpp"
+#include <BabelWiresLib/Maps/mapProject.hpp>
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 
 #include <cassert>
 

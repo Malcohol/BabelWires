@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/LogWindow/logWindow.hpp"
+#include <BabelWiresQtUi/LogWindow/logWindow.hpp>
 
 #include <QHBoxLayout>
 #include <QLabel>

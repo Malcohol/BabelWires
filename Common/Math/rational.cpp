@@ -5,9 +5,11 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Math/rational.hpp"
-#include "Common/Utilities/hash.hpp"
-#include "Common/exceptions.hpp"
+#include <Common/Math/rational.hpp>
+
+#include <Common/Utilities/hash.hpp>
+#include <Common/exceptions.hpp>
+
 #include <cassert>
 #include <functional>
 #include <sstream>

@@ -1,16 +1,17 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/Commands/activateOptionalCommand.hpp"
+#include <BabelWiresLib/Project/Commands/activateOptionalCommand.hpp>
 
-#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp>
 
 TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;

@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/ValueNames/valueNames.hpp"
+#include <BabelWiresLib/ValueNames/valueNames.hpp>
 
 #include <map>
 #include <unordered_map>

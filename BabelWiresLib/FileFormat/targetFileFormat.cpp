@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/FileFormat/targetFileFormat.hpp"
+#include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 
 babelwires::TargetFileFormatRegistry::TargetFileFormatRegistry()
     : Registry("File Feature Factory Registry"){};

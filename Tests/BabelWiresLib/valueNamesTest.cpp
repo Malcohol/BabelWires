@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/ValueNames/sparseValueNamesImpl.hpp"
-#include "BabelWiresLib/ValueNames/contiguousValueNamesImpl.hpp"
+#include <BabelWiresLib/ValueNames/sparseValueNamesImpl.hpp>
+#include <BabelWiresLib/ValueNames/contiguousValueNamesImpl.hpp>
 
 TEST(ValueNames, sparseIteration) {
     babelwires::SparseValueNamesImpl names({ {4, "four"}, {8, "eight"}, {12, "twelve"}});

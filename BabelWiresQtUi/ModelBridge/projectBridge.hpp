@@ -7,14 +7,14 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/projectIds.hpp"
-#include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
-#include "BabelWiresLib/ProjectExtra/projectObserver.hpp"
-#include "BabelWiresLib/Commands/commandManager.hpp"
+#include <BabelWiresLib/Project/projectIds.hpp>
+#include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
+#include <BabelWiresLib/ProjectExtra/projectObserver.hpp>
+#include <BabelWiresLib/Commands/commandManager.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/Internal/flowSceneConnectionInfo.hpp"
+#include <BabelWiresQtUi/ModelBridge/Internal/flowSceneConnectionInfo.hpp>
 
-#include "Common/multiKeyMap.hpp"
+#include <Common/multiKeyMap.hpp>
 
 #include <QObject>
 #include <nodes/Node>

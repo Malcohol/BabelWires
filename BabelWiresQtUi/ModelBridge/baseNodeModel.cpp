@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/baseNodeModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/baseNodeModel.hpp>
 
 babelwires::BaseNodeModel::BaseNodeModel(ProjectBridge& projectBridge)
     : m_projectBridge(projectBridge) {}

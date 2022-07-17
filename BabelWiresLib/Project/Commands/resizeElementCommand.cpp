@@ -5,10 +5,10 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Commands/resizeElementCommand.hpp"
+#include <BabelWiresLib/Project/Commands/resizeElementCommand.hpp>
 
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
 #include <cassert>
 

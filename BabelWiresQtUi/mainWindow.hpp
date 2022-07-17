@@ -7,12 +7,12 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ComplexValueEditors/complexValueEditorManager.hpp"
+#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorManager.hpp>
 
-#include "BabelWiresLib/Project/projectData.hpp"
-#include "BabelWiresLib/Project/uiPosition.hpp"
+#include <BabelWiresLib/Project/projectData.hpp>
+#include <BabelWiresLib/Project/uiPosition.hpp>
 
-#include "Common/Signal/signalSubscription.hpp"
+#include <Common/Signal/signalSubscription.hpp>
 
 #include <QMainWindow>
 

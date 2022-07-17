@@ -1,24 +1,25 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/Commands/removeElementCommand.hpp"
+#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
 
-#include "BabelWiresLib/Project/Commands/moveElementCommand.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/processorElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElement.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProjectData.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
-#include "Tests/TestUtils/tempFilePath.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+
+#include <Tests/TestUtils/tempFilePath.hpp>
 
 TEST(RemoveElementCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;

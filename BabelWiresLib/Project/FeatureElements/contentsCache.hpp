@@ -11,8 +11,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "Common/Utilities/enumFlags.hpp"
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <Common/Utilities/enumFlags.hpp>
 
 namespace babelwires {
 

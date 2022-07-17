@@ -1,17 +1,17 @@
-#include "Tests/BabelWiresLib/TestUtils/testProjectData.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
 
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWiresLib/Project/FeatureElements/processorElementData.hpp"
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFileFormats.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 testUtils::TestProjectData::TestProjectData()
     : m_sourceFilePath(std::string("testSourceFile") + testUtils::TestSourceFileFormat::getFileExtension())

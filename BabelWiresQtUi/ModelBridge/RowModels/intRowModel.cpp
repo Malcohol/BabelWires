@@ -5,11 +5,12 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/RowModels/intRowModel.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/intRowModel.hpp>
 
-#include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresQtUi/ValueEditors/spinBoxValueEditor.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
+#include <BabelWiresQtUi/ValueEditors/spinBoxValueEditor.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+
+#include <BabelWiresLib/Features/numericFeature.hpp>
 
 #include <QString>
 

@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
+#include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 
 babelwires::SourceFileFormatRegistry::SourceFileFormatRegistry()
     : FileTypeRegistry("File Format Registry") {}

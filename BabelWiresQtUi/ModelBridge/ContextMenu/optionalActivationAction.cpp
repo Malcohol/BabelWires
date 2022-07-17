@@ -5,14 +5,15 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/optionalActivationAction.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/optionalActivationAction.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include "BabelWiresLib/Project/Commands/activateOptionalCommand.hpp"
-#include "BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <BabelWiresLib/Project/Commands/activateOptionalCommand.hpp>
+#include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
+
+#include <Common/Identifiers/identifierRegistry.hpp>
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::FeaturePath pathToRecord,
                                                                Identifier optional, bool isActivated)

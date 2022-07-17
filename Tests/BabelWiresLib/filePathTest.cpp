@@ -1,10 +1,11 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/FileFormat/filePath.hpp"
-#include "Common/exceptions.hpp"
+#include <BabelWiresLib/FileFormat/filePath.hpp>
 
-#include "Tests/TestUtils/testLog.hpp"
-#include "Tests/TestUtils/tempFilePath.hpp"
+#include <Common/exceptions.hpp>
+
+#include <Tests/TestUtils/testLog.hpp>
+#include <Tests/TestUtils/tempFilePath.hpp>
 
 #include <fstream>
 

@@ -1,4 +1,5 @@
-#include "Common/Utilities/enumFlags.hpp"
+#include <Common/Utilities/enumFlags.hpp>
+
 #include <gtest/gtest.h>
 
 namespace {

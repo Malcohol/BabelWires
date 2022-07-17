@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Commands/commandManager.hpp"
-#include "BabelWiresLib/Commands/commands.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Commands/commandManager.hpp>
+#include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 namespace {
     struct TestCommand : babelwires::Command<babelwires::Project> {

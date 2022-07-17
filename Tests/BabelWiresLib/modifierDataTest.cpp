@@ -1,19 +1,19 @@
 #include <gtest/gtest.h>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Features/arrayFeature.hpp"
-#include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresLib/Features/stringFeature.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/localModifier.hpp"
-#include "BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp"
-#include "BabelWiresLib/Project/Modifiers/connectionModifierData.hpp"
+#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include "Common/Serialization/XML/xmlDeserializer.hpp"
-#include "Common/Serialization/XML/xmlSerializer.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
 
-#include "Tests/TestUtils/testLog.hpp"
+#include <Tests/TestUtils/testLog.hpp>
 
 TEST(ModifierDataTest, arrayInitializationApply) {
     babelwires::ArraySizeModifierData data;

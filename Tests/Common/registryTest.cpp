@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "Common/Registry/fileTypeRegistry.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Registry/fileTypeRegistry.hpp>
 
-#include "Tests/TestUtils/equalSets.hpp"
-#include "Tests/TestUtils/testLog.hpp"
+#include <Tests/TestUtils/equalSets.hpp>
+#include <Tests/TestUtils/testLog.hpp>
 
 namespace {
     struct TestRegistryEntry : public babelwires::FileTypeEntry {

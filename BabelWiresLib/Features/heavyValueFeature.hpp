@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/features.hpp"
+#include <BabelWiresLib/Features/features.hpp>
 
 #include <memory>
 
@@ -46,4 +46,4 @@ namespace babelwires {
 
 } // namespace babelwires
 
-#include "BabelWiresLib/Features/heavyValueFeature_inl.hpp"
+#include <BabelWiresLib/Features/heavyValueFeature_inl.hpp>

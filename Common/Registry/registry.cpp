@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Registry/registry.hpp"
+#include <Common/Registry/registry.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
 babelwires::RegistryEntry::RegistryEntry(LongIdentifier identifier, VersionNumber version)
     : m_identifier(identifier)

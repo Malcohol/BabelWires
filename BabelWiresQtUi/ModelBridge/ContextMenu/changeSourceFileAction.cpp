@@ -5,19 +5,20 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/ContextMenu/changeSourceFileAction.hpp"
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/changeSourceFileAction.hpp>
 
-#include "BabelWiresQtUi/ModelBridge/accessModelScope.hpp"
-#include "BabelWiresQtUi/ModelBridge/featureModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
-#include "BabelWiresQtUi/Utilities/fileDialogs.hpp"
+#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include "BabelWiresLib/Project/Commands/changeFileCommand.hpp"
-#include "BabelWiresLib/FileFormat/sourceFileFormat.hpp"
-#include "Common/Registry/fileTypeRegistry.hpp"
-#include "BabelWiresLib/Project/FeatureElements/fileElement.hpp"
-#include "BabelWiresLib/Project/project.hpp"
-#include "BabelWiresQtUi/uiProjectContext.hpp"
+#include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
+#include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
+#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/project.hpp>
+
+#include <Common/Registry/fileTypeRegistry.hpp>
 
 babelwires::ChangeSourceFileAction::ChangeSourceFileAction()
     : FeatureContextMenuAction(tr("Open file\u2026")) {}

@@ -1,5 +1,6 @@
-#include "Common/Math/rational.hpp"
-#include "Common/exceptions.hpp"
+#include <Common/Math/rational.hpp>
+#include <Common/exceptions.hpp>
+
 #include <gtest/gtest.h>
 
 #include <unordered_set>

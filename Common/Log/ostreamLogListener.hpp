@@ -7,9 +7,9 @@
  **/
 #pragma once
 
-#include "Common/Log/log.hpp"
-#include "Common/Signal/signalSubscription.hpp"
-#include "Common/Utilities/enumFlags.hpp"
+#include <Common/Log/log.hpp>
+#include <Common/Signal/signalSubscription.hpp>
+#include <Common/Utilities/enumFlags.hpp>
 
 #include <ostream>
 

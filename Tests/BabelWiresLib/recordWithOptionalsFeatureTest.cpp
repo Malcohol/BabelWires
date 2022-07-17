@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 
-#include "BabelWiresLib/Features/numericFeature.hpp"
-#include "BabelWiresLib/Features/featureMixins.hpp"
+#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/featureMixins.hpp>
 
-#include "Tests/TestUtils/equalSets.hpp"
+#include <Tests/TestUtils/equalSets.hpp>
 
 TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
     babelwires::RecordWithOptionalsFeature recordFeature;

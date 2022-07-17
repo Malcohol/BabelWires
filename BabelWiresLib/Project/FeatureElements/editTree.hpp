@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "Common/types.hpp"
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <Common/types.hpp>
 
 #include <memory>
 #include <type_traits>
@@ -155,4 +155,4 @@ namespace babelwires {
 
 } // namespace babelwires
 
-#include "BabelWiresLib/Project/FeatureElements/editTree_inl.hpp"
+#include <BabelWiresLib/Project/FeatureElements/editTree_inl.hpp>

@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/RowModels/rowModelWithRichText.hpp"
+#include <BabelWiresQtUi/ModelBridge/RowModels/rowModelWithRichText.hpp>
 
 #include <QPainter>
 #include <QStyle>

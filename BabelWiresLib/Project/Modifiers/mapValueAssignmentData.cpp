@@ -5,13 +5,13 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp"
+#include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
 
-#include "BabelWiresLib/Features/mapFeature.hpp"
-#include "BabelWiresLib/Features/modelExceptions.hpp"
+#include <BabelWiresLib/Features/mapFeature.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
-#include "Common/Serialization/deserializer.hpp"
-#include "Common/Serialization/serializer.hpp"
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 void babelwires::MapValueAssignmentData::apply(Feature* targetFeature) const {
     if (MapFeature* mapFeature = targetFeature->as<MapFeature>()) {

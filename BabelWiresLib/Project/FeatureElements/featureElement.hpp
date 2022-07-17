@@ -8,12 +8,12 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/FeatureElements/contentsCache.hpp"
-#include "BabelWiresLib/Project/FeatureElements/editTree.hpp"
-#include "BabelWiresLib/Project/projectIds.hpp"
+#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
+#include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
+#include <BabelWiresLib/Project/projectIds.hpp>
 
-#include "Common/Utilities/enumFlags.hpp"
-#include "Common/Utilities/pointerRange.hpp"
+#include <Common/Utilities/enumFlags.hpp>
+#include <Common/Utilities/pointerRange.hpp>
 
 #include <memory>
 #include <vector>

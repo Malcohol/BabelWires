@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
-#include "Common/Audio/audioDest.hpp"
-#include "Common/Audio/audioInterface.hpp"
-#include "Common/Audio/audioSource.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <Common/Audio/audioDest.hpp>
+#include <Common/Audio/audioInterface.hpp>
+#include <Common/Audio/audioSource.hpp>
+#include <Common/Identifiers/identifierRegistry.hpp>
 
-#include "Tests/TestUtils/equalSets.hpp"
-#include "Tests/TestUtils/testIdentifiers.hpp"
+#include <Tests/TestUtils/equalSets.hpp>
+#include <Tests/TestUtils/testIdentifiers.hpp>
 
 #include <cassert>
 

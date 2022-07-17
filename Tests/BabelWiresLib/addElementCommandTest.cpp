@@ -1,13 +1,14 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Project/Commands/addElementCommand.hpp"
+#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
 
-#include "BabelWiresLib/Project/Commands/moveElementCommand.hpp"
-#include "Common/Identifiers/identifierRegistry.hpp"
-#include "BabelWiresLib/Project/project.hpp"
+#include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(AddElementCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;

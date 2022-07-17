@@ -6,11 +6,11 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include "BabelWiresLib/Maps/Commands/setMapCommand.hpp"
+#include <BabelWiresLib/Maps/Commands/setMapCommand.hpp>
 
-#include "BabelWiresLib/Maps/MapEntries/mapEntryData.hpp"
-#include "BabelWiresLib/Maps/mapProject.hpp"
-#include "BabelWiresLib/Maps/mapProjectEntry.hpp"
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/mapProject.hpp>
+#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 
 babelwires::SetMapCommand::SetMapCommand(std::string commandName, std::unique_ptr<MapData> newData)
     : SimpleCommand(commandName), m_newContents(std::move(newData)) {}

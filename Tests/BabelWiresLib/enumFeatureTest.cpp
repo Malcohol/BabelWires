@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/rootFeature.hpp"
+#include <BabelWiresLib/Features/rootFeature.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testEnum.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testEnvironment.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-#include "Tests/TestUtils/testIdentifiers.hpp"
+#include <Tests/TestUtils/testIdentifiers.hpp>
 
-#include "Common/Identifiers/identifierRegistry.hpp"
+#include <Common/Identifiers/identifierRegistry.hpp>
 
 TEST(FeatureTest, enumFeature) {
     babelwires::IdentifierRegistryScope identifierRegistry;

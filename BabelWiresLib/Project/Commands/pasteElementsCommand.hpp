@@ -7,10 +7,10 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Commands/commands.hpp"
-#include "BabelWiresLib/Project/projectData.hpp"
+#include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/Project/projectData.hpp>
 
-#include "BabelWiresLib/ProjectExtra/connectionDescription.hpp"
+#include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 
 namespace babelwires {
 

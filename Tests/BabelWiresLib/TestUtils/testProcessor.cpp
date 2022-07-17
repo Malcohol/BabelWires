@@ -1,9 +1,9 @@
-#include "Tests/BabelWiresLib/TestUtils/testProcessor.hpp"
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
-#include "BabelWiresLib/Features/Utilities/modelUtilities.hpp"
+#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 
-#include "BabelWiresLib/Features/featureMixins.hpp"
+#include <BabelWiresLib/Features/featureMixins.hpp>
 
 testUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& context) {
     m_inputFeature = std::make_unique<TestRootFeature>(context);

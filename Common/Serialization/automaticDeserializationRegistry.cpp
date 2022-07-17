@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Serialization/automaticDeserializationRegistry.hpp"
+#include <Common/Serialization/automaticDeserializationRegistry.hpp>
 
 #include <cassert>
 

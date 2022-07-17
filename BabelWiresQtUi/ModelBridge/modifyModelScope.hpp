@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "BabelWiresQtUi/ModelBridge/accessModelScope.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
+#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 namespace babelwires {
 

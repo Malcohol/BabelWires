@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "Common/Audio/audioDest.hpp"
-#include "Common/Registry/fileTypeRegistry.hpp"
+#include <Common/Audio/audioDest.hpp>
+#include <Common/Registry/fileTypeRegistry.hpp>
 
 #include <cctype>
 #include <memory>

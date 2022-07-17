@@ -7,13 +7,13 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Features/Path/featurePath.hpp"
-#include "BabelWiresLib/Project/projectIds.hpp"
-#include "BabelWiresLib/Project/projectVisitable.hpp"
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Project/projectIds.hpp>
+#include <BabelWiresLib/Project/projectVisitable.hpp>
 
-#include "Common/Cloning/cloneable.hpp"
-#include "Common/Math/rational.hpp"
-#include "Common/Serialization/serializable.hpp"
+#include <Common/Cloning/cloneable.hpp>
+#include <Common/Math/rational.hpp>
+#include <Common/Serialization/serializable.hpp>
 
 namespace babelwires {
 

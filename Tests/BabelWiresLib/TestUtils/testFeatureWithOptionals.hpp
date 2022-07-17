@@ -2,12 +2,12 @@
 
 #include <gtest/gtest.h>
 
-#include "BabelWiresLib/Features/recordWithOptionalsFeature.hpp"
-#include "BabelWiresLib/Features/rootFeature.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElement.hpp"
-#include "BabelWiresLib/Project/FeatureElements/featureElementData.hpp"
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
-#include "Tests/BabelWiresLib/TestUtils/testRecord.hpp"
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 namespace testUtils {
     /// A record with optional fields.

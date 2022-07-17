@@ -5,9 +5,9 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/uuid.hpp"
+#include <Common/uuid.hpp>
 
-#include "Common/exceptions.hpp"
+#include <Common/exceptions.hpp>
 
 #include <algorithm>
 #include <cassert>

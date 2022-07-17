@@ -5,12 +5,14 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp"
-#include "BabelWiresLib/Project/Commands/addElementCommand.hpp"
-#include "BabelWiresLib/FileFormat/targetFileFormat.hpp"
-#include "BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp"
-#include "BabelWiresQtUi/ModelBridge/elementNodeModel.hpp"
-#include "BabelWiresQtUi/ModelBridge/projectBridge.hpp"
+#include <BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp>
+
+#include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+
+#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
 
 #include <QtWidgets/QFileDialog>
 #include <nodes/FlowScene>

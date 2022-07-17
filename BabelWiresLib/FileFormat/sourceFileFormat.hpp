@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "Common/Registry/fileTypeRegistry.hpp"
-#include "Common/productInfo.hpp"
+#include <Common/Registry/fileTypeRegistry.hpp>
+#include <Common/productInfo.hpp>
 
 #include <istream>
 #include <string>

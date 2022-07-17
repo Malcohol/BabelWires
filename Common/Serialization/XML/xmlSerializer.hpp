@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/Serialization/serializer.hpp"
+#include <Common/Serialization/serializer.hpp>
 
 #include <tinyxml2.h>
 

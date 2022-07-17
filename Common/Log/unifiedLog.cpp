@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "Common/Log/unifiedLog.hpp"
+#include <Common/Log/unifiedLog.hpp>
 
 babelwires::Log::MessageBuilder babelwires::UnifiedLog::logInfo() {
     return createMessageBuilder(MessageType::infoMessage);

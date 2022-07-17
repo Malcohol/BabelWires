@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
-#include "Common/Registry/registry.hpp"
+#include <Common/Registry/registry.hpp>
 #include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {

@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include "Common/Serialization/serializableValue.hpp"
-#include "Common/Serialization/serializerDeserializerCommon.hpp"
+#include <Common/Serialization/serializableValue.hpp>
+#include <Common/Serialization/serializerDeserializerCommon.hpp>
 
 #include <cstdint>
 #include <map>

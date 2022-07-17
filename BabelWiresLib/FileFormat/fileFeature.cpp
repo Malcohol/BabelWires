@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include "BabelWiresLib/FileFormat/fileFeature.hpp"
+#include <BabelWiresLib/FileFormat/fileFeature.hpp>
 
 babelwires::FileFeature::FileFeature(const ProjectContext& projectContext, LongIdentifier fileFormatIdentifier)
     : RootFeature(projectContext)

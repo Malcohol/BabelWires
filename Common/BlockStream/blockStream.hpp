@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "Common/BlockStream/streamEvent.hpp"
+#include <Common/BlockStream/streamEvent.hpp>
 
 #include <memory>
 #include <vector>
@@ -101,4 +101,4 @@ namespace babelwires {
     };
 } // namespace babelwires
 
-#include "Common/BlockStream/blockStream_inl.hpp"
+#include <Common/BlockStream/blockStream_inl.hpp>

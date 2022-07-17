@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include "BabelWiresLib/Project/Modifiers/modifierData.hpp"
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 namespace babelwires {
     /// Data used to assign a ValueFeature within a container to a value from another element.
