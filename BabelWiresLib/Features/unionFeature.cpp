@@ -19,8 +19,8 @@ babelwires::UnionFeature::UnionFeature(TagValues tags, unsigned int defaultTagIn
 void babelwires::UnionFeature::addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex) {
     assert(isTag(tag) && "The tag is not a valid tag for this union");
     // All branches are unselected until the union is set to default. This ensures the stored indices are correct.
-    InactiveBranch& inactiveBranch = m_inactiveBranches[tag];
-    inactiveBranch.m_inactiveFields.emplace_back(std::move(fieldAndIndex));
+    UnselectedBranch& unselectedBranch = m_unselectedBranches[tag];
+    unselectedBranch.m_inactiveFields.emplace_back(std::move(fieldAndIndex));
 }
 
 void babelwires::UnionFeature::selectTag(Identifier tag) {
@@ -35,33 +35,33 @@ void babelwires::UnionFeature::selectTag(Identifier tag) {
 
     if (m_selectedTag.has_value()) {
         // There is at an active branch (always true after setToDefault has been called).
-        assert((m_inactiveBranches.size() == m_tags.size() - 1) && "Inconsistency between m_inactiveBranches and m_tags");
+        assert((m_unselectedBranches.size() == m_tags.size() - 1) && "Inconsistency between m_unselectedBranches and m_tags");
 
         // Deactivate the fields in the currently selected branch.
-        InactiveBranch newInactiveBranch;
+        UnselectedBranch newUnselectedBranch;
        
         // Maybe need to reverse?
-        for (auto identifier : m_activeBranch.m_activeFields) {
+        for (auto identifier : m_selectedBranch.m_activeFields) {
             FieldAndIndex fieldAndIndex = removeField(identifier);
             fieldAndIndex.m_feature->setToDefault();
-            newInactiveBranch.m_inactiveFields.emplace_back(std::move(fieldAndIndex));
+            newUnselectedBranch.m_inactiveFields.emplace_back(std::move(fieldAndIndex));
         }
 
-        m_activeBranch.m_activeFields.clear();
-        m_inactiveBranches.insert(std::pair(tag, std::move(newInactiveBranch)));
+        m_selectedBranch.m_activeFields.clear();
+        m_unselectedBranches.insert(std::pair(tag, std::move(newUnselectedBranch)));
     } else {
-        assert((m_inactiveBranches.size() == m_tags.size()) && "Inconsistency between m_inactiveBranches and m_tags");
+        assert((m_unselectedBranches.size() == m_tags.size()) && "Inconsistency between m_unselectedBranches and m_tags");
     }
 
-    // Activate the fields in the inactiveBranch.
+    // Activate the fields in the unselectedBranch.
 
-    auto it = m_inactiveBranches.find(tag);
-    assert((it != m_inactiveBranches.end()) && "Tag not found in inactive branches");
-    InactiveBranch oldInactiveBranch = std::move(it->second);
-    m_inactiveBranches.erase(it);
+    auto it = m_unselectedBranches.find(tag);
+    assert((it != m_unselectedBranches.end()) && "Tag not found in m_unselectedBranches");
+    UnselectedBranch oldUnselectedBranch = std::move(it->second);
+    m_unselectedBranches.erase(it);
 
-    for (auto& fieldAndIndex : oldInactiveBranch.m_inactiveFields) {
-        m_activeBranch.m_activeFields.emplace_back(fieldAndIndex.m_identifier);
+    for (auto& fieldAndIndex : oldUnselectedBranch.m_inactiveFields) {
+        m_selectedBranch.m_activeFields.emplace_back(fieldAndIndex.m_identifier);
         addFieldAndIndexInternal(std::move(fieldAndIndex));
     }
 
@@ -79,7 +79,7 @@ bool babelwires::UnionFeature::isTag(Identifier tag) const {
 bool babelwires::UnionFeature::isSelectedTag(Identifier tag) const {
     assert(isTag(tag) && "isSelectedTag can only be called with an actual tag");
     const bool isGivenTag = (m_selectedTag == tag);
-    assert(isGivenTag == (m_inactiveBranches.find(tag) != m_inactiveBranches.end()) && "Inconsistency between m_selectedTag and m_inactiveBranches");
+    assert(isGivenTag == (m_unselectedBranches.find(tag) != m_unselectedBranches.end()) && "Inconsistency between m_selectedTag and m_unselectedBranches");
     return isGivenTag;
 }
 
@@ -89,7 +89,7 @@ void babelwires::UnionFeature::doSetToDefault() {
 }
 
 void babelwires::UnionFeature::doSetToDefaultNonRecursive() {
-    for (auto& pair : m_inactiveBranches) {
+    for (auto& pair : m_unselectedBranches) {
         for (auto& inactiveField : pair.second.m_inactiveFields) {
             // After construction, these may not have been set to their default state.
             inactiveField.m_feature->setToDefault();

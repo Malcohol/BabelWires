@@ -45,16 +45,16 @@ namespace babelwires {
         unsigned int m_defaultTagIndex;
         std::optional<Identifier> m_selectedTag;
 
-        struct ActiveBranch {
+        struct SelectedBranch {
             std::vector<Identifier> m_activeFields;
         };
 
-        struct InactiveBranch {
+        struct UnselectedBranch {
             std::vector<FieldAndIndex> m_inactiveFields;
         };
 
-        ActiveBranch m_activeBranch;
-        std::unordered_map<Identifier, InactiveBranch> m_inactiveBranches;
+        SelectedBranch m_selectedBranch;
+        std::unordered_map<Identifier, UnselectedBranch> m_unselectedBranches;
     };
 
     template <typename T>
