@@ -93,6 +93,11 @@ void babelwires::RecordFeature::addFieldInternal(Field f, int index) {
     setChanged(Changes::StructureChanged);
 }
 
+void babelwires::RecordFeature::addFieldAndIndexInternal(FieldAndIndex fieldAndIndex) {
+    const int targetIndex = fieldAndIndex.m_index;
+    addFieldInternal(std::move(fieldAndIndex), targetIndex);
+}
+
 babelwires::RecordFeature::FieldAndIndex babelwires::RecordFeature::removeField(Identifier identifier) {
     int i;
     for (i = 0; i < m_fields.size(); ++i) {

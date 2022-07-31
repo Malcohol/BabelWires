@@ -68,6 +68,7 @@ SET( BABELWIRESLIB_SRCS
 	Features/Path/pathStep.cpp
 	Features/Utilities/featureXml.cpp
 	Features/rootFeature.cpp
+	Features/unionFeature.cpp
 	Serialization/projectBundle.cpp
 	Project/Commands/activateOptionalCommand.cpp
 	Project/Commands/addElementCommand.cpp

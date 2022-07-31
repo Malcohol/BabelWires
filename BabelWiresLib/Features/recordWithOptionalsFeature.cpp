@@ -23,7 +23,7 @@ void babelwires::RecordWithOptionalsFeature::activateField(Identifier identifier
         throw ModelException() << "The field " << identifier << " is not an inactive optional field, so it cannot be activated";
     }
     std::for_each(it + 1, m_inactiveFields.end(), [](FieldAndIndex& f) { ++f.m_index; });
-    addFieldInternal(std::move(*it), it->m_index);
+    addFieldAndIndexInternal(std::move(*it));
     m_inactiveFields.erase(it);
 }
 
