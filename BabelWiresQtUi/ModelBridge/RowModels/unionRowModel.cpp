@@ -46,10 +46,7 @@ void babelwires::UnionRowModel::setEditorData(QWidget* editor) const {
     const Identifier value = unionFeature.getSelectedTag();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
-    const auto& tags = unionFeature.getTags();
-    const auto it = std::find(tags.begin(), tags.end(), value);
-    unsigned int currentIndex = it - tags.begin();
-    dropDownBox->setCurrentIndex(currentIndex);
+    dropDownBox->setCurrentIndex(unionFeature.getSelectedTagIndex());
 }
 
 std::unique_ptr<babelwires::ModifierData> babelwires::UnionRowModel::createModifierFromEditor(QWidget* editor) const {

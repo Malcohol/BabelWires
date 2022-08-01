@@ -28,35 +28,51 @@ namespace babelwires {
         /// Select the tag.
         void selectTag(Identifier tag);
 
+        /// Return the tag which is currently selected.
         Identifier getSelectedTag() const;
 
         /// Return the set of tags.
         const TagValues& getTags() const;
+
+        /// Return the index of the tag which is currently selected.
+        unsigned int getSelectedTagIndex() const;
+
+        /// Get the index of the given tag.
+        unsigned int getIndexOfTag(Identifier tag) const;
 
       protected:
         void addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex);
         void doSetToDefault() override;
         void doSetToDefaultNonRecursive() override;
 
+        /// Select the tag using an index.
+        void selectTagByIndex(unsigned int index);
+
+        /// Check whether the tag is a tag of this union.
         bool isTag(Identifier tag) const;
-        bool isSelectedTag(Identifier tag) const;
 
       protected:
         /// Those fields which are optional.
         TagValues m_tags;
         unsigned int m_defaultTagIndex;
-        std::optional<Identifier> m_selectedTag;
+        int m_selectedTagIndex = -1;
 
+        /// Information about the currently selected branch.
         struct SelectedBranch {
             std::vector<Identifier> m_activeFields;
         };
 
+        /// Information about an unselected branch.
         struct UnselectedBranch {
             std::vector<FieldAndIndex> m_inactiveFields;
         };
 
+        /// Information about the currently selected branch.
         SelectedBranch m_selectedBranch;
-        std::unordered_map<Identifier, UnselectedBranch> m_unselectedBranches;
+
+        /// Information about the unselected branches in tag order.
+        /// The selected tag does have an entry, but it is always empty.
+        std::vector<UnselectedBranch> m_unselectedBranches;
     };
 
     template <typename T>

@@ -14,15 +14,14 @@ babelwires::UnionFeature::UnionFeature(TagValues tags, unsigned int defaultTagIn
     , m_defaultTagIndex(defaultTagIndex)
 {
     assert((m_defaultTagIndex < m_tags.size()) && "defaultTagIndex is out of range");
-    for (const auto& tag : m_tags) {
-        m_unselectedBranches.emplace(tag, UnselectedBranch());
-    }
+    m_unselectedBranches.resize(m_tags.size());
 }
 
 void babelwires::UnionFeature::addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex) {
     assert(isTag(tag) && "The tag is not a valid tag for this union");
+    const unsigned int index = getIndexOfTag(tag);
     // All branches are unselected until the union is set to default. This ensures the stored indices are correct.
-    UnselectedBranch& unselectedBranch = m_unselectedBranches[tag];
+    UnselectedBranch& unselectedBranch = m_unselectedBranches[index];
     unselectedBranch.m_inactiveFields.emplace_back(std::move(fieldAndIndex));
 }
 
@@ -31,18 +30,24 @@ void babelwires::UnionFeature::selectTag(Identifier tag) {
         // TODO Look up name from identifier
         throw ModelException() << "\"" << tag << "\" is not a valid tag for this union";
     }
-    if (isSelectedTag(tag)) {
+
+    const int indexOfNewTag = getIndexOfTag(tag);
+
+    selectTagByIndex(indexOfNewTag);
+}
+
+void babelwires::UnionFeature::selectTagByIndex(unsigned int index) {
+    if (index == m_selectedTagIndex) {
         // Nothing to do.
         return;
     }
 
-    if (m_selectedTag.has_value()) {
-        // There is at an active branch (always true after setToDefault has been called).
-        assert((m_unselectedBranches.size() == m_tags.size() - 1) && "Inconsistency between m_unselectedBranches and m_tags");
+    if (m_selectedTagIndex >= 0) {
+        UnselectedBranch& newUnselectedBranch = m_unselectedBranches[m_selectedTagIndex];
+        assert(newUnselectedBranch.m_inactiveFields.empty() && "The unselected branch object of the selected tag should be empty");
 
         // Deactivate the fields in the currently selected branch.
-        UnselectedBranch newUnselectedBranch;
-       
+
         // Maybe need to reverse?
         for (auto identifier : m_selectedBranch.m_activeFields) {
             FieldAndIndex fieldAndIndex = removeField(identifier);
@@ -51,24 +56,19 @@ void babelwires::UnionFeature::selectTag(Identifier tag) {
         }
 
         m_selectedBranch.m_activeFields.clear();
-        m_unselectedBranches.insert(std::pair(tag, std::move(newUnselectedBranch)));
-    } else {
-        assert((m_unselectedBranches.size() == m_tags.size()) && "Inconsistency between m_unselectedBranches and m_tags");
     }
 
     // Activate the fields in the unselectedBranch.
 
-    auto it = m_unselectedBranches.find(tag);
-    assert((it != m_unselectedBranches.end()) && "Tag not found in m_unselectedBranches");
-    UnselectedBranch oldUnselectedBranch = std::move(it->second);
-    m_unselectedBranches.erase(it);
+    typeof(UnselectedBranch::m_inactiveFields) oldUnselectedFields;
+    oldUnselectedFields.swap(m_unselectedBranches[index].m_inactiveFields);
 
-    for (auto& fieldAndIndex : oldUnselectedBranch.m_inactiveFields) {
+    for (auto& fieldAndIndex : oldUnselectedFields) {
         m_selectedBranch.m_activeFields.emplace_back(fieldAndIndex.m_identifier);
         addFieldAndIndexInternal(std::move(fieldAndIndex));
     }
 
-    m_selectedTag = tag;
+    m_selectedTagIndex = index;
 }
 
 const babelwires::UnionFeature::TagValues& babelwires::UnionFeature::getTags() const {
@@ -79,29 +79,32 @@ bool babelwires::UnionFeature::isTag(Identifier tag) const {
     return std::find(m_tags.begin(), m_tags.end(), tag) != m_tags.end();
 }
 
-bool babelwires::UnionFeature::isSelectedTag(Identifier tag) const {
-    assert(isTag(tag) && "isSelectedTag can only be called with an actual tag");
-    const bool isGivenTag = (m_selectedTag == tag);
-    assert(isGivenTag == (m_unselectedBranches.find(tag) == m_unselectedBranches.end()) && "Inconsistency between m_selectedTag and m_unselectedBranches");
-    return isGivenTag;
-}
-
 void babelwires::UnionFeature::doSetToDefault() {
     setToDefaultNonRecursive();
     setSubfeaturesToDefault();
 }
 
 void babelwires::UnionFeature::doSetToDefaultNonRecursive() {
-    for (auto& pair : m_unselectedBranches) {
-        for (auto& inactiveField : pair.second.m_inactiveFields) {
+    for (auto& unselectedBranch : m_unselectedBranches) {
+        for (auto& inactiveField : unselectedBranch.m_inactiveFields) {
             // After construction, these may not have been set to their default state.
             inactiveField.m_feature->setToDefault();
         }
     }
-    selectTag(m_tags[m_defaultTagIndex]);
+    selectTagByIndex(m_defaultTagIndex);
 }
 
 babelwires::Identifier babelwires::UnionFeature::getSelectedTag() const {
-    assert(m_selectedTag.has_value() && "Cannot call getSelectedTag until the union has been set to default");
-    return *m_selectedTag;
+    assert((m_selectedTagIndex >= 0) && "Cannot call getSelectedTag until the union has been set to default");
+    return m_tags[m_selectedTagIndex];
+}
+
+unsigned int babelwires::UnionFeature::getSelectedTagIndex() const {
+    return m_selectedTagIndex;
+}
+
+unsigned int babelwires::UnionFeature::getIndexOfTag(Identifier tag) const {
+    const auto it = std::find(m_tags.begin(), m_tags.end(), tag);
+    assert((it != m_tags.end()) && "The given tag is not a valid tag of this union");
+    return it - m_tags.begin();
 }
