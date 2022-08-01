@@ -14,6 +14,9 @@ babelwires::UnionFeature::UnionFeature(TagValues tags, unsigned int defaultTagIn
     , m_defaultTagIndex(defaultTagIndex)
 {
     assert((m_defaultTagIndex < m_tags.size()) && "defaultTagIndex is out of range");
+    for (const auto& tag : m_tags) {
+        m_unselectedBranches.emplace(tag, UnselectedBranch());
+    }
 }
 
 void babelwires::UnionFeature::addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex) {
@@ -79,7 +82,7 @@ bool babelwires::UnionFeature::isTag(Identifier tag) const {
 bool babelwires::UnionFeature::isSelectedTag(Identifier tag) const {
     assert(isTag(tag) && "isSelectedTag can only be called with an actual tag");
     const bool isGivenTag = (m_selectedTag == tag);
-    assert(isGivenTag == (m_unselectedBranches.find(tag) != m_unselectedBranches.end()) && "Inconsistency between m_selectedTag and m_unselectedBranches");
+    assert(isGivenTag == (m_unselectedBranches.find(tag) == m_unselectedBranches.end()) && "Inconsistency between m_selectedTag and m_unselectedBranches");
     return isGivenTag;
 }
 
