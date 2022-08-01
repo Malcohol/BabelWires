@@ -97,3 +97,8 @@ void babelwires::UnionFeature::doSetToDefaultNonRecursive() {
     }
     selectTag(m_tags[m_defaultTagIndex]);
 }
+
+babelwires::Identifier babelwires::UnionFeature::getSelectedTag() const {
+    assert(m_selectedTag.has_value() && "Cannot call getSelectedTag until the union has been set to default");
+    return *m_selectedTag;
+}

@@ -28,6 +28,8 @@ namespace babelwires {
         /// Select the tag.
         void selectTag(Identifier tag);
 
+        Identifier getSelectedTag() const;
+
         /// Return the set of tags.
         const TagValues& getTags() const;
 
