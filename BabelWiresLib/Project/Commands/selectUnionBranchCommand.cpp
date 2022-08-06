@@ -13,18 +13,19 @@
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 
 babelwires::SelectUnionBranchCommand::SelectUnionBranchCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                               Identifier tag)
-    : SimpleCommand(commandName)
+                               Identifier tagToSelect)
+    : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToUnion(std::move(featurePath))
-    , m_newTag(tag)
+    , m_tagToSelect(tagToSelect)
 {
 }
 
-bool babelwires::SelectUnionBranchCommand::initialize(const Project& project) {
+bool babelwires::SelectUnionBranchCommand::initializeAndExecute(Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
     if (!elementToModify) {
         return false;
@@ -40,25 +41,54 @@ bool babelwires::SelectUnionBranchCommand::initialize(const Project& project) {
         return false;
     }
 
-    if (!unionFeature->isTag(m_newTag)) {
+    if (!unionFeature->isTag(m_tagToSelect)) {
         return false;
     }
 
-    if (m_newTag == unionFeature->getSelectedTag()) {
+    if (m_tagToSelect == unionFeature->getSelectedTag()) {
         return false;
     }
 
     if (const Modifier *const modifier = elementToModify->findModifier(m_pathToUnion)) {
-        m_oldModifier = modifier->getModifierData().clone();
+        m_unionModifierToRemove = modifier->getModifierData().clone();
     }
+
+    for (const auto& field : unionFeature->getFieldsOfSelectedBranch()) {
+        FeaturePath pathToField = m_pathToUnion;
+        pathToField.pushStep(PathStep(field));
+        addSubCommand(std::make_unique<RemoveAllEditsCommand>("Remove union branch subcommand", m_elementId, pathToField));
+    }
+
+    if (!CompoundCommand::initializeAndExecute(project)) {
+        return false;
+    }
+
+    if (m_unionModifierToRemove) {
+        project.removeModifier(m_elementId, m_pathToUnion);
+    }
+
+    SelectUnionBranchModifierData modifierToAdd;
+    modifierToAdd.m_pathToFeature = m_pathToUnion;
+    modifierToAdd.m_tag = m_tagToSelect;
+    m_unionModifierToAdd = std::make_unique<SelectUnionBranchModifierData>(std::move(modifierToAdd));
+    
+    project.addModifier(m_elementId, *m_unionModifierToAdd);
 
     return true;
 }
 
 void babelwires::SelectUnionBranchCommand::execute(Project& project) const {
-    // TODO
+    CompoundCommand::execute(project);
+    if (m_unionModifierToRemove) {
+        project.removeModifier(m_elementId, m_pathToUnion);
+    }
+    project.addModifier(m_elementId, *m_unionModifierToAdd);
 }
 
 void babelwires::SelectUnionBranchCommand::undo(Project& project) const {
-    // TODO
+    project.removeModifier(m_elementId, m_pathToUnion);
+    if (m_unionModifierToRemove) {
+        project.addModifier(m_elementId, *m_unionModifierToRemove);
+    }
+    CompoundCommand::undo(project);
 }

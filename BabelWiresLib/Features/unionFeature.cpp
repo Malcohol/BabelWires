@@ -108,3 +108,7 @@ unsigned int babelwires::UnionFeature::getIndexOfTag(Identifier tag) const {
     assert((it != m_tags.end()) && "The given tag is not a valid tag of this union");
     return it - m_tags.begin();
 }
+
+const std::vector<babelwires::Identifier> babelwires::UnionFeature::getFieldsOfSelectedBranch() const {
+    return m_selectedBranch.m_activeFields;
+}

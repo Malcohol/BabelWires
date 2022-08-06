@@ -43,6 +43,9 @@ namespace babelwires {
         /// Check whether the tag is a tag of this union.
         bool isTag(Identifier tag) const;
 
+        /// Get the fields of the currently selected branch.
+        const std::vector<Identifier> getFieldsOfSelectedBranch() const;
+
       protected:
         void addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex);
         void doSetToDefault() override;
