@@ -107,7 +107,7 @@ QWidget* babelwires::RowModel::createEditor(QWidget* parent, const QModelIndex& 
 
 void babelwires::RowModel::setEditorData(QWidget* editor) const {}
 
-std::unique_ptr<babelwires::ModifierData> babelwires::RowModel::createModifierFromEditor(QWidget* editor) const {
+std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::RowModel::createCommandFromEditor(QWidget* editor) const {
     return nullptr;
 }
 

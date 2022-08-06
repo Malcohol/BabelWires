@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 
@@ -24,7 +25,6 @@ namespace babelwires {
 
     class Feature;
     class FeatureElement;
-    struct ModifierData;
     struct ContentsCacheEntry;
     class Modifier;
     class FeatureModelDelegate;
@@ -60,9 +60,8 @@ namespace babelwires {
         /// Set the data in the editor.
         virtual void setEditorData(QWidget* editor) const;
 
-        /// Given that the user has committed the edit, return a new modifier corresponding
-        /// to that edit.
-        virtual std::unique_ptr<ModifierData> createModifierFromEditor(QWidget* editor) const;
+        /// Given that the user has committed the edit, return a new command performing that edit.
+        virtual std::unique_ptr<Command<Project>> createCommandFromEditor(QWidget* editor) const;
 
         /// Returns true if this RowModel overrides paint and sizeHint.
         /// The default implementation returns false.

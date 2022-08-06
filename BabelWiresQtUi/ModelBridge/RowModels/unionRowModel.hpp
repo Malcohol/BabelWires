@@ -24,7 +24,7 @@ namespace babelwires {
 
         virtual void setEditorData(QWidget* editor) const override;
 
-        virtual std::unique_ptr<ModifierData> createModifierFromEditor(QWidget* editor) const override;
+        virtual std::unique_ptr<Command<Project>> createCommandFromEditor(QWidget* editor) const override;
 
       public:
         const UnionFeature& getUnionFeature() const;

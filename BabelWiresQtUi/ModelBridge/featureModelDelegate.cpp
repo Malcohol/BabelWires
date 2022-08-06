@@ -130,9 +130,8 @@ void babelwires::FeatureModelDelegate::setModelData(QWidget* editor, QAbstractIt
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable feature");
     // Allow the function to reject the contents of the editor.
-    if (std::unique_ptr<ModifierData> modifier = rowModel->createModifierFromEditor(editor)) {
-        m_projectBridge.scheduleCommand(
-            std::make_unique<AddModifierCommand>("Set value", element->getElementId(), std::move(modifier)));
+    if (std::unique_ptr<Command<Project>> command = rowModel->createCommandFromEditor(editor)) {
+        m_projectBridge.scheduleCommand(std::move(command));
     }
 }
 

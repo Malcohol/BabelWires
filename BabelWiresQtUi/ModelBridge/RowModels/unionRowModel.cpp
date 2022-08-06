@@ -11,6 +11,8 @@
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
 #include <BabelWiresLib/Features/unionFeature.hpp>
+#include <BabelWiresLib/Project/Commands/selectUnionBranchCommand.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -49,7 +51,7 @@ void babelwires::UnionRowModel::setEditorData(QWidget* editor) const {
     dropDownBox->setCurrentIndex(unionFeature.getSelectedTagIndex());
 }
 
-std::unique_ptr<babelwires::ModifierData> babelwires::UnionRowModel::createModifierFromEditor(QWidget* editor) const {
+std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::UnionRowModel::createCommandFromEditor(QWidget* editor) const {
     const babelwires::UnionFeature& unionFeature = getUnionFeature();
     const auto& tags = unionFeature.getTags();
     const Identifier value = unionFeature.getSelectedTag();
@@ -60,10 +62,7 @@ std::unique_ptr<babelwires::ModifierData> babelwires::UnionRowModel::createModif
     assert(newIndex < tags.size());
     const Identifier newValue = tags[newIndex];
     if (value != newValue) {
-        //auto modifier = std::make_unique<babelwires::EnumValueAssignmentData>();
-        //modifier->m_pathToFeature = babelwires::FeaturePath(&unionFeature);
-        //modifier->m_value = newValue;
-        //return modifier;
+        return std::make_unique<SelectUnionBranchCommand>("Select union branch", m_featureElement->getElementId(), babelwires::FeaturePath(&unionFeature), newValue);
     } else {
         return nullptr;
     }
