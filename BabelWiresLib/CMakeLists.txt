@@ -21,6 +21,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/connectionModifierData.cpp
 	Project/Modifiers/activateOptionalsModifierData.cpp
 	Project/Modifiers/mapValueAssignmentData.cpp
+	Project/Modifiers/selectUnionBranchModifierData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp
 	ProjectExtra/projectObserver.cpp
@@ -85,6 +86,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/removeAllEditsCommand.cpp
 	Project/Commands/removeFailedModifiersCommand.cpp
 	Project/Commands/resizeElementCommand.cpp
+	Project/Commands/selectUnionBranchCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp

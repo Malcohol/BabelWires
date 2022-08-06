@@ -40,6 +40,9 @@ namespace babelwires {
         /// Get the index of the given tag.
         unsigned int getIndexOfTag(Identifier tag) const;
 
+        /// Check whether the tag is a tag of this union.
+        bool isTag(Identifier tag) const;
+
       protected:
         void addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex);
         void doSetToDefault() override;
@@ -47,9 +50,6 @@ namespace babelwires {
 
         /// Select the tag using an index.
         void selectTagByIndex(unsigned int index);
-
-        /// Check whether the tag is a tag of this union.
-        bool isTag(Identifier tag) const;
 
       protected:
         /// Those fields which are optional.

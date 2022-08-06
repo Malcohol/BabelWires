@@ -36,7 +36,7 @@ bool babelwires::AddModifierCommand::initialize(const Project& project) {
         return false;
     }
 
-    if (const Modifier* modifier = element->findModifier(m_modifierToAdd->m_pathToFeature)) {
+    if (const Modifier *const modifier = element->findModifier(m_modifierToAdd->m_pathToFeature)) {
         m_modifierToRemove = modifier->getModifierData().clone();
     }
     return true;
