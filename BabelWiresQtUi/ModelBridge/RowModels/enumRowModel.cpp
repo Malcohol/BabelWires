@@ -2,16 +2,18 @@
  * The row model for EnumFeatures.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresQtUi/ModelBridge/RowModels/enumRowModel.hpp>
 
-#include <BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp>
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp>
 
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/Features/enumFeature.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -51,7 +53,8 @@ void babelwires::EnumRowModel::setEditorData(QWidget* editor) const {
     dropDownBox->setCurrentIndex(currentIndex);
 }
 
-std::unique_ptr<babelwires::ModifierData> babelwires::EnumRowModel::createModifierFromEditor(QWidget* editor) const {
+std::unique_ptr<babelwires::Command<babelwires::Project>>
+babelwires::EnumRowModel::createCommandFromEditor(QWidget* editor) const {
     const babelwires::EnumFeature& enumFeature = getEnumFeature();
     const babelwires::Enum::EnumValues& values = enumFeature.getEnum().getEnumValues();
     const Identifier value = enumFeature.get();
@@ -65,11 +68,12 @@ std::unique_ptr<babelwires::ModifierData> babelwires::EnumRowModel::createModifi
         auto modifier = std::make_unique<babelwires::EnumValueAssignmentData>();
         modifier->m_pathToFeature = babelwires::FeaturePath(&enumFeature);
         modifier->m_value = newValue;
-        return modifier;
+        return std::make_unique<AddModifierCommand>("Set enum value", m_featureElement->getElementId(),
+                                                    std::move(modifier));
     } else {
         return nullptr;
     }
-   return nullptr;
+    return nullptr;
 }
 
 bool babelwires::EnumRowModel::isItemEditable() const {

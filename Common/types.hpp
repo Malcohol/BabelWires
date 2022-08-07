@@ -49,6 +49,19 @@ namespace babelwires {
         ITERATOR end() const { return m_end; }
     };
 
+    template <typename T>
+    struct ReverseIterateWrapper {
+         T& iterable; 
+    };
+
+    template <typename T>
+    auto begin (ReverseIterateWrapper<T> w) { return std::rbegin(w.iterable); }
+
+    template <typename T>
+    auto end (ReverseIterateWrapper<T> w) { return std::rend(w.iterable); }
+
+    template <typename T>
+    ReverseIterateWrapper<T> reverseIterate (T&& iterable) { return { iterable }; }
     //
 
     /// Is str usable as an "identifier" ([a..zA..Z][_a..zA..Z0..9]*).

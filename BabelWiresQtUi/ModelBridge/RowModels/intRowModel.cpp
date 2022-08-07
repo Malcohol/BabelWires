@@ -11,6 +11,8 @@
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
 #include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <QString>
 
@@ -43,7 +45,7 @@ void babelwires::IntRowModel::setEditorData(QWidget* editor) const {
     spinBox->setValue(value);
 }
 
-std::unique_ptr<babelwires::ModifierData> babelwires::IntRowModel::createModifierFromEditor(QWidget* editor) const {
+std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::IntRowModel::createCommandFromEditor(QWidget* editor) const {
     const babelwires::IntFeature& intFeature = getIntFeature();
     int value = intFeature.get();
     const QSpinBox* spinBox = dynamic_cast<const QSpinBox*>(editor);
@@ -53,7 +55,8 @@ std::unique_ptr<babelwires::ModifierData> babelwires::IntRowModel::createModifie
         auto modifier = std::make_unique<babelwires::IntValueAssignmentData>();
         modifier->m_pathToFeature = babelwires::FeaturePath(&intFeature);
         modifier->m_value = value;
-        return modifier;
+        return std::make_unique<AddModifierCommand>("Set int value", m_featureElement->getElementId(),
+                                            std::move(modifier));
     } else {
         return nullptr;
     }

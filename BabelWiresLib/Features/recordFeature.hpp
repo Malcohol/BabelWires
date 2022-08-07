@@ -53,6 +53,9 @@ namespace babelwires {
             int m_index = -1;
         };
 
+        /// Convenience method which calls the addFieldInternal.
+        void addFieldAndIndexInternal(FieldAndIndex fieldAndIndex);
+
         FieldAndIndex removeField(Identifier identifier);
 
       protected:

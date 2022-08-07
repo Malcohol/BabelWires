@@ -67,9 +67,6 @@ std::string babelwires::FilePath::serializeToString() const {
 }
 
 babelwires::FilePath babelwires::FilePath::deserializeFromString(const std::string& string) {
-    if (std::all_of(string.begin(),string.end(),::isspace)) {
-        throw ParseException() << "Empty file path";
-    }
     std::filesystem::path path;
     try {
         path = std::filesystem::u8path(string);

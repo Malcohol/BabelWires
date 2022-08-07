@@ -16,6 +16,7 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/stringRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/enumRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/unionRowModel.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
@@ -24,6 +25,7 @@
 #include <BabelWiresLib/Features/stringFeature.hpp>
 #include <BabelWiresLib/Features/enumFeature.hpp>
 #include <BabelWiresLib/Features/mapFeature.hpp>
+#include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
 
 babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowModelRegistry,
@@ -57,6 +59,9 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     } else if (feature->as<const babelwires::MapFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::MapRowModel));
         new (m_rowModel) babelwires::MapRowModel();
+    } else if (feature->as<const babelwires::UnionFeature>()) {
+        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::UnionRowModel));
+        new (m_rowModel) babelwires::UnionRowModel();
     } else {
         // The base row model is used.
     }

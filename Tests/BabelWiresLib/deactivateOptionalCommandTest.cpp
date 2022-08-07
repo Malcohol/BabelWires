@@ -28,7 +28,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
         testEnvironment.m_project.getFeatureElement(targetId)->as<testUtils::TestFeatureElement>();
-    ASSERT_NE(element, nullptr);
+    ASSERT_NE(targetElement, nullptr);
 
     const auto getInputFeature = [element]() {
         return element->getInputFeature()->as<testUtils::TestFeatureWithOptionals>();
@@ -185,7 +185,6 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
 
     const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElementWithOptionals>();
     ASSERT_NE(element, nullptr);
-    ASSERT_NE(element, nullptr);
     const testUtils::TestFeatureWithOptionals* inputFeature =
         element->getInputFeature()->as<testUtils::TestFeatureWithOptionals>();
     ASSERT_NE(inputFeature, nullptr);
@@ -204,7 +203,6 @@ TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
         testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithOptionalsData());
 
     const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElementWithOptionals>();
-    ASSERT_NE(element, nullptr);
     ASSERT_NE(element, nullptr);
     const testUtils::TestFeatureWithOptionals* inputFeature =
         element->getInputFeature()->as<testUtils::TestFeatureWithOptionals>();

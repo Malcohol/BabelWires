@@ -1,5 +1,5 @@
 /**
- * The row model for StringFeatures.
+ * The row model for EnumFeatures.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -11,10 +11,10 @@
 
 namespace babelwires {
 
-    class StringFeature;
+    class UnionFeature;
 
-    /// The RowModel for StringFeatures.
-    class StringRowModel : public RowModel {
+    /// The row model for IntFeatures.
+    class UnionRowModel : public RowModel {
       public:
         virtual QVariant getValueDisplayData() const override;
 
@@ -27,7 +27,7 @@ namespace babelwires {
         virtual std::unique_ptr<Command<Project>> createCommandFromEditor(QWidget* editor) const override;
 
       public:
-        const StringFeature& getStringFeature() const;
+        const UnionFeature& getUnionFeature() const;
     };
 
 } // namespace babelwires

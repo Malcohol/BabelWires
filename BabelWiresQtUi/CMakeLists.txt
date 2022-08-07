@@ -24,6 +24,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/RowModels/rowModelRegistry.cpp
     ModelBridge/RowModels/rowModelWithRichText.cpp
     ModelBridge/RowModels/stringRowModel.cpp
+    ModelBridge/RowModels/unionRowModel.cpp
     ValueEditors/dropDownValueEditor.cpp
     ValueEditors/spinBoxValueEditor.cpp
     ValueEditors/lineEditValueEditor.cpp

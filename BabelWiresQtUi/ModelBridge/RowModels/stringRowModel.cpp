@@ -10,6 +10,8 @@
 #include <BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp>
 
 #include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <QString>
 
@@ -42,7 +44,7 @@ void babelwires::StringRowModel::setEditorData(QWidget* editor) const {
     lineEditor->setText(value.c_str());
 }
 
-std::unique_ptr<babelwires::ModifierData> babelwires::StringRowModel::createModifierFromEditor(QWidget* editor) const {
+std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::StringRowModel::createCommandFromEditor(QWidget* editor) const {
     const babelwires::StringFeature& strFeature = getStringFeature();
     auto lineEditor = qobject_cast<const LineEditValueEditor*>(editor);
     assert(lineEditor && "Unexpected editor");
@@ -51,7 +53,8 @@ std::unique_ptr<babelwires::ModifierData> babelwires::StringRowModel::createModi
         auto modifier = std::make_unique<babelwires::StringValueAssignmentData>();
         modifier->m_pathToFeature = babelwires::FeaturePath(&strFeature);
         modifier->m_value = contents;
-        return modifier;
+        return std::make_unique<AddModifierCommand>("Set string value", m_featureElement->getElementId(),
+                                    std::move(modifier));
     } else {
         return nullptr;
     }

@@ -8,6 +8,7 @@ SET( LIB_TEST_UTILS_SRCS
     testRecord.cpp
     testFeatureWithOptionals.cpp
     testRootFeature.cpp
+    testFeatureWithUnion.cpp
     testValueAndType.cpp
    )
 

@@ -10,6 +10,8 @@
 #include <BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp>
 
 #include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <QString>
 #include <QValidator>
@@ -75,8 +77,8 @@ void babelwires::RationalRowModel::setEditorData(QWidget* editor) const {
     lineEditor->setText(ratFeature.get().toString().c_str());
 }
 
-std::unique_ptr<babelwires::ModifierData>
-babelwires::RationalRowModel::createModifierFromEditor(QWidget* editor) const {
+std::unique_ptr<babelwires::Command<babelwires::Project>>
+babelwires::RationalRowModel::createCommandFromEditor(QWidget* editor) const {
     const babelwires::RationalFeature& ratFeature = getRationalFeature();
     Rational value = ratFeature.get();
     auto lineEditor = qobject_cast<const LineEditValueEditor*>(editor);
@@ -91,7 +93,8 @@ babelwires::RationalRowModel::createModifierFromEditor(QWidget* editor) const {
         auto modifier = std::make_unique<babelwires::RationalValueAssignmentData>();
         modifier->m_pathToFeature = babelwires::FeaturePath(&ratFeature);
         modifier->m_value = value;
-        return modifier;
+        return std::make_unique<AddModifierCommand>("Set rational value", m_featureElement->getElementId(),
+                                    std::move(modifier));
     }
     return nullptr;
 }
