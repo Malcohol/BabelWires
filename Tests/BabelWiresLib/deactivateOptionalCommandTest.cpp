@@ -28,7 +28,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
         testEnvironment.m_project.getFeatureElement(targetId)->as<testUtils::TestFeatureElement>();
-    ASSERT_NE(element, nullptr);
+    ASSERT_NE(targetElement, nullptr);
 
     const auto getInputFeature = [element]() {
         return element->getInputFeature()->as<testUtils::TestFeatureWithOptionals>();

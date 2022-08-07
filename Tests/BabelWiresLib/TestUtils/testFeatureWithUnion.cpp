@@ -1,24 +1,24 @@
 #include <gtest/gtest.h>
 
-#include <Tests/BabelWiresLib/TestUtils/testUnionFeature.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFeatureWithUnion.hpp>
 
-const babelwires::FeaturePath testUtils::TestUnionFeature::s_pathToUnionFeature =
-    babelwires::FeaturePath::deserializeFromString(testUtils::TestUnionFeature::s_unionFeatureIdInitializer);
-const babelwires::FeaturePath testUtils::TestUnionFeature::s_pathToFf0 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestUnionFeature::s_unionFeatureIdInitializer) + "/" + testUtils::TestUnionFeature::s_ff0IdInitializer);
-const babelwires::FeaturePath testUtils::TestUnionFeature::s_pathToFf1 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestUnionFeature::s_unionFeatureIdInitializer) + "/" + testUtils::TestUnionFeature::s_ff1IdInitializer);
-const babelwires::FeaturePath testUtils::TestUnionFeature::s_pathToFieldA0 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestUnionFeature::s_unionFeatureIdInitializer) + "/" + testUtils::TestUnionFeature::s_fieldA0IdInitializer);
-const babelwires::FeaturePath testUtils::TestUnionFeature::s_pathToFieldA1 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestUnionFeature::s_unionFeatureIdInitializer) + "/" + testUtils::TestUnionFeature::s_fieldA1IdInitializer);
-const babelwires::FeaturePath testUtils::TestUnionFeature::s_pathToFieldB0 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestUnionFeature::s_unionFeatureIdInitializer) + "/" + testUtils::TestUnionFeature::s_fieldB0IdInitializer);
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToUnionFeature =
+    babelwires::FeaturePath::deserializeFromString(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer);
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFf0 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_ff0IdInitializer);
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFf1 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_ff1IdInitializer);
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldA0 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldA0IdInitializer);
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldA1 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldA1IdInitializer);
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldB0 =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldB0IdInitializer);
 
-const babelwires::FeaturePath testUtils::TestUnionFeature::s_pathToFieldB0_Array_1 = babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestUnionFeature::s_unionFeatureIdInitializer) + "/" + testUtils::TestUnionFeature::s_fieldB0IdInitializer + "/" + testUtils::TestRecordFeature::s_arrayIdInitializer + "/1");
-const babelwires::FeaturePath testUtils::TestUnionFeature::s_pathToFieldB0_Int2 = babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestUnionFeature::s_unionFeatureIdInitializer) + "/" + testUtils::TestUnionFeature::s_fieldB0IdInitializer + "/" + testUtils::TestRecordFeature::s_recordIdInitializer + "/" + testUtils::TestRecordFeature::s_int2IdInitializer);
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldB0_Array_1 = babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldB0IdInitializer + "/" + testUtils::TestRecordFeature::s_arrayIdInitializer + "/1");
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldB0_Int2 = babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldB0IdInitializer + "/" + testUtils::TestRecordFeature::s_recordIdInitializer + "/" + testUtils::TestRecordFeature::s_int2IdInitializer);
 
-testUtils::TestUnionFeature::TestUnionFeature(const babelwires::ProjectContext& context)
+testUtils::TestFeatureWithUnion::TestFeatureWithUnion(const babelwires::ProjectContext& context)
     : RootFeature(context)
     , m_tagAId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_tagAIdInitializer, s_tagAFieldName, s_tagAUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
@@ -98,7 +98,7 @@ testUtils::TestFeatureElementWithUnion::TestFeatureElementWithUnion(const babelw
 testUtils::TestFeatureElementWithUnion::TestFeatureElementWithUnion(const babelwires::ProjectContext& context, const TestFeatureElementWithUnionData& data, babelwires::ElementId newId)
     : FeatureElement(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
-    m_feature = std::make_unique<TestUnionFeature>(context);
+    m_feature = std::make_unique<TestFeatureWithUnion>(context);
 }
 
 void testUtils::TestFeatureElementWithUnion::doProcess(babelwires::UserLogger&) {}

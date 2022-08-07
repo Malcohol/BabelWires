@@ -11,8 +11,8 @@
 
 namespace testUtils {
     /// A record with optional fields.
-    struct TestUnionFeature : babelwires::RootFeature {
-        TestUnionFeature(const babelwires::ProjectContext& context);
+    struct TestFeatureWithUnion : babelwires::RootFeature {
+        TestFeatureWithUnion(const babelwires::ProjectContext& context);
 
         static constexpr char s_tagAIdInitializer[] = "tagA";
         static constexpr char s_tagBIdInitializer[] = "tagB";
@@ -103,7 +103,7 @@ namespace testUtils {
         using babelwires::FeatureElement::getInputFeature;
         using babelwires::FeatureElement::getOutputFeature;
 
-        std::unique_ptr<testUtils::TestUnionFeature> m_feature;
+        std::unique_ptr<testUtils::TestFeatureWithUnion> m_feature;
     };
 
 } // namespace testUtils
