@@ -113,6 +113,6 @@ unsigned int babelwires::UnionFeature::getIndexOfTag(Identifier tag) const {
     return it - m_tags.begin();
 }
 
-const std::vector<babelwires::Identifier> babelwires::UnionFeature::getFieldsOfSelectedBranch() const {
+const std::vector<babelwires::Identifier>& babelwires::UnionFeature::getFieldsOfSelectedBranch() const {
     return m_selectedBranch.m_activeFields;
 }

@@ -25,21 +25,8 @@ namespace babelwires {
         /// The tags' identifiers must be registered.
         UnionFeature(TagValues tags, unsigned int defaultTagIndex);
 
-        /// Add an optional field, which is not present in the record until activated.
-        template <typename T>
-        T* addFieldInBranch(const Identifier& tag, std::unique_ptr<T> f, const Identifier& identifier);
-
-        /// Select the tag.
-        void selectTag(Identifier tag);
-
-        /// Return the tag which is currently selected.
-        Identifier getSelectedTag() const;
-
         /// Return the set of tags.
         const TagValues& getTags() const;
-
-        /// Return the index of the tag which is currently selected.
-        unsigned int getSelectedTagIndex() const;
 
         /// Get the index of the given tag.
         unsigned int getIndexOfTag(Identifier tag) const;
@@ -47,8 +34,21 @@ namespace babelwires {
         /// Check whether the tag is a tag of this union.
         bool isTag(Identifier tag) const;
 
+        /// Add a field to the branch corresponding to the given tag.
+        template <typename T>
+        T* addFieldInBranch(const Identifier& tag, std::unique_ptr<T> f, const Identifier& fieldIdentifier);
+
+        /// Select the tag.
+        void selectTag(Identifier tag);
+
+        /// Return the tag which is currently selected.
+        Identifier getSelectedTag() const;
+
+        /// Return the index of the tag which is currently selected.
+        unsigned int getSelectedTagIndex() const;
+
         /// Get the fields of the currently selected branch.
-        const std::vector<Identifier> getFieldsOfSelectedBranch() const;
+        const std::vector<Identifier>& getFieldsOfSelectedBranch() const;
 
       protected:
         void addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex);
@@ -84,9 +84,9 @@ namespace babelwires {
 
     template <typename T>
     T* babelwires::UnionFeature::addFieldInBranch(const Identifier& tag, std::unique_ptr<T> f,
-                                                  const Identifier& identifier) {
+                                                  const Identifier& fieldIdentifier) {
         T* fTPtr = f.get();
-        addFieldInBranchInternal(tag, FieldAndIndex{identifier, std::move(f), getNumFeatures()});
+        addFieldInBranchInternal(tag, FieldAndIndex{fieldIdentifier, std::move(f), getNumFeatures()});
         return fTPtr;
     }
 } // namespace babelwires

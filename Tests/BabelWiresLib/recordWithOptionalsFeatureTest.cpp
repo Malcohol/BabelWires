@@ -47,7 +47,6 @@ TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
     EXPECT_EQ(recordFeature.getFeature(1), fixedFeature0);
     EXPECT_EQ(recordFeature.getFeature(2), fixedFeature1);
 
-
     recordFeature.activateField(op2);
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 4);

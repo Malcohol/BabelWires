@@ -21,8 +21,7 @@ void babelwires::RecordFeature::doSetToDefault() {
     setSubfeaturesToDefault();
 }
 
-void babelwires::RecordFeature::doSetToDefaultNonRecursive() {
-}
+void babelwires::RecordFeature::doSetToDefaultNonRecursive() {}
 
 babelwires::Feature* babelwires::RecordFeature::doGetFeature(int i) {
     return m_fields.at(i).m_feature.get();
@@ -83,7 +82,8 @@ int babelwires::RecordFeature::getChildIndexFromStep(const Identifier& identifie
 
 void babelwires::RecordFeature::addFieldInternal(Field f, int index) {
     assert((f.m_identifier.getDiscriminator() != 0) && "Only registered identfiers can be used as field identifiers");
-    assert((tryGetChildFromStep(PathStep(f.m_identifier)) == nullptr) && "There's an alredy a field with that field identifier");
+    assert((tryGetChildFromStep(PathStep(f.m_identifier)) == nullptr) &&
+           "There's an alredy a field with that field identifier");
     f.m_feature->setOwner(this);
     if (index == -1) {
         m_fields.emplace_back(std::move(f));
@@ -116,8 +116,8 @@ babelwires::RecordFeature::FieldAndIndex babelwires::RecordFeature::removeField(
 std::size_t babelwires::RecordFeature::doGetHash() const {
     std::size_t hash = hash::mixtureOf(static_cast<const char*>("Record"));
     for (const auto& f : m_fields) {
-        // Records can change their set of active fields (see RecordWithOptionalsFeature), so we mix in the
-        // field's identifier as well as its hash.
+        // Records can change their set of active fields (see RecordWithOptionalsFeature and UnionFeature), so we mix in
+        // the field's identifier as well as its hash.
         hash::mixInto(hash, f.m_identifier);
         hash::mixInto(hash, f.m_feature->getHash());
     }
