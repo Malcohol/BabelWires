@@ -64,7 +64,7 @@ void babelwires::UnionFeature::selectTagByIndex(unsigned int index) {
 
     // Activate the fields in the unselectedBranch.
 
-    typeof(UnselectedBranch::m_inactiveFields) oldUnselectedFields;
+    decltype(UnselectedBranch::m_inactiveFields) oldUnselectedFields;
     oldUnselectedFields.swap(m_unselectedBranches[index].m_inactiveFields);
 
     for (auto& fieldAndIndex : oldUnselectedFields) {
