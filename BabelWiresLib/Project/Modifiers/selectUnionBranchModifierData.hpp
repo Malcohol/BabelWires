@@ -19,6 +19,6 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
-        Identifier m_tag;
+        Identifier m_tagToSelect;
     };
 }

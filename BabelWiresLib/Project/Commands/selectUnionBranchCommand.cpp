@@ -69,7 +69,7 @@ bool babelwires::SelectUnionBranchCommand::initializeAndExecute(Project& project
 
     SelectUnionBranchModifierData modifierToAdd;
     modifierToAdd.m_pathToFeature = m_pathToUnion;
-    modifierToAdd.m_tag = m_tagToSelect;
+    modifierToAdd.m_tagToSelect = m_tagToSelect;
     m_unionModifierToAdd = std::make_unique<SelectUnionBranchModifierData>(std::move(modifierToAdd));
     
     project.addModifier(m_elementId, *m_unionModifierToAdd);
