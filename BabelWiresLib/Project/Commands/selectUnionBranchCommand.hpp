@@ -14,7 +14,7 @@
 
 namespace babelwires {
     class Project;
-    class ModifierData;
+    struct ModifierData;
 
     /// Activate an optional in a RecordWithOptionalsFeature
     class SelectUnionBranchCommand : public CompoundCommand<Project> {
