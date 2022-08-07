@@ -14,14 +14,17 @@ babelwires::UnionFeature::UnionFeature(TagValues tags, unsigned int defaultTagIn
     , m_defaultTagIndex(defaultTagIndex)
 {
     assert((m_defaultTagIndex < m_tags.size()) && "defaultTagIndex is out of range");
+    assert(std::all_of(m_tags.begin(), m_tags.end(), [](const auto& t) {return t.getDiscriminator() != 0;}) && "Union tags must be registered identifiers");
     m_unselectedBranches.resize(m_tags.size());
 }
 
 void babelwires::UnionFeature::addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex) {
     assert(isTag(tag) && "The tag is not a valid tag for this union");
-    const unsigned int index = getIndexOfTag(tag);
+    const unsigned int tagIndex = getIndexOfTag(tag);
     // All branches are unselected until the union is set to default. This ensures the stored indices are correct.
-    UnselectedBranch& unselectedBranch = m_unselectedBranches[index];
+    UnselectedBranch& unselectedBranch = m_unselectedBranches[tagIndex];
+    // Each field already added for this branch will bump the target location of the new field by one.
+    fieldAndIndex.m_index += unselectedBranch.m_inactiveFields.size();
     unselectedBranch.m_inactiveFields.emplace_back(std::move(fieldAndIndex));
 }
 
@@ -48,12 +51,13 @@ void babelwires::UnionFeature::selectTagByIndex(unsigned int index) {
 
         // Deactivate the fields in the currently selected branch.
 
-        // Maybe need to reverse?
-        for (auto identifier : m_selectedBranch.m_activeFields) {
+        // Iterate in reverse order, so the fieldAndIndex picks up the correct indices.
+        for (auto identifier : reverseIterate(m_selectedBranch.m_activeFields)) {
             FieldAndIndex fieldAndIndex = removeField(identifier);
             fieldAndIndex.m_feature->setToDefault();
             newUnselectedBranch.m_inactiveFields.emplace_back(std::move(fieldAndIndex));
         }
+        std::reverse(newUnselectedBranch.m_inactiveFields.begin(), newUnselectedBranch.m_inactiveFields.end());
 
         m_selectedBranch.m_activeFields.clear();
     }

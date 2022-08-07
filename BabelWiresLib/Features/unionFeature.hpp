@@ -13,12 +13,16 @@
 
 namespace babelwires {
 
-    /// A Record feature with subfeatures which can be inactive.
+    /// A Record feature which offers alternative sets of fields.
+    /// The record can have normal fields which are always available.
+    /// Other fields are associated with one of a set of tags, which controls whether they are active or not.
+    /// Not every tag needs to have fields associated with it.
     class UnionFeature : public RecordFeature {
       public:
         using TagValues = std::vector<Identifier>;
 
         /// Construct a union with the given set of tags.
+        /// The tags' identifiers must be registered.
         UnionFeature(TagValues tags, unsigned int defaultTagIndex);
 
         /// Add an optional field, which is not present in the record until activated.

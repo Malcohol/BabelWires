@@ -56,6 +56,7 @@ SET( LIB_TESTS_SRCS
     targetFileElementTest.cpp
     typeTest.cpp
     typeSystemTest.cpp
+    unionFeatureTest.cpp
     valueNamesTest.cpp
    )
 
