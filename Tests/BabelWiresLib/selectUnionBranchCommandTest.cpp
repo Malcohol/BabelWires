@@ -107,3 +107,66 @@ TEST(SelectUnionBranchCommandTest, executeAndUndo) {
     checkModifiers(true);
 }
 
+TEST(SelectUnionBranchCommandTest, failSafelyNoElement) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::SelectUnionBranchCommand command("Test command",  51,
+                                               testUtils::TestFeatureWithUnion::s_pathToUnionFeature, "tag");
+
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
+}
+
+TEST(SelectUnionBranchCommandTest, failSafelyNoRecord) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::SelectUnionBranchCommand command("Test command",  51,
+                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"), "tag");
+
+    testUtils::TestFeatureElementWithUnionData elementData;
+    elementData.m_id = 51;
+
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+    EXPECT_EQ(elementId, 51);
+
+    testEnvironment.m_project.process();
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
+}
+
+TEST(SelectUnionBranchCommandTest, failSafelyNoOptional) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithUnionData());
+
+    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElementWithUnion>();
+    ASSERT_NE(element, nullptr);
+
+    babelwires::Identifier notATag("notTag");
+    notATag.setDiscriminator(1);
+    babelwires::SelectUnionBranchCommand command("Test command",  51,
+                                               testUtils::TestFeatureWithUnion::s_pathToUnionFeature, notATag);
+
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
+}
+
+TEST(DeactivateOptionalsCommandTest, failSafelyAlreadySelected) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithUnionData());
+
+    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElementWithUnion>();
+    ASSERT_NE(element, nullptr);
+    const testUtils::TestFeatureWithUnion* inputFeature =
+        element->getInputFeature()->as<testUtils::TestFeatureWithUnion>();
+    ASSERT_NE(inputFeature, nullptr);
+
+    babelwires::SelectUnionBranchCommand command("Test command", elementId,
+                                               testUtils::TestFeatureWithUnion::s_pathToUnionFeature, inputFeature->m_tagBId);
+
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
+}
+

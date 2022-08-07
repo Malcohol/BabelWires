@@ -41,6 +41,7 @@ namespace testUtils {
         static constexpr char s_fieldA1Uuid[] = "00000000-1111-2222-3333-8800000000A1";
         static constexpr char s_fieldB0Uuid[] = "00000000-1111-2222-3333-8800000000B0";
 
+        // Note: tagB is the default.
         babelwires::Identifier m_tagAId;
         babelwires::Identifier m_tagBId;
         babelwires::Identifier m_unionFeatureId;
