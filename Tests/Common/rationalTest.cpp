@@ -183,3 +183,43 @@ TEST(RationalTest, hash) {
     EXPECT_NE(set.find(Rational(1, 2)), set.end());
     EXPECT_NE(set.find(Rational(1, 2)), set.find(Rational(1)));
 }
+
+TEST(RationalTest, divmod) {
+    // Positive
+    {
+        const auto divmod = Rational(1).divmod(Rational(1));
+        EXPECT_EQ(std::get<0>(divmod), 1);    
+        EXPECT_EQ(std::get<1>(divmod), 0);
+    }
+    {
+        const auto divmod = Rational(1).divmod(Rational(2));
+        EXPECT_EQ(std::get<0>(divmod), 0);
+        EXPECT_EQ(std::get<1>(divmod), 1);
+    }
+    {
+        const auto divmod = Rational(1).divmod(Rational(1, 2));
+        EXPECT_EQ(std::get<0>(divmod), 2);    
+        EXPECT_EQ(std::get<1>(divmod), 0);
+    }
+    {
+        const auto divmod = Rational(3, 2).divmod(Rational(1));
+        EXPECT_EQ(std::get<0>(divmod), 1); 
+        EXPECT_EQ(std::get<1>(divmod), Rational(1, 2));
+    }
+    {
+        const auto divmod = Rational(1, 2).divmod(Rational(1, 3));
+        EXPECT_EQ(std::get<0>(divmod), 1); 
+        EXPECT_EQ(std::get<1>(divmod), Rational(1, 6));
+    }
+    {
+        const auto divmod = Rational(7, 2).divmod(Rational(1, 3));
+        EXPECT_EQ(std::get<0>(divmod), 10); 
+        EXPECT_EQ(std::get<1>(divmod), Rational(1, 6));
+    }
+    // Negative
+    {
+        const auto divmod = Rational(-2, 3).divmod(Rational(1, 2));
+        EXPECT_EQ(std::get<0>(divmod), -1); 
+        EXPECT_EQ(std::get<1>(divmod), -Rational(1, 6));
+    }
+}

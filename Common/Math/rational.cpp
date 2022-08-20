@@ -307,3 +307,13 @@ babelwires::Rational babelwires::Rational::parseString(std::string_view str) {
 std::size_t babelwires::Rational::getHash() const {
     return hash::mixtureOf(m_numerator, m_denominator);
 }
+
+std::tuple<int, babelwires::Rational> babelwires::Rational::divmod(Rational x) const {
+    const ComponentType e = x.m_denominator * m_numerator;
+    const ComponentType a = e / m_denominator;
+    const ComponentType b = e % m_denominator;
+    const ComponentType u = a / x.m_numerator;
+    const ComponentType v = a % x.m_numerator;
+    const Rational mod = (Rational(v) + Rational(b, m_denominator)) / x.m_denominator; 
+    return { u, mod };
+}

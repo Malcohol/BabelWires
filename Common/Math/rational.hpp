@@ -66,6 +66,10 @@ namespace babelwires {
         /// Get a hash value for the rational.
         std::size_t getHash() const;
 
+        /// Return (d, m) where d*x + m = this and m is smallest.
+        /// Note: The current implementation can return negative remainders.
+        std::tuple<int, Rational> divmod(Rational x) const;
+
       private:
         using BigType = std::int64_t;
         void setComponents(BigType numerator, BigType denominator);
