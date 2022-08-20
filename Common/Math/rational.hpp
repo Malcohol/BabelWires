@@ -67,7 +67,7 @@ namespace babelwires {
         std::size_t getHash() const;
 
         /// Return (d, m) where d*x + m = this and m is smallest.
-        /// Note: The current implementation can return negative remainders.
+        /// Note: The current implementation can return negative remainders for negative numbers.
         std::tuple<int, Rational> divmod(Rational x) const;
 
       private:
