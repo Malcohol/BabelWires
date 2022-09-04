@@ -31,6 +31,7 @@ namespace babelwires {
         return (data.m_int == 0xAABBCCDDu) ? IS_BIG_ENDIAN : IS_LITTLE_ENDIAN;
     }
 
+    // TODO: Allow ranges to describe open and closed intervals.
     template <typename T> struct Range {
         inline Range(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max())
             : m_min(min)

@@ -18,7 +18,7 @@ namespace babelwires {
     template <typename T> class NumericFeature : public ValueFeature {
       public:
         T get() const;
-        void set(T value);
+        virtual void set(T value);
 
         /// Get the range of valid values.
         virtual Range<T> getRange() const;
