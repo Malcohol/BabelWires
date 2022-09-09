@@ -11,7 +11,7 @@
 
 namespace babelwires {
 
-    struct ContentsCacheEntry;
+    class ContentsCacheEntry;
     class FeatureElement;
     class RowModelRegistry;
 

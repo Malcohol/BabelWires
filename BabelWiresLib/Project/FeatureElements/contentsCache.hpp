@@ -22,9 +22,15 @@ namespace babelwires {
     class ArrayFeature;
     class RootFeature;
     class EditTree;
+    class ContentsCache;
+
+    namespace Detail {
+      struct ContentsCacheBuilder;
+    }
 
     /// The information cached about a single row in the contents of a feature element.
-    struct ContentsCacheEntry {
+    class ContentsCacheEntry {
+      public:
         ContentsCacheEntry(std::string label, const Feature* inputFeature, const Feature* outputFeature,
                            const FeaturePath& path, std::uint8_t parentIndex);
 
@@ -44,6 +50,10 @@ namespace babelwires {
         const Feature* getInputThenOutputFeature() const { return m_inputFeature ? m_inputFeature : m_outputFeature; }
 
         const Feature* getOutputThenInputFeature() const { return m_outputFeature ? m_outputFeature : m_inputFeature; }
+
+      private:
+        friend ContentsCache;
+        friend Detail::ContentsCacheBuilder;
 
         std::string m_label;
         const Feature* m_inputFeature;
