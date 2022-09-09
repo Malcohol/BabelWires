@@ -26,7 +26,15 @@ babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Feat
     , m_inputFeature(inputFeature)
     , m_outputFeature(outputFeature)
     , m_path(path)
-    , m_parentIndex(parentIndex) {}
+    , m_parentIndex(parentIndex)
+    , m_isExpandable(false)
+    , m_isExpanded(false)
+    , m_hasModifier(false)
+    , m_hasLocalModifier(false)
+    , m_hasFailedModifier(false)
+    , m_hasHiddenModifiers(false)
+    , m_hasFailedHiddenModifiers(false)
+    , m_hasSubModifiers(false) {}
 
 babelwires::ContentsCache::ContentsCache(const EditTree& edits)
     : m_edits(edits) {}

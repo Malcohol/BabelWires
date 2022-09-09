@@ -65,28 +65,28 @@ namespace babelwires {
         /// Does the underlying feature have child features?
         /// Note: It's difficult to calculate the number of children without exploring them
         /// because of the rules about sharing paths between input/output features.
-        bool m_isExpandable = false;
+        bool m_isExpandable : 1;
 
         /// If this is a compound, is it expanded.
-        bool m_isExpanded = false;
+        bool m_isExpanded : 1;
 
         /// Is this entry modified?
-        bool m_hasModifier = false;
+        bool m_hasModifier : 1;
 
         /// The modifier is a local edit (as opposed to a ConnectionModifier)
-        bool m_hasLocalModifier = false;
+        bool m_hasLocalModifier : 1;
 
         /// Has that modifier failed?
-        bool m_hasFailedModifier = false;
+        bool m_hasFailedModifier : 1;
 
         /// Are there modifiers beneath this entry which are not visible?
-        bool m_hasHiddenModifiers = false;
+        bool m_hasHiddenModifiers : 1;
 
         /// Are there modifiers beneath this entry which are not visible and which failed?
-        bool m_hasFailedHiddenModifiers = false;
+        bool m_hasFailedHiddenModifiers : 1;
 
         /// Are there any modifiers at or beneath this entry?
-        bool m_hasSubModifiers = false;
+        bool m_hasSubModifiers : 1;
 
         /// A cache may not contain this many elements.
         static constexpr std::uint8_t c_invalidIndex = 255;
