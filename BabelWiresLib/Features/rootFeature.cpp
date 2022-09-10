@@ -28,5 +28,5 @@ const babelwires::ProjectContext& babelwires::RootFeature::getProjectContextAt(c
 }
 
 babelwires::Feature::Style babelwires::RootFeature::getStyle() const {
-    return Style(0);
+    return babelwires::Feature::Style::isInlined;
 }

@@ -62,8 +62,11 @@ namespace babelwires {
 
         /// Flags defining aspects of how a feature appears in a feature element.
         enum class Style : unsigned int {
-            /// Applies only to compound features.
+            // Applies only to compound features.
+            /// By default, compounds are collapsed and can be expanded. If false, they will be in a permanently expanded state.
             isCollapsable = 0b0001,
+            /// By default, the children of compounds are indented. If true, this will present the children at the top level.
+            isInlined = 0b0010,
         };
 
         /// How should this feature appear in a feature element?
