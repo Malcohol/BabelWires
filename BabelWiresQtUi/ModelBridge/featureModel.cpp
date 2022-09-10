@@ -137,9 +137,9 @@ QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) cons
                     } else {
                         triangle = entry->hasSubmodifiers() ? u8"\u25b6" : u8"\u25b7";
                     }
-                    return QString(entry->getPath().getNumSteps() * 2 - 1, ' ') + triangle + entry->getLabel().c_str();
+                    return QString(entry->getIndent() * 2 - 1, ' ') + triangle + entry->getLabel().c_str();
                 } else {
-                    return QString(entry->getPath().getNumSteps() * 2, ' ') + entry->getLabel().c_str();
+                    return QString(entry->getIndent() * 2, ' ') + entry->getLabel().c_str();
                 }
             } else {
                 assert((column == 1) && "Column out of range");

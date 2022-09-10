@@ -26,3 +26,7 @@ const babelwires::ProjectContext& babelwires::RootFeature::getProjectContextAt(c
     assert(rootFeature && "You cannot only call getProjectContextAt in a feature hierarchy with a RootFeature at its root");
     return rootFeature->m_projectContext;
 }
+
+babelwires::Feature::Style babelwires::RootFeature::getStyle() const {
+    return babelwires::Feature::Style::isInlined;
+}

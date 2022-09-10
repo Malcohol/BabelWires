@@ -1,22 +1,24 @@
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Identifiers/registeredIdentifier.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testModifier.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRootFeature.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+
+#include <Tests/TestUtils/testIdentifiers.hpp>
 
 namespace {
     std::unique_ptr<testUtils::LocalTestModifier> createModifier(babelwires::FeaturePath path, int x,
-                                                                    babelwires::FeatureElement* owner = nullptr) {
+                                                                 babelwires::FeatureElement* owner = nullptr) {
         auto data = std::make_unique<babelwires::IntValueAssignmentData>();
         data->m_pathToFeature = std::move(path);
         data->m_value = x;
@@ -95,8 +97,7 @@ namespace {
         EXPECT_FALSE(entry->isExpanded());
     }
 
-    void checkFirstArrayEntry(const babelwires::ContentsCacheEntry* entry,
-                              testUtils::TestRootFeature* inputFeature,
+    void checkFirstArrayEntry(const babelwires::ContentsCacheEntry* entry, testUtils::TestRootFeature* inputFeature,
                               testUtils::TestRootFeature* outputFeature) {
         EXPECT_EQ(entry->getLabel(), "[0]");
         if (inputFeature) {
@@ -114,8 +115,7 @@ namespace {
         EXPECT_FALSE(entry->isExpanded());
     }
 
-    void checkSecondArrayEntry(const babelwires::ContentsCacheEntry* entry,
-                               testUtils::TestRootFeature* inputFeature,
+    void checkSecondArrayEntry(const babelwires::ContentsCacheEntry* entry, testUtils::TestRootFeature* inputFeature,
                                testUtils::TestRootFeature* outputFeature) {
         EXPECT_EQ(entry->getLabel(), "[1]");
         if (inputFeature) {
@@ -142,8 +142,7 @@ namespace {
     }
 
     void testCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                             testUtils::TestRootFeature* inputFeature,
-                             testUtils::TestRootFeature* outputFeature) {
+                             testUtils::TestRootFeature* inputFeature, testUtils::TestRootFeature* outputFeature) {
         cache.setFeatures(inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 3);
         {
@@ -221,8 +220,8 @@ namespace {
         }
     }
 
-    void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                               testUtils::TestRootFeature* inputFeature,
+    void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache,
+                               babelwires::EditTree& editTree, testUtils::TestRootFeature* inputFeature,
                                testUtils::TestRootFeature* outputFeature) {
         ASSERT_TRUE(inputFeature);
 
@@ -580,8 +579,7 @@ namespace {
     }
 
     void testFileCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                                 testUtils::TestFileFeature* inputFeature,
-                                 testUtils::TestFileFeature* outputFeature) {
+                                 testUtils::TestFileFeature* inputFeature, testUtils::TestFileFeature* outputFeature) {
         ASSERT_EQ(cache.getNumRows(), 2);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -595,8 +593,8 @@ namespace {
         }
     }
 
-    void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                               testUtils::TestFileFeature* inputFeature,
+    void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache,
+                               babelwires::EditTree& editTree, testUtils::TestFileFeature* inputFeature,
                                testUtils::TestFileFeature* outputFeature) {
         ASSERT_TRUE(inputFeature);
 
@@ -676,4 +674,70 @@ TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     cache.setFeatures(&inputFeature, &outputFeature);
     testFileCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
+}
+
+namespace {
+    /// Style is normally set on a class with a virtual method. For testing convenience, we will use a class which
+    /// returns a style from a member.
+    struct TestRecordWithStyle : babelwires::RecordFeature {
+        TestRecordWithStyle(Style style)
+            : m_style(style) {
+                addField(std::make_unique<babelwires::IntFeature>(), testUtils::getTestRegisteredIdentifier("Flerm"));
+            }
+
+        Style getStyle() const { return m_style; }
+
+        Style m_style;
+    };
+
+    struct TestRecordWithChildStyles : babelwires::RootFeature {
+        TestRecordWithChildStyles(const babelwires::ProjectContext& context) : babelwires::RootFeature(context) {
+            addField(std::make_unique<TestRecordWithStyle>(Style(0)), testUtils::getTestRegisteredIdentifier("zero"));
+            addField(std::make_unique<TestRecordWithStyle>(Style::isCollapsable), testUtils::getTestRegisteredIdentifier("coll"));
+            addField(std::make_unique<TestRecordWithStyle>(Style::isInlined), testUtils::getTestRegisteredIdentifier("inline"));
+            addField(std::make_unique<TestRecordWithStyle>(Style::isCollapsable | Style::isInlined), testUtils::getTestRegisteredIdentifier("both"));
+        }
+    };
+} // namespace
+
+TEST(ContentsCacheTest, style) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::EditTree editTree;
+    babelwires::ContentsCache cache(editTree);
+
+    TestRecordWithChildStyles record(testEnvironment.m_projectContext);
+    // Handling of style should be unaffected by input / output features.
+    cache.setFeatures(&record, nullptr);
+
+    EXPECT_EQ(cache.getNumRows(), 6);
+    EXPECT_EQ(cache.getEntry(0)->getIndent(), 0);
+    EXPECT_EQ(cache.getEntry(1)->getIndent(), 1);
+    EXPECT_EQ(cache.getEntry(2)->getIndent(), 0);
+    EXPECT_EQ(cache.getEntry(3)->getIndent(), 0);
+    EXPECT_EQ(cache.getEntry(4)->getIndent(), 0);
+    EXPECT_EQ(cache.getEntry(5)->getIndent(), 0);
+
+    EXPECT_EQ(cache.getEntry(0)->isExpandable(), false);
+    EXPECT_EQ(cache.getEntry(1)->isExpandable(), false);
+    EXPECT_EQ(cache.getEntry(2)->isExpandable(), true);
+    EXPECT_EQ(cache.getEntry(3)->isExpandable(), false);
+    EXPECT_EQ(cache.getEntry(4)->isExpandable(), false);
+    EXPECT_EQ(cache.getEntry(5)->isExpandable(), true);
+
+    editTree.setExpanded(cache.getEntry(2)->getPath(), true);
+    editTree.setExpanded(cache.getEntry(5)->getPath(), true);
+    
+    cache.setFeatures(&record, nullptr);
+
+    EXPECT_EQ(cache.getNumRows(), 8);
+    EXPECT_EQ(cache.getEntry(0)->getIndent(), 0);
+    EXPECT_EQ(cache.getEntry(1)->getIndent(), 1);
+    EXPECT_EQ(cache.getEntry(2)->getIndent(), 0);
+    EXPECT_EQ(cache.getEntry(3)->getIndent(), 1);
+    EXPECT_EQ(cache.getEntry(4)->getIndent(), 0);
+    EXPECT_EQ(cache.getEntry(5)->getIndent(), 0);
+    EXPECT_EQ(cache.getEntry(6)->getIndent(), 0);
+    EXPECT_EQ(cache.getEntry(7)->getIndent(), 0);
 }

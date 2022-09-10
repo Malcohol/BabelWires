@@ -25,7 +25,7 @@ namespace babelwires {
 
     class Feature;
     class FeatureElement;
-    struct ContentsCacheEntry;
+    class ContentsCacheEntry;
     class Modifier;
     class FeatureModelDelegate;
 
