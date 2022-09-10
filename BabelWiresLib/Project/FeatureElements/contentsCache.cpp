@@ -20,13 +20,11 @@
 #include <unordered_set>
 
 babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Feature* inputFeature,
-                                                   const Feature* outputFeature, const FeaturePath& path,
-                                                   std::uint8_t parentIndex)
+                                                   const Feature* outputFeature, const FeaturePath& path)
     : m_label(std::move(label))
     , m_inputFeature(inputFeature)
     , m_outputFeature(outputFeature)
     , m_path(path)
-    , m_parentIndex(parentIndex)
     , m_isExpandable(false)
     , m_isExpanded(false)
     , m_hasModifier(false)
@@ -65,7 +63,7 @@ namespace babelwires {
                 if (index == 0) {
                     // Special case: The top level cannot be collapsed (mainly because the edit tree has no top level).
                     m_rows[index].m_isExpandable = false;
-                } else if (index != ContentsCacheEntry::c_invalidIndex) {
+                } else {
                     m_rows[index].m_isExpandable = isExpandable;
                     if (isExpandable) {
                         m_rows[index].m_isExpanded = m_edits.isExpanded(path);
@@ -75,13 +73,8 @@ namespace babelwires {
                 return true;
             }
 
-            void addInputFeatureToCache(std::string label, const babelwires::Feature* f, const FeaturePath& path,
-                                        std::uint8_t parentIndex) {
-                if (m_rows.size() == ContentsCacheEntry::c_invalidIndex - 1) {
-                    // TODO: Debug message
-                    return;
-                }
-                m_rows.emplace_back(ContentsCacheEntry(std::move(label), f, nullptr, path, parentIndex));
+            void addInputFeatureToCache(std::string label, const babelwires::Feature* f, const FeaturePath& path) {
+                m_rows.emplace_back(ContentsCacheEntry(std::move(label), f, nullptr, path));
                 const std::uint8_t thisIndex = m_rows.size() - 1;
                 if (const auto* record = f->as<const babelwires::RecordFeature>()) {
                     addInputRecordFeatureToCache(record, path, thisIndex);
@@ -97,7 +90,7 @@ namespace babelwires {
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(record->getFieldIdentifier(i)));
                         addInputFeatureToCache(m_identifierRegistry->getName(record->getFieldIdentifier(i)),
-                                               record->getFeature(i), std::move(pathToChild), thisIndex);
+                                               record->getFeature(i), std::move(pathToChild));
                     }
                 }
             }
@@ -110,18 +103,13 @@ namespace babelwires {
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(i));
                         addInputFeatureToCache(getArrayEntryLabel(i, entryNames), array->getFeature(i),
-                                               std::move(pathToChild), thisIndex);
+                                               std::move(pathToChild));
                     }
                 }
             }
 
-            void addOutputFeatureToCache(std::string label, const babelwires::Feature* f, const FeaturePath& path,
-                                         std::uint8_t parentIndex) {
-                if (m_rows.size() == ContentsCacheEntry::c_invalidIndex - 1) {
-                    // TODO: Debug message
-                    return;
-                }
-                m_rows.emplace_back(ContentsCacheEntry(std::move(label), nullptr, f, path, parentIndex));
+            void addOutputFeatureToCache(std::string label, const babelwires::Feature* f, const FeaturePath& path) {
+                m_rows.emplace_back(ContentsCacheEntry(std::move(label), nullptr, f, path));
                 const std::uint8_t thisIndex = m_rows.size() - 1;
                 if (const auto* record = f->as<const babelwires::RecordFeature>()) {
                     addOutputRecordFeatureToCache(record, path, thisIndex);
@@ -137,7 +125,7 @@ namespace babelwires {
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(record->getFieldIdentifier(i)));
                         addOutputFeatureToCache(m_identifierRegistry->getName(record->getFieldIdentifier(i)),
-                                                record->getFeature(i), std::move(pathToChild), thisIndex);
+                                                record->getFeature(i), std::move(pathToChild));
                     }
                 }
             }
@@ -150,19 +138,15 @@ namespace babelwires {
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(i));
                         addOutputFeatureToCache(getArrayEntryLabel(i, entryNames), array->getFeature(i),
-                                                std::move(pathToChild), thisIndex);
+                                                std::move(pathToChild));
                     }
                 }
             }
 
             void addFeatureToCache(std::string label, const Feature* inputFeature, const Feature* outputFeature,
-                                   const FeaturePath& path, std::uint8_t parentIndex) {
-                if (m_rows.size() == ContentsCacheEntry::c_invalidIndex - 1) {
-                    // TODO: Debug message
-                    return;
-                }
+                                   const FeaturePath& path) {
                 m_rows.emplace_back(
-                    ContentsCacheEntry(std::move(label), inputFeature, outputFeature, path, parentIndex));
+                    ContentsCacheEntry(std::move(label), inputFeature, outputFeature, path));
                 const std::uint8_t thisIndex = m_rows.size() - 1;
                 if (const auto* const inputRecord = inputFeature->as<const babelwires::RecordFeature>()) {
                     const auto* const outputRecord = outputFeature->as<const babelwires::RecordFeature>();
@@ -189,11 +173,11 @@ namespace babelwires {
                         if (outputChildIndex >= 0) {
                             addFeatureToCache(m_identifierRegistry->getName(inputFeature->getFieldIdentifier(i)),
                                               inputFeature->getFeature(i), outputFeature->getFeature(outputChildIndex),
-                                              std::move(pathToChild), thisIndex);
+                                              std::move(pathToChild));
                             outputIndicesHandled.insert(outputChildIndex);
                         } else {
                             addInputFeatureToCache(m_identifierRegistry->getName(inputFeature->getFieldIdentifier(i)),
-                                                   inputFeature->getFeature(i), std::move(pathToChild), thisIndex);
+                                                   inputFeature->getFeature(i), std::move(pathToChild));
                         }
                     }
                     for (int i = 0; i < outputFeature->getNumFeatures(); ++i) {
@@ -201,7 +185,7 @@ namespace babelwires {
                             FeaturePath pathToChild = path;
                             pathToChild.pushStep(PathStep(outputFeature->getFieldIdentifier(i)));
                             addOutputFeatureToCache(m_identifierRegistry->getName(outputFeature->getFieldIdentifier(i)),
-                                                    outputFeature->getFeature(i), std::move(pathToChild), thisIndex);
+                                                    outputFeature->getFeature(i), std::move(pathToChild));
                         }
                     }
                 }
@@ -218,21 +202,21 @@ namespace babelwires {
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(i));
                         addFeatureToCache(getArrayEntryLabel(i, entryNames), inputFeature->getFeature(i),
-                                          outputFeature->getFeature(i), std::move(pathToChild), thisIndex);
+                                          outputFeature->getFeature(i), std::move(pathToChild));
                     }
                     for (; i < inputFeature->getNumFeatures(); ++i) {
                         const babelwires::ValueNames* const entryNames = inputFeature->getEntryNames();
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(i));
                         addInputFeatureToCache(getArrayEntryLabel(i, entryNames), inputFeature->getFeature(i),
-                                               std::move(pathToChild), thisIndex);
+                                               std::move(pathToChild));
                     }
                     for (; i < outputFeature->getNumFeatures(); ++i) {
                         const babelwires::ValueNames* const entryNames = outputFeature->getEntryNames();
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(i));
                         addOutputFeatureToCache(getArrayEntryLabel(i, entryNames), outputFeature->getFeature(i),
-                                                std::move(pathToChild), thisIndex);
+                                                std::move(pathToChild));
                     }
                 }
             }
@@ -252,12 +236,11 @@ void babelwires::ContentsCache::setFeatures(const RootFeature* inputFeature, con
     // TODO Instead of this hack, make the extra "file" row a UI feature.
     const char* rootLabel = rootFeature->as<const babelwires::FileFeature>() ? "File" : "Root";
     if (inputFeature && outputFeature) {
-        builder.addFeatureToCache(rootLabel, inputFeature, outputFeature, FeaturePath(),
-                                  ContentsCacheEntry::c_invalidIndex);
+        builder.addFeatureToCache(rootLabel, inputFeature, outputFeature, FeaturePath());
     } else if (inputFeature) {
-        builder.addInputFeatureToCache(rootLabel, inputFeature, FeaturePath(), ContentsCacheEntry::c_invalidIndex);
+        builder.addInputFeatureToCache(rootLabel, inputFeature, FeaturePath());
     } else if (outputFeature) {
-        builder.addOutputFeatureToCache(rootLabel, outputFeature, FeaturePath(), ContentsCacheEntry::c_invalidIndex);
+        builder.addOutputFeatureToCache(rootLabel, outputFeature, FeaturePath());
     } else {
         assert(!"Unimplemented");
     }

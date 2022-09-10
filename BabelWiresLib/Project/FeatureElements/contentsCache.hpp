@@ -32,7 +32,7 @@ namespace babelwires {
     class ContentsCacheEntry {
       public:
         ContentsCacheEntry(std::string label, const Feature* inputFeature, const Feature* outputFeature,
-                           const FeaturePath& path, std::uint8_t parentIndex);
+                           const FeaturePath& path);
 
         const std::string& getLabel() const { return m_label; }
         const Feature* getInputFeature() const { return m_inputFeature; }
@@ -87,13 +87,6 @@ namespace babelwires {
 
         /// Are there any modifiers at or beneath this entry?
         bool m_hasSubModifiers : 1;
-
-        /// A cache may not contain this many elements.
-        static constexpr std::uint8_t c_invalidIndex = 255;
-
-        /// The index of this entries parent in the cache.
-        // TODO Not currently used and imposes a technical limit. Remove?
-        std::uint8_t m_parentIndex = c_invalidIndex;
     };
 
     /// A cache of the contents of a feature element visible to the user.
