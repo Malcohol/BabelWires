@@ -59,6 +59,10 @@ std::size_t babelwires::Feature::getHash() const {
     return doGetHash();
 }
 
+babelwires::Feature::Style babelwires::Feature::getStyle() const {
+    return Style::isCollapsable;
+}
+
 std::string babelwires::ValueFeature::getValueType() const {
     // Future proofing, while I consider this approach.
     assert((doGetValueType().size() <= 4) && "The value type must be 4 characters or shorter");

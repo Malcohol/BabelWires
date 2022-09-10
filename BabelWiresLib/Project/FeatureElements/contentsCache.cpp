@@ -59,16 +59,20 @@ namespace babelwires {
                 , m_edits(edits) {}
 
             /// Sets some compound details and returns whether the compound is expanded or not.
-            bool setAndGetCompoundIsExpanded(std::uint8_t index, const FeaturePath& path, bool isExpandable) {
+            bool setAndGetCompoundIsExpanded(const babelwires::CompoundFeature* compound, std::uint8_t index,
+                                             const FeaturePath& path, bool hasChildren) {
+                assert(compound);
                 if (index == 0) {
                     // Special case: The top level cannot be collapsed (mainly because the edit tree has no top level).
                     m_rows[index].m_isExpandable = false;
-                } else {
-                    m_rows[index].m_isExpandable = isExpandable;
-                    if (isExpandable) {
+                } else if (isNonzero(compound->getStyle() & babelwires::Feature::Style::isCollapsable)) {
+                    m_rows[index].m_isExpandable = hasChildren;
+                    if (hasChildren) {
                         m_rows[index].m_isExpanded = m_edits.isExpanded(path);
                         return m_rows[index].m_isExpanded;
                     }
+                } else {
+                    m_rows[index].m_isExpandable = false;
                 }
                 return true;
             }
@@ -85,7 +89,7 @@ namespace babelwires {
 
             void addInputRecordFeatureToCache(const babelwires::RecordFeature* record, const FeaturePath& path,
                                               std::uint8_t thisIndex) {
-                if (setAndGetCompoundIsExpanded(thisIndex, path, record->getNumFeatures())) {
+                if (setAndGetCompoundIsExpanded(record, thisIndex, path, record->getNumFeatures())) {
                     for (int i = 0; i < record->getNumFeatures(); ++i) {
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(record->getFieldIdentifier(i)));
@@ -97,7 +101,7 @@ namespace babelwires {
 
             void addInputArrayFeatureToCache(const babelwires::ArrayFeature* array, const FeaturePath& path,
                                              std::uint8_t thisIndex) {
-                if (setAndGetCompoundIsExpanded(thisIndex, path, array->getNumFeatures())) {
+                if (setAndGetCompoundIsExpanded(array, thisIndex, path, array->getNumFeatures())) {
                     const babelwires::ValueNames* const entryNames = array->getEntryNames();
                     for (int i = 0; i < array->getNumFeatures(); ++i) {
                         FeaturePath pathToChild = path;
@@ -120,7 +124,7 @@ namespace babelwires {
 
             void addOutputRecordFeatureToCache(const babelwires::RecordFeature* record, const FeaturePath& path,
                                                std::uint8_t thisIndex) {
-                if (setAndGetCompoundIsExpanded(thisIndex, path, record->getNumFeatures())) {
+                if (setAndGetCompoundIsExpanded(record, thisIndex, path, record->getNumFeatures())) {
                     for (int i = 0; i < record->getNumFeatures(); ++i) {
                         FeaturePath pathToChild = path;
                         pathToChild.pushStep(PathStep(record->getFieldIdentifier(i)));
@@ -132,7 +136,7 @@ namespace babelwires {
 
             void addOutputArrayFeatureToCache(const babelwires::ArrayFeature* array, const FeaturePath& path,
                                               std::uint8_t thisIndex) {
-                if (setAndGetCompoundIsExpanded(thisIndex, path, array->getNumFeatures())) {
+                if (setAndGetCompoundIsExpanded(array, thisIndex, path, array->getNumFeatures())) {
                     const babelwires::ValueNames* const entryNames = array->getEntryNames();
                     for (int i = 0; i < array->getNumFeatures(); ++i) {
                         FeaturePath pathToChild = path;
@@ -145,8 +149,7 @@ namespace babelwires {
 
             void addFeatureToCache(std::string label, const Feature* inputFeature, const Feature* outputFeature,
                                    const FeaturePath& path) {
-                m_rows.emplace_back(
-                    ContentsCacheEntry(std::move(label), inputFeature, outputFeature, path));
+                m_rows.emplace_back(ContentsCacheEntry(std::move(label), inputFeature, outputFeature, path));
                 const std::uint8_t thisIndex = m_rows.size() - 1;
                 if (const auto* const inputRecord = inputFeature->as<const babelwires::RecordFeature>()) {
                     const auto* const outputRecord = outputFeature->as<const babelwires::RecordFeature>();
@@ -161,7 +164,8 @@ namespace babelwires {
 
             void addRecordContentsToCache(const RecordFeature* inputFeature, const RecordFeature* outputFeature,
                                           const FeaturePath& path, std::uint8_t thisIndex) {
-                if (setAndGetCompoundIsExpanded(thisIndex, path,
+                // Assume expandability is common to input and output feature.
+                if (setAndGetCompoundIsExpanded(inputFeature, thisIndex, path,
                                                 inputFeature->getNumFeatures() + outputFeature->getNumFeatures())) {
                     const int cacheStartSize = m_rows.size();
                     std::unordered_set<int> outputIndicesHandled;
@@ -193,7 +197,8 @@ namespace babelwires {
 
             void addArrayContentsToCache(const ArrayFeature* inputFeature, const ArrayFeature* outputFeature,
                                          const FeaturePath& path, std::uint8_t thisIndex) {
-                if (setAndGetCompoundIsExpanded(thisIndex, path,
+                // Assume expandability is common to input and output feature.
+                if (setAndGetCompoundIsExpanded(inputFeature, thisIndex, path,
                                                 inputFeature->getNumFeatures() + outputFeature->getNumFeatures())) {
                     int i = 0;
                     for (; i < std::min(inputFeature->getNumFeatures(), outputFeature->getNumFeatures()); ++i) {
