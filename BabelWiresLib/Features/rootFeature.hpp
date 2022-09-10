@@ -25,6 +25,9 @@ namespace babelwires {
         /// hierarchy. Asserts if there is no root.
         static const ProjectContext& getProjectContextAt(const Feature& feature);
 
+        /// The root is not collapsable.
+        Style getStyle() const override;
+
       private:
         const ProjectContext& m_projectContext;
     };
