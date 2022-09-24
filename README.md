@@ -1,31 +1,37 @@
 # BabelWires
 
-BabelWires is a framework for building data format conversion applications.
-It attempts to occupy a space between command-line utilities (which tend to be quite fixed in functionality), and code (which is highly flexible, but unavailable to many people).
+BabelWires is a framework for data format conversion applications.
 
-Applications built in BabelWires allow a user to configure a conversion from a file in a source format to a file in a target format using a [dataflow](https://en.wikipedia.org/wiki/Dataflow_programming) style:
-* Imported data is represented as a node with output ports
-* Data to be exported is represented as a node with input ports
-* Processors, which mutate the imported data, are represented as nodes with both input and output ports.
+Its user interface is based on the [dataflow paradigm](https://en.wikipedia.org/wiki/Dataflow_programming):
+nodes representing input files, output files and data processors can be wired together to define how data should flow from input to output, being transformed along the way. 
+In flexibility and expressive power, it lies somewhere between command-line utilities (which tend to be quite fixed in functionality) and code (which is highly flexible, but unavailable to many people).
+It encourages the development of generic conversion software in contrast to bespoke format-specific applications.
 
-Users can create graphs of these nodes, defining how the source data is imported, processed and exported.    
+The BabelWires framework has no domain specific code, but provides the bulk of the domain agnostic code needed to construct this kind of application.
 
-BabelWires itself has no domain specific code, but provides the bulk of the domain agnostic code needed to construct this kind of application.
-The defining use-case is [SeqWires](https://github.com/Malcohol/SeqWires), which supports the conversion of music sequence data between various music sequencer formats.
-
+The defining use-case is [SeqWires](https://github.com/Malcohol/SeqWires), which supports the conversion of music sequence data between music sequencer formats.
 Here's a screenshot of SeqWires:
 
 ![Screenshot showing several nodes wired together](Docs/screenshot.png "SeqWires screenshot showing several nodes wired together")
 
 The framework provides:
-* a generic way of representing data in a tree of self-describing data structures ([Feature](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/features.hpp))
-* abstractions for source and target formats ([SourceFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/sourceFileFormat.hpp) and [TargetFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/targetFileFormat.hpp))
-* an abstraction for processing data ([Processor](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Processors/processor.hpp))
-* a data structure describing a graph of wired nodes ([Project](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Project/project.hpp))
-* a version-aware [serialization system](https://github.com/Malcohol/BabelWires/blob/main/Common/Serialization/serializable.hpp).
-* a Qt-based application UI for manipulating projects. (Note: The underlying data management layer has no dependency on the UI or UI framework.)
-* A generic way of defining maps between source and target values ([MapData](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Maps/mapData.hpp)). 
-* a first-class concept of failure, allowing the project to cope with structural changes to the imported data.
+* A generic way of representing data in a tree of self-describing data structures ([Feature](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/features.hpp))
+    * The nodes of the data flow graph carry their data in one more [RootFeatures](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/features.hpp).
+    * The leaves of the tree are ValueFeatures, which appear in the UI as rows with connectable ports.
+* Abstractions for source and target formats ([SourceFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/sourceFileFormat.hpp) and [TargetFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/targetFileFormat.hpp))
+    * Plugins register factory functions to add support for new formats.
+* An abstraction for processing data ([Processor](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Processors/processor.hpp))
+    * A registry of factory functions is used to provide an expandable set of processing nodes. 
+* A data structure describing a graph of wired nodes ([Project](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Project/project.hpp))
+* A version-aware [serialization system](https://github.com/Malcohol/BabelWires/blob/main/Common/Serialization/serializable.hpp) for project files.
+    * All serializable classes and factory functions declare a version.
+    * Every representable component of the system is associated with a universally unique identifier ([UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier)). (This ensures there is no ambiguity when data is serialized and deserialized in different contexts).
+* A [Qt](https://en.wikipedia.org/wiki/Qt_(software))-based user interface for manipulating projects
+    * The core data management layer, which includes formats and processors, has no dependency on the UI code or Qt.
+* Generic support for defining maps of key value pairs between values ([MapData](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Maps/mapData.hpp))
+    * These kinds of maps are very common in data transformation. 
+* A first-class concept of failure
+    * This allows the project to cope with structural changes to imported data.
 
 Here's a screenshot of the MapEditor defining a map between two types:
 ![Screenshot showing the MapEditor](Docs/mapEditor.png "Screenshot of the MapEditor")
