@@ -32,7 +32,9 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
         const TargetFileFormat& factory =
             context.m_targetFileFormatReg.getRegisteredEntry(elementData.m_factoryIdentifier);
         setFactoryName(factory.getName());
-        setFeature(factory.createNewFeature(context));
+        auto newFeature = factory.createNewFeature(context);
+        newFeature->setToDefault();
+        setFeature(std::move(newFeature));
     } catch (const RegistryException& e) {
         setInternalFailure(e.what());
         // This is the wrong kind of identifier, but it shouldn't matter because this failure is unrecoverable.

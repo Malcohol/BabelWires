@@ -25,7 +25,10 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
     const ElementData& elementData = getElementData();
     try {
         const ProcessorFactory& factory = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
-        setProcessor(factory.createNewProcessor(context));
+        auto newProcessor = factory.createNewProcessor(context);
+        newProcessor->getInputFeature()->setToDefault();
+        newProcessor->getOutputFeature()->setToDefault();
+        setProcessor(std::move(newProcessor));
         setFactoryName(factory.getName());
     } catch (const BaseException& e) {
         setFactoryName(elementData.m_factoryIdentifier);
