@@ -22,7 +22,9 @@ The framework provides:
     * Plugins register factory functions to add support for new formats.
 * An abstraction for processing data ([Processor](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Processors/processor.hpp))
     * A registry of factory functions is used to provide an expandable set of processing nodes. 
-* A data structure describing a graph of wired nodes ([Project](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Project/project.hpp))
+* A data structure describing a graph of wired nodes ([Project](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Project/project.hpp)).
+    * With the exception of some processors, which are internally multithreaded, BabelWires is essentially a single-threaded application.
+    * However, with a few to future proofing, the UI accesses to project strictly within scoped objects. This should make it straightforward to multithread if required.  
 * A version-aware [serialization system](https://github.com/Malcohol/BabelWires/blob/main/Common/Serialization/serializable.hpp) for project files.
     * All serializable classes and factory functions declare a version.
     * Every representable component of the system is associated with a universally unique identifier ([UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier)). (This ensures there is no ambiguity when data is serialized and deserialized in different contexts).
