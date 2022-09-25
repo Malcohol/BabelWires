@@ -54,6 +54,18 @@ TEST(SelectUnionBranchCommandTest, executeAndUndo) {
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
+    {
+        babelwires::IntValueAssignmentData assignInt;
+        assignInt.m_pathToFeature = testUtils::TestFeatureWithUnion::s_pathToFieldAB;
+        assignInt.m_value = 12;
+        testEnvironment.m_project.addModifier(elementId, assignInt);
+    }
+    {
+        babelwires::IntValueAssignmentData assignInt;
+        assignInt.m_pathToFeature = testUtils::TestFeatureWithUnion::s_pathToFieldBC;
+        assignInt.m_value = 4;
+        testEnvironment.m_project.addModifier(elementId, assignInt);
+    }
 
     const auto checkModifiers = [&testEnvironment, element, targetElement](bool isCommandExecuted) {
         const babelwires::Modifier* inputConnection =
@@ -71,12 +83,12 @@ TEST(SelectUnionBranchCommandTest, executeAndUndo) {
         if (isCommandExecuted) {
             EXPECT_EQ(inputConnection, nullptr);
             EXPECT_EQ(outputConnection, nullptr);
-            EXPECT_EQ(numModifiersAtElement, 1);
+            EXPECT_EQ(numModifiersAtElement, 2);
             EXPECT_EQ(numModifiersAtTarget, 0);
         } else {
             EXPECT_NE(inputConnection, nullptr);
             EXPECT_NE(outputConnection, nullptr);
-            EXPECT_EQ(numModifiersAtElement, 2);
+            EXPECT_EQ(numModifiersAtElement, 4);
             EXPECT_EQ(numModifiersAtTarget, 1);
         }
     };
@@ -151,7 +163,7 @@ TEST(SelectUnionBranchCommandTest, failSafelyNoOptional) {
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }
 
-TEST(DeactivateOptionalsCommandTest, failSafelyAlreadySelected) {
+TEST(SelectUnionBranchCommandTest, failSafelyAlreadySelected) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 

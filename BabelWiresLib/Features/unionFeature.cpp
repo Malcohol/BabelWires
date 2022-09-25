@@ -9,23 +9,33 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
-babelwires::UnionFeature::UnionFeature(TagValues tags, unsigned int defaultTagIndex) 
+babelwires::UnionFeature::UnionFeature(TagValues tags, unsigned int defaultTagIndex)
     : m_tags(std::move(tags))
-    , m_defaultTagIndex(defaultTagIndex)
-{
+    , m_defaultTagIndex(defaultTagIndex) {
     assert((m_defaultTagIndex < m_tags.size()) && "defaultTagIndex is out of range");
-    assert(std::all_of(m_tags.begin(), m_tags.end(), [](const auto& t) {return t.getDiscriminator() != 0;}) && "Union tags must be registered identifiers");
-    m_unselectedBranches.resize(m_tags.size());
+    assert(std::all_of(m_tags.begin(), m_tags.end(), [](const auto& t) { return t.getDiscriminator() != 0; }) &&
+           "Union tags must be registered identifiers");
+    m_fieldsInBranches.resize(m_tags.size());
 }
 
-void babelwires::UnionFeature::addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex) {
-    assert(isTag(tag) && "The tag is not a valid tag for this union");
-    const unsigned int tagIndex = getIndexOfTag(tag);
-    // All branches are unselected until the union is set to default. This ensures the stored indices are correct.
-    UnselectedBranch& unselectedBranch = m_unselectedBranches[tagIndex];
-    // Each field already added for this branch will bump the target location of the new field by one.
-    fieldAndIndex.m_index += unselectedBranch.m_inactiveFields.size();
-    unselectedBranch.m_inactiveFields.emplace_back(std::move(fieldAndIndex));
+void babelwires::UnionFeature::addFieldInBranchesInternal(const std::vector<Identifier>& tags, Field field) {
+    assert((tags.size() > 0) && "Each branch field must be associated with at least one tag");
+    assert((tryGetChildFromStep(PathStep{field.m_identifier}) == nullptr) &&
+           "Field identifier already used in the main record");
+    assert((m_fieldInfo.find(field.m_identifier) == m_fieldInfo.end()) &&
+           "Field identifier already used in another branch");
+
+    const int numRecordFeatures = getNumFeatures();
+    auto& fieldInfo = m_fieldInfo[field.m_identifier];
+    fieldInfo.m_feature = std::move(field.m_feature);
+    fieldInfo.m_feature->setToDefault();
+    for (const auto& tag : tags) {
+        unsigned int tagIndex = getIndexOfTag(tag);
+        auto& tagToBranchFieldIndices = m_fieldsInBranches[tagIndex];
+        fieldInfo.m_tagsWithIntendedIndices.emplace_back(TagIndexAndIntendedFieldIndex{
+            tagIndex, numRecordFeatures + static_cast<int>(tagToBranchFieldIndices.size())});
+        tagToBranchFieldIndices.emplace_back(field.m_identifier);
+    }
 }
 
 void babelwires::UnionFeature::selectTag(Identifier tag) {
@@ -45,31 +55,24 @@ void babelwires::UnionFeature::selectTagByIndex(unsigned int index) {
         return;
     }
 
-    if (m_selectedTagIndex >= 0) {
-        UnselectedBranch& newUnselectedBranch = m_unselectedBranches[m_selectedTagIndex];
-        assert(newUnselectedBranch.m_inactiveFields.empty() && "The unselected branch object of the selected tag should be empty");
+    BranchAdjustment adjustment = getBranchAdjustment(index);
 
-        // Deactivate the fields in the currently selected branch.
-
-        // Iterate in reverse order, so the fieldAndIndex picks up the correct indices.
-        for (auto identifier : reverseIterate(m_selectedBranch.m_activeFields)) {
-            FieldAndIndex fieldAndIndex = removeField(identifier);
-            fieldAndIndex.m_feature->setToDefault();
-            newUnselectedBranch.m_inactiveFields.emplace_back(std::move(fieldAndIndex));
-        }
-        std::reverse(newUnselectedBranch.m_inactiveFields.begin(), newUnselectedBranch.m_inactiveFields.end());
-
-        m_selectedBranch.m_activeFields.clear();
+    for (auto fieldIdentifier : adjustment.m_fieldsToRemove) {
+        FieldInfo& fieldInfo = m_fieldInfo[fieldIdentifier];
+        assert((fieldInfo.m_feature == nullptr) && "The fieldInfo of an active field must be unset");
+        FieldAndIndex fieldAndIndex = removeField(fieldIdentifier);
+        fieldInfo.m_feature.swap(fieldAndIndex.m_feature);
+        fieldInfo.m_feature->setToDefault();
     }
 
-    // Activate the fields in the unselectedBranch.
+    for (auto fieldIdentifier : adjustment.m_fieldsToAdd) {
+        FieldInfo& fieldInfo = m_fieldInfo[fieldIdentifier];
+        assert((fieldInfo.m_feature != nullptr) && "The fieldInfo of an inactive field must be set");
 
-    decltype(UnselectedBranch::m_inactiveFields) oldUnselectedFields;
-    oldUnselectedFields.swap(m_unselectedBranches[index].m_inactiveFields);
-
-    for (auto& fieldAndIndex : oldUnselectedFields) {
-        m_selectedBranch.m_activeFields.emplace_back(fieldAndIndex.m_identifier);
-        addFieldAndIndexInternal(std::move(fieldAndIndex));
+        auto it = std::find_if(fieldInfo.m_tagsWithIntendedIndices.begin(), fieldInfo.m_tagsWithIntendedIndices.end(),
+                            [index](const auto& tagAndField) { return tagAndField.m_tagIndex == index; });
+        assert((it != fieldInfo.m_tagsWithIntendedIndices.end()) && "The tag does not have this field in its branch");
+        addFieldAndIndexInternal(FieldAndIndex{fieldIdentifier, std::move(fieldInfo.m_feature), it->m_fieldIndex});
     }
 
     m_selectedTagIndex = index;
@@ -84,17 +87,12 @@ bool babelwires::UnionFeature::isTag(Identifier tag) const {
 }
 
 void babelwires::UnionFeature::doSetToDefault() {
+    // Inactive fields should all be in a default state.
     setToDefaultNonRecursive();
     setSubfeaturesToDefault();
 }
 
 void babelwires::UnionFeature::doSetToDefaultNonRecursive() {
-    for (auto& unselectedBranch : m_unselectedBranches) {
-        for (auto& inactiveField : unselectedBranch.m_inactiveFields) {
-            // After construction, these may not have been set to their default state.
-            inactiveField.m_feature->setToDefault();
-        }
-    }
     selectTagByIndex(m_defaultTagIndex);
 }
 
@@ -113,6 +111,32 @@ unsigned int babelwires::UnionFeature::getIndexOfTag(Identifier tag) const {
     return it - m_tags.begin();
 }
 
-const std::vector<babelwires::Identifier>& babelwires::UnionFeature::getFieldsOfSelectedBranch() const {
-    return m_selectedBranch.m_activeFields;
+std::vector<babelwires::Identifier>
+babelwires::UnionFeature::getFieldsRemovedByChangeOfBranch(Identifier proposedTag) const {
+    unsigned int tagIndex = getIndexOfTag(proposedTag);
+    babelwires::UnionFeature::BranchAdjustment branchAdjustment = getBranchAdjustment(tagIndex);
+    return std::move(branchAdjustment.m_fieldsToRemove);
+}
+
+babelwires::UnionFeature::BranchAdjustment babelwires::UnionFeature::getBranchAdjustment(unsigned int tagIndex) const {
+    assert((tagIndex != m_selectedTagIndex) && "Same branch");
+    std::vector<Identifier> fieldsToRemove;
+    if (m_selectedTagIndex >= 0) {
+        fieldsToRemove = m_fieldsInBranches[m_selectedTagIndex];
+    }
+    const std::vector<Identifier>& targetBranch = m_fieldsInBranches[tagIndex];
+    std::vector<Identifier> fieldsToAdd = targetBranch;
+    // This doesn't need to be N^2, but these vectors are likely to be very small, so it's fine.
+    fieldsToAdd.erase(std::remove_if(fieldsToAdd.begin(), fieldsToAdd.end(),
+                                   [&fieldsToRemove](auto t) {
+                                       return std::find(fieldsToRemove.begin(), fieldsToRemove.end(), t) !=
+                                              fieldsToRemove.end();
+                                   }),
+                    fieldsToAdd.end());
+    fieldsToRemove.erase(std::remove_if(fieldsToRemove.begin(), fieldsToRemove.end(),
+                                       [&targetBranch](auto t) {
+                                           return std::find(targetBranch.begin(), targetBranch.end(), t) != targetBranch.end();
+                                       }),
+                        fieldsToRemove.end());
+    return BranchAdjustment{fieldsToRemove, fieldsToAdd};
 }

@@ -64,7 +64,7 @@ namespace babelwires {
         /// The maximum number of characters which can be contained.
         static constexpr unsigned int N = (NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
 
-        IdentifierBase() : IdentifierBase("unset") {}
+        IdentifierBase() : IdentifierBase("_unset") {}
 
         /// Constructor from a string literal.
         template <unsigned int M, typename std::enable_if_t<(1 < M) && (M <= N), int> = 0>

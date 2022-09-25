@@ -38,6 +38,10 @@ namespace babelwires {
         template <typename T>
         T* addFieldInBranch(const Identifier& tag, std::unique_ptr<T> f, const Identifier& fieldIdentifier);
 
+        /// Add a field to the branches corresponding to the given tags.
+        template <typename T>
+        T* addFieldInBranches(const std::vector<Identifier>& tags, std::unique_ptr<T> f, const Identifier& fieldIdentifier);
+
         /// Select the tag.
         void selectTag(Identifier tag);
 
@@ -47,16 +51,23 @@ namespace babelwires {
         /// Return the index of the tag which is currently selected.
         unsigned int getSelectedTagIndex() const;
 
-        /// Get the fields of the currently selected branch.
-        const std::vector<Identifier>& getFieldsOfSelectedBranch() const;
+        /// Get the fields which would be removed if the proposedTag was selected.
+        std::vector<Identifier> getFieldsRemovedByChangeOfBranch(Identifier proposedTag) const;
 
       protected:
-        void addFieldInBranchInternal(const Identifier& tag, FieldAndIndex fieldAndIndex);
+        void addFieldInBranchesInternal(const std::vector<Identifier>& tags, Field field);
         void doSetToDefault() override;
         void doSetToDefaultNonRecursive() override;
 
         /// Select the tag using an index.
         void selectTagByIndex(unsigned int index);
+
+        struct BranchAdjustment {
+            std::vector<Identifier> m_fieldsToRemove;
+            std::vector<Identifier> m_fieldsToAdd;
+        };
+
+        BranchAdjustment getBranchAdjustment(unsigned int tagIndex) const;
 
       protected:
         /// Those fields which are optional.
@@ -64,29 +75,34 @@ namespace babelwires {
         unsigned int m_defaultTagIndex;
         int m_selectedTagIndex = -1;
 
-        /// Information about the currently selected branch.
-        struct SelectedBranch {
-            std::vector<Identifier> m_activeFields;
+        struct TagIndexAndIntendedFieldIndex {
+          unsigned int m_tagIndex;
+          int m_fieldIndex = -1;
         };
 
-        /// Information about an unselected branch.
-        struct UnselectedBranch {
-            std::vector<FieldAndIndex> m_inactiveFields;
+        struct FieldInfo {
+          /// The feature will be null when the field is currently active (since it will managed by the record class).
+          std::unique_ptr<Feature> m_feature;
+          std::vector<TagIndexAndIntendedFieldIndex> m_tagsWithIntendedIndices;
         };
 
-        /// Information about the currently selected branch.
-        SelectedBranch m_selectedBranch;
+        std::unordered_map<Identifier, FieldInfo> m_fieldInfo;
 
-        /// Information about the unselected branches in tag order.
-        /// The selected tag does have an entry, but it is always empty.
-        std::vector<UnselectedBranch> m_unselectedBranches;
+        /// In tag index order.
+        std::vector<std::vector<Identifier>> m_fieldsInBranches;
     };
 
     template <typename T>
     T* babelwires::UnionFeature::addFieldInBranch(const Identifier& tag, std::unique_ptr<T> f,
                                                   const Identifier& fieldIdentifier) {
+        return addFieldInBranches({tag}, std::move(f), fieldIdentifier);
+    }
+
+    template <typename T>
+    T* babelwires::UnionFeature::addFieldInBranches(const std::vector<Identifier>& tags, std::unique_ptr<T> f,
+                                                  const Identifier& fieldIdentifier) {
         T* fTPtr = f.get();
-        addFieldInBranchInternal(tag, FieldAndIndex{fieldIdentifier, std::move(f), getNumFeatures()});
+        addFieldInBranchesInternal(tags, Field{fieldIdentifier, std::move(f)});
         return fTPtr;
     }
 } // namespace babelwires
