@@ -2,7 +2,7 @@
  * The ContentsCache summarizes the contents of a FeatureElement visible to the user.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -25,7 +25,7 @@ namespace babelwires {
     class ContentsCache;
 
     namespace Detail {
-      struct ContentsCacheBuilder;
+        struct ContentsCacheBuilder;
     }
 
     /// The information cached about a single row in the contents of a feature element.
@@ -104,7 +104,8 @@ namespace babelwires {
         /// The EditTree object is never replaced, so we can keep a reference.
         /// (The input/output features can change (e.g. after a reload) so we
         /// can't store them in this object.)
-        ContentsCache(const EditTree& edits);
+        /// Non-const because of features with a not collapsable style.
+        ContentsCache(EditTree& edits);
 
         /// Build the cache with the given input and output features.
         void setFeatures(const RootFeature* inputFeature, const RootFeature* outputFeature);
@@ -150,7 +151,11 @@ namespace babelwires {
       private:
         /// The rows of the contents. The first row may be hidden if there's no useful information there.
         std::vector<ContentsCacheEntry> m_rows;
-        const EditTree& m_edits;
+
+        /// The edits carries the information about which nodes have been expanded.
+        /// Non-const because the cache builder can encounter features whose style states that they are not collapsable
+        /// (i.e. that they are expanded without required an edit) and we have to update the edit tree with that fact.
+        EditTree& m_edits;
 
         /// We hide the roots unless necessary (root is a file or there are hidden failed modifiers)
         int m_indexOffset = 0;

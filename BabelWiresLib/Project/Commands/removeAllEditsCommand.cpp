@@ -63,7 +63,7 @@ bool babelwires::RemoveAllEditsCommand::initialize(const Project& project) {
         }
     }
 
-    const auto pathsInThisEntry = elementToModify->getEdits().getAllExpandedPaths(m_pathToFeature);
+    const auto pathsInThisEntry = elementToModify->getEdits().getAllExplicitlyExpandedPaths(m_pathToFeature);
     m_expandedPathsRemoved.insert(m_expandedPathsRemoved.end(), pathsInThisEntry.begin(),
                                                pathsInThisEntry.end());
 

@@ -2,7 +2,7 @@
  * The EditTree arranges edits (modifiers and expand/collapse) in a tree organized by paths.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
@@ -55,7 +55,8 @@ babelwires::EditTree::findNodeIndex(babelwires::FeaturePath::const_iterator& cur
 }
 
 bool babelwires::EditTree::TreeNode::isNeeded() const {
-    return m_modifier || (m_isExpanded != c_expandedByDefault) || m_isExpandedChanged || (m_numDescendents > 0);
+    return m_modifier || (m_isExpanded != c_expandedByDefault) || (m_isImplicitlyExpanded != c_expandedByDefault) ||
+           m_isExpandedChanged || (m_numDescendents > 0);
 }
 
 void babelwires::EditTree::addEdit(const FeaturePath& featurePath, const EditNodeFunc& applyFunc) {
@@ -236,7 +237,7 @@ bool babelwires::EditTree::isExpanded(const FeaturePath& featurePath) const {
     if ((nodeIndex == -1) || (it != featurePath.end())) {
         return c_expandedByDefault;
     } else {
-        return m_nodes[nodeIndex].m_isExpanded;
+        return m_nodes[nodeIndex].m_isExpanded || m_nodes[nodeIndex].m_isImplicitlyExpanded;
     }
 }
 
@@ -255,6 +256,16 @@ void babelwires::EditTree::setExpanded(const FeaturePath& featurePath, bool expa
     } else {
         removeEdit(featurePath, toggleIsExpanded);
     }
+}
+
+void babelwires::EditTree::setImplicitlyExpanded(const FeaturePath& featurePath, bool expanded) {
+    const auto toggleIsImplicitlyExpanded = [expanded](TreeNode& nodeToEdit) {
+        nodeToEdit.m_isImplicitlyExpanded = expanded;
+    };
+
+    assert((expanded != c_expandedByDefault) &&
+           "Implicit expansion is expected to be the opposite of default expansion");
+    addEdit(featurePath, toggleIsImplicitlyExpanded);
 }
 
 bool babelwires::EditTree::validateTree() const {
@@ -358,8 +369,9 @@ void babelwires::EditTree::truncatePathAtFirstCollapsedNode(babelwires::FeatureP
         while (childIndex < endOfChildren) {
             const TreeNode& child = m_nodes[childIndex];
             if (child.m_step == current) {
-                if (((state == State::CurrentState) && !child.m_isExpanded) ||
-                    ((state == State::PreviousState) && (child.m_isExpanded == child.m_isExpandedChanged))) {
+                if (!child.m_isImplicitlyExpanded &&
+                    (((state == State::CurrentState) && !child.m_isExpanded) ||
+                     ((state == State::PreviousState) && (child.m_isExpanded == child.m_isExpandedChanged)))) {
                     path.truncate(pathIndex + 1);
                     return;
                 }
@@ -387,7 +399,7 @@ void babelwires::EditTree::truncatePathAtFirstCollapsedNode(babelwires::FeatureP
     }
 }
 
-std::vector<babelwires::FeaturePath> babelwires::EditTree::getAllExpandedPaths(const FeaturePath& featurePath) const {
+std::vector<babelwires::FeaturePath> babelwires::EditTree::getAllExplicitlyExpandedPaths(const FeaturePath& featurePath) const {
     std::vector<FeaturePath> expandedPaths;
 
     int beginIndex = 0;

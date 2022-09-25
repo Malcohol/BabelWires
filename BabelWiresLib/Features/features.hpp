@@ -70,6 +70,7 @@ namespace babelwires {
         };
 
         /// How should this feature appear in a feature element?
+        /// The system assumes that styles do not change over the lifetime of a feature.
         virtual Style getStyle() const;
 
       protected:

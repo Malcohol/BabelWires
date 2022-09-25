@@ -171,8 +171,6 @@ void babelwires::ProjectBridge::onNodeMoved(QtNodes::Node& n, const QPointF& new
     }
 }
 
-#include <iostream>
-
 void babelwires::ProjectBridge::onNodeResized(QtNodes::Node& n, const QSize& newSize) {
     switch (m_state) {
         case State::ListeningToFlowScene: {
