@@ -4,6 +4,7 @@
 #include <BabelWiresLib/Features/numericFeature.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
+#include <Tests/TestUtils/testIdentifiers.hpp>
 
 TEST(UnionFeatureTest, fieldOrder) {
     babelwires::Identifier tagA("tagA");
@@ -101,6 +102,116 @@ TEST(UnionFeatureTest, fieldOrder) {
     EXPECT_EQ(unionFeature.getFeature(1), fieldC0);
     EXPECT_EQ(unionFeature.getFeature(2), fixedFeature1);
     EXPECT_EQ(unionFeature.getFeature(3), fieldC1);
+}
+
+TEST(UnionFeatureTest, fieldOrderWithOverlappingBranches) {
+    babelwires::Identifier tagA("tagA");
+    tagA.setDiscriminator(1);
+    babelwires::Identifier tagB("tagB");
+    tagB.setDiscriminator(1);
+    babelwires::Identifier tagC("tagC");
+    tagC.setDiscriminator(1);
+
+    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+
+    EXPECT_EQ(unionFeature.getNumFeatures(), 0);
+
+    babelwires::Identifier fieldIdA0 = testUtils::getTestRegisteredIdentifier("fldA0");
+    babelwires::Identifier ff0 = testUtils::getTestRegisteredIdentifier("ff0");
+    babelwires::Identifier fieldIdAB = testUtils::getTestRegisteredIdentifier("fldAB");
+    babelwires::Identifier fieldIdC0 = testUtils::getTestRegisteredIdentifier("fldC0");
+    babelwires::Identifier fieldIdA1 = testUtils::getTestRegisteredIdentifier("fldA1");
+    babelwires::Identifier ff1 = testUtils::getTestRegisteredIdentifier("ff1");
+    babelwires::Identifier fieldIdBC = testUtils::getTestRegisteredIdentifier("fldBC");
+    babelwires::Identifier fieldIdC1 = testUtils::getTestRegisteredIdentifier("fldC1");
+    babelwires::Identifier fieldIdAC = testUtils::getTestRegisteredIdentifier("fldAC");
+
+    babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
+    babelwires::IntFeature* fixedFeature0 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
+    babelwires::IntFeature* fieldAB = unionFeature.addFieldInBranches({tagA, tagB}, std::make_unique<babelwires::IntFeature>(), fieldIdAB);
+    babelwires::IntFeature* fieldC0 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
+    babelwires::IntFeature* fieldA1 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
+    babelwires::IntFeature* fixedFeature1 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff1);
+    babelwires::IntFeature* fieldBC = unionFeature.addFieldInBranches({tagB, tagC}, std::make_unique<babelwires::IntFeature>(), fieldIdBC);
+    babelwires::IntFeature* fieldC1 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
+    babelwires::IntFeature* fieldAC = unionFeature.addFieldInBranches({tagA, tagC}, std::make_unique<babelwires::IntFeature>(), fieldIdAC);
+    
+    unionFeature.setToDefault();
+
+    EXPECT_EQ(unionFeature.getNumFeatures(), 6);
+    EXPECT_EQ(unionFeature.getFeature(0), fixedFeature0);
+    EXPECT_EQ(unionFeature.getFeature(1), fieldC0);
+    EXPECT_EQ(unionFeature.getFeature(2), fixedFeature1);
+    EXPECT_EQ(unionFeature.getFeature(3), fieldBC);
+    EXPECT_EQ(unionFeature.getFeature(4), fieldC1);
+    EXPECT_EQ(unionFeature.getFeature(5), fieldAC);
+
+    unionFeature.selectTag(tagB);
+
+    EXPECT_EQ(unionFeature.getNumFeatures(), 4);
+    EXPECT_EQ(unionFeature.getFeature(0), fixedFeature0);
+    EXPECT_EQ(unionFeature.getFeature(1), fieldAB);
+    EXPECT_EQ(unionFeature.getFeature(2), fixedFeature1);
+    EXPECT_EQ(unionFeature.getFeature(3), fieldBC);
+
+    unionFeature.selectTag(tagA);
+
+    EXPECT_EQ(unionFeature.getNumFeatures(), 6);
+    EXPECT_EQ(unionFeature.getFeature(0), fieldA0);
+    EXPECT_EQ(unionFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(unionFeature.getFeature(2), fieldAB);
+    EXPECT_EQ(unionFeature.getFeature(3), fieldA1);
+    EXPECT_EQ(unionFeature.getFeature(4), fixedFeature1);
+    EXPECT_EQ(unionFeature.getFeature(5), fieldAC);
+
+    // Same tag again.
+    unionFeature.selectTag(tagA);
+
+    EXPECT_EQ(unionFeature.getNumFeatures(), 6);
+    EXPECT_EQ(unionFeature.getFeature(0), fieldA0);
+    EXPECT_EQ(unionFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(unionFeature.getFeature(2), fieldAB);
+    EXPECT_EQ(unionFeature.getFeature(3), fieldA1);
+    EXPECT_EQ(unionFeature.getFeature(4), fixedFeature1);
+    EXPECT_EQ(unionFeature.getFeature(5), fieldAC);
+
+    unionFeature.selectTag(tagB);
+
+    EXPECT_EQ(unionFeature.getNumFeatures(), 4);
+    EXPECT_EQ(unionFeature.getFeature(0), fixedFeature0);
+    EXPECT_EQ(unionFeature.getFeature(1), fieldAB);
+    EXPECT_EQ(unionFeature.getFeature(2), fixedFeature1);
+    EXPECT_EQ(unionFeature.getFeature(3), fieldBC);
+
+    unionFeature.selectTag(tagC);
+
+    EXPECT_EQ(unionFeature.getNumFeatures(), 6);
+    EXPECT_EQ(unionFeature.getFeature(0), fixedFeature0);
+    EXPECT_EQ(unionFeature.getFeature(1), fieldC0);
+    EXPECT_EQ(unionFeature.getFeature(2), fixedFeature1);
+    EXPECT_EQ(unionFeature.getFeature(3), fieldBC);
+    EXPECT_EQ(unionFeature.getFeature(4), fieldC1);
+    EXPECT_EQ(unionFeature.getFeature(5), fieldAC);
+
+    unionFeature.selectTag(tagA);
+
+    EXPECT_EQ(unionFeature.getNumFeatures(), 6);
+    EXPECT_EQ(unionFeature.getFeature(0), fieldA0);
+    EXPECT_EQ(unionFeature.getFeature(1), fixedFeature0);
+    EXPECT_EQ(unionFeature.getFeature(2), fieldAB);
+    EXPECT_EQ(unionFeature.getFeature(3), fieldA1);
+    EXPECT_EQ(unionFeature.getFeature(4), fixedFeature1);
+    EXPECT_EQ(unionFeature.getFeature(5), fieldAC);
+
+    unionFeature.selectTag(tagC);
+
+    EXPECT_EQ(unionFeature.getNumFeatures(), 6);
+    EXPECT_EQ(unionFeature.getFeature(0), fixedFeature0);
+    EXPECT_EQ(unionFeature.getFeature(1), fieldC0);
+    EXPECT_EQ(unionFeature.getFeature(2), fixedFeature1);
+    EXPECT_EQ(unionFeature.getFeature(3), fieldBC);
+    EXPECT_EQ(unionFeature.getFeature(4), fieldC1);
+    EXPECT_EQ(unionFeature.getFeature(5), fieldAC);
 }
 
 TEST(UnionFeatureTest, changes) {

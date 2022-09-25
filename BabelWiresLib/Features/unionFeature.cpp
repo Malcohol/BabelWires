@@ -120,22 +120,23 @@ babelwires::UnionFeature::getFieldsRemovedByChangeOfBranch(Identifier proposedTa
 
 babelwires::UnionFeature::BranchAdjustment babelwires::UnionFeature::getBranchAdjustment(unsigned int tagIndex) const {
     assert((tagIndex != m_selectedTagIndex) && "Same branch");
-    std::vector<Identifier> currentBranch;
+    std::vector<Identifier> fieldsToRemove;
     if (m_selectedTagIndex >= 0) {
-        currentBranch = m_fieldsInBranches[m_selectedTagIndex];
+        fieldsToRemove = m_fieldsInBranches[m_selectedTagIndex];
     }
-    std::vector<Identifier> newBranch = m_fieldsInBranches[tagIndex];
+    const std::vector<Identifier>& targetBranch = m_fieldsInBranches[tagIndex];
+    std::vector<Identifier> fieldsToAdd = targetBranch;
     // This doesn't need to be N^2, but these vectors are likely to be very small, so it's fine.
-    currentBranch.erase(std::remove_if(currentBranch.begin(), currentBranch.end(),
-                                       [&newBranch](auto t) {
-                                           return std::find(newBranch.begin(), newBranch.end(), t) != newBranch.end();
-                                       }),
-                        currentBranch.end());
-    newBranch.erase(std::remove_if(newBranch.begin(), newBranch.end(),
-                                   [&currentBranch](auto t) {
-                                       return std::find(currentBranch.begin(), currentBranch.end(), t) !=
-                                              currentBranch.end();
+    fieldsToAdd.erase(std::remove_if(fieldsToAdd.begin(), fieldsToAdd.end(),
+                                   [&fieldsToRemove](auto t) {
+                                       return std::find(fieldsToRemove.begin(), fieldsToRemove.end(), t) !=
+                                              fieldsToRemove.end();
                                    }),
-                    newBranch.end());
-    return BranchAdjustment{currentBranch, newBranch};
+                    fieldsToAdd.end());
+    fieldsToRemove.erase(std::remove_if(fieldsToRemove.begin(), fieldsToRemove.end(),
+                                       [&targetBranch](auto t) {
+                                           return std::find(targetBranch.begin(), targetBranch.end(), t) != targetBranch.end();
+                                       }),
+                        fieldsToRemove.end());
+    return BranchAdjustment{fieldsToRemove, fieldsToAdd};
 }
