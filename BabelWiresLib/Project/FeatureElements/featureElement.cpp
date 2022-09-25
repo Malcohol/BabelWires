@@ -135,7 +135,7 @@ std::unique_ptr<babelwires::ElementData> babelwires::FeatureElement::extractElem
     for (const auto& m : m_edits.modifierRange()) {
         data->m_modifiers.emplace_back(m->getModifierData().clone());
     }
-    data->m_expandedPaths = m_edits.getAllExpandedPaths();
+    data->m_expandedPaths = m_edits.getAllExplicitlyExpandedPaths();
     // Strip out the currently unused paths.
     auto it = std::remove_if(data->m_expandedPaths.begin(), data->m_expandedPaths.end(), [this](const FeaturePath& p) {
         if (const Feature* inputFeature = getInputFeature()) {

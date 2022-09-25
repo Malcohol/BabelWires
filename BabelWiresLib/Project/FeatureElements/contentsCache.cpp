@@ -36,7 +36,7 @@ babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Feat
     , m_hasFailedHiddenModifiers(false)
     , m_hasSubModifiers(false) {}
 
-babelwires::ContentsCache::ContentsCache(const EditTree& edits)
+babelwires::ContentsCache::ContentsCache(EditTree& edits)
     : m_edits(edits) {}
 
 namespace {
@@ -55,7 +55,7 @@ namespace babelwires {
     namespace Detail {
 
         struct ContentsCacheBuilder {
-            ContentsCacheBuilder(std::vector<ContentsCacheEntry>& rows, const EditTree& edits)
+            ContentsCacheBuilder(std::vector<ContentsCacheEntry>& rows, EditTree& edits)
                 : m_identifierRegistry(IdentifierRegistry::read())
                 , m_rows(rows)
                 , m_edits(edits) {}
@@ -77,6 +77,9 @@ namespace babelwires {
                         return row.m_isExpanded;
                     }
                 } else {
+                    if (path.getNumSteps() > 0) {
+                        m_edits.setImplicitlyExpanded(path, true);
+                    }
                     row.m_isExpandable = false;
                 }
                 return true;
@@ -232,7 +235,7 @@ namespace babelwires {
 
             IdentifierRegistry::ReadAccess m_identifierRegistry;
             std::vector<ContentsCacheEntry>& m_rows;
-            const EditTree& m_edits;
+            EditTree& m_edits;
         };
 
     } // namespace Detail
@@ -279,7 +282,7 @@ void babelwires::ContentsCache::updateModifierFlags() {
         return;
     }
 
-    using Iterator = EditTree::Iterator<const EditTree>;
+    using Iterator = EditTree::Iterator<EditTree>;
 
     struct StackData {
         StackData(int index)
@@ -302,7 +305,7 @@ void babelwires::ContentsCache::updateModifierFlags() {
 
     for (int index = 0; index < m_rows.size(); ++index) {
         if (index > 0) {
-            // See if there is an approrpriate editTree iterator in the parent's set.
+            // See if there is an appropriate editTree iterator in the parent's set.
             stackDataStack.emplace_back(index);
             const PathStep& stepToHere = m_rows[index].m_path.getLastStep();
             StackData& parentStackData = stackDataStack[stackDataStack.size() - 2];

@@ -372,7 +372,7 @@ TEST(EditTreeTest, modifiersAndExpansion) {
     EXPECT_FALSE(tree.isExpanded(path6));
 }
 
-TEST(EditTreeTest, getAllExpandedPaths) {
+TEST(EditTreeTest, getAllExplicitlyExpandedPaths) {
     babelwires::EditTree tree;
 
     const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("tt/tt/tt/4");
@@ -392,30 +392,30 @@ TEST(EditTreeTest, getAllExpandedPaths) {
 
     using setOfPaths = std::vector<babelwires::FeaturePath>;
 
-    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExpandedPaths(), setOfPaths{path1, path2, path4, path5, path6}));
+    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path1, path2, path4, path5, path6}));
 
     tree.setExpanded(path3, true);
 
     EXPECT_TRUE(
-        testUtils::areEqualSets(tree.getAllExpandedPaths(), setOfPaths{path1, path2, path3, path4, path5, path6}));
+        testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path1, path2, path3, path4, path5, path6}));
 
     tree.setExpanded(path3, false);
 
-    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExpandedPaths(), setOfPaths{path1, path2, path4, path5, path6}));
+    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path1, path2, path4, path5, path6}));
 
     tree.setExpanded(path6, false);
     tree.setExpanded(path1, false);
     tree.removeModifier(tree.findModifier(path5));
     tree.clearChanges();
 
-    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExpandedPaths(), setOfPaths{path2, path4, path5}));
+    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path2, path4, path5}));
 
     tree.setExpanded(path2, false);
     tree.setExpanded(path4, false);
     tree.setExpanded(path5, false);
     tree.clearChanges();
 
-    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExpandedPaths(), setOfPaths{}));
+    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{}));
 }
 
 namespace {

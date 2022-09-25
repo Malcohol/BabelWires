@@ -29,7 +29,11 @@ namespace babelwires {
         Modifier* findModifier(const FeaturePath& featurePath);
         const Modifier* findModifier(const FeaturePath& featurePath) const;
         bool isExpanded(const FeaturePath& featurePath) const;
+
         void setExpanded(const FeaturePath& featurePath, bool expanded);
+
+        /// The feature at the path is not collapsible, so it should be treated as expanded without an edit.
+        void setImplicitlyExpanded(const FeaturePath& featurePath, bool expanded);
 
         /// Adjust edits which refer to an array at the path, starting at the startIndex.
         void adjustArrayIndices(const FeaturePath& pathToArray, ArrayIndex startIndex, int adjustment);
@@ -49,8 +53,8 @@ namespace babelwires {
         /// Remove the tail of the path hidden within a collapsed compound feature.
         void truncatePathAtFirstCollapsedNode(FeaturePath& path, State state) const;
 
-        /// Return all the expanded paths in the tree.
-        std::vector<FeaturePath> getAllExpandedPaths(const FeaturePath& path = FeaturePath()) const;
+        /// Return all the explicitly expanded paths in the tree.
+        std::vector<FeaturePath> getAllExplicitlyExpandedPaths(const FeaturePath& path = FeaturePath()) const;
 
       public:
         // Iteration through the tree of nodes.
@@ -142,6 +146,9 @@ namespace babelwires {
 
             /// True after m_isExpanded is changed, until clearChanges is called.
             bool m_isExpandedChanged = false;
+
+            /// The feature at the path is not collapsible, so it should be treated as expanded without an edit.
+            bool m_isImplicitlyExpanded = false;
 
             /// Is this tree node needed, either because it has descendents or it
             /// carries an edit?
