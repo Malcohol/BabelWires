@@ -151,7 +151,7 @@ TEST(SelectUnionBranchCommandTest, failSafelyNoOptional) {
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }
 
-TEST(DeactivateOptionalsCommandTest, failSafelyAlreadySelected) {
+TEST(SelectUnionBranchCommandTest, failSafelyAlreadySelected) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 

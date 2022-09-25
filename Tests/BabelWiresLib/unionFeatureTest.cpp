@@ -299,17 +299,20 @@ TEST(UnionFeatureTest, queries) {
 
     EXPECT_EQ(unionFeature.getSelectedTag(), tagC);
     EXPECT_EQ(unionFeature.getSelectedTagIndex(), 2);
-    EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsOfSelectedBranch(), {fieldIdC0, fieldIdC1}));
+    EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsRemovedByChangeOfBranch(tagA), {fieldIdC0, fieldIdC1}));
+    EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsRemovedByChangeOfBranch(tagB), {fieldIdC0, fieldIdC1}));
 
     unionFeature.selectTag(tagB);
 
     EXPECT_EQ(unionFeature.getSelectedTag(), tagB);
     EXPECT_EQ(unionFeature.getSelectedTagIndex(), 1);
-    EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsOfSelectedBranch(), {}));
+    EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsRemovedByChangeOfBranch(tagA), {}));
+    EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsRemovedByChangeOfBranch(tagC), {}));
 
     unionFeature.selectTag(tagA);
 
     EXPECT_EQ(unionFeature.getSelectedTag(), tagA);
     EXPECT_EQ(unionFeature.getSelectedTagIndex(), 0);
-    EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsOfSelectedBranch(), {fieldIdA0, fieldIdA1}));
+    EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsRemovedByChangeOfBranch(tagB), {fieldIdA0, fieldIdA1}));
+    EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsRemovedByChangeOfBranch(tagC), {fieldIdA0, fieldIdA1}));
 }
