@@ -561,6 +561,105 @@ TEST(EditTreeTest, truncatePaths) {
     }
 }
 
+TEST(EditTreeTest, truncatePathsWithImplicitlyExpandedPaths) {
+    babelwires::EditTree tree;
+
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+    }
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+    }
+
+    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa"), true);
+    // An implicitly expanded path might only be encountered after a path was expanded.
+    tree.setImplicitlyExpanded(babelwires::FeaturePath::deserializeFromString("aa/5"), true);
+
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+    }
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+    }
+
+    tree.clearChanges();
+
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+    }
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+    }
+
+    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa/5/bb"), true);
+
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc"));
+    }
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+    }
+
+    tree.clearChanges();
+
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc"));
+    }
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc"));
+    }
+
+    EXPECT_TRUE(testUtils::areEqualSets(std::vector<babelwires::FeaturePath>{babelwires::FeaturePath::deserializeFromString("aa"), babelwires::FeaturePath::deserializeFromString("aa/5/bb")}, tree.getAllExplicitlyExpandedPaths()));
+
+    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa"), false);
+
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+    }
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc"));
+    }
+
+    tree.clearChanges();
+
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+    }
+    {
+        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
+        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+    }
+
+    EXPECT_TRUE(testUtils::areEqualSets(std::vector<babelwires::FeaturePath>{babelwires::FeaturePath::deserializeFromString("aa/5/bb")}, tree.getAllExplicitlyExpandedPaths()));
+}
+
 TEST(EditTreeTest, treeIteration) {
     babelwires::EditTree tree;
 
