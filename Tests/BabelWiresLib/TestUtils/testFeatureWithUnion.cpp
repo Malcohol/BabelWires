@@ -14,6 +14,10 @@ const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldA1 =
     babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldA1IdInitializer);
 const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldB0 =
     babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldB0IdInitializer);
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldAB =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldABIdInitializer);
+const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldBC =
+    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldBCIdInitializer);
 
 const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldB0_Array_1 = babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldB0IdInitializer + "/" + testUtils::TestRecordFeature::s_arrayIdInitializer + "/1");
 const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldB0_Int2 = babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestFeatureWithUnion::s_unionFeatureIdInitializer) + "/" + testUtils::TestFeatureWithUnion::s_fieldB0IdInitializer + "/" + testUtils::TestRecordFeature::s_recordIdInitializer + "/" + testUtils::TestRecordFeature::s_int2IdInitializer);
@@ -24,6 +28,8 @@ testUtils::TestFeatureWithUnion::TestFeatureWithUnion(const babelwires::ProjectC
           s_tagAIdInitializer, s_tagAFieldName, s_tagAUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_tagBId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_tagBIdInitializer, s_tagBFieldName, s_tagBUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_tagCId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+          s_tagCIdInitializer, s_tagCFieldName, s_tagCUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_unionFeatureId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_unionFeatureIdInitializer, s_unionFeatureFieldName, s_unionFeatureUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_ff0Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
@@ -35,9 +41,13 @@ testUtils::TestFeatureWithUnion::TestFeatureWithUnion(const babelwires::ProjectC
     , m_fieldA1Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
           s_fieldA1IdInitializer, s_fieldA1FieldName, s_fieldA1Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_fieldB0Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
-          s_fieldB0IdInitializer, s_fieldB0FieldName, s_fieldB0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
+          s_fieldB0IdInitializer, s_fieldB0FieldName, s_fieldB0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_fieldABId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+          s_fieldABIdInitializer, s_fieldABFieldName, s_fieldABUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
+    , m_fieldBCId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+          s_fieldBCIdInitializer, s_fieldBCFieldName, s_fieldBCUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     {
-        auto testUnionFeaturePtr = std::make_unique<babelwires::UnionFeature>(babelwires::UnionFeature::TagValues{m_tagAId, m_tagBId}, 1);
+        auto testUnionFeaturePtr = std::make_unique<babelwires::UnionFeature>(babelwires::UnionFeature::TagValues{m_tagAId, m_tagBId, m_tagCId}, 1);
         m_unionFeature = testUnionFeaturePtr.get();
         addField(std::move(testUnionFeaturePtr), m_unionFeatureId);
     }
@@ -58,6 +68,11 @@ testUtils::TestFeatureWithUnion::TestFeatureWithUnion(const babelwires::ProjectC
     }
     {
         auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
+        m_fieldABFeature = intFeaturePtr.get();
+        m_unionFeature->addFieldInBranches({m_tagAId, m_tagBId}, std::move(intFeaturePtr), m_fieldABId);
+    }
+    {
+        auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
         m_fieldA1Feature = intFeaturePtr.get();
         m_unionFeature->addFieldInBranch(m_tagAId, std::move(intFeaturePtr), m_fieldA1Id);
     }
@@ -65,6 +80,11 @@ testUtils::TestFeatureWithUnion::TestFeatureWithUnion(const babelwires::ProjectC
         auto testRecordFeaturePtr = std::make_unique<testUtils::TestRecordFeature>();
         m_ff1Feature = testRecordFeaturePtr.get();
         m_unionFeature->addField(std::move(testRecordFeaturePtr), m_ff1Id);
+    }
+    {
+        auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
+        m_fieldBCFeature = intFeaturePtr.get();
+        m_unionFeature->addFieldInBranches({m_tagBId, m_tagCId}, std::move(intFeaturePtr), m_fieldBCId);
     }
 }
 

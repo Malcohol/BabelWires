@@ -16,40 +16,52 @@ namespace testUtils {
 
         static constexpr char s_tagAIdInitializer[] = "tagA";
         static constexpr char s_tagBIdInitializer[] = "tagB";
+        static constexpr char s_tagCIdInitializer[] = "tagC";
         static constexpr char s_unionFeatureIdInitializer[] = "subrd";
         static constexpr char s_ff0IdInitializer[] = "ff0";
         static constexpr char s_ff1IdInitializer[] = "ff1";
         static constexpr char s_fieldA0IdInitializer[] = "A0";
         static constexpr char s_fieldA1IdInitializer[] = "A1";
         static constexpr char s_fieldB0IdInitializer[] = "B0";
-
+        static constexpr char s_fieldABIdInitializer[] = "AB";
+        static constexpr char s_fieldBCIdInitializer[] = "BC";
+        
         static constexpr char s_tagAFieldName[] = "tagA";
         static constexpr char s_tagBFieldName[] = "tagB";
+        static constexpr char s_tagCFieldName[] = "tagC";
         static constexpr char s_unionFeatureFieldName[] = "union";
         static constexpr char s_ff0FieldName[] = "fixed field 0";
         static constexpr char s_ff1FieldName[] = "fixed field 1";
         static constexpr char s_fieldA0FieldName[] = "branch A field 0";
         static constexpr char s_fieldA1FieldName[] = "branch A field 1";
         static constexpr char s_fieldB0FieldName[] = "branch B field 0";
+        static constexpr char s_fieldABFieldName[] = "branch AB";
+        static constexpr char s_fieldBCFieldName[] = "branch BC";
 
         static constexpr char s_tagAUuid[] = "00000000-1111-2222-3333-88000000000A";
         static constexpr char s_tagBUuid[] = "00000000-1111-2222-3333-88000000000B";
+        static constexpr char s_tagCUuid[] = "00000000-1111-2222-3333-88000000000C";
         static constexpr char s_unionFeatureUuid[] = "00000000-1111-2222-3333-880000000000";
         static constexpr char s_ff0Uuid[] = "00000000-1111-2222-3333-880000000001";
         static constexpr char s_ff1Uuid[] = "00000000-1111-2222-3333-880000000002";
         static constexpr char s_fieldA0Uuid[] = "00000000-1111-2222-3333-8800000000A0";
         static constexpr char s_fieldA1Uuid[] = "00000000-1111-2222-3333-8800000000A1";
         static constexpr char s_fieldB0Uuid[] = "00000000-1111-2222-3333-8800000000B0";
+        static constexpr char s_fieldABUuid[] = "00000000-1111-2222-3333-8800000000AB";
+        static constexpr char s_fieldBCUuid[] = "00000000-1111-2222-3333-8800000000BC";
 
         // Note: tagB is the default.
         babelwires::Identifier m_tagAId;
         babelwires::Identifier m_tagBId;
+        babelwires::Identifier m_tagCId;
         babelwires::Identifier m_unionFeatureId;
         babelwires::Identifier m_ff0Id;
         babelwires::Identifier m_ff1Id;
         babelwires::Identifier m_fieldA0Id;
         babelwires::Identifier m_fieldA1Id;
         babelwires::Identifier m_fieldB0Id;
+        babelwires::Identifier m_fieldABId;
+        babelwires::Identifier m_fieldBCId;
 
         babelwires::UnionFeature* m_unionFeature;
         babelwires::IntFeature* m_ff0Feature;
@@ -57,6 +69,8 @@ namespace testUtils {
         babelwires::IntFeature* m_fieldA0Feature;
         babelwires::IntFeature* m_fieldA1Feature;
         testUtils::TestRecordFeature* m_fieldB0Feature;
+        babelwires::IntFeature* m_fieldABFeature;
+        babelwires::IntFeature* m_fieldBCFeature;
 
         // For convenience
         static const babelwires::FeaturePath s_pathToUnionFeature;
@@ -68,6 +82,9 @@ namespace testUtils {
 
         static const babelwires::FeaturePath s_pathToFieldB0_Array_1;
         static const babelwires::FeaturePath s_pathToFieldB0_Int2;
+
+        static const babelwires::FeaturePath s_pathToFieldAB;
+        static const babelwires::FeaturePath s_pathToFieldBC;
     };
 
     struct TestFeatureElementWithUnionData : babelwires::ElementData {
