@@ -2,6 +2,8 @@
 
 #include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/featureMixins.hpp>
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -212,6 +214,29 @@ TEST(UnionFeatureTest, fieldOrderWithOverlappingBranches) {
     EXPECT_EQ(unionFeature.getFeature(3), fieldBC);
     EXPECT_EQ(unionFeature.getFeature(4), fieldC1);
     EXPECT_EQ(unionFeature.getFeature(5), fieldAC);
+}
+
+TEST(UnionFeatureTest, defaults) {
+    // Confirm that features in branches are in a fully defaulted state when a branch is selected.
+    babelwires::Identifier tagA = testUtils::getTestRegisteredIdentifier("tagA");
+    babelwires::Identifier tagB = testUtils::getTestRegisteredIdentifier("tagB");
+
+    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB}, 0);
+
+    babelwires::RecordFeature* recordA = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recA"));
+    babelwires::IntFeature* fieldA = recordA->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 5>>(), testUtils::getTestRegisteredIdentifier("aa"));
+    babelwires::RecordFeature* recordF = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recF"));
+    babelwires::IntFeature* fieldF = recordF->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 6>>(), testUtils::getTestRegisteredIdentifier("ff"));
+    babelwires::RecordFeature* recordB = unionFeature.addFieldInBranch(tagB, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recB"));
+    babelwires::IntFeature* fieldB = recordB->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 7>>(), testUtils::getTestRegisteredIdentifier("bb"));
+
+    unionFeature.setToDefault();
+    EXPECT_EQ(fieldA->get(), 5);
+    EXPECT_EQ(fieldF->get(), 6);
+
+    unionFeature.selectTag(tagB);
+    EXPECT_EQ(fieldF->get(), 6);
+    EXPECT_EQ(fieldB->get(), 7);
 }
 
 TEST(UnionFeatureTest, changes) {

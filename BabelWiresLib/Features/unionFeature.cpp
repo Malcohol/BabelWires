@@ -87,9 +87,16 @@ bool babelwires::UnionFeature::isTag(Identifier tag) const {
 }
 
 void babelwires::UnionFeature::doSetToDefault() {
-    // Inactive fields should all be in a default state.
-    setToDefaultNonRecursive();
+    if (m_selectedTagIndex == -1) {
+        // This ensures that unselected tags are definitely defaulted.
+        // We do this here, to ensure the class is fully set up first.
+        for (auto& it : m_fieldInfo) {
+            it.second.m_feature->setToDefault();
+        }
+    }
     setSubfeaturesToDefault();
+    // Doing this second avoids setting the default branch to its default value twice.
+    setToDefaultNonRecursive();
 }
 
 void babelwires::UnionFeature::doSetToDefaultNonRecursive() {
