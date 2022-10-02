@@ -28,7 +28,9 @@ void babelwires::UnionFeature::addFieldInBranchesInternal(const std::vector<Iden
     const int numRecordFeatures = getNumFeatures();
     auto& fieldInfo = m_fieldInfo[field.m_identifier];
     fieldInfo.m_feature = std::move(field.m_feature);
-    fieldInfo.m_feature->setToDefault();
+    // This ensures that features which need to access the RootFeature can do so,
+    // even if they are in an unselected branch.
+    fieldInfo.m_feature->setOwner(this);
     for (const auto& tag : tags) {
         unsigned int tagIndex = getIndexOfTag(tag);
         auto& tagToBranchFieldIndices = m_fieldsInBranches[tagIndex];

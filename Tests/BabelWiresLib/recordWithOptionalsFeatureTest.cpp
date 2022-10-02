@@ -4,8 +4,13 @@
 
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/featureMixins.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
+#include <Tests/TestUtils/testIdentifiers.hpp>
 
 TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
     babelwires::RecordWithOptionalsFeature recordFeature;
@@ -277,4 +282,37 @@ TEST(RecordWithOptionalsFeatureTest, setToDefault) {
     recordFeature.setToDefault();
 
     EXPECT_FALSE(recordFeature.isActivated(op0));
+}
+
+TEST(RecordWithOptionalsFeatureTest, inactiveEnumCanBeDefaulted) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+    testEnvironment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
+
+    // Confirm that features in branches are in a fully defaulted state when a branch is selected.
+    babelwires::Identifier ff0 = testUtils::getTestRegisteredIdentifier("ff0");
+    babelwires::Identifier op0 = testUtils::getTestRegisteredIdentifier("op0");
+
+    babelwires::RecordWithOptionalsFeature* recordWithOptionalFeature = rootFeature.addField(std::make_unique<babelwires::RecordWithOptionalsFeature>(), testUtils::getTestRegisteredIdentifier("recOpt"));
+
+    babelwires::RecordFeature* fixedFeature0 = recordWithOptionalFeature->addField(std::make_unique<babelwires::RecordFeature>(), ff0);
+    babelwires::RecordFeature* optionalFeature0 = recordWithOptionalFeature->addOptionalField(std::make_unique<babelwires::RecordFeature>(), op0);
+
+    babelwires::EnumFeature* enumA =
+        fixedFeature0->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
+                              testUtils::getTestRegisteredIdentifier("enumA"));
+
+    babelwires::EnumFeature* enumB =
+        optionalFeature0->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
+                              testUtils::getTestRegisteredIdentifier("enumB"));
+
+    rootFeature.setToDefault();
+
+    EXPECT_EQ(babelwires::RootFeature::tryGetRootFeatureAt(*enumA), &rootFeature);
+
+    recordWithOptionalFeature->activateField(op0);
+
+    EXPECT_EQ(babelwires::RootFeature::tryGetRootFeatureAt(*enumB), &rootFeature);
 }

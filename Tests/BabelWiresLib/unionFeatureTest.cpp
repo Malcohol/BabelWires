@@ -1,9 +1,13 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/unionFeature.hpp>
-#include <BabelWiresLib/Features/numericFeature.hpp>
-#include <BabelWiresLib/Features/featureMixins.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Features/featureMixins.hpp>
+#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/unionFeature.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -22,7 +26,8 @@ TEST(UnionFeatureTest, fieldOrder) {
 
     babelwires::Identifier fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
-    babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
+    babelwires::IntFeature* fieldA0 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
 
     babelwires::Identifier ff0("ff0");
     ff0.setDiscriminator(1);
@@ -30,11 +35,13 @@ TEST(UnionFeatureTest, fieldOrder) {
 
     babelwires::Identifier fieldIdC0("fldC0");
     fieldIdC0.setDiscriminator(1);
-    babelwires::IntFeature* fieldC0 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
+    babelwires::IntFeature* fieldC0 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
 
     babelwires::Identifier fieldIdA1("fldA1");
     fieldIdA1.setDiscriminator(1);
-    babelwires::IntFeature* fieldA1 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
+    babelwires::IntFeature* fieldA1 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
 
     babelwires::Identifier ff1("ff1");
     ff1.setDiscriminator(1);
@@ -42,7 +49,8 @@ TEST(UnionFeatureTest, fieldOrder) {
 
     babelwires::Identifier fieldIdC1("fldC1");
     fieldIdC1.setDiscriminator(1);
-    babelwires::IntFeature* fieldC1 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
+    babelwires::IntFeature* fieldC1 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
 
     unionFeature.setToDefault();
 
@@ -128,16 +136,23 @@ TEST(UnionFeatureTest, fieldOrderWithOverlappingBranches) {
     babelwires::Identifier fieldIdC1 = testUtils::getTestRegisteredIdentifier("fldC1");
     babelwires::Identifier fieldIdAC = testUtils::getTestRegisteredIdentifier("fldAC");
 
-    babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
+    babelwires::IntFeature* fieldA0 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
     babelwires::IntFeature* fixedFeature0 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
-    babelwires::IntFeature* fieldAB = unionFeature.addFieldInBranches({tagA, tagB}, std::make_unique<babelwires::IntFeature>(), fieldIdAB);
-    babelwires::IntFeature* fieldC0 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
-    babelwires::IntFeature* fieldA1 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
+    babelwires::IntFeature* fieldAB =
+        unionFeature.addFieldInBranches({tagA, tagB}, std::make_unique<babelwires::IntFeature>(), fieldIdAB);
+    babelwires::IntFeature* fieldC0 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
+    babelwires::IntFeature* fieldA1 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
     babelwires::IntFeature* fixedFeature1 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff1);
-    babelwires::IntFeature* fieldBC = unionFeature.addFieldInBranches({tagB, tagC}, std::make_unique<babelwires::IntFeature>(), fieldIdBC);
-    babelwires::IntFeature* fieldC1 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
-    babelwires::IntFeature* fieldAC = unionFeature.addFieldInBranches({tagA, tagC}, std::make_unique<babelwires::IntFeature>(), fieldIdAC);
-    
+    babelwires::IntFeature* fieldBC =
+        unionFeature.addFieldInBranches({tagB, tagC}, std::make_unique<babelwires::IntFeature>(), fieldIdBC);
+    babelwires::IntFeature* fieldC1 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
+    babelwires::IntFeature* fieldAC =
+        unionFeature.addFieldInBranches({tagA, tagC}, std::make_unique<babelwires::IntFeature>(), fieldIdAC);
+
     unionFeature.setToDefault();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 6);
@@ -223,12 +238,21 @@ TEST(UnionFeatureTest, defaults) {
 
     babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB}, 0);
 
-    babelwires::RecordFeature* recordA = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recA"));
-    babelwires::IntFeature* fieldA = recordA->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 5>>(), testUtils::getTestRegisteredIdentifier("aa"));
-    babelwires::RecordFeature* recordF = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recF"));
-    babelwires::IntFeature* fieldF = recordF->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 6>>(), testUtils::getTestRegisteredIdentifier("ff"));
-    babelwires::RecordFeature* recordB = unionFeature.addFieldInBranch(tagB, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recB"));
-    babelwires::IntFeature* fieldB = recordB->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 7>>(), testUtils::getTestRegisteredIdentifier("bb"));
+    babelwires::RecordFeature* recordA = unionFeature.addFieldInBranch(
+        tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recA"));
+    babelwires::IntFeature* fieldA =
+        recordA->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 5>>(),
+                          testUtils::getTestRegisteredIdentifier("aa"));
+    babelwires::RecordFeature* recordF = unionFeature.addFieldInBranch(
+        tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recF"));
+    babelwires::IntFeature* fieldF =
+        recordF->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 6>>(),
+                          testUtils::getTestRegisteredIdentifier("ff"));
+    babelwires::RecordFeature* recordB = unionFeature.addFieldInBranch(
+        tagB, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recB"));
+    babelwires::IntFeature* fieldB =
+        recordB->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 7>>(),
+                          testUtils::getTestRegisteredIdentifier("bb"));
 
     unionFeature.setToDefault();
     EXPECT_EQ(fieldA->get(), 5);
@@ -253,7 +277,8 @@ TEST(UnionFeatureTest, changes) {
 
     babelwires::Identifier fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
-    babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
+    babelwires::IntFeature* fieldA0 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
 
     babelwires::Identifier ff0("ff0");
     ff0.setDiscriminator(1);
@@ -261,11 +286,13 @@ TEST(UnionFeatureTest, changes) {
 
     babelwires::Identifier fieldIdC0("fldC0");
     fieldIdC0.setDiscriminator(1);
-    babelwires::IntFeature* fieldC0 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
+    babelwires::IntFeature* fieldC0 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
 
     babelwires::Identifier fieldIdA1("fldA1");
     fieldIdA1.setDiscriminator(1);
-    babelwires::IntFeature* fieldA1 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
+    babelwires::IntFeature* fieldA1 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
 
     babelwires::Identifier ff1("ff1");
     ff1.setDiscriminator(1);
@@ -273,7 +300,8 @@ TEST(UnionFeatureTest, changes) {
 
     babelwires::Identifier fieldIdC1("fldC1");
     fieldIdC1.setDiscriminator(1);
-    babelwires::IntFeature* fieldC1 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
+    babelwires::IntFeature* fieldC1 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
 
     unionFeature.setToDefault();
 
@@ -325,7 +353,8 @@ TEST(UnionFeatureTest, hash) {
 
     babelwires::Identifier fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
-    babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
+    babelwires::IntFeature* fieldA0 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
 
     babelwires::Identifier ff0("ff0");
     ff0.setDiscriminator(1);
@@ -333,11 +362,13 @@ TEST(UnionFeatureTest, hash) {
 
     babelwires::Identifier fieldIdC0("fldC0");
     fieldIdC0.setDiscriminator(1);
-    babelwires::IntFeature* fieldC0 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
+    babelwires::IntFeature* fieldC0 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
 
     babelwires::Identifier fieldIdA1("fldA1");
     fieldIdA1.setDiscriminator(1);
-    babelwires::IntFeature* fieldA1 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
+    babelwires::IntFeature* fieldA1 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
 
     babelwires::Identifier ff1("ff1");
     ff1.setDiscriminator(1);
@@ -345,7 +376,8 @@ TEST(UnionFeatureTest, hash) {
 
     babelwires::Identifier fieldIdC1("fldC1");
     fieldIdC1.setDiscriminator(1);
-    babelwires::IntFeature* fieldC1 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
+    babelwires::IntFeature* fieldC1 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
 
     unionFeature.setToDefault();
 
@@ -392,7 +424,8 @@ TEST(UnionFeatureTest, queries) {
 
     babelwires::Identifier fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
-    babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
+    babelwires::IntFeature* fieldA0 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
 
     babelwires::Identifier ff0("ff0");
     ff0.setDiscriminator(1);
@@ -400,11 +433,13 @@ TEST(UnionFeatureTest, queries) {
 
     babelwires::Identifier fieldIdC0("fldC0");
     fieldIdC0.setDiscriminator(1);
-    babelwires::IntFeature* fieldC0 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
+    babelwires::IntFeature* fieldC0 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
 
     babelwires::Identifier fieldIdA1("fldA1");
     fieldIdA1.setDiscriminator(1);
-    babelwires::IntFeature* fieldA1 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
+    babelwires::IntFeature* fieldA1 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA1);
 
     babelwires::Identifier ff1("ff1");
     ff1.setDiscriminator(1);
@@ -412,7 +447,8 @@ TEST(UnionFeatureTest, queries) {
 
     babelwires::Identifier fieldIdC1("fldC1");
     fieldIdC1.setDiscriminator(1);
-    babelwires::IntFeature* fieldC1 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
+    babelwires::IntFeature* fieldC1 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC1);
 
     // Queries that do not depend on the active state of the union.
 
@@ -451,4 +487,40 @@ TEST(UnionFeatureTest, queries) {
     EXPECT_EQ(unionFeature.getSelectedTagIndex(), 0);
     EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsRemovedByChangeOfBranch(tagB), {fieldIdA0, fieldIdA1}));
     EXPECT_TRUE(testUtils::areEqualSets(unionFeature.getFieldsRemovedByChangeOfBranch(tagC), {fieldIdA0, fieldIdA1}));
+}
+
+TEST(UnionFeatureTest, unselectedEnumCanBeDefaulted) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+    testEnvironment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+
+    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
+
+    // Confirm that features in branches are in a fully defaulted state when a branch is selected.
+    babelwires::Identifier tagA = testUtils::getTestRegisteredIdentifier("tagA");
+    babelwires::Identifier tagB = testUtils::getTestRegisteredIdentifier("tagB");
+
+    babelwires::UnionFeature* unionFeature = rootFeature.addField(std::make_unique<babelwires::UnionFeature>(babelwires::UnionFeature::TagValues{tagA, tagB}, 0), testUtils::getTestRegisteredIdentifier("union"));
+
+    babelwires::RecordFeature* recordA = unionFeature->addFieldInBranch(
+        tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recA"));
+
+    babelwires::EnumFeature* enumA =
+        recordA->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
+                              testUtils::getTestRegisteredIdentifier("enumA"));
+
+    babelwires::RecordFeature* recordB = unionFeature->addFieldInBranch(
+        tagB, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recB"));
+
+    babelwires::EnumFeature* enumB =
+        recordB->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
+                              testUtils::getTestRegisteredIdentifier("enumB"));
+
+    rootFeature.setToDefault();
+
+    EXPECT_EQ(babelwires::RootFeature::tryGetRootFeatureAt(*enumA), &rootFeature);
+
+    unionFeature->selectTag(tagB);
+
+    EXPECT_EQ(babelwires::RootFeature::tryGetRootFeatureAt(*enumA), &rootFeature);
 }

@@ -13,6 +13,7 @@
 
 void babelwires::RecordWithOptionalsFeature::addOptionalFieldInternal(FieldAndIndex f) {
     m_optionalFields.emplace_back(f.m_identifier);
+    f.m_feature->setOwner(this);
     m_inactiveFields.emplace_back(std::move(f));
 }
 

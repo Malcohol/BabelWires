@@ -107,7 +107,10 @@ babelwires::RecordFeature::FieldAndIndex babelwires::RecordFeature::removeField(
     }
     assert((i < m_fields.size()) && "The field to remove was not present");
     FieldAndIndex f{std::move(m_fields[i]), i};
-    f.m_feature->setOwner(nullptr);
+    // Removed fields may still need to be rooted in the hierarchy, so we don't set their owner to null here.
+    // This requires the caller to be respectful of how the removed field is treated, since it could
+    // propagate changes up the owner chain.
+    // TODO: Consider setting to default and then settings owner to null. That might account for the needs of all use-cases.
     m_fields.erase(m_fields.begin() + i);
     setChanged(Changes::StructureChanged);
     return f;
