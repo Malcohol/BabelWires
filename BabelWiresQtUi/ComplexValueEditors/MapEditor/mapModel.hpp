@@ -46,7 +46,8 @@ namespace babelwires {
         void valuesChanged();
 
       public:
-        void initMapEntryModelDispatcher(const QModelIndex& index, MapEntryModelDispatcher& mapEntryModel) const;
+        /// Returns false if the index does not correspond to an entry in the map.
+        bool initMapEntryModelDispatcher(const QModelIndex& index, MapEntryModelDispatcher& mapEntryModel) const;
 
       signals:
         void valuesMayHaveChanged() const;

@@ -7,18 +7,18 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
-#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
+#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProject.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 
-#include <QtWidgets/QHeaderView>
 #include <QMenu>
+#include <QtWidgets/QHeaderView>
 
 babelwires::MapView::MapView() {
     setEditTriggers(QAbstractItemView::AllEditTriggers);
@@ -45,13 +45,20 @@ int babelwires::MapModel::columnCount(const QModelIndex& /*parent*/) const {
     return 2;
 }
 
-void babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index, MapEntryModelDispatcher& mapEntryModel) const {
+bool babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index,
+                                                       MapEntryModelDispatcher& mapEntryModel) const {
     const unsigned int row = static_cast<unsigned int>(index.row());
     const unsigned int column = static_cast<unsigned int>(index.column());
     const MapProject& mapProject = m_mapEditor.getMapProject();
-    const MapProjectEntry* entry = (row < mapProject.getNumMapEntries()) ? &mapProject.getMapEntry(row) : nullptr;
-    const bool isLastRow = (row == mapProject.getNumMapEntries() - 1);
+    const unsigned int numMapEntries = mapProject.getNumMapEntries();
+    if ((row >= numMapEntries) || (column >= 2)) {
+        // This can happen if you right-click below the current set of entries.
+        return false;
+    }
+    const MapProjectEntry& entry = mapProject.getMapEntry(row);
+    const bool isLastRow = (row == numMapEntries - 1);
     mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row, isLastRow);
+    return true;
 }
 
 QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
@@ -61,7 +68,9 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
 
     MapEntryModelDispatcher mapEntryModel;
-    initMapEntryModelDispatcher(index, mapEntryModel);
+    if (!initMapEntryModelDispatcher(index, mapEntryModel)) {
+        return {};
+    }
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -89,7 +98,9 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
 
 QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
     MapEntryModelDispatcher mapEntryModel;
-    initMapEntryModelDispatcher(index, mapEntryModel);
+    if (!initMapEntryModelDispatcher(index, mapEntryModel)) {
+        return nullptr;
+    }
 
     std::vector<std::unique_ptr<ContextMenuAction>> actions;
     mapEntryModel->getContextMenuActions(actions);
@@ -111,12 +122,13 @@ Qt::ItemFlags babelwires::MapModel::flags(const QModelIndex& index) const {
     Qt::ItemFlags flags = Qt::ItemIsEnabled;
 
     MapEntryModelDispatcher mapEntryModel;
-    initMapEntryModelDispatcher(index, mapEntryModel);
+    if (!initMapEntryModelDispatcher(index, mapEntryModel)) {
+        return flags;
+    }
 
     const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
     const unsigned int row = static_cast<unsigned int>(index.row());
-    if (m_mapEditor.getMapProject().getMapEntry(row).getValidity())
-    {
+    if (m_mapEditor.getMapProject().getMapEntry(row).getValidity()) {
         if (mapEntryModel->isItemEditable(column)) {
             flags = flags | Qt::ItemIsEditable;
         }
