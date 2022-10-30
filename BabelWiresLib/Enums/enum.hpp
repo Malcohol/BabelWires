@@ -50,8 +50,7 @@ namespace babelwires {
 
         std::unique_ptr<Value> createValue() const override;
 
-      protected:
-        virtual bool verifyParent(const Type& parentType) const;
+        virtual bool verifySupertype(const Type& supertype) const;
 
       private:
         EnumValues m_values;

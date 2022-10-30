@@ -12,7 +12,7 @@ babelwires::Type::Type(LongIdentifier identifier, VersionNumber version, std::op
     , m_parentTypeId(parentTypeId)
 {}
 
-bool babelwires::Type::verifyParent(const Type& parentType) const {
+bool babelwires::Type::verifySupertype(const Type& supertype) const {
     assert(false);
     return false;
 }
@@ -34,7 +34,7 @@ void babelwires::Type::setParent(const Type* parent) {
     assert(parent);
     assert(m_parentTypeId);
     assert(parent->getIdentifier() == *m_parentTypeId);
-    verifyParent(*parent);
+    verifySupertype(*parent);
     m_parent = parent;
 }
 

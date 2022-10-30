@@ -38,12 +38,12 @@ void babelwires::TypeSystem::addRelatedTypes(LongIdentifier typeId, RelatedTypes
     for (LongIdentifier potentialSupertype : relatedTypes.m_supertypeIds) {
         const Type *const supertype = getEntryByIdentifier(potentialSupertype);
         assert((supertype != nullptr) && "A supertype Id is not the id of a registered type");
-        assert(type->verifyParent(*supertype) && "A supertype is not suitable for the type"); 
+        assert(type->verifySupertype(*supertype) && "A supertype is not suitable for the type"); 
     }
     for (LongIdentifier potentialSubtype : relatedTypes.m_subtypeIds) {
         const Type *const subtype = getEntryByIdentifier(potentialSubtype);
         assert((subtype != nullptr) && "A subtype ID is not the id of a registered type");
-        assert(subtype->verifyParent(*type) && "A supertype is not suitable for the type"); 
+        assert(subtype->verifySupertype(*type) && "A supertype is not suitable for the type"); 
     }
 #endif
     assert((m_relatedTypes.find(typeId) == m_relatedTypes.end()) && "Related types already set for the given typeId");

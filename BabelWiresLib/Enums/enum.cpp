@@ -16,7 +16,7 @@ babelwires::Enum::Enum(LongIdentifier identifier, VersionNumber version, EnumVal
     , m_indexOfDefaultValue(indexOfDefaultValue) {
 #ifndef NDEBUG
     if (!parentTypeId) {
-        /// For enums with parents, their discriminators will be resolved in verifyParent.
+        /// For enums with parents, their discriminators will be resolved in verifySupertype.
         for (int i = 0; i < values.size(); ++i) {
             assert((values[i].getDiscriminator() != 0) && "Only registered ids can be used in an enum");
         }
@@ -51,6 +51,7 @@ bool babelwires::Enum::isAValue(const babelwires::Identifier& id) const {
     if (it == values.end()) {
         return false;
     }
+    // TODO Needed?
     id.setDiscriminator(it->getDiscriminator());
     return true;
 }
@@ -59,8 +60,8 @@ std::unique_ptr<babelwires::Value> babelwires::Enum::createValue() const {
     return std::make_unique<EnumValue>(getIdentifierFromIndex(getIndexOfDefaultValue()));
 }
 
-bool babelwires::Enum::verifyParent(const Type& parentType) const {
-    const Enum& parentEnum = parentType.is<Enum>();
+bool babelwires::Enum::verifySupertype(const Type& supertype) const {
+    const Enum& parentEnum = supertype.is<Enum>();
     for (const auto& v : m_values) {
         assert(parentEnum.isAValue(v));
     }
