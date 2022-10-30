@@ -42,7 +42,6 @@ namespace babelwires {
         /// Convenience method: Is this a subtype of otherType, or vice-versa (equality is allowed).
         bool isRelatedType(const Type& otherType) const;
 
-      protected:
         /// Confirm that the parent when resolved in the type system is the expected parent.
         /// The default implementation asserts.
         virtual bool verifyParent(const Type& parentType) const;

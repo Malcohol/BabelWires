@@ -31,6 +31,26 @@ void babelwires::UntypedTypeSystemRegistry::validateNewEntry(RegistryEntry* newE
 babelwires::TypeSystem::TypeSystem()
     : Registry("Type system") {}
 
+void babelwires::TypeSystem::addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes) {
+    const Type *const type = getEntryByIdentifier(typeId);
+    assert((type != nullptr) && "typeId is not the id of a registered type");
+#ifndef NDEBUG
+    for (LongIdentifier potentialSupertype : relatedTypes.m_supertypeIds) {
+        const Type *const supertype = getEntryByIdentifier(potentialSupertype);
+        assert((supertype != nullptr) && "A supertype Id is not the id of a registered type");
+        assert(type->verifyParent(*supertype) && "A supertype is not suitable for the type"); 
+    }
+    for (LongIdentifier potentialSubtype : relatedTypes.m_subtypeIds) {
+        const Type *const subtype = getEntryByIdentifier(potentialSubtype);
+        assert((subtype != nullptr) && "A subtype ID is not the id of a registered type");
+        assert(subtype->verifyParent(*type) && "A supertype is not suitable for the type"); 
+    }
+#endif
+    assert((m_relatedTypes.find(typeId) == m_relatedTypes.end()) && "Related types already set for the given typeId");
+    // TODO Cull tree?
+    m_relatedTypes.insert({typeId, std::move(relatedTypes)});
+}
+
 bool babelwires::TypeSystem::isSubType(LongIdentifier subtypeId, LongIdentifier supertypeId) const {
     const Type *const subtype = getEntryByIdentifier(subtypeId);
     assert(subtype && "The subtypeId was an unregistered type");

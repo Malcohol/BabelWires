@@ -29,6 +29,14 @@ namespace babelwires {
 
         using TypeIdSet = std::vector<LongIdentifier>;
 
+        struct RelatedTypes {
+          std::vector<LongIdentifier> m_supertypeIds;
+          std::vector<LongIdentifier> m_subtypeIds;
+        };
+
+        /// All types must be already registered.
+        void addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes);
+
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
         bool isSubType(LongIdentifier subtypeId, LongIdentifier supertypeId) const;
 
@@ -43,6 +51,9 @@ namespace babelwires {
 
         /// Return all subtypes and supertypes, including type.
         void addAllRelatedTypes(LongIdentifier typeId, TypeIdSet& relatedTypes) const;
+
+      protected:
+        std::unordered_map<LongIdentifier, RelatedTypes> m_relatedTypes;
     };
 
 } // namespace babelwires
