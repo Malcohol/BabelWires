@@ -61,7 +61,7 @@ namespace babelwires {
         UntypedRegistry(std::string registryName);
 
         /// Transfer ownership to the registry.
-        void addEntry(std::unique_ptr<RegistryEntry> newEntry);
+        RegistryEntry* addEntry(std::unique_ptr<RegistryEntry> newEntry);
 
         /// Find an entry by an internal key which should be stable between versions of the program.
         /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
@@ -98,7 +98,8 @@ namespace babelwires {
         Registry(std::string registryName);
 
         /// Transfer ownership to the registry.
-        void addEntry(std::unique_ptr<ENTRY> newEntry);
+        template<typename ENTRY_SUBTYPE, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
+        ENTRY_SUBTYPE* addEntry(std::unique_ptr<ENTRY_SUBTYPE> newEntry);
 
         /// Find an entry by an internal key which should be stable between
         /// versions of the program.
