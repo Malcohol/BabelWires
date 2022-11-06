@@ -16,10 +16,12 @@
 
 namespace babelwires {
 
+    /// A type describes a valid set of values.
+    /// Note that information about subtype relationships is kept in the TypeSystem.
     class Type : public RegistryEntry {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Type);
-        Type(LongIdentifier identifier, VersionNumber version, std::optional<LongIdentifier> parentTypeId = {});
+        Type(LongIdentifier identifier, VersionNumber version);
         
         virtual std::unique_ptr<Value> createValue() const = 0;
 

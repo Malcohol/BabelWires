@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
-babelwires::Type::Type(LongIdentifier identifier, VersionNumber version, std::optional<LongIdentifier> parentTypeId)
+babelwires::Type::Type(LongIdentifier identifier, VersionNumber version)
     : RegistryEntry(identifier, version)
 {}
 

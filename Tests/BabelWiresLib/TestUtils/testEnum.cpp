@@ -22,24 +22,21 @@ babelwires::LongIdentifier testUtils::TestSubEnum::getThisIdentifier() {
 }
 
 testUtils::TestSubEnum::TestSubEnum()
-    : babelwires::Enum(getThisIdentifier(), 1, babelwires::Enum::EnumValues{"Bar", "Erm", "Oom"}, 1,
-                       testUtils::TestEnum::getThisIdentifier()) {}
+    : babelwires::Enum(getThisIdentifier(), 1, babelwires::Enum::EnumValues{"Bar", "Erm", "Oom"}, 1) {}
 
 babelwires::LongIdentifier testUtils::TestSubSubEnum1::getThisIdentifier() {
     return getTestRegisteredLongIdentifier("TestSubSubEnum1");
 }
 
 testUtils::TestSubSubEnum1::TestSubSubEnum1()
-    : babelwires::Enum(getThisIdentifier(), 1, babelwires::Enum::EnumValues{"Bar", "Erm"}, 1,
-                       testUtils::TestSubEnum::getThisIdentifier()) {}
+    : babelwires::Enum(getThisIdentifier(), 1, babelwires::Enum::EnumValues{"Bar", "Erm"}, 1) {}
 
 babelwires::LongIdentifier testUtils::TestSubSubEnum2::getThisIdentifier() {
     return getTestRegisteredLongIdentifier("TestSubSubEnum2");
 }
 
 testUtils::TestSubSubEnum2::TestSubSubEnum2()
-    : babelwires::Enum(getThisIdentifier(), 1, babelwires::Enum::EnumValues{"Erm", "Oom"}, 1,
-                       testUtils::TestSubEnum::getThisIdentifier()) {}
+    : babelwires::Enum(getThisIdentifier(), 1, babelwires::Enum::EnumValues{"Erm", "Oom"}, 1) {}
 
 void testUtils::addTestEnumTypes(babelwires::TypeSystem& typeSystem) {
     typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());

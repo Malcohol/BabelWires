@@ -10,16 +10,13 @@
 #include <BabelWiresLib/TypeSystem/enumValue.hpp>
 
 babelwires::Enum::Enum(LongIdentifier identifier, VersionNumber version, EnumValues values,
-                       unsigned int indexOfDefaultValue, std::optional<LongIdentifier> parentTypeId)
-    : Type(identifier, version, parentTypeId)
+                       unsigned int indexOfDefaultValue)
+    : Type(identifier, version)
     , m_values(std::move(values))
     , m_indexOfDefaultValue(indexOfDefaultValue) {
 #ifndef NDEBUG
-    if (!parentTypeId) {
-        /// For enums with parents, their discriminators will be resolved in verifySupertype.
-        for (int i = 0; i < values.size(); ++i) {
-            assert((values[i].getDiscriminator() != 0) && "Only registered ids can be used in an enum");
-        }
+    for (int i = 0; i < values.size(); ++i) {
+        assert((values[i].getDiscriminator() != 0) && "Only registered ids can be used in an enum");
     }
 #endif
 }
