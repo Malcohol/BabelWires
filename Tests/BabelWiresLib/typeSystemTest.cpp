@@ -11,16 +11,30 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+namespace {
+    void addTestTypes(babelwires::TypeSystem& typeSystem) {
+        typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+        typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+        typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+        typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
+        typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
+
+        typeSystem.addRelatedTypes(testUtils::TestEnum::getThisIdentifier(),
+                                   {{}, {testUtils::TestSubSubEnum1::getThisIdentifier()}});
+        typeSystem.addRelatedTypes(testUtils::TestSubSubEnum2::getThisIdentifier(),
+                                   {{testUtils::TestEnum::getThisIdentifier()}, {}});
+        typeSystem.addRelatedTypes(
+            testUtils::TestSubEnum::getThisIdentifier(),
+            {{testUtils::TestEnum::getThisIdentifier()},
+             {testUtils::TestSubSubEnum1::getThisIdentifier(), testUtils::TestSubSubEnum2::getThisIdentifier()}});
+    }
+} // namespace
+
 TEST(TypeSystemTest, isSubTypes) {
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
-
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
+    addTestTypes(typeSystem);
 
     EXPECT_TRUE(
         typeSystem.isSubType(testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
@@ -69,12 +83,7 @@ TEST(TypeSystemTest, isRelatedTypes) {
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
-
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
+    addTestTypes(typeSystem);
 
     EXPECT_TRUE(
         typeSystem.isRelatedType(testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
@@ -120,155 +129,92 @@ TEST(TypeSystemTest, isRelatedTypes) {
                                           testUtils::TestSubSubEnum1::getThisIdentifier()));
 }
 
-TEST(TypeSystemTest, addAllSubTypes) {
+TEST(TypeSystemTest, getAllSubTypes) {
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
+    addTestTypes(typeSystem);
 
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
+    EXPECT_TRUE(testUtils::areEqualSets(typeSystem.getAllSubtypes(testUtils::TestType::getThisIdentifier()),
+                                        babelwires::TypeSystem::TypeIdSet{testUtils::TestType::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllSubtypes(testUtils::TestType::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestType::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(
+        testUtils::areEqualSets(typeSystem.getAllSubtypes(testUtils::TestSubSubEnum1::getThisIdentifier()),
+                                babelwires::TypeSystem::TypeIdSet{testUtils::TestSubSubEnum1::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllSubtypes(testUtils::TestSubSubEnum1::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestSubSubEnum1::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(
+        testUtils::areEqualSets(typeSystem.getAllSubtypes(testUtils::TestSubEnum::getThisIdentifier()),
+                                babelwires::TypeSystem::TypeIdSet{testUtils::TestSubEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubSubEnum1::getThisIdentifier(),
+                                                                  testUtils::TestSubSubEnum2::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllSubtypes(testUtils::TestSubEnum::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestSubEnum::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum1::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum2::getThisIdentifier()}));
-    }
-
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllSubtypes(testUtils::TestEnum::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
-                                                     testUtils::TestSubEnum::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum1::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum2::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(testUtils::areEqualSets(
+        typeSystem.getAllSubtypes(testUtils::TestEnum::getThisIdentifier()),
+        babelwires::TypeSystem::TypeIdSet{
+            testUtils::TestEnum::getThisIdentifier(), testUtils::TestSubEnum::getThisIdentifier(),
+            testUtils::TestSubSubEnum1::getThisIdentifier(), testUtils::TestSubSubEnum2::getThisIdentifier()}));
 }
 
-TEST(TypeSystemTest, addAllSupertypes) {
+TEST(TypeSystemTest, getAllSupertypes) {
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
+    addTestTypes(typeSystem);
 
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
+    EXPECT_TRUE(testUtils::areEqualSets(typeSystem.getAllSupertypes(testUtils::TestType::getThisIdentifier()),
+                                        babelwires::TypeSystem::TypeIdSet{testUtils::TestType::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllSupertypes(testUtils::TestType::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestType::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(testUtils::areEqualSets(typeSystem.getAllSupertypes(testUtils::TestEnum::getThisIdentifier()),
+                                        babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllSupertypes(testUtils::TestEnum::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(
+        testUtils::areEqualSets(typeSystem.getAllSupertypes(testUtils::TestSubEnum::getThisIdentifier()),
+                                babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubEnum::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllSupertypes(testUtils::TestSubEnum::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
-                                                     testUtils::TestSubEnum::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(
+        testUtils::areEqualSets(typeSystem.getAllSupertypes(testUtils::TestSubSubEnum1::getThisIdentifier()),
+                                babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubSubEnum1::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllSupertypes(testUtils::TestSubSubEnum1::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
-                                                     testUtils::TestSubEnum::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum1::getThisIdentifier()}));
-    }
-
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllSupertypes(testUtils::TestSubSubEnum2::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
-                                                     testUtils::TestSubEnum::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum2::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(
+        testUtils::areEqualSets(typeSystem.getAllSupertypes(testUtils::TestSubSubEnum2::getThisIdentifier()),
+                                babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubSubEnum2::getThisIdentifier()}));
 }
 
 TEST(TypeSystemTest, addAllRelatedTypes) {
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
+    addTestTypes(typeSystem);
 
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
+    EXPECT_TRUE(testUtils::areEqualSets(typeSystem.getAllRelatedTypes(testUtils::TestType::getThisIdentifier()),
+                                        babelwires::TypeSystem::TypeIdSet{testUtils::TestType::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllRelatedTypes(testUtils::TestType::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestType::getThisIdentifier()}));
-    }
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllRelatedTypes(testUtils::TestEnum::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
-                                                     testUtils::TestSubEnum::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum1::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum2::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(testUtils::areEqualSets(
+        typeSystem.getAllRelatedTypes(testUtils::TestEnum::getThisIdentifier()),
+        babelwires::TypeSystem::TypeIdSet{
+            testUtils::TestEnum::getThisIdentifier(), testUtils::TestSubEnum::getThisIdentifier(),
+            testUtils::TestSubSubEnum1::getThisIdentifier(), testUtils::TestSubSubEnum2::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllRelatedTypes(testUtils::TestSubEnum::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
-                                                     testUtils::TestSubEnum::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum1::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum2::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(testUtils::areEqualSets(
+        typeSystem.getAllRelatedTypes(testUtils::TestSubEnum::getThisIdentifier()),
+        babelwires::TypeSystem::TypeIdSet{
+            testUtils::TestEnum::getThisIdentifier(), testUtils::TestSubEnum::getThisIdentifier(),
+            testUtils::TestSubSubEnum1::getThisIdentifier(), testUtils::TestSubSubEnum2::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllRelatedTypes(testUtils::TestSubSubEnum1::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
-                                                     testUtils::TestSubEnum::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum1::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(
+        testUtils::areEqualSets(typeSystem.getAllRelatedTypes(testUtils::TestSubSubEnum1::getThisIdentifier()),
+                                babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubSubEnum1::getThisIdentifier()}));
 
-    {
-        babelwires::TypeSystem::TypeIdSet types;
-        typeSystem.addAllRelatedTypes(testUtils::TestSubSubEnum2::getThisIdentifier(), types);
-        EXPECT_TRUE(testUtils::areEqualSets(
-            types, babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
-                                                     testUtils::TestSubEnum::getThisIdentifier(),
-                                                     testUtils::TestSubSubEnum2::getThisIdentifier()}));
-    }
+    EXPECT_TRUE(
+        testUtils::areEqualSets(typeSystem.getAllRelatedTypes(testUtils::TestSubSubEnum2::getThisIdentifier()),
+                                babelwires::TypeSystem::TypeIdSet{testUtils::TestEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubEnum::getThisIdentifier(),
+                                                                  testUtils::TestSubSubEnum2::getThisIdentifier()}));
 }

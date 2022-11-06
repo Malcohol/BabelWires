@@ -26,13 +26,13 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
                 typeIds.emplace_back(*typeId);
                 break;
             case TypeFlexibility::allowSubtypes:
-                typeSystem.addAllSubtypes(*typeId, typeIds);
+                typeIds = typeSystem.getAllSubtypes(*typeId);
                 break;
             case TypeFlexibility::allowSupertypes:
-                typeSystem.addAllSupertypes(*typeId, typeIds);
+                typeIds = typeSystem.getAllSupertypes(*typeId);
                 break;
             case TypeFlexibility::allowRelatedTypes:
-                typeSystem.addAllRelatedTypes(*typeId, typeIds);
+                typeIds = typeSystem.getAllRelatedTypes(*typeId);
                 break;
         }
     } else {

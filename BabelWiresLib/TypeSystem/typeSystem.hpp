@@ -15,23 +15,15 @@
 namespace babelwires {
     class Type;
 
-    class UntypedTypeSystemRegistry : public UntypedRegistry 
-    {
-      public:
-        UntypedTypeSystemRegistry(std::string registryName);
-      protected:
-        void validateNewEntry(RegistryEntry* newEntry) const override;
-    };
-
-    class TypeSystem : public Registry<Type, UntypedTypeSystemRegistry> {
+    class TypeSystem : public Registry<Type> {
       public:
         TypeSystem();
 
         using TypeIdSet = std::vector<LongIdentifier>;
 
         struct RelatedTypes {
-          std::vector<LongIdentifier> m_supertypeIds;
-          std::vector<LongIdentifier> m_subtypeIds;
+          TypeIdSet m_supertypeIds;
+          TypeIdSet m_subtypeIds;
         };
 
         /// All types must be already registered.
@@ -44,16 +36,24 @@ namespace babelwires {
         bool isRelatedType(LongIdentifier typeAId, LongIdentifier typeBId) const;
 
         /// Return all the subtypes of type, including type.
-        void addAllSubtypes(LongIdentifier typeId, TypeIdSet& subtypes) const;
+        TypeIdSet getAllSubtypes(LongIdentifier typeId) const;
 
         /// Return all the supertypes, including type.
-        void addAllSupertypes(LongIdentifier typeId, TypeIdSet& supertypes) const;
+        TypeIdSet getAllSupertypes(LongIdentifier typeId) const;
 
         /// Return all subtypes and supertypes, including type.
-        void addAllRelatedTypes(LongIdentifier typeId, TypeIdSet& relatedTypes) const;
+        TypeIdSet getAllRelatedTypes(LongIdentifier typeId) const;
+
+      protected:
+        const RelatedTypes& getRelatedTypes(LongIdentifier typeId) const;
+        void getAllSubtypesHelper(LongIdentifier typeId, TypeIdSet& subtypes) const;
+        void getAllSupertypesHelper(LongIdentifier typeId, TypeIdSet& subtypes) const;
 
       protected:
         std::unordered_map<LongIdentifier, RelatedTypes> m_relatedTypes;
+
+        /// Used for types which have no relations.
+        const RelatedTypes m_emptyRelatedTypes;
     };
 
 } // namespace babelwires
