@@ -14,19 +14,7 @@
 namespace {
     void addTestTypes(babelwires::TypeSystem& typeSystem) {
         typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-        typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-        typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-        typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
-        typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
-
-        typeSystem.addRelatedTypes(testUtils::TestEnum::getThisIdentifier(),
-                                   {{}, {testUtils::TestSubSubEnum1::getThisIdentifier()}});
-        typeSystem.addRelatedTypes(testUtils::TestSubSubEnum2::getThisIdentifier(),
-                                   {{testUtils::TestEnum::getThisIdentifier()}, {}});
-        typeSystem.addRelatedTypes(
-            testUtils::TestSubEnum::getThisIdentifier(),
-            {{testUtils::TestEnum::getThisIdentifier()},
-             {testUtils::TestSubSubEnum1::getThisIdentifier(), testUtils::TestSubSubEnum2::getThisIdentifier()}});
+        testUtils::addTestEnumTypes(typeSystem);
     }
 } // namespace
 

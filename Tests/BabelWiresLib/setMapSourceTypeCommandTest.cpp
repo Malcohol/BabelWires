@@ -6,23 +6,20 @@
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProject.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/enumValue.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 
 TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
+    testUtils::addTestEnumTypes(environment.m_typeSystem);
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId(testUtils::TestEnum::getThisIdentifier());
@@ -36,7 +33,7 @@ TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
                                               testUtils::TestType::getThisIdentifier());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testUtils::TestType::getThisIdentifier());
+                                                      testUtils::TestType::getThisIdentifier());
 
     babelwires::EnumValue newSourceValue;
     newSourceValue.set("Erm");
@@ -96,7 +93,7 @@ TEST(SetMapSourceTypeCommandTest, failWithUnallowedType) {
     mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testUtils::TestType::getThisIdentifier());
+                                                      testUtils::TestType::getThisIdentifier());
     mapData.emplaceBack(allToOne.clone());
 
     mapProject.setMapData(mapData);
@@ -105,4 +102,3 @@ TEST(SetMapSourceTypeCommandTest, failWithUnallowedType) {
 
     EXPECT_FALSE(command.initialize(mapProject));
 }
-

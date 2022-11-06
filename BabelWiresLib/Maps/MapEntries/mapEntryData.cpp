@@ -26,7 +26,7 @@ babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSyst
     if (isLastEntry != isFallback(getKind())) {
        return isLastEntry ? "The last entry must be a fallback entry" : "A fallback entry can only be at the end of a map";
     }
-    return doValidate(*sourceType, *targetType);
+    return doValidate(typeSystem, *sourceType, *targetType);
 }
 
 std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, Kind kind) {

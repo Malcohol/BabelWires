@@ -27,6 +27,7 @@ namespace babelwires {
         };
 
         /// All types must be already registered.
+        /// Subtyping is managed seperately from the types themselves because a type may not know all its relations at construction time.
         void addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes);
 
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).

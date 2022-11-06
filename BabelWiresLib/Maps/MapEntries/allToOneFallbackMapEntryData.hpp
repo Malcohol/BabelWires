@@ -35,7 +35,7 @@ namespace babelwires {
         void visitFilePaths(FilePathVisitor& visitor) override;
 
       protected:
-        Result doValidate(const Type& sourceType, const Type& targetType) const override;
+        Result doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const override;
 
         /// Needed for deserialization.
         AllToOneFallbackMapEntryData();

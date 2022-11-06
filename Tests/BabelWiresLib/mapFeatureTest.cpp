@@ -66,8 +66,11 @@ TEST(MapFeatureTest, assign) {
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+    environment.m_typeSystem.addRelatedTypes(testUtils::TestSubEnum::getThisIdentifier(),
+                                             {{testUtils::TestEnum::getThisIdentifier()}, {}});
 
-    // MapFeatures expect to be able to find the typeSystem via the rootFeature at the root of the feature hierarchy.
+    // MapFeatures expect to be able to find the typeSystem via the rootFeature at the root of the feature
+    // hierarchy.
     babelwires::RootFeature rootFeature(environment.m_projectContext);
 
     // Note: The field identifiers here don't need to be correctly registered.
@@ -135,7 +138,7 @@ TEST(MapFeatureTest, assign) {
     testEnumTestEnumFeature->setToDefault();
 
     // Source and target changing
-    
+
     EXPECT_NO_THROW(testEnumTestEnumFeature->assign(*testSubEnumTestSubEnumFeature));
     testEnumTestEnumFeature->setToDefault();
 
@@ -148,8 +151,11 @@ TEST(MapFeatureTest, setAndGet) {
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+    environment.m_typeSystem.addRelatedTypes(testUtils::TestSubEnum::getThisIdentifier(),
+                                             {{testUtils::TestEnum::getThisIdentifier()}, {}});
 
-    // MapFeatures expect to be able to find the typeSystem via the rootFeature at the root of the feature hierarchy.
+    // MapFeatures expect to be able to find the typeSystem via the rootFeature at the root of the feature
+    // hierarchy.
     babelwires::RootFeature rootFeature(environment.m_projectContext);
 
     // Note: The field identifiers here don't need to be correctly registered.
@@ -217,7 +223,7 @@ TEST(MapFeatureTest, setAndGet) {
     testEnumTestEnumFeature->setToDefault();
 
     // Source and target changing
-    
+
     EXPECT_NO_THROW(testEnumTestEnumFeature->set(testSubEnumTestSubEnumFeature->get()));
     testEnumTestEnumFeature->setToDefault();
 
