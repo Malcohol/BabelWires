@@ -110,7 +110,7 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
         const auto* fileFeature = m_feature.get()->as<FileFeature>();
         const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
         assert(format && "FileFeature with unregistered file format");
-        format->writeToFile(*fileFeature, outStream, userLogger);
+        format->writeToFile(context, userLogger, *fileFeature, outStream);
         outStream.close();
         if (m_saveHashWhenSaved != m_saveHash) {
             setChanged(Changes::FeatureElementLabelChanged);

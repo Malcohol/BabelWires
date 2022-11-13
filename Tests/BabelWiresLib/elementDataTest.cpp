@@ -1,21 +1,21 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/processorElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 #include <Tests/TestUtils/tempFilePath.hpp>
 
@@ -125,7 +125,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
         auto targetFileFormat = std::make_unique<testUtils::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<testUtils::TestFileFeature>(testEnvironment.m_projectContext);
         fileFeature->m_intChildFeature->set(14);
-        targetFileFormat->writeToFile(*fileFeature, tempFile, testEnvironment.m_log);
+        targetFileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFile);
     }
 
     // Create sourceFileData which expect to be able to load the file.

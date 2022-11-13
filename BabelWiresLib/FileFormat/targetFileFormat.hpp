@@ -28,7 +28,7 @@ namespace babelwires {
       public:
         TargetFileFormat(LongIdentifier identifier, VersionNumber version, Extensions extensions);
         virtual std::unique_ptr<FileFeature> createNewFeature(const ProjectContext& projectContext) const = 0;
-        virtual void writeToFile(const FileFeature& fileFeature, std::ostream& os, UserLogger& userLogger) const = 0;
+        virtual void writeToFile(const ProjectContext& projectContext, UserLogger& userLogger, const FileFeature& fileFeature, std::ostream& os) const = 0;
     };
 
     /// Registry of TargetFileFactories.
