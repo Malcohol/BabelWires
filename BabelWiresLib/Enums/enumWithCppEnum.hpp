@@ -61,7 +61,7 @@ namespace babelwires {
 
         /// Set the value using a C++ enum value.
         void setFromValue(typename E::Value value) {
-            set(static_cast<const E*>(this->getEnum())->getIdentifierFromValue(value));
+            this->set(static_cast<const E&>(this->getEnum()).getIdentifierFromValue(value));
         }
     };
 } // namespace babelwires
