@@ -38,6 +38,9 @@ namespace babelwires {
         /// Get the index within EnumValues of the given id.
         unsigned int getIndexFromIdentifier(Identifier id) const;
 
+        /// Return the index within EnumValues of the given id, or -1.
+        int tryGetIndexFromIdentifier(Identifier id) const;
+
         /// Get the identifier within EnumValues at the given index.
         Identifier getIdentifierFromIndex(unsigned int index) const;
 

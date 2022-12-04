@@ -29,6 +29,15 @@ unsigned int babelwires::Enum::getIndexOfDefaultValue() const {
     return m_indexOfDefaultValue;
 }
 
+int babelwires::Enum::tryGetIndexFromIdentifier(babelwires::Identifier id) const {
+    const EnumValues& values = getEnumValues();
+    const auto it = std::find(values.begin(), values.end(), id);
+    if(it != values.end()) {
+        return static_cast<int>(it - values.begin());
+    }
+    return -1;
+}
+
 unsigned int babelwires::Enum::getIndexFromIdentifier(babelwires::Identifier id) const {
     const EnumValues& values = getEnumValues();
     const auto it = std::find(values.begin(), values.end(), id);
