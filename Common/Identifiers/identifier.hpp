@@ -123,6 +123,10 @@ namespace babelwires {
         /// This throws a ParseException if the identifier is not valid.
         static IdentifierBase deserializeFromString(std::string_view str);
 
+        /// Shorter identifiers can be converted to a code, which does excludes the discriminator.
+        template <int T = NUM_BLOCKS, typename std::enable_if_t<(T == 1), std::nullptr_t> = nullptr>
+        std::uint64_t toCode() const { return getDataAsCode<0>(); }
+
       public:
         friend bool operator==(const IdentifierBase& a, const IdentifierBase& b) {
             return a.getTupleOfCodes() == b.getTupleOfCodes();
