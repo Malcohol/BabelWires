@@ -1,24 +1,36 @@
 #include <Tests/TestUtils/tempFilePath.hpp>
 
-#include <fstream>
 #include <cassert>
+#include <fstream>
 #include <string>
 
 namespace {
-    std::filesystem::path discriminateFileName(std::string_view fileName, int discriminator) {
+    std::filesystem::path discriminateFileName(std::string_view fileName, std::string discriminator) {
         std::filesystem::path filePath = fileName;
-        if (discriminator != 0) {
+        if (!discriminator.empty()) {
             const std::filesystem::path extension = filePath.extension();
             filePath.replace_extension("");
-            filePath += "_" + std::to_string(discriminator);
+            filePath += "_" + discriminator;
             filePath.replace_extension(extension);
         }
         return filePath;
     }
-}
+
+    std::filesystem::path discriminateFileName(std::string_view fileName, int discriminator) {
+        return discriminateFileName(fileName, discriminator ? std::to_string(discriminator) : std::string(""));
+    }
+} // namespace
 
 testUtils::TempFilePath::TempFilePath(std::string_view fileName, int discriminator)
-    : m_filePath(std::filesystem::canonical(std::filesystem::temp_directory_path()) / discriminateFileName(fileName, discriminator))
+    : m_filePath(std::filesystem::canonical(std::filesystem::temp_directory_path()) /
+                 discriminateFileName(fileName, discriminator))
+    , m_asString(m_filePath.u8string()) {
+    tryRemoveFile();
+}
+
+testUtils::TempFilePath::TempFilePath(std::string_view fileName, std::string_view discriminator)
+    : m_filePath(std::filesystem::canonical(std::filesystem::temp_directory_path()) /
+                 discriminateFileName(fileName, std::string(discriminator)))
     , m_asString(m_filePath.u8string()) {
     tryRemoveFile();
 }
