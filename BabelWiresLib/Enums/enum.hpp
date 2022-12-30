@@ -10,6 +10,7 @@
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <vector>
+#include <unordered_map>
 
 namespace babelwires {
 
