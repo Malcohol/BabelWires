@@ -53,7 +53,10 @@ namespace babelwires {
         virtual bool verifySupertype(const Type& supertype) const;
 
       private:
+        /// The enum values in their intended order.
         EnumValues m_values;
+        /// Supports faster lookup for identifier-based queries.
+        std::unordered_map<Identifier, int> m_valueToIndex;
         unsigned int m_indexOfDefaultValue;
     };
 } // namespace babelwires

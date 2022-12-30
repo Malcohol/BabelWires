@@ -14,11 +14,11 @@ babelwires::Enum::Enum(LongIdentifier identifier, VersionNumber version, EnumVal
     : Type(identifier, version)
     , m_values(std::move(values))
     , m_indexOfDefaultValue(indexOfDefaultValue) {
-#ifndef NDEBUG
-    for (int i = 0; i < values.size(); ++i) {
-        assert((values[i].getDiscriminator() != 0) && "Only registered ids can be used in an enum");
+    m_valueToIndex.reserve(m_values.size());
+    for (int i = 0; i < m_values.size(); ++i) {
+        assert((m_values[i].getDiscriminator() != 0) && "Only registered ids can be used in an enum");
+        m_valueToIndex.insert({m_values[i], i});
     }
-#endif
 }
 
 const babelwires::Enum::EnumValues& babelwires::Enum::getEnumValues() const {
@@ -30,19 +30,18 @@ unsigned int babelwires::Enum::getIndexOfDefaultValue() const {
 }
 
 int babelwires::Enum::tryGetIndexFromIdentifier(babelwires::Identifier id) const {
-    const EnumValues& values = getEnumValues();
-    const auto it = std::find(values.begin(), values.end(), id);
-    if(it != values.end()) {
-        return static_cast<int>(it - values.begin());
+    const auto it = m_valueToIndex.find(id);
+    if(it != m_valueToIndex.end()) {
+        return it->second;
     }
     return -1;
 }
 
 unsigned int babelwires::Enum::getIndexFromIdentifier(babelwires::Identifier id) const {
     const EnumValues& values = getEnumValues();
-    const auto it = std::find(values.begin(), values.end(), id);
-    assert((it != values.end()) && "id not found in enum");
-    return static_cast<unsigned int>(it - values.begin());
+    const auto it = m_valueToIndex.find(id);
+    assert((it != m_valueToIndex.end()) && "id not found in enum");
+    return it->second;
 }
 
 babelwires::Identifier babelwires::Enum::getIdentifierFromIndex(unsigned int index) const {
@@ -53,12 +52,12 @@ babelwires::Identifier babelwires::Enum::getIdentifierFromIndex(unsigned int ind
 
 bool babelwires::Enum::isAValue(const babelwires::Identifier& id) const {
     const EnumValues& values = getEnumValues();
-    const auto it = std::find(values.begin(), values.end(), id);
-    if (it == values.end()) {
+    const auto it = m_valueToIndex.find(id);
+    if (it == m_valueToIndex.end()) {
         return false;
     }
     // TODO Needed?
-    id.setDiscriminator(it->getDiscriminator());
+    id.setDiscriminator(it->first.getDiscriminator());
     return true;
 }
 
