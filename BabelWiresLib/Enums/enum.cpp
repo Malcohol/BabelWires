@@ -68,7 +68,10 @@ std::unique_ptr<babelwires::Value> babelwires::Enum::createValue() const {
 bool babelwires::Enum::verifySupertype(const Type& supertype) const {
     const Enum& parentEnum = supertype.is<Enum>();
     for (const auto& v : m_values) {
-        assert(parentEnum.isAValue(v));
+        Identifier parentId = v;
+        assert(parentEnum.isAValue(parentId));
+        // I don't _know_ that this would cause problems, but it simplifies things to require this.
+        assert((parentId.getDiscriminator() == v.getDiscriminator()) && "An enum cannot be related to another enum with a different value with the same identifier");
     }
     return true;
 }
