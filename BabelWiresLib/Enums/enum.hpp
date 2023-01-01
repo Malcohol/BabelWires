@@ -19,6 +19,7 @@ namespace babelwires {
     class Enum : public Type {
       public:
         /// The set of values. We use Identifiers to get versionable serialization support.
+        /// The EnumValues vector may not contain duplicates.
         /// Note: This matches the result of REGISTERED_ID_VECTOR.
         using EnumValues = std::vector<Identifier>;
 
