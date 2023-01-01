@@ -17,6 +17,7 @@ babelwires::Enum::Enum(LongIdentifier identifier, VersionNumber version, EnumVal
     m_valueToIndex.reserve(m_values.size());
     for (int i = 0; i < m_values.size(); ++i) {
         assert((m_values[i].getDiscriminator() != 0) && "Only registered ids can be used in an enum");
+        assert((m_valueToIndex.find(m_values[i]) == m_valueToIndex.end()) && "Enum has duplicate value");
         m_valueToIndex.insert({m_values[i], i});
     }
 }
