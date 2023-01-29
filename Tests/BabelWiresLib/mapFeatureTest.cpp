@@ -26,8 +26,8 @@ namespace {
 TEST(MapFeatureTest, construction) {
     babelwires::MapFeature mapFeature(testTypeId1, testTypeId2);
 
-    EXPECT_EQ(mapFeature.getSourceTypeId(), testTypeId1);
-    EXPECT_EQ(mapFeature.getTargetTypeId(), testTypeId2);
+    EXPECT_EQ(mapFeature.getAllowedSourceTypeId(), testTypeId1);
+    EXPECT_EQ(mapFeature.getAllowedTargetTypeId(), testTypeId2);
 }
 
 TEST(MapFeatureTest, setToDefault) {

@@ -87,8 +87,8 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             const MapFeature& mapFeature = getMapFeature(scope);
             m_defaultMapValue = mapFeature.getDefaultMapData();
             const MapData& mapData = getMapDataFromProject(scope);
-            m_map.setAllowedSourceTypeId(mapFeature.getSourceTypeId());
-            m_map.setAllowedTargetTypeId(mapFeature.getTargetTypeId());
+            m_map.setAllowedSourceTypeId(mapFeature.getAllowedSourceTypeId());
+            m_map.setAllowedTargetTypeId(mapFeature.getAllowedTargetTypeId());
             m_map.setMapData(mapData);
             {
                 /// We do not treat the selection of source type in the usual (contravariant) way.

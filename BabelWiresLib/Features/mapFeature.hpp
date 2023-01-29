@@ -38,8 +38,8 @@ namespace babelwires {
         MapData getStandardDefaultMapData(MapEntryData::Kind fallbackKind) const;
 
       public:
-        LongIdentifier getSourceTypeId() const;
-        LongIdentifier getTargetTypeId() const;
+        LongIdentifier getAllowedSourceTypeId() const;
+        LongIdentifier getAllowedTargetTypeId() const;
 
       private:
         /// Empty means all types are allowed.

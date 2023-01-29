@@ -45,11 +45,11 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     }
 }
 
-babelwires::LongIdentifier babelwires::MapFeature::getSourceTypeId() const {
+babelwires::LongIdentifier babelwires::MapFeature::getAllowedSourceTypeId() const {
     return m_sourceTypeId;
 }
 
-babelwires::LongIdentifier babelwires::MapFeature::getTargetTypeId() const {
+babelwires::LongIdentifier babelwires::MapFeature::getAllowedTargetTypeId() const {
     return m_targetTypeId;
 }
 
