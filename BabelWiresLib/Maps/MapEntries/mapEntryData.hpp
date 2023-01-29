@@ -50,7 +50,7 @@ namespace babelwires {
         static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, Kind kind);
 
       protected:
-        virtual Result doValidate(const Type& sourceType, const Type& targetType) const = 0;
+        virtual Result doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const = 0;
     };
 } // namespace babelwires
 

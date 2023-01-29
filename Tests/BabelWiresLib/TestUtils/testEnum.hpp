@@ -5,6 +5,10 @@
 
 #pragma once
 
+namespace babelwires {
+    class TypeSystem;
+}
+
 /// The TestEnum uses some of the enumWithCppEnum macros. It doesn't use the full set, since they register identifiers
 /// using in standard ways (using magic statics) which don't work in the the Common and BabelWires tests libs.
 #define TESTENUM_VALUES(X)                                                                                            \
@@ -49,4 +53,6 @@ namespace testUtils {
 
         static babelwires::LongIdentifier getThisIdentifier();
     };
+
+    void addTestEnumTypes(babelwires::TypeSystem& typeSystem);
 } // namespace testUtils

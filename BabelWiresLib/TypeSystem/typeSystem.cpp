@@ -9,81 +9,114 @@
 
 #include <BabelWiresLib/Enums/enum.hpp>
 
-babelwires::UntypedTypeSystemRegistry::UntypedTypeSystemRegistry(std::string registryName) : UntypedRegistry(std::move(registryName)) {}
+#include <algorithm>
+
+namespace {
+    void insertTypeId(babelwires::TypeSystem::TypeIdSet& typeIds, babelwires::LongIdentifier typeId) {
+        auto it = std::upper_bound(typeIds.begin(), typeIds.end(), typeId);
+        typeIds.insert(it, typeId);
+    }
+} // namespace
 
 // TODO ALL VERY INEFFICIENT
 
-void babelwires::UntypedTypeSystemRegistry::validateNewEntry(RegistryEntry* newEntry) const
-{
-    // Super-call.
-    UntypedRegistry::validateNewEntry(newEntry);
+babelwires::TypeSystem::TypeSystem()
+    : Registry<Type>("Type system") {}
 
-    Type *const newType = static_cast<Type*>(newEntry);
-    if (newType->getParentTypeId()) {
-        const LongIdentifier parentTypeId = *newType->getParentTypeId();
-        Type *const parentType = static_cast<Type*>(getEntryByIdentifierNonConst(parentTypeId));
-        assert(parentType && "Parent type not known. Parent types must be registered before their children");
-        newType->setParent(parentType);
-        parentType->addChild(newType);
+void babelwires::TypeSystem::addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes) {
+    const Type* const type = getEntryByIdentifier(typeId);
+    assert((type != nullptr) && "typeId is not the id of a registered type");
+    std::sort(relatedTypes.m_subtypeIds.begin(), relatedTypes.m_subtypeIds.end());
+    std::sort(relatedTypes.m_supertypeIds.begin(), relatedTypes.m_supertypeIds.end());
+    for (LongIdentifier supertypeId : relatedTypes.m_supertypeIds) {
+#ifndef NDEBUG
+        const Type* const supertype = getEntryByIdentifier(supertypeId);
+        assert((supertype != nullptr) && "A supertype Id is not the id of a registered type");
+        assert(type->verifySupertype(*supertype) && "A supertype is not suitable for the type");
+#endif
+        insertTypeId(m_relatedTypes[supertypeId].m_subtypeIds, typeId);
+    }
+    for (LongIdentifier subtypeId : relatedTypes.m_subtypeIds) {
+#ifndef NDEBUG
+        const Type* const subtype = getEntryByIdentifier(subtypeId);
+        assert((subtype != nullptr) && "A subtype ID is not the id of a registered type");
+        assert(subtype->verifySupertype(*type) && "A supertype is not suitable for the type");
+#endif
+        insertTypeId(m_relatedTypes[subtypeId].m_supertypeIds, typeId);
+    }
+    assert((m_relatedTypes.find(typeId) == m_relatedTypes.end()) && "Related types already set for the given typeId");
+    // TODO Cull tree?
+    m_relatedTypes.insert({typeId, std::move(relatedTypes)});
+}
+
+const babelwires::TypeSystem::RelatedTypes& babelwires::TypeSystem::getRelatedTypes(LongIdentifier typeId) const {
+    const auto it = m_relatedTypes.find(typeId);
+    if (it != m_relatedTypes.end()) {
+        return it->second;
+    } else {
+        return m_emptyRelatedTypes;
     }
 }
 
-babelwires::TypeSystem::TypeSystem()
-    : Registry("Type system") {}
-
 bool babelwires::TypeSystem::isSubType(LongIdentifier subtypeId, LongIdentifier supertypeId) const {
-    const Type *const subtype = getEntryByIdentifier(subtypeId);
-    assert(subtype && "The subtypeId was an unregistered type");
-    const Type* current = subtype;
-    while (current && (current->getIdentifier() != supertypeId)) {
-        current = current->getParent();
+    if (subtypeId == supertypeId) {
+        return true;
     }
-    return current;
+    for (auto parentId : getRelatedTypes(subtypeId).m_supertypeIds) {
+        if (isSubType(parentId, supertypeId)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool babelwires::TypeSystem::isRelatedType(LongIdentifier typeAId, LongIdentifier typeBId) const {
-    const Type *const typeA = getEntryByIdentifier(typeAId);
-    assert(typeA && "The typeAId was an unregistered type");
-    const Type *const typeB = getEntryByIdentifier(typeBId);
-    assert(typeB && "The typeBId was an unregistered type");
-    return typeA->isSubType(*typeB) || typeB->isSubType(*typeA);
-}
-
-namespace {
-    void addAllSubtypesHelper(const babelwires::Type* type, babelwires::TypeSystem::TypeIdSet& subtypes) {
-        for (const auto& child : type->getChildren()) {
-            subtypes.emplace_back(child->getIdentifier());
-            addAllSubtypesHelper(child, subtypes);
-        }
-    }
-
-    void addAllSupertypesHelper(const babelwires::Type* type, babelwires::TypeSystem::TypeIdSet& supertypes) {
-        const babelwires::Type *const parent = type->getParent();
-        if (parent) {
-            supertypes.emplace_back(parent->getIdentifier());
-            addAllSupertypesHelper(parent, supertypes);
-        }
-    }
+    return isSubType(typeAId, typeBId) || isSubType(typeBId, typeAId);
 }
 
 void babelwires::TypeSystem::addAllSubtypes(LongIdentifier typeId, TypeIdSet& subtypes) const {
-    const Type *const type = getEntryByIdentifier(typeId);
-    assert(type && "Encountered an unregistered type");
     subtypes.emplace_back(typeId);
-    addAllSubtypesHelper(type, subtypes);
+    for (auto subtypeId : getRelatedTypes(typeId).m_subtypeIds) {
+        addAllSubtypes(subtypeId, subtypes);
+    }
 }
 
 void babelwires::TypeSystem::addAllSupertypes(LongIdentifier typeId, TypeIdSet& supertypes) const {
-    const Type *const type = getEntryByIdentifier(typeId);
-    assert(type && "Encountered an unregistered type");
     supertypes.emplace_back(typeId);
-    addAllSupertypesHelper(type, supertypes);
+    for (auto subtypeId : getRelatedTypes(typeId).m_supertypeIds) {
+        addAllSupertypes(subtypeId, supertypes);
+    }
 }
 
-void babelwires::TypeSystem::addAllRelatedTypes(LongIdentifier typeId, TypeIdSet& relatedTypes) const {
-    const Type *const type = getEntryByIdentifier(typeId);
-    assert(type && "Encountered an unregistered type");
-    relatedTypes.emplace_back(typeId);
-    addAllSubtypesHelper(type, relatedTypes);
-    addAllSupertypesHelper(type, relatedTypes);
+void babelwires::TypeSystem::addAllRelatedTypes(LongIdentifier typeId, TypeIdSet& typeIdSet) const {
+    typeIdSet.emplace_back(typeId);
+    addAllSubtypes(typeId, typeIdSet);
+    addAllSupertypes(typeId, typeIdSet);
+}
+
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllSubtypes(LongIdentifier typeId) const {
+    TypeIdSet subtypes;
+    addAllSubtypes(typeId, subtypes);
+    removeDuplicates(subtypes);
+    return subtypes;
+}
+
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllSupertypes(LongIdentifier typeId) const {
+    TypeIdSet supertypes;
+    addAllSupertypes(typeId, supertypes);
+    removeDuplicates(supertypes);
+    return supertypes;
+}
+
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllRelatedTypes(LongIdentifier typeId) const {
+    TypeIdSet relatedTypes;
+    addAllSubtypes(typeId, relatedTypes);
+    addAllSupertypes(typeId, relatedTypes);
+    removeDuplicates(relatedTypes);
+    return relatedTypes;
+}
+
+void babelwires::TypeSystem::removeDuplicates(babelwires::TypeSystem::TypeIdSet& typeIds) {
+    std::sort(typeIds.begin(), typeIds.end());
+    typeIds.erase(std::unique(typeIds.begin(), typeIds.end()), typeIds.end());
 }

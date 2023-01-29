@@ -13,6 +13,8 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
+#include <Tests/TestUtils/equalSets.hpp>
+
 namespace {
     const babelwires::LongIdentifier testTypeId1 = "TestType1";
     const babelwires::LongIdentifier testTypeId2 = "TestType2";
@@ -51,11 +53,11 @@ TEST(MapProjectTest, allowedTypes) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
 
-    EXPECT_EQ(mapProject.getAllowedSourceTypeId(), testUtils::TestType::getThisIdentifier());
-    EXPECT_EQ(mapProject.getAllowedTargetTypeId(), testUtils::TestEnum::getThisIdentifier());
+    EXPECT_TRUE(testUtils::areEqualSets(mapProject.getAllowedSourceTypeIds().m_typeIds, {testUtils::TestType::getThisIdentifier()}));
+    EXPECT_TRUE(testUtils::areEqualSets(mapProject.getAllowedTargetTypeIds().m_typeIds, {testUtils::TestEnum::getThisIdentifier()}));
 }
 
 TEST(MapProjectTest, getProjectContext) {
@@ -75,8 +77,8 @@ TEST(MapProjectTest, types) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
 
     mapProject.setSourceTypeId(testUtils::TestType::getThisIdentifier());
     mapProject.setTargetTypeId(testUtils::TestEnum::getThisIdentifier());
@@ -98,8 +100,8 @@ TEST(MapProjectTest, badTypes) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
 
     EXPECT_TRUE(mapProject.getSourceTypeValidity());
     EXPECT_TRUE(mapProject.getTargetTypeValidity());
@@ -136,8 +138,8 @@ TEST(MapProjectTest, setAndExtractMapData) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestSubEnum::getThisIdentifier());
@@ -169,8 +171,8 @@ TEST(MapProjectTest, modifyMapData) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestSubEnum::getThisIdentifier());
@@ -229,8 +231,8 @@ TEST(MapProjectTest, typeChangeAndValidity) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeId(testUtils::TestEnum::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestEnum::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestSubEnum::getThisIdentifier(),
                                               testUtils::TestSubEnum::getThisIdentifier());
@@ -288,8 +290,8 @@ TEST(MapProjectTest, modifyValidity) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestSubEnum::getThisIdentifier());
@@ -329,8 +331,8 @@ TEST(MapProjectTest, badMap) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
 
     babelwires::MapData mapData;
     mapData.setSourceTypeId(testTypeId1);

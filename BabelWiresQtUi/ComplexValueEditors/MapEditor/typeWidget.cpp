@@ -9,7 +9,7 @@
 
 #include <cassert>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId,
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeIds,
                                    TypeFlexibility flexibility)
     : QComboBox(parent)
     , m_hasBadItem(false) {
@@ -20,30 +20,32 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     m_badStyleSheet.append("\nQComboBox { background: red; }");
 
     std::vector<LongIdentifier> typeIds;
-    if (typeId.has_value()) {
+    for (auto typeId : allowedTypeIds.m_typeIds) {
         switch (flexibility) {
             case TypeFlexibility::strict:
-                typeIds.emplace_back(*typeId);
+                typeIds.emplace_back(typeId);
                 break;
             case TypeFlexibility::allowSubtypes:
-                typeSystem.addAllSubtypes(*typeId, typeIds);
+                typeSystem.addAllSubtypes(typeId, typeIds);
                 break;
             case TypeFlexibility::allowSupertypes:
-                typeSystem.addAllSupertypes(*typeId, typeIds);
+                typeSystem.addAllSupertypes(typeId, typeIds);
                 break;
             case TypeFlexibility::allowRelatedTypes:
-                typeSystem.addAllRelatedTypes(*typeId, typeIds);
+                typeSystem.addAllRelatedTypes(typeId, typeIds);
                 break;
         }
-    } else {
-        // TODO All types.
     }
+    TypeSystem::removeDuplicates(typeIds);
 
     std::vector<std::tuple<std::string, LongIdentifier>> sortedNames;
     sortedNames.reserve(typeIds.size());
 
     for (const auto& typeId : typeIds) {
-        sortedNames.emplace_back(std::tuple{typeSystem.getEntryByIdentifier(typeId)->getName(), typeId});
+        const Type *const type = typeSystem.getEntryByIdentifier(typeId);
+        if (!type->isAbstract()) {
+            sortedNames.emplace_back(std::tuple{type->getName(), typeId});
+        }
     }
     std::sort(sortedNames.begin(), sortedNames.end());
 

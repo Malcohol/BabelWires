@@ -10,6 +10,7 @@
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <vector>
+#include <unordered_map>
 
 namespace babelwires {
 
@@ -18,6 +19,7 @@ namespace babelwires {
     class Enum : public Type {
       public:
         /// The set of values. We use Identifiers to get versionable serialization support.
+        /// The EnumValues vector may not contain duplicates.
         /// Note: This matches the result of REGISTERED_ID_VECTOR.
         using EnumValues = std::vector<Identifier>;
 
@@ -25,12 +27,9 @@ namespace babelwires {
         /// Enums which have a parent _must_ be registered in the TypeSystem.
         /// They also need a set of values and a way of identifying the default.
         /// The values object can be the "output" of the REGISTERED_ID_VECTOR macro.
-        /// If parentTypeId is provided, then the parent type must itself be an enum, and must have
-        /// values which include all the values of this enum. The values in that case are not required
-        /// to be registered identifiers, since they will be resolved against the values in the parent.
-        /// If parentTypeId is not provided, then the values must all be registered identifiers.
+        /// The values must all be registered identifiers.
         Enum(LongIdentifier identifier, VersionNumber version, EnumValues values,
-             unsigned int indexOfDefaultValue, std::optional<LongIdentifier> parentTypeId = {});
+             unsigned int indexOfDefaultValue);
 
         /// Get the set of available enum values.
         const EnumValues& getEnumValues() const;
@@ -41,6 +40,9 @@ namespace babelwires {
         /// Get the index within EnumValues of the given id.
         unsigned int getIndexFromIdentifier(Identifier id) const;
 
+        /// Return the index within EnumValues of the given id, or -1.
+        int tryGetIndexFromIdentifier(Identifier id) const;
+
         /// Get the identifier within EnumValues at the given index.
         Identifier getIdentifierFromIndex(unsigned int index) const;
 
@@ -50,11 +52,13 @@ namespace babelwires {
 
         std::unique_ptr<Value> createValue() const override;
 
-      protected:
-        virtual bool verifyParent(const Type& parentType) const;
+        virtual bool verifySupertype(const Type& supertype) const;
 
       private:
+        /// The enum values in their intended order.
         EnumValues m_values;
+        /// Supports faster lookup for identifier-based queries.
+        std::unordered_map<Identifier, int> m_valueToIndex;
         unsigned int m_indexOfDefaultValue;
     };
 } // namespace babelwires

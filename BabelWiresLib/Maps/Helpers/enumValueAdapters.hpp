@@ -11,6 +11,13 @@
 #include <BabelWiresLib/TypeSystem/enumValue.hpp>
 
 namespace babelwires {
+    /// Convert an EnumValue to the identifier it carries.
+    struct EnumToIdentifierValueAdapter {
+        babelwires::Identifier operator() (const Value& value) const {
+            const auto& enumValue = value.is<EnumValue>();
+            return enumValue.get();
+        }
+    };
 
     /// Convert an EnumValue to a unsigned int corresponding to the index of the enum entry.
     /// Note: Be very careful with this if the enum could change in the future.

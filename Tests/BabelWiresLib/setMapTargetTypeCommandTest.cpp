@@ -19,14 +19,11 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
+    testUtils::addTestEnumTypes(environment.m_typeSystem);
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
 
     babelwires::MapData mapData;
     mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
@@ -90,8 +87,8 @@ TEST(SetMapTargetTypeCommandTest, failWithUnallowedType) {
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
     mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());

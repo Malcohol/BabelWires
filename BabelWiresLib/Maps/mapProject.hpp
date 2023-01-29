@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
+#include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Maps/mapData.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
@@ -28,11 +29,11 @@ namespace babelwires {
         MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
-        void setAllowedSourceTypeId(LongIdentifier sourceTypeId);
-        void setAllowedTargetTypeId(LongIdentifier targetTypeId);
+        void setAllowedSourceTypeId(const MapFeature::AllowedTypes& allowedTypeIds);
+        void setAllowedTargetTypeId(const MapFeature::AllowedTypes& allowedTypeIds);
 
-        LongIdentifier getAllowedSourceTypeId() const;
-        LongIdentifier getAllowedTargetTypeId() const;
+        const MapFeature::AllowedTypes& getAllowedSourceTypeIds() const;
+        const MapFeature::AllowedTypes& getAllowedTargetTypeIds() const;
        
         LongIdentifier getSourceTypeId() const;
         LongIdentifier getTargetTypeId() const;
@@ -65,10 +66,9 @@ namespace babelwires {
 
       private:
         const ProjectContext& m_projectContext;
-        /// Empty means all types are allowed.
-        LongIdentifier m_allowedSourceTypeId;
-        /// Empty means all types are allowed.
-        LongIdentifier m_allowedTargetTypeId;
+        MapFeature::AllowedTypes m_allowedSourceTypeIds;
+        MapFeature::AllowedTypes m_allowedTargetTypeIds;
+
         LongIdentifier m_sourceTypeId;
         LongIdentifier m_targetTypeId;
 

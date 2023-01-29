@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
@@ -31,8 +33,8 @@ void babelwires::AllToSameFallbackMapEntryData::visitIdentifiers(IdentifierVisit
 void babelwires::AllToSameFallbackMapEntryData::visitFilePaths(FilePathVisitor& visitor) {
 }
 
-babelwires::Result babelwires::AllToSameFallbackMapEntryData::doValidate(const Type& sourceType, const Type& targetType) const {
-    if (!sourceType.isSubType(targetType)) {
+babelwires::Result babelwires::AllToSameFallbackMapEntryData::doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const {
+    if (!typeSystem.isSubType(sourceType.getIdentifier(), targetType.getIdentifier())) {
         return "An \"All to Same\" mapping can't be used when the source type is not a subtype of the target type.";
     }
     return Result::success;

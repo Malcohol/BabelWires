@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Features/featureMixins.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/IO/fileDataSource.hpp>
+#include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
 #include <Common/exceptions.hpp>
 
@@ -75,8 +75,9 @@ char testUtils::TestSourceFileFormat::getFileData(const std::filesystem::path& p
 }
 
 std::unique_ptr<babelwires::FileFeature>
-testUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource, const babelwires::ProjectContext& projectContext, 
-                                                 babelwires::UserLogger& userLogger) const {
+testUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource,
+                                              const babelwires::ProjectContext& projectContext,
+                                              babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
     auto newFeature = std::make_unique<TestFileFeature>(projectContext);
     newFeature->m_intChildFeature->set(value);
@@ -106,12 +107,14 @@ std::string testUtils::TestTargetFileFormat::getProductName() const {
     return s_product;
 }
 
-std::unique_ptr<babelwires::FileFeature> testUtils::TestTargetFileFormat::createNewFeature(const babelwires::ProjectContext& projectContext) const {
+std::unique_ptr<babelwires::FileFeature>
+testUtils::TestTargetFileFormat::createNewFeature(const babelwires::ProjectContext& projectContext) const {
     return std::make_unique<TestFileFeature>(projectContext);
 }
 
-void testUtils::TestTargetFileFormat::writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
-                                                     babelwires::UserLogger& userLogger) const {
+void testUtils::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
+                                                  babelwires::UserLogger& userLogger,
+                                                  const babelwires::FileFeature& fileFeature, std::ostream& os) const {
     const TestFileFeature& testFileFeature = *fileFeature.as<TestFileFeature>();
     os << s_fileFormatId << char(testFileFeature.m_intChildFeature->get());
 }

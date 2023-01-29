@@ -10,8 +10,9 @@ babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::Registry(std::string registryName
     : m_untypedRegistry(std::move(registryName)) {}
 
 template <typename ENTRY, typename UNTYPED_REGISTRY>
-void babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::addEntry(std::unique_ptr<ENTRY> newEntry) {
-    m_untypedRegistry.addEntry(std::unique_ptr<RegistryEntry>(newEntry.release()));
+template <typename ENTRY_SUBTYPE, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t>>
+ENTRY_SUBTYPE* babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::addEntry(std::unique_ptr<ENTRY_SUBTYPE> newEntry) {
+    return static_cast<ENTRY_SUBTYPE*>(m_untypedRegistry.addEntry(std::unique_ptr<RegistryEntry>(newEntry.release())));
 }
 
 template <typename ENTRY, typename UNTYPED_REGISTRY>

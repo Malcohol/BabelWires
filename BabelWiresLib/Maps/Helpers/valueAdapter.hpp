@@ -9,7 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
-namespace babelwires { 
+namespace babelwires {
     /// Used by MapApplicators to convert abstract values to native values.
     template <typename T> using ValueAdapter = std::function<T(const Value&)>;
-}
+
+} // namespace babelwires

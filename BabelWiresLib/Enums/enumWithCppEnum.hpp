@@ -15,6 +15,17 @@
 // Implementation detail.
 #define ENUM_SELECT_FIRST_ARGUMENT(A, B, C) A,
 
+#define ENUM_DEFINE_CPP_ENUM_VALUE(Y)                                                                                  \
+    enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) NUM_VALUES, NotAValue = NUM_VALUES };
+
+#define ENUM_DEFINE_CPP_METHODS                                                                                        \
+    Value getValueFromIdentifier(babelwires::Identifier id) const {                                                    \
+        return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
+    }                                                                                                                  \
+    babelwires::Identifier getIdentifierFromValue(Value value) const {                                                 \
+        return getIdentifierFromIndex(static_cast<unsigned int>(value));                                               \
+    }
+
 /// Use in an Enum to add a C++ enum corresponding to the enum values.
 /// Boiler-plate of the following kind is required:
 /// #define MY_ENUM(X)                                                 \
@@ -22,13 +33,8 @@
 ///    X(Bar, "Bar value", "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
 /// For coding convenience, NUM_VALUES and NotAValue entries are provided.
 #define ENUM_DEFINE_CPP_ENUM(Y)                                                                                        \
-    enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) NUM_VALUES, NotAValue = NUM_VALUES };                             \
-    Value getValueFromIdentifier(babelwires::Identifier id) const {                                                    \
-        return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
-    }                                                                                                                  \
-    babelwires::Identifier getIdentifierFromValue(Value value) const {                                                 \
-        return getIdentifierFromIndex(static_cast<unsigned int>(value));                                               \
-    }
+    ENUM_DEFINE_CPP_ENUM_VALUE(Y)                                                                                      \
+    ENUM_DEFINE_CPP_METHODS
 
 // Implementation detail.
 #define ENUM_ARGUMENTS_AS_INITIALIZERS(A, B, C) {#A, B, C},
@@ -55,7 +61,7 @@ namespace babelwires {
 
         /// Set the value using a C++ enum value.
         void setFromValue(typename E::Value value) {
-            set(static_cast<const E*>(this->getEnum())->getIdentifierFromValue(value));
+            this->set(static_cast<const E&>(this->getEnum()).getIdentifierFromValue(value));
         }
     };
 } // namespace babelwires

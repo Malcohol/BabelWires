@@ -38,7 +38,8 @@ namespace testUtils {
         TestSourceFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::FileFeature> loadFromFile(babelwires::DataSource& dataSource, const babelwires::ProjectContext& projectContext,
+        std::unique_ptr<babelwires::FileFeature> loadFromFile(babelwires::DataSource& dataSource,
+                                                              const babelwires::ProjectContext& projectContext,
                                                               babelwires::UserLogger& userLogger) const override;
 
         static char getFileData(const std::filesystem::path& path);
@@ -53,9 +54,10 @@ namespace testUtils {
         TestTargetFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::FileFeature> createNewFeature(const babelwires::ProjectContext& projectContext) const override;
-        void writeToFile(const babelwires::FileFeature& fileFeature, std::ostream& os,
-                         babelwires::UserLogger& userLogger) const override;
+        std::unique_ptr<babelwires::FileFeature>
+        createNewFeature(const babelwires::ProjectContext& projectContext) const override;
+        void writeToFile(const babelwires::ProjectContext& projectContext, babelwires::UserLogger& userLogger,
+                         const babelwires::FileFeature& fileFeature, std::ostream& os) const override;
     };
 
 } // namespace testUtils

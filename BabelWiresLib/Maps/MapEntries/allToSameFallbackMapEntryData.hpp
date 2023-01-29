@@ -25,6 +25,6 @@ namespace babelwires {
         Kind getKind() const override;
       
       protected:
-        Result doValidate(const Type& sourceType, const Type& targetType) const override;
+        Result doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const override;
     };
 }

@@ -22,7 +22,7 @@ namespace {
         auto fileFormat = std::make_unique<testUtils::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<testUtils::TestFileFeature>(testEnvironment.m_projectContext);
         fileFeature->m_intChildFeature->set(value);
-        fileFormat->writeToFile(*fileFeature, tempFile, testEnvironment.m_log);
+        fileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFile);
     }
 } // namespace
 
