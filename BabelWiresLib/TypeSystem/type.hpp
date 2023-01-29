@@ -27,7 +27,7 @@ namespace babelwires {
 
         /// An abstract type just acts as a placeholder in the type system and will not
         /// be permitted in a number of situations.
-        /// An example is AbstractPercussionType in seqwires, which is used as a common base
+        /// An example is AbstractPercussionSet in seqwires, which is used as a common base
         /// type for all enums of percussion instruments, but is not intended to be an actual type.
         /// The default implementation returns false, so types need to opt-in to being abstract.
         virtual bool isAbstract() const;
