@@ -100,12 +100,14 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
                 m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeIds(),
                                                     TypeWidget::TypeFlexibility::allowSubtypes);
+                m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
                 m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeIds(),
                                                     TypeWidget::TypeFlexibility::allowSubtypes);
+                m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }
             connect(m_sourceTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
