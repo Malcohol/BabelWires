@@ -52,6 +52,7 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
         addItem(std::get<0>(name).c_str());
         m_typeIds.emplace_back(std::get<1>(name));
     }
+    setTypeId(allowedTypeIds.getDefaultTypeId());
 
     connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &TypeWidget::onCurrentIndexChanged);
 }
