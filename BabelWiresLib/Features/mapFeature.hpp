@@ -43,8 +43,8 @@ namespace babelwires {
 
       private:
         /// Empty means all types are allowed.
-        LongIdentifier m_sourceTypeId;
+        LongIdentifier m_allowedSourceTypeId;
         /// Empty means all types are allowed.
-        LongIdentifier m_targetTypeId;
+        LongIdentifier m_allowedTargetTypeId;
     };
 } // namespace babelwires

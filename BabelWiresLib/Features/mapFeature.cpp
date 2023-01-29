@@ -20,8 +20,8 @@ std::string babelwires::MapFeature::doGetValueType() const {
 }
 
 babelwires::MapFeature::MapFeature(LongIdentifier sourceTypeId, LongIdentifier targetTargetId)
-    : m_sourceTypeId(std::move(sourceTypeId))
-    , m_targetTypeId(std::move(targetTargetId)) {}
+    : m_allowedSourceTypeId(std::move(sourceTypeId))
+    , m_allowedTargetTypeId(std::move(targetTargetId)) {}
 
 void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     const LongIdentifier& newSourceType = newValue.getSourceTypeId();
@@ -30,8 +30,8 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     const ProjectContext& context = babelwires::RootFeature::getProjectContextAt(*this);
     const TypeSystem& typeSystem = context.m_typeSystem;
 
-    const bool relatedSource = typeSystem.isRelatedType(m_sourceTypeId, newSourceType);
-    const bool covariance = typeSystem.isSubType(newTargetType, m_targetTypeId);
+    const bool relatedSource = typeSystem.isRelatedType(m_allowedSourceTypeId, newSourceType);
+    const bool covariance = typeSystem.isSubType(newTargetType, m_allowedTargetTypeId);
     if (!relatedSource && !covariance) {
         throw ModelException() << "Neither the source nor the target types of the map are valid for this feature";
     } else if (!relatedSource) {
@@ -46,21 +46,21 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
 }
 
 babelwires::LongIdentifier babelwires::MapFeature::getAllowedSourceTypeId() const {
-    return m_sourceTypeId;
+    return m_allowedSourceTypeId;
 }
 
 babelwires::LongIdentifier babelwires::MapFeature::getAllowedTargetTypeId() const {
-    return m_targetTypeId;
+    return m_allowedTargetTypeId;
 }
 
 babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryData::Kind fallbackKind) const {
     assert(MapEntryData::isFallback(fallbackKind) && "Only a fallback kind is expected here");
 
     MapData mapData;
-    mapData.setSourceTypeId(m_sourceTypeId);
-    mapData.setTargetTypeId(m_targetTypeId);
+    mapData.setSourceTypeId(m_allowedSourceTypeId);
+    mapData.setTargetTypeId(m_allowedTargetTypeId);
     const TypeSystem& typeSystem = RootFeature::getProjectContextAt(*this).m_typeSystem;
-    mapData.emplaceBack(MapEntryData::create(typeSystem, m_sourceTypeId, m_targetTypeId, fallbackKind));
+    mapData.emplaceBack(MapEntryData::create(typeSystem, m_allowedSourceTypeId, m_allowedTargetTypeId, fallbackKind));
     return mapData;
 }
 
