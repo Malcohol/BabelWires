@@ -42,7 +42,10 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     sortedNames.reserve(typeIds.size());
 
     for (const auto& typeId : typeIds) {
-        sortedNames.emplace_back(std::tuple{typeSystem.getEntryByIdentifier(typeId)->getName(), typeId});
+        const Type *const type = typeSystem.getEntryByIdentifier(typeId);
+        if (!type->isAbstract()) {
+            sortedNames.emplace_back(std::tuple{type->getName(), typeId});
+        }
     }
     std::sort(sortedNames.begin(), sortedNames.end());
 

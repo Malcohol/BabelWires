@@ -50,9 +50,12 @@ babelwires::LongIdentifier babelwires::MapProject::getTargetTypeId() const {
 
 void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    if (!typeSystem.getEntryByIdentifier(sourceId)) {
+    const Type *const type = typeSystem.getEntryByIdentifier(sourceId);
+    if (!type) {
         // TODO Add type name.
         m_sourceTypeValidity = "The source type is not recognized.";
+    } else if (type->isAbstract()) {
+        m_sourceTypeValidity = "The source type is abstract.";
     } else if (!m_allowedSourceTypeIds.isRelatedToSome(typeSystem, sourceId)) {
         // TODO Add type name.
         m_sourceTypeValidity = "The source type is not valid here.";
@@ -69,9 +72,12 @@ void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
 
 void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    if (!typeSystem.getEntryByIdentifier(targetId)) {
+    const Type *const type = typeSystem.getEntryByIdentifier(targetId);
+    if (!type) {
         // TODO Add type name.
         m_targetTypeValidity = "The target type is not recognized.";
+    } else if (type->isAbstract()) {
+        m_targetTypeValidity = "The target type is abstract.";
     } else if (!m_allowedTargetTypeIds.isSubtypeOfSome(typeSystem, targetId)) {
         // TODO Add type name.
         m_targetTypeValidity = "The target type is not valid here.";
