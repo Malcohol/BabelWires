@@ -19,10 +19,6 @@ std::string babelwires::MapFeature::doGetValueType() const {
     return "map";
 }
 
-babelwires::MapFeature::MapFeature(LongIdentifier sourceTypeId, LongIdentifier targetTargetId)
-    : m_allowedSourceTypeId(std::move(sourceTypeId))
-    , m_allowedTargetTypeId(std::move(targetTargetId)) {}
-
 void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     const LongIdentifier& newSourceType = newValue.getSourceTypeId();
     const LongIdentifier& newTargetType = newValue.getTargetTypeId();
@@ -47,16 +43,6 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     if (!newValue.isValid(context.m_typeSystem)) {
         throw ModelException() << "The map is not valid";
     }
-}
-
-void babelwires::MapFeature::getAllowedSourceTypeIds(AllowedTypes& allowedTypesOut) const {
-    allowedTypesOut.m_typeIds = {m_allowedSourceTypeId};
-    allowedTypesOut.m_indexOfDefault = 0;
-}
-
-void babelwires::MapFeature::getAllowedTargetTypeIds(AllowedTypes& allowedTypesOut) const {
-    allowedTypesOut.m_typeIds = {m_allowedTargetTypeId};
-    allowedTypesOut.m_indexOfDefault = 0;
 }
 
 babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryData::Kind fallbackKind) const {
@@ -96,4 +82,19 @@ bool babelwires::MapFeature::AllowedTypes::isSubtypeOfSome(const TypeSystem& typ
                                         [typeId, &typeSystem](babelwires::LongIdentifier id) {
                                             return typeSystem.isSubType(typeId, id);
                                         });
+}
+
+babelwires::StandardMapFeature::StandardMapFeature(LongIdentifier sourceTypeId, LongIdentifier targetTargetId)
+    : m_allowedSourceTypeId(std::move(sourceTypeId))
+    , m_allowedTargetTypeId(std::move(targetTargetId)) {}
+
+
+void babelwires::StandardMapFeature::getAllowedSourceTypeIds(AllowedTypes& allowedTypesOut) const {
+    allowedTypesOut.m_typeIds = {m_allowedSourceTypeId};
+    allowedTypesOut.m_indexOfDefault = 0;
+}
+
+void babelwires::StandardMapFeature::getAllowedTargetTypeIds(AllowedTypes& allowedTypesOut) const {
+    allowedTypesOut.m_typeIds = {m_allowedTargetTypeId};
+    allowedTypesOut.m_indexOfDefault = 0;
 }

@@ -25,7 +25,7 @@ namespace {
 } // namespace
 
 TEST(MapFeatureTest, construction) {
-    babelwires::MapFeature mapFeature(testTypeId1, testTypeId2);
+    babelwires::StandardMapFeature mapFeature(testTypeId1, testTypeId2);
 
     babelwires::MapFeature::AllowedTypes allowedTypes;
     mapFeature.getAllowedSourceTypeIds(allowedTypes);
@@ -43,7 +43,7 @@ TEST(MapFeatureTest, setToDefault) {
     babelwires::RootFeature rootFeature(environment.m_projectContext);
     // The field identifier here doesn't need to be correctly registered.
     babelwires::MapFeature* mapFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestType::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestType::getThisIdentifier(),
                                                                       testUtils::TestType::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo"));
 
@@ -55,8 +55,8 @@ TEST(MapFeatureTest, setToDefault) {
 }
 
 TEST(MapFeatureTest, isCompatible) {
-    babelwires::MapFeature mapFeature(testTypeId1, testTypeId2);
-    babelwires::MapFeature mapFeature2(testTypeId1, testTypeId2);
+    babelwires::StandardMapFeature mapFeature(testTypeId1, testTypeId2);
+    babelwires::StandardMapFeature mapFeature2(testTypeId1, testTypeId2);
     babelwires::IntFeature intFeature;
 
     EXPECT_TRUE(mapFeature.isCompatible(mapFeature2));
@@ -79,19 +79,19 @@ TEST(MapFeatureTest, assign) {
 
     // Note: The field identifiers here don't need to be correctly registered.
     babelwires::MapFeature* testTypeTestTypeFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestType::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestType::getThisIdentifier(),
                                                                       testUtils::TestType::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo1"));
     babelwires::MapFeature* testEnumTestTypeFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestEnum::getThisIdentifier(),
                                                                       testUtils::TestType::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo2"));
     babelwires::MapFeature* testTypeTestEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestType::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestType::getThisIdentifier(),
                                                                       testUtils::TestEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo3"));
     babelwires::MapFeature* testEnumTestEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestEnum::getThisIdentifier(),
                                                                       testUtils::TestEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo4"));
 
@@ -106,15 +106,15 @@ TEST(MapFeatureTest, assign) {
     EXPECT_THROW(testTypeTestTypeFeature->assign(*testEnumTestEnumFeature), babelwires::ModelException);
 
     babelwires::MapFeature* testEnumTestSubEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestEnum::getThisIdentifier(),
                                                                       testUtils::TestSubEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo5"));
     babelwires::MapFeature* testSubEnumTestEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestSubEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestSubEnum::getThisIdentifier(),
                                                                       testUtils::TestEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo6"));
     babelwires::MapFeature* testSubEnumTestSubEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestSubEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestSubEnum::getThisIdentifier(),
                                                                       testUtils::TestSubEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo7"));
 
@@ -164,19 +164,19 @@ TEST(MapFeatureTest, setAndGet) {
 
     // Note: The field identifiers here don't need to be correctly registered.
     babelwires::MapFeature* testTypeTestTypeFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestType::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestType::getThisIdentifier(),
                                                                       testUtils::TestType::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo1"));
     babelwires::MapFeature* testEnumTestTypeFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestEnum::getThisIdentifier(),
                                                                       testUtils::TestType::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo2"));
     babelwires::MapFeature* testTypeTestEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestType::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestType::getThisIdentifier(),
                                                                       testUtils::TestEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo3"));
     babelwires::MapFeature* testEnumTestEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestEnum::getThisIdentifier(),
                                                                       testUtils::TestEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo4"));
 
@@ -191,15 +191,15 @@ TEST(MapFeatureTest, setAndGet) {
     EXPECT_THROW(testTypeTestTypeFeature->set(testEnumTestEnumFeature->get()), babelwires::ModelException);
 
     babelwires::MapFeature* testEnumTestSubEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestEnum::getThisIdentifier(),
                                                                       testUtils::TestSubEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo5"));
     babelwires::MapFeature* testSubEnumTestEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestSubEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestSubEnum::getThisIdentifier(),
                                                                       testUtils::TestEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo6"));
     babelwires::MapFeature* testSubEnumTestSubEnumFeature =
-        rootFeature.addField(std::make_unique<babelwires::MapFeature>(testUtils::TestSubEnum::getThisIdentifier(),
+        rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testUtils::TestSubEnum::getThisIdentifier(),
                                                                       testUtils::TestSubEnum::getThisIdentifier()),
                              testUtils::getTestRegisteredIdentifier("Foo7"));
 
