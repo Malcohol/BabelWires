@@ -16,11 +16,6 @@ namespace {
         auto it = std::upper_bound(typeIds.begin(), typeIds.end(), typeId);
         typeIds.insert(it, typeId);
     }
-
-    void removeDuplicates(babelwires::TypeSystem::TypeIdSet& typeIds) {
-        std::sort(typeIds.begin(), typeIds.end());
-        typeIds.erase(std::unique(typeIds.begin(), typeIds.end()), typeIds.end());
-    }
 } // namespace
 
 // TODO ALL VERY INEFFICIENT
@@ -79,38 +74,49 @@ bool babelwires::TypeSystem::isRelatedType(LongIdentifier typeAId, LongIdentifie
     return isSubType(typeAId, typeBId) || isSubType(typeBId, typeAId);
 }
 
-void babelwires::TypeSystem::getAllSubtypesHelper(LongIdentifier typeId, TypeIdSet& subtypes) const {
+void babelwires::TypeSystem::addAllSubtypes(LongIdentifier typeId, TypeIdSet& subtypes) const {
     subtypes.emplace_back(typeId);
     for (auto subtypeId : getRelatedTypes(typeId).m_subtypeIds) {
-        getAllSubtypesHelper(subtypeId, subtypes);
+        addAllSubtypes(subtypeId, subtypes);
     }
 }
 
-void babelwires::TypeSystem::getAllSupertypesHelper(LongIdentifier typeId, TypeIdSet& supertypes) const {
+void babelwires::TypeSystem::addAllSupertypes(LongIdentifier typeId, TypeIdSet& supertypes) const {
     supertypes.emplace_back(typeId);
     for (auto subtypeId : getRelatedTypes(typeId).m_supertypeIds) {
-        getAllSupertypesHelper(subtypeId, supertypes);
+        addAllSupertypes(subtypeId, supertypes);
     }
+}
+
+void babelwires::TypeSystem::addAllRelatedTypes(LongIdentifier typeId, TypeIdSet& typeIdSet) const {
+    typeIdSet.emplace_back(typeId);
+    addAllSubtypes(typeId, typeIdSet);
+    addAllSupertypes(typeId, typeIdSet);
 }
 
 babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllSubtypes(LongIdentifier typeId) const {
     TypeIdSet subtypes;
-    getAllSubtypesHelper(typeId, subtypes);
+    addAllSubtypes(typeId, subtypes);
     removeDuplicates(subtypes);
     return subtypes;
 }
 
 babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllSupertypes(LongIdentifier typeId) const {
     TypeIdSet supertypes;
-    getAllSupertypesHelper(typeId, supertypes);
+    addAllSupertypes(typeId, supertypes);
     removeDuplicates(supertypes);
     return supertypes;
 }
 
 babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllRelatedTypes(LongIdentifier typeId) const {
     TypeIdSet relatedTypes;
-    getAllSubtypesHelper(typeId, relatedTypes);
-    getAllSupertypesHelper(typeId, relatedTypes);
+    addAllSubtypes(typeId, relatedTypes);
+    addAllSupertypes(typeId, relatedTypes);
     removeDuplicates(relatedTypes);
     return relatedTypes;
+}
+
+void babelwires::TypeSystem::removeDuplicates(babelwires::TypeSystem::TypeIdSet& typeIds) {
+    std::sort(typeIds.begin(), typeIds.end());
+    typeIds.erase(std::unique(typeIds.begin(), typeIds.end()), typeIds.end());
 }

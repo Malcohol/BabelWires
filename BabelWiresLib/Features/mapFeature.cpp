@@ -30,8 +30,12 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     const ProjectContext& context = babelwires::RootFeature::getProjectContextAt(*this);
     const TypeSystem& typeSystem = context.m_typeSystem;
 
-    const bool relatedSource = typeSystem.isRelatedType(m_allowedSourceTypeId, newSourceType);
-    const bool covariance = typeSystem.isSubType(newTargetType, m_allowedTargetTypeId);
+    AllowedTypes allowedTypes;
+    getAllowedSourceTypeIds(allowedTypes);
+    const bool relatedSource = allowedTypes.isRelatedToSome(typeSystem, newSourceType);
+    getAllowedTargetTypeIds(allowedTypes);
+    const bool covariance = allowedTypes.isSubtypeOfSome(typeSystem, newTargetType);
+
     if (!relatedSource && !covariance) {
         throw ModelException() << "Neither the source nor the target types of the map are valid for this feature";
     } else if (!relatedSource) {
@@ -45,22 +49,31 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     }
 }
 
-babelwires::LongIdentifier babelwires::MapFeature::getAllowedSourceTypeId() const {
-    return m_allowedSourceTypeId;
+void babelwires::MapFeature::getAllowedSourceTypeIds(AllowedTypes& allowedTypesOut) const {
+    allowedTypesOut.m_typeIds = {m_allowedSourceTypeId};
+    allowedTypesOut.m_indexOfDefault = 0;
 }
 
-babelwires::LongIdentifier babelwires::MapFeature::getAllowedTargetTypeId() const {
-    return m_allowedTargetTypeId;
+void babelwires::MapFeature::getAllowedTargetTypeIds(AllowedTypes& allowedTypesOut) const {
+    allowedTypesOut.m_typeIds = {m_allowedTargetTypeId};
+    allowedTypesOut.m_indexOfDefault = 0;
 }
 
 babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryData::Kind fallbackKind) const {
     assert(MapEntryData::isFallback(fallbackKind) && "Only a fallback kind is expected here");
 
+    AllowedTypes allowedTypes;
+    getAllowedSourceTypeIds(allowedTypes);
+    const babelwires::LongIdentifier defaultSourceTypeId = allowedTypes.getDefaultTypeId();
+    getAllowedTargetTypeIds(allowedTypes);
+    const babelwires::LongIdentifier defaultTargetTypeId = allowedTypes.getDefaultTypeId();
+
     MapData mapData;
-    mapData.setSourceTypeId(m_allowedSourceTypeId);
-    mapData.setTargetTypeId(m_allowedTargetTypeId);
+    mapData.setSourceTypeId(defaultSourceTypeId);
+    mapData.setTargetTypeId(defaultTargetTypeId);
+
     const TypeSystem& typeSystem = RootFeature::getProjectContextAt(*this).m_typeSystem;
-    mapData.emplaceBack(MapEntryData::create(typeSystem, m_allowedSourceTypeId, m_allowedTargetTypeId, fallbackKind));
+    mapData.emplaceBack(MapEntryData::create(typeSystem, defaultSourceTypeId, defaultTargetTypeId, fallbackKind));
     return mapData;
 }
 
@@ -70,4 +83,17 @@ babelwires::MapData babelwires::MapFeature::getDefaultMapData() const {
 
 void babelwires::MapFeature::doSetToDefault() {
     set(getDefaultMapData());
+}
+
+bool babelwires::MapFeature::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, LongIdentifier typeId) const {
+    return std::any_of(m_typeIds.begin(), m_typeIds.end(), [typeId, &typeSystem](babelwires::LongIdentifier id) {
+        return typeSystem.isRelatedType(id, typeId);
+    });
+}
+
+bool babelwires::MapFeature::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, LongIdentifier typeId) const {
+    return std::any_of(m_typeIds.begin(), m_typeIds.end(),
+                                        [typeId, &typeSystem](babelwires::LongIdentifier id) {
+                                            return typeSystem.isSubType(typeId, id);
+                                        });
 }

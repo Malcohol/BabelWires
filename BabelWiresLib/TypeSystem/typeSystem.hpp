@@ -45,10 +45,20 @@ namespace babelwires {
         /// Return all subtypes and supertypes, including type.
         TypeIdSet getAllRelatedTypes(LongIdentifier typeId) const;
 
+        /// Add typeId and all its subtypes to the set. Does not remove duplicates.
+        void addAllSubtypes(LongIdentifier typeId, TypeIdSet& typeIdSet) const;
+
+        /// Add typeId and all its supertypes to the set. Does not remove duplicates.
+        void addAllSupertypes(LongIdentifier typeId, TypeIdSet& typeIdSet) const;
+
+        /// Add typeId and all its subtypes and super types to the set. Does not remove duplicates.
+        void addAllRelatedTypes(LongIdentifier typeId, TypeIdSet& typeIdSet) const;
+
+        /// Convenience function.
+        static void removeDuplicates(TypeIdSet& typeIds);
+
       protected:
         const RelatedTypes& getRelatedTypes(LongIdentifier typeId) const;
-        void getAllSubtypesHelper(LongIdentifier typeId, TypeIdSet& subtypes) const;
-        void getAllSupertypesHelper(LongIdentifier typeId, TypeIdSet& subtypes) const;
 
       protected:
         std::unordered_map<LongIdentifier, RelatedTypes> m_relatedTypes;

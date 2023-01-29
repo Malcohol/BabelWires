@@ -10,6 +10,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Features/mapFeature.hpp>
 
 #include <QComboBox>
 #include <optional>
@@ -32,8 +33,7 @@ namespace babelwires {
           allowRelatedTypes 
         };
 
-        /// If a type identifier is not provided, all types are allowed.
-        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId, TypeFlexibility flexibility);
+        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeIds, TypeFlexibility flexibility);
 
         LongIdentifier getTypeId() const;
         void setTypeId(LongIdentifier id);

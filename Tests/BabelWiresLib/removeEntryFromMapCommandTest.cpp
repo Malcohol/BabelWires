@@ -19,8 +19,8 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
     mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
@@ -69,8 +69,8 @@ TEST(RemoveEntryFromMapCommandTest, removeInvalid) {
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
     mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
@@ -118,8 +118,8 @@ TEST(RemoveEntryFromMapCommandTest, failAtEnd) {
     environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapProject.setAllowedTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
     mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());

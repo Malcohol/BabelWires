@@ -8,8 +8,8 @@
 #pragma once
 
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
-#include <BabelWiresLib/Maps/mapData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Maps/mapData.hpp>
 
 namespace babelwires {
     /// A MapFeature describes a mapping between types.
@@ -38,8 +38,17 @@ namespace babelwires {
         MapData getStandardDefaultMapData(MapEntryData::Kind fallbackKind) const;
 
       public:
-        LongIdentifier getAllowedSourceTypeId() const;
-        LongIdentifier getAllowedTargetTypeId() const;
+        struct AllowedTypes {
+            std::vector<LongIdentifier> m_typeIds;
+            int m_indexOfDefault = 0;
+
+            LongIdentifier getDefaultTypeId() const { return m_typeIds[m_indexOfDefault]; }
+            bool isRelatedToSome(const TypeSystem& typeSystem, LongIdentifier type) const;
+            bool isSubtypeOfSome(const TypeSystem& typeSystem, LongIdentifier type) const;
+        };
+
+        void getAllowedSourceTypeIds(AllowedTypes& allowedTypesOut) const;
+        void getAllowedTargetTypeIds(AllowedTypes& allowedTypesOut) const;
 
       private:
         /// Empty means all types are allowed.

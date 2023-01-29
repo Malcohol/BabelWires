@@ -15,6 +15,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
+#include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
@@ -26,8 +27,11 @@ namespace {
 TEST(MapFeatureTest, construction) {
     babelwires::MapFeature mapFeature(testTypeId1, testTypeId2);
 
-    EXPECT_EQ(mapFeature.getAllowedSourceTypeId(), testTypeId1);
-    EXPECT_EQ(mapFeature.getAllowedTargetTypeId(), testTypeId2);
+    babelwires::MapFeature::AllowedTypes allowedTypes;
+    mapFeature.getAllowedSourceTypeIds(allowedTypes);
+    EXPECT_TRUE(testUtils::areEqualSets(allowedTypes.m_typeIds, std::vector<babelwires::LongIdentifier>{testTypeId1}));
+    mapFeature.getAllowedTargetTypeIds(allowedTypes);
+    EXPECT_TRUE(testUtils::areEqualSets(allowedTypes.m_typeIds, std::vector<babelwires::LongIdentifier>{testTypeId2}));
 }
 
 TEST(MapFeatureTest, setToDefault) {

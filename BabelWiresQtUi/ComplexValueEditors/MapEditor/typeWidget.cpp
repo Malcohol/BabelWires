@@ -9,7 +9,7 @@
 
 #include <cassert>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, std::optional<LongIdentifier> typeId,
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeIds,
                                    TypeFlexibility flexibility)
     : QComboBox(parent)
     , m_hasBadItem(false) {
@@ -20,24 +20,23 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     m_badStyleSheet.append("\nQComboBox { background: red; }");
 
     std::vector<LongIdentifier> typeIds;
-    if (typeId.has_value()) {
+    for (auto typeId : allowedTypeIds.m_typeIds) {
         switch (flexibility) {
             case TypeFlexibility::strict:
-                typeIds.emplace_back(*typeId);
+                typeIds.emplace_back(typeId);
                 break;
             case TypeFlexibility::allowSubtypes:
-                typeIds = typeSystem.getAllSubtypes(*typeId);
+                typeSystem.addAllSubtypes(typeId, typeIds);
                 break;
             case TypeFlexibility::allowSupertypes:
-                typeIds = typeSystem.getAllSupertypes(*typeId);
+                typeSystem.addAllSupertypes(typeId, typeIds);
                 break;
             case TypeFlexibility::allowRelatedTypes:
-                typeIds = typeSystem.getAllRelatedTypes(*typeId);
+                typeSystem.addAllRelatedTypes(typeId, typeIds);
                 break;
         }
-    } else {
-        // TODO All types.
     }
+    TypeSystem::removeDuplicates(typeIds);
 
     std::vector<std::tuple<std::string, LongIdentifier>> sortedNames;
     sortedNames.reserve(typeIds.size());

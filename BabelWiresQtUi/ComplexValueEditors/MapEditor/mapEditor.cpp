@@ -87,21 +87,24 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             const MapFeature& mapFeature = getMapFeature(scope);
             m_defaultMapValue = mapFeature.getDefaultMapData();
             const MapData& mapData = getMapDataFromProject(scope);
-            m_map.setAllowedSourceTypeId(mapFeature.getAllowedSourceTypeId());
-            m_map.setAllowedTargetTypeId(mapFeature.getAllowedTargetTypeId());
+            MapFeature::AllowedTypes allowedTypeIds;
+            mapFeature.getAllowedSourceTypeIds(allowedTypeIds);
+            m_map.setAllowedSourceTypeId(allowedTypeIds);
+            mapFeature.getAllowedTargetTypeIds(allowedTypeIds);
+            m_map.setAllowedTargetTypeId(allowedTypeIds);
             m_map.setMapData(mapData);
             {
                 /// We do not treat the selection of source type in the usual (contravariant) way.
                 /// Although type correct, it's not useful to allow supertypes, since the extra values will never be
                 /// used. Subtypes are permitted, since the fallback guarantees the map is well-defined.
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
-                m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeId(),
+                m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeIds(),
                                                     TypeWidget::TypeFlexibility::allowSubtypes);
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
-                m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeId(),
+                m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeIds(),
                                                     TypeWidget::TypeFlexibility::allowSubtypes);
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }

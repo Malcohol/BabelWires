@@ -19,10 +19,10 @@ babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string command
     , m_newTargetTypeId(newTargetTypeId) {}
 
 bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
-    const LongIdentifier allowedTargetType = map.getAllowedTargetTypeId();
+    const MapFeature::AllowedTypes& allowedTypeIds = map.getAllowedTargetTypeIds();
     const ProjectContext& context = map.getProjectContext();
     const TypeSystem& typeSystem = context.m_typeSystem;
-    if (!typeSystem.isSubType(m_newTargetTypeId, allowedTargetType)) {
+    if (!allowedTypeIds.isSubtypeOfSome(typeSystem, m_newTargetTypeId)) {
         return false;
     }
     m_oldTargetTypeId = map.getTargetTypeId();
