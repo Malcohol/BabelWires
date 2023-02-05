@@ -7,7 +7,7 @@ testUtils::TestEnvironment::TestEnvironment()
     : m_projectContext{m_sourceFileFormatReg, m_targetFileFormatReg, m_processorReg, m_deserializationReg, m_typeSystem,
                        std::default_random_engine(0x123456789abcdeful)}
     , m_project(m_projectContext, m_log) {
-    m_targetFileFormatReg.addEntry(std::make_unique<TestTargetFileFormat>());
-    m_sourceFileFormatReg.addEntry(std::make_unique<TestSourceFileFormat>());
-    m_processorReg.addEntry(std::make_unique<TestProcessorFactory>());
+    m_targetFileFormatReg.addEntry<TestTargetFileFormat>();
+    m_sourceFileFormatReg.addEntry<TestSourceFileFormat>();
+    m_processorReg.addEntry<TestProcessorFactory>();
 }

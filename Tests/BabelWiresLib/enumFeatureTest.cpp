@@ -12,7 +12,7 @@
 TEST(FeatureTest, enumFeature) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    testEnvironment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::EnumFeature& enumFeature = *rootFeature.addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()), testUtils::getTestRegisteredIdentifier("aaa"));
@@ -34,7 +34,7 @@ TEST(FeatureTest, enumFeature) {
 TEST(FeatureTest, enumFeatureChanges) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    testEnvironment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::EnumFeature& enumFeature = *rootFeature.addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()), testUtils::getTestRegisteredIdentifier("flerm"));
@@ -70,7 +70,7 @@ TEST(FeatureTest, enumFeatureChanges) {
 TEST(FeatureTest, enumFeatureHash) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    testEnvironment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::EnumFeature& enumFeature = *rootFeature.addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()), testUtils::getTestRegisteredIdentifier("flerm"));

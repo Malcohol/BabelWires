@@ -135,7 +135,7 @@ TEST(MapDataTest, equality) {
 
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    typeSystem.addEntry<testUtils::TestType>();
 
     mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
 
@@ -180,7 +180,7 @@ TEST(MapDataTest, getHash) {
 
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    typeSystem.addEntry<testUtils::TestType>();
 
     mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
 
@@ -201,7 +201,7 @@ TEST(MapDataTest, isInvalid_validMap) {
 
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+    typeSystem.addEntry<testUtils::TestType>();  
 
     mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
     mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
@@ -221,7 +221,7 @@ TEST(MapDataTest, isInvalid_outOfPlaceFallback) {
 
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+    typeSystem.addEntry<testUtils::TestType>();  
 
     mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
     mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
@@ -237,7 +237,7 @@ TEST(MapDataTest, isInvalid_noFallback) {
 
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+    typeSystem.addEntry<testUtils::TestType>();  
 
     mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
     mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
@@ -251,7 +251,7 @@ TEST(MapDataTest, isValid_typeMismatch) {
 
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+    typeSystem.addEntry<testUtils::TestType>();  
 
     mapData.setSourceTypeId(testTypeId1);
     mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
@@ -270,7 +270,7 @@ TEST(MapDataTest, serializationTest) {
     
         babelwires::IdentifierRegistryScope identifierRegistry;
         babelwires::TypeSystem typeSystem;
-        typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+        typeSystem.addEntry<testUtils::TestType>();  
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.
         auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
@@ -314,7 +314,7 @@ TEST(MapDataTest, cloneTest) {
 
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());  
+    typeSystem.addEntry<testUtils::TestType>();  
 
     // Note: We want to be able to clone when entries do not match the types, as in this case.
     auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());

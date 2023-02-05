@@ -23,7 +23,7 @@ namespace {
 TEST(MapProjectTest, mapProjectEntry) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::OneToOneMapEntryData oneToOne(typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -48,8 +48,8 @@ TEST(MapProjectTest, mapProjectEntry) {
 TEST(MapProjectTest, allowedTypes) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
@@ -72,8 +72,8 @@ TEST(MapProjectTest, getProjectContext) {
 TEST(MapProjectTest, types) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
@@ -95,8 +95,8 @@ TEST(MapProjectTest, types) {
 TEST(MapProjectTest, badTypes) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
@@ -132,9 +132,9 @@ TEST(MapProjectTest, badTypes) {
 TEST(MapProjectTest, setAndExtractMapData) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
+    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
@@ -165,9 +165,9 @@ TEST(MapProjectTest, setAndExtractMapData) {
 TEST(MapProjectTest, modifyMapData) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
+    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
@@ -225,9 +225,9 @@ TEST(MapProjectTest, modifyMapData) {
 TEST(MapProjectTest, typeChangeAndValidity) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
+    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
+    environment.m_typeSystem.addEntry<testUtils::TestSubSubEnum1>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
@@ -284,9 +284,9 @@ TEST(MapProjectTest, typeChangeAndValidity) {
 TEST(MapProjectTest, modifyValidity) {
      babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
+    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
@@ -326,8 +326,8 @@ TEST(MapProjectTest, modifyValidity) {
 TEST(MapProjectTest, badMap) {
      babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 

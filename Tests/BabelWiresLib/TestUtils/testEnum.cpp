@@ -49,10 +49,10 @@ testUtils::TestSubSubEnum2::TestSubSubEnum2()
                        1) {}
 
 void testUtils::addTestEnumTypes(babelwires::TypeSystem& typeSystem) {
-    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum1>());
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubSubEnum2>());
+    typeSystem.addEntry<testUtils::TestEnum>();
+    typeSystem.addEntry<testUtils::TestSubEnum>();
+    typeSystem.addEntry<testUtils::TestSubSubEnum1>();
+    typeSystem.addEntry<testUtils::TestSubSubEnum2>();
 
     typeSystem.addRelatedTypes(testUtils::TestEnum::getThisIdentifier(),
                                {{}, {testUtils::TestSubSubEnum1::getThisIdentifier()}});
