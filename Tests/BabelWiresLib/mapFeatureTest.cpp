@@ -37,7 +37,7 @@ TEST(MapFeatureTest, construction) {
 TEST(MapFeatureTest, setToDefault) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     // MapFeatures expect to be able to find the typeSystem via the rootFeature at the root of the feature hierarchy.
     babelwires::RootFeature rootFeature(environment.m_projectContext);
@@ -67,9 +67,9 @@ TEST(MapFeatureTest, isCompatible) {
 TEST(MapFeatureTest, assign) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
+    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
     environment.m_typeSystem.addRelatedTypes(testUtils::TestSubEnum::getThisIdentifier(),
                                              {{testUtils::TestEnum::getThisIdentifier()}, {}});
 
@@ -152,9 +152,9 @@ TEST(MapFeatureTest, assign) {
 TEST(MapFeatureTest, setAndGet) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
+    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
+    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
     environment.m_typeSystem.addRelatedTypes(testUtils::TestSubEnum::getThisIdentifier(),
                                              {{testUtils::TestEnum::getThisIdentifier()}, {}});
 

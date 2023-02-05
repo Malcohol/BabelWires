@@ -27,6 +27,7 @@ Processors:
 
 Refactor: 
 * Consider replacing virtual deserialize() method by deserializing constructor
+  - Tried this in PR #14. Breaks symmetry.
 * Move some of the logic in doProcess up into FeatureElement.
 * Split featureElementData into separate files - replace any dynamic casts.
 * Split Features & Import/Export out from the project lib. 
@@ -39,6 +40,7 @@ Refactor:
 * Arrays and optional modification are special-cased in the project: Could that be handled instead by a virtual "merge" method?
   - Also, they are special cased in the removeModifierCommand. Could that be handled instead by a virtual "removeModifier" method?
   - It's slightly unfortunate to have modifierData know about commands, but overall might be worth it.
+* Try to use Value to store value in a value feature, and use it in set value modifiers.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.
@@ -65,3 +67,7 @@ Ideas:
 * SelectableArrays: For arrays larger than 16 elements:
   - Each element has an input drop down which selects the output array element.
   - This would be useful for complex input formats.
+
+Types:
+* Automatically provide an augmented version of each enum with a dummy value ("------" or "\_|\_" maybe?)
+  - Would allow percussion / chord processor to drop events (or add them in?)

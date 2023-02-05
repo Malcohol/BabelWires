@@ -16,7 +16,7 @@
 TEST(ChangeEntryKindCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
@@ -53,7 +53,7 @@ TEST(ChangeEntryKindCommandTest, executeAndUndo) {
 TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
@@ -81,7 +81,7 @@ TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {
 TEST(ChangeEntryKindCommandTest, failNotFallbackAtEnd) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});

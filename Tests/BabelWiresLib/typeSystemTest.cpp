@@ -13,7 +13,7 @@
 
 namespace {
     void addTestTypes(babelwires::TypeSystem& typeSystem) {
-        typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+        typeSystem.addEntry<testUtils::TestType>();
         testUtils::addTestEnumTypes(typeSystem);
     }
 } // namespace

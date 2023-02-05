@@ -96,12 +96,12 @@ TEST(EnumTest, subEnum) {
 
     babelwires::TypeSystem typeSystem;
 
-    typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    typeSystem.addEntry<testUtils::TestEnum>();
     // Have to register Sub-Enums in the TypeSystem or they don't work.
-    typeSystem.addEntry(std::make_unique<testUtils::TestSubEnum>());
+    typeSystem.addEntry<testUtils::TestSubEnum>();
 
-    const auto& testEnum = typeSystem.getRegisteredEntry(testUtils::TestEnum::getThisIdentifier());
-    const auto& testSubEnum = typeSystem.getRegisteredEntry(testUtils::TestSubEnum::getThisIdentifier());
+    const auto& testEnum = typeSystem.getEntryByType<testUtils::TestEnum>();
+    const auto& testSubEnum = typeSystem.getEntryByType<testUtils::TestSubEnum>();
 
     auto value = testSubEnum.createValue();
     EXPECT_TRUE(value);

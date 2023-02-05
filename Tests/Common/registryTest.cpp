@@ -43,7 +43,7 @@ TEST(RegistryTest, base) {
         "test", "Test", "00000000-1111-2222-3333-444444444444",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
-    registry.addEntry(std::make_unique<TestRegistryEntry>(entryId, 1, TestRegistryEntry::Extensions{"test"}, 15));
+    registry.addEntry<TestRegistryEntry>(entryId, 1, TestRegistryEntry::Extensions{"test"}, 15);
 
     ASSERT_NE(registry.getEntryByIdentifier("test"), nullptr);
     EXPECT_NE(&registry.getRegisteredEntry("test"), nullptr);

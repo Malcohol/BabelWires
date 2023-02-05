@@ -492,7 +492,7 @@ TEST(UnionFeatureTest, queries) {
 TEST(UnionFeatureTest, unselectedEnumCanBeDefaulted) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry(std::make_unique<testUtils::TestEnum>());
+    testEnvironment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
 

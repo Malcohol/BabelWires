@@ -16,7 +16,7 @@
 TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
@@ -73,7 +73,7 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
 TEST(ReplaceMapEntryCommandTest, failBeyondEnd) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
@@ -100,7 +100,7 @@ TEST(ReplaceMapEntryCommandTest, failBeyondEnd) {
 TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
@@ -160,7 +160,7 @@ TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
 TEST(ReplaceMapEntryCommandTest, failInvalid) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});

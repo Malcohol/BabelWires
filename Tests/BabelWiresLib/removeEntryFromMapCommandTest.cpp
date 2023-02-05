@@ -16,7 +16,7 @@
 TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
@@ -66,7 +66,7 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
 TEST(RemoveEntryFromMapCommandTest, removeInvalid) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
@@ -115,7 +115,7 @@ TEST(RemoveEntryFromMapCommandTest, removeInvalid) {
 TEST(RemoveEntryFromMapCommandTest, failAtEnd) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry(std::make_unique<testUtils::TestType>());
+    environment.m_typeSystem.addEntry<testUtils::TestType>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});

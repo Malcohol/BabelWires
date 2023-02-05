@@ -12,5 +12,5 @@
 #include <BabelWiresLib/TypeSystem/intType.hpp>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
-    context.m_typeSystem.addEntry(std::make_unique<IntType>());
+    context.m_typeSystem.addEntry<IntType>();
 }

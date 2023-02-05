@@ -92,7 +92,7 @@ TEST(AudioInterfaceRegistryTest, destinationsAndSources) {
     EXPECT_TRUE(reg.getDestinationNames().empty());
     EXPECT_TRUE(reg.getSourceNames().empty());
 
-    reg.addEntry(std::make_unique<TestAudioInterface>("foo", 10));
+    reg.addEntry<TestAudioInterface>("foo", 10);
 
     using setOfStrings = std::vector<std::string>;
 
@@ -118,7 +118,7 @@ TEST(AudioInterfaceRegistryTest, destinationsAndSources) {
         auto sourceFoo3 = reg.getSource("foo::foo3");
         EXPECT_EQ(sourceFoo3->getNumChannels(), 13);
     }
-    reg.addEntry(std::make_unique<TestAudioInterface>("erm", 20));
+    reg.addEntry<TestAudioInterface>("erm", 20);
     EXPECT_TRUE(testUtils::areEqualSets(reg.getDestinationNames(),
                                         setOfStrings{"foo::foo1", "foo::foo2", "erm::erm1", "erm::erm2"}));
     {
