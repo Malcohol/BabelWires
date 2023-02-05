@@ -23,16 +23,16 @@ jobs:
             cc: "gcc-11",
             cxx: "g++-11"
           }
-        #- {
-        #    name: "Windows Latest MSVC",
-        #    os: windows-latest,
-        #    build_type: "Debug",
-        #    targetFolder: "Debug/", # Must match build_type.
-        #    exeExtension: ".exe",
-        #    cc: "cl",
-        #    cxx: "cl",
-        #    generators: "Visual Studio 16 2019"
-        #  }
+        - {
+            name: "Windows Latest MSVC",
+            os: windows-latest,
+            build_type: "Debug",
+            targetFolder: "Debug/", # Must match build_type.
+            exeExtension: ".exe",
+            cc: "cl",
+            cxx: "cl",
+            generators: "Visual Studio 16 2019"
+          }
 
     steps:
     - uses: actions/checkout@v2
