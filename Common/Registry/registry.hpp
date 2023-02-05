@@ -119,6 +119,15 @@ namespace babelwires {
         /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
         const ENTRY& getRegisteredEntry(const LongIdentifier& identifier) const;
 
+        /// If ENTRY_SUBTYPE has the common static method "getThisIdentifier", then you can look it up by type
+        /// and get a typed reference back.
+        template<typename ENTRY_SUBTYPE, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
+        const ENTRY_SUBTYPE& getEntryByType() const {
+          const ENTRY& entry = getRegisteredEntry(ENTRY_SUBTYPE::getThisIdentifier());
+          assert(dynamic_cast<const ENTRY_SUBTYPE*>(&entry) && "The registered type was not of the expected type");
+          return static_cast<const ENTRY_SUBTYPE&>(entry);
+        }
+
       public:
         class Iterator;
         // Iteration.

@@ -87,9 +87,9 @@ TEST(MapProjectTest, types) {
     EXPECT_EQ(mapProject.getTargetTypeId(), testUtils::TestEnum::getThisIdentifier());
 
     EXPECT_EQ(mapProject.getSourceType(),
-              environment.m_typeSystem.getEntryByIdentifier(testUtils::TestType::getThisIdentifier()));
+              &environment.m_typeSystem.getEntryByType<testUtils::TestType>());
     EXPECT_EQ(mapProject.getTargetType(),
-              environment.m_typeSystem.getEntryByIdentifier(testUtils::TestEnum::getThisIdentifier()));
+              &environment.m_typeSystem.getEntryByType<testUtils::TestEnum>());
 }
 
 TEST(MapProjectTest, badTypes) {
