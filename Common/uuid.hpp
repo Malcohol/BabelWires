@@ -27,12 +27,12 @@ namespace babelwires {
 
         /// This asserts the uuidText is in the correct form:
         /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-        Uuid(const std::string& uuidText);
+        Uuid(std::string_view uuidText);
 
         /// This asserts the uuidText is in the correct form:
         /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
         Uuid(const char* uuidText)
-            : Uuid(std::string(uuidText)) {}
+            : Uuid(std::string_view(uuidText)) {}
 
         /// Is the Uuid all zeros?
         bool isZero() const;

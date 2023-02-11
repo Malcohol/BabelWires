@@ -20,7 +20,7 @@ namespace {
 
 babelwires::Uuid::Uuid() = default;
 
-babelwires::Uuid::Uuid(const std::string& uuidText) {
+babelwires::Uuid::Uuid(std::string_view uuidText) {
     assert(isValid(uuidText) && "The provided UUID was not in the correct form.");
     {
         std::stringstream tmp;
@@ -43,6 +43,16 @@ void babelwires::Uuid::randomize(std::default_random_engine& randomEngine) {
         m_high = std::uniform_int_distribution<std::uint64_t>()(randomEngine);
         m_low = std::uniform_int_distribution<std::uint64_t>()(randomEngine);
     } while (isZero());
+}
+
+std::string babelwires::Uuid::serializeToString() const {
+    std::ostringstream newText;
+    newText << std::hex << std::setfill('0') << std::setw(8) << (m_high >> 32);
+    newText << "-" << std::setw(4) << ((m_high >> 16) & 0xffff);
+    newText << "-" << std::setw(4) << (m_high & 0xffff);
+    newText << "-" << std::setw(4) << (m_low >> 48);
+    newText << "-" << std::setw(12) << (m_low & 0xffffffffffffll);
+    return newText.str();
 }
 
 babelwires::Uuid babelwires::Uuid::deserializeFromString(std::string_view uuidText) {
