@@ -38,7 +38,7 @@ void babelwires::UntypedFileTypeRegistry::validateNewEntry(RegistryEntry* newEnt
 babelwires::FileTypeEntry::Extensions babelwires::UntypedFileTypeRegistry::getFileExtensions() const {
     babelwires::FileTypeEntry::Extensions extensions;
     for (const auto& f : *this) {
-        const auto& theseExtensions = static_cast<const FileTypeEntry*>(f.get())->getFileExtensions();
+        const auto& theseExtensions = static_cast<const FileTypeEntry*>(f.second.get())->getFileExtensions();
         extensions.insert(extensions.end(), theseExtensions.begin(), theseExtensions.end());
     }
     return extensions;
@@ -49,9 +49,9 @@ const babelwires::RegistryEntry* babelwires::UntypedFileTypeRegistry::getEntryBy
     std::for_each(extension.begin(), extension.end(), [](auto& c) { c = std::tolower(c); });
 
     for (const auto& f : *this) {
-        const auto& theseExtensions = static_cast<const FileTypeEntry*>(f.get())->getFileExtensions();
+        const auto& theseExtensions = static_cast<const FileTypeEntry*>(f.second.get())->getFileExtensions();
         if (std::find(theseExtensions.begin(), theseExtensions.end(), extension) != theseExtensions.end()) {
-            return &*f;
+            return f.second.get();
         }
     }
     return nullptr;

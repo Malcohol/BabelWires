@@ -31,8 +31,8 @@ template <typename ENTRY, typename UNTYPED_REGISTRY> class babelwires::Registry<
     Iterator() = default;
     Iterator(ParentIterator it)
         : m_iterator(it) {}
-    const ENTRY& operator*() { return static_cast<const ENTRY&>(**m_iterator); }
-    const ENTRY* operator->() { return static_cast<const ENTRY*>(m_iterator->get()); }
+    const ENTRY& operator*() { return static_cast<const ENTRY&>(*m_iterator->second.get()); }
+    const ENTRY* operator->() { return static_cast<const ENTRY*>(m_iterator->second.get()); }
     Iterator& operator++() {
         ++m_iterator;
         return *this;

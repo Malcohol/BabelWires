@@ -35,49 +35,52 @@ babelwires::UntypedRegistry::UntypedRegistry(std::string registryName)
     : m_registryName(std::move(registryName)) {}
 
 babelwires::RegistryEntry* babelwires::UntypedRegistry::addEntry(std::unique_ptr<RegistryEntry> newEntry) {
-    assert((newEntry->getIdentifier().getDiscriminator() != 0) && "A registered entry must have a registered identifier");
-    assert((getEntryByIdentifier(newEntry->getIdentifier()) == nullptr) &&
-           "Format with that identifier already registered.");
+    LongIdentifier id = newEntry->getIdentifier();
+    assert((newEntry->getIdentifier().getDiscriminator() != 0) &&
+           "A registered entry must have a registered identifier");
+    assert((getEntryByIdentifier(id) == nullptr) && "Format with that identifier already registered.");
     assert((getEntryByName(newEntry->getName()) == nullptr) && "Format with that name already registered.");
-    RegistryEntry *const rawEntry = newEntry.get();
+    RegistryEntry* const rawEntry = newEntry.get();
     validateNewEntry(rawEntry);
     newEntry->onRegistered();
-    m_entries.push_back(std::move(newEntry));
+    m_entries.insert({ id, std::move(newEntry) });
     return rawEntry;
 }
 
-const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifier(const LongIdentifier& identifier) const {
-    for (auto&& f : m_entries) {
-        if (identifier == f->getIdentifier()) {
-            // resolve the identifier if it is currently unresolved.
-            f->getIdentifier().copyDiscriminatorTo(identifier);
-            return f.get();
-        }
+const babelwires::RegistryEntry*
+babelwires::UntypedRegistry::getEntryByIdentifier(const LongIdentifier& identifier) const {
+    const auto& it = m_entries.find(identifier);
+    if (it != m_entries.end()) {
+        // resolve the identifier if it is currently unresolved.
+        it->first.copyDiscriminatorTo(identifier);
+        return it->second.get();
     }
     return nullptr;
 }
 
-babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByIdentifierNonConst(const LongIdentifier& identifier) const {
-    for (auto&& f : m_entries) {
-        if (identifier == f->getIdentifier()) {
-            // resolve the identifier if it is currently unresolved.
-            f->getIdentifier().copyDiscriminatorTo(identifier);
-            return f.get();
-        }
+babelwires::RegistryEntry*
+babelwires::UntypedRegistry::getEntryByIdentifierNonConst(const LongIdentifier& identifier) const {
+    const auto& it = m_entries.find(identifier);
+    if (it != m_entries.end()) {
+        // resolve the identifier if it is currently unresolved.
+        it->first.copyDiscriminatorTo(identifier);
+        return it->second.get();
     }
     return nullptr;
 }
 
 const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByName(std::string_view name) const {
-    for (auto&& f : m_entries) {
-        if (name == f->getName()) {
-            return f.get();
+    auto identifierRegistryScope = IdentifierRegistry::read();
+    for (auto&& it : m_entries) {
+        if (name == identifierRegistryScope->getName(it.first)) {
+            return it.second.get();
         }
     }
     return nullptr;
 }
 
-const babelwires::RegistryEntry& babelwires::UntypedRegistry::getRegisteredEntry(const LongIdentifier& identifier) const {
+const babelwires::RegistryEntry&
+babelwires::UntypedRegistry::getRegisteredEntry(const LongIdentifier& identifier) const {
     const RegistryEntry* const entry = getEntryByIdentifier(identifier);
     if (!entry) {
         throw RegistryException() << "No entry called \"" << identifier << "\" was found in the " << m_registryName;

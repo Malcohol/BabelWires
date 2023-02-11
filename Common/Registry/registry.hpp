@@ -16,7 +16,7 @@
 #include <cassert>
 #include <memory>
 #include <string>
-#include <vector>
+#include <unordered_map>
 
 namespace babelwires {
 
@@ -83,9 +83,11 @@ namespace babelwires {
 
       protected:
         std::string m_registryName;
-        std::vector<std::unique_ptr<RegistryEntry>> m_entries;
+        std::unordered_map<LongIdentifier, std::unique_ptr<RegistryEntry>> m_entries;
 
-      public:
+      protected:
+        template <typename ENTRY, typename UNTYPED_REGISTRY> friend class Registry;
+
         // Iteration.
         using Iterator = decltype(m_entries)::const_iterator;
         Iterator begin() const { return m_entries.begin(); }
