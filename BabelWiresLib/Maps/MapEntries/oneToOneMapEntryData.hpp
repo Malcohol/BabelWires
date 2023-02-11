@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 
 namespace babelwires {
     class TypeSystem;

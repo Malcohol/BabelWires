@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 #include <Common/exceptions.hpp>
 
 #include <algorithm>

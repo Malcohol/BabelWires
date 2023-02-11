@@ -13,7 +13,7 @@
 #include <ostream>
 #include <random>
 
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 
 namespace babelwires {
 

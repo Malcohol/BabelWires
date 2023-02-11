@@ -19,7 +19,7 @@
 
 #include <Common/IO/outFileStream.hpp>
 #include <Common/Log/userLogger.hpp>
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 
 #include <fstream>
 

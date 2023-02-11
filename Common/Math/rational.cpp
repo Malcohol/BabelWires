@@ -7,7 +7,7 @@
  **/
 #include <Common/Math/rational.hpp>
 
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 #include <Common/exceptions.hpp>
 
 #include <cassert>

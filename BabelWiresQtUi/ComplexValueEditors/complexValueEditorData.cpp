@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
