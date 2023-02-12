@@ -29,8 +29,6 @@ babelwires::VersionNumber babelwires::RegistryEntry::getVersion() const {
     return m_version;
 }
 
-void babelwires::RegistryEntry::onRegistered() {}
-
 babelwires::UntypedRegistry::UntypedRegistry(std::string registryName)
     : m_registryName(std::move(registryName)) {}
 
@@ -41,7 +39,6 @@ babelwires::RegistryEntry* babelwires::UntypedRegistry::addEntry(std::unique_ptr
     assert((getEntryByIdentifier(id) == nullptr) && "Format with that identifier already registered.");
     assert((getEntryByName(newEntry->getName()) == nullptr) && "Format with that name already registered.");
     RegistryEntry* const rawEntry = newEntry.get();
-    newEntry->onRegistered();
     m_entries.insert({ id, std::move(newEntry) });
     return rawEntry;
 }

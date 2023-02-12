@@ -39,9 +39,6 @@ namespace babelwires {
         /// Get the version of this entry.
         VersionNumber getVersion() const;
 
-        /// Called when an entry gets registered. The default implementation does nothing.
-        virtual void onRegistered();
-
       private:
         LongIdentifier m_identifier;
         VersionNumber m_version;
