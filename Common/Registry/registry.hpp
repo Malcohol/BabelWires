@@ -85,7 +85,7 @@ namespace babelwires {
         std::unordered_map<LongIdentifier, std::unique_ptr<RegistryEntry>> m_entries;
 
       protected:
-        template <typename ENTRY, typename UNTYPED_REGISTRY> friend class Registry;
+        template <typename ENTRY> friend class Registry;
 
         // Iteration.
         using Iterator = decltype(m_entries)::const_iterator;
@@ -94,7 +94,7 @@ namespace babelwires {
     };
 
     /// Shared features of Format Registries.
-    template <typename ENTRY, typename UNTYPED_REGISTRY = UntypedRegistry> class Registry {
+    template <typename ENTRY> class Registry {
       public:
         Registry(std::string registryName);
 
@@ -137,7 +137,7 @@ namespace babelwires {
         Iterator end() const;
 
       protected:
-        UNTYPED_REGISTRY m_untypedRegistry;
+        UntypedRegistry m_untypedRegistry;
     };
 
 } // namespace babelwires
