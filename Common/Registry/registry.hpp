@@ -75,7 +75,6 @@ namespace babelwires {
         const RegistryEntry& getRegisteredEntry(const LongIdentifier& identifier) const;
 
       protected:
-        virtual void validateNewEntry(RegistryEntry* newEntry) const;
         const RegistryEntry* getEntryByName(std::string_view name) const;
 
         /// Protected non-const version available to subclasses.
@@ -103,11 +102,9 @@ namespace babelwires {
         template<typename ENTRY_SUBTYPE, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
         ENTRY_SUBTYPE* addEntry(std::unique_ptr<ENTRY_SUBTYPE> newEntry);
 
-        /// Create a new entry and transfer it to the registry.
+        /// Construct a new entry which is owned by the registry.
         template<typename ENTRY_SUBTYPE, typename... ARGS, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
-        ENTRY_SUBTYPE* addEntry(ARGS&&... args) {
-          return addEntry(std::make_unique<ENTRY_SUBTYPE>(std::forward<ARGS>(args)...));
-        }
+        ENTRY_SUBTYPE* addEntry(ARGS&&... args);
 
         /// Find an entry by an internal key which should be stable between
         /// versions of the program.
@@ -129,6 +126,9 @@ namespace babelwires {
           assert(dynamic_cast<const ENTRY_SUBTYPE*>(&entry) && "The registered type was not of the expected type");
           return static_cast<const ENTRY_SUBTYPE&>(entry);
         }
+
+        /// This is called when entries are added and can be used to validate them, for example.
+        virtual void onEntryRegistered(ENTRY& newEntry) const {}
 
       public:
         class Iterator;

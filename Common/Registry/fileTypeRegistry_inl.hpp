@@ -5,17 +5,22 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-template <typename ENTRY, typename UNTYPED_REGISTRY>
-babelwires::FileTypeRegistry<ENTRY, UNTYPED_REGISTRY>::FileTypeRegistry(std::string registryName)
+template <typename ENTRY>
+babelwires::FileTypeRegistry<ENTRY>::FileTypeRegistry(std::string registryName)
     : Registry<ENTRY, UntypedFileTypeRegistry>(std::move(registryName)) {}
 
-template <typename ENTRY, typename UNTYPED_REGISTRY>
+template <typename ENTRY>
 const ENTRY*
-babelwires::FileTypeRegistry<ENTRY, UNTYPED_REGISTRY>::getEntryByFileName(std::string_view fileName) const {
-    return static_cast<const ENTRY*>(Registry<ENTRY, UNTYPED_REGISTRY>::m_untypedRegistry.getEntryByFileName(fileName));
+babelwires::FileTypeRegistry<ENTRY>::getEntryByFileName(std::string_view fileName) const {
+    return static_cast<const ENTRY*>(FileTypeRegistry<ENTRY>::m_untypedRegistry.getEntryByFileName(fileName));
 }
 
-template <typename ENTRY, typename UNTYPED_REGISTRY>
-babelwires::FileTypeEntry::Extensions babelwires::FileTypeRegistry<ENTRY, UNTYPED_REGISTRY>::getFileExtensions() const {
-    return Registry<ENTRY, UNTYPED_REGISTRY>::m_untypedRegistry.getFileExtensions();
+template <typename ENTRY>
+babelwires::FileTypeEntry::Extensions babelwires::FileTypeRegistry<ENTRY>::getFileExtensions() const {
+    return FileTypeRegistry<ENTRY>::m_untypedRegistry.getFileExtensions();
+}
+
+template <typename ENTRY>
+void babelwires::FileTypeRegistry<ENTRY>::onEntryRegistered(ENTRY& newEntry) const {
+    return FileTypeRegistry<ENTRY>::m_untypedRegistry.validateNewEntry(&newEntry);
 }

@@ -23,9 +23,6 @@ babelwires::UntypedFileTypeRegistry::UntypedFileTypeRegistry(std::string registr
     : UntypedRegistry(std::move(registryName)) {}
 
 void babelwires::UntypedFileTypeRegistry::validateNewEntry(RegistryEntry* newEntry) const {
-    // Super-call.
-    UntypedRegistry::validateNewEntry(newEntry);
-
     const auto& currentExtensions = getFileExtensions();
 
     for (const auto& n : static_cast<const FileTypeEntry*>(newEntry)->getFileExtensions()) {

@@ -41,7 +41,6 @@ babelwires::RegistryEntry* babelwires::UntypedRegistry::addEntry(std::unique_ptr
     assert((getEntryByIdentifier(id) == nullptr) && "Format with that identifier already registered.");
     assert((getEntryByName(newEntry->getName()) == nullptr) && "Format with that name already registered.");
     RegistryEntry* const rawEntry = newEntry.get();
-    validateNewEntry(rawEntry);
     newEntry->onRegistered();
     m_entries.insert({ id, std::move(newEntry) });
     return rawEntry;
@@ -87,5 +86,3 @@ babelwires::UntypedRegistry::getRegisteredEntry(const LongIdentifier& identifier
     }
     return *entry;
 }
-
-void babelwires::UntypedRegistry::validateNewEntry(RegistryEntry* newEntry) const {}

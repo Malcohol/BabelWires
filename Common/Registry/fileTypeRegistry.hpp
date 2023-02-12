@@ -38,15 +38,14 @@ namespace babelwires {
         /// A fileName which is just the extension will also match.
         const RegistryEntry* getEntryByFileName(std::string_view fileName) const;
 
-      protected:
-        virtual void validateNewEntry(RegistryEntry* newEntry) const override;
+        void validateNewEntry(RegistryEntry* newEntry) const;
 
         const RegistryEntry* getEntryByExtension(std::string extension) const;
     };
 
     /// A registry whose entries can be queried based on file extensions.
-    template <typename ENTRY, typename UNTYPED_REGISTRY = UntypedFileTypeRegistry>
-    class FileTypeRegistry : public Registry<ENTRY, UNTYPED_REGISTRY> {
+    template <typename ENTRY>
+    class FileTypeRegistry : public Registry<ENTRY, UntypedFileTypeRegistry> {
       public:
         FileTypeRegistry(std::string registryName);
 
@@ -56,8 +55,9 @@ namespace babelwires {
 
         /// Get the file extensions of all registered extensions in no particular order.
         FileTypeEntry::Extensions getFileExtensions() const;
-    };
 
+        void onEntryRegistered(ENTRY& newEntry) const override;
+    };
 } // namespace babelwires
 
 #include <Common/Registry/fileTypeRegistry_inl.hpp>

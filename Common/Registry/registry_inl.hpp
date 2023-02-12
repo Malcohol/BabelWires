@@ -12,7 +12,15 @@ babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::Registry(std::string registryName
 template <typename ENTRY, typename UNTYPED_REGISTRY>
 template <typename ENTRY_SUBTYPE, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t>>
 ENTRY_SUBTYPE* babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::addEntry(std::unique_ptr<ENTRY_SUBTYPE> newEntry) {
+    assert(newEntry && "Registered entries must be non-null");
+    onEntryRegistered(*newEntry);
     return static_cast<ENTRY_SUBTYPE*>(m_untypedRegistry.addEntry(std::unique_ptr<RegistryEntry>(newEntry.release())));
+}
+
+template <typename ENTRY, typename UNTYPED_REGISTRY>
+template<typename ENTRY_SUBTYPE, typename... ARGS, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t>>
+ENTRY_SUBTYPE* babelwires::Registry<ENTRY, UNTYPED_REGISTRY>::addEntry(ARGS&&... args) {
+    return addEntry(std::make_unique<ENTRY_SUBTYPE>(std::forward<ARGS>(args)...));
 }
 
 template <typename ENTRY, typename UNTYPED_REGISTRY>
