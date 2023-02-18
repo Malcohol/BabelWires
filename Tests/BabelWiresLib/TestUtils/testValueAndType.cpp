@@ -1,7 +1,5 @@
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
-#include <Tests/TestUtils/testIdentifiers.hpp>
-
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
@@ -39,13 +37,6 @@ void testUtils::TestValue::serializeContents(babelwires::Serializer& serializer)
 void testUtils::TestValue::deserializeContents(babelwires::Deserializer& deserializer){
     deserializer.deserializeValue("value", m_value);
 }
-
-babelwires::LongIdentifier testUtils::TestType::getThisIdentifier() {
-    return getTestRegisteredLongIdentifier("TestType");
-}
-
-testUtils::TestType::TestType()
-    : Type(getThisIdentifier(), 1) {}
 
 std::unique_ptr<babelwires::Value> testUtils::TestType::createValue() const {
     return std::make_unique<TestValue>();

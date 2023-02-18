@@ -23,13 +23,10 @@ namespace babelwires {
         /// Note: This matches the result of REGISTERED_ID_VECTOR.
         using EnumValues = std::vector<Identifier>;
 
-        /// Enums can be registered in the TypeSystem, so they need their own identifier and version.
-        /// Enums which have a parent _must_ be registered in the TypeSystem.
-        /// They also need a set of values and a way of identifying the default.
+        /// Enums need a set of values and a way of identifying the default.
         /// The values object can be the "output" of the REGISTERED_ID_VECTOR macro.
         /// The values must all be registered identifiers.
-        Enum(LongIdentifier identifier, VersionNumber version, EnumValues values,
-             unsigned int indexOfDefaultValue);
+        Enum(EnumValues values, unsigned int indexOfDefaultValue);
 
         /// Get the set of available enum values.
         const EnumValues& getEnumValues() const;

@@ -11,6 +11,9 @@
 
 #include <algorithm>
 
+babelwires::PrimitiveTypeEntry::PrimitiveTypeEntry(LongIdentifier identifier, VersionNumber version)
+    : RegistryEntry(identifier, version) {}
+
 namespace {
     void insertTypeId(babelwires::TypeSystem::TypeIdSet& typeIds, babelwires::LongIdentifier typeId) {
         auto it = std::upper_bound(typeIds.begin(), typeIds.end(), typeId);
@@ -21,7 +24,7 @@ namespace {
 // TODO ALL VERY INEFFICIENT
 
 babelwires::TypeSystem::TypeSystem()
-    : Registry<Type>("Type system") {}
+    : m_primitiveTypeRegistry("Primitive Type Registry") {}
 
 void babelwires::TypeSystem::addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes) {
     const Type* const type = getEntryByIdentifier(typeId);
@@ -58,7 +61,8 @@ const babelwires::TypeSystem::RelatedTypes& babelwires::TypeSystem::getRelatedTy
     }
 }
 
-bool babelwires::TypeSystem::isSubType(LongIdentifier subtypeId, LongIdentifier supertypeId) const {
+bool babelwires::TypeSystem::isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const {
+    /*
     if (subtypeId == supertypeId) {
         return true;
     }
@@ -67,11 +71,13 @@ bool babelwires::TypeSystem::isSubType(LongIdentifier subtypeId, LongIdentifier 
             return true;
         }
     }
+    */
     return false;
 }
 
-bool babelwires::TypeSystem::isRelatedType(LongIdentifier typeAId, LongIdentifier typeBId) const {
-    return isSubType(typeAId, typeBId) || isSubType(typeBId, typeAId);
+bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeAId, const TypeRef& typeBId) const {
+    // return isSubType(typeAId, typeBId) || isSubType(typeBId, typeAId);
+    return false;
 }
 
 void babelwires::TypeSystem::addAllSubtypes(LongIdentifier typeId, TypeIdSet& subtypes) const {

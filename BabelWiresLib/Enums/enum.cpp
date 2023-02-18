@@ -9,10 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/enumValue.hpp>
 
-babelwires::Enum::Enum(LongIdentifier identifier, VersionNumber version, EnumValues values,
-                       unsigned int indexOfDefaultValue)
-    : Type(identifier, version)
-    , m_values(std::move(values))
+babelwires::Enum::Enum(EnumValues values, unsigned int indexOfDefaultValue)
+    : m_values(std::move(values))
     , m_indexOfDefaultValue(indexOfDefaultValue) {
     m_valueToIndex.reserve(m_values.size());
     for (int i = 0; i < m_values.size(); ++i) {
@@ -32,7 +30,7 @@ unsigned int babelwires::Enum::getIndexOfDefaultValue() const {
 
 int babelwires::Enum::tryGetIndexFromIdentifier(babelwires::Identifier id) const {
     const auto it = m_valueToIndex.find(id);
-    if(it != m_valueToIndex.end()) {
+    if (it != m_valueToIndex.end()) {
         return it->second;
     }
     return -1;
@@ -72,7 +70,8 @@ bool babelwires::Enum::verifySupertype(const Type& supertype) const {
         Identifier parentId = v;
         assert(parentEnum.isAValue(parentId));
         // I don't _know_ that this would cause problems, but it simplifies things to require this.
-        assert((parentId.getDiscriminator() == v.getDiscriminator()) && "An enum cannot be related to another enum with a different value with the same identifier");
+        assert((parentId.getDiscriminator() == v.getDiscriminator()) &&
+               "An enum cannot be related to another enum with a different value with the same identifier");
     }
     return true;
 }

@@ -22,7 +22,7 @@ void babelwires::IntValue::set(int value) {
 }
 
 bool babelwires::IntValue::isValid(const Type& type) const {
-    return type.getIdentifier() == IntType::getThisIdentifier();
+    return type.getTypeRef() == TypeRef{IntType::getThisIdentifier()};
 }
 
 void babelwires::IntValue::serializeContents(Serializer& serializer) const {

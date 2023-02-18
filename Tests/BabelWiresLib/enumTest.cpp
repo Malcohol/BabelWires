@@ -48,12 +48,15 @@ ENUM_DEFINE_ENUM_VALUE_SOURCE(TEST_ENUM_VALUES);
 TEST(EnumTest, enumWithCppEnum) {
     struct TestEnum : babelwires::Enum {
         TestEnum()
-            : Enum(getThisIdentifier(), 1, ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
+            : Enum(ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
 
         static babelwires::LongIdentifier getThisIdentifier() {
             return babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
                                            "TestEnum", "TestEnum", "aaaaaaaa-1111-2222-3333-444444444444",
                                            babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        }
+        babelwires::TypeRef getTypeRef() const {
+            return getThisIdentifier();
         }
 
         ENUM_DEFINE_CPP_ENUM(TEST_ENUM_VALUES);

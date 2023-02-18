@@ -2,6 +2,9 @@
 
 #include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
 #include <BabelWiresLib/Features/enumFeature.hpp>
+#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+
+#include <Tests/TestUtils/testIdentifiers.hpp>
 
 #pragma once
 
@@ -25,33 +28,29 @@ namespace testUtils {
 
 // Foo, Bar, Erm, Oom, Boo
     struct TestEnum : babelwires::Enum {
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestEnum"), 1);
         TestEnum();
 
         /// Expose a C++ enum which matches the Enum.
         ENUM_DEFINE_CPP_ENUM(TESTENUM_VALUES);
-
-        static babelwires::LongIdentifier getThisIdentifier();
     };
 
     // Bar, Erm, Oom
     struct TestSubEnum : babelwires::Enum {
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestSubEnum"), 1);
         TestSubEnum();
-
-        static babelwires::LongIdentifier getThisIdentifier();
     };
 
     // Bar, Erm
     struct TestSubSubEnum1 : babelwires::Enum {
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestSubSubEnum1"), 1);
         TestSubSubEnum1();
-
-        static babelwires::LongIdentifier getThisIdentifier();
     };
 
     // Erm, Oom
     struct TestSubSubEnum2 : babelwires::Enum {
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestSubSubEnum2"), 1);
         TestSubSubEnum2();
-
-        static babelwires::LongIdentifier getThisIdentifier();
     };
 
     void addTestEnumTypes(babelwires::TypeSystem& typeSystem);

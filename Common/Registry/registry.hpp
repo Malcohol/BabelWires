@@ -34,6 +34,7 @@ namespace babelwires {
 
         /// The name of the entry, which can be displayed to the user and is permitted to change
         /// over time.
+        /// This is a convenience method which just uses the IdentifierRegistry singleton internally.
         std::string getName() const;
 
         /// Get the version of this entry.

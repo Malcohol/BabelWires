@@ -8,16 +8,14 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
+#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 namespace babelwires {
 
     class IntType : public Type {
       public:
-        IntType();
-
-        static LongIdentifier getThisIdentifier();
+        PRIMITIVE_TYPE("int", "integer", "90ed4c0c-2fa1-4373-9b67-e711358af824", 1);
 
         std::unique_ptr<Value> createValue() const override;
     };
-
 }

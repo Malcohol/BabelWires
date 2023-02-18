@@ -8,16 +8,59 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <Common/Registry/registry.hpp>
 #include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {
-    class Type;
+    class TypeRef;
 
-    class TypeSystem : public Registry<Type> {
+    /// The common C++ type of PrimitiveTypes.
+    /// The type itself is carried by the subclass PrimitiveTypeEntryImpl.
+    class PrimitiveTypeEntry : public RegistryEntry {
+      public:
+        PrimitiveTypeEntry(LongIdentifier identifier, VersionNumber version);
+
+        virtual Type& getType() = 0;
+        virtual const Type& getType() const = 0;
+    };
+
+    /// Implementation class of PrimitiveTypeEntry which contains an instance of the type.
+    template <typename TYPE> class PrimitiveTypeEntryConcrete : public PrimitiveTypeEntry {
+      public:
+        /// Construct an entry and the type it describes together.
+        /// If the type requires arguments (other than the TypeRef) those will be passed in by this constructor.
+        template <typename... ARGS>
+        PrimitiveTypeEntryConcrete(ARGS&&... args)
+            : PrimitiveTypeEntry(TYPE::getThisIdentifier(), TYPE::getVersion())
+            , m_type(std::forward<ARGS>(args)...) {}
+
+        Type& getType() override { return m_type; }
+        const Type& getType() const override { return m_type; }
+
+      private:
+        TYPE m_type;
+    };
+
+    class TypeSystem {
       public:
         TypeSystem();
+
+        template<typename TYPE, typename... ARGS, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
+        TYPE* addEntry(ARGS&&... args) {
+          auto* entry = m_primitiveTypeRegistry.addEntry<PrimitiveTypeEntryConcrete<TYPE>>(std::forward<ARGS>(args)...);
+          Type& type = entry->getType();
+          return &type.is<TYPE>();
+        }
+
+        template<typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
+        const TYPE& getEntryByType() const {
+          const PrimitiveTypeEntry& entry = m_primitiveTypeRegistry.getRegisteredEntry(TYPE::getThisIdentifier());
+          return entry.getType().is<TYPE>();
+        }
+
+        const Type* getEntryByIdentifier(LongIdentifier id) const;
 
         using TypeIdSet = std::vector<LongIdentifier>;
 
@@ -31,10 +74,10 @@ namespace babelwires {
         void addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes);
 
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
-        bool isSubType(LongIdentifier subtypeId, LongIdentifier supertypeId) const;
+        bool isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
 
         /// Confirm whether typeA is a subtype or supertype of type B (equality is allowed).
-        bool isRelatedType(LongIdentifier typeAId, LongIdentifier typeBId) const;
+        bool isRelatedType(const TypeRef& typeAId, const TypeRef& typeBId) const;
 
         /// Return all the subtypes of type, including type.
         TypeIdSet getAllSubtypes(LongIdentifier typeId) const;
@@ -61,6 +104,8 @@ namespace babelwires {
         const RelatedTypes& getRelatedTypes(LongIdentifier typeId) const;
 
       protected:
+        Registry<PrimitiveTypeEntry> m_primitiveTypeRegistry;
+
         std::unordered_map<LongIdentifier, RelatedTypes> m_relatedTypes;
 
         /// Used for types which have no relations.
