@@ -11,6 +11,7 @@
 
 #include <Common/Serialization/serializable.hpp>
 #include <Common/Identifiers/identifier.hpp>
+#include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <variant>
 #include <array>
@@ -52,6 +53,10 @@ namespace babelwires {
 
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;
+
+      private:
+        /// Avoids locking the IdentifierRegistry multiple times.
+        void toStringHelper(std::ostream& os, babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const;
 
       private:
         // TODO Consider a hack where the first element of the vector is actually treated as a constructorId.
