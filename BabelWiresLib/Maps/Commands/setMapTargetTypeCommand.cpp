@@ -14,9 +14,9 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string commandName, LongIdentifier newTargetTypeId)
+babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string commandName, TypeRef newTargetTypeId)
     : SimpleCommand(commandName)
-    , m_newTargetTypeId(newTargetTypeId) {}
+    , m_newTargetTypeId(std::move(newTargetTypeId)) {}
 
 bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
     const MapFeature::AllowedTypes& allowedTypeIds = map.getAllowedTargetTypeIds();

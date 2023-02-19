@@ -421,14 +421,14 @@ void babelwires::MapEditor::setToDefault() {
 }
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {
-    const LongIdentifier newSourceTypeId = m_sourceTypeWidget->getTypeId();
+    const TypeRef& newSourceTypeId = m_sourceTypeWidget->getTypeId();
     if (newSourceTypeId != m_map.getSourceTypeId()) {
         executeCommand(std::make_unique<SetMapSourceTypeCommand>("Set map source type", newSourceTypeId));
     }
 }
 
 void babelwires::MapEditor::setTargetTypeFromWidget() {
-    const LongIdentifier newTargetTypeId = m_targetTypeWidget->getTypeId();
+    const TypeRef& newTargetTypeId = m_targetTypeWidget->getTypeId();
     if (newTargetTypeId != m_map.getTargetTypeId()) {
         executeCommand(std::make_unique<SetMapTargetTypeCommand>("Set map target type", newTargetTypeId));
     }

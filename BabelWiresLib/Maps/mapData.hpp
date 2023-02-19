@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Serialization/serializable.hpp>
@@ -39,11 +40,11 @@ namespace babelwires {
         MapData& operator=(MapData&& other);
         virtual ~MapData();
 
-        LongIdentifier getSourceTypeId() const;
-        LongIdentifier getTargetTypeId() const;
+        const TypeRef& getSourceTypeId() const;
+        const TypeRef& getTargetTypeId() const;
 
-        void setSourceTypeId(LongIdentifier sourceId);
-        void setTargetTypeId(LongIdentifier targetId);
+        void setSourceTypeId(const TypeRef& sourceId);
+        void setTargetTypeId(const TypeRef& targetId);
 
         unsigned int getNumMapEntries() const;
         const MapEntryData& getMapEntry(unsigned int index) const;
@@ -66,8 +67,8 @@ namespace babelwires {
         bool isValid(const TypeSystem& typeSystem) const;
 
       public:
-        LongIdentifier m_sourceTypeId;
-        LongIdentifier m_targetTypeId;
+        TypeRef m_sourceTypeId;
+        TypeRef m_targetTypeId;
         /// All non-null.
         std::vector<std::unique_ptr<MapEntryData>> m_mapEntries;
     };

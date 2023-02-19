@@ -46,6 +46,9 @@ namespace babelwires {
 
         bool operator==(const TypeRef& other) const;
         bool operator!=(const TypeRef& other) const;
+        
+        /// Note: This orders TypeRefs using identifiers NOT SUBTYPING!
+        bool operator<(const TypeRef& other) const;
 
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;

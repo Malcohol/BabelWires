@@ -19,7 +19,7 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     // TODO This doesn't work as intended.
     m_badStyleSheet.append("\nQComboBox { background: red; }");
 
-    std::vector<LongIdentifier> typeIds;
+    babelwires::TypeSystem::TypeIdSet typeIds;
     for (auto typeId : allowedTypeIds.m_typeIds) {
         switch (flexibility) {
             case TypeFlexibility::strict:
@@ -38,13 +38,13 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     }
     TypeSystem::removeDuplicates(typeIds);
 
-    std::vector<std::tuple<std::string, LongIdentifier>> sortedNames;
+    std::vector<std::tuple<std::string, TypeRef>> sortedNames;
     sortedNames.reserve(typeIds.size());
 
     for (const auto& typeId : typeIds) {
-        const Type *const type = typeSystem.getEntryByIdentifier(typeId);
-        if (!type->isAbstract()) {
-            sortedNames.emplace_back(std::tuple{type->getName(), typeId});
+        const Type& type = typeId.resolve(typeSystem);
+        if (!type.isAbstract()) {
+            sortedNames.emplace_back(std::tuple{type.getName(), typeId});
         }
     }
     std::sort(sortedNames.begin(), sortedNames.end());
@@ -59,19 +59,19 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &TypeWidget::onCurrentIndexChanged);
 }
 
-babelwires::LongIdentifier babelwires::TypeWidget::getTypeId() const {
+const babelwires::TypeRef& babelwires::TypeWidget::getTypeId() const {
     assert(currentIndex() < m_typeIds.size());
     return m_typeIds[currentIndex()];
 }
 
-void babelwires::TypeWidget::setTypeId(LongIdentifier id) {
+void babelwires::TypeWidget::setTypeId(const TypeRef& id) {
     auto it = std::find(m_typeIds.begin(), m_typeIds.end(), id);
     assert(it != m_typeIds.end());
     const int newIndex = it - m_typeIds.begin();
     setCurrentIndex(newIndex);
 }
 
-void babelwires::TypeWidget::addBadItemIfNotPresent(LongIdentifier id) {
+void babelwires::TypeWidget::addBadItemIfNotPresent(const TypeRef& id) {
     if (m_hasBadItem) {
         if (m_typeIds.back() == id) {
             return;
@@ -80,7 +80,7 @@ void babelwires::TypeWidget::addBadItemIfNotPresent(LongIdentifier id) {
         }
     }
     m_typeIds.emplace_back(id);
-    std::string typeName = IdentifierRegistry::read()->getName(id);
+    std::string typeName = id.toString();
     addItem(typeName.c_str());
     const int newIndex = m_typeIds.size() - 1;
     const QModelIndex index = model()->index(newIndex, 0);

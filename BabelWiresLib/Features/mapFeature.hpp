@@ -35,12 +35,12 @@ namespace babelwires {
         virtual MapData getDefaultMapData() const;
 
         struct AllowedTypes {
-            std::vector<LongIdentifier> m_typeIds;
+            std::vector<TypeRef> m_typeIds;
             unsigned int m_indexOfDefault = 0;
 
-            LongIdentifier getDefaultTypeId() const { return m_typeIds[m_indexOfDefault]; }
-            bool isRelatedToSome(const TypeSystem& typeSystem, LongIdentifier type) const;
-            bool isSubtypeOfSome(const TypeSystem& typeSystem, LongIdentifier type) const;
+            const TypeRef& getDefaultTypeId() const { return m_typeIds[m_indexOfDefault]; }
+            bool isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& type) const;
+            bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& type) const;
         };
 
         virtual void getAllowedSourceTypeIds(AllowedTypes& allowedTypesOut) const = 0;
@@ -65,7 +65,7 @@ namespace babelwires {
         void getAllowedTargetTypeIds(AllowedTypes& allowedTypesOut) const override;
 
       private:
-        LongIdentifier m_allowedSourceTypeId;
-        LongIdentifier m_allowedTargetTypeId;
+        TypeRef m_allowedSourceTypeId;
+        TypeRef m_allowedTargetTypeId;
     };
 } // namespace babelwires

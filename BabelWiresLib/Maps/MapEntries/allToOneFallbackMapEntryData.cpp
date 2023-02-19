@@ -14,8 +14,8 @@
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData() = default;
 
-babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const TypeSystem& typeSystem, LongIdentifier targetTypeId) {
-    const Type* targetType = typeSystem.getEntryByIdentifier(targetTypeId);
+babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const TypeSystem& typeSystem, const TypeRef& targetTypeId) {
+    const Type* targetType = targetTypeId.tryResolve(typeSystem);
     assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
 
     m_targetValue = targetType->createValue();

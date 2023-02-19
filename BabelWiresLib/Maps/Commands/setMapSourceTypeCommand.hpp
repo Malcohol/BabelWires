@@ -9,6 +9,7 @@
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 
@@ -19,15 +20,15 @@ namespace babelwires {
     /// Add an element to an array feature.
     class SetMapSourceTypeCommand : public SimpleCommand<MapProject> {
       public:
-        SetMapSourceTypeCommand(std::string commandName, LongIdentifier newSourceTypeId);
+        SetMapSourceTypeCommand(std::string commandName, TypeRef newSourceTypeId);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
         virtual void undo(MapProject& map) const override;
 
       private:
-        LongIdentifier m_newSourceTypeId;
-        LongIdentifier m_oldSourceTypeId = "NotSet";
+        TypeRef m_newSourceTypeId;
+        TypeRef m_oldSourceTypeId;
     };
 
 } // namespace babelwires

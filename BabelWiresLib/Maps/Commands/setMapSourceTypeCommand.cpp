@@ -14,9 +14,9 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string commandName, LongIdentifier newSourceTypeId)
+babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string commandName, TypeRef newSourceTypeId)
     : SimpleCommand(commandName)
-    , m_newSourceTypeId(newSourceTypeId) {}
+    , m_newSourceTypeId(std::move(newSourceTypeId)) {}
 
 bool babelwires::SetMapSourceTypeCommand::initialize(const MapProject& map) {
     const MapFeature::AllowedTypes& allowedTypeIds = map.getAllowedSourceTypeIds();

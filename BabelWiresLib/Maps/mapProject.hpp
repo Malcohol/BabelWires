@@ -35,11 +35,11 @@ namespace babelwires {
         const MapFeature::AllowedTypes& getAllowedSourceTypeIds() const;
         const MapFeature::AllowedTypes& getAllowedTargetTypeIds() const;
        
-        LongIdentifier getSourceTypeId() const;
-        LongIdentifier getTargetTypeId() const;
+        const TypeRef& getSourceTypeId() const;
+        const TypeRef& getTargetTypeId() const;
 
-        void setSourceTypeId(LongIdentifier sourceId);
-        void setTargetTypeId(LongIdentifier targetId);
+        void setSourceTypeId(const TypeRef& sourceId);
+        void setTargetTypeId(const TypeRef& targetId);
 
         const Type* getSourceType() const;
         const Type* getTargetType() const;
@@ -69,8 +69,8 @@ namespace babelwires {
         MapFeature::AllowedTypes m_allowedSourceTypeIds;
         MapFeature::AllowedTypes m_allowedTargetTypeIds;
 
-        LongIdentifier m_sourceTypeId;
-        LongIdentifier m_targetTypeId;
+        TypeRef m_sourceTypeId;
+        TypeRef m_targetTypeId;
 
         Result m_sourceTypeValidity;
         Result m_targetTypeValidity;

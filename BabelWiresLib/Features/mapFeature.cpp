@@ -20,8 +20,8 @@ std::string babelwires::MapFeature::doGetValueType() const {
 }
 
 void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
-    const LongIdentifier& newSourceType = newValue.getSourceTypeId();
-    const LongIdentifier& newTargetType = newValue.getTargetTypeId();
+    const TypeRef& newSourceType = newValue.getSourceTypeId();
+    const TypeRef& newTargetType = newValue.getTargetTypeId();
 
     const ProjectContext& context = babelwires::RootFeature::getProjectContextAt(*this);
     const TypeSystem& typeSystem = context.m_typeSystem;
@@ -50,9 +50,9 @@ babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryDa
 
     AllowedTypes allowedTypes;
     getAllowedSourceTypeIds(allowedTypes);
-    const babelwires::LongIdentifier defaultSourceTypeId = allowedTypes.getDefaultTypeId();
+    const TypeRef& defaultSourceTypeId = allowedTypes.getDefaultTypeId();
     getAllowedTargetTypeIds(allowedTypes);
-    const babelwires::LongIdentifier defaultTargetTypeId = allowedTypes.getDefaultTypeId();
+    const TypeRef& defaultTargetTypeId = allowedTypes.getDefaultTypeId();
 
     MapData mapData;
     mapData.setSourceTypeId(defaultSourceTypeId);
@@ -71,15 +71,15 @@ void babelwires::MapFeature::doSetToDefault() {
     set(getDefaultMapData());
 }
 
-bool babelwires::MapFeature::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, LongIdentifier typeId) const {
-    return std::any_of(m_typeIds.begin(), m_typeIds.end(), [typeId, &typeSystem](babelwires::LongIdentifier id) {
+bool babelwires::MapFeature::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& typeId) const {
+    return std::any_of(m_typeIds.begin(), m_typeIds.end(), [typeId, &typeSystem](const TypeRef& id) {
         return typeSystem.isRelatedType(id, typeId);
     });
 }
 
-bool babelwires::MapFeature::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, LongIdentifier typeId) const {
+bool babelwires::MapFeature::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& typeId) const {
     return std::any_of(m_typeIds.begin(), m_typeIds.end(),
-                                        [typeId, &typeSystem](babelwires::LongIdentifier id) {
+                                        [typeId, &typeSystem](const TypeRef& id) {
                                             return typeSystem.isSubType(typeId, id);
                                         });
 }

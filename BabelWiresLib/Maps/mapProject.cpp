@@ -40,17 +40,17 @@ const babelwires::MapFeature::AllowedTypes& babelwires::MapProject::getAllowedTa
     return m_allowedTargetTypeIds;
 }
 
-babelwires::LongIdentifier babelwires::MapProject::getSourceTypeId() const {
+const babelwires::TypeRef& babelwires::MapProject::getSourceTypeId() const {
     return m_sourceTypeId;
 }
 
-babelwires::LongIdentifier babelwires::MapProject::getTargetTypeId() const {
+const babelwires::TypeRef& babelwires::MapProject::getTargetTypeId() const {
     return m_targetTypeId;
 }
 
-void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
+void babelwires::MapProject::setSourceTypeId(const TypeRef& sourceId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    const Type *const type = typeSystem.getEntryByIdentifier(sourceId);
+    const Type *const type = sourceId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
         m_sourceTypeValidity = "The source type is not recognized.";
@@ -70,9 +70,9 @@ void babelwires::MapProject::setSourceTypeId(LongIdentifier sourceId) {
     }
 }
 
-void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
+void babelwires::MapProject::setTargetTypeId(const TypeRef& targetId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    const Type *const type = typeSystem.getEntryByIdentifier(targetId);
+    const Type *const type = targetId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
         m_targetTypeValidity = "The target type is not recognized.";
@@ -93,11 +93,13 @@ void babelwires::MapProject::setTargetTypeId(LongIdentifier targetId) {
 }
 
 const babelwires::Type* babelwires::MapProject::getSourceType() const {
-    return m_projectContext.m_typeSystem.getEntryByIdentifier(m_sourceTypeId);
+    // TODO Could this fail to resolve?
+    return m_sourceTypeId.tryResolve(m_projectContext.m_typeSystem);
 }
 
 const babelwires::Type* babelwires::MapProject::getTargetType() const {
-    return m_projectContext.m_typeSystem.getEntryByIdentifier(m_targetTypeId);
+    // TODO Could this fail to resolve?
+    return m_targetTypeId.tryResolve(m_projectContext.m_typeSystem);
 }
 
 unsigned int babelwires::MapProject::getNumMapEntries() const {

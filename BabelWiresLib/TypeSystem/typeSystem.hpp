@@ -68,7 +68,7 @@ namespace babelwires {
 
         const Type* getEntryByIdentifier(LongIdentifier id) const;
 
-        using TypeIdSet = std::vector<LongIdentifier>;
+        using TypeIdSet = std::vector<TypeRef>;
 
         struct RelatedTypes {
           TypeIdSet m_supertypeIds;
@@ -86,33 +86,33 @@ namespace babelwires {
         bool isRelatedType(const TypeRef& typeAId, const TypeRef& typeBId) const;
 
         /// Return all the subtypes of type, including type.
-        TypeIdSet getAllSubtypes(LongIdentifier typeId) const;
+        TypeIdSet getAllSubtypes(const TypeRef& typeId) const;
 
         /// Return all the supertypes, including type.
-        TypeIdSet getAllSupertypes(LongIdentifier typeId) const;
+        TypeIdSet getAllSupertypes(const TypeRef& typeId) const;
 
         /// Return all subtypes and supertypes, including type.
-        TypeIdSet getAllRelatedTypes(LongIdentifier typeId) const;
+        TypeIdSet getAllRelatedTypes(const TypeRef& typeId) const;
 
         /// Add typeId and all its subtypes to the set. Does not remove duplicates.
-        void addAllSubtypes(LongIdentifier typeId, TypeIdSet& typeIdSet) const;
+        void addAllSubtypes(const TypeRef& typeId, TypeIdSet& typeIdSet) const;
 
         /// Add typeId and all its supertypes to the set. Does not remove duplicates.
-        void addAllSupertypes(LongIdentifier typeId, TypeIdSet& typeIdSet) const;
+        void addAllSupertypes(const TypeRef& typeId, TypeIdSet& typeIdSet) const;
 
         /// Add typeId and all its subtypes and super types to the set. Does not remove duplicates.
-        void addAllRelatedTypes(LongIdentifier typeId, TypeIdSet& typeIdSet) const;
+        void addAllRelatedTypes(const TypeRef& typeId, TypeIdSet& typeIdSet) const;
 
         /// Convenience function.
         static void removeDuplicates(TypeIdSet& typeIds);
 
       protected:
-        const RelatedTypes& getRelatedTypes(LongIdentifier typeId) const;
+        const RelatedTypes& getRelatedTypes(const TypeRef& typeId) const;
 
       protected:
         Registry<PrimitiveTypeEntry> m_primitiveTypeRegistry;
 
-        std::unordered_map<LongIdentifier, RelatedTypes> m_relatedTypes;
+        std::unordered_map<TypeRef, RelatedTypes> m_relatedTypes;
 
         /// Used for types which have no relations.
         const RelatedTypes m_emptyRelatedTypes;

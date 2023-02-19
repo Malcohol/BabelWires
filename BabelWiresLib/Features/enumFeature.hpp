@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <Common/Identifiers/identifier.hpp>
 #include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <vector>
 
@@ -24,7 +24,7 @@ namespace babelwires {
     /// without requiring versioning code to adapt old serialized data.
     class EnumFeature : public ValueFeature {
       public:
-        EnumFeature(LongIdentifier e);
+        EnumFeature(TypeRef e);
 
         /// This only works if the enum is in a hierarchy rooted in a RootFeature.
         const Enum& getEnum() const;
@@ -43,7 +43,7 @@ namespace babelwires {
 
       protected:
         ///
-        LongIdentifier m_enum;
+        TypeRef m_enum;
 
         ///
         Identifier m_value;
