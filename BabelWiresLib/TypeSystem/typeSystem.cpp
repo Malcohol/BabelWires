@@ -73,7 +73,6 @@ const babelwires::TypeSystem::RelatedTypes& babelwires::TypeSystem::getRelatedTy
 }
 
 bool babelwires::TypeSystem::isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const {
-    /*
     if (subtypeId == supertypeId) {
         return true;
     }
@@ -82,13 +81,11 @@ bool babelwires::TypeSystem::isSubType(const TypeRef& subtypeId, const TypeRef& 
             return true;
         }
     }
-    */
     return false;
 }
 
 bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeAId, const TypeRef& typeBId) const {
-    // return isSubType(typeAId, typeBId) || isSubType(typeBId, typeAId);
-    return false;
+    return isSubType(typeAId, typeBId) || isSubType(typeBId, typeAId);
 }
 
 void babelwires::TypeSystem::addAllSubtypes(const TypeRef& typeId, TypeIdSet& subtypes) const {

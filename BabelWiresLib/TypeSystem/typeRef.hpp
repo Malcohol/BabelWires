@@ -65,7 +65,7 @@ namespace babelwires {
       private:
         // TODO Consider a hack where the first element of the vector is actually treated as a constructorId.
         using ConstructedTypeData = std::tuple<TypeConstructorId, Arguments>;
-        using Storage = std::variant<std::nullptr_t, PrimitiveTypeId, ConstructedTypeData>;
+        using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
 
       private:
         Storage m_typeDescription;

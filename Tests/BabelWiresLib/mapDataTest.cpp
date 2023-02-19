@@ -22,9 +22,8 @@ namespace {
 TEST(MapDataTest, types) {
     babelwires::MapData mapData;
 
-    // By default, has the int type.
-    EXPECT_EQ(mapData.getSourceTypeId(), babelwires::LongIdentifier());
-    EXPECT_EQ(mapData.getTargetTypeId(), babelwires::LongIdentifier());
+    EXPECT_EQ(mapData.getSourceTypeId(), babelwires::TypeRef());
+    EXPECT_EQ(mapData.getTargetTypeId(), babelwires::TypeRef());
 
     mapData.setSourceTypeId(testTypeId1);
     mapData.setTargetTypeId(testTypeId2);

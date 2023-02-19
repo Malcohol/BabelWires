@@ -50,9 +50,9 @@ babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryDa
 
     AllowedTypes allowedTypes;
     getAllowedSourceTypeIds(allowedTypes);
-    const TypeRef& defaultSourceTypeId = allowedTypes.getDefaultTypeId();
+    TypeRef defaultSourceTypeId = allowedTypes.getDefaultTypeId();
     getAllowedTargetTypeIds(allowedTypes);
-    const TypeRef& defaultTargetTypeId = allowedTypes.getDefaultTypeId();
+    TypeRef defaultTargetTypeId = allowedTypes.getDefaultTypeId();
 
     MapData mapData;
     mapData.setSourceTypeId(defaultSourceTypeId);

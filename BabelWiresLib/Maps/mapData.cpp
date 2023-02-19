@@ -127,8 +127,8 @@ void babelwires::MapData::deserializeContents(Deserializer& deserializer) {
 }
 
 void babelwires::MapData::visitIdentifiers(IdentifierVisitor& visitor) {
-    visitor(m_sourceTypeId);
-    visitor(m_targetTypeId);
+    m_sourceTypeId.visitIdentifiers(visitor);
+    m_targetTypeId.visitIdentifiers(visitor);
     for (const auto& e : m_mapEntries) {
         e->visitIdentifiers(visitor);
     }
