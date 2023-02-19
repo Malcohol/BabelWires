@@ -101,7 +101,7 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
         IdEnd = str.size();
     }
     if ((IdEnd + 1 < str.size()) && (IdEnd == next) && (str[IdEnd] == '<') && (str[IdEnd + 1] == '>')) {
-        return {TypeRef(), IdEnd + 1};
+        return {TypeRef(), IdEnd + 2};
     }
     const LongIdentifier startId = LongIdentifier::deserializeFromString(str.substr(next, IdEnd));
     next = IdEnd;
@@ -124,6 +124,7 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
         if (str[next] == ',') {
             ++next;
         } else if (str[next] == '>') {
+            ++next;
             break;
         } else {
             throw ParseException() << "Trailing characters in inner TypeRef";
