@@ -16,6 +16,8 @@
 #include <array>
 
 namespace babelwires {
+    class Type;
+    class TypeSystem;
 
     class TypeRef : public ProjectVisitable {
       public:
@@ -24,8 +26,11 @@ namespace babelwires {
 
         TypeRef();
         TypeRef(PrimitiveTypeId typeId);
-        TypeRef(TypeConstructorId unaryTypeConstructorId, TypeRef argument);
-        TypeRef(const TypeRef& other);
+        /// Unary construction.
+        TypeRef(TypeConstructorId typeConstructorId, TypeRef argument);
+
+        const Type* tryResolve(const TypeSystem& typeSystem) const;
+        const Type& resolve(const TypeSystem& typeSystem) const;
 
         /// Return a human-readable version of the TypeRef.
         std::string toString() const;
@@ -42,16 +47,23 @@ namespace babelwires {
         bool operator==(const TypeRef& other) const;
         bool operator!=(const TypeRef& other) const;
 
+        /// Get a hash which can be used with std::hash.
+        std::size_t getHash() const;
+
       private:
-        template<int N> using Arguments = std::array<TypeRef, N>;
-        template<int N> using HigherOrderTypeData = std::tuple<TypeConstructorId, std::unique_ptr<Arguments<N>>>;
-
-        // TODO Include all cases up to a fixed N.
-        using Storage = std::variant<std::nullptr_t, PrimitiveTypeId, HigherOrderTypeData<1>>;
-
-        static Storage deepCopy(const Storage& otherStorage);
+        // TODO Consider a hack where the first element of the vector is actually treated as a constructorId.
+        using Arguments = std::vector<TypeRef>;
+        using ConstructedTypeData = std::tuple<TypeConstructorId, Arguments>;
+        using Storage = std::variant<std::nullptr_t, PrimitiveTypeId, ConstructedTypeData>;
 
       private:
         Storage m_typeDescription;
     };
 } // namespace babelwires
+
+
+namespace std {
+    template <> struct hash<babelwires::TypeRef> {
+        inline std::size_t operator()(const babelwires::TypeRef& typeRef) const { return typeRef.getHash(); }
+    };
+} // namespace std

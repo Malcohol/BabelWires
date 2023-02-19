@@ -12,9 +12,12 @@
 
 #include <Common/Registry/registry.hpp>
 #include <Common/Identifiers/identifier.hpp>
+#include <Common/exceptions.hpp>
 
 namespace babelwires {
     class TypeRef;
+
+    class TypeSystemException : public ExceptionWithStream<TypeSystemException> {};
 
     /// The common C++ type of PrimitiveTypes.
     /// The type itself is carried by the subclass PrimitiveTypeEntryImpl.
@@ -59,6 +62,9 @@ namespace babelwires {
           const PrimitiveTypeEntry& entry = m_primitiveTypeRegistry.getRegisteredEntry(TYPE::getThisIdentifier());
           return entry.getType().is<TYPE>();
         }
+
+        const Type* tryGetPrimitiveType(LongIdentifier id) const;
+        const Type& getPrimitiveType(LongIdentifier id) const;
 
         const Type* getEntryByIdentifier(LongIdentifier id) const;
 

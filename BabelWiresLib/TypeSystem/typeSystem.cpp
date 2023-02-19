@@ -21,19 +21,30 @@ namespace {
     }
 } // namespace
 
-// TODO ALL VERY INEFFICIENT
-
 babelwires::TypeSystem::TypeSystem()
     : m_primitiveTypeRegistry("Primitive Type Registry") {}
 
+const babelwires::Type* babelwires::TypeSystem::tryGetPrimitiveType(LongIdentifier id) const {
+    const auto* entry = m_primitiveTypeRegistry.getEntryByIdentifier(id);
+    return entry ? &entry->getType() : nullptr;
+}
+
+const babelwires::Type& babelwires::TypeSystem::getPrimitiveType(LongIdentifier id) const {
+    return m_primitiveTypeRegistry.getRegisteredEntry(id).getType();
+}
+
+// TODO ALL VERY INEFFICIENT
+
 void babelwires::TypeSystem::addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes) {
-    const Type* const type = getEntryByIdentifier(typeId);
+#ifndef NDEBUG
+    const Type* const type = tryGetPrimitiveType(typeId);
     assert((type != nullptr) && "typeId is not the id of a registered type");
+#endif
     std::sort(relatedTypes.m_subtypeIds.begin(), relatedTypes.m_subtypeIds.end());
     std::sort(relatedTypes.m_supertypeIds.begin(), relatedTypes.m_supertypeIds.end());
     for (LongIdentifier supertypeId : relatedTypes.m_supertypeIds) {
 #ifndef NDEBUG
-        const Type* const supertype = getEntryByIdentifier(supertypeId);
+        const Type* const supertype = tryGetPrimitiveType(supertypeId);
         assert((supertype != nullptr) && "A supertype Id is not the id of a registered type");
         assert(type->verifySupertype(*supertype) && "A supertype is not suitable for the type");
 #endif
@@ -41,7 +52,7 @@ void babelwires::TypeSystem::addRelatedTypes(LongIdentifier typeId, RelatedTypes
     }
     for (LongIdentifier subtypeId : relatedTypes.m_subtypeIds) {
 #ifndef NDEBUG
-        const Type* const subtype = getEntryByIdentifier(subtypeId);
+        const Type* const subtype = tryGetPrimitiveType(subtypeId);
         assert((subtype != nullptr) && "A subtype ID is not the id of a registered type");
         assert(subtype->verifySupertype(*type) && "A supertype is not suitable for the type");
 #endif

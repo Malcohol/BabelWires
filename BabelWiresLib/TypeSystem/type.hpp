@@ -11,7 +11,6 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
-#include <Common/Registry/registry.hpp>
 
 #include <optional>
 

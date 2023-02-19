@@ -43,6 +43,7 @@ namespace babelwires {
 
     /// A simple struct representing an iterable range.
     template <typename ITERATOR> struct Span {
+        Span(ITERATOR begin, ITERATOR end) : m_begin(std::move(begin)), m_end(std::move(end)) {}
         ITERATOR m_begin;
         ITERATOR m_end;
 
