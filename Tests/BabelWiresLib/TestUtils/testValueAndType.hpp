@@ -29,8 +29,6 @@ namespace testUtils {
       public:
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestType"), 1);
 
-        TestType();
-
         std::unique_ptr<babelwires::Value> createValue() const override;
     };
 } // namespace testUtils

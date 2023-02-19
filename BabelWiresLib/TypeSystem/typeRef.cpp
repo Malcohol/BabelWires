@@ -118,3 +118,8 @@ bool babelwires::TypeRef::operator==(const TypeRef& other) const {
 bool babelwires::TypeRef::operator!=(const TypeRef& other) const {
     return !(*this == other);
 }
+
+bool babelwires::TypeRef::operator<(const TypeRef& other) const {
+    // TODO
+    return false;
+}
