@@ -16,8 +16,8 @@ babelwires::TypeRef::TypeRef() = default;
 babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
     : m_typeDescription(typeId) {}
 
-babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef argument)
-    : m_typeDescription(ConstructedTypeData{typeConstructorId, {std::move(argument)}}) {}
+babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, Arguments arguments)
+    : m_typeDescription(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {}
 
 const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
@@ -49,7 +49,7 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
 
 std::string babelwires::TypeRef::serializeToString() const {
     struct VisitorMethods {
-        std::string operator()(std::nullptr_t) { return "()"; }
+        std::string operator()(std::nullptr_t) { return "<>"; }
         std::string operator()(PrimitiveTypeId typeId) { return typeId.serializeToString(); }
         std::string operator()(const ConstructedTypeData& higherOrderData) {
             std::ostringstream os;
@@ -57,7 +57,7 @@ std::string babelwires::TypeRef::serializeToString() const {
             assert((arguments.size() > 0) && "0-arity type constructors are not permitted");
             os << std::get<0>(higherOrderData).serializeToString() << "<" << arguments[0].serializeToString();
             for (const auto& arg : Span{arguments.cbegin() + 1, arguments.cend()}) {
-                os << arg.serializeToString();
+                os << "," << arg.serializeToString();
             }
             os << ">";
             return os.str();
@@ -69,7 +69,7 @@ std::string babelwires::TypeRef::serializeToString() const {
 void babelwires::TypeRef::toStringHelper(std::ostream& os,
                                          babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {
     struct VisitorMethods {
-        void operator()(std::nullptr_t) { m_os << "()"; }
+        void operator()(std::nullptr_t) { m_os << "<>"; }
         void operator()(PrimitiveTypeId typeId) { m_os << m_identifierRegistry->getName(typeId); }
         void operator()(const ConstructedTypeData& higherOrderData) {
             const auto& arguments = std::get<1>(higherOrderData);
@@ -94,9 +94,50 @@ std::string babelwires::TypeRef::toString() const {
     return os.str();
 }
 
+std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef::parseHelper(std::string_view str) {
+    std::string_view::size_type next = 0;
+    auto IdEnd = str.find_first_of("<>,", next);
+    if (IdEnd == -1) {
+        IdEnd = str.size();
+    }
+    if ((IdEnd + 1 < str.size()) && (IdEnd == next) && (str[IdEnd] == '<') && (str[IdEnd + 1] == '>')) {
+        return {TypeRef(), IdEnd + 1};
+    }
+    const LongIdentifier startId = LongIdentifier::deserializeFromString(str.substr(next, IdEnd));
+    next = IdEnd;
+    if (str[next] != '<') {
+        return {startId, next};
+    }
+    ++next;
+    Arguments arguments;
+    if (next == str.size()) {
+        throw ParseException() << "Unterminated TypeRef";
+    }
+    while(1) {
+        auto tuple = parseHelper(str.substr(next));
+        arguments.emplace_back(std::move(std::get<0>(tuple)));
+        assert((std::get<1>(tuple) > 0) && "Did not advance while parsing");
+        next += std::get<1>(tuple);
+        if (next == str.size()) {
+            throw ParseException() << "Unterminated TypeRef";
+        }
+        if (str[next] == ',') {
+            ++next;
+        } else if (str[next] == '>') {
+            break;
+        } else {
+            throw ParseException() << "Trailing characters in inner TypeRef";
+        }
+    }
+    return {TypeRef{startId, std::move(arguments)}, next};
+}
+
 babelwires::TypeRef babelwires::TypeRef::deserializeFromString(std::string_view str) {
-    // TODO
-    return {};
+    auto parseResult = parseHelper(str);
+    if (std::get<1>(parseResult) != str.size()) {
+        throw ParseException() << "Trailing characters in TypeRef";
+    }
+    return std::get<0>(parseResult);
 }
 
 void babelwires::TypeRef::visitIdentifiers(IdentifierVisitor& visitor) {
@@ -191,7 +232,8 @@ bool babelwires::TypeRef::operator<(const TypeRef& other) const {
             }
             const Arguments& argumentsThis = std::get<1>(higherOrderData);
             const Arguments& argumentsOther = std::get<1>(*otherConstructedTypeData);
-            auto mismatch = std::mismatch(argumentsThis.begin(), argumentsThis.end(), argumentsOther.begin(), argumentsOther.end());
+            auto mismatch =
+                std::mismatch(argumentsThis.begin(), argumentsThis.end(), argumentsOther.begin(), argumentsOther.end());
             if (mismatch.first != argumentsThis.end()) {
                 if (mismatch.second != argumentsOther.end()) {
                     return *mismatch.first < *mismatch.second;

@@ -56,8 +56,9 @@ SET( LIB_TESTS_SRCS
     setMapTargetTypeCommandTest.cpp
     sourceFileElementTest.cpp
     targetFileElementTest.cpp
-    typeTest.cpp
+    typeRefTest.cpp
     typeSystemTest.cpp
+    typeTest.cpp
     unionFeatureTest.cpp
     valueNamesTest.cpp
    )

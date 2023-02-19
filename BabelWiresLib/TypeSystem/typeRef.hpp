@@ -27,8 +27,9 @@ namespace babelwires {
 
         TypeRef();
         TypeRef(PrimitiveTypeId typeId);
-        /// Unary construction.
-        TypeRef(TypeConstructorId typeConstructorId, TypeRef argument);
+        
+        using Arguments = std::vector<TypeRef>;
+        TypeRef(TypeConstructorId typeConstructorId, Arguments arguments);
 
         const Type* tryResolve(const TypeSystem& typeSystem) const;
         const Type& resolve(const TypeSystem& typeSystem) const;
@@ -58,9 +59,11 @@ namespace babelwires {
         /// Avoids locking the IdentifierRegistry multiple times.
         void toStringHelper(std::ostream& os, babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const;
 
+        /// Returns a parsed type and a position just beyond that type.
+        static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);
+
       private:
         // TODO Consider a hack where the first element of the vector is actually treated as a constructorId.
-        using Arguments = std::vector<TypeRef>;
         using ConstructedTypeData = std::tuple<TypeConstructorId, Arguments>;
         using Storage = std::variant<std::nullptr_t, PrimitiveTypeId, ConstructedTypeData>;
 

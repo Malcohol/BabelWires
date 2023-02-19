@@ -41,6 +41,8 @@ Refactor:
   - Also, they are special cased in the removeModifierCommand. Could that be handled instead by a virtual "removeModifier" method?
   - It's slightly unfortunate to have modifierData know about commands, but overall might be worth it.
 * Try to use Value to store value in a value feature, and use it in set value modifiers.
+* Clean up uses of toString, operator<<, serializeToString, etc. Make clear which resolves identifiers.
+* deserializeToString methods should return a tuple which includes the position after the parsed object.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.

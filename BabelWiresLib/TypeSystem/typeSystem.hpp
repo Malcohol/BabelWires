@@ -52,6 +52,7 @@ namespace babelwires {
 
         template<typename TYPE, typename... ARGS, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         TYPE* addEntry(ARGS&&... args) {
+          // TODO Validate names.
           auto* entry = m_primitiveTypeRegistry.addEntry<PrimitiveTypeEntryConcrete<TYPE>>(std::forward<ARGS>(args)...);
           Type& type = entry->getType();
           return &type.is<TYPE>();
