@@ -33,5 +33,5 @@ void babelwires::MapValueAssignmentData::deserializeContents(Deserializer& deser
 
 void babelwires::MapValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {
     ModifierData::visitIdentifiers(visitor);
-    visitor(m_mapData);
+    m_mapData.visitIdentifiers(visitor);
 }
