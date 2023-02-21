@@ -14,10 +14,10 @@
 babelwires::TypeRef::TypeRef() = default;
 
 babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
-    : m_typeDescription(typeId) {}
+    : m_storage(typeId) {}
 
 babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, Arguments arguments)
-    : m_typeDescription(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {}
+    : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {}
 
 const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
@@ -29,7 +29,7 @@ const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSy
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
-    return std::visit(visitorMethods, m_typeDescription);
+    return std::visit(visitorMethods, m_storage);
 }
 
 const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSystem) const {
@@ -44,7 +44,7 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
-    return std::visit(visitorMethods, m_typeDescription);
+    return std::visit(visitorMethods, m_storage);
 }
 
 std::string babelwires::TypeRef::serializeToString() const {
@@ -63,7 +63,7 @@ std::string babelwires::TypeRef::serializeToString() const {
             return os.str();
         }
     } visitorMethods;
-    return std::visit(visitorMethods, m_typeDescription);
+    return std::visit(visitorMethods, m_storage);
 }
 
 void babelwires::TypeRef::toStringHelper(std::ostream& os,
@@ -84,7 +84,7 @@ void babelwires::TypeRef::toStringHelper(std::ostream& os,
         std::ostream& m_os;
         babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;
     } visitorMethods{os, identifierRegistry};
-    std::visit(visitorMethods, m_typeDescription);
+    std::visit(visitorMethods, m_storage);
 }
 
 std::string babelwires::TypeRef::toString() const {
@@ -154,7 +154,7 @@ void babelwires::TypeRef::visitIdentifiers(IdentifierVisitor& visitor) {
         }
         IdentifierVisitor& m_visitor;
     } visitorMethods{visitor};
-    return std::visit(visitorMethods, m_typeDescription);
+    return std::visit(visitorMethods, m_storage);
 }
 
 void babelwires::TypeRef::visitFilePaths(FilePathVisitor& visitor) {}
@@ -173,79 +173,6 @@ std::size_t babelwires::TypeRef::getHash() const {
         }
         std::size_t& m_currentHash;
     } visitorMethods{hash};
-    std::visit(visitorMethods, m_typeDescription);
+    std::visit(visitorMethods, m_storage);
     return hash;
-}
-
-bool babelwires::TypeRef::operator==(const TypeRef& other) const {
-    struct VisitorMethods {
-        bool operator()(std::monostate) { return std::holds_alternative<std::monostate>(m_other.m_typeDescription); }
-        bool operator()(const PrimitiveTypeId& typeId) {
-            const LongIdentifier* const otherPrimitiveTypeId = std::get_if<LongIdentifier>(&m_other.m_typeDescription);
-            return otherPrimitiveTypeId ? (typeId == *otherPrimitiveTypeId) : false;
-        }
-        bool operator()(const ConstructedTypeData& higherOrderData) {
-            const ConstructedTypeData* const otherConstructedTypeData =
-                std::get_if<ConstructedTypeData>(&m_other.m_typeDescription);
-            if (!otherConstructedTypeData) {
-                return false;
-            }
-            if (std::get<0>(higherOrderData) != std::get<0>(*otherConstructedTypeData)) {
-                return false;
-            }
-            const Arguments& argumentsThis = std::get<1>(higherOrderData);
-            const Arguments& argumentsOther = std::get<1>(*otherConstructedTypeData);
-            return std::equal(argumentsThis.begin(), argumentsThis.end(), argumentsOther.begin(), argumentsOther.end());
-        }
-        const TypeRef& m_other;
-    } visitorMethods{other};
-    return std::visit(visitorMethods, m_typeDescription);
-}
-
-bool babelwires::TypeRef::operator!=(const TypeRef& other) const {
-    return !(*this == other);
-}
-
-bool babelwires::TypeRef::operator<(const TypeRef& other) const {
-    struct VisitorMethods {
-        bool operator()(std::monostate) { return !std::holds_alternative<std::monostate>(m_other.m_typeDescription); }
-        bool operator()(const PrimitiveTypeId& typeId) {
-            if (std::holds_alternative<std::monostate>(m_other.m_typeDescription)) {
-                return false;
-            }
-            const LongIdentifier* const otherPrimitiveTypeId = std::get_if<LongIdentifier>(&m_other.m_typeDescription);
-            if (!otherPrimitiveTypeId) {
-                return true;
-            }
-            return typeId < *otherPrimitiveTypeId;
-        }
-        bool operator()(const ConstructedTypeData& higherOrderData) {
-            const ConstructedTypeData* const otherConstructedTypeData =
-                std::get_if<ConstructedTypeData>(&m_other.m_typeDescription);
-            if (!otherConstructedTypeData) {
-                return false;
-            }
-            if (std::get<0>(higherOrderData) < std::get<0>(*otherConstructedTypeData)) {
-                return true;
-            }
-            if (std::get<0>(*otherConstructedTypeData) < std::get<0>(higherOrderData)) {
-                return false;
-            }
-            const Arguments& argumentsThis = std::get<1>(higherOrderData);
-            const Arguments& argumentsOther = std::get<1>(*otherConstructedTypeData);
-            auto mismatch =
-                std::mismatch(argumentsThis.begin(), argumentsThis.end(), argumentsOther.begin(), argumentsOther.end());
-            if (mismatch.first != argumentsThis.end()) {
-                if (mismatch.second != argumentsOther.end()) {
-                    return *mismatch.first < *mismatch.second;
-                } else {
-                    return false;
-                }
-            } else {
-                return mismatch.second != argumentsOther.end();
-            }
-        }
-        const TypeRef& m_other;
-    } visitorMethods{other};
-    return std::visit(visitorMethods, m_typeDescription);
 }

@@ -46,11 +46,11 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        bool operator==(const TypeRef& other) const;
-        bool operator!=(const TypeRef& other) const;
+        friend bool operator==(const TypeRef& a, const TypeRef& b) { return a.m_storage == b.m_storage; }
+        friend bool operator!=(const TypeRef& a, const TypeRef& b) { return a.m_storage != b.m_storage; }
         
         /// Note: This orders TypeRefs using identifiers NOT SUBTYPING!
-        bool operator<(const TypeRef& other) const;
+        friend bool operator<(const TypeRef& a, const TypeRef& b) { return a.m_storage < b.m_storage; }
 
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;
@@ -68,7 +68,7 @@ namespace babelwires {
         using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
 
       private:
-        Storage m_typeDescription;
+        Storage m_storage;
     };
 } // namespace babelwires
 

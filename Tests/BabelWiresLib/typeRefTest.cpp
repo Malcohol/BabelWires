@@ -44,6 +44,48 @@ TEST(TypeRefTest, equality) {
     EXPECT_NE(constructedTypeRef2, constructedTypeRef3);
 }
 
+TEST(TypeRefTest, lessThan) {
+    babelwires::TypeRef nullTypeRef;
+    babelwires::TypeRef primitiveTypeRef1(babelwires::LongIdentifier("Bar"));
+    babelwires::TypeRef primitiveTypeRef2(babelwires::LongIdentifier("Foo"));
+    babelwires::TypeRef constructedTypeRef1(babelwires::LongIdentifier("Foo"), {babelwires::LongIdentifier("Bar")});
+    babelwires::TypeRef constructedTypeRef2(babelwires::LongIdentifier("Foo"),
+                                            {babelwires::LongIdentifier("Bar"), babelwires::LongIdentifier("Flerm")});
+    babelwires::TypeRef constructedTypeRef3(
+        babelwires::LongIdentifier("Foo"),
+        {babelwires::LongIdentifier("Bar"),
+         babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {babelwires::LongIdentifier("Erm")})});
+    babelwires::TypeRef constructedTypeRef4(babelwires::LongIdentifier("Foo"), {babelwires::LongIdentifier("Boo")});
+
+    EXPECT_LT(nullTypeRef, primitiveTypeRef1);
+    EXPECT_LT(primitiveTypeRef1, primitiveTypeRef2);
+    EXPECT_LT(primitiveTypeRef1, constructedTypeRef1);
+    EXPECT_LT(constructedTypeRef1, constructedTypeRef2);
+    EXPECT_LT(constructedTypeRef1, constructedTypeRef3);
+    EXPECT_LT(constructedTypeRef1, constructedTypeRef4);
+    EXPECT_LT(constructedTypeRef2, constructedTypeRef3);
+    EXPECT_LT(constructedTypeRef2, constructedTypeRef4);
+    EXPECT_LT(constructedTypeRef3, constructedTypeRef4);
+
+    EXPECT_FALSE(nullTypeRef < nullTypeRef);
+    EXPECT_FALSE(primitiveTypeRef1 < primitiveTypeRef1);
+    EXPECT_FALSE(primitiveTypeRef2 < primitiveTypeRef2);
+    EXPECT_FALSE(constructedTypeRef1 < constructedTypeRef1);
+    EXPECT_FALSE(constructedTypeRef2 < constructedTypeRef2);
+    EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef3);
+    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef4);
+
+    EXPECT_FALSE(primitiveTypeRef1 < nullTypeRef);
+    EXPECT_FALSE(primitiveTypeRef2 < primitiveTypeRef1);
+    EXPECT_FALSE(constructedTypeRef1 < primitiveTypeRef1);
+    EXPECT_FALSE(constructedTypeRef2 < constructedTypeRef1);
+    EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef1);
+    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef1);
+    EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef2);
+    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef2);
+    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef3);
+}
+
 TEST(TypeRefTest, serializeToStringNoDiscriminators) {
     babelwires::TypeRef nullTypeRef;
     EXPECT_EQ(nullTypeRef.serializeToString(), "<>");
@@ -63,6 +105,12 @@ TEST(TypeRefTest, serializeToStringNoDiscriminators) {
         {babelwires::LongIdentifier("Bar"),
          babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {babelwires::LongIdentifier("Erm")})});
     EXPECT_EQ(constructedTypeRef3.serializeToString(), "Foo<Bar,Flerm<Erm>>");
+
+    babelwires::TypeRef constructedTypeRef4(
+        babelwires::LongIdentifier("Foo"),
+        {babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {babelwires::LongIdentifier("Erm")}),
+         babelwires::LongIdentifier("Bar")});
+    EXPECT_EQ(constructedTypeRef4.serializeToString(), "Foo<Flerm<Erm>,Bar>");
 }
 
 TEST(TypeRefTest, serializeToStringWithDiscriminators) {
@@ -84,6 +132,13 @@ TEST(TypeRefTest, serializeToStringWithDiscriminators) {
          babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
                              {testUtils::getTestRegisteredLongIdentifier("Erm", 13)})});
     EXPECT_EQ(constructedTypeRef3.serializeToString(), "Foo`2<Bar`4,Flerm`1<Erm`13>>");
+
+    babelwires::TypeRef constructedTypeRef4(
+        testUtils::getTestRegisteredLongIdentifier("Foo", 2),
+        {babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
+                             {testUtils::getTestRegisteredLongIdentifier("Erm", 13)}),
+         testUtils::getTestRegisteredLongIdentifier("Bar", 4)});
+    EXPECT_EQ(constructedTypeRef4.serializeToString(), "Foo`2<Flerm`1<Erm`13>,Bar`4>");
 }
 
 TEST(TypeRefTest, deserializeFromStringNoDiscriminatorsSuccess) {
@@ -102,6 +157,12 @@ TEST(TypeRefTest, deserializeFromStringNoDiscriminatorsSuccess) {
         {babelwires::LongIdentifier("Bar"),
          babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {babelwires::LongIdentifier("Erm")})});
     EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo<Bar,Flerm<Erm>>"));
+
+    babelwires::TypeRef constructedTypeRef4(
+        babelwires::LongIdentifier("Foo"),
+        {babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {babelwires::LongIdentifier("Erm")}),
+         babelwires::LongIdentifier("Bar")});
+    EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo<Flerm<Erm>,Bar>"));
 }
 
 TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {
@@ -125,6 +186,15 @@ TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {
          babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
                              {testUtils::getTestRegisteredLongIdentifier("Erm", 13)})});
     EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo`2<Bar`4,Flerm`1<Erm`13>>"));
+
+    babelwires::TypeRef constructedTypeRef4(
+        testUtils::getTestRegisteredLongIdentifier("Foo", 2),
+        {
+            babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
+                                {testUtils::getTestRegisteredLongIdentifier("Erm", 13)}),
+            testUtils::getTestRegisteredLongIdentifier("Bar", 4),
+        });
+    EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo`2<Flerm`1<Erm`13>,Bar`4>"));
 }
 
 TEST(TypeRefTest, deserializeFromStringFailure) {
