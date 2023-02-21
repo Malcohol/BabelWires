@@ -2,6 +2,7 @@
 
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
+#include <Tests/TestUtils/testLog.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
 TEST(TypeRefTest, equality) {
@@ -84,6 +85,27 @@ TEST(TypeRefTest, lessThan) {
     EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef2);
     EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef2);
     EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef3);
+}
+
+TEST(TypeRefTest, toString) {
+    testUtils::TestLog log;
+    babelwires::IdentifierRegistryScope identifierRegistry;
+
+    EXPECT_EQ(babelwires::TypeRef().toString(), "<>");
+
+    babelwires::LongIdentifier foo =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Foo", "Foofoo", "00000000-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+
+    EXPECT_EQ(babelwires::TypeRef(foo).toString(), "Foofoo");
+
+    babelwires::LongIdentifier bar =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Bar", "Barbar", "11111111-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+
+    EXPECT_EQ(babelwires::TypeRef(foo, {bar}).toString(), "Foofoo<Barbar>");
+    EXPECT_EQ(babelwires::TypeRef(foo, {bar, foo}).toString(), "Foofoo<Barbar, Foofoo>");
+    EXPECT_EQ(babelwires::TypeRef(foo, {babelwires::TypeRef(bar, {bar}), foo}).toString(), "Foofoo<Barbar<Barbar>, Foofoo>");
 }
 
 TEST(TypeRefTest, serializeToStringNoDiscriminators) {
@@ -218,8 +240,14 @@ TEST(TypeRefTest, visitIdentifiers) {
                                                      {testUtils::getTestRegisteredLongIdentifier("Erm", 13)})});
 
     struct Visitor : babelwires::IdentifierVisitor {
-        void operator()(babelwires::Identifier& identifier) { m_seen.emplace(identifier); identifier.setDiscriminator(17); }
-        void operator()(babelwires::LongIdentifier& identifier) { m_seen.emplace(identifier); identifier.setDiscriminator(18); }
+        void operator()(babelwires::Identifier& identifier) {
+            m_seen.emplace(identifier);
+            identifier.setDiscriminator(17);
+        }
+        void operator()(babelwires::LongIdentifier& identifier) {
+            m_seen.emplace(identifier);
+            identifier.setDiscriminator(18);
+        }
         std::set<babelwires::Identifier> m_seen;
     } visitor1, visitor2;
 
@@ -227,13 +255,21 @@ TEST(TypeRefTest, visitIdentifiers) {
     typeRef.visitIdentifiers(visitor2);
 
     auto it = visitor1.m_seen.begin();
-    EXPECT_EQ(*it, "Bar"); EXPECT_EQ(it->getDiscriminator(), 4); ++it;
-    EXPECT_EQ(*it, "Erm"); EXPECT_EQ(it->getDiscriminator(), 13); ++it;
-    EXPECT_EQ(*it, "Flerm"); EXPECT_EQ(it->getDiscriminator(), 1); ++it;
-    EXPECT_EQ(*it, "Foo"); EXPECT_EQ(it->getDiscriminator(), 2); ++it;
+    EXPECT_EQ(*it, "Bar");
+    EXPECT_EQ(it->getDiscriminator(), 4);
+    ++it;
+    EXPECT_EQ(*it, "Erm");
+    EXPECT_EQ(it->getDiscriminator(), 13);
+    ++it;
+    EXPECT_EQ(*it, "Flerm");
+    EXPECT_EQ(it->getDiscriminator(), 1);
+    ++it;
+    EXPECT_EQ(*it, "Foo");
+    EXPECT_EQ(it->getDiscriminator(), 2);
+    ++it;
     EXPECT_EQ(it, visitor1.m_seen.end());
 
-    for(auto id : visitor2.m_seen) {
+    for (auto id : visitor2.m_seen) {
         EXPECT_EQ(id.getDiscriminator(), 18);
     }
 }
@@ -246,11 +282,11 @@ TEST(TypeRefTest, hash) {
     babelwires::TypeRef constructedTypeRef2(
         babelwires::LongIdentifier("Foo"),
         {babelwires::LongIdentifier("Bar"),
-         babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {babelwires::LongIdentifier("Erm")})});   
+         babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {babelwires::LongIdentifier("Erm")})});
     babelwires::TypeRef constructedTypeRef3(
         babelwires::LongIdentifier("Foo"),
         {babelwires::LongIdentifier("Bar"),
-         babelwires::TypeRef(babelwires::LongIdentifier("Oom"), {babelwires::LongIdentifier("Erm")})});   
+         babelwires::TypeRef(babelwires::LongIdentifier("Oom"), {babelwires::LongIdentifier("Erm")})});
 
     std::hash<babelwires::TypeRef> hasher;
 

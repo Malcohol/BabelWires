@@ -74,9 +74,10 @@ void babelwires::TypeRef::toStringHelper(std::ostream& os,
         void operator()(const ConstructedTypeData& higherOrderData) {
             const auto& arguments = std::get<1>(higherOrderData);
             assert((arguments.size() > 0) && "0-arity type constructors are not permitted");
-            m_os << m_identifierRegistry->getName(std::get<0>(higherOrderData));
+            m_os << m_identifierRegistry->getName(std::get<0>(higherOrderData)) << "<";
             arguments[0].toStringHelper(m_os, m_identifierRegistry);
             for (const auto& arg : Span{arguments.cbegin() + 1, arguments.cend()}) {
+                m_os << ", ";
                 arg.toStringHelper(m_os, m_identifierRegistry);
             }
             m_os << ">";
@@ -161,7 +162,7 @@ void babelwires::TypeRef::visitFilePaths(FilePathVisitor& visitor) {}
 
 std::size_t babelwires::TypeRef::getHash() const {
     std::size_t hash = 0x123456789;
-    // I wonder if the constructor of std::hash objects creates pointless overhead here?
+    // I wonder if the construction of std::hash objects creates pointless overhead here?
     struct VisitorMethods {
         void operator()(std::monostate) { hash::mixInto(m_currentHash, 0x11122233); }
         void operator()(const PrimitiveTypeId& typeId) { hash::mixInto(m_currentHash, typeId); }
