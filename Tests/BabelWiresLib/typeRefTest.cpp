@@ -237,3 +237,30 @@ TEST(TypeRefTest, visitIdentifiers) {
         EXPECT_EQ(id.getDiscriminator(), 18);
     }
 }
+
+TEST(TypeRefTest, hash) {
+    babelwires::TypeRef nullTypeRef;
+    babelwires::TypeRef primitiveTypeRef1(babelwires::LongIdentifier("Foo"));
+    babelwires::TypeRef primitiveTypeRef2(babelwires::LongIdentifier("Bar"));
+    babelwires::TypeRef constructedTypeRef1(babelwires::LongIdentifier("Foo"), {babelwires::LongIdentifier("Bar")});
+    babelwires::TypeRef constructedTypeRef2(
+        babelwires::LongIdentifier("Foo"),
+        {babelwires::LongIdentifier("Bar"),
+         babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {babelwires::LongIdentifier("Erm")})});   
+    babelwires::TypeRef constructedTypeRef3(
+        babelwires::LongIdentifier("Foo"),
+        {babelwires::LongIdentifier("Bar"),
+         babelwires::TypeRef(babelwires::LongIdentifier("Oom"), {babelwires::LongIdentifier("Erm")})});   
+
+    std::hash<babelwires::TypeRef> hasher;
+
+    // In theory, some of these could fail due to a hash collision.
+    EXPECT_NE(hasher(nullTypeRef), hasher(primitiveTypeRef1));
+    EXPECT_NE(hasher(primitiveTypeRef1), hasher(primitiveTypeRef2));
+    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRef1));
+    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRef2));
+    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRef3));
+    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRef2));
+    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRef3));
+    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRef3));
+}
