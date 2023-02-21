@@ -210,3 +210,30 @@ TEST(TypeRefTest, deserializeFromStringFailure) {
     EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo<Bom>Flerm"), babelwires::ParseException);
     EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo Bee"), babelwires::ParseException);
 }
+
+TEST(TypeRefTest, visitIdentifiers) {
+    babelwires::TypeRef typeRef(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
+                                {testUtils::getTestRegisteredLongIdentifier("Bar", 4),
+                                 babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
+                                                     {testUtils::getTestRegisteredLongIdentifier("Erm", 13)})});
+
+    struct Visitor : babelwires::IdentifierVisitor {
+        void operator()(babelwires::Identifier& identifier) { m_seen.emplace(identifier); identifier.setDiscriminator(17); }
+        void operator()(babelwires::LongIdentifier& identifier) { m_seen.emplace(identifier); identifier.setDiscriminator(18); }
+        std::set<babelwires::Identifier> m_seen;
+    } visitor1, visitor2;
+
+    typeRef.visitIdentifiers(visitor1);
+    typeRef.visitIdentifiers(visitor2);
+
+    auto it = visitor1.m_seen.begin();
+    EXPECT_EQ(*it, "Bar"); EXPECT_EQ(it->getDiscriminator(), 4); ++it;
+    EXPECT_EQ(*it, "Erm"); EXPECT_EQ(it->getDiscriminator(), 13); ++it;
+    EXPECT_EQ(*it, "Flerm"); EXPECT_EQ(it->getDiscriminator(), 1); ++it;
+    EXPECT_EQ(*it, "Foo"); EXPECT_EQ(it->getDiscriminator(), 2); ++it;
+    EXPECT_EQ(it, visitor1.m_seen.end());
+
+    for(auto id : visitor2.m_seen) {
+        EXPECT_EQ(id.getDiscriminator(), 18);
+    }
+}
