@@ -1,9 +1,11 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 
 TEST(TypeRefTest, equality) {
     babelwires::TypeRef nullTypeRef;
@@ -85,6 +87,40 @@ TEST(TypeRefTest, lessThan) {
     EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef2);
     EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef2);
     EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef3);
+}
+
+TEST(TypeRefTest, resolve) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+
+    const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+
+    babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
+
+    EXPECT_EQ(testEnum, &typeRef.resolve(typeSystem));
+
+    // TODO Constructed types
+}
+
+TEST(TypeRefTest, tryResolveSuccess) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+
+    const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+
+    babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
+
+    EXPECT_EQ(testEnum, typeRef.tryResolve(typeSystem));
+
+    // TODO Constructed types
+}
+
+TEST(TypeRefTest, tryResolveFailure) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+
+    EXPECT_EQ(nullptr, babelwires::TypeRef().tryResolve(typeSystem));
+    EXPECT_EQ(nullptr, babelwires::TypeRef(babelwires::LongIdentifier("Foo")).tryResolve(typeSystem));
 }
 
 TEST(TypeRefTest, toString) {
