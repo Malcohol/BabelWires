@@ -123,7 +123,7 @@ TEST(TypeRefTest, tryResolveFailure) {
     EXPECT_EQ(nullptr, babelwires::TypeRef(babelwires::LongIdentifier("Foo")).tryResolve(typeSystem));
 }
 
-TEST(TypeRefTest, toString) {
+TEST(TypeRefTest, toStringSuccess) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
@@ -135,13 +135,94 @@ TEST(TypeRefTest, toString) {
 
     EXPECT_EQ(babelwires::TypeRef(foo).toString(), "Foofoo");
 
-    babelwires::LongIdentifier bar =
-        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Bar", "Barbar", "11111111-2222-3333-4444-555566667777",
+    babelwires::LongIdentifier unary0 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Unary0", "UNARY[{0}]", "11111111-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(unary0, {foo}).toString(), "UNARY[Foofoo]");
+    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(unary0, {foo})}).toString(), "UNARY[UNARY[Foofoo]]");
+    
+    babelwires::LongIdentifier unary1 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Unary1", "{0}++", "22222222-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(unary1, {foo}).toString(), "Foofoo++");
+    EXPECT_EQ(babelwires::TypeRef(unary1, {babelwires::TypeRef(unary0, {foo})}).toString(), "UNARY[Foofoo]++");
+    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(unary1, {foo})}).toString(), "UNARY[Foofoo++]");
+
+    babelwires::LongIdentifier binary0 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Binary0", "{0} + {1}", "33333333-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(binary0, {foo, babelwires::TypeRef(unary0, {foo})}).toString(), "Foofoo + UNARY[Foofoo]");
+    EXPECT_EQ(babelwires::TypeRef(binary0, {babelwires::TypeRef(unary0, {foo}), foo}).toString(), "UNARY[Foofoo] + Foofoo");
+    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(binary0, {foo, foo})}).toString(), "UNARY[Foofoo + Foofoo]");
+
+    // With some escaped brackets.
+    babelwires::LongIdentifier binary1 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Binary0", "}}{1}{{}}{0}{{", "44444444-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(binary1, {foo, babelwires::TypeRef(unary0, {foo})}).toString(), "}UNARY[Foofoo]{}Foofoo{");
+    EXPECT_EQ(babelwires::TypeRef(binary1, {babelwires::TypeRef(unary0, {foo}), foo}).toString(), "}Foofoo{}UNARY[Foofoo]{");
+    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(binary1, {foo, foo})}).toString(), "UNARY[}Foofoo{}Foofoo{]");
+}
+
+TEST(TypeRefTest, toStringMalformed) {
+    // The format string can be read from data.
+    // ToString should not assert or throw since it might be used in displaying log or error messages.
+    testUtils::TestLog log;
+    babelwires::IdentifierRegistryScope identifierRegistry;
+
+    babelwires::LongIdentifier foo =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Foo", "Foofoo", "00000000-2222-3333-4444-555566667777",
                                                          babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
-    EXPECT_EQ(babelwires::TypeRef(foo, {bar}).toString(), "Foofoo<Barbar>");
-    EXPECT_EQ(babelwires::TypeRef(foo, {bar, foo}).toString(), "Foofoo<Barbar, Foofoo>");
-    EXPECT_EQ(babelwires::TypeRef(foo, {babelwires::TypeRef(bar, {bar}), foo}).toString(), "Foofoo<Barbar<Barbar>, Foofoo>");
+    babelwires::LongIdentifier unary0 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Unary0", "{", "11111111-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(unary0, {foo}).toString(), "MalformedTypeRef{Unary0`1<Foo`1>}");
+
+    babelwires::LongIdentifier unary1 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Unary1", "oo{", "22222222-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(unary1, {foo}).toString(), "MalformedTypeRef{Unary1`1<Foo`1>}");
+
+    // This type of format string is not supported.
+    babelwires::LongIdentifier unary2 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Unary2", "oo{}pp", "33333333-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(unary2, {foo}).toString(), "MalformedTypeRef{Unary2`1<Foo`1>}");
+
+    babelwires::LongIdentifier unary3 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Unary3", "UNARY{0}", "44444444-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    // Not enough arguments
+    EXPECT_EQ(babelwires::TypeRef(unary3, {}).toString(), "MalformedTypeRef{Unary3`1<>}");
+    // Too many arguments
+    EXPECT_EQ(babelwires::TypeRef(unary3, {foo, foo}).toString(), "MalformedTypeRef{Unary3`1<Foo`1,Foo`1>}");
+
+    /*
+    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(unary0, {foo})}).toString(), "UNARY[UNARY[Foofoo]]");
+    
+    babelwires::LongIdentifier unary1 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Unary1", "{0}++", "22222222-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(unary1, {foo}).toString(), "Foofoo++");
+    EXPECT_EQ(babelwires::TypeRef(unary1, {babelwires::TypeRef(unary0, {foo})}).toString(), "UNARY[Foofoo]++");
+    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(unary1, {foo})}).toString(), "UNARY[Foofoo++]");
+
+    babelwires::LongIdentifier binary0 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Binary0", "{0} + {1}", "33333333-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(binary0, {foo, babelwires::TypeRef(unary0, {foo})}).toString(), "Foofoo + UNARY[Foofoo]");
+    EXPECT_EQ(babelwires::TypeRef(binary0, {babelwires::TypeRef(unary0, {foo}), foo}).toString(), "UNARY[Foofoo] + Foofoo");
+    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(binary0, {foo, foo})}).toString(), "UNARY[Foofoo + Foofoo]");
+
+    // With some escaped brackets.
+    babelwires::LongIdentifier binary1 =
+        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Binary0", "}}{1}{{}}{0}{{", "44444444-2222-3333-4444-555566667777",
+                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
+    EXPECT_EQ(babelwires::TypeRef(binary1, {foo, babelwires::TypeRef(unary0, {foo})}).toString(), "}UNARY[Foofoo]{}Foofoo{");
+    EXPECT_EQ(babelwires::TypeRef(binary1, {babelwires::TypeRef(unary0, {foo}), foo}).toString(), "}Foofoo{}UNARY[Foofoo]{");
+    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(binary1, {foo, foo})}).toString(), "UNARY[}Foofoo{}Foofoo{]");
+    */
 }
 
 TEST(TypeRefTest, serializeToStringNoDiscriminators) {

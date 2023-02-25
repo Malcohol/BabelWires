@@ -29,6 +29,11 @@ namespace babelwires {
         TypeRef(PrimitiveTypeId typeId);
         
         using Arguments = std::vector<TypeRef>;
+
+        /// The maximum number of arguments a TypeRef can carry.
+        static constexpr std::size_t s_maxNumArguments = 9;
+
+        /// At most s_maxNumArguments arguments are allowed.
         TypeRef(TypeConstructorId typeConstructorId, Arguments arguments);
 
         const Type* tryResolve(const TypeSystem& typeSystem) const;
@@ -57,7 +62,7 @@ namespace babelwires {
 
       private:
         /// Avoids locking the IdentifierRegistry multiple times.
-        void toStringHelper(std::ostream& os, babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const;
+        std::string toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const;
 
         /// Returns a parsed type and a position just beyond that type.
         static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);

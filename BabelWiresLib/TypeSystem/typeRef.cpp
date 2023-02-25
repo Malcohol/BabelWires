@@ -11,13 +11,17 @@
 
 #include <Common/Hash/hash.hpp>
 
+#include <bitset>
+
 babelwires::TypeRef::TypeRef() = default;
 
 babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
     : m_storage(typeId) {}
 
 babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, Arguments arguments)
-    : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {}
+    : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {
+    assert((arguments.size() <= s_maxNumArguments) && "Too many arguments for TypeRef");
+}
 
 const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
@@ -53,46 +57,125 @@ std::string babelwires::TypeRef::serializeToString() const {
         std::string operator()(PrimitiveTypeId typeId) { return typeId.serializeToString(); }
         std::string operator()(const ConstructedTypeData& higherOrderData) {
             std::ostringstream os;
+            os << std::get<0>(higherOrderData).serializeToString();
             const auto& arguments = std::get<1>(higherOrderData);
-            assert((arguments.size() > 0) && "0-arity type constructors are not permitted");
-            os << std::get<0>(higherOrderData).serializeToString() << "<" << arguments[0].serializeToString();
-            for (const auto& arg : Span{arguments.cbegin() + 1, arguments.cend()}) {
-                os << "," << arg.serializeToString();
+            if (arguments.empty()) {
+                // Correctly formed TypeRef should not hit this case.
+                // It can be used when falling-back to this representation
+                // from toString.
+                os << "<>";
+            } else {
+                char sep = '<';
+                for (const auto& arg : arguments) {
+                    os << sep << arg.serializeToString();
+                    sep = ',';
+                }
+                os << ">";
             }
-            os << ">";
             return os.str();
         }
     } visitorMethods;
     return std::visit(visitorMethods, m_storage);
 }
 
-void babelwires::TypeRef::toStringHelper(std::ostream& os,
-                                         babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {
-    struct VisitorMethods {
-        void operator()(std::monostate) { m_os << "<>"; }
-        void operator()(PrimitiveTypeId typeId) { m_os << m_identifierRegistry->getName(typeId); }
-        void operator()(const ConstructedTypeData& higherOrderData) {
-            const auto& arguments = std::get<1>(higherOrderData);
-            assert((arguments.size() > 0) && "0-arity type constructors are not permitted");
-            m_os << m_identifierRegistry->getName(std::get<0>(higherOrderData)) << "<";
-            arguments[0].toStringHelper(m_os, m_identifierRegistry);
-            for (const auto& arg : Span{arguments.cbegin() + 1, arguments.cend()}) {
-                m_os << ", ";
-                arg.toStringHelper(m_os, m_identifierRegistry);
-            }
-            m_os << ">";
+namespace {
+    /// A very simple string formatting algorithm sufficient for this job.
+    /// Hopefully could be replaced by std::format when that's properly supported.
+    std::string format(std::string_view format, const std::vector<std::string>& arguments) {
+        if (format.size() < 2) {
+            return {};
         }
-        std::ostream& m_os;
+        if (arguments.size() > babelwires::TypeRef::s_maxNumArguments) {
+            return {};
+        }
+        std::bitset<babelwires::TypeRef::s_maxNumArguments> argumentsNotYetSeen((1 << arguments.size()) - 1);
+        std::ostringstream oss;
+        constexpr char open = '{';
+        constexpr char close = '}';
+        enum { normal, justReadOpen, justReadIndex, justReadClose } state = normal;
+        for (const char currentChar : format) {
+            switch (state) {
+                case normal: {
+                    if (currentChar == open) {
+                        state = justReadOpen;
+                    } else if (currentChar == close) {
+                        state = justReadClose;
+                    } else {
+                        oss << currentChar;
+                    }
+                    break;
+                }
+                case justReadOpen: {
+                    if ((currentChar >= '0') && (currentChar <= '9')) {
+                        const std::size_t indexCharAsIndex = currentChar - '0';
+                        if (indexCharAsIndex >= arguments.size()) {
+                            return {};
+                        }
+                        oss << arguments[indexCharAsIndex];
+                        argumentsNotYetSeen.reset(indexCharAsIndex);
+                        state = justReadIndex;
+                    } else if (currentChar == open) {
+                        oss << open;
+                        state = normal;
+                    } else {
+                        return {};
+                    }
+                    break;
+                }
+                case justReadIndex: {
+                    if (currentChar == close) {
+                        state = normal;
+                    } else {
+                        return {};
+                    }
+                    break;
+                }
+                case justReadClose: {
+                    if (currentChar == close) {
+                        oss << close;
+                        state = normal;
+                    } else {
+                        return {};
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (argumentsNotYetSeen.none()) {
+            return oss.str();
+        } else {
+            return {};
+        }
+    }
+} // namespace
+
+std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {
+    struct VisitorMethods {
+        std::string operator()(std::monostate) { return "<>"; }
+        std::string operator()(PrimitiveTypeId typeId) { return m_identifierRegistry->getName(typeId); }
+        std::string operator()(const ConstructedTypeData& higherOrderData) {
+            std::string formatString = m_identifierRegistry->getName(std::get<0>(higherOrderData));
+            std::vector<std::string> argumentsStr;
+            const auto& arguments = std::get<1>(higherOrderData);
+            std::for_each(arguments.begin(), arguments.end(), [this, &argumentsStr](const TypeRef& typeRef) {
+                argumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
+            });
+            return format(formatString, argumentsStr);
+        }
         babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;
-    } visitorMethods{os, identifierRegistry};
-    std::visit(visitorMethods, m_storage);
+    } visitorMethods{identifierRegistry};
+    const std::string str = std::visit(visitorMethods, m_storage);
+    if (!str.empty()) {
+        return str;
+    } else {
+        return "MalformedTypeRef{" + serializeToString() + "}";
+    }
 }
 
 std::string babelwires::TypeRef::toString() const {
-    std::ostringstream os;
     auto regScope = IdentifierRegistry::read();
-    toStringHelper(os, regScope);
-    return os.str();
+    return toStringHelper(regScope);
 }
 
 std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef::parseHelper(std::string_view str) {
@@ -114,9 +197,12 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
     if (next == str.size()) {
         throw ParseException() << "Unterminated TypeRef";
     }
-    while(1) {
+    while (1) {
         auto tuple = parseHelper(str.substr(next));
         arguments.emplace_back(std::move(std::get<0>(tuple)));
+        if (arguments.size() > s_maxNumArguments) {
+            throw ParseException() << "TypeRef too many arguments (maximum allowed is " << s_maxNumArguments << ")";
+        }
         assert((std::get<1>(tuple) > 0) && "Did not advance while parsing");
         next += std::get<1>(tuple);
         if (next == str.size()) {
