@@ -197,32 +197,6 @@ TEST(TypeRefTest, toStringMalformed) {
     EXPECT_EQ(babelwires::TypeRef(unary3, {}).toString(), "MalformedTypeRef{Unary3`1<>}");
     // Too many arguments
     EXPECT_EQ(babelwires::TypeRef(unary3, {foo, foo}).toString(), "MalformedTypeRef{Unary3`1<Foo`1,Foo`1>}");
-
-    /*
-    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(unary0, {foo})}).toString(), "UNARY[UNARY[Foofoo]]");
-    
-    babelwires::LongIdentifier unary1 =
-        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Unary1", "{0}++", "22222222-2222-3333-4444-555566667777",
-                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(unary1, {foo}).toString(), "Foofoo++");
-    EXPECT_EQ(babelwires::TypeRef(unary1, {babelwires::TypeRef(unary0, {foo})}).toString(), "UNARY[Foofoo]++");
-    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(unary1, {foo})}).toString(), "UNARY[Foofoo++]");
-
-    babelwires::LongIdentifier binary0 =
-        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Binary0", "{0} + {1}", "33333333-2222-3333-4444-555566667777",
-                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(binary0, {foo, babelwires::TypeRef(unary0, {foo})}).toString(), "Foofoo + UNARY[Foofoo]");
-    EXPECT_EQ(babelwires::TypeRef(binary0, {babelwires::TypeRef(unary0, {foo}), foo}).toString(), "UNARY[Foofoo] + Foofoo");
-    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(binary0, {foo, foo})}).toString(), "UNARY[Foofoo + Foofoo]");
-
-    // With some escaped brackets.
-    babelwires::LongIdentifier binary1 =
-        babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata("Binary0", "}}{1}{{}}{0}{{", "44444444-2222-3333-4444-555566667777",
-                                                         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(binary1, {foo, babelwires::TypeRef(unary0, {foo})}).toString(), "}UNARY[Foofoo]{}Foofoo{");
-    EXPECT_EQ(babelwires::TypeRef(binary1, {babelwires::TypeRef(unary0, {foo}), foo}).toString(), "}Foofoo{}UNARY[Foofoo]{");
-    EXPECT_EQ(babelwires::TypeRef(unary0, {babelwires::TypeRef(binary1, {foo, foo})}).toString(), "UNARY[}Foofoo{}Foofoo{]");
-    */
 }
 
 TEST(TypeRefTest, serializeToStringNoDiscriminators) {
@@ -302,6 +276,9 @@ TEST(TypeRefTest, deserializeFromStringNoDiscriminatorsSuccess) {
         {babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {babelwires::LongIdentifier("Erm")}),
          babelwires::LongIdentifier("Bar")});
     EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo<Flerm<Erm>,Bar>"));
+
+    // 10 arguments supported
+    EXPECT_NO_THROW(babelwires::TypeRef::deserializeFromString("Foo<A,B,C,D,E,F,G,H,I,J>"));
 }
 
 TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {
@@ -348,6 +325,8 @@ TEST(TypeRefTest, deserializeFromStringFailure) {
     EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo>"), babelwires::ParseException);
     EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo<Bom>Flerm"), babelwires::ParseException);
     EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo Bee"), babelwires::ParseException);
+    // Too many arguments
+    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo<A,B,C,D,E,F,G,H,I,J,K>"), babelwires::ParseException);
 }
 
 TEST(TypeRefTest, visitIdentifiers) {

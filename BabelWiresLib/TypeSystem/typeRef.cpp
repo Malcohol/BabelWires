@@ -61,8 +61,8 @@ std::string babelwires::TypeRef::serializeToString() const {
             const auto& arguments = std::get<1>(higherOrderData);
             if (arguments.empty()) {
                 // Correctly formed TypeRef should not hit this case.
-                // It can be used when falling-back to this representation
-                // from toString.
+                // It can be hit when falling-back to this representation
+                // if toString formatting fails.
                 os << "<>";
             } else {
                 char sep = '<';
@@ -106,6 +106,7 @@ namespace {
                     break;
                 }
                 case justReadOpen: {
+                    static_assert(babelwires::TypeRef::s_maxNumArguments == 10);
                     if ((currentChar >= '0') && (currentChar <= '9')) {
                         const std::size_t indexCharAsIndex = currentChar - '0';
                         if (indexCharAsIndex >= arguments.size()) {
