@@ -1,5 +1,5 @@
 /**
- * A TypeRef identifies a type.
+ * A TypeConstructor constructs a type from other types.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -44,7 +44,7 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
         auto it = m_cache.emplace(std::pair{arguments, nullptr});
         if (it.second) {
             // Still not found.
-            // Only construct the type if the 
+            // Only construct the type if the arity is correct.
             if (resolvedArguments.size() == arguments.m_typeArguments.size()) {
                 it.first->second = constructType(resolvedArguments);
             }

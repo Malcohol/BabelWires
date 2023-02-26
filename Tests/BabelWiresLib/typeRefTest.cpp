@@ -4,8 +4,12 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
+
 #include <Tests/TestUtils/testIdentifiers.hpp>
 #include <Tests/TestUtils/testLog.hpp>
+
+#include <execution>
 
 TEST(TypeRefTest, equality) {
     babelwires::TypeRef nullTypeRef;
@@ -94,12 +98,17 @@ TEST(TypeRefTest, resolve) {
     babelwires::TypeSystem typeSystem;
 
     const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+    const testUtils::TestUnaryTypeConstructor* unaryConstructor =
+        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
 
     EXPECT_EQ(testEnum, &typeRef.resolve(typeSystem));
-
-    // TODO Constructed types
+    babelwires::TypeRef constructedTypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                           {{testUtils::TestEnum::getThisIdentifier()}});
+    const babelwires::Type& newType = constructedTypeRef.resolve(typeSystem);
+    EXPECT_EQ(newType.getTypeRef(), constructedTypeRef);
+    EXPECT_EQ(&constructedTypeRef.resolve(typeSystem), &constructedTypeRef.resolve(typeSystem));
 }
 
 TEST(TypeRefTest, tryResolveSuccess) {
@@ -107,12 +116,18 @@ TEST(TypeRefTest, tryResolveSuccess) {
     babelwires::TypeSystem typeSystem;
 
     const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+    const testUtils::TestUnaryTypeConstructor* unaryConstructor =
+        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
-
     EXPECT_EQ(testEnum, typeRef.tryResolve(typeSystem));
 
-    // TODO Constructed types
+    babelwires::TypeRef constructedTypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                           {{testUtils::TestEnum::getThisIdentifier()}});
+    const babelwires::Type* newType = constructedTypeRef.tryResolve(typeSystem);
+    EXPECT_NE(newType, nullptr);
+    EXPECT_EQ(newType->getTypeRef(), constructedTypeRef);
+    EXPECT_EQ(constructedTypeRef.tryResolve(typeSystem), constructedTypeRef.tryResolve(typeSystem));
 }
 
 TEST(TypeRefTest, tryResolveFailure) {
@@ -121,6 +136,34 @@ TEST(TypeRefTest, tryResolveFailure) {
 
     EXPECT_EQ(nullptr, babelwires::TypeRef().tryResolve(typeSystem));
     EXPECT_EQ(nullptr, babelwires::TypeRef(babelwires::LongIdentifier("Foo")).tryResolve(typeSystem));
+}
+
+TEST(TypeRefTest, tryResolveParallel) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+
+    const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+    const testUtils::TestUnaryTypeConstructor* unaryConstructor =
+        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+
+    babelwires::TypeRef constructedTypeRef(
+        testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+        {{babelwires::TypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                              {{babelwires::TypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                                    {{testUtils::TestEnum::getThisIdentifier()}})}})}});
+
+    std::vector<std::tuple<babelwires::TypeRef, const babelwires::Type*>> vectorOfResolutions;
+    for (int i = 0; i < 1000; ++i) {
+        vectorOfResolutions.emplace_back(std::tuple{constructedTypeRef, nullptr});
+    }
+    std::for_each(std::execution::par, vectorOfResolutions.begin(), vectorOfResolutions.end(),
+                  [&typeSystem](auto& tuple) { std::get<1>(tuple) = std::get<0>(tuple).tryResolve(typeSystem); });
+    for (int i = 0; i < 1000; ++i) {
+        const babelwires::Type* const resolvedType = std::get<1>(vectorOfResolutions[i]);
+        EXPECT_NE(resolvedType, nullptr);
+        EXPECT_EQ(resolvedType->getTypeRef(), constructedTypeRef);
+        EXPECT_EQ(resolvedType, std::get<1>(vectorOfResolutions[0]));
+    }
 }
 
 TEST(TypeRefTest, toStringSuccess) {
@@ -274,13 +317,13 @@ TEST(TypeRefTest, deserializeFromStringNoDiscriminatorsSuccess) {
     babelwires::TypeRef constructedTypeRef3(
         babelwires::LongIdentifier("Foo"),
         {{babelwires::LongIdentifier("Bar"),
-         babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {{babelwires::LongIdentifier("Erm")}})}});
+          babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {{babelwires::LongIdentifier("Erm")}})}});
     EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo<Bar,Flerm<Erm>>"));
 
     babelwires::TypeRef constructedTypeRef4(
         babelwires::LongIdentifier("Foo"),
         {{babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {{babelwires::LongIdentifier("Erm")}}),
-         babelwires::LongIdentifier("Bar")}});
+          babelwires::LongIdentifier("Bar")}});
     EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo<Flerm<Erm>,Bar>"));
 
     // 10 arguments supported
@@ -297,16 +340,16 @@ TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {
                                             {{testUtils::getTestRegisteredLongIdentifier("Bar", 4)}});
     EXPECT_EQ(constructedTypeRef1, babelwires::TypeRef::deserializeFromString("Foo`2<Bar`4>"));
 
-    babelwires::TypeRef constructedTypeRef2(
-        testUtils::getTestRegisteredLongIdentifier("Foo", 2),
-        {{testUtils::getTestRegisteredLongIdentifier("Bar", 4), testUtils::getTestRegisteredLongIdentifier("Flerm", 1)}});
+    babelwires::TypeRef constructedTypeRef2(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
+                                            {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
+                                              testUtils::getTestRegisteredLongIdentifier("Flerm", 1)}});
     EXPECT_EQ(constructedTypeRef2, babelwires::TypeRef::deserializeFromString("Foo`2<Bar`4,Flerm`1>"));
 
     babelwires::TypeRef constructedTypeRef3(
         testUtils::getTestRegisteredLongIdentifier("Foo", 2),
         {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
-         babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
-                             {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
+          babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
+                              {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
     EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo`2<Bar`4,Flerm`1<Erm`13>>"));
 
     babelwires::TypeRef constructedTypeRef4(
@@ -338,8 +381,8 @@ TEST(TypeRefTest, deserializeFromStringFailure) {
 TEST(TypeRefTest, visitIdentifiers) {
     babelwires::TypeRef typeRef(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
                                 {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
-                                 babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
-                                                     {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
+                                  babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
+                                                      {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
 
     struct Visitor : babelwires::IdentifierVisitor {
         void operator()(babelwires::Identifier& identifier) {
@@ -384,11 +427,11 @@ TEST(TypeRefTest, hash) {
     babelwires::TypeRef constructedTypeRef2(
         babelwires::LongIdentifier("Foo"),
         {{babelwires::LongIdentifier("Bar"),
-         babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {{babelwires::LongIdentifier("Erm")}})}});
+          babelwires::TypeRef(babelwires::LongIdentifier("Flerm"), {{babelwires::LongIdentifier("Erm")}})}});
     babelwires::TypeRef constructedTypeRef3(
         babelwires::LongIdentifier("Foo"),
         {{babelwires::LongIdentifier("Bar"),
-         babelwires::TypeRef(babelwires::LongIdentifier("Oom"), {{babelwires::LongIdentifier("Erm")}})}});
+          babelwires::TypeRef(babelwires::LongIdentifier("Oom"), {{babelwires::LongIdentifier("Erm")}})}});
 
     std::hash<babelwires::TypeRef> hasher;
 

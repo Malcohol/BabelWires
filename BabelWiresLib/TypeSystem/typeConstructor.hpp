@@ -16,21 +16,26 @@
 namespace babelwires {
 
     /// A TypeConstructor constructs a type from other types.
-    /// 
+    /// The types when constructed are stored in a mutable cache, which is locked by a mutex.
     class TypeConstructor {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(TypeConstructor);
 
+        /// Get the constructed type from the cache, or construct a new one.
         const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 
+        /// TypeConstructors are expected to have fixed arity.
         virtual unsigned int getArity() const = 0;
 
-        /// This throws a TypeSystemException if the number of arguments does not match the arity.
         virtual std::unique_ptr<Type> constructType(const std::vector<const Type*>& arguments) const = 0;
 
         // TODO Support for deduced subtyping, something like isSubtype and getSubtypes.
+
       private:
+        /// A mutex which ensures thread-safe access to the cache.
         mutable std::shared_mutex m_mutexForCache;
+
+        /// A cache which stops the system ending up with multiple copies of the same constructed type.
         mutable std::unordered_map<TypeConstructorArguments, std::unique_ptr<Type>> m_cache;
     };
 } // namespace babelwires
@@ -42,4 +47,9 @@ namespace babelwires {
 /// Regular brackets can be written with "{{" and "}}". Non-positional arguments "{}" are not supported.
 #define TYPE_CONSTRUCTOR(IDENTIFIER, NAME, UUID, VERSION)                                                              \
     static babelwires::LongIdentifier getThisIdentifier() { return REGISTERED_LONGID(IDENTIFIER, NAME, UUID); }        \
+    static babelwires::VersionNumber getVersion() { return VERSION; }
+
+/// Intended mainly for testing.
+#define TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                       \
+    static babelwires::LongIdentifier getThisIdentifier() { return IDENTIFIER; }                                       \
     static babelwires::VersionNumber getVersion() { return VERSION; }

@@ -57,11 +57,11 @@ const babelwires::TypeConstructor& babelwires::TypeSystem::getTypeConstructor(Lo
     return *std::get<0>(it->second);
 }
 
-babelwires::TypeConstructor* babelwires::TypeSystem::addTypeConstructor(LongIdentifier typeId, VersionNumber version,
-                                                           std::unique_ptr<TypeConstructor> newType) {
+babelwires::TypeConstructor* babelwires::TypeSystem::addTypeConstructorInternal(LongIdentifier typeId, VersionNumber version,
+                                                           std::unique_ptr<TypeConstructor> newTypeConstructor) {
     auto addResult = m_typeConstructorRegistry
                            .emplace(std::pair<LongIdentifier, TypeConstructorInfo>{
-                               typeId, TypeConstructorInfo{std::move(newType), version}});
+                               typeId, TypeConstructorInfo{std::move(newTypeConstructor), version}});
     assert(addResult.second && "TypeConstructor with that identifier already registered");
     return std::get<0>(addResult.first->second).get();
 }

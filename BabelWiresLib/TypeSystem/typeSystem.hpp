@@ -40,7 +40,7 @@ namespace babelwires {
         template <typename TYPE_CONSTRUCTOR, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
         TYPE_CONSTRUCTOR* addTypeConstructor(ARGS&&... args) {
-            TypeConstructor* newType = addTypeConstructor(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(), std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
+            TypeConstructor* newType = addTypeConstructorInternal(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(), std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
             return &newType->is<TYPE_CONSTRUCTOR>();
         }
 
@@ -93,7 +93,7 @@ namespace babelwires {
 
       protected:
         Type* addPrimitiveType(LongIdentifier typeId, VersionNumber version, std::unique_ptr<Type> newType);
-        TypeConstructor* addTypeConstructor(LongIdentifier typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
+        TypeConstructor* addTypeConstructorInternal(LongIdentifier typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
 
         const RelatedTypes& getRelatedTypes(const TypeRef& typeId) const;
 

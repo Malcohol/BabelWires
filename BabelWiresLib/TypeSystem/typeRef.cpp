@@ -20,7 +20,8 @@ babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
 
 babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments)
     : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {
-    assert((arguments.m_typeArguments.size() <= TypeConstructorArguments::s_maxNumArguments) && "Too many arguments for TypeRef");
+    assert((arguments.m_typeArguments.size() <= TypeConstructorArguments::s_maxNumArguments) &&
+           "Too many arguments for TypeRef");
 }
 
 const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
@@ -29,7 +30,7 @@ const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSy
         const babelwires::Type* operator()(PrimitiveTypeId typeId) { return m_typeSystem.tryGetPrimitiveType(typeId); }
         const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
             const LongIdentifier typeConstructorId = std::get<0>(higherOrderData);
-            if (const TypeConstructor *const typeConstructor = m_typeSystem.tryGetTypeConstructor(typeConstructorId)) {
+            if (const TypeConstructor* const typeConstructor = m_typeSystem.tryGetTypeConstructor(typeConstructorId)) {
                 return typeConstructor->getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
             }
             return nullptr;
@@ -48,8 +49,9 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
             const LongIdentifier typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);
-            // TODO
-            throw TypeSystemException() << "TODO";
+            const Type* type = typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+            assert(type);
+            return *type;
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
@@ -93,7 +95,8 @@ namespace {
         if (arguments.size() > babelwires::TypeConstructorArguments::s_maxNumArguments) {
             return {};
         }
-        std::bitset<babelwires::TypeConstructorArguments::s_maxNumArguments> argumentsNotYetSeen((1 << arguments.size()) - 1);
+        std::bitset<babelwires::TypeConstructorArguments::s_maxNumArguments> argumentsNotYetSeen(
+            (1 << arguments.size()) - 1);
         std::ostringstream oss;
         constexpr char open = '{';
         constexpr char close = '}';
@@ -207,7 +210,8 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
         auto tuple = parseHelper(str.substr(next));
         arguments.m_typeArguments.emplace_back(std::move(std::get<0>(tuple)));
         if (arguments.m_typeArguments.size() > TypeConstructorArguments::s_maxNumArguments) {
-            throw ParseException() << "TypeRef too many arguments (maximum allowed is " << TypeConstructorArguments::s_maxNumArguments << ")";
+            throw ParseException() << "TypeRef too many arguments (maximum allowed is "
+                                   << TypeConstructorArguments::s_maxNumArguments << ")";
         }
         assert((std::get<1>(tuple) > 0) && "Did not advance while parsing");
         next += std::get<1>(tuple);
