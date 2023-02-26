@@ -10,10 +10,6 @@
 #include <BabelWiresLib/Enums/enum.hpp>
 
 #include <algorithm>
-
-babelwires::PrimitiveTypeEntry::PrimitiveTypeEntry(LongIdentifier identifier, VersionNumber version)
-    : RegistryEntry(identifier, version) {}
-
 namespace {
     void insertTypeId(babelwires::TypeSystem::TypeIdSet& typeIds, const babelwires::TypeRef& typeId) {
         auto it = std::upper_bound(typeIds.begin(), typeIds.end(), typeId);
@@ -21,16 +17,29 @@ namespace {
     }
 } // namespace
 
-babelwires::TypeSystem::TypeSystem()
-    : m_primitiveTypeRegistry("Primitive Type Registry") {}
+babelwires::TypeSystem::~TypeSystem() = default;
 
 const babelwires::Type* babelwires::TypeSystem::tryGetPrimitiveType(LongIdentifier id) const {
-    const auto* entry = m_primitiveTypeRegistry.getEntryByIdentifier(id);
-    return entry ? &entry->getType() : nullptr;
+    auto it = m_primitiveTypeInfoRegistry.find(id);
+    if (it != m_primitiveTypeInfoRegistry.end()) {
+        return std::get<0>(it->second).get();
+    }
+    return nullptr;
 }
 
 const babelwires::Type& babelwires::TypeSystem::getPrimitiveType(LongIdentifier id) const {
-    return m_primitiveTypeRegistry.getRegisteredEntry(id).getType();
+    auto it = m_primitiveTypeInfoRegistry.find(id);
+    assert((it != m_primitiveTypeInfoRegistry.end()) && "Primitive Type not registered in type system");
+    return *std::get<0>(it->second);
+}
+
+babelwires::Type* babelwires::TypeSystem::addPrimitiveType(LongIdentifier typeId, VersionNumber version,
+                                                           std::unique_ptr<Type> newType) {
+    auto addResult = m_primitiveTypeInfoRegistry
+                           .emplace(std::pair<LongIdentifier, PrimitiveTypeInfo>{
+                               typeId, PrimitiveTypeInfo{std::move(newType), version}});
+    assert(addResult.second && "Type with that identifier already registered");
+    return std::get<0>(addResult.first->second).get();
 }
 
 // TODO ALL VERY INEFFICIENT

@@ -7,10 +7,9 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
+#include <BabelWiresLib/TypeSystem/value.hpp>
 
-#include <Common/Registry/registry.hpp>
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/exceptions.hpp>
 
@@ -19,49 +18,20 @@ namespace babelwires {
 
     class TypeSystemException : public ExceptionWithStream<TypeSystemException> {};
 
-    /// The common C++ type of PrimitiveTypes.
-    /// The type itself is carried by the subclass PrimitiveTypeEntryImpl.
-    class PrimitiveTypeEntry : public RegistryEntry {
-      public:
-        PrimitiveTypeEntry(LongIdentifier identifier, VersionNumber version);
-
-        virtual Type& getType() = 0;
-        virtual const Type& getType() const = 0;
-    };
-
-    /// Implementation class of PrimitiveTypeEntry which contains an instance of the type.
-    template <typename TYPE> class PrimitiveTypeEntryConcrete : public PrimitiveTypeEntry {
-      public:
-        /// Construct an entry and the type it describes together.
-        /// If the type requires arguments (other than the TypeRef) those will be passed in by this constructor.
-        template <typename... ARGS>
-        PrimitiveTypeEntryConcrete(ARGS&&... args)
-            : PrimitiveTypeEntry(TYPE::getThisIdentifier(), TYPE::getVersion())
-            , m_type(std::forward<ARGS>(args)...) {}
-
-        Type& getType() override { return m_type; }
-        const Type& getType() const override { return m_type; }
-
-      private:
-        TYPE m_type;
-    };
-
     class TypeSystem {
       public:
-        TypeSystem();
+        virtual ~TypeSystem();
 
-        template<typename TYPE, typename... ARGS, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
+        template <typename TYPE, typename... ARGS,
+                  std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         TYPE* addEntry(ARGS&&... args) {
-          // TODO Validate names.
-          auto* entry = m_primitiveTypeRegistry.addEntry<PrimitiveTypeEntryConcrete<TYPE>>(std::forward<ARGS>(args)...);
-          Type& type = entry->getType();
-          return &type.is<TYPE>();
+            Type* newType = addPrimitiveType(TYPE::getThisIdentifier(), TYPE::getVersion(), std::make_unique<TYPE>(std::forward<ARGS>(args)...));
+            return &newType->is<TYPE>();
         }
 
-        template<typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
+        template <typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         const TYPE& getEntryByType() const {
-          const PrimitiveTypeEntry& entry = m_primitiveTypeRegistry.getRegisteredEntry(TYPE::getThisIdentifier());
-          return entry.getType().is<TYPE>();
+            return getPrimitiveType(TYPE::getThisIdentifier()).template is<TYPE>();
         }
 
         const Type* tryGetPrimitiveType(LongIdentifier id) const;
@@ -72,12 +42,13 @@ namespace babelwires {
         using TypeIdSet = std::vector<TypeRef>;
 
         struct RelatedTypes {
-          TypeIdSet m_supertypeIds;
-          TypeIdSet m_subtypeIds;
+            TypeIdSet m_supertypeIds;
+            TypeIdSet m_subtypeIds;
         };
 
         /// All types must be already registered.
-        /// Subtyping is managed seperately from the types themselves because a type may not know all its relations at construction time.
+        /// Subtyping is managed seperately from the types themselves because a type may not know all its relations at
+        /// construction time.
         void addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes);
 
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
@@ -108,10 +79,14 @@ namespace babelwires {
         static void removeDuplicates(TypeIdSet& typeIds);
 
       protected:
+        Type* addPrimitiveType(LongIdentifier typeId, VersionNumber version, std::unique_ptr<Type> newType);
+        
+
         const RelatedTypes& getRelatedTypes(const TypeRef& typeId) const;
 
       protected:
-        Registry<PrimitiveTypeEntry> m_primitiveTypeRegistry;
+        using PrimitiveTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;
+        std::unordered_map<LongIdentifier, PrimitiveTypeInfo> m_primitiveTypeInfoRegistry;
 
         std::unordered_map<TypeRef, RelatedTypes> m_relatedTypes;
 
