@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
-#include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/exceptions.hpp>
@@ -37,7 +37,20 @@ namespace babelwires {
         const Type* tryGetPrimitiveType(LongIdentifier id) const;
         const Type& getPrimitiveType(LongIdentifier id) const;
 
-        const Type* getEntryByIdentifier(LongIdentifier id) const;
+        template <typename TYPE_CONSTRUCTOR, typename... ARGS,
+                  std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
+        TYPE_CONSTRUCTOR* addTypeConstructor(ARGS&&... args) {
+            TypeConstructor* newType = addTypeConstructor(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(), std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
+            return &newType->is<TYPE_CONSTRUCTOR>();
+        }
+
+        template <typename TYPE_CONSTRUCTOR, std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
+        const TYPE_CONSTRUCTOR& getTypeConstructorByType() const {
+            return getTypeConstructor(TYPE_CONSTRUCTOR::getThisIdentifier()).template is<TYPE_CONSTRUCTOR>();
+        }
+
+        const TypeConstructor* tryGetTypeConstructor(LongIdentifier id) const;
+        const TypeConstructor& getTypeConstructor(LongIdentifier id) const;
 
         using TypeIdSet = std::vector<TypeRef>;
 
@@ -80,13 +93,16 @@ namespace babelwires {
 
       protected:
         Type* addPrimitiveType(LongIdentifier typeId, VersionNumber version, std::unique_ptr<Type> newType);
-        
+        TypeConstructor* addTypeConstructor(LongIdentifier typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
 
         const RelatedTypes& getRelatedTypes(const TypeRef& typeId) const;
 
       protected:
         using PrimitiveTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;
-        std::unordered_map<LongIdentifier, PrimitiveTypeInfo> m_primitiveTypeInfoRegistry;
+        std::unordered_map<LongIdentifier, PrimitiveTypeInfo> m_primitiveTypeRegistry;
+
+        using TypeConstructorInfo = std::tuple<std::unique_ptr<TypeConstructor>, VersionNumber>;
+        std::unordered_map<LongIdentifier, TypeConstructorInfo> m_typeConstructorRegistry;
 
         std::unordered_map<TypeRef, RelatedTypes> m_relatedTypes;
 

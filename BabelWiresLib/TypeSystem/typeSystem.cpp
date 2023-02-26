@@ -7,6 +7,7 @@
  **/
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+
 #include <BabelWiresLib/Enums/enum.hpp>
 
 #include <algorithm>
@@ -20,25 +21,48 @@ namespace {
 babelwires::TypeSystem::~TypeSystem() = default;
 
 const babelwires::Type* babelwires::TypeSystem::tryGetPrimitiveType(LongIdentifier id) const {
-    auto it = m_primitiveTypeInfoRegistry.find(id);
-    if (it != m_primitiveTypeInfoRegistry.end()) {
+    auto it = m_primitiveTypeRegistry.find(id);
+    if (it != m_primitiveTypeRegistry.end()) {
         return std::get<0>(it->second).get();
     }
     return nullptr;
 }
 
 const babelwires::Type& babelwires::TypeSystem::getPrimitiveType(LongIdentifier id) const {
-    auto it = m_primitiveTypeInfoRegistry.find(id);
-    assert((it != m_primitiveTypeInfoRegistry.end()) && "Primitive Type not registered in type system");
+    auto it = m_primitiveTypeRegistry.find(id);
+    assert((it != m_primitiveTypeRegistry.end()) && "Primitive Type not registered in type system");
     return *std::get<0>(it->second);
 }
 
 babelwires::Type* babelwires::TypeSystem::addPrimitiveType(LongIdentifier typeId, VersionNumber version,
                                                            std::unique_ptr<Type> newType) {
-    auto addResult = m_primitiveTypeInfoRegistry
+    auto addResult = m_primitiveTypeRegistry
                            .emplace(std::pair<LongIdentifier, PrimitiveTypeInfo>{
                                typeId, PrimitiveTypeInfo{std::move(newType), version}});
     assert(addResult.second && "Type with that identifier already registered");
+    return std::get<0>(addResult.first->second).get();
+}
+
+const babelwires::TypeConstructor* babelwires::TypeSystem::tryGetTypeConstructor(LongIdentifier id) const {
+    auto it = m_typeConstructorRegistry.find(id);
+    if (it != m_typeConstructorRegistry.end()) {
+        return std::get<0>(it->second).get();
+    }
+    return nullptr;
+}
+
+const babelwires::TypeConstructor& babelwires::TypeSystem::getTypeConstructor(LongIdentifier id) const {
+    auto it = m_typeConstructorRegistry.find(id);
+    assert((it != m_typeConstructorRegistry.end()) && "TypeConstructor not registered in type system");
+    return *std::get<0>(it->second);
+}
+
+babelwires::TypeConstructor* babelwires::TypeSystem::addTypeConstructor(LongIdentifier typeId, VersionNumber version,
+                                                           std::unique_ptr<TypeConstructor> newType) {
+    auto addResult = m_typeConstructorRegistry
+                           .emplace(std::pair<LongIdentifier, TypeConstructorInfo>{
+                               typeId, TypeConstructorInfo{std::move(newType), version}});
+    assert(addResult.second && "TypeConstructor with that identifier already registered");
     return std::get<0>(addResult.first->second).get();
 }
 

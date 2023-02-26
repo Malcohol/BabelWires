@@ -8,13 +8,14 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
+#include <BabelWiresLib/TypeSystem/typeConstructorArguments.hpp>
 
-#include <Common/Serialization/serializable.hpp>
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Serialization/serializable.hpp>
 
-#include <variant>
 #include <array>
+#include <variant>
 
 namespace babelwires {
     class Type;
@@ -27,14 +28,12 @@ namespace babelwires {
 
         TypeRef();
         TypeRef(PrimitiveTypeId typeId);
-        
-        using Arguments = std::vector<TypeRef>;
 
         /// The maximum number of arguments a TypeRef can carry.
         static constexpr std::size_t s_maxNumArguments = 10;
 
         /// At most s_maxNumArguments arguments are allowed.
-        TypeRef(TypeConstructorId typeConstructorId, Arguments arguments);
+        TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments);
 
         const Type* tryResolve(const TypeSystem& typeSystem) const;
         const Type& resolve(const TypeSystem& typeSystem) const;
@@ -53,7 +52,7 @@ namespace babelwires {
 
         friend bool operator==(const TypeRef& a, const TypeRef& b) { return a.m_storage == b.m_storage; }
         friend bool operator!=(const TypeRef& a, const TypeRef& b) { return a.m_storage != b.m_storage; }
-        
+
         /// Note: This orders TypeRefs using identifiers NOT SUBTYPING!
         friend bool operator<(const TypeRef& a, const TypeRef& b) { return a.m_storage < b.m_storage; }
 
@@ -69,14 +68,13 @@ namespace babelwires {
 
       private:
         // TODO Consider a hack where the first element of the vector is actually treated as a constructorId.
-        using ConstructedTypeData = std::tuple<TypeConstructorId, Arguments>;
+        using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArguments>;
         using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
 
       private:
         Storage m_storage;
     };
 } // namespace babelwires
-
 
 namespace std {
     template <> struct hash<babelwires::TypeRef> {
