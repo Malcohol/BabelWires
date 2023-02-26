@@ -29,10 +29,6 @@ namespace babelwires {
         TypeRef();
         TypeRef(PrimitiveTypeId typeId);
 
-        /// The maximum number of arguments a TypeRef can carry.
-        static constexpr std::size_t s_maxNumArguments = 10;
-
-        /// At most s_maxNumArguments arguments are allowed.
         TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments);
 
         const Type* tryResolve(const TypeSystem& typeSystem) const;

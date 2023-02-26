@@ -20,7 +20,7 @@ babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
 
 babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments)
     : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {
-    assert((arguments.m_typeArguments.size() <= s_maxNumArguments) && "Too many arguments for TypeRef");
+    assert((arguments.m_typeArguments.size() <= TypeConstructorArguments::s_maxNumArguments) && "Too many arguments for TypeRef");
 }
 
 const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
@@ -90,10 +90,10 @@ namespace {
         if (format.size() < 2) {
             return {};
         }
-        if (arguments.size() > babelwires::TypeRef::s_maxNumArguments) {
+        if (arguments.size() > babelwires::TypeConstructorArguments::s_maxNumArguments) {
             return {};
         }
-        std::bitset<babelwires::TypeRef::s_maxNumArguments> argumentsNotYetSeen((1 << arguments.size()) - 1);
+        std::bitset<babelwires::TypeConstructorArguments::s_maxNumArguments> argumentsNotYetSeen((1 << arguments.size()) - 1);
         std::ostringstream oss;
         constexpr char open = '{';
         constexpr char close = '}';
@@ -111,7 +111,7 @@ namespace {
                     break;
                 }
                 case justReadOpen: {
-                    static_assert(babelwires::TypeRef::s_maxNumArguments == 10);
+                    static_assert(babelwires::TypeConstructorArguments::s_maxNumArguments == 10);
                     if ((currentChar >= '0') && (currentChar <= '9')) {
                         const std::size_t indexCharAsIndex = currentChar - '0';
                         if (indexCharAsIndex >= arguments.size()) {
@@ -206,8 +206,8 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
     while (1) {
         auto tuple = parseHelper(str.substr(next));
         arguments.m_typeArguments.emplace_back(std::move(std::get<0>(tuple)));
-        if (arguments.m_typeArguments.size() > s_maxNumArguments) {
-            throw ParseException() << "TypeRef too many arguments (maximum allowed is " << s_maxNumArguments << ")";
+        if (arguments.m_typeArguments.size() > TypeConstructorArguments::s_maxNumArguments) {
+            throw ParseException() << "TypeRef too many arguments (maximum allowed is " << TypeConstructorArguments::s_maxNumArguments << ")";
         }
         assert((std::get<1>(tuple) > 0) && "Did not advance while parsing");
         next += std::get<1>(tuple);
