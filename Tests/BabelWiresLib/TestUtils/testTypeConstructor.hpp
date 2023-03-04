@@ -27,11 +27,10 @@ namespace testUtils {
         unsigned int getArity() const override { return 1; }
 
         std::unique_ptr<babelwires::Type>
-        constructType(const std::vector<const babelwires::Type*>& arguments) const override {
+        constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& arguments) const override {
             assert(arguments.size() == 1);
             // Remember the typeRef, since there's no way to reconstruct it.
-            return std::make_unique<TestConstructedType>(
-                babelwires::TypeRef(getThisIdentifier(), {{arguments[0]->getTypeRef()}}));
+            return std::make_unique<TestConstructedType>(std::move(newTypeRef));
         }
     };
 } // namespace testUtils

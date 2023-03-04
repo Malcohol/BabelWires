@@ -35,6 +35,7 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
             resolvedArguments.emplace_back(argAsType);
         }
     }
+    TypeRef newTypeRef(getTypeConstructorId(), arguments);
 
     {
         // Phase 3: Try the cache again with a write lock.
@@ -46,7 +47,7 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
             // Still not found.
             // Only construct the type if the arity is correct.
             if (resolvedArguments.size() == arguments.m_typeArguments.size()) {
-                it.first->second = constructType(resolvedArguments);
+                it.first->second = constructType(std::move(newTypeRef), resolvedArguments);
             }
         }
         return it.first->second.get();

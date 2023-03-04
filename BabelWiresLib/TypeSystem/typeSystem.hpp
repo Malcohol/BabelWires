@@ -9,14 +9,12 @@
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
-#include <Common/exceptions.hpp>
 
 namespace babelwires {
     class TypeRef;
-
-    class TypeSystemException : public ExceptionWithStream<TypeSystemException> {};
 
     class TypeSystem {
       public:

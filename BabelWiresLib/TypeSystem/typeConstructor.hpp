@@ -10,6 +10,7 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
+#include <Common/Identifiers/registeredIdentifier.hpp>
 
 #include <shared_mutex>
 
@@ -24,10 +25,14 @@ namespace babelwires {
         /// Get the constructed type from the cache, or construct a new one.
         const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 
+        /// This is supplied by the TYPE_CONSTRUCTOR macro.
+        virtual LongIdentifier getTypeConstructorId() const = 0;
+
         /// TypeConstructors are expected to have fixed arity.
         virtual unsigned int getArity() const = 0;
 
-        virtual std::unique_ptr<Type> constructType(const std::vector<const Type*>& arguments) const = 0;
+        virtual std::unique_ptr<Type> constructType(TypeRef newTypeRef,
+                                                    const std::vector<const Type*>& arguments) const = 0;
 
         // TODO Support for deduced subtyping, something like isSubtype and getSubtypes.
 
@@ -47,9 +52,11 @@ namespace babelwires {
 /// Regular brackets can be written with "{{" and "}}". Non-positional arguments "{}" are not supported.
 #define TYPE_CONSTRUCTOR(IDENTIFIER, NAME, UUID, VERSION)                                                              \
     static babelwires::LongIdentifier getThisIdentifier() { return REGISTERED_LONGID(IDENTIFIER, NAME, UUID); }        \
-    static babelwires::VersionNumber getVersion() { return VERSION; }
+    static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
+    babelwires::LongIdentifier getTypeConstructorId() const override { return getThisIdentifier(); }
 
 /// Intended mainly for testing.
 #define TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                       \
     static babelwires::LongIdentifier getThisIdentifier() { return IDENTIFIER; }                                       \
-    static babelwires::VersionNumber getVersion() { return VERSION; }
+    static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
+    babelwires::LongIdentifier getTypeConstructorId() const override { return getThisIdentifier(); }
