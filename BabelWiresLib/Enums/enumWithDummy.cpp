@@ -15,7 +15,7 @@ babelwires::EnumWithDummy::EnumWithDummy(TypeRef typeRef, const Enum& srcEnum)
     , Enum(ensureDummyValue(srcEnum.getEnumValues()), srcEnum.getIndexOfDefaultValue()) {}
 
 babelwires::Identifier babelwires::EnumWithDummy::getDummyValue() {
-    return REGISTERED_ID("dummy", "Dummy", "9e715cdc-399a-48b7-bc04-ad98e9e900d9");
+    return REGISTERED_ID("____", "____", "9e715cdc-399a-48b7-bc04-ad98e9e900d9");
 }
 
 babelwires::Enum::EnumValues babelwires::EnumWithDummy::ensureDummyValue(const EnumValues& srcValues) {

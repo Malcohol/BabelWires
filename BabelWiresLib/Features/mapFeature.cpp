@@ -84,7 +84,7 @@ bool babelwires::MapFeature::AllowedTypes::isSubtypeOfSome(const TypeSystem& typ
                                         });
 }
 
-babelwires::StandardMapFeature::StandardMapFeature(LongIdentifier sourceTypeId, LongIdentifier targetTargetId)
+babelwires::StandardMapFeature::StandardMapFeature(TypeRef sourceTypeId, TypeRef targetTargetId)
     : m_allowedSourceTypeId(std::move(sourceTypeId))
     , m_allowedTargetTypeId(std::move(targetTargetId)) {}
 

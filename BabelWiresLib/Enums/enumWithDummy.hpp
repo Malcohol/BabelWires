@@ -36,7 +36,7 @@ namespace babelwires {
     /// A unary type constructor which adds a dummy value to an existing enum.
     class AddDummy : public TypeConstructor {
       public:
-        TYPE_CONSTRUCTOR("AddDummy", "({0}+\u22a5)", "bd5af7a5-4a75-4807-a3d8-93851e1a7d00", 1);
+        TYPE_CONSTRUCTOR("AddDummy", "{0} + _", "bd5af7a5-4a75-4807-a3d8-93851e1a7d00", 1);
 
         unsigned int getArity() const override;
 

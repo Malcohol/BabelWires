@@ -59,7 +59,7 @@ namespace babelwires {
     /// A MapFeature which allows only a single source and target type.
     class StandardMapFeature : public MapFeature {
       public:
-        StandardMapFeature(LongIdentifier sourceId, LongIdentifier targetId);
+        StandardMapFeature(TypeRef sourceId, TypeRef targetId);
 
         void getAllowedSourceTypeIds(AllowedTypes& allowedTypesOut) const override;
         void getAllowedTargetTypeIds(AllowedTypes& allowedTypesOut) const override;
