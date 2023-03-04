@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Enums/enumWithDummy.hpp>
+#include <BabelWiresLib/Enums/addDummy.hpp>
 
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>

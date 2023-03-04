@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/intType.hpp>
-#include <BabelWiresLib/Enums/enumWithDummy.hpp>
+#include <BabelWiresLib/Enums/addDummy.hpp>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<IntType>();
