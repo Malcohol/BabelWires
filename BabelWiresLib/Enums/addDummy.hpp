@@ -10,18 +10,12 @@
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 #include <BabelWiresLib/Enums/enum.hpp>
 
-#include <vector>
-#include <unordered_map>
-
 namespace babelwires {
 
     /// An Enum with a dummy value.
     class EnumWithDummy : public Enum {
       public:
         EnumWithDummy(TypeRef typeRef, const Enum& srcEnum);
-
-        /// The Dummy value is only permitted at the end of the enum.
-        static Identifier getDummyValue();
       
         TypeRef getTypeRef() const override;
 
@@ -37,6 +31,10 @@ namespace babelwires {
     class AddDummy : public TypeConstructor {
       public:
         TYPE_CONSTRUCTOR("AddDummy", "{0} + _", "bd5af7a5-4a75-4807-a3d8-93851e1a7d00", 1);
+
+        /// The Dummy value added to enums. 
+        /// Note that the dummy value is only permitted at the end of the enum.
+        static Identifier getDummyValue();
 
         unsigned int getArity() const override;
 
