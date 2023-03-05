@@ -43,6 +43,22 @@ namespace babelwires {
         /// A cache which stops the system ending up with multiple copies of the same constructed type.
         mutable std::unordered_map<TypeConstructorArguments, std::unique_ptr<Type>> m_cache;
     };
+
+    /// A convenience type which can used by type constructors for the type they want to construct
+    /// where the class for the type doesn't implement getTypeRef.
+    /// Type constructors are not obliged to use this template.
+    template <typename T> class ConstructedType : public T {
+      public:
+        template <typename... ARGS>
+        ConstructedType(TypeRef typeRef, ARGS&&... args)
+            : T(std::forward<ARGS>(args)...)
+            , m_typeRef(std::move(typeRef)) {}
+
+        TypeRef getTypeRef() const override { return m_typeRef; }
+
+      private:
+        TypeRef m_typeRef;
+    };
 } // namespace babelwires
 
 /// Type constructors need to be registered.
