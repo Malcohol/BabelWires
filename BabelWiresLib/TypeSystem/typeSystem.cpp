@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-
 #include <BabelWiresLib/Enums/enum.hpp>
 
 #include <algorithm>
@@ -36,9 +35,8 @@ const babelwires::Type& babelwires::TypeSystem::getPrimitiveType(LongIdentifier 
 
 babelwires::Type* babelwires::TypeSystem::addPrimitiveType(LongIdentifier typeId, VersionNumber version,
                                                            std::unique_ptr<Type> newType) {
-    auto addResult = m_primitiveTypeRegistry
-                           .emplace(std::pair<LongIdentifier, PrimitiveTypeInfo>{
-                               typeId, PrimitiveTypeInfo{std::move(newType), version}});
+    auto addResult = m_primitiveTypeRegistry.emplace(
+        std::pair<LongIdentifier, PrimitiveTypeInfo>{typeId, PrimitiveTypeInfo{std::move(newType), version}});
     assert(addResult.second && "Type with that identifier already registered");
     return std::get<0>(addResult.first->second).get();
 }
@@ -57,11 +55,11 @@ const babelwires::TypeConstructor& babelwires::TypeSystem::getTypeConstructor(Lo
     return *std::get<0>(it->second);
 }
 
-babelwires::TypeConstructor* babelwires::TypeSystem::addTypeConstructorInternal(LongIdentifier typeId, VersionNumber version,
-                                                           std::unique_ptr<TypeConstructor> newTypeConstructor) {
-    auto addResult = m_typeConstructorRegistry
-                           .emplace(std::pair<LongIdentifier, TypeConstructorInfo>{
-                               typeId, TypeConstructorInfo{std::move(newTypeConstructor), version}});
+babelwires::TypeConstructor*
+babelwires::TypeSystem::addTypeConstructorInternal(LongIdentifier typeId, VersionNumber version,
+                                                   std::unique_ptr<TypeConstructor> newTypeConstructor) {
+    auto addResult = m_typeConstructorRegistry.emplace(std::pair<LongIdentifier, TypeConstructorInfo>{
+        typeId, TypeConstructorInfo{std::move(newTypeConstructor), version}});
     assert(addResult.second && "TypeConstructor with that identifier already registered");
     return std::get<0>(addResult.first->second).get();
 }
@@ -105,20 +103,51 @@ const babelwires::TypeSystem::RelatedTypes& babelwires::TypeSystem::getRelatedTy
     }
 }
 
-bool babelwires::TypeSystem::isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const {
+babelwires::TypeRef::SubTypeOrder babelwires::TypeSystem::getSubTypeOrder(const TypeRef& subtypeId,
+                                                                          const TypeRef& supertypeId) const {
+    // TODO Subtyping is currently a complete mess!
+
     if (subtypeId == supertypeId) {
-        return true;
+        return TypeRef::SubTypeOrder::IsEquivalent;
     }
     for (auto parentId : getRelatedTypes(subtypeId).m_supertypeIds) {
-        if (isSubType(parentId, supertypeId)) {
-            return true;
+        const TypeRef::SubTypeOrder parentOrder = getSubTypeOrder(parentId, supertypeId);
+        if ((parentOrder == TypeRef::SubTypeOrder::IsEquivalent) || (parentOrder == TypeRef::SubTypeOrder::IsSubType)) {
+            return TypeRef::SubTypeOrder::IsSubType;
         }
     }
-    return false;
+    for (auto parentId : getRelatedTypes(supertypeId).m_supertypeIds) {
+        const TypeRef::SubTypeOrder parentOrder = getSubTypeOrder(parentId, subtypeId);
+        if ((parentOrder == TypeRef::SubTypeOrder::IsEquivalent) ||
+            (parentOrder == TypeRef::SubTypeOrder::IsSuperType)) {
+            return TypeRef::SubTypeOrder::IsSuperType;
+        }
+    }
+    const TypeRef::SubTypeOrder orderFromSubtype = subtypeId.isSubTypeHelper(*this, supertypeId);
+    if (orderFromSubtype != TypeRef::SubTypeOrder::IsUnrelated) {
+        // I'm making assumptions here, such as: if the A knows it's a supertype of B, then it also knows if it's
+        // equivalent, and would have told us.
+        return orderFromSubtype;
+    }
+    switch (supertypeId.isSubTypeHelper(*this, subtypeId)) {
+        case TypeRef::SubTypeOrder::IsSubType:
+            return TypeRef::SubTypeOrder::IsSuperType;
+        case TypeRef::SubTypeOrder::IsSuperType:
+            return TypeRef::SubTypeOrder::IsSubType;
+        case TypeRef::SubTypeOrder::IsEquivalent:
+            return TypeRef::SubTypeOrder::IsEquivalent;
+        default:
+            return TypeRef::SubTypeOrder::IsUnrelated;
+    }
+}
+
+bool babelwires::TypeSystem::isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const {
+    TypeRef::SubTypeOrder order = getSubTypeOrder(subtypeId, supertypeId);
+    return (order == TypeRef::SubTypeOrder::IsEquivalent) || (order == TypeRef::SubTypeOrder::IsSubType);
 }
 
 bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeAId, const TypeRef& typeBId) const {
-    return isSubType(typeAId, typeBId) || isSubType(typeBId, typeAId);
+    return getSubTypeOrder(typeAId, typeBId) != TypeRef::SubTypeOrder::IsUnrelated;
 }
 
 void babelwires::TypeSystem::addAllSubtypes(const TypeRef& typeId, TypeIdSet& subtypes) const {

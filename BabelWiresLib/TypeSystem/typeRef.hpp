@@ -55,6 +55,17 @@ namespace babelwires {
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;
 
+        enum class SubTypeOrder {
+          IsSubType,
+          IsSuperType,
+          IsEquivalent,
+          IsUnrelated
+        };
+
+        /// If it doesn't have an explicit relationship between this and other, then it calls this
+        /// to see if this is constructed and whether the type constructor can determine the relationship.
+        SubTypeOrder isSubTypeHelper(const TypeSystem& typeSystem, const TypeRef& other) const;
+
       private:
         /// Avoids locking the IdentifierRegistry multiple times.
         std::string toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const;

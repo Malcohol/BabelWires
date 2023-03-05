@@ -62,6 +62,8 @@ namespace babelwires {
         /// construction time.
         void addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes);
 
+        TypeRef::SubTypeOrder getSubTypeOrder(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
+
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
         bool isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
 

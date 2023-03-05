@@ -34,7 +34,15 @@ namespace babelwires {
         virtual std::unique_ptr<Type> constructType(TypeRef newTypeRef,
                                                     const std::vector<const Type*>& arguments) const = 0;
 
-        // TODO Support for deduced subtyping, something like isSubtype and getSubtypes.
+        /// Are two types constructed by this type constructor related by subtyping? 
+        /// By default, this returns IsUnrelated.
+        virtual TypeRef::SubTypeOrder isSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA, const TypeConstructorArguments& argumentsB) const;
+
+        /// Is this a type constructed by this type related to the type other?
+        /// By default, this returns IsUnrelated.
+        /// Assumption: The subtype relation between two constructed types never depends on an axiom which involves both type constructors.
+        /// (Things like distributivity laws would break this assumption, but I doubt they'd be needed.)
+        virtual TypeRef::SubTypeOrder isSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments, const TypeRef& other) const;
 
       private:
         /// A mutex which ensures thread-safe access to the cache.

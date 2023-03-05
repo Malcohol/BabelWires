@@ -270,3 +270,38 @@ std::size_t babelwires::TypeRef::getHash() const {
     std::visit(visitorMethods, m_storage);
     return hash;
 }
+
+babelwires::TypeRef::SubTypeOrder babelwires::TypeRef::isSubTypeHelper(const TypeSystem& typeSystem,
+                                                                       const TypeRef& other) const {
+    struct VisitorMethods {
+        SubTypeOrder operator()(std::monostate) {
+            if (std::holds_alternative<std::monostate>(m_other.m_storage)) {
+                return SubTypeOrder::IsEquivalent;
+            }
+        }
+        SubTypeOrder operator()(const PrimitiveTypeId& typeId) {
+            // This method does not attempt to query the RHS.
+            return SubTypeOrder::IsUnrelated;
+        }
+        SubTypeOrder operator()(const ConstructedTypeData& higherOrderData) {
+            const LongIdentifier typeConstructorId = std::get<0>(higherOrderData);
+            const TypeConstructor* const typeConstructor = m_typeSystem.tryGetTypeConstructor(typeConstructorId);
+            if (!typeConstructor) {
+                return SubTypeOrder::IsUnrelated;
+            }
+            const ConstructedTypeData* const higherOrderDataOther =
+                std::get_if<ConstructedTypeData>(&m_other.m_storage);
+            if (higherOrderDataOther) {
+                const LongIdentifier typeConstructorIdOther = std::get<0>(*higherOrderDataOther);
+                if (typeConstructorIdOther == typeConstructorId) {
+                    return typeConstructor->isSubtypeHelper(m_typeSystem, std::get<1>(higherOrderData),
+                                                            std::get<1>(*higherOrderDataOther));
+                }
+            }
+            return typeConstructor->isSubtypeHelper(m_typeSystem, std::get<1>(higherOrderData), m_other);
+        }
+        const TypeRef& m_other;
+        const TypeSystem& m_typeSystem;
+    } visitorMethods{other, typeSystem};
+    return std::visit(visitorMethods, m_storage);
+}

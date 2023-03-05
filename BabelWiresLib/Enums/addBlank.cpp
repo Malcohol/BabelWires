@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 unsigned int babelwires::AddBlank::getArity() const {
     return 1;
@@ -40,3 +41,23 @@ babelwires::Enum::EnumValues babelwires::AddBlank::ensureBlankValue(const Enum::
     newValues.emplace_back(AddBlank::getBlankValue());
     return newValues;
 }
+
+
+babelwires::TypeRef::SubTypeOrder babelwires::AddBlank::isSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments, const TypeRef& other) const {
+    if (arguments.m_typeArguments.size() != 1) {
+        return TypeRef::SubTypeOrder::IsUnrelated;
+    }
+    const TypeRef::SubTypeOrder argOrder = typeSystem.getSubTypeOrder(arguments.m_typeArguments[0], other);
+    if ((argOrder == TypeRef::SubTypeOrder::IsEquivalent) || (argOrder == TypeRef::SubTypeOrder::IsSuperType)) {
+        return argOrder;
+    }
+    return TypeRef::SubTypeOrder::IsUnrelated;
+}
+
+babelwires::TypeRef::SubTypeOrder babelwires::AddBlank::isSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA, const TypeConstructorArguments& argumentsB) const {
+    if ((argumentsA.m_typeArguments.size() != 1) || (argumentsB.m_typeArguments.size() != 1)) {
+        return TypeRef::SubTypeOrder::IsUnrelated;    
+    }
+    return typeSystem.getSubTypeOrder(argumentsA.m_typeArguments[0], argumentsB.m_typeArguments[0]);
+}
+
