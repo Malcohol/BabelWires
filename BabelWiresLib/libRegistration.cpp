@@ -10,9 +10,9 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/intType.hpp>
-#include <BabelWiresLib/Enums/addDummy.hpp>
+#include <BabelWiresLib/Enums/addBlank.hpp>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<IntType>();
-    context.m_typeSystem.addTypeConstructor<AddDummy>();
+    context.m_typeSystem.addTypeConstructor<AddBlank>();
 }

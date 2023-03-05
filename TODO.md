@@ -69,7 +69,3 @@ Ideas:
 * SelectableArrays: For arrays larger than 16 elements:
   - Each element has an input drop down which selects the output array element.
   - This would be useful for complex input formats.
-
-Types:
-* Automatically provide an augmented version of each enum with a dummy value ("------" or "\_|\_" maybe?)
-  - Would allow percussion / chord processor to drop events (or add them in?)

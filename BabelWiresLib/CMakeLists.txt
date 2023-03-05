@@ -28,7 +28,7 @@ SET( BABELWIRESLIB_SRCS
 	ProjectExtra/connectionDescription.cpp
 	ProjectExtra/projectUtilities.cpp
 	Enums/enum.cpp
-	Enums/addDummy.cpp
+	Enums/addBlank.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
