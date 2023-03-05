@@ -61,18 +61,16 @@ namespace babelwires {
     };
 } // namespace babelwires
 
-/// Type constructors need to be registered.
-/// For now, assume this is always done statically.
-/// The NAME of a type constructor is a format string with positional arguments for all its type arguments.
-/// For example, the NAME of the binary product type constructor might be something like "({0} * {1})".
-/// Regular brackets can be written with "{{" and "}}". Non-positional arguments "{}" are not supported.
-#define TYPE_CONSTRUCTOR(IDENTIFIER, NAME, UUID, VERSION)                                                              \
-    static babelwires::LongIdentifier getThisIdentifier() { return REGISTERED_LONGID(IDENTIFIER, NAME, UUID); }        \
-    static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
-    babelwires::LongIdentifier getTypeConstructorId() const override { return getThisIdentifier(); }
-
 /// Intended mainly for testing.
 #define TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                       \
     static babelwires::LongIdentifier getThisIdentifier() { return IDENTIFIER; }                                       \
     static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
     babelwires::LongIdentifier getTypeConstructorId() const override { return getThisIdentifier(); }
+
+/// Type constructors need to be registered.
+/// For now, assume this is always done statically.
+/// The NAME of a type constructor is a format string with positional arguments for all its type arguments.
+/// For example, the NAME of the binary product type constructor might be something like "{0} * {1}".
+/// Regular brackets can be written with "{{" and "}}". Non-positional arguments "{}" are not supported.
+#define TYPE_CONSTRUCTOR(IDENTIFIER, NAME, UUID, VERSION)                                                              \
+    TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(REGISTERED_LONGID(IDENTIFIER, NAME, UUID), VERSION)

@@ -11,16 +11,14 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
+/// Intended mainly for testing.
+#define PRIMITIVE_TYPE_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                         \
+    static babelwires::LongIdentifier getThisIdentifier() { return IDENTIFIER; }                                       \
+    static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
+    babelwires::TypeRef getTypeRef() const override { return getThisIdentifier(); }
+
 /// Primitive types are not derived from other types, so they need to be registered.
 /// The TypeSystem expects primitive types to support certain functions and methods, which
 /// this macro provides.
-#define PRIMITIVE_TYPE(IDENTIFIER, NAME, UUID, VERSION) \
-    static babelwires::LongIdentifier getThisIdentifier() { return REGISTERED_LONGID(IDENTIFIER, NAME, UUID); } \
-    static babelwires::VersionNumber getVersion() { return VERSION; } \
-    babelwires::TypeRef getTypeRef() const override { return getThisIdentifier(); }
-
-/// Intended mainly for testing.
-#define PRIMITIVE_TYPE_WITH_REGISTERED_ID(IDENTIFIER, VERSION) \
-    static babelwires::LongIdentifier getThisIdentifier() { return IDENTIFIER; } \
-    static babelwires::VersionNumber getVersion() { return VERSION; } \
-    babelwires::TypeRef getTypeRef() const override { return getThisIdentifier(); }
+#define PRIMITIVE_TYPE(IDENTIFIER, NAME, UUID, VERSION)                                                                \
+    PRIMITIVE_TYPE_WITH_REGISTERED_ID(REGISTERED_LONGID(IDENTIFIER, NAME, UUID), VERSION)
