@@ -105,11 +105,15 @@ const babelwires::TypeSystem::RelatedTypes& babelwires::TypeSystem::getRelatedTy
 
 babelwires::TypeRef::SubTypeOrder babelwires::TypeSystem::getSubTypeOrder(const TypeRef& subtypeId,
                                                                           const TypeRef& supertypeId) const {
-    // TODO Subtyping is currently a complete mess!
-
     if (subtypeId == supertypeId) {
         return TypeRef::SubTypeOrder::IsEquivalent;
     }
+    return subtypeId.isSubTypeHelper(*this, supertypeId);
+}
+
+babelwires::TypeRef::SubTypeOrder
+babelwires::TypeSystem::getSubTypeOrderBetweenPrimitives(const LongIdentifier& subtypeId,
+                                                         const LongIdentifier& supertypeId) const {
     for (auto parentId : getRelatedTypes(subtypeId).m_supertypeIds) {
         const TypeRef::SubTypeOrder parentOrder = getSubTypeOrder(parentId, supertypeId);
         if ((parentOrder == TypeRef::SubTypeOrder::IsEquivalent) || (parentOrder == TypeRef::SubTypeOrder::IsSubType)) {
@@ -123,22 +127,7 @@ babelwires::TypeRef::SubTypeOrder babelwires::TypeSystem::getSubTypeOrder(const 
             return TypeRef::SubTypeOrder::IsSuperType;
         }
     }
-    const TypeRef::SubTypeOrder orderFromSubtype = subtypeId.isSubTypeHelper(*this, supertypeId);
-    if (orderFromSubtype != TypeRef::SubTypeOrder::IsUnrelated) {
-        // I'm making assumptions here, such as: if the A knows it's a supertype of B, then it also knows if it's
-        // equivalent, and would have told us.
-        return orderFromSubtype;
-    }
-    switch (supertypeId.isSubTypeHelper(*this, subtypeId)) {
-        case TypeRef::SubTypeOrder::IsSubType:
-            return TypeRef::SubTypeOrder::IsSuperType;
-        case TypeRef::SubTypeOrder::IsSuperType:
-            return TypeRef::SubTypeOrder::IsSubType;
-        case TypeRef::SubTypeOrder::IsEquivalent:
-            return TypeRef::SubTypeOrder::IsEquivalent;
-        default:
-            return TypeRef::SubTypeOrder::IsUnrelated;
-    }
+    return TypeRef::SubTypeOrder::IsUnrelated;
 }
 
 bool babelwires::TypeSystem::isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const {

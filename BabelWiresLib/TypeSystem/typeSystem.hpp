@@ -64,6 +64,8 @@ namespace babelwires {
 
         TypeRef::SubTypeOrder getSubTypeOrder(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
 
+        TypeRef::SubTypeOrder getSubTypeOrderBetweenPrimitives(const LongIdentifier& subtypeId, const LongIdentifier& supertypeId) const;
+
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
         bool isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
 

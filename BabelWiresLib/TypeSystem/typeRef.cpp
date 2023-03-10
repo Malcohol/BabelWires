@@ -271,37 +271,73 @@ std::size_t babelwires::TypeRef::getHash() const {
     return hash;
 }
 
+// helper type for the visitor #4
+template <class... Ts> struct overloaded : Ts... {
+    using Ts::operator()...;
+};
+// explicit deduction guide (not needed as of C++20)
+template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+namespace {
+    babelwires::TypeRef::SubTypeOrder reverse(babelwires::TypeRef::SubTypeOrder order) {
+        switch (order) {
+            case babelwires::TypeRef::SubTypeOrder::IsSubType:
+                return babelwires::TypeRef::SubTypeOrder::IsSuperType;
+            case babelwires::TypeRef::SubTypeOrder::IsSuperType:
+                return babelwires::TypeRef::SubTypeOrder::IsSubType;
+            default:
+                return order;
+        }
+    }
+} // namespace
+
 babelwires::TypeRef::SubTypeOrder babelwires::TypeRef::isSubTypeHelper(const TypeSystem& typeSystem,
                                                                        const TypeRef& other) const {
-    struct VisitorMethods {
-        SubTypeOrder operator()(std::monostate) {
-            if (std::holds_alternative<std::monostate>(m_other.m_storage)) {
-                return SubTypeOrder::IsEquivalent;
-            }
-        }
-        SubTypeOrder operator()(const PrimitiveTypeId& typeId) {
-            // This method does not attempt to query the RHS.
-            return SubTypeOrder::IsUnrelated;
-        }
-        SubTypeOrder operator()(const ConstructedTypeData& higherOrderData) {
-            const LongIdentifier typeConstructorId = std::get<0>(higherOrderData);
-            const TypeConstructor* const typeConstructor = m_typeSystem.tryGetTypeConstructor(typeConstructorId);
-            if (!typeConstructor) {
-                return SubTypeOrder::IsUnrelated;
-            }
-            const ConstructedTypeData* const higherOrderDataOther =
-                std::get_if<ConstructedTypeData>(&m_other.m_storage);
-            if (higherOrderDataOther) {
-                const LongIdentifier typeConstructorIdOther = std::get<0>(*higherOrderDataOther);
-                if (typeConstructorIdOther == typeConstructorId) {
-                    return typeConstructor->isSubtypeHelper(m_typeSystem, std::get<1>(higherOrderData),
-                                                            std::get<1>(*higherOrderDataOther));
+    return std::visit(
+        overloaded{
+            [](std::monostate, std::monostate) { return SubTypeOrder::IsEquivalent; },
+            [&typeSystem](const PrimitiveTypeId& typeId, const PrimitiveTypeId& otherTypeId) {
+                return typeSystem.getSubTypeOrderBetweenPrimitives(typeId, otherTypeId);
+            },
+            [&typeSystem](const ConstructedTypeData& higherOrderData, const PrimitiveTypeId& otherTypeId) {
+                const LongIdentifier typeConstructorId = std::get<0>(higherOrderData);
+                const TypeConstructor* const typeConstructor = typeSystem.tryGetTypeConstructor(typeConstructorId);
+                if (!typeConstructor) {
+                    return SubTypeOrder::IsUnrelated;
                 }
-            }
-            return typeConstructor->isSubtypeHelper(m_typeSystem, std::get<1>(higherOrderData), m_other);
-        }
-        const TypeRef& m_other;
-        const TypeSystem& m_typeSystem;
-    } visitorMethods{other, typeSystem};
-    return std::visit(visitorMethods, m_storage);
+                return typeConstructor->isSubtypeHelper(typeSystem, std::get<1>(higherOrderData), otherTypeId);
+            },
+            [&typeSystem](const PrimitiveTypeId& typeId, const ConstructedTypeData& otherHigherOrderData) {
+                const LongIdentifier typeConstructorId = std::get<0>(otherHigherOrderData);
+                const TypeConstructor* const typeConstructor = typeSystem.tryGetTypeConstructor(typeConstructorId);
+                if (!typeConstructor) {
+                    return SubTypeOrder::IsUnrelated;
+                }
+                return reverse(typeConstructor->isSubtypeHelper(typeSystem, std::get<1>(otherHigherOrderData), typeId));
+            },
+            [&typeSystem, &other, this](const ConstructedTypeData& higherOrderData, const ConstructedTypeData& otherHigherOrderData) {
+                const LongIdentifier typeConstructorId = std::get<0>(higherOrderData);
+                const LongIdentifier otherTypeConstructorId = std::get<0>(otherHigherOrderData);
+                const TypeConstructor* const typeConstructor = typeSystem.tryGetTypeConstructor(typeConstructorId);
+                if (!typeConstructor) {
+                    return SubTypeOrder::IsUnrelated;
+                }
+                const auto args = std::get<1>(higherOrderData);
+                const auto otherArgs = std::get<1>(otherHigherOrderData);
+                if (typeConstructorId == otherTypeConstructorId) {
+                    typeConstructor->isSubtypeHelper(typeSystem, args, otherArgs);
+                }
+                const TypeConstructor* const otherTypeConstructor =
+                    typeSystem.tryGetTypeConstructor(otherTypeConstructorId);
+                if (!otherTypeConstructor) {
+                    return SubTypeOrder::IsUnrelated;
+                }
+                auto compareUsingThis = typeConstructor->isSubtypeHelper(typeSystem, args, other);
+                if (compareUsingThis != SubTypeOrder::IsUnrelated) {
+                    return compareUsingThis;
+                }
+                return reverse(otherTypeConstructor->isSubtypeHelper(typeSystem, otherArgs, *this));
+            },
+            [](auto&&, auto&&) { return SubTypeOrder::IsUnrelated; }},
+        m_storage, other.m_storage);
 }
