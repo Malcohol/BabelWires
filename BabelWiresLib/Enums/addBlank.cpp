@@ -49,7 +49,7 @@ babelwires::TypeRef::SubTypeOrder babelwires::AddBlank::isSubtypeHelper(const Ty
     }
     const TypeRef::SubTypeOrder argOrder = typeSystem.getSubTypeOrder(arguments.m_typeArguments[0], other);
     if ((argOrder == TypeRef::SubTypeOrder::IsEquivalent) || (argOrder == TypeRef::SubTypeOrder::IsSuperType)) {
-        return argOrder;
+        return TypeRef::SubTypeOrder::IsSuperType;
     }
     return TypeRef::SubTypeOrder::IsUnrelated;
 }
