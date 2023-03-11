@@ -43,21 +43,21 @@ babelwires::Enum::EnumValues babelwires::AddBlank::ensureBlankValue(const Enum::
 }
 
 
-babelwires::TypeRef::SubTypeOrder babelwires::AddBlank::isSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments, const TypeRef& other) const {
+babelwires::SubtypeOrder babelwires::AddBlank::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments, const TypeRef& other) const {
     if (arguments.m_typeArguments.size() != 1) {
-        return TypeRef::SubTypeOrder::IsUnrelated;
+        return SubtypeOrder::IsUnrelated;
     }
-    const TypeRef::SubTypeOrder argOrder = typeSystem.getSubTypeOrder(arguments.m_typeArguments[0], other);
-    if ((argOrder == TypeRef::SubTypeOrder::IsEquivalent) || (argOrder == TypeRef::SubTypeOrder::IsSuperType)) {
-        return TypeRef::SubTypeOrder::IsSuperType;
+    const SubtypeOrder argOrder = typeSystem.compareSubtype(arguments.m_typeArguments[0], other);
+    if ((argOrder == SubtypeOrder::IsEquivalent) || (argOrder == SubtypeOrder::IsSupertype)) {
+        return SubtypeOrder::IsSupertype;
     }
-    return TypeRef::SubTypeOrder::IsUnrelated;
+    return SubtypeOrder::IsUnrelated;
 }
 
-babelwires::TypeRef::SubTypeOrder babelwires::AddBlank::isSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA, const TypeConstructorArguments& argumentsB) const {
+babelwires::SubtypeOrder babelwires::AddBlank::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA, const TypeConstructorArguments& argumentsB) const {
     if ((argumentsA.m_typeArguments.size() != 1) || (argumentsB.m_typeArguments.size() != 1)) {
-        return TypeRef::SubTypeOrder::IsUnrelated;    
+        return SubtypeOrder::IsUnrelated;    
     }
-    return typeSystem.getSubTypeOrder(argumentsA.m_typeArguments[0], argumentsB.m_typeArguments[0]);
+    return typeSystem.compareSubtype(argumentsA.m_typeArguments[0], argumentsB.m_typeArguments[0]);
 }
 

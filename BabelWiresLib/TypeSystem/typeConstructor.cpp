@@ -54,10 +54,10 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
     }
 }
 
-babelwires::TypeRef::SubTypeOrder babelwires::TypeConstructor::isSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments, const TypeRef& other) const {
-    return TypeRef::SubTypeOrder::IsUnrelated;
+babelwires::SubtypeOrder babelwires::TypeConstructor::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments, const TypeRef& other) const {
+    return SubtypeOrder::IsUnrelated;
 }
 
-babelwires::TypeRef::SubTypeOrder babelwires::TypeConstructor::isSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA, const TypeConstructorArguments& argumentsB) const {
-    return TypeRef::SubTypeOrder::IsUnrelated;
+babelwires::SubtypeOrder babelwires::TypeConstructor::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA, const TypeConstructorArguments& argumentsB) const {
+    return SubtypeOrder::IsUnrelated;
 }

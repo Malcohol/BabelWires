@@ -10,6 +10,7 @@
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeOrder.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 
@@ -62,7 +63,8 @@ namespace babelwires {
         /// construction time.
         void addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes);
 
-        TypeRef::SubTypeOrder getSubTypeOrder(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
+        /// Determine whether typeA and typeB are related by the subtype order.
+        SubtypeOrder compareSubtype(const TypeRef& typeA, const TypeRef& typeB) const;
 
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
         bool isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
@@ -91,7 +93,8 @@ namespace babelwires {
         /// Convenience function.
         static void removeDuplicates(TypeIdSet& typeIds);
 
-        TypeRef::SubTypeOrder getSubTypeOrderPrimitives(const LongIdentifier& subtypeId, const LongIdentifier& supertypeId) const;
+        /// Determine whether primitive typeA and primitive typeB are related by the subtype order.
+        SubtypeOrder compareSubtypePrimitives(const LongIdentifier& typeA, const LongIdentifier& typeB) const;
 
       protected:
         Type* addPrimitiveType(LongIdentifier typeId, VersionNumber version, std::unique_ptr<Type> newType);
