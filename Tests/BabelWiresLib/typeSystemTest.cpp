@@ -133,6 +133,33 @@ TEST(TypeSystemTest, compareSubtypeBinary) {
     EXPECT_EQ(typeSystem.compareSubtype(testUtils::TestSubEnum::getThisIdentifier(), binaryOfSubEnumSubEnum), babelwires::SubtypeOrder::IsUnrelated);
 }
 
+TEST(TypeSystemTest, compareSubtypeComplex) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+
+    babelwires::TypeSystem typeSystem;
+    addTestTypes(typeSystem);
+    typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+    typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
+
+    babelwires::TypeRef binaryOfEnumSubSubEnum1(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestEnum::getThisIdentifier(), testUtils::TestSubSubEnum1::getThisIdentifier()}});
+
+    babelwires::TypeRef unaryOfBinaryOfEnumSubSubEnum1(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                       {{binaryOfEnumSubSubEnum1}});
+
+    babelwires::TypeRef binaryOfSubEnumSubEnum(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestSubEnum::getThisIdentifier(), testUtils::TestSubEnum::getThisIdentifier()}});
+
+    babelwires::TypeRef unaryOfBinaryOfSubEnumSubEnum(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                       {{binaryOfSubEnumSubEnum}});
+
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfBinaryOfEnumSubSubEnum1, unaryOfBinaryOfSubEnumSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfBinaryOfSubEnumSubEnum, unaryOfBinaryOfEnumSubSubEnum1), babelwires::SubtypeOrder::IsSupertype);
+
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfBinaryOfSubEnumSubEnum, binaryOfEnumSubSubEnum1), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfEnumSubSubEnum1, unaryOfBinaryOfSubEnumSubEnum), babelwires::SubtypeOrder::IsSubtype);
+}
+
 TEST(TypeSystemTest, isRelatedTypes) {
     babelwires::IdentifierRegistryScope identifierRegistry;
 
