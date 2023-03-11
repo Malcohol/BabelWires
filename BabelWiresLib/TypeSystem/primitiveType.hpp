@@ -17,8 +17,9 @@
     static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
     babelwires::TypeRef getTypeRef() const override { return getThisIdentifier(); }
 
-/// Primitive types are not derived from other types, so they need to be registered.
-/// The TypeSystem expects primitive types to support certain functions and methods, which
+/// Primitive types (i.e. types which are not constructed from other types) need to be directly
+/// registered in the TypeSystem.
+/// The TypeSystem expects them to support certain functions and methods, which
 /// this macro provides.
 #define PRIMITIVE_TYPE(IDENTIFIER, NAME, UUID, VERSION)                                                                \
     PRIMITIVE_TYPE_WITH_REGISTERED_ID(REGISTERED_LONGID(IDENTIFIER, NAME, UUID), VERSION)

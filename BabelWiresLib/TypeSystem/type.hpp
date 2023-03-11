@@ -25,6 +25,9 @@ namespace babelwires {
         /// Create a Value representing an instance of the type.
         virtual std::unique_ptr<Value> createValue() const = 0;
 
+        /// Get a TypeRef that describes this type.
+        /// Primitive types get an implementation of this method from the PRIMITIVE_TYPE macro.
+        /// Complex types constructed by TypeConstructors must provide their own implementation.
         virtual TypeRef getTypeRef() const = 0;
 
         /// An abstract type just acts as a placeholder in the type system and cannot
