@@ -11,7 +11,7 @@
 
 #include <algorithm>
 namespace {
-    void insertTypeId(babelwires::TypeSystem::TypeIdSet& typeIds, const babelwires::TypeRef& typeId) {
+    void insertTypeId(babelwires::TypeSystem::TypeIdSet& typeIds, const babelwires::LongIdentifier& typeId) {
         auto it = std::upper_bound(typeIds.begin(), typeIds.end(), typeId);
         typeIds.insert(it, typeId);
     }
@@ -73,17 +73,17 @@ void babelwires::TypeSystem::addRelatedTypes(LongIdentifier typeId, RelatedTypes
 #endif
     std::sort(relatedTypes.m_subtypeIds.begin(), relatedTypes.m_subtypeIds.end());
     std::sort(relatedTypes.m_supertypeIds.begin(), relatedTypes.m_supertypeIds.end());
-    for (const TypeRef& supertypeId : relatedTypes.m_supertypeIds) {
+    for (const LongIdentifier& supertypeId : relatedTypes.m_supertypeIds) {
 #ifndef NDEBUG
-        const Type* const supertype = supertypeId.tryResolve(*this);
+        const Type* const supertype = tryGetPrimitiveType(supertypeId);
         assert((supertype != nullptr) && "A supertype Id is not the id of a registered type");
         assert(type->verifySupertype(*supertype) && "A supertype is not suitable for the type");
 #endif
         insertTypeId(m_relatedTypes[supertypeId].m_subtypeIds, typeId);
     }
-    for (const TypeRef& subtypeId : relatedTypes.m_subtypeIds) {
+    for (const LongIdentifier& subtypeId : relatedTypes.m_subtypeIds) {
 #ifndef NDEBUG
-        const Type* const subtype = subtypeId.tryResolve(*this);
+        const Type* const subtype = tryGetPrimitiveType(subtypeId);
         assert((subtype != nullptr) && "A subtype ID is not the id of a registered type");
         assert(subtype->verifySupertype(*type) && "A supertype is not suitable for the type");
 #endif
@@ -94,7 +94,7 @@ void babelwires::TypeSystem::addRelatedTypes(LongIdentifier typeId, RelatedTypes
     m_relatedTypes.insert({typeId, std::move(relatedTypes)});
 }
 
-const babelwires::TypeSystem::RelatedTypes& babelwires::TypeSystem::getRelatedTypes(const TypeRef& typeId) const {
+const babelwires::TypeSystem::RelatedTypes& babelwires::TypeSystem::getRelatedTypes(const LongIdentifier& typeId) const {
     const auto it = m_relatedTypes.find(typeId);
     if (it != m_relatedTypes.end()) {
         return it->second;
@@ -111,25 +111,6 @@ babelwires::TypeRef::SubTypeOrder babelwires::TypeSystem::getSubTypeOrder(const 
     return subtypeId.isSubTypeHelper(*this, supertypeId);
 }
 
-babelwires::TypeRef::SubTypeOrder
-babelwires::TypeSystem::getSubTypeOrderBetweenPrimitives(const LongIdentifier& subtypeId,
-                                                         const LongIdentifier& supertypeId) const {
-    for (auto parentId : getRelatedTypes(subtypeId).m_supertypeIds) {
-        const TypeRef::SubTypeOrder parentOrder = getSubTypeOrder(parentId, supertypeId);
-        if ((parentOrder == TypeRef::SubTypeOrder::IsEquivalent) || (parentOrder == TypeRef::SubTypeOrder::IsSubType)) {
-            return TypeRef::SubTypeOrder::IsSubType;
-        }
-    }
-    for (auto parentId : getRelatedTypes(supertypeId).m_supertypeIds) {
-        const TypeRef::SubTypeOrder parentOrder = getSubTypeOrder(parentId, subtypeId);
-        if ((parentOrder == TypeRef::SubTypeOrder::IsEquivalent) ||
-            (parentOrder == TypeRef::SubTypeOrder::IsSuperType)) {
-            return TypeRef::SubTypeOrder::IsSuperType;
-        }
-    }
-    return TypeRef::SubTypeOrder::IsUnrelated;
-}
-
 bool babelwires::TypeSystem::isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const {
     TypeRef::SubTypeOrder order = getSubTypeOrder(subtypeId, supertypeId);
     return (order == TypeRef::SubTypeOrder::IsEquivalent) || (order == TypeRef::SubTypeOrder::IsSubType);
@@ -139,41 +120,69 @@ bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeAId, const TypeRef
     return getSubTypeOrder(typeAId, typeBId) != TypeRef::SubTypeOrder::IsUnrelated;
 }
 
-void babelwires::TypeSystem::addAllSubtypes(const TypeRef& typeId, TypeIdSet& subtypes) const {
+bool babelwires::TypeSystem::isSubTypePrimitives(const LongIdentifier& subtypeId, const LongIdentifier& supertypeId) const {
+    if (subtypeId == supertypeId) {
+        return true;
+    }
+    for (auto parentId : getRelatedTypes(subtypeId).m_supertypeIds) {
+        if (isSubTypePrimitives(parentId, supertypeId)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+babelwires::TypeRef::SubTypeOrder
+babelwires::TypeSystem::getSubTypeOrderPrimitives(const LongIdentifier& subtypeId,
+                                                         const LongIdentifier& supertypeId) const {
+    if (subtypeId == supertypeId) {
+        return TypeRef::SubTypeOrder::IsEquivalent;
+    }
+    if (isSubTypePrimitives(subtypeId, supertypeId)) {
+        return TypeRef::SubTypeOrder::IsSubType;
+    }
+    if (isSubTypePrimitives(supertypeId, subtypeId)) {
+        return TypeRef::SubTypeOrder::IsSuperType;
+    }
+    return TypeRef::SubTypeOrder::IsUnrelated;
+}
+
+
+void babelwires::TypeSystem::addAllSubtypes(const LongIdentifier& typeId, TypeIdSet& subtypes) const {
     subtypes.emplace_back(typeId);
     for (auto subtypeId : getRelatedTypes(typeId).m_subtypeIds) {
         addAllSubtypes(subtypeId, subtypes);
     }
 }
 
-void babelwires::TypeSystem::addAllSupertypes(const TypeRef& typeId, TypeIdSet& supertypes) const {
+void babelwires::TypeSystem::addAllSupertypes(const LongIdentifier& typeId, TypeIdSet& supertypes) const {
     supertypes.emplace_back(typeId);
     for (auto subtypeId : getRelatedTypes(typeId).m_supertypeIds) {
         addAllSupertypes(subtypeId, supertypes);
     }
 }
 
-void babelwires::TypeSystem::addAllRelatedTypes(const TypeRef& typeId, TypeIdSet& typeIdSet) const {
+void babelwires::TypeSystem::addAllRelatedTypes(const LongIdentifier& typeId, TypeIdSet& typeIdSet) const {
     typeIdSet.emplace_back(typeId);
     addAllSubtypes(typeId, typeIdSet);
     addAllSupertypes(typeId, typeIdSet);
 }
 
-babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllSubtypes(const TypeRef& typeId) const {
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllSubtypes(const LongIdentifier& typeId) const {
     TypeIdSet subtypes;
     addAllSubtypes(typeId, subtypes);
     removeDuplicates(subtypes);
     return subtypes;
 }
 
-babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllSupertypes(const TypeRef& typeId) const {
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllSupertypes(const LongIdentifier& typeId) const {
     TypeIdSet supertypes;
     addAllSupertypes(typeId, supertypes);
     removeDuplicates(supertypes);
     return supertypes;
 }
 
-babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllRelatedTypes(const TypeRef& typeId) const {
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllRelatedTypes(const LongIdentifier& typeId) const {
     TypeIdSet relatedTypes;
     addAllSubtypes(typeId, relatedTypes);
     addAllSupertypes(typeId, relatedTypes);

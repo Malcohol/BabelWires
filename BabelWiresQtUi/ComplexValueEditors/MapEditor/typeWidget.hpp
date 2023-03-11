@@ -21,18 +21,7 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        enum class TypeFlexibility { 
-          /// Only allow the given type to be selected.
-          strict, 
-          /// Allow the type and its subtypes to be selected
-          allowSubtypes,
-          /// Allow the type and its supertypes to be selected
-          allowSupertypes,
-          /// Allow the type, its subtypes and its supertypes to be selected
-          allowRelatedTypes 
-        };
-
-        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeIds, TypeFlexibility flexibility);
+        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeIds);
 
         const TypeRef& getTypeId() const;
         void setTypeId(const TypeRef& id);
@@ -50,7 +39,7 @@ namespace babelwires {
         void onCurrentIndexChanged(int index);
 
       private:
-        TypeSystem::TypeIdSet m_typeIds;
+        std::vector<TypeRef> m_typeIds;
         bool m_hasBadItem;
         QString m_defaultStyleSheet;
         QString m_badStyleSheet;

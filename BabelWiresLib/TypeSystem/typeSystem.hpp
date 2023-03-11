@@ -50,7 +50,7 @@ namespace babelwires {
         const TypeConstructor* tryGetTypeConstructor(LongIdentifier id) const;
         const TypeConstructor& getTypeConstructor(LongIdentifier id) const;
 
-        using TypeIdSet = std::vector<TypeRef>;
+        using TypeIdSet = std::vector<LongIdentifier>;
 
         struct RelatedTypes {
             TypeIdSet m_supertypeIds;
@@ -64,8 +64,6 @@ namespace babelwires {
 
         TypeRef::SubTypeOrder getSubTypeOrder(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
 
-        TypeRef::SubTypeOrder getSubTypeOrderBetweenPrimitives(const LongIdentifier& subtypeId, const LongIdentifier& supertypeId) const;
-
         /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
         bool isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
 
@@ -73,31 +71,35 @@ namespace babelwires {
         bool isRelatedType(const TypeRef& typeAId, const TypeRef& typeBId) const;
 
         /// Return all the subtypes of type, including type.
-        TypeIdSet getAllSubtypes(const TypeRef& typeId) const;
+        TypeIdSet getAllSubtypes(const LongIdentifier& typeId) const;
 
         /// Return all the supertypes, including type.
-        TypeIdSet getAllSupertypes(const TypeRef& typeId) const;
+        TypeIdSet getAllSupertypes(const LongIdentifier& typeId) const;
 
         /// Return all subtypes and supertypes, including type.
-        TypeIdSet getAllRelatedTypes(const TypeRef& typeId) const;
+        TypeIdSet getAllRelatedTypes(const LongIdentifier& typeId) const;
 
         /// Add typeId and all its subtypes to the set. Does not remove duplicates.
-        void addAllSubtypes(const TypeRef& typeId, TypeIdSet& typeIdSet) const;
+        void addAllSubtypes(const LongIdentifier& typeId, TypeIdSet& typeIdSet) const;
 
         /// Add typeId and all its supertypes to the set. Does not remove duplicates.
-        void addAllSupertypes(const TypeRef& typeId, TypeIdSet& typeIdSet) const;
+        void addAllSupertypes(const LongIdentifier& typeId, TypeIdSet& typeIdSet) const;
 
         /// Add typeId and all its subtypes and super types to the set. Does not remove duplicates.
-        void addAllRelatedTypes(const TypeRef& typeId, TypeIdSet& typeIdSet) const;
+        void addAllRelatedTypes(const LongIdentifier& typeId, TypeIdSet& typeIdSet) const;
 
         /// Convenience function.
         static void removeDuplicates(TypeIdSet& typeIds);
+
+        TypeRef::SubTypeOrder getSubTypeOrderPrimitives(const LongIdentifier& subtypeId, const LongIdentifier& supertypeId) const;
 
       protected:
         Type* addPrimitiveType(LongIdentifier typeId, VersionNumber version, std::unique_ptr<Type> newType);
         TypeConstructor* addTypeConstructorInternal(LongIdentifier typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
 
-        const RelatedTypes& getRelatedTypes(const TypeRef& typeId) const;
+        const RelatedTypes& getRelatedTypes(const LongIdentifier& typeId) const;
+
+        bool isSubTypePrimitives(const LongIdentifier& subtypeId, const LongIdentifier& supertypeId) const;
 
       protected:
         using PrimitiveTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;
@@ -106,7 +108,7 @@ namespace babelwires {
         using TypeConstructorInfo = std::tuple<std::unique_ptr<TypeConstructor>, VersionNumber>;
         std::unordered_map<LongIdentifier, TypeConstructorInfo> m_typeConstructorRegistry;
 
-        std::unordered_map<TypeRef, RelatedTypes> m_relatedTypes;
+        std::unordered_map<LongIdentifier, RelatedTypes> m_relatedTypes;
 
         /// Used for types which have no relations.
         const RelatedTypes m_emptyRelatedTypes;

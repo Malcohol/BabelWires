@@ -94,19 +94,14 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             m_map.setAllowedTargetTypeId(allowedTypeIds);
             m_map.setMapData(mapData);
             {
-                /// We do not treat the selection of source type in the usual (contravariant) way.
-                /// Although type correct, it's not useful to allow supertypes, since the extra values will never be
-                /// used. Subtypes are permitted, since the fallback guarantees the map is well-defined.
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
-                m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeIds(),
-                                                    TypeWidget::TypeFlexibility::allowSubtypes);
+                m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeIds());
                 m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
-                m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeIds(),
-                                                    TypeWidget::TypeFlexibility::allowSubtypes);
+                m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeIds());
                 m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }

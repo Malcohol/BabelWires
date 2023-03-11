@@ -297,7 +297,7 @@ babelwires::TypeRef::SubTypeOrder babelwires::TypeRef::isSubTypeHelper(const Typ
         overloaded{
             [](std::monostate, std::monostate) { return SubTypeOrder::IsEquivalent; },
             [&typeSystem](const PrimitiveTypeId& typeId, const PrimitiveTypeId& otherTypeId) {
-                return typeSystem.getSubTypeOrderBetweenPrimitives(typeId, otherTypeId);
+                return typeSystem.getSubTypeOrderPrimitives(typeId, otherTypeId);
             },
             [&typeSystem](const ConstructedTypeData& higherOrderData, const PrimitiveTypeId& otherTypeId) {
                 const LongIdentifier typeConstructorId = std::get<0>(higherOrderData);

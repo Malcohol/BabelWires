@@ -9,8 +9,7 @@
 
 #include <cassert>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeIds,
-                                   TypeFlexibility flexibility)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeIds)
     : QComboBox(parent)
     , m_hasBadItem(false) {
     m_defaultStyleSheet = styleSheet();
@@ -19,24 +18,9 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     // TODO This doesn't work as intended.
     m_badStyleSheet.append("\nQComboBox { background: red; }");
 
-    babelwires::TypeSystem::TypeIdSet typeIds;
-    for (auto typeId : allowedTypeIds.m_typeIds) {
-        switch (flexibility) {
-            case TypeFlexibility::strict:
-                typeIds.emplace_back(typeId);
-                break;
-            case TypeFlexibility::allowSubtypes:
-                typeSystem.addAllSubtypes(typeId, typeIds);
-                break;
-            case TypeFlexibility::allowSupertypes:
-                typeSystem.addAllSupertypes(typeId, typeIds);
-                break;
-            case TypeFlexibility::allowRelatedTypes:
-                typeSystem.addAllRelatedTypes(typeId, typeIds);
-                break;
-        }
-    }
-    TypeSystem::removeDuplicates(typeIds);
+    std::vector<TypeRef> typeIds = allowedTypeIds.m_typeIds;
+    std::sort(typeIds.begin(), typeIds.end());
+    typeIds.erase(std::unique(typeIds.begin(), typeIds.end()), typeIds.end());
 
     std::vector<std::tuple<std::string, TypeRef>> sortedNames;
     sortedNames.reserve(typeIds.size());
