@@ -22,11 +22,14 @@ void babelwires::MapValueAssignmentData::apply(Feature* targetFeature) const {
 }
 
 void babelwires::MapValueAssignmentData::serializeContents(Serializer& serializer) const {
+    //TODO Should be a super-call!
+    serializer.serializeValue("path", m_pathToFeature);
     // inline the contents of m_map.
     m_mapData.serializeContents(serializer);
 }
 
 void babelwires::MapValueAssignmentData::deserializeContents(Deserializer& deserializer) {
+    deserializer.deserializeValue("path", m_pathToFeature);
     // the contents of m_map are expected to be inlined.
     m_mapData.deserializeContents(deserializer);
 }
