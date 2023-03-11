@@ -312,7 +312,7 @@ babelwires::SubtypeOrder babelwires::TypeRef::compareSubtypeHelper(const TypeSys
                 const auto argsA = std::get<1>(higherOrderDataA);
                 const auto argsB = std::get<1>(higherOrderDataB);
                 if (typeConstructorIdA == typeConstructorIdB) {
-                    typeConstructorA->compareSubtypeHelper(typeSystem, argsA, argsB);
+                    return typeConstructorA->compareSubtypeHelper(typeSystem, argsA, argsB);
                 }
                 const TypeConstructor* const typeConstructorB =
                     typeSystem.tryGetTypeConstructor(typeConstructorIdB);

@@ -10,6 +10,7 @@ SET( LIB_TEST_UTILS_SRCS
     testRootFeature.cpp
     testFeatureWithUnion.cpp
     testValueAndType.cpp
+    testTypeConstructor.cpp
    )
 
 ADD_LIBRARY( libTestUtils ${LIB_TEST_UTILS_SRCS} )

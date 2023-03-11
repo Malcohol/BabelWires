@@ -4,6 +4,8 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+
 #include <cassert>
 
 namespace testUtils {
@@ -27,10 +29,16 @@ namespace testUtils {
         unsigned int getArity() const override { return 1; }
 
         std::unique_ptr<babelwires::Type>
-        constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& arguments) const override {
-            assert(arguments.size() == 1);
-            // Remember the typeRef, since there's no way to reconstruct it.
-            return std::make_unique<TestConstructedType>(std::move(newTypeRef));
-        }
+        constructType(babelwires::TypeRef newTypeRef,
+                      const std::vector<const babelwires::Type*>& arguments) const override;
+        /// A < B => UNARY<A> < UNARY<B>
+        babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem,
+                                                      const babelwires::TypeConstructorArguments& argumentsA,
+                                                      const babelwires::TypeConstructorArguments& argumentsB) const;
+
+        /// B < A => B < UNARY<A>
+        babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem,
+                                                      const babelwires::TypeConstructorArguments& arguments,
+                                                      const babelwires::TypeRef& other) const;
     };
 } // namespace testUtils
