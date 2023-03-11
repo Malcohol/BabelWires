@@ -58,7 +58,7 @@ namespace babelwires {
 
         /// If it doesn't have an explicit relationship between this and other, then it calls this
         /// to see if this is constructed and whether the type constructor can determine the relationship.
-        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeRef& other) const;
+        static SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeRef& typeRefA, const TypeRef& typeRefB);
 
       private:
         /// Avoids locking the IdentifierRegistry multiple times.
@@ -68,7 +68,6 @@ namespace babelwires {
         static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);
 
       private:
-        // TODO Consider a hack where the first element of the vector is actually treated as a constructorId.
         using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArguments>;
         using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
 

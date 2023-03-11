@@ -64,13 +64,13 @@ namespace babelwires {
         void addRelatedTypes(LongIdentifier typeId, RelatedTypes relatedTypes);
 
         /// Determine whether typeA and typeB are related by the subtype order.
-        SubtypeOrder compareSubtype(const TypeRef& typeA, const TypeRef& typeB) const;
+        SubtypeOrder compareSubtype(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
 
-        /// Confirm whether subtype is in fact a subtype of supertype (equality is allowed).
-        bool isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const;
+        /// Confirm whether typeRefA is in fact a subtype of typeRefB (equality is allowed).
+        bool isSubType(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
 
         /// Confirm whether typeA is a subtype or supertype of type B (equality is allowed).
-        bool isRelatedType(const TypeRef& typeAId, const TypeRef& typeBId) const;
+        bool isRelatedType(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
 
         /// Return all the subtypes of type, including type.
         TypeIdSet getAllSubtypes(const LongIdentifier& typeId) const;
@@ -94,7 +94,7 @@ namespace babelwires {
         static void removeDuplicates(TypeIdSet& typeIds);
 
         /// Determine whether primitive typeA and primitive typeB are related by the subtype order.
-        SubtypeOrder compareSubtypePrimitives(const LongIdentifier& typeA, const LongIdentifier& typeB) const;
+        SubtypeOrder compareSubtypePrimitives(const LongIdentifier& typeIdA, const LongIdentifier& typeIdB) const;
 
       protected:
         Type* addPrimitiveType(LongIdentifier typeId, VersionNumber version, std::unique_ptr<Type> newType);
@@ -102,7 +102,7 @@ namespace babelwires {
 
         const RelatedTypes& getRelatedTypes(const LongIdentifier& typeId) const;
 
-        bool isSubTypePrimitives(const LongIdentifier& subtypeId, const LongIdentifier& supertypeId) const;
+        bool isSubTypePrimitives(const LongIdentifier& typeIdA, const LongIdentifier& typeIdB) const;
 
       protected:
         using PrimitiveTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;

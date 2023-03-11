@@ -103,29 +103,29 @@ const babelwires::TypeSystem::RelatedTypes& babelwires::TypeSystem::getRelatedTy
     }
 }
 
-babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& typeA,
-                                                                          const TypeRef& typeB) const {
-    if (typeA == typeB) {
+babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& typeRefA,
+                                                                          const TypeRef& typeRefB) const {
+    if (typeRefA == typeRefB) {
         return SubtypeOrder::IsEquivalent;
     }
-    return typeA.compareSubtypeHelper(*this, typeB);
+    return TypeRef::compareSubtypeHelper(*this, typeRefA, typeRefB);
 }
 
-bool babelwires::TypeSystem::isSubType(const TypeRef& subtypeId, const TypeRef& supertypeId) const {
-    SubtypeOrder order = compareSubtype(subtypeId, supertypeId);
+bool babelwires::TypeSystem::isSubType(const TypeRef& typeRefA, const TypeRef& typeRefB) const {
+    SubtypeOrder order = compareSubtype(typeRefA, typeRefB);
     return (order == SubtypeOrder::IsEquivalent) || (order == SubtypeOrder::IsSubtype);
 }
 
-bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeAId, const TypeRef& typeBId) const {
-    return compareSubtype(typeAId, typeBId) != SubtypeOrder::IsUnrelated;
+bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeRefA, const TypeRef& typeRefB) const {
+    return compareSubtype(typeRefA, typeRefB) != SubtypeOrder::IsUnrelated;
 }
 
-bool babelwires::TypeSystem::isSubTypePrimitives(const LongIdentifier& subtypeId, const LongIdentifier& supertypeId) const {
-    if (subtypeId == supertypeId) {
+bool babelwires::TypeSystem::isSubTypePrimitives(const LongIdentifier& typeIdA, const LongIdentifier& typeIdB) const {
+    if (typeIdA == typeIdB) {
         return true;
     }
-    for (auto parentId : getRelatedTypes(subtypeId).m_supertypeIds) {
-        if (isSubTypePrimitives(parentId, supertypeId)) {
+    for (auto parentId : getRelatedTypes(typeIdA).m_supertypeIds) {
+        if (isSubTypePrimitives(parentId, typeIdB)) {
             return true;
         }
     }
@@ -133,15 +133,15 @@ bool babelwires::TypeSystem::isSubTypePrimitives(const LongIdentifier& subtypeId
 }
 
 babelwires::SubtypeOrder
-babelwires::TypeSystem::compareSubtypePrimitives(const LongIdentifier& typeA,
-                                                         const LongIdentifier& typeB) const {
-    if (typeA == typeB) {
+babelwires::TypeSystem::compareSubtypePrimitives(const LongIdentifier& typeIdA,
+                                                         const LongIdentifier& typeIdB) const {
+    if (typeIdA == typeIdB) {
         return SubtypeOrder::IsEquivalent;
     }
-    if (isSubTypePrimitives(typeA, typeB)) {
+    if (isSubTypePrimitives(typeIdA, typeIdB)) {
         return SubtypeOrder::IsSubtype;
     }
-    if (isSubTypePrimitives(typeB, typeA)) {
+    if (isSubTypePrimitives(typeIdB, typeIdA)) {
         return SubtypeOrder::IsSupertype;
     }
     return SubtypeOrder::IsUnrelated;
