@@ -26,11 +26,11 @@ babelwires::OneToOneMapEntryData::OneToOneMapEntryData(OneToOneMapEntryData&& ot
     m_targetValue = std::move(other.m_targetValue);
 }
 
-babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const TypeSystem& typeSystem, const TypeRef& sourceTypeId,
-                                                       const TypeRef& targetTypeId) {
-    const Type* sourceType = sourceTypeId.tryResolve(typeSystem);
+babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
+                                                       const TypeRef& targetTypeRef) {
+    const Type* sourceType = sourceTypeRef.tryResolve(typeSystem);
     assert(sourceType && "You cannot construct a OneToOneMapEntryData entry with an unknown source type");
-    const Type* targetType = targetTypeId.tryResolve(typeSystem);
+    const Type* targetType = targetTypeRef.tryResolve(typeSystem);
     assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
 
     m_sourceValue = sourceType->createValue();

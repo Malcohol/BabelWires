@@ -22,8 +22,8 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     testUtils::addTestEnumTypes(environment.m_typeSystem);
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeRefs({{testUtils::TestEnum::getThisIdentifier()}});
 
     babelwires::MapData mapData;
     mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
@@ -87,8 +87,8 @@ TEST(SetMapTargetTypeCommandTest, failWithUnallowedType) {
     environment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
     mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());

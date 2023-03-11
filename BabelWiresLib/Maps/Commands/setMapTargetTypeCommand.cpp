@@ -14,25 +14,25 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string commandName, TypeRef newTargetTypeId)
+babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string commandName, TypeRef newTargetTypeRef)
     : SimpleCommand(commandName)
-    , m_newTargetTypeId(std::move(newTargetTypeId)) {}
+    , m_newTargetTypeRef(std::move(newTargetTypeRef)) {}
 
 bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
-    const MapFeature::AllowedTypes& allowedTypeIds = map.getAllowedTargetTypeIds();
+    const MapFeature::AllowedTypes& allowedTypeRefs = map.getAllowedTargetTypeRefs();
     const ProjectContext& context = map.getProjectContext();
     const TypeSystem& typeSystem = context.m_typeSystem;
-    if (!allowedTypeIds.isSubtypeOfSome(typeSystem, m_newTargetTypeId)) {
+    if (!allowedTypeRefs.isSubtypeOfSome(typeSystem, m_newTargetTypeRef)) {
         return false;
     }
-    m_oldTargetTypeId = map.getTargetTypeRef();
+    m_oldTargetTypeRef = map.getTargetTypeRef();
     return true;
 }
 
 void babelwires::SetMapTargetTypeCommand::execute(MapProject& map) const {
-    map.setTargetTypeRef(m_newTargetTypeId);
+    map.setTargetTypeRef(m_newTargetTypeRef);
 }
 
 void babelwires::SetMapTargetTypeCommand::undo(MapProject& map) const {
-    map.setTargetTypeRef(m_oldTargetTypeId);
+    map.setTargetTypeRef(m_oldTargetTypeRef);
 }

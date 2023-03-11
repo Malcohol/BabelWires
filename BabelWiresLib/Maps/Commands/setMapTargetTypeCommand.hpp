@@ -20,15 +20,15 @@ namespace babelwires {
     /// Add an element to an array feature.
     class SetMapTargetTypeCommand : public SimpleCommand<MapProject> {
       public:
-        SetMapTargetTypeCommand(std::string commandName, TypeRef newTargetTypeId);
+        SetMapTargetTypeCommand(std::string commandName, TypeRef newTargetTypeRef);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
         virtual void undo(MapProject& map) const override;
 
       private:
-        TypeRef m_newTargetTypeId;
-        TypeRef m_oldTargetTypeId;
+        TypeRef m_newTargetTypeRef;
+        TypeRef m_oldTargetTypeRef;
     };
 
 } // namespace babelwires

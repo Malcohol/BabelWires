@@ -35,16 +35,16 @@ namespace babelwires {
         virtual MapData getDefaultMapData() const;
 
         struct AllowedTypes {
-            std::vector<TypeRef> m_typeIds;
+            std::vector<TypeRef> m_typeRefs;
             unsigned int m_indexOfDefault = 0;
 
-            const TypeRef& getDefaultTypeId() const { return m_typeIds[m_indexOfDefault]; }
+            const TypeRef& getDefaultTypeRef() const { return m_typeRefs[m_indexOfDefault]; }
             bool isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& type) const;
             bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& type) const;
         };
 
-        virtual void getAllowedSourceTypeIds(AllowedTypes& allowedTypesOut) const = 0;
-        virtual void getAllowedTargetTypeIds(AllowedTypes& allowedTypesOut) const = 0;
+        virtual void getAllowedSourceTypeRefs(AllowedTypes& allowedTypesOut) const = 0;
+        virtual void getAllowedTargetTypeRefs(AllowedTypes& allowedTypesOut) const = 0;
 
       protected:
         std::string doGetValueType() const override;
@@ -61,11 +61,11 @@ namespace babelwires {
       public:
         StandardMapFeature(TypeRef sourceId, TypeRef targetId);
 
-        void getAllowedSourceTypeIds(AllowedTypes& allowedTypesOut) const override;
-        void getAllowedTargetTypeIds(AllowedTypes& allowedTypesOut) const override;
+        void getAllowedSourceTypeRefs(AllowedTypes& allowedTypesOut) const override;
+        void getAllowedTargetTypeRefs(AllowedTypes& allowedTypesOut) const override;
 
       private:
-        TypeRef m_allowedSourceTypeId;
-        TypeRef m_allowedTargetTypeId;
+        TypeRef m_allowedSourceTypeRef;
+        TypeRef m_allowedTargetTypeRef;
     };
 } // namespace babelwires

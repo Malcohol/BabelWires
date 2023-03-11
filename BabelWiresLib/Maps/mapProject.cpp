@@ -22,22 +22,22 @@ babelwires::MapProject::MapProject(const ProjectContext& projectContext)
 
 babelwires::MapProject::~MapProject() = default;
 
-void babelwires::MapProject::setAllowedSourceTypeId(const MapFeature::AllowedTypes& allowedTypeIds) {
-    m_allowedSourceTypeIds = allowedTypeIds;
-    setSourceTypeRef(allowedTypeIds.getDefaultTypeId());
+void babelwires::MapProject::setAllowedSourceTypeRefs(const MapFeature::AllowedTypes& allowedTypes) {
+    m_allowedSourceTypeRefs = allowedTypes;
+    setSourceTypeRef(allowedTypes.getDefaultTypeRef());
 }
 
-void babelwires::MapProject::setAllowedTargetTypeId(const MapFeature::AllowedTypes& allowedTypeIds) {
-    m_allowedTargetTypeIds = allowedTypeIds;
-    setTargetTypeRef(allowedTypeIds.getDefaultTypeId());
+void babelwires::MapProject::setAllowedTargetTypeRefs(const MapFeature::AllowedTypes& allowedTypes) {
+    m_allowedTargetTypeRefs = allowedTypes;
+    setTargetTypeRef(allowedTypes.getDefaultTypeRef());
 }
 
-const babelwires::MapFeature::AllowedTypes& babelwires::MapProject::getAllowedSourceTypeIds() const {
-    return m_allowedSourceTypeIds;
+const babelwires::MapFeature::AllowedTypes& babelwires::MapProject::getAllowedSourceTypeRefs() const {
+    return m_allowedSourceTypeRefs;
 }
 
-const babelwires::MapFeature::AllowedTypes& babelwires::MapProject::getAllowedTargetTypeIds() const {
-    return m_allowedTargetTypeIds;
+const babelwires::MapFeature::AllowedTypes& babelwires::MapProject::getAllowedTargetTypeRefs() const {
+    return m_allowedTargetTypeRefs;
 }
 
 const babelwires::TypeRef& babelwires::MapProject::getSourceTypeRef() const {
@@ -56,7 +56,7 @@ void babelwires::MapProject::setSourceTypeRef(const TypeRef& sourceId) {
         m_sourceTypeValidity = "The source type is not recognized.";
     } else if (type->isAbstract()) {
         m_sourceTypeValidity = "The source type is abstract.";
-    } else if (!m_allowedSourceTypeIds.isRelatedToSome(typeSystem, sourceId)) {
+    } else if (!m_allowedSourceTypeRefs.isRelatedToSome(typeSystem, sourceId)) {
         // TODO Add type name.
         m_sourceTypeValidity = "The source type is not valid here.";
     } else {
@@ -78,7 +78,7 @@ void babelwires::MapProject::setTargetTypeRef(const TypeRef& targetId) {
         m_targetTypeValidity = "The target type is not recognized.";
     } else if (type->isAbstract()) {
         m_targetTypeValidity = "The target type is abstract.";
-    } else if (!m_allowedTargetTypeIds.isSubtypeOfSome(typeSystem, targetId)) {
+    } else if (!m_allowedTargetTypeRefs.isSubtypeOfSome(typeSystem, targetId)) {
         // TODO Add type name.
         m_targetTypeValidity = "The target type is not valid here.";
     } else {
