@@ -45,8 +45,8 @@ namespace {
         }
 
         babelwires::MapData mapData;
-        mapData.setSourceTypeId(sourceTypeId);
-        mapData.setTargetTypeId(targetTypeId);
+        mapData.setSourceTypeRef(sourceTypeId);
+        mapData.setTargetTypeRef(targetTypeId);
         mapData.emplaceBack(std::move(oneToOne1));
         mapData.emplaceBack(std::move(oneToOne2));
         mapData.emplaceBack(std::move(fallback));

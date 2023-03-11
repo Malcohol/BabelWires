@@ -23,8 +23,8 @@ TEST(ChangeEntryKindCommandTest, executeAndUndo) {
     mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -60,8 +60,8 @@ TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {
     mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -88,8 +88,8 @@ TEST(ChangeEntryKindCommandTest, failNotFallbackAtEnd) {
     mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());

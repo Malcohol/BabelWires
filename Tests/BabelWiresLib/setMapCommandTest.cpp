@@ -23,8 +23,8 @@ TEST(SetMapCommandTest, executeAndUndo) {
     mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -55,8 +55,8 @@ TEST(SetMapCommandTest, executeAndUndo) {
                                               testUtils::TestType::getThisIdentifier());
 
     babelwires::MapData mapData2;
-    mapData2.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData2.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData2.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue.clone());
@@ -92,8 +92,8 @@ TEST(SetMapCommandTest, invalidOldMap) {
     mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -126,8 +126,8 @@ TEST(SetMapCommandTest, invalidOldMap) {
                                               testUtils::TestType::getThisIdentifier());
 
     babelwires::MapData mapData2;
-    mapData2.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData2.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData2.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue.clone());
@@ -168,8 +168,8 @@ TEST(SetMapCommandTest, invalidNewMap) {
     mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -199,8 +199,8 @@ TEST(SetMapCommandTest, invalidNewMap) {
                                               testUtils::TestType::getThisIdentifier());
 
     babelwires::MapData mapData2;
-    mapData2.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData2.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData2.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue.clone());

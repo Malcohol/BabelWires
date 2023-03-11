@@ -18,7 +18,7 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("AddBlank", "{0} + _", "bd5af7a5-4a75-4807-a3d8-93851e1a7d00", 1);
 
-        /// The Dummy value added to enums.
+        /// The blank value that gets added to enums.
         /// Note that the blank value is only permitted at the end of the enum.
         static Identifier getBlankValue();
 

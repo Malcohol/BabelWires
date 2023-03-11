@@ -96,13 +96,13 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
                 m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeIds());
-                m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
+                m_sourceTypeWidget->setTypeId(m_map.getSourceTypeRef());
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
                 m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeIds());
-                m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
+                m_targetTypeWidget->setTypeId(m_map.getTargetTypeRef());
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }
             connect(m_sourceTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
@@ -261,15 +261,15 @@ void babelwires::MapEditor::updateUiAfterChange() const {
     if (m_map.getSourceTypeValidity()) {
         m_sourceTypeWidget->removeBadItemIfPresent();
     } else {
-        m_sourceTypeWidget->addBadItemIfNotPresent(m_map.getSourceTypeId());
+        m_sourceTypeWidget->addBadItemIfNotPresent(m_map.getSourceTypeRef());
     }
     if (m_map.getTargetTypeValidity()) {
         m_targetTypeWidget->removeBadItemIfPresent();
     } else {
-        m_targetTypeWidget->addBadItemIfNotPresent(m_map.getTargetTypeId());
+        m_targetTypeWidget->addBadItemIfNotPresent(m_map.getTargetTypeRef());
     }
-    m_sourceTypeWidget->setTypeId(m_map.getSourceTypeId());
-    m_targetTypeWidget->setTypeId(m_map.getTargetTypeId());
+    m_sourceTypeWidget->setTypeId(m_map.getSourceTypeRef());
+    m_targetTypeWidget->setTypeId(m_map.getTargetTypeRef());
 }
 
 void babelwires::MapEditor::saveMapToFile() {
@@ -417,14 +417,14 @@ void babelwires::MapEditor::setToDefault() {
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {
     const TypeRef& newSourceTypeId = m_sourceTypeWidget->getTypeId();
-    if (newSourceTypeId != m_map.getSourceTypeId()) {
+    if (newSourceTypeId != m_map.getSourceTypeRef()) {
         executeCommand(std::make_unique<SetMapSourceTypeCommand>("Set map source type", newSourceTypeId));
     }
 }
 
 void babelwires::MapEditor::setTargetTypeFromWidget() {
     const TypeRef& newTargetTypeId = m_targetTypeWidget->getTypeId();
-    if (newTargetTypeId != m_map.getTargetTypeId()) {
+    if (newTargetTypeId != m_map.getTargetTypeRef()) {
         executeCommand(std::make_unique<SetMapTargetTypeCommand>("Set map target type", newTargetTypeId));
     }
 }

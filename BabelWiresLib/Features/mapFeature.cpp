@@ -20,8 +20,8 @@ std::string babelwires::MapFeature::doGetValueType() const {
 }
 
 void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
-    const TypeRef& newSourceType = newValue.getSourceTypeId();
-    const TypeRef& newTargetType = newValue.getTargetTypeId();
+    const TypeRef& newSourceType = newValue.getSourceTypeRef();
+    const TypeRef& newTargetType = newValue.getTargetTypeRef();
 
     const ProjectContext& context = babelwires::RootFeature::getProjectContextAt(*this);
     const TypeSystem& typeSystem = context.m_typeSystem;
@@ -55,8 +55,8 @@ babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryDa
     TypeRef defaultTargetTypeId = allowedTypes.getDefaultTypeId();
 
     MapData mapData;
-    mapData.setSourceTypeId(defaultSourceTypeId);
-    mapData.setTargetTypeId(defaultTargetTypeId);
+    mapData.setSourceTypeRef(defaultSourceTypeId);
+    mapData.setTargetTypeRef(defaultTargetTypeId);
 
     const TypeSystem& typeSystem = RootFeature::getProjectContextAt(*this).m_typeSystem;
     mapData.emplaceBack(MapEntryData::create(typeSystem, defaultSourceTypeId, defaultTargetTypeId, fallbackKind));

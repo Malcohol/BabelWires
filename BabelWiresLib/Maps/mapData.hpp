@@ -40,11 +40,11 @@ namespace babelwires {
         MapData& operator=(MapData&& other);
         virtual ~MapData();
 
-        const TypeRef& getSourceTypeId() const;
-        const TypeRef& getTargetTypeId() const;
+        const TypeRef& getSourceTypeRef() const;
+        const TypeRef& getTargetTypeRef() const;
 
-        void setSourceTypeId(const TypeRef& sourceId);
-        void setTargetTypeId(const TypeRef& targetId);
+        void setSourceTypeRef(const TypeRef& sourceRef);
+        void setTargetTypeRef(const TypeRef& targetRef);
 
         unsigned int getNumMapEntries() const;
         const MapEntryData& getMapEntry(unsigned int index) const;
@@ -67,8 +67,8 @@ namespace babelwires {
         bool isValid(const TypeSystem& typeSystem) const;
 
       public:
-        TypeRef m_sourceTypeId;
-        TypeRef m_targetTypeId;
+        TypeRef m_sourceTypeRef;
+        TypeRef m_targetTypeRef;
         /// All non-null.
         std::vector<std::unique_ptr<MapEntryData>> m_mapEntries;
     };

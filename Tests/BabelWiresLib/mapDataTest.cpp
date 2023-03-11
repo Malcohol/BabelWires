@@ -22,13 +22,13 @@ namespace {
 TEST(MapDataTest, types) {
     babelwires::MapData mapData;
 
-    EXPECT_EQ(mapData.getSourceTypeId(), babelwires::TypeRef());
-    EXPECT_EQ(mapData.getTargetTypeId(), babelwires::TypeRef());
+    EXPECT_EQ(mapData.getSourceTypeRef(), babelwires::TypeRef());
+    EXPECT_EQ(mapData.getTargetTypeRef(), babelwires::TypeRef());
 
-    mapData.setSourceTypeId(testTypeId1);
-    mapData.setTargetTypeId(testTypeId2);
-    EXPECT_EQ(mapData.getSourceTypeId(), testTypeId1);
-    EXPECT_EQ(mapData.getTargetTypeId(), testTypeId2);
+    mapData.setSourceTypeRef(testTypeId1);
+    mapData.setTargetTypeRef(testTypeId2);
+    EXPECT_EQ(mapData.getSourceTypeRef(), testTypeId1);
+    EXPECT_EQ(mapData.getTargetTypeRef(), testTypeId2);
 }
 
 TEST(MapDataTest, entries) {
@@ -44,13 +44,13 @@ TEST(MapDataTest, entries) {
 TEST(MapDataTest, copyConstruction) {
     babelwires::MapData mapData;
 
-    mapData.setSourceTypeId(testTypeId1);
-    mapData.setTargetTypeId(testTypeId2);
+    mapData.setSourceTypeRef(testTypeId1);
+    mapData.setTargetTypeRef(testTypeId2);
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
     babelwires::MapData mapData2 = mapData;
-    EXPECT_EQ(mapData2.getSourceTypeId(), testTypeId1);
-    EXPECT_EQ(mapData2.getTargetTypeId(), testTypeId2);
+    EXPECT_EQ(mapData2.getSourceTypeRef(), testTypeId1);
+    EXPECT_EQ(mapData2.getTargetTypeRef(), testTypeId2);
     EXPECT_EQ(mapData2.getNumMapEntries(), 1);
     // Ensure mapEntries are not shared.
     EXPECT_NE(&mapData.getMapEntry(0), &mapData2.getMapEntry(0));
@@ -59,14 +59,14 @@ TEST(MapDataTest, copyConstruction) {
 TEST(MapDataTest, moveConstruction) {
     babelwires::MapData mapData;
 
-    mapData.setSourceTypeId(testTypeId1);
-    mapData.setTargetTypeId(testTypeId2);
+    mapData.setSourceTypeRef(testTypeId1);
+    mapData.setTargetTypeRef(testTypeId2);
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
     auto mapEntry = &mapData.getMapEntry(0);
 
     babelwires::MapData mapData2 = std::move(mapData);
-    EXPECT_EQ(mapData2.getSourceTypeId(), testTypeId1);
-    EXPECT_EQ(mapData2.getTargetTypeId(), testTypeId2);
+    EXPECT_EQ(mapData2.getSourceTypeRef(), testTypeId1);
+    EXPECT_EQ(mapData2.getTargetTypeRef(), testTypeId2);
     EXPECT_EQ(mapData2.getNumMapEntries(), 1);
     // Ensure mapEntries are moved.
     EXPECT_EQ(&mapData2.getMapEntry(0), mapEntry);
@@ -75,14 +75,14 @@ TEST(MapDataTest, moveConstruction) {
 TEST(MapDataTest, copyAssignment) {
     babelwires::MapData mapData;
 
-    mapData.setSourceTypeId(testTypeId1);
-    mapData.setTargetTypeId(testTypeId2);
+    mapData.setSourceTypeRef(testTypeId1);
+    mapData.setTargetTypeRef(testTypeId2);
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
     babelwires::MapData mapData2;
     mapData2 = mapData;
-    EXPECT_EQ(mapData2.getSourceTypeId(), testTypeId1);
-    EXPECT_EQ(mapData2.getTargetTypeId(), testTypeId2);
+    EXPECT_EQ(mapData2.getSourceTypeRef(), testTypeId1);
+    EXPECT_EQ(mapData2.getTargetTypeRef(), testTypeId2);
     EXPECT_EQ(mapData2.getNumMapEntries(), 1);
     // Ensure mapEntries are not shared.
     EXPECT_NE(&mapData.getMapEntry(0), &mapData2.getMapEntry(0));
@@ -91,15 +91,15 @@ TEST(MapDataTest, copyAssignment) {
 TEST(MapDataTest, moveAssignment) {
     babelwires::MapData mapData;
 
-    mapData.setSourceTypeId(testTypeId1);
-    mapData.setTargetTypeId(testTypeId2);
+    mapData.setSourceTypeRef(testTypeId1);
+    mapData.setTargetTypeRef(testTypeId2);
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
     auto mapEntry = &mapData.getMapEntry(0);
 
     babelwires::MapData mapData2;
     mapData2 = std::move(mapData);
-    EXPECT_EQ(mapData2.getSourceTypeId(), testTypeId1);
-    EXPECT_EQ(mapData2.getTargetTypeId(), testTypeId2);
+    EXPECT_EQ(mapData2.getSourceTypeRef(), testTypeId1);
+    EXPECT_EQ(mapData2.getTargetTypeRef(), testTypeId2);
     EXPECT_EQ(mapData2.getNumMapEntries(), 1);
     // Ensure mapEntries are moved.
     EXPECT_EQ(&mapData2.getMapEntry(0), mapEntry);
@@ -112,22 +112,22 @@ TEST(MapDataTest, equality) {
     EXPECT_TRUE(mapData == mapData2);
     EXPECT_FALSE(mapData != mapData2);
 
-    mapData.setSourceTypeId(testTypeId1);
+    mapData.setSourceTypeRef(testTypeId1);
 
     EXPECT_FALSE(mapData == mapData2);
     EXPECT_TRUE(mapData != mapData2);
 
-    mapData2.setSourceTypeId(testTypeId1);
+    mapData2.setSourceTypeRef(testTypeId1);
 
     EXPECT_TRUE(mapData == mapData2);
     EXPECT_FALSE(mapData != mapData2);
 
-    mapData.setTargetTypeId(testTypeId2);
+    mapData.setTargetTypeRef(testTypeId2);
 
     EXPECT_FALSE(mapData == mapData2);
     EXPECT_TRUE(mapData != mapData2);
 
-    mapData2.setTargetTypeId(testTypeId2);
+    mapData2.setTargetTypeRef(testTypeId2);
 
     EXPECT_TRUE(mapData == mapData2);
     EXPECT_FALSE(mapData != mapData2);
@@ -161,19 +161,19 @@ TEST(MapDataTest, getHash) {
 
     EXPECT_EQ(mapData.getHash(), mapData2.getHash());
 
-    mapData.setSourceTypeId(testTypeId1);
+    mapData.setSourceTypeRef(testTypeId1);
 
     EXPECT_NE(mapData.getHash(), mapData2.getHash());
 
-    mapData2.setSourceTypeId(testTypeId1);
+    mapData2.setSourceTypeRef(testTypeId1);
 
     EXPECT_EQ(mapData.getHash(), mapData2.getHash());
 
-    mapData.setTargetTypeId(testTypeId2);
+    mapData.setTargetTypeRef(testTypeId2);
 
     EXPECT_NE(mapData.getHash(), mapData2.getHash());
 
-    mapData2.setTargetTypeId(testTypeId2);
+    mapData2.setTargetTypeRef(testTypeId2);
 
     EXPECT_EQ(mapData.getHash(), mapData2.getHash());
 
@@ -202,8 +202,8 @@ TEST(MapDataTest, isInvalid_validMap) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
@@ -222,8 +222,8 @@ TEST(MapDataTest, isInvalid_outOfPlaceFallback) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
@@ -238,8 +238,8 @@ TEST(MapDataTest, isInvalid_noFallback) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
 
     EXPECT_FALSE(mapData.isValid(typeSystem));
@@ -252,8 +252,8 @@ TEST(MapDataTest, isValid_typeMismatch) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
-    mapData.setSourceTypeId(testTypeId1);
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testTypeId1);
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     mapData.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier()));
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
@@ -264,8 +264,8 @@ TEST(MapDataTest, serializationTest) {
     std::string serializedContents;
     {
         babelwires::MapData mapData;
-        mapData.setSourceTypeId(testTypeId1);
-        mapData.setTargetTypeId(testTypeId2);
+        mapData.setSourceTypeRef(testTypeId1);
+        mapData.setTargetTypeRef(testTypeId2);
     
         babelwires::IdentifierRegistryScope identifierRegistry;
         babelwires::TypeSystem typeSystem;
@@ -292,8 +292,8 @@ TEST(MapDataTest, serializationTest) {
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_sourceTypeId, testTypeId1);
-    EXPECT_EQ(dataPtr->m_targetTypeId, testTypeId2);
+    EXPECT_EQ(dataPtr->m_sourceTypeRef, testTypeId1);
+    EXPECT_EQ(dataPtr->m_targetTypeRef, testTypeId2);
     EXPECT_EQ(dataPtr->getNumMapEntries(), 2);
     EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::OneToOne);
     const auto *const sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
@@ -308,8 +308,8 @@ TEST(MapDataTest, serializationTest) {
 
 TEST(MapDataTest, cloneTest) {
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(testTypeId1);
-    mapData.setTargetTypeId(testTypeId2);
+    mapData.setSourceTypeRef(testTypeId1);
+    mapData.setTargetTypeRef(testTypeId2);
 
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
@@ -328,8 +328,8 @@ TEST(MapDataTest, cloneTest) {
     auto cloneMapData = mapData.clone();
 
     ASSERT_NE(cloneMapData, nullptr);
-    EXPECT_EQ(cloneMapData->m_sourceTypeId, testTypeId1);
-    EXPECT_EQ(cloneMapData->m_targetTypeId, testTypeId2);
+    EXPECT_EQ(cloneMapData->m_sourceTypeRef, testTypeId1);
+    EXPECT_EQ(cloneMapData->m_targetTypeRef, testTypeId2);
     EXPECT_EQ(cloneMapData->getNumMapEntries(), 2);
     EXPECT_EQ(cloneMapData->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::OneToOne);
     const auto *const clonedEntryData = cloneMapData->getMapEntry(0).as<babelwires::OneToOneMapEntryData>();
