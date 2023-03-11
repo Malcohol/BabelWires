@@ -13,6 +13,14 @@
 
 #include <bitset>
 
+namespace {
+    // I would rather use '<' and '>', but they get escaped in XML, which makes project files ugly.
+    constexpr char openChar = '[';
+    constexpr char closeChar = ']';
+    constexpr char defaultStateString[] = "[]";
+    constexpr char parseChars[] = "[],";
+}
+
 babelwires::TypeRef::TypeRef() = default;
 
 babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
@@ -60,7 +68,7 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
 
 std::string babelwires::TypeRef::serializeToString() const {
     struct VisitorMethods {
-        std::string operator()(std::monostate) { return "<>"; }
+        std::string operator()(std::monostate) { return defaultStateString; }
         std::string operator()(PrimitiveTypeId typeId) { return typeId.serializeToString(); }
         std::string operator()(const ConstructedTypeData& higherOrderData) {
             std::ostringstream os;
@@ -70,14 +78,14 @@ std::string babelwires::TypeRef::serializeToString() const {
                 // Correctly formed TypeRef should not hit this case.
                 // It can be hit when falling-back to this representation
                 // if toString formatting fails.
-                os << "<>";
+                os << defaultStateString;
             } else {
-                char sep = '<';
+                char sep = openChar;
                 for (const auto& arg : arguments) {
                     os << sep << arg.serializeToString();
                     sep = ',';
                 }
-                os << ">";
+                os << closeChar;
             }
             return os.str();
         }
@@ -161,7 +169,7 @@ namespace {
 
 std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {
     struct VisitorMethods {
-        std::string operator()(std::monostate) { return "<>"; }
+        std::string operator()(std::monostate) { return defaultStateString; }
         std::string operator()(PrimitiveTypeId typeId) { return m_identifierRegistry->getName(typeId); }
         std::string operator()(const ConstructedTypeData& higherOrderData) {
             std::string formatString = m_identifierRegistry->getName(std::get<0>(higherOrderData));
@@ -189,16 +197,16 @@ std::string babelwires::TypeRef::toString() const {
 
 std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef::parseHelper(std::string_view str) {
     std::string_view::size_type next = 0;
-    auto IdEnd = str.find_first_of("<>,", next);
+    auto IdEnd = str.find_first_of(parseChars, next);
     if (IdEnd == -1) {
         IdEnd = str.size();
     }
-    if ((IdEnd + 1 < str.size()) && (IdEnd == next) && (str[IdEnd] == '<') && (str[IdEnd + 1] == '>')) {
+    if ((IdEnd + 1 < str.size()) && (IdEnd == next) && (str[IdEnd] == openChar) && (str[IdEnd + 1] == closeChar)) {
         return {TypeRef(), IdEnd + 2};
     }
     const LongIdentifier startId = LongIdentifier::deserializeFromString(str.substr(next, IdEnd));
     next = IdEnd;
-    if (str[next] != '<') {
+    if (str[next] != openChar) {
         return {startId, next};
     }
     ++next;
@@ -220,7 +228,7 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
         }
         if (str[next] == ',') {
             ++next;
-        } else if (str[next] == '>') {
+        } else if (str[next] == closeChar) {
             ++next;
             break;
         } else {
