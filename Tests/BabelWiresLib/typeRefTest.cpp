@@ -226,26 +226,26 @@ TEST(TypeRefTest, toStringMalformed) {
     babelwires::LongIdentifier unary0 = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
         "Unary0", "{", "11111111-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(unary0, {{foo}}).toString(), "MalformedTypeRef{Unary0`1[Foo`1]}");
+    EXPECT_EQ(babelwires::TypeRef(unary0, {{foo}}).toString(), "MalformedTypeRef{Unary0'1[Foo'1]}");
 
     babelwires::LongIdentifier unary1 = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
         "Unary1", "oo{", "22222222-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(unary1, {{foo}}).toString(), "MalformedTypeRef{Unary1`1[Foo`1]}");
+    EXPECT_EQ(babelwires::TypeRef(unary1, {{foo}}).toString(), "MalformedTypeRef{Unary1'1[Foo'1]}");
 
     // This type of format string is not supported.
     babelwires::LongIdentifier unary2 = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
         "Unary2", "oo{}pp", "33333333-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(unary2, {{foo}}).toString(), "MalformedTypeRef{Unary2`1[Foo`1]}");
+    EXPECT_EQ(babelwires::TypeRef(unary2, {{foo}}).toString(), "MalformedTypeRef{Unary2'1[Foo'1]}");
 
     babelwires::LongIdentifier unary3 = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
         "Unary3", "UNARY{0}", "44444444-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     // Not enough arguments
-    EXPECT_EQ(babelwires::TypeRef(unary3, {}).toString(), "MalformedTypeRef{Unary3`1[]}");
+    EXPECT_EQ(babelwires::TypeRef(unary3, {}).toString(), "MalformedTypeRef{Unary3'1[]}");
     // Too many arguments
-    EXPECT_EQ(babelwires::TypeRef(unary3, {{foo, foo}}).toString(), "MalformedTypeRef{Unary3`1[Foo`1,Foo`1]}");
+    EXPECT_EQ(babelwires::TypeRef(unary3, {{foo, foo}}).toString(), "MalformedTypeRef{Unary3'1[Foo'1,Foo'1]}");
 }
 
 TEST(TypeRefTest, serializeToStringNoDiscriminators) {
@@ -277,30 +277,30 @@ TEST(TypeRefTest, serializeToStringNoDiscriminators) {
 
 TEST(TypeRefTest, serializeToStringWithDiscriminators) {
     babelwires::TypeRef primitiveTypeRef(testUtils::getTestRegisteredLongIdentifier("Foo", 2));
-    EXPECT_EQ(primitiveTypeRef.serializeToString(), "Foo`2");
+    EXPECT_EQ(primitiveTypeRef.serializeToString(), "Foo'2");
 
     babelwires::TypeRef constructedTypeRef1(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
                                             {{testUtils::getTestRegisteredLongIdentifier("Bar", 4)}});
-    EXPECT_EQ(constructedTypeRef1.serializeToString(), "Foo`2[Bar`4]");
+    EXPECT_EQ(constructedTypeRef1.serializeToString(), "Foo'2[Bar'4]");
 
     babelwires::TypeRef constructedTypeRef2(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
                                             {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
                                               testUtils::getTestRegisteredLongIdentifier("Flerm", 1)}});
-    EXPECT_EQ(constructedTypeRef2.serializeToString(), "Foo`2[Bar`4,Flerm`1]");
+    EXPECT_EQ(constructedTypeRef2.serializeToString(), "Foo'2[Bar'4,Flerm'1]");
 
     babelwires::TypeRef constructedTypeRef3(
         testUtils::getTestRegisteredLongIdentifier("Foo", 2),
         {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
           babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
                               {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
-    EXPECT_EQ(constructedTypeRef3.serializeToString(), "Foo`2[Bar`4,Flerm`1[Erm`13]]");
+    EXPECT_EQ(constructedTypeRef3.serializeToString(), "Foo'2[Bar'4,Flerm'1[Erm'13]]");
 
     babelwires::TypeRef constructedTypeRef4(
         testUtils::getTestRegisteredLongIdentifier("Foo", 2),
         {{babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
                               {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}}),
           testUtils::getTestRegisteredLongIdentifier("Bar", 4)}});
-    EXPECT_EQ(constructedTypeRef4.serializeToString(), "Foo`2[Flerm`1[Erm`13],Bar`4]");
+    EXPECT_EQ(constructedTypeRef4.serializeToString(), "Foo'2[Flerm'1[Erm'13],Bar'4]");
 }
 
 TEST(TypeRefTest, deserializeFromStringNoDiscriminatorsSuccess) {
@@ -334,23 +334,23 @@ TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {
     EXPECT_EQ(babelwires::TypeRef(), babelwires::TypeRef::deserializeFromString("[]"));
 
     babelwires::TypeRef primitiveTypeRef(testUtils::getTestRegisteredLongIdentifier("Foo", 2));
-    EXPECT_EQ(primitiveTypeRef, babelwires::TypeRef::deserializeFromString("Foo`2"));
+    EXPECT_EQ(primitiveTypeRef, babelwires::TypeRef::deserializeFromString("Foo'2"));
 
     babelwires::TypeRef constructedTypeRef1(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
                                             {{testUtils::getTestRegisteredLongIdentifier("Bar", 4)}});
-    EXPECT_EQ(constructedTypeRef1, babelwires::TypeRef::deserializeFromString("Foo`2[Bar`4]"));
+    EXPECT_EQ(constructedTypeRef1, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4]"));
 
     babelwires::TypeRef constructedTypeRef2(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
                                             {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
                                               testUtils::getTestRegisteredLongIdentifier("Flerm", 1)}});
-    EXPECT_EQ(constructedTypeRef2, babelwires::TypeRef::deserializeFromString("Foo`2[Bar`4,Flerm`1]"));
+    EXPECT_EQ(constructedTypeRef2, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4,Flerm'1]"));
 
     babelwires::TypeRef constructedTypeRef3(
         testUtils::getTestRegisteredLongIdentifier("Foo", 2),
         {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
           babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
                               {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
-    EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo`2[Bar`4,Flerm`1[Erm`13]]"));
+    EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4,Flerm'1[Erm'13]]"));
 
     babelwires::TypeRef constructedTypeRef4(
         testUtils::getTestRegisteredLongIdentifier("Foo", 2),
@@ -359,7 +359,7 @@ TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {
                                 {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}}),
             testUtils::getTestRegisteredLongIdentifier("Bar", 4),
         }});
-    EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo`2[Flerm`1[Erm`13],Bar`4]"));
+    EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo'2[Flerm'1[Erm'13],Bar'4]"));
 }
 
 TEST(TypeRefTest, deserializeFromStringFailure) {

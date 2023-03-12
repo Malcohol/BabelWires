@@ -63,7 +63,7 @@ TEST(FeaturePathTest, pathStepSerialization) {
 
     babelwires::PathStep hello2("Hello");
     hello2.getField().setDiscriminator(199);
-    EXPECT_EQ(hello2.serializeToString(), "Hello`199");
+    EXPECT_EQ(hello2.serializeToString(), "Hello'199");
 
     babelwires::PathStep index(10);
     EXPECT_EQ(index.serializeToString(), "10");
@@ -77,7 +77,7 @@ TEST(FeaturePathTest, pathStepDeserialization) {
     EXPECT_EQ(step.getField().getDiscriminator(), 0);
 
     babelwires::PathStep step1(0);
-    EXPECT_NO_THROW(step1 = babelwires::PathStep::deserializeFromString("Hello`2"));
+    EXPECT_NO_THROW(step1 = babelwires::PathStep::deserializeFromString("Hello'2"));
     EXPECT_TRUE(step1.isField());
     EXPECT_EQ(step1.getField(), babelwires::Identifier("Hello"));
     EXPECT_EQ(step1.getField().getDiscriminator(), 2);
@@ -87,11 +87,11 @@ TEST(FeaturePathTest, pathStepDeserialization) {
     EXPECT_TRUE(step2.isIndex());
     EXPECT_EQ(step2.getIndex(), 10);
 
-    EXPECT_THROW(babelwires::PathStep::deserializeFromString("`"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::PathStep::deserializeFromString("'"), babelwires::ParseException);
     EXPECT_THROW(babelwires::PathStep::deserializeFromString("/"), babelwires::ParseException);
     EXPECT_THROW(babelwires::PathStep::deserializeFromString("Hællo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::PathStep::deserializeFromString("Hello`65536"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::PathStep::deserializeFromString("1`23"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::PathStep::deserializeFromString("Hello'65536"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::PathStep::deserializeFromString("1'23"), babelwires::ParseException);
     EXPECT_THROW(babelwires::PathStep::deserializeFromString("3Hello"), babelwires::ParseException);
 }
 
@@ -316,7 +316,7 @@ TEST(FeaturePathTest, pathSerialization) {
     path.getStep(0).getField().setDiscriminator(2);
     path.getStep(1).getField().setDiscriminator(4);
 
-    EXPECT_EQ(path.serializeToString(), "Forb`2/Erm`4/12");
+    EXPECT_EQ(path.serializeToString(), "Forb'2/Erm'4/12");
 }
 
 TEST(FeaturePathTest, pathDeserialization) {
@@ -337,7 +337,7 @@ TEST(FeaturePathTest, pathDeserialization) {
     EXPECT_EQ(path2.getStep(2), babelwires::PathStep("Erm"));
 
     babelwires::FeaturePath path3;
-    EXPECT_NO_THROW(path3 = babelwires::FeaturePath::deserializeFromString("Forb`2/12/Erm`4"));
+    EXPECT_NO_THROW(path3 = babelwires::FeaturePath::deserializeFromString("Forb'2/12/Erm'4"));
     EXPECT_EQ(path3.getNumSteps(), 3);
     EXPECT_EQ(path3.getStep(0), babelwires::PathStep("Forb"));
     EXPECT_EQ(path3.getStep(0).getField().getDiscriminator(), 2);
@@ -347,10 +347,10 @@ TEST(FeaturePathTest, pathDeserialization) {
 
     EXPECT_THROW(babelwires::FeaturePath::deserializeFromString("Foo//Bar"), babelwires::ParseException);
     EXPECT_THROW(babelwires::FeaturePath::deserializeFromString("/Foo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FeaturePath::deserializeFromString("`23/Foo"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::FeaturePath::deserializeFromString("'23/Foo"), babelwires::ParseException);
     EXPECT_THROW(babelwires::FeaturePath::deserializeFromString("Foo/Hællo/Foo"), babelwires::ParseException);
     EXPECT_THROW(babelwires::FeaturePath::deserializeFromString("Foo/3Hello"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::FeaturePath::deserializeFromString("Foo/Erm`233232"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::FeaturePath::deserializeFromString("Foo/Erm'233232"), babelwires::ParseException);
     EXPECT_THROW(babelwires::FeaturePath::deserializeFromString("Foo/Erm/"), babelwires::ParseException);
 }
 
