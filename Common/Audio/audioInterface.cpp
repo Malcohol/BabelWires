@@ -13,7 +13,7 @@
 
 #include <sstream>
 
-babelwires::AudioInterface::AudioInterface(LongIdentifier identifier, VersionNumber version)
+babelwires::AudioInterface::AudioInterface(LongId identifier, VersionNumber version)
     : RegistryEntry(identifier, version) {}
 
 babelwires::AudioInterfaceRegistry::AudioInterfaceRegistry()

@@ -32,7 +32,7 @@ namespace testUtils {
     /// The serialized format is just the identifier followed by a single byte which carries the value of
     /// intChildFeature. This has version 1.
     struct TestSourceFileFormat : babelwires::SourceFileFormat {
-        static babelwires::LongIdentifier getThisIdentifier();
+        static babelwires::LongId getThisIdentifier();
         static std::string getFileExtension();
 
         TestSourceFileFormat();
@@ -49,7 +49,7 @@ namespace testUtils {
     /// A factor for construction new file features.
     /// This is given version 3, to allow version testing.
     struct TestTargetFileFormat : babelwires::TargetFileFormat {
-        static babelwires::LongIdentifier getThisIdentifier();
+        static babelwires::LongId getThisIdentifier();
 
         TestTargetFileFormat();
         std::string getManufacturerName() const override;

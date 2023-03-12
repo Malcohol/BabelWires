@@ -24,12 +24,12 @@ ENTRY_SUBTYPE* babelwires::Registry<ENTRY>::addEntry(ARGS&&... args) {
 }
 
 template <typename ENTRY>
-const ENTRY* babelwires::Registry<ENTRY>::getEntryByIdentifier(const LongIdentifier& identifier) const {
+const ENTRY* babelwires::Registry<ENTRY>::getEntryByIdentifier(const LongId& identifier) const {
     return static_cast<const ENTRY*>(m_untypedRegistry.getEntryByIdentifier(identifier));
 }
 
 template <typename ENTRY>
-const ENTRY& babelwires::Registry<ENTRY>::getRegisteredEntry(const LongIdentifier& identifier) const {
+const ENTRY& babelwires::Registry<ENTRY>::getRegisteredEntry(const LongId& identifier) const {
     return static_cast<const ENTRY&>(m_untypedRegistry.getRegisteredEntry(identifier));
 }
 

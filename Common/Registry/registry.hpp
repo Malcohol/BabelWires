@@ -25,12 +25,12 @@ namespace babelwires {
       public:
         /// An identifier is used to uniquely identify the entry.
         /// Typically, it will be obtained via the REGISTERED_LONGID macro.
-        RegistryEntry(LongIdentifier identifier, VersionNumber version);
+        RegistryEntry(LongId identifier, VersionNumber version);
         virtual ~RegistryEntry();
 
         /// Return an identifier which uniquely identifies the entry.
         /// The identifier should never be changed.
-        LongIdentifier getIdentifier() const;
+        LongId getIdentifier() const;
 
         /// The name of the entry, which can be displayed to the user and is permitted to change
         /// over time.
@@ -41,7 +41,7 @@ namespace babelwires {
         VersionNumber getVersion() const;
 
       private:
-        LongIdentifier m_identifier;
+        LongId m_identifier;
         VersionNumber m_version;
     };
 
@@ -64,23 +64,23 @@ namespace babelwires {
         /// Find an entry by an internal key which should be stable between versions of the program.
         /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
         /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
-        const RegistryEntry* getEntryByIdentifier(const LongIdentifier& identifier) const;
+        const RegistryEntry* getEntryByIdentifier(const LongId& identifier) const;
 
         /// Find an entry which is expected to be present.
         /// Will throw an RegistryException if the entry is not found.
         /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
         /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
-        const RegistryEntry& getRegisteredEntry(const LongIdentifier& identifier) const;
+        const RegistryEntry& getRegisteredEntry(const LongId& identifier) const;
 
       protected:
         const RegistryEntry* getEntryByName(std::string_view name) const;
 
         /// Protected non-const version available to subclasses.
-        RegistryEntry* getEntryByIdentifierNonConst(const LongIdentifier& identifier) const;
+        RegistryEntry* getEntryByIdentifierNonConst(const LongId& identifier) const;
 
       protected:
         std::string m_registryName;
-        std::unordered_map<LongIdentifier, std::unique_ptr<RegistryEntry>> m_entries;
+        std::unordered_map<LongId, std::unique_ptr<RegistryEntry>> m_entries;
 
       protected:
         template <typename ENTRY> friend class Registry;
@@ -108,13 +108,13 @@ namespace babelwires {
         /// versions of the program.
         /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
         /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
-        const ENTRY* getEntryByIdentifier(const LongIdentifier& identifier) const;
+        const ENTRY* getEntryByIdentifier(const LongId& identifier) const;
 
         /// Find an entry which is expected to be present.
         /// Will throw an RegistryException if the entry is not found.
         /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
         /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
-        const ENTRY& getRegisteredEntry(const LongIdentifier& identifier) const;
+        const ENTRY& getRegisteredEntry(const LongId& identifier) const;
 
         /// If ENTRY_SUBTYPE has the common static method "getThisIdentifier", then you can look it up by type
         /// and get a typed reference back.

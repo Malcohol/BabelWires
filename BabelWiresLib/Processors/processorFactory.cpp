@@ -7,5 +7,5 @@
  **/
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 
-babelwires::ProcessorFactory::ProcessorFactory(LongIdentifier identifier, VersionNumber version)
+babelwires::ProcessorFactory::ProcessorFactory(LongId identifier, VersionNumber version)
     : RegistryEntry(identifier, version) {}

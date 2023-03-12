@@ -31,7 +31,7 @@ namespace testUtils {
     struct TestProcessorFactory : babelwires::ProcessorFactory {
         TestProcessorFactory();
 
-        static babelwires::LongIdentifier getThisIdentifier();
+        static babelwires::LongId getThisIdentifier();
 
         std::unique_ptr<babelwires::Processor> createNewProcessor(const babelwires::ProjectContext& projectContext) const override;
     };

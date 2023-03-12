@@ -59,7 +59,7 @@ namespace {
     };
 
     struct SndFileAudioDestFactory : babelwires::FileAudioDestFactory {
-        SndFileAudioDestFactory(babelwires::LongIdentifier id, const char* ext, std::uint32_t code)
+        SndFileAudioDestFactory(babelwires::LongId id, const char* ext, std::uint32_t code)
             : FileAudioDestFactory(id, 1, Extensions{ext})
             , m_formatCode(code) {}
 
@@ -73,7 +73,7 @@ namespace {
 
 } // namespace
 
-babelwires::FileAudioDestFactory::FileAudioDestFactory(LongIdentifier identifier, VersionNumber version,
+babelwires::FileAudioDestFactory::FileAudioDestFactory(LongId identifier, VersionNumber version,
                                                        Extensions extensions)
     : FileTypeEntry(identifier, version, std::move(extensions)) {}
 

@@ -37,7 +37,7 @@ const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSy
         const babelwires::Type* operator()(std::monostate) { return nullptr; }
         const babelwires::Type* operator()(PrimitiveTypeId typeId) { return m_typeSystem.tryGetPrimitiveType(typeId); }
         const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
-            const LongIdentifier typeConstructorId = std::get<0>(higherOrderData);
+            const LongId typeConstructorId = std::get<0>(higherOrderData);
             if (const TypeConstructor* const typeConstructor = m_typeSystem.tryGetTypeConstructor(typeConstructorId)) {
                 return typeConstructor->getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
             }
@@ -55,7 +55,7 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         }
         const babelwires::Type& operator()(PrimitiveTypeId typeId) { return m_typeSystem.getPrimitiveType(typeId); }
         const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
-            const LongIdentifier typeConstructorId = std::get<0>(higherOrderData);
+            const LongId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);
             const Type* type = typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
             assert(type);
@@ -204,7 +204,7 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
     if ((IdEnd + 1 < str.size()) && (IdEnd == next) && (str[IdEnd] == openChar) && (str[IdEnd + 1] == closeChar)) {
         return {TypeRef(), IdEnd + 2};
     }
-    const LongIdentifier startId = LongIdentifier::deserializeFromString(str.substr(next, IdEnd));
+    const LongId startId = LongId::deserializeFromString(str.substr(next, IdEnd));
     next = IdEnd;
     if (str[next] != openChar) {
         return {startId, next};
@@ -288,7 +288,7 @@ babelwires::SubtypeOrder babelwires::TypeRef::compareSubtypeHelper(const TypeSys
                 return typeSystem.compareSubtypePrimitives(typeIdA, typeIdB);
             },
             [&typeSystem](const ConstructedTypeData& higherOrderDataA, const PrimitiveTypeId& typeIdB) {
-                const LongIdentifier typeConstructorId = std::get<0>(higherOrderDataA);
+                const LongId typeConstructorId = std::get<0>(higherOrderDataA);
                 const TypeConstructor* const typeConstructor = typeSystem.tryGetTypeConstructor(typeConstructorId);
                 if (!typeConstructor) {
                     return SubtypeOrder::IsUnrelated;
@@ -296,7 +296,7 @@ babelwires::SubtypeOrder babelwires::TypeRef::compareSubtypeHelper(const TypeSys
                 return typeConstructor->compareSubtypeHelper(typeSystem, std::get<1>(higherOrderDataA), typeIdB);
             },
             [&typeSystem](const PrimitiveTypeId& typeIdA, const ConstructedTypeData& higherOrderDataB) {
-                const LongIdentifier typeConstructorIdA = std::get<0>(higherOrderDataB);
+                const LongId typeConstructorIdA = std::get<0>(higherOrderDataB);
                 const TypeConstructor* const typeConstructorA = typeSystem.tryGetTypeConstructor(typeConstructorIdA);
                 if (!typeConstructorA) {
                     return SubtypeOrder::IsUnrelated;
@@ -306,8 +306,8 @@ babelwires::SubtypeOrder babelwires::TypeRef::compareSubtypeHelper(const TypeSys
             },
             [&typeSystem, &typeRefA, &typeRefB](const ConstructedTypeData& higherOrderDataA,
                                                 const ConstructedTypeData& higherOrderDataB) {
-                const LongIdentifier typeConstructorIdA = std::get<0>(higherOrderDataA);
-                const LongIdentifier typeConstructorIdB = std::get<0>(higherOrderDataB);
+                const LongId typeConstructorIdA = std::get<0>(higherOrderDataA);
+                const LongId typeConstructorIdB = std::get<0>(higherOrderDataB);
                 const TypeConstructor* const typeConstructorA = typeSystem.tryGetTypeConstructor(typeConstructorIdA);
                 if (!typeConstructorA) {
                     return SubtypeOrder::IsUnrelated;

@@ -27,7 +27,7 @@ testUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext& co
         addField(std::make_unique<babelwires::HasStaticRange<babelwires::IntFeature, 0, 255>>(), m_intChildId);
 }
 
-babelwires::LongIdentifier testUtils::TestSourceFileFormat::getThisIdentifier() {
+babelwires::LongId testUtils::TestSourceFileFormat::getThisIdentifier() {
     return s_fileFormatId;
 }
 
@@ -95,7 +95,7 @@ testUtils::TestTargetFileFormat::TestTargetFileFormat()
                            babelwires::IdentifierRegistry::Authority::isAuthoritative),
                        3, {s_fileFormatId}) {}
 
-babelwires::LongIdentifier testUtils::TestTargetFileFormat::getThisIdentifier() {
+babelwires::LongId testUtils::TestTargetFileFormat::getThisIdentifier() {
     return s_factoryFormatId;
 }
 

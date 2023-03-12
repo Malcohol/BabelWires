@@ -13,7 +13,7 @@
 
 /// Intended mainly for testing.
 #define PRIMITIVE_TYPE_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                         \
-    static babelwires::LongIdentifier getThisIdentifier() { return IDENTIFIER; }                                       \
+    static babelwires::LongId getThisIdentifier() { return IDENTIFIER; }                                       \
     static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
     babelwires::TypeRef getTypeRef() const override { return getThisIdentifier(); }
 

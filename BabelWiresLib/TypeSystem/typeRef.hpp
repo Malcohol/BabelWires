@@ -26,8 +26,8 @@ namespace babelwires {
     /// or storing the id of its constructor and its arguments.
     class TypeRef : public ProjectVisitable {
       public:
-        using PrimitiveTypeId = LongIdentifier;
-        using TypeConstructorId = LongIdentifier;
+        using PrimitiveTypeId = LongId;
+        using TypeConstructorId = LongId;
 
         TypeRef();
 

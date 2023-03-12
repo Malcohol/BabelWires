@@ -21,8 +21,8 @@ namespace {
     }
 
     babelwires::MapData setUpTestMapData(const babelwires::TypeSystem& typeSystem,
-                                         babelwires::LongIdentifier sourceTypeId,
-                                         babelwires::LongIdentifier targetTypeId, const babelwires::Value& sourceValue1,
+                                         babelwires::LongId sourceTypeId,
+                                         babelwires::LongId targetTypeId, const babelwires::Value& sourceValue1,
                                          const babelwires::Value& sourceValue2, const babelwires::Value& targetValue1,
                                          const babelwires::Value& targetValue2, const babelwires::Value& targetValue3,
                                          bool allToOneFallback) {

@@ -87,7 +87,7 @@ void babelwires::FeatureElement::setFactoryName(std::string factoryName) {
     m_factoryName = std::move(factoryName);
 }
 
-void babelwires::FeatureElement::setFactoryName(LongIdentifier identifier) {
+void babelwires::FeatureElement::setFactoryName(LongId identifier) {
     m_factoryName = IdentifierRegistry::read()->getName(identifier);
 }
 

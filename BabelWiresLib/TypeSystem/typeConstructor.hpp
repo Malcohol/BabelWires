@@ -27,7 +27,7 @@ namespace babelwires {
         const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 
         /// This is supplied by the TYPE_CONSTRUCTOR macro.
-        virtual LongIdentifier getTypeConstructorId() const = 0;
+        virtual LongId getTypeConstructorId() const = 0;
 
         /// TypeConstructors are expected to have fixed arity.
         virtual unsigned int getArity() const = 0;
@@ -82,9 +82,9 @@ namespace babelwires {
 
 /// Intended mainly for testing.
 #define TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                       \
-    static babelwires::LongIdentifier getThisIdentifier() { return IDENTIFIER; }                                       \
+    static babelwires::LongId getThisIdentifier() { return IDENTIFIER; }                                       \
     static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
-    babelwires::LongIdentifier getTypeConstructorId() const override { return getThisIdentifier(); }
+    babelwires::LongId getTypeConstructorId() const override { return getThisIdentifier(); }
 
 /// Type constructors need to be registered.
 /// For now, assume this is always done statically.

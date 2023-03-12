@@ -10,5 +10,5 @@ namespace testUtils {
 
     /// Get a long identifier with the given discriminator.
     /// Convenience function for tests which don't require the id to be actually registered.
-    babelwires::LongIdentifier getTestRegisteredLongIdentifier(std::string_view name, unsigned int discriminator = 1);
+    babelwires::LongId getTestRegisteredLongIdentifier(std::string_view name, unsigned int discriminator = 1);
 }

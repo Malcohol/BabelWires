@@ -34,7 +34,7 @@ testUtils::TestProcessorFactory::TestProcessorFactory()
                            babelwires::IdentifierRegistry::Authority::isAuthoritative),
                        2) {}
 
-babelwires::LongIdentifier testUtils::TestProcessorFactory::getThisIdentifier() {
+babelwires::LongId testUtils::TestProcessorFactory::getThisIdentifier() {
     return "testProcessor";
 }
 

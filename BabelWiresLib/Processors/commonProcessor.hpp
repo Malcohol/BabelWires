@@ -30,7 +30,7 @@ namespace babelwires {
     /// A convenient base class for processor factories.
     template <typename PROCESSOR> class CommonProcessorFactory : public ProcessorFactory {
       public:
-        CommonProcessorFactory(LongIdentifier identifier, VersionNumber version)
+        CommonProcessorFactory(LongId identifier, VersionNumber version)
             : ProcessorFactory(identifier, version) {}
 
         std::unique_ptr<babelwires::Processor> createNewProcessor(const ProjectContext& projectContext) const override {

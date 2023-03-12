@@ -50,7 +50,7 @@ TEST(EnumTest, enumWithCppEnum) {
         TestEnum()
             : Enum(ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
 
-        static babelwires::LongIdentifier getThisIdentifier() {
+        static babelwires::LongId getThisIdentifier() {
             return babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
                                            "TestEnum", "TestEnum", "aaaaaaaa-1111-2222-3333-444444444444",
                                            babelwires::IdentifierRegistry::Authority::isAuthoritative);

@@ -223,8 +223,8 @@ namespace babelwires {
     };
 
     using ShortId = IdentifierBase<1>;
-
-    using LongIdentifier = IdentifierBase<3>;
+    using MediumId = IdentifierBase<2>;
+    using LongId = IdentifierBase<3>;
 
 } // namespace babelwires
 

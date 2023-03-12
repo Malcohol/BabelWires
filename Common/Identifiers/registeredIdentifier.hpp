@@ -40,7 +40,7 @@ namespace babelwires {
 
 #define REGISTERED_LONGID(IDENTIFIER, NAME, UUID)                                                                      \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
-        static babelwires::LongIdentifier f = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(  \
+        static babelwires::LongId f = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(  \
             id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
         assert(                                                                                                        \
             (babelwires::IdentifierRegistry::read()->getName(f) == name) &&                                            \

@@ -6,8 +6,8 @@ babelwires::ShortId testUtils::getTestRegisteredIdentifier(std::string_view name
     return id;
 }
 
-babelwires::LongIdentifier testUtils::getTestRegisteredLongIdentifier(std::string_view name, unsigned int discriminator) {
-    babelwires::LongIdentifier id = name;
+babelwires::LongId testUtils::getTestRegisteredLongIdentifier(std::string_view name, unsigned int discriminator) {
+    babelwires::LongId id = name;
     id.setDiscriminator(discriminator);
     return id;
 }

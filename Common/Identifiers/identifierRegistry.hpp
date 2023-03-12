@@ -47,12 +47,12 @@ namespace babelwires {
 
         /// Give the Identifier a unique index so it can be later used to look-up the name.
         /// Returns a Identifier with a modified discriminator.
-        LongIdentifier addLongIdentifierWithMetadata(LongIdentifier identifier, const std::string& name,
+        LongId addLongIdentifierWithMetadata(LongId identifier, const std::string& name,
                                                      const Uuid& uuid, Authority authority);
         ShortId addShortIdentifierWithMetadata(ShortId identifier, const std::string& name, const Uuid& uuid,
                                              Authority authority);
 
-        LongIdentifier addIdentifierWithMetadata(LongIdentifier identifier, const std::string& name, const Uuid& uuid,
+        LongId addIdentifierWithMetadata(LongId identifier, const std::string& name, const Uuid& uuid,
                                                  Authority authority) {
             return addLongIdentifierWithMetadata(identifier, name, uuid, authority);
         }
@@ -62,7 +62,7 @@ namespace babelwires {
         }
 
         /// Get the name from the given identifier.
-        std::string getName(LongIdentifier identifier) const;
+        std::string getName(LongId identifier) const;
 
       public:
         // For use during serialization/deserialization:
@@ -71,11 +71,11 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
         /// Information stored about an identifier.
-        using ValueType = std::tuple<LongIdentifier, const std::string*, const Uuid*>;
+        using ValueType = std::tuple<LongId, const std::string*, const Uuid*>;
 
         /// Extract the information about an identifier from a local IdentifierRegistry.
         /// This can throw a ParseException if the contents are invalid.
-        ValueType getDeserializedIdentifierData(LongIdentifier identifier) const;
+        ValueType getDeserializedIdentifierData(LongId identifier) const;
 
       public:
         // Singleton stuff:
@@ -127,19 +127,19 @@ namespace babelwires {
         struct InstanceData : Serializable {
             SERIALIZABLE(InstanceData, "identifier", void, 1);
             InstanceData();
-            InstanceData(std::string fieldName, Uuid uuid, LongIdentifier identifier, Authority authority);
+            InstanceData(std::string fieldName, Uuid uuid, LongId identifier, Authority authority);
 
             void serializeContents(Serializer& serializer) const override;
             void deserializeContents(Deserializer& deserializer) override;
 
             std::string m_fieldName;
             Uuid m_uuid;
-            LongIdentifier m_identifier;
+            LongId m_identifier;
             Authority m_authority;
         };
 
         ///
-        const InstanceData* getInstanceData(LongIdentifier identifier) const;
+        const InstanceData* getInstanceData(LongId identifier) const;
 
       private:
         friend const_iterator;
@@ -152,7 +152,7 @@ namespace babelwires {
         };
 
         /// For each identifier, we can index associated data.
-        std::unordered_map<LongIdentifier, Data> m_instanceDatasFromIdentifier;
+        std::unordered_map<LongId, Data> m_instanceDatasFromIdentifier;
 
       private:
         /// Lifetime of this is managed externally.

@@ -122,20 +122,20 @@ TEST(IdentifierTest, identifierDeserialization) {
 }
 
 TEST(IdentifierTest, longIdentifiers) {
-    babelwires::LongIdentifier hello("Hello");
+    babelwires::LongId hello("Hello");
     EXPECT_EQ(hello.getDiscriminator(), 0);
     hello.setDiscriminator(17);
 
     std::string helloStr = "Hello";
-    babelwires::LongIdentifier hello1(helloStr);
+    babelwires::LongId hello1(helloStr);
     hello1.setDiscriminator(27);
 
     // Discriminators are not used to distinguish fields.
     EXPECT_EQ(hello, hello1);
-    std::hash<babelwires::LongIdentifier> fieldHasher;
+    std::hash<babelwires::LongId> fieldHasher;
     EXPECT_EQ(fieldHasher(hello), fieldHasher(hello1));
 
-    babelwires::LongIdentifier goodbye("AMuchLongerIndetifier");
+    babelwires::LongId goodbye("AMuchLongerIndetifier");
     goodbye.setDiscriminator(17);
     EXPECT_NE(hello, goodbye);
 
@@ -148,14 +148,14 @@ TEST(IdentifierTest, longIdentifiers) {
 }
 
 TEST(IdentifierTest, longIdentifierOrder) {
-    babelwires::LongIdentifier zero("A000");
-    babelwires::LongIdentifier ten("A10");
-    babelwires::LongIdentifier ant("ant");
-    babelwires::LongIdentifier antelope("antelopes");
-    babelwires::LongIdentifier Emu("Emu");
-    babelwires::LongIdentifier emu("emu");
-    babelwires::LongIdentifier Ibex("Ibex");
-    babelwires::LongIdentifier zebra("zebra");
+    babelwires::LongId zero("A000");
+    babelwires::LongId ten("A10");
+    babelwires::LongId ant("ant");
+    babelwires::LongId antelope("antelopes");
+    babelwires::LongId Emu("Emu");
+    babelwires::LongId emu("emu");
+    babelwires::LongId Ibex("Ibex");
+    babelwires::LongId zebra("zebra");
 
     EXPECT_LT(zero, ten);
     EXPECT_LT(ten, Emu);
@@ -165,10 +165,10 @@ TEST(IdentifierTest, longIdentifierOrder) {
     EXPECT_LT(antelope, emu);
     EXPECT_LT(emu, zebra);
 
-    babelwires::LongIdentifier hello0("aggggggggggggggggggggg");
-    babelwires::LongIdentifier hello1("ggggggggggaggggggggggg");
-    babelwires::LongIdentifier hello2("ggggggggggggggggggggga");
-    babelwires::LongIdentifier hello3("gggggggggggggggggggggg");
+    babelwires::LongId hello0("aggggggggggggggggggggg");
+    babelwires::LongId hello1("ggggggggggaggggggggggg");
+    babelwires::LongId hello2("ggggggggggggggggggggga");
+    babelwires::LongId hello3("gggggggggggggggggggggg");
 
     EXPECT_LT(hello0, hello1);
     EXPECT_LT(hello1, hello2);
@@ -176,7 +176,7 @@ TEST(IdentifierTest, longIdentifierOrder) {
 }
 
 TEST(IdentifierTest, longIdentifierStringOutput) {
-    babelwires::LongIdentifier hello("Hello_world");
+    babelwires::LongId hello("Hello_world");
     EXPECT_EQ(hello.toString(), "Hello_world");
     {
         std::ostringstream os;
@@ -192,7 +192,7 @@ TEST(IdentifierTest, longIdentifierStringOutput) {
 }
 
 TEST(IdentifierTest, longIdentifierSerialization) {
-    babelwires::LongIdentifier hello("Hello_world");
+    babelwires::LongId hello("Hello_world");
     EXPECT_EQ(hello.serializeToString(), "Hello_world");
 
     hello.setDiscriminator(81);
@@ -201,56 +201,56 @@ TEST(IdentifierTest, longIdentifierSerialization) {
 
 
 TEST(IdentifierTest, longIdentifierDeserialization) {
-    const babelwires::LongIdentifier hello = babelwires::LongIdentifier::deserializeFromString("Hello_world");
+    const babelwires::LongId hello = babelwires::LongId::deserializeFromString("Hello_world");
     EXPECT_EQ(hello, "Hello_world");
     EXPECT_EQ(hello.getDiscriminator(), 0);
 
-    const babelwires::LongIdentifier hello1 = babelwires::LongIdentifier::deserializeFromString("Hello_world'12");
+    const babelwires::LongId hello1 = babelwires::LongId::deserializeFromString("Hello_world'12");
     EXPECT_EQ(hello1, "Hello_world");
     EXPECT_EQ(hello1.getDiscriminator(), 12);
 
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("H"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("H'1"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("HE'11"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hel'111"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hell'111"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hello'111"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hell33"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("He_33_'10"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hello'255"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Helloo'65500"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hello_incredible_world'65500"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("_"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("_o_o_"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("___EE"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("_o_o_'3"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("H"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("H'1"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("HE'11"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hel'111"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hell'111"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hello'111"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hell33"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("He_33_'10"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hello'255"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Helloo'65500"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hello_incredible_world'65500"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("_"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("_o_o_"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("___EE"));
+    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("_o_o_'3"));
 
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString(""), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("02"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("12"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("'12"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("2Hello"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("Hællo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("Hello_incredible_world_"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("Hello_incredible_world`111"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("Helloo'65535"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("Hell'100000"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("^-.-^'3"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString(""), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("02"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("12"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("'12"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("2Hello"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("Hællo"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("Hello_incredible_world_"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("Hello_incredible_world`111"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("Helloo'65535"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("Hell'100000"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongId::deserializeFromString("^-.-^'3"), babelwires::ParseException);
 }
 
 TEST(IdentifierTest, shortToLongIdentifiers) {
     const babelwires::ShortId hello = "Hello";
-    const babelwires::LongIdentifier hello1 = hello;
+    const babelwires::LongId hello1 = hello;
     EXPECT_EQ(hello, hello1);
 
     hello.setDiscriminator(12);
-    const babelwires::LongIdentifier hello2 = hello;
+    const babelwires::LongId hello2 = hello;
     EXPECT_EQ(hello, hello2);
     EXPECT_EQ(hello2.getDiscriminator(), 12);
 }
 
 TEST(IdentifierTest, longToShortIdentifiers) {
-    const babelwires::LongIdentifier hello = "Helloo";
+    const babelwires::LongId hello = "Helloo";
     const babelwires::ShortId hello1(hello);
     EXPECT_EQ(hello, hello1);
 
@@ -259,7 +259,7 @@ TEST(IdentifierTest, longToShortIdentifiers) {
     EXPECT_EQ(hello, hello2);
     EXPECT_EQ(hello2.getDiscriminator(), 12);
 
-    const babelwires::LongIdentifier longHello = "Hellooo";
+    const babelwires::LongId longHello = "Hellooo";
     EXPECT_THROW(babelwires::ShortId shortHello(longHello), babelwires::ParseException);
 }
 
@@ -445,21 +445,21 @@ TEST(IdentifierTest, longIdentifierInRegistry) {
 
     babelwires::IdentifierRegistry identifierRegistry;
 
-    babelwires::LongIdentifier hello("Hello_world");
+    babelwires::LongId hello("Hello_world");
     EXPECT_EQ(hello.getDiscriminator(), 0);
 
     babelwires::Uuid uuid("00000000-1111-2222-3333-000000000001");
 
-    const babelwires::LongIdentifier id = identifierRegistry.addIdentifierWithMetadata(
+    const babelwires::LongId id = identifierRegistry.addIdentifierWithMetadata(
         hello, "Hello World", uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(hello, id);
     EXPECT_NE(id.getDiscriminator(), 0);
     EXPECT_EQ(identifierRegistry.getName(id), "Hello World");
 
-    babelwires::LongIdentifier hello2("Hello_world");
+    babelwires::LongId hello2("Hello_world");
     babelwires::Uuid uuid2("00000000-1111-2222-3333-000000000002");
 
-    const babelwires::LongIdentifier id2 = identifierRegistry.addIdentifierWithMetadata(
+    const babelwires::LongId id2 = identifierRegistry.addIdentifierWithMetadata(
         hello2, "Hello World 2", uuid2, babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(hello, id);
     EXPECT_NE(id2.getDiscriminator(), 0);

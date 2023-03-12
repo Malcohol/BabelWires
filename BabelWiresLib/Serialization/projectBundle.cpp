@@ -40,7 +40,7 @@ void babelwires::ProjectBundle::adaptDataToAdditionalMetadata(const ProjectConte
 namespace {
     struct FactoryInfoPair : babelwires::Serializable {
         SERIALIZABLE(FactoryInfoPair, "factory", void, 1);
-        babelwires::LongIdentifier m_factoryIdentifier = "nofact";
+        babelwires::LongId m_factoryIdentifier = "nofact";
         babelwires::VersionNumber m_factoryVersion;
 
         void serializeContents(babelwires::Serializer& serializer) const override {
@@ -77,7 +77,7 @@ void babelwires::ProjectBundle::visitIdentifiers(IdentifierVisitor& visitor) {
     // Visit the identifiers in the factory metadata.
     decltype(m_factoryMetadata) newMap;
     for (const auto& [k, v] : m_factoryMetadata) {
-        LongIdentifier newKey = k;
+        LongId newKey = k;
         visitor(newKey);
         newMap.insert(std::pair(newKey, v));
     }
