@@ -117,11 +117,10 @@ template <unsigned int NUM_BLOCKS> bool babelwires::IdentifierBase<NUM_BLOCKS>::
         return false;
     }
     for (int i = 0; i < n; ++i) {
-        // Path and discriminator delimiters would make paths impossible to parse.
-        // We rely on the high-bit for tagging the path step union.
+        // Restricting to typical identifier rules makes it easier to parse expressions, e.g. paths.
+        // Also, it guarantees that the high-bit is available for tagging the path step union.
         const char c = chars[i];
-        if ((c == s_discriminatorDelimiter) || (c == s_pathDelimiter) || !std::isgraph(c)) {
-            assert((c <= 127) && "Assumption that std::isgraph allows only 7-bit ASCII is wrong.");
+        if (!std::isalnum(c) && (c != '_')) {
             return false;
         }
     }

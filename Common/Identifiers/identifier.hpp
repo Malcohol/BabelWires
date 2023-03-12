@@ -53,10 +53,7 @@ namespace babelwires {
     ///   is deserialized into a build where the referant does not exist. Thus, the metadata will
     ///   be available if the identifier is later serialized.
     ///
-    /// Constraints on characters:
-    /// * They must have a graphical representation (see std::isgraph)
-    /// * They cannot be the path delimiter "/"
-    /// * They cannot be the discriminator delimiter "`"
+    /// The characters must be alphanumeric or '_'.
     ///
     /// NUM_BLOCKS is the number of std::uint64_t which store the contents.
     template <unsigned int NUM_BLOCKS> union IdentifierBase {

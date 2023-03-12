@@ -105,6 +105,7 @@ const babelwires::TypeSystem::RelatedTypes& babelwires::TypeSystem::getRelatedTy
 
 babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& typeRefA,
                                                                           const TypeRef& typeRefB) const {
+    // TODO Thread-safe cache here.
     if (typeRefA == typeRefB) {
         return SubtypeOrder::IsEquivalent;
     }

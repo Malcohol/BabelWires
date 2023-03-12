@@ -100,13 +100,13 @@ TEST(IdentifierTest, identifierDeserialization) {
     EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("Hell`111"));
     EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("Hello`111"));
     EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("Hell33"));
-    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("He(33)`10"));
+    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("He_33_`10"));
     EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("Hello`255"));
     EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("Helloo`65500"));
-    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("."));
-    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("^-.-^"));
-    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("(%[EE"));
-    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("^-.-^`3"));
+    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("_"));
+    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("_o_o_"));
+    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("___EE"));
+    EXPECT_NO_THROW(babelwires::Identifier::deserializeFromString("_o_o_`3"));
 
     EXPECT_THROW(babelwires::Identifier::deserializeFromString(""), babelwires::ParseException);
     EXPECT_THROW(babelwires::Identifier::deserializeFromString("02"), babelwires::ParseException);
@@ -118,6 +118,7 @@ TEST(IdentifierTest, identifierDeserialization) {
     EXPECT_THROW(babelwires::Identifier::deserializeFromString("Helloooo"), babelwires::ParseException);
     EXPECT_THROW(babelwires::Identifier::deserializeFromString("Helloo`65535"), babelwires::ParseException);
     EXPECT_THROW(babelwires::Identifier::deserializeFromString("Hell`100000"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::Identifier::deserializeFromString("^-.-^`3"), babelwires::ParseException);
 }
 
 TEST(IdentifierTest, longIdentifiers) {
@@ -215,14 +216,14 @@ TEST(IdentifierTest, longIdentifierDeserialization) {
     EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hell`111"));
     EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hello`111"));
     EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hell33"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("He(33)`10"));
+    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("He_33_`10"));
     EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hello`255"));
     EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Helloo`65500"));
     EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("Hello_incredible_world`65500"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("."));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("^-.-^"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("(%[EE"));
-    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("^-.-^`3"));
+    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("_"));
+    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("_o_o_"));
+    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("___EE"));
+    EXPECT_NO_THROW(babelwires::LongIdentifier::deserializeFromString("_o_o_`3"));
 
     EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString(""), babelwires::ParseException);
     EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("02"), babelwires::ParseException);
@@ -234,6 +235,7 @@ TEST(IdentifierTest, longIdentifierDeserialization) {
     EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("Hello_incredible_world'111"), babelwires::ParseException);
     EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("Helloo`65535"), babelwires::ParseException);
     EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("Hell`100000"), babelwires::ParseException);
+    EXPECT_THROW(babelwires::LongIdentifier::deserializeFromString("^-.-^`3"), babelwires::ParseException);
 }
 
 TEST(IdentifierTest, shortToLongIdentifiers) {
