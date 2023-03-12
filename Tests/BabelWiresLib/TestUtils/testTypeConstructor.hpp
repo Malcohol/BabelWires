@@ -24,7 +24,7 @@ namespace testUtils {
                                                       const babelwires::TypeConstructorArguments& argumentsA,
                                                       const babelwires::TypeConstructorArguments& argumentsB) const;
 
-        /// Same as AddBlank.
+        /// Same as AddBlankToEnum.
         /// B < A => B < Unary<A>
         babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem,
                                                       const babelwires::TypeConstructorArguments& arguments,

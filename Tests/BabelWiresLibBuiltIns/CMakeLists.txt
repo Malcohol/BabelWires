@@ -1,6 +1,6 @@
 SET( LIB_TESTS_SRCS
     babelWiresBuiltInsTests.cpp
-    addBlankTest.cpp
+    addBlankToEnumTest.cpp
    )
 
 ADD_EXECUTABLE( babelWiresBuiltInsTests ${LIB_TESTS_SRCS} )
