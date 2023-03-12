@@ -12,10 +12,10 @@
 
 namespace babelwires {
     /// See the REGISTERED_ID_VECTOR macro.
-    using IdentifiersSource = std::vector<std::tuple<const babelwires::Identifier, std::string, Uuid>>;
+    using IdentifiersSource = std::vector<std::tuple<const babelwires::ShortId, std::string, Uuid>>;
 
     /// See the REGISTERED_ID_VECTOR macro.
-    using RegisteredIdentifiers = std::vector<babelwires::Identifier>;
+    using RegisteredIdentifiers = std::vector<babelwires::ShortId>;
 
     namespace detail {
         RegisteredIdentifiers getIdentifiers(const IdentifiersSource& source);
@@ -29,7 +29,7 @@ namespace babelwires {
 /// called.
 #define REGISTERED_ID(IDENTIFIER, NAME, UUID)                                                                          \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
-        static babelwires::Identifier f = babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(     \
+        static babelwires::ShortId f = babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(     \
             id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
         assert(                                                                                                        \
             (babelwires::IdentifierRegistry::read()->getName(f) == name) &&                                            \

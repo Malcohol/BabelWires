@@ -1,5 +1,5 @@
 /**
- * A PathStep is a union of a Identifier and an ArrayIndex.
+ * A PathStep is a union of a ShortId and an ArrayIndex.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -15,12 +15,12 @@ namespace babelwires {
 
     using ArrayIndex = std::uint16_t;
 
-    /// A PathStep is a union of a Identifier and an ArrayIndex.
+    /// A PathStep is a union of a ShortId and an ArrayIndex.
     union PathStep {
       public:
         // explicit, because a temporary PathStep contains a copy of f, and any modification to its mutable
         // discriminator will be lost.
-        explicit PathStep(const Identifier& f)
+        explicit PathStep(const ShortId& f)
             : m_fieldIdentifier(f) {}
         PathStep(ArrayIndex index)
             : m_arrayIndex(Index()) {
@@ -39,13 +39,13 @@ namespace babelwires {
         bool isIndex() const { return !isField(); }
 
         /// Get the contained field identifier or assert.
-        const Identifier& getField() const {
+        const ShortId& getField() const {
             assert(isField());
             return m_fieldIdentifier;
         }
 
         /// Get the contained field identifier or assert.
-        Identifier& getField() {
+        ShortId& getField() {
             assert(isField());
             return m_fieldIdentifier;
         }
@@ -63,7 +63,7 @@ namespace babelwires {
         }
 
         /// If the step contains a field identifier, return a pointer to it.
-        const Identifier* asField() const { return isField() ? &m_fieldIdentifier : nullptr; }
+        const ShortId* asField() const { return isField() ? &m_fieldIdentifier : nullptr; }
 
         /// If the step contains an array index, return a pointer to it.
         const ArrayIndex* asIndex() const { return isIndex() ? &m_arrayIndex.m_index : nullptr; }
@@ -93,7 +93,7 @@ namespace babelwires {
         friend struct std::hash<PathStep>;
 
         // A union of these.
-        Identifier m_fieldIdentifier;
+        ShortId m_fieldIdentifier;
 
         struct Index {
             /// The last two bytes are used as the tag.

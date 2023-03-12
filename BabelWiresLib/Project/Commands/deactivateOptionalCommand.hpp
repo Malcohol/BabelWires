@@ -19,7 +19,7 @@ namespace babelwires {
     class DeactivateOptionalCommand : public CompoundCommand<Project> {
       public:
         DeactivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                               Identifier optional);
+                               ShortId optional);
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
@@ -28,7 +28,7 @@ namespace babelwires {
       private:
         ElementId m_elementId;
         FeaturePath m_pathToRecord;
-        Identifier m_optional;
+        ShortId m_optional;
 
         /// Did an old modifier get replaced (otherwise this is the first modification).
         bool m_wasModifier = false;

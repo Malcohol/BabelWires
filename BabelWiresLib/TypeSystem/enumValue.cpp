@@ -15,15 +15,15 @@
 
 babelwires::EnumValue::EnumValue() = default;
 
-babelwires::EnumValue::EnumValue(Identifier value)
+babelwires::EnumValue::EnumValue(ShortId value)
     : m_value(value) {}
 
 /// Get the current value of the feature.
-babelwires::Identifier babelwires::EnumValue::get() const {
+babelwires::ShortId babelwires::EnumValue::get() const {
     return m_value;
 }
 
-void babelwires::EnumValue::set(Identifier value) {
+void babelwires::EnumValue::set(ShortId value) {
     m_value = value;
 }
 

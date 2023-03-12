@@ -15,7 +15,7 @@ unsigned int babelwires::AddBlankToEnum::getArity() const {
     return 1;
 }
 
-babelwires::Identifier babelwires::AddBlankToEnum::getBlankValue() {
+babelwires::ShortId babelwires::AddBlankToEnum::getBlankValue() {
     return REGISTERED_ID("____", "____", "9e715cdc-399a-48b7-bc04-ad98e9e900d9");
 }
 

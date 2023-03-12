@@ -385,7 +385,7 @@ TEST(TypeRefTest, visitIdentifiers) {
                                                       {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
 
     struct Visitor : babelwires::IdentifierVisitor {
-        void operator()(babelwires::Identifier& identifier) {
+        void operator()(babelwires::ShortId& identifier) {
             m_seen.emplace(identifier);
             identifier.setDiscriminator(17);
         }
@@ -393,7 +393,7 @@ TEST(TypeRefTest, visitIdentifiers) {
             m_seen.emplace(identifier);
             identifier.setDiscriminator(18);
         }
-        std::set<babelwires::Identifier> m_seen;
+        std::set<babelwires::ShortId> m_seen;
     } visitor1, visitor2;
 
     typeRef.visitIdentifiers(visitor1);

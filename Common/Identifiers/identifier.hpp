@@ -222,7 +222,7 @@ namespace babelwires {
         static_assert(sizeof(Data) == sizeof(m_code));
     };
 
-    using Identifier = IdentifierBase<1>;
+    using ShortId = IdentifierBase<1>;
 
     using LongIdentifier = IdentifierBase<3>;
 

@@ -19,7 +19,7 @@ namespace babelwires {
     /// Not every tag needs to have fields associated with it.
     class UnionFeature : public RecordFeature {
       public:
-        using TagValues = std::vector<Identifier>;
+        using TagValues = std::vector<ShortId>;
 
         /// Construct a union with the given set of tags.
         /// The tags' identifiers must be registered.
@@ -29,33 +29,33 @@ namespace babelwires {
         const TagValues& getTags() const;
 
         /// Get the index of the given tag.
-        unsigned int getIndexOfTag(Identifier tag) const;
+        unsigned int getIndexOfTag(ShortId tag) const;
 
         /// Check whether the tag is a tag of this union.
-        bool isTag(Identifier tag) const;
+        bool isTag(ShortId tag) const;
 
         /// Add a field to the branch corresponding to the given tag.
         template <typename T>
-        T* addFieldInBranch(const Identifier& tag, std::unique_ptr<T> f, const Identifier& fieldIdentifier);
+        T* addFieldInBranch(const ShortId& tag, std::unique_ptr<T> f, const ShortId& fieldIdentifier);
 
         /// Add a field to the branches corresponding to the given tags.
         template <typename T>
-        T* addFieldInBranches(const std::vector<Identifier>& tags, std::unique_ptr<T> f, const Identifier& fieldIdentifier);
+        T* addFieldInBranches(const std::vector<ShortId>& tags, std::unique_ptr<T> f, const ShortId& fieldIdentifier);
 
         /// Select the tag.
-        void selectTag(Identifier tag);
+        void selectTag(ShortId tag);
 
         /// Return the tag which is currently selected.
-        Identifier getSelectedTag() const;
+        ShortId getSelectedTag() const;
 
         /// Return the index of the tag which is currently selected.
         unsigned int getSelectedTagIndex() const;
 
         /// Get the fields which would be removed if the proposedTag was selected.
-        std::vector<Identifier> getFieldsRemovedByChangeOfBranch(Identifier proposedTag) const;
+        std::vector<ShortId> getFieldsRemovedByChangeOfBranch(ShortId proposedTag) const;
 
       protected:
-        void addFieldInBranchesInternal(const std::vector<Identifier>& tags, Field field);
+        void addFieldInBranchesInternal(const std::vector<ShortId>& tags, Field field);
         void doSetToDefault() override;
         void doSetToDefaultNonRecursive() override;
 
@@ -63,8 +63,8 @@ namespace babelwires {
         void selectTagByIndex(unsigned int index);
 
         struct BranchAdjustment {
-            std::vector<Identifier> m_fieldsToRemove;
-            std::vector<Identifier> m_fieldsToAdd;
+            std::vector<ShortId> m_fieldsToRemove;
+            std::vector<ShortId> m_fieldsToAdd;
         };
 
         BranchAdjustment getBranchAdjustment(unsigned int tagIndex) const;
@@ -86,21 +86,21 @@ namespace babelwires {
           std::vector<TagIndexAndIntendedFieldIndex> m_tagsWithIntendedIndices;
         };
 
-        std::unordered_map<Identifier, FieldInfo> m_fieldInfo;
+        std::unordered_map<ShortId, FieldInfo> m_fieldInfo;
 
         /// In tag index order.
-        std::vector<std::vector<Identifier>> m_fieldsInBranches;
+        std::vector<std::vector<ShortId>> m_fieldsInBranches;
     };
 
     template <typename T>
-    T* babelwires::UnionFeature::addFieldInBranch(const Identifier& tag, std::unique_ptr<T> f,
-                                                  const Identifier& fieldIdentifier) {
+    T* babelwires::UnionFeature::addFieldInBranch(const ShortId& tag, std::unique_ptr<T> f,
+                                                  const ShortId& fieldIdentifier) {
         return addFieldInBranches({tag}, std::move(f), fieldIdentifier);
     }
 
     template <typename T>
-    T* babelwires::UnionFeature::addFieldInBranches(const std::vector<Identifier>& tags, std::unique_ptr<T> f,
-                                                  const Identifier& fieldIdentifier) {
+    T* babelwires::UnionFeature::addFieldInBranches(const std::vector<ShortId>& tags, std::unique_ptr<T> f,
+                                                  const ShortId& fieldIdentifier) {
         T* fTPtr = f.get();
         addFieldInBranchesInternal(tags, Field{fieldIdentifier, std::move(f)});
         return fTPtr;

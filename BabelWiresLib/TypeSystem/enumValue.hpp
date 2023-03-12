@@ -17,13 +17,13 @@ namespace babelwires {
         SERIALIZABLE(EnumValue, "enum", Value, 1);
 
         EnumValue();
-        EnumValue(Identifier value);
+        EnumValue(ShortId value);
 
         /// Get the current value of the feature.
-        Identifier get() const;
+        ShortId get() const;
 
         /// Set the value in the feature.
-        void set(Identifier value);
+        void set(ShortId value);
 
         bool isValid(const Type& type) const override;
         void serializeContents(Serializer& serializer) const override;
@@ -35,6 +35,6 @@ namespace babelwires {
         std::string toString() const override;
 
       private:
-        Identifier m_value;
+        ShortId m_value;
     };
 } // namespace babelwires

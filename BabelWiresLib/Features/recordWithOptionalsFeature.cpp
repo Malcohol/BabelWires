@@ -17,7 +17,7 @@ void babelwires::RecordWithOptionalsFeature::addOptionalFieldInternal(FieldAndIn
     m_inactiveFields.emplace_back(std::move(f));
 }
 
-void babelwires::RecordWithOptionalsFeature::activateField(Identifier identifier) {
+void babelwires::RecordWithOptionalsFeature::activateField(ShortId identifier) {
     const auto it = std::find_if(m_inactiveFields.begin(), m_inactiveFields.end(),
                                  [identifier](const FieldAndIndex& f) { return f.m_identifier == identifier; });
     if(it == m_inactiveFields.end()) {
@@ -28,7 +28,7 @@ void babelwires::RecordWithOptionalsFeature::activateField(Identifier identifier
     m_inactiveFields.erase(it);
 }
 
-void babelwires::RecordWithOptionalsFeature::deactivateField(Identifier identifier) {
+void babelwires::RecordWithOptionalsFeature::deactivateField(ShortId identifier) {
     if (!isOptional(identifier) || !isActivated(identifier)) {
         throw ModelException() << "The field " << identifier << " is not an active optional field, so it cannot be deactivated";
     }
@@ -43,16 +43,16 @@ void babelwires::RecordWithOptionalsFeature::deactivateField(Identifier identifi
     m_inactiveFields.insert(insertionPoint, std::move(f));
 }
 
-bool babelwires::RecordWithOptionalsFeature::isOptional(Identifier identifier) const {
+bool babelwires::RecordWithOptionalsFeature::isOptional(ShortId identifier) const {
     return std::find(m_optionalFields.begin(), m_optionalFields.end(), identifier) != m_optionalFields.end();
 }
 
-bool babelwires::RecordWithOptionalsFeature::isActivated(Identifier identifier) const {
+bool babelwires::RecordWithOptionalsFeature::isActivated(ShortId identifier) const {
     assert(isOptional(identifier) && "The identifier does not identify an optional field");
     return tryGetChildFromStep(PathStep(identifier));
 }
 
-const std::vector<babelwires::Identifier>& babelwires::RecordWithOptionalsFeature::getOptionalFields() const {
+const std::vector<babelwires::ShortId>& babelwires::RecordWithOptionalsFeature::getOptionalFields() const {
     return m_optionalFields;
 }
 

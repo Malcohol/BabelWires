@@ -16,13 +16,13 @@ namespace babelwires {
     /// QAction for activating or deactivating an optional.
     class OptionalActivationAction : public babelwires::FeatureContextMenuAction {
       public:
-        OptionalActivationAction(babelwires::FeaturePath pathToRecord, Identifier optional, bool isActivated);
+        OptionalActivationAction(babelwires::FeaturePath pathToRecord, ShortId optional, bool isActivated);
 
         virtual void actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const override;
 
       private:
         babelwires::FeaturePath m_pathToRecord;
-        Identifier m_optional;
+        ShortId m_optional;
         bool m_isActivated;
     };
 }

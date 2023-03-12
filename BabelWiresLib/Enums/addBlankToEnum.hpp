@@ -21,7 +21,7 @@ namespace babelwires {
 
         /// The blank value that gets added to enums.
         /// Note that the blank value is only permitted at the end of the enum.
-        static Identifier getBlankValue();
+        static ShortId getBlankValue();
 
         unsigned int getArity() const override;
 

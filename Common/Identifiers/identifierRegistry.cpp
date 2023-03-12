@@ -43,7 +43,7 @@ void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deseriali
 
 babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWithMetadata(
     babelwires::LongIdentifier identifier, const std::string& name, const Uuid& uuid, Authority authority) {
-    const Identifier::Discriminator discriminator = identifier.getDiscriminator();
+    const ShortId::Discriminator discriminator = identifier.getDiscriminator();
     assert((discriminator == 0) && "The identifier already has a discriminator: Did you already register it?");
 
     const auto it = m_uuidToInstanceDataMap.find(uuid);
@@ -60,7 +60,7 @@ babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWith
 
         const int newDiscriminator = data.m_instanceDatas.size() + 1;
         // I could fail safe here, but it seems very unlikely to happen. If it does, then the system needs a rethink.
-        assert((newDiscriminator <= Identifier::c_maxDiscriminator) && "Too many duplicate identifiers");
+        assert((newDiscriminator <= ShortId::c_maxDiscriminator) && "Too many duplicate identifiers");
         data.m_instanceDatas.emplace_back(uit->second.get());
         identifier.setDiscriminator(newDiscriminator);
         uit->second->m_identifier = identifier;
@@ -87,14 +87,14 @@ babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWith
     return identifier;
 }
 
-babelwires::Identifier babelwires::IdentifierRegistry::addShortIdentifierWithMetadata(babelwires::Identifier identifier,
+babelwires::ShortId babelwires::IdentifierRegistry::addShortIdentifierWithMetadata(babelwires::ShortId identifier,
                                                                                       const std::string& name,
                                                                                       const Uuid& uuid,
                                                                                       Authority authority) {
 #ifndef NDEBUG
     try {
 #endif
-        return Identifier(addLongIdentifierWithMetadata(identifier, name, uuid, authority));
+        return ShortId(addLongIdentifierWithMetadata(identifier, name, uuid, authority));
 #ifndef NDEBUG
     } catch (const ParseException&) {
         assert(false && "A long identifier was previously registered with this uuid");
@@ -104,7 +104,7 @@ babelwires::Identifier babelwires::IdentifierRegistry::addShortIdentifierWithMet
 
 const babelwires::IdentifierRegistry::InstanceData*
 babelwires::IdentifierRegistry::getInstanceData(LongIdentifier identifier) const {
-    const babelwires::Identifier::Discriminator index = identifier.getDiscriminator();
+    const babelwires::ShortId::Discriminator index = identifier.getDiscriminator();
     if (index > 0) {
         identifier.setDiscriminator(0);
         const auto& it = m_instanceDatasFromIdentifier.find(identifier);
@@ -231,7 +231,7 @@ void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deseriali
         std::unique_ptr<InstanceData> instanceDataPtr = it.getObject();
         InstanceData* instanceData = instanceDataPtr.get();
 
-        const Identifier::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
+        const ShortId::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
         if (discriminator == 0) {
             throw ParseException() << "An identifier in the identifier metadata had no discriminator";
         }

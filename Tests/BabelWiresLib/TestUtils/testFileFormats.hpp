@@ -20,7 +20,7 @@ namespace testUtils {
 
         static constexpr char s_intChildUuid[] = "00000000-1111-2222-3333-800000000BBB";
 
-        babelwires::Identifier m_intChildId;
+        babelwires::ShortId m_intChildId;
 
         /// A shortcut for accessing at the child feature.
         babelwires::IntFeature* m_intChildFeature;

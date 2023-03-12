@@ -49,14 +49,14 @@ namespace babelwires {
         /// Returns a Identifier with a modified discriminator.
         LongIdentifier addLongIdentifierWithMetadata(LongIdentifier identifier, const std::string& name,
                                                      const Uuid& uuid, Authority authority);
-        Identifier addShortIdentifierWithMetadata(Identifier identifier, const std::string& name, const Uuid& uuid,
+        ShortId addShortIdentifierWithMetadata(ShortId identifier, const std::string& name, const Uuid& uuid,
                                              Authority authority);
 
         LongIdentifier addIdentifierWithMetadata(LongIdentifier identifier, const std::string& name, const Uuid& uuid,
                                                  Authority authority) {
             return addLongIdentifierWithMetadata(identifier, name, uuid, authority);
         }
-        Identifier addIdentifierWithMetadata(Identifier identifier, const std::string& name, const Uuid& uuid,
+        ShortId addIdentifierWithMetadata(ShortId identifier, const std::string& name, const Uuid& uuid,
                                              Authority authority) {
             return addShortIdentifierWithMetadata(identifier, name, uuid, authority);
         }

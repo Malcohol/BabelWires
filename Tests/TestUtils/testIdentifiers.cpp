@@ -1,7 +1,7 @@
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
-babelwires::Identifier testUtils::getTestRegisteredIdentifier(std::string_view name, unsigned int discriminator) {
-    babelwires::Identifier id = name;
+babelwires::ShortId testUtils::getTestRegisteredIdentifier(std::string_view name, unsigned int discriminator) {
+    babelwires::ShortId id = name;
     id.setDiscriminator(discriminator);
     return id;
 }

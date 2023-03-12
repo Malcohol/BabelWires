@@ -30,10 +30,10 @@ namespace babelwires {
         const Enum& getEnum() const;
 
         /// Get the current value of the feature.
-        Identifier get() const;
+        ShortId get() const;
 
         /// Set the value in the feature.
-        void set(Identifier value);
+        void set(ShortId value);
 
       protected:
         std::string doGetValueType() const override;
@@ -46,7 +46,7 @@ namespace babelwires {
         TypeRef m_enum;
 
         ///
-        Identifier m_value;
+        ShortId m_value;
     };
 
     /// EnumFeature for RegisteredEnums, which can be conveniently constructed, since it assumes the Enum it

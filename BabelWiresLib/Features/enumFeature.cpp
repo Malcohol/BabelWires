@@ -27,11 +27,11 @@ const babelwires::Enum& babelwires::EnumFeature::getEnum() const {
     return *e;
 }
 
-babelwires::Identifier babelwires::EnumFeature::get() const {
+babelwires::ShortId babelwires::EnumFeature::get() const {
     return m_value;
 }
 
-void babelwires::EnumFeature::set(Identifier id) {
+void babelwires::EnumFeature::set(ShortId id) {
     const Enum& e = getEnum();
     const Enum::EnumValues& values = e.getEnumValues();
     const auto it = std::find(values.begin(), values.end(), id);
@@ -47,7 +47,7 @@ void babelwires::EnumFeature::set(Identifier id) {
 
 void babelwires::EnumFeature::doSetToDefault() {
     const Enum& e = getEnum();
-    const Identifier defaultValue = e.getIdentifierFromIndex(e.getIndexOfDefaultValue());
+    const ShortId defaultValue = e.getIdentifierFromIndex(e.getIndexOfDefaultValue());
     if (defaultValue != m_value) {
         setChanged(Changes::ValueChanged);
         m_value = defaultValue;
@@ -55,7 +55,7 @@ void babelwires::EnumFeature::doSetToDefault() {
 }
 
 std::size_t babelwires::EnumFeature::doGetHash() const {
-    return std::hash<Identifier>{}(m_value);
+    return std::hash<ShortId>{}(m_value);
 }
 
 std::string babelwires::EnumFeature::doGetValueType() const {
@@ -64,6 +64,6 @@ std::string babelwires::EnumFeature::doGetValueType() const {
 
 void babelwires::EnumFeature::doAssign(const ValueFeature& other) {
     const EnumFeature& otherEnum = static_cast<const EnumFeature&>(other);
-    Identifier otherValue = otherEnum.get();
+    ShortId otherValue = otherEnum.get();
     set(otherValue);
 }

@@ -28,7 +28,7 @@ QWidget* babelwires::EnumValueModel::createEditor(const QModelIndex& index, QWid
 
 void babelwires::EnumValueModel::setEditorData(QWidget* editor) const {
     const EnumValue* enumValue = m_value->as<EnumValue>();
-    const Identifier value = enumValue->get();
+    const ShortId value = enumValue->get();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
     const Enum* const e = m_type->as<Enum>();
@@ -44,11 +44,11 @@ std::unique_ptr<babelwires::Value> babelwires::EnumValueModel::createValueFromEd
     const int newIndex = dropDownBox->currentIndex();
     assert(newIndex >= 0);
     assert(newIndex < values.size());
-    const Identifier newValue = values[newIndex];
+    const ShortId newValue = values[newIndex];
 
     const EnumValue* const enumValue = m_value->as<EnumValue>();
     assert(enumValue && "Expecting an enum value here");
-    const Identifier currentValue = enumValue->get();
+    const ShortId currentValue = enumValue->get();
 
     if (newValue != currentValue) {
         auto newEnumValue = std::make_unique<babelwires::EnumValue>();

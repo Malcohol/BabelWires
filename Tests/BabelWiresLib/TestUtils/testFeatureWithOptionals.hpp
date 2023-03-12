@@ -32,11 +32,11 @@ namespace testUtils {
         static constexpr char s_op0Uuid[] = "00000000-1111-2222-3333-880000000003";
         static constexpr char s_op1Uuid[] = "00000000-1111-2222-3333-880000000004";
 
-        babelwires::Identifier m_subrecordId;
-        babelwires::Identifier m_ff0Id;
-        babelwires::Identifier m_ff1Id;
-        babelwires::Identifier m_op0Id;
-        babelwires::Identifier m_op1Id;
+        babelwires::ShortId m_subrecordId;
+        babelwires::ShortId m_ff0Id;
+        babelwires::ShortId m_ff1Id;
+        babelwires::ShortId m_op0Id;
+        babelwires::ShortId m_op1Id;
 
         babelwires::RecordWithOptionalsFeature* m_subrecord;
         babelwires::IntFeature* m_ff0Feature;

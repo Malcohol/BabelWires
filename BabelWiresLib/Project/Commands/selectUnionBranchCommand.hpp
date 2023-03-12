@@ -20,7 +20,7 @@ namespace babelwires {
     class SelectUnionBranchCommand : public CompoundCommand<Project> {
       public:
         SelectUnionBranchCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                               Identifier tagToSelect);
+                               ShortId tagToSelect);
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
@@ -29,7 +29,7 @@ namespace babelwires {
       private:
         ElementId m_elementId;
         FeaturePath m_pathToUnion;
-        Identifier m_tagToSelect;
+        ShortId m_tagToSelect;
 
         std::unique_ptr<ModifierData> m_unionModifierToAdd;
         std::unique_ptr<ModifierData> m_unionModifierToRemove;

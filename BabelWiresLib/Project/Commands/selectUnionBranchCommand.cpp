@@ -17,7 +17,7 @@
 #include <BabelWiresLib/Features/rootFeature.hpp>
 
 babelwires::SelectUnionBranchCommand::SelectUnionBranchCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                               Identifier tagToSelect)
+                               ShortId tagToSelect)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToUnion(std::move(featurePath))

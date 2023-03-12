@@ -679,7 +679,7 @@ TEST(EditTreeTest, treeIteration) {
 
     auto it = tree.begin();
     EXPECT_NE(it, tree.end());
-    EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::Identifier("aa")));
+    EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("aa")));
     EXPECT_EQ(it.getModifier(), nullptr);
     {
         auto cit = it.childrenBegin();
@@ -692,7 +692,7 @@ TEST(EditTreeTest, treeIteration) {
     }
     it.nextSibling();
     EXPECT_NE(it, tree.end());
-    EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::Identifier("bb")));
+    EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("bb")));
     ASSERT_NE(it.getModifier(), nullptr);
     EXPECT_EQ(it.getModifier()->getModifierData().m_pathToFeature, path3);
     {
@@ -710,7 +710,7 @@ TEST(EditTreeTest, treeIteration) {
     }
     it.nextSibling();
     EXPECT_NE(it, tree.end());
-    EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::Identifier("cc")));
+    EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("cc")));
     ASSERT_EQ(it.getModifier(), nullptr);
     {
         auto cit = it.childrenBegin();

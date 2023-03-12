@@ -17,7 +17,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                               Identifier optional)
+                               ShortId optional)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToRecord(std::move(featurePath))

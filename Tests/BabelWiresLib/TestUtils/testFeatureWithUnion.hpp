@@ -51,17 +51,17 @@ namespace testUtils {
         static constexpr char s_fieldBCUuid[] = "00000000-1111-2222-3333-8800000000BC";
 
         // Note: tagB is the default.
-        babelwires::Identifier m_tagAId;
-        babelwires::Identifier m_tagBId;
-        babelwires::Identifier m_tagCId;
-        babelwires::Identifier m_unionFeatureId;
-        babelwires::Identifier m_ff0Id;
-        babelwires::Identifier m_ff1Id;
-        babelwires::Identifier m_fieldA0Id;
-        babelwires::Identifier m_fieldA1Id;
-        babelwires::Identifier m_fieldB0Id;
-        babelwires::Identifier m_fieldABId;
-        babelwires::Identifier m_fieldBCId;
+        babelwires::ShortId m_tagAId;
+        babelwires::ShortId m_tagBId;
+        babelwires::ShortId m_tagCId;
+        babelwires::ShortId m_unionFeatureId;
+        babelwires::ShortId m_ff0Id;
+        babelwires::ShortId m_ff1Id;
+        babelwires::ShortId m_fieldA0Id;
+        babelwires::ShortId m_fieldA1Id;
+        babelwires::ShortId m_fieldB0Id;
+        babelwires::ShortId m_fieldABId;
+        babelwires::ShortId m_fieldBCId;
 
         babelwires::UnionFeature* m_unionFeature;
         babelwires::IntFeature* m_ff0Feature;

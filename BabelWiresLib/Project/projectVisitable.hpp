@@ -17,7 +17,7 @@ namespace babelwires {
 
     struct IdentifierVisitor {
         virtual ~IdentifierVisitor() = default;
-        virtual void operator()(Identifier& identifier) = 0;
+        virtual void operator()(ShortId& identifier) = 0;
         virtual void operator()(LongIdentifier& identifier) = 0;
 
         /// Allow the visitor to be applied to types in templates which may or may have identifier members.
