@@ -199,7 +199,7 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
     std::string_view::size_type next = 0;
     auto IdEnd = str.find_first_of(parseChars, next);
     if (IdEnd == -1) {
-        IdEnd = str.size();
+        return {TypeRef{LongIdentifier::deserializeFromString(str)}, str.size()};
     }
     if ((IdEnd + 1 < str.size()) && (IdEnd == next) && (str[IdEnd] == openChar) && (str[IdEnd + 1] == closeChar)) {
         return {TypeRef(), IdEnd + 2};
