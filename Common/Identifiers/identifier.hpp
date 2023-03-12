@@ -35,7 +35,7 @@ namespace babelwires {
     /// the identifier to act as a key for look-up in a global registry.
     ///
     /// Global uniqueness is achieved by registering the identifier with the IdentifierRegistry.
-    /// The most convenient way of registering an identifier is to use the REGISTERED_ID macro.
+    /// The most convenient way of registering an identifier is to use the BW_SHORT_ID macro.
     ///
     /// Data is arranged so the bit pattern can never be confused for array indices, when
     /// considering FeaturePaths. On little-endian architectures, the string is stored in

@@ -27,7 +27,7 @@ namespace babelwires {
 /// This expression evaluates to a Identifier which has the data from the given IDENTIFIER and a discriminator
 /// which allows the name to be looked up in the IdentifierRegistry. The registration happens only the first time it is
 /// called.
-#define REGISTERED_ID(IDENTIFIER, NAME, UUID)                                                                          \
+#define BW_SHORT_ID(IDENTIFIER, NAME, UUID)                                                                          \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
         static babelwires::ShortId f = babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(     \
             id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
@@ -38,7 +38,7 @@ namespace babelwires {
         return f;                                                                                                      \
     }(IDENTIFIER, NAME, UUID))
 
-#define REGISTERED_LONGID(IDENTIFIER, NAME, UUID)                                                                      \
+#define BW_LONG_ID(IDENTIFIER, NAME, UUID)                                                                      \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
         static babelwires::LongId f = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(  \
             id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \

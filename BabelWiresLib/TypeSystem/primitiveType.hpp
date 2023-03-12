@@ -22,4 +22,4 @@
 /// The TypeSystem expects them to support certain functions and methods, which
 /// this macro provides.
 #define PRIMITIVE_TYPE(IDENTIFIER, NAME, UUID, VERSION)                                                                \
-    PRIMITIVE_TYPE_WITH_REGISTERED_ID(REGISTERED_LONGID(IDENTIFIER, NAME, UUID), VERSION)
+    PRIMITIVE_TYPE_WITH_REGISTERED_ID(BW_LONG_ID(IDENTIFIER, NAME, UUID), VERSION)

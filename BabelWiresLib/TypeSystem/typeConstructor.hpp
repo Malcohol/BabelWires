@@ -92,4 +92,4 @@ namespace babelwires {
 /// For example, the NAME of the binary product type constructor might be something like "{0} * {1}".
 /// Regular brackets can be written with "{{" and "}}". Non-positional arguments "{}" are not supported.
 #define TYPE_CONSTRUCTOR(IDENTIFIER, NAME, UUID, VERSION)                                                              \
-    TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(REGISTERED_LONGID(IDENTIFIER, NAME, UUID), VERSION)
+    TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(BW_LONG_ID(IDENTIFIER, NAME, UUID), VERSION)

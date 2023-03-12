@@ -24,7 +24,7 @@ namespace babelwires {
     class RegistryEntry {
       public:
         /// An identifier is used to uniquely identify the entry.
-        /// Typically, it will be obtained via the REGISTERED_LONGID macro.
+        /// Typically, it will be obtained via the BW_LONG_ID macro.
         RegistryEntry(LongId identifier, VersionNumber version);
         virtual ~RegistryEntry();
 

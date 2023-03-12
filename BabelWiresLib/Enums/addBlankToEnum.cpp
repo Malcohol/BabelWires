@@ -16,7 +16,7 @@ unsigned int babelwires::AddBlankToEnum::getArity() const {
 }
 
 babelwires::ShortId babelwires::AddBlankToEnum::getBlankValue() {
-    return REGISTERED_ID("____", "____", "9e715cdc-399a-48b7-bc04-ad98e9e900d9");
+    return BW_SHORT_ID("____", "____", "9e715cdc-399a-48b7-bc04-ad98e9e900d9");
 }
 
 std::unique_ptr<babelwires::Type> babelwires::AddBlankToEnum::constructType(TypeRef newTypeRef,

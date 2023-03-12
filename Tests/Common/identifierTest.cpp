@@ -391,7 +391,7 @@ TEST(IdentifierTest, implicitIdentifierRegistration) {
     int discriminator = 0;
     for (int i = 0; i < 3; ++i) {
         // Repeating this line of code should be a NOOP.
-        babelwires::ShortId hello = REGISTERED_ID("hello", "Hello world", "00000000-1111-2222-3333-000000000001");
+        babelwires::ShortId hello = BW_SHORT_ID("hello", "Hello world", "00000000-1111-2222-3333-000000000001");
         EXPECT_EQ(hello, "hello");
         EXPECT_NE(hello.getDiscriminator(), 0);
         if (discriminator != 0) {
