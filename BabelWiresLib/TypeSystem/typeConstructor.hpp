@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/subtypeOrder.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
@@ -18,7 +18,7 @@
 namespace babelwires {
 
     /// A TypeConstructor constructs a type from other types.
-    /// The types when constructed are stored in a mutable cache, which is locked by a mutex.
+    /// A mutable cache ensures that each type is only constructed once.
     class TypeConstructor {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(TypeConstructor);
@@ -32,29 +32,39 @@ namespace babelwires {
         /// TypeConstructors are expected to have fixed arity.
         virtual unsigned int getArity() const = 0;
 
-        virtual std::unique_ptr<Type> constructType(TypeRef newTypeRef,
-                                                    const std::vector<const Type*>& arguments) const = 0;
-
-        /// Are two types constructed by this type constructor related by subtyping? 
+        /// Are two types constructed by this type constructor related by subtyping?
         /// By default, this returns IsUnrelated.
-        virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA, const TypeConstructorArguments& argumentsB) const;
+        virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                  const TypeConstructorArguments& argumentsA,
+                                                  const TypeConstructorArguments& argumentsB) const;
 
         /// Is this a type constructed by this type related to the type other?
         /// By default, this returns IsUnrelated.
-        /// Assumption: The subtype relation between two constructed types never depends on an axiom which involves both type constructors.
-        /// (Things like distributivity laws would break this assumption, but I doubt they'd be needed.)
-        virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments, const TypeRef& other) const;
+        /// Assumption: The subtype relation between two constructed types never depends on an axiom which involves both
+        /// type constructors. (Things like distributivity laws would break this assumption, but I doubt they'd be
+        /// needed.)
+        virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                  const TypeConstructorArguments& arguments,
+                                                  const TypeRef& other) const;
+
+      protected:
+        /// Construct the new type.
+        /// The newTypeRef is provided to allow implementations to move it into the constructed type.
+        virtual std::unique_ptr<Type> constructType(TypeRef newTypeRef,
+                                                    const std::vector<const Type*>& arguments) const = 0;
 
       private:
         /// A mutex which ensures thread-safe access to the cache.
+        /// Use a shared-only lock on the assumption that the majority of simultaneous queries are not for the
+        // same TypeRef.
         mutable std::shared_mutex m_mutexForCache;
 
         /// A cache which stops the system ending up with multiple copies of the same constructed type.
         mutable std::unordered_map<TypeConstructorArguments, std::unique_ptr<Type>> m_cache;
     };
 
-    /// A convenience type which can used by type constructors for the type they want to construct
-    /// where the class for the type doesn't implement getTypeRef.
+    /// A convenience class which can used by type constructors for the type they want to construct.
+    /// It provides an implementing getTypeRef.
     /// Type constructors are not obliged to use this template.
     template <typename T> class ConstructedType : public T {
       public:
