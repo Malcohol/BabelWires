@@ -4,7 +4,7 @@
 
 testUtils::TestFailedFeature::TestFailedFeature(const babelwires::ProjectContext& context)
     : RootFeature(context) {
-    addField(std::make_unique<RecordFeature>(), babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    addField(std::make_unique<RecordFeature>(), babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
                                                     "Failed", "Failed", "00000000-1111-2222-3333-800000000888",
                                                     babelwires::IdentifierRegistry::Authority::isAuthoritative));
 }

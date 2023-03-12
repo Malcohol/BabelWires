@@ -15,10 +15,10 @@ namespace {
 
     struct TestParallelProcessor : babelwires::ParallelProcessor<LimitedIntFeature, LimitedIntFeature> {
         TestParallelProcessor(const babelwires::ProjectContext& context) : babelwires::ParallelProcessor<LimitedIntFeature, LimitedIntFeature>(context) {
-            const babelwires::ShortId intId = babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+            const babelwires::ShortId intId = babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
                 "foo", "foo", "ec463f45-098d-4170-9890-d5a2db2e7658",
                 babelwires::IdentifierRegistry::Authority::isAuthoritative);
-            const babelwires::ShortId arrayId = babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+            const babelwires::ShortId arrayId = babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
                 "array", "array", "d607ccca-7cc3-4d17-940e-3ca87467f064",
                 babelwires::IdentifierRegistry::Authority::isAuthoritative);
             m_intValue = m_inputFeature->addField(std::make_unique<babelwires::IntFeature>(), intId);

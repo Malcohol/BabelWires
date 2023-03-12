@@ -41,7 +41,7 @@ void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deseriali
     m_authority = Authority::isProvisional;
 }
 
-babelwires::LongId babelwires::IdentifierRegistry::addLongIdentifierWithMetadata(
+babelwires::LongId babelwires::IdentifierRegistry::addLongIdWithMetadata(
     babelwires::LongId identifier, const std::string& name, const Uuid& uuid, Authority authority) {
     const ShortId::Discriminator discriminator = identifier.getDiscriminator();
     assert((discriminator == 0) && "The identifier already has a discriminator: Did you already register it?");
@@ -87,14 +87,14 @@ babelwires::LongId babelwires::IdentifierRegistry::addLongIdentifierWithMetadata
     return identifier;
 }
 
-babelwires::ShortId babelwires::IdentifierRegistry::addShortIdentifierWithMetadata(babelwires::ShortId identifier,
+babelwires::ShortId babelwires::IdentifierRegistry::addShortIdWithMetadata(babelwires::ShortId identifier,
                                                                                       const std::string& name,
                                                                                       const Uuid& uuid,
                                                                                       Authority authority) {
 #ifndef NDEBUG
     try {
 #endif
-        return ShortId(addLongIdentifierWithMetadata(identifier, name, uuid, authority));
+        return ShortId(addLongIdWithMetadata(identifier, name, uuid, authority));
 #ifndef NDEBUG
     } catch (const ParseException&) {
         assert(false && "A long identifier was previously registered with this uuid");

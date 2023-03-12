@@ -47,18 +47,18 @@ namespace babelwires {
 
         /// Give the Identifier a unique index so it can be later used to look-up the name.
         /// Returns a Identifier with a modified discriminator.
-        LongId addLongIdentifierWithMetadata(LongId identifier, const std::string& name,
+        LongId addLongIdWithMetadata(LongId identifier, const std::string& name,
                                                      const Uuid& uuid, Authority authority);
-        ShortId addShortIdentifierWithMetadata(ShortId identifier, const std::string& name, const Uuid& uuid,
+        ShortId addShortIdWithMetadata(ShortId identifier, const std::string& name, const Uuid& uuid,
                                              Authority authority);
 
         LongId addIdentifierWithMetadata(LongId identifier, const std::string& name, const Uuid& uuid,
                                                  Authority authority) {
-            return addLongIdentifierWithMetadata(identifier, name, uuid, authority);
+            return addLongIdWithMetadata(identifier, name, uuid, authority);
         }
         ShortId addIdentifierWithMetadata(ShortId identifier, const std::string& name, const Uuid& uuid,
                                              Authority authority) {
-            return addShortIdentifierWithMetadata(identifier, name, uuid, authority);
+            return addShortIdWithMetadata(identifier, name, uuid, authority);
         }
 
         /// Get the name from the given identifier.

@@ -18,15 +18,15 @@ const babelwires::FeaturePath testUtils::TestFeatureWithOptionals::s_pathToOp1_I
 
 testUtils::TestFeatureWithOptionals::TestFeatureWithOptionals(const babelwires::ProjectContext& context)
     : RootFeature(context)
-    , m_subrecordId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_subrecordId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_subrecordIdInitializer, s_subrecordFieldName, s_subrecordUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_ff0Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_ff0Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_ff0IdInitializer, s_ff0FieldName, s_ff0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_ff1Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_ff1Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_ff1IdInitializer, s_ff1FieldName, s_ff1Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_op0Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_op0Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_op0IdInitializer, s_op0FieldName, s_op0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_op1Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_op1Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_op1IdInitializer, s_op1FieldName, s_op1Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     {
         auto testRecordWithOptionalsFeaturePtr = std::make_unique<babelwires::RecordWithOptionalsFeature>();

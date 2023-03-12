@@ -29,7 +29,7 @@ namespace babelwires {
 /// called.
 #define REGISTERED_ID(IDENTIFIER, NAME, UUID)                                                                          \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
-        static babelwires::ShortId f = babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(     \
+        static babelwires::ShortId f = babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(     \
             id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
         assert(                                                                                                        \
             (babelwires::IdentifierRegistry::read()->getName(f) == name) &&                                            \
@@ -40,7 +40,7 @@ namespace babelwires {
 
 #define REGISTERED_LONGID(IDENTIFIER, NAME, UUID)                                                                      \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
-        static babelwires::LongId f = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(  \
+        static babelwires::LongId f = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(  \
             id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
         assert(                                                                                                        \
             (babelwires::IdentifierRegistry::read()->getName(f) == name) &&                                            \
