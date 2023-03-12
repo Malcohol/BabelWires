@@ -14,6 +14,7 @@ namespace babelwires {
     /// A unary type constructor which adds a blank value to an existing enum.
     /// This is useful in map targets to indicate when the map should exclude an entry, rather than select a mapped
     /// value.
+    /// AddBlank to an enum which already has a blank returns an enum with the same values.
     class AddBlank : public TypeConstructor {
       public:
         TYPE_CONSTRUCTOR("AddBlank", "{0} + _", "bd5af7a5-4a75-4807-a3d8-93851e1a7d00", 1);
