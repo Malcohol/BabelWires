@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 
 namespace babelwires {
     class TypeSystem;
@@ -20,7 +20,7 @@ namespace babelwires {
       public:
         CLONEABLE(OneToOneMapEntryData);
         SERIALIZABLE(OneToOneMapEntryData, "oneToOne", MapEntryData, 1);
-        OneToOneMapEntryData(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId);
+        OneToOneMapEntryData(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef);
         OneToOneMapEntryData(const OneToOneMapEntryData& other);
         OneToOneMapEntryData(OneToOneMapEntryData&& other);
 

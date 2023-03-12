@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
@@ -18,7 +19,7 @@ namespace {
     }
 } // namespace
 
-TEST(TypeSystemTest, isSubTypes) {
+TEST(TypeSystemTest, isSubTypesPrimitives) {
     babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
@@ -65,6 +66,98 @@ TEST(TypeSystemTest, isSubTypes) {
                                       testUtils::TestSubSubEnum2::getThisIdentifier()));
     EXPECT_FALSE(typeSystem.isSubType(testUtils::TestSubSubEnum2::getThisIdentifier(),
                                       testUtils::TestSubSubEnum1::getThisIdentifier()));
+}
+
+TEST(TypeSystemTest, compareSubtypeUnary) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+
+    babelwires::TypeSystem typeSystem;
+    addTestTypes(typeSystem);
+    typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+
+    babelwires::TypeRef unaryOfSubEnum(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestSubEnum::getThisIdentifier()}});
+
+    babelwires::TypeRef unaryOfSubSubEnum1(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestSubSubEnum1::getThisIdentifier()}});
+
+    babelwires::TypeRef unaryOfSubSubEnum2(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestSubSubEnum2::getThisIdentifier()}});
+    
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubEnum, unaryOfSubEnum), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubEnum, unaryOfSubSubEnum1), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubEnum, unaryOfSubSubEnum2), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubSubEnum1, unaryOfSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubSubEnum1, unaryOfSubSubEnum1), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubSubEnum1, unaryOfSubSubEnum2), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubSubEnum2, unaryOfSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubSubEnum2, unaryOfSubSubEnum1), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubSubEnum2, unaryOfSubSubEnum2), babelwires::SubtypeOrder::IsEquivalent);
+
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubEnum, testUtils::TestSubEnum::getThisIdentifier()), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubEnum, testUtils::TestSubSubEnum1::getThisIdentifier()), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfSubEnum, testUtils::TestEnum::getThisIdentifier()), babelwires::SubtypeOrder::IsUnrelated);
+    
+    EXPECT_EQ(typeSystem.compareSubtype(testUtils::TestSubEnum::getThisIdentifier(), unaryOfSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(typeSystem.compareSubtype(testUtils::TestSubSubEnum1::getThisIdentifier(), unaryOfSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(typeSystem.compareSubtype(testUtils::TestEnum::getThisIdentifier(), unaryOfSubEnum), babelwires::SubtypeOrder::IsUnrelated);
+}
+
+TEST(TypeSystemTest, compareSubtypeBinary) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+
+    babelwires::TypeSystem typeSystem;
+    addTestTypes(typeSystem);
+    typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
+
+    babelwires::TypeRef binaryOfSubEnumSubEnum(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestSubEnum::getThisIdentifier(), testUtils::TestSubEnum::getThisIdentifier()}});
+
+    babelwires::TypeRef binaryOfEnumSubSubEnum1(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestEnum::getThisIdentifier(), testUtils::TestSubSubEnum1::getThisIdentifier()}});
+
+    babelwires::TypeRef binaryOfSubEnumSubSubEnum2(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestSubEnum::getThisIdentifier(), testUtils::TestSubSubEnum2::getThisIdentifier()}});
+
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfSubEnumSubEnum, binaryOfSubEnumSubEnum), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfSubEnumSubEnum, binaryOfEnumSubSubEnum1), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfSubEnumSubEnum, binaryOfSubEnumSubSubEnum2), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfEnumSubSubEnum1, binaryOfSubEnumSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfEnumSubSubEnum1, binaryOfEnumSubSubEnum1), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfEnumSubSubEnum1, binaryOfSubEnumSubSubEnum2), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfSubEnumSubSubEnum2, binaryOfSubEnumSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfSubEnumSubSubEnum2, binaryOfEnumSubSubEnum1), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfSubEnumSubSubEnum2, binaryOfSubEnumSubSubEnum2), babelwires::SubtypeOrder::IsEquivalent);
+
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfSubEnumSubEnum, testUtils::TestSubEnum::getThisIdentifier()), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(typeSystem.compareSubtype(testUtils::TestSubEnum::getThisIdentifier(), binaryOfSubEnumSubEnum), babelwires::SubtypeOrder::IsUnrelated);
+}
+
+TEST(TypeSystemTest, compareSubtypeComplex) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+
+    babelwires::TypeSystem typeSystem;
+    addTestTypes(typeSystem);
+    typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+    typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
+
+    babelwires::TypeRef binaryOfEnumSubSubEnum1(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestEnum::getThisIdentifier(), testUtils::TestSubSubEnum1::getThisIdentifier()}});
+
+    babelwires::TypeRef unaryOfBinaryOfEnumSubSubEnum1(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                       {{binaryOfEnumSubSubEnum1}});
+
+    babelwires::TypeRef binaryOfSubEnumSubEnum(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
+                                       {{testUtils::TestSubEnum::getThisIdentifier(), testUtils::TestSubEnum::getThisIdentifier()}});
+
+    babelwires::TypeRef unaryOfBinaryOfSubEnumSubEnum(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                                       {{binaryOfSubEnumSubEnum}});
+
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfBinaryOfEnumSubSubEnum1, unaryOfBinaryOfSubEnumSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfBinaryOfSubEnumSubEnum, unaryOfBinaryOfEnumSubSubEnum1), babelwires::SubtypeOrder::IsSupertype);
+
+    EXPECT_EQ(typeSystem.compareSubtype(unaryOfBinaryOfSubEnumSubEnum, binaryOfEnumSubSubEnum1), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(typeSystem.compareSubtype(binaryOfEnumSubSubEnum1, unaryOfBinaryOfSubEnumSubEnum), babelwires::SubtypeOrder::IsSubtype);
 }
 
 TEST(TypeSystemTest, isRelatedTypes) {

@@ -29,17 +29,17 @@ namespace babelwires {
         MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
-        void setAllowedSourceTypeId(const MapFeature::AllowedTypes& allowedTypeIds);
-        void setAllowedTargetTypeId(const MapFeature::AllowedTypes& allowedTypeIds);
+        void setAllowedSourceTypeRefs(const MapFeature::AllowedTypes& allowedTypes);
+        void setAllowedTargetTypeRefs(const MapFeature::AllowedTypes& allowedTypes);
 
-        const MapFeature::AllowedTypes& getAllowedSourceTypeIds() const;
-        const MapFeature::AllowedTypes& getAllowedTargetTypeIds() const;
+        const MapFeature::AllowedTypes& getAllowedSourceTypeRefs() const;
+        const MapFeature::AllowedTypes& getAllowedTargetTypeRefs() const;
        
-        LongIdentifier getSourceTypeId() const;
-        LongIdentifier getTargetTypeId() const;
+        const TypeRef& getSourceTypeRef() const;
+        const TypeRef& getTargetTypeRef() const;
 
-        void setSourceTypeId(LongIdentifier sourceId);
-        void setTargetTypeId(LongIdentifier targetId);
+        void setSourceTypeRef(const TypeRef& sourceId);
+        void setTargetTypeRef(const TypeRef& targetId);
 
         const Type* getSourceType() const;
         const Type* getTargetType() const;
@@ -66,11 +66,11 @@ namespace babelwires {
 
       private:
         const ProjectContext& m_projectContext;
-        MapFeature::AllowedTypes m_allowedSourceTypeIds;
-        MapFeature::AllowedTypes m_allowedTargetTypeIds;
+        MapFeature::AllowedTypes m_allowedSourceTypeRefs;
+        MapFeature::AllowedTypes m_allowedTargetTypeRefs;
 
-        LongIdentifier m_sourceTypeId;
-        LongIdentifier m_targetTypeId;
+        TypeRef m_sourceTypeRef;
+        TypeRef m_targetTypeRef;
 
         Result m_sourceTypeValidity;
         Result m_targetTypeValidity;

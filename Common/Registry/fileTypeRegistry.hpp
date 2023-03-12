@@ -2,7 +2,7 @@
  * The FileTypeRegistry is a registry that can be queried by file extension.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -26,27 +26,8 @@ namespace babelwires {
         Extensions m_extensions;
     };
 
-    /// Adds file extension logic to the untyped registry.
-    class UntypedFileTypeRegistry : public UntypedRegistry {
-      public:
-        UntypedFileTypeRegistry(std::string registryName);
-
-        /// Get the file extensions of all registered extensions in no particular order.
-        FileTypeEntry::Extensions getFileExtensions() const;
-
-        /// Search for an entry by looking for a matching extension.
-        /// A fileName which is just the extension will also match.
-        const RegistryEntry* getEntryByFileName(std::string_view fileName) const;
-
-      protected:
-        virtual void validateNewEntry(RegistryEntry* newEntry) const override;
-
-        const RegistryEntry* getEntryByExtension(std::string extension) const;
-    };
-
     /// A registry whose entries can be queried based on file extensions.
-    template <typename ENTRY, typename UNTYPED_REGISTRY = UntypedFileTypeRegistry>
-    class FileTypeRegistry : public Registry<ENTRY, UNTYPED_REGISTRY> {
+    template <typename ENTRY> class FileTypeRegistry : public Registry<ENTRY> {
       public:
         FileTypeRegistry(std::string registryName);
 
@@ -56,8 +37,12 @@ namespace babelwires {
 
         /// Get the file extensions of all registered extensions in no particular order.
         FileTypeEntry::Extensions getFileExtensions() const;
-    };
 
+        void onEntryRegistered(ENTRY& newEntry) const override;
+
+      private:
+        const ENTRY* getEntryByExtension(std::string extension) const;
+    };
 } // namespace babelwires
 
 #include <Common/Registry/fileTypeRegistry_inl.hpp>

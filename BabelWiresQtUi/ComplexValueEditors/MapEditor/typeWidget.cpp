@@ -9,8 +9,7 @@
 
 #include <cassert>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeIds,
-                                   TypeFlexibility flexibility)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeRefs)
     : QComboBox(parent)
     , m_hasBadItem(false) {
     m_defaultStyleSheet = styleSheet();
@@ -19,70 +18,55 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     // TODO This doesn't work as intended.
     m_badStyleSheet.append("\nQComboBox { background: red; }");
 
-    std::vector<LongIdentifier> typeIds;
-    for (auto typeId : allowedTypeIds.m_typeIds) {
-        switch (flexibility) {
-            case TypeFlexibility::strict:
-                typeIds.emplace_back(typeId);
-                break;
-            case TypeFlexibility::allowSubtypes:
-                typeSystem.addAllSubtypes(typeId, typeIds);
-                break;
-            case TypeFlexibility::allowSupertypes:
-                typeSystem.addAllSupertypes(typeId, typeIds);
-                break;
-            case TypeFlexibility::allowRelatedTypes:
-                typeSystem.addAllRelatedTypes(typeId, typeIds);
-                break;
-        }
-    }
-    TypeSystem::removeDuplicates(typeIds);
+    std::vector<TypeRef> typeRefs = allowedTypeRefs.m_typeRefs;
+    std::sort(typeRefs.begin(), typeRefs.end());
+    typeRefs.erase(std::unique(typeRefs.begin(), typeRefs.end()), typeRefs.end());
 
-    std::vector<std::tuple<std::string, LongIdentifier>> sortedNames;
-    sortedNames.reserve(typeIds.size());
+    std::vector<std::tuple<std::string, TypeRef>> sortedNames;
+    sortedNames.reserve(typeRefs.size());
 
-    for (const auto& typeId : typeIds) {
-        const Type *const type = typeSystem.getEntryByIdentifier(typeId);
-        if (!type->isAbstract()) {
-            sortedNames.emplace_back(std::tuple{type->getName(), typeId});
+    for (const auto& typeRef : typeRefs) {
+        const Type& type = typeRef.resolve(typeSystem);
+        if (!type.isAbstract()) {
+            sortedNames.emplace_back(std::tuple{type.getName(), typeRef});
         }
     }
     std::sort(sortedNames.begin(), sortedNames.end());
 
-    m_typeIds.swap(typeIds);
-    m_typeIds.clear();
+    m_typeRefs.swap(typeRefs);
+    m_typeRefs.clear();
     for (const auto& name : sortedNames) {
         addItem(std::get<0>(name).c_str());
-        m_typeIds.emplace_back(std::get<1>(name));
+        m_typeRefs.emplace_back(std::get<1>(name));
     }
 
     connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &TypeWidget::onCurrentIndexChanged);
 }
 
-babelwires::LongIdentifier babelwires::TypeWidget::getTypeId() const {
-    assert(currentIndex() < m_typeIds.size());
-    return m_typeIds[currentIndex()];
+const babelwires::TypeRef& babelwires::TypeWidget::getTypeRef() const {
+    assert(currentIndex() < m_typeRefs.size());
+    return m_typeRefs[currentIndex()];
 }
 
-void babelwires::TypeWidget::setTypeId(LongIdentifier id) {
-    auto it = std::find(m_typeIds.begin(), m_typeIds.end(), id);
-    assert(it != m_typeIds.end());
-    const int newIndex = it - m_typeIds.begin();
+void babelwires::TypeWidget::setTypeRef(const TypeRef& id) {
+    auto it = std::find(m_typeRefs.begin(), m_typeRefs.end(), id);
+    assert(it != m_typeRefs.end());
+    const int newIndex = it - m_typeRefs.begin();
     setCurrentIndex(newIndex);
 }
 
-void babelwires::TypeWidget::addBadItemIfNotPresent(LongIdentifier id) {
+void babelwires::TypeWidget::addBadItemIfNotPresent(const TypeRef& id) {
     if (m_hasBadItem) {
-        if (m_typeIds.back() == id) {
+        if (m_typeRefs.back() == id) {
             return;
         } else {
             clearBadItem();
         }
     }
-    m_typeIds.emplace_back(id);
-    std::string typeName = IdentifierRegistry::read()->getName(id);
+    m_typeRefs.emplace_back(id);
+    std::string typeName = id.toString();
     addItem(typeName.c_str());
-    const int newIndex = m_typeIds.size() - 1;
+    const int newIndex = m_typeRefs.size() - 1;
     const QModelIndex index = model()->index(newIndex, 0);
     model()->setData(index, QColor(Qt::red), Qt::BackgroundRole);
     m_hasBadItem = true;
@@ -90,13 +74,13 @@ void babelwires::TypeWidget::addBadItemIfNotPresent(LongIdentifier id) {
 
 int babelwires::TypeWidget::getBadItemIndex() const {
     assert(m_hasBadItem && "Bad item not set");
-    return m_typeIds.size() - 1;
+    return m_typeRefs.size() - 1;
 }
 
 void babelwires::TypeWidget::clearBadItem() {
     assert(m_hasBadItem);
     removeItem(getBadItemIndex());
-    m_typeIds.pop_back();
+    m_typeRefs.pop_back();
     m_hasBadItem = false;
 }
 

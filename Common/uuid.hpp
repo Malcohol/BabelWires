@@ -13,9 +13,11 @@
 #include <ostream>
 #include <random>
 
+#include <Common/Hash/hash.hpp>
+
 namespace babelwires {
 
-    /// A very simple UUID class which is essentially just a wrapper for a validated string.
+    /// A very simple UUID class.
     /// This does not impose any standard on the UUIDs, it just requires that they have the
     /// the required textual format.
     class Uuid {
@@ -25,12 +27,12 @@ namespace babelwires {
 
         /// This asserts the uuidText is in the correct form:
         /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-        Uuid(std::string uuidText);
+        Uuid(std::string_view uuidText);
 
         /// This asserts the uuidText is in the correct form:
         /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
         Uuid(const char* uuidText)
-            : Uuid(std::string(uuidText)) {}
+            : Uuid(std::string_view(uuidText)) {}
 
         /// Is the Uuid all zeros?
         bool isZero() const;
@@ -38,16 +40,16 @@ namespace babelwires {
         /// Set the Uuid to a random, non-zero value.
         void randomize(std::default_random_engine& randomEngine);
 
-        std::string serializeToString() const { return m_text; }
+        std::string serializeToString() const;
 
         /// This throws a parse exception if the uuidText is not in the correct form:
         /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
         static Uuid deserializeFromString(std::string_view uuidText);
 
         /// Write the UUID in textual form to the stream.
-        friend std::ostream& operator<<(std::ostream& os, const Uuid& uuid) { return os << uuid.m_text; }
+        friend std::ostream& operator<<(std::ostream& os, const Uuid& uuid) { return os << uuid.serializeToString(); }
 
-        friend bool operator==(const Uuid& a, const Uuid& b) { return a.m_text == b.m_text; }
+        friend bool operator==(const Uuid& a, const Uuid& b) { return (a.m_high == b.m_high) && (a.m_low == b.m_low); }
 
         friend bool operator!=(const Uuid& a, const Uuid& b) { return !(a == b); }
 
@@ -59,8 +61,8 @@ namespace babelwires {
         friend struct std::hash<Uuid>;
 
       private:
-        /// For simplicity, just store as text.
-        std::string m_text;
+        std::uint64_t m_high = 0;
+        std::uint64_t m_low = 0;
     };
 
 } // namespace babelwires
@@ -68,8 +70,6 @@ namespace babelwires {
 namespace std {
     /// Calculate a hash for a UUID.
     template <> struct hash<babelwires::Uuid> {
-        inline std::size_t operator()(const babelwires::Uuid& uuid) const { return m_stringHasher(uuid.m_text); }
-
-        std::hash<std::string> m_stringHasher;
+        inline std::size_t operator()(const babelwires::Uuid& uuid) const { return babelwires::hash::mixtureOf(uuid.m_high, uuid.m_low); }
     };
 } // namespace std

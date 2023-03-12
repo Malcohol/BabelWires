@@ -22,12 +22,12 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     testUtils::addTestEnumTypes(environment.m_typeSystem);
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeId({{testUtils::TestEnum::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeRefs({{testUtils::TestEnum::getThisIdentifier()}});
 
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestSubSubEnum1::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestSubSubEnum1::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestEnum::getThisIdentifier());
@@ -54,7 +54,7 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
 
     mapProject.setMapData(mapData);
 
-    EXPECT_EQ(mapProject.getTargetTypeId(), testUtils::TestSubSubEnum1::getThisIdentifier());
+    EXPECT_EQ(mapProject.getTargetTypeRef(), testUtils::TestSubSubEnum1::getThisIdentifier());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
@@ -65,7 +65,7 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
 
-    EXPECT_EQ(mapProject.getTargetTypeId(), testUtils::TestSubSubEnum2::getThisIdentifier());
+    EXPECT_EQ(mapProject.getTargetTypeRef(), testUtils::TestSubSubEnum2::getThisIdentifier());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(1).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());
@@ -73,7 +73,7 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
 
     command.undo(mapProject);
 
-    EXPECT_EQ(mapProject.getTargetTypeId(), testUtils::TestSubSubEnum1::getThisIdentifier());
+    EXPECT_EQ(mapProject.getTargetTypeRef(), testUtils::TestSubSubEnum1::getThisIdentifier());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
@@ -87,12 +87,12 @@ TEST(SetMapTargetTypeCommandTest, failWithUnallowedType) {
     environment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeId({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeId({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
     babelwires::MapData mapData;
-    mapData.setSourceTypeId(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeId(testUtils::TestType::getThisIdentifier());
+    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());

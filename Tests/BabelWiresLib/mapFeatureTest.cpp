@@ -28,10 +28,10 @@ TEST(MapFeatureTest, construction) {
     babelwires::StandardMapFeature mapFeature(testTypeId1, testTypeId2);
 
     babelwires::MapFeature::AllowedTypes allowedTypes;
-    mapFeature.getAllowedSourceTypeIds(allowedTypes);
-    EXPECT_TRUE(testUtils::areEqualSets(allowedTypes.m_typeIds, std::vector<babelwires::LongIdentifier>{testTypeId1}));
-    mapFeature.getAllowedTargetTypeIds(allowedTypes);
-    EXPECT_TRUE(testUtils::areEqualSets(allowedTypes.m_typeIds, std::vector<babelwires::LongIdentifier>{testTypeId2}));
+    mapFeature.getAllowedSourceTypeRefs(allowedTypes);
+    EXPECT_TRUE(testUtils::areEqualSets(allowedTypes.m_typeRefs, std::vector<babelwires::TypeRef>{testTypeId1}));
+    mapFeature.getAllowedTargetTypeRefs(allowedTypes);
+    EXPECT_TRUE(testUtils::areEqualSets(allowedTypes.m_typeRefs, std::vector<babelwires::TypeRef>{testTypeId2}));
 }
 
 TEST(MapFeatureTest, setToDefault) {

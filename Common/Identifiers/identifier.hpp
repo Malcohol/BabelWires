@@ -7,23 +7,23 @@
  **/
 #pragma once
 
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 #include <Common/exceptions.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cstring>
 #include <functional>
 #include <limits>
 #include <string>
 #include <string_view>
-#include <array>
 
 namespace babelwires {
 
     constexpr char s_pathDelimiterString[] = "/";
     constexpr char s_pathDelimiter = s_pathDelimiterString[0];
-    constexpr char s_discriminatorDelimiter = '`';
+    constexpr char s_discriminatorDelimiter = '\'';
 
     /// An identifier uniquely identifies an object in some local context and globally.
     /// The primary use-case is identifying fields within records.
@@ -53,10 +53,8 @@ namespace babelwires {
     ///   is deserialized into a build where the referant does not exist. Thus, the metadata will
     ///   be available if the identifier is later serialized.
     ///
-    /// Constraints on characters:
-    /// * They must have a graphical representation (see std::isgraph)
-    /// * They cannot be the path delimiter "/"
-    /// * They cannot be the discriminator delimiter "`"
+    /// Identifiers follow the usual rules: The characters must be alphanumeric or '_' and cannot
+    /// begin with a digit.
     ///
     /// NUM_BLOCKS is the number of std::uint64_t which store the contents.
     template <unsigned int NUM_BLOCKS> union IdentifierBase {
@@ -64,7 +62,8 @@ namespace babelwires {
         /// The maximum number of characters which can be contained.
         static constexpr unsigned int N = (NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
 
-        IdentifierBase() : IdentifierBase("_unset") {}
+        IdentifierBase()
+            : IdentifierBase("_unset") {}
 
         /// Constructor from a string literal.
         template <unsigned int M, typename std::enable_if_t<(1 < M) && (M <= N), int> = 0>
@@ -125,7 +124,9 @@ namespace babelwires {
 
         /// Shorter identifiers can be converted to a code, which does excludes the discriminator.
         template <int T = NUM_BLOCKS, typename std::enable_if_t<(T == 1), std::nullptr_t> = nullptr>
-        std::uint64_t toCode() const { return getDataAsCode<0>(); }
+        std::uint64_t toCode() const {
+            return getDataAsCode<0>();
+        }
 
       public:
         friend bool operator==(const IdentifierBase& a, const IdentifierBase& b) {

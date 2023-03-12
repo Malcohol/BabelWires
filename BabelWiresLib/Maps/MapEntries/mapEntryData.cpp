@@ -14,12 +14,12 @@
 
 babelwires::MapEntryData::~MapEntryData() = default;
 
-babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, bool isLastEntry) const {
-    const Type *const sourceType = typeSystem.getEntryByIdentifier(sourceTypeId);
+babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef, bool isLastEntry) const {
+    const Type *const sourceType = sourceTypeRef.tryResolve(typeSystem);
     if (!sourceType) {
         return "The source type is not recognized";
     }
-    const Type *const targetType = typeSystem.getEntryByIdentifier(targetTypeId);
+    const Type *const targetType = targetTypeRef.tryResolve(typeSystem);
     if (!targetType) {
         return "The target type is not recognized";
     }
@@ -29,12 +29,12 @@ babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSyst
     return doValidate(typeSystem, *sourceType, *targetType);
 }
 
-std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, Kind kind) {
+std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef, Kind kind) {
     switch (kind) {
         case Kind::OneToOne:
-            return std::make_unique<OneToOneMapEntryData>(typeSystem, sourceTypeId, targetTypeId);
+            return std::make_unique<OneToOneMapEntryData>(typeSystem, sourceTypeRef, targetTypeRef);
         case Kind::AllToOne:
-            return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeId);
+            return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeRef);
         case Kind::AllToSame:
             return std::make_unique<AllToSameFallbackMapEntryData>();
     }

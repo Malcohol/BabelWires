@@ -2,7 +2,7 @@
  * Some general type definitions, functions and templates.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -43,6 +43,9 @@ namespace babelwires {
 
     /// A simple struct representing an iterable range.
     template <typename ITERATOR> struct Span {
+        Span(ITERATOR begin, ITERATOR end)
+            : m_begin(std::move(begin))
+            , m_end(std::move(end)) {}
         ITERATOR m_begin;
         ITERATOR m_end;
 
@@ -50,19 +53,21 @@ namespace babelwires {
         ITERATOR end() const { return m_end; }
     };
 
-    template <typename T>
-    struct ReverseIterateWrapper {
-         T& iterable; 
+    template <typename T> struct ReverseIterateWrapper {
+        T& iterable;
     };
 
-    template <typename T>
-    auto begin (ReverseIterateWrapper<T> w) { return std::rbegin(w.iterable); }
+    template <typename T> auto begin(ReverseIterateWrapper<T> w) {
+        return std::rbegin(w.iterable);
+    }
 
-    template <typename T>
-    auto end (ReverseIterateWrapper<T> w) { return std::rend(w.iterable); }
+    template <typename T> auto end(ReverseIterateWrapper<T> w) {
+        return std::rend(w.iterable);
+    }
 
-    template <typename T>
-    ReverseIterateWrapper<T> reverseIterate (T&& iterable) { return { iterable }; }
+    template <typename T> ReverseIterateWrapper<T> reverseIterate(T&& iterable) {
+        return {iterable};
+    }
     //
 
     /// Is str usable as an "identifier" ([a..zA..Z][_a..zA..Z0..9]*).
@@ -75,6 +80,13 @@ namespace babelwires {
     template <typename T, typename U> struct CopyConst {
         typedef typename std::conditional<std::is_const<T>::value, typename std::add_const<U>::type, U>::type type;
     };
+
+    /// Standard utilities to allow std::visit to use lambdas.
+    template <class... Ts> struct overloaded : Ts... {
+        using Ts::operator()...;
+    };
+
+    template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 } // namespace babelwires
 
 /// Adds "as" and "is" methods to a hierarchy.
@@ -82,13 +94,20 @@ namespace babelwires {
 /// foo.as<BAR>() either returns a BAR* or nullptr.
 /// "is" is not a dynamic_cast: it is a shorthand for a static_cast to a T&, although it does assert using "as".
 /// These should neaten up dynamic_casting in client code, and should make refactors easier in future.
-#define DOWNCASTABLE_TYPE_HIERARCHY(BASE) \
-    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> \
-    T* as() { return dynamic_cast<T*>(this); } \
-    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> \
-    const T* as() const { return dynamic_cast<const T*>(this); } \
-    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> \
-    T& is() { assert(as<T>()); return static_cast<T&>(*this); } \
-    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> \
-    const T& is() const { assert(as<T>()); return static_cast<const T&>(*this); }
-    
+#define DOWNCASTABLE_TYPE_HIERARCHY(BASE)                                                                              \
+    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> T* as() {            \
+        return dynamic_cast<T*>(this);                                                                                 \
+    }                                                                                                                  \
+    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr>                      \
+    const T* as() const {                                                                                              \
+        return dynamic_cast<const T*>(this);                                                                           \
+    }                                                                                                                  \
+    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> T& is() {            \
+        assert(as<T>());                                                                                               \
+        return static_cast<T&>(*this);                                                                                 \
+    }                                                                                                                  \
+    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr>                      \
+    const T& is() const {                                                                                              \
+        assert(as<T>());                                                                                               \
+        return static_cast<const T&>(*this);                                                                           \
+    }

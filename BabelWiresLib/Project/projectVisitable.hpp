@@ -13,6 +13,8 @@
 #include <functional>
 
 namespace babelwires {
+    struct ProjectVisitable;
+
     struct IdentifierVisitor {
         virtual ~IdentifierVisitor() = default;
         virtual void operator()(Identifier& identifier) = 0;
@@ -20,6 +22,10 @@ namespace babelwires {
 
         /// Allow the visitor to be applied to types in templates which may or may have identifier members.
         void operator()(...) {}
+
+        /// Avoid a pitfall.
+        void operator()(ProjectVisitable&) = delete;
+        void operator()(const ProjectVisitable&) = delete;
     };
     
     class FilePath;

@@ -7,10 +7,6 @@
  **/
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
-babelwires::Type::Type(LongIdentifier identifier, VersionNumber version)
-    : RegistryEntry(identifier, version)
-{}
-
 bool babelwires::Type::verifySupertype(const Type& supertype) const {
     assert(false);
     return false;
@@ -18,4 +14,8 @@ bool babelwires::Type::verifySupertype(const Type& supertype) const {
 
 bool babelwires::Type::isAbstract() const {
     return false;
+}
+
+std::string babelwires::Type::getName() const {
+    return getTypeRef().toString();
 }

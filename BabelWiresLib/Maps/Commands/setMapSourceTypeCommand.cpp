@@ -14,25 +14,25 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string commandName, LongIdentifier newSourceTypeId)
+babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string commandName, TypeRef newSourceTypeRef)
     : SimpleCommand(commandName)
-    , m_newSourceTypeId(newSourceTypeId) {}
+    , m_newSourceTypeRef(std::move(newSourceTypeRef)) {}
 
 bool babelwires::SetMapSourceTypeCommand::initialize(const MapProject& map) {
-    const MapFeature::AllowedTypes& allowedTypeIds = map.getAllowedSourceTypeIds();
+    const MapFeature::AllowedTypes& allowedTypes = map.getAllowedSourceTypeRefs();
     const ProjectContext& context = map.getProjectContext();
     const TypeSystem& typeSystem = context.m_typeSystem;
-    if (!allowedTypeIds.isRelatedToSome(typeSystem, m_newSourceTypeId)) {
+    if (!allowedTypes.isRelatedToSome(typeSystem, m_newSourceTypeRef)) {
         return false;
     }
-    m_oldSourceTypeId = map.getSourceTypeId();
+    m_oldSourceTypeRef = map.getSourceTypeRef();
     return true;
 }
 
 void babelwires::SetMapSourceTypeCommand::execute(MapProject& map) const {
-    map.setSourceTypeId(m_newSourceTypeId);
+    map.setSourceTypeRef(m_newSourceTypeRef);
 }
 
 void babelwires::SetMapSourceTypeCommand::undo(MapProject& map) const {
-    map.setSourceTypeId(m_oldSourceTypeId);
+    map.setSourceTypeRef(m_oldSourceTypeRef);
 }

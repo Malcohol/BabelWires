@@ -28,6 +28,7 @@ SET( BABELWIRESLIB_SRCS
 	ProjectExtra/connectionDescription.cpp
 	ProjectExtra/projectUtilities.cpp
 	Enums/enum.cpp
+	Enums/addBlankToEnum.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
@@ -37,6 +38,9 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/intValue.cpp
 	TypeSystem/enumValue.cpp
 	TypeSystem/type.cpp
+	TypeSystem/typeConstructor.cpp
+	TypeSystem/typeConstructorArguments.cpp
+	TypeSystem/typeRef.cpp
 	Maps/Commands/addEntryToMapCommand.cpp
 	Maps/Commands/removeEntryFromMapCommand.cpp
 	Maps/Commands/replaceMapEntryCommand.cpp

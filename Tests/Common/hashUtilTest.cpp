@@ -1,4 +1,4 @@
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 
 #include <gtest/gtest.h>
 

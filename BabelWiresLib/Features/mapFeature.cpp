@@ -20,16 +20,16 @@ std::string babelwires::MapFeature::doGetValueType() const {
 }
 
 void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
-    const LongIdentifier& newSourceType = newValue.getSourceTypeId();
-    const LongIdentifier& newTargetType = newValue.getTargetTypeId();
+    const TypeRef& newSourceType = newValue.getSourceTypeRef();
+    const TypeRef& newTargetType = newValue.getTargetTypeRef();
 
     const ProjectContext& context = babelwires::RootFeature::getProjectContextAt(*this);
     const TypeSystem& typeSystem = context.m_typeSystem;
 
     AllowedTypes allowedTypes;
-    getAllowedSourceTypeIds(allowedTypes);
+    getAllowedSourceTypeRefs(allowedTypes);
     const bool relatedSource = allowedTypes.isRelatedToSome(typeSystem, newSourceType);
-    getAllowedTargetTypeIds(allowedTypes);
+    getAllowedTargetTypeRefs(allowedTypes);
     const bool covariance = allowedTypes.isSubtypeOfSome(typeSystem, newTargetType);
 
     if (!relatedSource && !covariance) {
@@ -49,17 +49,17 @@ babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryDa
     assert(MapEntryData::isFallback(fallbackKind) && "Only a fallback kind is expected here");
 
     AllowedTypes allowedTypes;
-    getAllowedSourceTypeIds(allowedTypes);
-    const babelwires::LongIdentifier defaultSourceTypeId = allowedTypes.getDefaultTypeId();
-    getAllowedTargetTypeIds(allowedTypes);
-    const babelwires::LongIdentifier defaultTargetTypeId = allowedTypes.getDefaultTypeId();
+    getAllowedSourceTypeRefs(allowedTypes);
+    TypeRef defaultSourceTypeRef = allowedTypes.getDefaultTypeRef();
+    getAllowedTargetTypeRefs(allowedTypes);
+    TypeRef defaultTargetTypeRef = allowedTypes.getDefaultTypeRef();
 
     MapData mapData;
-    mapData.setSourceTypeId(defaultSourceTypeId);
-    mapData.setTargetTypeId(defaultTargetTypeId);
+    mapData.setSourceTypeRef(defaultSourceTypeRef);
+    mapData.setTargetTypeRef(defaultTargetTypeRef);
 
     const TypeSystem& typeSystem = RootFeature::getProjectContextAt(*this).m_typeSystem;
-    mapData.emplaceBack(MapEntryData::create(typeSystem, defaultSourceTypeId, defaultTargetTypeId, fallbackKind));
+    mapData.emplaceBack(MapEntryData::create(typeSystem, defaultSourceTypeRef, defaultTargetTypeRef, fallbackKind));
     return mapData;
 }
 
@@ -71,30 +71,30 @@ void babelwires::MapFeature::doSetToDefault() {
     set(getDefaultMapData());
 }
 
-bool babelwires::MapFeature::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, LongIdentifier typeId) const {
-    return std::any_of(m_typeIds.begin(), m_typeIds.end(), [typeId, &typeSystem](babelwires::LongIdentifier id) {
-        return typeSystem.isRelatedType(id, typeId);
+bool babelwires::MapFeature::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& typeRef) const {
+    return std::any_of(m_typeRefs.begin(), m_typeRefs.end(), [typeRef, &typeSystem](const TypeRef& id) {
+        return typeSystem.isRelatedType(id, typeRef);
     });
 }
 
-bool babelwires::MapFeature::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, LongIdentifier typeId) const {
-    return std::any_of(m_typeIds.begin(), m_typeIds.end(),
-                                        [typeId, &typeSystem](babelwires::LongIdentifier id) {
-                                            return typeSystem.isSubType(typeId, id);
+bool babelwires::MapFeature::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& typeRef) const {
+    return std::any_of(m_typeRefs.begin(), m_typeRefs.end(),
+                                        [typeRef, &typeSystem](const TypeRef& id) {
+                                            return typeSystem.isSubType(typeRef, id);
                                         });
 }
 
-babelwires::StandardMapFeature::StandardMapFeature(LongIdentifier sourceTypeId, LongIdentifier targetTargetId)
-    : m_allowedSourceTypeId(std::move(sourceTypeId))
-    , m_allowedTargetTypeId(std::move(targetTargetId)) {}
+babelwires::StandardMapFeature::StandardMapFeature(TypeRef sourceTypeRef, TypeRef targetTargetRef)
+    : m_allowedSourceTypeRef(std::move(sourceTypeRef))
+    , m_allowedTargetTypeRef(std::move(targetTargetRef)) {}
 
 
-void babelwires::StandardMapFeature::getAllowedSourceTypeIds(AllowedTypes& allowedTypesOut) const {
-    allowedTypesOut.m_typeIds = {m_allowedSourceTypeId};
+void babelwires::StandardMapFeature::getAllowedSourceTypeRefs(AllowedTypes& allowedTypesOut) const {
+    allowedTypesOut.m_typeRefs = {m_allowedSourceTypeRef};
     allowedTypesOut.m_indexOfDefault = 0;
 }
 
-void babelwires::StandardMapFeature::getAllowedTargetTypeIds(AllowedTypes& allowedTypesOut) const {
-    allowedTypesOut.m_typeIds = {m_allowedTargetTypeId};
+void babelwires::StandardMapFeature::getAllowedTargetTypeRefs(AllowedTypes& allowedTypesOut) const {
+    allowedTypesOut.m_typeRefs = {m_allowedTargetTypeRef};
     allowedTypesOut.m_indexOfDefault = 0;
 }

@@ -8,7 +8,6 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
-#include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <Common/Cloning/cloneable.hpp>
 #include <Common/Serialization/serializable.hpp>
@@ -18,6 +17,8 @@
 
 namespace babelwires {
     class TypeSystem;
+    class TypeRef;
+    class Type;
 
     class MapEntryData : public Serializable, public Cloneable, public ProjectVisitable {
       public:
@@ -30,7 +31,7 @@ namespace babelwires {
         virtual bool operator==(const MapEntryData& other) const = 0;
         bool operator!= (const MapEntryData& other) const { return !(*this == other); }
         
-        Result validate(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, bool isLastEntry) const;
+        Result validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef, bool isLastEntry) const;
 
         /// MapEntryData subclasses have a fixed hierarchy.
         enum class Kind {
@@ -47,7 +48,7 @@ namespace babelwires {
         static bool isFallback(Kind kind);
 
         /// Create a MapEntryData of the given kind.
-        static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, LongIdentifier sourceTypeId, LongIdentifier targetTypeId, Kind kind);
+        static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef, Kind kind);
 
       protected:
         virtual Result doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const = 0;

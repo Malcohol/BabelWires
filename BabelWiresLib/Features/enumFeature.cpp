@@ -15,12 +15,12 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-babelwires::EnumFeature::EnumFeature(LongIdentifier e)
-    : m_enum(e) {}
+babelwires::EnumFeature::EnumFeature(TypeRef e)
+    : m_enum(std::move(e)) {}
 
 const babelwires::Enum& babelwires::EnumFeature::getEnum() const {
     const ProjectContext& projectContext = RootFeature::getProjectContextAt(*this);
-    const Type* type = projectContext.m_typeSystem.getEntryByIdentifier(m_enum);
+    const Type* type = m_enum.tryResolve(projectContext.m_typeSystem);
     assert(type && "The enum to set is not of a known type");
     const Enum* e = type->as<Enum>();
     assert(type && "The type of the enum to set is not an enum");

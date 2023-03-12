@@ -1,5 +1,8 @@
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+
+#include <Tests/TestUtils/testIdentifiers.hpp>
 
 #pragma once
 
@@ -24,9 +27,7 @@ namespace testUtils {
     /// The Type of TestValues.
     class TestType : public babelwires::Type {
       public:
-        TestType();
-
-        static babelwires::LongIdentifier getThisIdentifier();
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestType"), 1);
 
         std::unique_ptr<babelwires::Value> createValue() const override;
     };

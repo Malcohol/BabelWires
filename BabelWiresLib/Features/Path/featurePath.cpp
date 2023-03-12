@@ -13,7 +13,7 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Log/debugLogger.hpp>
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 #include <Common/types.hpp>
 
 #include <algorithm>

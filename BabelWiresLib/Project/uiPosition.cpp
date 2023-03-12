@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/uiPosition.hpp>
 
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 
 bool babelwires::UiPosition::operator==(const UiPosition& other) const {
     return (m_x == other.m_x) && (m_y == other.m_y);

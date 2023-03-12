@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
-#include <Common/Utilities/hash.hpp>
+#include <Common/Hash/hash.hpp>
 
 #include <limits>
 
