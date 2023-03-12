@@ -26,6 +26,7 @@ namespace babelwires {
             }
 
             void operator()(babelwires::ShortId& identifier) override { visit(identifier); }
+            void operator()(babelwires::MediumId& identifier) override { visit(identifier); }
             void operator()(babelwires::LongId& identifier) override { visit(identifier); }
 
             const SOURCE_REG& m_sourceReg;

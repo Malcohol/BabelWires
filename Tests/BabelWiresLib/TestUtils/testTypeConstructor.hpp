@@ -12,7 +12,7 @@ namespace testUtils {
     /// Always returns a TestType.
     class TestUnaryTypeConstructor : public babelwires::TypeConstructor {
       public:
-        TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("Unary"), 1);
+        TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Unary"), 1);
 
         unsigned int getArity() const override { return 1; }
 
@@ -33,7 +33,7 @@ namespace testUtils {
 
     class TestBinaryTypeConstructor : public babelwires::TypeConstructor {
       public:
-        TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("Binary"), 1);
+        TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Binary"), 1);
         unsigned int getArity() const override { return 2; }
 
         std::unique_ptr<babelwires::Type>

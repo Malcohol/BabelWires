@@ -7,7 +7,12 @@
  **/
 #pragma once
 
+#include <Common/Identifiers/identifier.hpp>
+
 namespace babelwires {
+    using PrimitiveTypeId = MediumId;
+    using TypeConstructorId = MediumId;
+
     enum class SubtypeOrder { IsSubtype, IsSupertype, IsEquivalent, IsUnrelated };
 
     /// Swap IsSubtype and IsSupertype.

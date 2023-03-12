@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/subtypeOrder.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
@@ -27,7 +27,7 @@ namespace babelwires {
         const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 
         /// This is supplied by the TYPE_CONSTRUCTOR macro.
-        virtual LongId getTypeConstructorId() const = 0;
+        virtual TypeConstructorId getTypeConstructorId() const = 0;
 
         /// TypeConstructors are expected to have fixed arity.
         virtual unsigned int getArity() const = 0;
@@ -82,9 +82,9 @@ namespace babelwires {
 
 /// Intended mainly for testing.
 #define TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                       \
-    static babelwires::LongId getThisIdentifier() { return IDENTIFIER; }                                       \
+    static babelwires::TypeConstructorId getThisIdentifier() { return IDENTIFIER; }                                             \
     static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
-    babelwires::LongId getTypeConstructorId() const override { return getThisIdentifier(); }
+    babelwires::TypeConstructorId getTypeConstructorId() const override { return getThisIdentifier(); }
 
 /// Type constructors need to be registered.
 /// For now, assume this is always done statically.
@@ -92,4 +92,4 @@ namespace babelwires {
 /// For example, the NAME of the binary product type constructor might be something like "{0} * {1}".
 /// Regular brackets can be written with "{{" and "}}". Non-positional arguments "{}" are not supported.
 #define TYPE_CONSTRUCTOR(IDENTIFIER, NAME, UUID, VERSION)                                                              \
-    TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(BW_LONG_ID(IDENTIFIER, NAME, UUID), VERSION)
+    TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(BW_MEDIUM_ID(IDENTIFIER, NAME, UUID), VERSION)

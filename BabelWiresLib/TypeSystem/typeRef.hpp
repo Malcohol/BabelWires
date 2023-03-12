@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructorArguments.hpp>
-#include <BabelWiresLib/TypeSystem/subtypeOrder.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -26,9 +26,6 @@ namespace babelwires {
     /// or storing the id of its constructor and its arguments.
     class TypeRef : public ProjectVisitable {
       public:
-        using PrimitiveTypeId = LongId;
-        using TypeConstructorId = LongId;
-
         TypeRef();
 
         /// A TypeRef describing a primitive type.

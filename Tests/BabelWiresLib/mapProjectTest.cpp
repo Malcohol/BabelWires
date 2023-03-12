@@ -16,8 +16,8 @@
 #include <Tests/TestUtils/equalSets.hpp>
 
 namespace {
-    const babelwires::LongId testTypeId1 = "TestType1";
-    const babelwires::LongId testTypeId2 = "TestType2";
+    const babelwires::PrimitiveTypeId testTypeId1 = "TestType1";
+    const babelwires::PrimitiveTypeId testTypeId2 = "TestType2";
 } // namespace
 
 TEST(MapProjectTest, mapProjectEntry) {

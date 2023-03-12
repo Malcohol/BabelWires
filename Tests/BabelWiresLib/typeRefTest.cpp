@@ -13,15 +13,15 @@
 
 TEST(TypeRefTest, equality) {
     babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::LongId("Foo"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::LongId("Bar"));
-    babelwires::TypeRef constructedTypeRef1(babelwires::LongId("Foo"), {{babelwires::LongId("Bar")}});
-    babelwires::TypeRef constructedTypeRef2(babelwires::LongId("Foo"),
-                                            {{babelwires::LongId("Bar"), babelwires::LongId("Flerm")}});
+    babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Foo"));
+    babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Bar"));
+    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Bar")}});
+    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"),
+                                            {{babelwires::PrimitiveTypeId("Bar"), babelwires::PrimitiveTypeId("Flerm")}});
     babelwires::TypeRef constructedTypeRef3(
-        babelwires::LongId("Foo"),
-        {{babelwires::LongId("Bar"),
-          babelwires::TypeRef(babelwires::LongId("Flerm"), {{babelwires::LongId("Erm")}})}});
+        babelwires::TypeConstructorId("Foo"),
+        {{babelwires::PrimitiveTypeId("Bar"),
+          babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), {{babelwires::PrimitiveTypeId("Erm")}})}});
 
     EXPECT_EQ(nullTypeRef, nullTypeRef);
     EXPECT_EQ(primitiveTypeRef1, primitiveTypeRef1);
@@ -53,16 +53,16 @@ TEST(TypeRefTest, equality) {
 
 TEST(TypeRefTest, lessThan) {
     babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::LongId("Bar"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::LongId("Foo"));
-    babelwires::TypeRef constructedTypeRef1(babelwires::LongId("Foo"), {{babelwires::LongId("Bar")}});
-    babelwires::TypeRef constructedTypeRef2(babelwires::LongId("Foo"),
-                                            {{babelwires::LongId("Bar"), babelwires::LongId("Flerm")}});
+    babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Bar"));
+    babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Foo"));
+    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Bar")}});
+    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"),
+                                            {{babelwires::PrimitiveTypeId("Bar"), babelwires::PrimitiveTypeId("Flerm")}});
     babelwires::TypeRef constructedTypeRef3(
-        babelwires::LongId("Foo"),
-        {{babelwires::LongId("Bar"),
-          babelwires::TypeRef(babelwires::LongId("Flerm"), {{babelwires::LongId("Erm")}})}});
-    babelwires::TypeRef constructedTypeRef4(babelwires::LongId("Foo"), {{babelwires::LongId("Boo")}});
+        babelwires::PrimitiveTypeId("Foo"),
+        {{babelwires::PrimitiveTypeId("Bar"),
+          babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), {{babelwires::PrimitiveTypeId("Erm")}})}});
+    babelwires::TypeRef constructedTypeRef4(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Boo")}});
 
     EXPECT_LT(nullTypeRef, primitiveTypeRef1);
     EXPECT_LT(primitiveTypeRef1, primitiveTypeRef2);
@@ -135,7 +135,7 @@ TEST(TypeRefTest, tryResolveFailure) {
     babelwires::TypeSystem typeSystem;
 
     EXPECT_EQ(nullptr, babelwires::TypeRef().tryResolve(typeSystem));
-    EXPECT_EQ(nullptr, babelwires::TypeRef(babelwires::LongId("Foo")).tryResolve(typeSystem));
+    EXPECT_EQ(nullptr, babelwires::TypeRef(babelwires::PrimitiveTypeId("Foo")).tryResolve(typeSystem));
 }
 
 TEST(TypeRefTest, tryResolveParallel) {
@@ -172,26 +172,26 @@ TEST(TypeRefTest, toStringSuccess) {
 
     EXPECT_EQ(babelwires::TypeRef().toString(), "[]");
 
-    babelwires::LongId foo = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::PrimitiveTypeId foo = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Foo", "Foofoo", "00000000-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
     EXPECT_EQ(babelwires::TypeRef(foo).toString(), "Foofoo");
 
-    babelwires::LongId unary0 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::TypeConstructorId unary0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary0", "UNARY[{0}]", "11111111-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(unary0, {{foo}}).toString(), "UNARY[Foofoo]");
     EXPECT_EQ(babelwires::TypeRef(unary0, {{babelwires::TypeRef(unary0, {{foo}})}}).toString(), "UNARY[UNARY[Foofoo]]");
 
-    babelwires::LongId unary1 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::TypeConstructorId unary1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary1", "{0}++", "22222222-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(unary1, {{foo}}).toString(), "Foofoo++");
     EXPECT_EQ(babelwires::TypeRef(unary1, {{babelwires::TypeRef(unary0, {{foo}})}}).toString(), "UNARY[Foofoo]++");
     EXPECT_EQ(babelwires::TypeRef(unary0, {{babelwires::TypeRef(unary1, {{foo}})}}).toString(), "UNARY[Foofoo++]");
 
-    babelwires::LongId binary0 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::TypeConstructorId binary0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Binary0", "{0} + {1}", "33333333-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(binary0, {{foo, babelwires::TypeRef(unary0, {{foo}})}}).toString(),
@@ -202,7 +202,7 @@ TEST(TypeRefTest, toStringSuccess) {
               "UNARY[Foofoo + Foofoo]");
 
     // With some escaped brackets.
-    babelwires::LongId binary1 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::TypeConstructorId binary1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Binary0", "}}{1}{{}}{0}{{", "44444444-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(binary1, {{foo, babelwires::TypeRef(unary0, {{foo}})}}).toString(),
@@ -219,27 +219,27 @@ TEST(TypeRefTest, toStringMalformed) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
-    babelwires::LongId foo = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::PrimitiveTypeId foo = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Foo", "Foofoo", "00000000-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
-    babelwires::LongId unary0 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::TypeConstructorId unary0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary0", "{", "11111111-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(unary0, {{foo}}).toString(), "MalformedTypeRef{Unary0'1[Foo'1]}");
 
-    babelwires::LongId unary1 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::TypeConstructorId unary1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary1", "oo{", "22222222-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(unary1, {{foo}}).toString(), "MalformedTypeRef{Unary1'1[Foo'1]}");
 
     // This type of format string is not supported.
-    babelwires::LongId unary2 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::TypeConstructorId unary2 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary2", "oo{}pp", "33333333-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(unary2, {{foo}}).toString(), "MalformedTypeRef{Unary2'1[Foo'1]}");
 
-    babelwires::LongId unary3 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+    babelwires::TypeConstructorId unary3 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary3", "UNARY{0}", "44444444-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     // Not enough arguments
@@ -252,78 +252,78 @@ TEST(TypeRefTest, serializeToStringNoDiscriminators) {
     babelwires::TypeRef nullTypeRef;
     EXPECT_EQ(nullTypeRef.serializeToString(), "[]");
 
-    babelwires::TypeRef primitiveTypeRef(babelwires::LongId("Foo"));
+    babelwires::TypeRef primitiveTypeRef(babelwires::PrimitiveTypeId("Foo"));
     EXPECT_EQ(primitiveTypeRef.serializeToString(), "Foo");
 
-    babelwires::TypeRef constructedTypeRef1(babelwires::LongId("Foo"), {{babelwires::LongId("Bar")}});
+    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Bar")}});
     EXPECT_EQ(constructedTypeRef1.serializeToString(), "Foo[Bar]");
 
-    babelwires::TypeRef constructedTypeRef2(babelwires::LongId("Foo"),
-                                            {{babelwires::LongId("Bar"), babelwires::LongId("Flerm")}});
+    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"),
+                                            {{babelwires::PrimitiveTypeId("Bar"), babelwires::PrimitiveTypeId("Flerm")}});
     EXPECT_EQ(constructedTypeRef2.serializeToString(), "Foo[Bar,Flerm]");
 
     babelwires::TypeRef constructedTypeRef3(
-        babelwires::LongId("Foo"),
-        {{babelwires::LongId("Bar"),
-          babelwires::TypeRef(babelwires::LongId("Flerm"), {{babelwires::LongId("Erm")}})}});
+        babelwires::TypeConstructorId("Foo"),
+        {{babelwires::PrimitiveTypeId("Bar"),
+          babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), {{babelwires::PrimitiveTypeId("Erm")}})}});
     EXPECT_EQ(constructedTypeRef3.serializeToString(), "Foo[Bar,Flerm[Erm]]");
 
     babelwires::TypeRef constructedTypeRef4(
-        babelwires::LongId("Foo"),
-        {{babelwires::TypeRef(babelwires::LongId("Flerm"), {{babelwires::LongId("Erm")}}),
-          babelwires::LongId("Bar")}});
+        babelwires::TypeConstructorId("Foo"),
+        {{babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), {{babelwires::PrimitiveTypeId("Erm")}}),
+          babelwires::PrimitiveTypeId("Bar")}});
     EXPECT_EQ(constructedTypeRef4.serializeToString(), "Foo[Flerm[Erm],Bar]");
 }
 
 TEST(TypeRefTest, serializeToStringWithDiscriminators) {
-    babelwires::TypeRef primitiveTypeRef(testUtils::getTestRegisteredLongIdentifier("Foo", 2));
+    babelwires::TypeRef primitiveTypeRef(testUtils::getTestRegisteredMediumIdentifier("Foo", 2));
     EXPECT_EQ(primitiveTypeRef.serializeToString(), "Foo'2");
 
-    babelwires::TypeRef constructedTypeRef1(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
-                                            {{testUtils::getTestRegisteredLongIdentifier("Bar", 4)}});
+    babelwires::TypeRef constructedTypeRef1(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
+                                            {{testUtils::getTestRegisteredMediumIdentifier("Bar", 4)}});
     EXPECT_EQ(constructedTypeRef1.serializeToString(), "Foo'2[Bar'4]");
 
-    babelwires::TypeRef constructedTypeRef2(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
-                                            {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
-                                              testUtils::getTestRegisteredLongIdentifier("Flerm", 1)}});
+    babelwires::TypeRef constructedTypeRef2(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
+                                            {{testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
+                                              testUtils::getTestRegisteredMediumIdentifier("Flerm", 1)}});
     EXPECT_EQ(constructedTypeRef2.serializeToString(), "Foo'2[Bar'4,Flerm'1]");
 
     babelwires::TypeRef constructedTypeRef3(
-        testUtils::getTestRegisteredLongIdentifier("Foo", 2),
-        {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
-          babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
-                              {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
+        testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
+        {{testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
+          babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
+                              {{testUtils::getTestRegisteredMediumIdentifier("Erm", 13)}})}});
     EXPECT_EQ(constructedTypeRef3.serializeToString(), "Foo'2[Bar'4,Flerm'1[Erm'13]]");
 
     babelwires::TypeRef constructedTypeRef4(
-        testUtils::getTestRegisteredLongIdentifier("Foo", 2),
-        {{babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
-                              {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}}),
-          testUtils::getTestRegisteredLongIdentifier("Bar", 4)}});
+        testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
+        {{babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
+                              {{testUtils::getTestRegisteredMediumIdentifier("Erm", 13)}}),
+          testUtils::getTestRegisteredMediumIdentifier("Bar", 4)}});
     EXPECT_EQ(constructedTypeRef4.serializeToString(), "Foo'2[Flerm'1[Erm'13],Bar'4]");
 }
 
 TEST(TypeRefTest, deserializeFromStringNoDiscriminatorsSuccess) {
-    babelwires::TypeRef primitiveTypeRef(babelwires::LongId("Foo"));
+    babelwires::TypeRef primitiveTypeRef(babelwires::TypeConstructorId("Foo"));
     EXPECT_EQ(primitiveTypeRef, babelwires::TypeRef::deserializeFromString("Foo"));
 
-    babelwires::TypeRef constructedTypeRef1(babelwires::LongId("Foo"), {{babelwires::LongId("Bar")}});
+    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Bar")}});
     EXPECT_EQ(constructedTypeRef1, babelwires::TypeRef::deserializeFromString("Foo[Bar]"));
 
-    babelwires::TypeRef constructedTypeRef2(babelwires::LongId("Foo"),
-                                            {{babelwires::LongId("Bar"), babelwires::LongId("Flerm")}});
+    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"),
+                                            {{babelwires::PrimitiveTypeId("Bar"), babelwires::PrimitiveTypeId("Flerm")}});
     EXPECT_EQ(constructedTypeRef2, babelwires::TypeRef::deserializeFromString("Foo[Bar,Flerm]"));
 
     babelwires::TypeRef constructedTypeRef3(
-        babelwires::LongId("Foo"),
-        {{babelwires::LongId("Bar"),
-          babelwires::TypeRef(babelwires::LongId("Flerm"), {{babelwires::LongId("Erm")}})}});
+        babelwires::TypeConstructorId("Foo"),
+        {{babelwires::PrimitiveTypeId("Bar"),
+          babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), {{babelwires::PrimitiveTypeId("Erm")}})}});
     EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo[Bar,Flerm[Erm]]"));
 
     babelwires::TypeRef constructedTypeRef4(
-        babelwires::LongId("Foo"),
-        {{babelwires::TypeRef(babelwires::LongId("Flerm"), {{babelwires::LongId("Erm")}}),
-          babelwires::LongId("Bar")}});
+        babelwires::TypeConstructorId("Foo"),
+        {{babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), {{babelwires::PrimitiveTypeId("Erm")}}),
+          babelwires::PrimitiveTypeId("Bar")}});
     EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo[Flerm[Erm],Bar]"));
 
     // 10 arguments supported
@@ -333,31 +333,31 @@ TEST(TypeRefTest, deserializeFromStringNoDiscriminatorsSuccess) {
 TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {
     EXPECT_EQ(babelwires::TypeRef(), babelwires::TypeRef::deserializeFromString("[]"));
 
-    babelwires::TypeRef primitiveTypeRef(testUtils::getTestRegisteredLongIdentifier("Foo", 2));
+    babelwires::TypeRef primitiveTypeRef(testUtils::getTestRegisteredMediumIdentifier("Foo", 2));
     EXPECT_EQ(primitiveTypeRef, babelwires::TypeRef::deserializeFromString("Foo'2"));
 
-    babelwires::TypeRef constructedTypeRef1(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
-                                            {{testUtils::getTestRegisteredLongIdentifier("Bar", 4)}});
+    babelwires::TypeRef constructedTypeRef1(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
+                                            {{testUtils::getTestRegisteredMediumIdentifier("Bar", 4)}});
     EXPECT_EQ(constructedTypeRef1, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4]"));
 
-    babelwires::TypeRef constructedTypeRef2(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
-                                            {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
-                                              testUtils::getTestRegisteredLongIdentifier("Flerm", 1)}});
+    babelwires::TypeRef constructedTypeRef2(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
+                                            {{testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
+                                              testUtils::getTestRegisteredMediumIdentifier("Flerm", 1)}});
     EXPECT_EQ(constructedTypeRef2, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4,Flerm'1]"));
 
     babelwires::TypeRef constructedTypeRef3(
-        testUtils::getTestRegisteredLongIdentifier("Foo", 2),
-        {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
-          babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
-                              {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
+        testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
+        {{testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
+          babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
+                              {{testUtils::getTestRegisteredMediumIdentifier("Erm", 13)}})}});
     EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4,Flerm'1[Erm'13]]"));
 
     babelwires::TypeRef constructedTypeRef4(
-        testUtils::getTestRegisteredLongIdentifier("Foo", 2),
+        testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
         {{
-            babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
-                                {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}}),
-            testUtils::getTestRegisteredLongIdentifier("Bar", 4),
+            babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
+                                {{testUtils::getTestRegisteredMediumIdentifier("Erm", 13)}}),
+            testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
         }});
     EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo'2[Flerm'1[Erm'13],Bar'4]"));
 }
@@ -379,19 +379,23 @@ TEST(TypeRefTest, deserializeFromStringFailure) {
 }
 
 TEST(TypeRefTest, visitIdentifiers) {
-    babelwires::TypeRef typeRef(testUtils::getTestRegisteredLongIdentifier("Foo", 2),
-                                {{testUtils::getTestRegisteredLongIdentifier("Bar", 4),
-                                  babelwires::TypeRef(testUtils::getTestRegisteredLongIdentifier("Flerm", 1),
-                                                      {{testUtils::getTestRegisteredLongIdentifier("Erm", 13)}})}});
+    babelwires::TypeRef typeRef(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
+                                {{testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
+                                  babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
+                                                      {{testUtils::getTestRegisteredMediumIdentifier("Erm", 13)}})}});
 
     struct Visitor : babelwires::IdentifierVisitor {
         void operator()(babelwires::ShortId& identifier) {
             m_seen.emplace(identifier);
             identifier.setDiscriminator(17);
         }
-        void operator()(babelwires::LongId& identifier) {
+        void operator()(babelwires::MediumId& identifier) {
             m_seen.emplace(identifier);
             identifier.setDiscriminator(18);
+        }
+        void operator()(babelwires::LongId& identifier) {
+            m_seen.emplace(identifier);
+            identifier.setDiscriminator(24);
         }
         std::set<babelwires::ShortId> m_seen;
     } visitor1, visitor2;
@@ -421,17 +425,17 @@ TEST(TypeRefTest, visitIdentifiers) {
 
 TEST(TypeRefTest, hash) {
     babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::LongId("Foo"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::LongId("Bar"));
-    babelwires::TypeRef constructedTypeRef1(babelwires::LongId("Foo"), {{babelwires::LongId("Bar")}});
+    babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Foo"));
+    babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Bar"));
+    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Bar")}});
     babelwires::TypeRef constructedTypeRef2(
-        babelwires::LongId("Foo"),
-        {{babelwires::LongId("Bar"),
-          babelwires::TypeRef(babelwires::LongId("Flerm"), {{babelwires::LongId("Erm")}})}});
+        babelwires::TypeConstructorId("Foo"),
+        {{babelwires::PrimitiveTypeId("Bar"),
+          babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), {{babelwires::PrimitiveTypeId("Erm")}})}});
     babelwires::TypeRef constructedTypeRef3(
-        babelwires::LongId("Foo"),
-        {{babelwires::LongId("Bar"),
-          babelwires::TypeRef(babelwires::LongId("Oom"), {{babelwires::LongId("Erm")}})}});
+        babelwires::TypeConstructorId("Foo"),
+        {{babelwires::PrimitiveTypeId("Bar"),
+          babelwires::TypeRef(babelwires::TypeConstructorId("Oom"), {{babelwires::PrimitiveTypeId("Erm")}})}});
 
     std::hash<babelwires::TypeRef> hasher;
 
