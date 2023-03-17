@@ -31,7 +31,7 @@ const babelwires::Feature* babelwires::RecordFeature::doGetFeature(int i) const 
     return m_fields.at(i).m_feature.get();
 }
 
-babelwires::Identifier babelwires::RecordFeature::getFieldIdentifier(int i) const {
+babelwires::ShortId babelwires::RecordFeature::getFieldIdentifier(int i) const {
     return m_fields.at(i).m_identifier;
 }
 
@@ -49,7 +49,7 @@ namespace {
     template <typename R>
     typename babelwires::CopyConst<R, babelwires::Feature>::type*
     tryGetChildFromStepT(R* record, const babelwires::PathStep& step) {
-        if (const babelwires::Identifier* field = step.asField()) {
+        if (const babelwires::ShortId* field = step.asField()) {
             const int childIndex = record->getChildIndexFromStep(*field);
             if (childIndex >= 0) {
                 return record->getFeature(childIndex);
@@ -68,9 +68,9 @@ const babelwires::Feature* babelwires::RecordFeature::tryGetChildFromStep(const 
     return tryGetChildFromStepT(this, step);
 }
 
-int babelwires::RecordFeature::getChildIndexFromStep(const Identifier& identifier) const {
+int babelwires::RecordFeature::getChildIndexFromStep(const ShortId& identifier) const {
     for (int i = 0; i < getNumFeatures(); ++i) {
-        Identifier f = getFieldIdentifier(i);
+        ShortId f = getFieldIdentifier(i);
         if (f == identifier) {
             // Since step has resolved, ensure it gets the correct discriminator.
             f.copyDiscriminatorTo(identifier);
@@ -98,7 +98,7 @@ void babelwires::RecordFeature::addFieldAndIndexInternal(FieldAndIndex fieldAndI
     addFieldInternal(std::move(fieldAndIndex), targetIndex);
 }
 
-babelwires::RecordFeature::FieldAndIndex babelwires::RecordFeature::removeField(Identifier identifier) {
+babelwires::RecordFeature::FieldAndIndex babelwires::RecordFeature::removeField(ShortId identifier) {
     int i;
     for (i = 0; i < m_fields.size(); ++i) {
         if (identifier == m_fields[i].m_identifier) {

@@ -56,17 +56,17 @@ namespace {
 
 testUtils::TestRootFeature::TestRootFeature(const babelwires::ProjectContext& context, int intValueLimit, bool addExtraInt)
     : RootFeature(context)
-    , m_intId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_intId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_intIdInitializer, s_intFieldName, s_intUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_arrayId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_arrayId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_arrayIdInitializer, s_arrayFieldName, s_arrayUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_recordId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_recordId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_recordIdInitializer, s_recordFieldName, s_recordUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_int2Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_int2Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_int2IdInitializer, s_int2FieldName, s_int2Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_extraIntId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_extraIntId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_extraIntIdInitializer, s_extraIntFieldName, s_extraIntUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_intValueLimit(intValueLimit) {

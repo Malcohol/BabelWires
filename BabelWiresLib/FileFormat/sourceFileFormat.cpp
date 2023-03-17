@@ -10,5 +10,5 @@
 babelwires::SourceFileFormatRegistry::SourceFileFormatRegistry()
     : FileTypeRegistry("File Format Registry") {}
 
-babelwires::SourceFileFormat::SourceFileFormat(LongIdentifier identifier, VersionNumber version, Extensions extensions)
+babelwires::SourceFileFormat::SourceFileFormat(LongId identifier, VersionNumber version, Extensions extensions)
     : FileTypeEntry(identifier, version, std::move(extensions)) {}

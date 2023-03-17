@@ -24,27 +24,27 @@ const babelwires::FeaturePath testUtils::TestFeatureWithUnion::s_pathToFieldB0_I
 
 testUtils::TestFeatureWithUnion::TestFeatureWithUnion(const babelwires::ProjectContext& context)
     : RootFeature(context)
-    , m_tagAId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_tagAId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_tagAIdInitializer, s_tagAFieldName, s_tagAUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_tagBId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_tagBId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_tagBIdInitializer, s_tagBFieldName, s_tagBUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_tagCId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_tagCId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_tagCIdInitializer, s_tagCFieldName, s_tagCUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_unionFeatureId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_unionFeatureId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_unionFeatureIdInitializer, s_unionFeatureFieldName, s_unionFeatureUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_ff0Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_ff0Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_ff0IdInitializer, s_ff0FieldName, s_ff0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_ff1Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_ff1Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_ff1IdInitializer, s_ff1FieldName, s_ff1Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_fieldA0Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_fieldA0Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_fieldA0IdInitializer, s_fieldA0FieldName, s_fieldA0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_fieldA1Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_fieldA1Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_fieldA1IdInitializer, s_fieldA1FieldName, s_fieldA1Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_fieldB0Id(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_fieldB0Id(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_fieldB0IdInitializer, s_fieldB0FieldName, s_fieldB0Uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_fieldABId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_fieldABId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_fieldABIdInitializer, s_fieldABFieldName, s_fieldABUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_fieldBCId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_fieldBCId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_fieldBCIdInitializer, s_fieldBCFieldName, s_fieldBCUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     {
         auto testUnionFeaturePtr = std::make_unique<babelwires::UnionFeature>(babelwires::UnionFeature::TagValues{m_tagAId, m_tagBId, m_tagCId}, 1);

@@ -21,8 +21,8 @@ namespace {
     }
 
     babelwires::MapData setUpTestMapData(const babelwires::TypeSystem& typeSystem,
-                                         babelwires::LongIdentifier sourceTypeId,
-                                         babelwires::LongIdentifier targetTypeId, const babelwires::Value& sourceValue1,
+                                         const babelwires::TypeRef& sourceTypeId,
+                                         const babelwires::TypeRef& targetTypeId, const babelwires::Value& sourceValue1,
                                          const babelwires::Value& sourceValue2, const babelwires::Value& targetValue1,
                                          const babelwires::Value& targetValue2, const babelwires::Value& targetValue3,
                                          bool allToOneFallback) {
@@ -54,7 +54,7 @@ namespace {
     }
 
     babelwires::MapData setUpTestTypeMapData(const babelwires::TypeSystem& typeSystem, babelwires::MapData& mapData,
-                              bool allToOneFallback) {
+                                             bool allToOneFallback) {
         testUtils::TestValue sourceValue1;
         sourceValue1.m_value = "aaa";
 
@@ -70,13 +70,13 @@ namespace {
         testUtils::TestValue targetValue3;
         targetValue3.m_value = "zzz";
 
-        return setUpTestMapData(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier(),
-                         sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3,
-                         allToOneFallback);
+        return setUpTestMapData(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                testUtils::TestType::getThisIdentifier(), sourceValue1, sourceValue2, targetValue1,
+                                targetValue2, targetValue3, allToOneFallback);
     }
 
     babelwires::MapData setUpTestEnumMapData(const babelwires::TypeSystem& typeSystem, babelwires::MapData& mapData,
-                              bool allToOneFallback) {
+                                             bool allToOneFallback) {
         babelwires::EnumValue sourceValue1;
         sourceValue1.set("Foo");
 
@@ -92,12 +92,13 @@ namespace {
         babelwires::EnumValue targetValue3;
         targetValue3.set("Erm");
 
-        return setUpTestMapData(typeSystem, testUtils::TestEnum::getThisIdentifier(), testUtils::TestEnum::getThisIdentifier(),
-                         sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3,
-                         allToOneFallback);
+        return setUpTestMapData(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                testUtils::TestEnum::getThisIdentifier(), sourceValue1, sourceValue2, targetValue1,
+                                targetValue2, targetValue3, allToOneFallback);
     }
 
-    babelwires::MapData setUpTestTypeTestEnumMapData(const babelwires::TypeSystem& typeSystem, babelwires::MapData& mapData) {
+    babelwires::MapData setUpTestTypeTestEnumMapData(const babelwires::TypeSystem& typeSystem,
+                                                     babelwires::MapData& mapData) {
         testUtils::TestValue sourceValue1;
         sourceValue1.m_value = "aaa";
 
@@ -113,11 +114,13 @@ namespace {
         babelwires::EnumValue targetValue3;
         targetValue3.set("Erm");
 
-        return setUpTestMapData(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestEnum::getThisIdentifier(),
-                         sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3, true);
+        return setUpTestMapData(typeSystem, testUtils::TestType::getThisIdentifier(),
+                                testUtils::TestEnum::getThisIdentifier(), sourceValue1, sourceValue2, targetValue1,
+                                targetValue2, targetValue3, true);
     }
 
-    babelwires::MapData setUpTestEnumTestTypeMapData(const babelwires::TypeSystem& typeSystem, babelwires::MapData& mapData) {
+    babelwires::MapData setUpTestEnumTestTypeMapData(const babelwires::TypeSystem& typeSystem,
+                                                     babelwires::MapData& mapData) {
         babelwires::EnumValue sourceValue1;
         sourceValue1.set("Foo");
 
@@ -133,9 +136,9 @@ namespace {
         testUtils::TestValue targetValue3;
         targetValue3.m_value = "zzz";
 
-        return setUpTestMapData(typeSystem, testUtils::TestEnum::getThisIdentifier(), testUtils::TestEnum::getThisIdentifier(),
-                         sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3,
-                         true);
+        return setUpTestMapData(typeSystem, testUtils::TestEnum::getThisIdentifier(),
+                                testUtils::TestEnum::getThisIdentifier(), sourceValue1, sourceValue2, targetValue1,
+                                targetValue2, targetValue3, true);
     }
 } // namespace
 
@@ -238,8 +241,8 @@ TEST(MapHelperTest, enumSourceMapApplicator_differentTypes) {
 
     babelwires::MapData mapData = setUpTestEnumTestTypeMapData(typeSystem, mapData);
 
-    babelwires::EnumSourceMapApplicator<testUtils::TestEnum, std::string> mapApplicator(
-        mapData, testEnum, &testValueAdapter);
+    babelwires::EnumSourceMapApplicator<testUtils::TestEnum, std::string> mapApplicator(mapData, testEnum,
+                                                                                        &testValueAdapter);
 
     EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Foo], "xxx");
     EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Bar], "yyy");

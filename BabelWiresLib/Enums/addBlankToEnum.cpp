@@ -11,17 +11,12 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-unsigned int babelwires::AddBlankToEnum::getArity() const {
-    return 1;
-}
-
-babelwires::Identifier babelwires::AddBlankToEnum::getBlankValue() {
-    return REGISTERED_ID("____", "____", "9e715cdc-399a-48b7-bc04-ad98e9e900d9");
+babelwires::ShortId babelwires::AddBlankToEnum::getBlankValue() {
+    return BW_SHORT_ID("____", "____", "9e715cdc-399a-48b7-bc04-ad98e9e900d9");
 }
 
 std::unique_ptr<babelwires::Type> babelwires::AddBlankToEnum::constructType(TypeRef newTypeRef,
-                                                                      const std::vector<const Type*>& arguments) const {
-    assert((arguments.size() == 1) && "AddBlankToEnum is unary.");
+                                                                      const std::array<const Type*, 1>& arguments) const {
     const Enum* const srcEnum = arguments[0]->as<Enum>();
     if (!srcEnum) {
         throw TypeSystemException() << "Non-enum argument << " << arguments[0]->getName() << " provided to AddBlankToEnum";
@@ -43,10 +38,7 @@ babelwires::Enum::EnumValues babelwires::AddBlankToEnum::ensureBlankValue(const 
 }
 
 
-babelwires::SubtypeOrder babelwires::AddBlankToEnum::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments, const TypeRef& other) const {
-    if (arguments.m_typeArguments.size() != 1) {
-        return SubtypeOrder::IsUnrelated;
-    }
+babelwires::SubtypeOrder babelwires::AddBlankToEnum::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments<1>& arguments, const TypeRef& other) const {
     const SubtypeOrder argOrder = typeSystem.compareSubtype(arguments.m_typeArguments[0], other);
     if ((argOrder == SubtypeOrder::IsEquivalent) || (argOrder == SubtypeOrder::IsSupertype)) {
         return SubtypeOrder::IsSupertype;
@@ -54,10 +46,7 @@ babelwires::SubtypeOrder babelwires::AddBlankToEnum::compareSubtypeHelper(const 
     return SubtypeOrder::IsUnrelated;
 }
 
-babelwires::SubtypeOrder babelwires::AddBlankToEnum::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA, const TypeConstructorArguments& argumentsB) const {
-    if ((argumentsA.m_typeArguments.size() != 1) || (argumentsB.m_typeArguments.size() != 1)) {
-        return SubtypeOrder::IsUnrelated;    
-    }
+babelwires::SubtypeOrder babelwires::AddBlankToEnum::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments<1>& argumentsA, const TypeConstructorArguments<1>& argumentsB) const {
     return typeSystem.compareSubtype(argumentsA.m_typeArguments[0], argumentsB.m_typeArguments[0]);
 }
 

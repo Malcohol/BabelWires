@@ -18,7 +18,7 @@ babelwires::UnionFeature::UnionFeature(TagValues tags, unsigned int defaultTagIn
     m_fieldsInBranches.resize(m_tags.size());
 }
 
-void babelwires::UnionFeature::addFieldInBranchesInternal(const std::vector<Identifier>& tags, Field field) {
+void babelwires::UnionFeature::addFieldInBranchesInternal(const std::vector<ShortId>& tags, Field field) {
     assert((tags.size() > 0) && "Each branch field must be associated with at least one tag");
     assert((tryGetChildFromStep(PathStep{field.m_identifier}) == nullptr) &&
            "Field identifier already used in the main record");
@@ -40,7 +40,7 @@ void babelwires::UnionFeature::addFieldInBranchesInternal(const std::vector<Iden
     }
 }
 
-void babelwires::UnionFeature::selectTag(Identifier tag) {
+void babelwires::UnionFeature::selectTag(ShortId tag) {
     if (!isTag(tag)) {
         // TODO Look up name from identifier
         throw ModelException() << "\"" << tag << "\" is not a valid tag for this union";
@@ -84,7 +84,7 @@ const babelwires::UnionFeature::TagValues& babelwires::UnionFeature::getTags() c
     return m_tags;
 }
 
-bool babelwires::UnionFeature::isTag(Identifier tag) const {
+bool babelwires::UnionFeature::isTag(ShortId tag) const {
     return std::find(m_tags.begin(), m_tags.end(), tag) != m_tags.end();
 }
 
@@ -105,7 +105,7 @@ void babelwires::UnionFeature::doSetToDefaultNonRecursive() {
     selectTagByIndex(m_defaultTagIndex);
 }
 
-babelwires::Identifier babelwires::UnionFeature::getSelectedTag() const {
+babelwires::ShortId babelwires::UnionFeature::getSelectedTag() const {
     assert((m_selectedTagIndex >= 0) && "Cannot call getSelectedTag until the union has been set to default");
     return m_tags[m_selectedTagIndex];
 }
@@ -114,14 +114,14 @@ unsigned int babelwires::UnionFeature::getSelectedTagIndex() const {
     return m_selectedTagIndex;
 }
 
-unsigned int babelwires::UnionFeature::getIndexOfTag(Identifier tag) const {
+unsigned int babelwires::UnionFeature::getIndexOfTag(ShortId tag) const {
     const auto it = std::find(m_tags.begin(), m_tags.end(), tag);
     assert((it != m_tags.end()) && "The given tag is not a valid tag of this union");
     return it - m_tags.begin();
 }
 
-std::vector<babelwires::Identifier>
-babelwires::UnionFeature::getFieldsRemovedByChangeOfBranch(Identifier proposedTag) const {
+std::vector<babelwires::ShortId>
+babelwires::UnionFeature::getFieldsRemovedByChangeOfBranch(ShortId proposedTag) const {
     unsigned int tagIndex = getIndexOfTag(proposedTag);
     babelwires::UnionFeature::BranchAdjustment branchAdjustment = getBranchAdjustment(tagIndex);
     return std::move(branchAdjustment.m_fieldsToRemove);
@@ -129,12 +129,12 @@ babelwires::UnionFeature::getFieldsRemovedByChangeOfBranch(Identifier proposedTa
 
 babelwires::UnionFeature::BranchAdjustment babelwires::UnionFeature::getBranchAdjustment(unsigned int tagIndex) const {
     assert((tagIndex != m_selectedTagIndex) && "Same branch");
-    std::vector<Identifier> fieldsToRemove;
+    std::vector<ShortId> fieldsToRemove;
     if (m_selectedTagIndex >= 0) {
         fieldsToRemove = m_fieldsInBranches[m_selectedTagIndex];
     }
-    const std::vector<Identifier>& targetBranch = m_fieldsInBranches[tagIndex];
-    std::vector<Identifier> fieldsToAdd = targetBranch;
+    const std::vector<ShortId>& targetBranch = m_fieldsInBranches[tagIndex];
+    std::vector<ShortId> fieldsToAdd = targetBranch;
     // This doesn't need to be N^2, but these vectors are likely to be very small, so it's fine.
     fieldsToAdd.erase(std::remove_if(fieldsToAdd.begin(), fieldsToAdd.end(),
                                    [&fieldsToRemove](auto t) {

@@ -212,7 +212,7 @@ TEST(FeatureTest, recordFeature) {
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 0);
 
-    babelwires::Identifier hello("Hello");
+    babelwires::ShortId hello("Hello");
     hello.setDiscriminator(17);
 
     auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
@@ -221,21 +221,21 @@ TEST(FeatureTest, recordFeature) {
     EXPECT_EQ(recordFeature.getFeature(0), intFeature);
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 1);
-    babelwires::Identifier hello0 = recordFeature.getFieldIdentifier(0);
+    babelwires::ShortId hello0 = recordFeature.getFieldIdentifier(0);
     EXPECT_EQ(hello0, hello);
     babelwires::PathStep helloStep(hello);
     // This will set the descriminator (which is mutable) to match the one in the record.
     EXPECT_EQ(recordFeature.tryGetChildFromStep(helloStep), intFeature);
     EXPECT_EQ(hello.getDiscriminator(), helloStep.getField().getDiscriminator());
 
-    const babelwires::Identifier hello1("Hello");
+    const babelwires::ShortId hello1("Hello");
     EXPECT_EQ(hello1.getDiscriminator(), 0);
     // This will set the descriminator (which is mutable) to match the one in the record.
     EXPECT_EQ(recordFeature.getChildIndexFromStep(hello1), 0);
     EXPECT_EQ(hello, hello1);
     EXPECT_EQ(hello.getDiscriminator(), hello1.getDiscriminator());
 
-    const babelwires::Identifier hello2("Hello");
+    const babelwires::ShortId hello2("Hello");
     hello2.setDiscriminator(86);
     // This time the descriminator is untouched, since it's already set.
     EXPECT_EQ(recordFeature.getChildIndexFromStep(hello2), 0);
@@ -247,7 +247,7 @@ TEST(FeatureTest, recordFeature) {
     EXPECT_EQ(step.getField(), hello);
     EXPECT_EQ(step.getField().getDiscriminator(), hello.getDiscriminator());
 
-    babelwires::Identifier goodbye("Goodby");
+    babelwires::ShortId goodbye("Goodby");
     goodbye.setDiscriminator(109);
 
     auto stringFeaturePtr = std::make_unique<babelwires::StringFeature>();
@@ -255,7 +255,7 @@ TEST(FeatureTest, recordFeature) {
     recordFeature.addField(std::move(stringFeaturePtr), goodbye);
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 2);
-    babelwires::Identifier goodbye0 = recordFeature.getFieldIdentifier(1);
+    babelwires::ShortId goodbye0 = recordFeature.getFieldIdentifier(1);
     EXPECT_EQ(goodbye0, goodbye);
     EXPECT_EQ(recordFeature.tryGetChildFromStep(babelwires::PathStep(goodbye0)), stringFeature);
 
@@ -263,7 +263,7 @@ TEST(FeatureTest, recordFeature) {
     EXPECT_TRUE(step2.isField());
     EXPECT_EQ(step2.getField(), goodbye);
 
-    const babelwires::Identifier goodbye1("Goodby");
+    const babelwires::ShortId goodbye1("Goodby");
     EXPECT_EQ(recordFeature.getChildIndexFromStep(goodbye1), 1);
 }
 
@@ -280,7 +280,7 @@ TEST(FeatureTest, recordFeatureChanges) {
     EXPECT_FALSE(recordFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
     EXPECT_FALSE(recordFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
 
-    babelwires::Identifier hello("Hello");
+    babelwires::ShortId hello("Hello");
     hello.setDiscriminator(17);
     auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
     babelwires::IntFeature* intFeature = intFeaturePtr.get();
@@ -311,7 +311,7 @@ TEST(FeatureTest, recordFeatureHash) {
 
     const std::uint32_t hashWhenEmpty = recordFeature.getHash();
 
-    babelwires::Identifier hello("Hello");
+    babelwires::ShortId hello("Hello");
     hello.setDiscriminator(17);
     babelwires::IntFeature* intFeature = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), hello);
 

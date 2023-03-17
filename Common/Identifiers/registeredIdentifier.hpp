@@ -12,10 +12,10 @@
 
 namespace babelwires {
     /// See the REGISTERED_ID_VECTOR macro.
-    using IdentifiersSource = std::vector<std::tuple<const babelwires::Identifier, std::string, Uuid>>;
+    using IdentifiersSource = std::vector<std::tuple<const babelwires::ShortId, std::string, Uuid>>;
 
     /// See the REGISTERED_ID_VECTOR macro.
-    using RegisteredIdentifiers = std::vector<babelwires::Identifier>;
+    using RegisteredIdentifiers = std::vector<babelwires::ShortId>;
 
     namespace detail {
         RegisteredIdentifiers getIdentifiers(const IdentifiersSource& source);
@@ -27,24 +27,35 @@ namespace babelwires {
 /// This expression evaluates to a Identifier which has the data from the given IDENTIFIER and a discriminator
 /// which allows the name to be looked up in the IdentifierRegistry. The registration happens only the first time it is
 /// called.
-#define REGISTERED_ID(IDENTIFIER, NAME, UUID)                                                                          \
+#define BW_SHORT_ID(IDENTIFIER, NAME, UUID)                                                                            \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
-        static babelwires::Identifier f = babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(     \
+        static babelwires::ShortId f = babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(                \
             id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
         assert(                                                                                                        \
             (babelwires::IdentifierRegistry::read()->getName(f) == name) &&                                            \
-            "Each usage of this macro should register a single fieldIdentifier."                                       \
+            "Each usage of this macro should register a single identifier."                                            \
             " Do not use it in cases where the same code can be called a second time with a different identifier.");   \
         return f;                                                                                                      \
     }(IDENTIFIER, NAME, UUID))
 
-#define REGISTERED_LONGID(IDENTIFIER, NAME, UUID)                                                                      \
+#define BW_MEDIUM_ID(IDENTIFIER, NAME, UUID)                                                                           \
     ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
-        static babelwires::LongIdentifier f = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(  \
+        static babelwires::MediumId f = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(              \
             id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
         assert(                                                                                                        \
             (babelwires::IdentifierRegistry::read()->getName(f) == name) &&                                            \
-            "Each usage of this macro should register a single fieldIdentifier."                                       \
+            "Each usage of this macro should register a single identifier."                                            \
+            " Do not use it in cases where the same code can be called a second time with a different identifier.");   \
+        return f;                                                                                                      \
+    }(IDENTIFIER, NAME, UUID))
+
+#define BW_LONG_ID(IDENTIFIER, NAME, UUID)                                                                             \
+    ([](auto&& id, auto&& name, auto&& uuid) {                                                                         \
+        static babelwires::LongId f = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(                  \
+            id, name, uuid, babelwires::IdentifierRegistry::Authority::isAuthoritative);                               \
+        assert(                                                                                                        \
+            (babelwires::IdentifierRegistry::read()->getName(f) == name) &&                                            \
+            "Each usage of this macro should register a single identifier."                                            \
             " Do not use it in cases where the same code can be called a second time with a different identifier.");   \
         return f;                                                                                                      \
     }(IDENTIFIER, NAME, UUID))

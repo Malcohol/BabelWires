@@ -79,7 +79,7 @@ namespace babelwires {
         void visitFilePaths(FilePathVisitor& visitor) override;
 
         /// The factory which creates FeatureElements corresponding to this data.
-        LongIdentifier m_factoryIdentifier = "nofact";
+        LongId m_factoryIdentifier = "nofact";
 
         /// The version of the factory to which these contents relate.
         /// 0 is treated specially, and means that versioning should be ignored, and the data should
@@ -118,7 +118,7 @@ namespace babelwires {
         /// Look up the ID in the reg, and issue a warning if there are version incompatibilities.
         template<typename REGISTRY>
         bool checkFactoryVersionCommon(const REGISTRY& reg, UserLogger& userLogger,
-                                   LongIdentifier factoryIdentifier, VersionNumber& thisVersion);
+                                   LongId factoryIdentifier, VersionNumber& thisVersion);
     };
 } // namespace babelwires
 

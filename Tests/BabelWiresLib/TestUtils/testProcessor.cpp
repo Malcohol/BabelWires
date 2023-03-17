@@ -29,12 +29,12 @@ babelwires::RootFeature* testUtils::TestProcessor::getOutputFeature() {
 }
 
 testUtils::TestProcessorFactory::TestProcessorFactory()
-    : ProcessorFactory(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+    : ProcessorFactory(babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
                            "testProcessor", "Test processor", "714b6684-ad20-43e6-abda-c0d308586bf4",
                            babelwires::IdentifierRegistry::Authority::isAuthoritative),
                        2) {}
 
-babelwires::LongIdentifier testUtils::TestProcessorFactory::getThisIdentifier() {
+babelwires::LongId testUtils::TestProcessorFactory::getThisIdentifier() {
     return "testProcessor";
 }
 

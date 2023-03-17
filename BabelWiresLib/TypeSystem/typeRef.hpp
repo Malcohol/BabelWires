@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructorArguments.hpp>
-#include <BabelWiresLib/TypeSystem/subtypeOrder.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -23,20 +23,26 @@ namespace babelwires {
     class TypeSystem;
 
     /// A TypeRef describes a type by storing an Id if it is a primitive type,
-    /// or storing the id of its constructor and its arguments.
+    /// or storing the id of its constructor and TypeRefs for its arguments.
     class TypeRef : public ProjectVisitable {
       public:
-        using PrimitiveTypeId = LongIdentifier;
-        using TypeConstructorId = LongIdentifier;
-
         TypeRef();
+        ~TypeRef();
 
-        /// A TypeRef describing a primitive type.
+        /// Construct a TypeRef describing a primitive type.
         TypeRef(PrimitiveTypeId typeId);
 
-        /// A TypeRef describing a complex type, constructed by applying the TypeConstructor
-        /// to the arguments.
-        TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments);
+        /// Construct a TypeRef describing a unary type constructor applied to an argument.
+        TypeRef(TypeConstructorId typeConstructorId, TypeRef argument);
+
+        /// Construct a TypeRef describing a binary type constructor applied to two arguments.
+        TypeRef(TypeConstructorId typeConstructorId, TypeRef argument0, TypeRef argument1);
+
+        /// Constructor for use in templates.
+        template <unsigned int N>
+        explicit TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments<N> arguments)
+            : m_storage(ConstructedStorage<N>{std::make_shared<ConstructedTypeData<N>>(
+                  ConstructedTypeData<N>{typeConstructorId, std::move(arguments)})}) {}
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
         const Type* tryResolve(const TypeSystem& typeSystem) const;
@@ -66,7 +72,8 @@ namespace babelwires {
         std::size_t getHash() const;
 
         /// Used by the TypeSystem to compare the type typeRefs using the subtype relationship.
-        static SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeRef& typeRefA, const TypeRef& typeRefB);
+        static SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeRef& typeRefA,
+                                                 const TypeRef& typeRefB);
 
       private:
         /// Avoids locking the IdentifierRegistry multiple times.
@@ -76,8 +83,48 @@ namespace babelwires {
         static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);
 
       private:
-        using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArguments>;
-        using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
+        struct TryResolveVisitor;
+        struct ResolveVisitor;
+        struct SerializeVisitor;
+        struct ToStringVisitor;
+        struct VisitIdentifiersVisitor;
+        struct GetHashVisitor;
+        struct CompareSubtypeVisitor;
+
+      private:
+        template <unsigned int N> struct ConstructedTypeData {
+            TypeConstructorId m_typeConstructorId;
+            TypeConstructorArguments<N> m_arguments;
+
+            friend bool operator==(const ConstructedTypeData& a, const ConstructedTypeData& b) {
+                return (a.m_typeConstructorId == b.m_typeConstructorId) && (a.m_arguments == b.m_arguments);
+            }
+            friend bool operator!=(const ConstructedTypeData& a, const ConstructedTypeData& b) { return !(a == b); }
+            friend bool operator<(const ConstructedTypeData& a, const ConstructedTypeData& b) {
+                return a.m_arguments < b.m_arguments;
+            }
+        };
+
+        template <unsigned int N> struct ConstructedStorage {
+            ConstructedTypeData<N>* operator->() const { return m_ptr.get(); }
+
+            friend bool operator==(const ConstructedStorage& a, const ConstructedStorage& b) {
+                assert(a.m_ptr != nullptr);
+                assert(b.m_ptr != nullptr);
+                return (a.m_ptr == b.m_ptr) || (*a.m_ptr == *b.m_ptr);
+            }
+            friend bool operator!=(const ConstructedStorage& a, const ConstructedStorage& b) { return !(a == b); }
+            friend bool operator<(const ConstructedStorage& a, const ConstructedStorage& b) {
+                assert(a.m_ptr != nullptr);
+                assert(b.m_ptr != nullptr);
+                return (*a.m_ptr < *b.m_ptr);
+            }
+
+            std::shared_ptr<ConstructedTypeData<N>> m_ptr;
+        };
+
+        static_assert(c_maxNumTypeConstructorArguments == 2);
+        using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedStorage<1>, ConstructedStorage<2>>;
 
       private:
         Storage m_storage;

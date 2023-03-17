@@ -10,5 +10,5 @@
 babelwires::TargetFileFormatRegistry::TargetFileFormatRegistry()
     : Registry("File Feature Factory Registry"){};
 
-babelwires::TargetFileFormat::TargetFileFormat(LongIdentifier identifier, VersionNumber version, Extensions extensions)
+babelwires::TargetFileFormat::TargetFileFormat(LongId identifier, VersionNumber version, Extensions extensions)
     : FileTypeEntry(identifier, version, std::move(extensions)) {}

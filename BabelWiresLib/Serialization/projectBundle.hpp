@@ -28,7 +28,7 @@ namespace babelwires {
 
       public:
         /// Information about the factories used by the projectData.
-        using FactoryMetadata = std::map<LongIdentifier, VersionNumber>;
+        using FactoryMetadata = std::map<LongId, VersionNumber>;
 
         const FactoryMetadata& getFactoryMetadata() const { return m_factoryMetadata; }
 

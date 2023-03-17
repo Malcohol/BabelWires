@@ -20,7 +20,7 @@ namespace testUtils {
 
         static constexpr char s_intChildUuid[] = "00000000-1111-2222-3333-800000000BBB";
 
-        babelwires::Identifier m_intChildId;
+        babelwires::ShortId m_intChildId;
 
         /// A shortcut for accessing at the child feature.
         babelwires::IntFeature* m_intChildFeature;
@@ -32,7 +32,7 @@ namespace testUtils {
     /// The serialized format is just the identifier followed by a single byte which carries the value of
     /// intChildFeature. This has version 1.
     struct TestSourceFileFormat : babelwires::SourceFileFormat {
-        static babelwires::LongIdentifier getThisIdentifier();
+        static babelwires::LongId getThisIdentifier();
         static std::string getFileExtension();
 
         TestSourceFileFormat();
@@ -49,7 +49,7 @@ namespace testUtils {
     /// A factor for construction new file features.
     /// This is given version 3, to allow version testing.
     struct TestTargetFileFormat : babelwires::TargetFileFormat {
-        static babelwires::LongIdentifier getThisIdentifier();
+        static babelwires::LongId getThisIdentifier();
 
         TestTargetFileFormat();
         std::string getManufacturerName() const override;

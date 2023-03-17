@@ -9,7 +9,7 @@
 namespace {
     struct TestRegistryEntry : public babelwires::FileTypeEntry {
       public:
-        TestRegistryEntry(babelwires::LongIdentifier identifier, babelwires::VersionNumber version,
+        TestRegistryEntry(babelwires::LongId identifier, babelwires::VersionNumber version,
                           Extensions extensions, int payload)
             : FileTypeEntry(identifier, version, std::move(extensions))
             , m_payload(payload) {}
@@ -39,7 +39,7 @@ TEST(RegistryTest, base) {
 
     EXPECT_EQ(registry.getEntryByIdentifier("test"), nullptr);
 
-    const babelwires::LongIdentifier entryId = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+    const babelwires::LongId entryId = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
         "test", "Test", "00000000-1111-2222-3333-444444444444",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
@@ -60,7 +60,7 @@ TEST(RegistryTest, base) {
     EXPECT_EQ(registry.getEntryByFileName("oom.test.test2"), nullptr);
     EXPECT_EQ(registry.getEntryByFileName("foo.test2"), nullptr);
 
-    const babelwires::LongIdentifier entryId2 = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+    const babelwires::LongId entryId2 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
         "test2", "Test2", "00000000-1111-2222-3333-555555555555",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
@@ -82,7 +82,7 @@ TEST(RegistryTest, base) {
     EXPECT_EQ(registry.getEntryByFileName("oom.test.test2")->getName(), "Test2");
     EXPECT_EQ(registry.getEntryByFileName("oom.test.test2")->m_payload, -144);
 
-    const babelwires::LongIdentifier entryId3 = babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+    const babelwires::LongId entryId3 = babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
         "test3", "Test3", "00000000-1111-2222-3333-666666666666",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
 

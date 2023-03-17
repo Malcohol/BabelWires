@@ -12,5 +12,5 @@
 babelwires::FailedFeature::FailedFeature(const ProjectContext& projectContext)
     : RootFeature(projectContext) {
     addField(std::make_unique<RootFeature>(projectContext),
-             REGISTERED_ID("Failed", "Failed", "2d9667c0-0829-48ec-a952-5ba96cb5693f"));
+             BW_SHORT_ID("Failed", "Failed", "2d9667c0-0829-48ec-a952-5ba96cb5693f"));
 }

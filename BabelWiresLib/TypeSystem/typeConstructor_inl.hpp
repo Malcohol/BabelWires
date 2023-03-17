@@ -5,19 +5,11 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/type.hpp>
-
-#include <mutex>
-
+template<unsigned int N>
 const babelwires::Type*
-babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
-                                                const TypeConstructorArguments& arguments) const {
-    if (getArity() != arguments.m_typeArguments.size()) {
-        return nullptr;
-    }
-
+babelwires::TypeConstructor<N>::getOrConstructType(const TypeSystem& typeSystem,
+                                                const TypeConstructorArguments<N>& arguments) const {
     {
         // Phase 1: Try cache read-only
         std::shared_lock lock(m_mutexForCache);
@@ -29,10 +21,11 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
     }
 
     // Phase 2: Resolve the arguments.
-    std::vector<const Type*> resolvedArguments;
-    for (auto arg : arguments.m_typeArguments) {
+    std::array<const Type*, N> resolvedArguments;
+    for (int i = 0; i < N; ++i) {
+        const TypeRef& arg = arguments.m_typeArguments[i];
         if (const Type* const argAsType = arg.tryResolve(typeSystem)) {
-            resolvedArguments.emplace_back(argAsType);
+            resolvedArguments[i] = argAsType;
         }
     }
     TypeRef newTypeRef(getTypeConstructorId(), arguments);
@@ -54,10 +47,12 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
     }
 }
 
-babelwires::SubtypeOrder babelwires::TypeConstructor::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments, const TypeRef& other) const {
+template<unsigned int N>
+babelwires::SubtypeOrder babelwires::TypeConstructor<N>::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments<N>& arguments, const TypeRef& other) const {
     return SubtypeOrder::IsUnrelated;
 }
 
-babelwires::SubtypeOrder babelwires::TypeConstructor::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA, const TypeConstructorArguments& argumentsB) const {
+template<unsigned int N>
+babelwires::SubtypeOrder babelwires::TypeConstructor<N>::compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments<N>& argumentsA, const TypeConstructorArguments<N>& argumentsB) const {
     return SubtypeOrder::IsUnrelated;
 }

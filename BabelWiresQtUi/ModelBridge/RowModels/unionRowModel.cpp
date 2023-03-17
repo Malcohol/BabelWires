@@ -27,7 +27,7 @@ const babelwires::UnionFeature& babelwires::UnionRowModel::getUnionFeature() con
 
 QVariant babelwires::UnionRowModel::getValueDisplayData() const {
     const babelwires::UnionFeature& unionFeature = getUnionFeature();
-    const Identifier value = unionFeature.getSelectedTag();
+    const ShortId value = unionFeature.getSelectedTag();
     return QString(IdentifierRegistry::read()->getName(value).c_str());
 }
 
@@ -45,7 +45,7 @@ QWidget* babelwires::UnionRowModel::createEditor(QWidget* parent, const QModelIn
 
 void babelwires::UnionRowModel::setEditorData(QWidget* editor) const {
     const babelwires::UnionFeature& unionFeature = getUnionFeature();
-    const Identifier value = unionFeature.getSelectedTag();
+    const ShortId value = unionFeature.getSelectedTag();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
     dropDownBox->setCurrentIndex(unionFeature.getSelectedTagIndex());
@@ -54,13 +54,13 @@ void babelwires::UnionRowModel::setEditorData(QWidget* editor) const {
 std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::UnionRowModel::createCommandFromEditor(QWidget* editor) const {
     const babelwires::UnionFeature& unionFeature = getUnionFeature();
     const auto& tags = unionFeature.getTags();
-    const Identifier value = unionFeature.getSelectedTag();
+    const ShortId value = unionFeature.getSelectedTag();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
     const int newIndex = dropDownBox->currentIndex();
     assert(newIndex >= 0);
     assert(newIndex < tags.size());
-    const Identifier newValue = tags[newIndex];
+    const ShortId newValue = tags[newIndex];
     if (value != newValue) {
         return std::make_unique<SelectUnionBranchCommand>("Select union branch", m_featureElement->getElementId(), babelwires::FeaturePath(&unionFeature), newValue);
     } else {

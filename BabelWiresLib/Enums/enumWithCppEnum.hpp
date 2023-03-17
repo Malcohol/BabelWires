@@ -19,10 +19,10 @@
     enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) NUM_VALUES, NotAValue = NUM_VALUES };
 
 #define ENUM_DEFINE_CPP_METHODS                                                                                        \
-    Value getValueFromIdentifier(babelwires::Identifier id) const {                                                    \
+    Value getValueFromIdentifier(babelwires::ShortId id) const {                                                    \
         return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
     }                                                                                                                  \
-    babelwires::Identifier getIdentifierFromValue(Value value) const {                                                 \
+    babelwires::ShortId getIdentifierFromValue(Value value) const {                                                 \
         return getIdentifierFromIndex(static_cast<unsigned int>(value));                                               \
     }
 

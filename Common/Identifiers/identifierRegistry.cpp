@@ -21,7 +21,7 @@ babelwires::IdentifierRegistry::InstanceData::InstanceData()
     : m_identifier("Invald")
     , m_authority(Authority::isProvisional) {}
 
-babelwires::IdentifierRegistry::InstanceData::InstanceData(std::string fieldName, Uuid uuid, LongIdentifier identifier,
+babelwires::IdentifierRegistry::InstanceData::InstanceData(std::string fieldName, Uuid uuid, LongId identifier,
                                                            Authority authority)
     : m_fieldName(std::move(fieldName))
     , m_uuid(std::move(uuid))
@@ -41,9 +41,10 @@ void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deseriali
     m_authority = Authority::isProvisional;
 }
 
-babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWithMetadata(
-    babelwires::LongIdentifier identifier, const std::string& name, const Uuid& uuid, Authority authority) {
-    const Identifier::Discriminator discriminator = identifier.getDiscriminator();
+babelwires::LongId babelwires::IdentifierRegistry::addLongIdWithMetadata(babelwires::LongId identifier,
+                                                                         const std::string& name, const Uuid& uuid,
+                                                                         Authority authority) {
+    const ShortId::Discriminator discriminator = identifier.getDiscriminator();
     assert((discriminator == 0) && "The identifier already has a discriminator: Did you already register it?");
 
     const auto it = m_uuidToInstanceDataMap.find(uuid);
@@ -60,7 +61,7 @@ babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWith
 
         const int newDiscriminator = data.m_instanceDatas.size() + 1;
         // I could fail safe here, but it seems very unlikely to happen. If it does, then the system needs a rethink.
-        assert((newDiscriminator <= Identifier::c_maxDiscriminator) && "Too many duplicate identifiers");
+        assert((newDiscriminator <= ShortId::c_maxDiscriminator) && "Too many duplicate identifiers");
         data.m_instanceDatas.emplace_back(uit->second.get());
         identifier.setDiscriminator(newDiscriminator);
         uit->second->m_identifier = identifier;
@@ -87,24 +88,37 @@ babelwires::LongIdentifier babelwires::IdentifierRegistry::addLongIdentifierWith
     return identifier;
 }
 
-babelwires::Identifier babelwires::IdentifierRegistry::addShortIdentifierWithMetadata(babelwires::Identifier identifier,
-                                                                                      const std::string& name,
-                                                                                      const Uuid& uuid,
-                                                                                      Authority authority) {
+babelwires::MediumId babelwires::IdentifierRegistry::addMediumIdWithMetadata(babelwires::MediumId identifier,
+                                                                             const std::string& name, const Uuid& uuid,
+                                                                             Authority authority) {
 #ifndef NDEBUG
     try {
 #endif
-        return Identifier(addLongIdentifierWithMetadata(identifier, name, uuid, authority));
+        return MediumId(addLongIdWithMetadata(identifier, name, uuid, authority));
 #ifndef NDEBUG
     } catch (const ParseException&) {
-        assert(false && "A long identifier was previously registered with this uuid");
+        assert(false && "Another identifier was previously registered with this uuid");
+    }
+#endif
+}
+
+babelwires::ShortId babelwires::IdentifierRegistry::addShortIdWithMetadata(babelwires::ShortId identifier,
+                                                                           const std::string& name, const Uuid& uuid,
+                                                                           Authority authority) {
+#ifndef NDEBUG
+    try {
+#endif
+        return ShortId(addLongIdWithMetadata(identifier, name, uuid, authority));
+#ifndef NDEBUG
+    } catch (const ParseException&) {
+        assert(false && "Another identifier was previously registered with this uuid");
     }
 #endif
 }
 
 const babelwires::IdentifierRegistry::InstanceData*
-babelwires::IdentifierRegistry::getInstanceData(LongIdentifier identifier) const {
-    const babelwires::Identifier::Discriminator index = identifier.getDiscriminator();
+babelwires::IdentifierRegistry::getInstanceData(LongId identifier) const {
+    const babelwires::ShortId::Discriminator index = identifier.getDiscriminator();
     if (index > 0) {
         identifier.setDiscriminator(0);
         const auto& it = m_instanceDatasFromIdentifier.find(identifier);
@@ -119,7 +133,7 @@ babelwires::IdentifierRegistry::getInstanceData(LongIdentifier identifier) const
 }
 
 babelwires::IdentifierRegistry::ValueType
-babelwires::IdentifierRegistry::getDeserializedIdentifierData(LongIdentifier identifier) const {
+babelwires::IdentifierRegistry::getDeserializedIdentifierData(LongId identifier) const {
     if (const babelwires::IdentifierRegistry::InstanceData* data = getInstanceData(identifier)) {
         return ValueType{identifier, &data->m_fieldName, &data->m_uuid};
     }
@@ -128,7 +142,7 @@ babelwires::IdentifierRegistry::getDeserializedIdentifierData(LongIdentifier ide
                               "discriminator) are allowed";
 }
 
-std::string babelwires::IdentifierRegistry::getName(LongIdentifier identifier) const {
+std::string babelwires::IdentifierRegistry::getName(LongId identifier) const {
     if (const InstanceData* data = getInstanceData(identifier)) {
         return data->m_fieldName;
     }
@@ -212,8 +226,8 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
     // We'd like the table sorted by identifier.
     // The default ordering for identifiers is unaware of disciminators.
     std::sort(contents.begin(), contents.end(), [](const auto* a, const auto* b) {
-        const babelwires::LongIdentifier idA = a->m_identifier;
-        const babelwires::LongIdentifier idB = b->m_identifier;
+        const babelwires::LongId idA = a->m_identifier;
+        const babelwires::LongId idB = b->m_identifier;
         if (idA < idB) {
             return true;
         } else if (idB < idA) {
@@ -231,7 +245,7 @@ void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deseriali
         std::unique_ptr<InstanceData> instanceDataPtr = it.getObject();
         InstanceData* instanceData = instanceDataPtr.get();
 
-        const Identifier::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
+        const ShortId::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
         if (discriminator == 0) {
             throw ParseException() << "An identifier in the identifier metadata had no discriminator";
         }

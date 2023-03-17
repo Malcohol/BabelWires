@@ -28,7 +28,7 @@ unsigned int babelwires::Enum::getIndexOfDefaultValue() const {
     return m_indexOfDefaultValue;
 }
 
-int babelwires::Enum::tryGetIndexFromIdentifier(babelwires::Identifier id) const {
+int babelwires::Enum::tryGetIndexFromIdentifier(babelwires::ShortId id) const {
     const auto it = m_valueToIndex.find(id);
     if (it != m_valueToIndex.end()) {
         return it->second;
@@ -36,20 +36,20 @@ int babelwires::Enum::tryGetIndexFromIdentifier(babelwires::Identifier id) const
     return -1;
 }
 
-unsigned int babelwires::Enum::getIndexFromIdentifier(babelwires::Identifier id) const {
+unsigned int babelwires::Enum::getIndexFromIdentifier(babelwires::ShortId id) const {
     const EnumValues& values = getEnumValues();
     const auto it = m_valueToIndex.find(id);
     assert((it != m_valueToIndex.end()) && "id not found in enum");
     return it->second;
 }
 
-babelwires::Identifier babelwires::Enum::getIdentifierFromIndex(unsigned int index) const {
+babelwires::ShortId babelwires::Enum::getIdentifierFromIndex(unsigned int index) const {
     const EnumValues& values = getEnumValues();
     assert(index < values.size());
     return values[index];
 }
 
-bool babelwires::Enum::isAValue(const babelwires::Identifier& id) const {
+bool babelwires::Enum::isAValue(const babelwires::ShortId& id) const {
     const EnumValues& values = getEnumValues();
     const auto it = m_valueToIndex.find(id);
     if (it == m_valueToIndex.end()) {
@@ -67,7 +67,7 @@ std::unique_ptr<babelwires::Value> babelwires::Enum::createValue() const {
 bool babelwires::Enum::verifySupertype(const Type& supertype) const {
     const Enum& parentEnum = supertype.is<Enum>();
     for (const auto& v : m_values) {
-        Identifier parentId = v;
+        ShortId parentId = v;
         assert(parentEnum.isAValue(parentId));
         // I don't _know_ that this would cause problems, but it simplifies things to require this.
         assert((parentId.getDiscriminator() == v.getDiscriminator()) &&

@@ -13,7 +13,7 @@
 namespace babelwires {
     /// Convert an EnumValue to the identifier it carries.
     struct EnumToIdentifierValueAdapter {
-        babelwires::Identifier operator() (const Value& value) const {
+        babelwires::ShortId operator() (const Value& value) const {
             const auto& enumValue = value.is<EnumValue>();
             return enumValue.get();
         }

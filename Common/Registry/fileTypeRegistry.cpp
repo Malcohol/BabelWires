@@ -9,7 +9,7 @@
 
 #include <cctype>
 
-babelwires::FileTypeEntry::FileTypeEntry(LongIdentifier identifier, VersionNumber version,
+babelwires::FileTypeEntry::FileTypeEntry(LongId identifier, VersionNumber version,
                                          Extensions extensions)
     : RegistryEntry(identifier, version)
     , m_extensions(std::move(extensions)) {

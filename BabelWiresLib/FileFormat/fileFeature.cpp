@@ -7,10 +7,10 @@
  **/
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
 
-babelwires::FileFeature::FileFeature(const ProjectContext& projectContext, LongIdentifier fileFormatIdentifier)
+babelwires::FileFeature::FileFeature(const ProjectContext& projectContext, LongId fileFormatIdentifier)
     : RootFeature(projectContext)
     , m_factoryIdentifier(fileFormatIdentifier) {}
 
-babelwires::LongIdentifier babelwires::FileFeature::getFileFormatIdentifier() const {
+babelwires::LongId babelwires::FileFeature::getFileFormatIdentifier() const {
     return m_factoryIdentifier;
 }

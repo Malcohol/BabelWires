@@ -27,7 +27,7 @@ namespace testUtils {
     /// The Type of TestValues.
     class TestType : public babelwires::Type {
       public:
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestType"), 1);
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("TestType"), 1);
 
         std::unique_ptr<babelwires::Value> createValue() const override;
     };

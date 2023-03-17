@@ -99,6 +99,6 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         
-        Identifier m_value = "Fixme";
+        ShortId m_value = "Fixme";
     };
 } // namespace babelwires

@@ -20,7 +20,7 @@ namespace babelwires {
     /// Objects which can create processors, and which can be registered in the ProcessFactoryRegistry.
     class ProcessorFactory : public RegistryEntry {
       public:
-        ProcessorFactory(LongIdentifier identifier, VersionNumber version);
+        ProcessorFactory(LongId identifier, VersionNumber version);
 
         /// Return a new processor.
         virtual std::unique_ptr<Processor> createNewProcessor(const ProjectContext& projectContext) const = 0;

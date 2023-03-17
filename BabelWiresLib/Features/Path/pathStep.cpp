@@ -1,5 +1,5 @@
 /**
- * A PathStep is a union of a Identifier and an ArrayIndex.
+ * A PathStep is a union of a ShortId and an ArrayIndex.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -13,7 +13,7 @@
 #include <sstream>
 
 void babelwires::PathStep::writeToStream(std::ostream& os) const {
-    if (const Identifier* f = asField()) {
+    if (const ShortId* f = asField()) {
         os << *f;
     } else {
         os << getIndex();
@@ -21,7 +21,7 @@ void babelwires::PathStep::writeToStream(std::ostream& os) const {
 }
 
 std::string babelwires::PathStep::serializeToString() const {
-    if (const Identifier* f = asField()) {
+    if (const ShortId* f = asField()) {
         return f->serializeToString();
     } else {
         return std::to_string(getIndex());
@@ -41,6 +41,6 @@ babelwires::PathStep babelwires::PathStep::deserializeFromString(std::string_vie
         }
         return arrayIndex;
     } else {
-        return PathStep(Identifier::deserializeFromString(str));
+        return PathStep(ShortId::deserializeFromString(str));
     }
 }

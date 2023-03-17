@@ -10,13 +10,3 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <Common/Hash/hash.hpp>
-
-babelwires::TypeConstructorArguments::~TypeConstructorArguments() = default;
-
-std::size_t babelwires::TypeConstructorArguments::getHash() const {
-    std::size_t hash = 0x80235AA2;
-    for (const auto& arg : m_typeArguments) {
-        hash::mixInto(hash, arg);
-    }
-    return hash;
-}

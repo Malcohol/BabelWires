@@ -17,7 +17,7 @@ namespace babelwires {
     /// A given audio interface (e.g. Alsa) must provide an implementation of this interface.
     class AudioInterface : public RegistryEntry {
       public:
-        AudioInterface(LongIdentifier identifier, VersionNumber version);
+        AudioInterface(LongId identifier, VersionNumber version);
 
         virtual std::vector<std::string> getDestinationNames() const = 0;
         virtual std::unique_ptr<babelwires::AudioDest> getDestination(std::string_view destinationName) const = 0;

@@ -9,7 +9,7 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-babelwires::RegistryEntry::RegistryEntry(LongIdentifier identifier, VersionNumber version)
+babelwires::RegistryEntry::RegistryEntry(LongId identifier, VersionNumber version)
     : m_identifier(identifier)
     , m_version(version) {
     assert((version > 0) && "0 is not a valid version");
@@ -17,7 +17,7 @@ babelwires::RegistryEntry::RegistryEntry(LongIdentifier identifier, VersionNumbe
 
 babelwires::RegistryEntry::~RegistryEntry() = default;
 
-babelwires::LongIdentifier babelwires::RegistryEntry::getIdentifier() const {
+babelwires::LongId babelwires::RegistryEntry::getIdentifier() const {
     return m_identifier;
 }
 
@@ -33,7 +33,7 @@ babelwires::UntypedRegistry::UntypedRegistry(std::string registryName)
     : m_registryName(std::move(registryName)) {}
 
 babelwires::RegistryEntry* babelwires::UntypedRegistry::addEntry(std::unique_ptr<RegistryEntry> newEntry) {
-    LongIdentifier id = newEntry->getIdentifier();
+    LongId id = newEntry->getIdentifier();
     assert((newEntry->getIdentifier().getDiscriminator() != 0) &&
            "A registered entry must have a registered identifier");
     assert((getEntryByIdentifier(id) == nullptr) && "Format with that identifier already registered.");
@@ -44,7 +44,7 @@ babelwires::RegistryEntry* babelwires::UntypedRegistry::addEntry(std::unique_ptr
 }
 
 const babelwires::RegistryEntry*
-babelwires::UntypedRegistry::getEntryByIdentifier(const LongIdentifier& identifier) const {
+babelwires::UntypedRegistry::getEntryByIdentifier(const LongId& identifier) const {
     const auto& it = m_entries.find(identifier);
     if (it != m_entries.end()) {
         // resolve the identifier if it is currently unresolved.
@@ -55,7 +55,7 @@ babelwires::UntypedRegistry::getEntryByIdentifier(const LongIdentifier& identifi
 }
 
 babelwires::RegistryEntry*
-babelwires::UntypedRegistry::getEntryByIdentifierNonConst(const LongIdentifier& identifier) const {
+babelwires::UntypedRegistry::getEntryByIdentifierNonConst(const LongId& identifier) const {
     const auto& it = m_entries.find(identifier);
     if (it != m_entries.end()) {
         // resolve the identifier if it is currently unresolved.
@@ -76,7 +76,7 @@ const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByName(std
 }
 
 const babelwires::RegistryEntry&
-babelwires::UntypedRegistry::getRegisteredEntry(const LongIdentifier& identifier) const {
+babelwires::UntypedRegistry::getRegisteredEntry(const LongId& identifier) const {
     const RegistryEntry* const entry = getEntryByIdentifier(identifier);
     if (!entry) {
         throw RegistryException() << "No entry called \"" << identifier << "\" was found in the " << m_registryName;

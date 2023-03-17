@@ -53,7 +53,7 @@ namespace babelwires {
       protected:
         /// Subclass constructors should call this to add the input/output array. This should almost always
         /// be after all the input features are added.
-        void addArrayFeature(Identifier id) {
+        void addArrayFeature(ShortId id) {
             m_arrayIn = m_inputFeature->addField(std::make_unique<InputArrayFeature>(), id);
             m_arrayOut = m_outputFeature->addField(std::make_unique<OutputArrayFeature>(), id);
         }

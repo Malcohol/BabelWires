@@ -59,7 +59,7 @@ namespace {
     };
 
     struct SndFileAudioDestFactory : babelwires::FileAudioDestFactory {
-        SndFileAudioDestFactory(babelwires::LongIdentifier id, const char* ext, std::uint32_t code)
+        SndFileAudioDestFactory(babelwires::LongId id, const char* ext, std::uint32_t code)
             : FileAudioDestFactory(id, 1, Extensions{ext})
             , m_formatCode(code) {}
 
@@ -73,17 +73,17 @@ namespace {
 
 } // namespace
 
-babelwires::FileAudioDestFactory::FileAudioDestFactory(LongIdentifier identifier, VersionNumber version,
+babelwires::FileAudioDestFactory::FileAudioDestFactory(LongId identifier, VersionNumber version,
                                                        Extensions extensions)
     : FileTypeEntry(identifier, version, std::move(extensions)) {}
 
 babelwires::FileAudioDestRegistry::FileAudioDestRegistry()
     : FileTypeRegistry<FileAudioDestFactory>("File Audio Dest Registry") {
-    addEntry(std::make_unique<SndFileAudioDestFactory>(REGISTERED_LONGID("WAV", "WAV file", "c2b2f468-2826-4ba9-bc6b-706833c0ed69"), "wav", (SF_FORMAT_WAV | SF_FORMAT_PCM_16)));
+    addEntry(std::make_unique<SndFileAudioDestFactory>(BW_LONG_ID("WAV", "WAV file", "c2b2f468-2826-4ba9-bc6b-706833c0ed69"), "wav", (SF_FORMAT_WAV | SF_FORMAT_PCM_16)));
     addEntry(
-        std::make_unique<SndFileAudioDestFactory>(REGISTERED_LONGID("AIFF", "Aiff file", "b3bdca68-28ad-449c-a7a0-362686f7a5fc"), "aiff", (SF_FORMAT_AIFF | SF_FORMAT_PCM_16)));
-    addEntry(std::make_unique<SndFileAudioDestFactory>(REGISTERED_LONGID("FLAC", "FLAC file", "fe9b3901-e63d-4719-a695-8a08473cf061"), "flac", SF_FORMAT_FLAC));
-    addEntry(std::make_unique<SndFileAudioDestFactory>(REGISTERED_LONGID("OGG", "OGG file", "479f13ab-4830-49f0-9559-9a96233616ff"), "ogg", SF_FORMAT_OGG));
+        std::make_unique<SndFileAudioDestFactory>(BW_LONG_ID("AIFF", "Aiff file", "b3bdca68-28ad-449c-a7a0-362686f7a5fc"), "aiff", (SF_FORMAT_AIFF | SF_FORMAT_PCM_16)));
+    addEntry(std::make_unique<SndFileAudioDestFactory>(BW_LONG_ID("FLAC", "FLAC file", "fe9b3901-e63d-4719-a695-8a08473cf061"), "flac", SF_FORMAT_FLAC));
+    addEntry(std::make_unique<SndFileAudioDestFactory>(BW_LONG_ID("OGG", "OGG file", "479f13ab-4830-49f0-9559-9a96233616ff"), "ogg", SF_FORMAT_OGG));
 }
 
 std::unique_ptr<babelwires::AudioDest>

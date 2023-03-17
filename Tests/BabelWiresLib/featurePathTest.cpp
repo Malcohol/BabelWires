@@ -16,9 +16,9 @@
 #include <Common/exceptions.hpp>
 
 TEST(FeaturePathTest, pathStepOps) {
-    babelwires::Identifier hello("Hello");
-    babelwires::Identifier hello1("Hello");
-    babelwires::Identifier goodbye("Byebye");
+    babelwires::ShortId hello("Hello");
+    babelwires::ShortId hello1("Hello");
+    babelwires::ShortId goodbye("Byebye");
 
     babelwires::PathStep helloStep(hello);
     babelwires::PathStep hello1Step(hello1);
@@ -48,7 +48,7 @@ TEST(FeaturePathTest, pathStepOps) {
 }
 
 TEST(FeaturePathTest, pathStepDiscriminator) {
-    babelwires::PathStep helloStep(babelwires::Identifier("Hello"));
+    babelwires::PathStep helloStep(babelwires::ShortId("Hello"));
 
     helloStep.asField()->setDiscriminator(12);
     EXPECT_EQ(helloStep.asField()->getDiscriminator(), 12);
@@ -73,13 +73,13 @@ TEST(FeaturePathTest, pathStepDeserialization) {
     babelwires::PathStep step(0);
     EXPECT_NO_THROW(step = babelwires::PathStep::deserializeFromString("Hello"));
     EXPECT_TRUE(step.isField());
-    EXPECT_EQ(step.getField(), babelwires::Identifier("Hello"));
+    EXPECT_EQ(step.getField(), babelwires::ShortId("Hello"));
     EXPECT_EQ(step.getField().getDiscriminator(), 0);
 
     babelwires::PathStep step1(0);
     EXPECT_NO_THROW(step1 = babelwires::PathStep::deserializeFromString("Hello'2"));
     EXPECT_TRUE(step1.isField());
-    EXPECT_EQ(step1.getField(), babelwires::Identifier("Hello"));
+    EXPECT_EQ(step1.getField(), babelwires::ShortId("Hello"));
     EXPECT_EQ(step1.getField().getDiscriminator(), 2);
 
     babelwires::PathStep step2("Erm");

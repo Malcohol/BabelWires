@@ -155,7 +155,7 @@ TEST(SelectUnionBranchCommandTest, failSafelyNoOptional) {
     const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElementWithUnion>();
     ASSERT_NE(element, nullptr);
 
-    babelwires::Identifier notATag("notTag");
+    babelwires::ShortId notATag("notTag");
     notATag.setDiscriminator(1);
     babelwires::SelectUnionBranchCommand command("Test command",  51,
                                                testUtils::TestFeatureWithUnion::s_pathToUnionFeature, notATag);

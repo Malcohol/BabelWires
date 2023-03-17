@@ -21,7 +21,7 @@ namespace babelwires {
         /// The set of values. We use Identifiers to get versionable serialization support.
         /// The EnumValues vector may not contain duplicates.
         /// Note: This matches the result of REGISTERED_ID_VECTOR.
-        using EnumValues = std::vector<Identifier>;
+        using EnumValues = std::vector<ShortId>;
 
         /// Enums need a set of values and a way of identifying the default.
         /// The values object can be the "output" of the REGISTERED_ID_VECTOR macro.
@@ -35,17 +35,17 @@ namespace babelwires {
         unsigned int getIndexOfDefaultValue() const;
 
         /// Get the index within EnumValues of the given id.
-        unsigned int getIndexFromIdentifier(Identifier id) const;
+        unsigned int getIndexFromIdentifier(ShortId id) const;
 
         /// Return the index within EnumValues of the given id, or -1.
-        int tryGetIndexFromIdentifier(Identifier id) const;
+        int tryGetIndexFromIdentifier(ShortId id) const;
 
         /// Get the identifier within EnumValues at the given index.
-        Identifier getIdentifierFromIndex(unsigned int index) const;
+        ShortId getIdentifierFromIndex(unsigned int index) const;
 
         /// Is the identifier one of the values in the enum?
         /// This can resolve the discriminator in the identifier.
-        bool isAValue(const Identifier& id) const;
+        bool isAValue(const ShortId& id) const;
 
         std::unique_ptr<Value> createValue() const override;
 
@@ -55,7 +55,7 @@ namespace babelwires {
         /// The enum values in their intended order.
         EnumValues m_values;
         /// Supports faster lookup for identifier-based queries.
-        std::unordered_map<Identifier, int> m_valueToIndex;
+        std::unordered_map<ShortId, int> m_valueToIndex;
         unsigned int m_indexOfDefaultValue;
     };
 } // namespace babelwires

@@ -20,7 +20,7 @@ namespace babelwires {
     /// its format, so we associate some reasonable settings with each file extension using factories.
     class FileAudioDestFactory : public FileTypeEntry {
       public:
-        FileAudioDestFactory(LongIdentifier identifier, VersionNumber version, Extensions extensions);
+        FileAudioDestFactory(LongId identifier, VersionNumber version, Extensions extensions);
 
         virtual std::unique_ptr<AudioDest> createFileAudioDest(const char* fileName,
                                                                unsigned int numChannels) const = 0;

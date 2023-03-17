@@ -11,11 +11,11 @@
 #include <Tests/TestUtils/equalSets.hpp>
 
 TEST(SelectUnionBranchModifierDataTest, apply) {
-    babelwires::Identifier tagA("tagA");
+    babelwires::ShortId tagA("tagA");
     tagA.setDiscriminator(1);
-    babelwires::Identifier tagB("tagB");
+    babelwires::ShortId tagB("tagB");
     tagB.setDiscriminator(1);
-    babelwires::Identifier tagC("tagC");
+    babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
     babelwires::SelectUnionBranchModifierData data;
@@ -23,19 +23,19 @@ TEST(SelectUnionBranchModifierDataTest, apply) {
 
     babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
 
-    babelwires::Identifier fieldIdA0("fldA0");
+    babelwires::ShortId fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
     babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
 
-    babelwires::Identifier ff0("ff0");
+    babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
     babelwires::IntFeature* fixedFeature0 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
 
-    babelwires::Identifier fieldIdC0("fldC0");
+    babelwires::ShortId fieldIdC0("fldC0");
     fieldIdC0.setDiscriminator(1);
     babelwires::IntFeature* fieldC0 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
 
-    babelwires::Identifier ff1("ff1");
+    babelwires::ShortId ff1("ff1");
     ff1.setDiscriminator(1);
     babelwires::IntFeature* fixedFeature1 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff1);
 
@@ -47,11 +47,11 @@ TEST(SelectUnionBranchModifierDataTest, apply) {
 }
 
 TEST(SelectUnionBranchModifierDataTest, failureNotATag) {
-    babelwires::Identifier tagA("tagA");
+    babelwires::ShortId tagA("tagA");
     tagA.setDiscriminator(1);
-    babelwires::Identifier tagB("tagB");
+    babelwires::ShortId tagB("tagB");
     tagB.setDiscriminator(1);
-    babelwires::Identifier tagC("tagC");
+    babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
     babelwires::SelectUnionBranchModifierData data;
@@ -59,11 +59,11 @@ TEST(SelectUnionBranchModifierDataTest, failureNotATag) {
 
     babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
 
-    babelwires::Identifier fieldIdA0("fldA0");
+    babelwires::ShortId fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
     babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
 
-    babelwires::Identifier ff0("ff0");
+    babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
 
     babelwires::IntFeature* fixedFeature0 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);

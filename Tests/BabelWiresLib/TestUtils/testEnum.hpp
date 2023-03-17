@@ -28,7 +28,7 @@ namespace testUtils {
 
 // Foo, Bar, Erm, Oom, Boo
     struct TestEnum : babelwires::Enum {
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestEnum"), 1);
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Enum"), 1);
         TestEnum();
 
         /// Expose a C++ enum which matches the Enum.
@@ -37,19 +37,19 @@ namespace testUtils {
 
     // Bar, Erm, Oom
     struct TestSubEnum : babelwires::Enum {
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestSubEnum"), 1);
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("SubEnum"), 1);
         TestSubEnum();
     };
 
     // Bar, Erm
     struct TestSubSubEnum1 : babelwires::Enum {
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestSubSubEnum1"), 1);
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("SubSubEnum1"), 1);
         TestSubSubEnum1();
     };
 
     // Erm, Oom
     struct TestSubSubEnum2 : babelwires::Enum {
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredLongIdentifier("TestSubSubEnum2"), 1);
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("SubSubEnum2"), 1);
         TestSubSubEnum2();
     };
 

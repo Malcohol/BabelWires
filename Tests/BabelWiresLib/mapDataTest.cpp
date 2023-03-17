@@ -15,8 +15,8 @@
 #include <Tests/TestUtils/testLog.hpp>
 
 namespace {
-    const babelwires::LongIdentifier testTypeId1 = "TestType1";
-    const babelwires::LongIdentifier testTypeId2 = "TestType2";
+    const babelwires::PrimitiveTypeId testTypeId1 = "TestType1";
+    const babelwires::PrimitiveTypeId testTypeId2 = "TestType2";
 } // namespace
 
 TEST(MapDataTest, types) {

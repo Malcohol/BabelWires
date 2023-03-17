@@ -20,14 +20,14 @@ namespace {
 
 testUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext& context)
     : babelwires::FileFeature(context, s_fileFormatId)
-    , m_intChildId(babelwires::IdentifierRegistry::write()->addShortIdentifierWithMetadata(
+    , m_intChildId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     m_intChildFeature =
         addField(std::make_unique<babelwires::HasStaticRange<babelwires::IntFeature, 0, 255>>(), m_intChildId);
 }
 
-babelwires::LongIdentifier testUtils::TestSourceFileFormat::getThisIdentifier() {
+babelwires::LongId testUtils::TestSourceFileFormat::getThisIdentifier() {
     return s_fileFormatId;
 }
 
@@ -36,7 +36,7 @@ std::string testUtils::TestSourceFileFormat::getFileExtension() {
 }
 
 testUtils::TestSourceFileFormat::TestSourceFileFormat()
-    : SourceFileFormat(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+    : SourceFileFormat(babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
                            s_fileFormatId, s_fileFormatId, "f557b89a-2499-465a-a605-5ef7f69284c4",
                            babelwires::IdentifierRegistry::Authority::isAuthoritative),
                        1, {s_fileFormatId}) {}
@@ -90,12 +90,12 @@ void testUtils::TestSourceFileFormat::writeToTestFile(const std::filesystem::pat
 }
 
 testUtils::TestTargetFileFormat::TestTargetFileFormat()
-    : TargetFileFormat(babelwires::IdentifierRegistry::write()->addLongIdentifierWithMetadata(
+    : TargetFileFormat(babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
                            s_factoryFormatId, s_factoryFormatId, "a9a603aa-9d83-4f12-ac35-de0056d5a568",
                            babelwires::IdentifierRegistry::Authority::isAuthoritative),
                        3, {s_fileFormatId}) {}
 
-babelwires::LongIdentifier testUtils::TestTargetFileFormat::getThisIdentifier() {
+babelwires::LongId testUtils::TestTargetFileFormat::getThisIdentifier() {
     return s_factoryFormatId;
 }
 

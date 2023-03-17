@@ -16,7 +16,7 @@
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::FeaturePath pathToRecord,
-                                                               Identifier optional, bool isActivated)
+                                                               ShortId optional, bool isActivated)
     : FeatureContextMenuAction(IdentifierRegistry::read()->getName(optional).c_str())
     , m_pathToRecord(std::move(pathToRecord))
     , m_optional(optional)
