@@ -23,7 +23,7 @@ namespace babelwires {
     class TypeSystem;
 
     /// A TypeRef describes a type by storing an Id if it is a primitive type,
-    /// or storing the id of its constructor and its arguments.
+    /// or storing the id of its constructor and TypeRefs for its arguments.
     class TypeRef : public ProjectVisitable {
       public:
         TypeRef();
@@ -38,6 +38,7 @@ namespace babelwires {
         /// Construct a TypeRef describing a binary type constructor applied to two arguments.
         TypeRef(TypeConstructorId typeConstructorId, TypeRef argument0, TypeRef argument1);
 
+        /// Constructor for use in templates.
         template <unsigned int N>
         explicit TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments<N> arguments)
             : m_storage(ConstructedStorage<N>{std::make_shared<ConstructedTypeData<N>>(
@@ -122,6 +123,7 @@ namespace babelwires {
             std::shared_ptr<ConstructedTypeData<N>> m_ptr;
         };
 
+        static_assert(c_maxNumTypeConstructorArguments == 2);
         using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedStorage<1>, ConstructedStorage<2>>;
 
       private:

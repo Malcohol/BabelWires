@@ -120,6 +120,7 @@ namespace babelwires {
         template<unsigned int N>
         using TypeConstructorRegistry = std::unordered_map<TypeConstructorId, TypeConstructorInfo<N>>;
 
+        static_assert(c_maxNumTypeConstructorArguments == 2);
         std::tuple<TypeConstructorRegistry<1>, TypeConstructorRegistry<2>> m_typeConstructorRegistry;
 
         std::unordered_map<PrimitiveTypeId, RelatedTypes> m_relatedTypes;

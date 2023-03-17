@@ -24,17 +24,14 @@ namespace {
 babelwires::TypeRef::TypeRef() = default;
 babelwires::TypeRef::~TypeRef() = default;
 
-babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef argument)
-    : m_storage(ConstructedStorage<1>{
-          std::make_shared<ConstructedTypeData<1>>(ConstructedTypeData<1>{typeConstructorId, {std::move(argument)}})}) {
-}
-
-babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef argument0, TypeRef argument1)
-    : m_storage(ConstructedStorage<2>{std::make_shared<ConstructedTypeData<2>>(
-          ConstructedTypeData<2>{typeConstructorId, {std::move(argument0), std::move(argument1)}})}) {}
-
 babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
     : m_storage(typeId) {}
+
+babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef argument)
+    : TypeRef(typeConstructorId, TypeConstructorArguments<1>{std::move(argument)}) {}
+
+babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef argument0, TypeRef argument1)
+    : TypeRef(typeConstructorId, TypeConstructorArguments<2>{std::move(argument0), std::move(argument1)}) {}
 
 struct babelwires::TypeRef::TryResolveVisitor {
     const babelwires::Type* operator()(std::monostate) { return nullptr; }
@@ -107,10 +104,10 @@ namespace {
         if (format.size() < 2) {
             return {};
         }
-        if (arguments.size() > babelwires::s_maxNumTypeConstructorArguments) {
+        if (arguments.size() > babelwires::c_maxNumTypeConstructorArguments) {
             return {};
         }
-        std::bitset<babelwires::s_maxNumTypeConstructorArguments> argumentsNotYetSeen((1 << arguments.size()) - 1);
+        std::bitset<babelwires::c_maxNumTypeConstructorArguments> argumentsNotYetSeen((1 << arguments.size()) - 1);
         std::ostringstream oss;
         constexpr char open = '{';
         constexpr char close = '}';
@@ -128,8 +125,8 @@ namespace {
                     break;
                 }
                 case justReadOpen: {
-                    static_assert(babelwires::s_maxNumTypeConstructorArguments <= 10);
-                    if ((currentChar >= '0') && (currentChar < '0' + babelwires::s_maxNumTypeConstructorArguments)) {
+                    static_assert(babelwires::c_maxNumTypeConstructorArguments <= 10);
+                    if ((currentChar >= '0') && (currentChar < '0' + babelwires::c_maxNumTypeConstructorArguments)) {
                         const std::size_t indexCharAsIndex = currentChar - '0';
                         if (indexCharAsIndex >= arguments.size()) {
                             return {};
@@ -224,9 +221,9 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
     while (1) {
         auto tuple = parseHelper(str.substr(next));
         arguments.emplace_back(std::move(std::get<0>(tuple)));
-        if (arguments.size() > s_maxNumTypeConstructorArguments) {
+        if (arguments.size() > c_maxNumTypeConstructorArguments) {
             throw ParseException() << "TypeRef too many arguments (maximum allowed is "
-                                   << s_maxNumTypeConstructorArguments << ")";
+                                   << c_maxNumTypeConstructorArguments << ")";
         }
         assert((std::get<1>(tuple) > 0) && "Did not advance while parsing");
         next += std::get<1>(tuple);
