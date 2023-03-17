@@ -73,7 +73,7 @@ TEST(TypeSystemTest, compareSubtypeUnary) {
 
     babelwires::TypeSystem typeSystem;
     addTestTypes(typeSystem);
-    typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+    typeSystem.addTypeConstructor<1, testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef unaryOfSubEnum(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                                        {{testUtils::TestSubEnum::getThisIdentifier()}});
@@ -108,7 +108,7 @@ TEST(TypeSystemTest, compareSubtypeBinary) {
 
     babelwires::TypeSystem typeSystem;
     addTestTypes(typeSystem);
-    typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
+    typeSystem.addTypeConstructor<2, testUtils::TestBinaryTypeConstructor>();
 
     babelwires::TypeRef binaryOfSubEnumSubEnum(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
                                        {{testUtils::TestSubEnum::getThisIdentifier(), testUtils::TestSubEnum::getThisIdentifier()}});
@@ -138,8 +138,8 @@ TEST(TypeSystemTest, compareSubtypeComplex) {
 
     babelwires::TypeSystem typeSystem;
     addTestTypes(typeSystem);
-    typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
-    typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
+    typeSystem.addTypeConstructor<1, testUtils::TestUnaryTypeConstructor>();
+    typeSystem.addTypeConstructor<2, testUtils::TestBinaryTypeConstructor>();
 
     babelwires::TypeRef binaryOfEnumSubSubEnum1(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
                                        {{testUtils::TestEnum::getThisIdentifier(), testUtils::TestSubSubEnum1::getThisIdentifier()}});

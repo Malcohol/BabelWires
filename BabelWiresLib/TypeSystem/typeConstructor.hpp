@@ -9,34 +9,38 @@
 
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
+#include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
 #include <shared_mutex>
+#include <mutex>
 
 namespace babelwires {
 
     /// A TypeConstructor constructs a type from other types.
     /// A mutable cache ensures that each type is only constructed once.
+    template<unsigned int N>
     class TypeConstructor {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(TypeConstructor);
 
         /// Get the constructed type from the cache, or construct a new one.
-        const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
+        const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments<N>& arguments) const;
 
         /// This is supplied by the TYPE_CONSTRUCTOR macro.
         virtual TypeConstructorId getTypeConstructorId() const = 0;
 
         /// TypeConstructors are expected to have fixed arity.
-        virtual unsigned int getArity() const = 0;
+        //TODO
+        unsigned int getArity() const { return N; }
 
         /// Are two types constructed by this type constructor related by subtyping?
         /// By default, this returns IsUnrelated.
         virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                  const TypeConstructorArguments& argumentsA,
-                                                  const TypeConstructorArguments& argumentsB) const;
+                                                  const TypeConstructorArguments<N>& argumentsA,
+                                                  const TypeConstructorArguments<N>& argumentsB) const;
 
         /// Is this a type constructed by this type related to the type other?
         /// By default, this returns IsUnrelated.
@@ -44,14 +48,14 @@ namespace babelwires {
         /// type constructors. (Things like distributivity laws would break this assumption, but I doubt they'd be
         /// needed.)
         virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                  const TypeConstructorArguments& arguments,
+                                                  const TypeConstructorArguments<N>& arguments,
                                                   const TypeRef& other) const;
 
       protected:
         /// Construct the new type.
         /// The newTypeRef is provided to allow implementations to move it into the constructed type.
         virtual std::unique_ptr<Type> constructType(TypeRef newTypeRef,
-                                                    const std::vector<const Type*>& arguments) const = 0;
+                                                    const std::array<const Type*, N>& arguments) const = 0;
 
       private:
         /// A mutex which ensures thread-safe access to the cache.
@@ -60,7 +64,7 @@ namespace babelwires {
         mutable std::shared_mutex m_mutexForCache;
 
         /// A cache which stops the system ending up with multiple copies of the same constructed type.
-        mutable std::unordered_map<TypeConstructorArguments, std::unique_ptr<Type>> m_cache;
+        mutable std::unordered_map<TypeConstructorArguments<N>, std::unique_ptr<Type>> m_cache;
     };
 
     /// A convenience class which can used by type constructors for the type they want to construct.
@@ -93,3 +97,5 @@ namespace babelwires {
 /// Regular brackets can be written with "{{" and "}}". Non-positional arguments "{}" are not supported.
 #define TYPE_CONSTRUCTOR(IDENTIFIER, NAME, UUID, VERSION)                                                              \
     TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(BW_MEDIUM_ID(IDENTIFIER, NAME, UUID), VERSION)
+
+#include <BabelWiresLib/TypeSystem/typeConstructor_inl.hpp>

@@ -36,20 +36,24 @@ namespace babelwires {
         const Type* tryGetPrimitiveType(PrimitiveTypeId id) const;
         const Type& getPrimitiveType(PrimitiveTypeId id) const;
 
-        template <typename TYPE_CONSTRUCTOR, typename... ARGS,
-                  std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
+        template <unsigned int N, typename TYPE_CONSTRUCTOR, typename... ARGS,
+                  std::enable_if_t<std::is_base_of_v<TypeConstructor<N>, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
         TYPE_CONSTRUCTOR* addTypeConstructor(ARGS&&... args) {
-            TypeConstructor* newType = addTypeConstructorInternal(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(), std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
-            return &newType->is<TYPE_CONSTRUCTOR>();
+            TypeConstructor<N>* newType = addTypeConstructorInternal<N>(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(), std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
+            return &newType->template is<TYPE_CONSTRUCTOR>();
         }
 
-        template <typename TYPE_CONSTRUCTOR, std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
+        // TODO Should be able to pick up N from TYPE_CONSTRUCTOR
+        template <unsigned int N, typename TYPE_CONSTRUCTOR, std::enable_if_t<std::is_base_of_v<TypeConstructor<N>, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
         const TYPE_CONSTRUCTOR& getTypeConstructorByType() const {
-            return getTypeConstructor(TYPE_CONSTRUCTOR::getThisIdentifier()).template is<TYPE_CONSTRUCTOR>();
+            return getTypeConstructor<N>(TYPE_CONSTRUCTOR::getThisIdentifier()).template is<TYPE_CONSTRUCTOR>();
         }
 
-        const TypeConstructor* tryGetTypeConstructor(TypeConstructorId id) const;
-        const TypeConstructor& getTypeConstructor(TypeConstructorId id) const;
+        template<unsigned int N>
+        const TypeConstructor<N>* tryGetTypeConstructor(TypeConstructorId id) const;
+
+        template<unsigned int N>
+        const TypeConstructor<N>& getTypeConstructor(TypeConstructorId id) const;
 
         using TypeIdSet = std::vector<PrimitiveTypeId>;
 
@@ -98,7 +102,9 @@ namespace babelwires {
 
       protected:
         Type* addPrimitiveType(LongId typeId, VersionNumber version, std::unique_ptr<Type> newType);
-        TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
+
+        template<unsigned int N>
+        TypeConstructor<N>* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor<N>> newTypeConstructor);
 
         const RelatedTypes& getRelatedTypes(const PrimitiveTypeId& typeId) const;
 
@@ -108,8 +114,13 @@ namespace babelwires {
         using PrimitiveTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;
         std::unordered_map<PrimitiveTypeId, PrimitiveTypeInfo> m_primitiveTypeRegistry;
 
-        using TypeConstructorInfo = std::tuple<std::unique_ptr<TypeConstructor>, VersionNumber>;
-        std::unordered_map<TypeConstructorId, TypeConstructorInfo> m_typeConstructorRegistry;
+        template<unsigned int N>
+        using TypeConstructorInfo = std::tuple<std::unique_ptr<TypeConstructor<N>>, VersionNumber>;
+
+        template<unsigned int N>
+        using TypeConstructorRegistry = std::unordered_map<TypeConstructorId, TypeConstructorInfo<N>>;
+
+        std::tuple<TypeConstructorRegistry<1>, TypeConstructorRegistry<2>> m_typeConstructorRegistry;
 
         std::unordered_map<PrimitiveTypeId, RelatedTypes> m_relatedTypes;
 
@@ -118,3 +129,5 @@ namespace babelwires {
     };
 
 } // namespace babelwires
+
+#include <BabelWiresLib/TypeSystem/typeSystem_inl.hpp>

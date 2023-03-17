@@ -19,16 +19,16 @@ namespace {
     constexpr char closeChar = ']';
     constexpr char defaultStateString[] = "[]";
     constexpr char parseChars[] = "[],";
-}
+} // namespace
 
 babelwires::TypeRef::TypeRef() = default;
 
 babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
     : m_storage(typeId) {}
 
-babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments)
+babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArgumentsOld arguments)
     : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {
-    assert((arguments.m_typeArguments.size() <= TypeConstructorArguments::s_maxNumArguments) &&
+    assert((arguments.m_typeArguments.size() <= TypeConstructorArgumentsOld::s_maxNumArguments) &&
            "Too many arguments for TypeRef");
 }
 
@@ -38,8 +38,22 @@ const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSy
         const babelwires::Type* operator()(PrimitiveTypeId typeId) { return m_typeSystem.tryGetPrimitiveType(typeId); }
         const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-            if (const TypeConstructor* const typeConstructor = m_typeSystem.tryGetTypeConstructor(typeConstructorId)) {
-                return typeConstructor->getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+            const TypeConstructorArgumentsOld& args = std::get<1>(higherOrderData);
+            if (args.m_typeArguments.size() == 1) {
+                if (const TypeConstructor<1>* const typeConstructor =
+                        m_typeSystem.tryGetTypeConstructor<1>(typeConstructorId)) {
+                    TypeConstructorArguments<1> newArgs;
+                    newArgs.m_typeArguments[0] = args.m_typeArguments[0];
+                    return typeConstructor->getOrConstructType(m_typeSystem, newArgs);
+                }
+            } else if (args.m_typeArguments.size() == 2) {
+                if (const TypeConstructor<2>* const typeConstructor =
+                        m_typeSystem.tryGetTypeConstructor<2>(typeConstructorId)) {
+                    TypeConstructorArguments<2> newArgs;
+                    newArgs.m_typeArguments[0] = args.m_typeArguments[0];
+                    newArgs.m_typeArguments[1] = args.m_typeArguments[1];
+                    return typeConstructor->getOrConstructType(m_typeSystem, newArgs);
+                }
             }
             return nullptr;
         }
@@ -56,8 +70,24 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         const babelwires::Type& operator()(PrimitiveTypeId typeId) { return m_typeSystem.getPrimitiveType(typeId); }
         const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-            const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);
-            const Type* type = typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+            const TypeConstructorArgumentsOld& args = std::get<1>(higherOrderData);
+            const Type* type = nullptr;
+            if (args.m_typeArguments.size() == 1) {
+                if (const TypeConstructor<1>* const typeConstructor =
+                        m_typeSystem.tryGetTypeConstructor<1>(typeConstructorId)) {
+                    TypeConstructorArguments<1> newArgs;
+                    newArgs.m_typeArguments[0] = args.m_typeArguments[0];
+                    type = typeConstructor->getOrConstructType(m_typeSystem, newArgs);
+                }
+            } else if (args.m_typeArguments.size() == 2) {
+                if (const TypeConstructor<2>* const typeConstructor =
+                        m_typeSystem.tryGetTypeConstructor<2>(typeConstructorId)) {
+                    TypeConstructorArguments<2> newArgs;
+                    newArgs.m_typeArguments[0] = args.m_typeArguments[0];
+                    newArgs.m_typeArguments[1] = args.m_typeArguments[1];
+                    type = typeConstructor->getOrConstructType(m_typeSystem, newArgs);
+                }
+            }
             assert(type);
             return *type;
         }
@@ -100,10 +130,10 @@ namespace {
         if (format.size() < 2) {
             return {};
         }
-        if (arguments.size() > babelwires::TypeConstructorArguments::s_maxNumArguments) {
+        if (arguments.size() > babelwires::TypeConstructorArgumentsOld::s_maxNumArguments) {
             return {};
         }
-        std::bitset<babelwires::TypeConstructorArguments::s_maxNumArguments> argumentsNotYetSeen(
+        std::bitset<babelwires::TypeConstructorArgumentsOld::s_maxNumArguments> argumentsNotYetSeen(
             (1 << arguments.size()) - 1);
         std::ostringstream oss;
         constexpr char open = '{';
@@ -122,7 +152,7 @@ namespace {
                     break;
                 }
                 case justReadOpen: {
-                    static_assert(babelwires::TypeConstructorArguments::s_maxNumArguments == 10);
+                    static_assert(babelwires::TypeConstructorArgumentsOld::s_maxNumArguments == 10);
                     if ((currentChar >= '0') && (currentChar <= '9')) {
                         const std::size_t indexCharAsIndex = currentChar - '0';
                         if (indexCharAsIndex >= arguments.size()) {
@@ -210,16 +240,16 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
         return {startId, next};
     }
     ++next;
-    TypeConstructorArguments arguments;
+    TypeConstructorArgumentsOld arguments;
     if (next == str.size()) {
         throw ParseException() << "Unterminated TypeRef";
     }
     while (1) {
         auto tuple = parseHelper(str.substr(next));
         arguments.m_typeArguments.emplace_back(std::move(std::get<0>(tuple)));
-        if (arguments.m_typeArguments.size() > TypeConstructorArguments::s_maxNumArguments) {
+        if (arguments.m_typeArguments.size() > TypeConstructorArgumentsOld::s_maxNumArguments) {
             throw ParseException() << "TypeRef too many arguments (maximum allowed is "
-                                   << TypeConstructorArguments::s_maxNumArguments << ")";
+                                   << TypeConstructorArgumentsOld::s_maxNumArguments << ")";
         }
         assert((std::get<1>(tuple) > 0) && "Did not advance while parsing");
         next += std::get<1>(tuple);
@@ -289,47 +319,136 @@ babelwires::SubtypeOrder babelwires::TypeRef::compareSubtypeHelper(const TypeSys
             },
             [&typeSystem](const ConstructedTypeData& higherOrderDataA, const PrimitiveTypeId& typeIdB) {
                 const TypeConstructorId typeConstructorId = std::get<0>(higherOrderDataA);
-                const TypeConstructor* const typeConstructor = typeSystem.tryGetTypeConstructor(typeConstructorId);
-                if (!typeConstructor) {
-                    return SubtypeOrder::IsUnrelated;
+                const TypeConstructorArgumentsOld& args = std::get<1>(higherOrderDataA);
+                if (args.m_typeArguments.size() == 1) {
+                    if (const TypeConstructor<1>* const typeConstructor =
+                            typeSystem.tryGetTypeConstructor<1>(typeConstructorId)) {
+                        TypeConstructorArguments<1> newArgs;
+                        newArgs.m_typeArguments[0] = args.m_typeArguments[0];
+                        return typeConstructor->compareSubtypeHelper(typeSystem, newArgs, typeIdB);
+                    }
+                } else if (args.m_typeArguments.size() == 2) {
+                    if (const TypeConstructor<2>* const typeConstructor =
+                            typeSystem.tryGetTypeConstructor<2>(typeConstructorId)) {
+                        TypeConstructorArguments<2> newArgs;
+                        newArgs.m_typeArguments[0] = args.m_typeArguments[0];
+                        newArgs.m_typeArguments[1] = args.m_typeArguments[1];
+                        return typeConstructor->compareSubtypeHelper(typeSystem, newArgs, typeIdB);
+                    }
                 }
-                return typeConstructor->compareSubtypeHelper(typeSystem, std::get<1>(higherOrderDataA), typeIdB);
+                return SubtypeOrder::IsUnrelated;
             },
             [&typeSystem](const PrimitiveTypeId& typeIdA, const ConstructedTypeData& higherOrderDataB) {
-                const TypeConstructorId typeConstructorIdA = std::get<0>(higherOrderDataB);
-                const TypeConstructor* const typeConstructorA = typeSystem.tryGetTypeConstructor(typeConstructorIdA);
-                if (!typeConstructorA) {
-                    return SubtypeOrder::IsUnrelated;
+                const TypeConstructorId typeConstructorIdB = std::get<0>(higherOrderDataB);
+                const TypeConstructorArgumentsOld& args = std::get<1>(higherOrderDataB);
+                if (args.m_typeArguments.size() == 1) {
+                    if (const TypeConstructor<1>* const typeConstructor =
+                            typeSystem.tryGetTypeConstructor<1>(typeConstructorIdB)) {
+                        TypeConstructorArguments<1> newArgs;
+                        newArgs.m_typeArguments[0] = args.m_typeArguments[0];
+                        return reverseSubtypeOrder(typeConstructor->compareSubtypeHelper(typeSystem, newArgs, typeIdA));
+                    }
+                } else if (args.m_typeArguments.size() == 2) {
+                    if (const TypeConstructor<2>* const typeConstructor =
+                            typeSystem.tryGetTypeConstructor<2>(typeConstructorIdB)) {
+                        TypeConstructorArguments<2> newArgs;
+                        newArgs.m_typeArguments[0] = args.m_typeArguments[0];
+                        newArgs.m_typeArguments[1] = args.m_typeArguments[1];
+                        return reverseSubtypeOrder(typeConstructor->compareSubtypeHelper(typeSystem, newArgs, typeIdA));
+                    }
                 }
-                return reverseSubtypeOrder(
-                    typeConstructorA->compareSubtypeHelper(typeSystem, std::get<1>(higherOrderDataB), typeIdA));
+                return SubtypeOrder::IsUnrelated;
             },
             [&typeSystem, &typeRefA, &typeRefB](const ConstructedTypeData& higherOrderDataA,
                                                 const ConstructedTypeData& higherOrderDataB) {
                 const TypeConstructorId typeConstructorIdA = std::get<0>(higherOrderDataA);
                 const TypeConstructorId typeConstructorIdB = std::get<0>(higherOrderDataB);
-                const TypeConstructor* const typeConstructorA = typeSystem.tryGetTypeConstructor(typeConstructorIdA);
-                if (!typeConstructorA) {
-                    return SubtypeOrder::IsUnrelated;
-                }
-                const auto argsA = std::get<1>(higherOrderDataA);
-                const auto argsB = std::get<1>(higherOrderDataB);
+                const TypeConstructorArgumentsOld& argsA = std::get<1>(higherOrderDataA);
+                const TypeConstructorArgumentsOld& argsB = std::get<1>(higherOrderDataB);
                 if (typeConstructorIdA == typeConstructorIdB) {
-                    return typeConstructorA->compareSubtypeHelper(typeSystem, argsA, argsB);
+                    if (argsA.m_typeArguments.size() == argsB.m_typeArguments.size()) {
+                        if (argsA.m_typeArguments.size() == 1) {
+                            if (const TypeConstructor<1>* const typeConstructorA =
+                                    typeSystem.tryGetTypeConstructor<1>(typeConstructorIdA)) {
+                                TypeConstructorArguments<1> newArgsA;
+                                newArgsA.m_typeArguments[0] = argsA.m_typeArguments[0];
+                                TypeConstructorArguments<1> newArgsB;
+                                newArgsB.m_typeArguments[0] = argsB.m_typeArguments[0];
+                                return typeConstructorA->compareSubtypeHelper(typeSystem, newArgsA, newArgsB);
+                            }
+                        } else if (argsA.m_typeArguments.size() == 2) {
+                            if (const TypeConstructor<2>* const typeConstructorA =
+                                    typeSystem.tryGetTypeConstructor<2>(typeConstructorIdA)) {
+                                TypeConstructorArguments<2> newArgsA;
+                                newArgsA.m_typeArguments[0] = argsA.m_typeArguments[0];
+                                newArgsA.m_typeArguments[1] = argsA.m_typeArguments[1];
+                                TypeConstructorArguments<2> newArgsB;
+                                newArgsB.m_typeArguments[0] = argsB.m_typeArguments[0];
+                                newArgsB.m_typeArguments[1] = argsB.m_typeArguments[1];
+                                return typeConstructorA->compareSubtypeHelper(typeSystem, newArgsA, newArgsB);
+                            }
+                        }
+                    }
                 }
-                const TypeConstructor* const typeConstructorB = typeSystem.tryGetTypeConstructor(typeConstructorIdB);
-                if (!typeConstructorB) {
-                    return SubtypeOrder::IsUnrelated;
+                if (argsA.m_typeArguments.size() == 1) {
+                    if (const TypeConstructor<1>* const typeConstructorA =
+                            typeSystem.tryGetTypeConstructor<1>(typeConstructorIdA)) {
+                        TypeConstructorArguments<1> newArgsA;
+                        newArgsA.m_typeArguments[0] = argsA.m_typeArguments[0];
+                        auto comparisonUsingA = typeConstructorA->compareSubtypeHelper(typeSystem, newArgsA, typeRefB);
+                        if (comparisonUsingA != SubtypeOrder::IsUnrelated) {
+                            return comparisonUsingA;
+                        }
+                        if (argsB.m_typeArguments.size() == 1) {
+                            TypeConstructorArguments<1> newArgsB;
+                            newArgsB.m_typeArguments[0] = argsB.m_typeArguments[0];
+                            if (const TypeConstructor<1>* const typeConstructorB =
+                                    typeSystem.tryGetTypeConstructor<1>(typeConstructorIdB)) {
+                                return reverseSubtypeOrder(
+                                    typeConstructorB->compareSubtypeHelper(typeSystem, newArgsB, typeRefA));
+                            }
+                        } else if (argsB.m_typeArguments.size() == 2) {
+                            TypeConstructorArguments<2> newArgsB;
+                            newArgsB.m_typeArguments[0] = argsB.m_typeArguments[0];
+                            newArgsB.m_typeArguments[1] = argsB.m_typeArguments[1];
+                            if (const TypeConstructor<2>* const typeConstructorB =
+                                    typeSystem.tryGetTypeConstructor<2>(typeConstructorIdB)) {
+                                return reverseSubtypeOrder(
+                                    typeConstructorB->compareSubtypeHelper(typeSystem, newArgsB, typeRefA));
+                            }
+                        }
+                    }
+                } else if (argsA.m_typeArguments.size() == 2) {
+                    if (const TypeConstructor<2>* const typeConstructorA =
+                            typeSystem.tryGetTypeConstructor<2>(typeConstructorIdA)) {
+                        TypeConstructorArguments<2> newArgsA;
+                        newArgsA.m_typeArguments[0] = argsA.m_typeArguments[0];
+                        newArgsA.m_typeArguments[1] = argsA.m_typeArguments[1];
+                        auto comparisonUsingA = typeConstructorA->compareSubtypeHelper(typeSystem, newArgsA, typeRefB);
+                        if (comparisonUsingA != SubtypeOrder::IsUnrelated) {
+                            return comparisonUsingA;
+                        }
+                        if (argsB.m_typeArguments.size() == 1) {
+                            TypeConstructorArguments<1> newArgsB;
+                            newArgsB.m_typeArguments[0] = argsB.m_typeArguments[0];
+                            if (const TypeConstructor<1>* const typeConstructorB =
+                                    typeSystem.tryGetTypeConstructor<1>(typeConstructorIdB)) {
+                                return reverseSubtypeOrder(
+                                    typeConstructorB->compareSubtypeHelper(typeSystem, newArgsB, typeRefA));
+                            }
+                        } else if (argsB.m_typeArguments.size() == 2) {
+                            TypeConstructorArguments<2> newArgsB;
+                            newArgsB.m_typeArguments[0] = argsB.m_typeArguments[0];
+                            newArgsB.m_typeArguments[1] = argsB.m_typeArguments[1];
+                            if (const TypeConstructor<2>* const typeConstructorB =
+                                    typeSystem.tryGetTypeConstructor<2>(typeConstructorIdB)) {
+                                return reverseSubtypeOrder(
+                                    typeConstructorB->compareSubtypeHelper(typeSystem, newArgsB, typeRefA));
+                            }
+                        }
+                    }
                 }
-                auto comparisonUsingA = typeConstructorA->compareSubtypeHelper(typeSystem, argsA, typeRefB);
-                if (comparisonUsingA != SubtypeOrder::IsUnrelated) {
-                    return comparisonUsingA;
-                }
-                // typeConstructorA doesn't know whether the types are related, but maybe typeConstructorB does.
-                // For now, assume that there are no rules which require knowing typeConstructorA and typeConstructorB,
-                // or rules where structure below the first level is needed.
-                // Note that distributivity and associativity laws could violate these assumptions.
-                return reverseSubtypeOrder(typeConstructorB->compareSubtypeHelper(typeSystem, argsB, typeRefA));
+                return SubtypeOrder::IsUnrelated;
             },
             [](auto&&, auto&&) { return SubtypeOrder::IsUnrelated; }},
         typeRefA.m_storage, typeRefB.m_storage);

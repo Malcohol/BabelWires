@@ -41,29 +41,6 @@ babelwires::Type* babelwires::TypeSystem::addPrimitiveType(LongId typeId, Versio
     return std::get<0>(addResult.first->second).get();
 }
 
-const babelwires::TypeConstructor* babelwires::TypeSystem::tryGetTypeConstructor(TypeConstructorId id) const {
-    auto it = m_typeConstructorRegistry.find(id);
-    if (it != m_typeConstructorRegistry.end()) {
-        return std::get<0>(it->second).get();
-    }
-    return nullptr;
-}
-
-const babelwires::TypeConstructor& babelwires::TypeSystem::getTypeConstructor(TypeConstructorId id) const {
-    auto it = m_typeConstructorRegistry.find(id);
-    assert((it != m_typeConstructorRegistry.end()) && "TypeConstructor not registered in type system");
-    return *std::get<0>(it->second);
-}
-
-babelwires::TypeConstructor*
-babelwires::TypeSystem::addTypeConstructorInternal(TypeConstructorId typeId, VersionNumber version,
-                                                   std::unique_ptr<TypeConstructor> newTypeConstructor) {
-    auto addResult = m_typeConstructorRegistry.emplace(std::pair<TypeConstructorId, TypeConstructorInfo>{
-        typeId, TypeConstructorInfo{std::move(newTypeConstructor), version}});
-    assert(addResult.second && "TypeConstructor with that identifier already registered");
-    return std::get<0>(addResult.first->second).get();
-}
-
 // TODO ALL VERY INEFFICIENT
 
 void babelwires::TypeSystem::addRelatedTypes(PrimitiveTypeId typeId, RelatedTypes relatedTypes) {

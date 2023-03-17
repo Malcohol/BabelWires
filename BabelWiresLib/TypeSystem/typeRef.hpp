@@ -33,7 +33,7 @@ namespace babelwires {
 
         /// A TypeRef describing a complex type, constructed by applying the TypeConstructor
         /// to the arguments.
-        TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments);
+        TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArgumentsOld arguments);
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
         const Type* tryResolve(const TypeSystem& typeSystem) const;
@@ -73,7 +73,7 @@ namespace babelwires {
         static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);
 
       private:
-        using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArguments>;
+        using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArgumentsOld>;
         using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
 
       private:

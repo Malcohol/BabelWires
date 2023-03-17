@@ -38,9 +38,8 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/intValue.cpp
 	TypeSystem/enumValue.cpp
 	TypeSystem/type.cpp
-	TypeSystem/typeConstructor.cpp
-	TypeSystem/typeConstructorArguments.cpp
 	TypeSystem/typeRef.cpp
+	TypeSystem/typeConstructorArguments.cpp
 	Maps/Commands/addEntryToMapCommand.cpp
 	Maps/Commands/removeEntryFromMapCommand.cpp
 	Maps/Commands/replaceMapEntryCommand.cpp

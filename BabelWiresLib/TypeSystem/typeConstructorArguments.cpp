@@ -11,9 +11,9 @@
 
 #include <Common/Hash/hash.hpp>
 
-babelwires::TypeConstructorArguments::~TypeConstructorArguments() = default;
+babelwires::TypeConstructorArgumentsOld::~TypeConstructorArgumentsOld() = default;
 
-std::size_t babelwires::TypeConstructorArguments::getHash() const {
+std::size_t babelwires::TypeConstructorArgumentsOld::getHash() const {
     std::size_t hash = 0x80235AA2;
     for (const auto& arg : m_typeArguments) {
         hash::mixInto(hash, arg);

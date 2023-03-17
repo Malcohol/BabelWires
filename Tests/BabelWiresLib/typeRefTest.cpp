@@ -99,7 +99,7 @@ TEST(TypeRefTest, resolve) {
 
     const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
-        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+        typeSystem.addTypeConstructor<1, testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
 
@@ -117,7 +117,7 @@ TEST(TypeRefTest, tryResolveSuccess) {
 
     const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
-        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+        typeSystem.addTypeConstructor<1, testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
     EXPECT_EQ(testEnum, typeRef.tryResolve(typeSystem));
@@ -144,7 +144,7 @@ TEST(TypeRefTest, tryResolveParallel) {
 
     const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
-        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+        typeSystem.addTypeConstructor<1, testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef constructedTypeRef(
         testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
