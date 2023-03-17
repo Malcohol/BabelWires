@@ -26,15 +26,13 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(TypeConstructor);
 
+        static constexpr unsigned int c_arity = N;
+
         /// Get the constructed type from the cache, or construct a new one.
         const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments<N>& arguments) const;
 
         /// This is supplied by the TYPE_CONSTRUCTOR macro.
         virtual TypeConstructorId getTypeConstructorId() const = 0;
-
-        /// TypeConstructors are expected to have fixed arity.
-        //TODO
-        unsigned int getArity() const { return N; }
 
         /// Are two types constructed by this type constructor related by subtyping?
         /// By default, this returns IsUnrelated.

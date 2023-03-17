@@ -55,19 +55,19 @@ TEST(TypeRefTest, lessThan) {
     babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Bar"));
     babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Foo"));
     babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"));
-    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
+    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Boo"));
+    babelwires::TypeRef constructedTypeRef3(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
                                             babelwires::PrimitiveTypeId("Flerm"));
-    babelwires::TypeRef constructedTypeRef3(
+    babelwires::TypeRef constructedTypeRef4(
         babelwires::PrimitiveTypeId("Foo"), babelwires::PrimitiveTypeId("Bar"),
         babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")));
-    babelwires::TypeRef constructedTypeRef4(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Boo"));
 
     EXPECT_LT(nullTypeRef, primitiveTypeRef1);
     EXPECT_LT(primitiveTypeRef1, primitiveTypeRef2);
     EXPECT_LT(primitiveTypeRef1, constructedTypeRef1);
-    EXPECT_LT(constructedTypeRef1, constructedTypeRef2);
     EXPECT_LT(constructedTypeRef1, constructedTypeRef3);
     EXPECT_LT(constructedTypeRef1, constructedTypeRef4);
+    EXPECT_LT(constructedTypeRef1, constructedTypeRef2);
     EXPECT_LT(constructedTypeRef2, constructedTypeRef3);
     EXPECT_LT(constructedTypeRef2, constructedTypeRef4);
     EXPECT_LT(constructedTypeRef3, constructedTypeRef4);
@@ -76,19 +76,19 @@ TEST(TypeRefTest, lessThan) {
     EXPECT_FALSE(primitiveTypeRef1 < primitiveTypeRef1);
     EXPECT_FALSE(primitiveTypeRef2 < primitiveTypeRef2);
     EXPECT_FALSE(constructedTypeRef1 < constructedTypeRef1);
-    EXPECT_FALSE(constructedTypeRef2 < constructedTypeRef2);
     EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef3);
     EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef4);
+    EXPECT_FALSE(constructedTypeRef2 < constructedTypeRef2);
 
     EXPECT_FALSE(primitiveTypeRef1 < nullTypeRef);
     EXPECT_FALSE(primitiveTypeRef2 < primitiveTypeRef1);
     EXPECT_FALSE(constructedTypeRef1 < primitiveTypeRef1);
-    EXPECT_FALSE(constructedTypeRef2 < constructedTypeRef1);
     EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef1);
     EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef1);
+    EXPECT_FALSE(constructedTypeRef2 < constructedTypeRef1);
+    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef3);
     EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef2);
     EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef2);
-    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef3);
 }
 
 TEST(TypeRefTest, resolve) {
@@ -97,7 +97,7 @@ TEST(TypeRefTest, resolve) {
 
     const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
-        typeSystem.addTypeConstructor<1, testUtils::TestUnaryTypeConstructor>();
+        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
 
@@ -115,7 +115,7 @@ TEST(TypeRefTest, tryResolveSuccess) {
 
     const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
-        typeSystem.addTypeConstructor<1, testUtils::TestUnaryTypeConstructor>();
+        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
     EXPECT_EQ(testEnum, typeRef.tryResolve(typeSystem));
@@ -142,7 +142,7 @@ TEST(TypeRefTest, tryResolveParallel) {
 
     const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
-        typeSystem.addTypeConstructor<1, testUtils::TestUnaryTypeConstructor>();
+        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef constructedTypeRef(
         testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
@@ -198,7 +198,7 @@ TEST(TypeRefTest, toStringSuccess) {
 
     // With some escaped brackets.
     babelwires::TypeConstructorId binary1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
-        "Binary0", "{1}{0}", "44444444-2222-3333-4444-555566667777",
+        "Binary1", "}}{1}{{}}{0}{{", "44444444-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(binary1, foo, babelwires::TypeRef(unary0, foo)).toString(),
               "}UNARY[Foofoo]{}Foofoo{");
@@ -237,8 +237,6 @@ TEST(TypeRefTest, toStringMalformed) {
     babelwires::TypeConstructorId unary3 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary3", "UNARY{0}", "44444444-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    // Not enough arguments
-    EXPECT_EQ(babelwires::TypeRef(unary3, {}).toString(), "MalformedTypeRef{Unary3'1[]}");
     // Too many arguments
     EXPECT_EQ(babelwires::TypeRef(unary3, foo, foo).toString(), "MalformedTypeRef{Unary3'1[Foo'1,Foo'1]}");
 }
@@ -317,9 +315,6 @@ TEST(TypeRefTest, deserializeFromStringNoDiscriminatorsSuccess) {
         babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")),
         babelwires::PrimitiveTypeId("Bar"));
     EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo[Flerm[Erm],Bar]"));
-
-    // 10 arguments supported
-    EXPECT_NO_THROW(babelwires::TypeRef::deserializeFromString("Foo[A,B,C,D,E,F,G,H,I,J]"));
 }
 
 TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {

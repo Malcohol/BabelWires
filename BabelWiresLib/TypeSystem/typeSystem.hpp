@@ -36,10 +36,10 @@ namespace babelwires {
         const Type* tryGetPrimitiveType(PrimitiveTypeId id) const;
         const Type& getPrimitiveType(PrimitiveTypeId id) const;
 
-        template <unsigned int N, typename TYPE_CONSTRUCTOR, typename... ARGS,
-                  std::enable_if_t<std::is_base_of_v<TypeConstructor<N>, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
+        template <typename TYPE_CONSTRUCTOR, typename... ARGS,
+                  std::enable_if_t<std::is_base_of_v<TypeConstructor<TYPE_CONSTRUCTOR::c_arity>, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
         TYPE_CONSTRUCTOR* addTypeConstructor(ARGS&&... args) {
-            TypeConstructor<N>* newType = addTypeConstructorInternal<N>(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(), std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
+            TypeConstructor<TYPE_CONSTRUCTOR::c_arity>* newType = addTypeConstructorInternal<TYPE_CONSTRUCTOR::c_arity>(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(), std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
             return &newType->template is<TYPE_CONSTRUCTOR>();
         }
 

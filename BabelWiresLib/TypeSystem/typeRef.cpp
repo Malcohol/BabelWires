@@ -13,7 +13,6 @@
 
 #include <bitset>
 
-/*
 namespace {
     // I would rather use '<' and '>', but they get escaped in XML, which makes project files ugly.
     constexpr char openChar = '[';
@@ -23,99 +22,82 @@ namespace {
 } // namespace
 
 babelwires::TypeRef::TypeRef() = default;
+babelwires::TypeRef::~TypeRef() = default;
+
+babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef argument)
+    : m_storage(ConstructedStorage<1>{
+          std::make_shared<ConstructedTypeData<1>>(ConstructedTypeData<1>{typeConstructorId, {std::move(argument)}})}) {
+}
+
+babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef argument0, TypeRef argument1)
+    : m_storage(ConstructedStorage<2>{std::make_shared<ConstructedTypeData<2>>(
+          ConstructedTypeData<2>{typeConstructorId, {std::move(argument0), std::move(argument1)}})}) {}
 
 babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
     : m_storage(typeId) {}
 
-const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
-    struct VisitorMethods {
-        const babelwires::Type* operator()(std::monostate) { return nullptr; }
-        const babelwires::Type* operator()(PrimitiveTypeId typeId) { return m_typeSystem.tryGetPrimitiveType(typeId); }
-        const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
-            const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-            const TypeConstructorArgumentsOld& args = std::get<1>(higherOrderData);
-            if (args.m_typeArguments.size() == 1) {
-                if (const TypeConstructor<1>* const typeConstructor =
-                        m_typeSystem.tryGetTypeConstructor<1>(typeConstructorId)) {
-                    TypeConstructorArguments<1> newArgs;
-                    newArgs.m_typeArguments[0] = args.m_typeArguments[0];
-                    return typeConstructor->getOrConstructType(m_typeSystem, newArgs);
-                }
-            } else if (args.m_typeArguments.size() == 2) {
-                if (const TypeConstructor<2>* const typeConstructor =
-                        m_typeSystem.tryGetTypeConstructor<2>(typeConstructorId)) {
-                    TypeConstructorArguments<2> newArgs;
-                    newArgs.m_typeArguments[0] = args.m_typeArguments[0];
-                    newArgs.m_typeArguments[1] = args.m_typeArguments[1];
-                    return typeConstructor->getOrConstructType(m_typeSystem, newArgs);
-                }
-            }
-            return nullptr;
+struct babelwires::TypeRef::TryResolveVisitor {
+    const babelwires::Type* operator()(std::monostate) { return nullptr; }
+
+    const babelwires::Type* operator()(PrimitiveTypeId typeId) { return m_typeSystem.tryGetPrimitiveType(typeId); }
+
+    template <unsigned int N> const babelwires::Type* operator()(const ConstructedStorage<N>& higherOrderData) {
+        const TypeConstructorId typeConstructorId = higherOrderData->m_typeConstructorId;
+        const TypeConstructorArguments<N>& args = higherOrderData->m_arguments;
+        if (const TypeConstructor<N>* const typeConstructor =
+                m_typeSystem.tryGetTypeConstructor<N>(typeConstructorId)) {
+            return typeConstructor->getOrConstructType(m_typeSystem, args);
         }
-        const TypeSystem& m_typeSystem;
-    } visitorMethods{typeSystem};
-    return std::visit(visitorMethods, m_storage);
+        return nullptr;
+    }
+    const TypeSystem& m_typeSystem;
+};
+
+const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
+    return std::visit(TryResolveVisitor{typeSystem}, m_storage);
 }
+
+struct babelwires::TypeRef::ResolveVisitor {
+    const babelwires::Type& operator()(std::monostate) {
+        throw TypeSystemException() << "A null type cannot be resolved.";
+    }
+    const babelwires::Type& operator()(PrimitiveTypeId typeId) { return m_typeSystem.getPrimitiveType(typeId); }
+
+    template <unsigned int N> const babelwires::Type& operator()(const ConstructedStorage<N>& higherOrderData) {
+        const TypeConstructorId typeConstructorId = higherOrderData->m_typeConstructorId;
+        const TypeConstructorArguments<N>& args = higherOrderData->m_arguments;
+        const TypeConstructor<N>& typeConstructor = m_typeSystem.getTypeConstructor<N>(typeConstructorId);
+        const Type* const type = typeConstructor.getOrConstructType(m_typeSystem, args);
+        assert(type);
+        return *type;
+    }
+    const TypeSystem& m_typeSystem;
+};
 
 const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSystem) const {
-    struct VisitorMethods {
-        const babelwires::Type& operator()(std::monostate) {
-            throw TypeSystemException() << "A null type cannot be resolved.";
-        }
-        const babelwires::Type& operator()(PrimitiveTypeId typeId) { return m_typeSystem.getPrimitiveType(typeId); }
-        const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
-            const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-            const TypeConstructorArgumentsOld& args = std::get<1>(higherOrderData);
-            const Type* type = nullptr;
-            if (args.m_typeArguments.size() == 1) {
-                if (const TypeConstructor<1>* const typeConstructor =
-                        m_typeSystem.tryGetTypeConstructor<1>(typeConstructorId)) {
-                    TypeConstructorArguments<1> newArgs;
-                    newArgs.m_typeArguments[0] = args.m_typeArguments[0];
-                    type = typeConstructor->getOrConstructType(m_typeSystem, newArgs);
-                }
-            } else if (args.m_typeArguments.size() == 2) {
-                if (const TypeConstructor<2>* const typeConstructor =
-                        m_typeSystem.tryGetTypeConstructor<2>(typeConstructorId)) {
-                    TypeConstructorArguments<2> newArgs;
-                    newArgs.m_typeArguments[0] = args.m_typeArguments[0];
-                    newArgs.m_typeArguments[1] = args.m_typeArguments[1];
-                    type = typeConstructor->getOrConstructType(m_typeSystem, newArgs);
-                }
-            }
-            assert(type);
-            return *type;
-        }
-        const TypeSystem& m_typeSystem;
-    } visitorMethods{typeSystem};
-    return std::visit(visitorMethods, m_storage);
+    return std::visit(ResolveVisitor{typeSystem}, m_storage);
 }
 
-std::string babelwires::TypeRef::serializeToString() const {
-    struct VisitorMethods {
-        std::string operator()(std::monostate) { return defaultStateString; }
-        std::string operator()(PrimitiveTypeId typeId) { return typeId.serializeToString(); }
-        std::string operator()(const ConstructedTypeData& higherOrderData) {
-            std::ostringstream os;
-            os << std::get<0>(higherOrderData).serializeToString();
-            const auto& arguments = std::get<1>(higherOrderData).m_typeArguments;
-            if (arguments.empty()) {
-                // Correctly formed TypeRef should not hit this case.
-                // It can be hit when falling-back to this representation
-                // if toString formatting fails.
-                os << defaultStateString;
-            } else {
-                char sep = openChar;
-                for (const auto& arg : arguments) {
-                    os << sep << arg.serializeToString();
-                    sep = ',';
-                }
-                os << closeChar;
-            }
-            return os.str();
+struct babelwires::TypeRef::SerializeVisitor {
+    std::string operator()(std::monostate) { return defaultStateString; }
+    std::string operator()(PrimitiveTypeId typeId) { return typeId.serializeToString(); }
+
+    template <unsigned int N> std::string operator()(const ConstructedStorage<N>& higherOrderData) {
+        std::ostringstream os;
+        os << higherOrderData->m_typeConstructorId.serializeToString();
+        const auto& arguments = higherOrderData->m_arguments;
+        char sep = openChar;
+        for (const auto& arg : arguments.m_typeArguments) {
+            os << sep << arg.serializeToString();
+            sep = ',';
         }
-    } visitorMethods;
-    return std::visit(visitorMethods, m_storage);
+        os << closeChar;
+        return os.str();
+    }
+};
+
+std::string babelwires::TypeRef::serializeToString() const {
+    return std::visit(SerializeVisitor(), m_storage);
 }
 
 namespace {
@@ -125,11 +107,10 @@ namespace {
         if (format.size() < 2) {
             return {};
         }
-        if (arguments.size() > babelwires::TypeConstructorArgumentsOld::s_maxNumArguments) {
+        if (arguments.size() > babelwires::s_maxNumTypeConstructorArguments) {
             return {};
         }
-        std::bitset<babelwires::TypeConstructorArgumentsOld::s_maxNumArguments> argumentsNotYetSeen(
-            (1 << arguments.size()) - 1);
+        std::bitset<babelwires::s_maxNumTypeConstructorArguments> argumentsNotYetSeen((1 << arguments.size()) - 1);
         std::ostringstream oss;
         constexpr char open = '{';
         constexpr char close = '}';
@@ -147,8 +128,8 @@ namespace {
                     break;
                 }
                 case justReadOpen: {
-                    static_assert(babelwires::TypeConstructorArgumentsOld::s_maxNumArguments == 10);
-                    if ((currentChar >= '0') && (currentChar <= '9')) {
+                    static_assert(babelwires::s_maxNumTypeConstructorArguments <= 10);
+                    if ((currentChar >= '0') && (currentChar < '0' + babelwires::s_maxNumTypeConstructorArguments)) {
                         const std::size_t indexCharAsIndex = currentChar - '0';
                         if (indexCharAsIndex >= arguments.size()) {
                             return {};
@@ -192,22 +173,23 @@ namespace {
     }
 } // namespace
 
+struct babelwires::TypeRef::ToStringVisitor {
+    std::string operator()(std::monostate) { return defaultStateString; }
+    std::string operator()(PrimitiveTypeId typeId) { return m_identifierRegistry->getName(typeId); }
+    template <unsigned int N> std::string operator()(const ConstructedStorage<N>& higherOrderData) {
+        std::string formatString = m_identifierRegistry->getName(higherOrderData->m_typeConstructorId);
+        std::vector<std::string> argumentsStr;
+        const auto& arguments = higherOrderData->m_arguments.m_typeArguments;
+        std::for_each(arguments.begin(), arguments.end(), [this, &argumentsStr](const TypeRef& typeRef) {
+            argumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
+        });
+        return format(formatString, argumentsStr);
+    }
+    babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;
+};
+
 std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {
-    struct VisitorMethods {
-        std::string operator()(std::monostate) { return defaultStateString; }
-        std::string operator()(PrimitiveTypeId typeId) { return m_identifierRegistry->getName(typeId); }
-        std::string operator()(const ConstructedTypeData& higherOrderData) {
-            std::string formatString = m_identifierRegistry->getName(std::get<0>(higherOrderData));
-            std::vector<std::string> argumentsStr;
-            const auto& arguments = std::get<1>(higherOrderData).m_typeArguments;
-            std::for_each(arguments.begin(), arguments.end(), [this, &argumentsStr](const TypeRef& typeRef) {
-                argumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
-            });
-            return format(formatString, argumentsStr);
-        }
-        babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;
-    } visitorMethods{identifierRegistry};
-    const std::string str = std::visit(visitorMethods, m_storage);
+    const std::string str = std::visit(ToStringVisitor{identifierRegistry}, m_storage);
     if (!str.empty()) {
         return str;
     } else {
@@ -235,16 +217,16 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
         return {startId, next};
     }
     ++next;
-    TypeConstructorArgumentsOld arguments;
+    std::vector<TypeRef> arguments;
     if (next == str.size()) {
         throw ParseException() << "Unterminated TypeRef";
     }
     while (1) {
         auto tuple = parseHelper(str.substr(next));
-        arguments.m_typeArguments.emplace_back(std::move(std::get<0>(tuple)));
-        if (arguments.m_typeArguments.size() > TypeConstructorArgumentsOld::s_maxNumArguments) {
+        arguments.emplace_back(std::move(std::get<0>(tuple)));
+        if (arguments.size() > s_maxNumTypeConstructorArguments) {
             throw ParseException() << "TypeRef too many arguments (maximum allowed is "
-                                   << TypeConstructorArgumentsOld::s_maxNumArguments << ")";
+                                   << s_maxNumTypeConstructorArguments << ")";
         }
         assert((std::get<1>(tuple) > 0) && "Did not advance while parsing");
         next += std::get<1>(tuple);
@@ -260,7 +242,14 @@ std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef
             throw ParseException() << "Trailing characters in inner TypeRef";
         }
     }
-    return {TypeRef{startId, std::move(arguments)}, next};
+    switch (arguments.size()) {
+        case 1:
+            return {TypeRef{startId, std::move(arguments[0])}, next};
+        case 2:
+            return {TypeRef{startId, std::move(arguments[0]), std::move(arguments[1])}, next};
+        default:
+            throw ParseException() << "TypeRef with unsupported number of type arguments";
+    }
 }
 
 babelwires::TypeRef babelwires::TypeRef::deserializeFromString(std::string_view str) {
@@ -271,40 +260,41 @@ babelwires::TypeRef babelwires::TypeRef::deserializeFromString(std::string_view 
     return std::get<0>(parseResult);
 }
 
+struct babelwires::TypeRef::VisitIdentifiersVisitor {
+    void operator()(std::monostate) {}
+    void operator()(PrimitiveTypeId& typeId) { m_visitor(typeId); }
+    template <unsigned int N> void operator()(ConstructedStorage<N>& higherOrderData) {
+        m_visitor(higherOrderData->m_typeConstructorId);
+        auto& arguments = higherOrderData->m_arguments.m_typeArguments;
+        std::for_each(arguments.begin(), arguments.end(), [this](TypeRef& arg) { arg.visitIdentifiers(m_visitor); });
+    }
+    IdentifierVisitor& m_visitor;
+};
+
 void babelwires::TypeRef::visitIdentifiers(IdentifierVisitor& visitor) {
     // Note: The visitor needs to access the actual stored data, so be careful to avoid copies.
-    struct VisitorMethods {
-        void operator()(std::monostate) {}
-        void operator()(PrimitiveTypeId& typeId) { m_visitor(typeId); }
-        void operator()(ConstructedTypeData& higherOrderData) {
-            m_visitor(std::get<0>(higherOrderData));
-            auto& arguments = std::get<1>(higherOrderData).m_typeArguments;
-            std::for_each(arguments.begin(), arguments.end(),
-                          [this](TypeRef& arg) { arg.visitIdentifiers(m_visitor); });
-        }
-        IdentifierVisitor& m_visitor;
-    } visitorMethods{visitor};
-    return std::visit(visitorMethods, m_storage);
+    return std::visit(VisitIdentifiersVisitor{visitor}, m_storage);
 }
 
 void babelwires::TypeRef::visitFilePaths(FilePathVisitor& visitor) {}
 
+struct babelwires::TypeRef::GetHashVisitor {
+    void operator()(std::monostate) { hash::mixInto(m_currentHash, 0x11122233); }
+    void operator()(const PrimitiveTypeId& typeId) { hash::mixInto(m_currentHash, typeId); }
+    template<unsigned int N>
+    void operator()(const ConstructedStorage<N>& higherOrderData) {
+        hash::mixInto(m_currentHash, higherOrderData->m_typeConstructorId, higherOrderData->m_arguments);
+    }
+    std::size_t& m_currentHash;
+};
+
 std::size_t babelwires::TypeRef::getHash() const {
     std::size_t hash = 0x123456789;
     // I wonder if the construction of std::hash objects creates pointless overhead here?
-    struct VisitorMethods {
-        void operator()(std::monostate) { hash::mixInto(m_currentHash, 0x11122233); }
-        void operator()(const PrimitiveTypeId& typeId) { hash::mixInto(m_currentHash, typeId); }
-        void operator()(const ConstructedTypeData& higherOrderData) {
-            hash::mixInto(m_currentHash, std::get<0>(higherOrderData), std::get<1>(higherOrderData));
-        }
-        std::size_t& m_currentHash;
-    } visitorMethods{hash};
-    std::visit(visitorMethods, m_storage);
+    std::visit(GetHashVisitor{hash}, m_storage);
     return hash;
 }
 
-*/
 struct babelwires::TypeRef::CompareSubtypeVisitor {
     SubtypeOrder operator()(std::monostate, std::monostate) { return SubtypeOrder::IsEquivalent; }
     SubtypeOrder operator()(const PrimitiveTypeId& typeIdA, const PrimitiveTypeId& typeIdB) {

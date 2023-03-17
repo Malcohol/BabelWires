@@ -61,7 +61,7 @@ TEST(AddBlankToEnum, idempotency) {
 
     babelwires::TypeSystem typeSystem;
     const testUtils::TestEnum* const testEnum = typeSystem.addEntry<testUtils::TestEnum>();
-    typeSystem.addTypeConstructor<1, babelwires::AddBlankToEnum>();
+    typeSystem.addTypeConstructor<babelwires::AddBlankToEnum>();
 
     babelwires::AddBlankToEnum addBlankToEnum;
     const babelwires::Type* const newType =
@@ -89,7 +89,7 @@ TEST(AddBlankToEnum, compareSubtype) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     testUtils::addTestEnumTypes(typeSystem);
-    typeSystem.addTypeConstructor<1, babelwires::AddBlankToEnum>();
+    typeSystem.addTypeConstructor<babelwires::AddBlankToEnum>();
 
     babelwires::TypeRef addBlankToEnumToSubEnum(babelwires::AddBlankToEnum::getThisIdentifier(),
                                           testUtils::TestSubEnum::getThisIdentifier());

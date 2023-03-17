@@ -13,6 +13,8 @@ namespace babelwires {
     using PrimitiveTypeId = MediumId;
     using TypeConstructorId = MediumId;
 
+    static constexpr unsigned int s_maxNumTypeConstructorArguments = 2;
+
     enum class SubtypeOrder { IsSubtype, IsSupertype, IsEquivalent, IsUnrelated };
 
     /// Swap IsSubtype and IsSupertype.

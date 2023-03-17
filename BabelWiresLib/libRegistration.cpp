@@ -14,5 +14,5 @@
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<IntType>();
-    context.m_typeSystem.addTypeConstructor<1, AddBlankToEnum>();
+    context.m_typeSystem.addTypeConstructor<AddBlankToEnum>();
 }
