@@ -40,10 +40,10 @@ TEST(AddBlankToEnum, constructType) {
 
     babelwires::AddBlankToEnum addBlankToEnum;
     const babelwires::Type* const newType =
-        addBlankToEnum.getOrConstructType(typeSystem, {{testUtils::TestEnum::getThisIdentifier()}});
+        addBlankToEnum.getOrConstructType(typeSystem, babelwires::TypeConstructorArguments<1>{testUtils::TestEnum::getThisIdentifier()});
     ASSERT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeRef(), babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
-                                                         {{testUtils::TestEnum::getThisIdentifier()}}));
+                                                         testUtils::TestEnum::getThisIdentifier()));
 
     const babelwires::Enum* const newEnum = newType->as<babelwires::Enum>();
     ASSERT_NE(newEnum, nullptr);
@@ -65,14 +65,14 @@ TEST(AddBlankToEnum, idempotency) {
 
     babelwires::AddBlankToEnum addBlankToEnum;
     const babelwires::Type* const newType =
-        addBlankToEnum.getOrConstructType(typeSystem, {{babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
-                                                                      {{testUtils::TestEnum::getThisIdentifier()}})}});
+        addBlankToEnum.getOrConstructType(typeSystem, babelwires::TypeConstructorArguments<1>{babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
+                                                                      testUtils::TestEnum::getThisIdentifier())});
 
     ASSERT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeRef(),
               babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
-                                  {{babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
-                                                        {{testUtils::TestEnum::getThisIdentifier()}})}}));
+                                  babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
+                                                        testUtils::TestEnum::getThisIdentifier())));
 
     const babelwires::Enum* const newEnum = newType->as<babelwires::Enum>();
     ASSERT_NE(newEnum, nullptr);
@@ -92,13 +92,13 @@ TEST(AddBlankToEnum, compareSubtype) {
     typeSystem.addTypeConstructor<1, babelwires::AddBlankToEnum>();
 
     babelwires::TypeRef addBlankToEnumToSubEnum(babelwires::AddBlankToEnum::getThisIdentifier(),
-                                          {{testUtils::TestSubEnum::getThisIdentifier()}});
+                                          testUtils::TestSubEnum::getThisIdentifier());
 
     babelwires::TypeRef addBlankToEnumToSubSubEnum1(babelwires::AddBlankToEnum::getThisIdentifier(),
-                                              {{testUtils::TestSubSubEnum1::getThisIdentifier()}});
+                                              testUtils::TestSubSubEnum1::getThisIdentifier());
 
     babelwires::TypeRef addBlankToEnumToSubSubEnum2(babelwires::AddBlankToEnum::getThisIdentifier(),
-                                              {{testUtils::TestSubSubEnum2::getThisIdentifier()}});
+                                              testUtils::TestSubSubEnum2::getThisIdentifier());
 
     EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubEnum, addBlankToEnumToSubEnum), babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubEnum, addBlankToEnumToSubSubEnum1),

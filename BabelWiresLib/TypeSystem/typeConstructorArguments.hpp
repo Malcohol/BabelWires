@@ -41,39 +41,11 @@ namespace babelwires {
             return hash;
         }
     };
-
-    class TypeConstructorArgumentsOld {
-      public:
-        ~TypeConstructorArgumentsOld();
-
-        /// The maximum number of arguments a TypeRef can carry.
-        static constexpr std::size_t s_maxNumArguments = 10;
-
-        std::vector<TypeRef> m_typeArguments;
-
-        friend bool operator==(const TypeConstructorArgumentsOld& a, const TypeConstructorArgumentsOld& b) {
-            return a.m_typeArguments == b.m_typeArguments;
-        }
-        friend bool operator!=(const TypeConstructorArgumentsOld& a, const TypeConstructorArgumentsOld& b) {
-            return a.m_typeArguments != b.m_typeArguments;
-        }
-        friend bool operator<(const TypeConstructorArgumentsOld& a, const TypeConstructorArgumentsOld& b) {
-            return a.m_typeArguments < b.m_typeArguments;
-        }
-        /// Get a hash which can be used with std::hash.
-        std::size_t getHash() const;
-    };
 } // namespace babelwires
 
 namespace std {
     template <unsigned int N> struct hash<babelwires::TypeConstructorArguments<N>> {
         inline std::size_t operator()(const babelwires::TypeConstructorArguments<N>& arguments) const {
-            return arguments.getHash();
-        }
-    };
-
-    template <> struct hash<babelwires::TypeConstructorArgumentsOld> {
-        inline std::size_t operator()(const babelwires::TypeConstructorArgumentsOld& arguments) const {
             return arguments.getHash();
         }
     };

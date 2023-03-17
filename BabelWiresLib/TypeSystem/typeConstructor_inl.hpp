@@ -22,15 +22,13 @@ babelwires::TypeConstructor<N>::getOrConstructType(const TypeSystem& typeSystem,
 
     // Phase 2: Resolve the arguments.
     std::array<const Type*, N> resolvedArguments;
-    TypeConstructorArgumentsOld newTypeRefArguments;
     for (int i = 0; i < N; ++i) {
         const TypeRef& arg = arguments.m_typeArguments[i];
-        newTypeRefArguments.m_typeArguments.emplace_back(arg);
         if (const Type* const argAsType = arg.tryResolve(typeSystem)) {
             resolvedArguments[i] = argAsType;
         }
     }
-    TypeRef newTypeRef(getTypeConstructorId(), std::move(newTypeRefArguments));
+    TypeRef newTypeRef(getTypeConstructorId(), arguments);
 
     {
         // Phase 3: Try the cache again with a write lock.

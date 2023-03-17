@@ -33,7 +33,15 @@ namespace babelwires {
 
         /// A TypeRef describing a complex type, constructed by applying the TypeConstructor
         /// to the arguments.
-        TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArgumentsOld arguments);
+        TypeRef(TypeConstructorId typeConstructorId, TypeRef argument)
+            : m_storage(ConstructedStorage<1>{std::make_shared<ConstructedTypeData<1>>(ConstructedTypeData<1>{typeConstructorId, {std::move(argument)}})}) {}
+
+        TypeRef(TypeConstructorId typeConstructorId, TypeRef argument0, TypeRef argument1)
+            : m_storage(ConstructedStorage<2>{std::make_shared<ConstructedTypeData<2>>(ConstructedTypeData<2>{typeConstructorId, {std::move(argument0), std::move(argument1)}})}) {}
+
+        template<unsigned int N>
+        explicit TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments<N> arguments)
+            : m_storage(ConstructedStorage<N>{std::make_shared<ConstructedTypeData<N>>(ConstructedTypeData<N>{typeConstructorId, std::move(arguments)})}) {}
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
         const Type* tryResolve(const TypeSystem& typeSystem) const;
@@ -63,7 +71,8 @@ namespace babelwires {
         std::size_t getHash() const;
 
         /// Used by the TypeSystem to compare the type typeRefs using the subtype relationship.
-        static SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeRef& typeRefA, const TypeRef& typeRefB);
+        static SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeRef& typeRefA,
+                                                 const TypeRef& typeRefB);
 
       private:
         /// Avoids locking the IdentifierRegistry multiple times.
@@ -73,8 +82,40 @@ namespace babelwires {
         static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);
 
       private:
-        using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArgumentsOld>;
-        using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
+        struct CompareSubtypeVisitor;
+
+      private:
+        template <unsigned int N> struct ConstructedTypeData {
+            ConstructedTypeData(TypeConstructorId, TypeConstructorArguments<N>&& args);
+            TypeConstructorId m_typeConstructorId;
+            TypeConstructorArguments<N> m_arguments;
+
+            friend bool operator==(const ConstructedTypeData& a, const ConstructedTypeData& b) {
+                return (a.m_typeConstructorId == b.m_typeConstructorId) && (a.m_arguments == b.m_arguments);
+            }
+            friend bool operator!=(const ConstructedTypeData& a, const ConstructedTypeData& b) { return !(a == b); }
+            friend bool operator<(const ConstructedTypeData& a, const ConstructedTypeData& b) { return a.m_arguments < b.m_arguments; }
+
+        };
+
+        template <unsigned int N> struct ConstructedStorage {
+            ConstructedTypeData<N>* operator->() const {
+              return m_ptr.get();
+            }
+
+            friend bool operator==(const ConstructedStorage& a, const ConstructedStorage& b) {
+                return (a.m_ptr == b.m_ptr) || (*a.m_ptr == *b.m_ptr);
+            }
+            friend bool operator!=(const ConstructedStorage& a, const ConstructedStorage& b) { return !(a == b); }
+            friend bool operator<(const ConstructedStorage& a, const ConstructedStorage& b) 
+            {
+              return (a.m_ptr == b.m_ptr) || (*a.m_ptr < *b.m_ptr);
+            }
+
+            std::shared_ptr<ConstructedTypeData<N>> m_ptr;
+        };
+
+        using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedStorage<1>, ConstructedStorage<2>>;
 
       private:
         Storage m_storage;
