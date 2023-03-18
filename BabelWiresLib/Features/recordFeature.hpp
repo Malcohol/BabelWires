@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/compoundFeature.hpp>
 
 namespace babelwires {
 

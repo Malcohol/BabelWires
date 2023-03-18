@@ -1,11 +1,12 @@
 /**
- * A Feature is a self-describing data-structure which stores the data in the model.
+ * A ValueFeature is a feature which stores a value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Features/valueFeature.hpp>
+
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
 std::string babelwires::ValueFeature::getValueType() const {

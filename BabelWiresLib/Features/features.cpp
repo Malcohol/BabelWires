@@ -7,9 +7,8 @@
  **/
 #include <BabelWiresLib/Features/features.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/compoundFeature.hpp>
 
 babelwires::Feature::~Feature() {}
 
@@ -61,54 +60,4 @@ std::size_t babelwires::Feature::getHash() const {
 
 babelwires::Feature::Style babelwires::Feature::getStyle() const {
     return Style::isCollapsable;
-}
-
-
-namespace {
-    void checkIndex(const babelwires::CompoundFeature* f, int i) {
-        if ((i < 0) || (i >= f->getNumFeatures())) {
-            throw babelwires::ModelException()
-                << "Compound feature with " << f->getNumFeatures() << " children queried by index " << i;
-        }
-    }
-
-} // namespace
-
-babelwires::Feature* babelwires::CompoundFeature::getFeature(int i) {
-    checkIndex(this, i);
-    return doGetFeature(i);
-}
-
-const babelwires::Feature* babelwires::CompoundFeature::getFeature(int i) const {
-    checkIndex(this, i);
-    return doGetFeature(i);
-}
-
-void babelwires::CompoundFeature::setSubfeaturesToDefault() {
-    for (auto&& child : subfeatures(*this)) {
-        child->setToDefault();
-    }
-}
-
-void babelwires::CompoundFeature::doClearChanges() {
-    Feature::doClearChanges();
-    for (auto&& child : subfeatures(*this)) {
-        child->clearChanges();
-    }
-}
-
-babelwires::Feature& babelwires::CompoundFeature::getChildFromStep(const PathStep& step) {
-    if (Feature* f = tryGetChildFromStep(step)) {
-        return *f;
-    } else {
-        throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
-    }
-}
-
-const babelwires::Feature& babelwires::CompoundFeature::getChildFromStep(const PathStep& step) const {
-    if (const Feature* f = tryGetChildFromStep(step)) {
-        return *f;
-    } else {
-        throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
-    }
 }

@@ -1,5 +1,5 @@
 /**
- * A Feature is a self-describing data-structure which stores the data in the model.
+ * A ValueFeature is a feature which stores a value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Features/features.hpp>
 
 namespace babelwires {
-    /// A value feature is one which can be set.
+    /// A ValueFeature is a feature which stores a value.
     class ValueFeature : public Feature {
       public:
         /// A short string which determines which values can be passed in to assign.

@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 
 #include <BabelWiresLib/Features/Path/pathStep.hpp>
-#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/compoundFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
