@@ -1,5 +1,5 @@
 /**
- * The SubTypeOrder describes the relationship between two types.
+ * Some common definitions used by type system classes.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,9 +13,21 @@ namespace babelwires {
     using PrimitiveTypeId = MediumId;
     using TypeConstructorId = MediumId;
 
+    /// The maximum supported number of type arguments for a type constructor.
     static constexpr unsigned int c_maxNumTypeConstructorArguments = 2;
 
-    enum class SubtypeOrder { IsSubtype, IsSupertype, IsEquivalent, IsUnrelated };
+    /// The SubTypeOrder describes the relationship between two types.
+    enum class SubtypeOrder 
+    { 
+        /// Every value of the first type is a member of the second type.
+        IsSubtype, 
+        /// Every value of the second type is a member of the first type.
+        IsSupertype,
+        /// Both types have the same set of values.
+        IsEquivalent,
+        /// The types are neither Subtypes nor Supertypes of each other.
+        IsUnrelated 
+    };
 
     /// Swap IsSubtype and IsSupertype.
     inline SubtypeOrder reverseSubtypeOrder(SubtypeOrder order) {

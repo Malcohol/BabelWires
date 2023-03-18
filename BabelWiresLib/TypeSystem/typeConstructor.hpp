@@ -7,29 +7,29 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
-#include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-#include <shared_mutex>
 #include <mutex>
+#include <shared_mutex>
 
 namespace babelwires {
 
     /// A TypeConstructor constructs a type from other types.
     /// A mutable cache ensures that each type is only constructed once.
-    template<unsigned int N>
-    class TypeConstructor {
+    template <unsigned int N> class TypeConstructor {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(TypeConstructor);
 
         static constexpr unsigned int c_arity = N;
 
         /// Get the constructed type from the cache, or construct a new one.
-        const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments<N>& arguments) const;
+        const Type* getOrConstructType(const TypeSystem& typeSystem,
+                                       const TypeConstructorArguments<N>& arguments) const;
 
         /// This is supplied by the TYPE_CONSTRUCTOR macro.
         virtual TypeConstructorId getTypeConstructorId() const = 0;
@@ -84,7 +84,7 @@ namespace babelwires {
 
 /// Intended mainly for testing.
 #define TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                       \
-    static babelwires::TypeConstructorId getThisIdentifier() { return IDENTIFIER; }                                             \
+    static babelwires::TypeConstructorId getThisIdentifier() { return IDENTIFIER; }                                    \
     static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
     babelwires::TypeConstructorId getTypeConstructorId() const override { return getThisIdentifier(); }
 

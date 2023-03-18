@@ -1,5 +1,5 @@
 /**
- * A type describes a valid set of values.
+ * TypeConstructorArguments is a container of the TypeRef arguments provided to a type constructor. 
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -15,11 +15,9 @@ namespace babelwires {
     class TypeSystem;
     class TypeRef;
 
+    /// TypeConstructorArguments is a container of the TypeRef arguments provided to a type constructor. 
     template <unsigned int N> class TypeConstructorArguments {
       public:
-        /// The maximum number of arguments a TypeRef can carry.
-        static constexpr std::size_t s_maxNumArguments = 10;
-
         std::array<TypeRef, N> m_typeArguments;
 
         friend bool operator==(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {

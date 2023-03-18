@@ -17,7 +17,7 @@ namespace babelwires {
     /// AddBlankToEnum to an enum which already has a blank returns an enum with the same values.
     class AddBlankToEnum : public TypeConstructor<1> {
       public:
-        TYPE_CONSTRUCTOR("AddBlankToEnum", "{0} + _", "bd5af7a5-4a75-4807-a3d8-93851e1a7d00", 1);
+        TYPE_CONSTRUCTOR("AddBlankToEnum", "{0}_", "bd5af7a5-4a75-4807-a3d8-93851e1a7d00", 1);
 
         /// The blank value that gets added to enums.
         /// Note that the blank value is only permitted at the end of the enum.
