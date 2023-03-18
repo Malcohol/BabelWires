@@ -59,7 +59,7 @@ SET( BABELWIRESLIB_SRCS
 	Processors/processor.cpp
 	Processors/processorFactory.cpp
 	Processors/commonProcessor.cpp
-	Features/features.cpp
+	Features/feature.cpp
 	Features/compoundFeature.cpp
 	Features/recordFeature.cpp
 	Features/recordWithOptionalsFeature.cpp

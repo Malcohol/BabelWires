@@ -1,7 +1,7 @@
 #include <BabelWiresLib/Features/Utilities/featureXml.hpp>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
-#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/stringFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>

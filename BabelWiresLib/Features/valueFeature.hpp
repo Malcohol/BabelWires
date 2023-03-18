@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 
 namespace babelwires {
     /// A ValueFeature is a feature which stores a value.

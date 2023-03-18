@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 
 #include <Common/types.hpp>
 
