@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <vector>

@@ -63,26 +63,6 @@ babelwires::Feature::Style babelwires::Feature::getStyle() const {
     return Style::isCollapsable;
 }
 
-std::string babelwires::ValueFeature::getValueType() const {
-    // Future proofing, while I consider this approach.
-    assert((doGetValueType().size() <= 4) && "The value type must be 4 characters or shorter");
-    return doGetValueType();
-}
-
-bool babelwires::ValueFeature::isCompatible(const ValueFeature& other) {
-    return getValueType() == other.getValueType();
-}
-
-void babelwires::ValueFeature::assign(const ValueFeature& other) {
-    if (!isCompatible(other)) {
-        throw ModelException() << "Assigning an incompatible value";
-    }
-    doAssign(other);
-}
-
-void babelwires::ValueFeature::doSetToDefaultNonRecursive() {
-    setToDefault();
-}
 
 namespace {
     void checkIndex(const babelwires::CompoundFeature* f, int i) {

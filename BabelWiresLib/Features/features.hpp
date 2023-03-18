@@ -99,32 +99,6 @@ namespace babelwires {
         Changes m_changes = Changes::SomethingChanged;
     };
 
-    /// A value feature is one which can be set.
-    class ValueFeature : public Feature {
-      public:
-        /// A short string which determines which values can be passed in to assign.
-        /// TODO: This design is imposed by the current UI, but is inflexible because it doesn't
-        /// support a good notion of subtyping.
-        std::string getValueType() const;
-
-        /// Could the value in other ever be assigned to this (irrespective of its current value).
-        /// This checks that the value types are equal.
-        bool isCompatible(const ValueFeature& other);
-
-        /// Set this to hold the same value as other.
-        /// This will throw a ModelException if the assignment failed.
-        void assign(const ValueFeature& other);
-
-      protected:
-        /// Calls doSetToDefault.
-        virtual void doSetToDefaultNonRecursive() override;
-
-        /// Return a string of length <= 4 characters.
-        virtual std::string doGetValueType() const = 0;
-
-        /// Implementations may assume that other is compatible.
-        virtual void doAssign(const ValueFeature& other) = 0;
-    };
 
     /// A feature which contains other features.
     /// See function subfeatures in modelUtilities for support for iterators and ranged for loops.

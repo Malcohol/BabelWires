@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/features.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <Common/Math/rational.hpp>
 
