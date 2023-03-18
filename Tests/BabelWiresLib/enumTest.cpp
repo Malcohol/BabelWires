@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
-#include <BabelWiresLib/TypeSystem/enumValue.hpp>
+#include <BabelWiresLib/Enums/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

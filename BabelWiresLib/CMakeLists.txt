@@ -36,7 +36,7 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/typeSystem.cpp
 	TypeSystem/intType.cpp
 	TypeSystem/intValue.cpp
-	TypeSystem/enumValue.cpp
+	Enums/enumValue.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
 	Maps/Commands/addEntryToMapCommand.cpp

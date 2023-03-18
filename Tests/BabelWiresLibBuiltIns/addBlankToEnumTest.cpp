@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Enums/addBlankToEnum.hpp>
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
-#include <BabelWiresLib/TypeSystem/enumValue.hpp>
+#include <BabelWiresLib/Enums/enumValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 

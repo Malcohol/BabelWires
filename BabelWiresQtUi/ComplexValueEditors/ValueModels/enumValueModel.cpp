@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp>
 
 #include <BabelWiresLib/Enums/enum.hpp>
-#include <BabelWiresLib/TypeSystem/enumValue.hpp>
+#include <BabelWiresLib/Enums/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

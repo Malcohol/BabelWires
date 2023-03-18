@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Enums/enum.hpp>
 
-#include <BabelWiresLib/TypeSystem/enumValue.hpp>
+#include <BabelWiresLib/Enums/enumValue.hpp>
 
 babelwires::Enum::Enum(EnumValues values, unsigned int indexOfDefaultValue)
     : m_values(std::move(values))
