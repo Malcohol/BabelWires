@@ -16,17 +16,12 @@
 
 babelwires::ValueAssignmentData::ValueAssignmentData() = default;
 
-babelwires::ValueAssignmentData::ValueAssignmentData(std::unique_ptr<Value> value) : m_value(std::move(value)) {
-}
-
-babelwires::ValueAssignmentData::ValueAssignmentData(const ValueAssignmentData& other)
-    : LocalModifierData(other), m_value(other.m_value->clone()) {}
-
-babelwires::ValueAssignmentData::ValueAssignmentData(ValueAssignmentData&& other) : LocalModifierData(std::move(other)), m_value(std::move(other.m_value)) {}
+babelwires::ValueAssignmentData::ValueAssignmentData(std::unique_ptr<Value> value)
+    : m_value(std::shared_ptr<const Value>(value.release())) {}
 
 void babelwires::ValueAssignmentData::apply(Feature* targetFeature) const {
     if (SimpleValueFeature* valueFeature = targetFeature->as<SimpleValueFeature>()) {
-        valueFeature->setValue(*m_value);
+        valueFeature->setValuePtr(m_value);
     } else {
         throw babelwires::ModelException() << "Could not assign an value to a non-SimpleValueFeature";
     }

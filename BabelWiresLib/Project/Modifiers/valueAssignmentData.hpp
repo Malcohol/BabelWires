@@ -20,15 +20,13 @@ namespace babelwires {
         
         ValueAssignmentData();
         ValueAssignmentData(std::unique_ptr<Value> value);
-        ValueAssignmentData(const ValueAssignmentData& other);
-        ValueAssignmentData(ValueAssignmentData&& other);
 
         virtual void apply(Feature* targetFeature) const override;
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
 
       private:
-        std::unique_ptr<Value> m_value;
+        std::shared_ptr<const Value> m_value;
     };
 
 } // namespace babelwires

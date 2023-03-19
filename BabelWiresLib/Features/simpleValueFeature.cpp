@@ -14,10 +14,21 @@ std::string babelwires::SimpleValueFeature::doGetValueType() const {
 
 void babelwires::SimpleValueFeature::doAssign(const ValueFeature& other) {
     if (const auto* otherValueFeature = other.as<SimpleValueFeature>()) {
-        const Value& otherValue = otherValueFeature->getValue();
-        setValue(otherValue);
+        setValuePtr(otherValueFeature->m_value);
     } else {
         throw ModelException() << "Cannot assign other kinds of Feature to SimpleValueFeature";
+    }
+}
+
+void babelwires::SimpleValueFeature::setValuePtr(const std::shared_ptr<const Value>& newValue) {
+    if ((m_value != newValue) && (*m_value != *newValue)) {
+        const Type& type = getType();
+        if (newValue->isValid(type)) {
+            m_value = newValue;
+            setChanged(Changes::ValueChanged);
+        } else {
+            throw ModelException() << "The new value is not a valid instance of " << m_typeRef.toString();
+        }
     }
 }
 
@@ -25,7 +36,7 @@ void babelwires::SimpleValueFeature::setValue(const Value& value) {
     if (value != *m_value) {
         const Type& type = getType();
         if (value.isValid(type)) {
-            m_value = value.clone();
+            m_value = std::shared_ptr<const Value>(value.clone().release());
             setChanged(Changes::ValueChanged);
         } else {
             throw ModelException() << "The new value is not a valid instance of " << m_typeRef.toString();
