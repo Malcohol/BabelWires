@@ -17,6 +17,7 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/enumRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/unionRowModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/RowModels/valueRowModel.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
@@ -26,6 +27,7 @@
 #include <BabelWiresLib/Features/enumFeature.hpp>
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/unionFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
 
 babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowModelRegistry,
@@ -35,6 +37,9 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     const babelwires::Feature* feature = entry->getInputThenOutputFeature();
     if (rowModelRegistry.handleFeature(feature, m_rowModel)) {
         // Handled by a registered handler.
+    } else if (feature->as<const babelwires::SimpleValueFeature>()) {
+        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ValueRowModel));
+        new (m_rowModel) babelwires::ValueRowModel();
     } else if (feature->as<const babelwires::StringFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::StringRowModel));
         new (m_rowModel) babelwires::StringRowModel();
@@ -67,4 +72,5 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     }
     m_rowModel->m_contentsCacheEntry = entry;
     m_rowModel->m_featureElement = element;
+    m_rowModel->init();
 }

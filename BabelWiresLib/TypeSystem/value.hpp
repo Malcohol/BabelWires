@@ -34,3 +34,10 @@ namespace babelwires {
         bool operator!= (const Value& other) const { return !(*this == other); }
     };
 } // namespace babelwires
+
+
+namespace std {
+    template <> struct hash<babelwires::Value> {
+        inline std::size_t operator()(const babelwires::Value& value) const { return value.getHash(); }
+    };
+} // namespace std

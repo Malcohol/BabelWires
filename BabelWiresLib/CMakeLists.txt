@@ -68,6 +68,7 @@ SET( BABELWIRESLIB_SRCS
 	Features/numericFeature.cpp
 	Features/stringFeature.cpp
 	Features/mapFeature.cpp
+	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp
 	Features/Path/pathStep.cpp
 	Features/Utilities/featureXml.cpp

@@ -1,5 +1,5 @@
 /**
- * The row model for UnionFeatures.
+ * The row model for IntFeatures.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -11,11 +11,12 @@
 
 namespace babelwires {
 
-    class UnionFeature;
+    class SimpleValueFeature;
 
-    /// The row model for IntFeatures.
-    class UnionRowModel : public RowModel {
+    class ValueRowModel : public RowModel {
       public:
+        void init() override;
+
         virtual QVariant getValueDisplayData() const override;
 
         virtual bool isItemEditable() const override;
@@ -27,7 +28,7 @@ namespace babelwires {
         virtual std::unique_ptr<Command<Project>> createCommandFromEditor(QWidget* editor) const override;
 
       public:
-        const UnionFeature& getUnionFeature() const;
+        const SimpleValueFeature& getValueFeature() const;
     };
 
 } // namespace babelwires

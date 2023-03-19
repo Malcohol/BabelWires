@@ -24,6 +24,8 @@
 
 #include <cassert>
 
+void babelwires::RowModel::init() {}
+
 bool babelwires::RowModel::hasInputFeature() const {
     return m_contentsCacheEntry->getInputFeature();
 }
