@@ -2,7 +2,7 @@
  * Functionality supporting clone methods.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -17,17 +17,23 @@ namespace babelwires {
     /// is that it should deep-clone its members.
     struct Cloneable {
         virtual ~Cloneable();
-        virtual Cloneable* cloneImpl() const = 0;
+        virtual Cloneable* cloneImpl() const& = 0;
+        virtual Cloneable* cloneImpl() && = 0;
     };
 
 /// Use this macros in abstract classes which derive from Cloneable.
 #define CLONEABLE_ABSTRACT(CLASS)                                                                                      \
-    std::unique_ptr<CLASS> clone() const { return std::unique_ptr<CLASS>(static_cast<CLASS*>(cloneImpl())); }
+    std::unique_ptr<CLASS> clone() const& { return std::unique_ptr<CLASS>(static_cast<CLASS*>(cloneImpl())); }         \
+    std::unique_ptr<CLASS> clone()&& {                                                                                 \
+        return std::unique_ptr<CLASS>(static_cast<CLASS*>(std::move(*this).cloneImpl()));                              \
+    }
 
 /// Use this macros in classes which derive from Cloneable.
 #define CLONEABLE(CLASS)                                                                                               \
-    std::unique_ptr<CLASS> clone() const { return std::unique_ptr<CLASS>(cloneImpl()); }                               \
-    virtual CLASS* cloneImpl() const override { return new CLASS(*this); }
+    std::unique_ptr<CLASS> clone() const& { return std::unique_ptr<CLASS>(cloneImpl()); }                              \
+    virtual CLASS* cloneImpl() const& override { return new CLASS(*this); }                                            \
+    std::unique_ptr<CLASS> clone()&& { return std::unique_ptr<CLASS>(std::move(*this).cloneImpl()); }                  \
+    virtual CLASS* cloneImpl() && override { return new CLASS(std::move(*this)); }
 
     /// Use this at the base of a hierarchy of cloneable classes to support non-default clone behaviour.
     /// Note: Classes T deriving from CustomCloneable must have a constructor taking a T and a Context.
