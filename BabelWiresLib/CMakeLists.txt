@@ -22,6 +22,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/activateOptionalsModifierData.cpp
 	Project/Modifiers/mapValueAssignmentData.cpp
 	Project/Modifiers/selectUnionBranchModifierData.cpp
+	Project/Modifiers/valueAssignmentData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp
 	ProjectExtra/projectObserver.cpp

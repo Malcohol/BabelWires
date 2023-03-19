@@ -21,8 +21,8 @@ namespace babelwires {
 
         const Type& getType() const;
 
-        const Value& getValue() const;
-        void setValue(const Value& newValue) const;
+        const Value& get() const;
+        void set(const Value& newValue);
 
       protected:
         /// Return a string of length <= 4 characters.
