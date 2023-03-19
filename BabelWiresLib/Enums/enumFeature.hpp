@@ -36,12 +36,4 @@ namespace babelwires {
         void set(ShortId value);
     };
 
-    /// EnumFeature for RegisteredEnums, which can be conveniently constructed, since it assumes the Enum it
-    /// references has been registered in the TypeSystem.
-    template <typename E> class RegisteredEnumFeature : public EnumFeature {
-      public:
-        RegisteredEnumFeature()
-            : EnumFeature(E::getThisIdentifier()) {}
-    };
-
 } // namespace babelwires

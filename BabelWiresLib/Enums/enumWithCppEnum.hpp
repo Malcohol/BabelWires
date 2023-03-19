@@ -52,8 +52,10 @@ namespace babelwires {
     /// This provides convenience methods which allow the contained value of an EnumFeature
     /// to be queried or set using the corresponding C++ enum (assuming the latter was added to
     /// the Enum with ENUM_DEFINE_CPP_ENUM).
-    template <typename E> class EnumWithCppEnumFeature : public RegisteredEnumFeature<E> {
+    template <typename E> class EnumWithCppEnumFeature : public EnumFeature {
       public:
+        EnumWithCppEnumFeature() : EnumFeature(E::getThisIdentifier()) {}
+
         /// Get the stored value as a C++ enum value.
         typename E::Value getAsValue() const {
             return static_cast<const E&>(this->getEnum()).getValueFromIdentifier(this->get());
