@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <vector>
@@ -22,7 +22,7 @@ namespace babelwires {
     /// with ValueNames.
     /// The particular advantage of an EnumFeature is that values can be reordered and new values can be added
     /// without requiring versioning code to adapt old serialized data.
-    class EnumFeature : public ValueFeature {
+    class EnumFeature : public SimpleValueFeature {
       public:
         EnumFeature(TypeRef e);
 
@@ -34,19 +34,6 @@ namespace babelwires {
 
         /// Set the value in the feature.
         void set(ShortId value);
-
-      protected:
-        std::string doGetValueType() const override;
-        void doAssign(const ValueFeature& other) override;
-        void doSetToDefault() override;
-        std::size_t doGetHash() const override;
-
-      protected:
-        ///
-        TypeRef m_enum;
-
-        ///
-        ShortId m_value;
     };
 
     /// EnumFeature for RegisteredEnums, which can be conveniently constructed, since it assumes the Enum it
