@@ -22,7 +22,9 @@ namespace babelwires {
         const Type& getType() const;
 
         const Value& getValue() const;
+        
         void setValue(const Value& newValue);
+        void setValue(Value&& newValue);
 
         void setValuePtr(const std::shared_ptr<const Value>& newValue);
 

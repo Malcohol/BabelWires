@@ -44,6 +44,19 @@ void babelwires::SimpleValueFeature::setValue(const Value& value) {
     }
 }
 
+void babelwires::SimpleValueFeature::setValue(Value&& value) {
+    if (value != *m_value) {
+        const Type& type = getType();
+        if (value.isValid(type)) {
+            // R-value cloning uses the move contructor.
+            m_value = std::shared_ptr<const Value>(std::move(value).clone().release());
+            setChanged(Changes::ValueChanged);
+        } else {
+            throw ModelException() << "The new value is not a valid instance of " << m_typeRef.toString();
+        }
+    }
+}
+
 void babelwires::SimpleValueFeature::doSetToDefault() {
     auto newValue = getType().createValue();
     if (*newValue != *m_value) {
