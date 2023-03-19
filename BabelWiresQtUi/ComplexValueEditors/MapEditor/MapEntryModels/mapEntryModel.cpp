@@ -62,7 +62,7 @@ bool babelwires::MapEntryModel::isItemEditable(Column column) const {
     return false;
 }
 
-QWidget* babelwires::MapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
+QWidget* babelwires::MapEntryModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     assert(false && "This item isn't editable");
     return nullptr;
 }

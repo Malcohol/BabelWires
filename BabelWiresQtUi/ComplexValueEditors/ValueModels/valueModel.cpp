@@ -21,7 +21,7 @@ const babelwires::Type* babelwires::ValueModel::getType() const {
     return m_type;
 }
 
-QWidget* babelwires::ValueModel::createEditor(const QModelIndex& index, QWidget* parent) const {
+QWidget* babelwires::ValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     assert(false && "This method must be overridden in subclasses");
     return nullptr;
 }

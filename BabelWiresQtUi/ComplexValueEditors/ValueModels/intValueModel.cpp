@@ -13,7 +13,7 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-QWidget* babelwires::IntValueModel::createEditor(const QModelIndex& index, QWidget* parent) const {
+QWidget* babelwires::IntValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     // TODO value names
     auto spinBox = std::make_unique<SpinBoxValueEditor>(parent, index, nullptr);
     // TODO range

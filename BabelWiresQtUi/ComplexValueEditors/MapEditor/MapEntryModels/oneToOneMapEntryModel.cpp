@@ -46,13 +46,13 @@ bool babelwires::OneToOneMapEntryModel::isItemEditable(Column column) const {
     }
 }
 
-QWidget* babelwires::OneToOneMapEntryModel::createEditor(const QModelIndex& index, QWidget* parent) const {
+QWidget* babelwires::OneToOneMapEntryModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     const Column column = indexToColumn(index);
     switch (column) {
         case Column::sourceValue:
-            return m_sourceValueModel->createEditor(index, parent);
+            return m_sourceValueModel->createEditor(parent, index);
         case Column::targetValue:
-            return m_targetValueModel->createEditor(index, parent);
+            return m_targetValueModel->createEditor(parent, index);
         default:
             assert(false && "That column isn't editable");
             return nullptr;

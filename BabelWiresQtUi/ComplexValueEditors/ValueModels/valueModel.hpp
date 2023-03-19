@@ -18,7 +18,7 @@ namespace babelwires {
     class ValueModel {
       public:
         virtual QVariant getDisplayData() const;
-        virtual QWidget* createEditor(const QModelIndex& index, QWidget* parent) const;
+        virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
         virtual void setEditorData(QWidget* editor) const;
         virtual std::unique_ptr<Value> createValueFromEditorIfDifferent(QWidget* editor) const;
         virtual bool isItemEditable() const;
