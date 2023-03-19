@@ -16,8 +16,8 @@ Here's a screenshot of SeqWires:
 
 The framework provides:
 * A generic way of representing data in a tree of self-describing data structures ([Feature](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/feature.hpp))
-    * The nodes of the data flow graph carry their data in one more [RootFeatures](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/feature.hpp).
-    * The leaves of the tree are ValueFeatures, which appear in the UI as rows with connectable ports.
+    * The nodes of the data flow graph carry their data in one more [CompoundFeatures](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/compoundFeature.hpp).
+    * The leaves of the tree are [ValueFeatures](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/valueFeature.hpp), which appear in the UI as rows with connectable ports.
 * Abstractions for source and target formats ([SourceFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/sourceFileFormat.hpp) and [TargetFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/targetFileFormat.hpp))
     * Plugins register factory functions to add support for new formats.
 * An abstraction for processing data ([Processor](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Processors/processor.hpp))
