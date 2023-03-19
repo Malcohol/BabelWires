@@ -64,8 +64,10 @@ namespace {
 TEST(CloneTest, move) {
     M m(12);
     auto copiedClone = m.clone();
+    EXPECT_EQ(copiedClone->m_x, 12);
     EXPECT_EQ(copiedClone->m_state, M::Copied);
     auto movedClone = std::move(m).clone();
+    EXPECT_EQ(movedClone->m_x, 12);
     EXPECT_EQ(movedClone->m_state, M::Moved);
 }
 
