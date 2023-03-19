@@ -21,7 +21,7 @@
 
 void babelwires::ValueRowModel::init() {
     const babelwires::SimpleValueFeature& valueFeature = getValueFeature();
-    m_valueModelDispatcher.init(valueFeature.getType(), valueFeature.get());
+    m_valueModelDispatcher.init(valueFeature.getType(), valueFeature.getValue());
 }
 
 const babelwires::SimpleValueFeature& babelwires::ValueRowModel::getValueFeature() const {

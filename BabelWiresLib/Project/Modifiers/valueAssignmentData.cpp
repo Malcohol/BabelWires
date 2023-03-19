@@ -26,7 +26,7 @@ babelwires::ValueAssignmentData::ValueAssignmentData(ValueAssignmentData&& other
 
 void babelwires::ValueAssignmentData::apply(Feature* targetFeature) const {
     if (SimpleValueFeature* valueFeature = targetFeature->as<SimpleValueFeature>()) {
-        valueFeature->set(*m_value);
+        valueFeature->setValue(*m_value);
     } else {
         throw babelwires::ModelException() << "Could not assign an value to a non-SimpleValueFeature";
     }
