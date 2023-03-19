@@ -14,7 +14,6 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/recordWithOptionalsRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelRegistry.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/stringRowModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/RowModels/enumRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/unionRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/valueRowModel.hpp>
@@ -49,9 +48,6 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     } else if (feature->as<const babelwires::RationalFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::RationalRowModel));
         new (m_rowModel) babelwires::RationalRowModel();
-    } else if (feature->as<const babelwires::EnumFeature>()) {
-        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::EnumRowModel));
-        new (m_rowModel) babelwires::EnumRowModel();
     } else if (feature->as<const babelwires::ArrayFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ArrayRowModel));
         new (m_rowModel) babelwires::ArrayRowModel();

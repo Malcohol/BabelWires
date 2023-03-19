@@ -89,16 +89,4 @@ namespace babelwires {
 
         std::string m_value;
     };
-
-    /// Data used to assign an EnumFeature within a container to a certain value.
-    struct EnumValueAssignmentData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
-        CLONEABLE(EnumValueAssignmentData);
-        SERIALIZABLE(EnumValueAssignmentData, "assignEnum", LocalModifierData, 1);
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-        void visitIdentifiers(IdentifierVisitor& visitor) override;
-        
-        ShortId m_value = "Fixme";
-    };
 } // namespace babelwires

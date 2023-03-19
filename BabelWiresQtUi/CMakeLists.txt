@@ -13,7 +13,6 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/modifyModelScope.cpp
     ModelBridge/accessModelScope.cpp
     ModelBridge/RowModels/arrayRowModel.cpp
-    ModelBridge/RowModels/enumRowModel.cpp
     ModelBridge/RowModels/fileRowModel.cpp
     ModelBridge/RowModels/intRowModel.cpp
     ModelBridge/RowModels/mapRowModel.cpp

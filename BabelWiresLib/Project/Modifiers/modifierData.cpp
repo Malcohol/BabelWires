@@ -92,26 +92,3 @@ void babelwires::StringValueAssignmentData::deserializeContents(Deserializer& de
     deserializer.deserializeValue("path", m_pathToFeature);
     deserializer.deserializeValue("value", m_value);
 }
-
-void babelwires::EnumValueAssignmentData::apply(Feature* targetFeature) const {
-    if (EnumFeature* enumFeature = targetFeature->as<EnumFeature>()) {
-        enumFeature->set(m_value);
-    } else {
-        throw babelwires::ModelException() << "Could not assign an enum value to a non-enum feature";
-    }
-}
-
-void babelwires::EnumValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
-    serializer.serializeValue("value", m_value);
-}
-
-void babelwires::EnumValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
-    deserializer.deserializeValue("value", m_value);
-}
-
-void babelwires::EnumValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {
-    ModifierData::visitIdentifiers(visitor);
-    visitor(m_value);
-}
