@@ -26,19 +26,3 @@ testUtils::TestSubSubEnum2::TestSubSubEnum2()
     : babelwires::Enum(babelwires::Enum::EnumValues{testUtils::getTestRegisteredIdentifier("Erm", 3),
                                                     testUtils::getTestRegisteredIdentifier("Oom", 4)},
                        1) {}
-
-void testUtils::addTestEnumTypes(babelwires::TypeSystem& typeSystem) {
-    typeSystem.addEntry<testUtils::TestEnum>();
-    typeSystem.addEntry<testUtils::TestSubEnum>();
-    typeSystem.addEntry<testUtils::TestSubSubEnum1>();
-    typeSystem.addEntry<testUtils::TestSubSubEnum2>();
-
-    typeSystem.addRelatedTypes(testUtils::TestEnum::getThisIdentifier(),
-                               {{}, {testUtils::TestSubSubEnum1::getThisIdentifier()}});
-    typeSystem.addRelatedTypes(testUtils::TestSubSubEnum2::getThisIdentifier(),
-                               {{testUtils::TestEnum::getThisIdentifier()}, {}});
-    typeSystem.addRelatedTypes(
-        testUtils::TestSubEnum::getThisIdentifier(),
-        {{testUtils::TestEnum::getThisIdentifier()},
-         {testUtils::TestSubSubEnum1::getThisIdentifier(), testUtils::TestSubSubEnum2::getThisIdentifier()}});
-}

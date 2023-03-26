@@ -15,7 +15,6 @@
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(FeatureElementTest, basicAccessors) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
@@ -31,7 +30,6 @@ TEST(FeatureElementTest, basicAccessors) {
 }
 
 TEST(FeatureElementTest, labels) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
@@ -43,7 +41,6 @@ TEST(FeatureElementTest, labels) {
 }
 
 TEST(FeatureElementTest, uiData) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
     featureElementData.m_uiData.m_uiPosition = babelwires::UiPosition{23, -29};
@@ -62,7 +59,6 @@ TEST(FeatureElementTest, uiData) {
 }
 
 TEST(FeatureElementTest, modifiers) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
@@ -168,7 +164,6 @@ TEST(FeatureElementTest, modifiers) {
 }
 
 TEST(FeatureElementTest, expandedPaths) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
@@ -225,7 +220,6 @@ TEST(FeatureElementTest, expandedPaths) {
 }
 
 TEST(FeatureElementTest, extractElementData) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
@@ -304,7 +298,6 @@ TEST(FeatureElementTest, extractElementData) {
 }
 
 TEST(FeatureElementTest, removedModifiers) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
@@ -364,7 +357,6 @@ TEST(FeatureElementTest, removedModifiers) {
 }
 
 TEST(FeatureElementTest, failure) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
@@ -385,7 +377,6 @@ TEST(FeatureElementTest, failure) {
 }
 
 TEST(FeatureElementTest, simpleChanges) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
@@ -491,7 +482,6 @@ TEST(FeatureElementTest, simpleChanges) {
 }
 
 TEST(FeatureElementTest, isInDependencyLoop) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 

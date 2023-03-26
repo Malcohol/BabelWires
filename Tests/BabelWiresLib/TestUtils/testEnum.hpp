@@ -52,6 +52,4 @@ namespace testUtils {
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("SubSubEnum2"), 1);
         TestSubSubEnum2();
     };
-
-    void addTestEnumTypes(babelwires::TypeSystem& typeSystem);
 } // namespace testUtils

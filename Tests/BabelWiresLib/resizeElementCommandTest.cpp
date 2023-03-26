@@ -11,7 +11,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(ResizeElementCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -41,7 +40,6 @@ TEST(ResizeElementCommandTest, executeAndUndo) {
 }
 
 TEST(ResizeElementCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;
@@ -55,7 +53,6 @@ TEST(ResizeElementCommandTest, failSafelyNoElement) {
 }
 
 TEST(ResizeElementCommandTest, subsumeMoves) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -89,7 +86,6 @@ TEST(ResizeElementCommandTest, subsumeMoves) {
 }
 
 TEST(ResizeElementCommandTest, subsumeMovesDelay) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;

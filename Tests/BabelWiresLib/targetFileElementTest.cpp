@@ -20,7 +20,6 @@ namespace {
 } // namespace
 
 TEST(TargetFileElementTest, targetFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     std::ostringstream tempFileName;
@@ -76,7 +75,6 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
 }
 
 TEST(TargetFileElementTest, changeFile) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.

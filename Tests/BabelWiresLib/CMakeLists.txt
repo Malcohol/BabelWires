@@ -2,6 +2,7 @@ SET( LIB_TESTS_SRCS
     babelWiresTests.cpp
     activateOptionalsModifierDataTest.cpp
     activateOptionalCommandTest.cpp
+    addBlankToEnumTest.cpp
     addElementCommandTest.cpp
     addEntryToArrayCommandTest.cpp
     addModifierCommandTest.cpp

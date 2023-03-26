@@ -21,7 +21,6 @@ namespace {
 } // namespace
 
 TEST(MapProjectTest, mapProjectEntry) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
 
@@ -46,11 +45,8 @@ TEST(MapProjectTest, mapProjectEntry) {
 }
 
 TEST(MapProjectTest, allowedTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-
+        
     babelwires::MapProject mapProject(environment.m_projectContext);
 
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -61,7 +57,6 @@ TEST(MapProjectTest, allowedTypes) {
 }
 
 TEST(MapProjectTest, getProjectContext) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
@@ -70,11 +65,8 @@ TEST(MapProjectTest, getProjectContext) {
 }
 
 TEST(MapProjectTest, types) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-
+        
     babelwires::MapProject mapProject(environment.m_projectContext);
 
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -93,11 +85,8 @@ TEST(MapProjectTest, types) {
 }
 
 TEST(MapProjectTest, badTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-
+        
     babelwires::MapProject mapProject(environment.m_projectContext);
 
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -130,12 +119,8 @@ TEST(MapProjectTest, badTypes) {
 }
 
 TEST(MapProjectTest, setAndExtractMapData) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
-
+            
     babelwires::MapProject mapProject(environment.m_projectContext);
 
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -163,12 +148,8 @@ TEST(MapProjectTest, setAndExtractMapData) {
 }
 
 TEST(MapProjectTest, modifyMapData) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
-
+            
     babelwires::MapProject mapProject(environment.m_projectContext);
 
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -223,12 +204,8 @@ TEST(MapProjectTest, modifyMapData) {
 }
 
 TEST(MapProjectTest, typeChangeAndValidity) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
-    environment.m_typeSystem.addEntry<testUtils::TestSubSubEnum1>();
-
+            
     babelwires::MapProject mapProject(environment.m_projectContext);
 
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestEnum::getThisIdentifier()}});
@@ -282,12 +259,8 @@ TEST(MapProjectTest, typeChangeAndValidity) {
 }
 
 TEST(MapProjectTest, modifyValidity) {
-     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
-
+     testUtils::TestEnvironment environment;
+            
     babelwires::MapProject mapProject(environment.m_projectContext);
 
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -324,11 +297,8 @@ TEST(MapProjectTest, modifyValidity) {
 }
 
 TEST(MapProjectTest, badMap) {
-     babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-
+     testUtils::TestEnvironment environment;
+        
     babelwires::MapProject mapProject(environment.m_projectContext);
 
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});

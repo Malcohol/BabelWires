@@ -11,7 +11,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(MoveElementCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -45,7 +44,6 @@ TEST(MoveElementCommandTest, executeAndUndo) {
 }
 
 TEST(MoveElementCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;
@@ -59,7 +57,6 @@ TEST(MoveElementCommandTest, failSafelyNoElement) {
 }
 
 TEST(MoveElementCommandTest, subsumeMoves) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -97,7 +94,6 @@ TEST(MoveElementCommandTest, subsumeMoves) {
 }
 
 TEST(MoveElementCommandTest, subsumeMovesDelay) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;

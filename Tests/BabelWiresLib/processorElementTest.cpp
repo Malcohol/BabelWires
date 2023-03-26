@@ -15,7 +15,6 @@
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 TEST(ProcessorElementTest, sourceFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;

@@ -22,7 +22,6 @@
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 TEST(RemoveElementCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;
@@ -84,7 +83,6 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
 }
 
 TEST(RemoveElementCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;
@@ -98,7 +96,6 @@ TEST(RemoveElementCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveElementCommandTest, subsumption) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId element1Id =

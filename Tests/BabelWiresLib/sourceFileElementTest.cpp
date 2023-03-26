@@ -27,7 +27,6 @@ namespace {
 } // namespace
 
 TEST(SourceFileElementTest, sourceFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
@@ -87,7 +86,6 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
 }
 
 TEST(SourceFileElementTest, changeFile) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.

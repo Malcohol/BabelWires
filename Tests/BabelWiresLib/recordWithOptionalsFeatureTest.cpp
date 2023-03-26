@@ -285,9 +285,7 @@ TEST(RecordWithOptionalsFeatureTest, setToDefault) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, inactiveEnumCanBeDefaulted) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
 

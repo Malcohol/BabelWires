@@ -112,7 +112,6 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
 }
 
 TEST(ElementDataTest, sourceFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
@@ -219,7 +218,6 @@ TEST(ElementDataTest, targetFileDataSerialize) {
 }
 
 TEST(ElementDataTest, targetFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::TargetFileElementData data;
@@ -308,7 +306,6 @@ TEST(ElementDataTest, processorDataSerialize) {
 }
 
 TEST(ElementDataTest, processorDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;

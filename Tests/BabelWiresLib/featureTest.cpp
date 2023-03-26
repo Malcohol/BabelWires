@@ -133,9 +133,7 @@ TEST(FeatureTest, rationalFeatureHash) {
 }
 
 TEST(FeatureTest, stringFeature) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
@@ -153,9 +151,7 @@ TEST(FeatureTest, stringFeature) {
 }
 
 TEST(FeatureTest, stringFeatureChanges) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
@@ -181,9 +177,7 @@ TEST(FeatureTest, stringFeatureChanges) {
 }
 
 TEST(FeatureTest, stringFeatureHash) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
@@ -200,9 +194,7 @@ TEST(FeatureTest, stringFeatureHash) {
 }
 
 TEST(FeatureTest, valueCompatibility) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
     babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
@@ -238,9 +230,7 @@ TEST(FeatureTest, valueCompatibility) {
 }
 
 TEST(FeatureTest, recordFeature) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
 
     babelwires::RecordFeature recordFeature;
 

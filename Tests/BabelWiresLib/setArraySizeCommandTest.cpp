@@ -16,7 +16,6 @@
 // TODO Test default array with non-minimum default size.
 
 TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -106,7 +105,6 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
 }
 
 TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -203,7 +201,6 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
 }
 
 TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -258,7 +255,6 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
 }
 
 TEST(SetArraySizeCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::SetArraySizeCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"), 4);
@@ -268,7 +264,6 @@ TEST(SetArraySizeCommandTest, failSafelyNoElement) {
 }
 
 TEST(SetArraySizeCommandTest, failSafelyNoArray) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::SetArraySizeCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"), 4);
@@ -284,7 +279,6 @@ TEST(SetArraySizeCommandTest, failSafelyNoArray) {
 }
 
 TEST(SetArraySizeCommandTest, failSafelyOutOfRange) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());

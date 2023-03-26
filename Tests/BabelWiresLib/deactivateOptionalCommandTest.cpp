@@ -15,7 +15,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
@@ -129,7 +128,6 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
@@ -141,7 +139,6 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoElement) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
@@ -159,7 +156,6 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
@@ -177,7 +173,6 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
@@ -196,7 +191,6 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
 }
 
 TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =

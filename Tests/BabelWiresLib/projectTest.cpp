@@ -21,7 +21,6 @@
 #include <fstream>
 
 TEST(ProjectTest, setAndExtractProjectData) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;
@@ -42,7 +41,6 @@ TEST(ProjectTest, setAndExtractProjectData) {
 }
 
 TEST(ProjectTest, projectId) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // The test testEnvironment has a built-in newly constructed project.
@@ -64,7 +62,6 @@ TEST(ProjectTest, projectId) {
 }
 
 TEST(ProjectTest, addGetAndRemoveElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -93,7 +90,6 @@ TEST(ProjectTest, addGetAndRemoveElement) {
 }
 
 TEST(ProjectTest, addAndRemoveLocalModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -120,7 +116,6 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
 }
 
 TEST(ProjectTest, addAndRemoveConnectionModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceElementId =
@@ -155,7 +150,6 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -200,7 +194,6 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -246,7 +239,6 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceElementId =
@@ -304,7 +296,6 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 }
 
 TEST(ProjectTest, uiProperties) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData testFeatureData;
@@ -335,7 +326,6 @@ TEST(ProjectTest, uiProperties) {
 }
 
 TEST(ProjectTest, elementIds) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -369,7 +359,6 @@ TEST(ProjectTest, elementIds) {
 }
 
 TEST(ProjectTest, reloadSource) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TempFilePath tempFilePath("testSource." + testUtils::TestSourceFileFormat::getFileExtension());
@@ -410,7 +399,6 @@ TEST(ProjectTest, reloadSource) {
 }
 
 TEST(ProjectTest, saveTarget) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TempFilePath tempFilePath("testTarget." + testUtils::TestSourceFileFormat::getFileExtension());
@@ -449,7 +437,6 @@ TEST(ProjectTest, saveTarget) {
 }
 
 TEST(ProjectTest, process) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;
@@ -527,7 +514,6 @@ TEST(ProjectTest, process) {
 }
 
 TEST(ProjectTest, dependencyLoop) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId1 =
@@ -597,7 +583,6 @@ TEST(ProjectTest, dependencyLoop) {
 
 // Check that one dependency loop does not prevent other elements from processing correctly.
 TEST(ProjectTest, dependencyLoopAndProcessing) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId1 =
@@ -684,7 +669,6 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 }
 
 TEST(ProjectTest, updateWithAvailableIds) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     std::vector<babelwires::ElementId> idsToCheck0 = {testUtils::TestProjectData::c_sourceElementId,
@@ -731,7 +715,6 @@ TEST(ProjectTest, updateWithAvailableIds) {
 }
 
 TEST(ProjectTest, processWithFailure) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;

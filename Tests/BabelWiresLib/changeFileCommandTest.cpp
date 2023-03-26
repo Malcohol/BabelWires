@@ -17,8 +17,7 @@
 
 namespace {
     void testSourceFileChange(bool source1Present, bool source2Present) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         testUtils::TempFilePath filePath1("foo" + testUtils::TestSourceFileFormat::getFileExtension());
         testUtils::TempFilePath filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
@@ -98,7 +97,6 @@ TEST(ChangeFileCommandTest, executeAndUndoSourceMissing1and2) {
 }
 
 TEST(ChangeFileCommandTest, executeAndUndoTarget) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     std::string filePath1("foo" + testUtils::TestSourceFileFormat::getFileExtension());
@@ -138,7 +136,6 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
 }
 
 TEST(ChangeFileCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     std::string filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
@@ -150,7 +147,6 @@ TEST(ChangeFileCommandTest, failSafelyNoElement) {
 
 // Not sure how this could happen.
 TEST(ChangeFileCommandTest, failSafelyNotAFileElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());

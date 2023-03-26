@@ -8,6 +8,8 @@
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
 #include <Tests/TestUtils/testLog.hpp>
@@ -33,14 +35,12 @@ TEST(AddBlankToEnum, ensureBlankValueEmpty) {
 }
 
 TEST(AddBlankToEnum, constructType) {
-    testUtils::TestLog log;
-
-    babelwires::TypeSystem typeSystem;
-    const testUtils::TestEnum* const testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+    testUtils::TestEnvironment testEnvironment;
+    const testUtils::TestEnum& testEnum = testEnvironment.m_typeSystem.getEntryByType<testUtils::TestEnum>();
 
     babelwires::AddBlankToEnum addBlankToEnum;
     const babelwires::Type* const newType =
-        addBlankToEnum.getOrConstructType(typeSystem, babelwires::TypeConstructorArguments<1>{testUtils::TestEnum::getThisIdentifier()});
+        addBlankToEnum.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments<1>{testUtils::TestEnum::getThisIdentifier()});
     ASSERT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeRef(), babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
                                                          testUtils::TestEnum::getThisIdentifier()));
@@ -48,24 +48,21 @@ TEST(AddBlankToEnum, constructType) {
     const babelwires::Enum* const newEnum = newType->as<babelwires::Enum>();
     ASSERT_NE(newEnum, nullptr);
 
-    EXPECT_EQ(newEnum->getEnumValues().size(), testEnum->getEnumValues().size() + 1);
-    for (int i = 0; i < testEnum->getEnumValues().size(); ++i) {
-        EXPECT_EQ(newEnum->getEnumValues()[i], testEnum->getEnumValues()[i]);
+    EXPECT_EQ(newEnum->getEnumValues().size(), testEnum.getEnumValues().size() + 1);
+    for (int i = 0; i < testEnum.getEnumValues().size(); ++i) {
+        EXPECT_EQ(newEnum->getEnumValues()[i], testEnum.getEnumValues()[i]);
     }
     EXPECT_EQ(newEnum->getEnumValues()[newEnum->getEnumValues().size() - 1], babelwires::AddBlankToEnum::getBlankValue());
-    EXPECT_EQ(newEnum->getIndexOfDefaultValue(), testEnum->getIndexOfDefaultValue());
+    EXPECT_EQ(newEnum->getIndexOfDefaultValue(), testEnum.getIndexOfDefaultValue());
 }
 
 TEST(AddBlankToEnum, idempotency) {
-    testUtils::TestLog log;
-
-    babelwires::TypeSystem typeSystem;
-    const testUtils::TestEnum* const testEnum = typeSystem.addEntry<testUtils::TestEnum>();
-    typeSystem.addTypeConstructor<babelwires::AddBlankToEnum>();
+    testUtils::TestEnvironment testEnvironment;
+    const testUtils::TestEnum& testEnum = testEnvironment.m_typeSystem.getEntryByType<testUtils::TestEnum>();
 
     babelwires::AddBlankToEnum addBlankToEnum;
     const babelwires::Type* const newType =
-        addBlankToEnum.getOrConstructType(typeSystem, babelwires::TypeConstructorArguments<1>{babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
+        addBlankToEnum.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments<1>{babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
                                                                       testUtils::TestEnum::getThisIdentifier())});
 
     ASSERT_NE(newType, nullptr);
@@ -77,19 +74,16 @@ TEST(AddBlankToEnum, idempotency) {
     const babelwires::Enum* const newEnum = newType->as<babelwires::Enum>();
     ASSERT_NE(newEnum, nullptr);
 
-    EXPECT_EQ(newEnum->getEnumValues().size(), testEnum->getEnumValues().size() + 1);
-    for (int i = 0; i < testEnum->getEnumValues().size(); ++i) {
-        EXPECT_EQ(newEnum->getEnumValues()[i], testEnum->getEnumValues()[i]);
+    EXPECT_EQ(newEnum->getEnumValues().size(), testEnum.getEnumValues().size() + 1);
+    for (int i = 0; i < testEnum.getEnumValues().size(); ++i) {
+        EXPECT_EQ(newEnum->getEnumValues()[i], testEnum.getEnumValues()[i]);
     }
     EXPECT_EQ(newEnum->getEnumValues()[newEnum->getEnumValues().size() - 1], babelwires::AddBlankToEnum::getBlankValue());
-    EXPECT_EQ(newEnum->getIndexOfDefaultValue(), testEnum->getIndexOfDefaultValue());
+    EXPECT_EQ(newEnum->getIndexOfDefaultValue(), testEnum.getIndexOfDefaultValue());
 }
 
 TEST(AddBlankToEnum, compareSubtype) {
-    testUtils::TestLog log;
-    babelwires::TypeSystem typeSystem;
-    testUtils::addTestEnumTypes(typeSystem);
-    typeSystem.addTypeConstructor<babelwires::AddBlankToEnum>();
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::TypeRef addBlankToEnumToSubEnum(babelwires::AddBlankToEnum::getThisIdentifier(),
                                           testUtils::TestSubEnum::getThisIdentifier());
@@ -100,33 +94,33 @@ TEST(AddBlankToEnum, compareSubtype) {
     babelwires::TypeRef addBlankToEnumToSubSubEnum2(babelwires::AddBlankToEnum::getThisIdentifier(),
                                               testUtils::TestSubSubEnum2::getThisIdentifier());
 
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubEnum, addBlankToEnumToSubEnum), babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubEnum, addBlankToEnumToSubSubEnum1),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubEnum, addBlankToEnumToSubEnum), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubEnum, addBlankToEnumToSubSubEnum1),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubEnum, addBlankToEnumToSubSubEnum2),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubEnum, addBlankToEnumToSubSubEnum2),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubSubEnum1, addBlankToEnumToSubEnum), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubSubEnum1, addBlankToEnumToSubSubEnum1),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum1, addBlankToEnumToSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum1, addBlankToEnumToSubSubEnum1),
               babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubSubEnum1, addBlankToEnumToSubSubEnum2),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum1, addBlankToEnumToSubSubEnum2),
               babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubSubEnum2, addBlankToEnumToSubEnum), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubSubEnum2, addBlankToEnumToSubSubEnum1),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum2, addBlankToEnumToSubEnum), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum2, addBlankToEnumToSubSubEnum1),
               babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubSubEnum2, addBlankToEnumToSubSubEnum2),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum2, addBlankToEnumToSubSubEnum2),
               babelwires::SubtypeOrder::IsEquivalent);
 
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubEnum, testUtils::TestSubEnum::getThisIdentifier()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubEnum, testUtils::TestSubEnum::getThisIdentifier()),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubEnum, testUtils::TestSubSubEnum1::getThisIdentifier()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubEnum, testUtils::TestSubSubEnum1::getThisIdentifier()),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(typeSystem.compareSubtype(addBlankToEnumToSubEnum, testUtils::TestEnum::getThisIdentifier()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubEnum, testUtils::TestEnum::getThisIdentifier()),
               babelwires::SubtypeOrder::IsUnrelated);
 
-    EXPECT_EQ(typeSystem.compareSubtype(testUtils::TestSubEnum::getThisIdentifier(), addBlankToEnumToSubEnum),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testUtils::TestSubEnum::getThisIdentifier(), addBlankToEnumToSubEnum),
               babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(typeSystem.compareSubtype(testUtils::TestSubSubEnum1::getThisIdentifier(), addBlankToEnumToSubEnum),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testUtils::TestSubSubEnum1::getThisIdentifier(), addBlankToEnumToSubEnum),
               babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(typeSystem.compareSubtype(testUtils::TestEnum::getThisIdentifier(), addBlankToEnumToSubEnum),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testUtils::TestEnum::getThisIdentifier(), addBlankToEnumToSubEnum),
               babelwires::SubtypeOrder::IsUnrelated);
 }

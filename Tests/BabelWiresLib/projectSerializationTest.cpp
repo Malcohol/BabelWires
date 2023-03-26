@@ -13,7 +13,6 @@
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(ProjectSerializationTest, saveLoadStringSameContext) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData testProjectData;
@@ -37,8 +36,7 @@ TEST(ProjectSerializationTest, saveLoadStringSameContext) {
 TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
     std::string serializedContents;
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         testUtils::TestProjectData testProjectData;
         testProjectData.resolvePathsInCurrentContext(testEnvironment.m_projectContext);
@@ -47,8 +45,7 @@ TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
     }
 
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         babelwires::ProjectData loadedData = babelwires::ProjectSerialization::loadFromString(
             serializedContents, testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
@@ -66,8 +63,7 @@ TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
 TEST(ProjectSerializationTest, saveLoadFile) {
     testUtils::TempFilePath tempFile("Foo.test");
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         testUtils::TestProjectData testProjectData;
         testProjectData.resolvePathsInCurrentContext(testEnvironment.m_projectContext);
@@ -76,8 +72,7 @@ TEST(ProjectSerializationTest, saveLoadFile) {
     }
 
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         babelwires::ProjectData loadedData =
             babelwires::ProjectSerialization::loadFromFile(tempFile, testEnvironment.m_projectContext, testEnvironment.m_log);

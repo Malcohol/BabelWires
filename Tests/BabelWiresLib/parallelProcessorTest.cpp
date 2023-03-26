@@ -44,7 +44,6 @@ namespace {
 } // namespace
 
 TEST(ParallelProcessorTest, updateOutputOnChanges) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     TestParallelProcessor processor(testEnvironment.m_projectContext);
@@ -93,7 +92,6 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
 }
 
 TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     // Use the testEnvironment's log to determine when the processEntry method is called.
     testUtils::TestEnvironment testEnvironment;
 
@@ -168,7 +166,6 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
 }
 
 TEST(ParallelProcessorTest, testFailure) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     // Use the testEnvironment's log to determine when the processEntry method is called.
     testUtils::TestEnvironment testEnvironment;
 

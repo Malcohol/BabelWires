@@ -5,7 +5,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(RootFeatureTest, rootedFeature) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestRootFeature rootedFeature(testEnvironment.m_projectContext);
@@ -18,7 +17,6 @@ TEST(RootFeatureTest, rootedFeature) {
 }
 
 TEST(RootFeatureTest, unrootedFeature) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestRecordFeature unrootedFeature;

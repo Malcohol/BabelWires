@@ -95,7 +95,6 @@ TEST(EnumTest, createValue) {
 }
 
 TEST(EnumTest, subEnum) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
 

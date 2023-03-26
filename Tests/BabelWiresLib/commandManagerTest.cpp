@@ -45,7 +45,6 @@ namespace {
 } // namespace
 
 TEST(CommandManagerTest, undoRedoSinceCommand) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
@@ -113,7 +112,6 @@ TEST(CommandManagerTest, undoRedoSinceCommand) {
 }
 
 TEST(CommandManagerTest, undoRedoWithTwoCommands) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
@@ -211,7 +209,6 @@ TEST(CommandManagerTest, undoRedoWithTwoCommands) {
 }
 
 TEST(CommandManagerTest, failedCommand) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
@@ -269,7 +266,6 @@ TEST(CommandManagerTest, failedCommand) {
 }
 
 TEST(CommandManagerTest, subsumption) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 
@@ -304,7 +300,6 @@ TEST(CommandManagerTest, subsumption) {
 }
 
 TEST(CommandManagerTest, clear) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::CommandManager commandManager(testEnvironment.m_project, testEnvironment.m_log);
 

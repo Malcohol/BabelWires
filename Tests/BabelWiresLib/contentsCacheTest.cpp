@@ -340,7 +340,6 @@ namespace {
 } // namespace
 
 TEST(ContentsCacheTest, inputFeatureOnly) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
@@ -354,7 +353,6 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
 }
 
 TEST(ContentsCacheTest, outputFeatureOnly) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
@@ -367,7 +365,6 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
 }
 
 TEST(ContentsCacheTest, inputAndOutputFeature) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
@@ -383,7 +380,6 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
 }
 
 TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
@@ -460,7 +456,6 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
 }
 
 TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
@@ -631,7 +626,6 @@ namespace {
 } // namespace
 
 TEST(ContentsCacheTest, inputFileFeatureOnly) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
@@ -646,7 +640,6 @@ TEST(ContentsCacheTest, inputFileFeatureOnly) {
 }
 
 TEST(ContentsCacheTest, outputFileFeatureOnly) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
@@ -660,7 +653,6 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
 }
 
 TEST(ContentsCacheTest, inputAndOutputFileFeature) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
@@ -701,7 +693,6 @@ namespace {
 } // namespace
 
 TEST(ContentsCacheTest, style) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;

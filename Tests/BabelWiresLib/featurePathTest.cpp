@@ -145,7 +145,6 @@ TEST(FeaturePathTest, pathIteration) {
 
 TEST(FeaturePathTest, pathFollow) {
     testUtils::TestLog log;
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     testUtils::TestRecordFeature testRecordFeature;
 
@@ -187,7 +186,6 @@ TEST(FeaturePathTest, pathFollow) {
 
 TEST(FeaturePathTest, pathResolve) {
     testUtils::TestLog log;
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::FeaturePath pathToInt;
     babelwires::FeaturePath pathToArray;
@@ -246,7 +244,6 @@ TEST(FeaturePathTest, pathResolve) {
 
 TEST(FeaturePathTest, pathTryFollow) {
     testUtils::TestLog log;
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     testUtils::TestRecordFeature testRecordFeature;
 
@@ -270,7 +267,6 @@ TEST(FeaturePathTest, pathTryFollow) {
 
 TEST(FeaturePathTest, pathFollowFail) {
     testUtils::TestLog log;
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::FeaturePath pathToNonField;
     babelwires::FeaturePath pathToNonIndex;

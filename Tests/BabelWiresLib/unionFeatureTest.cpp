@@ -490,10 +490,8 @@ TEST(UnionFeatureTest, queries) {
 }
 
 TEST(UnionFeatureTest, unselectedEnumCanBeDefaulted) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<testUtils::TestEnum>();
-
+    
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
 
     // Confirm that features in branches are in a fully defaulted state when a branch is selected.

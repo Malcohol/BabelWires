@@ -35,10 +35,8 @@ TEST(MapFeatureTest, construction) {
 }
 
 TEST(MapFeatureTest, setToDefault) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-
+    
     // MapFeatures expect to be able to find the typeSystem via the rootFeature at the root of the feature hierarchy.
     babelwires::RootFeature rootFeature(environment.m_projectContext);
     // The field identifier here doesn't need to be correctly registered.
@@ -65,13 +63,7 @@ TEST(MapFeatureTest, isCompatible) {
 }
 
 TEST(MapFeatureTest, assign) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
-    environment.m_typeSystem.addRelatedTypes(testUtils::TestSubEnum::getThisIdentifier(),
-                                             {{testUtils::TestEnum::getThisIdentifier()}, {}});
 
     // MapFeatures expect to be able to find the typeSystem via the rootFeature at the root of the feature
     // hierarchy.
@@ -150,13 +142,7 @@ TEST(MapFeatureTest, assign) {
 }
 
 TEST(MapFeatureTest, setAndGet) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-    environment.m_typeSystem.addEntry<testUtils::TestSubEnum>();
-    environment.m_typeSystem.addRelatedTypes(testUtils::TestSubEnum::getThisIdentifier(),
-                                             {{testUtils::TestEnum::getThisIdentifier()}, {}});
 
     // MapFeatures expect to be able to find the typeSystem via the rootFeature at the root of the feature
     // hierarchy.

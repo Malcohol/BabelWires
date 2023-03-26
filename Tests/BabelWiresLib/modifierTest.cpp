@@ -29,6 +29,8 @@ namespace {
 } // namespace
 
 TEST(ModifierTest, basicStuff) {
+    testUtils::TestEnvironment testEnvironment;
+
     babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/bb");
 
     auto intModData = std::make_unique<babelwires::IntValueAssignmentData>();
@@ -66,7 +68,9 @@ TEST(ModifierTest, clone) {
 }
 
 TEST(ModifierTest, localApplySuccess) {
-    babelwires::RecordFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::RootFeature recordFeature(testEnvironment.m_projectContext);
 
     babelwires::ShortId id0("aa");
     id0.setDiscriminator(1);
@@ -98,7 +102,9 @@ TEST(ModifierTest, localApplySuccess) {
 }
 
 TEST(ModifierTest, localApplyFailureWrongType) {
-    babelwires::RecordFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::RootFeature recordFeature(testEnvironment.m_projectContext);
 
     babelwires::ShortId id0("aa");
     id0.setDiscriminator(1);
@@ -130,7 +136,9 @@ TEST(ModifierTest, localApplyFailureWrongType) {
 }
 
 TEST(ModifierTest, localApplyFailureNoTarget) {
-    babelwires::RecordFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::RootFeature recordFeature(testEnvironment.m_projectContext);
 
     babelwires::ShortId id0("aa");
     id0.setDiscriminator(1);
@@ -151,7 +159,6 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
     testUtils::TestLogWithListener testLog;
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     intMod.applyIfLocal(testLog, &recordFeature);
     EXPECT_TRUE(intMod.isFailed());
@@ -160,7 +167,9 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
 }
 
 TEST(ModifierTest, arraySizeModifierSuccess) {
-    babelwires::RecordFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::RootFeature recordFeature(testEnvironment.m_projectContext);
 
     babelwires::ShortId id0("aa");
     id0.setDiscriminator(1);
@@ -181,7 +190,6 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
     testUtils::TestLogWithListener testLog;
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     arrayMod.applyIfLocal(testLog, &recordFeature);
     EXPECT_FALSE(arrayMod.isFailed());
@@ -210,7 +218,9 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
 }
 
 TEST(ModifierTest, arraySizeModifierFailure) {
-    babelwires::RecordFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::RootFeature recordFeature(testEnvironment.m_projectContext);
 
     babelwires::ShortId id0("aa");
     id0.setDiscriminator(1);
@@ -232,7 +242,6 @@ TEST(ModifierTest, arraySizeModifierFailure) {
     testUtils::TestLogWithListener testLog;
 
     // An exception will try to print out a path, which will expect one of these singletons.
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     arrayMod.applyIfLocal(testLog, &recordFeature);
     EXPECT_TRUE(arrayMod.isFailed());
@@ -244,8 +253,7 @@ TEST(ModifierTest, arraySizeModifierFailure) {
 }
 
 TEST(ModifierTest, connectionModifierSuccess) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
@@ -254,9 +262,9 @@ TEST(ModifierTest, connectionModifierSuccess) {
     sourceData.m_value = 100;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::IntValueAssignmentData>(sourceData));
 
-    const babelwires::ElementId sourceId = projectContext.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
-    babelwires::RecordFeature targetRecordFeature;
+    babelwires::RootFeature targetRecordFeature(testEnvironment.m_projectContext);
     babelwires::ShortId id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
@@ -275,16 +283,15 @@ TEST(ModifierTest, connectionModifierSuccess) {
 
     EXPECT_EQ(targetFeature->get(), 0);
 
-    connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
+    connectionMod.applyConnection(testEnvironment.m_project, testEnvironment.m_log, &targetRecordFeature);
 
     EXPECT_EQ(targetFeature->get(), 100);
 }
 
 TEST(ModifierTest, connectionModifierTargetPathFailure) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment testEnvironment;
 
-    babelwires::RecordFeature targetRecordFeature;
+    babelwires::RootFeature targetRecordFeature(testEnvironment.m_projectContext);
     babelwires::ShortId id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
@@ -303,19 +310,18 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
     connectionMod.setOwner(&owner);
 
     EXPECT_EQ(targetFeature->get(), 0);
-    connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
+    connectionMod.applyConnection(testEnvironment.m_project, testEnvironment.m_log, &targetRecordFeature);
     EXPECT_TRUE(connectionMod.isFailed());
     EXPECT_EQ(connectionMod.getState(), babelwires::Modifier::State::TargetMissing);
     EXPECT_EQ(targetFeature->get(), 0);
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("xx"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("xx"));
 }
 
 TEST(ModifierTest, connectionModifierSourceIdFailure) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment testEnvironment;
 
-    babelwires::RecordFeature targetRecordFeature;
+    babelwires::RootFeature targetRecordFeature(testEnvironment.m_projectContext);
     babelwires::ShortId id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
@@ -334,18 +340,17 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
     connectionMod.setOwner(&owner);
 
     EXPECT_EQ(targetFeature->get(), 0);
-    connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
+    connectionMod.applyConnection(testEnvironment.m_project, testEnvironment.m_log, &targetRecordFeature);
     EXPECT_TRUE(connectionMod.isFailed());
     EXPECT_EQ(connectionMod.getState(), babelwires::Modifier::State::SourceMissing);
     EXPECT_EQ(targetFeature->get(), 0);
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("source"));
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("99"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("source"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("99"));
 }
 
 TEST(ModifierTest, connectionModifierSourcePathFailure) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
@@ -354,9 +359,9 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
     sourceData.m_value = 100;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::IntValueAssignmentData>(sourceData));
 
-    const babelwires::ElementId sourceId = projectContext.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
-    babelwires::RecordFeature targetRecordFeature;
+    babelwires::RootFeature targetRecordFeature(testEnvironment.m_projectContext);
     babelwires::ShortId id1("bb");
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
@@ -374,18 +379,17 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
     connectionMod.setOwner(&owner);
 
     EXPECT_EQ(targetFeature->get(), 0);
-    connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
+    connectionMod.applyConnection(testEnvironment.m_project, testEnvironment.m_log, &targetRecordFeature);
     EXPECT_TRUE(connectionMod.isFailed());
     EXPECT_EQ(connectionMod.getState(), babelwires::Modifier::State::SourceMissing);
     EXPECT_EQ(targetFeature->get(), 0);
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("source"));
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("xx"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("source"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("xx"));
 }
 
 TEST(ModifierTest, connectionModifierApplicationFailure) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
-    testUtils::TestEnvironment projectContext;
+    testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
@@ -394,9 +398,9 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     sourceData.m_value = 100;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::IntValueAssignmentData>(sourceData));
 
-    const babelwires::ElementId sourceId = projectContext.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
-    babelwires::RecordFeature targetRecordFeature;
+    babelwires::RootFeature targetRecordFeature(testEnvironment.m_projectContext);
     babelwires::ShortId id1("bb");
     id1.setDiscriminator(1);
     babelwires::StringFeature* targetFeature =
@@ -415,11 +419,11 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     connectionMod.setOwner(&owner);
 
     EXPECT_EQ(targetFeature->get(), "Hello");
-    connectionMod.applyConnection(projectContext.m_project, projectContext.m_log, &targetRecordFeature);
+    connectionMod.applyConnection(testEnvironment.m_project, testEnvironment.m_log, &targetRecordFeature);
     EXPECT_TRUE(connectionMod.isFailed());
     EXPECT_EQ(connectionMod.getState(), babelwires::Modifier::State::ApplicationFailed);
     // The string will now be default.
     EXPECT_TRUE(targetFeature->get().empty());
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
-    EXPECT_TRUE(projectContext.m_log.hasSubstringIgnoreCase("incompatible"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("incompatible"));
 }

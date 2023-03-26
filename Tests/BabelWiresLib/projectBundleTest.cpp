@@ -18,7 +18,6 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
     babelwires::ProjectBundle bundle;
 
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
         testUtils::TestEnvironment testEnvironment;
         
         // Ensure some of the test record's discriminators are not default.
@@ -91,8 +90,6 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         bundle2.interpretInCurrentContext();
 
         {
-            // Bit of a hack, but this lets us iterate through the registry.
-            // TODO Perhaps just make iteration public
             const babelwires::IdentifierRegistry& testRegistry = bundle2.getIdentifierRegistry();
 
             // These have no duplicates in the bundle.
@@ -151,8 +148,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
     }
 
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         // Slightly different arrangement and UUIDs to the above (not that it should matter)
         babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,
@@ -199,7 +195,6 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
 }
 
 TEST(ProjectBundleTest, factoryMetadata) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestProjectData projectData;
 
@@ -230,7 +225,6 @@ TEST(ProjectBundleTest, factoryMetadata) {
 
 TEST(ProjectBundleTest, filePathResolution) {
     testUtils::TestLogWithListener log;
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     std::filesystem::path root = std::filesystem::canonical(std::filesystem::temp_directory_path());
@@ -312,7 +306,6 @@ TEST(ProjectBundleTest, filePathResolution) {
 
 TEST(ProjectBundleTest, factoryIdentifiers) {
     testUtils::TestLog log;
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     // Prepopulate the identifierRegistry with clashing factory identifier.
     // I don't expect duplicate factory identifiers, but this will make it easier to test

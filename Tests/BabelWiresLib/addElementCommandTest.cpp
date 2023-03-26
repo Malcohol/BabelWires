@@ -11,7 +11,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(AddElementCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::AddElementCommand command("Test command", std::make_unique<testUtils::TestFeatureElementData>());
@@ -38,7 +37,6 @@ TEST(AddElementCommandTest, executeAndUndo) {
 }
 
 TEST(AddElementCommandTest, subsumeMoves) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::AddElementCommand addCommand("Test command", std::make_unique<testUtils::TestFeatureElementData>());

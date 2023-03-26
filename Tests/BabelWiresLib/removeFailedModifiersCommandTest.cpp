@@ -15,8 +15,7 @@
 
 namespace {
     void testRemoveFailedModifiers(bool isWholeRecord) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         testUtils::TestFeatureElementData elementData;
         {
@@ -116,7 +115,6 @@ TEST(RemoveFailedModifiersCommandTest, executeAndUndoSubFeature) {
 }
 
 TEST(RemoveFailedModifiersCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveFailedModifiersCommand command("Test command", 51,
                                                      babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
@@ -126,7 +124,6 @@ TEST(RemoveFailedModifiersCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveFailedModifiersCommandTest, failSafelyNoSubFeature) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveFailedModifiersCommand command("Test command", 51,
                                                      babelwires::FeaturePath::deserializeFromString("qqq/zzz"));

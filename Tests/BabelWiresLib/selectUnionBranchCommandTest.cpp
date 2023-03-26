@@ -15,7 +15,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureWithUnion.hpp>
 
 TEST(SelectUnionBranchCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithUnionData());
@@ -120,7 +119,6 @@ TEST(SelectUnionBranchCommandTest, executeAndUndo) {
 }
 
 TEST(SelectUnionBranchCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::SelectUnionBranchCommand command("Test command",  51,
                                                testUtils::TestFeatureWithUnion::s_pathToUnionFeature, "tag");
@@ -130,7 +128,6 @@ TEST(SelectUnionBranchCommandTest, failSafelyNoElement) {
 }
 
 TEST(SelectUnionBranchCommandTest, failSafelyNoRecord) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::SelectUnionBranchCommand command("Test command",  51,
                                                babelwires::FeaturePath::deserializeFromString("qqq/zzz"), "tag");
@@ -146,7 +143,6 @@ TEST(SelectUnionBranchCommandTest, failSafelyNoRecord) {
 }
 
 TEST(SelectUnionBranchCommandTest, failSafelyNoOptional) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
@@ -164,7 +160,6 @@ TEST(SelectUnionBranchCommandTest, failSafelyNoOptional) {
 }
 
 TEST(SelectUnionBranchCommandTest, failSafelyAlreadySelected) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =

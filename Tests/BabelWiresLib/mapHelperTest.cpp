@@ -143,7 +143,6 @@ namespace {
 } // namespace
 
 TEST(MapHelperTest, unorderedMapApplicator_allToOneFallback) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
 
@@ -159,7 +158,6 @@ TEST(MapHelperTest, unorderedMapApplicator_allToOneFallback) {
 }
 
 TEST(MapHelperTest, unorderedMapApplicator_allToSameFallback) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
 
@@ -175,7 +173,6 @@ TEST(MapHelperTest, unorderedMapApplicator_allToSameFallback) {
 }
 
 TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -195,7 +192,6 @@ TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
 }
 
 TEST(MapHelperTest, enumSourceMapApplicator_allToOneFallback) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestEnum>();
 
@@ -214,7 +210,6 @@ TEST(MapHelperTest, enumSourceMapApplicator_allToOneFallback) {
 }
 
 TEST(MapHelperTest, enumSourceMapApplicator_allToSameFallback) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestEnum>();
 
@@ -233,7 +228,6 @@ TEST(MapHelperTest, enumSourceMapApplicator_allToSameFallback) {
 }
 
 TEST(MapHelperTest, enumSourceMapApplicator_differentTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestEnum>();
 

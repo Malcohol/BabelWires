@@ -12,7 +12,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(AddModifierCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -52,7 +51,6 @@ TEST(AddModifierCommandTest, executeAndUndo) {
 }
 
 TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -100,7 +98,6 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
 }
 
 TEST(AddModifierCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;
@@ -114,7 +111,6 @@ TEST(AddModifierCommandTest, failSafelyNoElement) {
 }
 
 TEST(AddModifierCommandTest, failSafelyNoTarget) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::IntValueAssignmentData modData;

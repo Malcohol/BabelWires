@@ -16,7 +16,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp>
 
 TEST(RemoveModifierCommandTest, executeAndUndoArray) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -113,7 +112,6 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 
 TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
 {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithOptionalsData());
@@ -214,7 +212,6 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
 }
 
 TEST(RemoveModifierCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveModifierCommand command("Test command", 51,
                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
@@ -224,7 +221,6 @@ TEST(RemoveModifierCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveModifierCommandTest, failSafelyNoModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveModifierCommand command("Test command", 51,
                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"));

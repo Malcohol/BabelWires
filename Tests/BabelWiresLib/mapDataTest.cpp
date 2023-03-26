@@ -132,7 +132,6 @@ TEST(MapDataTest, equality) {
     EXPECT_TRUE(mapData == mapData2);
     EXPECT_FALSE(mapData != mapData2);
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
 
@@ -177,7 +176,6 @@ TEST(MapDataTest, getHash) {
 
     EXPECT_EQ(mapData.getHash(), mapData2.getHash());
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
 
@@ -198,7 +196,6 @@ TEST(MapDataTest, getHash) {
 TEST(MapDataTest, isInvalid_validMap) {
     babelwires::MapData mapData;
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
@@ -218,7 +215,6 @@ TEST(MapDataTest, isInvalid_validMap) {
 TEST(MapDataTest, isInvalid_outOfPlaceFallback) {
     babelwires::MapData mapData;
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
@@ -234,7 +230,6 @@ TEST(MapDataTest, isInvalid_outOfPlaceFallback) {
 TEST(MapDataTest, isInvalid_noFallback) {
     babelwires::MapData mapData;
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
@@ -248,7 +243,6 @@ TEST(MapDataTest, isInvalid_noFallback) {
 TEST(MapDataTest, isValid_typeMismatch) {
     babelwires::MapData mapData;
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
@@ -267,8 +261,7 @@ TEST(MapDataTest, serializationTest) {
         mapData.setSourceTypeRef(testTypeId1);
         mapData.setTargetTypeRef(testTypeId2);
     
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        babelwires::TypeSystem typeSystem;
+            babelwires::TypeSystem typeSystem;
         typeSystem.addEntry<testUtils::TestType>();  
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.
@@ -311,7 +304,6 @@ TEST(MapDataTest, cloneTest) {
     mapData.setSourceTypeRef(testTypeId1);
     mapData.setTargetTypeRef(testTypeId2);
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 

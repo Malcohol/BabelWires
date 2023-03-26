@@ -12,7 +12,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -67,7 +66,6 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
 }
 
 TEST(RemoveSimpleModifierCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveSimpleModifierCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
@@ -77,7 +75,6 @@ TEST(RemoveSimpleModifierCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveSimpleModifierCommandTest, failSafelyNoModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveSimpleModifierCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
