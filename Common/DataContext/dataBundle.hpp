@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <Common/DataContext/dataVisitable.hpp>
 #include <Common/DataContext/filePath.hpp>
 #include <Common/DataContext/dataContext.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>

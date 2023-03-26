@@ -148,7 +148,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
     }
 
     {
-            testUtils::TestEnvironment testEnvironment;
+        testUtils::TestEnvironment testEnvironment;
 
         // Slightly different arrangement and UUIDs to the above (not that it should matter)
         babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,

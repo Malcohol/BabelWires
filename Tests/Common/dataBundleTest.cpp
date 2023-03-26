@@ -1,0 +1,140 @@
+#include <gtest/gtest.h>
+
+#include <Common/DataContext/dataBundle.hpp>
+#include <Common/DataContext/dataSerialization.hpp>
+#include <Common/DataContext/dataVisitable.hpp>
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
+
+#include <Tests/TestUtils/testLog.hpp>
+
+namespace {
+    struct TestBundlePayload : babelwires::Serializable, babelwires::DataVisitable {
+        SERIALIZABLE(TestBundlePayload, "TestBundlePayload", void, 1);
+
+        TestBundlePayload() {}
+        TestBundlePayload(int x)
+            : m_contents(x)
+            , m_shortId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
+                  "short", "short", "00000000-1111-2222-3333-000000000000",
+                  babelwires::IdentifierRegistry::Authority::isAuthoritative))
+            , m_mediumId(babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
+                  "mediumId", "medium", "00000000-1111-2222-3333-000000000001",
+                  babelwires::IdentifierRegistry::Authority::isAuthoritative))
+            , m_longId(babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+                  "aLongIdentifier", "long", "00000000-1111-2222-3333-000000000002",
+                  babelwires::IdentifierRegistry::Authority::isAuthoritative)) {}
+
+        void visitIdentifiers(babelwires::IdentifierVisitor& visitor) override {
+            visitor(m_shortId);
+            visitor(m_mediumId);
+            visitor(m_longId);
+        }
+
+        /// Call the visitor on all FilePaths in the object.
+        void visitFilePaths(babelwires::FilePathVisitor& visitor) override { visitor(m_filePath); }
+
+        void serializeContents(babelwires::Serializer& serializer) const override {
+            serializer.serializeValue("shortId", m_shortId);
+            serializer.serializeValue("mediumId", m_mediumId);
+            serializer.serializeValue("longId", m_longId);
+            serializer.serializeValue("filePath", m_filePath);
+        }
+
+        void deserializeContents(babelwires::Deserializer& deserializer) override {
+            deserializer.deserializeValue("shortId", m_shortId);
+            deserializer.deserializeValue("mediumId", m_mediumId);
+            deserializer.deserializeValue("longId", m_longId);
+            deserializer.deserializeValue("filePath", m_filePath);
+        }
+
+        int m_contents;
+        babelwires::ShortId m_shortId;
+        babelwires::MediumId m_mediumId;
+        babelwires::LongId m_longId;
+        babelwires::FilePath m_filePath;
+    };
+
+    struct TestBundle : babelwires::DataBundle<TestBundlePayload> {
+        SERIALIZABLE(TestBundle, "TestBundle", void, 1);
+
+
+        TestBundle() = default;
+        TestBundle(std::filesystem::path pathToBundleFile, TestBundlePayload&& payload)
+            : DataBundle(std::move(pathToBundleFile), std::move(payload)) {
+        }
+
+        void visitIdentifiers(babelwires::IdentifierVisitor& visitor) override { getData().visitIdentifiers(visitor); }
+
+        /// Call the visitor on all FilePaths in the object.
+        void visitFilePaths(babelwires::FilePathVisitor& visitor) override { getData().visitFilePaths(visitor); }
+
+        void interpretAdditionalMetadataInCurrentContext() override {}
+
+        void adaptDataToAdditionalMetadata(const babelwires::DataContext& context,
+                                           babelwires::UserLogger& userLogger) override {}
+
+        void serializeAdditionalMetadata(babelwires::Serializer& serializer) const override {}
+
+        void deserializeAdditionalMetadata(babelwires::Deserializer& deserializer) override {}
+    };
+} // namespace
+
+TEST(ProjectBundleTest, identifiers) {
+    // This will carry data between the first part of the test and the second.
+    TestBundle bundle;
+
+    {
+        testUtils::TestLog testLog;
+        babelwires::IdentifierRegistryScope identifierRegistry;
+
+        // Ensure we're not just testing in same context on both sides.
+        babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
+            "mediumId", "other medium", "55555555-1111-2222-3333-000000000001",
+            babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+            "aLongIdentifier", "other long 1", "55555555-1111-2222-3333-000000000002",
+            babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
+            "aLongIdentifier", "other long 2", "55555555-1111-2222-3333-000000000022",
+            babelwires::IdentifierRegistry::Authority::isAuthoritative);
+
+        TestBundlePayload sourcePayload(15);
+
+        EXPECT_EQ(sourcePayload.m_shortId.getDiscriminator(), 1);
+        EXPECT_EQ(sourcePayload.m_mediumId.getDiscriminator(), 2); 
+        EXPECT_EQ(sourcePayload.m_longId.getDiscriminator(), 3);
+
+        bundle = TestBundle(std::filesystem::current_path(), std::move(sourcePayload));
+        bundle.interpretInCurrentContext();
+
+        EXPECT_EQ(bundle.getData().m_shortId.getDiscriminator(), 1);
+        EXPECT_EQ(bundle.getData().m_mediumId.getDiscriminator(), 1); 
+        EXPECT_EQ(bundle.getData().m_longId.getDiscriminator(), 1);
+    }
+
+    {
+        testUtils::TestLog testLog;
+        babelwires::IdentifierRegistryScope identifierRegistry;
+        babelwires::AutomaticDeserializationRegistry deserializationReg;
+        babelwires::DataContext dataContext{deserializationReg};
+
+        // Ensure we're not just testing in same context on both sides.
+        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
+            "short", "other short 1", "66666666-1111-2222-3333-000000000000",
+            babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
+            "short", "other short 2", "66666666-1111-2222-3333-000000000011",
+            babelwires::IdentifierRegistry::Authority::isAuthoritative);
+        babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
+            "mediumId", "other medium", "66666666-1111-2222-3333-000000000001",
+            babelwires::IdentifierRegistry::Authority::isAuthoritative);
+
+        TestBundlePayload targetPayload =
+            std::move(bundle).resolveAgainstCurrentContext(dataContext, std::filesystem::current_path(), testLog);
+
+        EXPECT_EQ(targetPayload.m_shortId.getDiscriminator(), 3);
+        EXPECT_EQ(targetPayload.m_mediumId.getDiscriminator(), 2); 
+        EXPECT_EQ(targetPayload.m_longId.getDiscriminator(), 1);
+    }
+}

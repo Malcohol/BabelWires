@@ -3,6 +3,7 @@ SET( COMMON_TESTS_SRCS
    blockStreamTest.cpp
    cloneTest.cpp
    commonTests.cpp
+   dataBundleTest.cpp
    dataSourceTest.cpp
    filePathTest.cpp
    enumFlagsTest.cpp
