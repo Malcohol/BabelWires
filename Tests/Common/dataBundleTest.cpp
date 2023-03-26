@@ -132,9 +132,18 @@ TEST(DataBundleTest, identifiers) {
         TestBundlePayload targetPayload =
             std::move(bundle).resolveAgainstCurrentContext(dataContext, std::filesystem::current_path(), testLog);
 
+        EXPECT_EQ(targetPayload.m_contents, 15);
         EXPECT_EQ(targetPayload.m_shortId.getDiscriminator(), 3);
         EXPECT_EQ(targetPayload.m_mediumId.getDiscriminator(), 2);
         EXPECT_EQ(targetPayload.m_longId.getDiscriminator(), 1);
+
+        // Confirm that the resolved data is provisional.
+        {
+            babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
+                "mediumId", "Updated name", "00000000-1111-2222-3333-000000000001",
+                babelwires::IdentifierRegistry::Authority::isAuthoritative);
+            EXPECT_EQ(babelwires::IdentifierRegistry::read()->getName(targetPayload.m_mediumId), "Updated name");
+        }
     }
 }
 
@@ -187,9 +196,9 @@ TEST(DataBundleTest, filePathResolution) {
             testUtils::TestLog testLog;
             babelwires::IdentifierRegistryScope identifierRegistry;
 
-            TestBundlePayload projectData(14);
-            projectData.m_filePath = scenario.m_pathInProjectData;
-            bundle = TestBundle(scenario.m_oldBase, std::move(projectData));
+            TestBundlePayload sourcePayload(44);
+            sourcePayload.m_filePath = scenario.m_pathInProjectData;
+            bundle = TestBundle(scenario.m_oldBase, std::move(sourcePayload));
             bundle.interpretInCurrentContext();
         }
 
@@ -199,10 +208,11 @@ TEST(DataBundleTest, filePathResolution) {
             babelwires::AutomaticDeserializationRegistry deserializationReg;
             babelwires::DataContext dataContext{deserializationReg};
 
-            TestBundlePayload projectData;
-            projectData = std::move(bundle).resolveAgainstCurrentContext(dataContext, scenario.m_newBase, log);
+            TestBundlePayload targetPayload =
+                std::move(bundle).resolveAgainstCurrentContext(dataContext, scenario.m_newBase, log);
 
-            EXPECT_EQ(projectData.m_filePath, scenario.m_expectedResolvedPath);
+            EXPECT_EQ(targetPayload.m_contents, 44);
+            EXPECT_EQ(targetPayload.m_filePath, scenario.m_expectedResolvedPath);
         }
     }
 }
