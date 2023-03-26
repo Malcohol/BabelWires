@@ -50,7 +50,7 @@ void babelwires::DataBundle<DATA>::interpretInCurrentContext() {
 }
 
 template <typename DATA>
-DATA babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const ProjectContext& context,
+DATA babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const DataContext& context,
                                                                       const std::filesystem::path& pathToFile,
                                                                       UserLogger& userLogger) && {
     resolveIdentifiersAgainstCurrentContext();

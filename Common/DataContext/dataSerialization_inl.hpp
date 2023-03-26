@@ -5,21 +5,10 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Serialization/projectSerialization.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Serialization/projectBundle.hpp>
-
-#include <Common/IO/outFileStream.hpp>
-#include <Common/Serialization/XML/xmlDeserializer.hpp>
-#include <Common/Serialization/XML/xmlSerializer.hpp>
-#include <Common/exceptions.hpp>
-
-#include <fstream>
 
 template <typename BUNDLE>
 typename babelwires::DataSerialization<BUNDLE>::Data babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is,
-                                                                         const ProjectContext& context,
+                                                                         const DataContext& context,
                                                                          const std::filesystem::path& pathToFile,
                                                                          UserLogger& userLogger) {
     std::string str((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
@@ -38,7 +27,7 @@ typename babelwires::DataSerialization<BUNDLE>::Data babelwires::DataSerializati
 
 template <typename BUNDLE>
 typename babelwires::DataSerialization<BUNDLE>::Data babelwires::DataSerialization<BUNDLE>::loadFromFile(const std::filesystem::path& pathToFile,
-                                                                       const ProjectContext& context,
+                                                                       const DataContext& context,
                                                                        UserLogger& userLogger) {
     std::ifstream is(pathToFile);
     try {
@@ -51,7 +40,7 @@ typename babelwires::DataSerialization<BUNDLE>::Data babelwires::DataSerializati
 
 template <typename BUNDLE>
 typename babelwires::DataSerialization<BUNDLE>::Data babelwires::DataSerialization<BUNDLE>::loadFromString(const std::string& string,
-                                                                         const ProjectContext& context,
+                                                                         const DataContext& context,
                                                                          const std::filesystem::path& pathToFile,
                                                                          UserLogger& userLogger) {
     std::istringstream is(string);

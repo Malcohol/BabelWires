@@ -7,7 +7,14 @@
  **/
 #pragma once
 
+#include <Common/DataContext/dataContext.hpp>
+#include <Common/IO/outFileStream.hpp>
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
+#include <Common/exceptions.hpp>
+
 #include <filesystem>
+#include <fstream>
 #include <istream>
 #include <memory>
 #include <ostream>
@@ -22,7 +29,7 @@ namespace babelwires {
       public:
         using Data = typename BUNDLE::Data;
 
-        static Data loadFromFile(const std::filesystem::path& pathToFile, const ProjectContext& context,
+        static Data loadFromFile(const std::filesystem::path& pathToFile, const DataContext& context,
                                  UserLogger& userLogger);
 
         /// Throws a FileIoException on failure.
@@ -32,7 +39,7 @@ namespace babelwires {
         /// pathToFile may be empty, in which case only absolute file paths in the data can be resolved.
         /// That might happen if data is being pasted into an unsaved project. Fortunately, this probably means that the
         /// absolute paths originate in the current filesystem.
-        static Data loadFromString(const std::string& string, const ProjectContext& context,
+        static Data loadFromString(const std::string& string, const DataContext& context,
                                    const std::filesystem::path& pathToFile, UserLogger& userLogger);
 
         /// Serialize the data and return it as a string.
@@ -43,11 +50,11 @@ namespace babelwires {
 
       private:
         /// Load the data from is, resolving the data in the given context and pathToFile.
-        static Data loadFromStream(std::istream& is, const ProjectContext& context,
+        static Data loadFromStream(std::istream& is, const DataContext& context,
                                    const std::filesystem::path& pathToFile, UserLogger& userLogger);
 
         static void saveToStream(std::ostream& os, const std::filesystem::path& pathToFile, Data data);
     };
 } // namespace babelwires
 
-#include <BabelWiresLib/Serialization/dataSerialization_inl.hpp>
+#include <Common/DataContext/dataSerialization_inl.hpp>

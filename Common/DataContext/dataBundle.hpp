@@ -8,9 +8,7 @@
 #pragma once
 
 #include <Common/DataContext/filePath.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Project/projectVisitable.hpp>
-
+#include <Common/DataContext/dataContext.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Log/userLogger.hpp>
 #include <Common/Serialization/serializable.hpp>
@@ -21,9 +19,8 @@ namespace babelwires {
     /// A DataBundle carries data which is independent of the current system, and carries metadata sufficient
     /// to load it into a system which may not be identical to the system in which it was saved.
     /// This base class handles metadata for identifiers and paths, although the subclass must implement the
-    /// ProjectVisitable interface so the data (and possibly additional metadata) get visited.
-    /// Some virtual methods are provided so subclasses can provide support for additional metadata.
-    template <typename DATA> class DataBundle : public Serializable, public ProjectVisitable {
+    /// DataVisitable interface so the data (and possibly additional metadata) get visited.
+    template <typename DATA> class DataBundle : public Serializable, public DataVisitable {
       public:
         using Data = DATA;
 
@@ -45,7 +42,7 @@ namespace babelwires {
 
         /// Returns the contained data, modified so it corresponds the current system.
         /// This object is invalidated after calling this.
-        DATA resolveAgainstCurrentContext(const ProjectContext& context, const std::filesystem::path& pathToFile,
+        DATA resolveAgainstCurrentContext(const DataContext& context, const std::filesystem::path& pathToFile,
                                           UserLogger& userLogger) &&;
 
         void serializeContents(Serializer& serializer) const override;
@@ -62,7 +59,7 @@ namespace babelwires {
         virtual void interpretAdditionalMetadataInCurrentContext() {}
 
         /// If the subclass needs to do any additional resolution, it can do it here.
-        virtual void adaptDataToAdditionalMetadata(const ProjectContext& context, UserLogger& userLogger) {}
+        virtual void adaptDataToAdditionalMetadata(const DataContext& context, UserLogger& userLogger) {}
 
         /// Allows the subclass to put additional metadata at the same level as the metadata handled by this class.
         virtual void serializeAdditionalMetadata(Serializer& serializer) const {}
@@ -105,4 +102,4 @@ namespace babelwires {
 
 } // namespace babelwires
 
-#include <BabelWiresLib/Serialization/dataBundle_inl.hpp>
+#include <Common/DataContext/dataBundle_inl.hpp>
