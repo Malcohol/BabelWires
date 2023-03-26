@@ -9,7 +9,7 @@
 
 #include <BabelWiresQtUi/ValueEditors/spinBoxValueEditor.hpp>
 
-#include <BabelWiresLib/TypeSystem/intValue.hpp>
+#include <BabelWiresLib/Types/Int/intValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

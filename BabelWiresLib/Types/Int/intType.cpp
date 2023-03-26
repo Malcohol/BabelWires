@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/TypeSystem/intType.hpp>
+#include <BabelWiresLib/Types/Int/intType.hpp>
 
-#include <BabelWiresLib/TypeSystem/intValue.hpp>
+#include <BabelWiresLib/Types/Int/intValue.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 

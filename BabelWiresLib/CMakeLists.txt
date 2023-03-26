@@ -32,8 +32,8 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
 	TypeSystem/typeSystem.cpp
-	TypeSystem/intType.cpp
-	TypeSystem/intValue.cpp
+	Types/Int/intType.cpp
+	Types/Int/intValue.cpp
 	Types/Enum/enum.cpp
 	Types/Enum/addBlankToEnum.cpp
 	Types/Enum/enumValue.cpp
