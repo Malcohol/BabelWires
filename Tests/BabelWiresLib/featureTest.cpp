@@ -5,9 +5,9 @@
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
-#include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Types/String/stringFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/TypeSystem/stringType.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>

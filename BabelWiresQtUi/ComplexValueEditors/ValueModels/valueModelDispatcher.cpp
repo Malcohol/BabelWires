@@ -13,7 +13,7 @@
 
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/TypeSystem/intType.hpp>
-#include <BabelWiresLib/TypeSystem/stringType.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 
 void babelwires::ValueModelDispatcher::init(const Type& type, const Value& value) {
     m_valueModel = &m_valueModelStorage;

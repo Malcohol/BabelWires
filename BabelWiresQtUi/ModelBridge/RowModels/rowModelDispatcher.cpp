@@ -21,7 +21,7 @@
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
-#include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Types/String/stringFeature.hpp>
 #include <BabelWiresLib/Enums/enumFeature.hpp>
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/unionFeature.hpp>

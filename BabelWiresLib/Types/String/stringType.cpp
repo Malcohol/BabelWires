@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/TypeSystem/stringType.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 
-#include <BabelWiresLib/TypeSystem/stringValue.hpp>
+#include <BabelWiresLib/Types/String/stringValue.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 

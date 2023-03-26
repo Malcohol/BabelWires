@@ -5,10 +5,10 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Types/String/stringFeature.hpp>
 
-#include <BabelWiresLib/TypeSystem/stringType.hpp>
-#include <BabelWiresLib/TypeSystem/stringValue.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/stringValue.hpp>
 
 babelwires::StringFeature::StringFeature()
     : SimpleValueFeature(StringType::getThisIdentifier()) {

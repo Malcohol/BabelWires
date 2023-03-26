@@ -15,18 +15,13 @@
 namespace babelwires {
     class Enum;
 
-    /// A feature offering a choice from a set of named values.
-    /// The user should care only about the selected value, and not about the particular index, which is
-    /// an implementation detail and could change in future.
-    /// If the mapping between names and their index is meaningful to the user, consider using an IntFeature
-    /// with ValueNames.
-    /// The particular advantage of an EnumFeature is that values can be reordered and new values can be added
-    /// without requiring versioning code to adapt old serialized data.
+    /// A subclass of SimpleValueFeature which provides convenient methods to access
+    /// and modify the EnumValue carried by the value.
     class EnumFeature : public SimpleValueFeature {
       public:
         EnumFeature(TypeRef e);
 
-        /// This only works if the enum is in a hierarchy rooted in a RootFeature.
+        /// Get the enum which determines the values of this feature.
         const Enum& getEnum() const;
 
         /// Get the current value of the feature.

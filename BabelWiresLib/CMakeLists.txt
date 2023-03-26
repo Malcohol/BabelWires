@@ -36,8 +36,9 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/typeSystem.cpp
 	TypeSystem/intType.cpp
 	TypeSystem/intValue.cpp
-	TypeSystem/stringType.cpp
-	TypeSystem/stringValue.cpp
+	Types/String/stringType.cpp
+	Types/String/stringValue.cpp
+	Types/String/stringFeature.cpp
 	Enums/enumValue.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
@@ -68,7 +69,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/arrayFeature.cpp
 	Enums/enumFeature.cpp
 	Features/numericFeature.cpp
-	Features/stringFeature.cpp
 	Features/mapFeature.cpp
 	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp
