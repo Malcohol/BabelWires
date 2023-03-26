@@ -22,7 +22,6 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/RowModels/rowModelDispatcher.cpp
     ModelBridge/RowModels/rowModelRegistry.cpp
     ModelBridge/RowModels/rowModelWithRichText.cpp
-    ModelBridge/RowModels/stringRowModel.cpp
     ModelBridge/RowModels/unionRowModel.cpp
     ModelBridge/RowModels/valueRowModel.cpp
     ValueEditors/dropDownValueEditor.cpp
@@ -53,6 +52,7 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/mapModelDelegate.cpp
     ComplexValueEditors/ValueModels/enumValueModel.cpp
     ComplexValueEditors/ValueModels/intValueModel.cpp
+    ComplexValueEditors/ValueModels/stringValueModel.cpp
     ComplexValueEditors/ValueModels/valueModel.cpp
     ComplexValueEditors/ValueModels/valueModelDispatcher.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.cpp

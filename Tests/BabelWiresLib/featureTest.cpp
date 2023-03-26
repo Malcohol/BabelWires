@@ -6,6 +6,13 @@
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/TypeSystem/stringType.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/TestUtils/testIdentifiers.hpp>
+
+#include <Tests/TestUtils/testLog.hpp>
 
 TEST(FeatureTest, intFeature) {
     babelwires::IntFeature intFeature;
@@ -126,7 +133,13 @@ TEST(FeatureTest, rationalFeatureHash) {
 }
 
 TEST(FeatureTest, stringFeature) {
-    babelwires::StringFeature stringFeature;
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
+
+    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
+    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
+    babelwires::StringFeature& stringFeature2 = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("bbb"));
 
     stringFeature.setToDefault();
     EXPECT_EQ(stringFeature.get(), "");
@@ -134,13 +147,18 @@ TEST(FeatureTest, stringFeature) {
     stringFeature.set("Hello");
     EXPECT_EQ(stringFeature.get(), "Hello");
 
-    babelwires::StringFeature stringFeature2;
+    stringFeature2.set("Goodbye");
     stringFeature2.assign(stringFeature);
     EXPECT_EQ(stringFeature2.get(), "Hello");
 }
 
 TEST(FeatureTest, stringFeatureChanges) {
-    babelwires::StringFeature stringFeature;
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
+
+    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
+    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
 
     // After construction, everything has changed.
     EXPECT_TRUE(stringFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -163,7 +181,12 @@ TEST(FeatureTest, stringFeatureChanges) {
 }
 
 TEST(FeatureTest, stringFeatureHash) {
-    babelwires::StringFeature stringFeature;
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
+
+    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
+    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
 
     stringFeature.set("");
     const std::size_t hashAtEmpty = stringFeature.getHash();
@@ -177,10 +200,17 @@ TEST(FeatureTest, stringFeatureHash) {
 }
 
 TEST(FeatureTest, valueCompatibility) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
+
+    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
+    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
+    babelwires::StringFeature& stringFeature2 = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("bbb"));
+
     // Currently, int and rational are incompatible. (We could change that in the future)
     babelwires::IntFeature intFeature, intFeature2;
     babelwires::RationalFeature rationalFeature, rationalFeature2;
-    babelwires::StringFeature stringFeature, stringFeature2;
 
     EXPECT_TRUE(intFeature.isCompatible(intFeature2));
     EXPECT_FALSE(intFeature.isCompatible(stringFeature));
@@ -208,6 +238,10 @@ TEST(FeatureTest, valueCompatibility) {
 }
 
 TEST(FeatureTest, recordFeature) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestEnvironment testEnvironment;
+    testEnvironment.m_typeSystem.addEntry<babelwires::StringType>();
+
     babelwires::RecordFeature recordFeature;
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 0);

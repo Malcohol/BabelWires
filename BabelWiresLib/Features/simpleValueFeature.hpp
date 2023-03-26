@@ -29,10 +29,8 @@ namespace babelwires {
         void setValuePtr(const std::shared_ptr<const Value>& newValue);
 
       protected:
-        /// Return a string of length <= 4 characters.
         virtual std::string doGetValueType() const override;
 
-        /// Implementations may assume that other is compatible.
         virtual void doAssign(const ValueFeature& other) override;
 
         virtual void doSetToDefault() override;

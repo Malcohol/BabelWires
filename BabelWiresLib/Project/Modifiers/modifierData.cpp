@@ -74,21 +74,3 @@ void babelwires::RationalValueAssignmentData::deserializeContents(Deserializer& 
     deserializer.deserializeValue("path", m_pathToFeature);
     deserializer.deserializeValue("value", m_value);
 }
-
-void babelwires::StringValueAssignmentData::apply(Feature* targetFeature) const {
-    if (StringFeature* stringFeature = targetFeature->as<StringFeature>()) {
-        stringFeature->set(m_value);
-    } else {
-        throw babelwires::ModelException() << "Could not assign a string to a non-string feature";
-    }
-}
-
-void babelwires::StringValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
-    serializer.serializeValue("value", m_value);
-}
-
-void babelwires::StringValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
-    deserializer.deserializeValue("value", m_value);
-}

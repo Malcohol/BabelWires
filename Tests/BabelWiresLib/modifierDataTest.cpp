@@ -73,7 +73,7 @@ TEST(ModifierDataTest, intValueAssignmentApply) {
     data.apply(&intFeature);
     EXPECT_EQ(intFeature.get(), 198);
 
-    babelwires::StringFeature notIntFeature;
+    babelwires::RationalFeature notIntFeature;
     EXPECT_THROW(data.apply(&notIntFeature), babelwires::ModelException);
 }
 
@@ -121,7 +121,7 @@ TEST(ModifierDataTest, rationalValueAssignmentApply) {
     data.apply(&ratFeature);
     EXPECT_EQ(ratFeature.get(), babelwires::Rational(19 / 57));
 
-    babelwires::StringFeature notRatFeature;
+    babelwires::IntFeature notRatFeature;
     EXPECT_THROW(data.apply(&notRatFeature), babelwires::ModelException);
 }
 
@@ -157,54 +157,6 @@ TEST(ModifierDataTest, rationalValueAssignmentSerialization) {
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("aa/bb/6"));
     EXPECT_EQ(dataPtr->m_value, babelwires::Rational(19 / 57));
-}
-
-TEST(ModifierDataTest, stringValueAssignmentApply) {
-    babelwires::StringValueAssignmentData data;
-    data.m_value = "Hello";
-
-    babelwires::StringFeature stringFeature;
-    EXPECT_EQ(stringFeature.get(), "");
-
-    data.apply(&stringFeature);
-    EXPECT_EQ(stringFeature.get(), "Hello");
-
-    babelwires::IntFeature notStringFeature;
-    EXPECT_THROW(data.apply(&notStringFeature), babelwires::ModelException);
-}
-
-TEST(ModifierDataTest, stringValueAssignmentClone) {
-    babelwires::StringValueAssignmentData data;
-    data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
-    data.m_value = "Hello";
-    auto dataPtr = data.clone();
-    ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("aa/bb/6"));
-    EXPECT_EQ(dataPtr->m_value, "Hello");
-}
-
-TEST(ModifierDataTest, stringValueAssignmentSerialization) {
-    std::string serializedContents;
-    {
-        babelwires::StringValueAssignmentData data;
-        data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
-        data.m_value = "Hello";
-
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(data);
-        std::ostringstream os;
-        serializer.write(os);
-        serializedContents = std::move(os.str());
-    }
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::StringValueAssignmentData>();
-    deserializer.finalize();
-
-    ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("aa/bb/6"));
-    EXPECT_EQ(dataPtr->m_value, "Hello");
 }
 
 TEST(ModifierDataTest, assignFromFeatureApply) {
@@ -286,11 +238,6 @@ TEST(ModifierDataTest, createModifierMethods) {
     }
     {
         babelwires::RationalValueAssignmentData data;
-        ASSERT_NE(data.createModifier(), nullptr);
-        EXPECT_NE(data.createModifier()->as<babelwires::LocalModifier>(), nullptr);
-    }
-    {
-        babelwires::StringValueAssignmentData data;
         ASSERT_NE(data.createModifier(), nullptr);
         EXPECT_NE(data.createModifier()->as<babelwires::LocalModifier>(), nullptr);
     }

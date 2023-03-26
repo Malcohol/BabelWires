@@ -78,15 +78,4 @@ namespace babelwires {
 
         Rational m_value = 0;
     };
-
-    /// Data used to assign a StringFeature within a container to a certain value.
-    struct StringValueAssignmentData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
-        CLONEABLE(StringValueAssignmentData);
-        SERIALIZABLE(StringValueAssignmentData, "assignString", LocalModifierData, 1);
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-
-        std::string m_value;
-    };
 } // namespace babelwires

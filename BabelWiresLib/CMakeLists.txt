@@ -37,6 +37,8 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/typeSystem.cpp
 	TypeSystem/intType.cpp
 	TypeSystem/intValue.cpp
+	TypeSystem/stringType.cpp
+	TypeSystem/stringValue.cpp
 	Enums/enumValue.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp

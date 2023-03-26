@@ -7,25 +7,17 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
 #include <string>
 
 namespace babelwires {
 
-    class StringFeature : public ValueFeature {
+    class StringFeature : public SimpleValueFeature {
       public:
+        StringFeature();
         std::string get() const;
         void set(std::string value);
-
-      protected:
-        virtual void doSetToDefault() override;
-        virtual std::string doGetValueType() const override;
-        virtual void doAssign(const ValueFeature& other) override;
-        virtual std::size_t doGetHash() const override;
-
-      private:
-        std::string m_value;
     };
 
 } // namespace babelwires

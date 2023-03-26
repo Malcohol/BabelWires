@@ -9,9 +9,11 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/enumValueModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/intValueModel.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/stringValueModel.hpp>
 
 #include <BabelWiresLib/Enums/enum.hpp>
 #include <BabelWiresLib/TypeSystem/intType.hpp>
+#include <BabelWiresLib/TypeSystem/stringType.hpp>
 
 void babelwires::ValueModelDispatcher::init(const Type& type, const Value& value) {
     m_valueModel = &m_valueModelStorage;
@@ -21,6 +23,9 @@ void babelwires::ValueModelDispatcher::init(const Type& type, const Value& value
     } else if (type.as<IntType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::IntValueModel));
         new (m_valueModel) babelwires::IntValueModel();
+    } else if (type.as<StringType>()) {
+        static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::StringValueModel));
+        new (m_valueModel) babelwires::StringValueModel();
     } else {
         // The base row model is used.
     }

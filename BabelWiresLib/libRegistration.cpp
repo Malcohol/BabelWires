@@ -10,9 +10,11 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/intType.hpp>
+#include <BabelWiresLib/TypeSystem/stringType.hpp>
 #include <BabelWiresLib/Enums/addBlankToEnum.hpp>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<IntType>();
+    context.m_typeSystem.addEntry<StringType>();
     context.m_typeSystem.addTypeConstructor<AddBlankToEnum>();
 }
