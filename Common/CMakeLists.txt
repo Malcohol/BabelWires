@@ -4,6 +4,7 @@ SET( COMMON_SRCS
 	Audio/audioInterface.cpp
 	Audio/fileAudioDest.cpp
 	Audio/fileAudioSource.cpp
+	DataContext/filePath.cpp
 	exceptions.cpp
 	Identifiers/identifierRegistry.cpp
 	Identifiers/registeredIdentifier.cpp

@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
 
-#include <BabelWiresLib/FileFormat/filePath.hpp>
+#include <Common/DataContext/filePath.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
 #include <Common/exceptions.hpp>

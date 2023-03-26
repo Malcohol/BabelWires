@@ -33,7 +33,6 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
-	FileFormat/filePath.cpp
 	TypeSystem/typeSystem.cpp
 	TypeSystem/intType.cpp
 	TypeSystem/intValue.cpp

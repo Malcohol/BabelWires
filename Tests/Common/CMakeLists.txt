@@ -4,6 +4,7 @@ SET( COMMON_TESTS_SRCS
    cloneTest.cpp
    commonTests.cpp
    dataSourceTest.cpp
+   filePathTest.cpp
    enumFlagsTest.cpp
    exceptionTest.cpp
    hashUtilTest.cpp

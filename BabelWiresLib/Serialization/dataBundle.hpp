@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/FileFormat/filePath.hpp>
+#include <Common/DataContext/filePath.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
