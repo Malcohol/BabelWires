@@ -60,6 +60,13 @@ bool babelwires::Enum::isAValue(const babelwires::ShortId& id) const {
     return true;
 }
 
+bool babelwires::Enum::isValidValue(const Value& v) const {
+    if (const auto* enumValue = v.as<EnumValue>()) {
+        return isAValue(enumValue->get());
+    }
+    return false;
+}
+
 std::unique_ptr<babelwires::Value> babelwires::Enum::createValue() const {
     return std::make_unique<EnumValue>(getIdentifierFromIndex(getIndexOfDefaultValue()));
 }

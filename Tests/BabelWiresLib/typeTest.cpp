@@ -15,8 +15,8 @@ TEST(TypeTest, typeAndValue)
     auto value = testType.createValue();
     EXPECT_TRUE(value);
     EXPECT_TRUE(value->as<testUtils::TestValue>());
-    EXPECT_TRUE(value->isValid(testType));
+    EXPECT_TRUE(testType.isValidValue(*value));
 
     testUtils::TestEnum testEnum;
-    EXPECT_FALSE(value->isValid(testEnum));
+    EXPECT_FALSE(testEnum.isValidValue(*value));
 }

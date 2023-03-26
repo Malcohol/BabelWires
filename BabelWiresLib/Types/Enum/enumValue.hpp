@@ -25,7 +25,6 @@ namespace babelwires {
         /// Set the value in the feature.
         void set(ShortId value);
 
-        bool isValid(const Type& type) const override;
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;

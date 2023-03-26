@@ -52,6 +52,8 @@ namespace babelwires {
 
         std::unique_ptr<Value> createValue() const override;
 
+        bool isValidValue(const Value& v) const override;
+
         virtual bool verifySupertype(const Type& supertype) const;
 
       private:

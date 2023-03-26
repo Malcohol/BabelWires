@@ -14,3 +14,7 @@
 std::unique_ptr<babelwires::Value> babelwires::IntType::createValue() const {
     return std::make_unique<IntValue>();
 }
+
+bool babelwires::IntType::isValidValue(const Value& v) const {
+    return v.as<IntValue>();
+}

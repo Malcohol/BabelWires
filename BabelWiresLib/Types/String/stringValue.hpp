@@ -22,7 +22,6 @@ namespace babelwires {
         std::string get() const;
         void set(std::string value);
 
-        bool isValid(const Type& type) const override;
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;

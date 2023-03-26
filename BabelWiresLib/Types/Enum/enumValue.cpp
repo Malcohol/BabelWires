@@ -27,13 +27,6 @@ void babelwires::EnumValue::set(ShortId value) {
     m_value = value;
 }
 
-bool babelwires::EnumValue::isValid(const Type& type) const {
-    if (const Enum* e = type.as<Enum>()) {
-        return e->isAValue(m_value);
-    }
-    return false;
-}
-
 void babelwires::EnumValue::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("value", m_value);
 }

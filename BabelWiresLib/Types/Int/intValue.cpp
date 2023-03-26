@@ -21,10 +21,6 @@ void babelwires::IntValue::set(int value) {
     m_value = value;
 }
 
-bool babelwires::IntValue::isValid(const Type& type) const {
-    return type.getTypeRef() == TypeRef{IntType::getThisIdentifier()};
-}
-
 void babelwires::IntValue::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("value", m_value);
 }

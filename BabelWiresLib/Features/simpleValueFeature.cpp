@@ -23,7 +23,7 @@ void babelwires::SimpleValueFeature::doAssign(const ValueFeature& other) {
 void babelwires::SimpleValueFeature::setValuePtr(const std::shared_ptr<const Value>& newValue) {
     if ((m_value != newValue) && (*m_value != *newValue)) {
         const Type& type = getType();
-        if (newValue->isValid(type)) {
+        if (type.isValidValue(*newValue)) {
             m_value = newValue;
             setChanged(Changes::ValueChanged);
         } else {
@@ -35,7 +35,7 @@ void babelwires::SimpleValueFeature::setValuePtr(const std::shared_ptr<const Val
 void babelwires::SimpleValueFeature::setValue(const Value& value) {
     if (value != *m_value) {
         const Type& type = getType();
-        if (value.isValid(type)) {
+        if (type.isValidValue(value)) {
             m_value = std::shared_ptr<const Value>(value.clone().release());
             setChanged(Changes::ValueChanged);
         } else {
@@ -47,7 +47,7 @@ void babelwires::SimpleValueFeature::setValue(const Value& value) {
 void babelwires::SimpleValueFeature::setValue(Value&& value) {
     if (value != *m_value) {
         const Type& type = getType();
-        if (value.isValid(type)) {
+        if (type.isValidValue(value)) {
             // R-value cloning uses the move contructor.
             m_value = std::shared_ptr<const Value>(std::move(value).clone().release());
             setChanged(Changes::ValueChanged);

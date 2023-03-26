@@ -5,10 +5,6 @@
 
 testUtils::TestValue::TestValue() : m_value("test value value") {}
 
-bool testUtils::TestValue::isValid(const babelwires::Type& type) const{
-    return type.as<TestType>();
-}
-
 std::size_t testUtils::TestValue::getHash() const{
     return std::hash<std::string>()(m_value);
 }
@@ -40,4 +36,8 @@ void testUtils::TestValue::deserializeContents(babelwires::Deserializer& deseria
 
 std::unique_ptr<babelwires::Value> testUtils::TestType::createValue() const {
     return std::make_unique<TestValue>();
+}
+
+bool testUtils::TestType::isValidValue(const babelwires::Value& value) const{
+    return value.as<TestValue>();
 }

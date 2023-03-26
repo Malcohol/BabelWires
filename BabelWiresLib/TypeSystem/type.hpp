@@ -17,13 +17,19 @@
 namespace babelwires {
 
     /// A type describes a valid set of values.
-    /// Note that information about subtype relationships is kept in the TypeSystem.
+    /// Note that a value can be an instance of more than one type.
+    /// A type is a subtypes of another type when all its values are valid
+    /// values of the other. 
+    /// Information about subtype relationships is managed by the TypeSystem.
     class Type {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Type);
 
         /// Create a Value representing an instance of the type.
         virtual std::unique_ptr<Value> createValue() const = 0;
+
+        /// Is the value v an element of this type.
+        virtual bool isValidValue(const Value& v) const = 0;
 
         /// Get a TypeRef that describes this type.
         /// Primitive types get an implementation of this method from the PRIMITIVE_TYPE macro.

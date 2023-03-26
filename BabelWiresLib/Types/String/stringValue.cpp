@@ -24,10 +24,6 @@ void babelwires::StringValue::set(std::string value) {
     m_value = std::move(value);
 }
 
-bool babelwires::StringValue::isValid(const Type& type) const {
-    return type.getTypeRef() == TypeRef{StringType::getThisIdentifier()};
-}
-
 void babelwires::StringValue::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("value", m_value);
 }

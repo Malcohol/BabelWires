@@ -23,10 +23,6 @@ namespace babelwires {
         CLONEABLE_ABSTRACT(Value);
         SERIALIZABLE_ABSTRACT(Value, void);
 
-        /// Checks whether this value is a valid member of the given type.
-        /// Note: A value can be an instance of more than one type. For example,
-        /// the values of an enum subtypes are also instances of its enum supertype.
-        virtual bool isValid(const Type& type) const = 0;
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const Value& other) const = 0;
         virtual std::string toString() const = 0;
