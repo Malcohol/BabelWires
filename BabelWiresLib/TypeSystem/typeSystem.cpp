@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 
 #include <algorithm>
 namespace {

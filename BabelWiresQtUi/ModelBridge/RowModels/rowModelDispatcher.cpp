@@ -22,7 +22,7 @@
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Types/String/stringFeature.hpp>
-#include <BabelWiresLib/Enums/enumFeature.hpp>
+#include <BabelWiresLib/Types/Enum/enumFeature.hpp>
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>

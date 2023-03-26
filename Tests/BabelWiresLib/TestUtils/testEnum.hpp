@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
-#include <BabelWiresLib/Enums/enumFeature.hpp>
+#include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
+#include <BabelWiresLib/Types/Enum/enumFeature.hpp>
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>

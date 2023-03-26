@@ -28,18 +28,19 @@ SET( BABELWIRESLIB_SRCS
 	ProjectExtra/projectObserver.cpp
 	ProjectExtra/connectionDescription.cpp
 	ProjectExtra/projectUtilities.cpp
-	Enums/enum.cpp
-	Enums/addBlankToEnum.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
 	TypeSystem/typeSystem.cpp
 	TypeSystem/intType.cpp
 	TypeSystem/intValue.cpp
+	Types/Enum/enum.cpp
+	Types/Enum/addBlankToEnum.cpp
+	Types/Enum/enumValue.cpp
+	Types/Enum/enumFeature.cpp
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
 	Types/String/stringFeature.cpp
-	Enums/enumValue.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
 	Maps/Commands/addEntryToMapCommand.cpp
@@ -67,7 +68,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/recordFeature.cpp
 	Features/recordWithOptionalsFeature.cpp
 	Features/arrayFeature.cpp
-	Enums/enumFeature.cpp
 	Features/numericFeature.cpp
 	Features/mapFeature.cpp
 	Features/simpleValueFeature.cpp

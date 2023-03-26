@@ -5,14 +5,14 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Enums/enumFeature.hpp>
+#include <BabelWiresLib/Types/Enum/enumFeature.hpp>
 
-#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

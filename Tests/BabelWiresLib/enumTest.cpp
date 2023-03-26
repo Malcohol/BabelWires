@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Enums/enum.hpp>
-#include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

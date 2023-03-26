@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapData.hpp>
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>

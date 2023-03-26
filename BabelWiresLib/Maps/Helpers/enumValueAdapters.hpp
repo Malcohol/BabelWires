@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Enums/enum.hpp>
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 namespace babelwires {
     /// Convert an EnumValue to the identifier it carries.

@@ -2,7 +2,7 @@
 
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>

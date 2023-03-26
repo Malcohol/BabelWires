@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Enums/enum.hpp>
-#include <BabelWiresLib/Enums/enumFeature.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumFeature.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 

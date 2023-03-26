@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/Maps/Helpers/valueAdapter.hpp>
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>

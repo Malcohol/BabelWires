@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Enums/addBlankToEnum.hpp>
+#include <BabelWiresLib/Types/Enum/addBlankToEnum.hpp>
 
-#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 

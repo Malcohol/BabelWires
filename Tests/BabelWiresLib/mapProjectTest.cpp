@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProject.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>

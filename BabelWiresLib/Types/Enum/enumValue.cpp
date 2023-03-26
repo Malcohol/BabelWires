@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
-#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>

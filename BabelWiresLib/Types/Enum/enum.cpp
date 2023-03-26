@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 babelwires::Enum::Enum(EnumValues values, unsigned int indexOfDefaultValue)
     : m_values(std::move(values))

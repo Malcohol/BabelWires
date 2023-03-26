@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/intValueModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/stringValueModel.hpp>
 
-#include <BabelWiresLib/Enums/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/TypeSystem/intType.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 
