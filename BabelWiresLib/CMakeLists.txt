@@ -31,18 +31,6 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
-	TypeSystem/typeSystem.cpp
-	Types/Int/intType.cpp
-	Types/Int/intValue.cpp
-	Types/Enum/enum.cpp
-	Types/Enum/addBlankToEnum.cpp
-	Types/Enum/enumValue.cpp
-	Types/Enum/enumFeature.cpp
-	Types/String/stringType.cpp
-	Types/String/stringValue.cpp
-	Types/String/stringFeature.cpp
-	TypeSystem/type.cpp
-	TypeSystem/typeRef.cpp
 	Maps/Commands/addEntryToMapCommand.cpp
 	Maps/Commands/removeEntryFromMapCommand.cpp
 	Maps/Commands/replaceMapEntryCommand.cpp
@@ -95,6 +83,19 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/resizeElementCommand.cpp
 	Project/Commands/selectUnionBranchCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
+	TypeSystem/typeSystem.cpp
+	Types/Int/intType.cpp
+	Types/Int/intValue.cpp
+	Types/Enum/enum.cpp
+	Types/Enum/addBlankToEnum.cpp
+	Types/Enum/enumValue.cpp
+	Types/Enum/enumFeature.cpp
+	Types/String/stringType.cpp
+	Types/String/stringValue.cpp
+	Types/String/stringFeature.cpp
+	TypeSystem/type.cpp
+	TypeSystem/typeRef.cpp
+	TypeSystem/valueHolder.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp
 	ValueNames/contiguousValueNamesImpl.cpp

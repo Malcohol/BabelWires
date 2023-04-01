@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
     class Value;
@@ -26,7 +27,7 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
       private:
-        std::shared_ptr<const Value> m_value;
+        ValueHolder m_value;
     };
 
 } // namespace babelwires

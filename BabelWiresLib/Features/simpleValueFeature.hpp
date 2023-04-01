@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
     class Type;
@@ -26,7 +27,7 @@ namespace babelwires {
         void setValue(const Value& newValue);
         void setValue(Value&& newValue);
 
-        void setValuePtr(const std::shared_ptr<const Value>& newValue);
+        void setValueHolder(const ValueHolder& newValue);
 
       protected:
         virtual std::string doGetValueType() const override;
@@ -38,6 +39,6 @@ namespace babelwires {
         virtual std::size_t doGetHash() const override;
       private:
         TypeRef m_typeRef;
-        std::shared_ptr<const Value> m_value;
+        ValueHolder m_value;
     };
 } // namespace babelwires

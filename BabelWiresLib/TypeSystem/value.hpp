@@ -16,7 +16,7 @@
 namespace babelwires {
     class Type;
 
-    // TODO: Could this be unified with ValueFeature, or could they share code?
+    /// A Value is an abstract class for objects which carry a single, usually simple value.
     class Value : public Serializable, public Cloneable, public ProjectVisitable {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Value);

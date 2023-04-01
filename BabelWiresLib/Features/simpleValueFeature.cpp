@@ -14,13 +14,13 @@ std::string babelwires::SimpleValueFeature::doGetValueType() const {
 
 void babelwires::SimpleValueFeature::doAssign(const ValueFeature& other) {
     if (const auto* otherValueFeature = other.as<SimpleValueFeature>()) {
-        setValuePtr(otherValueFeature->m_value);
+        m_value = otherValueFeature->m_value;
     } else {
         throw ModelException() << "Cannot assign other kinds of Feature to SimpleValueFeature";
     }
 }
 
-void babelwires::SimpleValueFeature::setValuePtr(const std::shared_ptr<const Value>& newValue) {
+void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue) {
     if ((m_value != newValue) && (*m_value != *newValue)) {
         const Type& type = getType();
         if (type.isValidValue(*newValue)) {
@@ -36,7 +36,7 @@ void babelwires::SimpleValueFeature::setValue(const Value& value) {
     if (value != *m_value) {
         const Type& type = getType();
         if (type.isValidValue(value)) {
-            m_value = std::shared_ptr<const Value>(value.clone().release());
+            m_value = value;
             setChanged(Changes::ValueChanged);
         } else {
             throw ModelException() << "The new value is not a valid instance of " << m_typeRef.toString();
@@ -48,8 +48,7 @@ void babelwires::SimpleValueFeature::setValue(Value&& value) {
     if (value != *m_value) {
         const Type& type = getType();
         if (type.isValidValue(value)) {
-            // R-value cloning uses the move contructor.
-            m_value = std::shared_ptr<const Value>(std::move(value).clone().release());
+            m_value = std::move(value);
             setChanged(Changes::ValueChanged);
         } else {
             throw ModelException() << "The new value is not a valid instance of " << m_typeRef.toString();
