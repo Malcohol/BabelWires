@@ -38,6 +38,10 @@ namespace babelwires {
         const Value& operator*() const;
         const Value* operator->() const;
 
+        /// Clone the contents to ensure they are not shared and return a non-const pointer.
+        /// Any manipulations must be performed before the ValueHolder is shared.
+        Value& copyContentsAndGetNonConst();
+        
         friend bool operator==(const ValueHolder& a, const ValueHolder& b) {
             return (a.m_pointerToValue == b.m_pointerToValue) ||
                    (a.m_pointerToValue && b.m_pointerToValue && (*a.m_pointerToValue == *b.m_pointerToValue));

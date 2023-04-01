@@ -88,3 +88,11 @@ const babelwires::Value* babelwires::ValueHolder::operator->() const
 {
     return m_pointerToValue.get();
 }
+
+babelwires::Value& babelwires::ValueHolder::copyContentsAndGetNonConst()
+{
+    std::unique_ptr<Value> clone = m_pointerToValue->clone();
+    Value* ptrToClone = clone.get();
+    m_pointerToValue = std::shared_ptr<const Value>(clone.release());
+    return *ptrToClone;
+}

@@ -9,9 +9,9 @@
 
 #include <BabelWiresLib/Types/Enum/enum.hpp>
 
-#include <Common/Serialization/serializer.hpp>
-#include <Common/Serialization/deserializer.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 babelwires::EnumValue::EnumValue() = default;
 
@@ -40,6 +40,14 @@ void babelwires::EnumValue::visitIdentifiers(IdentifierVisitor& visitor) {
 }
 
 void babelwires::EnumValue::visitFilePaths(FilePathVisitor& visitor) {}
+
+bool babelwires::EnumValue::canContainIdentifiers() const {
+    return true;
+}
+
+bool babelwires::EnumValue::canContainFilePaths() const {
+    return false;
+}
 
 std::size_t babelwires::EnumValue::getHash() const {
     // eeee - Arbitrary discriminator.

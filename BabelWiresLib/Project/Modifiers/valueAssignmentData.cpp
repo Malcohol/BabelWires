@@ -36,3 +36,15 @@ void babelwires::ValueAssignmentData::deserializeContents(Deserializer& deserial
     deserializer.deserializeValue("path", m_pathToFeature);
     m_value = deserializer.deserializeObject<Value>("value");
 }
+
+void babelwires::ValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {
+    if (m_value->canContainIdentifiers()) {
+        m_value.copyContentsAndGetNonConst().visitIdentifiers(visitor);
+    }
+}
+
+void babelwires::ValueAssignmentData::visitFilePaths(FilePathVisitor& visitor) {
+    if (m_value->canContainFilePaths()) {
+        m_value.copyContentsAndGetNonConst().visitFilePaths(visitor);
+    }
+}

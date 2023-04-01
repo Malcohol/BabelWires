@@ -1,6 +1,6 @@
+#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
@@ -19,6 +19,8 @@ namespace testUtils {
         void visitFilePaths(babelwires::FilePathVisitor& visitor) override;
         void serializeContents(babelwires::Serializer& serializer) const override;
         void deserializeContents(babelwires::Deserializer& deserializer) override;
+        bool canContainIdentifiers() const override;
+        bool canContainFilePaths() const override;
 
         std::string m_value;
     };

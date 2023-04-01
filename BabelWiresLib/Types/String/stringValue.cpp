@@ -38,6 +38,14 @@ void babelwires::StringValue::visitIdentifiers(IdentifierVisitor& visitor) {
 
 void babelwires::StringValue::visitFilePaths(FilePathVisitor& visitor) {}
 
+bool babelwires::StringValue::canContainIdentifiers() const {
+    return false;
+}
+
+bool babelwires::StringValue::canContainFilePaths() const {
+    return false;
+}
+
 std::size_t babelwires::StringValue::getHash() const {
     return std::hash<std::string>()(m_value);
 }

@@ -9,8 +9,8 @@
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
-#include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 /// Get the current value of the feature.
 int babelwires::IntValue::get() const {
@@ -34,6 +34,14 @@ void babelwires::IntValue::visitIdentifiers(IdentifierVisitor& visitor) {
 }
 
 void babelwires::IntValue::visitFilePaths(FilePathVisitor& visitor) {}
+
+bool babelwires::IntValue::canContainIdentifiers() const {
+    return false;
+}
+
+bool babelwires::IntValue::canContainFilePaths() const {
+    return false;
+}
 
 std::size_t babelwires::IntValue::getHash() const {
     // 1111 - Arbitrary discriminator

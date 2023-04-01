@@ -23,6 +23,8 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
+        bool canContainIdentifiers() const override;
+        bool canContainFilePaths() const override;
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
         std::string toString() const override;
