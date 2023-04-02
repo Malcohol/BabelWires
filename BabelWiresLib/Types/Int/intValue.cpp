@@ -12,7 +12,9 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-/// Get the current value of the feature.
+babelwires::IntValue::IntValue() = default;
+babelwires::IntValue::IntValue(int value) : m_value(value) {}
+
 int babelwires::IntValue::get() const {
     return m_value;
 }

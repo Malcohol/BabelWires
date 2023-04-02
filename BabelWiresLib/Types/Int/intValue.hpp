@@ -16,6 +16,9 @@ namespace babelwires {
         CLONEABLE(IntValue);
         SERIALIZABLE(IntValue, "int", Value, 1);
 
+        IntValue();
+        IntValue(int value);
+
         int get() const;
         void set(int value);
 
