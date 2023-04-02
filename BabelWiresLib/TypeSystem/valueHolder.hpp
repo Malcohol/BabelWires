@@ -16,7 +16,7 @@ namespace babelwires {
 
     /// A ValueHolder is a container which holds a single value.
     /// TODO in-place storage for small values.
-    class ValueHolder : public ProjectVisitable {
+    class ValueHolder {
       public:
         ValueHolder() = default;
         ValueHolder(const ValueHolder& other);
@@ -35,9 +35,10 @@ namespace babelwires {
         ValueHolder& operator=(std::unique_ptr<Value> ptr);
         ValueHolder& operator=(std::shared_ptr<const Value> ptr);
 
-        /// Construct a value of Value subclass T. The returned NewValueHolder carries a non-const
-        /// reference to the new value. The non-const reference can be used to mutate the new value
-        /// but that must be done before the ValueHolder is made available outside the current context.
+        /// Construct a value of Value subclass T. The returned NewValueHolder can be used as a
+        /// ValueHolder, but carries a non-const reference to the new value. The non-const reference
+        /// can be used to mutate the new value but that must be done before the ValueHolder is
+        /// made available outside the current context.
         template <typename T, typename... ARGS> static NewValueHolder makeValue(ARGS&&... args);
 
         operator bool() const;
@@ -62,14 +63,16 @@ namespace babelwires {
         friend bool operator!=(const ValueHolder& a, const Value* b) { return !(a == b); }
         friend bool operator!=(const Value* a, const ValueHolder& b) { return !(a == b); }
 
-        void visitIdentifiers(IdentifierVisitor& visitor) override;
-        void visitFilePaths(FilePathVisitor& visitor) override;
+        void visitIdentifiers(IdentifierVisitor& visitor);
+        void visitFilePaths(FilePathVisitor& visitor);
 
       private:
         using PointerToValue = std::shared_ptr<const Value>;
         PointerToValue m_pointerToValue;
     };
 
+    /// The return value of ValueHolder::makeValue which can be treated as a ValueHolder&& but
+    /// also provides non-const access to the new value.
     class NewValueHolder {
       public:
         ValueHolder m_valueHolder;
