@@ -41,8 +41,8 @@ void testUtils::TestValue::deserializeContents(babelwires::Deserializer& deseria
     deserializer.deserializeValue("value", m_value);
 }
 
-std::unique_ptr<babelwires::Value> testUtils::TestType::createValue() const {
-    return std::make_unique<TestValue>();
+babelwires::NewValueHolder testUtils::TestType::createValue() const {
+    return babelwires::ValueHolder::makeValue<TestValue>();
 }
 
 bool testUtils::TestType::isValidValue(const babelwires::Value& value) const {

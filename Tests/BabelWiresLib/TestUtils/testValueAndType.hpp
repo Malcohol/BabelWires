@@ -30,7 +30,7 @@ namespace testUtils {
       public:
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("TestType"), 1);
 
-        std::unique_ptr<babelwires::Value> createValue() const override;
+        babelwires::NewValueHolder createValue() const override;
         bool isValidValue(const babelwires::Value& value) const override;
     };
 } // namespace testUtils

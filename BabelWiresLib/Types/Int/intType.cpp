@@ -11,8 +11,8 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-std::unique_ptr<babelwires::Value> babelwires::IntType::createValue() const {
-    return std::make_unique<IntValue>();
+babelwires::NewValueHolder babelwires::IntType::createValue() const {
+    return ValueHolder::makeValue<IntValue>();
 }
 
 bool babelwires::IntType::isValidValue(const Value& v) const {

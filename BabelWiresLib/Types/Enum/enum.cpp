@@ -67,8 +67,8 @@ bool babelwires::Enum::isValidValue(const Value& v) const {
     return false;
 }
 
-std::unique_ptr<babelwires::Value> babelwires::Enum::createValue() const {
-    return std::make_unique<EnumValue>(getIdentifierFromIndex(getIndexOfDefaultValue()));
+babelwires::NewValueHolder babelwires::Enum::createValue() const {
+    return ValueHolder::makeValue<EnumValue>(getIdentifierFromIndex(getIndexOfDefaultValue()));
 }
 
 bool babelwires::Enum::verifySupertype(const Type& supertype) const {

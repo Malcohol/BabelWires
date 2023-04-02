@@ -96,3 +96,16 @@ babelwires::Value& babelwires::ValueHolder::copyContentsAndGetNonConst()
     m_pointerToValue = std::shared_ptr<const Value>(clone.release());
     return *ptrToClone;
 }
+
+void babelwires::ValueHolder::visitIdentifiers(IdentifierVisitor& visitor)
+{
+    if (m_pointerToValue && m_pointerToValue->canContainIdentifiers()) {
+        copyContentsAndGetNonConst().visitIdentifiers(visitor);
+    }
+}
+
+void babelwires::ValueHolder::visitFilePaths(FilePathVisitor& visitor) {
+    if (m_pointerToValue && m_pointerToValue->canContainFilePaths()) {
+        copyContentsAndGetNonConst().visitFilePaths(visitor);
+    }
+}

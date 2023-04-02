@@ -266,9 +266,9 @@ TEST(MapDataTest, serializationTest) {
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.
         auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
-        auto entrySourceValue = std::make_unique<testUtils::TestValue>();
-        entrySourceValue->m_value = "test mapData serialization";
-        entryData->setSourceValue(std::move(entrySourceValue));
+        testUtils::TestValue entrySourceValue;
+        entrySourceValue.m_value = "test mapData serialization";
+        entryData->setSourceValue(entrySourceValue);
         mapData.emplaceBack(std::move(entryData));
         mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
@@ -289,7 +289,7 @@ TEST(MapDataTest, serializationTest) {
     EXPECT_EQ(dataPtr->m_targetTypeRef, testTypeId2);
     EXPECT_EQ(dataPtr->getNumMapEntries(), 2);
     EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::OneToOne);
-    const auto *const sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
+    babelwires::ValueHolder sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
     ASSERT_NE(sourceValue, nullptr);
     const auto *const sourceAsTestValue = sourceValue->as<testUtils::TestValue>();
     ASSERT_NE(sourceAsTestValue, nullptr);
@@ -309,11 +309,10 @@ TEST(MapDataTest, cloneTest) {
 
     // Note: We want to be able to clone when entries do not match the types, as in this case.
     auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
-    auto entrySourceValue = std::make_unique<testUtils::TestValue>();
     auto entryDataPtr = entryData.get();
-    auto entrySourceValuePtr = entrySourceValue.get();
-    entrySourceValue->m_value = "test mapData serialization";
-    entryData->setSourceValue(std::move(entrySourceValue));
+    testUtils::TestValue entrySourceValue;
+    entrySourceValue.m_value = "test mapData serialization";
+    entryData->setSourceValue(entrySourceValue);
     mapData.emplaceBack(std::move(entryData));
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 

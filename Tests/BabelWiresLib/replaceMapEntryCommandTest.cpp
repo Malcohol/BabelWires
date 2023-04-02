@@ -36,8 +36,8 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
     newSourceValue.m_value = "Source";
     testUtils::TestValue newTargetValue;
     newTargetValue.m_value = "Target";
-    oneToOne.setSourceValue(newSourceValue.clone());
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setTargetValue(newTargetValue);
 
     mapData.emplaceBack(oneToOne.clone());
     mapData.emplaceBack(allToOne.clone());
@@ -47,8 +47,8 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
                                               testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
-    oneToOne2.setSourceValue(newSourceValue.clone());
-    oneToOne2.setTargetValue(newTargetValue.clone());
+    oneToOne2.setSourceValue(newSourceValue);
+    oneToOne2.setTargetValue(newTargetValue);
 
     babelwires::ReplaceMapEntryCommand command("Replace", oneToOne2.clone(), 1);
     
@@ -125,8 +125,8 @@ TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
     testUtils::TestValue newTargetValue;
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
-    oneToOne2.setSourceValue(newSourceValue.clone());
-    oneToOne2.setTargetValue(newTargetValue.clone());
+    oneToOne2.setSourceValue(newSourceValue);
+    oneToOne2.setTargetValue(newTargetValue);
     
     babelwires::ReplaceMapEntryCommand command("Replace", oneToOne2.clone(), 1);
     

@@ -174,8 +174,8 @@ TEST(MapProjectTest, modifyMapData) {
     newSourceValue.m_value = "Source";
     babelwires::EnumValue newTargetValue;
     newTargetValue.set("Erm");
-    oneToOne2.setSourceValue(newSourceValue.clone());
-    oneToOne2.setTargetValue(newTargetValue.clone());
+    oneToOne2.setSourceValue(newSourceValue);
+    oneToOne2.setTargetValue(newTargetValue);
 
     EXPECT_EQ(mapProject.getNumMapEntries(), 2);
 
@@ -195,7 +195,7 @@ TEST(MapProjectTest, modifyMapData) {
                                                        testUtils::TestSubEnum::getThisIdentifier());
     babelwires::EnumValue newTargetValue2;
     newTargetValue2.set("Oom");
-    allToOne2.setTargetValue(newTargetValue2.clone());
+    allToOne2.setTargetValue(newTargetValue2);
 
     mapProject.replaceMapEntry(allToOne2.clone(), 1);
     EXPECT_EQ(mapProject.getNumMapEntries(), 2);
@@ -217,14 +217,14 @@ TEST(MapProjectTest, typeChangeAndValidity) {
     newSourceValue.set("Oom");
     babelwires::EnumValue newTargetValue;
     newTargetValue.set("Oom");
-    oneToOne.setSourceValue(newSourceValue.clone());
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setTargetValue(newTargetValue);
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                       testUtils::TestSubEnum::getThisIdentifier());
     babelwires::EnumValue newTargetValue2;
     newTargetValue2.set("Erm");
-    allToOne.setTargetValue(newTargetValue2.clone());
+    allToOne.setTargetValue(newTargetValue2);
 
     babelwires::MapData mapData;
     mapData.setSourceTypeRef(testUtils::TestSubEnum::getThisIdentifier());

@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
@@ -25,8 +25,8 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Type);
 
-        /// Create a Value representing an instance of the type.
-        virtual std::unique_ptr<Value> createValue() const = 0;
+        /// Create a new Value representing a default instance of the type.
+        virtual NewValueHolder createValue() const = 0;
 
         /// Is the value v an element of this type.
         virtual bool isValidValue(const Value& v) const = 0;

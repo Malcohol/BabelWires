@@ -36,8 +36,8 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
     newSourceValue.m_value = "Source";
     testUtils::TestValue newTargetValue;
     newTargetValue.m_value = "Target";
-    oneToOne.setSourceValue(newSourceValue.clone());
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setTargetValue(newTargetValue);
 
     mapData.emplaceBack(oneToOne.clone());
     mapData.emplaceBack(allToOne.clone());

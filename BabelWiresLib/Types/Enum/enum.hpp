@@ -50,7 +50,7 @@ namespace babelwires {
         /// This can resolve the discriminator in the identifier.
         bool isAValue(const ShortId& id) const;
 
-        std::unique_ptr<Value> createValue() const override;
+        NewValueHolder createValue() const override;
 
         bool isValidValue(const Value& v) const override;
 

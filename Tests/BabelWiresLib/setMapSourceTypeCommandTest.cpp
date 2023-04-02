@@ -34,15 +34,15 @@ TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
 
     babelwires::EnumValue newSourceValue;
     newSourceValue.set("Erm");
-    oneToOne.setSourceValue(newSourceValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
     mapData.emplaceBack(oneToOne.clone());
 
     newSourceValue.set("Bar");
-    oneToOne.setSourceValue(newSourceValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
     mapData.emplaceBack(oneToOne.clone());
 
     newSourceValue.set("Oom");
-    oneToOne.setSourceValue(newSourceValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
     mapData.emplaceBack(oneToOne.clone());
 
     mapData.emplaceBack(allToOne.clone());

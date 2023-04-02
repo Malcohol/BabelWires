@@ -36,8 +36,8 @@ TEST(SetMapCommandTest, executeAndUndo) {
     newSourceValue.m_value = "Source";
     testUtils::TestValue newTargetValue;
     newTargetValue.m_value = "Target";
-    oneToOne.setSourceValue(newSourceValue.clone());
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setTargetValue(newTargetValue);
 
     mapData.emplaceBack(oneToOne.clone());
     mapData.emplaceBack(allToOne.clone());
@@ -57,8 +57,8 @@ TEST(SetMapCommandTest, executeAndUndo) {
     mapData2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
-    oneToOne2.setSourceValue(newSourceValue.clone());
-    oneToOne2.setTargetValue(newTargetValue.clone());
+    oneToOne2.setSourceValue(newSourceValue);
+    oneToOne2.setTargetValue(newTargetValue);
     mapData2.emplaceBack(oneToOne2.clone());
     mapData2.emplaceBack(allToOne.clone());
 
@@ -101,8 +101,8 @@ TEST(SetMapCommandTest, invalidOldMap) {
     newSourceValue.m_value = "Source";
     testUtils::TestValue newTargetValue;
     newTargetValue.m_value = "Target";
-    oneToOne.setSourceValue(newSourceValue.clone());
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setTargetValue(newTargetValue);
 
     mapData.emplaceBack(oneToOne.clone());
     mapData.emplaceBack(allToOne.clone());
@@ -126,8 +126,8 @@ TEST(SetMapCommandTest, invalidOldMap) {
     mapData2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
-    oneToOne2.setSourceValue(newSourceValue.clone());
-    oneToOne2.setTargetValue(newTargetValue.clone());
+    oneToOne2.setSourceValue(newSourceValue);
+    oneToOne2.setTargetValue(newTargetValue);
     mapData2.emplaceBack(oneToOne2.clone());
     mapData2.emplaceBack(allToOne.clone());
 
@@ -175,8 +175,8 @@ TEST(SetMapCommandTest, invalidNewMap) {
     newSourceValue.m_value = "Source";
     testUtils::TestValue newTargetValue;
     newTargetValue.m_value = "Target";
-    oneToOne.setSourceValue(newSourceValue.clone());
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setTargetValue(newTargetValue);
 
     mapData.emplaceBack(oneToOne.clone());
     mapData.emplaceBack(allToOne.clone());
@@ -197,8 +197,8 @@ TEST(SetMapCommandTest, invalidNewMap) {
     mapData2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
-    oneToOne2.setSourceValue(newSourceValue.clone());
-    oneToOne2.setTargetValue(newTargetValue.clone());
+    oneToOne2.setSourceValue(newSourceValue);
+    oneToOne2.setTargetValue(newTargetValue);
     mapData2.emplaceBack(oneToOne2.clone());
     mapData2.emplaceBack(allToOne.clone());
     mapData2.emplaceBack(allToOne.clone());

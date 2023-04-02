@@ -34,17 +34,17 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
 
     babelwires::EnumValue newTargetValue;
     newTargetValue.set("Erm");
-    oneToOne.setTargetValue(newTargetValue.clone());
-    allToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setTargetValue(newTargetValue);
+    allToOne.setTargetValue(newTargetValue);
 
     mapData.emplaceBack(oneToOne.clone());
 
     newTargetValue.set("Bar");
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setTargetValue(newTargetValue);
     mapData.emplaceBack(oneToOne.clone());
 
     newTargetValue.set("Oom");
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setTargetValue(newTargetValue);
     mapData.emplaceBack(oneToOne.clone());
 
     mapData.emplaceBack(allToOne.clone());

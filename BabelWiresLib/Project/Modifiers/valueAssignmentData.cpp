@@ -38,13 +38,9 @@ void babelwires::ValueAssignmentData::deserializeContents(Deserializer& deserial
 }
 
 void babelwires::ValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {
-    if (m_value->canContainIdentifiers()) {
-        m_value.copyContentsAndGetNonConst().visitIdentifiers(visitor);
-    }
+    m_value.visitIdentifiers(visitor);
 }
 
 void babelwires::ValueAssignmentData::visitFilePaths(FilePathVisitor& visitor) {
-    if (m_value->canContainFilePaths()) {
-        m_value.copyContentsAndGetNonConst().visitFilePaths(visitor);
-    }
+    m_value.visitFilePaths(visitor);
 }

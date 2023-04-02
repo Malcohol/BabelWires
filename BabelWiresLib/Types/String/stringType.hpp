@@ -16,7 +16,7 @@ namespace babelwires {
       public:
         PRIMITIVE_TYPE("string", "string", "0e422e25-cb94-40a3-8790-4918c918e637", 1);
 
-        std::unique_ptr<Value> createValue() const override;
+        NewValueHolder createValue() const override;
 
         bool isValidValue(const Value& v) const override;
     };
