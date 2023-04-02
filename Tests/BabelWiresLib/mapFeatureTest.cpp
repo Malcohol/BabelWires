@@ -29,9 +29,9 @@ TEST(MapFeatureTest, construction) {
 
     babelwires::MapFeature::AllowedTypes allowedTypes;
     mapFeature.getAllowedSourceTypeRefs(allowedTypes);
-    EXPECT_TRUE(testUtils::areEqualSets(allowedTypes.m_typeRefs, std::vector<babelwires::TypeRef>{testTypeId1}));
+    EXPECT_TRUE(testUtils::unorderedAreEqualSets(allowedTypes.m_typeRefs, std::vector<babelwires::TypeRef>{testTypeId1}));
     mapFeature.getAllowedTargetTypeRefs(allowedTypes);
-    EXPECT_TRUE(testUtils::areEqualSets(allowedTypes.m_typeRefs, std::vector<babelwires::TypeRef>{testTypeId2}));
+    EXPECT_TRUE(testUtils::unorderedAreEqualSets(allowedTypes.m_typeRefs, std::vector<babelwires::TypeRef>{testTypeId2}));
 }
 
 TEST(MapFeatureTest, setToDefault) {

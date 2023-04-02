@@ -63,9 +63,6 @@ namespace babelwires {
         friend bool operator==(const TypeRef& a, const TypeRef& b) { return a.m_storage == b.m_storage; }
         friend bool operator!=(const TypeRef& a, const TypeRef& b) { return a.m_storage != b.m_storage; }
 
-        /// Note: This orders TypeRefs using identifiers NOT SUBTYPING!
-        friend bool operator<(const TypeRef& a, const TypeRef& b) { return a.m_storage < b.m_storage; }
-
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;
 

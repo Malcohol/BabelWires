@@ -50,48 +50,6 @@ TEST(TypeRefTest, equality) {
     EXPECT_NE(constructedTypeRef2, constructedTypeRef3);
 }
 
-TEST(TypeRefTest, lessThan) {
-    babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Bar"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Foo"));
-    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Bar")}});
-    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"),
-                                            {{babelwires::PrimitiveTypeId("Bar"), babelwires::PrimitiveTypeId("Flerm")}});
-    babelwires::TypeRef constructedTypeRef3(
-        babelwires::PrimitiveTypeId("Foo"),
-        {{babelwires::PrimitiveTypeId("Bar"),
-          babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), {{babelwires::PrimitiveTypeId("Erm")}})}});
-    babelwires::TypeRef constructedTypeRef4(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Boo")}});
-
-    EXPECT_LT(nullTypeRef, primitiveTypeRef1);
-    EXPECT_LT(primitiveTypeRef1, primitiveTypeRef2);
-    EXPECT_LT(primitiveTypeRef1, constructedTypeRef1);
-    EXPECT_LT(constructedTypeRef1, constructedTypeRef3);
-    EXPECT_LT(constructedTypeRef1, constructedTypeRef4);
-    EXPECT_LT(constructedTypeRef1, constructedTypeRef2);
-    EXPECT_LT(constructedTypeRef2, constructedTypeRef3);
-    EXPECT_LT(constructedTypeRef2, constructedTypeRef4);
-    EXPECT_LT(constructedTypeRef3, constructedTypeRef4);
-
-    EXPECT_FALSE(nullTypeRef < nullTypeRef);
-    EXPECT_FALSE(primitiveTypeRef1 < primitiveTypeRef1);
-    EXPECT_FALSE(primitiveTypeRef2 < primitiveTypeRef2);
-    EXPECT_FALSE(constructedTypeRef1 < constructedTypeRef1);
-    EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef3);
-    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef4);
-    EXPECT_FALSE(constructedTypeRef2 < constructedTypeRef2);
-
-    EXPECT_FALSE(primitiveTypeRef1 < nullTypeRef);
-    EXPECT_FALSE(primitiveTypeRef2 < primitiveTypeRef1);
-    EXPECT_FALSE(constructedTypeRef1 < primitiveTypeRef1);
-    EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef1);
-    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef1);
-    EXPECT_FALSE(constructedTypeRef2 < constructedTypeRef1);
-    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef3);
-    EXPECT_FALSE(constructedTypeRef3 < constructedTypeRef2);
-    EXPECT_FALSE(constructedTypeRef4 < constructedTypeRef2);
-}
-
 TEST(TypeRefTest, resolve) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;

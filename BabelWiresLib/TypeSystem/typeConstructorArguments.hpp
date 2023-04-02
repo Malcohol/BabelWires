@@ -25,7 +25,7 @@ namespace babelwires {
         
         friend bool operator==(const TypeConstructorArguments& a, const TypeConstructorArguments& b) { return a.m_typeArguments == b.m_typeArguments; }
         friend bool operator!=(const TypeConstructorArguments& a, const TypeConstructorArguments& b) { return a.m_typeArguments != b.m_typeArguments; }
-        friend bool operator<(const TypeConstructorArguments& a, const TypeConstructorArguments& b) { return a.m_typeArguments < b.m_typeArguments; }
+
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;
     };

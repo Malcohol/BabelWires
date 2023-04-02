@@ -2,14 +2,16 @@
 
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <cassert>
+#include <unordered_set>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeRefs)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem,
+                                   const MapFeature::AllowedTypes& allowedTypeRefs)
     : QComboBox(parent)
     , m_hasBadItem(false) {
     m_defaultStyleSheet = styleSheet();
@@ -18,22 +20,29 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     // TODO This doesn't work as intended.
     m_badStyleSheet.append("\nQComboBox { background: red; }");
 
-    std::vector<TypeRef> typeRefs = allowedTypeRefs.m_typeRefs;
-    std::sort(typeRefs.begin(), typeRefs.end());
-    typeRefs.erase(std::unique(typeRefs.begin(), typeRefs.end()), typeRefs.end());
+    // Ensure uniqueness.
+    std::unordered_set<TypeRef> typeRefSet;
+    for (const auto& typeRef : allowedTypeRefs.m_typeRefs) {
+        typeRefSet.insert(typeRef);
+    }
 
     std::vector<std::tuple<std::string, TypeRef>> sortedNames;
-    sortedNames.reserve(typeRefs.size());
+    sortedNames.reserve(typeRefSet.size());
 
-    for (const auto& typeRef : typeRefs) {
+    for (const auto& typeRef : typeRefSet) {
         const Type& type = typeRef.resolve(typeSystem);
         if (!type.isAbstract()) {
             sortedNames.emplace_back(std::tuple{type.getName(), typeRef});
         }
     }
-    std::sort(sortedNames.begin(), sortedNames.end());
+    
+    std::sort(sortedNames.begin(), sortedNames.end(), [](const auto& a, const auto& b) {
+        return (std::get<0>(a) < std::get<0>(b)) ||
+               ((std::get<0>(a) == std::get<0>(b)) &&
+                (std::get<1>(a).serializeToString() < std::get<1>(b).serializeToString()));
+    });
 
-    m_typeRefs.swap(typeRefs);
+    m_typeRefs.reserve(typeRefSet.size());
     m_typeRefs.clear();
     for (const auto& name : sortedNames) {
         addItem(std::get<0>(name).c_str());
@@ -85,11 +94,9 @@ void babelwires::TypeWidget::clearBadItem() {
 }
 
 void babelwires::TypeWidget::onCurrentIndexChanged(int index) {
-    if (m_hasBadItem && (index == getBadItemIndex()))
-    {
+    if (m_hasBadItem && (index == getBadItemIndex())) {
         setStyleSheet(m_badStyleSheet);
-    }
-    else {
+    } else {
         setStyleSheet(m_defaultStyleSheet);
     }
 }
