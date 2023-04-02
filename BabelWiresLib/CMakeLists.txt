@@ -95,6 +95,8 @@ SET( BABELWIRESLIB_SRCS
 	Types/String/stringFeature.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
+	TypeSystem/typeConstructorArguments.cpp
+	TypeSystem/typeConstructor.cpp
 	TypeSystem/valueHolder.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp

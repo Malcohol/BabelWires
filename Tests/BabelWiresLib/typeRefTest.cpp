@@ -54,13 +54,14 @@ TEST(TypeRefTest, lessThan) {
     babelwires::TypeRef nullTypeRef;
     babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Bar"));
     babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Foo"));
-    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"));
-    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Boo"));
-    babelwires::TypeRef constructedTypeRef3(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-                                            babelwires::PrimitiveTypeId("Flerm"));
-    babelwires::TypeRef constructedTypeRef4(
-        babelwires::PrimitiveTypeId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")));
+    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Bar")}});
+    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"),
+                                            {{babelwires::PrimitiveTypeId("Bar"), babelwires::PrimitiveTypeId("Flerm")}});
+    babelwires::TypeRef constructedTypeRef3(
+        babelwires::PrimitiveTypeId("Foo"),
+        {{babelwires::PrimitiveTypeId("Bar"),
+          babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), {{babelwires::PrimitiveTypeId("Erm")}})}});
+    babelwires::TypeRef constructedTypeRef4(babelwires::TypeConstructorId("Foo"), {{babelwires::PrimitiveTypeId("Boo")}});
 
     EXPECT_LT(nullTypeRef, primitiveTypeRef1);
     EXPECT_LT(primitiveTypeRef1, primitiveTypeRef2);
