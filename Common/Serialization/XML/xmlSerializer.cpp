@@ -67,6 +67,10 @@ void babelwires::XmlSerializer::serializeValue(std::string_view key, std::string
     getCurrentElement()->SetAttribute(toCStr(key), toCStr(value));
 }
 
+void babelwires::XmlSerializer::serializeValue(std::string_view key, std::uint64_t value) {
+    getCurrentElement()->SetAttribute(toCStr(key), value);
+}
+
 void babelwires::XmlSerializer::serializeValue(std::string_view key, std::uint32_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
@@ -80,6 +84,10 @@ void babelwires::XmlSerializer::serializeValue(std::string_view key, std::uint8_
 }
 
 void babelwires::XmlSerializer::serializeValue(std::string_view key, std::int32_t value) {
+    getCurrentElement()->SetAttribute(toCStr(key), value);
+}
+
+void babelwires::XmlSerializer::serializeValue(std::string_view key, std::int64_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 

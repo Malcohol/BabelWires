@@ -23,9 +23,11 @@ namespace babelwires {
 
         void serializeValue(std::string_view key, bool value) override;
         void serializeValue(std::string_view key, std::string_view value) override;
+        void serializeValue(std::string_view key, std::uint64_t value) override;
         void serializeValue(std::string_view key, std::uint32_t value) override;
         void serializeValue(std::string_view key, std::uint16_t value) override;
         void serializeValue(std::string_view key, std::uint8_t value) override;
+        void serializeValue(std::string_view key, std::int64_t value) override;
         void serializeValue(std::string_view key, std::int32_t value) override;
         void serializeValue(std::string_view key, std::int16_t value) override;
         void serializeValue(std::string_view key, std::int8_t value) override;
