@@ -17,10 +17,10 @@ namespace babelwires {
         SERIALIZABLE(IntValue, "int", Value, 1);
 
         IntValue();
-        IntValue(int value);
+        IntValue(std::int64_t value);
 
         int get() const;
-        void set(int value);
+        void set(std::int64_t value);
 
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
@@ -33,7 +33,7 @@ namespace babelwires {
         std::string toString() const override;
 
       private:
-        int m_value;
+        std::int64_t m_value;
     };
 
 } // namespace babelwires

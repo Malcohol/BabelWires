@@ -13,13 +13,13 @@
 #include <Common/Serialization/serializer.hpp>
 
 babelwires::IntValue::IntValue() = default;
-babelwires::IntValue::IntValue(int value) : m_value(value) {}
+babelwires::IntValue::IntValue(std::int64_t value) : m_value(value) {}
 
 int babelwires::IntValue::get() const {
     return m_value;
 }
 
-void babelwires::IntValue::set(int value) {
+void babelwires::IntValue::set(std::int64_t value) {
     m_value = value;
 }
 
