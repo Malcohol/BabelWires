@@ -2,6 +2,8 @@
 
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/Int/intValue.hpp>
+#include <BabelWiresLib/Types/String/stringValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
@@ -21,6 +23,10 @@ TEST(TypeRefTest, equality) {
     babelwires::TypeRef constructedTypeRef3(
         babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
         babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")));
+    babelwires::TypeRef constructedTypeRefValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
+    babelwires::TypeRef constructedTypeRefMixed1(
+        babelwires::TypeConstructorId("Foo"),
+        babelwires::TypeConstructorArguments{{babelwires::PrimitiveTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     EXPECT_EQ(nullTypeRef, nullTypeRef);
     EXPECT_EQ(primitiveTypeRef1, primitiveTypeRef1);
@@ -28,26 +34,40 @@ TEST(TypeRefTest, equality) {
     EXPECT_EQ(constructedTypeRef1, constructedTypeRef1);
     EXPECT_EQ(constructedTypeRef2, constructedTypeRef2);
     EXPECT_EQ(constructedTypeRef3, constructedTypeRef3);
+    EXPECT_EQ(constructedTypeRefValue1, constructedTypeRefValue1);
+    EXPECT_EQ(constructedTypeRefMixed1, constructedTypeRefMixed1);
 
     EXPECT_NE(nullTypeRef, primitiveTypeRef1);
     EXPECT_NE(nullTypeRef, primitiveTypeRef2);
     EXPECT_NE(nullTypeRef, constructedTypeRef1);
     EXPECT_NE(nullTypeRef, constructedTypeRef2);
     EXPECT_NE(nullTypeRef, constructedTypeRef3);
+    EXPECT_NE(nullTypeRef, constructedTypeRefValue1);
+    EXPECT_NE(nullTypeRef, constructedTypeRefMixed1);
 
     EXPECT_NE(primitiveTypeRef1, primitiveTypeRef2);
     EXPECT_NE(primitiveTypeRef1, constructedTypeRef1);
     EXPECT_NE(primitiveTypeRef1, constructedTypeRef2);
     EXPECT_NE(primitiveTypeRef1, constructedTypeRef3);
+    EXPECT_NE(primitiveTypeRef1, constructedTypeRefValue1);
+    EXPECT_NE(primitiveTypeRef1, constructedTypeRefMixed1);
 
     EXPECT_NE(primitiveTypeRef2, constructedTypeRef1);
     EXPECT_NE(primitiveTypeRef2, constructedTypeRef2);
     EXPECT_NE(primitiveTypeRef2, constructedTypeRef3);
+    EXPECT_NE(primitiveTypeRef2, constructedTypeRefValue1);
+    EXPECT_NE(primitiveTypeRef2, constructedTypeRefMixed1);
 
     EXPECT_NE(constructedTypeRef1, constructedTypeRef2);
     EXPECT_NE(constructedTypeRef1, constructedTypeRef3);
+    EXPECT_NE(constructedTypeRef1, constructedTypeRefValue1);
+    EXPECT_NE(constructedTypeRef1, constructedTypeRefMixed1);
 
     EXPECT_NE(constructedTypeRef2, constructedTypeRef3);
+    EXPECT_NE(constructedTypeRef2, constructedTypeRefValue1);
+    EXPECT_NE(constructedTypeRef2, constructedTypeRefMixed1);
+
+    EXPECT_NE(constructedTypeRefValue1, constructedTypeRefMixed1);
 }
 
 TEST(TypeRefTest, resolve) {
@@ -297,10 +317,11 @@ TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {
                             testUtils::getTestRegisteredMediumIdentifier("Erm", 13)));
     EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4,Flerm'1[Erm'13]]"));
 
-    babelwires::TypeRef constructedTypeRef4(testUtils::getTestRegisteredMediumIdentifier("Foo", 2), babelwires::TypeRef(
-                                                testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
-                                                testUtils::getTestRegisteredMediumIdentifier("Erm", 13)),
-                                            testUtils::getTestRegisteredMediumIdentifier("Bar", 4));
+    babelwires::TypeRef constructedTypeRef4(
+        testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
+        babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
+                            testUtils::getTestRegisteredMediumIdentifier("Erm", 13)),
+        testUtils::getTestRegisteredMediumIdentifier("Bar", 4));
     EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo'2[Flerm'1[Erm'13],Bar'4]"));
 }
 

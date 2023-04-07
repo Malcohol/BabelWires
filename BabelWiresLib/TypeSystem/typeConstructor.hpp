@@ -47,8 +47,8 @@ namespace babelwires {
       protected:
         /// Construct the new type.
         /// The newTypeRef is provided to allow implementations to move it into the constructed type.
-        virtual std::unique_ptr<Type> constructType(TypeRef newTypeRef,
-                                                    const std::vector<const Type*>& arguments) const = 0;
+        virtual std::unique_ptr<Type> constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+                                                    const std::vector<ValueHolder>& valueArguments) const = 0;
 
       private:
         /// A mutex which ensures thread-safe access to the cache.
@@ -79,7 +79,7 @@ namespace babelwires {
 
 /// Intended mainly for testing.
 #define TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                       \
-    static babelwires::TypeConstructorId getThisIdentifier() { return IDENTIFIER; }                                             \
+    static babelwires::TypeConstructorId getThisIdentifier() { return IDENTIFIER; }                                    \
     static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
     babelwires::TypeConstructorId getTypeConstructorId() const override { return getThisIdentifier(); }
 

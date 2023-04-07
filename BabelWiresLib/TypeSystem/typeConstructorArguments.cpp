@@ -14,9 +14,13 @@
 babelwires::TypeConstructorArguments::~TypeConstructorArguments() = default;
 
 std::size_t babelwires::TypeConstructorArguments::getHash() const {
+    // Arbitrary value.
     std::size_t hash = 0x80235AA2;
-    for (const auto& arg : m_typeArguments) {
-        hash::mixInto(hash, arg);
+    for (const auto& targ : m_typeArguments) {
+        hash::mixInto(hash, targ);
+    }
+    for (const auto& varg : m_valueArguments) {
+        hash::mixInto(hash, varg);
     }
     return hash;
 }

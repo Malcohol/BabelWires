@@ -43,7 +43,7 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
             // Still not found.
             // Only construct the type if the arity is correct.
             if (resolvedArguments.size() == arguments.m_typeArguments.size()) {
-                it.first->second = constructType(std::move(newTypeRef), resolvedArguments);
+                it.first->second = constructType(std::move(newTypeRef), resolvedArguments, arguments.m_valueArguments);
             }
         }
         return it.first->second.get();

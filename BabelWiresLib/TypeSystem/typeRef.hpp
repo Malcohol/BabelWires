@@ -38,9 +38,9 @@ namespace babelwires {
         // Convenience constructors
         TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0);
         TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0, TypeRef typeRef1);
-        //TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0);
-        //TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1);
-        //TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1, ValueHolder value2);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1, ValueHolder value2);
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
         const Type* tryResolve(const TypeSystem& typeSystem) const;
@@ -78,6 +78,7 @@ namespace babelwires {
         static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);
 
       private:
+        // TODO More compact storage.
         using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArguments>;
         using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
 

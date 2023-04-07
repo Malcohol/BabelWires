@@ -1,8 +1,8 @@
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 
 std::unique_ptr<babelwires::Type>
-testUtils::TestUnaryTypeConstructor::constructType(babelwires::TypeRef newTypeRef,
-                                                   const std::vector<const babelwires::Type*>& arguments) const {
+testUtils::TestUnaryTypeConstructor::constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
+                                                    const std::vector<babelwires::ValueHolder>& valueArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
     return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef));
 }
@@ -26,8 +26,8 @@ testUtils::TestUnaryTypeConstructor::compareSubtypeHelper(const babelwires::Type
 }
 
 std::unique_ptr<babelwires::Type>
-testUtils::TestBinaryTypeConstructor::constructType(babelwires::TypeRef newTypeRef,
-                                                    const std::vector<const babelwires::Type*>& arguments) const {
+testUtils::TestBinaryTypeConstructor::constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
+                                                    const std::vector<babelwires::ValueHolder>& valueArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
     return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef));
 }
