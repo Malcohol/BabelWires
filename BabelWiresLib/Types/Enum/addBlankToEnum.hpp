@@ -26,13 +26,11 @@ namespace babelwires {
         std::unique_ptr<Type> constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<ValueHolder>& valueArguments) const override;
 
-        virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                  const TypeConstructorArguments& argumentsA,
-                                                  const TypeConstructorArguments& argumentsB) const override;
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA,
+                                          const TypeConstructorArguments& argumentsB) const override;
 
-        virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                  const TypeConstructorArguments& arguments,
-                                                  const TypeRef& other) const override;
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments,
+                                          const TypeRef& other) const override;
 
         /// Add a blank to the values unless one is already there.
         static Enum::EnumValues ensureBlankValue(const Enum::EnumValues& srcValues);

@@ -11,10 +11,25 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
+babelwires::IntType::IntType(Range<IntValue::NativeType> range, IntValue::NativeType defaultValue) 
+    : m_range(range)
+    , m_defaultValue(defaultValue)
+{
+}
+
 babelwires::NewValueHolder babelwires::IntType::createValue() const {
-    return ValueHolder::makeValue<IntValue>();
+    return ValueHolder::makeValue<IntValue>(m_defaultValue);
 }
 
 bool babelwires::IntType::isValidValue(const Value& v) const {
-    return v.as<IntValue>();
+    if (const IntValue* const intValue = v.as<IntValue>()) {
+        return m_range.contains(intValue->get());
+    }
+    return false;
 }
+
+babelwires::Range<babelwires::IntValue::NativeType> babelwires::IntType::getRange() const {
+    return m_range;
+}
+
+babelwires::DefaultIntType::DefaultIntType() : IntType() {}

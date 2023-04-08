@@ -11,6 +11,7 @@
 #include <limits>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 namespace babelwires {
 
@@ -37,6 +38,7 @@ namespace babelwires {
             : m_min(min)
             , m_max(max) {}
         bool contains(T value) const { return (m_min <= value) && (value <= m_max); }
+        T clamp(T value) const { return std::clamp(value, m_min, m_max); }
         T m_min;
         T m_max;
     };

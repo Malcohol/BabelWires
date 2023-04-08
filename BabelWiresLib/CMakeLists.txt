@@ -86,6 +86,8 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/typeSystem.cpp
 	Types/Int/intType.cpp
 	Types/Int/intValue.cpp
+	Types/Int/intTypeConstructor.cpp
+	Types/Int/intFeature.cpp
 	Types/Enum/enum.cpp
 	Types/Enum/addBlankToEnum.cpp
 	Types/Enum/enumValue.cpp

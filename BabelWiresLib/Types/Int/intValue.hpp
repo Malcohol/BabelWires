@@ -16,11 +16,13 @@ namespace babelwires {
         CLONEABLE(IntValue);
         SERIALIZABLE(IntValue, "int", Value, 1);
 
-        IntValue();
-        IntValue(std::int64_t value);
+        using NativeType = std::int64_t; 
 
-        int get() const;
-        void set(std::int64_t value);
+        IntValue();
+        IntValue(NativeType value);
+
+        NativeType get() const;
+        void set(NativeType value);
 
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
@@ -33,7 +35,7 @@ namespace babelwires {
         std::string toString() const override;
 
       private:
-        std::int64_t m_value;
+        NativeType m_value;
     };
 
 } // namespace babelwires
