@@ -29,6 +29,12 @@ namespace babelwires {
 
         /// Set the value in the feature.
         void set(ShortId value);
+
+        /// If the value is valid, then return the index of that value in the enum. Otherwise return -1.
+        int tryGetEnumIndex() const;
+
+        /// Set the value to correspond to the Enum's EnumValue at the given index.
+        void setToEnumIndex(unsigned int index);
     };
 
 } // namespace babelwires

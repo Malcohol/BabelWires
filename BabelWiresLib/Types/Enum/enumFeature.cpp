@@ -7,11 +7,11 @@
  **/
 #include <BabelWiresLib/Types/Enum/enumFeature.hpp>
 
-#include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -29,4 +29,12 @@ babelwires::ShortId babelwires::EnumFeature::get() const {
 
 void babelwires::EnumFeature::set(ShortId id) {
     setValue(EnumValue(id));
+}
+
+int babelwires::EnumFeature::tryGetEnumIndex() const {
+    return getType().is<Enum>().tryGetIndexFromIdentifier(get());
+}
+
+void babelwires::EnumFeature::setToEnumIndex(unsigned int index) {
+    set(getType().is<Enum>().getIdentifierFromIndex(index));
 }
