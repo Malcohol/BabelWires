@@ -38,10 +38,12 @@ babelwires::IntTypeConstructor::compareSubtypeHelper(const TypeSystem& typeSyste
                                                      const TypeConstructorArguments& argumentsA,
                                                      const TypeConstructorArguments& argumentsB) const {
     // TODO
+    return SubtypeOrder::IsEquivalent;
 }
 
 babelwires::SubtypeOrder babelwires::IntTypeConstructor::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                               const TypeConstructorArguments& arguments,
                                                                               const TypeRef& other) const {
     // TODO
+    return SubtypeOrder::IsEquivalent;
 }

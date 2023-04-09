@@ -10,13 +10,14 @@
 #include <BabelWiresQtUi/ValueEditors/spinBoxValueEditor.hpp>
 
 #include <BabelWiresLib/Types/Int/intValue.hpp>
+#include <BabelWiresLib/Types/Int/intType.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 QWidget* babelwires::IntValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
-    // TODO value names
     auto spinBox = std::make_unique<SpinBoxValueEditor>(parent, index, nullptr);
-    // TODO range
+    auto range = getType()->is<IntType>().getRange();
+    spinBox->setRange(range.m_min, range.m_max);
     return spinBox.release();
 }
 

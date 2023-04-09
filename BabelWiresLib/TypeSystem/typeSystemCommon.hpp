@@ -24,6 +24,8 @@ namespace babelwires {
         /// Every value of the second type is a member of the first type.
         IsSupertype,
         /// Both types have the same set of values.
+        /// Note that this does not necessarily mean the types are equal.
+        /// For example, two types could have the same range of values, but different defaults.
         IsEquivalent,
         /// The types are neither Subtypes nor Supertypes of each other.
         IsUnrelated 
