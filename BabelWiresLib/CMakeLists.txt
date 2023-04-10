@@ -61,7 +61,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp
 	Features/Path/pathStep.cpp
-	Features/Utilities/featureXml.cpp
 	Features/rootFeature.cpp
 	Features/valueFeature.cpp
 	Features/unionFeature.cpp
