@@ -24,6 +24,8 @@ namespace babelwires {
 
         bool isValidValue(const Value& v) const override;
 
+        std::string getKind() const override;
+
       private:
         IntValue::NativeType m_defaultValue;
         Range<IntValue::NativeType> m_range;

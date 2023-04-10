@@ -18,3 +18,7 @@ babelwires::NewValueHolder babelwires::StringType::createValue() const {
 bool babelwires::StringType::isValidValue(const Value& v) const {
     return v.as<StringValue>();
 }
+
+std::string babelwires::StringType::getKind() const {
+    return StringValue::serializationType;
+}

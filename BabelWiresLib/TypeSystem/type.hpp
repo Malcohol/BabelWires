@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 
@@ -19,7 +19,7 @@ namespace babelwires {
     /// A type describes a valid set of values.
     /// Note that a value can be an instance of more than one type.
     /// A type is a subtypes of another type when all its values are valid
-    /// values of the other. 
+    /// values of the other.
     /// Information about subtype relationships is managed by the TypeSystem.
     class Type {
       public:
@@ -35,6 +35,9 @@ namespace babelwires {
         /// Primitive types get an implementation of this method from the PRIMITIVE_TYPE macro.
         /// Complex types constructed by TypeConstructors must provide their own implementation.
         virtual TypeRef getTypeRef() const = 0;
+
+        /// Return a short string which defines the kind of values this type handles.
+        virtual std::string getKind() const = 0;
 
         /// An abstract type just acts as a placeholder in the type system and cannot
         /// be used in a number of situations.

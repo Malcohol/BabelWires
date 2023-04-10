@@ -10,8 +10,6 @@
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
 std::string babelwires::ValueFeature::getValueType() const {
-    // Future proofing, while I consider this approach.
-    assert((doGetValueType().size() <= 4) && "The value type must be 4 characters or shorter");
     return doGetValueType();
 }
 

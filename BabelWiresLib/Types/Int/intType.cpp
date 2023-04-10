@@ -32,4 +32,8 @@ babelwires::Range<babelwires::IntValue::NativeType> babelwires::IntType::getRang
     return m_range;
 }
 
+std::string babelwires::IntType::getKind() const {
+    return IntValue::serializationType;
+}
+
 babelwires::DefaultIntType::DefaultIntType() : IntType() {}

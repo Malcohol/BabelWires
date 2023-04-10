@@ -82,3 +82,7 @@ bool babelwires::Enum::verifySupertype(const Type& supertype) const {
     }
     return true;
 }
+
+std::string babelwires::Enum::getKind() const {
+    return EnumValue::serializationType;
+}

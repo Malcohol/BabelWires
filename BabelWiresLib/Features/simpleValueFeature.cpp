@@ -9,12 +9,12 @@ babelwires::SimpleValueFeature::SimpleValueFeature(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
 
 std::string babelwires::SimpleValueFeature::doGetValueType() const {
-    return "TODO";
+    return getType().getKind();
 }
 
 void babelwires::SimpleValueFeature::doAssign(const ValueFeature& other) {
     if (const auto* otherValueFeature = other.as<SimpleValueFeature>()) {
-        m_value = otherValueFeature->m_value;
+        setValueHolder(otherValueFeature->m_value);
     } else {
         throw ModelException() << "Cannot assign other kinds of Feature to SimpleValueFeature";
     }
