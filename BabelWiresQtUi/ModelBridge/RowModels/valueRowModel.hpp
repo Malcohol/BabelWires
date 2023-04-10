@@ -1,5 +1,5 @@
 /**
- * The row model for IntFeatures.
+ * The row model for ValueFeatures.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

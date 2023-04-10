@@ -13,7 +13,7 @@ namespace babelwires {
 
     class UnionFeature;
 
-    /// The row model for IntFeatures.
+    /// The row model for UnionFeatures.
     class UnionRowModel : public RowModel {
       public:
         virtual QVariant getValueDisplayData() const override;
