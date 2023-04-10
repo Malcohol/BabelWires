@@ -15,6 +15,8 @@ namespace testUtils {
         // This is used to test failed applications.
         TestRecordFeature(int intValueLimit = 255, bool addExtraInt = false);
 
+        void doSetToDefault() override;
+
         static constexpr char s_intIdInitializer[] = "int0";
         static constexpr char s_arrayIdInitializer[] = "array";
         static constexpr char s_recordIdInitializer[] = "record";

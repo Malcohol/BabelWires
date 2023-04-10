@@ -5,19 +5,24 @@
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
-#include <BabelWiresLib/Types/String/stringFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
+#include <BabelWiresLib/Types/String/stringFeature.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/TestUtils/testIdentifiers.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
+#include <Tests/TestUtils/testIdentifiers.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(FeatureTest, intFeature) {
-    babelwires::IntFeature intFeature;
-    EXPECT_EQ(intFeature.getOwner(), nullptr);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext);
+    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
+
+    EXPECT_EQ(intFeature.getOwner(), &rootedFeature.getRoot());
 
     intFeature.setToDefault();
     EXPECT_EQ(intFeature.get(), 0);
@@ -25,13 +30,18 @@ TEST(FeatureTest, intFeature) {
     intFeature.set(10);
     EXPECT_EQ(intFeature.get(), 10);
 
-    babelwires::IntFeature intFeature2;
+    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature2(testEnvironment.m_projectContext);
+    babelwires::IntFeature& intFeature2 = rootedFeature.getFeature();
+
     intFeature2.assign(intFeature);
     EXPECT_EQ(intFeature2.get(), 10);
 }
 
 TEST(FeatureTest, intFeatureChanges) {
-    babelwires::IntFeature intFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext);
+    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
 
     // After construction, everything has changed.
     EXPECT_TRUE(intFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -60,7 +70,10 @@ TEST(FeatureTest, intFeatureChanges) {
 }
 
 TEST(FeatureTest, intFeatureHash) {
-    babelwires::IntFeature intFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext);
+    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
 
     intFeature.set(0);
     const std::size_t hashAt0 = intFeature.getHash();
@@ -74,7 +87,11 @@ TEST(FeatureTest, intFeatureHash) {
 }
 
 TEST(FeatureTest, intFeatureWithRange) {
-    babelwires::IntFeature intFeature(10, 100);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext, 10, 100);
+    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
+
     intFeature.setToDefault();
     EXPECT_EQ(intFeature.get(), 10);
 
@@ -99,7 +116,10 @@ TEST(FeatureTest, intFeatureWithRange) {
 }
 
 TEST(FeatureTest, intFeatureWithDefault) {
-    babelwires::HasStaticDefault<babelwires::IntFeature, -10> intFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext, -10);
+    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
 
     intFeature.setToDefault();
     EXPECT_EQ(intFeature.get(), -10);
@@ -137,8 +157,10 @@ TEST(FeatureTest, stringFeature) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
-    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
-    babelwires::StringFeature& stringFeature2 = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("bbb"));
+    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(),
+                                                                     testUtils::getTestRegisteredIdentifier("aaa"));
+    babelwires::StringFeature& stringFeature2 = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(),
+                                                                      testUtils::getTestRegisteredIdentifier("bbb"));
 
     stringFeature.setToDefault();
     EXPECT_EQ(stringFeature.get(), "");
@@ -155,7 +177,8 @@ TEST(FeatureTest, stringFeatureChanges) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
-    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
+    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(),
+                                                                     testUtils::getTestRegisteredIdentifier("aaa"));
 
     // After construction, everything has changed.
     EXPECT_TRUE(stringFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -181,7 +204,8 @@ TEST(FeatureTest, stringFeatureHash) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
-    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
+    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(),
+                                                                     testUtils::getTestRegisteredIdentifier("aaa"));
 
     stringFeature.set("");
     const std::size_t hashAtEmpty = stringFeature.getHash();
@@ -198,12 +222,20 @@ TEST(FeatureTest, valueCompatibility) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
-    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("aaa"));
-    babelwires::StringFeature& stringFeature2 = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(), testUtils::getTestRegisteredIdentifier("bbb"));
+    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(),
+                                                                     testUtils::getTestRegisteredIdentifier("aaa"));
+    babelwires::StringFeature& stringFeature2 = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(),
+                                                                      testUtils::getTestRegisteredIdentifier("bbb"));
 
     // Currently, int and rational are incompatible. (We could change that in the future)
-    babelwires::IntFeature intFeature, intFeature2;
-    babelwires::RationalFeature rationalFeature, rationalFeature2;
+    babelwires::IntFeature& intFeature = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
+                                                                      testUtils::getTestRegisteredIdentifier("ccc"));
+    babelwires::IntFeature& intFeature2 = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
+                                                                      testUtils::getTestRegisteredIdentifier("ddd"));
+    babelwires::RationalFeature& rationalFeature = *rootFeature.addField(std::make_unique<babelwires::RationalFeature>(),
+                                                                      testUtils::getTestRegisteredIdentifier("eee"));
+    babelwires::RationalFeature& rationalFeature2 = *rootFeature.addField(std::make_unique<babelwires::RationalFeature>(),
+                                                                      testUtils::getTestRegisteredIdentifier("fff"));
 
     EXPECT_TRUE(intFeature.isCompatible(intFeature2));
     EXPECT_FALSE(intFeature.isCompatible(stringFeature));

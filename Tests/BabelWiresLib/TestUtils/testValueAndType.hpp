@@ -32,5 +32,6 @@ namespace testUtils {
 
         babelwires::NewValueHolder createValue() const override;
         bool isValidValue(const babelwires::Value& value) const override;
+        std::string getKind() const override;
     };
 } // namespace testUtils

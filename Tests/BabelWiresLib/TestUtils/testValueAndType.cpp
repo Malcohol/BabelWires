@@ -48,3 +48,7 @@ babelwires::NewValueHolder testUtils::TestType::createValue() const {
 bool testUtils::TestType::isValidValue(const babelwires::Value& value) const {
     return value.as<TestValue>();
 }
+
+std::string testUtils::TestType::getKind() const {
+    return "Test";
+}

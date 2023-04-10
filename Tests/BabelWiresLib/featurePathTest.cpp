@@ -1,20 +1,23 @@
 #include <gtest/gtest.h>
 
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
-#include <Tests/TestUtils/testLog.hpp>
-
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Identifiers/registeredIdentifier.hpp>
 #include <Common/Log/unifiedLog.hpp>
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 #include <Common/exceptions.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
+
+#include <Tests/TestUtils/testLog.hpp>
 
 TEST(FeaturePathTest, pathStepOps) {
     babelwires::ShortId hello("Hello");
@@ -145,11 +148,15 @@ TEST(FeaturePathTest, pathIteration) {
 }
 
 TEST(FeaturePathTest, pathFollow) {
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestRecordFeature testRecordFeature;
+    testUtils::RootedFeature<testUtils::TestRecordFeature> rootedFeature(testEnvironment.m_projectContext);
+    babelwires::RootFeature& rootFeature = rootedFeature.getRoot();
+    testUtils::TestRecordFeature& testRecordFeature = rootedFeature.getFeature();
+    testRecordFeature.setToDefault();
 
     // Now set up some paths.
+    babelwires::FeaturePath pathToRoot(&rootFeature);
     babelwires::FeaturePath pathToRecord(&testRecordFeature);
     babelwires::FeaturePath pathToInt(testRecordFeature.m_intFeature);
     babelwires::FeaturePath pathToArray(testRecordFeature.m_arrayFeature);
@@ -158,35 +165,37 @@ TEST(FeaturePathTest, pathFollow) {
     babelwires::FeaturePath pathToSubRecord(testRecordFeature.m_subRecordFeature);
     babelwires::FeaturePath pathToInt2(testRecordFeature.m_intFeature2);
 
-    EXPECT_EQ(&pathToRecord.follow(testRecordFeature), &testRecordFeature);
-    EXPECT_EQ(&pathToInt.follow(testRecordFeature), testRecordFeature.m_intFeature);
-    EXPECT_EQ(&pathToArray.follow(testRecordFeature), testRecordFeature.m_arrayFeature);
-    EXPECT_EQ(&pathToElem0.follow(testRecordFeature), testRecordFeature.m_elem0);
-    EXPECT_EQ(&pathToElem1.follow(testRecordFeature), testRecordFeature.m_elem1);
-    EXPECT_EQ(&pathToSubRecord.follow(testRecordFeature), testRecordFeature.m_subRecordFeature);
-    EXPECT_EQ(&pathToInt2.follow(testRecordFeature), testRecordFeature.m_intFeature2);
+    EXPECT_EQ(&pathToRoot.follow(rootFeature), &rootFeature);
+    EXPECT_EQ(&pathToRecord.follow(rootFeature), &testRecordFeature);
+    EXPECT_EQ(&pathToInt.follow(rootFeature), testRecordFeature.m_intFeature);
+    EXPECT_EQ(&pathToArray.follow(rootFeature), testRecordFeature.m_arrayFeature);
+    EXPECT_EQ(&pathToElem0.follow(rootFeature), testRecordFeature.m_elem0);
+    EXPECT_EQ(&pathToElem1.follow(rootFeature), testRecordFeature.m_elem1);
+    EXPECT_EQ(&pathToSubRecord.follow(rootFeature), testRecordFeature.m_subRecordFeature);
+    EXPECT_EQ(&pathToInt2.follow(rootFeature), testRecordFeature.m_intFeature2);
 
-    EXPECT_EQ(pathToRecord.getNumSteps(), 0);
-    EXPECT_EQ(pathToInt.getNumSteps(), 1);
-    EXPECT_EQ(pathToArray.getNumSteps(), 1);
-    EXPECT_EQ(pathToElem0.getNumSteps(), 2);
-    EXPECT_EQ(pathToElem1.getNumSteps(), 2);
-    EXPECT_EQ(pathToSubRecord.getNumSteps(), 1);
-    EXPECT_EQ(pathToInt2.getNumSteps(), 2);
+    EXPECT_EQ(pathToRoot.getNumSteps(), 0);
+    EXPECT_EQ(pathToRecord.getNumSteps(), 1);
+    EXPECT_EQ(pathToInt.getNumSteps(), 2);
+    EXPECT_EQ(pathToArray.getNumSteps(), 2);
+    EXPECT_EQ(pathToElem0.getNumSteps(), 3);
+    EXPECT_EQ(pathToElem1.getNumSteps(), 3);
+    EXPECT_EQ(pathToSubRecord.getNumSteps(), 2);
+    EXPECT_EQ(pathToInt2.getNumSteps(), 3);
 
-    EXPECT_EQ(pathToInt.getStep(0), babelwires::PathStep(testRecordFeature.m_intId));
-    EXPECT_EQ(pathToArray.getStep(0), babelwires::PathStep(testRecordFeature.m_arrayId));
-    EXPECT_EQ(pathToElem0.getStep(0), babelwires::PathStep(testRecordFeature.m_arrayId));
-    EXPECT_EQ(pathToElem0.getStep(1), babelwires::PathStep(0));
-    EXPECT_EQ(pathToElem1.getStep(0), babelwires::PathStep(testRecordFeature.m_arrayId));
-    EXPECT_EQ(pathToElem1.getStep(1), babelwires::PathStep(1));
-    EXPECT_EQ(pathToSubRecord.getStep(0), babelwires::PathStep(testRecordFeature.m_recordId));
-    EXPECT_EQ(pathToInt2.getStep(0), babelwires::PathStep(testRecordFeature.m_recordId));
-    EXPECT_EQ(pathToInt2.getStep(1), babelwires::PathStep(testRecordFeature.m_int2Id));
+    EXPECT_EQ(pathToInt.getStep(1), babelwires::PathStep(testRecordFeature.m_intId));
+    EXPECT_EQ(pathToArray.getStep(1), babelwires::PathStep(testRecordFeature.m_arrayId));
+    EXPECT_EQ(pathToElem0.getStep(1), babelwires::PathStep(testRecordFeature.m_arrayId));
+    EXPECT_EQ(pathToElem0.getStep(2), babelwires::PathStep(0));
+    EXPECT_EQ(pathToElem1.getStep(1), babelwires::PathStep(testRecordFeature.m_arrayId));
+    EXPECT_EQ(pathToElem1.getStep(2), babelwires::PathStep(1));
+    EXPECT_EQ(pathToSubRecord.getStep(1), babelwires::PathStep(testRecordFeature.m_recordId));
+    EXPECT_EQ(pathToInt2.getStep(1), babelwires::PathStep(testRecordFeature.m_recordId));
+    EXPECT_EQ(pathToInt2.getStep(2), babelwires::PathStep(testRecordFeature.m_int2Id));
 }
 
 TEST(FeaturePathTest, pathResolve) {
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
     babelwires::FeaturePath pathToInt;
     babelwires::FeaturePath pathToArray;
@@ -205,7 +214,10 @@ TEST(FeaturePathTest, pathResolve) {
     pathToInt2.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_recordIdInitializer));
     pathToInt2.pushStep(babelwires::PathStep(testUtils::TestRecordFeature::s_int2IdInitializer));
 
-    testUtils::TestRecordFeature testRecordFeature;
+    testUtils::RootedFeature<testUtils::TestRecordFeature> rootedFeature(testEnvironment.m_projectContext);
+    babelwires::RootFeature& rootFeature = rootedFeature.getRoot();
+    testUtils::TestRecordFeature& testRecordFeature = rootedFeature.getFeature();
+    testRecordFeature.setToDefault();
 
     EXPECT_EQ(pathToInt.getStep(0).getField().getDiscriminator(), 0);
     EXPECT_EQ(pathToArray.getStep(0).getField().getDiscriminator(), 0);
@@ -244,9 +256,12 @@ TEST(FeaturePathTest, pathResolve) {
 }
 
 TEST(FeaturePathTest, pathTryFollow) {
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestRecordFeature testRecordFeature;
+    testUtils::RootedFeature<testUtils::TestRecordFeature> rootedFeature(testEnvironment.m_projectContext);
+    babelwires::RootFeature& rootFeature = rootedFeature.getRoot();
+    testUtils::TestRecordFeature& testRecordFeature = rootedFeature.getFeature();
+    testRecordFeature.setToDefault();
 
     // Now set up some paths.
     babelwires::FeaturePath pathToRecord(&testRecordFeature);
@@ -257,13 +272,13 @@ TEST(FeaturePathTest, pathTryFollow) {
     babelwires::FeaturePath pathToSubRecord(testRecordFeature.m_subRecordFeature);
     babelwires::FeaturePath pathToInt2(testRecordFeature.m_intFeature2);
 
-    EXPECT_EQ(pathToRecord.tryFollow(testRecordFeature), &testRecordFeature);
-    EXPECT_EQ(pathToInt.tryFollow(testRecordFeature), testRecordFeature.m_intFeature);
-    EXPECT_EQ(pathToArray.tryFollow(testRecordFeature), testRecordFeature.m_arrayFeature);
-    EXPECT_EQ(pathToElem0.tryFollow(testRecordFeature), testRecordFeature.m_elem0);
-    EXPECT_EQ(pathToElem1.tryFollow(testRecordFeature), testRecordFeature.m_elem1);
-    EXPECT_EQ(pathToSubRecord.tryFollow(testRecordFeature), testRecordFeature.m_subRecordFeature);
-    EXPECT_EQ(pathToInt2.tryFollow(testRecordFeature), testRecordFeature.m_intFeature2);
+    EXPECT_EQ(pathToRecord.tryFollow(rootFeature), &testRecordFeature);
+    EXPECT_EQ(pathToInt.tryFollow(rootFeature), testRecordFeature.m_intFeature);
+    EXPECT_EQ(pathToArray.tryFollow(rootFeature), testRecordFeature.m_arrayFeature);
+    EXPECT_EQ(pathToElem0.tryFollow(rootFeature), testRecordFeature.m_elem0);
+    EXPECT_EQ(pathToElem1.tryFollow(rootFeature), testRecordFeature.m_elem1);
+    EXPECT_EQ(pathToSubRecord.tryFollow(rootFeature), testRecordFeature.m_subRecordFeature);
+    EXPECT_EQ(pathToInt2.tryFollow(rootFeature), testRecordFeature.m_intFeature2);
 }
 
 TEST(FeaturePathTest, pathFollowFail) {

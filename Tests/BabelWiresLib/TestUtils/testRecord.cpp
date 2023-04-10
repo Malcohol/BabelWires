@@ -43,10 +43,8 @@ testUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtra
 
     auto arrayFeaturePtr = std::make_unique<LimitedArrayFeature>(m_intValueLimit);
     m_arrayFeature = arrayFeaturePtr.get();
-    addField(std::move(arrayFeaturePtr), m_arrayId)->setToDefault();
-    m_elem0 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(0));
-    m_elem1 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(1));
-
+    addField(std::move(arrayFeaturePtr), m_arrayId);
+    
     auto subRecordPtr = std::make_unique<babelwires::RecordFeature>();
     m_subRecordFeature = subRecordPtr.get();
     addField(std::move(subRecordPtr), m_recordId);
@@ -60,4 +58,11 @@ testUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtra
         m_extraIntFeature = extraIntPtr.get();
         m_subRecordFeature->addField(std::move(extraIntPtr), m_extraIntId);
     }
+}
+
+void testUtils::TestRecordFeature::doSetToDefault() {
+    RecordFeature::doSetToDefault();
+    // These elements won't exist until now.
+    m_elem0 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(0));
+    m_elem1 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(1));
 }
