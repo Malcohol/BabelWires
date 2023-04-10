@@ -9,7 +9,6 @@
 
 #include <BabelWiresQtUi/ModelBridge/RowModels/arrayRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/fileRowModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/RowModels/intRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rationalRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/recordWithOptionalsRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelRegistry.hpp>
@@ -38,9 +37,6 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     } else if (feature->as<const babelwires::SimpleValueFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ValueRowModel));
         new (m_rowModel) babelwires::ValueRowModel();
-    } else if (feature->as<const babelwires::IntFeature>()) {
-        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::IntRowModel));
-        new (m_rowModel) babelwires::IntRowModel();
     } else if (feature->as<const babelwires::RationalFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::RationalRowModel));
         new (m_rowModel) babelwires::RationalRowModel();
