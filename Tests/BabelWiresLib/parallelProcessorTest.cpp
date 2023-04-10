@@ -3,18 +3,22 @@
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/featureMixins.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 namespace {
-    using LimitedIntFeature = babelwires::HasStaticRange<babelwires::IntFeature, -20, 20>;
+    struct LimitedIntFeature : public babelwires::IntFeature {
+        LimitedIntFeature()
+            : babelwires::IntFeature(-20, 20) {}
+    };
 
     struct TestParallelProcessor : babelwires::ParallelProcessor<LimitedIntFeature, LimitedIntFeature> {
-        TestParallelProcessor(const babelwires::ProjectContext& context) : babelwires::ParallelProcessor<LimitedIntFeature, LimitedIntFeature>(context) {
+        TestParallelProcessor(const babelwires::ProjectContext& context)
+            : babelwires::ParallelProcessor<LimitedIntFeature, LimitedIntFeature>(context) {
             const babelwires::ShortId intId = babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
                 "foo", "foo", "ec463f45-098d-4170-9890-d5a2db2e7658",
                 babelwires::IdentifierRegistry::Authority::isAuthoritative);
@@ -122,10 +126,10 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     processor.getInputFeature()->clearChanges();
     testEnvironment.m_log.clear();
     EXPECT_EQ(testEnvironment.m_log.getLogContents(), "");
-   
+
     processor.process(testEnvironment.m_log);
     EXPECT_EQ(testEnvironment.m_log.getLogContents(), "");
-    
+
     processor.getInputFeature()->clearChanges();
     testEnvironment.m_log.clear();
     getInputArrayEntry(0)->set(7);
@@ -145,7 +149,7 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     EXPECT_FALSE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(0)));
     EXPECT_FALSE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(1)));
     EXPECT_TRUE(findPath(testEnvironment.m_log.getLogContents(), getInputArrayEntry(2)));
-    
+
     processor.getInputFeature()->clearChanges();
     testEnvironment.m_log.clear();
     inputArrayFeature->removeEntry(1);

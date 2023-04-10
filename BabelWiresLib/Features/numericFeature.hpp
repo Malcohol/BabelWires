@@ -39,18 +39,6 @@ namespace babelwires {
         T m_value = 0;
     };
 
-    class IntFeature : public NumericFeature<int> {
-      public:
-        /// If the values in this feature have names, get the ValueNames object
-        /// which associates names and values.
-        /// The default implementation returns nullptr.
-        virtual const ValueNames* getValueNames() const;
-
-      protected:
-        /// Is other the same kind of number.
-        virtual std::string doGetValueType() const override;
-    };
-
     class RationalFeature : public NumericFeature<Rational> {
       protected:
         /// Is other the same kind of number.

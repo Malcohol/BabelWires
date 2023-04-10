@@ -39,9 +39,9 @@ namespace testUtils {
         babelwires::ShortId m_op1Id;
 
         babelwires::RecordWithOptionalsFeature* m_subrecord;
-        babelwires::IntFeature2* m_ff0Feature;
+        babelwires::IntFeature* m_ff0Feature;
         testUtils::TestRecordFeature* m_ff1Feature;
-        babelwires::IntFeature2* m_op0Feature;
+        babelwires::IntFeature* m_op0Feature;
         testUtils::TestRecordFeature* m_op1Feature;
 
         // For convenience

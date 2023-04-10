@@ -3,6 +3,7 @@
 #include <BabelWiresLib/ProjectExtra/projectObserver.hpp>
 
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
@@ -462,9 +463,8 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
     babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
     ObservedChanges observedChanges(projectObserver);
 
-    babelwires::IntValueAssignmentData intData;
+    babelwires::ValueAssignmentData intData(babelwires::IntValue(14));
     intData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-    intData.m_value = 14;
     testEnvironment.m_project.addModifier(sourceElementId, intData);
 
     testEnvironment.m_project.process();

@@ -9,22 +9,22 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 
-babelwires::IntFeature2::IntFeature2()
+babelwires::IntFeature::IntFeature()
     : SimpleValueFeature(DefaultIntType::getThisIdentifier()) {}
 
-babelwires::IntFeature2::IntFeature2(IntValue::NativeType defaultValue)
+babelwires::IntFeature::IntFeature(IntValue::NativeType defaultValue)
     : SimpleValueFeature(TypeRef(IntTypeConstructor::getThisIdentifier(),
                                  IntValue(std::numeric_limits<IntValue::NativeType>::min()),
                                  IntValue(std::numeric_limits<IntValue::NativeType>::max()), IntValue(defaultValue))) {}
 
-babelwires::IntFeature2::IntFeature2(IntValue::NativeType minValue, IntValue::NativeType maxValue, IntValue::NativeType defaultValue)
+babelwires::IntFeature::IntFeature(IntValue::NativeType minValue, IntValue::NativeType maxValue, IntValue::NativeType defaultValue)
     : SimpleValueFeature(TypeRef(IntTypeConstructor::getThisIdentifier(), IntValue(minValue), IntValue(maxValue),
                                  IntValue(std::clamp(defaultValue, minValue, maxValue)))) {}
 
-babelwires::IntValue::NativeType babelwires::IntFeature2::get() const {
+babelwires::IntValue::NativeType babelwires::IntFeature::get() const {
     return getValue().is<IntValue>().get();
 }
 
-void babelwires::IntFeature2::set(IntValue::NativeType value) {
+void babelwires::IntFeature::set(IntValue::NativeType value) {
     setValue(IntValue(value));
 }

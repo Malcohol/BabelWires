@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Types/String/stringFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
@@ -10,8 +9,10 @@
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -33,17 +34,17 @@ TEST(ModifierTest, basicStuff) {
 
     babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/bb");
 
-    auto intModData = std::make_unique<babelwires::IntValueAssignmentData>();
+    auto intModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(198));
     intModData->m_pathToFeature = path;
-    intModData->m_value = 198;
 
     babelwires::LocalModifier intMod(std::move(intModData));
 
     EXPECT_EQ(intMod.asConnectionModifier(), nullptr);
     EXPECT_EQ(intMod.getModifierData().m_pathToFeature, path);
     EXPECT_EQ(intMod.getPathToFeature(), path);
-    EXPECT_NE(intMod.getModifierData().as<babelwires::IntValueAssignmentData>(), nullptr);
-    EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData&>(intMod.getModifierData()).m_value, 198);
+    EXPECT_NE(intMod.getModifierData().as<babelwires::ValueAssignmentData>(), nullptr);
+    EXPECT_NE(static_cast<const babelwires::ValueAssignmentData&>(intMod.getModifierData()).getValue()->as<babelwires::IntValue>(), nullptr);
+    EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData&>(intMod.getModifierData()).getValue()->as<babelwires::IntValue>()->get(), 198);
 
     EXPECT_EQ(const_cast<const babelwires::LocalModifier&>(intMod).getOwner(), nullptr);
     TestOwner owner;
@@ -54,17 +55,17 @@ TEST(ModifierTest, basicStuff) {
 TEST(ModifierTest, clone) {
     babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/bb");
 
-    auto intModData = std::make_unique<babelwires::IntValueAssignmentData>();
+    auto intModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(198));
     intModData->m_pathToFeature = path;
-    intModData->m_value = 198;
 
     babelwires::LocalModifier intMod(std::move(intModData));
 
     auto clone = intMod.clone();
     ASSERT_NE(clone, nullptr);
     EXPECT_EQ(clone->getModifierData().m_pathToFeature, path);
-    EXPECT_NE(clone->getModifierData().as<babelwires::IntValueAssignmentData>(), nullptr);
-    EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData&>(clone->getModifierData()).m_value, 198);
+    EXPECT_NE(clone->getModifierData().as<babelwires::ValueAssignmentData>(), nullptr);
+    EXPECT_NE(static_cast<const babelwires::ValueAssignmentData&>(clone->getModifierData()).getValue()->as<babelwires::IntValue>(), nullptr);
+    EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData&>(clone->getModifierData()).getValue()->as<babelwires::IntValue>()->get(), 198);
 }
 
 TEST(ModifierTest, localApplySuccess) {
@@ -83,9 +84,8 @@ TEST(ModifierTest, localApplySuccess) {
 
     babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/bb");
 
-    auto intModData = std::make_unique<babelwires::IntValueAssignmentData>();
+    auto intModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(198));
     intModData->m_pathToFeature = path;
-    intModData->m_value = 198;
 
     babelwires::LocalModifier intMod(std::move(intModData));
 
@@ -118,9 +118,8 @@ TEST(ModifierTest, localApplyFailureWrongType) {
 
     babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/bb");
 
-    auto intModData = std::make_unique<babelwires::IntValueAssignmentData>();
+    auto intModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(198));
     intModData->m_pathToFeature = path;
-    intModData->m_value = 198;
 
     babelwires::LocalModifier intMod(std::move(intModData));
 
@@ -147,9 +146,8 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
 
     babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/bb");
 
-    auto intModData = std::make_unique<babelwires::IntValueAssignmentData>();
+    auto intModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(198));
     intModData->m_pathToFeature = path;
-    intModData->m_value = 198;
 
     babelwires::LocalModifier intMod(std::move(intModData));
 
@@ -257,10 +255,9 @@ TEST(ModifierTest, connectionModifierSuccess) {
 
     testUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
-    babelwires::IntValueAssignmentData sourceData;
+    babelwires::ValueAssignmentData sourceData(babelwires::IntValue(198));
     sourceData.m_pathToFeature = sourcePath;
-    sourceData.m_value = 100;
-    elementData.m_modifiers.emplace_back(std::make_unique<babelwires::IntValueAssignmentData>(sourceData));
+    elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));
 
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
@@ -354,10 +351,9 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 
     testUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
-    babelwires::IntValueAssignmentData sourceData;
+    babelwires::ValueAssignmentData sourceData(babelwires::IntValue(100));
     sourceData.m_pathToFeature = sourcePath;
-    sourceData.m_value = 100;
-    elementData.m_modifiers.emplace_back(std::make_unique<babelwires::IntValueAssignmentData>(sourceData));
+    elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));
 
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
@@ -393,10 +389,9 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
 
     testUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
-    babelwires::IntValueAssignmentData sourceData;
+    babelwires::ValueAssignmentData sourceData(babelwires::IntValue(100));
     sourceData.m_pathToFeature = sourcePath;
-    sourceData.m_value = 100;
-    elementData.m_modifiers.emplace_back(std::make_unique<babelwires::IntValueAssignmentData>(sourceData));
+    elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));
 
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 

@@ -4,6 +4,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
@@ -101,9 +102,8 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
     const babelwires::FeaturePath pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
     EXPECT_EQ(element->findModifier(pathToFeature), nullptr);
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(199));
     modData.m_pathToFeature = pathToFeature;
-    modData.m_value = 199;
 
     testEnvironment.m_project.addModifier(elementId, modData);
 
@@ -202,9 +202,8 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
         testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(702));
     modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
-    modData.m_value = 702;
     testEnvironment.m_project.addModifier(elementId, modData);
 
     const babelwires::FeaturePath pathToArray = testUtils::TestRootFeature::s_pathToArray;
@@ -494,9 +493,8 @@ TEST(ProjectTest, process) {
         babelwires::ProcessorElementData procData;
         procData.m_factoryIdentifier = testUtils::TestProcessorFactory::getThisIdentifier();
 
-        babelwires::IntValueAssignmentData modData;
+        babelwires::ValueAssignmentData modData(babelwires::IntValue(5));
         modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-        modData.m_value = 5;
         procData.m_modifiers.emplace_back(modData.clone());
 
         newProcId = testEnvironment.m_project.addFeatureElement(procData);
@@ -635,9 +633,8 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
         testEnvironment.m_project.addModifier(elementId2, modData);
     }
     {
-        babelwires::IntValueAssignmentData modData;
+        babelwires::ValueAssignmentData modData(babelwires::IntValue(16));
         modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-        modData.m_value = 16;
         testEnvironment.m_project.addModifier(elementId4, modData);
     }
 

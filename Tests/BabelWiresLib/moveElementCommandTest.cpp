@@ -3,6 +3,7 @@
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -46,9 +47,8 @@ TEST(MoveElementCommandTest, executeAndUndo) {
 TEST(MoveElementCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
-    modData.m_value = 86;
 
     babelwires::MoveElementCommand command("Test command", 57, babelwires::UiPosition{100, 12});
 

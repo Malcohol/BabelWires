@@ -21,12 +21,16 @@ namespace babelwires {
         
         ValueAssignmentData();
         ValueAssignmentData(std::unique_ptr<Value> value);
+        ValueAssignmentData(ValueHolder value);
 
         virtual void apply(Feature* targetFeature) const override;
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
+
+        ValueHolder getValue() const;
+
       private:
         ValueHolder m_value;
     };

@@ -210,8 +210,8 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
 
     EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 2);
 
-    getInputFeature()->m_arrayFeature->getFeature(0)->as<babelwires::IntFeature2>()->set(3);
-    getInputFeature()->m_arrayFeature->getFeature(1)->as<babelwires::IntFeature2>()->set(-18);
+    getInputFeature()->m_arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->set(3);
+    getInputFeature()->m_arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->set(-18);
 
     // insert at the end
     babelwires::AddEntryToArrayCommand command("Test command", elementId,

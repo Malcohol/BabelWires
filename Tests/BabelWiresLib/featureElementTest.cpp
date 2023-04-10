@@ -1,14 +1,15 @@
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Identifiers/registeredIdentifier.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
@@ -18,7 +19,8 @@ TEST(FeatureElementTest, basicAccessors) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 54);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 54);
 
     ASSERT_TRUE(featureElement);
     EXPECT_FALSE(featureElement->isFailed());
@@ -33,7 +35,8 @@ TEST(FeatureElementTest, labels) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
 
     EXPECT_NE(featureElement->getLabel().find("66"), std::string::npos);
     // The test element uses the data's identifier as a factory name.
@@ -46,7 +49,8 @@ TEST(FeatureElementTest, uiData) {
     featureElementData.m_uiData.m_uiPosition = babelwires::UiPosition{23, -29};
     featureElementData.m_uiData.m_uiSize = babelwires::UiSize{120};
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
 
     EXPECT_EQ(featureElement->getUiPosition(), (babelwires::UiPosition{23, -29}));
     EXPECT_EQ(featureElement->getUiSize(), babelwires::UiSize{120});
@@ -70,9 +74,8 @@ TEST(FeatureElementTest, modifiers) {
 
     // Deliberately have modifiers in non-canonical order.
     {
-        auto arrayElemData = std::make_unique<babelwires::IntValueAssignmentData>();
+        auto arrayElemData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(16));
         arrayElemData->m_pathToFeature = arrayElemPath;
-        arrayElemData->m_value = 16;
         featureElementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
@@ -82,13 +85,13 @@ TEST(FeatureElementTest, modifiers) {
         featureElementData.m_modifiers.emplace_back(std::move(arrayInitData));
     }
     {
-        auto failedModifier = std::make_unique<babelwires::IntValueAssignmentData>();
+        auto failedModifier = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(71));
         failedModifier->m_pathToFeature = failedPath;
-        failedModifier->m_value = 71;
         featureElementData.m_modifiers.emplace_back(std::move(failedModifier));
     }
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
 
@@ -97,29 +100,33 @@ TEST(FeatureElementTest, modifiers) {
         ASSERT_TRUE(arrayInitData);
         EXPECT_FALSE(arrayInitData->isFailed());
         ASSERT_TRUE(arrayInitData->getModifierData().as<babelwires::ArraySizeModifierData>());
-        EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(&arrayInitData->getModifierData())->m_size,
-                  5);
+        EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(&arrayInitData->getModifierData())->m_size, 5);
     }
     {
         const babelwires::Modifier* arrayElemData = featureElement->findModifier(arrayElemPath);
         ASSERT_TRUE(arrayElemData);
         EXPECT_FALSE(arrayElemData->isFailed());
-        ASSERT_TRUE(arrayElemData->getModifierData().as<babelwires::IntValueAssignmentData>());
-        EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&arrayElemData->getModifierData())->m_value,
+        ASSERT_TRUE(arrayElemData->getModifierData().as<babelwires::ValueAssignmentData>());
+        EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(&arrayElemData->getModifierData())
+                      ->getValue()
+                      ->as<babelwires::IntValue>()
+                      ->get(),
                   16);
     }
     {
         const babelwires::Modifier* failedModifier = featureElement->findModifier(failedPath);
         ASSERT_TRUE(failedModifier);
         EXPECT_TRUE(failedModifier->isFailed());
-        ASSERT_TRUE(failedModifier->getModifierData().as<babelwires::IntValueAssignmentData>());
-        EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&failedModifier->getModifierData())->m_value,
+        ASSERT_TRUE(failedModifier->getModifierData().as<babelwires::ValueAssignmentData>());
+        EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(&failedModifier->getModifierData())
+                      ->getValue()
+                      ->as<babelwires::IntValue>()
+                      ->get(),
                   71);
     }
     const babelwires::RecordFeature* const recordFeature = featureElement->getInputFeature();
     ASSERT_TRUE(recordFeature);
-    const testUtils::TestRootFeature* const testRecordFeature =
-        recordFeature->as<const testUtils::TestRootFeature>();
+    const testUtils::TestRootFeature* const testRecordFeature = recordFeature->as<const testUtils::TestRootFeature>();
     ASSERT_TRUE(testRecordFeature);
     EXPECT_EQ(testRecordFeature->m_arrayFeature->getNumFeatures(), 5);
     ASSERT_TRUE(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3)->as<const babelwires::IntFeature>());
@@ -131,9 +138,8 @@ TEST(FeatureElementTest, modifiers) {
         EXPECT_EQ(featureElement->findModifier(failedPath), nullptr);
     }
     {
-        babelwires::IntValueAssignmentData arrayElemData2;
+        babelwires::ValueAssignmentData arrayElemData2(babelwires::IntValue(12));
         arrayElemData2.m_pathToFeature = arrayElemPath2;
-        arrayElemData2.m_value = 12;
         featureElement->addModifier(testEnvironment.m_log, arrayElemData2);
         EXPECT_EQ(static_cast<const babelwires::IntFeature*>(testRecordFeature->m_arrayFeature->tryGetChildFromStep(4))
                       ->get(),
@@ -179,7 +185,8 @@ TEST(FeatureElementTest, expandedPaths) {
     featureElementData.m_expandedPaths.emplace_back(arrayPath);
     featureElementData.m_expandedPaths.emplace_back(fooBar);
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
 
@@ -233,9 +240,8 @@ TEST(FeatureElementTest, extractElementData) {
 
     // Deliberately have modifiers in non-canonical order.
     {
-        auto arrayElemData = std::make_unique<babelwires::IntValueAssignmentData>();
+        auto arrayElemData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(16));
         arrayElemData->m_pathToFeature = arrayElemPath;
-        arrayElemData->m_value = 16;
         featureElementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
@@ -245,9 +251,8 @@ TEST(FeatureElementTest, extractElementData) {
         featureElementData.m_modifiers.emplace_back(std::move(arrayInitData));
     }
     {
-        auto failedModifier = std::make_unique<babelwires::IntValueAssignmentData>();
+        auto failedModifier = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(71));
         failedModifier->m_pathToFeature = failedPath;
-        failedModifier->m_value = 71;
         featureElementData.m_modifiers.emplace_back(std::move(failedModifier));
     }
     featureElementData.m_expandedPaths.emplace_back(arrayElemPath2);
@@ -256,14 +261,14 @@ TEST(FeatureElementTest, extractElementData) {
     featureElementData.m_uiData.m_uiPosition = babelwires::UiPosition{23, -29};
     featureElementData.m_uiData.m_uiSize = babelwires::UiSize{120};
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
 
     {
-        babelwires::IntValueAssignmentData arrayElemData2;
+        babelwires::ValueAssignmentData arrayElemData2(babelwires::IntValue(12));
         arrayElemData2.m_pathToFeature = arrayElemPath2;
-        arrayElemData2.m_value = 12;
         featureElement->addModifier(testEnvironment.m_log, arrayElemData2);
     }
     featureElement->removeModifier(featureElement->findModifier(arrayElemPath));
@@ -281,12 +286,20 @@ TEST(FeatureElementTest, extractElementData) {
     EXPECT_TRUE(extractedData->m_modifiers[0].get()->as<babelwires::ArraySizeModifierData>());
     EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(extractedData->m_modifiers[0].get())->m_size, 5);
     EXPECT_EQ(extractedData->m_modifiers[1]->m_pathToFeature, arrayElemPath2);
-    EXPECT_TRUE(extractedData->m_modifiers[1]->as<babelwires::IntValueAssignmentData>());
-    EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[1].get())->m_value, 12);
+    EXPECT_TRUE(extractedData->m_modifiers[1]->as<babelwires::ValueAssignmentData>());
+    EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(extractedData->m_modifiers[1].get())
+                  ->getValue()
+                  ->as<babelwires::IntValue>()
+                  ->get(),
+              12);
     // Even though this modifier is currently failed, its data is still important.
     EXPECT_EQ(extractedData->m_modifiers[2]->m_pathToFeature, failedPath);
-    EXPECT_TRUE(extractedData->m_modifiers[2]->as<babelwires::IntValueAssignmentData>());
-    EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(extractedData->m_modifiers[2].get())->m_value, 71);
+    EXPECT_TRUE(extractedData->m_modifiers[2]->as<babelwires::ValueAssignmentData>());
+    EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(extractedData->m_modifiers[2].get())
+                  ->getValue()
+                  ->as<babelwires::IntValue>()
+                  ->get(),
+              71);
 
     // The failed path is not included.
     ASSERT_EQ(extractedData->m_expandedPaths.size(), 2);
@@ -309,9 +322,8 @@ TEST(FeatureElementTest, removedModifiers) {
 
     // Deliberately have modifiers in non-canonical order.
     {
-        auto arrayElemData = std::make_unique<babelwires::IntValueAssignmentData>();
+        auto arrayElemData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(16));
         arrayElemData->m_pathToFeature = arrayElemPath;
-        arrayElemData->m_value = 16;
         featureElementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
@@ -321,13 +333,13 @@ TEST(FeatureElementTest, removedModifiers) {
         featureElementData.m_modifiers.emplace_back(std::move(arrayInitData));
     }
     {
-        auto failedModifier = std::make_unique<babelwires::IntValueAssignmentData>();
+        auto failedModifier = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(71));
         failedModifier->m_pathToFeature = failedPath;
-        failedModifier->m_value = 71;
         featureElementData.m_modifiers.emplace_back(std::move(failedModifier));
     }
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
 
@@ -340,14 +352,20 @@ TEST(FeatureElementTest, removedModifiers) {
     for (const auto modifier : featureElement->getRemovedModifiers()) {
         ++numMods;
         if (modifier->getModifierData().m_pathToFeature == arrayElemPath) {
-            ASSERT_TRUE(modifier->getModifierData().as<babelwires::IntValueAssignmentData>());
-            EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData())->m_value,
+            ASSERT_TRUE(modifier->getModifierData().as<babelwires::ValueAssignmentData>());
+            EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(&modifier->getModifierData())
+                          ->getValue()
+                          ->as<babelwires::IntValue>()
+                          ->get(),
                       16);
             ++numCorrectMods;
         }
         if (modifier->getModifierData().m_pathToFeature == failedPath) {
-            ASSERT_TRUE(modifier->getModifierData().as<babelwires::IntValueAssignmentData>());
-            EXPECT_EQ(static_cast<const babelwires::IntValueAssignmentData*>(&modifier->getModifierData())->m_value,
+            ASSERT_TRUE(modifier->getModifierData().as<babelwires::ValueAssignmentData>());
+            EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(&modifier->getModifierData())
+                          ->getValue()
+                          ->as<babelwires::IntValue>()
+                          ->get(),
                       71);
             ++numCorrectMods;
         }
@@ -360,7 +378,8 @@ TEST(FeatureElementTest, failure) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
@@ -380,7 +399,8 @@ TEST(FeatureElementTest, simpleChanges) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementIsNew));
     EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementChangesMask));
     featureElement->clearChanges();
@@ -420,9 +440,8 @@ TEST(FeatureElementTest, simpleChanges) {
     }
     {
         featureElement->clearChanges();
-        babelwires::IntValueAssignmentData arrayElemData;
+        babelwires::ValueAssignmentData arrayElemData(babelwires::IntValue(12));
         arrayElemData.m_pathToFeature = arrayElemPath;
-        arrayElemData.m_value = 12;
         featureElement->addModifier(testEnvironment.m_log, arrayElemData);
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierAdded));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
@@ -466,7 +485,8 @@ TEST(FeatureElementTest, simpleChanges) {
     {
         featureElement->clearChanges();
         ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
-        static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateFailure(testEnvironment.m_projectContext);
+        static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+            ->simulateFailure(testEnvironment.m_projectContext);
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
@@ -474,7 +494,8 @@ TEST(FeatureElementTest, simpleChanges) {
     {
         featureElement->clearChanges();
         ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
-        static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery(testEnvironment.m_projectContext);
+        static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+            ->simulateRecovery(testEnvironment.m_projectContext);
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
         EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
@@ -485,7 +506,8 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestFeatureElementData featureElementData;
 
-    auto featureElement = featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement =
+        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
@@ -504,7 +526,8 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
     EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
-    static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateFailure(testEnvironment.m_projectContext);
+    static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+        ->simulateFailure(testEnvironment.m_projectContext);
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(true);
 
@@ -523,10 +546,12 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     // Don't think we need to note any change.
     // EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
-    static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery(testEnvironment.m_projectContext);
+    static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+        ->simulateRecovery(testEnvironment.m_projectContext);
     featureElement->setInDependencyLoop(true);
     featureElement->clearChanges();
-    static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateFailure(testEnvironment.m_projectContext);
+    static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+        ->simulateFailure(testEnvironment.m_projectContext);
 
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
@@ -534,7 +559,8 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
     featureElement->clearChanges();
-    static_cast<testUtils::TestFeatureElement*>(featureElement.get())->simulateRecovery(testEnvironment.m_projectContext);
+    static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+        ->simulateRecovery(testEnvironment.m_projectContext);
 
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));

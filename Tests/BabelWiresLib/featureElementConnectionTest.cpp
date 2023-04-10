@@ -1,15 +1,15 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Identifiers/registeredIdentifier.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
@@ -37,18 +37,17 @@ struct FeatureElementConnectionTest : ::testing::Test {
         // The ints in the source can carry higher values than those in the target.
         sourceElementData.m_intValueLimit = 1000;
         m_sourceId = m_context.m_project.addFeatureElement(sourceElementData);
-        m_sourceElement =
-            m_context.m_project.getFeatureElement(m_sourceId)->as<testUtils::TestFeatureElement>();
+        m_sourceElement = m_context.m_project.getFeatureElement(m_sourceId)->as<testUtils::TestFeatureElement>();
         ASSERT_TRUE(m_sourceElement);
 
         m_arrayInitData.m_pathToFeature = m_arrayPath;
         m_arrayInitData.m_size = 5;
 
+        m_arrayElemData = babelwires::ValueAssignmentData(babelwires::IntValue(16));
         m_arrayElemData.m_pathToFeature = m_arrayElemPath;
-        m_arrayElemData.m_value = 16;
 
+        m_arrayElemDataHigh = babelwires::ValueAssignmentData(babelwires::IntValue(700));
         m_arrayElemDataHigh.m_pathToFeature = m_arrayElemPath;
-        m_arrayElemDataHigh.m_value = 700;
 
         m_assignData.m_pathToFeature = m_arrayElemPath2;
         m_assignData.m_pathToSourceFeature = m_arrayElemPath;
@@ -61,9 +60,8 @@ struct FeatureElementConnectionTest : ::testing::Test {
     babelwires::ConnectionModifier* setUpConnectionModifier(int sourceValue) {
         m_sourceElement->addModifier(m_context.m_log, m_arrayInitData);
         if (sourceValue != 0) {
-            babelwires::IntValueAssignmentData sourceData;
+            babelwires::ValueAssignmentData sourceData{babelwires::IntValue(sourceValue)};
             sourceData.m_pathToFeature = m_arrayElemPath;
-            sourceData.m_value = sourceValue;
             m_sourceElement->addModifier(m_context.m_log, sourceData);
         }
 
@@ -89,8 +87,8 @@ struct FeatureElementConnectionTest : ::testing::Test {
 
     babelwires::ConnectionModifierData m_assignData;
     babelwires::ArraySizeModifierData m_arrayInitData;
-    babelwires::IntValueAssignmentData m_arrayElemData;
-    babelwires::IntValueAssignmentData m_arrayElemDataHigh;
+    babelwires::ValueAssignmentData m_arrayElemData;
+    babelwires::ValueAssignmentData m_arrayElemDataHigh;
 };
 
 TEST_F(FeatureElementConnectionTest, addAConnection) {

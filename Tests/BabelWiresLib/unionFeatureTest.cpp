@@ -5,6 +5,7 @@
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/unionFeature.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
@@ -491,28 +492,30 @@ TEST(UnionFeatureTest, queries) {
 
 TEST(UnionFeatureTest, unselectedEnumCanBeDefaulted) {
     testUtils::TestEnvironment testEnvironment;
-    
+
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
 
     // Confirm that features in branches are in a fully defaulted state when a branch is selected.
     babelwires::ShortId tagA = testUtils::getTestRegisteredIdentifier("tagA");
     babelwires::ShortId tagB = testUtils::getTestRegisteredIdentifier("tagB");
 
-    babelwires::UnionFeature* unionFeature = rootFeature.addField(std::make_unique<babelwires::UnionFeature>(babelwires::UnionFeature::TagValues{tagA, tagB}, 0), testUtils::getTestRegisteredIdentifier("union"));
+    babelwires::UnionFeature* unionFeature = rootFeature.addField(
+        std::make_unique<babelwires::UnionFeature>(babelwires::UnionFeature::TagValues{tagA, tagB}, 0),
+        testUtils::getTestRegisteredIdentifier("union"));
 
     babelwires::RecordFeature* recordA = unionFeature->addFieldInBranch(
         tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recA"));
 
     babelwires::EnumFeature* enumA =
         recordA->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
-                              testUtils::getTestRegisteredIdentifier("enumA"));
+                          testUtils::getTestRegisteredIdentifier("enumA"));
 
     babelwires::RecordFeature* recordB = unionFeature->addFieldInBranch(
         tagB, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recB"));
 
     babelwires::EnumFeature* enumB =
         recordB->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
-                              testUtils::getTestRegisteredIdentifier("enumB"));
+                          testUtils::getTestRegisteredIdentifier("enumB"));
 
     rootFeature.setToDefault();
 

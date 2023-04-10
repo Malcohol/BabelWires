@@ -58,17 +58,6 @@ namespace babelwires {
     };
 
     /// Data used to assign an IntFeature within a container to a certain value.
-    struct IntValueAssignmentData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
-        CLONEABLE(IntValueAssignmentData);
-        SERIALIZABLE(IntValueAssignmentData, "assignInt", LocalModifierData, 1);
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-
-        int m_value = 0;
-    };
-
-    /// Data used to assign an IntFeature within a container to a certain value.
     struct RationalValueAssignmentData : LocalModifierData {
         virtual void apply(Feature* targetFeature) const override;
         CLONEABLE(RationalValueAssignmentData);

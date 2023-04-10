@@ -24,7 +24,7 @@ testUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext& co
           s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     m_intChildFeature =
-        addField(std::make_unique<babelwires::HasStaticRange<babelwires::IntFeature, 0, 255>>(), m_intChildId);
+        addField(std::make_unique<babelwires::IntFeature>(0, 255), m_intChildId);
 }
 
 babelwires::LongId testUtils::TestSourceFileFormat::getThisIdentifier() {

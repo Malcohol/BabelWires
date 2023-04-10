@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
@@ -19,9 +19,8 @@
 namespace {
     std::unique_ptr<testUtils::LocalTestModifier> createModifier(babelwires::FeaturePath path, int x,
                                                                  babelwires::FeatureElement* owner = nullptr) {
-        auto data = std::make_unique<babelwires::IntValueAssignmentData>();
+        auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(x));
         data->m_pathToFeature = std::move(path);
-        data->m_value = x;
         auto modPtr = std::make_unique<testUtils::LocalTestModifier>(std::move(data));
         modPtr->setOwner(owner);
         return modPtr;

@@ -27,22 +27,22 @@ TEST(ActivateOptionalsModifierDataTest, apply) {
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
-    babelwires::IntFeature2* optionalFeature0 =
-        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature2>(), op0);
+    babelwires::IntFeature* optionalFeature0 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
-    babelwires::IntFeature2* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature2>(), ff0);
+    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
 
     babelwires::ShortId op1("op1");
     op1.setDiscriminator(1);
-    babelwires::IntFeature2* optionalFeature1 =
-        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature2>(), op1);
+    babelwires::IntFeature* optionalFeature1 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
 
     babelwires::ShortId op2("op2");
     op2.setDiscriminator(1);
-    babelwires::IntFeature2* optionalFeature2 =
-        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature2>(), op2);
+    babelwires::IntFeature* optionalFeature2 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op2);
 
     recordFeature.activateField("op1");
     recordFeature.activateField("op2");
@@ -66,22 +66,22 @@ TEST(ActivateOptionalsModifierDataTest, apply1) {
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
-    babelwires::IntFeature2* optionalFeature0 =
-        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature2>(), op0);
+    babelwires::IntFeature* optionalFeature0 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
-    babelwires::IntFeature2* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature2>(), ff0);
+    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
 
     babelwires::ShortId op1("op1");
     op1.setDiscriminator(1);
-    babelwires::IntFeature2* optionalFeature1 =
-        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature2>(), op1);
+    babelwires::IntFeature* optionalFeature1 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
 
     babelwires::ShortId op2("op2");
     op2.setDiscriminator(1);
-    babelwires::IntFeature2* optionalFeature2 =
-        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature2>(), op2);
+    babelwires::IntFeature* optionalFeature2 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op2);
 
     recordFeature.activateField("op0");
     recordFeature.activateField("op1");
@@ -104,12 +104,12 @@ TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
-    babelwires::IntFeature2* optionalFeature0 =
-        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature2>(), op0);
+    babelwires::IntFeature* optionalFeature0 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
-    babelwires::IntFeature2* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature2>(), ff0);
+    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
 
     EXPECT_THROW(data.apply(&recordFeature), babelwires::ModelException);
 }
@@ -118,7 +118,7 @@ TEST(ActivateOptionalsModifierDataTest, failureNotARecordWithOptionals) {
     babelwires::ActivateOptionalsModifierData data;
     data.m_selectedOptionals.emplace_back("op");
 
-    babelwires::IntFeature2 notARecordWithOptionals;
+    babelwires::IntFeature notARecordWithOptionals;
 
     EXPECT_THROW(data.apply(&notARecordWithOptionals), babelwires::ModelException);
 }

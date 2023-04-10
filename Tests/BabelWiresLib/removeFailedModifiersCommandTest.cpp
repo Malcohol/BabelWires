@@ -5,6 +5,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -20,9 +21,8 @@ namespace {
         testUtils::TestFeatureElementData elementData;
         {
             // Will fail.
-            babelwires::IntValueAssignmentData intAssignment;
+            babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
             intAssignment.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_4;
-            intAssignment.m_value = 12;
             elementData.m_modifiers.emplace_back(intAssignment.clone());
         }
         {

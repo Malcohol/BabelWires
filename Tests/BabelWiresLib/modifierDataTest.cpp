@@ -6,8 +6,10 @@
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
@@ -64,8 +66,7 @@ TEST(ModifierDataTest, arrayInitializationSerialization) {
 }
 
 TEST(ModifierDataTest, intValueAssignmentApply) {
-    babelwires::IntValueAssignmentData data;
-    data.m_value = 198;
+    babelwires::ValueAssignmentData data(babelwires::IntValue(198));
 
     babelwires::IntFeature intFeature;
     EXPECT_EQ(intFeature.get(), 0);
@@ -78,21 +79,19 @@ TEST(ModifierDataTest, intValueAssignmentApply) {
 }
 
 TEST(ModifierDataTest, intValueAssignmentClone) {
-    babelwires::IntValueAssignmentData data;
+    babelwires::ValueAssignmentData data(babelwires::IntValue(198));
     data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
-    data.m_value = 198;
     auto dataPtr = data.clone();
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("aa/bb/6"));
-    EXPECT_EQ(dataPtr->m_value, 198);
+    EXPECT_EQ(dataPtr->getValue()->as<babelwires::IntValue>()->get(), 198);
 }
 
 TEST(ModifierDataTest, intValueAssignmentSerialization) {
     std::string serializedContents;
     {
-        babelwires::IntValueAssignmentData data;
+        babelwires::ValueAssignmentData data(babelwires::IntValue(198));
         data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
-        data.m_value = 198;
 
         babelwires::XmlSerializer serializer;
         serializer.serializeObject(data);
@@ -103,12 +102,12 @@ TEST(ModifierDataTest, intValueAssignmentSerialization) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::IntValueAssignmentData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::ValueAssignmentData>();
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("aa/bb/6"));
-    EXPECT_EQ(dataPtr->m_value, 198);
+    EXPECT_EQ(dataPtr->getValue()->as<babelwires::IntValue>()->get(), 198);
 }
 
 TEST(ModifierDataTest, rationalValueAssignmentApply) {
@@ -231,7 +230,7 @@ TEST(ModifierDataTest, createModifierMethods) {
         EXPECT_NE(data.createModifier()->as<babelwires::ArraySizeModifier>(), nullptr);
     }
     {
-        babelwires::IntValueAssignmentData data;
+        babelwires::ValueAssignmentData data(babelwires::IntValue(12));
         ASSERT_NE(data.createModifier(), nullptr);
         EXPECT_NE(data.createModifier()->as<babelwires::LocalModifier>(), nullptr);
     }

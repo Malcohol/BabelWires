@@ -39,24 +39,6 @@ std::unique_ptr<babelwires::Modifier> babelwires::LocalModifierData::createModif
     return std::make_unique<babelwires::LocalModifier>(clone());
 }
 
-void babelwires::IntValueAssignmentData::apply(Feature* targetFeature) const {
-    if (IntFeature* intFeature = targetFeature->as<IntFeature>()) {
-        intFeature->set(m_value);
-    } else {
-        throw babelwires::ModelException() << "Could not assign an int to a non-int feature";
-    }
-}
-
-void babelwires::IntValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
-    serializer.serializeValue("value", m_value);
-}
-
-void babelwires::IntValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
-    deserializer.deserializeValue("value", m_value);
-}
-
 void babelwires::RationalValueAssignmentData::apply(Feature* targetFeature) const {
     if (RationalFeature* rationalFeature = targetFeature->as<RationalFeature>()) {
         rationalFeature->set(m_value);

@@ -3,6 +3,7 @@
 #include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
 
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>

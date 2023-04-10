@@ -4,6 +4,7 @@
 
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -16,9 +17,8 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
 
     testUtils::TestFeatureElementData elementData;
     {
-        babelwires::IntValueAssignmentData intAssignment;
+        babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
         intAssignment.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
-        intAssignment.m_value = 12;
         elementData.m_modifiers.emplace_back(intAssignment.clone());
     }
 

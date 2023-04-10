@@ -11,11 +11,11 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 namespace babelwires {
-    class IntFeature2 : public SimpleValueFeature {
+    class IntFeature : public SimpleValueFeature {
       public:
-        IntFeature2();
-        IntFeature2(IntValue::NativeType defaultValue);
-        IntFeature2(IntValue::NativeType minValue, IntValue::NativeType maxValue, IntValue::NativeType defaultValue = 0);
+        IntFeature();
+        IntFeature(IntValue::NativeType defaultValue);
+        IntFeature(IntValue::NativeType minValue, IntValue::NativeType maxValue, IntValue::NativeType defaultValue = 0);
 
         IntValue::NativeType get() const;
         void set(IntValue::NativeType value);

@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/String/stringFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -73,7 +74,7 @@ TEST(FeatureTest, intFeatureHash) {
 }
 
 TEST(FeatureTest, intFeatureWithRange) {
-    babelwires::HasStaticRange<babelwires::IntFeature, 10, 100> intFeature;
+    babelwires::IntFeature intFeature(10, 100);
     intFeature.setToDefault();
     EXPECT_EQ(intFeature.get(), 10);
 

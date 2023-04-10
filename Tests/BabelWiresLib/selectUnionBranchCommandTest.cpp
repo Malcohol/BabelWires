@@ -6,6 +6,7 @@
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -57,15 +58,13 @@ TEST(SelectUnionBranchCommandTest, executeAndUndo) {
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
     {
-        babelwires::IntValueAssignmentData assignInt;
+        babelwires::ValueAssignmentData assignInt(babelwires::IntValue(12));
         assignInt.m_pathToFeature = testUtils::TestFeatureWithUnion::s_pathToFieldAB;
-        assignInt.m_value = 12;
         testEnvironment.m_project.addModifier(elementId, assignInt);
     }
     {
-        babelwires::IntValueAssignmentData assignInt;
+        babelwires::ValueAssignmentData assignInt(babelwires::IntValue(4));
         assignInt.m_pathToFeature = testUtils::TestFeatureWithUnion::s_pathToFieldBC;
-        assignInt.m_value = 4;
         testEnvironment.m_project.addModifier(elementId, assignInt);
     }
 

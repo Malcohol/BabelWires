@@ -19,6 +19,9 @@ babelwires::ValueAssignmentData::ValueAssignmentData() = default;
 babelwires::ValueAssignmentData::ValueAssignmentData(std::unique_ptr<Value> value)
     : m_value(std::move(value)) {}
 
+babelwires::ValueAssignmentData::ValueAssignmentData(ValueHolder value)
+    : m_value(std::move(value)) {}
+
 void babelwires::ValueAssignmentData::apply(Feature* targetFeature) const {
     if (SimpleValueFeature* valueFeature = targetFeature->as<SimpleValueFeature>()) {
         valueFeature->setValueHolder(m_value);
@@ -43,4 +46,8 @@ void babelwires::ValueAssignmentData::visitIdentifiers(IdentifierVisitor& visito
 
 void babelwires::ValueAssignmentData::visitFilePaths(FilePathVisitor& visitor) {
     m_value.visitFilePaths(visitor);
+}
+
+babelwires::ValueHolder babelwires::ValueAssignmentData::getValue() const {
+    return m_value;
 }

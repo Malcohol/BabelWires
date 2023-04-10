@@ -64,13 +64,13 @@ namespace testUtils {
         babelwires::ShortId m_fieldBCId;
 
         babelwires::UnionFeature* m_unionFeature;
-        babelwires::IntFeature2* m_ff0Feature;
+        babelwires::IntFeature* m_ff0Feature;
         testUtils::TestRecordFeature* m_ff1Feature;
-        babelwires::IntFeature2* m_fieldA0Feature;
-        babelwires::IntFeature2* m_fieldA1Feature;
+        babelwires::IntFeature* m_fieldA0Feature;
+        babelwires::IntFeature* m_fieldA1Feature;
         testUtils::TestRecordFeature* m_fieldB0Feature;
-        babelwires::IntFeature2* m_fieldABFeature;
-        babelwires::IntFeature2* m_fieldBCFeature;
+        babelwires::IntFeature* m_fieldABFeature;
+        babelwires::IntFeature* m_fieldBCFeature;
 
         // For convenience
         static const babelwires::FeaturePath s_pathToUnionFeature;

@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
-
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Features/numericFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -53,9 +53,8 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
         babelwires::FeaturePath::deserializeFromString(testUtils::TestFileFeature::s_intChildInitializer);
 
     {
-        babelwires::IntValueAssignmentData intMod;
+        babelwires::ValueAssignmentData intMod(babelwires::IntValue(30));
         intMod.m_pathToFeature = pathToInt;
-        intMod.m_value = 30;
         targetFileElement->addModifier(testEnvironment.m_log, intMod);
     }
 

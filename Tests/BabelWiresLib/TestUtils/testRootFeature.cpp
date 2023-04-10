@@ -32,12 +32,7 @@ const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToExtraInt =
 
 namespace {
     struct LimitedIntFeature : babelwires::IntFeature {
-        LimitedIntFeature(int intValueLimit)
-            : m_intValueLimit(intValueLimit) {}
-
-        babelwires::Range<int> getRange() const override { return {-m_intValueLimit, m_intValueLimit}; }
-
-        int m_intValueLimit;
+        LimitedIntFeature(int intValueLimit) : IntFeature(-intValueLimit, intValueLimit) {}
     };
 
     struct LimitedArrayFeature : babelwires::ArrayFeature {
