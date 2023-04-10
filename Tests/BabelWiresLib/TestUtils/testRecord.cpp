@@ -3,13 +3,9 @@
 #include <BabelWiresLib/Features/featureMixins.hpp>
 
 namespace {
-    struct LimitedIntFeature : babelwires::IntFeature {
+    struct LimitedIntFeature : babelwires::IntFeature2 {
         LimitedIntFeature(int intValueLimit)
-            : m_intValueLimit(intValueLimit) {}
-
-        babelwires::Range<int> getRange() const override { return {-m_intValueLimit, m_intValueLimit}; }
-
-        int m_intValueLimit;
+            : IntFeature2(-intValueLimit, intValueLimit) {}
     };
 
     struct LimitedArrayFeature : babelwires::ArrayFeature {
@@ -48,8 +44,8 @@ testUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtra
     auto arrayFeaturePtr = std::make_unique<LimitedArrayFeature>(m_intValueLimit);
     m_arrayFeature = arrayFeaturePtr.get();
     addField(std::move(arrayFeaturePtr), m_arrayId)->setToDefault();
-    m_elem0 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(0));
-    m_elem1 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(1));
+    m_elem0 = static_cast<babelwires::IntFeature2*>(&m_arrayFeature->getChildFromStep(0));
+    m_elem1 = static_cast<babelwires::IntFeature2*>(&m_arrayFeature->getChildFromStep(1));
 
     auto subRecordPtr = std::make_unique<babelwires::RecordFeature>();
     m_subRecordFeature = subRecordPtr.get();

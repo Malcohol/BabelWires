@@ -52,12 +52,12 @@ testUtils::TestFeatureWithUnion::TestFeatureWithUnion(const babelwires::ProjectC
         addField(std::move(testUnionFeaturePtr), m_unionFeatureId);
     }
     {
-        auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
+        auto intFeaturePtr = std::make_unique<babelwires::IntFeature2>();
         m_fieldA0Feature = intFeaturePtr.get();
         m_unionFeature->addFieldInBranch(m_tagAId, std::move(intFeaturePtr), m_fieldA0Id);
     }
     {
-        auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
+        auto intFeaturePtr = std::make_unique<babelwires::IntFeature2>();
         m_ff0Feature = intFeaturePtr.get();
         m_unionFeature->addField(std::move(intFeaturePtr), m_ff0Id);
     }
@@ -67,12 +67,12 @@ testUtils::TestFeatureWithUnion::TestFeatureWithUnion(const babelwires::ProjectC
         m_unionFeature->addFieldInBranch(m_tagBId, std::move(testRecordFeaturePtr), m_fieldB0Id);
     }
     {
-        auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
+        auto intFeaturePtr = std::make_unique<babelwires::IntFeature2>();
         m_fieldABFeature = intFeaturePtr.get();
         m_unionFeature->addFieldInBranches({m_tagAId, m_tagBId}, std::move(intFeaturePtr), m_fieldABId);
     }
     {
-        auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
+        auto intFeaturePtr = std::make_unique<babelwires::IntFeature2>();
         m_fieldA1Feature = intFeaturePtr.get();
         m_unionFeature->addFieldInBranch(m_tagAId, std::move(intFeaturePtr), m_fieldA1Id);
     }
@@ -82,7 +82,7 @@ testUtils::TestFeatureWithUnion::TestFeatureWithUnion(const babelwires::ProjectC
         m_unionFeature->addField(std::move(testRecordFeaturePtr), m_ff1Id);
     }
     {
-        auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
+        auto intFeaturePtr = std::make_unique<babelwires::IntFeature2>();
         m_fieldBCFeature = intFeaturePtr.get();
         m_unionFeature->addFieldInBranches({m_tagBId, m_tagCId}, std::move(intFeaturePtr), m_fieldBCId);
     }

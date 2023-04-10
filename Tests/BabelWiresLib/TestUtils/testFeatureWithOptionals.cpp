@@ -34,12 +34,12 @@ testUtils::TestFeatureWithOptionals::TestFeatureWithOptionals(const babelwires::
         addField(std::move(testRecordWithOptionalsFeaturePtr), m_subrecordId);
     }
     {
-        auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
+        auto intFeaturePtr = std::make_unique<babelwires::IntFeature2>();
         m_ff0Feature = intFeaturePtr.get();
         m_subrecord->addField(std::move(intFeaturePtr), m_ff0Id);
     }
     {
-        auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
+        auto intFeaturePtr = std::make_unique<babelwires::IntFeature2>();
         m_op0Feature = intFeaturePtr.get();
         m_subrecord->addOptionalField(std::move(intFeaturePtr), m_op0Id);
     }
