@@ -81,6 +81,7 @@ TEST(ModifierTest, localApplySuccess) {
     babelwires::ShortId id1("bb");
     id1.setDiscriminator(2);
     babelwires::IntFeature* intFeature = childRecordFeature->addField(std::make_unique<babelwires::IntFeature>(), id1);
+    intFeature->setToDefault();
 
     babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/bb");
 

@@ -41,10 +41,12 @@ void babelwires::ValueAssignmentData::deserializeContents(Deserializer& deserial
 }
 
 void babelwires::ValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {
+    LocalModifierData::visitIdentifiers(visitor);
     m_value.visitIdentifiers(visitor);
 }
 
 void babelwires::ValueAssignmentData::visitFilePaths(FilePathVisitor& visitor) {
+    LocalModifierData::visitFilePaths(visitor);
     m_value.visitFilePaths(visitor);
 }
 

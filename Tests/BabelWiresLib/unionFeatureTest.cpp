@@ -9,6 +9,7 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -21,7 +22,10 @@ TEST(UnionFeatureTest, fieldOrder) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 
@@ -123,7 +127,10 @@ TEST(UnionFeatureTest, fieldOrderWithOverlappingBranches) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 
@@ -237,7 +244,10 @@ TEST(UnionFeatureTest, defaults) {
     babelwires::ShortId tagA = testUtils::getTestRegisteredIdentifier("tagA");
     babelwires::ShortId tagB = testUtils::getTestRegisteredIdentifier("tagB");
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB}, 0);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB}, 0);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     babelwires::RecordFeature* recordA = unionFeature.addFieldInBranch(
         tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recA"));
@@ -272,7 +282,10 @@ TEST(UnionFeatureTest, changes) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 
@@ -348,7 +361,10 @@ TEST(UnionFeatureTest, hash) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 
@@ -419,7 +435,10 @@ TEST(UnionFeatureTest, queries) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 

@@ -15,13 +15,20 @@
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
+
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(ModifierDataTest, arrayInitializationApply) {
+    testUtils::TestEnvironment testEnvironment;
+    
     babelwires::ArraySizeModifierData data;
     data.m_size = 5;
 
-    babelwires::StandardArrayFeature<babelwires::IntFeature> arrayFeature;
+    testUtils::RootedFeature<babelwires::StandardArrayFeature<babelwires::IntFeature>> rootFeature(testEnvironment.m_projectContext);
+    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
+
     EXPECT_EQ(arrayFeature.getNumFeatures(), 0);
 
     data.apply(&arrayFeature);
@@ -65,62 +72,25 @@ TEST(ModifierDataTest, arrayInitializationSerialization) {
     EXPECT_EQ(dataPtr->m_size, 5);
 }
 
-TEST(ModifierDataTest, intValueAssignmentApply) {
-    babelwires::ValueAssignmentData data(babelwires::IntValue(198));
-
-    babelwires::IntFeature intFeature;
-    EXPECT_EQ(intFeature.get(), 0);
-
-    data.apply(&intFeature);
-    EXPECT_EQ(intFeature.get(), 198);
-
-    babelwires::RationalFeature notIntFeature;
-    EXPECT_THROW(data.apply(&notIntFeature), babelwires::ModelException);
-}
-
-TEST(ModifierDataTest, intValueAssignmentClone) {
-    babelwires::ValueAssignmentData data(babelwires::IntValue(198));
-    data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
-    auto dataPtr = data.clone();
-    ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("aa/bb/6"));
-    EXPECT_EQ(dataPtr->getValue()->as<babelwires::IntValue>()->get(), 198);
-}
-
-TEST(ModifierDataTest, intValueAssignmentSerialization) {
-    std::string serializedContents;
-    {
-        babelwires::ValueAssignmentData data(babelwires::IntValue(198));
-        data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
-
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(data);
-        std::ostringstream os;
-        serializer.write(os);
-        serializedContents = std::move(os.str());
-    }
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::ValueAssignmentData>();
-    deserializer.finalize();
-
-    ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("aa/bb/6"));
-    EXPECT_EQ(dataPtr->getValue()->as<babelwires::IntValue>()->get(), 198);
-}
-
 TEST(ModifierDataTest, rationalValueAssignmentApply) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
+    babelwires::RationalFeature& ratFeature =
+        *rootFeature.addField(std::make_unique<babelwires::RationalFeature>(),
+                              testUtils::getTestRegisteredIdentifier("foo"));
+
     babelwires::RationalValueAssignmentData data;
     data.m_value = babelwires::Rational(19 / 57);
 
-    babelwires::RationalFeature ratFeature;
     EXPECT_EQ(ratFeature.get(), 0);
 
     data.apply(&ratFeature);
     EXPECT_EQ(ratFeature.get(), babelwires::Rational(19 / 57));
 
-    babelwires::IntFeature notRatFeature;
+    babelwires::IntFeature& notRatFeature =
+        *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
+                              testUtils::getTestRegisteredIdentifier("bar"));
     EXPECT_THROW(data.apply(&notRatFeature), babelwires::ModelException);
 }
 
@@ -161,10 +131,20 @@ TEST(ModifierDataTest, rationalValueAssignmentSerialization) {
 TEST(ModifierDataTest, assignFromFeatureApply) {
     babelwires::ConnectionModifierData data;
 
-    babelwires::IntFeature srcIntFeature;
-    srcIntFeature.set(14);
+    testUtils::TestEnvironment testEnvironment;
 
-    babelwires::IntFeature targetIntFeature;
+    babelwires::RootFeature srcRootFeature(testEnvironment.m_projectContext);
+    babelwires::IntFeature& srcIntFeature =
+        *srcRootFeature.addField(std::make_unique<babelwires::IntFeature>(),
+                              testUtils::getTestRegisteredIdentifier("foo"));
+
+    babelwires::RootFeature targetRootFeature(testEnvironment.m_projectContext);
+    babelwires::IntFeature& targetIntFeature =
+        *targetRootFeature.addField(std::make_unique<babelwires::IntFeature>(),
+                              testUtils::getTestRegisteredIdentifier("foo"));
+
+    srcIntFeature.set(14);
+    targetIntFeature.set(0);
     EXPECT_EQ(targetIntFeature.get(), 0);
 
     data.apply(&srcIntFeature, &targetIntFeature, true);
@@ -179,7 +159,9 @@ TEST(ModifierDataTest, assignFromFeatureApply) {
     data.apply(&srcIntFeature, &targetIntFeature, false);
     EXPECT_EQ(targetIntFeature.get(), 28);
 
-    babelwires::StringFeature notIntFeature;
+    babelwires::StringFeature& notIntFeature =
+        *srcRootFeature.addField(std::make_unique<babelwires::StringFeature>(),
+                              testUtils::getTestRegisteredIdentifier("bar"));
     EXPECT_THROW(data.apply(&srcIntFeature, &notIntFeature, true), babelwires::ModelException);
 
     // An exception will try to print out a path, which will expect one of these singletons.

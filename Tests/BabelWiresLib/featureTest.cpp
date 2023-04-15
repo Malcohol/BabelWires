@@ -229,13 +229,13 @@ TEST(FeatureTest, valueCompatibility) {
 
     // Currently, int and rational are incompatible. (We could change that in the future)
     babelwires::IntFeature& intFeature = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
-                                                                      testUtils::getTestRegisteredIdentifier("ccc"));
+                                                               testUtils::getTestRegisteredIdentifier("ccc"));
     babelwires::IntFeature& intFeature2 = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
-                                                                      testUtils::getTestRegisteredIdentifier("ddd"));
-    babelwires::RationalFeature& rationalFeature = *rootFeature.addField(std::make_unique<babelwires::RationalFeature>(),
-                                                                      testUtils::getTestRegisteredIdentifier("eee"));
-    babelwires::RationalFeature& rationalFeature2 = *rootFeature.addField(std::make_unique<babelwires::RationalFeature>(),
-                                                                      testUtils::getTestRegisteredIdentifier("fff"));
+                                                                testUtils::getTestRegisteredIdentifier("ddd"));
+    babelwires::RationalFeature& rationalFeature = *rootFeature.addField(
+        std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("eee"));
+    babelwires::RationalFeature& rationalFeature2 = *rootFeature.addField(
+        std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("fff"));
 
     EXPECT_TRUE(intFeature.isCompatible(intFeature2));
     EXPECT_FALSE(intFeature.isCompatible(stringFeature));
@@ -325,7 +325,10 @@ TEST(FeatureTest, recordFeature) {
 }
 
 TEST(FeatureTest, recordFeatureChanges) {
-    babelwires::RecordFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordFeature> rootedFeature(testEnvironment.m_projectContext);
+    babelwires::RecordFeature& recordFeature = rootedFeature.getFeature();
 
     // After construction, everything has changed.
     EXPECT_TRUE(recordFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -341,7 +344,6 @@ TEST(FeatureTest, recordFeatureChanges) {
     hello.setDiscriminator(17);
     auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
     babelwires::IntFeature* intFeature = intFeaturePtr.get();
-    intFeature->set(0);
     intFeature->clearChanges();
     recordFeature.addField(std::move(intFeaturePtr), hello);
 
@@ -362,7 +364,10 @@ TEST(FeatureTest, recordFeatureChanges) {
 }
 
 TEST(FeatureTest, recordFeatureHash) {
-    babelwires::RecordFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordFeature> rootedFeature(testEnvironment.m_projectContext);
+    babelwires::RecordFeature& recordFeature = rootedFeature.getFeature();
 
     recordFeature.setToDefault();
 
@@ -391,7 +396,11 @@ TEST(FeatureTest, recordFeatureHash) {
 }
 
 TEST(FeatureTest, arrayFeature) {
-    babelwires::StandardArrayFeature<babelwires::IntFeature> arrayFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::StandardArrayFeature<babelwires::IntFeature>> rootFeature(
+        testEnvironment.m_projectContext);
+    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
 
     EXPECT_EQ(arrayFeature.getNumFeatures(), 0);
 
@@ -462,7 +471,11 @@ TEST(FeatureTest, arrayFeature) {
 }
 
 TEST(FeatureTest, arrayFeatureChanges) {
-    babelwires::StandardArrayFeature<babelwires::IntFeature> arrayFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::StandardArrayFeature<babelwires::IntFeature>> rootFeature(
+        testEnvironment.m_projectContext);
+    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
 
     // After construction, everything has changed.
     EXPECT_TRUE(arrayFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -500,7 +513,11 @@ TEST(FeatureTest, arrayFeatureChanges) {
 }
 
 TEST(FeatureTest, arrayFeatureHash) {
-    babelwires::StandardArrayFeature<babelwires::IntFeature> arrayFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::StandardArrayFeature<babelwires::IntFeature>> rootFeature(
+        testEnvironment.m_projectContext);
+    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
 
     arrayFeature.setToDefault();
 
@@ -535,7 +552,11 @@ namespace {
 } // namespace
 
 TEST(FeatureTest, arraySizeRange) {
-    LimitedArray arrayFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<LimitedArray> rootFeature(
+        testEnvironment.m_projectContext);
+    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
 
     arrayFeature.setToDefault();
     EXPECT_EQ(arrayFeature.getNumFeatures(), 2);

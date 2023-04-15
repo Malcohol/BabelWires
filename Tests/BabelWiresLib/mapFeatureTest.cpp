@@ -56,9 +56,17 @@ TEST(MapFeatureTest, setToDefault) {
 }
 
 TEST(MapFeatureTest, isCompatible) {
-    babelwires::StandardMapFeature mapFeature(testTypeId1, testTypeId2);
-    babelwires::StandardMapFeature mapFeature2(testTypeId1, testTypeId2);
-    babelwires::IntFeature intFeature;
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
+
+    babelwires::MapFeature& mapFeature =
+        *rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testTypeId1, testTypeId2),
+                              testUtils::getTestRegisteredIdentifier("foo"));
+    babelwires::MapFeature& mapFeature2 =
+        *rootFeature.addField(std::make_unique<babelwires::StandardMapFeature>(testTypeId1, testTypeId2),
+                              testUtils::getTestRegisteredIdentifier("bar"));
+    babelwires::IntFeature& intFeature = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
+                                                                testUtils::getTestRegisteredIdentifier("boo"));
 
     EXPECT_TRUE(mapFeature.isCompatible(mapFeature2));
     EXPECT_FALSE(mapFeature.isCompatible(intFeature));

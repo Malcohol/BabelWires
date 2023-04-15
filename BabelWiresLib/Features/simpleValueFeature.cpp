@@ -70,7 +70,7 @@ const babelwires::Type& babelwires::SimpleValueFeature::getType() const {
 }
 
 const babelwires::Value& babelwires::SimpleValueFeature::getValue() const {
-    assert(m_value && "The NewValueFeature has not been initialized");
+    assert(m_value && "The SimpleValueFeature has not been initialized");
     return *m_value;
 }
 

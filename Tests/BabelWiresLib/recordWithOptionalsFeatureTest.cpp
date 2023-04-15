@@ -9,12 +9,16 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
 TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 0);
 
@@ -133,7 +137,10 @@ TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, changes) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -143,6 +150,8 @@ TEST(RecordWithOptionalsFeatureTest, changes) {
     op0.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature0 =
         recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+    // TODO: This test won't succeed with a non-default value here, which is indicates a bug.
+    optionalFeature0->setToDefault();
 
     recordFeature.clearChanges();
 
@@ -162,7 +171,10 @@ TEST(RecordWithOptionalsFeatureTest, changes) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, hash) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -205,7 +217,10 @@ TEST(RecordWithOptionalsFeatureTest, hash) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, queries) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -251,7 +266,10 @@ TEST(RecordWithOptionalsFeatureTest, queries) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, exceptions) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -274,7 +292,10 @@ TEST(RecordWithOptionalsFeatureTest, exceptions) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, setToDefault) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);

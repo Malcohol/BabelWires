@@ -3,6 +3,7 @@ Bugs:
   - This is probably a symptom of the weird factory re-factor in nodeeditor.
   - Consider reverting that change in my custom branch.
 * The UI does not update a row directly after a failed modifier is removed, so the row stays red.
+* RecordWithOptionalsFeatureTest::changes test only works if the values are default. Deactivating a non-default optional should not set the value changed flag.
 
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.

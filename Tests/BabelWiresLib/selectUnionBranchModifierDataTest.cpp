@@ -8,6 +8,9 @@
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
+
 #include <Tests/TestUtils/testLog.hpp>
 #include <Tests/TestUtils/equalSets.hpp>
 
@@ -19,10 +22,13 @@ TEST(SelectUnionBranchModifierDataTest, apply) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
+
     babelwires::SelectUnionBranchModifierData data;
     data.m_tagToSelect = tagC;
-
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
 
     babelwires::ShortId fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
@@ -58,7 +64,10 @@ TEST(SelectUnionBranchModifierDataTest, failureNotATag) {
     babelwires::SelectUnionBranchModifierData data;
     data.m_tagToSelect = "notTag";
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     babelwires::ShortId fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
