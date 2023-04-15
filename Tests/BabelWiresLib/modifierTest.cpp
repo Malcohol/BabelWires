@@ -256,7 +256,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
 
     testUtils::TestFeatureElementData elementData;
     const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
-    babelwires::ValueAssignmentData sourceData(babelwires::IntValue(198));
+    babelwires::ValueAssignmentData sourceData(babelwires::IntValue(100));
     sourceData.m_pathToFeature = sourcePath;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));
 
@@ -267,6 +267,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
+    targetRecordFeature.setToDefault();
 
     const babelwires::FeaturePath targetPath = babelwires::FeaturePath::deserializeFromString("bb");
 
@@ -294,6 +295,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
+    targetRecordFeature.setToDefault();
 
     const babelwires::FeaturePath sourcePath = babelwires::FeaturePath::deserializeFromString("aa");
     const babelwires::FeaturePath targetPath = babelwires::FeaturePath::deserializeFromString("xx");
@@ -324,6 +326,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
+    targetRecordFeature.setToDefault();
 
     const babelwires::FeaturePath sourcePath = babelwires::FeaturePath::deserializeFromString("aa");
     const babelwires::FeaturePath targetPath = babelwires::FeaturePath::deserializeFromString("bb");
@@ -363,6 +366,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
     id1.setDiscriminator(1);
     babelwires::IntFeature* targetFeature =
         targetRecordFeature.addField(std::make_unique<babelwires::IntFeature>(), id1);
+    targetRecordFeature.setToDefault();
 
     const babelwires::FeaturePath targetPath = babelwires::FeaturePath::deserializeFromString("bb");
 

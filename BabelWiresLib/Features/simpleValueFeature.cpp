@@ -21,7 +21,7 @@ void babelwires::SimpleValueFeature::doAssign(const ValueFeature& other) {
 }
 
 void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue) {
-    if ((m_value != newValue) && (*m_value != *newValue)) {
+    if (!m_value || ((m_value != newValue) && (*m_value != *newValue))) {
         const Type& type = getType();
         if (type.isValidValue(*newValue)) {
             m_value = newValue;
@@ -33,7 +33,7 @@ void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue)
 }
 
 void babelwires::SimpleValueFeature::setValue(const Value& value) {
-    if (value != *m_value) {
+    if (!m_value || (value != *m_value)) {
         const Type& type = getType();
         if (type.isValidValue(value)) {
             m_value = value;
@@ -45,7 +45,7 @@ void babelwires::SimpleValueFeature::setValue(const Value& value) {
 }
 
 void babelwires::SimpleValueFeature::setValue(Value&& value) {
-    if (value != *m_value) {
+    if (!m_value || (value != *m_value)) {
         const Type& type = getType();
         if (type.isValidValue(value)) {
             m_value = std::move(value);
@@ -58,7 +58,7 @@ void babelwires::SimpleValueFeature::setValue(Value&& value) {
 
 void babelwires::SimpleValueFeature::doSetToDefault() {
     auto [newValue, _] = getType().createValue();
-    if (*newValue != *m_value) {
+    if (!m_value || (*newValue != *m_value)) {
         m_value = std::move(newValue);
         setChanged(Changes::ValueChanged);
     }

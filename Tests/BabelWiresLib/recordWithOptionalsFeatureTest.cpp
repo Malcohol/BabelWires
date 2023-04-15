@@ -189,6 +189,7 @@ TEST(RecordWithOptionalsFeatureTest, hash) {
     op1.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature1 =
         recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+    recordFeature.setToDefault();
 
     const size_t hash0 = recordFeature.getHash();
 

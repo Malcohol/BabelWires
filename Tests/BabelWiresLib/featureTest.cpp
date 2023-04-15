@@ -236,6 +236,7 @@ TEST(FeatureTest, valueCompatibility) {
         std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("eee"));
     babelwires::RationalFeature& rationalFeature2 = *rootFeature.addField(
         std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("fff"));
+    rootFeature.setToDefault();
 
     EXPECT_TRUE(intFeature.isCompatible(intFeature2));
     EXPECT_FALSE(intFeature.isCompatible(stringFeature));
