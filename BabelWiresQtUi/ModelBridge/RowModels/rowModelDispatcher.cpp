@@ -9,7 +9,6 @@
 
 #include <BabelWiresQtUi/ModelBridge/RowModels/arrayRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/fileRowModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/RowModels/rationalRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/recordWithOptionalsRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelRegistry.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/mapRowModel.hpp>
@@ -18,7 +17,6 @@
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
-#include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Types/String/stringFeature.hpp>
 #include <BabelWiresLib/Types/Enum/enumFeature.hpp>
@@ -37,9 +35,6 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     } else if (feature->as<const babelwires::SimpleValueFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ValueRowModel));
         new (m_rowModel) babelwires::ValueRowModel();
-    } else if (feature->as<const babelwires::RationalFeature>()) {
-        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::RationalRowModel));
-        new (m_rowModel) babelwires::RationalRowModel();
     } else if (feature->as<const babelwires::ArrayFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ArrayRowModel));
         new (m_rowModel) babelwires::ArrayRowModel();

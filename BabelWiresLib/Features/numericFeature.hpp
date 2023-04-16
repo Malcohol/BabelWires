@@ -39,12 +39,6 @@ namespace babelwires {
         T m_value = 0;
     };
 
-    class RationalFeature : public NumericFeature<Rational> {
-      protected:
-        /// Is other the same kind of number.
-        virtual std::string doGetValueType() const override;
-    };
-
     // TODO Provide floating point features as standard.
 
 } // namespace babelwires

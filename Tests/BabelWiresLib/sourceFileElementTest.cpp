@@ -4,8 +4,6 @@
 #include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp>
 
-#include <BabelWiresLib/Features/numericFeature.hpp>
-
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>

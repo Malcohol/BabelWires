@@ -12,7 +12,6 @@
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
 #include <Common/Cloning/cloneable.hpp>
-#include <Common/Math/rational.hpp>
 #include <Common/Serialization/serializable.hpp>
 
 namespace babelwires {
@@ -55,16 +54,5 @@ namespace babelwires {
         virtual void apply(Feature* targetFeature) const = 0;
 
         virtual std::unique_ptr<Modifier> createModifier() const;
-    };
-
-    /// Data used to assign an IntFeature within a container to a certain value.
-    struct RationalValueAssignmentData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
-        CLONEABLE(RationalValueAssignmentData);
-        SERIALIZABLE(RationalValueAssignmentData, "assignRational", LocalModifierData, 1);
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-
-        Rational m_value = 0;
     };
 } // namespace babelwires

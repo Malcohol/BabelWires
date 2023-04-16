@@ -13,10 +13,14 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/Rational/rationalType.hpp>
+#include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<DefaultIntType>();
     context.m_typeSystem.addEntry<StringType>();
+    context.m_typeSystem.addEntry<DefaultRationalType>();
     context.m_typeSystem.addTypeConstructor<AddBlankToEnum>();
     context.m_typeSystem.addTypeConstructor<IntTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<RationalTypeConstructor>();
 }

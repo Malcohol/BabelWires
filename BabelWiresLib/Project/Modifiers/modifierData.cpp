@@ -38,21 +38,3 @@ void babelwires::ModifierData::visitFilePaths(FilePathVisitor& visitor) {
 std::unique_ptr<babelwires::Modifier> babelwires::LocalModifierData::createModifier() const {
     return std::make_unique<babelwires::LocalModifier>(clone());
 }
-
-void babelwires::RationalValueAssignmentData::apply(Feature* targetFeature) const {
-    if (RationalFeature* rationalFeature = targetFeature->as<RationalFeature>()) {
-        rationalFeature->set(m_value);
-    } else {
-        throw babelwires::ModelException() << "Could not assign a rational to a non-rational feature";
-    }
-}
-
-void babelwires::RationalValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
-    serializer.serializeValue("value", m_value);
-}
-
-void babelwires::RationalValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
-    deserializer.deserializeValue("value", m_value);
-}

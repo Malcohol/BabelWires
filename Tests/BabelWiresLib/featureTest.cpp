@@ -3,10 +3,11 @@
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/featureMixins.hpp>
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
-#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
+#include <BabelWiresLib/Types/Rational/rationalFeature.hpp>
 #include <BabelWiresLib/Types/String/stringFeature.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 
@@ -19,10 +20,10 @@
 TEST(FeatureTest, intFeature) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext);
-    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
+    testUtils::RootedFeature<babelwires::IntFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::IntFeature& intFeature = rootFeature.getFeature();
 
-    EXPECT_EQ(intFeature.getOwner(), &rootedFeature.getRoot());
+    EXPECT_EQ(intFeature.getOwner(), &rootFeature.getRoot());
 
     intFeature.setToDefault();
     EXPECT_EQ(intFeature.get(), 0);
@@ -31,7 +32,7 @@ TEST(FeatureTest, intFeature) {
     EXPECT_EQ(intFeature.get(), 10);
 
     testUtils::RootedFeature<babelwires::IntFeature> rootedFeature2(testEnvironment.m_projectContext);
-    babelwires::IntFeature& intFeature2 = rootedFeature.getFeature();
+    babelwires::IntFeature& intFeature2 = rootFeature.getFeature();
 
     intFeature2.assign(intFeature);
     EXPECT_EQ(intFeature2.get(), 10);
@@ -40,8 +41,8 @@ TEST(FeatureTest, intFeature) {
 TEST(FeatureTest, intFeatureChanges) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext);
-    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
+    testUtils::RootedFeature<babelwires::IntFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::IntFeature& intFeature = rootFeature.getFeature();
 
     // After construction, everything has changed.
     EXPECT_TRUE(intFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -72,8 +73,8 @@ TEST(FeatureTest, intFeatureChanges) {
 TEST(FeatureTest, intFeatureHash) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext);
-    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
+    testUtils::RootedFeature<babelwires::IntFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::IntFeature& intFeature = rootFeature.getFeature();
 
     intFeature.set(0);
     const std::size_t hashAt0 = intFeature.getHash();
@@ -89,8 +90,8 @@ TEST(FeatureTest, intFeatureHash) {
 TEST(FeatureTest, intFeatureWithRange) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext, 10, 100);
-    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
+    testUtils::RootedFeature<babelwires::IntFeature> rootFeature(testEnvironment.m_projectContext, 10, 100);
+    babelwires::IntFeature& intFeature = rootFeature.getFeature();
 
     intFeature.setToDefault();
     EXPECT_EQ(intFeature.get(), 10);
@@ -118,15 +119,18 @@ TEST(FeatureTest, intFeatureWithRange) {
 TEST(FeatureTest, intFeatureWithDefault) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<babelwires::IntFeature> rootedFeature(testEnvironment.m_projectContext, -10);
-    babelwires::IntFeature& intFeature = rootedFeature.getFeature();
+    testUtils::RootedFeature<babelwires::IntFeature> rootFeature(testEnvironment.m_projectContext, -10);
+    babelwires::IntFeature& intFeature = rootFeature.getFeature();
 
     intFeature.setToDefault();
     EXPECT_EQ(intFeature.get(), -10);
 }
 
 TEST(FeatureTest, rationalFeature) {
-    babelwires::RationalFeature rationalFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RationalFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RationalFeature& rationalFeature = rootFeature.getFeature();
 
     rationalFeature.setToDefault();
     EXPECT_EQ(rationalFeature.get(), 0);
@@ -134,13 +138,18 @@ TEST(FeatureTest, rationalFeature) {
     rationalFeature.set(babelwires::Rational(23, 54));
     EXPECT_EQ(rationalFeature.get(), babelwires::Rational(23, 54));
 
-    babelwires::RationalFeature rationalFeature2;
+    testUtils::RootedFeature<babelwires::RationalFeature> rootFeature2(testEnvironment.m_projectContext);
+    babelwires::RationalFeature& rationalFeature2 = rootFeature2.getFeature();
+
     rationalFeature2.assign(rationalFeature);
     EXPECT_EQ(rationalFeature2.get(), babelwires::Rational(23, 54));
 }
 
 TEST(FeatureTest, rationalFeatureHash) {
-    babelwires::RationalFeature rationalFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RationalFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RationalFeature& rationalFeature = rootFeature.getFeature();
 
     rationalFeature.set(0);
     const std::size_t hashAt0 = rationalFeature.getHash();
@@ -328,8 +337,8 @@ TEST(FeatureTest, recordFeature) {
 TEST(FeatureTest, recordFeatureChanges) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<babelwires::RecordFeature> rootedFeature(testEnvironment.m_projectContext);
-    babelwires::RecordFeature& recordFeature = rootedFeature.getFeature();
+    testUtils::RootedFeature<babelwires::RecordFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordFeature& recordFeature = rootFeature.getFeature();
 
     // After construction, everything has changed.
     EXPECT_TRUE(recordFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -367,8 +376,8 @@ TEST(FeatureTest, recordFeatureChanges) {
 TEST(FeatureTest, recordFeatureHash) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<babelwires::RecordFeature> rootedFeature(testEnvironment.m_projectContext);
-    babelwires::RecordFeature& recordFeature = rootedFeature.getFeature();
+    testUtils::RootedFeature<babelwires::RecordFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordFeature& recordFeature = rootFeature.getFeature();
 
     recordFeature.setToDefault();
 
@@ -555,8 +564,7 @@ namespace {
 TEST(FeatureTest, arraySizeRange) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<LimitedArray> rootFeature(
-        testEnvironment.m_projectContext);
+    testUtils::RootedFeature<LimitedArray> rootFeature(testEnvironment.m_projectContext);
     babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
 
     arrayFeature.setToDefault();
