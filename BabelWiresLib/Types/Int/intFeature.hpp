@@ -1,5 +1,5 @@
 /**
- * The type of integers.
+ * A feature which manages a single IntValue.
  *
  * (C) 2021 Malcolm Tyrrell
  *

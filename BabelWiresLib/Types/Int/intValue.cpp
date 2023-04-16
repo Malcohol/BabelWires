@@ -7,8 +7,6 @@
  **/
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
-#include <BabelWiresLib/Types/Int/intType.hpp>
-
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
@@ -31,9 +29,7 @@ void babelwires::IntValue::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("value", m_value);
 }
 
-void babelwires::IntValue::visitIdentifiers(IdentifierVisitor& visitor) {
-    visitor(m_value);
-}
+void babelwires::IntValue::visitIdentifiers(IdentifierVisitor& visitor) {}
 
 void babelwires::IntValue::visitFilePaths(FilePathVisitor& visitor) {}
 

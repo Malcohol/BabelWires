@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
+#include <BabelWiresLib/Types/Int/intValue.hpp>
 
 namespace babelwires {
     class IntTypeConstructor : public TypeConstructor {
@@ -22,5 +23,10 @@ namespace babelwires {
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments,
                                           const TypeRef& other) const override;
+
+      private:
+        /// Throws a TypeSystem exception if the arguments are not of the expect type.
+        static std::tuple<Range<IntValue::NativeType>, IntValue::NativeType>
+        extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires
