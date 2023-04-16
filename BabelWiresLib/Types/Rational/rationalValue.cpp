@@ -29,9 +29,13 @@ void babelwires::RationalValue::deserializeContents(Deserializer& deserializer) 
     deserializer.deserializeValue("value", m_value);
 }
 
-void babelwires::RationalValue::visitIdentifiers(IdentifierVisitor& visitor) {}
+void babelwires::RationalValue::visitIdentifiers(IdentifierVisitor& visitor) {
+    assert(false && "canContainIdentifiers should have returned false");
+}
 
-void babelwires::RationalValue::visitFilePaths(FilePathVisitor& visitor) {}
+void babelwires::RationalValue::visitFilePaths(FilePathVisitor& visitor) {
+    assert(false && "canContainFilePaths should have returned false");
+}
 
 bool babelwires::RationalValue::canContainIdentifiers() const {
     return false;

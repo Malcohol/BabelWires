@@ -10,7 +10,7 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-babelwires::IntValue::IntValue() = default;
+babelwires::IntValue::IntValue() : m_value(0) {}
 babelwires::IntValue::IntValue(NativeType value) : m_value(value) {}
 
 babelwires::IntValue::NativeType babelwires::IntValue::get() const {
@@ -29,9 +29,13 @@ void babelwires::IntValue::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("value", m_value);
 }
 
-void babelwires::IntValue::visitIdentifiers(IdentifierVisitor& visitor) {}
+void babelwires::IntValue::visitIdentifiers(IdentifierVisitor& visitor) {
+    assert(false && "canContainIdentifiers should have returned false");
+}
 
-void babelwires::IntValue::visitFilePaths(FilePathVisitor& visitor) {}
+void babelwires::IntValue::visitFilePaths(FilePathVisitor& visitor) {
+    assert(false && "canContainFilePaths should have returned false");
+}
 
 bool babelwires::IntValue::canContainIdentifiers() const {
     return false;

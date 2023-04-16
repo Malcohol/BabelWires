@@ -42,6 +42,12 @@ namespace babelwires {
         bool contains(const Range& other) const { 
             return contains(other.m_min) && contains(other.m_max);
         }
+        bool operator==(const Range& other) const {
+            return (m_min == other.m_min) && (m_max == other.m_max);
+        }
+        bool operator!=(const Range& other) const {
+            return (m_min != other.m_min) || (m_max != other.m_max);
+        }
         T clamp(T value) const { return std::clamp(value, m_min, m_max); }
         T m_min;
         T m_max;

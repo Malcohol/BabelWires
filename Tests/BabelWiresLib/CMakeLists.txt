@@ -21,6 +21,9 @@ SET( LIB_TESTS_SRCS
     featurePathTest.cpp
     featureTest.cpp
     editTreeTest.cpp
+    intFeatureTest.cpp
+    intValueTest.cpp
+    intTypeTest.cpp
     mapDataTest.cpp
     mapEntryDataTest.cpp
     mapFeatureTest.cpp
@@ -37,6 +40,7 @@ SET( LIB_TESTS_SRCS
     projectObserverTest.cpp
     projectSerializationTest.cpp
     projectTest.cpp
+    rationalFeatureTest.cpp
     recordWithOptionalsFeatureTest.cpp
     removeElementCommandTest.cpp
     removeEntryFromArrayCommandTest.cpp
@@ -55,6 +59,7 @@ SET( LIB_TESTS_SRCS
     setMapSourceTypeCommandTest.cpp
     setMapTargetTypeCommandTest.cpp
     sourceFileElementTest.cpp
+    stringFeatureTest.cpp
     targetFileElementTest.cpp
     typeRefTest.cpp
     typeSystemTest.cpp

@@ -261,7 +261,7 @@ TEST(MapDataTest, serializationTest) {
         mapData.setSourceTypeRef(testTypeId1);
         mapData.setTargetTypeRef(testTypeId2);
     
-            babelwires::TypeSystem typeSystem;
+        babelwires::TypeSystem typeSystem;
         typeSystem.addEntry<testUtils::TestType>();  
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.

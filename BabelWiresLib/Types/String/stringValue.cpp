@@ -33,10 +33,12 @@ void babelwires::StringValue::deserializeContents(Deserializer& deserializer) {
 }
 
 void babelwires::StringValue::visitIdentifiers(IdentifierVisitor& visitor) {
-    visitor(m_value);
+    assert(false && "canContainIdentifiers should have returned false");
 }
 
-void babelwires::StringValue::visitFilePaths(FilePathVisitor& visitor) {}
+void babelwires::StringValue::visitFilePaths(FilePathVisitor& visitor) {
+    assert(false && "canContainFilePaths should have returned false");
+}
 
 bool babelwires::StringValue::canContainIdentifiers() const {
     return false;
