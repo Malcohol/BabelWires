@@ -83,14 +83,18 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/selectUnionBranchCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
 	TypeSystem/typeSystem.cpp
-	Types/Int/intType.cpp
-	Types/Int/intValue.cpp
-	Types/Int/intTypeConstructor.cpp
-	Types/Int/intFeature.cpp
 	Types/Enum/enum.cpp
 	Types/Enum/addBlankToEnum.cpp
 	Types/Enum/enumValue.cpp
 	Types/Enum/enumFeature.cpp
+	Types/Int/intType.cpp
+	Types/Int/intValue.cpp
+	Types/Int/intTypeConstructor.cpp
+	Types/Int/intFeature.cpp
+	Types/Rational/rationalFeature.cpp
+	Types/Rational/rationalValue.cpp
+	Types/Rational/rationalType.cpp
+	Types/Rational/rationalTypeConstructor.cpp
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
 	Types/String/stringFeature.cpp

@@ -1,5 +1,5 @@
 /**
- * A StringFeature is a ValueFeature which carries a string.
+ * A feature which manages a single StringValue.
  *
  * (C) 2021 Malcolm Tyrrell
  *
