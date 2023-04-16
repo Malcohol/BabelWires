@@ -3,6 +3,8 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
+#include <BabelWiresLib/Types/Rational/rationalValue.hpp>
+#include <BabelWiresLib/Types/String/stringValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
@@ -38,6 +40,9 @@ TEST(IntTypeTest, defaultIntTypeIsValidValue) {
 
     EXPECT_TRUE(intType.isValidValue(minValue));
     EXPECT_TRUE(intType.isValidValue(maxValue));
+
+    EXPECT_FALSE(intType.isValidValue(babelwires::StringValue("Hello")));
+    EXPECT_FALSE(intType.isValidValue(babelwires::RationalValue(3)));
 }
 
 TEST(IntTypeTest, defaultIntTypeGetKind) {
@@ -79,7 +84,7 @@ TEST(IntTypeTest, constructedIntTypeRange) {
 
     const babelwires::Type* const type = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
-    const babelwires::IntType *const intType = type->as<babelwires::IntType>();
+    const babelwires::IntType* const intType = type->as<babelwires::IntType>();
     ASSERT_NE(intType, nullptr);
 
     auto range = intType->getRange();
@@ -99,6 +104,9 @@ TEST(IntTypeTest, constructedIntTypeIsValidValue) {
     EXPECT_TRUE(type->isValidValue(babelwires::IntValue(-12)));
     EXPECT_TRUE(type->isValidValue(babelwires::IntValue(14)));
     EXPECT_FALSE(type->isValidValue(babelwires::IntValue(15)));
+
+    EXPECT_FALSE(type->isValidValue(babelwires::StringValue("Hello")));
+    EXPECT_FALSE(type->isValidValue(babelwires::RationalValue(3)));
 }
 
 TEST(IntTypeTest, sameKind) {

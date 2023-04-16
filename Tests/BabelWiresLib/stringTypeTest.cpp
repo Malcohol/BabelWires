@@ -1,0 +1,45 @@
+#include <gtest/gtest.h>
+
+#include <BabelWiresLib/Types/Int/intType.hpp>
+#include <BabelWiresLib/Types/Rational/rationalValue.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/stringValue.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+
+TEST(StringTypeTest, stringTypeCreateValue) {
+    babelwires::StringType stringType;
+
+    babelwires::ValueHolder newValue = stringType.createValue();
+    EXPECT_TRUE(newValue);
+
+    const auto* const newStringValue = newValue->as<babelwires::StringValue>();
+    EXPECT_NE(newStringValue, nullptr);
+    EXPECT_EQ(newStringValue->get(), std::string());
+}
+
+TEST(StringTypeTest, stringTypeIsValidValue) {
+    babelwires::StringType stringType;
+
+    babelwires::StringValue value("Hello");
+
+    EXPECT_TRUE(stringType.isValidValue(value));
+
+    EXPECT_FALSE(stringType.isValidValue(babelwires::IntValue(5)));
+    EXPECT_FALSE(stringType.isValidValue(babelwires::RationalValue(3)));
+}
+
+TEST(StringTypeTest, stringTypeGetKind) {
+    babelwires::StringType stringType;
+
+    EXPECT_FALSE(stringType.getKind().empty());
+}
+
+TEST(StringTypeTest, stringTypeIsRegistered) {
+    testUtils::TestEnvironment testEnvironment;
+
+    const auto* const foundType =
+        testEnvironment.m_typeSystem.tryGetPrimitiveType(babelwires::StringType::getThisIdentifier());
+    EXPECT_NE(foundType, nullptr);
+    EXPECT_NE(foundType->as<babelwires::StringType>(), nullptr);
+}

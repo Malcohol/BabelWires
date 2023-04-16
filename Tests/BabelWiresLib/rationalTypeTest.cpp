@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
+#include <BabelWiresLib/Types/String/stringValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
@@ -38,6 +40,9 @@ TEST(RationalTypeTest, defaultRationalTypeIsValidValue) {
 
     EXPECT_TRUE(rationalType.isValidValue(minValue));
     EXPECT_TRUE(rationalType.isValidValue(maxValue));
+
+    EXPECT_FALSE(rationalType.isValidValue(babelwires::StringValue("Hello")));
+    EXPECT_FALSE(rationalType.isValidValue(babelwires::IntValue(3)));
 }
 
 TEST(RationalTypeTest, defaultRationalTypeGetKind) {
@@ -102,6 +107,9 @@ TEST(RationalTypeTest, constructedRationalTypeIsValidValue) {
     EXPECT_TRUE(type->isValidValue(babelwires::RationalValue(babelwires::Rational(2, 3))));
     EXPECT_TRUE(type->isValidValue(babelwires::RationalValue(babelwires::Rational(4, 3))));
     EXPECT_FALSE(type->isValidValue(babelwires::RationalValue(babelwires::Rational(3, 2))));
+
+    EXPECT_FALSE(type->isValidValue(babelwires::StringValue("Hello")));
+    EXPECT_FALSE(type->isValidValue(babelwires::IntValue(3)));
 }
 
 TEST(RationalTypeTest, sameKind) {

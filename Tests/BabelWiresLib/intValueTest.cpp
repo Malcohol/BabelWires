@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Types/Int/intFeature.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
