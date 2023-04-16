@@ -1,4 +1,3 @@
-#include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>

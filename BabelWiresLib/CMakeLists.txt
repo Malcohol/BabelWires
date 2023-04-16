@@ -56,7 +56,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/recordFeature.cpp
 	Features/recordWithOptionalsFeature.cpp
 	Features/arrayFeature.cpp
-	Features/numericFeature.cpp
 	Features/mapFeature.cpp
 	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp

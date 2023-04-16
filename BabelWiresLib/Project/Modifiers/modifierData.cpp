@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Types/String/stringFeature.hpp>
 #include <BabelWiresLib/Types/Enum/enumFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
