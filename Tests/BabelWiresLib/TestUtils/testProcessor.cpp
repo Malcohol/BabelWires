@@ -3,8 +3,6 @@
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 
-#include <BabelWiresLib/Features/featureMixins.hpp>
-
 testUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& context) {
     m_inputFeature = std::make_unique<TestRootFeature>(context);
     m_outputFeature = std::make_unique<TestRootFeature>(context);

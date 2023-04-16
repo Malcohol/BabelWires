@@ -1,7 +1,5 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
-#include <BabelWiresLib/Features/featureMixins.hpp>
-
 namespace {
     struct LimitedIntFeature : babelwires::IntFeature {
         LimitedIntFeature(int intValueLimit)

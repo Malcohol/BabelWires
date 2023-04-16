@@ -2,7 +2,6 @@
 
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 
-#include <BabelWiresLib/Features/featureMixins.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>

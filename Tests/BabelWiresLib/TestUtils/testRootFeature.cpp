@@ -1,7 +1,5 @@
 #include <Tests/BabelWiresLib/TestUtils/testRootFeature.hpp>
 
-#include <BabelWiresLib/Features/featureMixins.hpp>
-
 const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToInt =
     babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_intIdInitializer);
 const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray =
