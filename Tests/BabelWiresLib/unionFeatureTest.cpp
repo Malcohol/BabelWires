@@ -251,17 +251,17 @@ TEST(UnionFeatureTest, defaults) {
     babelwires::RecordFeature* recordA = unionFeature.addFieldInBranch(
         tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recA"));
     babelwires::IntFeature* fieldA =
-        recordA->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 5>>(),
+        recordA->addField(std::make_unique<babelwires::IntFeature>(5),
                           testUtils::getTestRegisteredIdentifier("aa"));
     babelwires::RecordFeature* recordF = unionFeature.addFieldInBranch(
         tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recF"));
     babelwires::IntFeature* fieldF =
-        recordF->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 6>>(),
+        recordF->addField(std::make_unique<babelwires::IntFeature>(6),
                           testUtils::getTestRegisteredIdentifier("ff"));
     babelwires::RecordFeature* recordB = unionFeature.addFieldInBranch(
         tagB, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recB"));
     babelwires::IntFeature* fieldB =
-        recordB->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 7>>(),
+        recordB->addField(std::make_unique<babelwires::IntFeature>(7),
                           testUtils::getTestRegisteredIdentifier("bb"));
 
     unionFeature.setToDefault();

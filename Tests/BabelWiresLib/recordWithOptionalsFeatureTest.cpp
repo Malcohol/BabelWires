@@ -301,12 +301,12 @@ TEST(RecordWithOptionalsFeatureTest, setToDefault) {
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
     babelwires::IntFeature* fixedFeature0 =
-        recordFeature.addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 12>>(), ff0);
+        recordFeature.addField(std::make_unique<babelwires::IntFeature>(12), ff0);
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
     babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(
-        std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 7>>(), op0);
+        std::make_unique<babelwires::IntFeature>(7), op0);
 
     recordFeature.setToDefault();
 
