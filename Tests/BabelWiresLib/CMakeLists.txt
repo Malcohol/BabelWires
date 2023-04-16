@@ -41,6 +41,8 @@ SET( LIB_TESTS_SRCS
     projectSerializationTest.cpp
     projectTest.cpp
     rationalFeatureTest.cpp
+    rationalTypeTest.cpp
+    rationalValueTest.cpp
     recordWithOptionalsFeatureTest.cpp
     removeElementCommandTest.cpp
     removeEntryFromArrayCommandTest.cpp
