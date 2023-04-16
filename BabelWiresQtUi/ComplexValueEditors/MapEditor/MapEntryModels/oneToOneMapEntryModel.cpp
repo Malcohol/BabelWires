@@ -74,7 +74,7 @@ std::unique_ptr<babelwires::MapEntryData>
 babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(Column column, QWidget* editor) const {
     switch (column) {
         case Column::sourceValue:
-            if (std::unique_ptr<Value> newValue = m_sourceValueModel->createValueFromEditorIfDifferent(editor)) {
+            if (ValueHolder newValue = m_sourceValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
                 babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
                 currentDiscreteData->setSourceValue(std::move(newValue));
@@ -82,7 +82,7 @@ babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(Column column
             }
             break;
         case Column::targetValue:
-            if (std::unique_ptr<Value> newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
+            if (ValueHolder newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
                 babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
                 currentDiscreteData->setTargetValue(std::move(newValue));

@@ -9,7 +9,7 @@
 
 #include <QVariant>
 
-#include <memory>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
     class Type;
@@ -20,7 +20,7 @@ namespace babelwires {
         virtual QVariant getDisplayData() const;
         virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
         virtual void setEditorData(QWidget* editor) const;
-        virtual std::unique_ptr<Value> createValueFromEditorIfDifferent(QWidget* editor) const;
+        virtual ValueHolder createValueFromEditorIfDifferent(QWidget* editor) const;
         virtual bool isItemEditable() const;
         virtual bool validateEditor(QWidget* editor) const;
         /*
@@ -34,6 +34,6 @@ namespace babelwires {
 
       public:
         const Type* m_type;
-        const Value* m_value; 
+        const Value* m_value;
     };
 } // namespace babelwires

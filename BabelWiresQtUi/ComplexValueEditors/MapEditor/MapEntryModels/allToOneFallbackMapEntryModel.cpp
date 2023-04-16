@@ -53,7 +53,7 @@ std::unique_ptr<babelwires::MapEntryData>
 babelwires::AllToOneFallbackMapEntryModel::createReplacementDataFromEditor(Column column, QWidget* editor) const {
     assert(isItemEditable(column) && "That column isn't editable");
 
-    if (std::unique_ptr<Value> newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
+    if (ValueHolder newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
         std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
         babelwires::AllToOneFallbackMapEntryData *const currentAllToOneData = currentData->as<AllToOneFallbackMapEntryData>();
         assert(currentAllToOneData && "Unexpected MapEntryData");
