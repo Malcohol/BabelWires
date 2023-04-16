@@ -10,10 +10,12 @@
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/enumValueModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/intValueModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/ValueModels/stringValueModel.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/rationalValueModel.hpp>
 
 #include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/Rational/rationalType.hpp>
 
 void babelwires::ValueModelDispatcher::init(const Type& type, const Value& value) {
     m_valueModel = &m_valueModelStorage;
@@ -23,6 +25,9 @@ void babelwires::ValueModelDispatcher::init(const Type& type, const Value& value
     } else if (type.as<IntType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::IntValueModel));
         new (m_valueModel) babelwires::IntValueModel();
+    } else if (type.as<RationalType>()) {
+        static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RationalValueModel));
+        new (m_valueModel) babelwires::RationalValueModel();
     } else if (type.as<StringType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::StringValueModel));
         new (m_valueModel) babelwires::StringValueModel();
