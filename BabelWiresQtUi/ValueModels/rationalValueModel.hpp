@@ -1,5 +1,5 @@
 /**
- * Model for IntValues.
+ * Model for RationalValues.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,11 +7,11 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
 
-    class IntValueModel : ValueModel {
+    class RationalValueModel : ValueModel {
       public:
         bool isItemEditable() const override;
         QWidget* createEditor(QWidget* parent, const QModelIndex& index) const override;

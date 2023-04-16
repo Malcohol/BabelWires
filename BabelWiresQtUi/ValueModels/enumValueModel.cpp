@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/enumValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/enumValueModel.hpp>
 
 #include <BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp>
 

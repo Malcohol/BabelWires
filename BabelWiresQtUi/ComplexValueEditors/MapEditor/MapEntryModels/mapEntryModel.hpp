@@ -9,7 +9,7 @@
 
 #include <QVariant>
 
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModelDispatcher.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModelDispatcher.hpp>
 
 #include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
 

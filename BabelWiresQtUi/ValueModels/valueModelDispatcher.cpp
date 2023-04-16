@@ -5,12 +5,12 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModelDispatcher.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModelDispatcher.hpp>
 
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/enumValueModel.hpp>
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/intValueModel.hpp>
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/stringValueModel.hpp>
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/rationalValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/enumValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/intValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/stringValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/rationalValueModel.hpp>
 
 #include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>

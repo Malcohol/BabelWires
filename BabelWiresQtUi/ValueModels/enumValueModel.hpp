@@ -1,5 +1,5 @@
 /**
- * Model for IntValues.
+ * Model for EnumValues.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,16 +7,16 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
 
-    class StringValueModel : ValueModel {
+    class EnumValueModel : ValueModel {
       public:
-        bool isItemEditable() const override;
         QWidget* createEditor(QWidget* parent, const QModelIndex& index) const override;
         void setEditorData(QWidget* editor) const override;
         std::unique_ptr<Value> createValueFromEditorIfDifferent(QWidget* editor) const override;
+        bool isItemEditable() const override;
         bool validateEditor(QWidget* editor) const override;
     };
 } // namespace babelwires

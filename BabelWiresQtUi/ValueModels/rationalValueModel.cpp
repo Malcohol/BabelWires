@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/rationalValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/rationalValueModel.hpp>
 
 #include <BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp>
 

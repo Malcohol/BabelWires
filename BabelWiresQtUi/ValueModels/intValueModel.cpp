@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/intValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/intValueModel.hpp>
 
 #include <BabelWiresQtUi/ValueEditors/spinBoxValueEditor.hpp>
 

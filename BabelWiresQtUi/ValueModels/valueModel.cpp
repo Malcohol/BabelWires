@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 #include <BabelWiresLib/TypeSystem/value.hpp>
 

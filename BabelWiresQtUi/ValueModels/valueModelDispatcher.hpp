@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
     class ValueModelDispatcher {
