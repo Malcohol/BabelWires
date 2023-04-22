@@ -12,10 +12,12 @@
 #include <Common/Math/rational.hpp>
 
 namespace babelwires {
+    /// Construct a new RationalType from three RationalValues: min, max and default.
     class RationalTypeConstructor : public TypeConstructor {
       public:
-        // TODO Need distinct name from Int.
-        TYPE_CONSTRUCTOR("Rational", "{{{0}..{2}..{1}}}", "dc2b335e-9336-471e-bc71-466bb65229d2", 1);
+        // The name format is not distinct from that of int, so there can be ambiguity. That's probably
+        // alright because type names are not used for anything other than display.
+        TYPE_CONSTRUCTOR("Rational", "{{{0}..{1}}}", "dc2b335e-9336-471e-bc71-466bb65229d2", 1);
 
         std::unique_ptr<Type> constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<ValueHolder>& valueArguments) const override;

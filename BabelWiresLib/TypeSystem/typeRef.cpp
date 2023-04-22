@@ -103,8 +103,6 @@ namespace {
         if (arguments.size() > babelwires::TypeConstructorArguments::s_maxNumArguments) {
             return {};
         }
-        std::bitset<babelwires::TypeConstructorArguments::s_maxNumArguments> argumentsNotYetSeen(
-            (1 << arguments.size()) - 1);
         std::ostringstream oss;
         constexpr char open = '{';
         constexpr char close = '}';
@@ -129,7 +127,6 @@ namespace {
                             return {};
                         }
                         oss << arguments[indexCharAsIndex];
-                        argumentsNotYetSeen.reset(indexCharAsIndex);
                         state = justReadIndex;
                     } else if (currentChar == open) {
                         oss << open;
@@ -158,8 +155,7 @@ namespace {
                 }
             }
         }
-
-        if (argumentsNotYetSeen.none()) {
+        if (state == normal) {
             return oss.str();
         } else {
             return {};
@@ -171,12 +167,16 @@ std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::
     struct VisitorMethods {
         std::string operator()(std::monostate) { return defaultStateString; }
         std::string operator()(PrimitiveTypeId typeId) { return m_identifierRegistry->getName(typeId); }
-        std::string operator()(const ConstructedTypeData& higherOrderData) {
-            std::string formatString = m_identifierRegistry->getName(std::get<0>(higherOrderData));
+        std::string operator()(const ConstructedTypeData& constructedTypeData) {
+            std::string formatString = m_identifierRegistry->getName(std::get<0>(constructedTypeData));
             std::vector<std::string> argumentsStr;
-            const auto& arguments = std::get<1>(higherOrderData).m_typeArguments;
-            std::for_each(arguments.begin(), arguments.end(), [this, &argumentsStr](const TypeRef& typeRef) {
+            const auto& typeArguments = std::get<1>(constructedTypeData).m_typeArguments;
+            std::for_each(typeArguments.begin(), typeArguments.end(), [this, &argumentsStr](const TypeRef& typeRef) {
                 argumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
+            });
+            const auto& valueArguments = std::get<1>(constructedTypeData).m_valueArguments;
+            std::for_each(valueArguments.begin(), valueArguments.end(),[&argumentsStr](const ValueHolder& value) {
+                argumentsStr.emplace_back(value->toString());
             });
             return format(formatString, argumentsStr);
         }

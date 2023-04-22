@@ -181,6 +181,10 @@ TEST(TypeRefTest, toStringSuccess) {
         "Unary0", "UNARY[{0}]", "11111111-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(unary0, foo).toString(), "UNARY[Foofoo]");
+    
+    // Too many arguments is allowed.
+    EXPECT_EQ(babelwires::TypeRef(unary0, foo, foo).toString(), "UNARY[Foofoo]");
+    
     EXPECT_EQ(babelwires::TypeRef(unary0, babelwires::TypeRef(unary0, foo)).toString(), "UNARY[UNARY[Foofoo]]");
 
     babelwires::TypeConstructorId unary1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
@@ -207,6 +211,11 @@ TEST(TypeRefTest, toStringSuccess) {
               "}Foofoo{}UNARY[Foofoo]{");
     EXPECT_EQ(babelwires::TypeRef(unary0, babelwires::TypeRef(binary1, foo, foo)).toString(),
               "UNARY[}Foofoo{}Foofoo{]");
+
+    // Values
+    EXPECT_EQ(babelwires::TypeRef(unary1, babelwires::StringValue("Hello")).toString(), "Hello++");
+    EXPECT_EQ(babelwires::TypeRef(binary0, babelwires::StringValue("Hello"), babelwires::IntValue(42)).toString(), "Hello + 42");
+    EXPECT_EQ(babelwires::TypeRef(binary0, babelwires::TypeConstructorArguments{{foo}, {babelwires::IntValue(42)}}).toString(), "Foofoo + 42");
 }
 
 TEST(TypeRefTest, toStringMalformed) {
@@ -234,12 +243,6 @@ TEST(TypeRefTest, toStringMalformed) {
         "Unary2", "oo{}pp", "33333333-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(unary2, foo).toString(), "MalformedTypeRef{Unary2'1[Foo'1]}");
-
-    babelwires::TypeConstructorId unary3 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
-        "Unary3", "UNARY{0}", "44444444-2222-3333-4444-555566667777",
-        babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    // Too many arguments
-    EXPECT_EQ(babelwires::TypeRef(unary3, foo, foo).toString(), "MalformedTypeRef{Unary3'1[Foo'1,Foo'1]}");
 }
 
 TEST(TypeRefTest, serializeToStringNoDiscriminators) {

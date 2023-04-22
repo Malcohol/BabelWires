@@ -125,3 +125,13 @@ TEST(RationalTypeTest, sameKind) {
 
     EXPECT_EQ(defaultRationalType.getKind(), type->getKind());
 }
+
+TEST(RationalTypeTest, typeName) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef rationalTypeRef(
+        babelwires::RationalTypeConstructor::getThisIdentifier(), babelwires::RationalValue(babelwires::Rational(2, 3)),
+        babelwires::RationalValue(babelwires::Rational(4, 3)), babelwires::RationalValue(1));
+
+    EXPECT_EQ(rationalTypeRef.toString(), "{2/3..1 1/3}");
+}
