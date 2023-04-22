@@ -39,7 +39,7 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     std::sort(sortedNames.begin(), sortedNames.end(), [](const auto& a, const auto& b) {
         return (std::get<0>(a) < std::get<0>(b)) ||
                ((std::get<0>(a) == std::get<0>(b)) &&
-                (std::get<1>(a).serializeToString() < std::get<1>(b).serializeToString()));
+                (std::get<1>(a).toString() < std::get<1>(b).toString()));
     });
 
     m_typeRefs.reserve(typeRefSet.size());

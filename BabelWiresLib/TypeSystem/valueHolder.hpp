@@ -66,6 +66,11 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor);
         void visitFilePaths(FilePathVisitor& visitor);
 
+        /// Not recommended, but can be used to get a pointer to the contained value.
+        /// This is unsafe only in the sense that a caller might be tempted to keep the pointer.
+        /// This is highly likely to dangle if the value is modified, so DO NOT KEEP IT.
+        const Value* getUnsafe() const;
+
       private:
         using PointerToValue = std::shared_ptr<const Value>;
         PointerToValue m_pointerToValue;

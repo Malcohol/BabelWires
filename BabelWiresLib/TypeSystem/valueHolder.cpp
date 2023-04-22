@@ -109,3 +109,7 @@ void babelwires::ValueHolder::visitFilePaths(FilePathVisitor& visitor) {
         copyContentsAndGetNonConst().visitFilePaths(visitor);
     }
 }
+
+const babelwires::Value* babelwires::ValueHolder::getUnsafe() const {
+    return m_pointerToValue.get();
+}

@@ -24,8 +24,10 @@ namespace babelwires {
 
     /// A TypeRef describes a type by storing an Id if it is a primitive type,
     /// or storing the id of its constructor and its arguments.
-    class TypeRef : public ProjectVisitable {
+    class TypeRef : public ProjectVisitable, public Serializable {
       public:
+        SERIALIZABLE(TypeRef, "typeref", void, 1);
+
         TypeRef();
 
         /// A TypeRef describing a primitive type.
@@ -51,12 +53,8 @@ namespace babelwires {
         /// Return a human-readable version of the TypeRef.
         std::string toString() const;
 
-        /// Return a serializable version of the TypeRef.
-        std::string serializeToString() const;
-
-        /// Parse a string as a TypeRef.
-        static TypeRef deserializeFromString(std::string_view str);
-
+        void serializeContents(Serializer& serializer) const override;
+        void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 

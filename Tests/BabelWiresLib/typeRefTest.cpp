@@ -5,6 +5,9 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
+#include <Common/Serialization/XML/xmlDeserializer.hpp>
+#include <Common/Serialization/XML/xmlSerializer.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 
@@ -160,7 +163,7 @@ TEST(TypeRefTest, tryResolveMixed) {
          {babelwires::StringValue(" is this string")}});
 
     const babelwires::Type& constructedTestType = constructedTestTypeRef.resolve(typeSystem);
-    const testUtils::TestType *const newTestType = constructedTestType.as<testUtils::TestType>();
+    const testUtils::TestType* const newTestType = constructedTestType.as<testUtils::TestType>();
     ASSERT_NE(newTestType, nullptr);
     EXPECT_EQ(newTestType->m_defaultValue, "Default value is this string");
 }
@@ -181,10 +184,10 @@ TEST(TypeRefTest, toStringSuccess) {
         "Unary0", "UNARY[{0}]", "11111111-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeRef(unary0, foo).toString(), "UNARY[Foofoo]");
-    
+
     // Too many arguments is allowed.
     EXPECT_EQ(babelwires::TypeRef(unary0, foo, foo).toString(), "UNARY[Foofoo]");
-    
+
     EXPECT_EQ(babelwires::TypeRef(unary0, babelwires::TypeRef(unary0, foo)).toString(), "UNARY[UNARY[Foofoo]]");
 
     babelwires::TypeConstructorId unary1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
@@ -214,8 +217,11 @@ TEST(TypeRefTest, toStringSuccess) {
 
     // Values
     EXPECT_EQ(babelwires::TypeRef(unary1, babelwires::StringValue("Hello")).toString(), "Hello++");
-    EXPECT_EQ(babelwires::TypeRef(binary0, babelwires::StringValue("Hello"), babelwires::IntValue(42)).toString(), "Hello + 42");
-    EXPECT_EQ(babelwires::TypeRef(binary0, babelwires::TypeConstructorArguments{{foo}, {babelwires::IntValue(42)}}).toString(), "Foofoo + 42");
+    EXPECT_EQ(babelwires::TypeRef(binary0, babelwires::StringValue("Hello"), babelwires::IntValue(42)).toString(),
+              "Hello + 42");
+    EXPECT_EQ(babelwires::TypeRef(binary0, babelwires::TypeConstructorArguments{{foo}, {babelwires::IntValue(42)}})
+                  .toString(),
+              "Foofoo + 42");
 }
 
 TEST(TypeRefTest, toStringMalformed) {
@@ -231,139 +237,57 @@ TEST(TypeRefTest, toStringMalformed) {
     babelwires::TypeConstructorId unary0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary0", "{", "11111111-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(unary0, foo).toString(), "MalformedTypeRef{Unary0'1[Foo'1]}");
+    EXPECT_EQ(babelwires::TypeRef(unary0, foo).toString(), "MalformedTypeRef");
 
     babelwires::TypeConstructorId unary1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary1", "oo{", "22222222-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(unary1, foo).toString(), "MalformedTypeRef{Unary1'1[Foo'1]}");
+    EXPECT_EQ(babelwires::TypeRef(unary1, foo).toString(), "MalformedTypeRef");
 
     // This type of format string is not supported.
     babelwires::TypeConstructorId unary2 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary2", "oo{}pp", "33333333-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(unary2, foo).toString(), "MalformedTypeRef{Unary2'1[Foo'1]}");
+    EXPECT_EQ(babelwires::TypeRef(unary2, foo).toString(), "MalformedTypeRef");
 }
 
-TEST(TypeRefTest, serializeToStringNoDiscriminators) {
+TEST(TypeRefTest, serialization) {
     babelwires::TypeRef nullTypeRef;
-    EXPECT_EQ(nullTypeRef.serializeToString(), "[]");
-
-    babelwires::TypeRef primitiveTypeRef(babelwires::PrimitiveTypeId("Foo"));
-    EXPECT_EQ(primitiveTypeRef.serializeToString(), "Foo");
-
+    babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Foo"));
+    babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Bar"));
     babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"));
-    EXPECT_EQ(constructedTypeRef1.serializeToString(), "Foo[Bar]");
-
     babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
                                             babelwires::PrimitiveTypeId("Flerm"));
-    EXPECT_EQ(constructedTypeRef2.serializeToString(), "Foo[Bar,Flerm]");
-
     babelwires::TypeRef constructedTypeRef3(
         babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
         babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")));
-    EXPECT_EQ(constructedTypeRef3.serializeToString(), "Foo[Bar,Flerm[Erm]]");
-
-    babelwires::TypeRef constructedTypeRef4(
+    babelwires::TypeRef constructedTypeRefValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
+    babelwires::TypeRef constructedTypeRefMixed1(
         babelwires::TypeConstructorId("Foo"),
-        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")),
-        babelwires::PrimitiveTypeId("Bar"));
-    EXPECT_EQ(constructedTypeRef4.serializeToString(), "Foo[Flerm[Erm],Bar]");
-}
+        babelwires::TypeConstructorArguments{{babelwires::PrimitiveTypeId("Bar")}, {babelwires::IntValue(16)}});
 
-TEST(TypeRefTest, serializeToStringWithDiscriminators) {
-    babelwires::TypeRef primitiveTypeRef(testUtils::getTestRegisteredMediumIdentifier("Foo", 2));
-    EXPECT_EQ(primitiveTypeRef.serializeToString(), "Foo'2");
+    std::vector<babelwires::TypeRef> testRefs = {
+        nullTypeRef,         primitiveTypeRef1,   primitiveTypeRef2,        constructedTypeRef1,
+        constructedTypeRef2, constructedTypeRef3, constructedTypeRefValue1, constructedTypeRefMixed1};
 
-    babelwires::TypeRef constructedTypeRef1(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
-                                            testUtils::getTestRegisteredMediumIdentifier("Bar", 4));
-    EXPECT_EQ(constructedTypeRef1.serializeToString(), "Foo'2[Bar'4]");
+    for (auto typeRef : testRefs) {
+        std::string serializedContents;
+        {
+            babelwires::XmlSerializer serializer;
+            serializer.serializeObject(typeRef);
+            std::ostringstream os;
+            serializer.write(os);
+            serializedContents = std::move(os.str());
+        }
+        testUtils::TestLog log;
+        babelwires::AutomaticDeserializationRegistry deserializationReg;
+        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+        auto typeRefPtr = deserializer.deserializeObject<babelwires::TypeRef>();
+        deserializer.finalize();
 
-    babelwires::TypeRef constructedTypeRef2(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
-                                            testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
-                                            testUtils::getTestRegisteredMediumIdentifier("Flerm", 1));
-    EXPECT_EQ(constructedTypeRef2.serializeToString(), "Foo'2[Bar'4,Flerm'1]");
-
-    babelwires::TypeRef constructedTypeRef3(
-        testUtils::getTestRegisteredMediumIdentifier("Foo", 2), testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
-        babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
-                            testUtils::getTestRegisteredMediumIdentifier("Erm", 13)));
-    EXPECT_EQ(constructedTypeRef3.serializeToString(), "Foo'2[Bar'4,Flerm'1[Erm'13]]");
-
-    babelwires::TypeRef constructedTypeRef4(
-        testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
-        babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
-                            testUtils::getTestRegisteredMediumIdentifier("Erm", 13)),
-        testUtils::getTestRegisteredMediumIdentifier("Bar", 4));
-    EXPECT_EQ(constructedTypeRef4.serializeToString(), "Foo'2[Flerm'1[Erm'13],Bar'4]");
-}
-
-TEST(TypeRefTest, deserializeFromStringNoDiscriminatorsSuccess) {
-    babelwires::TypeRef primitiveTypeRef(babelwires::TypeConstructorId("Foo"));
-    EXPECT_EQ(primitiveTypeRef, babelwires::TypeRef::deserializeFromString("Foo"));
-
-    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"));
-    EXPECT_EQ(constructedTypeRef1, babelwires::TypeRef::deserializeFromString("Foo[Bar]"));
-
-    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-                                            babelwires::PrimitiveTypeId("Flerm"));
-    EXPECT_EQ(constructedTypeRef2, babelwires::TypeRef::deserializeFromString("Foo[Bar,Flerm]"));
-
-    babelwires::TypeRef constructedTypeRef3(
-        babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")));
-    EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo[Bar,Flerm[Erm]]"));
-
-    babelwires::TypeRef constructedTypeRef4(
-        babelwires::TypeConstructorId("Foo"),
-        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")),
-        babelwires::PrimitiveTypeId("Bar"));
-    EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo[Flerm[Erm],Bar]"));
-}
-
-TEST(TypeRefTest, deserializeFromStringWithDiscriminatorsSuccess) {
-    EXPECT_EQ(babelwires::TypeRef(), babelwires::TypeRef::deserializeFromString("[]"));
-
-    babelwires::TypeRef primitiveTypeRef(testUtils::getTestRegisteredMediumIdentifier("Foo", 2));
-    EXPECT_EQ(primitiveTypeRef, babelwires::TypeRef::deserializeFromString("Foo'2"));
-
-    babelwires::TypeRef constructedTypeRef1(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
-                                            testUtils::getTestRegisteredMediumIdentifier("Bar", 4));
-    EXPECT_EQ(constructedTypeRef1, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4]"));
-
-    babelwires::TypeRef constructedTypeRef2(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
-                                            testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
-                                            testUtils::getTestRegisteredMediumIdentifier("Flerm", 1));
-    EXPECT_EQ(constructedTypeRef2, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4,Flerm'1]"));
-
-    babelwires::TypeRef constructedTypeRef3(
-        testUtils::getTestRegisteredMediumIdentifier("Foo", 2), testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
-        babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
-                            testUtils::getTestRegisteredMediumIdentifier("Erm", 13)));
-    EXPECT_EQ(constructedTypeRef3, babelwires::TypeRef::deserializeFromString("Foo'2[Bar'4,Flerm'1[Erm'13]]"));
-
-    babelwires::TypeRef constructedTypeRef4(
-        testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
-        babelwires::TypeRef(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
-                            testUtils::getTestRegisteredMediumIdentifier("Erm", 13)),
-        testUtils::getTestRegisteredMediumIdentifier("Bar", 4));
-    EXPECT_EQ(constructedTypeRef4, babelwires::TypeRef::deserializeFromString("Foo'2[Flerm'1[Erm'13],Bar'4]"));
-}
-
-TEST(TypeRefTest, deserializeFromStringFailure) {
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString(""), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("["), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("]"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("[Foo]"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo[Bar"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo[Boo,"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo[,"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo,"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo]"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo[Bom]Flerm"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo Bee"), babelwires::ParseException);
-    // Too many arguments
-    EXPECT_THROW(babelwires::TypeRef::deserializeFromString("Foo[A,B,C,D,E,F,G,H,I,J,K]"), babelwires::ParseException);
+        ASSERT_NE(typeRefPtr, nullptr);
+        EXPECT_EQ(*typeRefPtr, typeRef);
+    }
 }
 
 TEST(TypeRefTest, visitIdentifiers) {

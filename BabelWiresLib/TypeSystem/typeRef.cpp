@@ -10,15 +10,13 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Hash/hash.hpp>
+#include <Common/Serialization/deserializer.hpp>
+#include <Common/Serialization/serializer.hpp>
 
 #include <bitset>
 
 namespace {
-    // I would rather use '<' and '>', but they get escaped in XML, which makes project files ugly.
-    constexpr char openChar = '[';
-    constexpr char closeChar = ']';
     constexpr char defaultStateString[] = "[]";
-    constexpr char parseChars[] = "[],";
 } // namespace
 
 babelwires::TypeRef::TypeRef() = default;
@@ -63,33 +61,6 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
-    return std::visit(visitorMethods, m_storage);
-}
-
-std::string babelwires::TypeRef::serializeToString() const {
-    struct VisitorMethods {
-        std::string operator()(std::monostate) { return defaultStateString; }
-        std::string operator()(PrimitiveTypeId typeId) { return typeId.serializeToString(); }
-        std::string operator()(const ConstructedTypeData& higherOrderData) {
-            std::ostringstream os;
-            os << std::get<0>(higherOrderData).serializeToString();
-            const auto& arguments = std::get<1>(higherOrderData).m_typeArguments;
-            if (arguments.empty()) {
-                // Correctly formed TypeRef should not hit this case.
-                // It can be hit when falling-back to this representation
-                // if toString formatting fails.
-                os << defaultStateString;
-            } else {
-                char sep = openChar;
-                for (const auto& arg : arguments) {
-                    os << sep << arg.serializeToString();
-                    sep = ',';
-                }
-                os << closeChar;
-            }
-            return os.str();
-        }
-    } visitorMethods;
     return std::visit(visitorMethods, m_storage);
 }
 
@@ -175,9 +146,8 @@ std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::
                 argumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
             });
             const auto& valueArguments = std::get<1>(constructedTypeData).m_valueArguments;
-            std::for_each(valueArguments.begin(), valueArguments.end(),[&argumentsStr](const ValueHolder& value) {
-                argumentsStr.emplace_back(value->toString());
-            });
+            std::for_each(valueArguments.begin(), valueArguments.end(),
+                          [&argumentsStr](const ValueHolder& value) { argumentsStr.emplace_back(value->toString()); });
             return format(formatString, argumentsStr);
         }
         babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;
@@ -186,7 +156,7 @@ std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::
     if (!str.empty()) {
         return str;
     } else {
-        return "MalformedTypeRef{" + serializeToString() + "}";
+        return "MalformedTypeRef";
     }
 }
 
@@ -195,55 +165,48 @@ std::string babelwires::TypeRef::toString() const {
     return toStringHelper(regScope);
 }
 
-std::tuple<babelwires::TypeRef, std::string_view::size_type> babelwires::TypeRef::parseHelper(std::string_view str) {
-    std::string_view::size_type next = 0;
-    auto IdEnd = str.find_first_of(parseChars, next);
-    if (IdEnd == -1) {
-        return {TypeRef{MediumId::deserializeFromString(str)}, str.size()};
-    }
-    if ((IdEnd + 1 < str.size()) && (IdEnd == next) && (str[IdEnd] == openChar) && (str[IdEnd + 1] == closeChar)) {
-        return {TypeRef(), IdEnd + 2};
-    }
-    const MediumId startId = MediumId::deserializeFromString(str.substr(next, IdEnd));
-    next = IdEnd;
-    if (str[next] != openChar) {
-        return {startId, next};
-    }
-    ++next;
-    TypeConstructorArguments arguments;
-    if (next == str.size()) {
-        throw ParseException() << "Unterminated TypeRef";
-    }
-    while (1) {
-        auto tuple = parseHelper(str.substr(next));
-        arguments.m_typeArguments.emplace_back(std::move(std::get<0>(tuple)));
-        if (arguments.m_typeArguments.size() > TypeConstructorArguments::s_maxNumArguments) {
-            throw ParseException() << "TypeRef too many arguments (maximum allowed is "
-                                   << TypeConstructorArguments::s_maxNumArguments << ")";
+void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
+    struct VisitorMethods {
+        void operator()(std::monostate) {}
+        void operator()(const PrimitiveTypeId& typeId) { m_serializer.serializeValue("primitiveTypeId", typeId); }
+        void operator()(const ConstructedTypeData& constructedTypeData) {
+            m_serializer.serializeValue("typeConstructorId", std::get<0>(constructedTypeData));
+            m_serializer.serializeArray("typeArguments", std::get<1>(constructedTypeData).m_typeArguments);
+            std::vector<const Value*> tmpValueArray;
+            std::for_each(std::get<1>(constructedTypeData).m_valueArguments.begin(), std::get<1>(constructedTypeData).m_valueArguments.end(),
+                [&tmpValueArray](const ValueHolder& valueHolder){tmpValueArray.emplace_back(valueHolder.getUnsafe());});
+            m_serializer.serializeArray("valueArguments", tmpValueArray);
         }
-        assert((std::get<1>(tuple) > 0) && "Did not advance while parsing");
-        next += std::get<1>(tuple);
-        if (next == str.size()) {
-            throw ParseException() << "Unterminated TypeRef";
-        }
-        if (str[next] == ',') {
-            ++next;
-        } else if (str[next] == closeChar) {
-            ++next;
-            break;
-        } else {
-            throw ParseException() << "Trailing characters in inner TypeRef";
-        }
-    }
-    return {TypeRef{startId, std::move(arguments)}, next};
+        Serializer& m_serializer;
+    } visitorMethods{serializer};
+    std::visit(visitorMethods, m_storage);
 }
 
-babelwires::TypeRef babelwires::TypeRef::deserializeFromString(std::string_view str) {
-    auto parseResult = parseHelper(str);
-    if (std::get<1>(parseResult) != str.size()) {
-        throw ParseException() << "Trailing characters in TypeRef";
+void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
+    PrimitiveTypeId primitiveTypeId;
+    if (deserializer.deserializeValue("primitiveTypeId", primitiveTypeId,
+                                      babelwires::Deserializer::IsOptional::Optional)) {
+        m_storage = primitiveTypeId;
+    } else {
+        TypeConstructorId typeConstructorId;
+        if (deserializer.deserializeValue("typeConstructorId", typeConstructorId,
+                                          babelwires::Deserializer::IsOptional::Optional)) {
+            TypeConstructorArguments arguments;
+            auto typeIt = deserializer.deserializeArray<TypeRef>("typeArguments", Deserializer::IsOptional::Optional);
+            while (typeIt.isValid()) {
+                arguments.m_typeArguments.emplace_back(std::move(*typeIt.getObject()));
+                ++typeIt;
+            }
+            auto valueIt = deserializer.deserializeArray<Value>("valueArguments", Deserializer::IsOptional::Optional);
+            while (valueIt.isValid()) {
+                arguments.m_valueArguments.emplace_back(valueIt.getObject());
+                ++valueIt;
+            }
+            m_storage = ConstructedTypeData{typeConstructorId, std::move(arguments)};
+        } else {
+            m_storage = {};
+        }
     }
-    return std::get<0>(parseResult);
 }
 
 void babelwires::TypeRef::visitIdentifiers(IdentifierVisitor& visitor) {
