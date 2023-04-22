@@ -26,11 +26,11 @@ namespace testUtils {
         static constexpr char s_op0FieldName[] = "optional field 0";
         static constexpr char s_op1FieldName[] = "optional field 1";
 
-        static constexpr char s_subrecordUuid[] = "00000000-1111-2222-3333-880000000000";
-        static constexpr char s_ff0Uuid[] = "00000000-1111-2222-3333-880000000001";
-        static constexpr char s_ff1Uuid[] = "00000000-1111-2222-3333-880000000002";
-        static constexpr char s_op0Uuid[] = "00000000-1111-2222-3333-880000000003";
-        static constexpr char s_op1Uuid[] = "00000000-1111-2222-3333-880000000004";
+        static constexpr char s_subrecordUuid[] = "00000000-1111-2222-3333-770000000000";
+        static constexpr char s_ff0Uuid[] = "00000000-1111-2222-3333-770000000001";
+        static constexpr char s_ff1Uuid[] = "00000000-1111-2222-3333-770000000002";
+        static constexpr char s_op0Uuid[] = "00000000-1111-2222-3333-770000000003";
+        static constexpr char s_op1Uuid[] = "00000000-1111-2222-3333-770000000004";
 
         babelwires::ShortId m_subrecordId;
         babelwires::ShortId m_ff0Id;

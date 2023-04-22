@@ -3,8 +3,7 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
-
-#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -20,7 +19,6 @@ namespace {
 } // namespace
 
 TEST(TargetFileElementTest, targetFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     std::ostringstream tempFileName;
@@ -54,9 +52,8 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
         babelwires::FeaturePath::deserializeFromString(testUtils::TestFileFeature::s_intChildInitializer);
 
     {
-        babelwires::IntValueAssignmentData intMod;
+        babelwires::ValueAssignmentData intMod(babelwires::IntValue(30));
         intMod.m_pathToFeature = pathToInt;
-        intMod.m_value = 30;
         targetFileElement->addModifier(testEnvironment.m_log, intMod);
     }
 
@@ -76,7 +73,6 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
 }
 
 TEST(TargetFileElementTest, changeFile) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.

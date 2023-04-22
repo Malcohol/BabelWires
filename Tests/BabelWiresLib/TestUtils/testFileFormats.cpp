@@ -1,7 +1,5 @@
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 
-#include <BabelWiresLib/Features/featureMixins.hpp>
-
 #include <Common/IO/fileDataSource.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
@@ -24,7 +22,7 @@ testUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext& co
           s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
     m_intChildFeature =
-        addField(std::make_unique<babelwires::HasStaticRange<babelwires::IntFeature, 0, 255>>(), m_intChildId);
+        addField(std::make_unique<babelwires::IntFeature>(0, 255), m_intChildId);
 }
 
 babelwires::LongId testUtils::TestSourceFileFormat::getThisIdentifier() {

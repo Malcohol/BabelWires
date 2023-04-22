@@ -78,6 +78,10 @@ const tinyxml2::XMLNode* babelwires::XmlDeserializer::getCurrentNode() const {
     }
 }
 
+bool babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::uint64_t& value, IsOptional isOptional) {
+    return getIntValue(*getCurrentElement(), key, value, isOptional);
+}
+
 bool babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::uint32_t& value, IsOptional isOptional) {
     return getIntValue(*getCurrentElement(), key, value, isOptional);
 }
@@ -91,6 +95,10 @@ bool babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::ui
 }
 
 bool babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::int32_t& value, IsOptional isOptional) {
+    return getIntValue(*getCurrentElement(), key, value, isOptional);
+}
+
+bool babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::int64_t& value, IsOptional isOptional) {
     return getIntValue(*getCurrentElement(), key, value, isOptional);
 }
 

@@ -14,10 +14,8 @@
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
 TEST(ChangeEntryKindCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-
+    
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -51,10 +49,8 @@ TEST(ChangeEntryKindCommandTest, executeAndUndo) {
 }
 
 TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-
+    
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -79,10 +75,8 @@ TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {
 }
 
 TEST(ChangeEntryKindCommandTest, failNotFallbackAtEnd) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-
+    
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});

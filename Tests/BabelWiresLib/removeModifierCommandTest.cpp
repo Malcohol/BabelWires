@@ -6,6 +6,7 @@
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -16,7 +17,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp>
 
 TEST(RemoveModifierCommandTest, executeAndUndoArray) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -28,9 +28,8 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     }
     {
         // This is in the default size of the array, so should be unaffected.
-        babelwires::IntValueAssignmentData intAssignment;
+        babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
         intAssignment.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
-        intAssignment.m_value = 12;
         elementData.m_modifiers.emplace_back(intAssignment.clone());
     }
     {
@@ -42,9 +41,8 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
         elementData.m_modifiers.emplace_back(inputConnection.clone());
     }
     {
-        babelwires::IntValueAssignmentData intAssignment2;
+        babelwires::ValueAssignmentData intAssignment2(babelwires::IntValue(18));
         intAssignment2.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_4;
-        intAssignment2.m_value = 18;
         elementData.m_modifiers.emplace_back(intAssignment2.clone());
     }
 
@@ -113,7 +111,6 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 
 TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
 {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithOptionalsData());
@@ -135,21 +132,18 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
         testEnvironment.m_project.addModifier(elementId, activateOptionalsModifierData);
     }
     {
-        babelwires::IntValueAssignmentData intAssignment;
+        babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(-19));
         intAssignment.m_pathToFeature = testUtils::TestFeatureWithOptionals::s_pathToOp0;
-        intAssignment.m_value = -19;
         testEnvironment.m_project.addModifier(elementId, intAssignment);
     }
     {
-        babelwires::IntValueAssignmentData intAssignment;
+        babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
         intAssignment.m_pathToFeature = testUtils::TestFeatureWithOptionals::s_pathToOp1_Array_1;
-        intAssignment.m_value = 12;
         testEnvironment.m_project.addModifier(elementId, intAssignment);
     }
     {
-        babelwires::IntValueAssignmentData intAssignment;
+        babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(100));
         intAssignment.m_pathToFeature = testUtils::TestFeatureWithOptionals::s_pathToFf0;
-        intAssignment.m_value = 100;
         testEnvironment.m_project.addModifier(elementId, intAssignment);
     }
 
@@ -214,7 +208,6 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
 }
 
 TEST(RemoveModifierCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveModifierCommand command("Test command", 51,
                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
@@ -224,7 +217,6 @@ TEST(RemoveModifierCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveModifierCommandTest, failSafelyNoModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveModifierCommand command("Test command", 51,
                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"));

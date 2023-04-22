@@ -3,6 +3,7 @@
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -11,7 +12,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(MoveElementCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -45,12 +45,10 @@ TEST(MoveElementCommandTest, executeAndUndo) {
 }
 
 TEST(MoveElementCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
-    modData.m_value = 86;
 
     babelwires::MoveElementCommand command("Test command", 57, babelwires::UiPosition{100, 12});
 
@@ -59,7 +57,6 @@ TEST(MoveElementCommandTest, failSafelyNoElement) {
 }
 
 TEST(MoveElementCommandTest, subsumeMoves) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -97,7 +94,6 @@ TEST(MoveElementCommandTest, subsumeMoves) {
 }
 
 TEST(MoveElementCommandTest, subsumeMovesDelay) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;

@@ -3,6 +3,7 @@
 #include <BabelWiresLib/ProjectExtra/projectObserver.hpp>
 
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
@@ -64,8 +65,7 @@ namespace {
 
 namespace {
     void testFeatureElementAdded(bool shouldIgnore) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
         ObservedChanges observedChanges(projectObserver);
@@ -106,8 +106,7 @@ TEST(ProjectObserverTest, featureElementAddedIgnore) {
 
 namespace {
     void testFeatureElementRemoved(bool shouldIgnore) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         const babelwires::ElementId elementId =
             testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -154,8 +153,7 @@ TEST(ProjectObserverTest, featureElementRemovedIgnore) {
 
 namespace {
     void testFeatureElementMoved(bool shouldIgnore) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         const babelwires::ElementId elementId =
             testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -203,8 +201,7 @@ TEST(ProjectObserverTest, featureElementMovedIgnore) {
 
 namespace {
     void testFeatureElementsResized(bool shouldIgnore) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         const babelwires::ElementId elementId =
             testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -252,8 +249,7 @@ TEST(ProjectObserverTest, featureElementResizedIgnore) {
 
 namespace {
     void testConnectionAdded(bool shouldIgnore, bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         testUtils::TestFeatureElementData sourceElementData;
         if (sourceRecordIsExpanded) {
@@ -351,8 +347,7 @@ TEST(ProjectObserverTest, connectionAddedBothTruncatedIgnore) {
 
 namespace {
     void testConnectionRemoved(bool shouldIgnore, bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         testUtils::TestFeatureElementData sourceElementData;
         if (sourceRecordIsExpanded) {
@@ -448,7 +443,6 @@ TEST(ProjectObserverTest, connectionRemovedBothTruncatedIgnore) {
 }
 
 TEST(ProjectObserverTest, featureElementContentsChanged) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData sourceElementData;
@@ -469,9 +463,8 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
     babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
     ObservedChanges observedChanges(projectObserver);
 
-    babelwires::IntValueAssignmentData intData;
+    babelwires::ValueAssignmentData intData(babelwires::IntValue(14));
     intData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-    intData.m_value = 14;
     testEnvironment.m_project.addModifier(sourceElementId, intData);
 
     testEnvironment.m_project.process();

@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/processorElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
@@ -8,6 +7,7 @@
 #include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
@@ -44,18 +44,17 @@ namespace {
     }
 
     void setModifiers(babelwires::ElementData& data, const char* pathStep) {
-        auto newMod = std::make_unique<babelwires::IntValueAssignmentData>();
+        auto newMod = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(12));
         newMod->m_pathToFeature = babelwires::FeaturePath::deserializeFromString(pathStep);
-        newMod->m_value = 12;
         data.m_modifiers.emplace_back(std::move(newMod));
     }
 
     void checkModifiers(const babelwires::ElementData& data, const char* pathStep) {
         EXPECT_EQ(data.m_modifiers.size(), 1);
-        EXPECT_NE(data.m_modifiers[0]->as<babelwires::IntValueAssignmentData>(), nullptr);
-        const auto& mod = static_cast<const babelwires::IntValueAssignmentData&>(*data.m_modifiers[0]);
+        EXPECT_NE(data.m_modifiers[0]->as<babelwires::ValueAssignmentData>(), nullptr);
+        const auto& mod = static_cast<const babelwires::ValueAssignmentData&>(*data.m_modifiers[0]);
         EXPECT_EQ(mod.m_pathToFeature, babelwires::FeaturePath::deserializeFromString(pathStep));
-        EXPECT_EQ(mod.m_value, 12);
+        EXPECT_EQ(mod.getValue()->as<babelwires::IntValue>()->get(), 12);
     }
 } // namespace
 
@@ -112,7 +111,6 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
 }
 
 TEST(ElementDataTest, sourceFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
@@ -219,7 +217,6 @@ TEST(ElementDataTest, targetFileDataSerialize) {
 }
 
 TEST(ElementDataTest, targetFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::TargetFileElementData data;
@@ -308,7 +305,6 @@ TEST(ElementDataTest, processorDataSerialize) {
 }
 
 TEST(ElementDataTest, processorDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;

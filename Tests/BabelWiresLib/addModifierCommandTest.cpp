@@ -3,6 +3,7 @@
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -12,7 +13,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(AddModifierCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -26,9 +26,8 @@ TEST(AddModifierCommandTest, executeAndUndo) {
     EXPECT_NE(getInputFeature()->m_intFeature2->get(), 86);
     EXPECT_EQ(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-    modData.m_value = 86;
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
 
@@ -52,15 +51,13 @@ TEST(AddModifierCommandTest, executeAndUndo) {
 }
 
 TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
     {
-        babelwires::IntValueAssignmentData modData;
+        babelwires::ValueAssignmentData modData(babelwires::IntValue(77));
         modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-        modData.m_value = 77;
-        elementData.m_modifiers.emplace_back(modData.clone());
+       elementData.m_modifiers.emplace_back(modData.clone());
     }
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
@@ -74,9 +71,8 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 77);
     EXPECT_NE(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-    modData.m_value = 86;
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
 
@@ -100,12 +96,10 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
 }
 
 TEST(AddModifierCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
-    modData.m_value = 86;
 
     babelwires::AddModifierCommand command("Test command", 51, modData.clone());
 
@@ -114,12 +108,10 @@ TEST(AddModifierCommandTest, failSafelyNoElement) {
 }
 
 TEST(AddModifierCommandTest, failSafelyNoTarget) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
-    modData.m_value = 86;
 
     babelwires::AddModifierCommand command("Test command", 51, modData.clone());
 

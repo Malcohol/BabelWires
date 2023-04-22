@@ -14,7 +14,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp>
 
 TEST(ActivateOptionalsCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithOptionalsData());
@@ -65,7 +64,6 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
 
 
 TEST(ActivateOptionalsCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
@@ -77,7 +75,6 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoElement) {
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
@@ -95,7 +92,6 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithOptionalsData());
@@ -113,7 +109,6 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithOptionalsData());
@@ -133,7 +128,6 @@ TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
 }
 
 TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithOptionalsData());

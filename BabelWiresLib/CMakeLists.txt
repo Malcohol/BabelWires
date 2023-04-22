@@ -22,23 +22,15 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/activateOptionalsModifierData.cpp
 	Project/Modifiers/mapValueAssignmentData.cpp
 	Project/Modifiers/selectUnionBranchModifierData.cpp
+	Project/Modifiers/valueAssignmentData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp
 	ProjectExtra/projectObserver.cpp
 	ProjectExtra/connectionDescription.cpp
 	ProjectExtra/projectUtilities.cpp
-	Enums/enum.cpp
-	Enums/addBlankToEnum.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
-	FileFormat/filePath.cpp
-	TypeSystem/typeSystem.cpp
-	TypeSystem/intType.cpp
-	TypeSystem/intValue.cpp
-	Enums/enumValue.cpp
-	TypeSystem/type.cpp
-	TypeSystem/typeRef.cpp
 	Maps/Commands/addEntryToMapCommand.cpp
 	Maps/Commands/removeEntryFromMapCommand.cpp
 	Maps/Commands/replaceMapEntryCommand.cpp
@@ -64,13 +56,10 @@ SET( BABELWIRESLIB_SRCS
 	Features/recordFeature.cpp
 	Features/recordWithOptionalsFeature.cpp
 	Features/arrayFeature.cpp
-	Features/enumFeature.cpp
-	Features/numericFeature.cpp
-	Features/stringFeature.cpp
 	Features/mapFeature.cpp
+	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp
 	Features/Path/pathStep.cpp
-	Features/Utilities/featureXml.cpp
 	Features/rootFeature.cpp
 	Features/valueFeature.cpp
 	Features/unionFeature.cpp
@@ -92,6 +81,27 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/resizeElementCommand.cpp
 	Project/Commands/selectUnionBranchCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
+	TypeSystem/typeSystem.cpp
+	Types/Enum/enum.cpp
+	Types/Enum/addBlankToEnum.cpp
+	Types/Enum/enumValue.cpp
+	Types/Enum/enumFeature.cpp
+	Types/Int/intType.cpp
+	Types/Int/intValue.cpp
+	Types/Int/intTypeConstructor.cpp
+	Types/Int/intFeature.cpp
+	Types/Rational/rationalFeature.cpp
+	Types/Rational/rationalValue.cpp
+	Types/Rational/rationalType.cpp
+	Types/Rational/rationalTypeConstructor.cpp
+	Types/String/stringType.cpp
+	Types/String/stringValue.cpp
+	Types/String/stringFeature.cpp
+	TypeSystem/type.cpp
+	TypeSystem/typeRef.cpp
+	TypeSystem/typeConstructorArguments.cpp
+	TypeSystem/typeConstructor.cpp
+	TypeSystem/valueHolder.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp
 	ValueNames/contiguousValueNamesImpl.cpp

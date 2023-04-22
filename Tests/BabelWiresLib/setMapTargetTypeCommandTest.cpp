@@ -7,7 +7,7 @@
 #include <BabelWiresLib/Maps/mapProject.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -16,10 +16,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 
 TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    testUtils::addTestEnumTypes(environment.m_typeSystem);
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -37,17 +34,17 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
 
     babelwires::EnumValue newTargetValue;
     newTargetValue.set("Erm");
-    oneToOne.setTargetValue(newTargetValue.clone());
-    allToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setTargetValue(newTargetValue);
+    allToOne.setTargetValue(newTargetValue);
 
     mapData.emplaceBack(oneToOne.clone());
 
     newTargetValue.set("Bar");
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setTargetValue(newTargetValue);
     mapData.emplaceBack(oneToOne.clone());
 
     newTargetValue.set("Oom");
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setTargetValue(newTargetValue);
     mapData.emplaceBack(oneToOne.clone());
 
     mapData.emplaceBack(allToOne.clone());
@@ -81,11 +78,8 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
 }
 
 TEST(SetMapTargetTypeCommandTest, failWithUnallowedType) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-
+        
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});

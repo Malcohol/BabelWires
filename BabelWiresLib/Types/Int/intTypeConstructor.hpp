@@ -1,0 +1,34 @@
+/**
+ * A TypeConstructor which constructs an int type with a particular range and default.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
+#include <BabelWiresLib/Types/Int/intValue.hpp>
+
+namespace babelwires {
+    /// Construct a new IntType from three IntValues: min, max and default.
+    class IntTypeConstructor : public TypeConstructor {
+      public:
+        /// Note that the we don't represent the default in the name.
+        TYPE_CONSTRUCTOR("Int", "{{{0}..{1}}}", "96dc61c3-5940-47c4-9d98-9f06d5f01157", 1);
+
+        std::unique_ptr<Type> constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+                                            const std::vector<ValueHolder>& valueArguments) const override;
+
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA,
+                                          const TypeConstructorArguments& argumentsB) const override;
+
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments,
+                                          const TypeRef& other) const override;
+
+      private:
+        /// Throws a TypeSystem exception if the arguments are not of the expect type.
+        static std::tuple<Range<IntValue::NativeType>, IntValue::NativeType>
+        extractValueArguments(const std::vector<ValueHolder>& valueArguments);
+    };
+} // namespace babelwires

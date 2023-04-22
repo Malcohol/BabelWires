@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
-#include <BabelWiresLib/Features/enumFeature.hpp>
+#include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
+#include <BabelWiresLib/Types/Enum/enumFeature.hpp>
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -52,6 +52,4 @@ namespace testUtils {
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("SubSubEnum2"), 1);
         TestSubSubEnum2();
     };
-
-    void addTestEnumTypes(babelwires::TypeSystem& typeSystem);
 } // namespace testUtils

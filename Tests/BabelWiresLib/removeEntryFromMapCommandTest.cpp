@@ -14,10 +14,8 @@
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
 TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-
+    
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -38,8 +36,8 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
     newSourceValue.m_value = "Source";
     testUtils::TestValue newTargetValue;
     newTargetValue.m_value = "Target";
-    oneToOne.setSourceValue(newSourceValue.clone());
-    oneToOne.setTargetValue(newTargetValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setTargetValue(newTargetValue);
 
     mapData.emplaceBack(oneToOne.clone());
     mapData.emplaceBack(allToOne.clone());
@@ -64,10 +62,8 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
 }
 
 TEST(RemoveEntryFromMapCommandTest, removeInvalid) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-
+    
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
@@ -113,10 +109,8 @@ TEST(RemoveEntryFromMapCommandTest, removeInvalid) {
 }
 
 TEST(RemoveEntryFromMapCommandTest, failAtEnd) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-
+    
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});

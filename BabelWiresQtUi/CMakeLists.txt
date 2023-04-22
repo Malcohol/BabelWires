@@ -13,18 +13,15 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/modifyModelScope.cpp
     ModelBridge/accessModelScope.cpp
     ModelBridge/RowModels/arrayRowModel.cpp
-    ModelBridge/RowModels/enumRowModel.cpp
     ModelBridge/RowModels/fileRowModel.cpp
-    ModelBridge/RowModels/intRowModel.cpp
     ModelBridge/RowModels/mapRowModel.cpp
-    ModelBridge/RowModels/rationalRowModel.cpp
     ModelBridge/RowModels/recordWithOptionalsRowModel.cpp
     ModelBridge/RowModels/rowModel.cpp
     ModelBridge/RowModels/rowModelDispatcher.cpp
     ModelBridge/RowModels/rowModelRegistry.cpp
     ModelBridge/RowModels/rowModelWithRichText.cpp
-    ModelBridge/RowModels/stringRowModel.cpp
     ModelBridge/RowModels/unionRowModel.cpp
+    ModelBridge/RowModels/valueRowModel.cpp
     ValueEditors/dropDownValueEditor.cpp
     ValueEditors/spinBoxValueEditor.cpp
     ValueEditors/lineEditValueEditor.cpp
@@ -51,10 +48,6 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/typeWidget.cpp
     ComplexValueEditors/MapEditor/mapModel.cpp
     ComplexValueEditors/MapEditor/mapModelDelegate.cpp
-    ComplexValueEditors/ValueModels/enumValueModel.cpp
-    ComplexValueEditors/ValueModels/intValueModel.cpp
-    ComplexValueEditors/ValueModels/valueModel.cpp
-    ComplexValueEditors/ValueModels/valueModelDispatcher.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/oneToOneMapEntryModel.cpp
@@ -65,6 +58,12 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/MapContextMenuActions/changeEntryKindContextMenuAction.cpp
     ContextMenu/contextMenu.cpp
     ContextMenu/contextMenuAction.cpp
+    ValueModels/enumValueModel.cpp
+    ValueModels/intValueModel.cpp
+    ValueModels/rationalValueModel.cpp
+    ValueModels/stringValueModel.cpp
+    ValueModels/valueModel.cpp
+    ValueModels/valueModelDispatcher.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

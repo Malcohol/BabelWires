@@ -6,6 +6,7 @@
 #include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
@@ -43,9 +44,8 @@ testUtils::TestProjectData::TestProjectData()
             data.m_modifiers.emplace_back(modData.clone());
         }
         {
-            babelwires::IntValueAssignmentData modData;
+            babelwires::ValueAssignmentData modData(babelwires::IntValue(44));
             modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-            modData.m_value = 44;
             data.m_modifiers.emplace_back(modData.clone());
         }
         data.m_expandedPaths.emplace_back(testUtils::TestRootFeature::s_pathToArray);
@@ -96,7 +96,7 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
                   testUtils::TestFileFeature::s_intChildInitializer);
         EXPECT_EQ(modData1->m_pathToSourceFeature.getStep(0).asField()->getDiscriminator(), fileIntChildDiscriminator);
 
-        auto modData2 = sortedModifiers[1]->as<babelwires::IntValueAssignmentData>();
+        auto modData2 = sortedModifiers[1]->as<babelwires::ValueAssignmentData>();
         ASSERT_TRUE(modData2);
         ASSERT_GE(modData2->m_pathToFeature.getNumSteps(), 2);
         EXPECT_EQ(*modData2->m_pathToFeature.getStep(0).asField(),
@@ -148,7 +148,7 @@ void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::
     auto modData1 = m_elements[1]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
     modData1->m_pathToFeature.tryFollow(testRecord);
     modData1->m_pathToSourceFeature.tryFollow(testFileFeature);
-    auto modData2 = m_elements[1]->m_modifiers[1].get()->as<babelwires::IntValueAssignmentData>();
+    auto modData2 = m_elements[1]->m_modifiers[1].get()->as<babelwires::ValueAssignmentData>();
     modData2->m_pathToFeature.tryFollow(testRecord);
     m_elements[1]->m_expandedPaths[0].tryFollow(testRecord);
 }

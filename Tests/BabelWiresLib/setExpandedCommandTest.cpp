@@ -11,7 +11,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(SetExpandedCommandTest, executeAndUndoTrue) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -42,7 +41,6 @@ TEST(SetExpandedCommandTest, executeAndUndoTrue) {
 }
 
 TEST(SetExpandedCommandTest, executeAndUndoFalse) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -76,7 +74,6 @@ TEST(SetExpandedCommandTest, executeAndUndoFalse) {
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::SetExpandedCommand command("Test command", 51,
                                            babelwires::FeaturePath::deserializeFromString("qqq/zzz"), true);
@@ -86,7 +83,6 @@ TEST(SetExpandedCommandTest, failSafelyNoElement) {
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoFeature) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::SetExpandedCommand command("Test command", 51,
                                            babelwires::FeaturePath::deserializeFromString("qqq/zzz"), true);
@@ -102,7 +98,6 @@ TEST(SetExpandedCommandTest, failSafelyNoFeature) {
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoCompound) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::SetExpandedCommand command("Test command", 51, testUtils::TestRootFeature::s_pathToInt2, true);
 

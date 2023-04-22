@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Features/featureMixins.hpp>
-#include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/unionFeature.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -20,7 +20,10 @@ TEST(UnionFeatureTest, fieldOrder) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 
@@ -122,7 +125,10 @@ TEST(UnionFeatureTest, fieldOrderWithOverlappingBranches) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 
@@ -236,22 +242,25 @@ TEST(UnionFeatureTest, defaults) {
     babelwires::ShortId tagA = testUtils::getTestRegisteredIdentifier("tagA");
     babelwires::ShortId tagB = testUtils::getTestRegisteredIdentifier("tagB");
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB}, 0);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB}, 0);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     babelwires::RecordFeature* recordA = unionFeature.addFieldInBranch(
         tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recA"));
     babelwires::IntFeature* fieldA =
-        recordA->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 5>>(),
+        recordA->addField(std::make_unique<babelwires::IntFeature>(5),
                           testUtils::getTestRegisteredIdentifier("aa"));
     babelwires::RecordFeature* recordF = unionFeature.addFieldInBranch(
         tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recF"));
     babelwires::IntFeature* fieldF =
-        recordF->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 6>>(),
+        recordF->addField(std::make_unique<babelwires::IntFeature>(6),
                           testUtils::getTestRegisteredIdentifier("ff"));
     babelwires::RecordFeature* recordB = unionFeature.addFieldInBranch(
         tagB, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recB"));
     babelwires::IntFeature* fieldB =
-        recordB->addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 7>>(),
+        recordB->addField(std::make_unique<babelwires::IntFeature>(7),
                           testUtils::getTestRegisteredIdentifier("bb"));
 
     unionFeature.setToDefault();
@@ -271,7 +280,10 @@ TEST(UnionFeatureTest, changes) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 
@@ -347,7 +359,10 @@ TEST(UnionFeatureTest, hash) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 
@@ -418,7 +433,10 @@ TEST(UnionFeatureTest, queries) {
     babelwires::ShortId tagC("tagC");
     tagC.setDiscriminator(1);
 
-    babelwires::UnionFeature unionFeature(babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 2);
+    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     EXPECT_EQ(unionFeature.getNumFeatures(), 0);
 
@@ -490,9 +508,7 @@ TEST(UnionFeatureTest, queries) {
 }
 
 TEST(UnionFeatureTest, unselectedEnumCanBeDefaulted) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
 
@@ -500,21 +516,23 @@ TEST(UnionFeatureTest, unselectedEnumCanBeDefaulted) {
     babelwires::ShortId tagA = testUtils::getTestRegisteredIdentifier("tagA");
     babelwires::ShortId tagB = testUtils::getTestRegisteredIdentifier("tagB");
 
-    babelwires::UnionFeature* unionFeature = rootFeature.addField(std::make_unique<babelwires::UnionFeature>(babelwires::UnionFeature::TagValues{tagA, tagB}, 0), testUtils::getTestRegisteredIdentifier("union"));
+    babelwires::UnionFeature* unionFeature = rootFeature.addField(
+        std::make_unique<babelwires::UnionFeature>(babelwires::UnionFeature::TagValues{tagA, tagB}, 0),
+        testUtils::getTestRegisteredIdentifier("union"));
 
     babelwires::RecordFeature* recordA = unionFeature->addFieldInBranch(
         tagA, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recA"));
 
     babelwires::EnumFeature* enumA =
         recordA->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
-                              testUtils::getTestRegisteredIdentifier("enumA"));
+                          testUtils::getTestRegisteredIdentifier("enumA"));
 
     babelwires::RecordFeature* recordB = unionFeature->addFieldInBranch(
         tagB, std::make_unique<babelwires::RecordFeature>(), testUtils::getTestRegisteredIdentifier("recB"));
 
     babelwires::EnumFeature* enumB =
         recordB->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
-                              testUtils::getTestRegisteredIdentifier("enumB"));
+                          testUtils::getTestRegisteredIdentifier("enumB"));
 
     rootFeature.setToDefault();
 

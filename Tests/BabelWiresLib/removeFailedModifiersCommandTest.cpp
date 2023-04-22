@@ -5,6 +5,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -15,15 +16,13 @@
 
 namespace {
     void testRemoveFailedModifiers(bool isWholeRecord) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         testUtils::TestFeatureElementData elementData;
         {
             // Will fail.
-            babelwires::IntValueAssignmentData intAssignment;
+            babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
             intAssignment.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_4;
-            intAssignment.m_value = 12;
             elementData.m_modifiers.emplace_back(intAssignment.clone());
         }
         {
@@ -116,7 +115,6 @@ TEST(RemoveFailedModifiersCommandTest, executeAndUndoSubFeature) {
 }
 
 TEST(RemoveFailedModifiersCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveFailedModifiersCommand command("Test command", 51,
                                                      babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
@@ -126,7 +124,6 @@ TEST(RemoveFailedModifiersCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveFailedModifiersCommandTest, failSafelyNoSubFeature) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveFailedModifiersCommand command("Test command", 51,
                                                      babelwires::FeaturePath::deserializeFromString("qqq/zzz"));

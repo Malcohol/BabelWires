@@ -23,26 +23,26 @@ namespace babelwires {
     class TypeSystem;
 
     /// A TypeRef describes a type by storing an Id if it is a primitive type,
-    /// or storing the id of its constructor and TypeRefs for its arguments.
-    class TypeRef : public ProjectVisitable {
+    /// or storing the id of its constructor and its arguments.
+    class TypeRef : public ProjectVisitable, public Serializable {
       public:
-        TypeRef();
-        ~TypeRef();
+        SERIALIZABLE(TypeRef, "typeref", void, 1);
 
-        /// Construct a TypeRef describing a primitive type.
+        TypeRef();
+
+        /// A TypeRef describing a primitive type.
         TypeRef(PrimitiveTypeId typeId);
 
-        /// Construct a TypeRef describing a unary type constructor applied to an argument.
-        TypeRef(TypeConstructorId typeConstructorId, TypeRef argument);
+        /// A TypeRef describing a complex type, constructed by applying the TypeConstructor
+        /// to the arguments.
+        TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments);
 
-        /// Construct a TypeRef describing a binary type constructor applied to two arguments.
-        TypeRef(TypeConstructorId typeConstructorId, TypeRef argument0, TypeRef argument1);
-
-        /// Constructor for use in templates.
-        template <unsigned int N>
-        explicit TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments<N> arguments)
-            : m_storage(ConstructedStorage<N>{std::make_shared<ConstructedTypeData<N>>(
-                  ConstructedTypeData<N>{typeConstructorId, std::move(arguments)})}) {}
+        // Convenience constructors
+        TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0);
+        TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0, TypeRef typeRef1);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1, ValueHolder value2);
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
         const Type* tryResolve(const TypeSystem& typeSystem) const;
@@ -53,20 +53,13 @@ namespace babelwires {
         /// Return a human-readable version of the TypeRef.
         std::string toString() const;
 
-        /// Return a serializable version of the TypeRef.
-        std::string serializeToString() const;
-
-        /// Parse a string as a TypeRef.
-        static TypeRef deserializeFromString(std::string_view str);
-
+        void serializeContents(Serializer& serializer) const override;
+        void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
         friend bool operator==(const TypeRef& a, const TypeRef& b) { return a.m_storage == b.m_storage; }
         friend bool operator!=(const TypeRef& a, const TypeRef& b) { return a.m_storage != b.m_storage; }
-
-        /// Note: This orders TypeRefs using identifiers NOT SUBTYPING!
-        friend bool operator<(const TypeRef& a, const TypeRef& b) { return a.m_storage < b.m_storage; }
 
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;
@@ -83,48 +76,9 @@ namespace babelwires {
         static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);
 
       private:
-        struct TryResolveVisitor;
-        struct ResolveVisitor;
-        struct SerializeVisitor;
-        struct ToStringVisitor;
-        struct VisitIdentifiersVisitor;
-        struct GetHashVisitor;
-        struct CompareSubtypeVisitor;
-
-      private:
-        template <unsigned int N> struct ConstructedTypeData {
-            TypeConstructorId m_typeConstructorId;
-            TypeConstructorArguments<N> m_arguments;
-
-            friend bool operator==(const ConstructedTypeData& a, const ConstructedTypeData& b) {
-                return (a.m_typeConstructorId == b.m_typeConstructorId) && (a.m_arguments == b.m_arguments);
-            }
-            friend bool operator!=(const ConstructedTypeData& a, const ConstructedTypeData& b) { return !(a == b); }
-            friend bool operator<(const ConstructedTypeData& a, const ConstructedTypeData& b) {
-                return a.m_arguments < b.m_arguments;
-            }
-        };
-
-        template <unsigned int N> struct ConstructedStorage {
-            ConstructedTypeData<N>* operator->() const { return m_ptr.get(); }
-
-            friend bool operator==(const ConstructedStorage& a, const ConstructedStorage& b) {
-                assert(a.m_ptr != nullptr);
-                assert(b.m_ptr != nullptr);
-                return (a.m_ptr == b.m_ptr) || (*a.m_ptr == *b.m_ptr);
-            }
-            friend bool operator!=(const ConstructedStorage& a, const ConstructedStorage& b) { return !(a == b); }
-            friend bool operator<(const ConstructedStorage& a, const ConstructedStorage& b) {
-                assert(a.m_ptr != nullptr);
-                assert(b.m_ptr != nullptr);
-                return (*a.m_ptr < *b.m_ptr);
-            }
-
-            std::shared_ptr<ConstructedTypeData<N>> m_ptr;
-        };
-
-        static_assert(c_maxNumTypeConstructorArguments == 2);
-        using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedStorage<1>, ConstructedStorage<2>>;
+        // TODO More compact storage.
+        using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArguments>;
+        using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
 
       private:
         Storage m_storage;
@@ -136,3 +90,5 @@ namespace std {
         inline std::size_t operator()(const babelwires::TypeRef& typeRef) const { return typeRef.getHash(); }
     };
 } // namespace std
+
+#include <BabelWiresLib/TypeSystem/typeRef_inl.hpp>

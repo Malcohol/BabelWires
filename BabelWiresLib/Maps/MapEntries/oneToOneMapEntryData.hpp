@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
-#include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #include <Common/Hash/hash.hpp>
 
@@ -27,10 +27,10 @@ namespace babelwires {
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
 
-        const Value* getSourceValue() const;
-        void setSourceValue(std::unique_ptr<Value> value);
-        const Value* getTargetValue() const;
-        void setTargetValue(std::unique_ptr<Value> value);
+        const ValueHolder& getSourceValue() const;
+        void setSourceValue(ValueHolder value);
+        const ValueHolder& getTargetValue() const;
+        void setTargetValue(ValueHolder value);
 
         Kind getKind() const override;
 
@@ -47,8 +47,8 @@ namespace babelwires {
 
       private:
         /// Non-null
-        std::unique_ptr<Value> m_sourceValue;
+        ValueHolder m_sourceValue;
         /// Non-null
-        std::unique_ptr<Value> m_targetValue;
+        ValueHolder m_targetValue;
     };
 } // namespace babelwires

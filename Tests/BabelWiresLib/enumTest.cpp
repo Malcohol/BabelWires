@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Enums/enum.hpp>
-#include <BabelWiresLib/Enums/enumWithCppEnum.hpp>
+#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -81,21 +81,20 @@ TEST(EnumTest, enumWithCppEnum) {
 TEST(EnumTest, createValue) {
     testUtils::TestEnum testEnum;
     
-    auto value = testEnum.createValue();
-    EXPECT_TRUE(value);
-    auto enumValue = value->as<babelwires::EnumValue>();
+    auto [valueHolder, value] = testEnum.createValue();
+    EXPECT_TRUE(valueHolder);
+    auto enumValue = value.as<babelwires::EnumValue>();
     EXPECT_TRUE(enumValue);
-    EXPECT_TRUE(value->isValid(testEnum));
+    EXPECT_TRUE(testEnum.isValidValue(value));
     EXPECT_EQ(enumValue->get(), "Bar");
 
     enumValue->set("Foo");
-    EXPECT_TRUE(value->isValid(testEnum));
+    EXPECT_TRUE(testEnum.isValidValue(value));
     enumValue->set("Flerm");
-    EXPECT_FALSE(value->isValid(testEnum));
+    EXPECT_FALSE(testEnum.isValidValue(value));
 }
 
 TEST(EnumTest, subEnum) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     babelwires::TypeSystem typeSystem;
 
@@ -106,18 +105,18 @@ TEST(EnumTest, subEnum) {
     const auto& testEnum = typeSystem.getEntryByType<testUtils::TestEnum>();
     const auto& testSubEnum = typeSystem.getEntryByType<testUtils::TestSubEnum>();
 
-    auto value = testSubEnum.createValue();
-    EXPECT_TRUE(value);
-    auto enumValue = value->as<babelwires::EnumValue>();
+    auto [valueHolder, value] = testSubEnum.createValue();
+    EXPECT_TRUE(valueHolder);
+    auto enumValue = value.as<babelwires::EnumValue>();
     EXPECT_TRUE(enumValue);
-    EXPECT_TRUE(value->isValid(testEnum));
-    EXPECT_TRUE(value->isValid(testSubEnum));
+    EXPECT_TRUE(testEnum.isValidValue(value));
+    EXPECT_TRUE(testSubEnum.isValidValue(value));
 
     enumValue->set("Foo");
-    EXPECT_TRUE(value->isValid(testEnum));
-    EXPECT_FALSE(value->isValid(testSubEnum));
+    EXPECT_TRUE(testEnum.isValidValue(value));
+    EXPECT_FALSE(testSubEnum.isValidValue(value));
     
     enumValue->set("Flerm");
-    EXPECT_FALSE(value->isValid(testEnum));
-    EXPECT_FALSE(value->isValid(testSubEnum));
+    EXPECT_FALSE(testEnum.isValidValue(value));
+    EXPECT_FALSE(testSubEnum.isValidValue(value));
 }

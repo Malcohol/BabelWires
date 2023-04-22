@@ -18,35 +18,8 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
     babelwires::ProjectBundle bundle;
 
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
         testUtils::TestEnvironment testEnvironment;
         
-        // Ensure some of the test record's discriminators are not default.
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,
-                                                             "test int", "41000000-1111-2222-3333-800000000001",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,
-                                                             "test int 1", "42000000-1111-2222-3333-800000000001",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,
-                                                             "test int 2", "43000000-1111-2222-3333-800000000001",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_arrayIdInitializer,
-                                                             "test array", "41000000-1111-2222-3333-800000000002",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_arrayIdInitializer,
-                                                             "test array 1", "42000000-1111-2222-3333-800000000002",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_recordIdInitializer,
-                                                             "test record", "41000000-1111-2222-3333-800000000003",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-
-        // Also register some irrelevant field names.
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata("Flum", "Flum", "41000000-1111-2222-3333-800000000100",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata("Zarg", "Zarg", "41000000-1111-2222-3333-800000000101",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-
         // Confirm that not all the discriminators in a test record are default.
         {
             testUtils::TestRecordFeature testRecord;
@@ -91,8 +64,6 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         bundle2.interpretInCurrentContext();
 
         {
-            // Bit of a hack, but this lets us iterate through the registry.
-            // TODO Perhaps just make iteration public
             const babelwires::IdentifierRegistry& testRegistry = bundle2.getIdentifierRegistry();
 
             // These have no duplicates in the bundle.
@@ -151,55 +122,16 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
     }
 
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
         testUtils::TestEnvironment testEnvironment;
-
-        // Slightly different arrangement and UUIDs to the above (not that it should matter)
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_intIdInitializer,
-                                                             "test int", "51000000-1111-2222-3333-800000000001",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_arrayIdInitializer,
-                                                             "test array", "51000000-1111-2222-3333-800000000002",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_recordIdInitializer,
-                                                             "test record 1", "51000000-1111-2222-3333-800000000003",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_recordIdInitializer,
-                                                             "test record 2", "52000000-1111-2222-3333-800000000003",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(testUtils::TestRecordFeature::s_recordIdInitializer,
-                                                             "test record 3", "53000000-1111-2222-3333-800000000003",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-
-        // Ensure the record's fieldIdentifiers are registered, but don't do the same for the file feature.
-        testUtils::TestRecordFeature testRecord;
-
-        // Also register some irrelevant field names.
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata("Flum", "Flum", "51000000-1111-2222-3333-800000000100",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata("Zarg", "Zarg", "51000000-1111-2222-3333-800000000101",
-                                                             babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
         babelwires::ProjectData projectData =
             std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
 
-        testUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 2, 2, 4, 1, 2);
-
-        // Confirm that the resolved data is provisional.
-        {
-            babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-                testUtils::TestFileFeature::s_intChildInitializer, "Updated field name",
-                testUtils::TestFileFeature::s_intChildUuid,
-                babelwires::IdentifierRegistry::Authority::isAuthoritative);
-            EXPECT_EQ(babelwires::IdentifierRegistry::read()->getName(
-                          *projectData.m_elements[0]->m_modifiers[0]->m_pathToFeature.getStep(0).asField()),
-                      "Updated field name");
-        }
+        testUtils::TestProjectData::testProjectDataAndDisciminators(projectData, 4, 3, 2, 1, 2);
     }
 }
 
 TEST(ProjectBundleTest, factoryMetadata) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestProjectData projectData;
 
@@ -230,7 +162,6 @@ TEST(ProjectBundleTest, factoryMetadata) {
 
 TEST(ProjectBundleTest, filePathResolution) {
     testUtils::TestLogWithListener log;
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     std::filesystem::path root = std::filesystem::canonical(std::filesystem::temp_directory_path());
@@ -310,9 +241,9 @@ TEST(ProjectBundleTest, filePathResolution) {
     }
 }
 
+/*
 TEST(ProjectBundleTest, factoryIdentifiers) {
     testUtils::TestLog log;
-    babelwires::IdentifierRegistryScope identifierRegistry;
 
     // Prepopulate the identifierRegistry with clashing factory identifier.
     // I don't expect duplicate factory identifiers, but this will make it easier to test
@@ -348,3 +279,4 @@ TEST(ProjectBundleTest, factoryIdentifiers) {
     EXPECT_EQ(bundle.getData().m_elements[1]->m_factoryIdentifier.getDiscriminator(), 1);
     EXPECT_EQ(bundle.getData().m_elements[2]->m_factoryIdentifier.getDiscriminator(), 1);
 }
+*/

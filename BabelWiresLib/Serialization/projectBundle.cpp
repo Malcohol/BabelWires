@@ -7,8 +7,10 @@
  **/
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
 
-#include <BabelWiresLib/FileFormat/filePath.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+
+#include <Common/DataContext/filePath.hpp>
 
 #include <Common/exceptions.hpp>
 
@@ -26,14 +28,15 @@ void babelwires::ProjectBundle::interpretAdditionalMetadataInCurrentContext() {
     }
 }
 
-void babelwires::ProjectBundle::adaptDataToAdditionalMetadata(const ProjectContext& context, UserLogger& userLogger) {
+void babelwires::ProjectBundle::adaptDataToAdditionalMetadata(const DataContext& context, UserLogger& userLogger) {
+    const ProjectContext& projectContext = static_cast<const ProjectContext&>(context);
     for (auto& element : getData().m_elements) {
         element->m_factoryVersion = m_factoryMetadata[element->m_factoryIdentifier];
     }
 
     for (auto& element : getData().m_elements) {
         // Can log the same message multiple times.
-        element->checkFactoryVersion(context, userLogger);
+        element->checkFactoryVersion(projectContext, userLogger);
     }
 }
 

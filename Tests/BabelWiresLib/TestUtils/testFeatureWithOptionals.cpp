@@ -86,6 +86,7 @@ testUtils::TestFeatureElementWithOptionals::TestFeatureElementWithOptionals(cons
     : FeatureElement(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
     m_feature = std::make_unique<TestFeatureWithOptionals>(context);
+    m_feature->setToDefault();
 }
 
 void testUtils::TestFeatureElementWithOptionals::doProcess(babelwires::UserLogger&) {}

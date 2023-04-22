@@ -4,8 +4,6 @@
 #include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp>
 
-#include <BabelWiresLib/Features/numericFeature.hpp>
-
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
@@ -27,7 +25,6 @@ namespace {
 } // namespace
 
 TEST(SourceFileElementTest, sourceFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
@@ -87,7 +84,6 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
 }
 
 TEST(SourceFileElementTest, changeFile) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.

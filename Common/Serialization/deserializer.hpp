@@ -41,11 +41,15 @@ namespace babelwires {
                                       IsOptional isOptional = IsOptional::Required) = 0;
         virtual bool deserializeValue(std::string_view key, std::string& value,
                                       IsOptional isOptional = IsOptional::Required) = 0;
+        virtual bool deserializeValue(std::string_view key, std::uint64_t& value,
+                                      IsOptional isOptional = IsOptional::Required) = 0;
         virtual bool deserializeValue(std::string_view key, std::uint32_t& value,
                                       IsOptional isOptional = IsOptional::Required) = 0;
         virtual bool deserializeValue(std::string_view key, std::uint16_t& value,
                                       IsOptional isOptional = IsOptional::Required) = 0;
         virtual bool deserializeValue(std::string_view key, std::uint8_t& value,
+                                      IsOptional isOptional = IsOptional::Required) = 0;
+        virtual bool deserializeValue(std::string_view key, std::int64_t& value,
                                       IsOptional isOptional = IsOptional::Required) = 0;
         virtual bool deserializeValue(std::string_view key, std::int32_t& value,
                                       IsOptional isOptional = IsOptional::Required) = 0;

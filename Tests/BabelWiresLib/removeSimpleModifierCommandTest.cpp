@@ -4,6 +4,7 @@
 
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -12,14 +13,12 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
     {
-        babelwires::IntValueAssignmentData intAssignment;
+        babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
         intAssignment.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
-        intAssignment.m_value = 12;
         elementData.m_modifiers.emplace_back(intAssignment.clone());
     }
 
@@ -67,7 +66,6 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
 }
 
 TEST(RemoveSimpleModifierCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveSimpleModifierCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
@@ -77,7 +75,6 @@ TEST(RemoveSimpleModifierCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveSimpleModifierCommandTest, failSafelyNoModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveSimpleModifierCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"));

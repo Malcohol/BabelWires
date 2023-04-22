@@ -110,14 +110,14 @@ void babelwires::MapData::emplaceBack(std::unique_ptr<MapEntryData> newEntry) {
 }
 
 void babelwires::MapData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("sourceType", m_sourceTypeRef);
-    serializer.serializeValue("targetType", m_targetTypeRef);
+    serializer.serializeObject(m_sourceTypeRef, "sourceType");
+    serializer.serializeObject(m_targetTypeRef, "targetType");
     serializer.serializeArray("entries", m_mapEntries);
 }
 
 void babelwires::MapData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("sourceType", m_sourceTypeRef);
-    deserializer.deserializeValue("targetType", m_targetTypeRef);
+    m_sourceTypeRef = std::move(*deserializer.deserializeObject<TypeRef>("sourceType"));
+    m_targetTypeRef = std::move(*deserializer.deserializeObject<TypeRef>("targetType"));
     auto it = deserializer.deserializeArray<MapEntryData>("entries", Deserializer::IsOptional::Optional);
     while (it.isValid()) {
         std::unique_ptr<MapEntryData> newEntry = it.getObject();

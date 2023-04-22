@@ -1,22 +1,22 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
-#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Types/Int/intValue.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 
 namespace {
     std::unique_ptr<babelwires::Modifier> createModifier(babelwires::FeaturePath path, int x,
                                                          babelwires::FeatureElement* owner = nullptr) {
-        auto data = std::make_unique<babelwires::IntValueAssignmentData>();
+        auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(x));
         data->m_pathToFeature = std::move(path);
-        data->m_value = x;
         auto modPtr = std::make_unique<babelwires::LocalModifier>(std::move(data));
         modPtr->setOwner(owner);
         return modPtr;
@@ -87,31 +87,38 @@ TEST(EditTreeTest, severalModifier) {
     ASSERT_TRUE(tree.findModifier(path5));
     ASSERT_TRUE(tree.findModifier(path6));
 
-    ASSERT_TRUE(tree.findModifier(path1)->getModifierData().as<babelwires::IntValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path2)->getModifierData().as<babelwires::IntValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path3)->getModifierData().as<babelwires::IntValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path4)->getModifierData().as<babelwires::IntValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path5)->getModifierData().as<babelwires::IntValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path6)->getModifierData().as<babelwires::IntValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path1)->getModifierData().as<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path2)->getModifierData().as<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path3)->getModifierData().as<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path4)->getModifierData().as<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path5)->getModifierData().as<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path6)->getModifierData().as<babelwires::ValueAssignmentData>());
 
+    EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path1)->getModifierData())
+                  ->getValue()
+                  ->as<babelwires::IntValue>()
+                  ->get(),
+              1);
     EXPECT_EQ(
-        static_cast<const babelwires::IntValueAssignmentData*>(&tree.findModifier(path1)->getModifierData())->m_value,
-        1);
+        static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path2)->getModifierData())->getValue()
+                  ->as<babelwires::IntValue>()
+                  ->get(), 2);
     EXPECT_EQ(
-        static_cast<const babelwires::IntValueAssignmentData*>(&tree.findModifier(path2)->getModifierData())->m_value,
-        2);
+        static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path3)->getModifierData())->getValue()
+                  ->as<babelwires::IntValue>()
+                  ->get(), 3);
     EXPECT_EQ(
-        static_cast<const babelwires::IntValueAssignmentData*>(&tree.findModifier(path3)->getModifierData())->m_value,
-        3);
+        static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path4)->getModifierData())->getValue()
+                  ->as<babelwires::IntValue>()
+                  ->get(), 4);
     EXPECT_EQ(
-        static_cast<const babelwires::IntValueAssignmentData*>(&tree.findModifier(path4)->getModifierData())->m_value,
-        4);
+        static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path5)->getModifierData())->getValue()
+                  ->as<babelwires::IntValue>()
+                  ->get(), 5);
     EXPECT_EQ(
-        static_cast<const babelwires::IntValueAssignmentData*>(&tree.findModifier(path5)->getModifierData())->m_value,
-        5);
-    EXPECT_EQ(
-        static_cast<const babelwires::IntValueAssignmentData*>(&tree.findModifier(path6)->getModifierData())->m_value,
-        6);
+        static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path6)->getModifierData())->getValue()
+                  ->as<babelwires::IntValue>()
+                  ->get(), 6);
 
     tree.removeModifier(tree.findModifier(path3));
 
@@ -392,16 +399,18 @@ TEST(EditTreeTest, getAllExplicitlyExpandedPaths) {
 
     using setOfPaths = std::vector<babelwires::FeaturePath>;
 
-    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path1, path2, path4, path5, path6}));
+    EXPECT_TRUE(
+        testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path1, path2, path4, path5, path6}));
 
     tree.setExpanded(path3, true);
 
-    EXPECT_TRUE(
-        testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path1, path2, path3, path4, path5, path6}));
+    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(),
+                                        setOfPaths{path1, path2, path3, path4, path5, path6}));
 
     tree.setExpanded(path3, false);
 
-    EXPECT_TRUE(testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path1, path2, path4, path5, path6}));
+    EXPECT_TRUE(
+        testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path1, path2, path4, path5, path6}));
 
     tree.setExpanded(path6, false);
     tree.setExpanded(path1, false);
@@ -629,7 +638,10 @@ TEST(EditTreeTest, truncatePathsWithImplicitlyExpandedPaths) {
         EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc"));
     }
 
-    EXPECT_TRUE(testUtils::areEqualSets(std::vector<babelwires::FeaturePath>{babelwires::FeaturePath::deserializeFromString("aa"), babelwires::FeaturePath::deserializeFromString("aa/5/bb")}, tree.getAllExplicitlyExpandedPaths()));
+    EXPECT_TRUE(testUtils::areEqualSets(
+        std::vector<babelwires::FeaturePath>{babelwires::FeaturePath::deserializeFromString("aa"),
+                                             babelwires::FeaturePath::deserializeFromString("aa/5/bb")},
+        tree.getAllExplicitlyExpandedPaths()));
 
     tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa"), false);
 
@@ -657,7 +669,9 @@ TEST(EditTreeTest, truncatePathsWithImplicitlyExpandedPaths) {
         EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
     }
 
-    EXPECT_TRUE(testUtils::areEqualSets(std::vector<babelwires::FeaturePath>{babelwires::FeaturePath::deserializeFromString("aa/5/bb")}, tree.getAllExplicitlyExpandedPaths()));
+    EXPECT_TRUE(testUtils::areEqualSets(
+        std::vector<babelwires::FeaturePath>{babelwires::FeaturePath::deserializeFromString("aa/5/bb")},
+        tree.getAllExplicitlyExpandedPaths()));
 }
 
 TEST(EditTreeTest, treeIteration) {

@@ -40,9 +40,11 @@ namespace babelwires {
         // Serialize simple values.
         virtual void serializeValue(std::string_view key, bool value) = 0;
         virtual void serializeValue(std::string_view key, std::string_view value) = 0;
+        virtual void serializeValue(std::string_view key, std::uint64_t value) = 0;
         virtual void serializeValue(std::string_view key, std::uint32_t value) = 0;
         virtual void serializeValue(std::string_view key, std::uint16_t value) = 0;
         virtual void serializeValue(std::string_view key, std::uint8_t value) = 0;
+        virtual void serializeValue(std::string_view key, std::int64_t value) = 0;
         virtual void serializeValue(std::string_view key, std::int32_t value) = 0;
         virtual void serializeValue(std::string_view key, std::int16_t value) = 0;
         virtual void serializeValue(std::string_view key, std::int8_t value) = 0;

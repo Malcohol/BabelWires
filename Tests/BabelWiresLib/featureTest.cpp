@@ -1,186 +1,40 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
-#include <BabelWiresLib/Features/featureMixins.hpp>
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
-#include <BabelWiresLib/Features/numericFeature.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
-#include <BabelWiresLib/Features/stringFeature.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
+#include <BabelWiresLib/Types/Rational/rationalFeature.hpp>
+#include <BabelWiresLib/Types/String/stringFeature.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 
-TEST(FeatureTest, intFeature) {
-    babelwires::IntFeature intFeature;
-    EXPECT_EQ(intFeature.getOwner(), nullptr);
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
-    intFeature.setToDefault();
-    EXPECT_EQ(intFeature.get(), 0);
-
-    intFeature.set(10);
-    EXPECT_EQ(intFeature.get(), 10);
-
-    babelwires::IntFeature intFeature2;
-    intFeature2.assign(intFeature);
-    EXPECT_EQ(intFeature2.get(), 10);
-}
-
-TEST(FeatureTest, intFeatureChanges) {
-    babelwires::IntFeature intFeature;
-
-    // After construction, everything has changed.
-    EXPECT_TRUE(intFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(intFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_TRUE(intFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    intFeature.clearChanges();
-    EXPECT_FALSE(intFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(intFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(intFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    intFeature.setToDefault();
-    // Don't assume anything about the constructed value, so don't test for value changed.
-    EXPECT_FALSE(intFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    intFeature.set(10);
-    EXPECT_TRUE(intFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(intFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(intFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    intFeature.clearChanges();
-    intFeature.set(10);
-    EXPECT_FALSE(intFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(intFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(intFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-}
-
-TEST(FeatureTest, intFeatureHash) {
-    babelwires::IntFeature intFeature;
-
-    intFeature.set(0);
-    const std::size_t hashAt0 = intFeature.getHash();
-
-    intFeature.set(10);
-    const std::size_t hashAt10 = intFeature.getHash();
-
-    // There's a small chance that this test will trigger a false positive. If so, convert the test to be more
-    // statistical.
-    EXPECT_NE(hashAt0, hashAt10);
-}
-
-TEST(FeatureTest, intFeatureWithRange) {
-    babelwires::HasStaticRange<babelwires::IntFeature, 10, 100> intFeature;
-    intFeature.setToDefault();
-    EXPECT_EQ(intFeature.get(), 10);
-
-    intFeature.set(50);
-    EXPECT_EQ(intFeature.get(), 50);
-
-    intFeature.set(10);
-    EXPECT_EQ(intFeature.get(), 10);
-
-    intFeature.set(100);
-    EXPECT_EQ(intFeature.get(), 100);
-
-    intFeature.clearChanges();
-
-    EXPECT_THROW(intFeature.set(0), babelwires::ModelException);
-    // Unchanged.
-    EXPECT_EQ(intFeature.get(), 100);
-    EXPECT_FALSE(intFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-
-    intFeature.setToDefault();
-    EXPECT_EQ(intFeature.get(), 10);
-}
-
-TEST(FeatureTest, intFeatureWithDefault) {
-    babelwires::HasStaticDefault<babelwires::IntFeature, -10> intFeature;
-
-    intFeature.setToDefault();
-    EXPECT_EQ(intFeature.get(), -10);
-}
-
-TEST(FeatureTest, rationalFeature) {
-    babelwires::RationalFeature rationalFeature;
-
-    rationalFeature.setToDefault();
-    EXPECT_EQ(rationalFeature.get(), 0);
-
-    rationalFeature.set(babelwires::Rational(23, 54));
-    EXPECT_EQ(rationalFeature.get(), babelwires::Rational(23, 54));
-
-    babelwires::RationalFeature rationalFeature2;
-    rationalFeature2.assign(rationalFeature);
-    EXPECT_EQ(rationalFeature2.get(), babelwires::Rational(23, 54));
-}
-
-TEST(FeatureTest, rationalFeatureHash) {
-    babelwires::RationalFeature rationalFeature;
-
-    rationalFeature.set(0);
-    const std::size_t hashAt0 = rationalFeature.getHash();
-
-    rationalFeature.set(babelwires::Rational(23, 54));
-    const std::size_t hashAt23over54 = rationalFeature.getHash();
-
-    // There's a small chance that this test will trigger a false positive. If so, convert the test to be more
-    // statistical.
-    EXPECT_NE(hashAt0, hashAt23over54);
-}
-
-TEST(FeatureTest, stringFeature) {
-    babelwires::StringFeature stringFeature;
-
-    stringFeature.setToDefault();
-    EXPECT_EQ(stringFeature.get(), "");
-
-    stringFeature.set("Hello");
-    EXPECT_EQ(stringFeature.get(), "Hello");
-
-    babelwires::StringFeature stringFeature2;
-    stringFeature2.assign(stringFeature);
-    EXPECT_EQ(stringFeature2.get(), "Hello");
-}
-
-TEST(FeatureTest, stringFeatureChanges) {
-    babelwires::StringFeature stringFeature;
-
-    // After construction, everything has changed.
-    EXPECT_TRUE(stringFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(stringFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_TRUE(stringFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    stringFeature.clearChanges();
-    EXPECT_FALSE(stringFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(stringFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(stringFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    stringFeature.setToDefault();
-    // Don't assume anything about the constructed value, so don't test for value changed.
-    EXPECT_FALSE(stringFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    stringFeature.set("Hello");
-    EXPECT_TRUE(stringFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(stringFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(stringFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-}
-
-TEST(FeatureTest, stringFeatureHash) {
-    babelwires::StringFeature stringFeature;
-
-    stringFeature.set("");
-    const std::size_t hashAtEmpty = stringFeature.getHash();
-
-    stringFeature.set("Hello");
-    const std::size_t hashAtHello = stringFeature.getHash();
-
-    // There's a small chance that this test will trigger a false positive. If so, convert the test to be more
-    // statistical.
-    EXPECT_NE(hashAtEmpty, hashAtHello);
-}
+#include <Tests/TestUtils/testIdentifiers.hpp>
+#include <Tests/TestUtils/testLog.hpp>
 
 TEST(FeatureTest, valueCompatibility) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
+    babelwires::StringFeature& stringFeature = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(),
+                                                                     testUtils::getTestRegisteredIdentifier("aaa"));
+    babelwires::StringFeature& stringFeature2 = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(),
+                                                                      testUtils::getTestRegisteredIdentifier("bbb"));
+
     // Currently, int and rational are incompatible. (We could change that in the future)
-    babelwires::IntFeature intFeature, intFeature2;
-    babelwires::RationalFeature rationalFeature, rationalFeature2;
-    babelwires::StringFeature stringFeature, stringFeature2;
+    babelwires::IntFeature& intFeature = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
+                                                               testUtils::getTestRegisteredIdentifier("ccc"));
+    babelwires::IntFeature& intFeature2 = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
+                                                                testUtils::getTestRegisteredIdentifier("ddd"));
+    babelwires::RationalFeature& rationalFeature = *rootFeature.addField(
+        std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("eee"));
+    babelwires::RationalFeature& rationalFeature2 = *rootFeature.addField(
+        std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("fff"));
+    rootFeature.setToDefault();
 
     EXPECT_TRUE(intFeature.isCompatible(intFeature2));
     EXPECT_FALSE(intFeature.isCompatible(stringFeature));
@@ -208,6 +62,8 @@ TEST(FeatureTest, valueCompatibility) {
 }
 
 TEST(FeatureTest, recordFeature) {
+    testUtils::TestEnvironment testEnvironment;
+
     babelwires::RecordFeature recordFeature;
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 0);
@@ -268,7 +124,10 @@ TEST(FeatureTest, recordFeature) {
 }
 
 TEST(FeatureTest, recordFeatureChanges) {
-    babelwires::RecordFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordFeature& recordFeature = rootFeature.getFeature();
 
     // After construction, everything has changed.
     EXPECT_TRUE(recordFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -284,7 +143,6 @@ TEST(FeatureTest, recordFeatureChanges) {
     hello.setDiscriminator(17);
     auto intFeaturePtr = std::make_unique<babelwires::IntFeature>();
     babelwires::IntFeature* intFeature = intFeaturePtr.get();
-    intFeature->set(0);
     intFeature->clearChanges();
     recordFeature.addField(std::move(intFeaturePtr), hello);
 
@@ -305,7 +163,10 @@ TEST(FeatureTest, recordFeatureChanges) {
 }
 
 TEST(FeatureTest, recordFeatureHash) {
-    babelwires::RecordFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordFeature& recordFeature = rootFeature.getFeature();
 
     recordFeature.setToDefault();
 
@@ -334,7 +195,11 @@ TEST(FeatureTest, recordFeatureHash) {
 }
 
 TEST(FeatureTest, arrayFeature) {
-    babelwires::StandardArrayFeature<babelwires::IntFeature> arrayFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::StandardArrayFeature<babelwires::IntFeature>> rootFeature(
+        testEnvironment.m_projectContext);
+    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
 
     EXPECT_EQ(arrayFeature.getNumFeatures(), 0);
 
@@ -405,7 +270,11 @@ TEST(FeatureTest, arrayFeature) {
 }
 
 TEST(FeatureTest, arrayFeatureChanges) {
-    babelwires::StandardArrayFeature<babelwires::IntFeature> arrayFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::StandardArrayFeature<babelwires::IntFeature>> rootFeature(
+        testEnvironment.m_projectContext);
+    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
 
     // After construction, everything has changed.
     EXPECT_TRUE(arrayFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -443,7 +312,11 @@ TEST(FeatureTest, arrayFeatureChanges) {
 }
 
 TEST(FeatureTest, arrayFeatureHash) {
-    babelwires::StandardArrayFeature<babelwires::IntFeature> arrayFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::StandardArrayFeature<babelwires::IntFeature>> rootFeature(
+        testEnvironment.m_projectContext);
+    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
 
     arrayFeature.setToDefault();
 
@@ -478,7 +351,10 @@ namespace {
 } // namespace
 
 TEST(FeatureTest, arraySizeRange) {
-    LimitedArray arrayFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<LimitedArray> rootFeature(testEnvironment.m_projectContext);
+    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
 
     arrayFeature.setToDefault();
     EXPECT_EQ(arrayFeature.getNumFeatures(), 2);

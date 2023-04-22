@@ -7,10 +7,9 @@
  **/
 #pragma once
 
+#include <Common/DataContext/dataContext.hpp>
+
 #include <random>
-namespace babelwires {
-    class DeserializationRegistry;
-}
 
 namespace babelwires {
 
@@ -25,11 +24,10 @@ namespace babelwires {
     /// * The debug log, because that is needed everywhere.
     /// * The user log is provided separately, because I want fine control of its use.
     /// * The IdentifierRegistry, because I judged it too painful to pass around.
-    struct ProjectContext {
+    struct ProjectContext : DataContext {
         SourceFileFormatRegistry& m_sourceFileFormatReg;
         TargetFileFormatRegistry& m_targetFileFormatReg;
         ProcessorFactoryRegistry& m_processorReg;
-        DeserializationRegistry& m_deserializationReg;
         TypeSystem& m_typeSystem;
         std::default_random_engine m_randomEngine;
     };

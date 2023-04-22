@@ -3,8 +3,8 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/processorElement.hpp>
-#include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -15,7 +15,6 @@
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 TEST(ProcessorElementTest, sourceFileDataCreateElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;
@@ -37,9 +36,8 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     const babelwires::FeaturePath arraySettingIntPath = testUtils::TestRootFeature::s_pathToInt;
     const babelwires::FeaturePath valueSettingIntPath = testUtils::TestRootFeature::s_pathToInt2;
 
-    babelwires::IntValueAssignmentData valueSettingData;
+    babelwires::ValueAssignmentData valueSettingData(babelwires::IntValue(4));
     valueSettingData.m_pathToFeature = valueSettingIntPath;
-    valueSettingData.m_value = 4;
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, valueSettingData);
@@ -53,9 +51,8 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
-    babelwires::IntValueAssignmentData arraySettingData;
+    babelwires::ValueAssignmentData arraySettingData(babelwires::IntValue(4));
     arraySettingData.m_pathToFeature = arraySettingIntPath;
-    arraySettingData.m_value = 4;
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, arraySettingData);
@@ -68,9 +65,8 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
-    babelwires::IntValueAssignmentData badArraySettingData;
+    babelwires::ValueAssignmentData badArraySettingData(babelwires::IntValue(-1));
     badArraySettingData.m_pathToFeature = arraySettingIntPath;
-    badArraySettingData.m_value = -1;
 
     processorElement->clearChanges();
     processorElement->removeModifier(processorElement->findModifier(arraySettingIntPath));

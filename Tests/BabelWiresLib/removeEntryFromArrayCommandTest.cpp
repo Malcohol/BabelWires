@@ -16,7 +16,6 @@
 // TODO Test default array with non-minimum default size.
 
 TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -112,7 +111,6 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
 }
 
 TEST(RemoveEntryFromArrayCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveEntryFromArrayCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"), 1, 1);
@@ -122,7 +120,6 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoElement) {
 }
 
 TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveEntryFromArrayCommand command("Test command", 51,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"), 1, 1);
@@ -138,7 +135,6 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
 }
 
 TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());

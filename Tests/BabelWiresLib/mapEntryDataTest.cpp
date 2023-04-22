@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapData.hpp>
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -42,7 +42,6 @@ TEST(MapEntryDataTest, getKindName) {
 }
 
 TEST(MapEntryDataTest, create) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -83,7 +82,6 @@ TEST(MapEntryDataTest, create) {
 }
 
 TEST(MapEntryDataTest, equalityByKind) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -103,7 +101,6 @@ TEST(MapEntryDataTest, equalityByKind) {
 }
 
 TEST(MapEntryDataTest, oneToOneEqualitySameTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -119,21 +116,20 @@ TEST(MapEntryDataTest, oneToOneEqualitySameTypes) {
     testUtils::TestValue sourceValue;
     sourceValue.m_value = "equality test";
 
-    oneToOneA.setSourceValue(sourceValue.clone());
+    oneToOneA.setSourceValue(sourceValue);
     EXPECT_NE(oneToOneA, oneToOneB);
 
-    oneToOneB.setSourceValue(sourceValue.clone());
+    oneToOneB.setSourceValue(sourceValue);
     EXPECT_EQ(oneToOneA, oneToOneB);
 
-    oneToOneA.setTargetValue(sourceValue.clone());
+    oneToOneA.setTargetValue(sourceValue);
     EXPECT_NE(oneToOneA, oneToOneB);
 
-    oneToOneB.setTargetValue(sourceValue.clone());
+    oneToOneB.setTargetValue(sourceValue);
     EXPECT_EQ(oneToOneA, oneToOneB);
 }
 
 TEST(MapEntryDataTest, oneToOneEqualityDifferentTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -166,7 +162,6 @@ TEST(MapEntryDataTest, oneToOneEqualityDifferentTypes) {
 }
 
 TEST(MapEntryDataTest, allToOneEqualitySameTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -180,15 +175,14 @@ TEST(MapEntryDataTest, allToOneEqualitySameTypes) {
     testUtils::TestValue sourceValue;
     sourceValue.m_value = "equality test";
 
-    allToOneA.setTargetValue(sourceValue.clone());
+    allToOneA.setTargetValue(sourceValue);
     EXPECT_NE(allToOneA, allToOneB);
 
-    allToOneB.setTargetValue(sourceValue.clone());
+    allToOneB.setTargetValue(sourceValue);
     EXPECT_EQ(allToOneA, allToOneB);
 }
 
 TEST(MapEntryDataTest, allToOneEqualityDifferentTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -202,7 +196,6 @@ TEST(MapEntryDataTest, allToOneEqualityDifferentTypes) {
 }
 
 TEST(MapEntryDataTest, hashByKind) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -222,7 +215,6 @@ TEST(MapEntryDataTest, hashByKind) {
 }
 
 TEST(MapEntryDataTest, oneToOneHashSameTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -238,21 +230,20 @@ TEST(MapEntryDataTest, oneToOneHashSameTypes) {
     testUtils::TestValue sourceValue;
     sourceValue.m_value = "equality test";
 
-    oneToOneA.setSourceValue(sourceValue.clone());
+    oneToOneA.setSourceValue(sourceValue);
     EXPECT_NE(oneToOneA.getHash(), oneToOneB.getHash());
 
-    oneToOneB.setSourceValue(sourceValue.clone());
+    oneToOneB.setSourceValue(sourceValue);
     EXPECT_EQ(oneToOneA.getHash(), oneToOneB.getHash());
 
-    oneToOneA.setTargetValue(sourceValue.clone());
+    oneToOneA.setTargetValue(sourceValue);
     EXPECT_NE(oneToOneA.getHash(), oneToOneB.getHash());
 
-    oneToOneB.setTargetValue(sourceValue.clone());
+    oneToOneB.setTargetValue(sourceValue);
     EXPECT_EQ(oneToOneA.getHash(), oneToOneB.getHash());
 }
 
 TEST(MapEntryDataTest, oneToOneHashDifferentTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -285,7 +276,6 @@ TEST(MapEntryDataTest, oneToOneHashDifferentTypes) {
 }
 
 TEST(MapEntryDataTest, allToOneHashSameTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -299,15 +289,14 @@ TEST(MapEntryDataTest, allToOneHashSameTypes) {
     testUtils::TestValue sourceValue;
     sourceValue.m_value = "equality test";
 
-    allToOneA.setTargetValue(sourceValue.clone());
+    allToOneA.setTargetValue(sourceValue);
     EXPECT_NE(allToOneA.getHash(), allToOneB.getHash());
 
-    allToOneB.setTargetValue(sourceValue.clone());
+    allToOneB.setTargetValue(sourceValue);
     EXPECT_EQ(allToOneA.getHash(), allToOneB.getHash());
 }
 
 TEST(MapEntryDataTest, allToOneHashDifferentTypes) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -321,7 +310,6 @@ TEST(MapEntryDataTest, allToOneHashDifferentTypes) {
 }
 
 TEST(MapEntryDataTest, oneToOneValidate) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -343,7 +331,6 @@ TEST(MapEntryDataTest, oneToOneValidate) {
 }
 
 TEST(MapEntryDataTest, allToOneValidate) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -364,7 +351,6 @@ TEST(MapEntryDataTest, allToOneValidate) {
 }
 
 TEST(MapEntryDataTest, allToSameValidate) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -385,7 +371,6 @@ TEST(MapEntryDataTest, allToSameValidate) {
 }
 
 TEST(MapEntryDataTest, oneToOneGetAndSetValues) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -396,21 +381,20 @@ TEST(MapEntryDataTest, oneToOneGetAndSetValues) {
     testUtils::TestValue sourceValue;
     sourceValue.m_value = "source";
 
-    oneToOne.setSourceValue(sourceValue.clone());
+    oneToOne.setSourceValue(sourceValue);
     const auto sourceValueFromData = oneToOne.getSourceValue()->as<testUtils::TestValue>();
     ASSERT_NE(sourceValueFromData, nullptr);
     EXPECT_EQ(sourceValueFromData->m_value, sourceValue.m_value);
 
     babelwires::EnumValue targetValue;
     targetValue.set("Foo");
-    oneToOne.setTargetValue(targetValue.clone());
+    oneToOne.setTargetValue(targetValue);
     const auto targetValueFromData = oneToOne.getTargetValue()->as<babelwires::EnumValue>();
     ASSERT_NE(targetValueFromData, nullptr);
     EXPECT_EQ(targetValueFromData->get(), targetValue.get());
 }
 
 TEST(MapEntryDataTest, allToOneGetAndSetValues) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -420,7 +404,7 @@ TEST(MapEntryDataTest, allToOneGetAndSetValues) {
     testUtils::TestValue targetValue;
     targetValue.m_value = "source";
 
-    allToOne.setTargetValue(targetValue.clone());
+    allToOne.setTargetValue(targetValue);
     const auto targetValueFromData = allToOne.getTargetValue()->as<testUtils::TestValue>();
     ASSERT_NE(targetValueFromData, nullptr);
     EXPECT_EQ(targetValueFromData->m_value, targetValue.m_value);
@@ -429,8 +413,7 @@ TEST(MapEntryDataTest, allToOneGetAndSetValues) {
 TEST(MapEntryDataTest, oneToOneSerialize) {
     std::string serializedContents;
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        babelwires::TypeSystem typeSystem;
+            babelwires::TypeSystem typeSystem;
         typeSystem.addEntry<testUtils::TestType>();  
         typeSystem.addEntry<testUtils::TestEnum>();
 
@@ -440,11 +423,11 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
         testUtils::TestValue sourceValue;
         sourceValue.m_value = "test serialization";
 
-        oneToOne.setSourceValue(sourceValue.clone());
+        oneToOne.setSourceValue(sourceValue);
 
         babelwires::EnumValue targetValue;
         targetValue.set("Foo");
-        oneToOne.setTargetValue(targetValue.clone());
+        oneToOne.setTargetValue(targetValue);
 
         babelwires::XmlSerializer serializer;
         serializer.serializeObject(oneToOne);
@@ -459,8 +442,8 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
-    const auto *const sourceValue = dataPtr->getSourceValue();
-    const auto *const targetValue = dataPtr->getTargetValue();
+    const babelwires::ValueHolder& sourceValue = dataPtr->getSourceValue();
+    const babelwires::ValueHolder& targetValue = dataPtr->getTargetValue();
     ASSERT_NE(sourceValue, nullptr);
     ASSERT_NE(targetValue, nullptr);
 
@@ -476,8 +459,7 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
 TEST(MapEntryDataTest, allToOneSerialize) {
     std::string serializedContents;
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        babelwires::TypeSystem typeSystem;
+            babelwires::TypeSystem typeSystem;
         typeSystem.addEntry<testUtils::TestType>();  
 
         babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, testUtils::TestType::getThisIdentifier());
@@ -485,7 +467,7 @@ TEST(MapEntryDataTest, allToOneSerialize) {
         testUtils::TestValue targetValue;
         targetValue.m_value = "test serialization";
 
-        allToOne.setTargetValue(targetValue.clone());
+        allToOne.setTargetValue(targetValue);
 
         babelwires::XmlSerializer serializer;
         serializer.serializeObject(allToOne);
@@ -500,7 +482,7 @@ TEST(MapEntryDataTest, allToOneSerialize) {
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
-    const auto *const targetValue = dataPtr->getTargetValue();
+    const babelwires::ValueHolder& targetValue = dataPtr->getTargetValue();
     ASSERT_NE(targetValue, nullptr);
 
     const auto *const targetValueFromData = targetValue->as<testUtils::TestValue>();
@@ -511,8 +493,7 @@ TEST(MapEntryDataTest, allToOneSerialize) {
 TEST(MapEntryDataTest, allToSameSerialize) {
     std::string serializedContents;
     {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        babelwires::TypeSystem typeSystem;
+            babelwires::TypeSystem typeSystem;
         typeSystem.addEntry<testUtils::TestType>();  
 
         babelwires::AllToSameFallbackMapEntryData allToSame;
@@ -534,7 +515,6 @@ TEST(MapEntryDataTest, allToSameSerialize) {
 
 
 TEST(MapEntryDataTest, oneToOneClone) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -545,17 +525,17 @@ TEST(MapEntryDataTest, oneToOneClone) {
     testUtils::TestValue sourceValue;
     sourceValue.m_value = "test serialization";
 
-    oneToOne.setSourceValue(sourceValue.clone());
+    oneToOne.setSourceValue(sourceValue);
 
     babelwires::EnumValue targetValue;
     targetValue.set("Foo");
-    oneToOne.setTargetValue(targetValue.clone());
+    oneToOne.setTargetValue(targetValue);
 
     auto dataPtr = oneToOne.clone();
 
     ASSERT_NE(dataPtr, nullptr);
-    const auto *const sourceValueInClone = dataPtr->getSourceValue();
-    const auto *const targetValueInClone = dataPtr->getTargetValue();
+    const babelwires::ValueHolder& sourceValueInClone = dataPtr->getSourceValue();
+    const babelwires::ValueHolder& targetValueInClone = dataPtr->getTargetValue();
     ASSERT_NE(sourceValueInClone, nullptr);
     ASSERT_NE(targetValueInClone, nullptr);
 
@@ -569,7 +549,6 @@ TEST(MapEntryDataTest, oneToOneClone) {
 }
 
 TEST(MapEntryDataTest, allToOneClone) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
@@ -578,12 +557,12 @@ TEST(MapEntryDataTest, allToOneClone) {
     testUtils::TestValue targetValue;
     targetValue.m_value = "test serialization";
 
-    allToOne.setTargetValue(targetValue.clone());
+    allToOne.setTargetValue(targetValue);
 
     auto dataPtr = allToOne.clone();
 
     ASSERT_NE(dataPtr, nullptr);
-    const auto *const targetValueInClone = dataPtr->getTargetValue();
+    const babelwires::ValueHolder& targetValueInClone = dataPtr->getTargetValue();
     ASSERT_NE(targetValueInClone, nullptr);
 
     const auto *const targetValueFromData = targetValueInClone->as<testUtils::TestValue>();
@@ -592,7 +571,6 @@ TEST(MapEntryDataTest, allToOneClone) {
 }
 
 TEST(MapEntryDataTest, allToSameClone) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 

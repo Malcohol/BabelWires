@@ -30,11 +30,11 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(AllToOneF
     m_targetValue = std::move(other.m_targetValue);
 }
 
-const babelwires::Value* babelwires::AllToOneFallbackMapEntryData::getTargetValue() const {
-    return m_targetValue.get();
+const babelwires::ValueHolder& babelwires::AllToOneFallbackMapEntryData::getTargetValue() const {
+    return m_targetValue;
 }
 
-void babelwires::AllToOneFallbackMapEntryData::setTargetValue(std::unique_ptr<Value> value) {
+void babelwires::AllToOneFallbackMapEntryData::setTargetValue(ValueHolder value) {
     m_targetValue = std::move(value);
 }
 
@@ -62,15 +62,15 @@ void babelwires::AllToOneFallbackMapEntryData::deserializeContents(Deserializer&
 }
 
 void babelwires::AllToOneFallbackMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {
-    m_targetValue->visitIdentifiers(visitor);
+    m_targetValue.visitIdentifiers(visitor);
 }
 
 void babelwires::AllToOneFallbackMapEntryData::visitFilePaths(FilePathVisitor& visitor) {
-    m_targetValue->visitFilePaths(visitor);
+    m_targetValue.visitFilePaths(visitor);
 }
 
 babelwires::Result babelwires::AllToOneFallbackMapEntryData::doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const  {
-    const bool targetTypeIsValid = m_targetValue->isValid(targetType);
+    const bool targetTypeIsValid = targetType.isValidValue(*m_targetValue);
     if (!targetTypeIsValid) {
         return "The target value isn't valid.";
     }

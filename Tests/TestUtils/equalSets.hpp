@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 namespace testUtils {
     /// Assumes T is sortable.
@@ -25,5 +26,20 @@ namespace testUtils {
         }
 
         return true;
+    }
+
+    template <typename T> bool unorderedAreEqualSets(const std::vector<T>& a, const std::vector<T>& b) {
+        if (a.empty() && b.empty()) {
+            return true;
+        }
+        std::unordered_set<T> aset;
+        for (auto elemA : a) {
+            aset.insert(elemA);
+        }
+        std::unordered_set<T> bset;
+        for (auto elemB : b) {
+            bset.insert(elemB);
+        }
+        return aset == bset;
     }
 } // namespace testUtils

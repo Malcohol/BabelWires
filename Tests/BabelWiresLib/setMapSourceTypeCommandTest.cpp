@@ -6,7 +6,7 @@
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProject.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
-#include <BabelWiresLib/Enums/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -16,10 +16,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
 TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    testUtils::addTestEnumTypes(environment.m_typeSystem);
 
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestEnum::getThisIdentifier()}});
@@ -37,15 +34,15 @@ TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
 
     babelwires::EnumValue newSourceValue;
     newSourceValue.set("Erm");
-    oneToOne.setSourceValue(newSourceValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
     mapData.emplaceBack(oneToOne.clone());
 
     newSourceValue.set("Bar");
-    oneToOne.setSourceValue(newSourceValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
     mapData.emplaceBack(oneToOne.clone());
 
     newSourceValue.set("Oom");
-    oneToOne.setSourceValue(newSourceValue.clone());
+    oneToOne.setSourceValue(newSourceValue);
     mapData.emplaceBack(oneToOne.clone());
 
     mapData.emplaceBack(allToOne.clone());
@@ -79,11 +76,8 @@ TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
 }
 
 TEST(SetMapSourceTypeCommandTest, failWithUnallowedType) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment environment;
-    environment.m_typeSystem.addEntry<testUtils::TestType>();
-    environment.m_typeSystem.addEntry<testUtils::TestEnum>();
-
+        
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});

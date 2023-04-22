@@ -11,6 +11,7 @@
 #include <limits>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 namespace babelwires {
 
@@ -31,12 +32,23 @@ namespace babelwires {
         return (data.m_int == 0xAABBCCDDu) ? IS_BIG_ENDIAN : IS_LITTLE_ENDIAN;
     }
 
+    // TODO: Consider renaming Interval.
     // TODO: Allow ranges to describe open and closed intervals.
     template <typename T> struct Range {
         inline Range(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max())
             : m_min(min)
             , m_max(max) {}
         bool contains(T value) const { return (m_min <= value) && (value <= m_max); }
+        bool contains(const Range& other) const { 
+            return contains(other.m_min) && contains(other.m_max);
+        }
+        bool operator==(const Range& other) const {
+            return (m_min == other.m_min) && (m_max == other.m_max);
+        }
+        bool operator!=(const Range& other) const {
+            return (m_min != other.m_min) || (m_max != other.m_max);
+        }
+        T clamp(T value) const { return std::clamp(value, m_min, m_max); }
         T m_min;
         T m_max;
     };

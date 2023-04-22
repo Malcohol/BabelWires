@@ -12,7 +12,6 @@
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
 #include <Common/Cloning/cloneable.hpp>
-#include <Common/Math/rational.hpp>
 #include <Common/Serialization/serializable.hpp>
 
 namespace babelwires {
@@ -55,50 +54,5 @@ namespace babelwires {
         virtual void apply(Feature* targetFeature) const = 0;
 
         virtual std::unique_ptr<Modifier> createModifier() const;
-    };
-
-    /// Data used to assign an IntFeature within a container to a certain value.
-    struct IntValueAssignmentData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
-        CLONEABLE(IntValueAssignmentData);
-        SERIALIZABLE(IntValueAssignmentData, "assignInt", LocalModifierData, 1);
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-
-        int m_value = 0;
-    };
-
-    /// Data used to assign an IntFeature within a container to a certain value.
-    struct RationalValueAssignmentData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
-        CLONEABLE(RationalValueAssignmentData);
-        SERIALIZABLE(RationalValueAssignmentData, "assignRational", LocalModifierData, 1);
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-
-        Rational m_value = 0;
-    };
-
-    /// Data used to assign a StringFeature within a container to a certain value.
-    struct StringValueAssignmentData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
-        CLONEABLE(StringValueAssignmentData);
-        SERIALIZABLE(StringValueAssignmentData, "assignString", LocalModifierData, 1);
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-
-        std::string m_value;
-    };
-
-    /// Data used to assign an EnumFeature within a container to a certain value.
-    struct EnumValueAssignmentData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
-        CLONEABLE(EnumValueAssignmentData);
-        SERIALIZABLE(EnumValueAssignmentData, "assignEnum", LocalModifierData, 1);
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-        void visitIdentifiers(IdentifierVisitor& visitor) override;
-        
-        ShortId m_value = "Fixme";
     };
 } // namespace babelwires

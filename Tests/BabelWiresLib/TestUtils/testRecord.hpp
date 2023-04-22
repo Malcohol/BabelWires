@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
-#include <BabelWiresLib/Features/numericFeature.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -14,6 +14,8 @@ namespace testUtils {
         // Contained ints have an imposed value limit.
         // This is used to test failed applications.
         TestRecordFeature(int intValueLimit = 255, bool addExtraInt = false);
+
+        void doSetToDefault() override;
 
         static constexpr char s_intIdInitializer[] = "int0";
         static constexpr char s_arrayIdInitializer[] = "array";

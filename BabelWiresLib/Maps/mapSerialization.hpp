@@ -8,8 +8,9 @@
 #pragma once
 
 #include <BabelWiresLib/Maps/mapData.hpp>
-#include <BabelWiresLib/Serialization/dataBundle.hpp>
-#include <BabelWiresLib/Serialization/dataSerialization.hpp>
+
+#include <Common/DataContext/dataBundle.hpp>
+#include <Common/DataContext/dataSerialization.hpp>
 
 #include <filesystem>
 

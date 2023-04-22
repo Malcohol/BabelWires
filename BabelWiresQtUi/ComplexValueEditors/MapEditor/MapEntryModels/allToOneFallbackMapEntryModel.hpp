@@ -19,7 +19,7 @@ namespace babelwires {
         QVariant getDisplayData(Column column) const override;
 
         bool isItemEditable(Column column) const override;
-        QWidget* createEditor(const QModelIndex& index, QWidget* parent) const override;
+        QWidget* createEditor(QWidget* parent, const QModelIndex& index) const override;
         void setEditorData(Column column, QWidget* editor) const override;
         std::unique_ptr<MapEntryData> createReplacementDataFromEditor(Column column, QWidget* editor) const override;
         bool validateEditor(QWidget* editor, Column column) const override;

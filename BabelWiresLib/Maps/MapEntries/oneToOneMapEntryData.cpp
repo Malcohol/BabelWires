@@ -54,19 +54,19 @@ bool babelwires::OneToOneMapEntryData::operator==(const MapEntryData& other) con
     return (*m_sourceValue == *otherData->m_sourceValue) && (*m_targetValue == *otherData->m_targetValue);
 }
 
-const babelwires::Value* babelwires::OneToOneMapEntryData::getSourceValue() const {
-    return m_sourceValue.get();
+const babelwires::ValueHolder& babelwires::OneToOneMapEntryData::getSourceValue() const {
+    return m_sourceValue;
 }
 
-void babelwires::OneToOneMapEntryData::setSourceValue(std::unique_ptr<Value> value) {
+void babelwires::OneToOneMapEntryData::setSourceValue(ValueHolder value) {
     m_sourceValue = std::move(value);
 }
 
-const babelwires::Value* babelwires::OneToOneMapEntryData::getTargetValue() const {
-    return m_targetValue.get();
+const babelwires::ValueHolder& babelwires::OneToOneMapEntryData::getTargetValue() const {
+    return m_targetValue;
 }
 
-void babelwires::OneToOneMapEntryData::setTargetValue(std::unique_ptr<Value> value) {
+void babelwires::OneToOneMapEntryData::setTargetValue(ValueHolder value) {
     m_targetValue = std::move(value);
 }
 
@@ -82,18 +82,18 @@ void babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deseria
 }
 
 void babelwires::OneToOneMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {
-    m_sourceValue->visitIdentifiers(visitor);
-    m_targetValue->visitIdentifiers(visitor);
+    m_sourceValue.visitIdentifiers(visitor);
+    m_targetValue.visitIdentifiers(visitor);
 }
 
 void babelwires::OneToOneMapEntryData::visitFilePaths(FilePathVisitor& visitor) {
-    m_sourceValue->visitFilePaths(visitor);
-    m_targetValue->visitFilePaths(visitor);
+    m_sourceValue.visitFilePaths(visitor);
+    m_targetValue.visitFilePaths(visitor);
 }
 
 babelwires::Result babelwires::OneToOneMapEntryData::doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const {
-    const bool sourceTypeIsValid = m_sourceValue->isValid(sourceType);
-    const bool targetTypeIsValid = m_targetValue->isValid(targetType);
+    const bool sourceTypeIsValid = sourceType.isValidValue(*m_sourceValue);
+    const bool targetTypeIsValid = targetType.isValidValue(*m_targetValue);
     if (!sourceTypeIsValid && !targetTypeIsValid) {
         return "Neither source nor target values are valid.";
     } else if (!sourceTypeIsValid) {

@@ -132,7 +132,6 @@ TEST(MapDataTest, equality) {
     EXPECT_TRUE(mapData == mapData2);
     EXPECT_FALSE(mapData != mapData2);
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
 
@@ -177,7 +176,6 @@ TEST(MapDataTest, getHash) {
 
     EXPECT_EQ(mapData.getHash(), mapData2.getHash());
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
 
@@ -198,7 +196,6 @@ TEST(MapDataTest, getHash) {
 TEST(MapDataTest, isInvalid_validMap) {
     babelwires::MapData mapData;
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
@@ -218,7 +215,6 @@ TEST(MapDataTest, isInvalid_validMap) {
 TEST(MapDataTest, isInvalid_outOfPlaceFallback) {
     babelwires::MapData mapData;
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
@@ -234,7 +230,6 @@ TEST(MapDataTest, isInvalid_outOfPlaceFallback) {
 TEST(MapDataTest, isInvalid_noFallback) {
     babelwires::MapData mapData;
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
@@ -248,7 +243,6 @@ TEST(MapDataTest, isInvalid_noFallback) {
 TEST(MapDataTest, isValid_typeMismatch) {
     babelwires::MapData mapData;
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
@@ -267,15 +261,14 @@ TEST(MapDataTest, serializationTest) {
         mapData.setSourceTypeRef(testTypeId1);
         mapData.setTargetTypeRef(testTypeId2);
     
-        babelwires::IdentifierRegistryScope identifierRegistry;
         babelwires::TypeSystem typeSystem;
         typeSystem.addEntry<testUtils::TestType>();  
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.
         auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
-        auto entrySourceValue = std::make_unique<testUtils::TestValue>();
-        entrySourceValue->m_value = "test mapData serialization";
-        entryData->setSourceValue(std::move(entrySourceValue));
+        testUtils::TestValue entrySourceValue;
+        entrySourceValue.m_value = "test mapData serialization";
+        entryData->setSourceValue(entrySourceValue);
         mapData.emplaceBack(std::move(entryData));
         mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
@@ -296,7 +289,7 @@ TEST(MapDataTest, serializationTest) {
     EXPECT_EQ(dataPtr->m_targetTypeRef, testTypeId2);
     EXPECT_EQ(dataPtr->getNumMapEntries(), 2);
     EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::OneToOne);
-    const auto *const sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
+    babelwires::ValueHolder sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
     ASSERT_NE(sourceValue, nullptr);
     const auto *const sourceAsTestValue = sourceValue->as<testUtils::TestValue>();
     ASSERT_NE(sourceAsTestValue, nullptr);
@@ -311,17 +304,15 @@ TEST(MapDataTest, cloneTest) {
     mapData.setSourceTypeRef(testTypeId1);
     mapData.setTargetTypeRef(testTypeId2);
 
-    babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();  
 
     // Note: We want to be able to clone when entries do not match the types, as in this case.
     auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisIdentifier(), testUtils::TestType::getThisIdentifier());
-    auto entrySourceValue = std::make_unique<testUtils::TestValue>();
     auto entryDataPtr = entryData.get();
-    auto entrySourceValuePtr = entrySourceValue.get();
-    entrySourceValue->m_value = "test mapData serialization";
-    entryData->setSourceValue(std::move(entrySourceValue));
+    testUtils::TestValue entrySourceValue;
+    entrySourceValue.m_value = "test mapData serialization";
+    entryData->setSourceValue(entrySourceValue);
     mapData.emplaceBack(std::move(entryData));
     mapData.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 

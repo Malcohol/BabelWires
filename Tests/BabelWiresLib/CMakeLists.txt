@@ -2,6 +2,7 @@ SET( LIB_TESTS_SRCS
     babelWiresTests.cpp
     activateOptionalsModifierDataTest.cpp
     activateOptionalCommandTest.cpp
+    addBlankToEnumTest.cpp
     addElementCommandTest.cpp
     addEntryToArrayCommandTest.cpp
     addModifierCommandTest.cpp
@@ -19,8 +20,10 @@ SET( LIB_TESTS_SRCS
     featureElementTest.cpp
     featurePathTest.cpp
     featureTest.cpp
-    filePathTest.cpp
     editTreeTest.cpp
+    intFeatureTest.cpp
+    intValueTest.cpp
+    intTypeTest.cpp
     mapDataTest.cpp
     mapEntryDataTest.cpp
     mapFeatureTest.cpp
@@ -37,6 +40,9 @@ SET( LIB_TESTS_SRCS
     projectObserverTest.cpp
     projectSerializationTest.cpp
     projectTest.cpp
+    rationalFeatureTest.cpp
+    rationalTypeTest.cpp
+    rationalValueTest.cpp
     recordWithOptionalsFeatureTest.cpp
     removeElementCommandTest.cpp
     removeEntryFromArrayCommandTest.cpp
@@ -55,12 +61,16 @@ SET( LIB_TESTS_SRCS
     setMapSourceTypeCommandTest.cpp
     setMapTargetTypeCommandTest.cpp
     sourceFileElementTest.cpp
+    stringFeatureTest.cpp
+    stringTypeTest.cpp
+    stringValueTest.cpp
     targetFileElementTest.cpp
     typeRefTest.cpp
     typeSystemTest.cpp
     typeTest.cpp
     unionFeatureTest.cpp
     valueNamesTest.cpp
+    valueHolderTest.cpp
    )
 
 ADD_EXECUTABLE( babelWiresTests ${LIB_TESTS_SRCS} )

@@ -4,6 +4,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
@@ -21,7 +22,6 @@
 #include <fstream>
 
 TEST(ProjectTest, setAndExtractProjectData) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;
@@ -42,7 +42,6 @@ TEST(ProjectTest, setAndExtractProjectData) {
 }
 
 TEST(ProjectTest, projectId) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     // The test testEnvironment has a built-in newly constructed project.
@@ -64,7 +63,6 @@ TEST(ProjectTest, projectId) {
 }
 
 TEST(ProjectTest, addGetAndRemoveElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -93,7 +91,6 @@ TEST(ProjectTest, addGetAndRemoveElement) {
 }
 
 TEST(ProjectTest, addAndRemoveLocalModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -105,9 +102,8 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
     const babelwires::FeaturePath pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
     EXPECT_EQ(element->findModifier(pathToFeature), nullptr);
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(199));
     modData.m_pathToFeature = pathToFeature;
-    modData.m_value = 199;
 
     testEnvironment.m_project.addModifier(elementId, modData);
 
@@ -120,7 +116,6 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
 }
 
 TEST(ProjectTest, addAndRemoveConnectionModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceElementId =
@@ -155,7 +150,6 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -200,7 +194,6 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -209,9 +202,8 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
         testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(702));
     modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
-    modData.m_value = 702;
     testEnvironment.m_project.addModifier(elementId, modData);
 
     const babelwires::FeaturePath pathToArray = testUtils::TestRootFeature::s_pathToArray;
@@ -246,7 +238,6 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceElementId =
@@ -304,7 +295,6 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 }
 
 TEST(ProjectTest, uiProperties) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData testFeatureData;
@@ -335,7 +325,6 @@ TEST(ProjectTest, uiProperties) {
 }
 
 TEST(ProjectTest, elementIds) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
@@ -369,7 +358,6 @@ TEST(ProjectTest, elementIds) {
 }
 
 TEST(ProjectTest, reloadSource) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TempFilePath tempFilePath("testSource." + testUtils::TestSourceFileFormat::getFileExtension());
@@ -410,7 +398,6 @@ TEST(ProjectTest, reloadSource) {
 }
 
 TEST(ProjectTest, saveTarget) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TempFilePath tempFilePath("testTarget." + testUtils::TestSourceFileFormat::getFileExtension());
@@ -449,7 +436,6 @@ TEST(ProjectTest, saveTarget) {
 }
 
 TEST(ProjectTest, process) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;
@@ -507,9 +493,8 @@ TEST(ProjectTest, process) {
         babelwires::ProcessorElementData procData;
         procData.m_factoryIdentifier = testUtils::TestProcessorFactory::getThisIdentifier();
 
-        babelwires::IntValueAssignmentData modData;
+        babelwires::ValueAssignmentData modData(babelwires::IntValue(5));
         modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-        modData.m_value = 5;
         procData.m_modifiers.emplace_back(modData.clone());
 
         newProcId = testEnvironment.m_project.addFeatureElement(procData);
@@ -527,7 +512,6 @@ TEST(ProjectTest, process) {
 }
 
 TEST(ProjectTest, dependencyLoop) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId1 =
@@ -597,7 +581,6 @@ TEST(ProjectTest, dependencyLoop) {
 
 // Check that one dependency loop does not prevent other elements from processing correctly.
 TEST(ProjectTest, dependencyLoopAndProcessing) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId1 =
@@ -650,9 +633,8 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
         testEnvironment.m_project.addModifier(elementId2, modData);
     }
     {
-        babelwires::IntValueAssignmentData modData;
+        babelwires::ValueAssignmentData modData(babelwires::IntValue(16));
         modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-        modData.m_value = 16;
         testEnvironment.m_project.addModifier(elementId4, modData);
     }
 
@@ -684,7 +666,6 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 }
 
 TEST(ProjectTest, updateWithAvailableIds) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     std::vector<babelwires::ElementId> idsToCheck0 = {testUtils::TestProjectData::c_sourceElementId,
@@ -731,7 +712,6 @@ TEST(ProjectTest, updateWithAvailableIds) {
 }
 
 TEST(ProjectTest, processWithFailure) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;

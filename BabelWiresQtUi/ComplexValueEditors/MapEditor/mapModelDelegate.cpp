@@ -30,7 +30,7 @@ QWidget* babelwires::MapModelDelegate::createEditor(QWidget* parent, const QStyl
     assert(mapEntryModel->isItemEditable(column) &&
            "We should not be trying to create an editor for a non-editable feature");
 
-    QWidget* const editor = mapEntryModel->createEditor(index, parent);
+    QWidget* const editor = mapEntryModel->createEditor(parent, index);
 
     if (editor) {
         QVariant property = editor->property(ValueEditorInterface::s_propertyName);

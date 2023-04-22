@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Maps/MapEntries/fallbackMapEntryData.hpp>
-#include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
 
@@ -21,8 +21,8 @@ namespace babelwires {
         AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other);
         AllToOneFallbackMapEntryData(AllToOneFallbackMapEntryData&& other);
 
-        const Value* getTargetValue() const;
-        void setTargetValue(std::unique_ptr<Value> value);
+        const ValueHolder& getTargetValue() const;
+        void setTargetValue(ValueHolder value);
 
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
@@ -42,6 +42,6 @@ namespace babelwires {
         
       private:
         /// Non-null
-        std::unique_ptr<Value> m_targetValue;
+        ValueHolder m_targetValue;
     };
 } // namespace babelwires

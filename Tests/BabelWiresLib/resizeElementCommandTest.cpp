@@ -3,6 +3,7 @@
 #include <BabelWiresLib/Project/Commands/resizeElementCommand.hpp>
 
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -11,7 +12,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(ResizeElementCommandTest, executeAndUndo) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -41,12 +41,10 @@ TEST(ResizeElementCommandTest, executeAndUndo) {
 }
 
 TEST(ResizeElementCommandTest, failSafelyNoElement) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::IntValueAssignmentData modData;
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
-    modData.m_value = 86;
 
     babelwires::ResizeElementCommand command("Test command", 57, babelwires::UiSize{113});
 
@@ -55,7 +53,6 @@ TEST(ResizeElementCommandTest, failSafelyNoElement) {
 }
 
 TEST(ResizeElementCommandTest, subsumeMoves) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -89,7 +86,6 @@ TEST(ResizeElementCommandTest, subsumeMoves) {
 }
 
 TEST(ResizeElementCommandTest, subsumeMovesDelay) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;

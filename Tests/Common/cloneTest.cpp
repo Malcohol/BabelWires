@@ -47,6 +47,30 @@ TEST(CloneTest, basic) {
     }
 }
 
+#include <iostream>
+
+namespace {
+    struct M : public Cloneable {
+        CLONEABLE(M);
+        M(int x) : m_x(x) { m_state = Constructed; }
+        M(const M& other) : m_x(other.m_x) { m_state = Copied; }
+        M(M&& other) : m_x(other.m_x) { m_state = Moved; }
+
+        int m_x = 0;
+        enum State { Constructed, Copied, Moved } m_state;
+    };
+}
+
+TEST(CloneTest, move) {
+    M m(12);
+    auto copiedClone = m.clone();
+    EXPECT_EQ(copiedClone->m_x, 12);
+    EXPECT_EQ(copiedClone->m_state, M::Copied);
+    auto movedClone = std::move(m).clone();
+    EXPECT_EQ(movedClone->m_x, 12);
+    EXPECT_EQ(movedClone->m_state, M::Moved);
+}
+
 namespace {
     struct CloneContext;
 

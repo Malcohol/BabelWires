@@ -9,7 +9,7 @@
 
 #include <QVariant>
 
-#include <BabelWiresQtUi/ComplexValueEditors/ValueModels/valueModelDispatcher.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModelDispatcher.hpp>
 
 #include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
 
@@ -40,7 +40,7 @@ namespace babelwires {
         virtual bool isItemEditable(Column column) const;
 
         /// The default asserts.
-        virtual QWidget* createEditor(const QModelIndex& index, QWidget* parent) const;
+        virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
         
         /// The default asserts.
         virtual void setEditorData(Column column, QWidget* editor) const;

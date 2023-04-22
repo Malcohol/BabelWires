@@ -1,5 +1,5 @@
 /**
- * TypeConstructorArguments is a container of the TypeRef arguments provided to a type constructor. 
+ * A type describes a valid set of values.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,43 +7,41 @@
  **/
 #pragma once
 
-#include <Common/Hash/hash.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
-#include <array>
+#include <vector>
+
 namespace babelwires {
     class Type;
     class TypeSystem;
     class TypeRef;
+    class ValueHolder;
 
-    /// TypeConstructorArguments is a container of the TypeRef arguments provided to a type constructor. 
-    template <unsigned int N> class TypeConstructorArguments {
+    class TypeConstructorArguments {
       public:
-        std::array<TypeRef, N> m_typeArguments;
+        ~TypeConstructorArguments();
+
+        /// The maximum number of arguments a TypeRef can carry.
+        static constexpr std::size_t s_maxNumArguments = 10;
+
+        std::vector<TypeRef> m_typeArguments;
+        std::vector<ValueHolder> m_valueArguments;
 
         friend bool operator==(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
-            return a.m_typeArguments == b.m_typeArguments;
+            return (a.m_typeArguments == b.m_typeArguments) && (a.m_valueArguments == b.m_valueArguments);
         }
         friend bool operator!=(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
-            return a.m_typeArguments != b.m_typeArguments;
-        }
-        friend bool operator<(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
-            return a.m_typeArguments < b.m_typeArguments;
+            return !(a == b);
         }
 
         /// Get a hash which can be used with std::hash.
-        std::size_t getHash() const {
-            std::size_t hash = 0x80235AA2;
-            for (const auto& arg : m_typeArguments) {
-                hash::mixInto(hash, arg);
-            }
-            return hash;
-        }
+        std::size_t getHash() const;
     };
 } // namespace babelwires
 
 namespace std {
-    template <unsigned int N> struct hash<babelwires::TypeConstructorArguments<N>> {
-        inline std::size_t operator()(const babelwires::TypeConstructorArguments<N>& arguments) const {
+    template <> struct hash<babelwires::TypeConstructorArguments> {
+        inline std::size_t operator()(const babelwires::TypeConstructorArguments& arguments) const {
             return arguments.getHash();
         }
     };

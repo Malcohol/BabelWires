@@ -22,7 +22,6 @@
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;
@@ -76,7 +75,6 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
 }
 
 TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData originalProjectData;
@@ -193,8 +191,7 @@ namespace {
     // will get wired back up.
     // If you paste into a different project, however, these connections are ignored.
     void testSourceElementsOutsideProjectData(bool isPastingIntoSameProject) {
-        babelwires::IdentifierRegistryScope identifierRegistry;
-        testUtils::TestEnvironment testEnvironment;
+            testUtils::TestEnvironment testEnvironment;
 
         babelwires::ElementId sourceElementId =
             testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());

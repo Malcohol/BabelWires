@@ -2,13 +2,15 @@
  * Base class of models corresponding to a row in a node of the flow graph.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+
+#include <BabelWiresQtUi/ValueModels/valueModelDispatcher.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 
 #include <QVariant>
@@ -34,6 +36,7 @@ namespace babelwires {
     class RowModel {
       public:
         // Note: No virtual destructor.
+        virtual void init();
 
         virtual QVariant getValueDisplayData() const;
 
@@ -92,6 +95,7 @@ namespace babelwires {
       public:
         const ContentsCacheEntry* m_contentsCacheEntry = nullptr;
         const FeatureElement* m_featureElement = nullptr;
+        ValueModelDispatcher m_valueModelDispatcher;
     };
 
 } // namespace babelwires

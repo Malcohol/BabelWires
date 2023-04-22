@@ -12,11 +12,11 @@ TEST(TypeTest, typeAndValue)
     // This mostly just exercises the API.
 
     testUtils::TestType testType;
-    auto value = testType.createValue();
-    EXPECT_TRUE(value);
-    EXPECT_TRUE(value->as<testUtils::TestValue>());
-    EXPECT_TRUE(value->isValid(testType));
+    auto [valueHolder, value] = testType.createValue();
+    EXPECT_TRUE(valueHolder);
+    EXPECT_TRUE(value.as<testUtils::TestValue>());
+    EXPECT_TRUE(testType.isValidValue(value));
 
     testUtils::TestEnum testEnum;
-    EXPECT_FALSE(value->isValid(testEnum));
+    EXPECT_FALSE(testEnum.isValidValue(value));
 }

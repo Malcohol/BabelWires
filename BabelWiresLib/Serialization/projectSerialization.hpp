@@ -7,8 +7,9 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Serialization/dataSerialization.hpp>
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
+
+#include <Common/DataContext/dataSerialization.hpp>
 
 namespace babelwires {
     /// Isolates the codebase from the choice of format and other implementation details of serialization.

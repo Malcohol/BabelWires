@@ -2,24 +2,29 @@
 
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 
-#include <BabelWiresLib/Features/numericFeature.hpp>
-#include <BabelWiresLib/Features/featureMixins.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Types/Int/intFeature.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
 TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 0);
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+    babelwires::IntFeature* optionalFeature0 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -27,11 +32,13 @@ TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
 
     babelwires::ShortId op1("op1");
     op1.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+    babelwires::IntFeature* optionalFeature1 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
 
     babelwires::ShortId op2("op2");
     op2.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature2 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op2);
+    babelwires::IntFeature* optionalFeature2 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op2);
 
     babelwires::ShortId ff1("ff1");
     ff1.setDiscriminator(1);
@@ -39,7 +46,8 @@ TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
 
     babelwires::ShortId op3("op3");
     op3.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature3 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op3);
+    babelwires::IntFeature* optionalFeature3 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op3);
 
     EXPECT_EQ(recordFeature.getNumFeatures(), 2);
     EXPECT_EQ(recordFeature.getFeature(0), fixedFeature0);
@@ -128,7 +136,10 @@ TEST(RecordWithOptionalsFeatureTest, fieldOrder) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, changes) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -136,10 +147,13 @@ TEST(RecordWithOptionalsFeatureTest, changes) {
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+    babelwires::IntFeature* optionalFeature0 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+    // TODO: This test won't succeed with a non-default value here, which is indicates a bug.
+    optionalFeature0->setToDefault();
 
     recordFeature.clearChanges();
-    
+
     recordFeature.activateField(op0);
 
     EXPECT_TRUE(recordFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
@@ -156,7 +170,10 @@ TEST(RecordWithOptionalsFeatureTest, changes) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, hash) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -164,11 +181,14 @@ TEST(RecordWithOptionalsFeatureTest, hash) {
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+    babelwires::IntFeature* optionalFeature0 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
     babelwires::ShortId op1("op1");
     op1.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+    babelwires::IntFeature* optionalFeature1 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+    recordFeature.setToDefault();
 
     const size_t hash0 = recordFeature.getHash();
 
@@ -197,7 +217,10 @@ TEST(RecordWithOptionalsFeatureTest, hash) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, queries) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -205,11 +228,13 @@ TEST(RecordWithOptionalsFeatureTest, queries) {
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+    babelwires::IntFeature* optionalFeature0 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
     babelwires::ShortId op1("op1");
     op1.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+    babelwires::IntFeature* optionalFeature1 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
 
     EXPECT_TRUE(testUtils::areEqualSets(recordFeature.getOptionalFields(), {op0, op1}));
 
@@ -241,7 +266,10 @@ TEST(RecordWithOptionalsFeatureTest, queries) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, exceptions) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -249,11 +277,13 @@ TEST(RecordWithOptionalsFeatureTest, exceptions) {
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
+    babelwires::IntFeature* optionalFeature0 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op0);
 
     babelwires::ShortId op1("op1");
     op1.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature1 = recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
+    babelwires::IntFeature* optionalFeature1 =
+        recordFeature.addOptionalField(std::make_unique<babelwires::IntFeature>(), op1);
 
     EXPECT_THROW(recordFeature.activateField("foo"), babelwires::ModelException);
     EXPECT_THROW(recordFeature.activateField("ff0"), babelwires::ModelException);
@@ -262,15 +292,20 @@ TEST(RecordWithOptionalsFeatureTest, exceptions) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, setToDefault) {
-    babelwires::RecordWithOptionalsFeature recordFeature;
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::RecordWithOptionalsFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::RecordWithOptionalsFeature& recordFeature = rootFeature.getFeature();
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
-    babelwires::IntFeature* fixedFeature0 = recordFeature.addField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 12>>(), ff0);
+    babelwires::IntFeature* fixedFeature0 =
+        recordFeature.addField(std::make_unique<babelwires::IntFeature>(12), ff0);
 
     babelwires::ShortId op0("op0");
     op0.setDiscriminator(1);
-    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(std::make_unique<babelwires::HasStaticDefault<babelwires::IntFeature, 7>>(), op0);
+    babelwires::IntFeature* optionalFeature0 = recordFeature.addOptionalField(
+        std::make_unique<babelwires::IntFeature>(7), op0);
 
     recordFeature.setToDefault();
 
@@ -285,9 +320,7 @@ TEST(RecordWithOptionalsFeatureTest, setToDefault) {
 }
 
 TEST(RecordWithOptionalsFeatureTest, inactiveEnumCanBeDefaulted) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<testUtils::TestEnum>();
 
     babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
 
@@ -295,18 +328,21 @@ TEST(RecordWithOptionalsFeatureTest, inactiveEnumCanBeDefaulted) {
     babelwires::ShortId ff0 = testUtils::getTestRegisteredIdentifier("ff0");
     babelwires::ShortId op0 = testUtils::getTestRegisteredIdentifier("op0");
 
-    babelwires::RecordWithOptionalsFeature* recordWithOptionalFeature = rootFeature.addField(std::make_unique<babelwires::RecordWithOptionalsFeature>(), testUtils::getTestRegisteredIdentifier("recOpt"));
+    babelwires::RecordWithOptionalsFeature* recordWithOptionalFeature = rootFeature.addField(
+        std::make_unique<babelwires::RecordWithOptionalsFeature>(), testUtils::getTestRegisteredIdentifier("recOpt"));
 
-    babelwires::RecordFeature* fixedFeature0 = recordWithOptionalFeature->addField(std::make_unique<babelwires::RecordFeature>(), ff0);
-    babelwires::RecordFeature* optionalFeature0 = recordWithOptionalFeature->addOptionalField(std::make_unique<babelwires::RecordFeature>(), op0);
+    babelwires::RecordFeature* fixedFeature0 =
+        recordWithOptionalFeature->addField(std::make_unique<babelwires::RecordFeature>(), ff0);
+    babelwires::RecordFeature* optionalFeature0 =
+        recordWithOptionalFeature->addOptionalField(std::make_unique<babelwires::RecordFeature>(), op0);
 
     babelwires::EnumFeature* enumA =
         fixedFeature0->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
-                              testUtils::getTestRegisteredIdentifier("enumA"));
+                                testUtils::getTestRegisteredIdentifier("enumA"));
 
     babelwires::EnumFeature* enumB =
         optionalFeature0->addField(std::make_unique<babelwires::EnumFeature>(testUtils::TestEnum::getThisIdentifier()),
-                              testUtils::getTestRegisteredIdentifier("enumB"));
+                                   testUtils::getTestRegisteredIdentifier("enumB"));
 
     rootFeature.setToDefault();
 
