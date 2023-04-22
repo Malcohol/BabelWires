@@ -30,10 +30,9 @@ namespace babelwires {
 
 /// Use this macros in classes which derive from Cloneable.
 #define CLONEABLE(CLASS)                                                                                               \
-    std::unique_ptr<CLASS> clone() const& { return std::unique_ptr<CLASS>(cloneImpl()); }                              \
-    virtual CLASS* cloneImpl() const& override { return new CLASS(*this); }                                            \
-    std::unique_ptr<CLASS> clone()&& { return std::unique_ptr<CLASS>(std::move(*this).cloneImpl()); }                  \
-    virtual CLASS* cloneImpl() && override { return new CLASS(std::move(*this)); }
+    CLONEABLE_ABSTRACT(CLASS)                                                                                          \
+    Cloneable* cloneImpl() const& override { return new CLASS(*this); }                                                \
+    Cloneable* cloneImpl() && override { return new CLASS(std::move(*this)); }
 
     /// Use this at the base of a hierarchy of cloneable classes to support non-default clone behaviour.
     /// Note: Classes T deriving from CustomCloneable must have a constructor taking a T and a Context.
