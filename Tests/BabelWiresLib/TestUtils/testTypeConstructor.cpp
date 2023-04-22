@@ -1,5 +1,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 
+#include <BabelWiresLib/Types/String/stringValue.hpp>
+
 std::unique_ptr<babelwires::Type>
 testUtils::TestUnaryTypeConstructor::constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
                                                     const std::vector<babelwires::ValueHolder>& valueArguments) const {
@@ -49,4 +51,20 @@ babelwires::SubtypeOrder testUtils::TestBinaryTypeConstructor::compareSubtypeHel
         return babelwires::SubtypeOrder::IsSupertype;
     }
     return babelwires::SubtypeOrder::IsUnrelated;
+}
+
+std::unique_ptr<babelwires::Type>
+testUtils::TestMixedTypeConstructor::constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
+                                                    const std::vector<babelwires::ValueHolder>& valueArguments) const {
+    assert(typeArguments.size() == 1);
+    assert(valueArguments.size() == 1);
+    
+    const TestType *const testType = typeArguments[0]->as<TestType>();
+    const babelwires::StringValue *const stringValue = valueArguments[0]->as<babelwires::StringValue>();
+
+    assert(testType != nullptr);
+    assert(stringValue != nullptr);
+
+    // Remember the typeRef, since there's no way to reconstruct it.
+    return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef), testType->m_defaultValue + stringValue->get());
 }

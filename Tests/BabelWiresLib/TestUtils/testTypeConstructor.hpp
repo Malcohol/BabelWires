@@ -45,4 +45,15 @@ namespace testUtils {
                                                       const babelwires::TypeConstructorArguments& argumentsB) const;
     };
 
+    /// Takes a TestType and a StringValue and constructs a new TestType with the value concatenated onto its default.
+    class TestMixedTypeConstructor : public babelwires::TypeConstructor {
+      public:
+        TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Mixed"), 1);
+
+        std::unique_ptr<babelwires::Type>
+        constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
+                                                    const std::vector<babelwires::ValueHolder>& valueArguments) const override;
+    };
+
+
 } // namespace testUtils

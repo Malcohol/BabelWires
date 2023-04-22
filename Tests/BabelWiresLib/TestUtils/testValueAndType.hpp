@@ -11,7 +11,7 @@ namespace testUtils {
       public:
         CLONEABLE(TestValue);
         SERIALIZABLE(TestValue, "testValue", babelwires::Value, 1);
-        TestValue();
+        TestValue(std::string value = "The value");
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
         std::string toString() const override;
@@ -30,8 +30,12 @@ namespace testUtils {
       public:
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("TestType"), 1);
 
+        TestType(std::string defaultValue = "Default value");
+
         babelwires::NewValueHolder createValue() const override;
         bool isValidValue(const babelwires::Value& value) const override;
         std::string getKind() const override;
+
+        std::string m_defaultValue;
     };
 } // namespace testUtils

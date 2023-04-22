@@ -143,6 +143,28 @@ TEST(TypeRefTest, tryResolveParallel) {
     }
 }
 
+TEST(TypeRefTest, tryResolveMixed) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+
+    const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+    const testUtils::TestUnaryTypeConstructor* unaryConstructor =
+        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+    const testUtils::TestMixedTypeConstructor* mixedConstructor =
+        typeSystem.addTypeConstructor<testUtils::TestMixedTypeConstructor>();
+
+    babelwires::TypeRef constructedTestTypeRef(
+        testUtils::TestMixedTypeConstructor::getThisIdentifier(),
+        {{babelwires::TypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+                              testUtils::TestEnum::getThisIdentifier())},
+         {babelwires::StringValue(" is this string")}});
+
+    const babelwires::Type& constructedTestType = constructedTestTypeRef.resolve(typeSystem);
+    const testUtils::TestType *const newTestType = constructedTestType.as<testUtils::TestType>();
+    ASSERT_NE(newTestType, nullptr);
+    EXPECT_EQ(newTestType->m_defaultValue, "Default value is this string");
+}
+
 TEST(TypeRefTest, toStringSuccess) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
@@ -397,6 +419,11 @@ TEST(TypeRefTest, hash) {
     babelwires::TypeRef constructedTypeRef3(
         babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
         babelwires::TypeRef(babelwires::TypeConstructorId("Oom"), babelwires::PrimitiveTypeId("Erm")));
+    babelwires::TypeRef constructedTypeRefValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
+    babelwires::TypeRef constructedTypeRefValue2(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Erm"));
+    babelwires::TypeRef constructedTypeRefMixed1(
+        babelwires::TypeConstructorId("Foo"),
+        babelwires::TypeConstructorArguments{{babelwires::PrimitiveTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     std::hash<babelwires::TypeRef> hasher;
 
@@ -406,7 +433,20 @@ TEST(TypeRefTest, hash) {
     EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRef1));
     EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRef2));
     EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRef3));
+    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRefValue1));
+    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRefValue2));
+    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRefMixed1));
     EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRef2));
     EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRef3));
+    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRefValue1));
+    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRefValue2));
+    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRefMixed1));
     EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRef3));
+    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRef3));
+    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRefValue1));
+    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRefValue2));
+    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRefMixed1));
+    EXPECT_NE(hasher(constructedTypeRefValue1), hasher(constructedTypeRefValue2));
+    EXPECT_NE(hasher(constructedTypeRefValue1), hasher(constructedTypeRefMixed1));
+    EXPECT_NE(hasher(constructedTypeRefValue2), hasher(constructedTypeRefMixed1));
 }

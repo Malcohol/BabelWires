@@ -3,8 +3,8 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-testUtils::TestValue::TestValue()
-    : m_value("test value value") {}
+testUtils::TestValue::TestValue(std::string value)
+    : m_value(value) {}
 
 std::size_t testUtils::TestValue::getHash() const {
     return std::hash<std::string>()(m_value);
@@ -41,8 +41,10 @@ void testUtils::TestValue::deserializeContents(babelwires::Deserializer& deseria
     deserializer.deserializeValue("value", m_value);
 }
 
+testUtils::TestType::TestType(std::string defaultValue) : m_defaultValue(defaultValue) {}
+
 babelwires::NewValueHolder testUtils::TestType::createValue() const {
-    return babelwires::ValueHolder::makeValue<TestValue>();
+    return babelwires::ValueHolder::makeValue<TestValue>(m_defaultValue);
 }
 
 bool testUtils::TestType::isValidValue(const babelwires::Value& value) const {
