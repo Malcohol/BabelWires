@@ -36,7 +36,7 @@ void babelwires::EnumValueModel::setEditorData(QWidget* editor) const {
     dropDownBox->setCurrentIndex(currentIndex);
 }
 
-babelwires::ValueHolder babelwires::EnumValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
+babelwires::EditableValueHolder babelwires::EnumValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     const Enum* const e = m_type->as<Enum>();
     const babelwires::Enum::EnumValues& values = e->getEnumValues();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
@@ -51,7 +51,7 @@ babelwires::ValueHolder babelwires::EnumValueModel::createValueFromEditorIfDiffe
     const ShortId currentValue = enumValue->get();
 
     if (newValue != currentValue) {
-        return ValueHolder::makeValue<babelwires::EnumValue>(newValue);
+        return EditableValueHolder::makeValue<babelwires::EnumValue>(newValue);
     }
     return {};
 }

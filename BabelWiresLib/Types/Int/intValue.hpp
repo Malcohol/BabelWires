@@ -7,11 +7,11 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 namespace babelwires {
 
-    class IntValue : public Value {
+    class IntValue : public EditableValue {
       public:
         CLONEABLE(IntValue);
         SERIALIZABLE(IntValue, "int", Value, 1);

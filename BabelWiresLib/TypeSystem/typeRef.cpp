@@ -172,9 +172,9 @@ void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
         void operator()(const ConstructedTypeData& constructedTypeData) {
             m_serializer.serializeValue("typeConstructorId", std::get<0>(constructedTypeData));
             m_serializer.serializeArray("typeArguments", std::get<1>(constructedTypeData).m_typeArguments);
-            std::vector<const Value*> tmpValueArray;
+            std::vector<const EditableValue*> tmpValueArray;
             std::for_each(std::get<1>(constructedTypeData).m_valueArguments.begin(), std::get<1>(constructedTypeData).m_valueArguments.end(),
-                [&tmpValueArray](const ValueHolder& valueHolder){tmpValueArray.emplace_back(valueHolder.getUnsafe());});
+                [&tmpValueArray](const EditableValueHolder& valueHolder){tmpValueArray.emplace_back(valueHolder.getUnsafe());});
             m_serializer.serializeArray("valueArguments", tmpValueArray);
         }
         Serializer& m_serializer;
@@ -197,7 +197,7 @@ void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
                 arguments.m_typeArguments.emplace_back(std::move(*typeIt.getObject()));
                 ++typeIt;
             }
-            auto valueIt = deserializer.deserializeArray<Value>("valueArguments", Deserializer::IsOptional::Optional);
+            auto valueIt = deserializer.deserializeArray<EditableValue>("valueArguments", Deserializer::IsOptional::Optional);
             while (valueIt.isValid()) {
                 arguments.m_valueArguments.emplace_back(valueIt.getObject());
                 ++valueIt;

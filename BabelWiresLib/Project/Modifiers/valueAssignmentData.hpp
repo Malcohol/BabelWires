@@ -20,8 +20,8 @@ namespace babelwires {
         SERIALIZABLE(ValueAssignmentData, "assign", LocalModifierData, 1);
         
         ValueAssignmentData();
-        ValueAssignmentData(std::unique_ptr<Value> value);
-        ValueAssignmentData(ValueHolder value);
+        ValueAssignmentData(std::unique_ptr<EditableValue> value);
+        ValueAssignmentData(EditableValueHolder value);
 
         virtual void apply(Feature* targetFeature) const override;
         void serializeContents(Serializer& serializer) const override;
@@ -29,10 +29,10 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        ValueHolder getValue() const;
+        EditableValueHolder getValue() const;
 
       private:
-        ValueHolder m_value;
+        EditableValueHolder m_value;
     };
 
 } // namespace babelwires

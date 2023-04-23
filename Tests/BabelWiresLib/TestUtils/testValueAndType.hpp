@@ -7,7 +7,7 @@
 #pragma once
 
 namespace testUtils {
-    class TestValue : public babelwires::Value {
+    class TestValue : public babelwires::EditableValue {
       public:
         CLONEABLE(TestValue);
         SERIALIZABLE(TestValue, "testValue", babelwires::Value, 1);

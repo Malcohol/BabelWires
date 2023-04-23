@@ -30,7 +30,7 @@ void babelwires::IntValueModel::setEditorData(QWidget* editor) const {
     spinBox->setValue(value);
 }
 
-babelwires::ValueHolder babelwires::IntValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
+babelwires::EditableValueHolder babelwires::IntValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     const QSpinBox* spinBox = dynamic_cast<const QSpinBox*>(editor);
     assert(spinBox && "Unexpected editor");
     const int newValue = spinBox->value();
@@ -39,7 +39,7 @@ babelwires::ValueHolder babelwires::IntValueModel::createValueFromEditorIfDiffer
     const int currentValue = v.get();
 
     if (newValue != currentValue) {
-        return ValueHolder::makeValue<babelwires::IntValue>(newValue);
+        return EditableValueHolder::makeValue<babelwires::IntValue>(newValue);
     }
     return {};
 }

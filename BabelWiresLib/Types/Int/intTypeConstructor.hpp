@@ -18,7 +18,7 @@ namespace babelwires {
         TYPE_CONSTRUCTOR("Int", "{{{0}..{1}}}", "96dc61c3-5940-47c4-9d98-9f06d5f01157", 1);
 
         std::unique_ptr<Type> constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                            const std::vector<ValueHolder>& valueArguments) const override;
+                                            const std::vector<EditableValueHolder>& valueArguments) const override;
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA,
                                           const TypeConstructorArguments& argumentsB) const override;
@@ -29,6 +29,6 @@ namespace babelwires {
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expect type.
         static std::tuple<Range<IntValue::NativeType>, IntValue::NativeType>
-        extractValueArguments(const std::vector<ValueHolder>& valueArguments);
+        extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
     };
 } // namespace babelwires

@@ -20,7 +20,7 @@ namespace babelwires {
         virtual QVariant getDisplayData() const;
         virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
         virtual void setEditorData(QWidget* editor) const;
-        virtual ValueHolder createValueFromEditorIfDifferent(QWidget* editor) const;
+        virtual EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const;
         virtual bool isItemEditable() const;
         virtual bool validateEditor(QWidget* editor) const;
         /*

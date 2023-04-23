@@ -17,7 +17,7 @@ babelwires::ShortId babelwires::AddBlankToEnum::getBlankValue() {
 
 std::unique_ptr<babelwires::Type>
 babelwires::AddBlankToEnum::constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                          const std::vector<ValueHolder>& valueArguments) const {
+                                          const std::vector<EditableValueHolder>& valueArguments) const {
     if (typeArguments.size() != 1) {
         throw TypeSystemException() << "AddBlankToEnum expects one type argument but got " << typeArguments.size();
     }

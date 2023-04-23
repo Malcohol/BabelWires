@@ -21,8 +21,8 @@ namespace babelwires {
         AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other);
         AllToOneFallbackMapEntryData(AllToOneFallbackMapEntryData&& other);
 
-        const ValueHolder& getTargetValue() const;
-        void setTargetValue(ValueHolder value);
+        const EditableValueHolder& getTargetValue() const;
+        void setTargetValue(EditableValueHolder value);
 
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
@@ -42,6 +42,6 @@ namespace babelwires {
         
       private:
         /// Non-null
-        ValueHolder m_targetValue;
+        EditableValueHolder m_targetValue;
     };
 } // namespace babelwires

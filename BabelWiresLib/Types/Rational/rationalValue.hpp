@@ -7,13 +7,13 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 #include <Common/Math/rational.hpp>
 
 namespace babelwires {
 
-    class RationalValue : public Value {
+    class RationalValue : public EditableValue {
       public:
         CLONEABLE(RationalValue);
         SERIALIZABLE(RationalValue, "rational", Value, 1);

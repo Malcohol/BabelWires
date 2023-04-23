@@ -27,10 +27,10 @@ namespace babelwires {
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
 
-        const ValueHolder& getSourceValue() const;
-        void setSourceValue(ValueHolder value);
-        const ValueHolder& getTargetValue() const;
-        void setTargetValue(ValueHolder value);
+        const EditableValueHolder& getSourceValue() const;
+        void setSourceValue(EditableValueHolder value);
+        const EditableValueHolder& getTargetValue() const;
+        void setTargetValue(EditableValueHolder value);
 
         Kind getKind() const override;
 
@@ -47,8 +47,8 @@ namespace babelwires {
 
       private:
         /// Non-null
-        ValueHolder m_sourceValue;
+        EditableValueHolder m_sourceValue;
         /// Non-null
-        ValueHolder m_targetValue;
+        EditableValueHolder m_targetValue;
     };
 } // namespace babelwires

@@ -54,7 +54,7 @@ void babelwires::RationalValueModel::setEditorData(QWidget* editor) const {
     lineEditor->setText(v.get().toString().c_str());
 }
 
-babelwires::ValueHolder babelwires::RationalValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
+babelwires::EditableValueHolder babelwires::RationalValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     const RationalValue& v = getValue()->is<RationalValue>();
     const Rational currentValue = v.get();
 
@@ -68,7 +68,7 @@ babelwires::ValueHolder babelwires::RationalValueModel::createValueFromEditorIfD
     }
 
     if (newValue != currentValue) {
-        return ValueHolder::makeValue<babelwires::RationalValue>(newValue);
+        return EditableValueHolder::makeValue<babelwires::RationalValue>(newValue);
     }
     return {};
 }

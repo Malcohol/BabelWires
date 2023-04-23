@@ -101,7 +101,7 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/typeRef.cpp
 	TypeSystem/typeConstructorArguments.cpp
 	TypeSystem/typeConstructor.cpp
-	TypeSystem/valueHolder.cpp
+	TypeSystem/value.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp
 	ValueNames/contiguousValueNamesImpl.cpp

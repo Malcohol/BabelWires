@@ -24,7 +24,7 @@ namespace babelwires {
         static ShortId getBlankValue();
 
         std::unique_ptr<Type> constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                            const std::vector<ValueHolder>& valueArguments) const override;
+                                            const std::vector<EditableValueHolder>& valueArguments) const override;
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA,
                                           const TypeConstructorArguments& argumentsB) const override;

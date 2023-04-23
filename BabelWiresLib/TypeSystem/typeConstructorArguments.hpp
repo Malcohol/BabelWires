@@ -15,7 +15,6 @@ namespace babelwires {
     class Type;
     class TypeSystem;
     class TypeRef;
-    class ValueHolder;
 
     class TypeConstructorArguments {
       public:
@@ -25,7 +24,7 @@ namespace babelwires {
         static constexpr std::size_t s_maxNumArguments = 10;
 
         std::vector<TypeRef> m_typeArguments;
-        std::vector<ValueHolder> m_valueArguments;
+        std::vector<EditableValueHolder> m_valueArguments;
 
         friend bool operator==(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
             return (a.m_typeArguments == b.m_typeArguments) && (a.m_valueArguments == b.m_valueArguments);

@@ -8,7 +8,7 @@
 #include <Common/DataContext/filePath.hpp>
 
 namespace {
-    struct TestableValue : babelwires::Value {
+    struct TestableValue : babelwires::EditableValue {
         SERIALIZABLE(TestableValue, "TestableValue", Value, 1);
         CLONEABLE(TestableValue);
 

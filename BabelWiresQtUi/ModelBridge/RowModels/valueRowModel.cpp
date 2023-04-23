@@ -42,7 +42,7 @@ void babelwires::ValueRowModel::setEditorData(QWidget* editor) const {
 }
 
 std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
-    if (ValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
+    if (EditableValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
         const babelwires::SimpleValueFeature& valueFeature = getValueFeature();
         auto modifier = std::make_unique<babelwires::ValueAssignmentData>(std::move(newValue));
         modifier->m_pathToFeature = babelwires::FeaturePath(&valueFeature);
