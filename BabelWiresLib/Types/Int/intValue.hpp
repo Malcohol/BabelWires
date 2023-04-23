@@ -14,7 +14,7 @@ namespace babelwires {
     class IntValue : public EditableValue {
       public:
         CLONEABLE(IntValue);
-        SERIALIZABLE(IntValue, "int", Value, 1);
+        SERIALIZABLE(IntValue, "int", EditableValue, 1);
 
         using NativeType = std::int64_t; 
 
