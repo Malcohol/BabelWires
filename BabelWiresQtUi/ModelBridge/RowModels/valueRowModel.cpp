@@ -69,3 +69,13 @@ void babelwires::ValueRowModel::paint(QPainter* painter, QStyleOptionViewItem& o
 QSize babelwires::ValueRowModel::sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const {
     return m_valueModelDispatcher->sizeHint(option, index);
 }
+
+QString babelwires::ValueRowModel::getTooltip() const {
+    QString rowTooltip = RowModel::getTooltip();
+    QString valueTooltip = m_valueModelDispatcher->getTooltip();
+    if (rowTooltip.isEmpty() || valueTooltip.isEmpty()) {
+        return rowTooltip + valueTooltip;
+    } else {
+        return rowTooltip + "/n" + valueTooltip;
+    }
+}

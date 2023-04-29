@@ -34,6 +34,7 @@ namespace babelwires {
         virtual bool hasCustomPainting() const;
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual QString getTooltip() const;
 
       protected:
         const Value* getValue() const;

@@ -33,6 +33,7 @@ namespace babelwires {
 
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
+        virtual QString getTooltip() const override;
       public:
         const SimpleValueFeature& getValueFeature() const;
     };

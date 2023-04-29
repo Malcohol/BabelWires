@@ -56,7 +56,7 @@ QVariant babelwires::RowModel::getValueDisplayData() const {
     return {};
 }
 
-QVariant babelwires::RowModel::getTooltip() const {
+QString babelwires::RowModel::getTooltip() const {
     if (m_featureElement->isFailed()) {
         return m_featureElement->getReasonForFailure().c_str();
     } else if (m_contentsCacheEntry->hasFailedModifier()) {

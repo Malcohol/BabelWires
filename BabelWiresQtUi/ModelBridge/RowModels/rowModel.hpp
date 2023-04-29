@@ -40,7 +40,7 @@ namespace babelwires {
 
         virtual QVariant getValueDisplayData() const;
 
-        virtual QVariant getTooltip() const;
+        virtual QString getTooltip() const;
 
         enum class ColumnType { Key, Value };
 

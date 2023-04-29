@@ -57,3 +57,7 @@ QSize babelwires::ValueModel::sizeHint(QStyleOptionViewItem& option, const QMode
     assert(false && "hasCustomPainting returned false");
     return {};
 }
+
+QString babelwires::ValueModel::getTooltip() const {
+    return {};
+}
