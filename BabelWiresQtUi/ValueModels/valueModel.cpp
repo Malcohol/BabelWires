@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
+#include <QSize>
+
 QVariant babelwires::ValueModel::getDisplayData() const {
     return QString(m_value->toString().c_str());
 }
@@ -41,4 +43,17 @@ bool babelwires::ValueModel::isItemEditable() const {
 
 bool babelwires::ValueModel::validateEditor(QWidget* editor) const {
     return false;
+}
+
+bool babelwires::ValueModel::hasCustomPainting() const {
+    return false;
+}
+
+void babelwires::ValueModel::paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const {
+    assert(false && "hasCustomPainting returned false");
+}
+
+QSize babelwires::ValueModel::sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const {
+    assert(false && "hasCustomPainting returned false");
+    return {};
 }

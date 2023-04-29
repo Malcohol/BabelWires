@@ -11,6 +11,11 @@
 
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
+class QWidget;
+class QModelIndex;
+class QStyleOptionViewItem;
+class QPainter;
+
 namespace babelwires {
     class Type;
     class Value;
@@ -23,11 +28,9 @@ namespace babelwires {
         virtual EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const;
         virtual bool isItemEditable() const;
         virtual bool validateEditor(QWidget* editor) const;
-        /*
         virtual bool hasCustomPainting() const;
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
-        */
       protected:
         const Value* getValue() const;
         const Type* getType() const;

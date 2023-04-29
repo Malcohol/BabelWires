@@ -55,3 +55,16 @@ std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::ValueRowMo
 bool babelwires::ValueRowModel::isItemEditable() const {
     return getInputFeature();
 }
+
+bool babelwires::ValueRowModel::hasCustomPainting() const {
+    return m_valueModelDispatcher->hasCustomPainting();
+}
+
+void babelwires::ValueRowModel::paint(QPainter* painter, QStyleOptionViewItem& option,
+                                             const QModelIndex& index) const {
+    m_valueModelDispatcher->paint(painter, option, index);
+}
+
+QSize babelwires::ValueRowModel::sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const {
+    return m_valueModelDispatcher->sizeHint(option, index);
+}

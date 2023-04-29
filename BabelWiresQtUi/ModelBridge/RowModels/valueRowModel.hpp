@@ -27,6 +27,12 @@ namespace babelwires {
 
         virtual std::unique_ptr<Command<Project>> createCommandFromEditor(QWidget* editor) const override;
 
+        virtual bool hasCustomPainting() const override;
+
+        virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
+        virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
       public:
         const SimpleValueFeature& getValueFeature() const;
     };

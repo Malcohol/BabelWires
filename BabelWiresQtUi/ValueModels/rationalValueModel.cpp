@@ -37,6 +37,14 @@ namespace {
 
 } // namespace
 
+QVariant babelwires::RationalValueModel::getDisplayData() const {
+    const Rational value = m_value->is<RationalValue>().get();
+    //if (isFeatureModified()) {
+    //    return QString("<b>") + QString(value.toHtmlString().c_str()) + QString("</b>");
+    //} else {
+        return QString(value.toHtmlString().c_str());
+    //}
+}
 
 QWidget* babelwires::RationalValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     auto editor = new LineEditValueEditor(parent, index);
