@@ -24,7 +24,7 @@
 
 #include <cassert>
 
-void babelwires::RowModel::init() {}
+void babelwires::RowModel::init(const ValueModelRegistry& valueModelRegistry) {}
 
 bool babelwires::RowModel::hasInputFeature() const {
     return m_contentsCacheEntry->getInputFeature();
@@ -56,7 +56,7 @@ QVariant babelwires::RowModel::getValueDisplayData() const {
     return {};
 }
 
-QVariant babelwires::RowModel::getTooltip() const {
+QString babelwires::RowModel::getTooltip() const {
     if (m_featureElement->isFailed()) {
         return m_featureElement->getReasonForFailure().c_str();
     } else if (m_contentsCacheEntry->hasFailedModifier()) {

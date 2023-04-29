@@ -33,8 +33,8 @@ babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const TypeSystem& typeSys
     const Type* targetType = targetTypeRef.tryResolve(typeSystem);
     assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
 
-    m_sourceValue = sourceType->createValue();
-    m_targetValue = targetType->createValue();
+    m_sourceValue = sourceType->createValue().is<EditableValue>();
+    m_targetValue = targetType->createValue().is<EditableValue>();
 }
 
 std::size_t babelwires::OneToOneMapEntryData::getHash() const {
@@ -54,19 +54,19 @@ bool babelwires::OneToOneMapEntryData::operator==(const MapEntryData& other) con
     return (*m_sourceValue == *otherData->m_sourceValue) && (*m_targetValue == *otherData->m_targetValue);
 }
 
-const babelwires::ValueHolder& babelwires::OneToOneMapEntryData::getSourceValue() const {
+const babelwires::EditableValueHolder& babelwires::OneToOneMapEntryData::getSourceValue() const {
     return m_sourceValue;
 }
 
-void babelwires::OneToOneMapEntryData::setSourceValue(ValueHolder value) {
+void babelwires::OneToOneMapEntryData::setSourceValue(EditableValueHolder value) {
     m_sourceValue = std::move(value);
 }
 
-const babelwires::ValueHolder& babelwires::OneToOneMapEntryData::getTargetValue() const {
+const babelwires::EditableValueHolder& babelwires::OneToOneMapEntryData::getTargetValue() const {
     return m_targetValue;
 }
 
-void babelwires::OneToOneMapEntryData::setTargetValue(ValueHolder value) {
+void babelwires::OneToOneMapEntryData::setTargetValue(EditableValueHolder value) {
     m_targetValue = std::move(value);
 }
 
@@ -77,8 +77,8 @@ void babelwires::OneToOneMapEntryData::serializeContents(Serializer& serializer)
 
 void babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deserializer) {
     // TODO: If refactoring to a constructor, can remove the null handling in == and clone.
-    m_sourceValue = deserializer.deserializeObject<Value>("source");
-    m_targetValue = deserializer.deserializeObject<Value>("target");
+    m_sourceValue = deserializer.deserializeObject<EditableValue>("source");
+    m_targetValue = deserializer.deserializeObject<EditableValue>("target");
 }
 
 void babelwires::OneToOneMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {

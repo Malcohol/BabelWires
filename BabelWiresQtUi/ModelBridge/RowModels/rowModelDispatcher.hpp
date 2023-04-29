@@ -2,7 +2,7 @@
  * The RowModelDispatcher provides access to an appropriate RowModel for a row.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -14,6 +14,7 @@ namespace babelwires {
     class ContentsCacheEntry;
     class FeatureElement;
     class RowModelRegistry;
+    class ValueModelRegistry;
 
     /// Dispatches to an appropriate RowModel.
     /// A bit of a hack to avoid an unnecessary allocation:
@@ -21,8 +22,8 @@ namespace babelwires {
     /// Neither require destruction, so it should be safe.
     class RowModelDispatcher {
       public:
-        RowModelDispatcher(const RowModelRegistry& rowModelRegistry, const ContentsCacheEntry* entry,
-                           const FeatureElement* element);
+        RowModelDispatcher(const RowModelRegistry& rowModelRegistry, const ValueModelRegistry& valueModelRegistry,
+                           const ContentsCacheEntry* entry, const FeatureElement* element);
 
         const RowModel* operator->() const { return m_rowModel; }
 

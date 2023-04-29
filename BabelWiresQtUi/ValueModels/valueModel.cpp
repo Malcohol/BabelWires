@@ -9,7 +9,9 @@
 
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
-QVariant babelwires::ValueModel::getDisplayData() const {
+#include <QSize>
+
+QVariant babelwires::ValueModel::getDisplayData(StyleHint styleHint) const {
     return QString(m_value->toString().c_str());
 }
 
@@ -30,7 +32,7 @@ void babelwires::ValueModel::setEditorData(QWidget* editor) const {
     assert(false && "This method must be overridden in subclasses");
 }
 
-babelwires::ValueHolder babelwires::ValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
+babelwires::EditableValueHolder babelwires::ValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     assert(false && "This method must be overridden in subclasses");
     return {};
 }
@@ -41,4 +43,21 @@ bool babelwires::ValueModel::isItemEditable() const {
 
 bool babelwires::ValueModel::validateEditor(QWidget* editor) const {
     return false;
+}
+
+bool babelwires::ValueModel::hasCustomPainting() const {
+    return false;
+}
+
+void babelwires::ValueModel::paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const {
+    assert(false && "hasCustomPainting returned false");
+}
+
+QSize babelwires::ValueModel::sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const {
+    assert(false && "hasCustomPainting returned false");
+    return {};
+}
+
+QString babelwires::ValueModel::getTooltip() const {
+    return {};
 }

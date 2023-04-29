@@ -7,10 +7,10 @@
 #pragma once
 
 namespace testUtils {
-    class TestValue : public babelwires::Value {
+    class TestValue : public babelwires::EditableValue {
       public:
         CLONEABLE(TestValue);
-        SERIALIZABLE(TestValue, "testValue", babelwires::Value, 1);
+        SERIALIZABLE(TestValue, "testValue", babelwires::EditableValue, 1);
         TestValue(std::string value = "The value");
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;

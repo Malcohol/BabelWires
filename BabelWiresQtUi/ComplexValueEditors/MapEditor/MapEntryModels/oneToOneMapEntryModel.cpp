@@ -16,10 +16,10 @@ const babelwires::OneToOneMapEntryData& babelwires::OneToOneMapEntryModel::getOn
     return static_cast<const babelwires::OneToOneMapEntryData&>(m_mapProjectEntry->getData());
 }
 
-void babelwires::OneToOneMapEntryModel::init() {
+void babelwires::OneToOneMapEntryModel::init(const ValueModelRegistry& valueModelRegistry) {
     const OneToOneMapEntryData& discreteMapEntry = getOneToOneMapEntryData();
-    m_sourceValueModel.init(*m_sourceType, *discreteMapEntry.getSourceValue());
-    m_targetValueModel.init(*m_targetType, *discreteMapEntry.getTargetValue());
+    m_sourceValueModel.init(valueModelRegistry, *m_sourceType, *discreteMapEntry.getSourceValue());
+    m_targetValueModel.init(valueModelRegistry, *m_targetType, *discreteMapEntry.getTargetValue());
 }
 
 QVariant babelwires::OneToOneMapEntryModel::getDisplayData(Column column) const {
@@ -74,7 +74,7 @@ std::unique_ptr<babelwires::MapEntryData>
 babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(Column column, QWidget* editor) const {
     switch (column) {
         case Column::sourceValue:
-            if (ValueHolder newValue = m_sourceValueModel->createValueFromEditorIfDifferent(editor)) {
+            if (EditableValueHolder newValue = m_sourceValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
                 babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
                 currentDiscreteData->setSourceValue(std::move(newValue));
@@ -82,7 +82,7 @@ babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(Column column
             }
             break;
         case Column::targetValue:
-            if (ValueHolder newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
+            if (EditableValueHolder newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
                 babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
                 currentDiscreteData->setTargetValue(std::move(newValue));

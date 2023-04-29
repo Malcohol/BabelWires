@@ -7,14 +7,14 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 namespace babelwires {
 
-    class EnumValue : public Value {
+    class EnumValue : public EditableValue {
       public:
         CLONEABLE(EnumValue);
-        SERIALIZABLE(EnumValue, "enum", Value, 1);
+        SERIALIZABLE(EnumValue, "enum", EditableValue, 1);
 
         EnumValue();
         EnumValue(ShortId value);

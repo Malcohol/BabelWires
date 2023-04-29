@@ -10,9 +10,11 @@
 #include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
+    class ValueModelRegistry;
+
     class ValueModelDispatcher {
       public:
-        void init(/*const ValueModelRegistry& valueModelRegistry, */ const Type& type, const Value& value);
+        void init(const ValueModelRegistry& valueModelRegistry, const Type& type, const Value& value);
 
         const ValueModel* operator->() const { return m_valueModel; }
 

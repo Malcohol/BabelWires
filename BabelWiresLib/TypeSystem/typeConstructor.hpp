@@ -48,7 +48,7 @@ namespace babelwires {
         /// Construct the new type.
         /// The newTypeRef is provided to allow implementations to move it into the constructed type.
         virtual std::unique_ptr<Type> constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                                    const std::vector<ValueHolder>& valueArguments) const = 0;
+                                                    const std::vector<EditableValueHolder>& valueArguments) const = 0;
 
       private:
         /// A mutex which ensures thread-safe access to the cache.

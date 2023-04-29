@@ -7,16 +7,17 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ValueModels/valueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModelWithRichText.hpp>
 
 namespace babelwires {
 
-    class RationalValueModel : ValueModel {
+    class RationalValueModel : ValueModelWithRichText {
       public:
+        QString getRichText() const override;
         bool isItemEditable() const override;
         QWidget* createEditor(QWidget* parent, const QModelIndex& index) const override;
         void setEditorData(QWidget* editor) const override;
-        ValueHolder createValueFromEditorIfDifferent(QWidget* editor) const override;
+        EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const override;
         bool validateEditor(QWidget* editor) const override;
     };
 } // namespace babelwires

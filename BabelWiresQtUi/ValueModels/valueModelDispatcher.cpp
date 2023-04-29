@@ -11,15 +11,18 @@
 #include <BabelWiresQtUi/ValueModels/intValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/stringValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/rationalValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModelRegistry.hpp>
 
 #include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 
-void babelwires::ValueModelDispatcher::init(const Type& type, const Value& value) {
+void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const Type& type, const Value& value) {
     m_valueModel = &m_valueModelStorage;
-    if (type.as<Enum>()) {
+    if (valueModelRegistry.handleFeature(&type, m_valueModel)) {
+        // Handled by a registered handler.
+    } else if (type.as<Enum>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::EnumValueModel));
         new (m_valueModel) babelwires::EnumValueModel();
     } else if (type.as<IntType>()) {

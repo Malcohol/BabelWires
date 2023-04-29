@@ -15,7 +15,7 @@ namespace babelwires {
     /// The OneToOneMapEntryModel provides the specific UI for a MapEntry with OneToOneMapEntryData.
     class OneToOneMapEntryModel : public MapEntryModel {
       public:
-        void init() override;
+        void init(const ValueModelRegistry& valueModelRegistry) override;
         QVariant getDisplayData(Column column) const override;
 
         bool isItemEditable(Column column) const override;

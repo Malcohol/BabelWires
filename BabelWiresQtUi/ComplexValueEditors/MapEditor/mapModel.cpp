@@ -10,6 +10,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 #include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
@@ -33,8 +34,9 @@ babelwires::MapView::MapView() {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
-babelwires::MapModel::MapModel(QObject* parent, MapEditor& mapEditor)
+babelwires::MapModel::MapModel(QObject* parent, const UiProjectContext& projectContext, MapEditor& mapEditor)
     : QAbstractTableModel(parent)
+    , m_projectContext(projectContext)
     , m_mapEditor(mapEditor) {}
 
 int babelwires::MapModel::rowCount(const QModelIndex& /*parent*/) const {
@@ -57,7 +59,7 @@ bool babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index,
     }
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
     const bool isLastRow = (row == numMapEntries - 1);
-    mapEntryModel.init(*mapProject.getSourceType(), *mapProject.getTargetType(), entry, row, isLastRow);
+    mapEntryModel.init(m_projectContext.m_valueModelReg, *mapProject.getSourceType(), *mapProject.getTargetType(), entry, row, isLastRow);
     return true;
 }
 

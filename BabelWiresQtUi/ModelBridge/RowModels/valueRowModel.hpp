@@ -15,7 +15,7 @@ namespace babelwires {
 
     class ValueRowModel : public RowModel {
       public:
-        void init() override;
+        void init(const ValueModelRegistry& valueModelRegistry) override;
 
         virtual QVariant getValueDisplayData() const override;
 
@@ -27,6 +27,13 @@ namespace babelwires {
 
         virtual std::unique_ptr<Command<Project>> createCommandFromEditor(QWidget* editor) const override;
 
+        virtual bool hasCustomPainting() const override;
+
+        virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
+        virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
+        virtual QString getTooltip() const override;
       public:
         const SimpleValueFeature& getValueFeature() const;
     };

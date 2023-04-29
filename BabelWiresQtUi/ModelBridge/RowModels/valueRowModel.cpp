@@ -19,9 +19,9 @@
 
 #include <cassert>
 
-void babelwires::ValueRowModel::init() {
+void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry) {
     const babelwires::SimpleValueFeature& valueFeature = getValueFeature();
-    m_valueModelDispatcher.init(valueFeature.getType(), valueFeature.getValue());
+    m_valueModelDispatcher.init(valueModelRegistry, valueFeature.getType(), valueFeature.getValue());
 }
 
 const babelwires::SimpleValueFeature& babelwires::ValueRowModel::getValueFeature() const {
@@ -30,7 +30,8 @@ const babelwires::SimpleValueFeature& babelwires::ValueRowModel::getValueFeature
 }
 
 QVariant babelwires::ValueRowModel::getValueDisplayData() const {
-    return m_valueModelDispatcher->getDisplayData();
+    const ValueModel::StyleHint styleHint = isFeatureModified() ? ValueModel::StyleHint::Bold : ValueModel::StyleHint::Normal;
+    return m_valueModelDispatcher->getDisplayData(styleHint);
 }
 
 QWidget* babelwires::ValueRowModel::createEditor(QWidget* parent, const QModelIndex& index) const {
@@ -42,7 +43,7 @@ void babelwires::ValueRowModel::setEditorData(QWidget* editor) const {
 }
 
 std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
-    if (ValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
+    if (EditableValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
         const babelwires::SimpleValueFeature& valueFeature = getValueFeature();
         auto modifier = std::make_unique<babelwires::ValueAssignmentData>(std::move(newValue));
         modifier->m_pathToFeature = babelwires::FeaturePath(&valueFeature);
@@ -54,4 +55,27 @@ std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::ValueRowMo
 
 bool babelwires::ValueRowModel::isItemEditable() const {
     return getInputFeature();
+}
+
+bool babelwires::ValueRowModel::hasCustomPainting() const {
+    return m_valueModelDispatcher->hasCustomPainting();
+}
+
+void babelwires::ValueRowModel::paint(QPainter* painter, QStyleOptionViewItem& option,
+                                             const QModelIndex& index) const {
+    m_valueModelDispatcher->paint(painter, option, index);
+}
+
+QSize babelwires::ValueRowModel::sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const {
+    return m_valueModelDispatcher->sizeHint(option, index);
+}
+
+QString babelwires::ValueRowModel::getTooltip() const {
+    QString rowTooltip = RowModel::getTooltip();
+    QString valueTooltip = m_valueModelDispatcher->getTooltip();
+    if (rowTooltip.isEmpty() || valueTooltip.isEmpty()) {
+        return rowTooltip + valueTooltip;
+    } else {
+        return rowTooltip + "/n" + valueTooltip;
+    }
 }

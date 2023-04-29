@@ -15,7 +15,7 @@ namespace babelwires {
     /// The AllToOneFallbackMapEntryModel provides the specific UI for a MapEntry with AllToOneFallbackMapEntryData.
     class AllToOneFallbackMapEntryModel : public MapEntryModel {
       public:
-        void init() override;
+        void init(const ValueModelRegistry& valueModelRegistry) override;
         QVariant getDisplayData(Column column) const override;
 
         bool isItemEditable(Column column) const override;

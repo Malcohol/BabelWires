@@ -18,7 +18,7 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const Typ
     const Type *const targetType = targetTypeRef.tryResolve(typeSystem);
     assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
 
-    m_targetValue = targetType->createValue();
+    m_targetValue = targetType->createValue().is<EditableValue>();
 }
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other) {
@@ -30,11 +30,11 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(AllToOneF
     m_targetValue = std::move(other.m_targetValue);
 }
 
-const babelwires::ValueHolder& babelwires::AllToOneFallbackMapEntryData::getTargetValue() const {
+const babelwires::EditableValueHolder& babelwires::AllToOneFallbackMapEntryData::getTargetValue() const {
     return m_targetValue;
 }
 
-void babelwires::AllToOneFallbackMapEntryData::setTargetValue(ValueHolder value) {
+void babelwires::AllToOneFallbackMapEntryData::setTargetValue(EditableValueHolder value) {
     m_targetValue = std::move(value);
 }
 
@@ -58,7 +58,7 @@ void babelwires::AllToOneFallbackMapEntryData::serializeContents(Serializer& ser
 }
 
 void babelwires::AllToOneFallbackMapEntryData::deserializeContents(Deserializer& deserializer) {
-    m_targetValue = deserializer.deserializeObject<Value>("target");
+    m_targetValue = deserializer.deserializeObject<EditableValue>("target");
 }
 
 void babelwires::AllToOneFallbackMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {

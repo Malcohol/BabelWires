@@ -4,7 +4,7 @@
 
 std::unique_ptr<babelwires::Type>
 testUtils::TestUnaryTypeConstructor::constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
-                                                    const std::vector<babelwires::ValueHolder>& valueArguments) const {
+                                                    const std::vector<babelwires::EditableValueHolder>& valueArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
     return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef));
 }
@@ -29,7 +29,7 @@ testUtils::TestUnaryTypeConstructor::compareSubtypeHelper(const babelwires::Type
 
 std::unique_ptr<babelwires::Type>
 testUtils::TestBinaryTypeConstructor::constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
-                                                    const std::vector<babelwires::ValueHolder>& valueArguments) const {
+                                                    const std::vector<babelwires::EditableValueHolder>& valueArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
     return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef));
 }
@@ -55,7 +55,7 @@ babelwires::SubtypeOrder testUtils::TestBinaryTypeConstructor::compareSubtypeHel
 
 std::unique_ptr<babelwires::Type>
 testUtils::TestMixedTypeConstructor::constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
-                                                    const std::vector<babelwires::ValueHolder>& valueArguments) const {
+                                                    const std::vector<babelwires::EditableValueHolder>& valueArguments) const {
     assert(typeArguments.size() == 1);
     assert(valueArguments.size() == 1);
     

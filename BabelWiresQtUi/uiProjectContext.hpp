@@ -11,6 +11,7 @@
 
 namespace babelwires {
     class RowModelRegistry;
+    class ValueModelRegistry;
 
     /// Values which give a particular BabelWires application its identity.
     struct ApplicationIdentity
@@ -23,6 +24,7 @@ namespace babelwires {
 
     struct UiProjectContext : ProjectContext {
         RowModelRegistry& m_rowModelReg;
+        ValueModelRegistry& m_valueModelReg;
         ApplicationIdentity m_applicationIdentity;
     };
 
