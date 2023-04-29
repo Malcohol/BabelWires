@@ -30,7 +30,8 @@ const babelwires::SimpleValueFeature& babelwires::ValueRowModel::getValueFeature
 }
 
 QVariant babelwires::ValueRowModel::getValueDisplayData() const {
-    return m_valueModelDispatcher->getDisplayData();
+    const ValueModel::StyleHint styleHint = isFeatureModified() ? ValueModel::StyleHint::Bold : ValueModel::StyleHint::Normal;
+    return m_valueModelDispatcher->getDisplayData(styleHint);
 }
 
 QWidget* babelwires::ValueRowModel::createEditor(QWidget* parent, const QModelIndex& index) const {

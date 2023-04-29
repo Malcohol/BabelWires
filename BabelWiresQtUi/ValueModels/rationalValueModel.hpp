@@ -13,7 +13,7 @@ namespace babelwires {
 
     class RationalValueModel : ValueModelWithRichText {
       public:
-        QVariant getDisplayData() const override;
+        QString getRichText() const override;
         bool isItemEditable() const override;
         QWidget* createEditor(QWidget* parent, const QModelIndex& index) const override;
         void setEditorData(QWidget* editor) const override;

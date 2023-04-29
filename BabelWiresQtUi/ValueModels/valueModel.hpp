@@ -22,7 +22,10 @@ namespace babelwires {
 
     class ValueModel {
       public:
-        virtual QVariant getDisplayData() const;
+        /// For ValueModels which don't use custom painting and return QString the style hint can be ignored since
+        /// it will be applied to the font.
+        enum class StyleHint { Normal, Bold };
+        virtual QVariant getDisplayData(StyleHint styleHint = ValueModel::StyleHint::Normal) const;
         virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
         virtual void setEditorData(QWidget* editor) const;
         virtual EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const;
@@ -31,6 +34,7 @@ namespace babelwires {
         virtual bool hasCustomPainting() const;
         virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
+
       protected:
         const Value* getValue() const;
         const Type* getType() const;

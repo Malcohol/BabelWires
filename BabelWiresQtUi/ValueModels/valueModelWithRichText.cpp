@@ -12,6 +12,20 @@
 #include <QStyleOptionViewItem>
 #include <QTextDocument>
 
+QVariant babelwires::ValueModelWithRichText::getDisplayData(StyleHint styleHint) const {
+    const QString richText = getRichText();
+    if (styleHint == StyleHint::Bold) {
+        QString result;
+        const int reserveSize = 7 + richText.size();
+        result.reserve(reserveSize);
+        result.append("<b>").append(richText).append("</b>");
+        assert(reserveSize == result.size());
+        return result;
+    } else {
+        return richText;
+    }
+}
+
 bool babelwires::ValueModelWithRichText::hasCustomPainting() const {
     return true;
 }

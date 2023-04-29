@@ -11,7 +11,7 @@
 
 #include <QSize>
 
-QVariant babelwires::ValueModel::getDisplayData() const {
+QVariant babelwires::ValueModel::getDisplayData(StyleHint styleHint) const {
     return QString(m_value->toString().c_str());
 }
 
