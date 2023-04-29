@@ -111,7 +111,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
                     [this]() { MapEditor::setTargetTypeFromWidget(); });
         }
         m_mapView = new MapView;
-        m_mapModel = new MapModel(m_mapView, *this);
+        m_mapModel = new MapModel(m_mapView, projectBridge.getContext(), *this);
         m_mapView->setContextMenuPolicy(Qt::CustomContextMenu);
         auto delegate = new MapModelDelegate(this);
         m_mapView->setItemDelegate(delegate);

@@ -16,7 +16,7 @@
 #include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Maps/mapProjectEntry.hpp>
 
-void babelwires::MapEntryModel::init() {}
+void babelwires::MapEntryModel::init(const ValueModelRegistry& valueModelRegistry) {}
 
 QVariant babelwires::MapEntryModel::getDisplayData(Column column) const {
     return {};

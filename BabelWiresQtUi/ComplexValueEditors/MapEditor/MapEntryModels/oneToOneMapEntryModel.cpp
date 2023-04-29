@@ -16,10 +16,10 @@ const babelwires::OneToOneMapEntryData& babelwires::OneToOneMapEntryModel::getOn
     return static_cast<const babelwires::OneToOneMapEntryData&>(m_mapProjectEntry->getData());
 }
 
-void babelwires::OneToOneMapEntryModel::init() {
+void babelwires::OneToOneMapEntryModel::init(const ValueModelRegistry& valueModelRegistry) {
     const OneToOneMapEntryData& discreteMapEntry = getOneToOneMapEntryData();
-    m_sourceValueModel.init(*m_sourceType, *discreteMapEntry.getSourceValue());
-    m_targetValueModel.init(*m_targetType, *discreteMapEntry.getTargetValue());
+    m_sourceValueModel.init(valueModelRegistry, *m_sourceType, *discreteMapEntry.getSourceValue());
+    m_targetValueModel.init(valueModelRegistry, *m_targetType, *discreteMapEntry.getTargetValue());
 }
 
 QVariant babelwires::OneToOneMapEntryModel::getDisplayData(Column column) const {

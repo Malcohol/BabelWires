@@ -17,12 +17,13 @@ namespace babelwires {
     class Type;
     class MapProjectEntry;
     class MapEntryData;
+    class ValueModelRegistry;
 
     /// MapEntryModels provide the UI specifics for MapEntries.
     /// The class should always be constructed via the MapEntryModelDispatcher.
     class MapEntryModel {
       public:
-        virtual void init();
+        virtual void init(const ValueModelRegistry& valueModelRegistry);
 
         enum class Column
         {

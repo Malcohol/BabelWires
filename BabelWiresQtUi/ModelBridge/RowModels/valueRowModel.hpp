@@ -15,7 +15,7 @@ namespace babelwires {
 
     class ValueRowModel : public RowModel {
       public:
-        void init() override;
+        void init(const ValueModelRegistry& valueModelRegistry) override;
 
         virtual QVariant getValueDisplayData() const override;
 

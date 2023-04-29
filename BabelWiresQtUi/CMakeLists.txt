@@ -64,6 +64,7 @@ SET( BABELWIRESQTUI_SRCS
     ValueModels/stringValueModel.cpp
     ValueModels/valueModel.cpp
     ValueModels/valueModelDispatcher.cpp
+    ValueModels/valueModelRegistry.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

@@ -125,7 +125,8 @@ QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) cons
 
     const Feature* feature = entry->getInputThenOutputFeature();
     assert(feature && "No feature for row model");
-    RowModelDispatcher rowModel(m_projectBridge.getContext().m_rowModelReg, entry, element);
+    const babelwires::UiProjectContext& context = m_projectBridge.getContext();
+    RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, entry, element);
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -181,7 +182,8 @@ Qt::ItemFlags babelwires::FeatureModel::flags(const QModelIndex& index) const {
     AccessModelScope scope(m_projectBridge);
     if (const FeatureElement* element = getFeatureElement(scope)) {
         if (const babelwires::ContentsCacheEntry* entry = getEntry(scope, index)) {
-            RowModelDispatcher rowModel(m_projectBridge.getContext().m_rowModelReg, entry, element);
+            const babelwires::UiProjectContext& context = m_projectBridge.getContext();
+            RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, entry, element);
 
             if (rowModel->isItemEditable()) {
                 flags = flags | Qt::ItemIsEditable;
@@ -203,7 +205,8 @@ QMenu* babelwires::FeatureModel::getContextMenu(const QModelIndex& index) {
         return nullptr;
     }
 
-    RowModelDispatcher rowModel(m_projectBridge.getContext().m_rowModelReg, entry, element);
+    const babelwires::UiProjectContext& context = m_projectBridge.getContext();
+    RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, entry, element);
 
     std::vector<std::unique_ptr<FeatureContextMenuAction>> actions;
     rowModel->getContextMenuActions(actions);

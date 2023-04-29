@@ -17,9 +17,9 @@ babelwires::AllToOneFallbackMapEntryModel::getAllToOneFallbackMapEntryData() con
     return static_cast<const babelwires::AllToOneFallbackMapEntryData&>(m_mapProjectEntry->getData());
 }
 
-void babelwires::AllToOneFallbackMapEntryModel::init() {
+void babelwires::AllToOneFallbackMapEntryModel::init(const ValueModelRegistry& valueModelRegistry) {
     const AllToOneFallbackMapEntryData& allToOneFallbackMapEntry = getAllToOneFallbackMapEntryData();
-    m_targetValueModel.init(*m_targetType, *allToOneFallbackMapEntry.getTargetValue());
+    m_targetValueModel.init(valueModelRegistry, *m_targetType, *allToOneFallbackMapEntry.getTargetValue());
 }
 
 QVariant babelwires::AllToOneFallbackMapEntryModel::getDisplayData(Column column) const {

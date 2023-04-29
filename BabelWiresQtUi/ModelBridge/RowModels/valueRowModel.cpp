@@ -19,9 +19,9 @@
 
 #include <cassert>
 
-void babelwires::ValueRowModel::init() {
+void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry) {
     const babelwires::SimpleValueFeature& valueFeature = getValueFeature();
-    m_valueModelDispatcher.init(valueFeature.getType(), valueFeature.getValue());
+    m_valueModelDispatcher.init(valueModelRegistry, valueFeature.getType(), valueFeature.getValue());
 }
 
 const babelwires::SimpleValueFeature& babelwires::ValueRowModel::getValueFeature() const {
