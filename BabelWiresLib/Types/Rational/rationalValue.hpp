@@ -16,7 +16,7 @@ namespace babelwires {
     class RationalValue : public EditableValue {
       public:
         CLONEABLE(RationalValue);
-        SERIALIZABLE(RationalValue, "rational", RationalValue, 1);
+        SERIALIZABLE(RationalValue, "rational", EditableValue, 1);
 
         RationalValue();
         RationalValue(Rational value);
