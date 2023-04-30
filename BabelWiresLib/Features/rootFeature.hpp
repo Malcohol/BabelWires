@@ -11,6 +11,7 @@
 
 namespace babelwires {
     struct ProjectContext;
+    class TypeSystem;
 
     /// RootFeatures are found at the root of a feature hierarchy, and make additional data
     /// available to the children.
@@ -24,6 +25,11 @@ namespace babelwires {
         /// Get a reference to the ProjectContext from the RootFeature at the root of the feature
         /// hierarchy. Asserts if there is no root.
         static const ProjectContext& getProjectContextAt(const Feature& feature);
+
+        /// Get a reference to the TypeSystem from the RootFeature at the root of the feature
+        /// hierarchy. Asserts if there is no root.
+        /// This is just a convenience function which calls getProjectContextAt.
+        static const TypeSystem& getTypeSystemAt(const Feature& feature);
 
         /// The root is not collapsable.
         Style getStyle() const override;

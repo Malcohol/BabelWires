@@ -86,13 +86,13 @@ TEST(EnumTest, createValue) {
     EXPECT_TRUE(valueHolder);
     auto enumValue = value.as<babelwires::EnumValue>();
     EXPECT_TRUE(enumValue);
-    EXPECT_TRUE(testEnum.isValidValue(value));
+    EXPECT_TRUE(testEnum.isValidValue(typeSystem, value));
     EXPECT_EQ(enumValue->get(), "Bar");
 
     enumValue->set("Foo");
-    EXPECT_TRUE(testEnum.isValidValue(value));
+    EXPECT_TRUE(testEnum.isValidValue(typeSystem, value));
     enumValue->set("Flerm");
-    EXPECT_FALSE(testEnum.isValidValue(value));
+    EXPECT_FALSE(testEnum.isValidValue(typeSystem, value));
 }
 
 TEST(EnumTest, subEnum) {
@@ -109,14 +109,14 @@ TEST(EnumTest, subEnum) {
     EXPECT_TRUE(valueHolder);
     auto enumValue = value.as<babelwires::EnumValue>();
     EXPECT_TRUE(enumValue);
-    EXPECT_TRUE(testEnum.isValidValue(value));
-    EXPECT_TRUE(testSubEnum.isValidValue(value));
+    EXPECT_TRUE(testEnum.isValidValue(typeSystem, value));
+    EXPECT_TRUE(testSubEnum.isValidValue(typeSystem, value));
 
     enumValue->set("Foo");
-    EXPECT_TRUE(testEnum.isValidValue(value));
-    EXPECT_FALSE(testSubEnum.isValidValue(value));
+    EXPECT_TRUE(testEnum.isValidValue(typeSystem, value));
+    EXPECT_FALSE(testSubEnum.isValidValue(typeSystem, value));
     
     enumValue->set("Flerm");
-    EXPECT_FALSE(testEnum.isValidValue(value));
-    EXPECT_FALSE(testSubEnum.isValidValue(value));
+    EXPECT_FALSE(testEnum.isValidValue(typeSystem, value));
+    EXPECT_FALSE(testSubEnum.isValidValue(typeSystem, value));
 }

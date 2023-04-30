@@ -15,7 +15,7 @@ babelwires::NewValueHolder babelwires::StringType::createValue(const TypeSystem&
     return ValueHolder::makeValue<StringValue>();
 }
 
-bool babelwires::StringType::isValidValue(const Value& v) const {
+bool babelwires::StringType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
     return v.as<StringValue>();
 }
 

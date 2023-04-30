@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresLib/Features/rootFeature.hpp>
 
+#include <BabelWiresLib/Project/projectContext.hpp>
+
 babelwires::RootFeature::RootFeature(const ProjectContext& projectContext)
     : m_projectContext(projectContext) {}
 
@@ -20,11 +22,14 @@ const babelwires::RootFeature* babelwires::RootFeature::tryGetRootFeatureAt(cons
     return current->as<RootFeature>();
 }
 
-/// Get the project context carried by this object.
 const babelwires::ProjectContext& babelwires::RootFeature::getProjectContextAt(const Feature& feature) {
     const RootFeature* rootFeature = tryGetRootFeatureAt(feature);
     assert(rootFeature && "You cannot only call getProjectContextAt in a feature hierarchy with a RootFeature at its root");
     return rootFeature->m_projectContext;
+}
+
+const babelwires::TypeSystem& babelwires::RootFeature::getTypeSystemAt(const Feature& feature) {
+    return getProjectContextAt(feature).m_typeSystem;
 }
 
 babelwires::Feature::Style babelwires::RootFeature::getStyle() const {

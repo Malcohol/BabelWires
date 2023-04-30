@@ -52,7 +52,7 @@ namespace babelwires {
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
-        bool isValidValue(const Value& v) const override;
+        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
 
         std::string getKind() const override;
 

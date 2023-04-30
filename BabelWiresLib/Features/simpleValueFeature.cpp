@@ -22,8 +22,9 @@ void babelwires::SimpleValueFeature::doAssign(const ValueFeature& other) {
 
 void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue) {
     if (!m_value || ((m_value != newValue) && (*m_value != *newValue))) {
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
-        if (type.isValidValue(*newValue)) {
+        if (type.isValidValue(typeSystem, *newValue)) {
             m_value = newValue;
             setChanged(Changes::ValueChanged);
         } else {
@@ -34,8 +35,9 @@ void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue)
 
 void babelwires::SimpleValueFeature::setValue(const Value& value) {
     if (!m_value || (value != *m_value)) {
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
-        if (type.isValidValue(value)) {
+        if (type.isValidValue(typeSystem, value)) {
             m_value = value;
             setChanged(Changes::ValueChanged);
         } else {
@@ -46,8 +48,9 @@ void babelwires::SimpleValueFeature::setValue(const Value& value) {
 
 void babelwires::SimpleValueFeature::setValue(Value&& value) {
     if (!m_value || (value != *m_value)) {
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
-        if (type.isValidValue(value)) {
+        if (type.isValidValue(typeSystem, value)) {
             m_value = std::move(value);
             setChanged(Changes::ValueChanged);
         } else {

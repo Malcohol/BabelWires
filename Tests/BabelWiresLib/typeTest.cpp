@@ -18,8 +18,8 @@ TEST(TypeTest, typeAndValue)
     auto [valueHolder, value] = testType.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
     EXPECT_TRUE(value.as<testUtils::TestValue>());
-    EXPECT_TRUE(testType.isValidValue(value));
+    EXPECT_TRUE(testType.isValidValue(typeSystem, value));
 
     testUtils::TestEnum testEnum;
-    EXPECT_FALSE(testEnum.isValidValue(value));
+    EXPECT_FALSE(testEnum.isValidValue(typeSystem, value));
 }

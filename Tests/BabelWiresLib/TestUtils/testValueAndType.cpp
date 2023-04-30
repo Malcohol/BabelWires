@@ -47,7 +47,7 @@ babelwires::NewValueHolder testUtils::TestType::createValue(const babelwires::Ty
     return babelwires::ValueHolder::makeValue<TestValue>(m_defaultValue);
 }
 
-bool testUtils::TestType::isValidValue(const babelwires::Value& value) const {
+bool testUtils::TestType::isValidValue(const babelwires::TypeSystem& typeSystem, const babelwires::Value& value) const {
     return value.as<TestValue>();
 }
 

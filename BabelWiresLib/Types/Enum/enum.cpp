@@ -60,7 +60,7 @@ bool babelwires::Enum::isAValue(const babelwires::ShortId& id) const {
     return true;
 }
 
-bool babelwires::Enum::isValidValue(const Value& v) const {
+bool babelwires::Enum::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
     if (const auto* enumValue = v.as<EnumValue>()) {
         return isAValue(enumValue->get());
     }

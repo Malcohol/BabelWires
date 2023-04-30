@@ -92,8 +92,8 @@ void babelwires::OneToOneMapEntryData::visitFilePaths(FilePathVisitor& visitor) 
 }
 
 babelwires::Result babelwires::OneToOneMapEntryData::doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const {
-    const bool sourceTypeIsValid = sourceType.isValidValue(*m_sourceValue);
-    const bool targetTypeIsValid = targetType.isValidValue(*m_targetValue);
+    const bool sourceTypeIsValid = sourceType.isValidValue(typeSystem, *m_sourceValue);
+    const bool targetTypeIsValid = targetType.isValidValue(typeSystem, *m_targetValue);
     if (!sourceTypeIsValid && !targetTypeIsValid) {
         return "Neither source nor target values are valid.";
     } else if (!sourceTypeIsValid) {
