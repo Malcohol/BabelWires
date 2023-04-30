@@ -24,6 +24,9 @@ namespace babelwires {
 
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const Value& other) const = 0;
+
+        /// Used for display to the user (e.g. in the default value editor and in constructed type expressions).
+        /// It does not have to be comprehensive.
         virtual std::string toString() const = 0;
 
         /// Convenience method for checking whether the value is an editable value.

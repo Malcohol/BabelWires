@@ -9,11 +9,10 @@
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/value.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
-#include <Common/Serialization/serializable.hpp>
 #include <Common/Utilities/result.hpp>
-#include <Common/Cloning/cloneable.hpp>
 
 #include <vector>
 #include <memory>
@@ -28,7 +27,7 @@ namespace babelwires {
     /// paste from similar but non-identical types, entries are not presumed to be valid.
     /// However, an assignment of MapData to a MapFeature will fail if there are
     /// invalid entries.
-    class MapData : public Serializable, public Cloneable, public ProjectVisitable {
+    class MapData : public EditableValue {
       public:
         SERIALIZABLE(MapData, "mapData", void, 1);
         CLONEABLE(MapData);
@@ -55,9 +54,12 @@ namespace babelwires {
         void emplaceBack(std::unique_ptr<MapEntryData> newEntry);
 
         bool operator==(const MapData& other) const;
-        bool operator!=(const MapData& other) const;
 
-        std::size_t getHash() const;
+        bool operator==(const Value& other) const override;
+        std::size_t getHash() const override;
+        std::string toString() const override;
+        bool canContainIdentifiers() const override;
+        bool canContainFilePaths() const override;
 
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
