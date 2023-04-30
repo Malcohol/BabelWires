@@ -56,16 +56,16 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
     command.execute(mapProject);
 
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
-    EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
-    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
+    EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
+    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(1).getData(), oneToOne2);
-    EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All21);
 
     command.undo(mapProject);
-    EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
-    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
+    EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
+    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(1).getData(), oneToOne);
-    EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All21);
 }
 
 TEST(ReplaceMapEntryCommandTest, failBeyondEnd) {
@@ -134,18 +134,18 @@ TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
     command.execute(mapProject);
 
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
-    EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
-    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
+    EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
+    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(1).getData(), oneToOne2);
-    EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All21);
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());
 
     command.undo(mapProject);
-    EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
-    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
-    EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
+    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::All21);
+    EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All21);
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(1).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());

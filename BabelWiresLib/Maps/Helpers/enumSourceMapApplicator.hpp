@@ -33,7 +33,7 @@ namespace babelwires {
             for (unsigned int i = 0; i < mapData.getNumMapEntries() - 1; ++i) {
                 const MapEntryData& entryData = mapData.getMapEntry(i);
                 switch (entryData.getKind()) {
-                    case MapEntryData::Kind::OneToOne: {
+                    case MapEntryData::Kind::One21: {
                         const auto& maplet = static_cast<const OneToOneMapEntryData&>(entryData);
                         m_indexToTarget[sourceAdapter(*maplet.getSourceValue())] =
                             targetAdapter(*maplet.getTargetValue());
@@ -71,7 +71,7 @@ namespace babelwires {
             for (unsigned int i = 0; i < mapData.getNumMapEntries() - 1; ++i) {
                 const MapEntryData& entryData = mapData.getMapEntry(i);
                 switch (entryData.getKind()) {
-                    case MapEntryData::Kind::OneToOne: {
+                    case MapEntryData::Kind::One21: {
                         const auto& maplet = static_cast<const OneToOneMapEntryData&>(entryData);
                         m_array[static_cast<unsigned int>(sourceAdapter(*maplet.getSourceValue()))] = targetAdapter(*maplet.getTargetValue());
                         break;

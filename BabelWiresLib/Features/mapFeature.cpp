@@ -59,7 +59,7 @@ babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryDa
 }
 
 babelwires::MapData babelwires::MapFeature::getDefaultMapData() const {
-    return getStandardDefaultMapData(MapEntryData::Kind::AllToOne);
+    return getStandardDefaultMapData(MapEntryData::Kind::All21);
 }
 
 void babelwires::MapFeature::doSetToDefault() {

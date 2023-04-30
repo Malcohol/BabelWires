@@ -8,6 +8,8 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
+#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 
 #include <Common/Cloning/cloneable.hpp>
 #include <Common/Serialization/serializable.hpp>
@@ -20,6 +22,20 @@ namespace babelwires {
     class TypeRef;
     class Type;
 
+#define BW_MAP_ENTRY_FALLBACK_KIND(X)                                                                                  \
+    X(One21, "OneToOne", "f498676a-fe06-4ee0-a841-5e563a6324f4")                                                      \
+    X(All21, "AllToOne", "d25f684d-1dad-475c-bb07-f387ee61cc3c")                                                       \
+    X(All2Sm, "AllToSame", "49293192-43b2-4902-820a-e11d519b152b")
+
+    /// The enum that determines the algorithm used.
+    class MapEntryFallbackKind : public babelwires::Enum {
+      public:
+        PRIMITIVE_TYPE("FallbackKind", "MapEntryFallbackKind", "11e020d5-526e-412d-aa9f-ac464ea34d26", 1);
+        MapEntryFallbackKind();
+
+        ENUM_DEFINE_CPP_ENUM(BW_MAP_ENTRY_FALLBACK_KIND);
+    };
+
     class MapEntryData : public Serializable, public Cloneable, public ProjectVisitable {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(MapEntryData);
@@ -29,29 +45,24 @@ namespace babelwires {
         virtual ~MapEntryData();
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const MapEntryData& other) const = 0;
-        bool operator!= (const MapEntryData& other) const { return !(*this == other); }
-        
-        Result validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef, bool isLastEntry) const;
+        bool operator!=(const MapEntryData& other) const { return !(*this == other); }
 
-        /// MapEntryData subclasses have a fixed hierarchy.
-        enum class Kind {
-            OneToOne,
-            AllToOne,
-            AllToSame,
+        Result validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef,
+                        bool isLastEntry) const;
 
-            NUM_KINDS
-        };
-
+        using Kind = MapEntryFallbackKind::Value;
         virtual Kind getKind() const = 0;
 
         static std::string getKindName(Kind kind);
         static bool isFallback(Kind kind);
 
         /// Create a MapEntryData of the given kind.
-        static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef, Kind kind);
+        static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
+                                                    const TypeRef& targetTypeRef, Kind kind);
 
       protected:
-        virtual Result doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const = 0;
+        virtual Result doValidate(const TypeSystem& typeSystem, const Type& sourceType,
+                                  const Type& targetType) const = 0;
     };
 } // namespace babelwires
 

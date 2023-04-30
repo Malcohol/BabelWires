@@ -41,5 +41,5 @@ babelwires::Result babelwires::AllToSameFallbackMapEntryData::doValidate(const T
 }
 
 babelwires::MapEntryData::Kind babelwires::AllToSameFallbackMapEntryData::getKind() const {
-    return Kind::AllToSame;
+    return Kind::All2Sm;
 }

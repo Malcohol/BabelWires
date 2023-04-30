@@ -105,5 +105,5 @@ babelwires::Result babelwires::OneToOneMapEntryData::doValidate(const TypeSystem
 }
 
 babelwires::MapEntryData::Kind babelwires::OneToOneMapEntryData::getKind() const {
-    return Kind::OneToOne;
+    return Kind::One21;
 }

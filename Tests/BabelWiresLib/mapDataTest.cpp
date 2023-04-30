@@ -288,14 +288,14 @@ TEST(MapDataTest, serializationTest) {
     EXPECT_EQ(dataPtr->m_sourceTypeRef, testTypeId1);
     EXPECT_EQ(dataPtr->m_targetTypeRef, testTypeId2);
     EXPECT_EQ(dataPtr->getNumMapEntries(), 2);
-    EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::OneToOne);
+    EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::One21);
     babelwires::ValueHolder sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
     ASSERT_NE(sourceValue, nullptr);
     const auto *const sourceAsTestValue = sourceValue->as<testUtils::TestValue>();
     ASSERT_NE(sourceAsTestValue, nullptr);
     EXPECT_EQ(sourceAsTestValue->m_value, "test mapData serialization");
 
-    EXPECT_EQ(dataPtr->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::AllToSame);
+    EXPECT_EQ(dataPtr->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::All2Sm);
 }
 
 
@@ -322,11 +322,11 @@ TEST(MapDataTest, cloneTest) {
     EXPECT_EQ(cloneMapData->m_sourceTypeRef, testTypeId1);
     EXPECT_EQ(cloneMapData->m_targetTypeRef, testTypeId2);
     EXPECT_EQ(cloneMapData->getNumMapEntries(), 2);
-    EXPECT_EQ(cloneMapData->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::OneToOne);
+    EXPECT_EQ(cloneMapData->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::One21);
     const auto *const clonedEntryData = cloneMapData->getMapEntry(0).as<babelwires::OneToOneMapEntryData>();
     ASSERT_NE(clonedEntryData, nullptr);
     EXPECT_NE(clonedEntryData, entryDataPtr);
     EXPECT_EQ(*clonedEntryData, *entryDataPtr);
-    EXPECT_EQ(cloneMapData->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::AllToSame);
+    EXPECT_EQ(cloneMapData->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::All2Sm);
 }
 

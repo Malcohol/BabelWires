@@ -35,16 +35,16 @@ TEST(ChangeEntryKindCommandTest, executeAndUndo) {
     mapData.emplaceBack(allToOne.clone());
     mapProject.setMapData(mapData);
 
-    babelwires::ChangeEntryKindCommand command("Set kind", babelwires::MapEntryData::Kind::OneToOne, 1);
-    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    babelwires::ChangeEntryKindCommand command("Set kind", babelwires::MapEntryData::Kind::One21, 1);
+    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::All21);
     EXPECT_NE(mapProject.getMapEntry(1).getData().as<babelwires::AllToOneFallbackMapEntryData>(), nullptr);
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
-    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::OneToOne);
+    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_NE(mapProject.getMapEntry(1).getData().as<babelwires::OneToOneMapEntryData>(), nullptr);
     command.undo(mapProject);
-    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::AllToOne);
+    EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::All21);
     EXPECT_NE(mapProject.getMapEntry(1).getData().as<babelwires::AllToOneFallbackMapEntryData>(), nullptr);
 }
 
@@ -70,7 +70,7 @@ TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {
     mapData.emplaceBack(allToOne.clone());
     mapProject.setMapData(mapData);
 
-    babelwires::ChangeEntryKindCommand command("Set kind", babelwires::MapEntryData::Kind::AllToOne, 1);
+    babelwires::ChangeEntryKindCommand command("Set kind", babelwires::MapEntryData::Kind::All21, 1);
     EXPECT_FALSE(command.initialize(mapProject));    
 }
 
@@ -96,6 +96,6 @@ TEST(ChangeEntryKindCommandTest, failNotFallbackAtEnd) {
     mapData.emplaceBack(allToOne.clone());
     mapProject.setMapData(mapData);
 
-    babelwires::ChangeEntryKindCommand command("Set kind", babelwires::MapEntryData::Kind::OneToOne, 2);
+    babelwires::ChangeEntryKindCommand command("Set kind", babelwires::MapEntryData::Kind::One21, 2);
     EXPECT_FALSE(command.initialize(mapProject));    
 }

@@ -22,12 +22,12 @@ namespace babelwires {
         MapApplicatorFallbackHelper(const MapData& mapData, const ValueAdapter<U>& targetAdapter) {
             const MapEntryData& fallbackEntryData = mapData.getMapEntry(mapData.getNumMapEntries() - 1);
             switch (fallbackEntryData.getKind()) {
-                case MapEntryData::Kind::AllToOne: {
+                case MapEntryData::Kind::All21: {
                     const auto& allToOne = static_cast<const AllToOneFallbackMapEntryData&>(fallbackEntryData);
                     m_fallbackValue = targetAdapter(*allToOne.getTargetValue());
                     break;
                 }
-                case MapEntryData::Kind::AllToSame:
+                case MapEntryData::Kind::All2Sm:
 #ifndef NDEBUG
                 {
                     constexpr bool sourceAndTargetAreSame = std::is_same_v<T, U>;

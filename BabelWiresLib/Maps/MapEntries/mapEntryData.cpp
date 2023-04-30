@@ -12,6 +12,12 @@
 #include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
 
+ENUM_DEFINE_ENUM_VALUE_SOURCE(BW_MAP_ENTRY_FALLBACK_KIND);
+
+babelwires::MapEntryFallbackKind::MapEntryFallbackKind()
+    : Enum(ENUM_IDENTIFIER_VECTOR(BW_MAP_ENTRY_FALLBACK_KIND), 0) {}
+
+
 babelwires::MapEntryData::~MapEntryData() = default;
 
 babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef, bool isLastEntry) const {
@@ -31,11 +37,11 @@ babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSyst
 
 std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef, Kind kind) {
     switch (kind) {
-        case Kind::OneToOne:
+        case Kind::One21:
             return std::make_unique<OneToOneMapEntryData>(typeSystem, sourceTypeRef, targetTypeRef);
-        case Kind::AllToOne:
+        case Kind::All21:
             return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeRef);
-        case Kind::AllToSame:
+        case Kind::All2Sm:
             return std::make_unique<AllToSameFallbackMapEntryData>();
     }
     assert(false && "Invalid kind");
@@ -43,16 +49,16 @@ std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const
 }
 
 bool babelwires::MapEntryData::isFallback(Kind kind) {
-    return (kind == Kind::AllToOne) || (kind == Kind::AllToSame);
+    return (kind == Kind::All21) || (kind == Kind::All2Sm);
 }
 
 std::string babelwires::MapEntryData::getKindName(Kind kind) {
     switch (kind) {
-        case Kind::OneToOne:
+        case Kind::One21:
             return "One to One";
-        case Kind::AllToOne:
+        case Kind::All21:
             return "All to One";
-        case Kind::AllToSame:
+        case Kind::All2Sm:
             return "All to Same";
     }
     assert(false && "Invalid kind");

@@ -15,7 +15,7 @@ namespace babelwires {
     /// 
     class MapType : public Type {
       public:
-        MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind fallbackKind = MapEntryData::Kind::AllToOne);
+        MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind fallbackKind = MapEntryData::Kind::All21);
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 

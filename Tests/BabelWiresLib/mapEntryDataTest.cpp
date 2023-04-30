@@ -22,15 +22,15 @@ namespace {
 } // namespace
 
 TEST(MapEntryDataTest, isFallback) {
-    EXPECT_FALSE(babelwires::MapEntryData::isFallback(babelwires::MapEntryData::Kind::OneToOne));
-    EXPECT_TRUE(babelwires::MapEntryData::isFallback(babelwires::MapEntryData::Kind::AllToOne));
-    EXPECT_TRUE(babelwires::MapEntryData::isFallback(babelwires::MapEntryData::Kind::AllToSame));
+    EXPECT_FALSE(babelwires::MapEntryData::isFallback(babelwires::MapEntryData::Kind::One21));
+    EXPECT_TRUE(babelwires::MapEntryData::isFallback(babelwires::MapEntryData::Kind::All21));
+    EXPECT_TRUE(babelwires::MapEntryData::isFallback(babelwires::MapEntryData::Kind::All2Sm));
 }
 
 TEST(MapEntryDataTest, getKindName) {
-    const auto oneToOneName = babelwires::MapEntryData::getKindName(babelwires::MapEntryData::Kind::OneToOne);
-    const auto allToOneName = babelwires::MapEntryData::getKindName(babelwires::MapEntryData::Kind::AllToOne);
-    const auto allToSameName = babelwires::MapEntryData::getKindName(babelwires::MapEntryData::Kind::AllToSame);
+    const auto oneToOneName = babelwires::MapEntryData::getKindName(babelwires::MapEntryData::Kind::One21);
+    const auto allToOneName = babelwires::MapEntryData::getKindName(babelwires::MapEntryData::Kind::All21);
+    const auto allToSameName = babelwires::MapEntryData::getKindName(babelwires::MapEntryData::Kind::All2Sm);
 
     EXPECT_GT(oneToOneName.length(), 0);
     EXPECT_GT(allToOneName.length(), 0);
@@ -48,18 +48,18 @@ TEST(MapEntryDataTest, create) {
 
     const auto oneToOne = babelwires::MapEntryData::create(typeSystem, testUtils::TestType::getThisIdentifier(),
                                                            testUtils::TestEnum::getThisIdentifier(),
-                                                           babelwires::MapEntryData::Kind::OneToOne);
+                                                           babelwires::MapEntryData::Kind::One21);
     const auto allToOne = babelwires::MapEntryData::create(typeSystem, testUtils::TestType::getThisIdentifier(),
                                                            testUtils::TestEnum::getThisIdentifier(),
-                                                           babelwires::MapEntryData::Kind::AllToOne);
+                                                           babelwires::MapEntryData::Kind::All21);
     // source == target for allToSame
     const auto allToSame = babelwires::MapEntryData::create(typeSystem, testUtils::TestType::getThisIdentifier(),
                                                             testUtils::TestType::getThisIdentifier(),
-                                                            babelwires::MapEntryData::Kind::AllToSame);
+                                                            babelwires::MapEntryData::Kind::All2Sm);
 
-    EXPECT_EQ(oneToOne->getKind(), babelwires::MapEntryData::Kind::OneToOne);
-    EXPECT_EQ(allToOne->getKind(), babelwires::MapEntryData::Kind::AllToOne);
-    EXPECT_EQ(allToSame->getKind(), babelwires::MapEntryData::Kind::AllToSame);
+    EXPECT_EQ(oneToOne->getKind(), babelwires::MapEntryData::Kind::One21);
+    EXPECT_EQ(allToOne->getKind(), babelwires::MapEntryData::Kind::All21);
+    EXPECT_EQ(allToSame->getKind(), babelwires::MapEntryData::Kind::All2Sm);
 
     EXPECT_TRUE(oneToOne->validate(typeSystem, testUtils::TestType::getThisIdentifier(),
                                    testUtils::TestEnum::getThisIdentifier(), false));
