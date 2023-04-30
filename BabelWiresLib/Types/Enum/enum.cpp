@@ -67,7 +67,7 @@ bool babelwires::Enum::isValidValue(const Value& v) const {
     return false;
 }
 
-babelwires::NewValueHolder babelwires::Enum::createValue() const {
+babelwires::NewValueHolder babelwires::Enum::createValue(const TypeSystem& typeSystem) const {
     return ValueHolder::makeValue<EnumValue>(getIdentifierFromIndex(getIndexOfDefaultValue()));
 }
 

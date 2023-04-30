@@ -18,7 +18,7 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const Typ
     const Type *const targetType = targetTypeRef.tryResolve(typeSystem);
     assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
 
-    m_targetValue = targetType->createValue().is<EditableValue>();
+    m_targetValue = targetType->createValue(typeSystem).is<EditableValue>();
 }
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other) {

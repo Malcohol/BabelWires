@@ -9,9 +9,10 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(IntTypeTest, defaultIntTypeCreateValue) {
+    babelwires::TypeSystem typeSystem;
     babelwires::DefaultIntType intType;
 
-    babelwires::ValueHolder newValue = intType.createValue();
+    babelwires::ValueHolder newValue = intType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newIntValue = newValue->as<babelwires::IntValue>();
@@ -68,7 +69,7 @@ TEST(IntTypeTest, constructedIntTypeCreateValue) {
 
     const babelwires::Type* const intType = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
-    babelwires::ValueHolder newValue = intType->createValue();
+    babelwires::ValueHolder newValue = intType->createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newIntValue = newValue->as<babelwires::IntValue>();

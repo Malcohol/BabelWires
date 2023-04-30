@@ -33,8 +33,8 @@ babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const TypeSystem& typeSys
     const Type* targetType = targetTypeRef.tryResolve(typeSystem);
     assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
 
-    m_sourceValue = sourceType->createValue().is<EditableValue>();
-    m_targetValue = targetType->createValue().is<EditableValue>();
+    m_sourceValue = sourceType->createValue(typeSystem).is<EditableValue>();
+    m_targetValue = targetType->createValue(typeSystem).is<EditableValue>();
 }
 
 std::size_t babelwires::OneToOneMapEntryData::getHash() const {

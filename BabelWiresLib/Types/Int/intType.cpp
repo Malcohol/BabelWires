@@ -17,7 +17,7 @@ babelwires::IntType::IntType(Range<IntValue::NativeType> range, IntValue::Native
 {
 }
 
-babelwires::NewValueHolder babelwires::IntType::createValue() const {
+babelwires::NewValueHolder babelwires::IntType::createValue(const TypeSystem& typeSystem) const {
     return ValueHolder::makeValue<IntValue>(m_defaultValue);
 }
 

@@ -8,9 +8,10 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(StringTypeTest, stringTypeCreateValue) {
+    babelwires::TypeSystem typeSystem;
     babelwires::StringType stringType;
 
-    babelwires::ValueHolder newValue = stringType.createValue();
+    babelwires::ValueHolder newValue = stringType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newStringValue = newValue->as<babelwires::StringValue>();

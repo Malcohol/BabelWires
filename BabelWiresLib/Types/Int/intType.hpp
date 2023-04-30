@@ -20,7 +20,7 @@ namespace babelwires {
         /// Get the range of valid values.
         Range<IntValue::NativeType> getRange() const;
 
-        NewValueHolder createValue() const override;
+        NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
         bool isValidValue(const Value& v) const override;
 

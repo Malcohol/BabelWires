@@ -57,7 +57,8 @@ void babelwires::SimpleValueFeature::setValue(Value&& value) {
 }
 
 void babelwires::SimpleValueFeature::doSetToDefault() {
-    auto [newValue, _] = getType().createValue();
+    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
+    auto [newValue, _] = getType().createValue(context.m_typeSystem);
     if (!m_value || (*newValue != *m_value)) {
         m_value = std::move(newValue);
         setChanged(Changes::ValueChanged);

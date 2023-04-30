@@ -9,9 +9,10 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(RationalTypeTest, defaultRationalTypeCreateValue) {
+    babelwires::TypeSystem typeSystem;
     babelwires::DefaultRationalType rationalType;
 
-    babelwires::ValueHolder newValue = rationalType.createValue();
+    babelwires::ValueHolder newValue = rationalType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newRationalValue = newValue->as<babelwires::RationalValue>();
@@ -69,7 +70,7 @@ TEST(RationalTypeTest, constructedRationalTypeCreateValue) {
 
     const babelwires::Type* const rationalType = rationalTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
-    babelwires::ValueHolder newValue = rationalType->createValue();
+    babelwires::ValueHolder newValue = rationalType->createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newRationalValue = newValue->as<babelwires::RationalValue>();

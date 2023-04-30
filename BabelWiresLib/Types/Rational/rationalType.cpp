@@ -17,7 +17,7 @@ babelwires::RationalType::RationalType(Range<Rational> range, Rational defaultVa
 {
 }
 
-babelwires::NewValueHolder babelwires::RationalType::createValue() const {
+babelwires::NewValueHolder babelwires::RationalType::createValue(const TypeSystem& typeSystem) const {
     return ValueHolder::makeValue<RationalValue>(m_defaultValue);
 }
 

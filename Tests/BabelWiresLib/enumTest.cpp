@@ -79,9 +79,10 @@ TEST(EnumTest, enumWithCppEnum) {
 
 
 TEST(EnumTest, createValue) {
+    babelwires::TypeSystem typeSystem;
     testUtils::TestEnum testEnum;
     
-    auto [valueHolder, value] = testEnum.createValue();
+    auto [valueHolder, value] = testEnum.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
     auto enumValue = value.as<babelwires::EnumValue>();
     EXPECT_TRUE(enumValue);
@@ -95,7 +96,6 @@ TEST(EnumTest, createValue) {
 }
 
 TEST(EnumTest, subEnum) {
-
     babelwires::TypeSystem typeSystem;
 
     typeSystem.addEntry<testUtils::TestEnum>();
@@ -105,7 +105,7 @@ TEST(EnumTest, subEnum) {
     const auto& testEnum = typeSystem.getEntryByType<testUtils::TestEnum>();
     const auto& testSubEnum = typeSystem.getEntryByType<testUtils::TestSubEnum>();
 
-    auto [valueHolder, value] = testSubEnum.createValue();
+    auto [valueHolder, value] = testSubEnum.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
     auto enumValue = value.as<babelwires::EnumValue>();
     EXPECT_TRUE(enumValue);

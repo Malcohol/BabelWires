@@ -50,7 +50,7 @@ namespace babelwires {
         /// This can resolve the discriminator in the identifier.
         bool isAValue(const ShortId& id) const;
 
-        NewValueHolder createValue() const override;
+        NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
         bool isValidValue(const Value& v) const override;
 

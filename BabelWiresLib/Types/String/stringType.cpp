@@ -11,7 +11,7 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::NewValueHolder babelwires::StringType::createValue() const {
+babelwires::NewValueHolder babelwires::StringType::createValue(const TypeSystem& typeSystem) const {
     return ValueHolder::makeValue<StringValue>();
 }
 
