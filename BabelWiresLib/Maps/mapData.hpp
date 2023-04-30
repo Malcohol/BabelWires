@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Utilities/result.hpp>
@@ -18,7 +19,6 @@
 #include <memory>
 
 namespace babelwires {
-    class MapEntryData;
     class TypeSystem;
     class Type;
 
@@ -35,6 +35,8 @@ namespace babelwires {
         MapData();
         MapData(const MapData& other);
         MapData(MapData&& other);
+        MapData(const TypeSystem& typeSystem, TypeRef sourceRef, TypeRef targetRef, MapEntryData::Kind fallbackKind);
+
         MapData& operator=(const MapData& other);
         MapData& operator=(MapData&& other);
         virtual ~MapData();

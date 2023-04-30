@@ -30,6 +30,13 @@ babelwires::MapData::MapData(MapData&& other)
     , m_targetTypeRef(other.m_targetTypeRef)
     , m_mapEntries(std::move(other.m_mapEntries)) {}
 
+babelwires::MapData::MapData(const TypeSystem& typeSystem, TypeRef sourceRef, TypeRef targetRef, MapEntryData::Kind fallbackKind) 
+    : m_sourceTypeRef(std::move(sourceRef))
+    , m_targetTypeRef(std::move(targetRef))
+{
+    m_mapEntries.emplace_back(MapEntryData::create(typeSystem, m_sourceTypeRef, m_targetTypeRef, fallbackKind));
+}
+
 babelwires::MapData& babelwires::MapData::operator=(const MapData& other) {
     m_sourceTypeRef = other.m_sourceTypeRef;
     m_targetTypeRef = other.m_targetTypeRef;

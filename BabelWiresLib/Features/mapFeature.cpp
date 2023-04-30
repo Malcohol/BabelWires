@@ -54,13 +54,8 @@ babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryDa
     getAllowedTargetTypeRefs(allowedTypes);
     TypeRef defaultTargetTypeRef = allowedTypes.getDefaultTypeRef();
 
-    MapData mapData;
-    mapData.setSourceTypeRef(defaultSourceTypeRef);
-    mapData.setTargetTypeRef(defaultTargetTypeRef);
-
     const TypeSystem& typeSystem = RootFeature::getProjectContextAt(*this).m_typeSystem;
-    mapData.emplaceBack(MapEntryData::create(typeSystem, defaultSourceTypeRef, defaultTargetTypeRef, fallbackKind));
-    return mapData;
+    return MapData(typeSystem, defaultSourceTypeRef, defaultTargetTypeRef, fallbackKind);
 }
 
 babelwires::MapData babelwires::MapFeature::getDefaultMapData() const {
