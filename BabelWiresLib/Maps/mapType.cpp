@@ -33,3 +33,10 @@ bool babelwires::MapType::isValidValue(const TypeSystem& typeSystem, const Value
 std::string babelwires::MapType::getKind() const {
     return MapData::serializationType;
 }
+
+const babelwires::TypeRef& babelwires::MapType::getSourceTypeRef() const {
+    return m_sourceTypeRef;
+}
+const babelwires::TypeRef& babelwires::MapType::getTargetTypeRef() const {
+    return m_targetTypeRef;
+}
