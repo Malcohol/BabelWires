@@ -1,5 +1,5 @@
 /**
- * A TypeConstructor which constructs an int type with a particular range and default.
+ * A TypeConstructor which constructs a map type.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,7 +11,7 @@
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 namespace babelwires {
-    /// Construct a new IntType from three IntValues: min, max and default.
+    /// Construct a new MapType from a source and target type and a default fallback kind.
     class MapTypeConstructor : public TypeConstructor {
       public:
         /// Note that the we don't represent the default in the name.

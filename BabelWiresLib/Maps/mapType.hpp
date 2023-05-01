@@ -15,7 +15,7 @@ namespace babelwires {
     /// 
     class MapType : public Type {
       public:
-        MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind fallbackKind = MapEntryData::Kind::All21);
+        MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind defaultFallbackKind = MapEntryData::Kind::All21);
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
@@ -29,6 +29,6 @@ namespace babelwires {
       private:
         TypeRef m_sourceTypeRef;
         TypeRef m_targetTypeRef;
-        MapEntryData::Kind m_fallbackKind;
+        MapEntryData::Kind m_defaultFallbackKind;
     };
 } // namespace babelwires

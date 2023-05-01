@@ -10,15 +10,15 @@
 #include <BabelWiresLib/Maps/mapData.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-babelwires::MapType::MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind fallbackKind)
+babelwires::MapType::MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind defaultFallbackKind)
     : m_sourceTypeRef(std::move(sourceTypeRef))
     , m_targetTypeRef(std::move(targetTypeRef))
-    , m_fallbackKind(fallbackKind) {
-    assert(MapEntryData::isFallback(fallbackKind) && "Only a fallback kind is expected here");
+    , m_defaultFallbackKind(defaultFallbackKind) {
+    assert(MapEntryData::isFallback(defaultFallbackKind) && "Only a fallback kind is expected here");
 }
 
 babelwires::NewValueHolder babelwires::MapType::createValue(const TypeSystem& typeSystem) const {
-    return ValueHolder::makeValue<MapData>(typeSystem, m_sourceTypeRef, m_targetTypeRef, m_fallbackKind);
+    return ValueHolder::makeValue<MapData>(typeSystem, m_sourceTypeRef, m_targetTypeRef, m_defaultFallbackKind);
 }
 
 bool babelwires::MapType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
