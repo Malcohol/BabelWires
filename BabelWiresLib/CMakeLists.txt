@@ -32,7 +32,6 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
 	Maps/Commands/addEntryToMapCommand.cpp
-	Maps/mapType.cpp
 	Maps/Commands/removeEntryFromMapCommand.cpp
 	Maps/Commands/replaceMapEntryCommand.cpp
 	Maps/Commands/setMapSourceTypeCommand.cpp
@@ -47,6 +46,8 @@ SET( BABELWIRESLIB_SRCS
 	Maps/MapEntries/allToSameFallbackMapEntryData.cpp
 	Maps/MapEntries/allToOneFallbackMapEntryData.cpp
 	Maps/mapProjectEntry.cpp
+	Maps/mapType.cpp
+	Maps/mapTypeConstructor.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp

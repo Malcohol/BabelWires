@@ -23,6 +23,9 @@ namespace babelwires {
 
         std::string getKind() const override;
 
+        const TypeRef& getSourceTypeRef() const;
+        const TypeRef& getTargetTypeRef() const;
+
       private:
         TypeRef m_sourceTypeRef;
         TypeRef m_targetTypeRef;
