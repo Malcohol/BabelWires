@@ -8,8 +8,8 @@
 #pragma once
 
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
-#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
-#include <BabelWiresLib/Maps/mapData.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/mapData.hpp>
 
 namespace babelwires {
     /// A MapFeature describes a mapping between types.

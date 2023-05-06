@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
-#include <BabelWiresLib/Maps/mapData.hpp>
+#include <BabelWiresLib/Types/Map/mapData.hpp>
 
 namespace babelwires {
     struct MapValueAssignmentData : LocalModifierData {

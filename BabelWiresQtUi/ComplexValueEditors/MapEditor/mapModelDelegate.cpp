@@ -12,8 +12,8 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 
-#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
-#include <BabelWiresLib/Maps/Commands/replaceMapEntryCommand.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/Commands/replaceMapEntryCommand.hpp>
 
 babelwires::MapModelDelegate::MapModelDelegate(QObject* parent)
     : QStyledItemDelegate(parent) {}

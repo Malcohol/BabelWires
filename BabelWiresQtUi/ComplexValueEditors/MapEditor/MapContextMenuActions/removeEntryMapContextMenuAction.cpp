@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 
-#include <BabelWiresLib/Maps/Commands/removeEntryFromMapCommand.hpp>
+#include <BabelWiresLib/Types/Map/Commands/removeEntryFromMapCommand.hpp>
 
 babelwires::RemoveEntryMapContextMenuAction::RemoveEntryMapContextMenuAction(const QString& text,
                                                                        unsigned int indexOfEntry)

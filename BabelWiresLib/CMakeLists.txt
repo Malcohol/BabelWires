@@ -31,23 +31,23 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
-	Maps/Commands/addEntryToMapCommand.cpp
-	Maps/Commands/removeEntryFromMapCommand.cpp
-	Maps/Commands/replaceMapEntryCommand.cpp
-	Maps/Commands/setMapSourceTypeCommand.cpp
-	Maps/Commands/setMapTargetTypeCommand.cpp
-	Maps/Commands/changeEntryKindCommand.cpp
-	Maps/Commands/setMapCommand.cpp
-	Maps/mapProject.cpp
-	Maps/mapSerialization.cpp
-	Maps/mapData.cpp
-	Maps/MapEntries/mapEntryData.cpp
-	Maps/MapEntries/oneToOneMapEntryData.cpp
-	Maps/MapEntries/allToSameFallbackMapEntryData.cpp
-	Maps/MapEntries/allToOneFallbackMapEntryData.cpp
-	Maps/mapProjectEntry.cpp
-	Maps/mapType.cpp
-	Maps/mapTypeConstructor.cpp
+	Types/Map/Commands/addEntryToMapCommand.cpp
+	Types/Map/Commands/removeEntryFromMapCommand.cpp
+	Types/Map/Commands/replaceMapEntryCommand.cpp
+	Types/Map/Commands/setMapSourceTypeCommand.cpp
+	Types/Map/Commands/setMapTargetTypeCommand.cpp
+	Types/Map/Commands/changeEntryKindCommand.cpp
+	Types/Map/Commands/setMapCommand.cpp
+	Types/Map/mapProject.cpp
+	Types/Map/mapSerialization.cpp
+	Types/Map/mapData.cpp
+	Types/Map/MapEntries/mapEntryData.cpp
+	Types/Map/MapEntries/oneToOneMapEntryData.cpp
+	Types/Map/MapEntries/allToSameFallbackMapEntryData.cpp
+	Types/Map/MapEntries/allToOneFallbackMapEntryData.cpp
+	Types/Map/mapProjectEntry.cpp
+	Types/Map/mapType.cpp
+	Types/Map/mapTypeConstructor.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp

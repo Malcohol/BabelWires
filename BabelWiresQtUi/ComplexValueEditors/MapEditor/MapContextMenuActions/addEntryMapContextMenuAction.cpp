@@ -10,8 +10,8 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 
-#include <BabelWiresLib/Maps/Commands/addEntryToMapCommand.hpp>
-#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/Commands/addEntryToMapCommand.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 babelwires::AddEntryMapContextMenuAction::AddEntryMapContextMenuAction(const QString& text,

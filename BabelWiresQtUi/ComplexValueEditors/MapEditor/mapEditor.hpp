@@ -11,7 +11,7 @@
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Maps/mapProject.hpp>
+#include <BabelWiresLib/Types/Map/mapProject.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <QWidget>

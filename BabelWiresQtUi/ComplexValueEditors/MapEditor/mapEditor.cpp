@@ -16,10 +16,10 @@
 
 #include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapCommand.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapSourceTypeCommand.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapTargetTypeCommand.hpp>
-#include <BabelWiresLib/Maps/mapSerialization.hpp>
+#include <BabelWiresLib/Types/Map/Commands/setMapCommand.hpp>
+#include <BabelWiresLib/Types/Map/Commands/setMapSourceTypeCommand.hpp>
+#include <BabelWiresLib/Types/Map/Commands/setMapTargetTypeCommand.hpp>
+#include <BabelWiresLib/Types/Map/mapSerialization.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
