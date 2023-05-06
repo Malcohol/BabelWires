@@ -84,7 +84,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/selectUnionBranchCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
 	TypeSystem/typeSystem.cpp
-	Types/Enum/enum.cpp
+	Types/Enum/enumType.cpp
 	Types/Enum/addBlankToEnum.cpp
 	Types/Enum/enumValue.cpp
 	Types/Enum/enumFeature.cpp

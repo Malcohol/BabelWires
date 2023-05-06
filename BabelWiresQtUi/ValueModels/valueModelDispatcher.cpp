@@ -13,7 +13,7 @@
 #include <BabelWiresQtUi/ValueModels/rationalValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/valueModelRegistry.hpp>
 
-#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
