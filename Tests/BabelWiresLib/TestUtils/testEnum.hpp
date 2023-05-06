@@ -24,10 +24,10 @@ namespace babelwires {
 namespace testUtils {
     /// Get values for the test enum.
     /// Note: The identifiers are not actually registered in the identifierRegistry.
-    extern const babelwires::Enum::EnumValues g_enumValues;
+    extern const babelwires::EnumType::EnumValues g_enumValues;
 
 // Foo, Bar, Erm, Oom, Boo
-    struct TestEnum : babelwires::Enum {
+    struct TestEnum : babelwires::EnumType {
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Enum"), 1);
         TestEnum();
 
@@ -36,19 +36,19 @@ namespace testUtils {
     };
 
     // Bar, Erm, Oom
-    struct TestSubEnum : babelwires::Enum {
+    struct TestSubEnum : babelwires::EnumType {
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("SubEnum"), 1);
         TestSubEnum();
     };
 
     // Bar, Erm
-    struct TestSubSubEnum1 : babelwires::Enum {
+    struct TestSubSubEnum1 : babelwires::EnumType {
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("SubSubEnum1"), 1);
         TestSubSubEnum1();
     };
 
     // Erm, Oom
-    struct TestSubSubEnum2 : babelwires::Enum {
+    struct TestSubSubEnum2 : babelwires::EnumType {
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("SubSubEnum2"), 1);
         TestSubSubEnum2();
     };

@@ -24,16 +24,16 @@ babelwires::AddBlankToEnum::constructType(const TypeSystem& typeSystem, TypeRef 
     if (valueArguments.size() != 0) {
         throw TypeSystemException() << "AddBlankToEnum expects zero value argument but got " << valueArguments.size();
     }
-    const Enum* const srcEnum = typeArguments[0]->as<Enum>();
+    const EnumType* const srcEnum = typeArguments[0]->as<EnumType>();
     if (!srcEnum) {
         throw TypeSystemException() << "Non-enum argument << " << typeArguments[0]->getName()
                                     << " provided to AddBlankToEnum";
     }
-    return std::make_unique<ConstructedType<Enum>>(std::move(newTypeRef), ensureBlankValue(srcEnum->getEnumValues()),
+    return std::make_unique<ConstructedType<EnumType>>(std::move(newTypeRef), ensureBlankValue(srcEnum->getEnumValues()),
                                                    srcEnum->getIndexOfDefaultValue());
 }
 
-babelwires::Enum::EnumValues babelwires::AddBlankToEnum::ensureBlankValue(const Enum::EnumValues& srcValues) {
+babelwires::EnumType::EnumValues babelwires::AddBlankToEnum::ensureBlankValue(const EnumType::EnumValues& srcValues) {
     if (srcValues.size() > 0) {
         if (srcValues[srcValues.size() - 1] == AddBlankToEnum::getBlankValue()) {
             return srcValues;
@@ -41,7 +41,7 @@ babelwires::Enum::EnumValues babelwires::AddBlankToEnum::ensureBlankValue(const 
         assert((std::find(srcValues.begin(), srcValues.end(), AddBlankToEnum::getBlankValue()) == srcValues.end()) &&
                "Found dummy value not at end of EnumValue vector.");
     }
-    babelwires::Enum::EnumValues newValues = srcValues;
+    babelwires::EnumType::EnumValues newValues = srcValues;
     newValues.emplace_back(AddBlankToEnum::getBlankValue());
     return newValues;
 }

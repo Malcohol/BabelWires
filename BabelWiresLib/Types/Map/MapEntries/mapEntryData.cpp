@@ -15,7 +15,7 @@
 ENUM_DEFINE_ENUM_VALUE_SOURCE(BW_MAP_ENTRY_FALLBACK_KIND);
 
 babelwires::MapEntryFallbackKind::MapEntryFallbackKind()
-    : Enum(ENUM_IDENTIFIER_VECTOR(BW_MAP_ENTRY_FALLBACK_KIND), 0) {}
+    : EnumType(ENUM_IDENTIFIER_VECTOR(BW_MAP_ENTRY_FALLBACK_KIND), 0) {}
 
 
 babelwires::MapEntryData::~MapEntryData() = default;

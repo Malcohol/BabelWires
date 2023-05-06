@@ -15,12 +15,12 @@
 
 namespace babelwires {
 
-    /// Converts MapValue with a Enum source type, to a map between source indices and given type U.
+    /// Converts MapValue with a EnumType source type, to a map between source indices and given type U.
     /// This can also be used where the subtype of such an enum is expected, by using the supertype as ENUM.
     /// NOTE: In the cases where the MapValue allows AllToSame, U must be unsigned int.
     template <typename U> class EnumSourceIndexMapApplicator {
       public:
-        EnumSourceIndexMapApplicator(const MapValue& mapValue, const Enum& sourceEnumType,
+        EnumSourceIndexMapApplicator(const MapValue& mapValue, const EnumType& sourceEnumType,
                                      const ValueAdapter<U>& targetAdapter) : m_srcEnum(sourceEnumType) {
             const unsigned int numEnumValues = sourceEnumType.getEnumValues().size();
             m_indexToTarget.resize(numEnumValues);
@@ -46,12 +46,12 @@ namespace babelwires {
         }
 
         U operator[](unsigned int srcIndex) const {
-            assert((srcIndex < m_srcEnum.getEnumValues().size()) && "Enum queried with out-of-range value");
+            assert((srcIndex < m_srcEnum.getEnumValues().size()) && "EnumType queried with out-of-range value");
             return m_indexToTarget[srcIndex];
         }
 
       private:
-        const Enum& m_srcEnum;
+        const EnumType& m_srcEnum;
         std::vector<U> m_indexToTarget;
     };
 
@@ -84,7 +84,7 @@ namespace babelwires {
 
         U operator[](const typename ENUM::Value& t) const {
             const unsigned int index = static_cast<unsigned int>(t);
-            assert(index < static_cast<unsigned int>(ENUM::Value::NUM_VALUES) && "Enum queried with out-of-range value");
+            assert(index < static_cast<unsigned int>(ENUM::Value::NUM_VALUES) && "EnumType queried with out-of-range value");
             return m_array[index];
         }
 

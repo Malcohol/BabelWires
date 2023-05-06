@@ -22,7 +22,7 @@ namespace babelwires {
     /// Convert an EnumValue to a unsigned int corresponding to the index of the enum entry.
     /// Note: Be very careful with this if the enum could change in the future.
     struct EnumToIndexValueAdapter {
-        const Enum& m_enum;
+        const EnumType& m_enum;
 
         unsigned int operator() (const Value& value) const {
             const auto& enumValue = value.is<EnumValue>();

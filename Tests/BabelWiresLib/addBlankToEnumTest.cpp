@@ -17,8 +17,8 @@
 TEST(AddBlankToEnum, ensureBlankValue) {
     testUtils::TestLog log;
 
-    babelwires::Enum::EnumValues values{"Foo", "Bar"};
-    babelwires::Enum::EnumValues hasBlank = babelwires::AddBlankToEnum::ensureBlankValue(values);
+    babelwires::EnumType::EnumValues values{"Foo", "Bar"};
+    babelwires::EnumType::EnumValues hasBlank = babelwires::AddBlankToEnum::ensureBlankValue(values);
     EXPECT_EQ(hasBlank.size(), 3);
     EXPECT_EQ(hasBlank[0], "Foo");
     EXPECT_EQ(hasBlank[1], "Bar");
@@ -28,8 +28,8 @@ TEST(AddBlankToEnum, ensureBlankValue) {
 TEST(AddBlankToEnum, ensureBlankValueEmpty) {
     testUtils::TestLog log;
 
-    babelwires::Enum::EnumValues empty;
-    babelwires::Enum::EnumValues justBlank = babelwires::AddBlankToEnum::ensureBlankValue(empty);
+    babelwires::EnumType::EnumValues empty;
+    babelwires::EnumType::EnumValues justBlank = babelwires::AddBlankToEnum::ensureBlankValue(empty);
     EXPECT_EQ(justBlank.size(), 1);
     EXPECT_EQ(justBlank[0], babelwires::AddBlankToEnum::getBlankValue());
 }
@@ -46,7 +46,7 @@ TEST(AddBlankToEnum, constructType) {
     EXPECT_EQ(newType->getTypeRef(), babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
                                                          testUtils::TestEnum::getThisIdentifier()));
 
-    const babelwires::Enum* const newEnum = newType->as<babelwires::Enum>();
+    const babelwires::EnumType* const newEnum = newType->as<babelwires::EnumType>();
     ASSERT_NE(newEnum, nullptr);
 
     EXPECT_EQ(newEnum->getEnumValues().size(), testEnum.getEnumValues().size() + 1);
@@ -72,7 +72,7 @@ TEST(AddBlankToEnum, idempotency) {
                                   babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
                                                         testUtils::TestEnum::getThisIdentifier())));
 
-    const babelwires::Enum* const newEnum = newType->as<babelwires::Enum>();
+    const babelwires::EnumType* const newEnum = newType->as<babelwires::EnumType>();
     ASSERT_NE(newEnum, nullptr);
 
     EXPECT_EQ(newEnum->getEnumValues().size(), testEnum.getEnumValues().size() + 1);

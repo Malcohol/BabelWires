@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
-babelwires::Enum::Enum(EnumValues values, unsigned int indexOfDefaultValue)
+babelwires::EnumType::EnumType(EnumValues values, unsigned int indexOfDefaultValue)
     : m_values(std::move(values))
     , m_indexOfDefaultValue(indexOfDefaultValue) {
     m_valueToIndex.reserve(m_values.size());
@@ -20,15 +20,15 @@ babelwires::Enum::Enum(EnumValues values, unsigned int indexOfDefaultValue)
     }
 }
 
-const babelwires::Enum::EnumValues& babelwires::Enum::getEnumValues() const {
+const babelwires::EnumType::EnumValues& babelwires::EnumType::getEnumValues() const {
     return m_values;
 }
 
-unsigned int babelwires::Enum::getIndexOfDefaultValue() const {
+unsigned int babelwires::EnumType::getIndexOfDefaultValue() const {
     return m_indexOfDefaultValue;
 }
 
-int babelwires::Enum::tryGetIndexFromIdentifier(babelwires::ShortId id) const {
+int babelwires::EnumType::tryGetIndexFromIdentifier(babelwires::ShortId id) const {
     const auto it = m_valueToIndex.find(id);
     if (it != m_valueToIndex.end()) {
         return it->second;
@@ -36,20 +36,20 @@ int babelwires::Enum::tryGetIndexFromIdentifier(babelwires::ShortId id) const {
     return -1;
 }
 
-unsigned int babelwires::Enum::getIndexFromIdentifier(babelwires::ShortId id) const {
+unsigned int babelwires::EnumType::getIndexFromIdentifier(babelwires::ShortId id) const {
     const EnumValues& values = getEnumValues();
     const auto it = m_valueToIndex.find(id);
     assert((it != m_valueToIndex.end()) && "id not found in enum");
     return it->second;
 }
 
-babelwires::ShortId babelwires::Enum::getIdentifierFromIndex(unsigned int index) const {
+babelwires::ShortId babelwires::EnumType::getIdentifierFromIndex(unsigned int index) const {
     const EnumValues& values = getEnumValues();
     assert(index < values.size());
     return values[index];
 }
 
-bool babelwires::Enum::isAValue(const babelwires::ShortId& id) const {
+bool babelwires::EnumType::isAValue(const babelwires::ShortId& id) const {
     const EnumValues& values = getEnumValues();
     const auto it = m_valueToIndex.find(id);
     if (it == m_valueToIndex.end()) {
@@ -60,19 +60,19 @@ bool babelwires::Enum::isAValue(const babelwires::ShortId& id) const {
     return true;
 }
 
-bool babelwires::Enum::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+bool babelwires::EnumType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
     if (const auto* enumValue = v.as<EnumValue>()) {
         return isAValue(enumValue->get());
     }
     return false;
 }
 
-babelwires::NewValueHolder babelwires::Enum::createValue(const TypeSystem& typeSystem) const {
+babelwires::NewValueHolder babelwires::EnumType::createValue(const TypeSystem& typeSystem) const {
     return ValueHolder::makeValue<EnumValue>(getIdentifierFromIndex(getIndexOfDefaultValue()));
 }
 
-bool babelwires::Enum::verifySupertype(const Type& supertype) const {
-    const Enum& parentEnum = supertype.is<Enum>();
+bool babelwires::EnumType::verifySupertype(const Type& supertype) const {
+    const EnumType& parentEnum = supertype.is<EnumType>();
     for (const auto& v : m_values) {
         ShortId parentId = v;
         assert(parentEnum.isAValue(parentId));
@@ -83,6 +83,6 @@ bool babelwires::Enum::verifySupertype(const Type& supertype) const {
     return true;
 }
 
-std::string babelwires::Enum::getKind() const {
+std::string babelwires::EnumType::getKind() const {
     return EnumValue::serializationType;
 }

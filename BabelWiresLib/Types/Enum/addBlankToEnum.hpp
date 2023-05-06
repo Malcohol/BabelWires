@@ -33,6 +33,6 @@ namespace babelwires {
                                           const TypeRef& other) const override;
 
         /// Add a blank to the values unless one is already there.
-        static Enum::EnumValues ensureBlankValue(const Enum::EnumValues& srcValues);
+        static EnumType::EnumValues ensureBlankValue(const EnumType::EnumValues& srcValues);
     };
 } // namespace babelwires

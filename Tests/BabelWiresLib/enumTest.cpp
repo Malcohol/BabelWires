@@ -16,7 +16,7 @@
 TEST(EnumTest, basic) {
     testUtils::TestEnum testEnum;
 
-    EXPECT_TRUE(testUtils::areEqualSets(testEnum.getEnumValues(), babelwires::Enum::EnumValues{"Foo", "Bar", "Erm", "Oom", "Boo"}));
+    EXPECT_TRUE(testUtils::areEqualSets(testEnum.getEnumValues(), babelwires::EnumType::EnumValues{"Foo", "Bar", "Erm", "Oom", "Boo"}));
 
     EXPECT_EQ(testEnum.getIndexOfDefaultValue(), 1);
 
@@ -46,9 +46,9 @@ TEST(EnumTest, basic) {
 ENUM_DEFINE_ENUM_VALUE_SOURCE(TEST_ENUM_VALUES);
 
 TEST(EnumTest, enumWithCppEnum) {
-    struct TestEnum : babelwires::Enum {
+    struct TestEnum : babelwires::EnumType {
         TestEnum()
-            : Enum(ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
+            : EnumType(ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
 
         static babelwires::PrimitiveTypeId getThisIdentifier() {
             return babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(

@@ -22,7 +22,7 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     m_valueModel = &m_valueModelStorage;
     if (valueModelRegistry.handleFeature(&type, m_valueModel)) {
         // Handled by a registered handler.
-    } else if (type.as<Enum>()) {
+    } else if (type.as<EnumType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::EnumValueModel));
         new (m_valueModel) babelwires::EnumValueModel();
     } else if (type.as<IntType>()) {
