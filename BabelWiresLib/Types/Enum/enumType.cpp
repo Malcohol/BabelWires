@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
-babelwires::EnumType::EnumType(EnumValues values, unsigned int indexOfDefaultValue)
+babelwires::EnumType::EnumType(ValueSet values, unsigned int indexOfDefaultValue)
     : m_values(std::move(values))
     , m_indexOfDefaultValue(indexOfDefaultValue) {
     m_valueToIndex.reserve(m_values.size());
@@ -20,7 +20,7 @@ babelwires::EnumType::EnumType(EnumValues values, unsigned int indexOfDefaultVal
     }
 }
 
-const babelwires::EnumType::EnumValues& babelwires::EnumType::getEnumValues() const {
+const babelwires::EnumType::ValueSet& babelwires::EnumType::getValueSet() const {
     return m_values;
 }
 
@@ -37,20 +37,20 @@ int babelwires::EnumType::tryGetIndexFromIdentifier(babelwires::ShortId id) cons
 }
 
 unsigned int babelwires::EnumType::getIndexFromIdentifier(babelwires::ShortId id) const {
-    const EnumValues& values = getEnumValues();
+    const ValueSet& values = getValueSet();
     const auto it = m_valueToIndex.find(id);
     assert((it != m_valueToIndex.end()) && "id not found in enum");
     return it->second;
 }
 
 babelwires::ShortId babelwires::EnumType::getIdentifierFromIndex(unsigned int index) const {
-    const EnumValues& values = getEnumValues();
+    const ValueSet& values = getValueSet();
     assert(index < values.size());
     return values[index];
 }
 
 bool babelwires::EnumType::isAValue(const babelwires::ShortId& id) const {
-    const EnumValues& values = getEnumValues();
+    const ValueSet& values = getValueSet();
     const auto it = m_valueToIndex.find(id);
     if (it == m_valueToIndex.end()) {
         return false;

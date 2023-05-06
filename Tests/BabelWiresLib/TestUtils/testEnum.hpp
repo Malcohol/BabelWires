@@ -24,7 +24,7 @@ namespace babelwires {
 namespace testUtils {
     /// Get values for the test enum.
     /// Note: The identifiers are not actually registered in the identifierRegistry.
-    extern const babelwires::EnumType::EnumValues g_enumValues;
+    extern const babelwires::EnumType::ValueSet g_enumValues;
 
 // Foo, Bar, Erm, Oom, Boo
     struct TestEnum : babelwires::EnumType {

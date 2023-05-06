@@ -19,7 +19,7 @@ QWidget* babelwires::EnumValueModel::createEditor(QWidget* parent, const QModelI
     auto dropDownBox = std::make_unique<DropDownValueEditor>(parent, index);
     {
         IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
-        for (auto enumValue : e->getEnumValues()) {
+        for (auto enumValue : e->getValueSet()) {
             dropDownBox->addItem(identifierRegistry->getName(enumValue).c_str());
         }
     }
@@ -38,7 +38,7 @@ void babelwires::EnumValueModel::setEditorData(QWidget* editor) const {
 
 babelwires::EditableValueHolder babelwires::EnumValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     const EnumType* const e = m_type->as<EnumType>();
-    const babelwires::EnumType::EnumValues& values = e->getEnumValues();
+    const babelwires::EnumType::ValueSet& values = e->getValueSet();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
     const int newIndex = dropDownBox->currentIndex();

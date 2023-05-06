@@ -16,7 +16,7 @@
 TEST(EnumTest, basic) {
     testUtils::TestEnum testEnum;
 
-    EXPECT_TRUE(testUtils::areEqualSets(testEnum.getEnumValues(), babelwires::EnumType::EnumValues{"Foo", "Bar", "Erm", "Oom", "Boo"}));
+    EXPECT_TRUE(testUtils::areEqualSets(testEnum.getValueSet(), babelwires::EnumType::ValueSet{"Foo", "Bar", "Erm", "Oom", "Boo"}));
 
     EXPECT_EQ(testEnum.getIndexOfDefaultValue(), 1);
 

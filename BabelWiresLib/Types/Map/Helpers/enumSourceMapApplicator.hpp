@@ -22,7 +22,7 @@ namespace babelwires {
       public:
         EnumSourceIndexMapApplicator(const MapValue& mapValue, const EnumType& sourceEnumType,
                                      const ValueAdapter<U>& targetAdapter) : m_srcEnum(sourceEnumType) {
-            const unsigned int numEnumValues = sourceEnumType.getEnumValues().size();
+            const unsigned int numEnumValues = sourceEnumType.getValueSet().size();
             m_indexToTarget.resize(numEnumValues);
             MapApplicatorFallbackHelper<unsigned int, U> fallbackHelper(mapValue, targetAdapter);
             for (unsigned int i = 0; i < numEnumValues; ++i) {
@@ -46,7 +46,7 @@ namespace babelwires {
         }
 
         U operator[](unsigned int srcIndex) const {
-            assert((srcIndex < m_srcEnum.getEnumValues().size()) && "EnumType queried with out-of-range value");
+            assert((srcIndex < m_srcEnum.getValueSet().size()) && "EnumType queried with out-of-range value");
             return m_indexToTarget[srcIndex];
         }
 

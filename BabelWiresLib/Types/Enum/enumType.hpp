@@ -22,28 +22,28 @@ namespace babelwires {
     class EnumType : public Type {
       public:
         /// The set of values. We use Identifiers to get versionable serialization support.
-        /// The EnumValues vector may not contain duplicates.
+        /// The ValueSet vector may not contain duplicates.
         /// Note: This matches the result of REGISTERED_ID_VECTOR.
-        using EnumValues = std::vector<ShortId>;
+        using ValueSet = std::vector<ShortId>;
 
         /// Enums need a set of values and a way of identifying the default.
         /// The values object can be the "output" of the REGISTERED_ID_VECTOR macro.
         /// The values must all be registered identifiers.
-        EnumType(EnumValues values, unsigned int indexOfDefaultValue);
+        EnumType(ValueSet values, unsigned int indexOfDefaultValue);
 
         /// Get the set of available enum values.
-        const EnumValues& getEnumValues() const;
+        const ValueSet& getValueSet() const;
 
         /// Get the index of the default value in the vector of enum values.
         unsigned int getIndexOfDefaultValue() const;
 
-        /// Get the index within EnumValues of the given id.
+        /// Get the index within ValueSet of the given id.
         unsigned int getIndexFromIdentifier(ShortId id) const;
 
-        /// Return the index within EnumValues of the given id, or -1.
+        /// Return the index within ValueSet of the given id, or -1.
         int tryGetIndexFromIdentifier(ShortId id) const;
 
-        /// Get the identifier within EnumValues at the given index.
+        /// Get the identifier within ValueSet at the given index.
         ShortId getIdentifierFromIndex(unsigned int index) const;
 
         /// Is the identifier one of the values in the enum?
@@ -60,7 +60,7 @@ namespace babelwires {
 
       private:
         /// The enum values in their intended order.
-        EnumValues m_values;
+        ValueSet m_values;
         /// Supports faster lookup for identifier-based queries.
         std::unordered_map<ShortId, int> m_valueToIndex;
         unsigned int m_indexOfDefaultValue;
