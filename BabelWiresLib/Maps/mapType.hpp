@@ -12,7 +12,12 @@
 
 namespace babelwires {
 
-    /// 
+    /// Type theory note: Maps have a fallback behaviour and therefore their source
+    /// types do not have to treated contravariantly: In theory, a map with any source
+    /// type can be used where another map is expected, so long as the target types
+    /// are handled in the usual covariant way.
+    /// In fact, we require source types to be at least "related" (i.e. in a subtype or
+    /// supertype relationship).
     class MapType : public Type {
       public:
         MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind defaultFallbackKind = MapEntryData::Kind::All21);
