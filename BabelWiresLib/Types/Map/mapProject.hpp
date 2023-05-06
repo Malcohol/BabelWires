@@ -1,5 +1,5 @@
 /**
- * The MapProject carries an enriched version of the data in a MapData and has support for editing.
+ * The MapProject carries an enriched version of the data in a MapValue and has support for editing.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/Features/mapFeature.hpp>
-#include <BabelWiresLib/Types/Map/mapData.hpp>
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Serialization/serializable.hpp>
@@ -23,7 +23,7 @@ namespace babelwires {
     class MapEntryData;
     struct ProjectContext;
 
-    /// The MapProject carries an enriched version of the data in a MapData and has support for editing.
+    /// The MapProject carries an enriched version of the data in a MapValue and has support for editing.
     class MapProject {
       public:
         MapProject(const ProjectContext& projectContext);
@@ -44,8 +44,8 @@ namespace babelwires {
         const Type* getSourceType() const;
         const Type* getTargetType() const;
 
-        MapData extractMapData() const;
-        void setMapData(const MapData& data);
+        MapValue extractMapValue() const;
+        void setMapValue(const MapValue& data);
 
         unsigned int getNumMapEntries() const;
         const MapProjectEntry& getMapEntry(unsigned int index) const;

@@ -20,9 +20,9 @@ TEST(SetMapCommandTest, executeAndUndo) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -30,7 +30,7 @@ TEST(SetMapCommandTest, executeAndUndo) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
 
-    mapData.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(oneToOne.clone());
 
     testUtils::TestValue newSourceValue;
     newSourceValue.m_value = "Source";
@@ -39,9 +39,9 @@ TEST(SetMapCommandTest, executeAndUndo) {
     oneToOne.setSourceValue(newSourceValue);
     oneToOne.setTargetValue(newTargetValue);
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
@@ -52,17 +52,17 @@ TEST(SetMapCommandTest, executeAndUndo) {
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
 
-    babelwires::MapData mapData2;
-    mapData2.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue2;
+    mapValue2.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue);
     oneToOne2.setTargetValue(newTargetValue);
-    mapData2.emplaceBack(oneToOne2.clone());
-    mapData2.emplaceBack(allToOne.clone());
+    mapValue2.emplaceBack(oneToOne2.clone());
+    mapValue2.emplaceBack(allToOne.clone());
 
-    babelwires::SetMapCommand command("Set map", mapData2.clone());
+    babelwires::SetMapCommand command("Set map", mapValue2.clone());
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
@@ -87,9 +87,9 @@ TEST(SetMapCommandTest, invalidOldMap) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -104,10 +104,10 @@ TEST(SetMapCommandTest, invalidOldMap) {
     oneToOne.setSourceValue(newSourceValue);
     oneToOne.setTargetValue(newTargetValue);
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
@@ -121,17 +121,17 @@ TEST(SetMapCommandTest, invalidOldMap) {
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
 
-    babelwires::MapData mapData2;
-    mapData2.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue2;
+    mapValue2.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue);
     oneToOne2.setTargetValue(newTargetValue);
-    mapData2.emplaceBack(oneToOne2.clone());
-    mapData2.emplaceBack(allToOne.clone());
+    mapValue2.emplaceBack(oneToOne2.clone());
+    mapValue2.emplaceBack(allToOne.clone());
 
-    babelwires::SetMapCommand command("Set map", mapData2.clone());
+    babelwires::SetMapCommand command("Set map", mapValue2.clone());
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
@@ -161,9 +161,9 @@ TEST(SetMapCommandTest, invalidNewMap) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -178,9 +178,9 @@ TEST(SetMapCommandTest, invalidNewMap) {
     oneToOne.setSourceValue(newSourceValue);
     oneToOne.setTargetValue(newTargetValue);
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     EXPECT_EQ(mapProject.getNumMapEntries(), 2);
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
@@ -192,18 +192,18 @@ TEST(SetMapCommandTest, invalidNewMap) {
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
 
-    babelwires::MapData mapData2;
-    mapData2.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue2;
+    mapValue2.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue2.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue);
     oneToOne2.setTargetValue(newTargetValue);
-    mapData2.emplaceBack(oneToOne2.clone());
-    mapData2.emplaceBack(allToOne.clone());
-    mapData2.emplaceBack(allToOne.clone());
+    mapValue2.emplaceBack(oneToOne2.clone());
+    mapValue2.emplaceBack(allToOne.clone());
+    mapValue2.emplaceBack(allToOne.clone());
 
-    babelwires::SetMapCommand command("Set map", mapData2.clone());
+    babelwires::SetMapCommand command("Set map", mapValue2.clone());
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);

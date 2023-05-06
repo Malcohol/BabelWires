@@ -20,9 +20,9 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -30,7 +30,7 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
 
-    mapData.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(oneToOne.clone());
 
     testUtils::TestValue newSourceValue;
     newSourceValue.m_value = "Source";
@@ -39,9 +39,9 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
     oneToOne.setSourceValue(newSourceValue);
     oneToOne.setTargetValue(newTargetValue);
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
 
@@ -68,9 +68,9 @@ TEST(RemoveEntryFromMapCommandTest, removeInvalid) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -78,10 +78,10 @@ TEST(RemoveEntryFromMapCommandTest, removeInvalid) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
@@ -115,9 +115,9 @@ TEST(RemoveEntryFromMapCommandTest, failAtEnd) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -125,9 +125,9 @@ TEST(RemoveEntryFromMapCommandTest, failAtEnd) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     babelwires::RemoveEntryFromMapCommand command("Remove", 1);
     EXPECT_FALSE(command.initialize(mapProject));    

@@ -1,5 +1,5 @@
 /**
- * MapData stores the mappings which define a map.
+ * MapValue stores the mappings which define a map.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -25,21 +25,21 @@ namespace babelwires {
     /// The data held by a map.
     /// To support scenarios such as deserialization after an awkward versioning step, or copy and
     /// paste from similar but non-identical types, entries are not presumed to be valid.
-    /// However, an assignment of MapData to a MapFeature will fail if there are
+    /// However, an assignment of MapValue to a MapFeature will fail if there are
     /// invalid entries.
-    class MapData : public EditableValue {
+    class MapValue : public EditableValue {
       public:
-        SERIALIZABLE(MapData, "mapData", void, 1);
-        CLONEABLE(MapData);
+        SERIALIZABLE(MapValue, "mapValue", void, 1);
+        CLONEABLE(MapValue);
 
-        MapData();
-        MapData(const MapData& other);
-        MapData(MapData&& other);
-        MapData(const TypeSystem& typeSystem, TypeRef sourceRef, TypeRef targetRef, MapEntryData::Kind fallbackKind);
+        MapValue();
+        MapValue(const MapValue& other);
+        MapValue(MapValue&& other);
+        MapValue(const TypeSystem& typeSystem, TypeRef sourceRef, TypeRef targetRef, MapEntryData::Kind fallbackKind);
 
-        MapData& operator=(const MapData& other);
-        MapData& operator=(MapData&& other);
-        virtual ~MapData();
+        MapValue& operator=(const MapValue& other);
+        MapValue& operator=(MapValue&& other);
+        virtual ~MapValue();
 
         const TypeRef& getSourceTypeRef() const;
         const TypeRef& getTargetTypeRef() const;
@@ -55,7 +55,7 @@ namespace babelwires {
 
         void emplaceBack(std::unique_ptr<MapEntryData> newEntry);
 
-        bool operator==(const MapData& other) const;
+        bool operator==(const MapValue& other) const;
 
         bool operator==(const Value& other) const override;
         std::size_t getHash() const override;

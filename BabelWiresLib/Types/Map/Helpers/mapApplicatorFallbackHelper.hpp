@@ -11,16 +11,16 @@
 #include <BabelWiresLib/Types/Map/Helpers/valueAdapter.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
-#include <BabelWiresLib/Types/Map/mapData.hpp>
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
 
 namespace babelwires {
     /// A helper which handles fallbacks for MapApplicators.
-    /// NOTE: In the cases where the MapData allows an AllToSame fallback, T and U must be the same.
+    /// NOTE: In the cases where the MapValue allows an AllToSame fallback, T and U must be the same.
     /// (It would be possible to provide MapApplicators without this limitation, but it's pretty awkward.)
     template <typename T, typename U> class MapApplicatorFallbackHelper {
       public:
-        MapApplicatorFallbackHelper(const MapData& mapData, const ValueAdapter<U>& targetAdapter) {
-            const MapEntryData& fallbackEntryData = mapData.getMapEntry(mapData.getNumMapEntries() - 1);
+        MapApplicatorFallbackHelper(const MapValue& mapValue, const ValueAdapter<U>& targetAdapter) {
+            const MapEntryData& fallbackEntryData = mapValue.getMapEntry(mapValue.getNumMapEntries() - 1);
             switch (fallbackEntryData.getKind()) {
                 case MapEntryData::Kind::All21: {
                     const auto& allToOne = static_cast<const AllToOneFallbackMapEntryData&>(fallbackEntryData);

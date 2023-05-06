@@ -15,7 +15,7 @@
 
 namespace babelwires {
     class MapProject;
-    class MapData;
+    class MapValue;
 
     /// Add an element to an array feature.
     class SetMapTargetTypeCommand : public SimpleCommand<MapProject> {

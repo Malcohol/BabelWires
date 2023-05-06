@@ -40,7 +40,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/Commands/setMapCommand.cpp
 	Types/Map/mapProject.cpp
 	Types/Map/mapSerialization.cpp
-	Types/Map/mapData.cpp
+	Types/Map/mapValue.cpp
 	Types/Map/MapEntries/mapEntryData.cpp
 	Types/Map/MapEntries/oneToOneMapEntryData.cpp
 	Types/Map/MapEntries/allToSameFallbackMapEntryData.cpp

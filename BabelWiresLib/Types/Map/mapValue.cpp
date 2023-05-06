@@ -1,11 +1,11 @@
 /**
- * A MapData defines a how values between two types.
+ * A MapValue defines a how values between two types.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Types/Map/mapData.hpp>
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
 
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
@@ -15,9 +15,9 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-babelwires::MapData::MapData() = default;
+babelwires::MapValue::MapValue() = default;
 
-babelwires::MapData::MapData(const MapData& other)
+babelwires::MapValue::MapValue(const MapValue& other)
     : m_sourceTypeRef(other.m_sourceTypeRef)
     , m_targetTypeRef(other.m_targetTypeRef) {
     for (const auto& e : other.m_mapEntries) {
@@ -25,19 +25,19 @@ babelwires::MapData::MapData(const MapData& other)
     }
 }
 
-babelwires::MapData::MapData(MapData&& other)
+babelwires::MapValue::MapValue(MapValue&& other)
     : m_sourceTypeRef(other.m_sourceTypeRef)
     , m_targetTypeRef(other.m_targetTypeRef)
     , m_mapEntries(std::move(other.m_mapEntries)) {}
 
-babelwires::MapData::MapData(const TypeSystem& typeSystem, TypeRef sourceRef, TypeRef targetRef, MapEntryData::Kind fallbackKind) 
+babelwires::MapValue::MapValue(const TypeSystem& typeSystem, TypeRef sourceRef, TypeRef targetRef, MapEntryData::Kind fallbackKind) 
     : m_sourceTypeRef(std::move(sourceRef))
     , m_targetTypeRef(std::move(targetRef))
 {
     m_mapEntries.emplace_back(MapEntryData::create(typeSystem, m_sourceTypeRef, m_targetTypeRef, fallbackKind));
 }
 
-babelwires::MapData& babelwires::MapData::operator=(const MapData& other) {
+babelwires::MapValue& babelwires::MapValue::operator=(const MapValue& other) {
     m_sourceTypeRef = other.m_sourceTypeRef;
     m_targetTypeRef = other.m_targetTypeRef;
     for (const auto& e : other.m_mapEntries) {
@@ -46,39 +46,39 @@ babelwires::MapData& babelwires::MapData::operator=(const MapData& other) {
     return *this;
 }
 
-babelwires::MapData& babelwires::MapData::operator=(MapData&& other) {
+babelwires::MapValue& babelwires::MapValue::operator=(MapValue&& other) {
     m_sourceTypeRef = other.m_sourceTypeRef;
     m_targetTypeRef = other.m_targetTypeRef;
     m_mapEntries = std::move(other.m_mapEntries);
     return *this;
 }
 
-babelwires::MapData::~MapData() = default;
+babelwires::MapValue::~MapValue() = default;
 
-const babelwires::TypeRef& babelwires::MapData::getSourceTypeRef() const {
+const babelwires::TypeRef& babelwires::MapValue::getSourceTypeRef() const {
     return m_sourceTypeRef;
 }
 
-const babelwires::TypeRef& babelwires::MapData::getTargetTypeRef() const {
+const babelwires::TypeRef& babelwires::MapValue::getTargetTypeRef() const {
     return m_targetTypeRef;
 }
 
-void babelwires::MapData::setSourceTypeRef(const TypeRef& sourceId) {
+void babelwires::MapValue::setSourceTypeRef(const TypeRef& sourceId) {
     m_sourceTypeRef = sourceId;
 }
 
-void babelwires::MapData::setTargetTypeRef(const TypeRef& targetId) {
+void babelwires::MapValue::setTargetTypeRef(const TypeRef& targetId) {
     m_targetTypeRef = targetId;
 }
 
-bool babelwires::MapData::operator==(const Value& other) const {
-    if (const MapData* otherMap = other.as<MapData>()) {
+bool babelwires::MapValue::operator==(const Value& other) const {
+    if (const MapValue* otherMap = other.as<MapValue>()) {
         return *this == *otherMap;
     }
     return false;
 }
 
-bool babelwires::MapData::operator==(const MapData& other) const {
+bool babelwires::MapValue::operator==(const MapValue& other) const {
     if ((m_sourceTypeRef != other.m_sourceTypeRef) || (m_targetTypeRef != other.m_targetTypeRef)) {
         return false;
     }
@@ -86,7 +86,7 @@ bool babelwires::MapData::operator==(const MapData& other) const {
                       [](const auto& a, const auto& b) { return (*a == *b); });
 }
 
-std::size_t babelwires::MapData::getHash() const {
+std::size_t babelwires::MapValue::getHash() const {
     std::size_t h = hash::mixtureOf(m_sourceTypeRef, m_targetTypeRef);
     for (const auto& e : m_mapEntries) {
         hash::mixInto(h, *e);
@@ -94,30 +94,30 @@ std::size_t babelwires::MapData::getHash() const {
     return h;
 }
 
-unsigned int babelwires::MapData::getNumMapEntries() const {
+unsigned int babelwires::MapValue::getNumMapEntries() const {
     return m_mapEntries.size();
 }
 
-std::string babelwires::MapData::toString() const {
+std::string babelwires::MapValue::toString() const {
     std::ostringstream os;
     os << getNumMapEntries() << " entries";
     return os.str();
 }
 
-bool babelwires::MapData::canContainIdentifiers() const {
+bool babelwires::MapValue::canContainIdentifiers() const {
     return true;
 }
-bool babelwires::MapData::canContainFilePaths() const {
+bool babelwires::MapValue::canContainFilePaths() const {
     // This is very unlikely, but since it only impacts serialization performance, so let's play it safe.
     return true;
 }
 
-const babelwires::MapEntryData& babelwires::MapData::getMapEntry(unsigned int index) const {
+const babelwires::MapEntryData& babelwires::MapValue::getMapEntry(unsigned int index) const {
     assert(index < m_mapEntries.size() && "Index to getMapEntry out of range");
     return *m_mapEntries[index];
 }
 
-bool babelwires::MapData::isValid(const TypeSystem& typeSystem) const {
+bool babelwires::MapValue::isValid(const TypeSystem& typeSystem) const {
     for (unsigned int i = 0; i < m_mapEntries.size(); ++i) {
         const auto& entryData = m_mapEntries[i];
         if (!entryData->validate(typeSystem, m_sourceTypeRef, m_targetTypeRef, (i == m_mapEntries.size() - 1))) {
@@ -127,18 +127,18 @@ bool babelwires::MapData::isValid(const TypeSystem& typeSystem) const {
     return true;
 }
 
-void babelwires::MapData::emplaceBack(std::unique_ptr<MapEntryData> newEntry) {
+void babelwires::MapValue::emplaceBack(std::unique_ptr<MapEntryData> newEntry) {
     assert((newEntry != nullptr) && "Null entry added to map");
     m_mapEntries.emplace_back(std::move(newEntry));
 }
 
-void babelwires::MapData::serializeContents(Serializer& serializer) const {
+void babelwires::MapValue::serializeContents(Serializer& serializer) const {
     serializer.serializeObject(m_sourceTypeRef, "sourceType");
     serializer.serializeObject(m_targetTypeRef, "targetType");
     serializer.serializeArray("entries", m_mapEntries);
 }
 
-void babelwires::MapData::deserializeContents(Deserializer& deserializer) {
+void babelwires::MapValue::deserializeContents(Deserializer& deserializer) {
     m_sourceTypeRef = std::move(*deserializer.deserializeObject<TypeRef>("sourceType"));
     m_targetTypeRef = std::move(*deserializer.deserializeObject<TypeRef>("targetType"));
     auto it = deserializer.deserializeArray<MapEntryData>("entries", Deserializer::IsOptional::Optional);
@@ -149,7 +149,7 @@ void babelwires::MapData::deserializeContents(Deserializer& deserializer) {
     }
 }
 
-void babelwires::MapData::visitIdentifiers(IdentifierVisitor& visitor) {
+void babelwires::MapValue::visitIdentifiers(IdentifierVisitor& visitor) {
     m_sourceTypeRef.visitIdentifiers(visitor);
     m_targetTypeRef.visitIdentifiers(visitor);
     for (const auto& e : m_mapEntries) {
@@ -157,12 +157,12 @@ void babelwires::MapData::visitIdentifiers(IdentifierVisitor& visitor) {
     }
 }
 
-void babelwires::MapData::visitFilePaths(FilePathVisitor& visitor) {
+void babelwires::MapValue::visitFilePaths(FilePathVisitor& visitor) {
     for (const auto& e : m_mapEntries) {
         e->visitFilePaths(visitor);
     }
 }
 
-void babelwires::MapData::setEntriesToDefault(const TypeSystem& typeSystem) {
+void babelwires::MapValue::setEntriesToDefault(const TypeSystem& typeSystem) {
     m_mapEntries.clear();
 }

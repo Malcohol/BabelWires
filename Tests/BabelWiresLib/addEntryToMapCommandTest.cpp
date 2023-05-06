@@ -20,9 +20,9 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -30,9 +30,9 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     testUtils::TestValue newSourceValue;
     newSourceValue.m_value = "Source";
@@ -58,9 +58,9 @@ TEST(AddEntryToMapCommandTest, failAtEnd) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -68,9 +68,9 @@ TEST(AddEntryToMapCommandTest, failAtEnd) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     babelwires::AddEntryToMapCommand command("Add entry", oneToOne.clone(), 2);
 

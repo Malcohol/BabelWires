@@ -12,20 +12,20 @@
 
 namespace babelwires {
     class MapProject;
-    class MapData;
+    class MapValue;
 
     /// Add an element to an array feature.
     class SetMapCommand : public SimpleCommand<MapProject> {
       public:
-        SetMapCommand(std::string commandName, std::unique_ptr<MapData> newData);
+        SetMapCommand(std::string commandName, std::unique_ptr<MapValue> newData);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
         virtual void undo(MapProject& map) const override;
 
       private:
-        std::unique_ptr<MapData> m_newContents;
-        std::unique_ptr<MapData> m_oldContents;
+        std::unique_ptr<MapValue> m_newContents;
+        std::unique_ptr<MapValue> m_oldContents;
     };
 
 } // namespace babelwires

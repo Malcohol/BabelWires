@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Types/Map/mapData.hpp>
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
 
 #include <Common/DataContext/dataBundle.hpp>
 #include <Common/DataContext/dataSerialization.hpp>
@@ -15,16 +15,16 @@
 #include <filesystem>
 
 namespace babelwires {
-    class MapBundle : public DataBundle<MapData> {
+    class MapBundle : public DataBundle<MapValue> {
       public:
         SERIALIZABLE(MapBundle, "map", void, 1);
         MapBundle() = default;
         MapBundle(MapBundle&&) = default;
         MapBundle& operator=(MapBundle&&) = default;
 
-        /// Construct a bundle from mapData.
+        /// Construct a bundle from mapValue.
         /// The map is modified to make the bundle independent of the current system.
-        MapBundle(std::filesystem::path pathToFile, MapData&& map);
+        MapBundle(std::filesystem::path pathToFile, MapValue&& map);
 
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;

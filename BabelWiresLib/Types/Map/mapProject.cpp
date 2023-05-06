@@ -1,5 +1,5 @@
 /**
- * The MapProject carries an enriched version of the data in a MapData and has support for editing.
+ * The MapProject carries an enriched version of the data in a MapValue and has support for editing.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -137,17 +137,17 @@ void babelwires::MapProject::replaceMapEntry(std::unique_ptr<MapEntryData> newEn
     m_mapEntries[index] = std::move(newEntry);
 }
 
-babelwires::MapData babelwires::MapProject::extractMapData() const {
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(m_sourceTypeRef);
-    mapData.setTargetTypeRef(m_targetTypeRef);
+babelwires::MapValue babelwires::MapProject::extractMapValue() const {
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(m_sourceTypeRef);
+    mapValue.setTargetTypeRef(m_targetTypeRef);
     for (const auto& mapEntry : m_mapEntries) {
-        mapData.emplaceBack(mapEntry->getData().clone());
+        mapValue.emplaceBack(mapEntry->getData().clone());
     }
-    return mapData;
+    return mapValue;
 }
 
-void babelwires::MapProject::setMapData(const MapData& data) {
+void babelwires::MapProject::setMapValue(const MapValue& data) {
     setSourceTypeRef(data.getSourceTypeRef());
     setTargetTypeRef(data.getTargetTypeRef());
     m_mapEntries.clear();

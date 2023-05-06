@@ -85,14 +85,14 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             const UiProjectContext& context = projectBridge.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
             const MapFeature& mapFeature = getMapFeature(scope);
-            m_defaultMapValue = mapFeature.getDefaultMapData();
-            const MapData& mapData = getMapDataFromProject(scope);
+            m_defaultMapValue = mapFeature.getDefaultMapValue();
+            const MapValue& mapValue = getMapValueFromProject(scope);
             MapFeature::AllowedTypes allowedTypeRefs;
             mapFeature.getAllowedSourceTypeRefs(allowedTypeRefs);
             m_map.setAllowedSourceTypeRefs(allowedTypeRefs);
             mapFeature.getAllowedTargetTypeRefs(allowedTypeRefs);
             m_map.setAllowedTargetTypeRefs(allowedTypeRefs);
-            m_map.setMapData(mapData);
+            m_map.setMapValue(mapValue);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
                 m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeRefs());
@@ -166,7 +166,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 
 void babelwires::MapEditor::applyMapToProject() {
     auto modifierData = std::make_unique<MapValueAssignmentData>();
-    modifierData->m_mapData = m_map.extractMapData();
+    modifierData->m_mapValue = m_map.extractMapValue();
     modifierData->m_pathToFeature = getData().getPathToValue();
 
     auto setValueCommand =
@@ -188,10 +188,10 @@ const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelSc
     return *mapFeature;
 }
 
-const babelwires::MapData& babelwires::MapEditor::getMapDataFromProject(AccessModelScope& scope) const {
+const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(AccessModelScope& scope) const {
     const MapValueAssignmentData* const mapModifier = tryGetMapValueAssignmentData(scope);
     if (mapModifier) {
-        return mapModifier->m_mapData;
+        return mapModifier->m_mapValue;
     }
     return getMapFeature(scope).get();
 }
@@ -224,11 +224,11 @@ babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) con
     return modifier->getModifierData().as<MapValueAssignmentData>();
 }
 
-const babelwires::MapData* babelwires::MapEditor::tryGetMapDataFromProject(AccessModelScope& scope) const {
+const babelwires::MapValue* babelwires::MapEditor::tryGetMapValueFromProject(AccessModelScope& scope) const {
     const MapValueAssignmentData* const mapModifier = tryGetMapValueAssignmentData(scope);
 
     if (mapModifier) {
-        return &mapModifier->m_mapData;
+        return &mapModifier->m_mapValue;
     }
 
     const babelwires::MapFeature* const mapFeature = tryGetMapFeature(scope);
@@ -241,18 +241,18 @@ const babelwires::MapData* babelwires::MapEditor::tryGetMapDataFromProject(Acces
 
 void babelwires::MapEditor::updateMapFromProject() {
     AccessModelScope scope(getProjectBridge());
-    const MapData* mapDataFromProject = tryGetMapDataFromProject(scope);
-    if (mapDataFromProject) {
+    const MapValue* mapValueFromProject = tryGetMapValueFromProject(scope);
+    if (mapValueFromProject) {
         getUserLogger().logInfo() << "Refreshing the map from the project";
         executeCommand(
-            std::make_unique<SetMapCommand>("Refresh the map from the project", mapDataFromProject->clone()));
+            std::make_unique<SetMapCommand>("Refresh the map from the project", mapValueFromProject->clone()));
     } else {
         warnThatMapNoLongerInProject("Cannot refresh the map.");
     }
 }
 
-void babelwires::MapEditor::setEditorMap(const MapData& map) {
-    m_map.setMapData(map);
+void babelwires::MapEditor::setEditorMap(const MapValue& map) {
+    m_map.setMapValue(map);
     updateUiAfterChange();
 }
 
@@ -291,7 +291,7 @@ bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
         try {
             std::string filePathStr = filePath.toStdString();
             getUserLogger().logInfo() << "Save map to \"" << filePathStr << '"';
-            MapSerialization::saveToFile(filePathStr, m_map.extractMapData());
+            MapSerialization::saveToFile(filePathStr, m_map.extractMapValue());
             return true;
         } catch (FileIoException& e) {
             getUserLogger().logError() << "The map could not be saved: " << e.what();
@@ -314,9 +314,9 @@ void babelwires::MapEditor::loadMapFromFile() {
             try {
                 std::string filePathStr = filePath.toStdString();
                 getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
-                MapData mapData =
+                MapValue mapValue =
                     MapSerialization::loadFromFile(filePathStr, getProjectBridge().getContext(), getUserLogger());
-                setEditorMap(mapData);
+                setEditorMap(mapValue);
                 m_lastSaveFilePath = filePath;
                 return;
             } catch (FileIoException& e) {

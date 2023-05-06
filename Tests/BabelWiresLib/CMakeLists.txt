@@ -24,7 +24,7 @@ SET( LIB_TESTS_SRCS
     intFeatureTest.cpp
     intValueTest.cpp
     intTypeTest.cpp
-    mapDataTest.cpp
+    mapValueTest.cpp
     mapEntryDataTest.cpp
     mapFeatureTest.cpp
     mapHelperTest.cpp

@@ -20,9 +20,9 @@ TEST(ChangeEntryKindCommandTest, executeAndUndo) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -30,10 +30,10 @@ TEST(ChangeEntryKindCommandTest, executeAndUndo) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     babelwires::ChangeEntryKindCommand command("Set kind", babelwires::MapEntryData::Kind::One21, 1);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::All21);
@@ -55,9 +55,9 @@ TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -65,10 +65,10 @@ TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     babelwires::ChangeEntryKindCommand command("Set kind", babelwires::MapEntryData::Kind::All21, 1);
     EXPECT_FALSE(command.initialize(mapProject));    
@@ -81,9 +81,9 @@ TEST(ChangeEntryKindCommandTest, failNotFallbackAtEnd) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestType::getThisIdentifier());
@@ -91,10 +91,10 @@ TEST(ChangeEntryKindCommandTest, failNotFallbackAtEnd) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
 
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(oneToOne.clone());
-    mapData.emplaceBack(allToOne.clone());
-    mapProject.setMapData(mapData);
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
+    mapProject.setMapValue(mapValue);
 
     babelwires::ChangeEntryKindCommand command("Set kind", babelwires::MapEntryData::Kind::One21, 2);
     EXPECT_FALSE(command.initialize(mapProject));    

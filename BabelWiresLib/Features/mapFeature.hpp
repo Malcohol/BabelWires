@@ -9,11 +9,11 @@
 
 #include <BabelWiresLib/Features/heavyValueFeature.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
-#include <BabelWiresLib/Types/Map/mapData.hpp>
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
 
 namespace babelwires {
     /// A MapFeature describes a mapping between types.
-    /// All the entries in the MapData of a MapFeature are expected to be valid.
+    /// All the entries in the MapValue of a MapFeature are expected to be valid.
     ///
     /// StandardMapFeature (below) supports a single source and single target type.
     /// However, in general MapFeatures are permitted to have more than one allowed
@@ -29,10 +29,10 @@ namespace babelwires {
     /// Maps with unrelated source types wouldn't be useful, so I judged it better to
     /// exclude them.
     /// Target types are treated in the usual covariant way.
-    class MapFeature : public HeavyValueFeature<MapData> {
+    class MapFeature : public HeavyValueFeature<MapValue> {
       public:
         /// Get the default map value used by this feature.
-        virtual MapData getDefaultMapData() const;
+        virtual MapValue getDefaultMapValue() const;
 
         struct AllowedTypes {
             std::vector<TypeRef> m_typeRefs;
@@ -48,12 +48,12 @@ namespace babelwires {
 
       protected:
         std::string doGetValueType() const override;
-        void onBeforeSetValue(const MapData& newValue) const override;
+        void onBeforeSetValue(const MapValue& newValue) const override;
         void doSetToDefault() override;
 
-        /// Convenience method for subclasses that want to override getDefaultMapData, letting them
+        /// Convenience method for subclasses that want to override getDefaultMapValue, letting them
         /// easily return a default with the appropriate kind of fallback.
-        MapData getStandardDefaultMapData(MapEntryData::Kind fallbackKind) const;
+        MapValue getStandardDefaultMapValue(MapEntryData::Kind fallbackKind) const;
     };
 
     /// A MapFeature which allows only a single source and target type.

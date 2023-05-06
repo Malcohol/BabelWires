@@ -32,7 +32,7 @@ namespace babelwires {
                   const ComplexValueEditorData& data);
 
         /// Resets the map editor to the state of the given map.
-        void setEditorMap(const MapData& mapData);
+        void setEditorMap(const MapValue& mapValue);
 
         /// Apply the state of this map to the project.
         void applyMapToProject();
@@ -40,8 +40,8 @@ namespace babelwires {
         /// Get the MapFeature or assert.
         const MapFeature& getMapFeature(AccessModelScope& scope) const;
 
-        /// Get the mapData from the project or assert.
-        const MapData& getMapDataFromProject(AccessModelScope& scope) const;
+        /// Get the mapValue from the project or assert.
+        const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
 
         /// Get the MapFeature or return nullptr.
         const MapFeature* tryGetMapFeature(AccessModelScope& scope) const;
@@ -49,7 +49,7 @@ namespace babelwires {
         /// See if there is a map assignment.
         /// If there is, return its data.
         /// Otherwise return the data of the mapFeature.
-        const MapData* tryGetMapDataFromProject(AccessModelScope& scope) const;
+        const MapValue* tryGetMapValueFromProject(AccessModelScope& scope) const;
 
         const MapProject& getMapProject() const;
 
@@ -96,7 +96,7 @@ namespace babelwires {
         MapProject m_map;
 
         /// Stores the default map value (obtained from the feature).
-        MapData m_defaultMapValue;
+        MapValue m_defaultMapValue;
 
         /// Manages changes to the map.
         CommandManager<MapProject> m_commandManager;

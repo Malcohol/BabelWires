@@ -1,5 +1,5 @@
 /**
- * MapType is the type for MapData.
+ * MapType is the type for MapValue.
  *
  * (C) 2021 Malcolm Tyrrell
  *

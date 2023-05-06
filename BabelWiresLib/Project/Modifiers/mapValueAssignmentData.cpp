@@ -15,7 +15,7 @@
 
 void babelwires::MapValueAssignmentData::apply(Feature* targetFeature) const {
     if (MapFeature* mapFeature = targetFeature->as<MapFeature>()) {
-        mapFeature->set(m_mapData);
+        mapFeature->set(m_mapValue);
     } else {
         throw babelwires::ModelException() << "Could not assign a map value to a non-map feature";
     }
@@ -25,16 +25,16 @@ void babelwires::MapValueAssignmentData::serializeContents(Serializer& serialize
     //TODO Should be a super-call!
     serializer.serializeValue("path", m_pathToFeature);
     // inline the contents of m_map.
-    m_mapData.serializeContents(serializer);
+    m_mapValue.serializeContents(serializer);
 }
 
 void babelwires::MapValueAssignmentData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_pathToFeature);
     // the contents of m_map are expected to be inlined.
-    m_mapData.deserializeContents(deserializer);
+    m_mapValue.deserializeContents(deserializer);
 }
 
 void babelwires::MapValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {
     ModifierData::visitIdentifiers(visitor);
-    m_mapData.visitIdentifiers(visitor);
+    m_mapValue.visitIdentifiers(visitor);
 }

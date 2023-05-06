@@ -6,7 +6,7 @@
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToSameFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
-#include <BabelWiresLib/Types/Map/mapData.hpp>
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
 
@@ -50,9 +50,9 @@ TEST(MapFeatureTest, setToDefault) {
 
     mapFeature->setToDefault();
 
-    const babelwires::MapData& mapData = mapFeature->get();
+    const babelwires::MapValue& mapValue = mapFeature->get();
 
-    EXPECT_TRUE(mapData.isValid(environment.m_typeSystem));
+    EXPECT_TRUE(mapValue.isValid(environment.m_typeSystem));
 }
 
 TEST(MapFeatureTest, isCompatible) {

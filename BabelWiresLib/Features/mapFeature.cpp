@@ -19,7 +19,7 @@ std::string babelwires::MapFeature::doGetValueType() const {
     return "map";
 }
 
-void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
+void babelwires::MapFeature::onBeforeSetValue(const MapValue& newValue) const {
     const TypeRef& newSourceType = newValue.getSourceTypeRef();
     const TypeRef& newTargetType = newValue.getTargetTypeRef();
 
@@ -45,7 +45,7 @@ void babelwires::MapFeature::onBeforeSetValue(const MapData& newValue) const {
     }
 }
 
-babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryData::Kind fallbackKind) const {
+babelwires::MapValue babelwires::MapFeature::getStandardDefaultMapValue(MapEntryData::Kind fallbackKind) const {
     assert(MapEntryData::isFallback(fallbackKind) && "Only a fallback kind is expected here");
 
     AllowedTypes allowedTypes;
@@ -55,15 +55,15 @@ babelwires::MapData babelwires::MapFeature::getStandardDefaultMapData(MapEntryDa
     TypeRef defaultTargetTypeRef = allowedTypes.getDefaultTypeRef();
 
     const TypeSystem& typeSystem = RootFeature::getProjectContextAt(*this).m_typeSystem;
-    return MapData(typeSystem, defaultSourceTypeRef, defaultTargetTypeRef, fallbackKind);
+    return MapValue(typeSystem, defaultSourceTypeRef, defaultTargetTypeRef, fallbackKind);
 }
 
-babelwires::MapData babelwires::MapFeature::getDefaultMapData() const {
-    return getStandardDefaultMapData(MapEntryData::Kind::All21);
+babelwires::MapValue babelwires::MapFeature::getDefaultMapValue() const {
+    return getStandardDefaultMapValue(MapEntryData::Kind::All21);
 }
 
 void babelwires::MapFeature::doSetToDefault() {
-    set(getDefaultMapData());
+    set(getDefaultMapValue());
 }
 
 bool babelwires::MapFeature::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& typeRef) const {
