@@ -43,13 +43,8 @@ babelwires::SubtypeOrder
 babelwires::MapTypeConstructor::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                      const TypeConstructorArguments& argumentsA,
                                                      const TypeConstructorArguments& argumentsB) const {
-    if (argumentsA.m_typeArguments.size() != 2) {
-        throw TypeSystemException() << "MapTypeConstructor expects 2 type arguments but got "
-                                    << argumentsA.m_typeArguments.size();
-    }
-    if (argumentsB.m_typeArguments.size() != 2) {
-        throw TypeSystemException() << "MapTypeConstructor expects 2 type arguments but got "
-                                    << argumentsB.m_typeArguments.size();
+    if ((argumentsA.m_typeArguments.size() != 2) || (argumentsB.m_typeArguments.size() != 2)) {
+        return SubtypeOrder::IsUnrelated;
     }
     const SubtypeOrder orderSource =
         typeSystem.compareSubtype(argumentsA.m_typeArguments[0], argumentsB.m_typeArguments[0]);
