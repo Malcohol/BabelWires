@@ -17,6 +17,7 @@
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
@@ -29,4 +30,5 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addTypeConstructor<IntTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<RationalTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<SumTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<MapTypeConstructor>();
 }

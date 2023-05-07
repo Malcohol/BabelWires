@@ -100,7 +100,13 @@ unsigned int babelwires::MapValue::getNumMapEntries() const {
 
 std::string babelwires::MapValue::toString() const {
     std::ostringstream os;
-    os << getNumMapEntries() << " entries";
+    const unsigned int numMapEntries = getNumMapEntries();
+    os << numMapEntries;
+    if (numMapEntries != 1) {
+        os << " entries";
+    } else {
+        os << " entry";
+    }
     return os.str();
 }
 

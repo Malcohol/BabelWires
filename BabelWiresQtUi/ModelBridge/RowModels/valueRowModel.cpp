@@ -54,7 +54,10 @@ std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::ValueRowMo
 }
 
 bool babelwires::ValueRowModel::isItemEditable() const {
-    return getInputFeature();
+    if (getInputFeature()) {
+        return m_valueModelDispatcher->isItemEditable();
+    }
+    return false;
 }
 
 bool babelwires::ValueRowModel::hasCustomPainting() const {

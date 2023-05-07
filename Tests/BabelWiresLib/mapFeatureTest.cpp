@@ -9,12 +9,16 @@
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
+#include <BabelWiresLib/Types/Map/mapFeature.hpp>
+#include <BabelWiresLib/Types/Int/intType.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -35,6 +39,15 @@ TEST(MapFeatureTest, construction) {
     mapFeature.getAllowedTargetTypeRefs(allowedTypes);
     EXPECT_TRUE(
         testUtils::unorderedAreEqualSets(allowedTypes.m_typeRefs, std::vector<babelwires::TypeRef>{testTypeId2}));
+}
+
+TEST(MapFeatureTest, construction2) {
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::RootedFeature<babelwires::MapFeature2> rootedFeature(testEnvironment.m_projectContext, babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultIntType::getThisIdentifier());
+    babelwires::MapFeature2& mapFeature = rootedFeature.getFeature();
+
+    mapFeature.setToDefault();
 }
 
 TEST(MapFeatureTest, setToDefault) {

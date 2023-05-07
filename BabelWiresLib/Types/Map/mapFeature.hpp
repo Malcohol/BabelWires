@@ -30,8 +30,8 @@ namespace babelwires {
         /// The need for the TypeSystem is because the typeRef uses an enum value for the fallback kind, which
         /// requires the EnumType to be looked-up. I could use an int instead, but the problem will just recur in
         /// future, so I will leave this here as a reminder to find a general approach.
-        const TypeRef& m_sourceType;
-        const TypeRef& m_targetType;
+        TypeRef m_sourceType;
+        TypeRef m_targetType;
         MapEntryData::Kind m_defaultFallbackKind;
     };
 } // namespace babelwires

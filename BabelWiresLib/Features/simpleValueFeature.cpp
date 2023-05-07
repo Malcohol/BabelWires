@@ -76,6 +76,10 @@ const babelwires::Type& babelwires::SimpleValueFeature::getType() const {
     return m_typeRef.resolve(context.m_typeSystem);
 }
 
+const babelwires::TypeRef& babelwires::SimpleValueFeature::getTypeRef() const {
+    return m_typeRef;
+}
+
 const babelwires::Value& babelwires::SimpleValueFeature::getValue() const {
     assert(m_value && "The SimpleValueFeature has not been initialized");
     return *m_value;
@@ -85,7 +89,7 @@ std::size_t babelwires::SimpleValueFeature::doGetHash() const {
     return hash::mixtureOf(m_typeRef, *m_value);
 }
 
-void babelwires::SimpleValueFeature::setType(TypeRef type) {
+void babelwires::SimpleValueFeature::setTypeRef(TypeRef type) {
     // It simplifies the system not to allow this.
     assert(!m_typeRef && "You cannot change the type after it is set");
     m_typeRef = std::move(type);

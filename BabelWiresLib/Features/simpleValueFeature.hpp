@@ -26,6 +26,8 @@ namespace babelwires {
         /// Construct a ValueFeature which carries values of the given type.
         SimpleValueFeature(TypeRef typeRef);
 
+        const TypeRef& getTypeRef() const;
+
         const Type& getType() const;
 
         const Value& getValue() const;
@@ -38,7 +40,7 @@ namespace babelwires {
       protected:
         /// This just exists so subclasses can set the type the first time if they use the default constructor.
         /// It asserts if the TypeRef has already been set.
-        void setType(TypeRef type);
+        void setTypeRef(TypeRef type);
 
         virtual std::string doGetValueType() const override;
 
