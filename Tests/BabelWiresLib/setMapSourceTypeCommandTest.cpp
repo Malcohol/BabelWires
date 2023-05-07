@@ -4,8 +4,8 @@
 
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
-#include <BabelWiresLib/Types/Map/mapProject.hpp>
-#include <BabelWiresLib/Types/Map/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 

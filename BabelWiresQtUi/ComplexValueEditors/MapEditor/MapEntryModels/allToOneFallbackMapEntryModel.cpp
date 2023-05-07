@@ -8,7 +8,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/allToOneFallbackMapEntryModel.hpp>
 
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Types/Map/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
 const babelwires::AllToOneFallbackMapEntryData&
 babelwires::AllToOneFallbackMapEntryModel::getAllToOneFallbackMapEntryData() const {

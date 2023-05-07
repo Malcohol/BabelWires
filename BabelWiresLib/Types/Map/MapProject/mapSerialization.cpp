@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Types/Map/mapSerialization.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapSerialization.hpp>
 
 babelwires::MapBundle::MapBundle(std::filesystem::path pathToFile, MapValue&& map)
     : DataBundle(std::move(pathToFile), std::move(map)) {}

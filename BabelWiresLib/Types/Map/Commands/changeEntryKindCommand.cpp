@@ -9,8 +9,8 @@
 #include <BabelWiresLib/Types/Map/Commands/changeEntryKindCommand.hpp>
 
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
-#include <BabelWiresLib/Types/Map/mapProject.hpp>
-#include <BabelWiresLib/Types/Map/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <cassert>

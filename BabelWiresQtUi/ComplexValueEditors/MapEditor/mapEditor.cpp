@@ -19,7 +19,7 @@
 #include <BabelWiresLib/Types/Map/Commands/setMapCommand.hpp>
 #include <BabelWiresLib/Types/Map/Commands/setMapSourceTypeCommand.hpp>
 #include <BabelWiresLib/Types/Map/Commands/setMapTargetTypeCommand.hpp>
-#include <BabelWiresLib/Types/Map/mapSerialization.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapSerialization.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>

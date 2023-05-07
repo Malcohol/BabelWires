@@ -15,8 +15,8 @@
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToSameFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
-#include <BabelWiresLib/Types/Map/mapProject.hpp>
-#include <BabelWiresLib/Types/Map/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
 #include <QMenu>
 #include <QtWidgets/QHeaderView>

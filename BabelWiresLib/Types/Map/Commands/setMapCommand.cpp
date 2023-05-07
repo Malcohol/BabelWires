@@ -9,8 +9,8 @@
 #include <BabelWiresLib/Types/Map/Commands/setMapCommand.hpp>
 
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
-#include <BabelWiresLib/Types/Map/mapProject.hpp>
-#include <BabelWiresLib/Types/Map/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
 babelwires::SetMapCommand::SetMapCommand(std::string commandName, std::unique_ptr<MapValue> newData)
     : SimpleCommand(commandName), m_newContents(std::move(newData)) {}

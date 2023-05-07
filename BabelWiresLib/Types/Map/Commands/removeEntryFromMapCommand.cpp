@@ -8,8 +8,8 @@
 
 #include <BabelWiresLib/Types/Map/Commands/removeEntryFromMapCommand.hpp>
 
-#include <BabelWiresLib/Types/Map/mapProject.hpp>
-#include <BabelWiresLib/Types/Map/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 
 #include <cassert>
