@@ -68,6 +68,9 @@ namespace babelwires {
         static SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeRef& typeRefA,
                                                  const TypeRef& typeRefB);
 
+        /// Does the TypeRef contain some data (other than the trivial std::monostate default state)?
+        operator bool() const;
+
       private:
         /// Avoids locking the IdentifierRegistry multiple times.
         std::string toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const;

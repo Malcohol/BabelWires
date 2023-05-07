@@ -13,13 +13,14 @@
 namespace babelwires {
 
     /// 
+    /// Note: This creates bare values of the summand types, not wrapped values.
     class SumType : public Type {
       public:
         using Summands = std::vector<TypeRef>;
 
         SumType(Summands summands);
 
-        /// Always creates a SumValue containing a value of the first summand.
+        /// Always creates a value of the first summand.
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;

@@ -5,6 +5,8 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+babelwires::SimpleValueFeature::SimpleValueFeature() = default;
+
 babelwires::SimpleValueFeature::SimpleValueFeature(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
 
@@ -60,6 +62,7 @@ void babelwires::SimpleValueFeature::setValue(Value&& value) {
 }
 
 void babelwires::SimpleValueFeature::doSetToDefault() {
+    assert(m_typeRef && "The type must be set to something non-trivial before doSetToDefault is called");
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);
     auto [newValue, _] = getType().createValue(context.m_typeSystem);
     if (!m_value || (*newValue != *m_value)) {
@@ -80,4 +83,10 @@ const babelwires::Value& babelwires::SimpleValueFeature::getValue() const {
 
 std::size_t babelwires::SimpleValueFeature::doGetHash() const {
     return hash::mixtureOf(m_typeRef, *m_value);
+}
+
+void babelwires::SimpleValueFeature::setType(TypeRef type) {
+    // It simplifies the system not to allow this.
+    assert(!m_typeRef && "You cannot change the type after it is set");
+    m_typeRef = std::move(type);
 }
