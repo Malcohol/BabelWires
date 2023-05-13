@@ -31,7 +31,6 @@ void babelwires::MapRowModel::getContextMenuActions(
     std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
     if (hasInputFeature()) {
-        const babelwires::MapFeature& mapFeature = getMapFeature();
         auto editAction = std::make_unique<OpenValueEditorAction>("Open map editor", m_contentsCacheEntry->getPath());
         actionsOut.emplace_back(std::move(editAction));
     }
