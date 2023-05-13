@@ -19,19 +19,5 @@ namespace babelwires {
                     MapEntryData::Kind defaultFallbackKind = MapEntryData::Kind::All21);
 
         const MapValue& get() const;
-
-      protected:
-        /// The TypeSystem is available now, so the parent's TypeRef can be set.
-        void doSetToDefault() override;
-
-      private:
-        /// TODO: This is disappointing. Storing these is a workaround for the fact that the Map's TypeRef cannot be
-        /// created until a TypeSystem is available which only becomes possible in doSetToDefault.
-        /// The need for the TypeSystem is because the typeRef uses an enum value for the fallback kind, which
-        /// requires the EnumType to be looked-up. I could use an int instead, but the problem will just recur in
-        /// future, so I will leave this here as a reminder to find a general approach.
-        TypeRef m_sourceType;
-        TypeRef m_targetType;
-        MapEntryData::Kind m_defaultFallbackKind;
     };
 } // namespace babelwires

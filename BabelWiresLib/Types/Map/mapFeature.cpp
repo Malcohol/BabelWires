@@ -15,21 +15,11 @@
 
 babelwires::MapFeature2::MapFeature2(const TypeRef& sourceType, const TypeRef& targetType,
                                      MapEntryData::Kind defaultFallbackKind)
-    : m_sourceType(sourceType)
-    , m_targetType(targetType)
-    , m_defaultFallbackKind(defaultFallbackKind) {}
+    : SimpleValueFeature(TypeRef(
+          MapTypeConstructor::getThisIdentifier(),
+          TypeConstructorArguments{{sourceType, targetType},
+                                   {EnumValue(MapEntryFallbackKind::getIdentifierFromValue(defaultFallbackKind))}})) {}
 
 const babelwires::MapValue& babelwires::MapFeature2::get() const {
     return getValue().is<MapValue>();
-}
-
-void babelwires::MapFeature2::doSetToDefault() {
-    if (!getTypeRef()) {
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
-        const MapEntryFallbackKind& fallbackKindEnum = typeSystem.getEntryByType<MapEntryFallbackKind>();
-        const babelwires::ShortId kindId = fallbackKindEnum.getIdentifierFromValue(m_defaultFallbackKind);
-        setTypeRef(TypeRef(MapTypeConstructor::getThisIdentifier(),
-                           TypeConstructorArguments{{m_sourceType, m_targetType}, {EnumValue(kindId)}}));
-    }
-    SimpleValueFeature::doSetToDefault();
 }

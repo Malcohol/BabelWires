@@ -5,8 +5,6 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-babelwires::SimpleValueFeature::SimpleValueFeature() = default;
-
 babelwires::SimpleValueFeature::SimpleValueFeature(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
 
@@ -87,10 +85,4 @@ const babelwires::Value& babelwires::SimpleValueFeature::getValue() const {
 
 std::size_t babelwires::SimpleValueFeature::doGetHash() const {
     return hash::mixtureOf(m_typeRef, *m_value);
-}
-
-void babelwires::SimpleValueFeature::setTypeRef(TypeRef type) {
-    // It simplifies the system not to allow this.
-    assert(!m_typeRef && "You cannot change the type after it is set");
-    m_typeRef = std::move(type);
 }

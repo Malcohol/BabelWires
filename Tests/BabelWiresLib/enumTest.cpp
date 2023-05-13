@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Types/Enum/enumType.hpp>
-#include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -16,7 +16,8 @@
 TEST(EnumTest, basic) {
     testUtils::TestEnum testEnum;
 
-    EXPECT_TRUE(testUtils::areEqualSets(testEnum.getValueSet(), babelwires::EnumType::ValueSet{"Foo", "Bar", "Erm", "Oom", "Boo"}));
+    EXPECT_TRUE(testUtils::areEqualSets(testEnum.getValueSet(),
+                                        babelwires::EnumType::ValueSet{"Foo", "Bar", "Erm", "Oom", "Boo"}));
 
     EXPECT_EQ(testEnum.getIndexOfDefaultValue(), 1);
 
@@ -43,24 +44,24 @@ TEST(EnumTest, basic) {
     X(Bar, "Bar value", "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")                                                        \
     X(Erm, "Erm value", "00000000-1111-2222-dddd-eeeeeeeeeeee")
 
-ENUM_DEFINE_ENUM_VALUE_SOURCE(TEST_ENUM_VALUES);
-
-TEST(EnumTest, enumWithCppEnum) {
+namespace {
     struct TestEnum : babelwires::EnumType {
         TestEnum()
-            : EnumType(ENUM_IDENTIFIER_VECTOR(TEST_ENUM_VALUES), 1) {}
+            : EnumType(getStaticValueSet(), 1) {}
 
         static babelwires::PrimitiveTypeId getThisIdentifier() {
             return babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
-                                           "TestEnum", "TestEnum", "aaaaaaaa-1111-2222-3333-444444444444",
-                                           babelwires::IdentifierRegistry::Authority::isAuthoritative);
+                "TestEnum", "TestEnum", "aaaaaaaa-1111-2222-3333-444444444444",
+                babelwires::IdentifierRegistry::Authority::isAuthoritative);
         }
-        babelwires::TypeRef getTypeRef() const {
-            return getThisIdentifier();
-        }
+        babelwires::TypeRef getTypeRef() const { return getThisIdentifier(); }
 
         ENUM_DEFINE_CPP_ENUM(TEST_ENUM_VALUES);
     };
+    ENUM_DEFINE_ENUM_VALUE_SOURCE(TestEnum, TEST_ENUM_VALUES);
+} // namespace
+
+TEST(EnumTest, enumWithCppEnum) {
 
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope fieldRegistry;
@@ -77,11 +78,10 @@ TEST(EnumTest, enumWithCppEnum) {
     EXPECT_EQ(testEnum.getIdentifierFromValue(TestEnum::Value::Erm).getDiscriminator(), 1);
 }
 
-
 TEST(EnumTest, createValue) {
     babelwires::TypeSystem typeSystem;
     testUtils::TestEnum testEnum;
-    
+
     auto [valueHolder, value] = testEnum.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
     auto enumValue = value.as<babelwires::EnumValue>();
@@ -115,7 +115,7 @@ TEST(EnumTest, subEnum) {
     enumValue->set("Foo");
     EXPECT_TRUE(testEnum.isValidValue(typeSystem, value));
     EXPECT_FALSE(testSubEnum.isValidValue(typeSystem, value));
-    
+
     enumValue->set("Flerm");
     EXPECT_FALSE(testEnum.isValidValue(typeSystem, value));
     EXPECT_FALSE(testSubEnum.isValidValue(typeSystem, value));
