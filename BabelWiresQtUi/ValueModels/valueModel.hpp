@@ -10,6 +10,7 @@
 #include <QVariant>
 
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 
 class QWidget;
 class QModelIndex;
@@ -19,6 +20,7 @@ class QPainter;
 namespace babelwires {
     class Type;
     class Value;
+    class DataLocation;
 
     class ValueModel {
       public:
@@ -36,6 +38,10 @@ namespace babelwires {
         virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual QString getTooltip() const;
 
+        /// Add any context actions which should appear in the context menu for this value.
+        /// Subclasses overriding this should use super-calls to collect standard actions.
+        virtual void getContextMenuActions(const DataLocation& location, std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const;
+
       protected:
         const Value* getValue() const;
         const Type* getType() const;
@@ -43,5 +49,7 @@ namespace babelwires {
       public:
         const Type* m_type;
         const Value* m_value;
+        /// Does the context make this value readonly.
+        bool m_isReadOnly;
     };
 } // namespace babelwires

@@ -7,18 +7,19 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+
+#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 
 namespace babelwires {
 
     struct OpenValueEditorAction : babelwires::FeatureContextMenuAction {
-        OpenValueEditorAction(const QString& text, babelwires::FeaturePath pathToArray);
+        OpenValueEditorAction(const QString& text, DataLocation location);
 
         virtual void actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const override;
 
       private:
-        babelwires::FeaturePath m_pathToMap;
+        DataLocation m_location;
     };
 
 } // namespace babelwires
