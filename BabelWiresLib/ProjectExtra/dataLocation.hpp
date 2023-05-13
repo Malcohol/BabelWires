@@ -15,13 +15,13 @@
 
 namespace babelwires {
     /// Data sufficient to describe the value the editor should be editing.
-    class ComplexValueEditorData : public Serializable, ProjectVisitable {
+    class DataLocation : public Serializable, ProjectVisitable {
       public:
-        SERIALIZABLE(ComplexValueEditorData, "editor", void, 1);
+        SERIALIZABLE(DataLocation, "location", void, 1);
 
-        ComplexValueEditorData() = default;
-        ComplexValueEditorData(ElementId elementId, FeaturePath pathToValue);
-        ComplexValueEditorData(const ComplexValueEditorData& other) = default;
+        DataLocation() = default;
+        DataLocation(ElementId elementId, FeaturePath pathToValue);
+        DataLocation(const DataLocation& other) = default;
 
         ElementId getElementId() const;
         const FeaturePath& getPathToValue() const;
@@ -30,11 +30,11 @@ namespace babelwires {
         // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
         std::size_t getHash() const;
 
-        inline friend bool operator==(const ComplexValueEditorData& a, const ComplexValueEditorData& b) { 
+        inline friend bool operator==(const DataLocation& a, const DataLocation& b) { 
             return (a.m_elementId == b.m_elementId) && (a.m_pathToValue == b.m_pathToValue);
         }
 
-        friend std::ostream& operator<<(std::ostream& os, const ComplexValueEditorData& data) {
+        friend std::ostream& operator<<(std::ostream& os, const DataLocation& data) {
             return os << "\"" << data.m_pathToValue << " @ node " << data.m_elementId << "\"";
         }
 
@@ -52,7 +52,7 @@ namespace babelwires {
 }
 
 namespace std {
-    template <> struct hash<babelwires::ComplexValueEditorData> {
-        inline std::size_t operator()(const babelwires::ComplexValueEditorData& data) const { return data.getHash(); }
+    template <> struct hash<babelwires::DataLocation> {
+        inline std::size_t operator()(const babelwires::DataLocation& data) const { return data.getHash(); }
     };
 } // namespace std

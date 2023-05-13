@@ -11,15 +11,15 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Features/mapFeature.hpp>
+#include <BabelWiresLib/Types/Map/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
-babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data) {
+babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data) {
     AccessModelScope scope(projectBridge);
     const ValueFeature& valueFeature = ComplexValueEditor::getValueFeatureOrThrow(scope, data);
 
     // TODO: For now, assume ComplexValueEditors are all built-in, so we don't need a registry.
-    if (valueFeature.as<MapFeature>()) {
+    if (valueFeature.as<MapFeature2>()) {
         // TODO: For now use a floating window.
         return new MapEditor(nullptr, projectBridge, userLogger, data);
     }

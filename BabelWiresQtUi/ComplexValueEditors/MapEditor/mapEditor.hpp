@@ -29,7 +29,7 @@ namespace babelwires {
       public:
         /// data - Enough information to restore the state of a MapEditor.
         MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
-                  const ComplexValueEditorData& data);
+                  const DataLocation& data);
 
         /// Resets the map editor to the state of the given map.
         void setEditorMap(const MapValue& mapValue);

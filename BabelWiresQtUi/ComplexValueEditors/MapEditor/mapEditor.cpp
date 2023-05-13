@@ -39,7 +39,7 @@
 #define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
 
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
-                                 const ComplexValueEditorData& data)
+                                 const DataLocation& data)
     : ComplexValueEditor(parent, projectBridge, userLogger, data)
     , m_map(projectBridge.getContext())
     , m_commandManager(m_map, userLogger) {
