@@ -12,16 +12,17 @@
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
+
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <QWidget>
 
 namespace babelwires {
     class ProjectBridge;
-    class MapFeature;
+    class MapFeature2;
     class MapModel;
     class MapView;
-    struct MapValueAssignmentData;
+    struct ValueAssignmentData;
     class TypeWidget;
 
     class MapEditor : public ComplexValueEditor {
@@ -38,13 +39,13 @@ namespace babelwires {
         void applyMapToProject();
 
         /// Get the MapFeature or assert.
-        const MapFeature& getMapFeature(AccessModelScope& scope) const;
+        const MapFeature2& getMapFeature(AccessModelScope& scope) const;
 
         /// Get the mapValue from the project or assert.
         const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
 
         /// Get the MapFeature or return nullptr.
-        const MapFeature* tryGetMapFeature(AccessModelScope& scope) const;
+        const MapFeature2* tryGetMapFeature(AccessModelScope& scope) const;
 
         /// See if there is a map assignment.
         /// If there is, return its data.
@@ -73,7 +74,7 @@ namespace babelwires {
         QString getTitle() const;
 
         /// Try to find a MapValueAssignment in the project which applies to the mapFeature.
-        const MapValueAssignmentData* tryGetMapValueAssignmentData(AccessModelScope& scope) const;
+        const ValueAssignmentData* tryGetMapValueAssignmentData(AccessModelScope& scope) const;
 
         void updateUiAfterChange() const;
 
@@ -96,7 +97,7 @@ namespace babelwires {
         MapProject m_map;
 
         /// Stores the default map value (obtained from the feature).
-        MapValue m_defaultMapValue;
+        TypeRef m_mapType;
 
         /// Manages changes to the map.
         CommandManager<MapProject> m_commandManager;
