@@ -1,5 +1,5 @@
 /**
- * A TypeConstructor which constructs a map type.
+ * A TypeConstructor which constructs a new SumType from a pair of types.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,10 +11,9 @@
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 namespace babelwires {
-    /// Construct a new SumType from a source and target type and a default fallback kind.
+    /// Construct a new SumType from a pair of types.
     class SumTypeConstructor : public TypeConstructor {
       public:
-        /// Note that the we don't represent the default in the name.
         TYPE_CONSTRUCTOR("Sum", "{0}+{1}", "e9978340-49d9-49f3-922a-3c367f5feaec", 1);
 
         std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,

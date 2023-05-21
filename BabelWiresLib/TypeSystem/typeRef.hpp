@@ -26,7 +26,7 @@ namespace babelwires {
     /// or storing the id of its constructor and its arguments.
     class TypeRef : public ProjectVisitable, public Serializable {
       public:
-        SERIALIZABLE(TypeRef, "typeref", void, 1);
+        SERIALIZABLE(TypeRef, "type", void, 1);
 
         TypeRef();
 

@@ -1,5 +1,5 @@
 /**
- * SumType is the type for MapValue.
+ * SumType is the type which allows any value of any of a number of other types.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -12,8 +12,10 @@
 
 namespace babelwires {
 
-    /// 
-    /// Note: This creates bare values of the summand types, not wrapped values.
+    /// SumType is the type which allows any value of any of a number of other types.
+    /// The values are SumValues, which are values tagged by their type.
+    /// Implementation note: Bare values would work (we could probably allow ambiguity) but testing
+    /// whether a value is a member of the sum gets computationally painful.
     class SumType : public Type {
       public:
         using Summands = std::vector<TypeRef>;

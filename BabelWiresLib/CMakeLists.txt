@@ -99,6 +99,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/Rational/rationalTypeConstructor.cpp
 	Types/Sum/sumType.cpp
 	Types/Sum/sumTypeConstructor.cpp
+	Types/Sum/sumValue.cpp
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
 	Types/String/stringFeature.cpp
