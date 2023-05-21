@@ -11,7 +11,7 @@
 #include <unordered_set>
 
 babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem,
-                                   const MapFeature::AllowedTypes& allowedTypeRefs)
+                                   const MapProject::AllowedTypes& allowedTypeRefs)
     : QComboBox(parent)
     , m_hasBadItem(false) {
     m_defaultStyleSheet = styleSheet();

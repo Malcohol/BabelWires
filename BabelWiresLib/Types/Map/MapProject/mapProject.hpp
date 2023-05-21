@@ -8,7 +8,6 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
-#include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
@@ -29,11 +28,20 @@ namespace babelwires {
         MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
-        void setAllowedSourceTypeRefs(const MapFeature::AllowedTypes& allowedTypes);
-        void setAllowedTargetTypeRefs(const MapFeature::AllowedTypes& allowedTypes);
+        struct AllowedTypes {
+            std::vector<TypeRef> m_typeRefs;
+            unsigned int m_indexOfDefault = 0;
 
-        const MapFeature::AllowedTypes& getAllowedSourceTypeRefs() const;
-        const MapFeature::AllowedTypes& getAllowedTargetTypeRefs() const;
+            bool isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& type) const;
+            bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& type) const;
+            const TypeRef& getDefaultTypeRef() const { return m_typeRefs[m_indexOfDefault]; }
+        };
+
+        void setAllowedSourceTypeRefs(const AllowedTypes& allowedTypes);
+        void setAllowedTargetTypeRefs(const AllowedTypes& allowedTypes);
+
+        const AllowedTypes& getAllowedSourceTypeRefs() const;
+        const AllowedTypes& getAllowedTargetTypeRefs() const;
        
         const TypeRef& getSourceTypeRef() const;
         const TypeRef& getTargetTypeRef() const;
@@ -66,8 +74,8 @@ namespace babelwires {
 
       private:
         const ProjectContext& m_projectContext;
-        MapFeature::AllowedTypes m_allowedSourceTypeRefs;
-        MapFeature::AllowedTypes m_allowedTargetTypeRefs;
+        AllowedTypes m_allowedSourceTypeRefs;
+        AllowedTypes m_allowedTargetTypeRefs;
 
         TypeRef m_sourceTypeRef;
         TypeRef m_targetTypeRef;

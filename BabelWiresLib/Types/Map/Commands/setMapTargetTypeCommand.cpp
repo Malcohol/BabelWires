@@ -19,7 +19,7 @@ babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string command
     , m_newTargetTypeRef(std::move(newTargetTypeRef)) {}
 
 bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
-    const MapFeature::AllowedTypes& allowedTypeRefs = map.getAllowedTargetTypeRefs();
+    const MapProject::AllowedTypes& allowedTypeRefs = map.getAllowedTargetTypeRefs();
     const ProjectContext& context = map.getProjectContext();
     const TypeSystem& typeSystem = context.m_typeSystem;
     if (!allowedTypeRefs.isSubtypeOfSome(typeSystem, m_newTargetTypeRef)) {

@@ -22,21 +22,21 @@ babelwires::MapProject::MapProject(const ProjectContext& projectContext)
 
 babelwires::MapProject::~MapProject() = default;
 
-void babelwires::MapProject::setAllowedSourceTypeRefs(const MapFeature::AllowedTypes& allowedTypes) {
+void babelwires::MapProject::setAllowedSourceTypeRefs(const AllowedTypes& allowedTypes) {
     m_allowedSourceTypeRefs = allowedTypes;
     setSourceTypeRef(allowedTypes.getDefaultTypeRef());
 }
 
-void babelwires::MapProject::setAllowedTargetTypeRefs(const MapFeature::AllowedTypes& allowedTypes) {
+void babelwires::MapProject::setAllowedTargetTypeRefs(const AllowedTypes& allowedTypes) {
     m_allowedTargetTypeRefs = allowedTypes;
     setTargetTypeRef(allowedTypes.getDefaultTypeRef());
 }
 
-const babelwires::MapFeature::AllowedTypes& babelwires::MapProject::getAllowedSourceTypeRefs() const {
+const babelwires::MapProject::AllowedTypes& babelwires::MapProject::getAllowedSourceTypeRefs() const {
     return m_allowedSourceTypeRefs;
 }
 
-const babelwires::MapFeature::AllowedTypes& babelwires::MapProject::getAllowedTargetTypeRefs() const {
+const babelwires::MapProject::AllowedTypes& babelwires::MapProject::getAllowedTargetTypeRefs() const {
     return m_allowedTargetTypeRefs;
 }
 
@@ -170,4 +170,18 @@ const babelwires::Result& babelwires::MapProject::getSourceTypeValidity() const 
 
 const babelwires::Result& babelwires::MapProject::getTargetTypeValidity() const {
     return m_targetTypeValidity;
+}
+
+
+bool babelwires::MapProject::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& typeRef) const {
+    return std::any_of(m_typeRefs.begin(), m_typeRefs.end(), [typeRef, &typeSystem](const TypeRef& id) {
+        return typeSystem.isRelatedType(id, typeRef);
+    });
+}
+
+bool babelwires::MapProject::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& typeRef) const {
+    return std::any_of(m_typeRefs.begin(), m_typeRefs.end(),
+                                        [typeRef, &typeSystem](const TypeRef& id) {
+                                            return typeSystem.isSubType(typeRef, id);
+                                        });
 }

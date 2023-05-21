@@ -19,7 +19,7 @@ babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string command
     , m_newSourceTypeRef(std::move(newSourceTypeRef)) {}
 
 bool babelwires::SetMapSourceTypeCommand::initialize(const MapProject& map) {
-    const MapFeature::AllowedTypes& allowedTypes = map.getAllowedSourceTypeRefs();
+    const MapProject::AllowedTypes& allowedTypes = map.getAllowedSourceTypeRefs();
     const ProjectContext& context = map.getProjectContext();
     const TypeSystem& typeSystem = context.m_typeSystem;
     if (!allowedTypes.isRelatedToSome(typeSystem, m_newSourceTypeRef)) {
