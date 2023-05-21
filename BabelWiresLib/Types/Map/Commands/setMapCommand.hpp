@@ -8,24 +8,25 @@
 
 #pragma once
 
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 
 namespace babelwires {
     class MapProject;
-    class MapValue;
 
     /// Add an element to an array feature.
     class SetMapCommand : public SimpleCommand<MapProject> {
       public:
-        SetMapCommand(std::string commandName, std::unique_ptr<MapValue> newData);
+        SetMapCommand(std::string commandName, ValueHolderTemplate<MapValue> newData);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
         virtual void undo(MapProject& map) const override;
 
       private:
-        std::unique_ptr<MapValue> m_newContents;
-        std::unique_ptr<MapValue> m_oldContents;
+        ValueHolderTemplate<MapValue> m_newContents;
+        ValueHolderTemplate<MapValue> m_oldContents;
     };
 
 } // namespace babelwires

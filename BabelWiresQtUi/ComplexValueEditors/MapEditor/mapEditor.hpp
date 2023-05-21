@@ -50,7 +50,7 @@ namespace babelwires {
         /// See if there is a map assignment.
         /// If there is, return its data.
         /// Otherwise return the data of the mapFeature.
-        const MapValue* tryGetMapValueFromProject(AccessModelScope& scope) const;
+        ValueHolderTemplate<MapValue> tryGetMapValueFromProject(AccessModelScope& scope) const;
 
         const MapProject& getMapProject() const;
 

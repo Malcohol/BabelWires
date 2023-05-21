@@ -12,18 +12,20 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
-babelwires::SetMapCommand::SetMapCommand(std::string commandName, std::unique_ptr<MapValue> newData)
-    : SimpleCommand(commandName), m_newContents(std::move(newData)) {}
+babelwires::SetMapCommand::SetMapCommand(std::string commandName, ValueHolderTemplate<MapValue> newData)
+    : SimpleCommand(commandName), m_newContents(std::move(newData)) {
+        assert(m_newContents->as<MapValue>() && "SetMapCommand given non-map value");
+    }
 
 bool babelwires::SetMapCommand::initialize(const MapProject& map) {
-    m_oldContents = std::make_unique<MapValue>(map.extractMapValue());
+    m_oldContents = map.extractMapValue();
     return true;
 }
 
 void babelwires::SetMapCommand::execute(MapProject& map) const {
-    map.setMapValue(*m_newContents);
+    map.setMapValue(m_newContents->is<MapValue>());
 }
 
 void babelwires::SetMapCommand::undo(MapProject& map) const {
-    map.setMapValue(*m_oldContents);
+    map.setMapValue(m_oldContents->is<MapValue>());
 }

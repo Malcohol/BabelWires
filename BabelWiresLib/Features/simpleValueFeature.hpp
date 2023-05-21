@@ -30,6 +30,7 @@ namespace babelwires {
         void setValue(const Value& newValue);
         void setValue(Value&& newValue);
 
+        const ValueHolder& getValueHolder() const;
         void setValueHolder(const ValueHolder& newValue);
 
       protected:

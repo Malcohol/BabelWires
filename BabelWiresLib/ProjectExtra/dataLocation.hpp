@@ -1,5 +1,5 @@
 /**
- * A ComplexValueEditorData carries enough data to reconstruct a ComplexValueEditor.
+ * A DataLocation identifies some data within the system.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -14,7 +14,10 @@
 #include <Common/Serialization/serializable.hpp>
 
 namespace babelwires {
-    /// Data sufficient to describe the value the editor should be editing.
+    /// A DataLocation identifies some data within the system.
+    /// Right now it is a concrete class and identifies a row within the project.
+    /// In theory, it should be abstracted and be able to identify data in other contexts
+    /// as well. An example would be the source or target values in the MapEditor.
     class DataLocation : public Serializable, ProjectVisitable {
       public:
         SERIALIZABLE(DataLocation, "location", void, 1);

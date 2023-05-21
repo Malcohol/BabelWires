@@ -33,6 +33,10 @@ void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue)
     }
 }
 
+const babelwires::ValueHolder& babelwires::SimpleValueFeature::getValueHolder() const {
+    return m_value;
+}
+
 void babelwires::SimpleValueFeature::setValue(const Value& value) {
     if (!m_value || (value != *m_value)) {
         const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);

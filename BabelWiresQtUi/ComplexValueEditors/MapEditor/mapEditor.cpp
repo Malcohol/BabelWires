@@ -222,28 +222,28 @@ babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) con
     return modifier->getModifierData().as<ValueAssignmentData>();
 }
 
-const babelwires::MapValue* babelwires::MapEditor::tryGetMapValueFromProject(AccessModelScope& scope) const {
+babelwires::ValueHolderTemplate<babelwires::MapValue> babelwires::MapEditor::tryGetMapValueFromProject(AccessModelScope& scope) const {
     if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
-        if (const MapValue* const mapValue = modifier->getValue()->as<MapValue>()) {
+        if (ValueHolderTemplate<MapValue> mapValue = modifier->getValue().asValueHolder<MapValue>()) {
             return mapValue;
         }
     }
 
     const babelwires::MapFeature2* const mapFeature = tryGetMapFeature(scope);
     if (!mapFeature) {
-        return nullptr;
+        return {};
     }
 
-    return &mapFeature->get();
+    return mapFeature->getValueHolder().isValueHolder<MapValue>();
 }
 
 void babelwires::MapEditor::updateMapFromProject() {
     AccessModelScope scope(getProjectBridge());
-    const MapValue* mapValueFromProject = tryGetMapValueFromProject(scope);
+    ValueHolderTemplate<MapValue> mapValueFromProject = tryGetMapValueFromProject(scope);
     if (mapValueFromProject) {
         getUserLogger().logInfo() << "Refreshing the map from the project";
         executeCommand(
-            std::make_unique<SetMapCommand>("Refresh the map from the project", mapValueFromProject->clone()));
+            std::make_unique<SetMapCommand>("Refresh the map from the project", mapValueFromProject));
     } else {
         warnThatMapNoLongerInProject("Cannot refresh the map.");
     }
@@ -413,7 +413,7 @@ void babelwires::MapEditor::setToDefault() {
     const TypeSystem& typeSystem = getProjectBridge().getContext().m_typeSystem;
     const MapType& mapType = m_mapType.resolve(typeSystem).is<MapType>();
     ValueHolder defaultMapValue = mapType.createValue(typeSystem);
-    executeCommand(std::make_unique<SetMapCommand>("Restore default map", defaultMapValue->is<MapValue>().clone()));
+    executeCommand(std::make_unique<SetMapCommand>("Restore default map", defaultMapValue.isValueHolder<MapValue>()));
 }
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {
