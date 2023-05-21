@@ -22,14 +22,14 @@ babelwires::MapProject::MapProject(const ProjectContext& projectContext)
 
 babelwires::MapProject::~MapProject() = default;
 
-void babelwires::MapProject::setAllowedSourceTypeRefs(const AllowedTypes& allowedTypes) {
-    m_allowedSourceTypeRefs = allowedTypes;
-    setSourceTypeRef(allowedTypes.getDefaultTypeRef());
+void babelwires::MapProject::setSpecifiedSourceTypeRef(TypeRef specifiedSourceType) {
+    m_allowedSourceTypeRefs = AllowedTypes{{ std::move(specifiedSourceType) }};
+    setSourceTypeRef(m_allowedSourceTypeRefs.getDefaultTypeRef());
 }
 
-void babelwires::MapProject::setAllowedTargetTypeRefs(const AllowedTypes& allowedTypes) {
-    m_allowedTargetTypeRefs = allowedTypes;
-    setTargetTypeRef(allowedTypes.getDefaultTypeRef());
+void babelwires::MapProject::setSpecifiedTargetTypeRef(TypeRef specifiedTargetType) {
+    m_allowedTargetTypeRefs = AllowedTypes{{ std::move(specifiedTargetType) }};
+    setTargetTypeRef(m_allowedTargetTypeRefs.getDefaultTypeRef());
 }
 
 const babelwires::MapProject::AllowedTypes& babelwires::MapProject::getAllowedSourceTypeRefs() const {

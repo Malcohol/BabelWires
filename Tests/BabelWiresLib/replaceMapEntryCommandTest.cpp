@@ -17,8 +17,8 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setSpecifiedSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapProject.setSpecifiedTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::MapValue mapValue;
     mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
@@ -72,8 +72,8 @@ TEST(ReplaceMapEntryCommandTest, failBeyondEnd) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setSpecifiedSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapProject.setSpecifiedTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::MapValue mapValue;
     mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
@@ -97,8 +97,8 @@ TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setSpecifiedSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapProject.setSpecifiedTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::MapValue mapValue;
     mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
@@ -155,8 +155,8 @@ TEST(ReplaceMapEntryCommandTest, failInvalid) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setSpecifiedSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapProject.setSpecifiedTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::MapValue mapValue;
     mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());

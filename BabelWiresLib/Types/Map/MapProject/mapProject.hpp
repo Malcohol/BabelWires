@@ -37,8 +37,11 @@ namespace babelwires {
             const TypeRef& getDefaultTypeRef() const { return m_typeRefs[m_indexOfDefault]; }
         };
 
-        void setAllowedSourceTypeRefs(const AllowedTypes& allowedTypes);
-        void setAllowedTargetTypeRefs(const AllowedTypes& allowedTypes);
+        /// Set the source type specified by the context.
+        void setSpecifiedSourceTypeRef(TypeRef specifiedSourceType);
+
+        /// Set the target type specified by the context.
+        void setSpecifiedTargetTypeRef(TypeRef specifiedTargetType);
 
         const AllowedTypes& getAllowedSourceTypeRefs() const;
         const AllowedTypes& getAllowedTargetTypeRefs() const;
