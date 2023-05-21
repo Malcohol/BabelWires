@@ -13,13 +13,13 @@
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 
-babelwires::MapFeature2::MapFeature2(const TypeRef& sourceType, const TypeRef& targetType,
+babelwires::MapFeature::MapFeature(const TypeRef& sourceType, const TypeRef& targetType,
                                      MapEntryData::Kind defaultFallbackKind)
     : SimpleValueFeature(TypeRef(
           MapTypeConstructor::getThisIdentifier(),
           TypeConstructorArguments{{sourceType, targetType},
                                    {EnumValue(MapEntryFallbackKind::getIdentifierFromValue(defaultFallbackKind))}})) {}
 
-const babelwires::MapValue& babelwires::MapFeature2::get() const {
+const babelwires::MapValue& babelwires::MapFeature::get() const {
     return getValue().is<MapValue>();
 }

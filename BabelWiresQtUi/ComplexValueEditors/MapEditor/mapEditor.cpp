@@ -85,7 +85,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             AccessModelScope scope(getProjectBridge());
             const UiProjectContext& context = projectBridge.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
-            const MapFeature2& mapFeature = getMapFeature(scope);
+            const MapFeature& mapFeature = getMapFeature(scope);
             m_mapType = mapFeature.getTypeRef();
             const MapValue& mapValue = getMapValueFromProject(scope);
             m_map.setSpecifiedSourceTypeRef(mapFeature.getType().is<MapType>().getSourceTypeRef());
@@ -178,9 +178,9 @@ void babelwires::MapEditor::applyMapToProject() {
     }
 }
 
-const babelwires::MapFeature2& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) const {
+const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) const {
     const ValueFeature& valueFeature = ComplexValueEditor::getValueFeature(scope, getData());
-    const MapFeature2* mapFeature = valueFeature.as<MapFeature2>();
+    const MapFeature* mapFeature = valueFeature.as<MapFeature>();
     assert(mapFeature && "The value feature was not a map feature");
     return *mapFeature;
 }
@@ -194,10 +194,10 @@ const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(Access
     return getMapFeature(scope).get();
 }
 
-const babelwires::MapFeature2* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {
+const babelwires::MapFeature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {
     const ValueFeature* valueFeature = ComplexValueEditor::tryGetValueFeature(scope, getData());
     if (valueFeature) {
-        const MapFeature2* mapFeature = valueFeature->as<MapFeature2>();
+        const MapFeature* mapFeature = valueFeature->as<MapFeature>();
         if (mapFeature) {
             return mapFeature;
         }
@@ -229,7 +229,7 @@ babelwires::ValueHolderTemplate<babelwires::MapValue> babelwires::MapEditor::try
         }
     }
 
-    const babelwires::MapFeature2* const mapFeature = tryGetMapFeature(scope);
+    const babelwires::MapFeature* const mapFeature = tryGetMapFeature(scope);
     if (!mapFeature) {
         return {};
     }

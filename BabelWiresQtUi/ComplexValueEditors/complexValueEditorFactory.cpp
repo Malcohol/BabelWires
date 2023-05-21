@@ -19,7 +19,7 @@ babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEdi
     const ValueFeature& valueFeature = ComplexValueEditor::getValueFeatureOrThrow(scope, data);
 
     // TODO: For now, assume ComplexValueEditors are all built-in, so we don't need a registry.
-    if (valueFeature.as<MapFeature2>()) {
+    if (valueFeature.as<MapFeature>()) {
         // TODO: For now use a floating window.
         return new MapEditor(nullptr, projectBridge, userLogger, data);
     }

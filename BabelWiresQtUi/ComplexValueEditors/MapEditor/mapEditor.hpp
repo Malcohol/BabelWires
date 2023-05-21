@@ -19,7 +19,7 @@
 
 namespace babelwires {
     class ProjectBridge;
-    class MapFeature2;
+    class MapFeature;
     class MapModel;
     class MapView;
     struct ValueAssignmentData;
@@ -39,13 +39,13 @@ namespace babelwires {
         void applyMapToProject();
 
         /// Get the MapFeature or assert.
-        const MapFeature2& getMapFeature(AccessModelScope& scope) const;
+        const MapFeature& getMapFeature(AccessModelScope& scope) const;
 
         /// Get the mapValue from the project or assert.
         const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
 
         /// Get the MapFeature or return nullptr.
-        const MapFeature2* tryGetMapFeature(AccessModelScope& scope) const;
+        const MapFeature* tryGetMapFeature(AccessModelScope& scope) const;
 
         /// See if there is a map assignment.
         /// If there is, return its data.
