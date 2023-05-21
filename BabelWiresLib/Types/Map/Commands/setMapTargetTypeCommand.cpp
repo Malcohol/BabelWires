@@ -25,14 +25,14 @@ bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
     if (!allowedTypeRefs.isSubtypeOfSome(typeSystem, m_newTargetTypeRef)) {
         return false;
     }
-    m_oldTargetTypeRef = map.getTargetTypeRef();
+    m_oldTargetTypeRef = map.getCurrentTargetTypeRef();
     return true;
 }
 
 void babelwires::SetMapTargetTypeCommand::execute(MapProject& map) const {
-    map.setTargetTypeRef(m_newTargetTypeRef);
+    map.setCurrentTargetTypeRef(m_newTargetTypeRef);
 }
 
 void babelwires::SetMapTargetTypeCommand::undo(MapProject& map) const {
-    map.setTargetTypeRef(m_oldTargetTypeRef);
+    map.setCurrentTargetTypeRef(m_oldTargetTypeRef);
 }

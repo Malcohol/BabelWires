@@ -24,12 +24,12 @@ babelwires::MapProject::~MapProject() = default;
 
 void babelwires::MapProject::setSpecifiedSourceTypeRef(TypeRef specifiedSourceType) {
     m_allowedSourceTypeRefs = AllowedTypes{{ std::move(specifiedSourceType) }};
-    setSourceTypeRef(m_allowedSourceTypeRefs.getDefaultTypeRef());
+    setCurrentSourceTypeRef(m_allowedSourceTypeRefs.getDefaultTypeRef());
 }
 
 void babelwires::MapProject::setSpecifiedTargetTypeRef(TypeRef specifiedTargetType) {
     m_allowedTargetTypeRefs = AllowedTypes{{ std::move(specifiedTargetType) }};
-    setTargetTypeRef(m_allowedTargetTypeRefs.getDefaultTypeRef());
+    setCurrentTargetTypeRef(m_allowedTargetTypeRefs.getDefaultTypeRef());
 }
 
 const babelwires::MapProject::AllowedTypes& babelwires::MapProject::getAllowedSourceTypeRefs() const {
@@ -40,15 +40,15 @@ const babelwires::MapProject::AllowedTypes& babelwires::MapProject::getAllowedTa
     return m_allowedTargetTypeRefs;
 }
 
-const babelwires::TypeRef& babelwires::MapProject::getSourceTypeRef() const {
-    return m_sourceTypeRef;
+const babelwires::TypeRef& babelwires::MapProject::getCurrentSourceTypeRef() const {
+    return m_currentSourceTypeRef;
 }
 
-const babelwires::TypeRef& babelwires::MapProject::getTargetTypeRef() const {
-    return m_targetTypeRef;
+const babelwires::TypeRef& babelwires::MapProject::getCurrentTargetTypeRef() const {
+    return m_currentTargetTypeRef;
 }
 
-void babelwires::MapProject::setSourceTypeRef(const TypeRef& sourceId) {
+void babelwires::MapProject::setCurrentSourceTypeRef(const TypeRef& sourceId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
     const Type *const type = sourceId.tryResolve(typeSystem);
     if (!type) {
@@ -63,14 +63,14 @@ void babelwires::MapProject::setSourceTypeRef(const TypeRef& sourceId) {
         m_sourceTypeValidity = Result::Success();
     }
 
-    m_sourceTypeRef = sourceId;
+    m_currentSourceTypeRef = sourceId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
-        m_mapEntries[i]->validate(typeSystem, m_sourceTypeRef, m_targetTypeRef, (i == m_mapEntries.size() - 1));
+        m_mapEntries[i]->validate(typeSystem, m_currentSourceTypeRef, m_currentTargetTypeRef, (i == m_mapEntries.size() - 1));
     }
 }
 
-void babelwires::MapProject::setTargetTypeRef(const TypeRef& targetId) {
+void babelwires::MapProject::setCurrentTargetTypeRef(const TypeRef& targetId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
     const Type *const type = targetId.tryResolve(typeSystem);
     if (!type) {
@@ -85,21 +85,21 @@ void babelwires::MapProject::setTargetTypeRef(const TypeRef& targetId) {
         m_targetTypeValidity = Result::Success();
     }
 
-    m_targetTypeRef = targetId;
+    m_currentTargetTypeRef = targetId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
-        m_mapEntries[i]->validate(typeSystem, m_sourceTypeRef, m_targetTypeRef, (i == m_mapEntries.size() - 1));
+        m_mapEntries[i]->validate(typeSystem, m_currentSourceTypeRef, m_currentTargetTypeRef, (i == m_mapEntries.size() - 1));
     }
 }
 
-const babelwires::Type* babelwires::MapProject::getSourceType() const {
+const babelwires::Type* babelwires::MapProject::getCurrentSourceType() const {
     // TODO Could this fail to resolve?
-    return m_sourceTypeRef.tryResolve(m_projectContext.m_typeSystem);
+    return m_currentSourceTypeRef.tryResolve(m_projectContext.m_typeSystem);
 }
 
-const babelwires::Type* babelwires::MapProject::getTargetType() const {
+const babelwires::Type* babelwires::MapProject::getCurrentTargetType() const {
     // TODO Could this fail to resolve?
-    return m_targetTypeRef.tryResolve(m_projectContext.m_typeSystem);
+    return m_currentTargetTypeRef.tryResolve(m_projectContext.m_typeSystem);
 }
 
 unsigned int babelwires::MapProject::getNumMapEntries() const {
@@ -111,14 +111,14 @@ const babelwires::MapProjectEntry& babelwires::MapProject::getMapEntry(unsigned 
 }
 
 babelwires::Result babelwires::MapProject::validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const {
-    return newEntry.validate(m_projectContext.m_typeSystem, m_sourceTypeRef, m_targetTypeRef, isLastEntry);
+    return newEntry.validate(m_projectContext.m_typeSystem, m_currentSourceTypeRef, m_currentTargetTypeRef, isLastEntry);
 }
 
 void babelwires::MapProject::addMapEntry(std::unique_ptr<MapEntryData> newEntryData, unsigned int index) {
     assert((index < m_mapEntries.size()) && "You cannot add the last entry of a map. It needs to be a fallback entry.");
     assert((index <= m_mapEntries.size()) && "index to add is out of range");
     auto newEntry = std::make_unique<MapProjectEntry>(std::move(newEntryData));
-    newEntry->validate(m_projectContext.m_typeSystem, m_sourceTypeRef, m_targetTypeRef, false);
+    newEntry->validate(m_projectContext.m_typeSystem, m_currentSourceTypeRef, m_currentTargetTypeRef, false);
     m_mapEntries.emplace(m_mapEntries.begin() + index, std::move(newEntry));
 }
 
@@ -133,14 +133,14 @@ void babelwires::MapProject::replaceMapEntry(std::unique_ptr<MapEntryData> newEn
     assert((index < m_mapEntries.size()) && "index to replace is out of range");
     const bool isLastEntry = (index == m_mapEntries.size() - 1);
     auto newEntry = std::make_unique<MapProjectEntry>(std::move(newEntryData));
-    newEntry->validate(m_projectContext.m_typeSystem, m_sourceTypeRef, m_targetTypeRef, isLastEntry);
+    newEntry->validate(m_projectContext.m_typeSystem, m_currentSourceTypeRef, m_currentTargetTypeRef, isLastEntry);
     m_mapEntries[index] = std::move(newEntry);
 }
 
 babelwires::MapValue babelwires::MapProject::extractMapValue() const {
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(m_sourceTypeRef);
-    mapValue.setTargetTypeRef(m_targetTypeRef);
+    mapValue.setSourceTypeRef(m_currentSourceTypeRef);
+    mapValue.setTargetTypeRef(m_currentTargetTypeRef);
     for (const auto& mapEntry : m_mapEntries) {
         mapValue.emplaceBack(mapEntry->getData().clone());
     }
@@ -148,14 +148,14 @@ babelwires::MapValue babelwires::MapProject::extractMapValue() const {
 }
 
 void babelwires::MapProject::setMapValue(const MapValue& data) {
-    setSourceTypeRef(data.getSourceTypeRef());
-    setTargetTypeRef(data.getTargetTypeRef());
+    setCurrentSourceTypeRef(data.getSourceTypeRef());
+    setCurrentTargetTypeRef(data.getTargetTypeRef());
     m_mapEntries.clear();
     for (unsigned int i = 0; i < data.m_mapEntries.size(); ++i) {
         const auto& mapEntryData = data.m_mapEntries[i];
         auto mapEntry = std::make_unique<MapProjectEntry>(mapEntryData->clone());
         const bool isLastEntry = (i == data.m_mapEntries.size() - 1);
-        mapEntry->validate(m_projectContext.m_typeSystem, m_sourceTypeRef, m_targetTypeRef, isLastEntry);
+        mapEntry->validate(m_projectContext.m_typeSystem, m_currentSourceTypeRef, m_currentTargetTypeRef, isLastEntry);
         m_mapEntries.emplace_back(std::move(mapEntry));
     }
 }

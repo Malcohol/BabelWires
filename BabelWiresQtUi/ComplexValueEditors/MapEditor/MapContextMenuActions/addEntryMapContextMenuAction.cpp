@@ -25,6 +25,6 @@ void babelwires::AddEntryMapContextMenuAction::actionTriggered(QAbstractItemMode
     MapEditor& mapEditor = mapModel->getMapEditor();
     const MapProject& mapProject = mapEditor.getMapProject();
 
-    auto newEntry = std::make_unique<OneToOneMapEntryData>(mapProject.getProjectContext().m_typeSystem, mapProject.getSourceTypeRef(), mapProject.getTargetTypeRef());
+    auto newEntry = std::make_unique<OneToOneMapEntryData>(mapProject.getProjectContext().m_typeSystem, mapProject.getCurrentSourceTypeRef(), mapProject.getCurrentTargetTypeRef());
     mapEditor.executeCommand(std::make_unique<AddEntryToMapCommand>("Add entry above", std::move(newEntry), m_indexOfNewEntry));
 }

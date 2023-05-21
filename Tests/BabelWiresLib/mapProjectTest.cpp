@@ -72,15 +72,15 @@ TEST(MapProjectTest, types) {
     mapProject.setSpecifiedSourceTypeRef(testUtils::TestType::getThisIdentifier());
     mapProject.setSpecifiedTargetTypeRef(testUtils::TestEnum::getThisIdentifier());
 
-    mapProject.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapProject.setTargetTypeRef(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setCurrentSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapProject.setCurrentTargetTypeRef(testUtils::TestEnum::getThisIdentifier());
 
-    EXPECT_EQ(mapProject.getSourceTypeRef(), testUtils::TestType::getThisIdentifier());
-    EXPECT_EQ(mapProject.getTargetTypeRef(), testUtils::TestEnum::getThisIdentifier());
+    EXPECT_EQ(mapProject.getCurrentSourceTypeRef(), testUtils::TestType::getThisIdentifier());
+    EXPECT_EQ(mapProject.getCurrentTargetTypeRef(), testUtils::TestEnum::getThisIdentifier());
 
-    EXPECT_EQ(mapProject.getSourceType(),
+    EXPECT_EQ(mapProject.getCurrentSourceType(),
               &environment.m_typeSystem.getEntryByType<testUtils::TestType>());
-    EXPECT_EQ(mapProject.getTargetType(),
+    EXPECT_EQ(mapProject.getCurrentTargetType(),
               &environment.m_typeSystem.getEntryByType<testUtils::TestEnum>());
 }
 
@@ -95,24 +95,24 @@ TEST(MapProjectTest, badTypes) {
     EXPECT_TRUE(mapProject.getSourceTypeValidity());
     EXPECT_TRUE(mapProject.getTargetTypeValidity());
 
-    mapProject.setSourceTypeRef(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setCurrentSourceTypeRef(testUtils::TestEnum::getThisIdentifier());
 
     EXPECT_FALSE(mapProject.getSourceTypeValidity());
     EXPECT_TRUE(mapProject.getTargetTypeValidity());
 
-    mapProject.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    mapProject.setCurrentTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     EXPECT_FALSE(mapProject.getSourceTypeValidity());
     EXPECT_FALSE(mapProject.getTargetTypeValidity());
 
-    mapProject.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapProject.setTargetTypeRef(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setCurrentSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapProject.setCurrentTargetTypeRef(testUtils::TestEnum::getThisIdentifier());
     
     EXPECT_TRUE(mapProject.getSourceTypeValidity());
     EXPECT_TRUE(mapProject.getTargetTypeValidity());
 
-    mapProject.setSourceTypeRef(testTypeId1);
-    mapProject.setTargetTypeRef(testTypeId2);
+    mapProject.setCurrentSourceTypeRef(testTypeId1);
+    mapProject.setCurrentTargetTypeRef(testTypeId2);
 
     EXPECT_FALSE(mapProject.getSourceTypeValidity());
     EXPECT_FALSE(mapProject.getTargetTypeValidity());
@@ -139,8 +139,8 @@ TEST(MapProjectTest, setAndExtractMapValue) {
 
     mapProject.setMapValue(mapValue);
 
-    EXPECT_EQ(mapProject.getSourceTypeRef(), testUtils::TestType::getThisIdentifier());
-    EXPECT_EQ(mapProject.getTargetTypeRef(), testUtils::TestSubEnum::getThisIdentifier());
+    EXPECT_EQ(mapProject.getCurrentSourceTypeRef(), testUtils::TestType::getThisIdentifier());
+    EXPECT_EQ(mapProject.getCurrentTargetTypeRef(), testUtils::TestSubEnum::getThisIdentifier());
     EXPECT_EQ(mapProject.extractMapValue(), mapValue);
     EXPECT_EQ(mapProject.getNumMapEntries(), 2);
     EXPECT_EQ(mapProject.getMapEntry(0).getData(), oneToOne);
@@ -237,22 +237,22 @@ TEST(MapProjectTest, typeChangeAndValidity) {
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
 
-    mapProject.setTargetTypeRef(testUtils::TestSubSubEnum1::getThisIdentifier());
+    mapProject.setCurrentTargetTypeRef(testUtils::TestSubSubEnum1::getThisIdentifier());
 
     EXPECT_FALSE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
 
-    mapProject.setTargetTypeRef(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setCurrentTargetTypeRef(testUtils::TestEnum::getThisIdentifier());
 
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
 
-    mapProject.setSourceTypeRef(testUtils::TestSubSubEnum1::getThisIdentifier());
+    mapProject.setCurrentSourceTypeRef(testUtils::TestSubSubEnum1::getThisIdentifier());
 
     EXPECT_FALSE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
 
-    mapProject.setSourceTypeRef(testUtils::TestEnum::getThisIdentifier());
+    mapProject.setCurrentSourceTypeRef(testUtils::TestEnum::getThisIdentifier());
 
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());

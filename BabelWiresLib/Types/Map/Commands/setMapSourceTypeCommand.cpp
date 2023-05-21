@@ -25,14 +25,14 @@ bool babelwires::SetMapSourceTypeCommand::initialize(const MapProject& map) {
     if (!allowedTypes.isRelatedToSome(typeSystem, m_newSourceTypeRef)) {
         return false;
     }
-    m_oldSourceTypeRef = map.getSourceTypeRef();
+    m_oldSourceTypeRef = map.getCurrentSourceTypeRef();
     return true;
 }
 
 void babelwires::SetMapSourceTypeCommand::execute(MapProject& map) const {
-    map.setSourceTypeRef(m_newSourceTypeRef);
+    map.setCurrentSourceTypeRef(m_newSourceTypeRef);
 }
 
 void babelwires::SetMapSourceTypeCommand::undo(MapProject& map) const {
-    map.setSourceTypeRef(m_oldSourceTypeRef);
+    map.setCurrentSourceTypeRef(m_oldSourceTypeRef);
 }

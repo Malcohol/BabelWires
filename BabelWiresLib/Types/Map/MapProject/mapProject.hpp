@@ -28,6 +28,12 @@ namespace babelwires {
         MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
+        /// Set the source type specified by the context.
+        void setSpecifiedSourceTypeRef(TypeRef specifiedSourceType);
+
+        /// Set the target type specified by the context.
+        void setSpecifiedTargetTypeRef(TypeRef specifiedTargetType);
+
         struct AllowedTypes {
             std::vector<TypeRef> m_typeRefs;
             unsigned int m_indexOfDefault = 0;
@@ -37,23 +43,17 @@ namespace babelwires {
             const TypeRef& getDefaultTypeRef() const { return m_typeRefs[m_indexOfDefault]; }
         };
 
-        /// Set the source type specified by the context.
-        void setSpecifiedSourceTypeRef(TypeRef specifiedSourceType);
-
-        /// Set the target type specified by the context.
-        void setSpecifiedTargetTypeRef(TypeRef specifiedTargetType);
-
         const AllowedTypes& getAllowedSourceTypeRefs() const;
         const AllowedTypes& getAllowedTargetTypeRefs() const;
        
-        const TypeRef& getSourceTypeRef() const;
-        const TypeRef& getTargetTypeRef() const;
+        const TypeRef& getCurrentSourceTypeRef() const;
+        const TypeRef& getCurrentTargetTypeRef() const;
 
-        void setSourceTypeRef(const TypeRef& sourceId);
-        void setTargetTypeRef(const TypeRef& targetId);
+        void setCurrentSourceTypeRef(const TypeRef& sourceId);
+        void setCurrentTargetTypeRef(const TypeRef& targetId);
 
-        const Type* getSourceType() const;
-        const Type* getTargetType() const;
+        const Type* getCurrentSourceType() const;
+        const Type* getCurrentTargetType() const;
 
         MapValue extractMapValue() const;
         void setMapValue(const MapValue& data);
@@ -80,8 +80,8 @@ namespace babelwires {
         AllowedTypes m_allowedSourceTypeRefs;
         AllowedTypes m_allowedTargetTypeRefs;
 
-        TypeRef m_sourceTypeRef;
-        TypeRef m_targetTypeRef;
+        TypeRef m_currentSourceTypeRef;
+        TypeRef m_currentTargetTypeRef;
 
         Result m_sourceTypeValidity;
         Result m_targetTypeValidity;
