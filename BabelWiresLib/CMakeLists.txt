@@ -20,7 +20,6 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/connectionModifier.cpp
 	Project/Modifiers/connectionModifierData.cpp
 	Project/Modifiers/activateOptionalsModifierData.cpp
-	Project/Modifiers/mapValueAssignmentData.cpp
 	Project/Modifiers/selectUnionBranchModifierData.cpp
 	Project/Modifiers/valueAssignmentData.cpp
 	Project/uiPosition.cpp
@@ -60,7 +59,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/recordFeature.cpp
 	Features/recordWithOptionalsFeature.cpp
 	Features/arrayFeature.cpp
-	Features/mapFeature.cpp
 	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp
 	Features/Path/pathStep.cpp
