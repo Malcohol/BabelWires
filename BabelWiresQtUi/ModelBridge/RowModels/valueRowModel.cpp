@@ -86,6 +86,7 @@ QString babelwires::ValueRowModel::getTooltip() const {
 
 void babelwires::ValueRowModel::getContextMenuActions(
     std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
+    RowModel::getContextMenuActions(actionsOut);
     const babelwires::SimpleValueFeature& valueFeature = getValueFeature();
     m_valueModelDispatcher->getContextMenuActions(
         DataLocation{m_featureElement->getElementId(), babelwires::FeaturePath(&valueFeature)}, actionsOut);
