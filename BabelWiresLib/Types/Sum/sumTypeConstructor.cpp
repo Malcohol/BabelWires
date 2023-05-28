@@ -15,7 +15,7 @@ std::unique_ptr<babelwires::Type>
 babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                               const std::vector<const Type*>& typeArguments,
                                               const std::vector<EditableValueHolder>& valueArguments) const {
-    if (typeArguments.size() <= 2) {
+    if (typeArguments.size() < 2) {
         throw TypeSystemException() << "SumTypeConstructor expects at least 2 type arguments but got " << typeArguments.size();
     }
     if (valueArguments.size() != 0) {
