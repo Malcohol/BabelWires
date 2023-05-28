@@ -28,12 +28,6 @@ namespace babelwires {
         MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
-        /// Set the source type specified by the context.
-        void setSpecifiedSourceTypeRef(TypeRef specifiedSourceType);
-
-        /// Set the target type specified by the context.
-        void setSpecifiedTargetTypeRef(TypeRef specifiedTargetType);
-
         struct AllowedTypes {
             std::vector<TypeRef> m_typeRefs;
             unsigned int m_indexOfDefault = 0;
@@ -42,6 +36,9 @@ namespace babelwires {
             bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& type) const;
             const TypeRef& getDefaultTypeRef() const { return m_typeRefs[m_indexOfDefault]; }
         };
+
+        void setAllowedSourceTypeRefs(const AllowedTypes& allowedTypes);
+        void setAllowedTargetTypeRefs(const AllowedTypes& allowedTypes);
 
         const AllowedTypes& getAllowedSourceTypeRefs() const;
         const AllowedTypes& getAllowedTargetTypeRefs() const;
