@@ -10,13 +10,12 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Sum/sumValue.hpp>
 
-babelwires::SumType::SumType(Summands summands)
-    : m_summands(std::move(summands)) {}
+babelwires::SumType::SumType(Summands summands, unsigned int indexOfDefaultSummand)
+    : m_summands(std::move(summands)), m_indexOfDefaultSummand(indexOfDefaultSummand) {}
 
 babelwires::NewValueHolder babelwires::SumType::createValue(const TypeSystem& typeSystem) const {
-    const unsigned int defaultType = 0;
     return babelwires::ValueHolder::makeValue<SumValue>(
-        m_summands[defaultType], m_summands[defaultType].resolve(typeSystem).createValue(typeSystem).is<EditableValue>());
+        m_summands[m_indexOfDefaultSummand], m_summands[m_indexOfDefaultSummand].resolve(typeSystem).createValue(typeSystem).is<EditableValue>());
 }
 
 bool babelwires::SumType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
@@ -47,4 +46,8 @@ std::string babelwires::SumType::getKind() const {
 
 const babelwires::SumType::Summands& babelwires::SumType::getSummands() const {
     return m_summands;
+}
+
+unsigned int babelwires::SumType::getIndexOfDefaultSummand() const {
+    return m_indexOfDefaultSummand;
 }

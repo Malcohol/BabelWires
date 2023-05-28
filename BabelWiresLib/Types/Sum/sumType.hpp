@@ -20,7 +20,7 @@ namespace babelwires {
       public:
         using Summands = std::vector<TypeRef>;
 
-        SumType(Summands summands);
+        SumType(Summands summands, unsigned int indexOfDefaultSummand = 0);
 
         /// Always creates a value of the first summand.
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
@@ -30,8 +30,10 @@ namespace babelwires {
         std::string getKind() const override;
 
         const Summands& getSummands() const;
+        unsigned int getIndexOfDefaultSummand() const;
 
       private:
         Summands m_summands;
+        unsigned int m_indexOfDefaultSummand;
     };
 } // namespace babelwires
