@@ -19,10 +19,15 @@ babelwires::NewValueHolder babelwires::SumType::createValue(const TypeSystem& ty
     return m_summands[m_indexOfDefaultSummand].resolve(typeSystem).createValue(typeSystem);
 }
 
-bool babelwires::SumType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
-    return std::find_if(m_summands.cbegin(), m_summands.cend(), [&typeSystem, &v](const TypeRef& summand) {
+int babelwires::SumType::getIndexOfValue(const TypeSystem& typeSystem, const Value& v) const {
+    const auto it = std::find_if(m_summands.cbegin(), m_summands.cend(), [&typeSystem, &v](const TypeRef& summand) {
                return summand.resolve(typeSystem).isValidValue(typeSystem, v);
-           }) != m_summands.cend();
+           });
+    return (it != m_summands.cend()) ? std::distance(m_summands.cbegin(), it) : -1;
+}
+
+bool babelwires::SumType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+    return getIndexOfValue(typeSystem, v) != -1;
 };
 
 std::string babelwires::SumType::getKind() const {

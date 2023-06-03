@@ -28,7 +28,7 @@ babelwires::SumOfMapsType::SumOfMapsType(Summands sourceTypes, Summands targetTy
     , m_sourceTypes(std::move(sourceTypes))
     , m_targetTypes(std::move(targetTypes))
     , m_indexOfDefaultSourceType(indexOfDefaultSourceType)
-    , m_indexOfDefaultTargetType(indexOfDefaultSourceType)
+    , m_indexOfDefaultTargetType(indexOfDefaultTargetType)
 {
     assert(indexOfDefaultSourceType < m_sourceTypes.size());
     assert(indexOfDefaultTargetType < m_targetTypes.size());

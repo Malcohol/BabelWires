@@ -64,6 +64,7 @@ SET( LIB_TESTS_SRCS
     stringFeatureTest.cpp
     stringTypeTest.cpp
     stringValueTest.cpp
+    sumOfMapsTypeTest.cpp
     sumTypeTest.cpp
     targetFileElementTest.cpp
     typeRefTest.cpp
