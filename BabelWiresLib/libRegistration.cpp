@@ -10,7 +10,6 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Enum/addBlankToEnum.hpp>
-#include <BabelWiresLib/Types/Enum/blankEnum.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
@@ -25,7 +24,6 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<StringType>();
     context.m_typeSystem.addEntry<DefaultRationalType>();
     context.m_typeSystem.addEntry<MapEntryFallbackKind>();
-    context.m_typeSystem.addEntry<BlankEnum>();
     context.m_typeSystem.addTypeConstructor<AddBlankToEnum>();
     context.m_typeSystem.addTypeConstructor<IntTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<RationalTypeConstructor>();

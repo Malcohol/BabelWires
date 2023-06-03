@@ -86,7 +86,6 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/setArraySizeCommand.cpp
 	TypeSystem/typeSystem.cpp
 	Types/Enum/addBlankToEnum.cpp
-	Types/Enum/blankEnum.cpp
 	Types/Enum/enumFeature.cpp
 	Types/Enum/enumType.cpp
 	Types/Enum/enumValue.cpp
