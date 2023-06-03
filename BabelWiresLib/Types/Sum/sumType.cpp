@@ -8,35 +8,21 @@
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Types/Sum/sumValue.hpp>
 
 babelwires::SumType::SumType(Summands summands, unsigned int indexOfDefaultSummand)
-    : m_summands(std::move(summands)), m_indexOfDefaultSummand(indexOfDefaultSummand) {}
+    : m_summands(std::move(summands))
+    , m_indexOfDefaultSummand(indexOfDefaultSummand) {
+    assert(indexOfDefaultSummand < m_summands.size());
+}
 
 babelwires::NewValueHolder babelwires::SumType::createValue(const TypeSystem& typeSystem) const {
-    return babelwires::ValueHolder::makeValue<SumValue>(
-        m_summands[m_indexOfDefaultSummand], m_summands[m_indexOfDefaultSummand].resolve(typeSystem).createValue(typeSystem).is<EditableValue>());
+    return m_summands[m_indexOfDefaultSummand].resolve(typeSystem).createValue(typeSystem);
 }
 
 bool babelwires::SumType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
-    if (const SumValue* const sumValue = v.as<SumValue>()) {
-        const TypeRef& typeTag = sumValue->getTypeTag();
-        // Check that the value is actually a value of its tag type.
-        if (typeTag.resolve(typeSystem).isValidValue(typeSystem, *sumValue->getValue())) {
-            // Look for the type in the summands (common case).
-            if (std::find(m_summands.cbegin(), m_summands.cend(), typeTag) != m_summands.end()) {
-                return true;
-            }
-            // See if typeTag is a subtype of one of the summands.
-            // Note: A value might be a member of one of the summands but its tag means it is not.
-            // Not sure if that's a good thing or not.
-            return std::find_if(m_summands.cbegin(), m_summands.cend(),
-                                [&typeSystem, &typeTag](const TypeRef& summand) {
-                                    return typeSystem.compareSubtype(typeTag, summand) == SubtypeOrder::IsSubtype;
-                                }) != m_summands.cend();
-        }
-    }
-    return false;
+    return std::find_if(m_summands.cbegin(), m_summands.cend(), [&typeSystem, &v](const TypeRef& summand) {
+               return summand.resolve(typeSystem).isValidValue(typeSystem, v);
+           }) != m_summands.cend();
 };
 
 std::string babelwires::SumType::getKind() const {

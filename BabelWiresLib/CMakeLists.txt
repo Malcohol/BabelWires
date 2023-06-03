@@ -49,6 +49,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/MapProject/mapSerialization.cpp
 	Types/Map/mapType.cpp
 	Types/Map/mapTypeConstructor.cpp
+	Types/Map/SumOfMaps/sumOfMapsType.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
@@ -99,7 +100,6 @@ SET( BABELWIRESLIB_SRCS
 	Types/Rational/rationalTypeConstructor.cpp
 	Types/Sum/sumType.cpp
 	Types/Sum/sumTypeConstructor.cpp
-	Types/Sum/sumValue.cpp
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
 	Types/String/stringFeature.cpp

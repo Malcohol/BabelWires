@@ -19,6 +19,7 @@
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
+#include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 
 void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const Type& type, const Value& value, bool isReadOnly) {
     m_valueModel = &m_valueModelStorage;
@@ -36,7 +37,7 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     } else if (type.as<StringType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::StringValueModel));
         new (m_valueModel) babelwires::StringValueModel();
-    } else if (type.as<MapType>()) {
+    } else if (type.as<MapType>() || type.as<SumOfMapsType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::MapValueModel));
         new (m_valueModel) babelwires::MapValueModel();
     } else {

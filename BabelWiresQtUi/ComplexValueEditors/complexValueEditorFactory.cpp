@@ -11,15 +11,17 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Types/Map/mapFeature.hpp>
+#include <BabelWiresLib/Types/Map/mapType.hpp>
+#include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
 babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data) {
     AccessModelScope scope(projectBridge);
-    const ValueFeature& valueFeature = ComplexValueEditor::getValueFeatureOrThrow(scope, data);
+    const SimpleValueFeature& valueFeature = ComplexValueEditor::getValueFeatureOrThrow(scope, data);
+    const Type& type = valueFeature.getType();
 
     // TODO: For now, assume ComplexValueEditors are all built-in, so we don't need a registry.
-    if (valueFeature.as<MapFeature>()) {
+    if (type.as<MapType>() || type.as<SumOfMapsType>()) {
         // TODO: For now use a floating window.
         return new MapEditor(nullptr, projectBridge, userLogger, data);
     }

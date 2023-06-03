@@ -17,7 +17,6 @@ void babelwires::MapValueModel::getContextMenuActions(
     std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
     ValueModel::getContextMenuActions(location, actionsOut);
     if (!m_isReadOnly) {
-        const babelwires::MapType& mapFeature = getType()->is<MapType>();
         auto editAction = std::make_unique<OpenValueEditorAction>("Open map editor", location);
         actionsOut.emplace_back(std::move(editAction));
     }

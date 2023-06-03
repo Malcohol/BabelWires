@@ -39,13 +39,13 @@ namespace babelwires {
         void applyMapToProject();
 
         /// Get the MapFeature or assert.
-        const MapFeature& getMapFeature(AccessModelScope& scope) const;
+        const SimpleValueFeature& getMapFeature(AccessModelScope& scope) const;
 
         /// Get the mapValue from the project or assert.
         const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
 
         /// Get the MapFeature or return nullptr.
-        const MapFeature* tryGetMapFeature(AccessModelScope& scope) const;
+        const SimpleValueFeature* tryGetMapFeature(AccessModelScope& scope) const;
 
         /// See if there is a map assignment.
         /// If there is, return its data.
@@ -96,8 +96,8 @@ namespace babelwires {
         /// Manages the map data being edited.
         MapProject m_map;
 
-        /// Stores the default map value (obtained from the feature).
-        TypeRef m_mapType;
+        /// Stores the default type.
+        TypeRef m_typeRef;
 
         /// Manages changes to the map.
         CommandManager<MapProject> m_commandManager;

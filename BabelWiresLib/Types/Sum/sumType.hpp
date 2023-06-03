@@ -8,14 +8,11 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
-#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 
 namespace babelwires {
 
     /// SumType is the type which allows any value of any of a number of other types.
-    /// The values are SumValues, which are values tagged by their type.
-    /// Implementation note: Bare values would work (we could probably allow ambiguity) but testing
-    /// whether a value is a member of the sum gets computationally painful.
+    /// A value of a sum type is just a bare values of one of the summands.
     class SumType : public Type {
       public:
         using Summands = std::vector<TypeRef>;

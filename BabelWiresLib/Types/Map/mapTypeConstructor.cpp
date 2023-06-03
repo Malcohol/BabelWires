@@ -15,8 +15,10 @@
 babelwires::MapEntryData::Kind
 babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSystem,
                                                       const std::vector<EditableValueHolder>& valueArguments) {
-    if (valueArguments.size() != 1) {
-        throw TypeSystemException() << "MapTypeConstructor expects 1 value argument but got " << valueArguments.size();
+    if (valueArguments.size() > 1) {
+        throw TypeSystemException() << "MapTypeConstructor expects at most 1 value argument but got " << valueArguments.size();
+    } else if (valueArguments.size() == 0) {
+        return babelwires::MapEntryData::Kind::All21;
     }
 
     if (const EnumValue* enumValue = valueArguments[0]->as<EnumValue>()) {
