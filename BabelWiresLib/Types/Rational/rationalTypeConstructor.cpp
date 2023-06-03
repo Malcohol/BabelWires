@@ -30,7 +30,7 @@ babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<Edi
 }
 
 std::unique_ptr<babelwires::Type>
-babelwires::RationalTypeConstructor::constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                               const std::vector<EditableValueHolder>& valueArguments) const {
     if (typeArguments.size() != 0) {
         throw TypeSystemException() << "RationalTypeConstructor does not expect type arguments but got "

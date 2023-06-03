@@ -7,17 +7,14 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorData.hpp>
-
-#include <BabelWiresLib/Project/projectIds.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 
 #include <QWidget>
 
 namespace babelwires {
     class ProjectBridge;
     struct UserLogger;
-    class ValueFeature;
+    class SimpleValueFeature;
     class AccessModelScope;
 
     /// Base class of widgets which provide type-specific UIs for editing values.
@@ -25,23 +22,23 @@ namespace babelwires {
         Q_OBJECT
 
         public:
-            ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data);
+            ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data);
 
-            const ComplexValueEditorData& getData() const;
+            const DataLocation& getData() const;
 
             // TODO Why are these static?
 
             /// Convenience Function: Get the ValueFeature referred to by the data, or assert.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueFeature& getValueFeature(AccessModelScope& scope, const ComplexValueEditorData& data);
+            static const SimpleValueFeature& getValueFeature(AccessModelScope& scope, const DataLocation& data);
 
             /// Convenience Function: Get the ValueFeature referred to by the data, or return nullptr.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueFeature* tryGetValueFeature(AccessModelScope& scope, const ComplexValueEditorData& data);
+            static const SimpleValueFeature* tryGetValueFeature(AccessModelScope& scope, const DataLocation& data);
 
             /// Convenience Function: Get the ValueFeature referred to by the data, or throw a ModelException.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueFeature& getValueFeatureOrThrow(AccessModelScope& scope, const ComplexValueEditorData& data);
+            static const SimpleValueFeature& getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data);
 
         signals:
             void editorClosing();
@@ -64,7 +61,7 @@ namespace babelwires {
             UserLogger& m_userLogger;
 
             /// 
-            ComplexValueEditorData m_data;
+            DataLocation m_data;
 
     };
 

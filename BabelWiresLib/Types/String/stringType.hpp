@@ -16,9 +16,9 @@ namespace babelwires {
       public:
         PRIMITIVE_TYPE("string", "string", "0e422e25-cb94-40a3-8790-4918c918e637", 1);
 
-        NewValueHolder createValue() const override;
+        NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
-        bool isValidValue(const Value& v) const override;
+        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
 
         std::string getKind() const override;
     };

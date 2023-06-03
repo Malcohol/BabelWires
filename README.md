@@ -30,7 +30,7 @@ The framework provides:
     * Every representable component of the system is associated with a universally unique identifier ([UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier)). (This ensures there is no ambiguity when data is serialized and deserialized in different contexts).
 * A [Qt](https://en.wikipedia.org/wiki/Qt_(software))-based user interface for manipulating projects
     * The core data management layer, which includes formats and processors, has no dependency on the UI code or Qt.
-* Generic support for defining maps of key value pairs between values ([MapData](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Maps/mapData.hpp))
+* Generic support for defining maps of key value pairs between values ([MapValue](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/Map/mapValue.hpp))
     * These kinds of maps are very common in data transformation. 
 * A first-class concept of failure
     * This allows the project to cope with structural changes to imported data.

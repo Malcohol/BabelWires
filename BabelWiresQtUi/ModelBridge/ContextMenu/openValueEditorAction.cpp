@@ -13,13 +13,13 @@
 #include <BabelWiresQtUi/mainWindow.hpp>
 
 
-babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, babelwires::FeaturePath pathToArray)
+babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, DataLocation location)
     : FeatureContextMenuAction(text)
-    , m_pathToMap(std::move(pathToArray)) {}
+    , m_location(std::move(location)) {}
 
 void babelwires::OpenValueEditorAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const ElementId elementId = model.getElementId();
 
-    model.getProjectBridge().getMainWindow()->openEditorForValue(ComplexValueEditorData{ elementId, m_pathToMap });
+    model.getProjectBridge().getMainWindow()->openEditorForValue(m_location);
 }

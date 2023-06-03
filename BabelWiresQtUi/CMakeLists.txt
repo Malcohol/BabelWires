@@ -14,7 +14,6 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/accessModelScope.cpp
     ModelBridge/RowModels/arrayRowModel.cpp
     ModelBridge/RowModels/fileRowModel.cpp
-    ModelBridge/RowModels/mapRowModel.cpp
     ModelBridge/RowModels/recordWithOptionalsRowModel.cpp
     ModelBridge/RowModels/rowModel.cpp
     ModelBridge/RowModels/rowModelDispatcher.cpp
@@ -41,7 +40,6 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/openValueEditorAction.cpp
     Utilities/fileDialogs.cpp
     ComplexValueEditors/complexValueEditor.cpp
-    ComplexValueEditors/complexValueEditorData.cpp
     ComplexValueEditors/complexValueEditorFactory.cpp
     ComplexValueEditors/complexValueEditorManager.cpp
     ComplexValueEditors/MapEditor/mapEditor.cpp
@@ -66,6 +64,7 @@ SET( BABELWIRESQTUI_SRCS
     ValueModels/valueModelDispatcher.cpp
     ValueModels/valueModelRegistry.cpp
     ValueModels/valueModelWithRichText.cpp
+    ValueModels/mapValueModel.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

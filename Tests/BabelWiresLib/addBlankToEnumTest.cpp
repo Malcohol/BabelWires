@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Types/Enum/addBlankToEnum.hpp>
-#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
@@ -17,8 +17,8 @@
 TEST(AddBlankToEnum, ensureBlankValue) {
     testUtils::TestLog log;
 
-    babelwires::Enum::EnumValues values{"Foo", "Bar"};
-    babelwires::Enum::EnumValues hasBlank = babelwires::AddBlankToEnum::ensureBlankValue(values);
+    babelwires::EnumType::ValueSet values{"Foo", "Bar"};
+    babelwires::EnumType::ValueSet hasBlank = babelwires::AddBlankToEnum::ensureBlankValue(values);
     EXPECT_EQ(hasBlank.size(), 3);
     EXPECT_EQ(hasBlank[0], "Foo");
     EXPECT_EQ(hasBlank[1], "Bar");
@@ -28,8 +28,8 @@ TEST(AddBlankToEnum, ensureBlankValue) {
 TEST(AddBlankToEnum, ensureBlankValueEmpty) {
     testUtils::TestLog log;
 
-    babelwires::Enum::EnumValues empty;
-    babelwires::Enum::EnumValues justBlank = babelwires::AddBlankToEnum::ensureBlankValue(empty);
+    babelwires::EnumType::ValueSet empty;
+    babelwires::EnumType::ValueSet justBlank = babelwires::AddBlankToEnum::ensureBlankValue(empty);
     EXPECT_EQ(justBlank.size(), 1);
     EXPECT_EQ(justBlank[0], babelwires::AddBlankToEnum::getBlankValue());
 }
@@ -46,14 +46,14 @@ TEST(AddBlankToEnum, constructType) {
     EXPECT_EQ(newType->getTypeRef(), babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
                                                          testUtils::TestEnum::getThisIdentifier()));
 
-    const babelwires::Enum* const newEnum = newType->as<babelwires::Enum>();
+    const babelwires::EnumType* const newEnum = newType->as<babelwires::EnumType>();
     ASSERT_NE(newEnum, nullptr);
 
-    EXPECT_EQ(newEnum->getEnumValues().size(), testEnum.getEnumValues().size() + 1);
-    for (int i = 0; i < testEnum.getEnumValues().size(); ++i) {
-        EXPECT_EQ(newEnum->getEnumValues()[i], testEnum.getEnumValues()[i]);
+    EXPECT_EQ(newEnum->getValueSet().size(), testEnum.getValueSet().size() + 1);
+    for (int i = 0; i < testEnum.getValueSet().size(); ++i) {
+        EXPECT_EQ(newEnum->getValueSet()[i], testEnum.getValueSet()[i]);
     }
-    EXPECT_EQ(newEnum->getEnumValues()[newEnum->getEnumValues().size() - 1], babelwires::AddBlankToEnum::getBlankValue());
+    EXPECT_EQ(newEnum->getValueSet()[newEnum->getValueSet().size() - 1], babelwires::AddBlankToEnum::getBlankValue());
     EXPECT_EQ(newEnum->getIndexOfDefaultValue(), testEnum.getIndexOfDefaultValue());
 }
 
@@ -72,14 +72,14 @@ TEST(AddBlankToEnum, idempotency) {
                                   babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
                                                         testUtils::TestEnum::getThisIdentifier())));
 
-    const babelwires::Enum* const newEnum = newType->as<babelwires::Enum>();
+    const babelwires::EnumType* const newEnum = newType->as<babelwires::EnumType>();
     ASSERT_NE(newEnum, nullptr);
 
-    EXPECT_EQ(newEnum->getEnumValues().size(), testEnum.getEnumValues().size() + 1);
-    for (int i = 0; i < testEnum.getEnumValues().size(); ++i) {
-        EXPECT_EQ(newEnum->getEnumValues()[i], testEnum.getEnumValues()[i]);
+    EXPECT_EQ(newEnum->getValueSet().size(), testEnum.getValueSet().size() + 1);
+    for (int i = 0; i < testEnum.getValueSet().size(); ++i) {
+        EXPECT_EQ(newEnum->getValueSet()[i], testEnum.getValueSet()[i]);
     }
-    EXPECT_EQ(newEnum->getEnumValues()[newEnum->getEnumValues().size() - 1], babelwires::AddBlankToEnum::getBlankValue());
+    EXPECT_EQ(newEnum->getValueSet()[newEnum->getValueSet().size() - 1], babelwires::AddBlankToEnum::getBlankValue());
     EXPECT_EQ(newEnum->getIndexOfDefaultValue(), testEnum.getIndexOfDefaultValue());
 }
 

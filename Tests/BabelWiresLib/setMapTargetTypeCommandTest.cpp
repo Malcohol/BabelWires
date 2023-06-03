@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Maps/Commands/setMapTargetTypeCommand.hpp>
+#include <BabelWiresLib/Types/Map/Commands/setMapTargetTypeCommand.hpp>
 
-#include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
-#include <BabelWiresLib/Maps/mapProject.hpp>
-#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
@@ -22,9 +22,9 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestEnum::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestSubSubEnum1::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestSubSubEnum1::getThisIdentifier());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
                                               testUtils::TestEnum::getThisIdentifier());
@@ -37,21 +37,21 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     oneToOne.setTargetValue(newTargetValue);
     allToOne.setTargetValue(newTargetValue);
 
-    mapData.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(oneToOne.clone());
 
     newTargetValue.set("Bar");
     oneToOne.setTargetValue(newTargetValue);
-    mapData.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(oneToOne.clone());
 
     newTargetValue.set("Oom");
     oneToOne.setTargetValue(newTargetValue);
-    mapData.emplaceBack(oneToOne.clone());
+    mapValue.emplaceBack(oneToOne.clone());
 
-    mapData.emplaceBack(allToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
 
-    mapProject.setMapData(mapData);
+    mapProject.setMapValue(mapValue);
 
-    EXPECT_EQ(mapProject.getTargetTypeRef(), testUtils::TestSubSubEnum1::getThisIdentifier());
+    EXPECT_EQ(mapProject.getCurrentTargetTypeRef(), testUtils::TestSubSubEnum1::getThisIdentifier());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
@@ -62,7 +62,7 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
 
-    EXPECT_EQ(mapProject.getTargetTypeRef(), testUtils::TestSubSubEnum2::getThisIdentifier());
+    EXPECT_EQ(mapProject.getCurrentTargetTypeRef(), testUtils::TestSubSubEnum2::getThisIdentifier());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(1).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());
@@ -70,7 +70,7 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
 
     command.undo(mapProject);
 
-    EXPECT_EQ(mapProject.getTargetTypeRef(), testUtils::TestSubSubEnum1::getThisIdentifier());
+    EXPECT_EQ(mapProject.getCurrentTargetTypeRef(), testUtils::TestSubSubEnum1::getThisIdentifier());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
@@ -84,15 +84,15 @@ TEST(SetMapTargetTypeCommandTest, failWithUnallowedType) {
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
 
-    babelwires::MapData mapData;
-    mapData.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapData.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    babelwires::MapValue mapValue;
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        testUtils::TestType::getThisIdentifier());
-    mapData.emplaceBack(allToOne.clone());
+    mapValue.emplaceBack(allToOne.clone());
 
-    mapProject.setMapData(mapData);
+    mapProject.setMapValue(mapValue);
 
     babelwires::SetMapTargetTypeCommand command("Set type", testUtils::TestEnum::getThisIdentifier());
 

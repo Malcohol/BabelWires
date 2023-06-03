@@ -26,7 +26,7 @@ namespace babelwires {
     /// or storing the id of its constructor and its arguments.
     class TypeRef : public ProjectVisitable, public Serializable {
       public:
-        SERIALIZABLE(TypeRef, "typeref", void, 1);
+        SERIALIZABLE(TypeRef, "type", void, 1);
 
         TypeRef();
 
@@ -67,6 +67,9 @@ namespace babelwires {
         /// Used by the TypeSystem to compare the type typeRefs using the subtype relationship.
         static SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeRef& typeRefA,
                                                  const TypeRef& typeRefB);
+
+        /// Does the TypeRef contain some data (other than the trivial std::monostate default state)?
+        operator bool() const;
 
       private:
         /// Avoids locking the IdentifierRegistry multiple times.

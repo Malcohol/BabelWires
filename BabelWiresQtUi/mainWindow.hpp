@@ -36,7 +36,7 @@ namespace babelwires {
         MainWindow(ProjectBridge& projectBridge, UnifiedLog& log);
         ~MainWindow();
 
-        void openEditorForValue(const ComplexValueEditorData& data);
+        void openEditorForValue(const DataLocation& data);
 
       private:
         void createActions();

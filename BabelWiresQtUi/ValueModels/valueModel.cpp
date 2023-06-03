@@ -61,3 +61,6 @@ QSize babelwires::ValueModel::sizeHint(QStyleOptionViewItem& option, const QMode
 QString babelwires::ValueModel::getTooltip() const {
     return {};
 }
+
+void babelwires::ValueModel::getContextMenuActions(
+    const DataLocation& location, std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {}

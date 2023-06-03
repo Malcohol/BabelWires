@@ -21,9 +21,9 @@ namespace babelwires {
         /// Get the range of valid values.
         Range<Rational> getRange() const;
 
-        NewValueHolder createValue() const override;
+        NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
-        bool isValidValue(const Value& v) const override;
+        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
 
         std::string getKind() const override;
 

@@ -19,7 +19,7 @@ namespace babelwires {
 
       public:
         void openEditorForValue(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
-                                const ComplexValueEditorData& data);
+                                const DataLocation& data);
 
         void closeAllValueEditors();
 

@@ -18,15 +18,19 @@ namespace babelwires {
     /// A ValueFeature is a feature which stores a value.
     class SimpleValueFeature : public ValueFeature {
       public:
+        /// Construct a ValueFeature which carries values of the given type.
         SimpleValueFeature(TypeRef typeRef);
+
+        const TypeRef& getTypeRef() const;
 
         const Type& getType() const;
 
         const Value& getValue() const;
-        
+
         void setValue(const Value& newValue);
         void setValue(Value&& newValue);
 
+        const ValueHolder& getValueHolder() const;
         void setValueHolder(const ValueHolder& newValue);
 
       protected:
@@ -37,6 +41,7 @@ namespace babelwires {
         virtual void doSetToDefault() override;
 
         virtual std::size_t doGetHash() const override;
+
       private:
         TypeRef m_typeRef;
         ValueHolder m_value;

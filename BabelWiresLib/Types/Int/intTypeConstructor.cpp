@@ -29,7 +29,7 @@ babelwires::IntTypeConstructor::extractValueArguments(const std::vector<Editable
 }
 
 std::unique_ptr<babelwires::Type>
-babelwires::IntTypeConstructor::constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                               const std::vector<EditableValueHolder>& valueArguments) const {
     if (typeArguments.size() != 0) {
         throw TypeSystemException() << "IntTypeConstructor does not expect type arguments but got "

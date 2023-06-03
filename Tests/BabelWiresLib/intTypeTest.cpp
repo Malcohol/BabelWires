@@ -9,9 +9,10 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(IntTypeTest, defaultIntTypeCreateValue) {
+    babelwires::TypeSystem typeSystem;
     babelwires::DefaultIntType intType;
 
-    babelwires::ValueHolder newValue = intType.createValue();
+    babelwires::ValueHolder newValue = intType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newIntValue = newValue->as<babelwires::IntValue>();
@@ -29,20 +30,21 @@ TEST(IntTypeTest, defaultIntTypeGetRange) {
 }
 
 TEST(IntTypeTest, defaultIntTypeIsValidValue) {
+    babelwires::TypeSystem typeSystem;
     babelwires::DefaultIntType intType;
 
     babelwires::IntValue value(80);
 
-    EXPECT_TRUE(intType.isValidValue(value));
+    EXPECT_TRUE(intType.isValidValue(typeSystem, value));
 
     const babelwires::IntValue minValue = std::numeric_limits<babelwires::IntValue::NativeType>::min();
     const babelwires::IntValue maxValue = std::numeric_limits<babelwires::IntValue::NativeType>::max();
 
-    EXPECT_TRUE(intType.isValidValue(minValue));
-    EXPECT_TRUE(intType.isValidValue(maxValue));
+    EXPECT_TRUE(intType.isValidValue(typeSystem, minValue));
+    EXPECT_TRUE(intType.isValidValue(typeSystem, maxValue));
 
-    EXPECT_FALSE(intType.isValidValue(babelwires::StringValue("Hello")));
-    EXPECT_FALSE(intType.isValidValue(babelwires::RationalValue(3)));
+    EXPECT_FALSE(intType.isValidValue(typeSystem, babelwires::StringValue("Hello")));
+    EXPECT_FALSE(intType.isValidValue(typeSystem, babelwires::RationalValue(3)));
 }
 
 TEST(IntTypeTest, defaultIntTypeGetKind) {
@@ -68,7 +70,7 @@ TEST(IntTypeTest, constructedIntTypeCreateValue) {
 
     const babelwires::Type* const intType = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
-    babelwires::ValueHolder newValue = intType->createValue();
+    babelwires::ValueHolder newValue = intType->createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newIntValue = newValue->as<babelwires::IntValue>();
@@ -100,13 +102,13 @@ TEST(IntTypeTest, constructedIntTypeIsValidValue) {
 
     const babelwires::Type* const type = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
-    EXPECT_FALSE(type->isValidValue(babelwires::IntValue(-13)));
-    EXPECT_TRUE(type->isValidValue(babelwires::IntValue(-12)));
-    EXPECT_TRUE(type->isValidValue(babelwires::IntValue(14)));
-    EXPECT_FALSE(type->isValidValue(babelwires::IntValue(15)));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(-13)));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(-12)));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(14)));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(15)));
 
-    EXPECT_FALSE(type->isValidValue(babelwires::StringValue("Hello")));
-    EXPECT_FALSE(type->isValidValue(babelwires::RationalValue(3)));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::StringValue("Hello")));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(3)));
 }
 
 TEST(IntTypeTest, sameKind) {

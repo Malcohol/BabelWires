@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/oneToOneMapEntryModel.hpp>
 
-#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
-#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
 const babelwires::OneToOneMapEntryData& babelwires::OneToOneMapEntryModel::getOneToOneMapEntryData() const {
     assert(m_mapProjectEntry);
@@ -18,8 +18,8 @@ const babelwires::OneToOneMapEntryData& babelwires::OneToOneMapEntryModel::getOn
 
 void babelwires::OneToOneMapEntryModel::init(const ValueModelRegistry& valueModelRegistry) {
     const OneToOneMapEntryData& discreteMapEntry = getOneToOneMapEntryData();
-    m_sourceValueModel.init(valueModelRegistry, *m_sourceType, *discreteMapEntry.getSourceValue());
-    m_targetValueModel.init(valueModelRegistry, *m_targetType, *discreteMapEntry.getTargetValue());
+    m_sourceValueModel.init(valueModelRegistry, *m_sourceType, *discreteMapEntry.getSourceValue(), false);
+    m_targetValueModel.init(valueModelRegistry, *m_targetType, *discreteMapEntry.getTargetValue(), false);
 }
 
 QVariant babelwires::OneToOneMapEntryModel::getDisplayData(Column column) const {

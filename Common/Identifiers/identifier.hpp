@@ -30,7 +30,7 @@ namespace babelwires {
     ///
     /// It stores a short string (N bytes) and a numeric discriminator (2 bytes).
     /// The string should be sufficient on its own to uniquely define an object during
-    /// local usage (e.g. a field within a record, or an Enum value within an Enum).
+    /// local usage (e.g. a field within a record or the value carried by an EnumValue).
     /// The discriminator is used to ensure the identifier is globally unique, which allows
     /// the identifier to act as a key for look-up in a global registry.
     ///

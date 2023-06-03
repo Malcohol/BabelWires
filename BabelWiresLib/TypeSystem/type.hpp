@@ -26,10 +26,10 @@ namespace babelwires {
         DOWNCASTABLE_TYPE_HIERARCHY(Type);
 
         /// Create a new Value representing a default instance of the type.
-        virtual NewValueHolder createValue() const = 0;
+        virtual NewValueHolder createValue(const TypeSystem& typeSystem) const = 0;
 
         /// Is the value v an element of this type.
-        virtual bool isValidValue(const Value& v) const = 0;
+        virtual bool isValidValue(const TypeSystem& typeSystem, const Value& v) const = 0;
 
         /// Get a TypeRef that describes this type.
         /// Primitive types get an implementation of this method from the PRIMITIVE_TYPE macro.

@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Features/mapFeature.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 
 #include <QComboBox>
 #include <optional>
@@ -21,7 +21,7 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapFeature::AllowedTypes& allowedTypeRefs);
+        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapProject::AllowedTypes& allowedTypeRefs);
 
         const TypeRef& getTypeRef() const;
         void setTypeRef(const TypeRef& id);

@@ -11,19 +11,19 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <QCloseEvent>
 
 babelwires::ComplexValueEditor::ComplexValueEditor(QWidget* parent, ProjectBridge& projectBridge,
-                                                   UserLogger& userLogger, const ComplexValueEditorData& data)
+                                                   UserLogger& userLogger, const DataLocation& data)
     : QWidget(parent)
     , m_projectBridge(projectBridge)
     , m_userLogger(userLogger)
     , m_data(data) {}
 
-const babelwires::ComplexValueEditorData& babelwires::ComplexValueEditor::getData() const {
+const babelwires::DataLocation& babelwires::ComplexValueEditor::getData() const {
     return m_data;
 }
 
@@ -45,8 +45,8 @@ void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
     }
 }
 
-const babelwires::ValueFeature&
-babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, const ComplexValueEditorData& data) {
+const babelwires::SimpleValueFeature&
+babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data) {
     const Project& project = scope.getProject();
 
     const FeatureElement* element = project.getFeatureElement(data.getElementId());
@@ -60,15 +60,15 @@ babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, 
         throw ModelException() << "The element does not have editable features.";
     }
 
-    const ValueFeature* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<ValueFeature>();
+    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<SimpleValueFeature>();
     if (!valueFeature) {
         throw ModelException() << "There is no value at that location.";
     }
     return *valueFeature;
 }
 
-const babelwires::ValueFeature* babelwires::ComplexValueEditor::tryGetValueFeature(AccessModelScope& scope,
-                                                                                   const ComplexValueEditorData& data) {
+const babelwires::SimpleValueFeature* babelwires::ComplexValueEditor::tryGetValueFeature(AccessModelScope& scope,
+                                                                                   const DataLocation& data) {
     const Project& project = scope.getProject();
 
     const FeatureElement* element = project.getFeatureElement(data.getElementId());
@@ -82,16 +82,16 @@ const babelwires::ValueFeature* babelwires::ComplexValueEditor::tryGetValueFeatu
         return nullptr;
     }
 
-    const ValueFeature* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<ValueFeature>();
+    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<SimpleValueFeature>();
     if (!valueFeature) {
         return nullptr;
     }
     return valueFeature;
 }
 
-const babelwires::ValueFeature& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope,
-                                                                                const ComplexValueEditorData& data) {
-    const ValueFeature* const valueFeature = tryGetValueFeature(scope, data);
+const babelwires::SimpleValueFeature& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope,
+                                                                                const DataLocation& data) {
+    const SimpleValueFeature* const valueFeature = tryGetValueFeature(scope, data);
     assert(valueFeature && "There was not value feature");
     return *valueFeature;
 }

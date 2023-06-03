@@ -22,8 +22,9 @@ void babelwires::SimpleValueFeature::doAssign(const ValueFeature& other) {
 
 void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue) {
     if (!m_value || ((m_value != newValue) && (*m_value != *newValue))) {
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
-        if (type.isValidValue(*newValue)) {
+        if (type.isValidValue(typeSystem, *newValue)) {
             m_value = newValue;
             setChanged(Changes::ValueChanged);
         } else {
@@ -32,10 +33,15 @@ void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue)
     }
 }
 
+const babelwires::ValueHolder& babelwires::SimpleValueFeature::getValueHolder() const {
+    return m_value;
+}
+
 void babelwires::SimpleValueFeature::setValue(const Value& value) {
     if (!m_value || (value != *m_value)) {
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
-        if (type.isValidValue(value)) {
+        if (type.isValidValue(typeSystem, value)) {
             m_value = value;
             setChanged(Changes::ValueChanged);
         } else {
@@ -46,8 +52,9 @@ void babelwires::SimpleValueFeature::setValue(const Value& value) {
 
 void babelwires::SimpleValueFeature::setValue(Value&& value) {
     if (!m_value || (value != *m_value)) {
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
-        if (type.isValidValue(value)) {
+        if (type.isValidValue(typeSystem, value)) {
             m_value = std::move(value);
             setChanged(Changes::ValueChanged);
         } else {
@@ -57,7 +64,9 @@ void babelwires::SimpleValueFeature::setValue(Value&& value) {
 }
 
 void babelwires::SimpleValueFeature::doSetToDefault() {
-    auto [newValue, _] = getType().createValue();
+    assert(m_typeRef && "The type must be set to something non-trivial before doSetToDefault is called");
+    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
+    auto [newValue, _] = getType().createValue(context.m_typeSystem);
     if (!m_value || (*newValue != *m_value)) {
         m_value = std::move(newValue);
         setChanged(Changes::ValueChanged);
@@ -67,6 +76,10 @@ void babelwires::SimpleValueFeature::doSetToDefault() {
 const babelwires::Type& babelwires::SimpleValueFeature::getType() const {
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);
     return m_typeRef.resolve(context.m_typeSystem);
+}
+
+const babelwires::TypeRef& babelwires::SimpleValueFeature::getTypeRef() const {
+    return m_typeRef;
 }
 
 const babelwires::Value& babelwires::SimpleValueFeature::getValue() const {

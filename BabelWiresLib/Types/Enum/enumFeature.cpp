@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -19,8 +19,8 @@
 babelwires::EnumFeature::EnumFeature(TypeRef e)
     : SimpleValueFeature(std::move(e)) {}
 
-const babelwires::Enum& babelwires::EnumFeature::getEnum() const {
-    return getType().is<Enum>();
+const babelwires::EnumType& babelwires::EnumFeature::getEnum() const {
+    return getType().is<EnumType>();
 }
 
 babelwires::ShortId babelwires::EnumFeature::get() const {
@@ -32,9 +32,9 @@ void babelwires::EnumFeature::set(ShortId id) {
 }
 
 int babelwires::EnumFeature::tryGetEnumIndex() const {
-    return getType().is<Enum>().tryGetIndexFromIdentifier(get());
+    return getType().is<EnumType>().tryGetIndexFromIdentifier(get());
 }
 
 void babelwires::EnumFeature::setToEnumIndex(unsigned int index) {
-    set(getType().is<Enum>().getIdentifierFromIndex(index));
+    set(getType().is<EnumType>().getIdentifierFromIndex(index));
 }

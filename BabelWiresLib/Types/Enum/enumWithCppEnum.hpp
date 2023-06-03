@@ -7,46 +7,38 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Types/Enum/enum.hpp>
 #include <BabelWiresLib/Types/Enum/enumFeature.hpp>
+#include <BabelWiresLib/Types/Enum/enumType.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-// Implementation detail.
+// Implementation details.
 #define ENUM_SELECT_FIRST_ARGUMENT(A, B, C) A,
+#define ENUM_ARGUMENTS_AS_INITIALIZERS(A, B, C) {#A, B, C},
 
-#define ENUM_DEFINE_CPP_ENUM_VALUE(Y)                                                                                  \
-    enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) NUM_VALUES, NotAValue = NUM_VALUES };
-
-#define ENUM_DEFINE_CPP_METHODS                                                                                        \
-    Value getValueFromIdentifier(babelwires::ShortId id) const {                                                    \
-        return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
-    }                                                                                                                  \
-    babelwires::ShortId getIdentifierFromValue(Value value) const {                                                 \
-        return getIdentifierFromIndex(static_cast<unsigned int>(value));                                               \
-    }
-
-/// Use in an Enum to add a C++ enum corresponding to the enum values.
+/// Use in an EnumType to add a C++ enum corresponding to the enum values.
 /// Boiler-plate of the following kind is required:
 /// #define MY_ENUM(X)                                                 \
 ///    X(Foo, "Foo value", "00000000-1111-2222-3333-444444444444")     \
 ///    X(Bar, "Bar value", "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
 /// For coding convenience, NUM_VALUES and NotAValue entries are provided.
+/// The EnumType constructor should use getStaticValueSet() to obtain its set of identifiers
 #define ENUM_DEFINE_CPP_ENUM(Y)                                                                                        \
-    ENUM_DEFINE_CPP_ENUM_VALUE(Y)                                                                                      \
-    ENUM_DEFINE_CPP_METHODS
-
-// Implementation detail.
-#define ENUM_ARGUMENTS_AS_INITIALIZERS(A, B, C) {#A, B, C},
-
-/// This defines a static which should be placed in a .cpp where the Enum will be constructed.
-#define ENUM_DEFINE_ENUM_VALUE_SOURCE(Y)                                                                               \
-    namespace {                                                                                                        \
-        const babelwires::IdentifiersSource s_enum_##Y = {Y(ENUM_ARGUMENTS_AS_INITIALIZERS)};                          \
+    enum class Value { Y(ENUM_SELECT_FIRST_ARGUMENT) NUM_VALUES, NotAValue = NUM_VALUES };                             \
+    static const babelwires::IdentifiersSource s_enumValueInitializers;                                                \
+    static const ValueSet& getStaticValueSet() {                                                                       \
+        return REGISTERED_ID_VECTOR(s_enumValueInitializers);                                                          \
+    }                                                                                                                  \
+    static babelwires::ShortId getIdentifierFromValue(Value value) {                                                   \
+        return getStaticValueSet()[static_cast<unsigned int>(value)];                                                  \
+    }                                                                                                                  \
+    Value getValueFromIdentifier(babelwires::ShortId id) const {                                                       \
+        return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
     }
 
-/// This should be used in the Enum constructor
-#define ENUM_IDENTIFIER_VECTOR(Y) REGISTERED_ID_VECTOR(s_enum_##Y)
+/// This defines a static which should be placed in a .cpp where the Enum will be constructed.
+#define ENUM_DEFINE_ENUM_VALUE_SOURCE(CLASS, Y)                                                                        \
+    const babelwires::IdentifiersSource CLASS::s_enumValueInitializers = {Y(ENUM_ARGUMENTS_AS_INITIALIZERS)};
 
 namespace babelwires {
     /// This provides convenience methods which allow the contained value of an EnumFeature
@@ -54,7 +46,8 @@ namespace babelwires {
     /// the Enum with ENUM_DEFINE_CPP_ENUM).
     template <typename E> class EnumWithCppEnumFeature : public EnumFeature {
       public:
-        EnumWithCppEnumFeature() : EnumFeature(E::getThisIdentifier()) {}
+        EnumWithCppEnumFeature()
+            : EnumFeature(E::getThisIdentifier()) {}
 
         /// Get the stored value as a C++ enum value.
         typename E::Value getAsValue() const {

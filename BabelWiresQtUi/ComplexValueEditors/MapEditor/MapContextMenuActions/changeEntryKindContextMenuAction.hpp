@@ -9,7 +9,7 @@
 
 #include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
 
-#include <BabelWiresLib/Maps/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 
 #include <QAction>
 #include <QAbstractItemModel>
