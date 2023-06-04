@@ -1,3 +1,10 @@
+/**
+ * A SimpleValueFeature is a ValueFeature which owns its value.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
@@ -8,19 +15,11 @@
 babelwires::SimpleValueFeature::SimpleValueFeature(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
 
-std::string babelwires::SimpleValueFeature::doGetValueType() const {
-    return getType().getKind();
+const babelwires::TypeRef& babelwires::SimpleValueFeature::doGetTypeRef() const {
+    return m_typeRef;
 }
 
-void babelwires::SimpleValueFeature::doAssign(const ValueFeature& other) {
-    if (const auto* otherValueFeature = other.as<SimpleValueFeature>()) {
-        setValueHolder(otherValueFeature->m_value);
-    } else {
-        throw ModelException() << "Cannot assign other kinds of Feature to SimpleValueFeature";
-    }
-}
-
-void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue) {
+void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
     if (!m_value || ((m_value != newValue) && (*m_value != *newValue))) {
         const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
@@ -33,34 +32,10 @@ void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue)
     }
 }
 
-const babelwires::ValueHolder& babelwires::SimpleValueFeature::getValueHolder() const {
+const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() const {
+    // Not sure if this assert is necessary.
+    assert(m_value && "The SimpleValueFeature has not been initialized");
     return m_value;
-}
-
-void babelwires::SimpleValueFeature::setValue(const Value& value) {
-    if (!m_value || (value != *m_value)) {
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
-        const Type& type = getType();
-        if (type.isValidValue(typeSystem, value)) {
-            m_value = value;
-            setChanged(Changes::ValueChanged);
-        } else {
-            throw ModelException() << "The new value is not a valid instance of " << m_typeRef.toString();
-        }
-    }
-}
-
-void babelwires::SimpleValueFeature::setValue(Value&& value) {
-    if (!m_value || (value != *m_value)) {
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
-        const Type& type = getType();
-        if (type.isValidValue(typeSystem, value)) {
-            m_value = std::move(value);
-            setChanged(Changes::ValueChanged);
-        } else {
-            throw ModelException() << "The new value is not a valid instance of " << m_typeRef.toString();
-        }
-    }
 }
 
 void babelwires::SimpleValueFeature::doSetToDefault() {
@@ -76,15 +51,6 @@ void babelwires::SimpleValueFeature::doSetToDefault() {
 const babelwires::Type& babelwires::SimpleValueFeature::getType() const {
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);
     return m_typeRef.resolve(context.m_typeSystem);
-}
-
-const babelwires::TypeRef& babelwires::SimpleValueFeature::getTypeRef() const {
-    return m_typeRef;
-}
-
-const babelwires::Value& babelwires::SimpleValueFeature::getValue() const {
-    assert(m_value && "The SimpleValueFeature has not been initialized");
-    return *m_value;
 }
 
 std::size_t babelwires::SimpleValueFeature::doGetHash() const {

@@ -16,7 +16,7 @@
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
@@ -31,7 +31,7 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     const babelwires::Feature* feature = entry->getInputThenOutputFeature();
     if (rowModelRegistry.handleFeature(feature, m_rowModel)) {
         // Handled by a registered handler.
-    } else if (feature->as<const babelwires::SimpleValueFeature>()) {
+    } else if (feature->as<const babelwires::ValueFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ValueRowModel));
         new (m_rowModel) babelwires::ValueRowModel();
     } else if (feature->as<const babelwires::ArrayFeature>()) {

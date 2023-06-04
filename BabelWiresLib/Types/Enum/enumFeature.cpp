@@ -24,7 +24,7 @@ const babelwires::EnumType& babelwires::EnumFeature::getEnum() const {
 }
 
 babelwires::ShortId babelwires::EnumFeature::get() const {
-    return getValue().is<EnumValue>().get();
+    return getValue()->is<EnumValue>().get();
 }
 
 void babelwires::EnumFeature::set(ShortId id) {

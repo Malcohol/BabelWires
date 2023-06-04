@@ -47,7 +47,7 @@ TEST(MapFeatureTest, setToDefault) {
 
     mapFeature->setToDefault();
 
-    const babelwires::MapValue* const mapValue = mapFeature->getValue().as<babelwires::MapValue>();
+    const babelwires::MapValue* const mapValue = mapFeature->getValue()->as<babelwires::MapValue>();
 
     EXPECT_TRUE(mapValue->isValid(environment.m_typeSystem));
 }
@@ -65,9 +65,8 @@ TEST(MapFeatureTest, isCompatible) {
     babelwires::IntFeature& intFeature = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
                                                                testUtils::getTestRegisteredIdentifier("boo"));
 
-    EXPECT_TRUE(mapFeature.isCompatible(mapFeature2));
-    EXPECT_FALSE(mapFeature.isCompatible(intFeature));
-    EXPECT_FALSE(intFeature.isCompatible(mapFeature));
+    EXPECT_EQ(mapFeature.getKind(), mapFeature2.getKind());
+    EXPECT_NE(mapFeature.getKind(), intFeature.getKind());
 }
 
 TEST(MapFeatureTest, assign) {
