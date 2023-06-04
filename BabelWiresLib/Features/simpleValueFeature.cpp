@@ -15,7 +15,11 @@
 babelwires::SimpleValueFeature::SimpleValueFeature(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
 
-void babelwires::SimpleValueFeature::setValue(const ValueHolder& newValue) {
+const babelwires::TypeRef& babelwires::SimpleValueFeature::doGetTypeRef() const {
+    return m_typeRef;
+}
+
+void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
     if (!m_value || ((m_value != newValue) && (*m_value != *newValue))) {
         const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
@@ -28,7 +32,7 @@ void babelwires::SimpleValueFeature::setValue(const ValueHolder& newValue) {
     }
 }
 
-const babelwires::ValueHolder& babelwires::SimpleValueFeature::getValue() const {
+const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() const {
     // Not sure if this assert is necessary.
     assert(m_value && "The SimpleValueFeature has not been initialized");
     return m_value;
@@ -47,10 +51,6 @@ void babelwires::SimpleValueFeature::doSetToDefault() {
 const babelwires::Type& babelwires::SimpleValueFeature::getType() const {
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);
     return m_typeRef.resolve(context.m_typeSystem);
-}
-
-const babelwires::TypeRef& babelwires::SimpleValueFeature::getTypeRef() const {
-    return m_typeRef;
 }
 
 std::size_t babelwires::SimpleValueFeature::doGetHash() const {

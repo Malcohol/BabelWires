@@ -21,16 +21,16 @@ namespace babelwires {
         /// Construct a ValueFeature which carries values of the given type.
         SimpleValueFeature(TypeRef typeRef);
 
-        const TypeRef& getTypeRef() const override;
-        const ValueHolder& getValue() const override;
-        void setValue(const ValueHolder& newValue) override;
-
         const Type& getType() const;
 
       protected:
         virtual void doSetToDefault() override;
 
         virtual std::size_t doGetHash() const override;
+
+        const TypeRef& doGetTypeRef() const override;
+        const ValueHolder& doGetValue() const override;
+        void doSetValue(const ValueHolder& newValue) override;
 
       private:
         TypeRef m_typeRef;

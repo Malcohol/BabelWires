@@ -11,6 +11,20 @@
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+
+const babelwires::TypeRef& babelwires::ValueFeature::getTypeRef() const {
+    return doGetTypeRef();
+}
+
+const babelwires::ValueHolder& babelwires::ValueFeature::getValue() const {
+    return doGetValue();
+}
+
+void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
+    doSetValue(newValue);
+}
 
 void babelwires::ValueFeature::assign(const ValueFeature& other) {
     if (getKind() != other.getKind()) {

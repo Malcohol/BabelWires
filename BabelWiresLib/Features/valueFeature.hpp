@@ -8,21 +8,23 @@
 #pragma once
 
 #include <BabelWiresLib/Features/feature.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
+    class TypeRef;
+    class Type;
+
     /// A ValueFeature is a feature which provides access to a value.
     class ValueFeature : public Feature {
       public:
         /// Get the TypeRef which describes the type of the value.
-        virtual const TypeRef& getTypeRef() const = 0;
+        const TypeRef& getTypeRef() const;
 
         /// Get the value currently held by this feature.
-        virtual const ValueHolder& getValue() const = 0;
+        const ValueHolder& getValue() const;
 
         /// Set this feature to hold a new value.
-        virtual void setValue(const ValueHolder& newValue) = 0;
+        void setValue(const ValueHolder& newValue);
 
         /// This is a convenience method which resolves the typeRef in the context of the TypeSystem
         /// carried by the rootFeature.
@@ -40,5 +42,9 @@ namespace babelwires {
       protected:
         /// Calls doSetToDefault.
         virtual void doSetToDefaultNonRecursive() override;
+
+        virtual const TypeRef& doGetTypeRef() const = 0;
+        virtual const ValueHolder& doGetValue() const = 0;
+        virtual void doSetValue(const ValueHolder& newValue) = 0;
     };
 }
