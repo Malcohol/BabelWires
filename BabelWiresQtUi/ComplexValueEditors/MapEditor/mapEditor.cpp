@@ -198,7 +198,7 @@ const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(Access
             return *mapValue;
         }
     }
-    return getMapFeature(scope).getValue().is<MapValue>();
+    return getMapFeature(scope).getValueHolder()->is<MapValue>();
 }
 
 const babelwires::SimpleValueFeature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {

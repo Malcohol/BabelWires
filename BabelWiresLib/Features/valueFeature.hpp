@@ -21,8 +21,6 @@ namespace babelwires {
 
         const Type& getType() const;
 
-        const Value& getValue() const;
-
         /// This is a convenience method which calls getType().getKind().
         /// TODO: This design is imposed by the current UI, but is inflexible because it doesn't
         /// support a good notion of subtyping.

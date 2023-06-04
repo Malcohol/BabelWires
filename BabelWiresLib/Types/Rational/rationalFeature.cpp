@@ -22,7 +22,7 @@ babelwires::RationalFeature::RationalFeature(Rational minValue, Rational maxValu
                                  RationalValue(std::clamp(defaultValue, minValue, maxValue)))) {}
 
 babelwires::Rational babelwires::RationalFeature::get() const {
-    return getValue().is<RationalValue>().get();
+    return getValueHolder()->is<RationalValue>().get();
 }
 
 void babelwires::RationalFeature::set(Rational value) {

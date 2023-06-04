@@ -31,7 +31,3 @@ const babelwires::Type& babelwires::ValueFeature::getType() const {
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);
     return getTypeRef().resolve(context.m_typeSystem);
 }
-
-const babelwires::Value& babelwires::ValueFeature::getValue() const {
-    return *getValueHolder();
-}
