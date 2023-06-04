@@ -27,9 +27,6 @@ namespace babelwires {
 
         const Type& getType() const;
 
-        void setValue(const Value& newValue);
-        void setValue(Value&& newValue);
-
       protected:
         virtual void doSetToDefault() override;
 

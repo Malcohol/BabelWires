@@ -28,7 +28,7 @@ babelwires::ShortId babelwires::EnumFeature::get() const {
 }
 
 void babelwires::EnumFeature::set(ShortId id) {
-    setValue(EnumValue(id));
+    setValueHolder(EnumValue(id));
 }
 
 int babelwires::EnumFeature::tryGetEnumIndex() const {

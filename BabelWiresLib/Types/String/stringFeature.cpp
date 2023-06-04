@@ -20,5 +20,5 @@ std::string babelwires::StringFeature::get() const {
 }
 
 void babelwires::StringFeature::set(std::string value) {
-    setValue(StringValue(value));
+    setValueHolder(StringValue(value));
 }

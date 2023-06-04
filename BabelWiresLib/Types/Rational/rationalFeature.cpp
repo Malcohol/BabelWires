@@ -26,5 +26,5 @@ babelwires::Rational babelwires::RationalFeature::get() const {
 }
 
 void babelwires::RationalFeature::set(Rational value) {
-    setValue(RationalValue(value));
+    setValueHolder(RationalValue(value));
 }

@@ -34,32 +34,6 @@ const babelwires::ValueHolder& babelwires::SimpleValueFeature::getValueHolder() 
     return m_value;
 }
 
-void babelwires::SimpleValueFeature::setValue(const Value& value) {
-    if (!m_value || (value != *m_value)) {
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
-        const Type& type = getType();
-        if (type.isValidValue(typeSystem, value)) {
-            m_value = value;
-            setChanged(Changes::ValueChanged);
-        } else {
-            throw ModelException() << "The new value is not a valid instance of " << m_typeRef.toString();
-        }
-    }
-}
-
-void babelwires::SimpleValueFeature::setValue(Value&& value) {
-    if (!m_value || (value != *m_value)) {
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
-        const Type& type = getType();
-        if (type.isValidValue(typeSystem, value)) {
-            m_value = std::move(value);
-            setChanged(Changes::ValueChanged);
-        } else {
-            throw ModelException() << "The new value is not a valid instance of " << m_typeRef.toString();
-        }
-    }
-}
-
 void babelwires::SimpleValueFeature::doSetToDefault() {
     assert(m_typeRef && "The type must be set to something non-trivial before doSetToDefault is called");
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);

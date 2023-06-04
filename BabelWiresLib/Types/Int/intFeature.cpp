@@ -26,5 +26,5 @@ babelwires::IntValue::NativeType babelwires::IntFeature::get() const {
 }
 
 void babelwires::IntFeature::set(IntValue::NativeType value) {
-    setValue(IntValue(value));
+    setValueHolder(IntValue(value));
 }
