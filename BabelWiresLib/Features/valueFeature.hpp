@@ -1,5 +1,5 @@
 /**
- * A ValueFeature is a feature which stores a value.
+ * A ValueFeature is a feature which provides access to a value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -8,19 +8,25 @@
 #pragma once
 
 #include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
-    /// A ValueFeature is a feature which stores a value.
+    /// A ValueFeature is a feature which provides access to a value.
     class ValueFeature : public Feature {
       public:
-        /// A short string which determines which values can be passed in to assign.
+        virtual const TypeRef& getTypeRef() const = 0;
+        virtual const ValueHolder& getValueHolder() const = 0;
+        virtual void setValueHolder(const ValueHolder& newValue) = 0;
+
+        const Type& getType() const;
+
+        const Value& getValue() const;
+
+        /// This is a convenience method which calls getType().getKind().
         /// TODO: This design is imposed by the current UI, but is inflexible because it doesn't
         /// support a good notion of subtyping.
-        std::string getValueType() const;
-
-        /// Could the value in other ever be assigned to this (irrespective of its current value).
-        /// This checks that the value types are equal.
-        bool isCompatible(const ValueFeature& other);
+        std::string getKind() const;
 
         /// Set this to hold the same value as other.
         /// This will throw a ModelException if the assignment failed.
@@ -29,11 +35,5 @@ namespace babelwires {
       protected:
         /// Calls doSetToDefault.
         virtual void doSetToDefaultNonRecursive() override;
-
-        /// Return a string of length <= 4 characters.
-        virtual std::string doGetValueType() const = 0;
-
-        /// Implementations may assume that other is compatible.
-        virtual void doAssign(const ValueFeature& other) = 0;
     };
 }

@@ -35,17 +35,17 @@ TEST(FeatureTest, valueCompatibility) {
         std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("fff"));
     rootFeature.setToDefault();
 
-    EXPECT_TRUE(intFeature.isCompatible(intFeature2));
-    EXPECT_FALSE(intFeature.isCompatible(stringFeature));
-    EXPECT_FALSE(intFeature.isCompatible(rationalFeature));
+    EXPECT_EQ(intFeature.getKind(), intFeature2.getKind());
+    EXPECT_NE(intFeature.getKind(), stringFeature.getKind());
+    EXPECT_NE(intFeature.getKind(), rationalFeature.getKind());
 
-    EXPECT_TRUE(rationalFeature.isCompatible(rationalFeature2));
-    EXPECT_FALSE(rationalFeature.isCompatible(intFeature));
-    EXPECT_FALSE(rationalFeature.isCompatible(stringFeature));
+    EXPECT_EQ(rationalFeature.getKind(), rationalFeature2.getKind());
+    EXPECT_NE(rationalFeature.getKind(), intFeature.getKind());
+    EXPECT_NE(rationalFeature.getKind(), stringFeature.getKind());
 
-    EXPECT_TRUE(stringFeature.isCompatible(stringFeature2));
-    EXPECT_FALSE(stringFeature.isCompatible(rationalFeature));
-    EXPECT_FALSE(stringFeature.isCompatible(intFeature));
+    EXPECT_EQ(stringFeature.getKind(), stringFeature2.getKind());
+    EXPECT_NE(stringFeature.getKind(), rationalFeature.getKind());
+    EXPECT_NE(stringFeature.getKind(), intFeature.getKind());
 
     EXPECT_NO_THROW(intFeature.assign(intFeature2));
     EXPECT_THROW(intFeature.assign(stringFeature), babelwires::ModelException);
