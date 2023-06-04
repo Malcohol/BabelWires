@@ -17,7 +17,7 @@
 
 babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data) {
     AccessModelScope scope(projectBridge);
-    const SimpleValueFeature& valueFeature = ComplexValueEditor::getValueFeatureOrThrow(scope, data);
+    const ValueFeature& valueFeature = ComplexValueEditor::getValueFeatureOrThrow(scope, data);
     const Type& type = valueFeature.getType();
 
     // TODO: For now, assume ComplexValueEditors are all built-in, so we don't need a registry.

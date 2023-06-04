@@ -15,8 +15,13 @@ namespace babelwires {
     /// A ValueFeature is a feature which provides access to a value.
     class ValueFeature : public Feature {
       public:
+        /// Get the TypeRef which describes the type of the value.
         virtual const TypeRef& getTypeRef() const = 0;
+
+        /// Get the value currently held by this feature.
         virtual const ValueHolder& getValue() const = 0;
+
+        /// Set this feature to hold a new value.
         virtual void setValue(const ValueHolder& newValue) = 0;
 
         /// This is a convenience method which resolves the typeRef in the context of the TypeSystem
@@ -24,8 +29,8 @@ namespace babelwires {
         const Type& getType() const;
 
         /// This is a convenience method which calls getType().getKind().
-        /// TODO: This design is imposed by the current UI, but is inflexible because it doesn't
-        /// support a good notion of subtyping.
+        /// The need for connectable features to provide a string description is not fundamental to the data model.
+        /// It is imposed by the current UI.
         std::string getKind() const;
 
         /// Set this to hold the same value as other.
