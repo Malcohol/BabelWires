@@ -16,7 +16,7 @@ void babelwires::ValueFeature::assign(const ValueFeature& other) {
     if (getKind() != other.getKind()) {
         throw ModelException() << "Assigning an incompatible value";
     }
-    setValueHolder(other.getValueHolder());
+    setValue(other.getValue());
 }
 
 std::string babelwires::ValueFeature::getKind() const {

@@ -15,7 +15,7 @@
 babelwires::SimpleValueFeature::SimpleValueFeature(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
 
-void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue) {
+void babelwires::SimpleValueFeature::setValue(const ValueHolder& newValue) {
     if (!m_value || ((m_value != newValue) && (*m_value != *newValue))) {
         const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
@@ -28,7 +28,7 @@ void babelwires::SimpleValueFeature::setValueHolder(const ValueHolder& newValue)
     }
 }
 
-const babelwires::ValueHolder& babelwires::SimpleValueFeature::getValueHolder() const {
+const babelwires::ValueHolder& babelwires::SimpleValueFeature::getValue() const {
     // Not sure if this assert is necessary.
     assert(m_value && "The SimpleValueFeature has not been initialized");
     return m_value;

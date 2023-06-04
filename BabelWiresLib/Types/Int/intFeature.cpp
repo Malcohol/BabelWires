@@ -22,9 +22,9 @@ babelwires::IntFeature::IntFeature(IntValue::NativeType minValue, IntValue::Nati
                                  IntValue(std::clamp(defaultValue, minValue, maxValue)))) {}
 
 babelwires::IntValue::NativeType babelwires::IntFeature::get() const {
-    return getValueHolder()->is<IntValue>().get();
+    return getValue()->is<IntValue>().get();
 }
 
 void babelwires::IntFeature::set(IntValue::NativeType value) {
-    setValueHolder(IntValue(value));
+    setValue(IntValue(value));
 }

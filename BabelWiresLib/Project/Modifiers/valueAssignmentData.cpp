@@ -29,7 +29,7 @@ babelwires::ValueAssignmentData::ValueAssignmentData(EditableValueHolder value)
 
 void babelwires::ValueAssignmentData::apply(Feature* targetFeature) const {
     if (ValueFeature* valueFeature = targetFeature->as<ValueFeature>()) {
-        valueFeature->setValueHolder(m_value);
+        valueFeature->setValue(m_value);
     } else {
         throw babelwires::ModelException() << "Could not assign a value to a non-SimpleValueFeature";
     }

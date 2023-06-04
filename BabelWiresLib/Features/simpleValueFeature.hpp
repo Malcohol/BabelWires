@@ -22,8 +22,8 @@ namespace babelwires {
         SimpleValueFeature(TypeRef typeRef);
 
         const TypeRef& getTypeRef() const override;
-        const ValueHolder& getValueHolder() const override;
-        void setValueHolder(const ValueHolder& newValue) override;
+        const ValueHolder& getValue() const override;
+        void setValue(const ValueHolder& newValue) override;
 
         const Type& getType() const;
 

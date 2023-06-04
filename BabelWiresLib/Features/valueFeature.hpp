@@ -16,9 +16,11 @@ namespace babelwires {
     class ValueFeature : public Feature {
       public:
         virtual const TypeRef& getTypeRef() const = 0;
-        virtual const ValueHolder& getValueHolder() const = 0;
-        virtual void setValueHolder(const ValueHolder& newValue) = 0;
+        virtual const ValueHolder& getValue() const = 0;
+        virtual void setValue(const ValueHolder& newValue) = 0;
 
+        /// This is a convenience method which resolves the typeRef in the context of the TypeSystem
+        /// carried by the rootFeature.
         const Type& getType() const;
 
         /// This is a convenience method which calls getType().getKind().

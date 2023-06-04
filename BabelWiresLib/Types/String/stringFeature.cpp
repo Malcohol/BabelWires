@@ -16,9 +16,9 @@ babelwires::StringFeature::StringFeature()
     }
 
 std::string babelwires::StringFeature::get() const {
-    return getValueHolder()->is<StringValue>().get();
+    return getValue()->is<StringValue>().get();
 }
 
 void babelwires::StringFeature::set(std::string value) {
-    setValueHolder(StringValue(value));
+    setValue(StringValue(value));
 }

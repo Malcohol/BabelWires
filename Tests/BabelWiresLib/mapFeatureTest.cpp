@@ -47,7 +47,7 @@ TEST(MapFeatureTest, setToDefault) {
 
     mapFeature->setToDefault();
 
-    const babelwires::MapValue* const mapValue = mapFeature->getValueHolder()->as<babelwires::MapValue>();
+    const babelwires::MapValue* const mapValue = mapFeature->getValue()->as<babelwires::MapValue>();
 
     EXPECT_TRUE(mapValue->isValid(environment.m_typeSystem));
 }
@@ -178,10 +178,10 @@ TEST(MapFeatureTest, setAndGet) {
     testEnumTestTypeFeature->setToDefault();
     testEnumTestEnumFeature->setToDefault();
 
-    EXPECT_NO_THROW(testTypeTestTypeFeature->setValueHolder(testTypeTestTypeFeature->getValueHolder()));
-    EXPECT_THROW(testTypeTestTypeFeature->setValueHolder(testTypeTestEnumFeature->getValueHolder()), babelwires::ModelException);
-    EXPECT_THROW(testTypeTestTypeFeature->setValueHolder(testEnumTestTypeFeature->getValueHolder()), babelwires::ModelException);
-    EXPECT_THROW(testTypeTestTypeFeature->setValueHolder(testEnumTestEnumFeature->getValueHolder()), babelwires::ModelException);
+    EXPECT_NO_THROW(testTypeTestTypeFeature->setValue(testTypeTestTypeFeature->getValue()));
+    EXPECT_THROW(testTypeTestTypeFeature->setValue(testTypeTestEnumFeature->getValue()), babelwires::ModelException);
+    EXPECT_THROW(testTypeTestTypeFeature->setValue(testEnumTestTypeFeature->getValue()), babelwires::ModelException);
+    EXPECT_THROW(testTypeTestTypeFeature->setValue(testEnumTestEnumFeature->getValue()), babelwires::ModelException);
 
     babelwires::MapFeature* testEnumTestSubEnumFeature =
         rootFeature.addField(std::make_unique<babelwires::MapFeature>(
@@ -203,26 +203,26 @@ TEST(MapFeatureTest, setAndGet) {
     // Target types are handled covariantly:
 
     // All target values in the new map are values in the original target type.
-    EXPECT_NO_THROW(testEnumTestEnumFeature->setValueHolder(testEnumTestSubEnumFeature->getValueHolder()));
+    EXPECT_NO_THROW(testEnumTestEnumFeature->setValue(testEnumTestSubEnumFeature->getValue()));
     testEnumTestEnumFeature->setToDefault();
 
     // A target value in the new map could be outside the range of the original target type.
-    EXPECT_THROW(testEnumTestSubEnumFeature->setValueHolder(testEnumTestEnumFeature->getValueHolder()), babelwires::ModelException);
+    EXPECT_THROW(testEnumTestSubEnumFeature->setValue(testEnumTestEnumFeature->getValue()), babelwires::ModelException);
 
     // Because of fallbacks, any related (sub- or supertype) type are permitted.
 
     // The new map defines values for the whole of the original source type.
-    EXPECT_NO_THROW(testSubEnumTestEnumFeature->setValueHolder(testEnumTestEnumFeature->getValueHolder()));
+    EXPECT_NO_THROW(testSubEnumTestEnumFeature->setValue(testEnumTestEnumFeature->getValue()));
     testSubEnumTestEnumFeature->setToDefault();
 
     // The new map defines values for the whole of the original source type (via the fallback).
-    EXPECT_NO_THROW(testEnumTestEnumFeature->setValueHolder(testSubEnumTestEnumFeature->getValueHolder()));
+    EXPECT_NO_THROW(testEnumTestEnumFeature->setValue(testSubEnumTestEnumFeature->getValue()));
     testEnumTestEnumFeature->setToDefault();
 
     // Source and target changing
 
-    EXPECT_NO_THROW(testEnumTestEnumFeature->setValueHolder(testSubEnumTestSubEnumFeature->getValueHolder()));
+    EXPECT_NO_THROW(testEnumTestEnumFeature->setValue(testSubEnumTestSubEnumFeature->getValue()));
     testEnumTestEnumFeature->setToDefault();
 
-    EXPECT_THROW(testSubEnumTestSubEnumFeature->setValueHolder(testEnumTestEnumFeature->getValueHolder()), babelwires::ModelException);
+    EXPECT_THROW(testSubEnumTestSubEnumFeature->setValue(testEnumTestEnumFeature->getValue()), babelwires::ModelException);
 }

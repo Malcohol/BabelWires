@@ -24,11 +24,11 @@ const babelwires::EnumType& babelwires::EnumFeature::getEnum() const {
 }
 
 babelwires::ShortId babelwires::EnumFeature::get() const {
-    return getValueHolder()->is<EnumValue>().get();
+    return getValue()->is<EnumValue>().get();
 }
 
 void babelwires::EnumFeature::set(ShortId id) {
-    setValueHolder(EnumValue(id));
+    setValue(EnumValue(id));
 }
 
 int babelwires::EnumFeature::tryGetEnumIndex() const {

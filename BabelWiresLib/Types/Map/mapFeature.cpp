@@ -21,5 +21,5 @@ babelwires::MapFeature::MapFeature(const TypeRef& sourceType, const TypeRef& tar
                                    {EnumValue(MapEntryFallbackKind::getIdentifierFromValue(defaultFallbackKind))}})) {}
 
 const babelwires::MapValue& babelwires::MapFeature::get() const {
-    return getValueHolder()->is<MapValue>();
+    return getValue()->is<MapValue>();
 }
