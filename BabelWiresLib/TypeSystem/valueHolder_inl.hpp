@@ -53,7 +53,7 @@ babelwires::ValueHolderTemplate<VALUE>& babelwires::ValueHolderTemplate<VALUE>::
 template <typename VALUE>
 babelwires::ValueHolderTemplate<VALUE>& babelwires::ValueHolderTemplate<VALUE>::operator=(VALUE&& value) {
     // R-value cloning uses the move contructor.
-    m_pointerToValue = std::shared_ptr<const Value>(std::move(value).clone().release());
+    m_pointerToValue = std::shared_ptr<const VALUE>(std::move(value).clone().release());
     return *this;
 }
 

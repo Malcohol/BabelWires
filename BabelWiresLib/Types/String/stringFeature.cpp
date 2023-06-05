@@ -16,7 +16,7 @@ babelwires::StringFeature::StringFeature()
     }
 
 std::string babelwires::StringFeature::get() const {
-    return getValue().is<StringValue>().get();
+    return getValue()->is<StringValue>().get();
 }
 
 void babelwires::StringFeature::set(std::string value) {

@@ -11,7 +11,7 @@
 
 #include <Common/Log/userLogger.hpp>
 
-void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ComplexValueEditorData& data) {
+void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data) {
     auto it = std::find_if(m_openValueEditors.begin(), m_openValueEditors.end(), [&data](const ComplexValueEditor* editor){ return data == editor->getData(); });
     if (it == m_openValueEditors.end()) {
         try {

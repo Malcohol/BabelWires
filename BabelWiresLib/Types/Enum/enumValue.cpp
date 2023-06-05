@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
-#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumType.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Serialization/deserializer.hpp>

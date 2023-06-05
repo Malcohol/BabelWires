@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
-#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumType.hpp>
 
 namespace babelwires {
     /// A unary type constructor which adds a blank value to an existing enum.
@@ -23,7 +23,7 @@ namespace babelwires {
         /// Note that the blank value is only permitted at the end of the enum.
         static ShortId getBlankValue();
 
-        std::unique_ptr<Type> constructType(TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+        std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA,
@@ -33,6 +33,6 @@ namespace babelwires {
                                           const TypeRef& other) const override;
 
         /// Add a blank to the values unless one is already there.
-        static Enum::EnumValues ensureBlankValue(const Enum::EnumValues& srcValues);
+        static EnumType::ValueSet ensureBlankValue(const EnumType::ValueSet& srcValues);
     };
 } // namespace babelwires

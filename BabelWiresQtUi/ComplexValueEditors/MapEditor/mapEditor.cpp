@@ -14,16 +14,18 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include <BabelWiresLib/Features/mapFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapCommand.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapSourceTypeCommand.hpp>
-#include <BabelWiresLib/Maps/Commands/setMapTargetTypeCommand.hpp>
-#include <BabelWiresLib/Maps/mapSerialization.hpp>
+#include <BabelWiresLib/Types/Map/mapFeature.hpp>
+#include <BabelWiresLib/Types/Map/mapType.hpp>
+#include <BabelWiresLib/Types/Map/Commands/setMapCommand.hpp>
+#include <BabelWiresLib/Types/Map/Commands/setMapSourceTypeCommand.hpp>
+#include <BabelWiresLib/Types/Map/Commands/setMapTargetTypeCommand.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapSerialization.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/Modifiers/mapValueAssignmentData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -39,7 +41,7 @@
 #define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
 
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
-                                 const ComplexValueEditorData& data)
+                                 const DataLocation& data)
     : ComplexValueEditor(parent, projectBridge, userLogger, data)
     , m_map(projectBridge.getContext())
     , m_commandManager(m_map, userLogger) {
@@ -84,25 +86,29 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             AccessModelScope scope(getProjectBridge());
             const UiProjectContext& context = projectBridge.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
-            const MapFeature& mapFeature = getMapFeature(scope);
-            m_defaultMapValue = mapFeature.getDefaultMapData();
-            const MapData& mapData = getMapDataFromProject(scope);
-            MapFeature::AllowedTypes allowedTypeRefs;
-            mapFeature.getAllowedSourceTypeRefs(allowedTypeRefs);
-            m_map.setAllowedSourceTypeRefs(allowedTypeRefs);
-            mapFeature.getAllowedTargetTypeRefs(allowedTypeRefs);
-            m_map.setAllowedTargetTypeRefs(allowedTypeRefs);
-            m_map.setMapData(mapData);
+            const ValueFeature& mapFeature = getMapFeature(scope);
+            m_typeRef = mapFeature.getTypeRef();
+            const MapValue& mapValue = getMapValueFromProject(scope);
+            if (mapFeature.getType().as<MapType>()) {
+                m_map.setAllowedSourceTypeRefs(MapProject::AllowedTypes{{mapFeature.getType().is<MapType>().getSourceTypeRef()}});
+                m_map.setAllowedTargetTypeRefs(MapProject::AllowedTypes{{mapFeature.getType().is<MapType>().getSourceTypeRef()}});
+            } else {
+                const SumOfMapsType *const sumOfMaps = mapFeature.getType().as<SumOfMapsType>();
+                assert(sumOfMaps && "MapEditor expecting a MapType of SumOfMapsType");
+                m_map.setAllowedSourceTypeRefs(MapProject::AllowedTypes{sumOfMaps->getSourceTypes(), sumOfMaps->getIndexOfDefaultSourceType()});
+                m_map.setAllowedTargetTypeRefs(MapProject::AllowedTypes{sumOfMaps->getTargetTypes(), sumOfMaps->getIndexOfDefaultTargetType()});
+            }
+            m_map.setMapValue(mapValue);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
                 m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeRefs());
-                m_sourceTypeWidget->setTypeRef(m_map.getSourceTypeRef());
+                m_sourceTypeWidget->setTypeRef(m_map.getCurrentSourceTypeRef());
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
                 m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeRefs());
-                m_targetTypeWidget->setTypeRef(m_map.getTargetTypeRef());
+                m_targetTypeWidget->setTypeRef(m_map.getCurrentTargetTypeRef());
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }
             connect(m_sourceTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
@@ -165,8 +171,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 }
 
 void babelwires::MapEditor::applyMapToProject() {
-    auto modifierData = std::make_unique<MapValueAssignmentData>();
-    modifierData->m_mapData = m_map.extractMapData();
+    auto modifierData = std::make_unique<ValueAssignmentData>(m_map.extractMapValue());
     modifierData->m_pathToFeature = getData().getPathToValue();
 
     auto setValueCommand =
@@ -181,33 +186,30 @@ void babelwires::MapEditor::applyMapToProject() {
     }
 }
 
-const babelwires::MapFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) const {
+const babelwires::ValueFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) const {
     const ValueFeature& valueFeature = ComplexValueEditor::getValueFeature(scope, getData());
-    const MapFeature* mapFeature = valueFeature.as<MapFeature>();
-    assert(mapFeature && "The value feature was not a map feature");
-    return *mapFeature;
+    assert(valueFeature.getType().as<MapType>() || valueFeature.getType().as<SumOfMapsType>());
+    return valueFeature;
 }
 
-const babelwires::MapData& babelwires::MapEditor::getMapDataFromProject(AccessModelScope& scope) const {
-    const MapValueAssignmentData* const mapModifier = tryGetMapValueAssignmentData(scope);
-    if (mapModifier) {
-        return mapModifier->m_mapData;
-    }
-    return getMapFeature(scope).get();
-}
-
-const babelwires::MapFeature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {
-    const ValueFeature* valueFeature = ComplexValueEditor::tryGetValueFeature(scope, getData());
-    if (valueFeature) {
-        const MapFeature* mapFeature = valueFeature->as<MapFeature>();
-        if (mapFeature) {
-            return mapFeature;
+const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(AccessModelScope& scope) const {
+    if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
+        if (const MapValue* const mapValue = modifier->getValue()->as<MapValue>()) {
+            return *mapValue;
         }
+    }
+    return getMapFeature(scope).getValue()->is<MapValue>();
+}
+
+const babelwires::ValueFeature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {
+    const ValueFeature* valueFeature = ComplexValueEditor::tryGetValueFeature(scope, getData());
+    if (valueFeature->getType().as<MapType>() || valueFeature->getType().as<SumOfMapsType>()) {
+        return valueFeature;
     }
     return nullptr;
 }
 
-const babelwires::MapValueAssignmentData*
+const babelwires::ValueAssignmentData*
 babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
     const FeatureElement* const element = scope.getProject().getFeatureElement(getData().getElementId());
 
@@ -221,38 +223,38 @@ babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) con
         return nullptr;
     }
 
-    return modifier->getModifierData().as<MapValueAssignmentData>();
+    return modifier->getModifierData().as<ValueAssignmentData>();
 }
 
-const babelwires::MapData* babelwires::MapEditor::tryGetMapDataFromProject(AccessModelScope& scope) const {
-    const MapValueAssignmentData* const mapModifier = tryGetMapValueAssignmentData(scope);
-
-    if (mapModifier) {
-        return &mapModifier->m_mapData;
+babelwires::ValueHolderTemplate<babelwires::MapValue> babelwires::MapEditor::tryGetMapValueFromProject(AccessModelScope& scope) const {
+    if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
+        if (ValueHolderTemplate<MapValue> mapValue = modifier->getValue().asValueHolder<MapValue>()) {
+            return mapValue;
+        }
     }
 
-    const babelwires::MapFeature* const mapFeature = tryGetMapFeature(scope);
+    const babelwires::ValueFeature* const mapFeature = tryGetMapFeature(scope);
     if (!mapFeature) {
-        return nullptr;
+        return {};
     }
 
-    return &mapFeature->get();
+    return mapFeature->getValue().isValueHolder<MapValue>();
 }
 
 void babelwires::MapEditor::updateMapFromProject() {
     AccessModelScope scope(getProjectBridge());
-    const MapData* mapDataFromProject = tryGetMapDataFromProject(scope);
-    if (mapDataFromProject) {
+    ValueHolderTemplate<MapValue> mapValueFromProject = tryGetMapValueFromProject(scope);
+    if (mapValueFromProject) {
         getUserLogger().logInfo() << "Refreshing the map from the project";
         executeCommand(
-            std::make_unique<SetMapCommand>("Refresh the map from the project", mapDataFromProject->clone()));
+            std::make_unique<SetMapCommand>("Refresh the map from the project", mapValueFromProject));
     } else {
         warnThatMapNoLongerInProject("Cannot refresh the map.");
     }
 }
 
-void babelwires::MapEditor::setEditorMap(const MapData& map) {
-    m_map.setMapData(map);
+void babelwires::MapEditor::setEditorMap(const MapValue& map) {
+    m_map.setMapValue(map);
     updateUiAfterChange();
 }
 
@@ -261,15 +263,15 @@ void babelwires::MapEditor::updateUiAfterChange() const {
     if (m_map.getSourceTypeValidity()) {
         m_sourceTypeWidget->removeBadItemIfPresent();
     } else {
-        m_sourceTypeWidget->addBadItemIfNotPresent(m_map.getSourceTypeRef());
+        m_sourceTypeWidget->addBadItemIfNotPresent(m_map.getCurrentSourceTypeRef());
     }
     if (m_map.getTargetTypeValidity()) {
         m_targetTypeWidget->removeBadItemIfPresent();
     } else {
-        m_targetTypeWidget->addBadItemIfNotPresent(m_map.getTargetTypeRef());
+        m_targetTypeWidget->addBadItemIfNotPresent(m_map.getCurrentTargetTypeRef());
     }
-    m_sourceTypeWidget->setTypeRef(m_map.getSourceTypeRef());
-    m_targetTypeWidget->setTypeRef(m_map.getTargetTypeRef());
+    m_sourceTypeWidget->setTypeRef(m_map.getCurrentSourceTypeRef());
+    m_targetTypeWidget->setTypeRef(m_map.getCurrentTargetTypeRef());
 }
 
 void babelwires::MapEditor::saveMapToFile() {
@@ -291,7 +293,7 @@ bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
         try {
             std::string filePathStr = filePath.toStdString();
             getUserLogger().logInfo() << "Save map to \"" << filePathStr << '"';
-            MapSerialization::saveToFile(filePathStr, m_map.extractMapData());
+            MapSerialization::saveToFile(filePathStr, m_map.extractMapValue());
             return true;
         } catch (FileIoException& e) {
             getUserLogger().logError() << "The map could not be saved: " << e.what();
@@ -314,9 +316,9 @@ void babelwires::MapEditor::loadMapFromFile() {
             try {
                 std::string filePathStr = filePath.toStdString();
                 getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
-                MapData mapData =
+                MapValue mapValue =
                     MapSerialization::loadFromFile(filePathStr, getProjectBridge().getContext(), getUserLogger());
-                setEditorMap(mapData);
+                setEditorMap(mapValue);
                 m_lastSaveFilePath = filePath;
                 return;
             } catch (FileIoException& e) {
@@ -412,19 +414,22 @@ void babelwires::MapEditor::onUndoStateChanged() {
 }
 
 void babelwires::MapEditor::setToDefault() {
-    executeCommand(std::make_unique<SetMapCommand>("Restore default map", m_defaultMapValue.clone()));
+    const TypeSystem& typeSystem = getProjectBridge().getContext().m_typeSystem;
+    const MapType& mapType = m_typeRef.resolve(typeSystem).is<MapType>();
+    ValueHolder defaultMapValue = mapType.createValue(typeSystem);
+    executeCommand(std::make_unique<SetMapCommand>("Restore default map", defaultMapValue.isValueHolder<MapValue>()));
 }
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {
     const TypeRef& newSourceTypeRef = m_sourceTypeWidget->getTypeRef();
-    if (newSourceTypeRef != m_map.getSourceTypeRef()) {
+    if (newSourceTypeRef != m_map.getCurrentSourceTypeRef()) {
         executeCommand(std::make_unique<SetMapSourceTypeCommand>("Set map source type", newSourceTypeRef));
     }
 }
 
 void babelwires::MapEditor::setTargetTypeFromWidget() {
     const TypeRef& newTargetTypeRef = m_targetTypeWidget->getTypeRef();
-    if (newTargetTypeRef != m_map.getTargetTypeRef()) {
+    if (newTargetTypeRef != m_map.getCurrentTargetTypeRef()) {
         executeCommand(std::make_unique<SetMapTargetTypeCommand>("Set map target type", newTargetTypeRef));
     }
 }

@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
-#include <BabelWiresLib/Features/heavyValueFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
@@ -36,17 +35,17 @@ TEST(FeatureTest, valueCompatibility) {
         std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("fff"));
     rootFeature.setToDefault();
 
-    EXPECT_TRUE(intFeature.isCompatible(intFeature2));
-    EXPECT_FALSE(intFeature.isCompatible(stringFeature));
-    EXPECT_FALSE(intFeature.isCompatible(rationalFeature));
+    EXPECT_EQ(intFeature.getKind(), intFeature2.getKind());
+    EXPECT_NE(intFeature.getKind(), stringFeature.getKind());
+    EXPECT_NE(intFeature.getKind(), rationalFeature.getKind());
 
-    EXPECT_TRUE(rationalFeature.isCompatible(rationalFeature2));
-    EXPECT_FALSE(rationalFeature.isCompatible(intFeature));
-    EXPECT_FALSE(rationalFeature.isCompatible(stringFeature));
+    EXPECT_EQ(rationalFeature.getKind(), rationalFeature2.getKind());
+    EXPECT_NE(rationalFeature.getKind(), intFeature.getKind());
+    EXPECT_NE(rationalFeature.getKind(), stringFeature.getKind());
 
-    EXPECT_TRUE(stringFeature.isCompatible(stringFeature2));
-    EXPECT_FALSE(stringFeature.isCompatible(rationalFeature));
-    EXPECT_FALSE(stringFeature.isCompatible(intFeature));
+    EXPECT_EQ(stringFeature.getKind(), stringFeature2.getKind());
+    EXPECT_NE(stringFeature.getKind(), rationalFeature.getKind());
+    EXPECT_NE(stringFeature.getKind(), intFeature.getKind());
 
     EXPECT_NO_THROW(intFeature.assign(intFeature2));
     EXPECT_THROW(intFeature.assign(stringFeature), babelwires::ModelException);
@@ -375,134 +374,4 @@ TEST(FeatureTest, arraySizeRange) {
     EXPECT_THROW(arrayFeature.setSize(6), babelwires::ModelException);
     EXPECT_FALSE(arrayFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
     EXPECT_EQ(arrayFeature.getNumFeatures(), 3);
-}
-
-namespace {
-    struct TestHeavyValue {
-        std::size_t getHash() const { return std::hash<int>()(m_int); }
-
-        bool operator==(const TestHeavyValue& other) const { return m_int == other.m_int; }
-        bool operator!=(const TestHeavyValue& other) const { return m_int != other.m_int; }
-
-        int m_int = 0;
-    };
-
-    struct TestHeavyFeature : babelwires::HeavyValueFeature<TestHeavyValue> {
-        std::string doGetValueType() const override { return "foo"; }
-    };
-} // namespace
-
-TEST(FeatureTest, heavyValueFeature) {
-    TestHeavyFeature heavyValueFeature;
-    EXPECT_EQ(heavyValueFeature.getOwner(), nullptr);
-
-    heavyValueFeature.setToDefault();
-    EXPECT_EQ(heavyValueFeature.get().m_int, 0);
-
-    TestHeavyValue value0;
-    value0.m_int = 15;
-    heavyValueFeature.set(value0);
-    EXPECT_EQ(heavyValueFeature.get().m_int, 15);
-
-    TestHeavyValue value1;
-    value1.m_int = 30;
-    heavyValueFeature.set(std::move(value1));
-    EXPECT_EQ(heavyValueFeature.get().m_int, 30);
-
-    auto value2 = std::make_unique<TestHeavyValue>();
-    value2->m_int = 45;
-    heavyValueFeature.set(std::move(value2));
-    EXPECT_EQ(heavyValueFeature.get().m_int, 45);
-}
-
-TEST(FeatureTest, heavyValueChanges) {
-    TestHeavyFeature heavyValueFeature;
-
-    // After construction, everything has changed.
-    EXPECT_TRUE(heavyValueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(heavyValueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_TRUE(heavyValueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    heavyValueFeature.clearChanges();
-
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    heavyValueFeature.setToDefault();
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    ASSERT_EQ(heavyValueFeature.get().m_int, 0);
-    TestHeavyValue value0;
-    heavyValueFeature.set(value0);
-
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    heavyValueFeature.clearChanges();
-    value0.m_int = 15;
-    heavyValueFeature.set(value0);
-    EXPECT_TRUE(heavyValueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(heavyValueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    heavyValueFeature.clearChanges();
-    heavyValueFeature.set(value0);
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(heavyValueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-}
-
-TEST(FeatureTest, heavyValueHash) {
-    TestHeavyFeature heavyValueFeature;
-    heavyValueFeature.setToDefault();
-    std::size_t hashAtDefault = heavyValueFeature.getHash();
-
-    TestHeavyValue value0;
-    value0.m_int = 10;
-    heavyValueFeature.set(value0);
-    std::size_t hashAtTen = heavyValueFeature.getHash();
-
-    EXPECT_NE(hashAtDefault, hashAtTen);
-}
-
-TEST(FeatureTest, heavyValueAssign) {
-    TestHeavyFeature heavyValueFeature;
-    TestHeavyValue value0;
-    value0.m_int = 10;
-    heavyValueFeature.set(value0);
-
-    TestHeavyFeature heavyValueFeature2;
-    heavyValueFeature2.assign(heavyValueFeature);
-    EXPECT_EQ(heavyValueFeature2.get().m_int, 10);
-
-    value0.m_int = 20;
-    heavyValueFeature.set(value0);
-    EXPECT_EQ(heavyValueFeature2.get().m_int, 10);
-
-    heavyValueFeature2.clearChanges();
-    heavyValueFeature2.assign(heavyValueFeature);
-    EXPECT_EQ(heavyValueFeature2.get().m_int, 20);
-
-    EXPECT_TRUE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    heavyValueFeature2.clearChanges();
-    heavyValueFeature2.assign(heavyValueFeature);
-
-    EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::StructureChanged));
-
-    value0.m_int = 30;
-    heavyValueFeature.set(value0);
-    heavyValueFeature2.set(value0);
-    heavyValueFeature2.clearChanges();
-    heavyValueFeature2.assign(heavyValueFeature);
-    EXPECT_EQ(heavyValueFeature2.get().m_int, 30);
-    EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(heavyValueFeature2.isChanged(babelwires::Feature::Changes::StructureChanged));
 }

@@ -2,7 +2,7 @@
  * The row model for ValueFeatures.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresQtUi/ModelBridge/RowModels/valueRowModel.hpp>
@@ -13,6 +13,7 @@
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
 #include <QString>
@@ -21,7 +22,7 @@
 
 void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry) {
     const babelwires::SimpleValueFeature& valueFeature = getValueFeature();
-    m_valueModelDispatcher.init(valueModelRegistry, valueFeature.getType(), valueFeature.getValue());
+    m_valueModelDispatcher.init(valueModelRegistry, valueFeature.getType(), *valueFeature.getValue(), (getInputFeature() == nullptr));
 }
 
 const babelwires::SimpleValueFeature& babelwires::ValueRowModel::getValueFeature() const {
@@ -30,7 +31,8 @@ const babelwires::SimpleValueFeature& babelwires::ValueRowModel::getValueFeature
 }
 
 QVariant babelwires::ValueRowModel::getValueDisplayData() const {
-    const ValueModel::StyleHint styleHint = isFeatureModified() ? ValueModel::StyleHint::Bold : ValueModel::StyleHint::Normal;
+    const ValueModel::StyleHint styleHint =
+        isFeatureModified() ? ValueModel::StyleHint::Bold : ValueModel::StyleHint::Normal;
     return m_valueModelDispatcher->getDisplayData(styleHint);
 }
 
@@ -42,27 +44,29 @@ void babelwires::ValueRowModel::setEditorData(QWidget* editor) const {
     m_valueModelDispatcher->setEditorData(editor);
 }
 
-std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
+std::unique_ptr<babelwires::Command<babelwires::Project>>
+babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
     if (EditableValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
         const babelwires::SimpleValueFeature& valueFeature = getValueFeature();
         auto modifier = std::make_unique<babelwires::ValueAssignmentData>(std::move(newValue));
         modifier->m_pathToFeature = babelwires::FeaturePath(&valueFeature);
-        return std::make_unique<AddModifierCommand>("Set value", m_featureElement->getElementId(),
-                                            std::move(modifier));
+        return std::make_unique<AddModifierCommand>("Set value", m_featureElement->getElementId(), std::move(modifier));
     }
     return nullptr;
 }
 
 bool babelwires::ValueRowModel::isItemEditable() const {
-    return getInputFeature();
+    if (getInputFeature()) {
+        return m_valueModelDispatcher->isItemEditable();
+    }
+    return false;
 }
 
 bool babelwires::ValueRowModel::hasCustomPainting() const {
     return m_valueModelDispatcher->hasCustomPainting();
 }
 
-void babelwires::ValueRowModel::paint(QPainter* painter, QStyleOptionViewItem& option,
-                                             const QModelIndex& index) const {
+void babelwires::ValueRowModel::paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const {
     m_valueModelDispatcher->paint(painter, option, index);
 }
 
@@ -78,4 +82,12 @@ QString babelwires::ValueRowModel::getTooltip() const {
     } else {
         return rowTooltip + "/n" + valueTooltip;
     }
+}
+
+void babelwires::ValueRowModel::getContextMenuActions(
+    std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
+    RowModel::getContextMenuActions(actionsOut);
+    const babelwires::SimpleValueFeature& valueFeature = getValueFeature();
+    m_valueModelDispatcher->getContextMenuActions(
+        DataLocation{m_featureElement->getElementId(), babelwires::FeaturePath(&valueFeature)}, actionsOut);
 }

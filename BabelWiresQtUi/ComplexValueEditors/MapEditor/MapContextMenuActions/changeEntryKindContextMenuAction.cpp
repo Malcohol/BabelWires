@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 
-#include <BabelWiresLib/Maps/Commands/changeEntryKindCommand.hpp>
+#include <BabelWiresLib/Types/Map/Commands/changeEntryKindCommand.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 babelwires::ChangeEntryKindContextMenuAction::ChangeEntryKindContextMenuAction(const QString& text, MapEntryData::Kind kind,

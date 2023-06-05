@@ -8,9 +8,10 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(StringTypeTest, stringTypeCreateValue) {
+    babelwires::TypeSystem typeSystem;
     babelwires::StringType stringType;
 
-    babelwires::ValueHolder newValue = stringType.createValue();
+    babelwires::ValueHolder newValue = stringType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newStringValue = newValue->as<babelwires::StringValue>();
@@ -19,14 +20,15 @@ TEST(StringTypeTest, stringTypeCreateValue) {
 }
 
 TEST(StringTypeTest, stringTypeIsValidValue) {
+    babelwires::TypeSystem typeSystem;
     babelwires::StringType stringType;
 
     babelwires::StringValue value("Hello");
 
-    EXPECT_TRUE(stringType.isValidValue(value));
+    EXPECT_TRUE(stringType.isValidValue(typeSystem, value));
 
-    EXPECT_FALSE(stringType.isValidValue(babelwires::IntValue(5)));
-    EXPECT_FALSE(stringType.isValidValue(babelwires::RationalValue(3)));
+    EXPECT_FALSE(stringType.isValidValue(typeSystem, babelwires::IntValue(5)));
+    EXPECT_FALSE(stringType.isValidValue(typeSystem, babelwires::RationalValue(3)));
 }
 
 TEST(StringTypeTest, stringTypeGetKind) {

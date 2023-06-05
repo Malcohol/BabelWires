@@ -1,5 +1,5 @@
 /**
- * A ValueFeature is a feature which stores a value.
+ * A ValueFeature is a feature which provides access to a value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -8,19 +8,32 @@
 #pragma once
 
 #include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
-    /// A ValueFeature is a feature which stores a value.
+    class TypeRef;
+    class Type;
+
+    /// A ValueFeature is a feature which provides access to a value.
     class ValueFeature : public Feature {
       public:
-        /// A short string which determines which values can be passed in to assign.
-        /// TODO: This design is imposed by the current UI, but is inflexible because it doesn't
-        /// support a good notion of subtyping.
-        std::string getValueType() const;
+        /// Get the TypeRef which describes the type of the value.
+        const TypeRef& getTypeRef() const;
 
-        /// Could the value in other ever be assigned to this (irrespective of its current value).
-        /// This checks that the value types are equal.
-        bool isCompatible(const ValueFeature& other);
+        /// Get the value currently held by this feature.
+        const ValueHolder& getValue() const;
+
+        /// Set this feature to hold a new value.
+        void setValue(const ValueHolder& newValue);
+
+        /// This is a convenience method which resolves the typeRef in the context of the TypeSystem
+        /// carried by the rootFeature.
+        const Type& getType() const;
+
+        /// This is a convenience method which calls getType().getKind().
+        /// The need for connectable features to provide a string description is not fundamental to the data model.
+        /// It is imposed by the current UI.
+        std::string getKind() const;
 
         /// Set this to hold the same value as other.
         /// This will throw a ModelException if the assignment failed.
@@ -30,10 +43,8 @@ namespace babelwires {
         /// Calls doSetToDefault.
         virtual void doSetToDefaultNonRecursive() override;
 
-        /// Return a string of length <= 4 characters.
-        virtual std::string doGetValueType() const = 0;
-
-        /// Implementations may assume that other is compatible.
-        virtual void doAssign(const ValueFeature& other) = 0;
+        virtual const TypeRef& doGetTypeRef() const = 0;
+        virtual const ValueHolder& doGetValue() const = 0;
+        virtual void doSetValue(const ValueHolder& newValue) = 0;
     };
 }

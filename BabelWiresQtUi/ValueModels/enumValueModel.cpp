@@ -9,17 +9,17 @@
 
 #include <BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp>
 
-#include <BabelWiresLib/Types/Enum/enum.hpp>
+#include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 QWidget* babelwires::EnumValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
-    const Enum* const e = m_type->as<Enum>();
+    const EnumType* const e = m_type->as<EnumType>();
     auto dropDownBox = std::make_unique<DropDownValueEditor>(parent, index);
     {
         IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
-        for (auto enumValue : e->getEnumValues()) {
+        for (auto enumValue : e->getValueSet()) {
             dropDownBox->addItem(identifierRegistry->getName(enumValue).c_str());
         }
     }
@@ -31,14 +31,14 @@ void babelwires::EnumValueModel::setEditorData(QWidget* editor) const {
     const ShortId value = enumValue->get();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
-    const Enum* const e = m_type->as<Enum>();
+    const EnumType* const e = m_type->as<EnumType>();
     unsigned int currentIndex = e->getIndexFromIdentifier(value);
     dropDownBox->setCurrentIndex(currentIndex);
 }
 
 babelwires::EditableValueHolder babelwires::EnumValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
-    const Enum* const e = m_type->as<Enum>();
-    const babelwires::Enum::EnumValues& values = e->getEnumValues();
+    const EnumType* const e = m_type->as<EnumType>();
+    const babelwires::EnumType::ValueSet& values = e->getValueSet();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
     const int newIndex = dropDownBox->currentIndex();

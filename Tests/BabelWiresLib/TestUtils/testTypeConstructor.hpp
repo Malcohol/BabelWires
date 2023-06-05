@@ -15,7 +15,7 @@ namespace testUtils {
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Unary"), 1);
 
         std::unique_ptr<babelwires::Type>
-        constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
+        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
                                                     const std::vector<babelwires::EditableValueHolder>& valueArguments) const override;
 
         /// A < B => Unary<A> < Unary<B>
@@ -35,7 +35,7 @@ namespace testUtils {
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Binary"), 1);
 
         std::unique_ptr<babelwires::Type>
-        constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
+        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
                                                     const std::vector<babelwires::EditableValueHolder>& valueArguments) const override;
 
         /// Similar to a function type constructor.
@@ -51,7 +51,7 @@ namespace testUtils {
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Mixed"), 1);
 
         std::unique_ptr<babelwires::Type>
-        constructType(babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
+        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
                                                     const std::vector<babelwires::EditableValueHolder>& valueArguments) const override;
     };
 

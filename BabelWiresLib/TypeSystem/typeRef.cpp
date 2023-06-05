@@ -297,3 +297,7 @@ babelwires::SubtypeOrder babelwires::TypeRef::compareSubtypeHelper(const TypeSys
             [](auto&&, auto&&) { return SubtypeOrder::IsUnrelated; }},
         typeRefA.m_storage, typeRefB.m_storage);
 }
+
+babelwires::TypeRef::operator bool() const {
+    return !std::holds_alternative<std::monostate>(m_storage);
+}

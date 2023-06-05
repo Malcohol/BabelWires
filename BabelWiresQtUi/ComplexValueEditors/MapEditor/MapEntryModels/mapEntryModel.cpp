@@ -11,10 +11,10 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapContextMenuActions/changeEntryKindContextMenuAction.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapContextMenuActions/removeEntryMapContextMenuAction.hpp>
 
-#include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
-#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/allToSameFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
 void babelwires::MapEntryModel::init(const ValueModelRegistry& valueModelRegistry) {}
 
@@ -46,7 +46,7 @@ void babelwires::MapEntryModel::getContextMenuActions(
         resetEntry->setDisabled(true);
     }
 
-    for (int i = 0; i < static_cast<int>(MapEntryData::Kind::NUM_KINDS); ++i) {
+    for (int i = 0; i < static_cast<int>(MapEntryData::Kind::NUM_VALUES); ++i) {
         const MapEntryData::Kind kind = static_cast<MapEntryData::Kind>(i);
         const auto actionName = QString("Change entry type to \"%1\"").arg(MapEntryData::getKindName(kind).c_str());
         auto& action =

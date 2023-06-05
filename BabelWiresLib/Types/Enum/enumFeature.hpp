@@ -13,7 +13,7 @@
 #include <vector>
 
 namespace babelwires {
-    class Enum;
+    class EnumType;
 
     /// A subclass of SimpleValueFeature which provides convenient methods to access
     /// and modify the EnumValue carried by the value.
@@ -22,7 +22,7 @@ namespace babelwires {
         EnumFeature(TypeRef e);
 
         /// Get the enum which determines the values of this feature.
-        const Enum& getEnum() const;
+        const EnumType& getEnum() const;
 
         /// Get the current value of the feature.
         ShortId get() const;

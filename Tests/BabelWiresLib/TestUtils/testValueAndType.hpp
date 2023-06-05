@@ -32,8 +32,8 @@ namespace testUtils {
 
         TestType(std::string defaultValue = "Default value");
 
-        babelwires::NewValueHolder createValue() const override;
-        bool isValidValue(const babelwires::Value& value) const override;
+        babelwires::NewValueHolder createValue(const babelwires::TypeSystem& typeSystem) const override;
+        bool isValidValue(const babelwires::TypeSystem& typeSystem, const babelwires::Value& value) const override;
         std::string getKind() const override;
 
         std::string m_defaultValue;

@@ -11,10 +11,10 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/allToOneFallbackMapEntryModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/allToSameFallbackMapEntryModel.hpp>
 
-#include <BabelWiresLib/Maps/mapProjectEntry.hpp>
-#include <BabelWiresLib/Maps/MapEntries/oneToOneMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/allToOneFallbackMapEntryData.hpp>
-#include <BabelWiresLib/Maps/MapEntries/allToSameFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/allToSameFallbackMapEntryData.hpp>
 
 void babelwires::MapEntryModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const Type& sourceType, const Type& targetType,
                                                const MapProjectEntry& entry, unsigned int row, bool isLastRow) {

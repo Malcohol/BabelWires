@@ -1,5 +1,5 @@
 /**
- * A ValueFeature is a feature which stores a value.
+ * A ValueFeature is a feature which provides access to a value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -8,22 +8,40 @@
 #include <BabelWiresLib/Features/valueFeature.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/type.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
-std::string babelwires::ValueFeature::getValueType() const {
-    return doGetValueType();
+const babelwires::TypeRef& babelwires::ValueFeature::getTypeRef() const {
+    return doGetTypeRef();
 }
 
-bool babelwires::ValueFeature::isCompatible(const ValueFeature& other) {
-    return getValueType() == other.getValueType();
+const babelwires::ValueHolder& babelwires::ValueFeature::getValue() const {
+    return doGetValue();
+}
+
+void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
+    doSetValue(newValue);
 }
 
 void babelwires::ValueFeature::assign(const ValueFeature& other) {
-    if (!isCompatible(other)) {
+    if (getKind() != other.getKind()) {
         throw ModelException() << "Assigning an incompatible value";
     }
-    doAssign(other);
+    setValue(other.getValue());
+}
+
+std::string babelwires::ValueFeature::getKind() const {
+    return getType().getKind();
 }
 
 void babelwires::ValueFeature::doSetToDefaultNonRecursive() {
     setToDefault();
+}
+
+const babelwires::Type& babelwires::ValueFeature::getType() const {
+    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
+    return getTypeRef().resolve(context.m_typeSystem);
 }

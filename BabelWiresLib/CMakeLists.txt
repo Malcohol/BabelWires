@@ -20,7 +20,6 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/connectionModifier.cpp
 	Project/Modifiers/connectionModifierData.cpp
 	Project/Modifiers/activateOptionalsModifierData.cpp
-	Project/Modifiers/mapValueAssignmentData.cpp
 	Project/Modifiers/selectUnionBranchModifierData.cpp
 	Project/Modifiers/valueAssignmentData.cpp
 	Project/uiPosition.cpp
@@ -28,24 +27,29 @@ SET( BABELWIRESLIB_SRCS
 	ProjectExtra/projectObserver.cpp
 	ProjectExtra/connectionDescription.cpp
 	ProjectExtra/projectUtilities.cpp
+	ProjectExtra/dataLocation.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
-	Maps/Commands/addEntryToMapCommand.cpp
-	Maps/Commands/removeEntryFromMapCommand.cpp
-	Maps/Commands/replaceMapEntryCommand.cpp
-	Maps/Commands/setMapSourceTypeCommand.cpp
-	Maps/Commands/setMapTargetTypeCommand.cpp
-	Maps/Commands/changeEntryKindCommand.cpp
-	Maps/Commands/setMapCommand.cpp
-	Maps/mapProject.cpp
-	Maps/mapSerialization.cpp
-	Maps/mapData.cpp
-	Maps/MapEntries/mapEntryData.cpp
-	Maps/MapEntries/oneToOneMapEntryData.cpp
-	Maps/MapEntries/allToSameFallbackMapEntryData.cpp
-	Maps/MapEntries/allToOneFallbackMapEntryData.cpp
-	Maps/mapProjectEntry.cpp
+	Types/Map/Commands/addEntryToMapCommand.cpp
+	Types/Map/Commands/removeEntryFromMapCommand.cpp
+	Types/Map/Commands/replaceMapEntryCommand.cpp
+	Types/Map/Commands/setMapSourceTypeCommand.cpp
+	Types/Map/Commands/setMapTargetTypeCommand.cpp
+	Types/Map/Commands/changeEntryKindCommand.cpp
+	Types/Map/Commands/setMapCommand.cpp
+	Types/Map/mapFeature.cpp
+	Types/Map/mapValue.cpp
+	Types/Map/MapEntries/mapEntryData.cpp
+	Types/Map/MapEntries/oneToOneMapEntryData.cpp
+	Types/Map/MapEntries/allToSameFallbackMapEntryData.cpp
+	Types/Map/MapEntries/allToOneFallbackMapEntryData.cpp
+	Types/Map/MapProject/mapProject.cpp
+	Types/Map/MapProject/mapProjectEntry.cpp
+	Types/Map/MapProject/mapSerialization.cpp
+	Types/Map/mapType.cpp
+	Types/Map/mapTypeConstructor.cpp
+	Types/Map/SumOfMaps/sumOfMapsType.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
@@ -56,7 +60,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/recordFeature.cpp
 	Features/recordWithOptionalsFeature.cpp
 	Features/arrayFeature.cpp
-	Features/mapFeature.cpp
 	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp
 	Features/Path/pathStep.cpp
@@ -82,10 +85,10 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/selectUnionBranchCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
 	TypeSystem/typeSystem.cpp
-	Types/Enum/enum.cpp
 	Types/Enum/addBlankToEnum.cpp
-	Types/Enum/enumValue.cpp
 	Types/Enum/enumFeature.cpp
+	Types/Enum/enumType.cpp
+	Types/Enum/enumValue.cpp
 	Types/Int/intType.cpp
 	Types/Int/intValue.cpp
 	Types/Int/intTypeConstructor.cpp
@@ -94,6 +97,8 @@ SET( BABELWIRESLIB_SRCS
 	Types/Rational/rationalValue.cpp
 	Types/Rational/rationalType.cpp
 	Types/Rational/rationalTypeConstructor.cpp
+	Types/Sum/sumType.cpp
+	Types/Sum/sumTypeConstructor.cpp
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
 	Types/String/stringFeature.cpp

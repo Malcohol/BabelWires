@@ -17,11 +17,11 @@ babelwires::IntType::IntType(Range<IntValue::NativeType> range, IntValue::Native
 {
 }
 
-babelwires::NewValueHolder babelwires::IntType::createValue() const {
+babelwires::NewValueHolder babelwires::IntType::createValue(const TypeSystem& typeSystem) const {
     return ValueHolder::makeValue<IntValue>(m_defaultValue);
 }
 
-bool babelwires::IntType::isValidValue(const Value& v) const {
+bool babelwires::IntType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
     if (const IntValue* const intValue = v.as<IntValue>()) {
         return m_range.contains(intValue->get());
     }

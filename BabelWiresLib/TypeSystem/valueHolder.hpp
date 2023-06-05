@@ -36,7 +36,7 @@ namespace babelwires {
         ValueHolderTemplate& operator=(std::unique_ptr<VALUE> ptr);
         ValueHolderTemplate& operator=(std::shared_ptr<const VALUE> ptr);
 
-        /// Construct a value of Value subclass T. The returned NewValueHolder can be used as a
+        /// Construct a value of Value subclass VALUE. The returned NewValueHolder can be used as a
         /// ValueHolder, but carries a non-const reference to the new value. The non-const reference
         /// can be used to mutate the new value but that must be done before the ValueHolder is
         /// made available outside the current context.
