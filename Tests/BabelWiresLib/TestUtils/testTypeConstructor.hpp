@@ -21,13 +21,13 @@ namespace testUtils {
         /// A < B => Unary<A> < Unary<B>
         babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem,
                                                       const babelwires::TypeConstructorArguments& argumentsA,
-                                                      const babelwires::TypeConstructorArguments& argumentsB) const;
+                                                      const babelwires::TypeConstructorArguments& argumentsB) const override;
 
         /// Same as AddBlankToEnum.
         /// B < A => B < Unary<A>
         babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem,
                                                       const babelwires::TypeConstructorArguments& arguments,
-                                                      const babelwires::TypeRef& other) const;
+                                                      const babelwires::TypeRef& other) const override;
     };
 
     class TestBinaryTypeConstructor : public babelwires::TypeConstructor {
@@ -42,7 +42,7 @@ namespace testUtils {
         /// (B < A) && (C < D) => Binary<A, C> < Binary<B, D>
         babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem,
                                                       const babelwires::TypeConstructorArguments& argumentsA,
-                                                      const babelwires::TypeConstructorArguments& argumentsB) const;
+                                                      const babelwires::TypeConstructorArguments& argumentsB) const override;
     };
 
     /// Takes a TestType and a StringValue and constructs a new TestType with the value concatenated onto its default.

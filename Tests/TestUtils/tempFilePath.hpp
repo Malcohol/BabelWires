@@ -29,8 +29,6 @@ namespace testUtils {
 
         operator const std::filesystem::path&();
 
-        operator const char*();
-
         std::filesystem::path m_filePath;
         std::string m_asString;
     };

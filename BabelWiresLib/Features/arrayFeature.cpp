@@ -12,6 +12,7 @@
 #include <Common/Hash/hash.hpp>
 
 #include <limits>
+#include <unordered_map>
 
 babelwires::Feature* babelwires::ArrayFeature::addEntry(int indexOfNewEntry) {
     assert((m_entries.size() <= getSizeRange().m_max) && "Array size is out of range.");

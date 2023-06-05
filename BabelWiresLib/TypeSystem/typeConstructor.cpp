@@ -11,6 +11,9 @@
 
 #include <mutex>
 
+
+babelwires::TypeConstructor::~TypeConstructor() = default;
+
 const babelwires::Type*
 babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
                                                 const TypeConstructorArguments& arguments) const {

@@ -55,10 +55,6 @@ testUtils::TempFilePath::operator const std::filesystem::path&() {
     return m_filePath;
 }
 
-testUtils::TempFilePath::operator const char*() {
-    return m_asString.c_str();
-}
-
 void testUtils::TempFilePath::ensureExists(std::string contents) {
     std::ofstream fs(m_filePath, std::ofstream::out);
     fs << contents;

@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Features/recordFeature.hpp>
 
 #include <optional>
+#include <unordered_map>
 
 namespace babelwires {
 

@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresLib/Processors/processor.hpp>
 
+babelwires::Processor::~Processor() = default;
+
 const babelwires::RootFeature* babelwires::Processor::getInputFeature() const {
     return const_cast<Processor*>(this)->getInputFeature();
 }

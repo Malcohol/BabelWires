@@ -39,7 +39,7 @@ void babelwires::Detail::parallelProcessorHelper(
     bool isFailed = false;
     std::array<std::string, s_maxParallelFeatures> failureStrings;
     std::iota(indices.begin(), indices.end(), 0);
-    std::for_each(std::execution::par, indices.begin(), indices.begin() + arrayIn->getNumFeatures(),
+    std::for_each(/*std::execution::par,*/ indices.begin(), indices.begin() + arrayIn->getNumFeatures(),
                   [&arrayIn, &arrayOut, &userLogger, &failureStrings, &isFailed, &processEntry, nonArrayInputChange](int i) {
                       const Feature* inputEntry = arrayIn->getFeature(i);
                       if (nonArrayInputChange || inputEntry->isChanged(Feature::Changes::SomethingChanged)) {

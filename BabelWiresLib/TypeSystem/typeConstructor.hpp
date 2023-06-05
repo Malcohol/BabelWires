@@ -23,6 +23,8 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(TypeConstructor);
 
+        virtual ~TypeConstructor();
+
         /// Get the constructed type from the cache, or construct a new one.
         const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 

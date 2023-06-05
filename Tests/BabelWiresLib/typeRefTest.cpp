@@ -136,7 +136,7 @@ TEST(TypeRefTest, tryResolveParallel) {
     for (int i = 0; i < 1000; ++i) {
         vectorOfResolutions.emplace_back(std::tuple{constructedTypeRef, nullptr});
     }
-    std::for_each(std::execution::par, vectorOfResolutions.begin(), vectorOfResolutions.end(),
+    std::for_each(/*std::execution::par,*/ vectorOfResolutions.begin(), vectorOfResolutions.end(),
                   [&typeSystem](auto& tuple) { std::get<1>(tuple) = std::get<0>(tuple).tryResolve(typeSystem); });
     for (int i = 0; i < 1000; ++i) {
         const babelwires::Type* const resolvedType = std::get<1>(vectorOfResolutions[i]);

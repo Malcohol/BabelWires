@@ -18,7 +18,7 @@ namespace babelwires {
         /// Apply the source value to the target feature.
         void apply(const Feature* sourceFeature, Feature* targetFeature, bool applyEvenIfSourceUnchanged) const;
 
-        virtual std::unique_ptr<Modifier> createModifier() const;
+        std::unique_ptr<Modifier> createModifier() const override;
 
         CLONEABLE(ConnectionModifierData);
         SERIALIZABLE(ConnectionModifierData, "assignFrom", ModifierData, 1);
