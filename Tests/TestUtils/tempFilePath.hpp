@@ -29,6 +29,9 @@ namespace testUtils {
 
         operator const std::filesystem::path&();
 
+        std::ofstream openForWriting(std::ios_base::openmode mode = std::ios_base::openmode()) const;
+        std::ifstream openForReading(std::ios_base::openmode mode = std::ios_base::openmode()) const;
+
         std::filesystem::path m_filePath;
         std::string m_asString;
     };

@@ -55,6 +55,14 @@ testUtils::TempFilePath::operator const std::filesystem::path&() {
     return m_filePath;
 }
 
+std::ofstream testUtils::TempFilePath::openForWriting(std::ios_base::openmode mode) const {
+    return std::ofstream(m_asString, mode);
+}
+
+std::ifstream testUtils::TempFilePath::openForReading(std::ios_base::openmode mode) const {
+    return std::ifstream(m_asString, mode);
+}
+
 void testUtils::TempFilePath::ensureExists(std::string contents) {
     std::ofstream fs(m_filePath, std::ofstream::out);
     fs << contents;
