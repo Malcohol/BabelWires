@@ -428,7 +428,7 @@ TEST(ProjectTest, saveTarget) {
     testEnvironment.m_project.tryToSaveAllTargets();
     EXPECT_EQ(testUtils::TestSourceFileFormat::getFileData(tempFilePath), 79);
 
-    std::ofstream lockThisStream(tempFilePath);
+    std::ofstream lockThisStream = tempFilePath.openForWriting();
 
     testEnvironment.m_log.clear();
     testEnvironment.m_project.tryToSaveTarget(elementId);

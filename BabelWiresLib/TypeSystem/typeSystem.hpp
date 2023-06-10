@@ -19,6 +19,7 @@ namespace babelwires {
 
     class TypeSystem {
       public:
+        TypeSystem();
         virtual ~TypeSystem();
 
         template <typename TYPE, typename... ARGS,

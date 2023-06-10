@@ -23,7 +23,7 @@ namespace babelwires {
 
     enum Endianness { IS_BIG_ENDIAN, IS_LITTLE_ENDIAN };
 
-    constexpr babelwires::Endianness getPlatformEndianness() {
+    inline const babelwires::Endianness getPlatformEndianness() {
         constexpr union {
             char m_bytes[4];
             uint32_t m_int;

@@ -28,6 +28,12 @@ namespace babelwires {
             return result0.second;
         }
 
+      private:
+        std::unordered_map<Key0, std::tuple<Key1, Value>> m_map0;
+        std::unordered_map<Key1, Key0> m_map1;
+      
+      public:
+
         class iterator {
           public:
             const Key0& getKey0() const { return m_it0->first; }
@@ -94,10 +100,6 @@ namespace babelwires {
         }
 
         bool erase(const iterator& it) { return erase0(it.m_it0->first); }
-
-      private:
-        std::unordered_map<Key0, std::tuple<Key1, Value>> m_map0;
-        std::unordered_map<Key1, Key0> m_map1;
     };
 
 } // namespace babelwires

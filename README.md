@@ -42,8 +42,16 @@ Here's a screenshot of the MapEditor defining a map between two types:
 
 [![Build and test pipeline](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml/badge.svg)](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml)
 
+BabelWires is intended to be cross platform but given the limited time I have available, quality is inconsistent:
+
+| Platform | Build | Unit Tests | UI |
+| -------- | --- | --- | --- | 
+| GNU/Linux | Verified by CI | Verified by CI | Functional |
+| Windows | Verified by CI | Verified by CI | Needs work |
+| Mac OS | Manual | Manual | Needs work |
+
 BabelWires is under active development, but please do not expect development to be rapid.
-I have very limited time to devote to this.
+My focus is on fundimetals.
 
 ## Downloading and Building
 
@@ -52,10 +60,6 @@ Clone recursively to ensure submodules are populated:
 ```
 git clone --recurse-submodules https://github.com/Malcohol/BabelWires.git
 ```
-
-BabelWires is intended to be cross platform.
-I primarily work in a GNU/Linux environment, but I'll try to ensure the MSVC/Windows build works.
-Building in other environments is untested.
 
 ## License
 

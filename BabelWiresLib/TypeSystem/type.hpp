@@ -25,6 +25,8 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Type);
 
+        virtual ~Type();
+
         /// Create a new Value representing a default instance of the type.
         virtual NewValueHolder createValue(const TypeSystem& typeSystem) const = 0;
 

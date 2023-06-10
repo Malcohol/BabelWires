@@ -55,8 +55,12 @@ testUtils::TempFilePath::operator const std::filesystem::path&() {
     return m_filePath;
 }
 
-testUtils::TempFilePath::operator const char*() {
-    return m_asString.c_str();
+std::ofstream testUtils::TempFilePath::openForWriting(std::ios_base::openmode mode) const {
+    return std::ofstream(m_asString, mode);
+}
+
+std::ifstream testUtils::TempFilePath::openForReading(std::ios_base::openmode mode) const {
+    return std::ifstream(m_asString, mode);
 }
 
 void testUtils::TempFilePath::ensureExists(std::string contents) {

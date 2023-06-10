@@ -16,7 +16,7 @@ TEST(OutFileStreamTest, basics) {
         os.close();
     }
     {
-        std::ifstream is(path);
+        std::ifstream is = path.openForReading();
         std::string contents{std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>()};
         EXPECT_EQ(contents, testData);
     }

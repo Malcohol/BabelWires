@@ -3,6 +3,7 @@
 #include <Common/Serialization/automaticDeserializationRegistry.hpp>
 
 #include <string>
+#include <unordered_map>
 
 namespace testUtils {
     /// Registry which extends AutomaticDeserializationRegistry with explicit registration.

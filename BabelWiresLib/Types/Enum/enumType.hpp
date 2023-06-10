@@ -56,7 +56,7 @@ namespace babelwires {
 
         std::string getKind() const override;
 
-        virtual bool verifySupertype(const Type& supertype) const;
+        bool verifySupertype(const Type& supertype) const override;
 
       private:
         /// The enum values in their intended order.

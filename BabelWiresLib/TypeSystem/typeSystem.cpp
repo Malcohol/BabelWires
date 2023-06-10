@@ -15,6 +15,7 @@ namespace {
     }
 } // namespace
 
+babelwires::TypeSystem::TypeSystem() : m_emptyRelatedTypes() {}
 babelwires::TypeSystem::~TypeSystem() = default;
 
 const babelwires::Type* babelwires::TypeSystem::tryGetPrimitiveType(PrimitiveTypeId id) const {

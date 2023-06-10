@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <unordered_map>
 
 using namespace babelwires;
 

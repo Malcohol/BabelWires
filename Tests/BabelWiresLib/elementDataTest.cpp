@@ -118,7 +118,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     tempFileName << "foo." << testUtils::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath(tempFileName.str());
     {
-        std::ofstream tempFile(tempFilePath);
+        std::ofstream tempFile = tempFilePath.openForWriting();
 
         auto targetFileFormat = std::make_unique<testUtils::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<testUtils::TestFileFeature>(testEnvironment.m_projectContext);

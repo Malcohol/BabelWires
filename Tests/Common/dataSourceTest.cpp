@@ -16,7 +16,7 @@ namespace {
 TEST(DataSource, getNextByte) {
     testUtils::TempFilePath fooPath("foo.txt");
     {
-        std::ofstream foo(fooPath, std::ios_base::binary);
+        std::ofstream foo(fooPath.m_asString, std::ios_base::binary);
         foo << testContents;
     }
 
@@ -38,7 +38,7 @@ TEST(DataSource, getNextByte) {
 TEST(DataSource, peekNextByte) {
     testUtils::TempFilePath fooPath("foo.txt");
     {
-        std::ofstream foo(fooPath, std::ios_base::binary);
+        std::ofstream foo = fooPath.openForWriting(std::ios_base::binary);
         foo << testContents;
     }
 
@@ -64,7 +64,7 @@ TEST(DataSource, peekNextByte) {
 TEST(DataSource, rewind) {
     testUtils::TempFilePath fooPath("foo.txt");
     {
-        std::ofstream foo(fooPath, std::ios_base::binary);
+        std::ofstream foo = fooPath.openForWriting(std::ios_base::binary);
         foo << testContents;
     }
 
@@ -127,7 +127,7 @@ TEST(DataSource, rewind) {
 TEST(DataSource, peekAndRewind) {
     testUtils::TempFilePath fooPath("foo.txt");
     {
-        std::ofstream foo(fooPath, std::ios_base::binary);
+        std::ofstream foo = fooPath.openForWriting(std::ios_base::binary);
         foo << testContents;
     }
 
