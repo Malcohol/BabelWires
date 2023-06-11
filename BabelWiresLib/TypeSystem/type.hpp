@@ -41,6 +41,10 @@ namespace babelwires {
         /// Return a short string which defines the kind of values this type handles.
         virtual std::string getKind() const = 0;
 
+        /// Are two types constructed by this type constructor related by subtyping?
+        /// By default, this returns IsUnrelated.
+        virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const;
+
         /// An abstract type just acts as a placeholder in the type system and cannot
         /// be used in a number of situations.
         /// An example is AbstractPercussionSet in SeqWires, which is used as a common base

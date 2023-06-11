@@ -18,15 +18,5 @@ namespace babelwires {
 
         std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
-
-        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& argumentsA,
-                                          const TypeConstructorArguments& argumentsB) const override;
-
-        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments,
-                                          const TypeRef& other) const override;
-
-      private:
-        SubtypeOrder compareSubtypeHelperInternal(const TypeSystem& typeSystem, const std::vector<TypeRef>& summandsA,
-                                          const std::vector<TypeRef>& summandsB) const;
     };
 } // namespace babelwires

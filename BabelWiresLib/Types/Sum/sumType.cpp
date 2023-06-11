@@ -42,3 +42,34 @@ const babelwires::SumType::Summands& babelwires::SumType::getSummands() const {
 unsigned int babelwires::SumType::getIndexOfDefaultSummand() const {
     return m_indexOfDefaultSummand;
 }
+
+
+babelwires::SubtypeOrder babelwires::SumType::compareSubtypeHelper(
+    const TypeSystem& typeSystem, const Type& other) const {
+    
+    const SumType* const otherSumType = other.as<SumType>();
+    if (!otherSumType) {
+        return SubtypeOrder::IsUnrelated;
+    }
+    const std::vector<TypeRef>& summandsA = getSummands();
+    const std::vector<TypeRef>& summandsB = otherSumType->getSummands();
+    
+    if ((summandsA.size() <= 2) || (summandsB.size() != summandsA.size())) {
+        return SubtypeOrder::IsUnrelated;
+    }
+    SubtypeOrder order = typeSystem.compareSubtype(summandsA[0], summandsB[0]);
+    if (order == SubtypeOrder::IsUnrelated) {
+        return SubtypeOrder::IsUnrelated;
+    }
+    for (int i = 1; i < summandsA.size(); ++i) {
+        const SubtypeOrder currentOrder = typeSystem.compareSubtype(summandsA[i], summandsB[i]);
+        if ((currentOrder != SubtypeOrder::IsEquivalent) && (currentOrder != order)) {
+            if (order == SubtypeOrder::IsEquivalent) {
+                order = currentOrder;
+            } else {
+                return SubtypeOrder::IsUnrelated;
+            }
+        }
+    }
+    return order;
+}

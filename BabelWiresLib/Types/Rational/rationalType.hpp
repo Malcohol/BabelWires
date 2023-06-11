@@ -27,6 +27,8 @@ namespace babelwires {
 
         std::string getKind() const override;
 
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+
       private:
         Rational m_defaultValue;
         Range<Rational> m_range;

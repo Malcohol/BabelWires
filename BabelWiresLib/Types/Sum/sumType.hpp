@@ -33,6 +33,8 @@ namespace babelwires {
         const Summands& getSummands() const;
         unsigned int getIndexOfDefaultSummand() const;
 
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+
       private:
         Summands m_summands;
         unsigned int m_indexOfDefaultSummand;

@@ -77,15 +77,15 @@ TEST(TypeRefTest, resolve) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
-    babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
+    babelwires::TypeRef typeRef(testUtils::TestType::getThisIdentifier());
 
-    EXPECT_EQ(testEnum, &typeRef.resolve(typeSystem));
+    EXPECT_EQ(testType, &typeRef.resolve(typeSystem));
     babelwires::TypeRef constructedTypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                           testUtils::TestEnum::getThisIdentifier());
+                                           testUtils::TestType::getThisIdentifier());
     const babelwires::Type& newType = constructedTypeRef.resolve(typeSystem);
     EXPECT_EQ(newType.getTypeRef(), constructedTypeRef);
     EXPECT_EQ(&constructedTypeRef.resolve(typeSystem), &constructedTypeRef.resolve(typeSystem));
@@ -95,15 +95,15 @@ TEST(TypeRefTest, tryResolveSuccess) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
-    babelwires::TypeRef typeRef(testUtils::TestEnum::getThisIdentifier());
-    EXPECT_EQ(testEnum, typeRef.tryResolve(typeSystem));
+    babelwires::TypeRef typeRef(testUtils::TestType::getThisIdentifier());
+    EXPECT_EQ(testType, typeRef.tryResolve(typeSystem));
 
     babelwires::TypeRef constructedTypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                           testUtils::TestEnum::getThisIdentifier());
+                                           testUtils::TestType::getThisIdentifier());
     const babelwires::Type* newType = constructedTypeRef.tryResolve(typeSystem);
     EXPECT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeRef(), constructedTypeRef);
@@ -122,7 +122,7 @@ TEST(TypeRefTest, tryResolveParallel) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
@@ -130,7 +130,7 @@ TEST(TypeRefTest, tryResolveParallel) {
         testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
         babelwires::TypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                             babelwires::TypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                                testUtils::TestEnum::getThisIdentifier())));
+                                                testUtils::TestType::getThisIdentifier())));
 
     std::vector<std::tuple<babelwires::TypeRef, const babelwires::Type*>> vectorOfResolutions;
     for (int i = 0; i < 1000; ++i) {
@@ -154,7 +154,7 @@ TEST(TypeRefTest, tryResolveMixed) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestEnum* testEnum = typeSystem.addEntry<testUtils::TestEnum>();
+    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     const testUtils::TestMixedTypeConstructor* mixedConstructor =
@@ -163,7 +163,7 @@ TEST(TypeRefTest, tryResolveMixed) {
     babelwires::TypeRef constructedTestTypeRef(
         testUtils::TestMixedTypeConstructor::getThisIdentifier(),
         {{babelwires::TypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                              testUtils::TestEnum::getThisIdentifier())},
+                              testUtils::TestType::getThisIdentifier())},
          {babelwires::StringValue(" is this string")}});
 
     const babelwires::Type& constructedTestType = constructedTestTypeRef.resolve(typeSystem);

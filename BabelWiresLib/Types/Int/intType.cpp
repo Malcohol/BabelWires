@@ -36,4 +36,31 @@ std::string babelwires::IntType::getKind() const {
     return IntValue::serializationType;
 }
 
+babelwires::SubtypeOrder babelwires::IntType::compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                                              const Type& other) const {
+    const IntType *const otherIntType = other.as<IntType>();
+    if (!otherIntType) {
+        return SubtypeOrder::IsUnrelated;
+    }
+
+    const auto& rangeThis = getRange();
+    const auto& rangeOther = otherIntType->getRange();
+
+    const bool thisSubOther = rangeOther.contains(rangeThis);
+    const bool otherSubThis = rangeThis.contains(rangeOther);
+
+    if (thisSubOther && otherSubThis) {
+        return SubtypeOrder::IsEquivalent;
+    } else if (thisSubOther) {
+        return SubtypeOrder::IsSubtype;
+    } else if (otherSubThis) {
+        return SubtypeOrder::IsSupertype;
+    } else {
+        return SubtypeOrder::IsUnrelated;
+    }
+
+    return SubtypeOrder::IsEquivalent;
+}
+
 babelwires::DefaultIntType::DefaultIntType() : IntType() {}
+

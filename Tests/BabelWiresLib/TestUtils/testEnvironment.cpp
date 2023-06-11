@@ -68,4 +68,5 @@ testUtils::TestEnvironment::TestEnvironment()
 
     m_typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
+    m_typeSystem.addTypeConstructor<testUtils::TestMixedTypeConstructor>();
 }

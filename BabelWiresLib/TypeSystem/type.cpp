@@ -21,3 +21,8 @@ bool babelwires::Type::isAbstract() const {
 std::string babelwires::Type::getName() const {
     return getTypeRef().toString();
 }
+
+
+babelwires::SubtypeOrder babelwires::Type::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
+    return SubtypeOrder::IsUnrelated;
+}

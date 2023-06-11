@@ -21,5 +21,7 @@ namespace babelwires {
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
 
         std::string getKind() const override;
+
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
     };
 }

@@ -45,20 +45,3 @@ babelwires::EnumType::ValueSet babelwires::AddBlankToEnum::ensureBlankValue(cons
     newValues.emplace_back(AddBlankToEnum::getBlankValue());
     return newValues;
 }
-
-babelwires::SubtypeOrder babelwires::AddBlankToEnum::compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                                          const TypeConstructorArguments& arguments,
-                                                                          const TypeRef& other) const {
-    const SubtypeOrder argOrder = typeSystem.compareSubtype(arguments.m_typeArguments[0], other);
-    if ((argOrder == SubtypeOrder::IsEquivalent) || (argOrder == SubtypeOrder::IsSupertype)) {
-        return SubtypeOrder::IsSupertype;
-    }
-    return SubtypeOrder::IsUnrelated;
-}
-
-babelwires::SubtypeOrder
-babelwires::AddBlankToEnum::compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                 const TypeConstructorArguments& argumentsA,
-                                                 const TypeConstructorArguments& argumentsB) const {
-    return typeSystem.compareSubtype(argumentsA.m_typeArguments[0], argumentsB.m_typeArguments[0]);
-}

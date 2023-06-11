@@ -41,37 +41,3 @@ babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, Type
                                                       typeArguments[1]->getTypeRef(), kind);
 }
 
-babelwires::SubtypeOrder
-babelwires::MapTypeConstructor::compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                     const TypeConstructorArguments& argumentsA,
-                                                     const TypeConstructorArguments& argumentsB) const {
-    if ((argumentsA.m_typeArguments.size() != 2) || (argumentsB.m_typeArguments.size() != 2)) {
-        return SubtypeOrder::IsUnrelated;
-    }
-    const SubtypeOrder orderSource =
-        typeSystem.compareSubtype(argumentsA.m_typeArguments[0], argumentsB.m_typeArguments[0]);
-    if (orderSource == SubtypeOrder::IsUnrelated) {
-        return SubtypeOrder::IsUnrelated;
-    }
-    const SubtypeOrder orderTarget =
-        typeSystem.compareSubtype(argumentsA.m_typeArguments[1], argumentsB.m_typeArguments[1]);
-    return orderTarget;
-}
-
-babelwires::SubtypeOrder babelwires::MapTypeConstructor::compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                                              const TypeConstructorArguments& arguments,
-                                                                              const TypeRef& other) const {
-    const MapType* const otherMapType = other.tryResolve(typeSystem)->as<MapType>();
-    if (!otherMapType) {
-        return SubtypeOrder::IsUnrelated;
-    } else {
-        const SubtypeOrder orderSource =
-            typeSystem.compareSubtype(arguments.m_typeArguments[0], otherMapType->getSourceTypeRef());
-        if (orderSource == SubtypeOrder::IsUnrelated) {
-            return SubtypeOrder::IsUnrelated;
-        }
-        const SubtypeOrder orderTarget =
-            typeSystem.compareSubtype(arguments.m_typeArguments[1], otherMapType->getTargetTypeRef());
-        return orderTarget;
-    }
-}

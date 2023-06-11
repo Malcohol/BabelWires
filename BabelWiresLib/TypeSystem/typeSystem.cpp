@@ -108,7 +108,12 @@ babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& t
     if (typeRefA == typeRefB) {
         return SubtypeOrder::IsEquivalent;
     }
-    return TypeRef::compareSubtypeHelper(*this, typeRefA, typeRefB);
+    if (const Type* typeA = typeRefA.tryResolve(*this)) {
+        if (const Type* typeB = typeRefB.tryResolve(*this)) {
+            return typeA->compareSubtypeHelper(*this, *typeB);
+        }
+    }
+    return SubtypeOrder::IsUnrelated;
 }
 
 bool babelwires::TypeSystem::isSubType(const TypeRef& typeRefA, const TypeRef& typeRefB) const {
