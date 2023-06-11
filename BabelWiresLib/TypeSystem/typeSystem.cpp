@@ -75,6 +75,7 @@ babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& t
     }
     if (const Type* typeA = typeRefA.tryResolve(*this)) {
         if (const Type* typeB = typeRefB.tryResolve(*this)) {
+            // Assume that typeA can definitively answer the question without having to ask typeB.
             return typeA->compareSubtypeHelper(*this, *typeB);
         }
     }
