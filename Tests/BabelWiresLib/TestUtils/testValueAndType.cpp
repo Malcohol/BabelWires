@@ -43,7 +43,9 @@ void testUtils::TestValue::deserializeContents(babelwires::Deserializer& deseria
 
 testUtils::TestType::TestType(unsigned int maximumLength, std::string defaultValue)
     : m_maximumLength(maximumLength)
-    , m_defaultValue(defaultValue) {}
+    , m_defaultValue(defaultValue) {
+        addTag(getTestTypeTag());
+    }
 
 babelwires::NewValueHolder testUtils::TestType::createValue(const babelwires::TypeSystem& typeSystem) const {
     return babelwires::ValueHolder::makeValue<TestValue>(m_defaultValue);
@@ -73,4 +75,8 @@ babelwires::SubtypeOrder testUtils::TestType::compareSubtypeHelper(const babelwi
         return babelwires::SubtypeOrder::IsEquivalent;
     }
     return (maximumLengthThis < maximumLengthOther) ? babelwires::SubtypeOrder::IsSubtype : babelwires::SubtypeOrder::IsSupertype;
+}
+
+babelwires::Type::Tag testUtils::TestType::getTestTypeTag() {
+    return getTestRegisteredMediumIdentifier("TestTypeTag");
 }

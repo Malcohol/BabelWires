@@ -39,6 +39,9 @@ namespace testUtils {
 
         babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem, const babelwires::Type& other) const override;
 
+        /// The TestType is tagged with this tag.
+        static Tag getTestTypeTag();
+
         unsigned int m_maximumLength;
         std::string m_defaultValue;
     };
