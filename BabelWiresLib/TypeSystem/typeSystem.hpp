@@ -60,7 +60,7 @@ namespace babelwires {
         };
 
         /// All types must be already registered.
-        /// Subtyping is managed seperately from the types themselves because a type may not know all its relations at
+        /// Subtyping is managed separately from the types themselves because a type may not know all its relations at
         /// construction time.
         void addRelatedTypes(PrimitiveTypeId typeId, RelatedTypes relatedTypes);
 
@@ -97,6 +97,9 @@ namespace babelwires {
         /// Determine whether primitive typeA and primitive typeB are related by the subtype order.
         SubtypeOrder compareSubtypePrimitives(const PrimitiveTypeId& typeIdA, const PrimitiveTypeId& typeIdB) const;
 
+        /// Get all the primitive types tagged with the given tag.
+        TypeIdSet getTaggedPrimitiveTypes(Type::Tag tag) const;
+
       protected:
         Type* addPrimitiveType(LongId typeId, VersionNumber version, std::unique_ptr<Type> newType);
         TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
@@ -113,6 +116,9 @@ namespace babelwires {
         std::unordered_map<TypeConstructorId, TypeConstructorInfo> m_typeConstructorRegistry;
 
         std::unordered_map<PrimitiveTypeId, RelatedTypes> m_relatedTypes;
+
+        /// Fast look-up of tagged types.
+        std::unordered_map<Type::Tag, std::vector<PrimitiveTypeId>> m_taggedPrimitiveTypes;
 
         /// Used for types which have no relations.
         const RelatedTypes m_emptyRelatedTypes;

@@ -58,5 +58,19 @@ namespace babelwires {
 
         /// Convenience function which returns a human-readable version of the type's TypeRef.
         std::string getName() const;
+
+        /// An identifier which can be used to group related types together.
+        using Tag = MediumId;
+
+        /// Get the tags associated with this type.
+        const std::vector<Tag>& getTags() const;
+
+      protected:
+        /// Only intended for use during subclass construction.
+        void addTag(Tag tag);
+
+      private:
+        /// The tags associated with this type.
+        std::vector<Tag> m_tags;
     };
 } // namespace babelwires

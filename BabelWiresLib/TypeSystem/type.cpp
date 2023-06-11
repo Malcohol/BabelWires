@@ -22,7 +22,14 @@ std::string babelwires::Type::getName() const {
     return getTypeRef().toString();
 }
 
-
 babelwires::SubtypeOrder babelwires::Type::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
     return SubtypeOrder::IsUnrelated;
+}
+
+void babelwires::Type::addTag(Tag tag) {
+    m_tags.emplace_back(tag);
+}
+
+const std::vector<babelwires::Type::Tag>& babelwires::Type::getTags() const { 
+    return m_tags;
 }

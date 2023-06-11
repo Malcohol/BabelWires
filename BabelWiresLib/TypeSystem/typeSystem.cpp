@@ -37,7 +37,11 @@ babelwires::Type* babelwires::TypeSystem::addPrimitiveType(LongId typeId, Versio
     auto addResult = m_primitiveTypeRegistry.emplace(
         std::pair<LongId, PrimitiveTypeInfo>{typeId, PrimitiveTypeInfo{std::move(newType), version}});
     assert(addResult.second && "Type with that identifier already registered");
-    return std::get<0>(addResult.first->second).get();
+    babelwires::Type *const newTypeRaw = std::get<0>(addResult.first->second).get();
+    for (auto it : newTypeRaw->getTags()) {
+        m_taggedPrimitiveTypes[it].emplace_back(typeId);
+    }
+    return newTypeRaw;
 }
 
 const babelwires::TypeConstructor* babelwires::TypeSystem::tryGetTypeConstructor(TypeConstructorId id) const {
@@ -198,4 +202,12 @@ babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllRelatedTypes(con
 void babelwires::TypeSystem::removeDuplicates(babelwires::TypeSystem::TypeIdSet& typeIds) {
     std::sort(typeIds.begin(), typeIds.end());
     typeIds.erase(std::unique(typeIds.begin(), typeIds.end()), typeIds.end());
+}
+
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getTaggedPrimitiveTypes(Type::Tag tag) const {
+    const auto it = m_taggedPrimitiveTypes.find(tag);
+    if (it != m_taggedPrimitiveTypes.end()) {
+        return it->second;
+    }
+    return {};
 }
