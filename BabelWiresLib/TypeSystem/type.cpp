@@ -13,11 +13,7 @@ bool babelwires::Type::verifySupertype(const Type& supertype) const {
     assert(false);
     return false;
 }
-
-bool babelwires::Type::isAbstract() const {
-    return false;
-}
-
+ 
 std::string babelwires::Type::getName() const {
     return getTypeRef().toString();
 }
