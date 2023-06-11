@@ -12,6 +12,8 @@
 babelwires::EnumType::EnumType(ValueSet values, unsigned int indexOfDefaultValue)
     : m_values(std::move(values))
     , m_indexOfDefaultValue(indexOfDefaultValue) {
+    m_sortedValues = m_values;
+    std::sort(m_sortedValues.begin(), m_sortedValues.end());
     m_valueToIndex.reserve(m_values.size());
     for (int i = 0; i < m_values.size(); ++i) {
         assert((m_values[i].getDiscriminator() != 0) && "Only registered ids can be used in an enum");
@@ -85,4 +87,48 @@ bool babelwires::EnumType::verifySupertype(const Type& supertype) const {
 
 std::string babelwires::EnumType::getKind() const {
     return EnumValue::serializationType;
+}
+
+babelwires::SubtypeOrder babelwires::EnumType::compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                                    const Type& other) const {
+    const EnumType* const otherEnum = other.as<EnumType>();
+    if (!otherEnum) {
+        return SubtypeOrder::IsUnrelated;
+    }
+    auto it = m_sortedValues.begin();
+    auto otherIt = otherEnum->m_sortedValues.begin();
+    bool thisIsNotSubtype = false;
+    bool thisIsNotSuperType = false;
+    while ((it < m_sortedValues.end()) && (otherIt < otherEnum->m_sortedValues.end())) {
+        if (*it < *otherIt) {
+            thisIsNotSubtype = true;
+            if (thisIsNotSuperType) {
+                return SubtypeOrder::IsUnrelated;
+            }
+            ++it;
+        } else if (*otherIt < *it) {
+            thisIsNotSuperType = true;
+            if (thisIsNotSubtype) {
+                return SubtypeOrder::IsUnrelated;
+            }
+            ++otherIt;
+        } else {
+            ++it;
+            ++otherIt;
+        }
+    }
+    if (it != m_sortedValues.end()) {
+        thisIsNotSubtype = true;
+    } else if (otherIt != otherEnum->m_sortedValues.end()) {
+        thisIsNotSuperType = true;
+    }
+    if (thisIsNotSubtype && thisIsNotSuperType) {
+        return SubtypeOrder::IsUnrelated;
+    } else if (thisIsNotSubtype) {
+        return SubtypeOrder::IsSupertype;
+    } else if (thisIsNotSuperType) {
+        return SubtypeOrder::IsSubtype;
+    } else {
+        return SubtypeOrder::IsEquivalent;
+    }
 }

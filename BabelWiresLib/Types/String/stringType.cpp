@@ -22,3 +22,12 @@ bool babelwires::StringType::isValidValue(const TypeSystem& typeSystem, const Va
 std::string babelwires::StringType::getKind() const {
     return StringValue::serializationType;
 }
+
+
+babelwires::SubtypeOrder babelwires::StringType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
+    if (other.as<StringType>()) {
+        return SubtypeOrder::IsEquivalent;
+    } else {
+        return SubtypeOrder::IsUnrelated;
+    }
+}

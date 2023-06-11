@@ -31,6 +31,8 @@ namespace babelwires {
         const TypeRef& getSourceTypeRef() const;
         const TypeRef& getTargetTypeRef() const;
 
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+
       private:
         TypeRef m_sourceTypeRef;
         TypeRef m_targetTypeRef;

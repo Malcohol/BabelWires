@@ -31,9 +31,7 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
 
     for (const auto& typeRef : typeRefSet) {
         const Type& type = typeRef.resolve(typeSystem);
-        if (!type.isAbstract()) {
-            sortedNames.emplace_back(std::tuple{type.getName(), typeRef});
-        }
+        sortedNames.emplace_back(std::tuple{type.getName(), typeRef});
     }
     
     std::sort(sortedNames.begin(), sortedNames.end(), [](const auto& a, const auto& b) {

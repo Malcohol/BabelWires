@@ -54,8 +54,6 @@ void babelwires::MapProject::setCurrentSourceTypeRef(const TypeRef& sourceId) {
     if (!type) {
         // TODO Add type name.
         m_sourceTypeValidity = "The source type is not recognized.";
-    } else if (type->isAbstract()) {
-        m_sourceTypeValidity = "The source type is abstract.";
     } else if (!m_allowedSourceTypeRefs.isRelatedToSome(typeSystem, sourceId)) {
         // TODO Add type name.
         m_sourceTypeValidity = "The source type is not valid here.";
@@ -76,8 +74,6 @@ void babelwires::MapProject::setCurrentTargetTypeRef(const TypeRef& targetId) {
     if (!type) {
         // TODO Add type name.
         m_targetTypeValidity = "The target type is not recognized.";
-    } else if (type->isAbstract()) {
-        m_targetTypeValidity = "The target type is abstract.";
     } else if (!m_allowedTargetTypeRefs.isSubtypeOfSome(typeSystem, targetId)) {
         // TODO Add type name.
         m_targetTypeValidity = "The target type is not valid here.";
@@ -85,7 +81,7 @@ void babelwires::MapProject::setCurrentTargetTypeRef(const TypeRef& targetId) {
         m_targetTypeValidity = Result::Success();
     }
 
-    m_currentTargetTypeRef = targetId;
+    m_currentTargetTypeRef = targetId; 
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
         m_mapEntries[i]->validate(typeSystem, m_currentSourceTypeRef, m_currentTargetTypeRef, (i == m_mapEntries.size() - 1));

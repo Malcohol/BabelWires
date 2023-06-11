@@ -6,51 +6,23 @@ std::unique_ptr<babelwires::Type>
 testUtils::TestUnaryTypeConstructor::constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
                                                     const std::vector<babelwires::EditableValueHolder>& valueArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
-    return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef));
-}
-
-/// A < B => UNARY<A> < UNARY<B>
-babelwires::SubtypeOrder testUtils::TestUnaryTypeConstructor::compareSubtypeHelper(
-    const babelwires::TypeSystem& typeSystem, const babelwires::TypeConstructorArguments& argumentsA,
-    const babelwires::TypeConstructorArguments& argumentsB) const {
-    return typeSystem.compareSubtype(argumentsA.m_typeArguments[0], argumentsB.m_typeArguments[0]);
-}
-
-babelwires::SubtypeOrder
-testUtils::TestUnaryTypeConstructor::compareSubtypeHelper(const babelwires::TypeSystem& typeSystem,
-                                                          const babelwires::TypeConstructorArguments& arguments,
-                                                          const babelwires::TypeRef& other) const {
-    const babelwires::SubtypeOrder argOrder = typeSystem.compareSubtype(arguments.m_typeArguments[0], other);
-    if ((argOrder == babelwires::SubtypeOrder::IsEquivalent) || (argOrder == babelwires::SubtypeOrder::IsSupertype)) {
-        return babelwires::SubtypeOrder::IsSupertype;
+    const TestType* const sourceType = typeArguments[0]->as<TestType>();
+    if (!sourceType) {
+        throw new babelwires::TypeSystemException();
     }
-    return babelwires::SubtypeOrder::IsUnrelated;
+    return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef), sourceType->m_maximumLength + 1);
 }
 
 std::unique_ptr<babelwires::Type>
 testUtils::TestBinaryTypeConstructor::constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
                                                     const std::vector<babelwires::EditableValueHolder>& valueArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
-    return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef));
-}
-
-babelwires::SubtypeOrder testUtils::TestBinaryTypeConstructor::compareSubtypeHelper(
-    const babelwires::TypeSystem& typeSystem, const babelwires::TypeConstructorArguments& argumentsA,
-    const babelwires::TypeConstructorArguments& argumentsB) const {
-    const auto compare0 = typeSystem.compareSubtype(argumentsA.m_typeArguments[0], argumentsB.m_typeArguments[0]);
-    const auto compare1 = typeSystem.compareSubtype(argumentsA.m_typeArguments[1], argumentsB.m_typeArguments[1]);
-    if ((compare0 == babelwires::SubtypeOrder::IsEquivalent) && (compare1 == babelwires::SubtypeOrder::IsEquivalent)) {
-        return babelwires::SubtypeOrder::IsEquivalent;
+    const TestType* const sourceType0 = typeArguments[0]->as<TestType>();
+    const TestType* const sourceType1 = typeArguments[1]->as<TestType>();
+    if (!sourceType0 || !sourceType1) {
+        throw new babelwires::TypeSystemException();
     }
-    if (((compare0 == babelwires::SubtypeOrder::IsSupertype) || (compare0 == babelwires::SubtypeOrder::IsEquivalent))
-     && ((compare1 == babelwires::SubtypeOrder::IsSubtype)) || (compare1 == babelwires::SubtypeOrder::IsEquivalent)) {
-        return babelwires::SubtypeOrder::IsSubtype;
-    }
-    if (((compare0 == babelwires::SubtypeOrder::IsSubtype) || (compare0 == babelwires::SubtypeOrder::IsEquivalent))
-    && ((compare1 == babelwires::SubtypeOrder::IsSupertype) || (compare1 == babelwires::SubtypeOrder::IsEquivalent))) {
-        return babelwires::SubtypeOrder::IsSupertype;
-    }
-    return babelwires::SubtypeOrder::IsUnrelated;
+    return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef), sourceType0->m_maximumLength + sourceType1->m_maximumLength);
 }
 
 std::unique_ptr<babelwires::Type>
@@ -66,5 +38,5 @@ testUtils::TestMixedTypeConstructor::constructType(const babelwires::TypeSystem&
     assert(stringValue != nullptr);
 
     // Remember the typeRef, since there's no way to reconstruct it.
-    return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef), testType->m_defaultValue + stringValue->get());
+    return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef), testType->m_maximumLength + stringValue->get().size(), testType->m_defaultValue + stringValue->get());
 }

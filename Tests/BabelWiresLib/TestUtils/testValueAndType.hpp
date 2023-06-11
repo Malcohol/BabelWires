@@ -30,12 +30,19 @@ namespace testUtils {
       public:
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("TestType"), 1);
 
-        TestType(std::string defaultValue = "Default value");
+        /// 0 == unbounded.
+        TestType(unsigned int maximumLength = 0, std::string defaultValue = "Default value");
 
         babelwires::NewValueHolder createValue(const babelwires::TypeSystem& typeSystem) const override;
         bool isValidValue(const babelwires::TypeSystem& typeSystem, const babelwires::Value& value) const override;
         std::string getKind() const override;
 
+        babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem, const babelwires::Type& other) const override;
+
+        /// The TestType is tagged with this tag.
+        static Tag getTestTypeTag();
+
+        unsigned int m_maximumLength;
         std::string m_defaultValue;
     };
 } // namespace testUtils

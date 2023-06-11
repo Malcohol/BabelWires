@@ -64,10 +64,6 @@ namespace babelwires {
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;
 
-        /// Used by the TypeSystem to compare the type typeRefs using the subtype relationship.
-        static SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const TypeRef& typeRefA,
-                                                 const TypeRef& typeRefB);
-
         /// Does the TypeRef contain some data (other than the trivial std::monostate default state)?
         operator bool() const;
 

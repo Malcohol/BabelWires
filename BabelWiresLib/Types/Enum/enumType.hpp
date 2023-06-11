@@ -58,9 +58,13 @@ namespace babelwires {
 
         bool verifySupertype(const Type& supertype) const override;
 
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+
       private:
         /// The enum values in their intended order.
         ValueSet m_values;
+        /// Used for subtyping.
+        ValueSet m_sortedValues;
         /// Supports faster lookup for identifier-based queries.
         std::unordered_map<ShortId, int> m_valueToIndex;
         unsigned int m_indexOfDefaultValue;

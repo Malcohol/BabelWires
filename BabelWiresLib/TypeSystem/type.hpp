@@ -41,12 +41,9 @@ namespace babelwires {
         /// Return a short string which defines the kind of values this type handles.
         virtual std::string getKind() const = 0;
 
-        /// An abstract type just acts as a placeholder in the type system and cannot
-        /// be used in a number of situations.
-        /// An example is AbstractPercussionSet in SeqWires, which is used as a common base
-        /// type for all enums of percussion instruments, but is not intended to be an actual type.
-        /// The default implementation returns false, so types need to opt-in to being abstract.
-        virtual bool isAbstract() const;
+        /// Are two types constructed by this type constructor related by subtyping?
+        /// By default, this returns IsUnrelated.
+        virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const;
 
         /// Confirm that the supertype is the expected parent.
         /// The default implementation asserts.
@@ -54,5 +51,19 @@ namespace babelwires {
 
         /// Convenience function which returns a human-readable version of the type's TypeRef.
         std::string getName() const;
+
+        /// An identifier which can be used to group related types together.
+        using Tag = MediumId;
+
+        /// Get the tags associated with this type.
+        const std::vector<Tag>& getTags() const;
+
+      protected:
+        /// Only intended for use during subclass construction.
+        void addTag(Tag tag);
+
+      private:
+        /// The tags associated with this type.
+        std::vector<Tag> m_tags;
     };
 } // namespace babelwires

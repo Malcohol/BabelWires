@@ -242,62 +242,6 @@ std::size_t babelwires::TypeRef::getHash() const {
     return hash;
 }
 
-babelwires::SubtypeOrder babelwires::TypeRef::compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                                   const TypeRef& typeRefA, const TypeRef& typeRefB) {
-    return std::visit(
-        overloaded{
-            [](std::monostate, std::monostate) { return SubtypeOrder::IsEquivalent; },
-            [&typeSystem](const PrimitiveTypeId& typeIdA, const PrimitiveTypeId& typeIdB) {
-                return typeSystem.compareSubtypePrimitives(typeIdA, typeIdB);
-            },
-            [&typeSystem](const ConstructedTypeData& higherOrderDataA, const PrimitiveTypeId& typeIdB) {
-                const TypeConstructorId typeConstructorId = std::get<0>(higherOrderDataA);
-                const TypeConstructor* const typeConstructor = typeSystem.tryGetTypeConstructor(typeConstructorId);
-                if (!typeConstructor) {
-                    return SubtypeOrder::IsUnrelated;
-                }
-                return typeConstructor->compareSubtypeHelper(typeSystem, std::get<1>(higherOrderDataA), typeIdB);
-            },
-            [&typeSystem](const PrimitiveTypeId& typeIdA, const ConstructedTypeData& higherOrderDataB) {
-                const TypeConstructorId typeConstructorIdA = std::get<0>(higherOrderDataB);
-                const TypeConstructor* const typeConstructorA = typeSystem.tryGetTypeConstructor(typeConstructorIdA);
-                if (!typeConstructorA) {
-                    return SubtypeOrder::IsUnrelated;
-                }
-                return reverseSubtypeOrder(
-                    typeConstructorA->compareSubtypeHelper(typeSystem, std::get<1>(higherOrderDataB), typeIdA));
-            },
-            [&typeSystem, &typeRefA, &typeRefB](const ConstructedTypeData& higherOrderDataA,
-                                                const ConstructedTypeData& higherOrderDataB) {
-                const TypeConstructorId typeConstructorIdA = std::get<0>(higherOrderDataA);
-                const TypeConstructorId typeConstructorIdB = std::get<0>(higherOrderDataB);
-                const TypeConstructor* const typeConstructorA = typeSystem.tryGetTypeConstructor(typeConstructorIdA);
-                if (!typeConstructorA) {
-                    return SubtypeOrder::IsUnrelated;
-                }
-                const auto argsA = std::get<1>(higherOrderDataA);
-                const auto argsB = std::get<1>(higherOrderDataB);
-                if (typeConstructorIdA == typeConstructorIdB) {
-                    return typeConstructorA->compareSubtypeHelper(typeSystem, argsA, argsB);
-                }
-                const TypeConstructor* const typeConstructorB = typeSystem.tryGetTypeConstructor(typeConstructorIdB);
-                if (!typeConstructorB) {
-                    return SubtypeOrder::IsUnrelated;
-                }
-                auto comparisonUsingA = typeConstructorA->compareSubtypeHelper(typeSystem, argsA, typeRefB);
-                if (comparisonUsingA != SubtypeOrder::IsUnrelated) {
-                    return comparisonUsingA;
-                }
-                // typeConstructorA doesn't know whether the types are related, but maybe typeConstructorB does.
-                // For now, assume that there are no rules which require knowing typeConstructorA and typeConstructorB,
-                // or rules where structure below the first level is needed.
-                // Note that distributivity and associativity laws could violate these assumptions.
-                return reverseSubtypeOrder(typeConstructorB->compareSubtypeHelper(typeSystem, argsB, typeRefA));
-            },
-            [](auto&&, auto&&) { return SubtypeOrder::IsUnrelated; }},
-        typeRefA.m_storage, typeRefB.m_storage);
-}
-
 babelwires::TypeRef::operator bool() const {
     return !std::holds_alternative<std::monostate>(m_storage);
 }

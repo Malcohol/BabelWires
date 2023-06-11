@@ -57,15 +57,7 @@ testUtils::TestEnvironment::TestEnvironment()
     m_typeSystem.addEntry<testUtils::TestSubSubEnum1>();
     m_typeSystem.addEntry<testUtils::TestSubSubEnum2>();
 
-    m_typeSystem.addRelatedTypes(testUtils::TestEnum::getThisIdentifier(),
-                                 {{}, {testUtils::TestSubSubEnum1::getThisIdentifier()}});
-    m_typeSystem.addRelatedTypes(testUtils::TestSubSubEnum2::getThisIdentifier(),
-                                 {{testUtils::TestEnum::getThisIdentifier()}, {}});
-    m_typeSystem.addRelatedTypes(
-        testUtils::TestSubEnum::getThisIdentifier(),
-        {{testUtils::TestEnum::getThisIdentifier()},
-         {testUtils::TestSubSubEnum1::getThisIdentifier(), testUtils::TestSubSubEnum2::getThisIdentifier()}});
-
     m_typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
+    m_typeSystem.addTypeConstructor<testUtils::TestMixedTypeConstructor>();
 }

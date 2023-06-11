@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 
-#include <BabelWiresLib/Types/Map/mapValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
 
 babelwires::MapType::MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind defaultFallbackKind)
     : m_sourceTypeRef(std::move(sourceTypeRef))
@@ -39,4 +39,20 @@ const babelwires::TypeRef& babelwires::MapType::getSourceTypeRef() const {
 }
 const babelwires::TypeRef& babelwires::MapType::getTargetTypeRef() const {
     return m_targetTypeRef;
+}
+
+babelwires::SubtypeOrder babelwires::MapType::compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                                   const Type& other) const {
+    const MapType* const otherMapType = other.as<MapType>();
+    if (!otherMapType) {
+        return SubtypeOrder::IsUnrelated;
+    }
+    const SubtypeOrder orderSource =
+        typeSystem.compareSubtype(m_sourceTypeRef, otherMapType->m_sourceTypeRef);
+    if (orderSource == SubtypeOrder::IsUnrelated) {
+        return SubtypeOrder::IsUnrelated;
+    }
+    const SubtypeOrder orderTarget =
+        typeSystem.compareSubtype(m_targetTypeRef, otherMapType->m_targetTypeRef);
+    return orderTarget;
 }
