@@ -16,12 +16,12 @@ babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(ValueHolderTemplate&
 
 template <typename VALUE>
 babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const VALUE& value)
-    : m_pointerToValue(value.clone().release()) {}
+    : m_pointerToValue(value.cloneShared()) {}
 
 template <typename VALUE>
 babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(VALUE&& value)
     // R-value cloning uses the move contructor.
-    : m_pointerToValue(std::move(value).clone().release()) {}
+    : m_pointerToValue(std::move(value).cloneShared()) {}
 
 template <typename VALUE>
 babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(std::unique_ptr<VALUE> ptr)
@@ -46,14 +46,14 @@ babelwires::ValueHolderTemplate<VALUE>& babelwires::ValueHolderTemplate<VALUE>::
 
 template <typename VALUE>
 babelwires::ValueHolderTemplate<VALUE>& babelwires::ValueHolderTemplate<VALUE>::operator=(const VALUE& value) {
-    m_pointerToValue = std::shared_ptr<const Value>(value.clone().release());
+    m_pointerToValue = value.cloneShared();
     return *this;
 }
 
 template <typename VALUE>
 babelwires::ValueHolderTemplate<VALUE>& babelwires::ValueHolderTemplate<VALUE>::operator=(VALUE&& value) {
     // R-value cloning uses the move contructor.
-    m_pointerToValue = std::shared_ptr<const VALUE>(std::move(value).clone().release());
+    m_pointerToValue = std::move(value).cloneShared();
     return *this;
 }
 
@@ -83,9 +83,9 @@ template <typename VALUE> const VALUE* babelwires::ValueHolderTemplate<VALUE>::o
 }
 
 template <typename VALUE> VALUE& babelwires::ValueHolderTemplate<VALUE>::copyContentsAndGetNonConst() {
-    std::unique_ptr<VALUE> clone = m_pointerToValue->clone();
+    std::shared_ptr<VALUE> clone = m_pointerToValue->cloneShared();
     VALUE* ptrToClone = clone.get();
-    m_pointerToValue = std::shared_ptr<const VALUE>(clone.release());
+    m_pointerToValue = clone;
     return *ptrToClone;
 }
 

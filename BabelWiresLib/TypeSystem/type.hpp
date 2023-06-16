@@ -12,8 +12,6 @@
 
 #include <Common/Identifiers/identifier.hpp>
 
-#include <optional>
-
 namespace babelwires {
 
     /// A type describes a valid set of values.
