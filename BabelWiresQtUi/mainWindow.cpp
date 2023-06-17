@@ -14,6 +14,7 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp>
 #include <BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp>
+#include <BabelWiresQtUi/ModelBridge/valueNodeFactory.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
@@ -28,6 +29,7 @@
 #include <BabelWiresLib/ProjectExtra/projectUtilities.hpp>
 #include <BabelWiresLib/Serialization/projectSerialization.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Log/unifiedLog.hpp>
 #include <Common/exceptions.hpp>
@@ -66,6 +68,9 @@ namespace {
         for (const auto& f : context.m_processorReg) {
             ret->registerModel<QtNodes::NodeDataModel>(babelwires::ProcessorNodeFactory(&projectBridge, &f),
                                                        "Processors");
+        }
+        for (const auto& t : context.m_typeSystem.getAllPrimitiveTypes()) {
+            ret->registerModel<QtNodes::NodeDataModel>(babelwires::ValueNodeFactory(&projectBridge, t), "Values");
         }
 
         return ret;
