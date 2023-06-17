@@ -18,19 +18,14 @@
 #include <nodes/FlowScene>
 
 babelwires::ValueNodeFactory::ValueNodeFactory(ProjectBridge* projectBridge, TypeRef typeOfValue)
-    : m_projectBridge(projectBridge)
+    : NodeFactoryBase(projectBridge)
     , m_typeOfValue(typeOfValue) {}
 
 QString babelwires::ValueNodeFactory::name() const {
     return m_typeOfValue.toString().c_str();
 }
 
-std::unique_ptr<QtNodes::NodeDataModel> babelwires::ValueNodeFactory::operator()() const {
-    if (!m_queryHack) {
-        m_queryHack = true;
-        return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_typeOfValue.toString().c_str());
-    }
-
+std::unique_ptr<QtNodes::NodeDataModel> babelwires::ValueNodeFactory::createNode() const {
     auto newDataPtr = std::make_unique<ValueElementData>(m_typeOfValue);
 
     auto commandPtr = std::make_unique<AddElementCommand>("Add Value Element", std::move(newDataPtr));

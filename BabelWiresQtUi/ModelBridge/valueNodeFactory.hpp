@@ -14,17 +14,15 @@
 namespace babelwires {
     class ProjectBridge;
     
-    class ValueNodeFactory {
+    class ValueNodeFactory : public NodeFactoryBase {
       public:
         ValueNodeFactory(ProjectBridge* projectBridge, TypeRef typeOfValue);
 
-        QString name() const;
-        std::unique_ptr<QtNodes::NodeDataModel> operator()() const;
+        QString name() const override;
+        std::unique_ptr<QtNodes::NodeDataModel> createNode() const;
 
       private:
-        ProjectBridge* m_projectBridge;
         TypeRef m_typeOfValue;
-        mutable bool m_queryHack = false;
     };
 
 } // namespace babelwires

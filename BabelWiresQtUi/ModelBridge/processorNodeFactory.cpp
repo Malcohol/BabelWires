@@ -19,19 +19,14 @@
 
 babelwires::ProcessorNodeFactory::ProcessorNodeFactory(ProjectBridge* projectBridge,
                                                        const ProcessorFactory* processorFactory)
-    : m_projectBridge(projectBridge)
+    : NodeFactoryBase(projectBridge)
     , m_processorFactory(processorFactory) {}
 
 QString babelwires::ProcessorNodeFactory::name() const {
     return m_processorFactory->getName().c_str();
 }
 
-std::unique_ptr<QtNodes::NodeDataModel> babelwires::ProcessorNodeFactory::operator()() const {
-    if (!m_queryHack) {
-        m_queryHack = true;
-        return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_processorFactory->getName().c_str());
-    }
-
+std::unique_ptr<QtNodes::NodeDataModel> babelwires::ProcessorNodeFactory::createNode() const {
     auto newDataPtr = std::make_unique<ProcessorElementData>();
     newDataPtr->m_factoryIdentifier = m_processorFactory->getIdentifier();
     newDataPtr->m_factoryVersion = m_processorFactory->getVersion();
