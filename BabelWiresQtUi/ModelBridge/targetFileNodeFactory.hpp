@@ -13,17 +13,15 @@ namespace babelwires {
     class ProjectBridge;
     class TargetFileFormat;
 
-    class TargetFileNodeFactory {
+    class TargetFileNodeFactory : public NodeFactoryBase {
       public:
         TargetFileNodeFactory(ProjectBridge* projectBridge, const TargetFileFormat* targetFileFormat);
 
-        QString name() const;
-        std::unique_ptr<QtNodes::NodeDataModel> operator()() const;
+        QString name() const override;
+        std::unique_ptr<QtNodes::NodeDataModel> createNode() const;
 
       private:
-        ProjectBridge* m_projectBridge;
         const TargetFileFormat* m_targetFileFormat;
-        mutable bool m_queryHack = false;
     };
 
 } // namespace babelwires

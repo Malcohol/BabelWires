@@ -2,7 +2,7 @@
  * BaseNodeModel is the base class shared by all the NodeDataModels in BabelWires.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -45,6 +45,32 @@ namespace babelwires {
 
       private:
         QString m_name;
+    };
+
+    /// Hack to work around the fact that nodeeditor expects registered items to be instances of the nodes they create.
+    /// It seems to be a kind of prototype-based system. That might work for some systems, but doesn't make any sense
+    /// for mine.
+    class NodeFactoryBase {
+      public:
+        NodeFactoryBase(ProjectBridge* projectBridge)
+            : m_projectBridge(projectBridge) {}
+
+        virtual QString name() const = 0;
+
+        std::unique_ptr<QtNodes::NodeDataModel> operator()() const {
+            if (!m_queryHack) {
+                m_queryHack = true;
+                return std::make_unique<FactoryNameQuery>(*m_projectBridge, name());
+            }
+            return createNode();
+        }
+
+      protected:
+        virtual std::unique_ptr<QtNodes::NodeDataModel> createNode() const = 0;
+        ProjectBridge* m_projectBridge;
+
+      private:
+        mutable bool m_queryHack = false;
     };
 
 } // namespace babelwires

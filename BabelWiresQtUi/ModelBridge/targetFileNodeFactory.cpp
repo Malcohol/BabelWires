@@ -12,26 +12,21 @@
 
 #include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
 
 #include <QtWidgets/QFileDialog>
 #include <nodes/FlowScene>
 
 babelwires::TargetFileNodeFactory::TargetFileNodeFactory(ProjectBridge* projectBridge,
                                                  const TargetFileFormat* targetFileFormat)
-    : m_projectBridge(projectBridge)
+    : NodeFactoryBase(projectBridge)
     , m_targetFileFormat(targetFileFormat) {}
 
 QString babelwires::TargetFileNodeFactory::name() const {
     return m_targetFileFormat->getName().c_str();
 }
 
-std::unique_ptr<QtNodes::NodeDataModel> babelwires::TargetFileNodeFactory::operator()() const {
-    if (!m_queryHack) {
-        m_queryHack = true;
-        return std::make_unique<FactoryNameQuery>(*m_projectBridge, m_targetFileFormat->getName().c_str());
-    }
-
+std::unique_ptr<QtNodes::NodeDataModel> babelwires::TargetFileNodeFactory::createNode() const {
     auto newDataPtr = std::make_unique<TargetFileElementData>();
     newDataPtr->m_factoryIdentifier = m_targetFileFormat->getIdentifier();
     newDataPtr->m_factoryVersion = m_targetFileFormat->getVersion();

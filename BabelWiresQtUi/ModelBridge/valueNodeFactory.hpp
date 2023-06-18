@@ -1,5 +1,5 @@
 /**
- * The factory which creates nodes for source files.
+ * The factory which creates nodes for target files.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -9,20 +9,20 @@
 
 #include <BabelWiresQtUi/ModelBridge/baseNodeModel.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+
 namespace babelwires {
     class ProjectBridge;
-    class SourceFileFormat;
-
-    /// The factory which creates nodes for source files.
-    class SourceFileNodeFactory : public NodeFactoryBase {
+    
+    class ValueNodeFactory : public NodeFactoryBase {
       public:
-        SourceFileNodeFactory(ProjectBridge* projectBridge, const SourceFileFormat* sourceFileFormat);
+        ValueNodeFactory(ProjectBridge* projectBridge, TypeRef typeOfValue);
 
         QString name() const override;
         std::unique_ptr<QtNodes::NodeDataModel> createNode() const;
 
       private:
-        const SourceFileFormat* m_sourceFileFormat;
+        TypeRef m_typeOfValue;
     };
 
 } // namespace babelwires

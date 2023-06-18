@@ -5,6 +5,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/sourceFileNodeFactory.cpp
     ModelBridge/targetFileNodeFactory.cpp
     ModelBridge/processorNodeFactory.cpp
+    ModelBridge/valueNodeFactory.cpp
     ModelBridge/baseNodeModel.cpp
     ModelBridge/projectBridge.cpp
     ModelBridge/elementNodeModel.cpp

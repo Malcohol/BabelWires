@@ -14,10 +14,24 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <iostream>
+
+namespace {
+    // QSpinBox cannot cover the full range of IntValue::NativeType, but it's likely to be rare for someone
+    // to want to type in a really really big number.
+    int clampToInt(babelwires::IntValue::NativeType value) {
+        return static_cast<int>(std::clamp(value, static_cast<babelwires::IntValue::NativeType>(std::numeric_limits<int>::min()),
+                                         static_cast<babelwires::IntValue::NativeType>(std::numeric_limits<int>::max())));
+    }
+}
+
 QWidget* babelwires::IntValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     auto spinBox = std::make_unique<SpinBoxValueEditor>(parent, index, nullptr);
     auto range = getType()->is<IntType>().getRange();
-    spinBox->setRange(range.m_min, range.m_max);
+    spinBox->setMinimum(clampToInt(range.m_min));
+    spinBox->setMaximum(clampToInt(range.m_max));
+    std::cout << "Minimum " << spinBox->minimum() << "\nMaximum " << spinBox->maximum() << "\n";
+    std::cout << "int min " << std::numeric_limits<int>::min() << "\nint max " << std::numeric_limits<int>::max() << "\n";
     return spinBox.release();
 }
 

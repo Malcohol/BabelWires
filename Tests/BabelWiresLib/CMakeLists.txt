@@ -73,6 +73,7 @@ SET( LIB_TESTS_SRCS
     unionFeatureTest.cpp
     valueNamesTest.cpp
     valueHolderTest.cpp
+    valueElementTest.cpp
    )
 
 ADD_EXECUTABLE( babelWiresTests ${LIB_TESTS_SRCS} )

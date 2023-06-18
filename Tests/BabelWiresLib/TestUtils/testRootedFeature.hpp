@@ -5,7 +5,7 @@
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
 namespace babelwires {
-    class ProjectContext;
+    struct ProjectContext;
 }
 
 namespace testUtils {

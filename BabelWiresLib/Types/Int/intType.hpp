@@ -38,6 +38,6 @@ namespace babelwires {
       public:
         DefaultIntType();
 
-        PRIMITIVE_TYPE("int", "integer", "90ed4c0c-2fa1-4373-9b67-e711358af824", 1);
+        PRIMITIVE_TYPE("int", "Integer", "90ed4c0c-2fa1-4373-9b67-e711358af824", 1);
     };
 }

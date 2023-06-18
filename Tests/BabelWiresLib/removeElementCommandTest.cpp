@@ -4,9 +4,9 @@
 
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/processorElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/sourceFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>

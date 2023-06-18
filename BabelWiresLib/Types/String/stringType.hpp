@@ -14,7 +14,7 @@ namespace babelwires {
 
     class StringType : public Type {
       public:
-        PRIMITIVE_TYPE("string", "string", "0e422e25-cb94-40a3-8790-4918c918e637", 1);
+        PRIMITIVE_TYPE("string", "String", "0e422e25-cb94-40a3-8790-4918c918e637", 1);
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 

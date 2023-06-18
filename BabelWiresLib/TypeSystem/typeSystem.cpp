@@ -98,3 +98,11 @@ babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getTaggedPrimitiveType
     }
     return {};
 }
+
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllPrimitiveTypes() const {
+    babelwires::TypeSystem::TypeIdSet result;
+    for (const auto& it : m_primitiveTypeRegistry) {
+        result.emplace_back(it.first);
+    }
+    return result;
+}
