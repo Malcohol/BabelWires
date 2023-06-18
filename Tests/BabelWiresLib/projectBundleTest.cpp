@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
-#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>

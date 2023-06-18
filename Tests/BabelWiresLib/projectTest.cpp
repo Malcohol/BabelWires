@@ -5,9 +5,9 @@
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

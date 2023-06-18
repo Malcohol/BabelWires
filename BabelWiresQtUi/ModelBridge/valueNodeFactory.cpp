@@ -11,8 +11,8 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/valueElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
 
 #include <QtWidgets/QFileDialog>
 #include <nodes/FlowScene>

@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>

@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/FeatureElements/valueElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/valueElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <Common/Serialization/deserializer.hpp>

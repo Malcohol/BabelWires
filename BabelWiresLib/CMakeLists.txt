@@ -2,18 +2,18 @@ SET( BABELWIRESLIB_SRCS
 	Project/project.cpp
 	Project/FeatureElements/featureElement.cpp
 	Project/FeatureElements/featureElementData.cpp
-	Project/FeatureElements/processorElement.cpp
-	Project/FeatureElements/sourceFileElement.cpp
-	Project/FeatureElements/targetFileElement.cpp
+	Project/FeatureElements/ProcessorElement/processorElement.cpp
+	Project/FeatureElements/SourceFileElement/sourceFileElement.cpp
+	Project/FeatureElements/TargetFileElement/targetFileElement.cpp
 	Project/FeatureElements/fileElement.cpp
 	Project/FeatureElements/failedFeature.cpp
 	Project/FeatureElements/editTree.cpp
 	Project/FeatureElements/contentsCache.cpp
-	Project/FeatureElements/sourceFileElementData.cpp
-	Project/FeatureElements/targetFileElementData.cpp
-	Project/FeatureElements/processorElementData.cpp
-	Project/FeatureElements/valueElement.cpp
-	Project/FeatureElements/valueElementData.cpp
+	Project/FeatureElements/SourceFileElement/sourceFileElementData.cpp
+	Project/FeatureElements/TargetFileElement/targetFileElementData.cpp
+	Project/FeatureElements/ProcessorElement/processorElementData.cpp
+	Project/FeatureElements/ValueElement/valueElement.cpp
+	Project/FeatureElements/ValueElement/valueElementData.cpp
 	Project/Modifiers/modifier.cpp
 	Project/Modifiers/modifierData.cpp
 	Project/Modifiers/localModifier.cpp

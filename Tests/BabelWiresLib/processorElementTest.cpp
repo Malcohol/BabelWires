@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/processorElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/processorElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElement.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 

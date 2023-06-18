@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Project/FeatureElements/valueElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/valueElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>

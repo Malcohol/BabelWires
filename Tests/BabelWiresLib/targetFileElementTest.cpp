@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
