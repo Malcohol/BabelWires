@@ -7,12 +7,14 @@
  **/
 #pragma once
 
+
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 namespace babelwires {
     /// Describes the construction of a ValueElement.
-    struct ValueElementData : ElementData {
+    class ValueElementData : public ElementData {
+      public:
         CLONEABLE(ValueElementData);
         CUSTOM_CLONEABLE(ValueElementData);
         SERIALIZABLE(ValueElementData, "value", ElementData, 1);
