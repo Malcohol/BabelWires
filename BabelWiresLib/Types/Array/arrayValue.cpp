@@ -26,6 +26,7 @@ std::size_t babelwires::ArrayValue::getHash() const {
     for (unsigned int i = 0; i < m_values.size(); ++i) {
         hash::mixInto(hash, m_values[i]->getHash());
     }
+    return hash;
 }
 
 bool babelwires::ArrayValue::operator==(const Value& other) const {
@@ -36,11 +37,18 @@ bool babelwires::ArrayValue::operator==(const Value& other) const {
     if (getSize() != otherArray->getSize()) {
         return false;
     }
+    for (unsigned int i = 0; i < m_values.size(); ++i) {
+        if (getValue(i) != otherArray->getValue(i)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 std::string babelwires::ArrayValue::toString() const {
     std::ostringstream os;
     os << "[" << m_values.size() << "]";
+    return os.str();
 }
 
 unsigned int babelwires::ArrayValue::getSize() const {

@@ -10,11 +10,21 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 
+// TODO Remove
+#include <BabelWiresLib/Types/Int/intType.hpp>
+
+babelwires::TestArrayType::TestArrayType()
+    : ArrayType(DefaultIntType::getThisIdentifier(), 1, 10) {}
+
 babelwires::ArrayType::ArrayType(TypeRef entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
     : m_entryType(std::move(entryType))
     , m_minimumSize(minimumSize)
     , m_maximumSize(maximumSize)
-    , m_initialSize(initialSize) {}
+    , m_initialSize((initialSize >= 0) ? initialSize : minimumSize) {
+    assert((minimumSize <= maximumSize) && "The minimum is not smaller than the maximum");
+    assert((m_initialSize >= minimumSize) && "The initial size is too big");
+    assert((m_initialSize <= maximumSize) && "The initial size is too small");
+}
 
 const babelwires::TypeRef& babelwires::ArrayType::getEntryType() const {
     return m_entryType;

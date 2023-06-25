@@ -19,6 +19,9 @@
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 
+// TODO Remove
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
+
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<DefaultIntType>();
     context.m_typeSystem.addEntry<StringType>();
@@ -29,4 +32,7 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addTypeConstructor<RationalTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<SumTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<MapTypeConstructor>();
+
+    // TODO Remove
+    context.m_typeSystem.addEntry<TestArrayType>();
 }

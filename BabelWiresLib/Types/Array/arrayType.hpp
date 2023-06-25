@@ -9,6 +9,9 @@
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
+// TODO Remove
+#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+
 namespace babelwires {
     class ArrayType : public Type {
       public:
@@ -30,5 +33,13 @@ namespace babelwires {
         unsigned int m_initialSize;
         unsigned int m_minimumSize;
         unsigned int m_maximumSize;
+    };
+
+    // TODO Remove
+    class TestArrayType : public ArrayType {
+      public:
+        TestArrayType();
+        
+        PRIMITIVE_TYPE("array", "Array", "0171a8a6-9ff7-4fed-a7fe-836529b690ae", 1);
     };
 } // namespace babelwires
