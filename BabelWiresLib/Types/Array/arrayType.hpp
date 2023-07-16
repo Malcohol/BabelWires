@@ -7,13 +7,13 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/type.hpp>
+#include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 // TODO Remove
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 namespace babelwires {
-    class ArrayType : public Type {
+    class ArrayType : public CompoundType {
       public:
         /// An initialSize of -1 means the initial size is the minimum size.
         ArrayType(TypeRef entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize = -1);
@@ -27,6 +27,14 @@ namespace babelwires {
         std::string getKind() const override;
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+
+      public:
+        int getNumChildren(const Value& compoundValue) const override;
+        Value* getChild(const Value& compoundValue, int i) override;
+        const Value* getChild(const Value& compoundValue, int i) const override;
+        PathStep getStepToChild(const Value& compoundValue, const Value& child) const override;
+        Value* tryGetChildFromStep(const Value& compoundValue, const PathStep& step) override;
+        const Value* tryGetChildFromStep(const Value& compoundValue, const PathStep& step) const override;
 
       private:
         TypeRef m_entryType;

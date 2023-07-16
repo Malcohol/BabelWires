@@ -7,15 +7,17 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/compoundFeature.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+
+#include <Common/multiKeyMap.hpp>
 
 namespace babelwires {
     class TypeRef;
     class Type;
 
     /// A ValueFeature is a feature which provides access to a value.
-    class ValueFeature : public Feature {
+    class ValueFeature : public CompoundFeature {
       public:
         /// Get the TypeRef which describes the type of the value.
         const TypeRef& getTypeRef() const;
@@ -39,12 +41,24 @@ namespace babelwires {
         /// This will throw a ModelException if the assignment failed.
         void assign(const ValueFeature& other);
 
+      public:
+        virtual int getNumFeatures() const;
+        virtual PathStep getStepToChild(const Feature* child) const;
+        virtual Feature* tryGetChildFromStep(const PathStep& step);
+        virtual const Feature* tryGetChildFromStep(const PathStep& step) const;
+        virtual Feature* doGetFeature(int i);
+        virtual const Feature* doGetFeature(int i) const;
+
       protected:
         /// Calls doSetToDefault.
         virtual void doSetToDefaultNonRecursive() override;
 
         virtual const TypeRef& doGetTypeRef() const = 0;
+        virtual ValueHolder& doGetValue() = 0;
         virtual const ValueHolder& doGetValue() const = 0;
         virtual void doSetValue(const ValueHolder& newValue) = 0;
+
+      private:
+        MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ValueFeature>> m_children;
     };
 }
