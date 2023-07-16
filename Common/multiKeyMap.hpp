@@ -44,20 +44,25 @@ namespace babelwires {
 
             bool operator==(const iterator& other) const { return m_it0 == other.m_it0; }
             bool operator!=(const iterator& other) const { return m_it0 != other.m_it0; }
+            void operator++() { ++m_it0; }
+
+            /// This means that foreach loops return the iterator at each step.
+            auto operator*() { return *this; };
 
           private:
-            using iterator0 = typename decltype(MultiKeyMap::m_map0)::iterator;
+            using iterator0 = typename decltype(MultiKeyMap::m_map0)::const_iterator;
 
             friend MultiKeyMap;
+
             iterator(iterator0 it0)
                 : m_it0(std::move(it0)) {}
 
             iterator0 m_it0;
         };
 
-        iterator find0(const Key0& k0) { return iterator{m_map0.find(k0)}; }
+        iterator find0(const Key0& k0) const { return iterator{m_map0.find(k0)}; }
 
-        iterator find1(const Key1& k1) {
+        iterator find1(const Key1& k1) const {
             auto it1 = m_map1.find(k1);
             if (it1 != m_map1.end()) {
                 const Key0& k0 = it1->second;
@@ -69,7 +74,8 @@ namespace babelwires {
             return end();
         }
 
-        iterator end() { return iterator{m_map0.end()}; }
+        iterator begin() const { return iterator{m_map0.begin()}; }
+        iterator end() const { return iterator{m_map0.end()}; }
 
         bool erase0(const Key0& k0) {
             auto it0 = m_map0.find(k0);
