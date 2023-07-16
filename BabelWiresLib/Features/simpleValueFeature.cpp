@@ -32,6 +32,12 @@ void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
     }
 }
 
+babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() {
+    // Not sure if this assert is necessary.
+    assert(m_value && "The SimpleValueFeature has not been initialized");
+    return m_value;
+}
+
 const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() const {
     // Not sure if this assert is necessary.
     assert(m_value && "The SimpleValueFeature has not been initialized");
