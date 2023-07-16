@@ -14,8 +14,11 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
+babelwires::ValueFeature::ValueFeature(TypeRef typeRef)
+    : m_typeRef(std::move(typeRef)) {}
+
 const babelwires::TypeRef& babelwires::ValueFeature::getTypeRef() const {
-    return doGetTypeRef();
+    return m_typeRef;
 }
 
 const babelwires::ValueHolder& babelwires::ValueFeature::getValue() const {
@@ -23,7 +26,17 @@ const babelwires::ValueHolder& babelwires::ValueFeature::getValue() const {
 }
 
 void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
-    doSetValue(newValue);
+    ValueHolder& currentValue = doGetValue();
+    if (!currentValue || ((currentValue != newValue) && (*currentValue != *newValue))) {
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+        const Type& type = getType();
+        if (type.isValidValue(typeSystem, *newValue)) {
+            currentValue = newValue;
+            setChanged(Changes::ValueChanged);
+        } else {
+            throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
+        }
+    }
 }
 
 void babelwires::ValueFeature::assign(const ValueFeature& other) {
@@ -43,14 +56,11 @@ void babelwires::ValueFeature::doSetToDefaultNonRecursive() {
 
 const babelwires::Type& babelwires::ValueFeature::getType() const {
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);
-    return getTypeRef().resolve(context.m_typeSystem);
+    return m_typeRef.resolve(context.m_typeSystem);
 }
 
 int babelwires::ValueFeature::getNumFeatures() const {
-    if (const CompoundType* const compoundType = getType().as<CompoundType>()) {
-        return compoundType->getNumChildren(*getValue());
-    }
-    return 0;
+    return m_children.size();
 }
 
 babelwires::PathStep babelwires::ValueFeature::getStepToChild(const Feature* child) const {
@@ -92,4 +102,19 @@ const babelwires::Feature* babelwires::ValueFeature::doGetFeature(int i) const {
         return it.getValue().get();
     }
     return nullptr;
+}
+
+std::size_t babelwires::ValueFeature::doGetHash() const {
+    return hash::mixtureOf(m_typeRef, *doGetValue());
+}
+
+void babelwires::ValueFeature::doSetToDefault() {
+    assert(m_typeRef && "The type must be set to something non-trivial before doSetToDefault is called");
+    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
+    auto [newValue, _] = getType().createValue(context.m_typeSystem);
+    ValueHolder& currentValue = doGetValue();
+    if (!currentValue || (*newValue != *currentValue)) {
+        currentValue = std::move(newValue);
+        setChanged(Changes::ValueChanged);
+    }
 }

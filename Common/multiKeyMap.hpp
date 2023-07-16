@@ -27,12 +27,13 @@ namespace babelwires {
             m_map1.insert_or_assign(std::move(k1), std::move(k0));
             return result0.second;
         }
-
+        
       private:
         std::unordered_map<Key0, std::tuple<Key1, Value>> m_map0;
         std::unordered_map<Key1, Key0> m_map1;
       
       public:
+        typename decltype(m_map0)::size_type size() const { return m_map0.size(); }
 
         class iterator {
           public:

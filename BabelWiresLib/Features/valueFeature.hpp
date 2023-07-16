@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/Features/compoundFeature.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <Common/multiKeyMap.hpp>
 
@@ -19,6 +20,9 @@ namespace babelwires {
     /// A ValueFeature is a feature which provides access to a value.
     class ValueFeature : public CompoundFeature {
       public:
+        /// Construct a ValueFeature which carries values of the given type.
+        ValueFeature(TypeRef typeRef);
+
         /// Get the TypeRef which describes the type of the value.
         const TypeRef& getTypeRef() const;
 
@@ -42,23 +46,23 @@ namespace babelwires {
         void assign(const ValueFeature& other);
 
       public:
-        virtual int getNumFeatures() const;
-        virtual PathStep getStepToChild(const Feature* child) const;
-        virtual Feature* tryGetChildFromStep(const PathStep& step);
-        virtual const Feature* tryGetChildFromStep(const PathStep& step) const;
-        virtual Feature* doGetFeature(int i);
-        virtual const Feature* doGetFeature(int i) const;
-
-      protected:
+        virtual int getNumFeatures() const override;
+        virtual PathStep getStepToChild(const Feature* child) const override;
+        virtual Feature* tryGetChildFromStep(const PathStep& step) override;
+        virtual const Feature* tryGetChildFromStep(const PathStep& step) const override;
+        virtual Feature* doGetFeature(int i) override;
+        virtual const Feature* doGetFeature(int i) const override;
         /// Calls doSetToDefault.
         virtual void doSetToDefaultNonRecursive() override;
+        virtual std::size_t doGetHash() const override;
+        virtual void doSetToDefault() override;
 
-        virtual const TypeRef& doGetTypeRef() const = 0;
+      protected:
         virtual ValueHolder& doGetValue() = 0;
         virtual const ValueHolder& doGetValue() const = 0;
-        virtual void doSetValue(const ValueHolder& newValue) = 0;
 
       private:
+        TypeRef m_typeRef;
         MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ValueFeature>> m_children;
     };
 }
