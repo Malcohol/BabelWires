@@ -27,6 +27,7 @@ namespace babelwires {
         const TypeRef& getTypeRef() const;
 
         /// Get the value currently held by this feature.
+        ValueHolder& getValue();
         const ValueHolder& getValue() const;
 
         /// Set this feature to hold a new value.
@@ -44,6 +45,9 @@ namespace babelwires {
         /// Set this to hold the same value as other.
         /// This will throw a ModelException if the assignment failed.
         void assign(const ValueFeature& other);
+
+        /// If the value is compound, synchronize the m_children data structure with the current children of the value.
+        void synchronizeSubfeatures();
 
       public:
         virtual int getNumFeatures() const override;

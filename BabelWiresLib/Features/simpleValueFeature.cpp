@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 babelwires::SimpleValueFeature::SimpleValueFeature(TypeRef typeRef)

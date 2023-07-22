@@ -1,5 +1,5 @@
 /**
- * A SimpleValueFeature is a ValueFeature which owns its value.
+ * A ChildValueFeature is a ValueFeature whose value is owned by an ancestor feature.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -15,18 +15,17 @@ namespace babelwires {
     class Type;
     class Value;
 
-    /// A SimpleValueFeature is a feature which owns its value.
-    class SimpleValueFeature : public ValueFeature {
+    /// A ChildValueFeature is a ValueFeature whose value is owned by an ancestor feature.
+    class ChildValueFeature : public ValueFeature {
       public:
         /// Construct a ValueFeature which carries values of the given type.
-        SimpleValueFeature(TypeRef typeRef);
+        ChildValueFeature(TypeRef typeRef, ValueHolder& valueHolder);
 
       protected:
-
         ValueHolder& doGetValue() override;
         const ValueHolder& doGetValue() const override;
 
       private:
-        ValueHolder m_value;
+        ValueHolder& m_value;
     };
 } // namespace babelwires

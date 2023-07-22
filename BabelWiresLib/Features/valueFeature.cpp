@@ -13,6 +13,9 @@
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/Features/childValueFeature.hpp>
+
+#include <map>
 
 babelwires::ValueFeature::ValueFeature(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
@@ -22,6 +25,10 @@ const babelwires::TypeRef& babelwires::ValueFeature::getTypeRef() const {
 }
 
 const babelwires::ValueHolder& babelwires::ValueFeature::getValue() const {
+    return doGetValue();
+}
+
+babelwires::ValueHolder& babelwires::ValueFeature::getValue() {
     return doGetValue();
 }
 
@@ -116,5 +123,56 @@ void babelwires::ValueFeature::doSetToDefault() {
     if (!currentValue || (*newValue != *currentValue)) {
         currentValue = std::move(newValue);
         setChanged(Changes::ValueChanged);
+    }
+}
+
+void babelwires::ValueFeature::synchronizeSubfeatures() {
+    const Value& value = *getValue();
+
+    if (auto* compound = getType().as<CompoundType>()) {
+
+        std::map<ValueHolder*, unsigned int> childValuesNow;
+
+        const unsigned int numChildrenNow = compound->getNumChildren(value);
+        for (unsigned int i = 0; i < numChildrenNow; ++i) {
+            childValuesNow.emplace(std::pair{compound->getChildNonConst(value, i), i});
+        }
+
+        std::map<ValueHolder*, PathStep> currentChildFeatures;
+        for (const auto& it : m_children) {
+            currentChildFeatures.emplace(std::pair{&it.getValue()->getValue(), it.getKey0()});
+        }
+
+        std::vector<std::pair<ValueHolder*, unsigned int>> toAdd;
+
+        auto itValue = childValuesNow.begin();
+        auto itFeature = currentChildFeatures.begin();
+        while ((itValue != childValuesNow.end()) && (itFeature != currentChildFeatures.end())) {
+            if (itValue->first < itFeature->first) {
+                toAdd.emplace_back(*itValue);
+                ++itValue;
+            } else if (itValue->first > itFeature->first) {
+                m_children.erase0(itFeature->second);
+                ++itFeature;
+            } else {
+                m_children.find0(itFeature->second).getValue()->synchronizeSubfeatures();
+                ++itValue;
+                ++itFeature;
+            }
+        }
+        while (itValue != childValuesNow.end()) {
+            toAdd.emplace_back(*itValue);
+            ++itValue;
+        }
+        while (itFeature != currentChildFeatures.end()) {
+            m_children.erase0(itFeature->second);
+            ++itFeature;
+        }
+
+        for (auto it : toAdd) {
+            ValueHolder* child = compound->getChildNonConst(value, it.second);
+            m_children.insert_or_assign(compound->getStepToChild(value, child), it.second,
+                std::make_unique<ChildValueFeature>(compound->getChildType(value, it.second), *child));
+        }
     }
 }
