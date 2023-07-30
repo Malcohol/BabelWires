@@ -86,3 +86,42 @@ babelwires::SubtypeOrder babelwires::ArrayType::compareSubtypeHelper(const TypeS
         return SubtypeOrder::IsUnrelated;
     }
 }
+
+int babelwires::ArrayType::getNumChildren(const Value& compoundValue) const {
+    const ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+    return arrayValue.getSize();
+}
+
+const babelwires::TypeRef& babelwires::ArrayType::getChildType(const Value& compoundValue, unsigned int i) const {
+    return m_entryType;
+}
+
+babelwires::ValueHolder* babelwires::ArrayType::getChildNonConst(Value& compoundValue, unsigned int i) const {
+    ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+    return &arrayValue.getValue(i);
+}
+
+const babelwires::ValueHolder* babelwires::ArrayType::getChild(const Value& compoundValue, unsigned int i) const {
+    const ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+    return &arrayValue.getValue(i);
+}
+
+babelwires::PathStep babelwires::ArrayType::getStepToChild(const Value& compoundValue, unsigned int i) const {
+    return PathStep(i);
+}
+
+babelwires::ValueHolder* babelwires::ArrayType::tryGetChildFromStepNonConst(Value& compoundValue, const PathStep& step) const {
+    ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+    if (const ArrayIndex* index = step.asIndex()) {
+        return &arrayValue.getValue(*index);
+    }
+    return nullptr;
+}
+
+const babelwires::ValueHolder* babelwires::ArrayType::tryGetChildFromStep(const Value& compoundValue, const PathStep& step) const {
+    const ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+    if (const ArrayIndex* index = step.asIndex()) {
+        return &arrayValue.getValue(*index);
+    }
+    return nullptr;
+}

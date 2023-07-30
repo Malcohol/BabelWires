@@ -9,13 +9,9 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
-babelwires::ChildValueFeature::ChildValueFeature(TypeRef typeRef, ValueHolder& valueHolder)
+babelwires::ChildValueFeature::ChildValueFeature(TypeRef typeRef, const ValueHolder& valueHolder)
     : ValueFeature(std::move(typeRef))
     , m_value(valueHolder) {}
-
-babelwires::ValueHolder& babelwires::ChildValueFeature::doGetValue() {
-    return m_value;
-}
 
 const babelwires::ValueHolder& babelwires::ChildValueFeature::doGetValue() const {
     return m_value;

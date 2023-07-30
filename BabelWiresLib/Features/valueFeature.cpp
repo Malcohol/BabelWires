@@ -28,11 +28,8 @@ const babelwires::ValueHolder& babelwires::ValueFeature::getValue() const {
     return doGetValue();
 }
 
-babelwires::ValueHolder& babelwires::ValueFeature::getValue() {
-    return doGetValue();
-}
-
 void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
+    /*
     ValueHolder& currentValue = doGetValue();
     if (!currentValue || ((currentValue != newValue) && (*currentValue != *newValue))) {
         const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
@@ -44,6 +41,7 @@ void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
             throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
         }
     }
+    */
 }
 
 void babelwires::ValueFeature::assign(const ValueFeature& other) {
@@ -116,6 +114,7 @@ std::size_t babelwires::ValueFeature::doGetHash() const {
 }
 
 void babelwires::ValueFeature::doSetToDefault() {
+    /*
     assert(m_typeRef && "The type must be set to something non-trivial before doSetToDefault is called");
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);
     auto [newValue, _] = getType().createValue(context.m_typeSystem);
@@ -124,6 +123,7 @@ void babelwires::ValueFeature::doSetToDefault() {
         currentValue = std::move(newValue);
         setChanged(Changes::ValueChanged);
     }
+    */
 }
 
 void babelwires::ValueFeature::synchronizeSubfeatures() {
@@ -131,19 +131,19 @@ void babelwires::ValueFeature::synchronizeSubfeatures() {
 
     if (auto* compound = getType().as<CompoundType>()) {
 
-        std::map<ValueHolder*, unsigned int> childValuesNow;
+        std::map<const ValueHolder*, unsigned int> childValuesNow;
 
         const unsigned int numChildrenNow = compound->getNumChildren(value);
         for (unsigned int i = 0; i < numChildrenNow; ++i) {
-            childValuesNow.emplace(std::pair{compound->getChildNonConst(value, i), i});
+            childValuesNow.emplace(std::pair{compound->getChild(value, i), i});
         }
 
-        std::map<ValueHolder*, PathStep> currentChildFeatures;
+        std::map<const ValueHolder*, PathStep> currentChildFeatures;
         for (const auto& it : m_children) {
             currentChildFeatures.emplace(std::pair{&it.getValue()->getValue(), it.getKey0()});
         }
 
-        std::vector<std::pair<ValueHolder*, unsigned int>> toAdd;
+        std::vector<std::pair<const ValueHolder*, unsigned int>> toAdd;
 
         auto itValue = childValuesNow.begin();
         auto itFeature = currentChildFeatures.begin();
@@ -170,8 +170,8 @@ void babelwires::ValueFeature::synchronizeSubfeatures() {
         }
 
         for (auto it : toAdd) {
-            ValueHolder* child = compound->getChildNonConst(value, it.second);
-            m_children.insert_or_assign(compound->getStepToChild(value, child), it.second,
+            const ValueHolder* child = compound->getChild(value, it.second);
+            m_children.insert_or_assign(compound->getStepToChild(value, it.second), it.second,
                 std::make_unique<ChildValueFeature>(compound->getChildType(value, it.second), *child));
         }
     }

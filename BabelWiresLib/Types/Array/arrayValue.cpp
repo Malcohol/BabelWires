@@ -71,6 +71,11 @@ const babelwires::ValueHolder& babelwires::ArrayValue::getValue(unsigned int ind
     return m_values[index];
 }
 
+babelwires::ValueHolder& babelwires::ArrayValue::getValue(unsigned int index) {
+    assert(index < m_values.size());
+    return m_values[index];
+}
+
 void babelwires::ArrayValue::setValue(unsigned int index, ValueHolder newValue) {
     assert(index < m_values.size());
     m_values[index] = std::move(newValue);

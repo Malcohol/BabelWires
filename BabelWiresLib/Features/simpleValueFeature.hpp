@@ -22,8 +22,6 @@ namespace babelwires {
         SimpleValueFeature(TypeRef typeRef);
 
       protected:
-
-        ValueHolder& doGetValue() override;
         const ValueHolder& doGetValue() const override;
 
       private:

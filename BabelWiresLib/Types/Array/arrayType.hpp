@@ -30,10 +30,11 @@ namespace babelwires {
 
       public:
         int getNumChildren(const Value& compoundValue) const override;
-        ValueHolder* getChildNonConst(const Value& compoundValue, int i) const override;
-        const ValueHolder* getChild(const Value& compoundValue, int i) const override;
-        PathStep getStepToChild(const Value& compoundValue, const ValueHolder* child) const override;
-        ValueHolder* tryGetChildFromStepNonConst(const Value& compoundValue, const PathStep& step) const override;
+        const TypeRef& getChildType(const Value& compoundValue, unsigned int i) const override;
+        ValueHolder* getChildNonConst(Value& compoundValue, unsigned int i) const override;
+        const ValueHolder* getChild(const Value& compoundValue, unsigned int i) const override;
+        PathStep getStepToChild(const Value& compoundValue, unsigned int i) const override;
+        ValueHolder* tryGetChildFromStepNonConst(Value& compoundValue, const PathStep& step) const override;
         const ValueHolder* tryGetChildFromStep(const Value& compoundValue, const PathStep& step) const override;
 
       private:

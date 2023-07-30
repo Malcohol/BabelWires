@@ -27,7 +27,6 @@ namespace babelwires {
         const TypeRef& getTypeRef() const;
 
         /// Get the value currently held by this feature.
-        ValueHolder& getValue();
         const ValueHolder& getValue() const;
 
         /// Set this feature to hold a new value.
@@ -62,7 +61,6 @@ namespace babelwires {
         virtual void doSetToDefault() override;
 
       protected:
-        virtual ValueHolder& doGetValue() = 0;
         virtual const ValueHolder& doGetValue() const = 0;
 
       private:

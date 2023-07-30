@@ -19,13 +19,12 @@ namespace babelwires {
     class ChildValueFeature : public ValueFeature {
       public:
         /// Construct a ValueFeature which carries values of the given type.
-        ChildValueFeature(TypeRef typeRef, ValueHolder& valueHolder);
+        ChildValueFeature(TypeRef typeRef, const ValueHolder& valueHolder);
 
       protected:
-        ValueHolder& doGetValue() override;
         const ValueHolder& doGetValue() const override;
 
       private:
-        ValueHolder& m_value;
+        const ValueHolder& m_value;
     };
 } // namespace babelwires
