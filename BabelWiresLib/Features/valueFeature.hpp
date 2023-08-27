@@ -16,6 +16,7 @@
 namespace babelwires {
     class TypeRef;
     class Type;
+    class SimpleValueFeature;
 
     /// A ValueFeature is a feature which provides access to a value.
     class ValueFeature : public CompoundFeature {
@@ -47,6 +48,12 @@ namespace babelwires {
 
         /// If the value is compound, synchronize the m_children data structure with the current children of the value.
         void synchronizeSubfeatures();
+
+        /// All value features must be below a single SimpleValueFeature.
+        virtual const SimpleValueFeature& getRootValueFeature() const = 0;
+
+        /// All value features must be below a single SimpleValueFeature.
+        virtual SimpleValueFeature& getRootValueFeature() = 0;
 
       public:
         virtual int getNumFeatures() const override;

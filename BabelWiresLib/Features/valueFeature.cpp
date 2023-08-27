@@ -29,19 +29,21 @@ const babelwires::ValueHolder& babelwires::ValueFeature::getValue() const {
 }
 
 void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
-    /*
-    ValueHolder& currentValue = doGetValue();
+    const ValueHolder& currentValue = doGetValue();
     if (!currentValue || ((currentValue != newValue) && (*currentValue != *newValue))) {
         const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
-            currentValue = newValue;
-            setChanged(Changes::ValueChanged);
+            // Get ModifyValueScope object from Root.
+            // Get value from it.
+            // Assign value at scope.
+            // Don't call the following since change management has to be done after the fact.
+            //   currentValue = newValue;
+            //   setChanged(Changes::ValueChanged); 
         } else {
             throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
         }
     }
-    */
 }
 
 void babelwires::ValueFeature::assign(const ValueFeature& other) {

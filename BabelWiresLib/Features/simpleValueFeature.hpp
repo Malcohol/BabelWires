@@ -21,6 +21,9 @@ namespace babelwires {
         /// Construct a ValueFeature which carries values of the given type.
         SimpleValueFeature(TypeRef typeRef);
 
+        const SimpleValueFeature& getRootValueFeature() const override;
+        SimpleValueFeature& getRootValueFeature() override;
+
       protected:
         const ValueHolder& doGetValue() const override;
 

@@ -22,3 +22,10 @@ const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() cons
     return m_value;
 }
 
+const babelwires::SimpleValueFeature& babelwires::SimpleValueFeature::getRootValueFeature() const {
+    return *this;
+}
+
+babelwires::SimpleValueFeature& babelwires::SimpleValueFeature::getRootValueFeature() {
+    return *this;
+}
