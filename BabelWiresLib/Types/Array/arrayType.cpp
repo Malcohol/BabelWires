@@ -110,18 +110,18 @@ babelwires::PathStep babelwires::ArrayType::getStepToChild(const Value& compound
     return PathStep(i);
 }
 
-babelwires::ValueHolder* babelwires::ArrayType::tryGetChildFromStepNonConst(Value& compoundValue, const PathStep& step) const {
-    ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+std::optional<std::tuple<babelwires::TypeRef, babelwires::ValueHolder&>> babelwires::ArrayType::tryGetChildFromStepNonConst(ValueHolder& compoundValue, const PathStep& step) const {
     if (const ArrayIndex* index = step.asIndex()) {
-        return &arrayValue.getValue(*index);
+        ArrayValue& arrayValue = compoundValue.copyContentsAndGetNonConst().is<ArrayValue>();
+        return {{ m_entryType, arrayValue.getValue(*index) }};
     }
-    return nullptr;
+    return {};
 }
 
-const babelwires::ValueHolder* babelwires::ArrayType::tryGetChildFromStep(const Value& compoundValue, const PathStep& step) const {
+std::optional<std::tuple<babelwires::TypeRef, const babelwires::ValueHolder&>> babelwires::ArrayType::tryGetChildFromStep(const Value& compoundValue, const PathStep& step) const {
     const ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
     if (const ArrayIndex* index = step.asIndex()) {
-        return &arrayValue.getValue(*index);
+        return {{ m_entryType, arrayValue.getValue(*index) }};
     }
-    return nullptr;
+    return {};
 }

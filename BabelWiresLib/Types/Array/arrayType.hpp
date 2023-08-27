@@ -34,8 +34,9 @@ namespace babelwires {
         ValueHolder* getChildNonConst(Value& compoundValue, unsigned int i) const override;
         const ValueHolder* getChild(const Value& compoundValue, unsigned int i) const override;
         PathStep getStepToChild(const Value& compoundValue, unsigned int i) const override;
-        ValueHolder* tryGetChildFromStepNonConst(Value& compoundValue, const PathStep& step) const override;
-        const ValueHolder* tryGetChildFromStep(const Value& compoundValue, const PathStep& step) const override;
+        std::optional<std::tuple<TypeRef, ValueHolder&>> tryGetChildFromStepNonConst(ValueHolder& compoundValue, const PathStep& step) const override;
+        std::optional<std::tuple<TypeRef, const ValueHolder&>> tryGetChildFromStep(const Value& compoundValue, const PathStep& step) const override;
+
 
       private:
         TypeRef m_entryType;

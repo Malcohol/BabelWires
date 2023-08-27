@@ -14,6 +14,8 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/Features/childValueFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/TypeSystem/valuePath.hpp>
 
 #include <map>
 
@@ -34,12 +36,12 @@ void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
         const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
-            // Get ModifyValueScope object from Root.
-            // Get value from it.
-            // Assign value at scope.
-            // Don't call the following since change management has to be done after the fact.
-            //   currentValue = newValue;
-            //   setChanged(Changes::ValueChanged); 
+            auto rootAndPath = getRootValueFeature();
+            ValueHolder& rootValueCopy = rootAndPath.m_root.getNonConstValueCopy();
+            const ProjectContext& context = RootFeature::getProjectContextAt(*this);
+            auto [_, valueInCopy] = followNonConst(context.m_typeSystem, rootAndPath.m_root.getType(), rootAndPath.m_pathFromRoot, rootValueCopy);
+            valueInCopy = newValue;
+            // Note: We've only changed data in a copy, so we don't adjust the change flags here.
         } else {
             throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
         }
@@ -176,5 +178,39 @@ void babelwires::ValueFeature::synchronizeSubfeatures() {
             m_children.insert_or_assign(compound->getStepToChild(value, it.second), it.second,
                 std::make_unique<ChildValueFeature>(compound->getChildType(value, it.second), *child));
         }
+    }
+}
+
+babelwires::ValueFeature::RootAndPath<const babelwires::SimpleValueFeature> babelwires::ValueFeature::getRootValueFeature() const {
+    const ValueFeature* current = this;
+    std::vector<PathStep> reversePath;
+    while (1) {
+        if (const SimpleValueFeature* currentAsRootValueFeature = current->as<SimpleValueFeature>()) {
+            std::reverse(reversePath.begin(), reversePath.end());
+            return { *currentAsRootValueFeature, FeaturePath(std::move(reversePath))};
+        }
+        assert(getOwner() && "You can only get the RootValueFeature from a ValueFeature in a hierarchy.");
+        const ValueFeature *const owner = getOwner()->as<ValueFeature>();
+        assert(owner && "The owner of a ChildValueFeature must be a ValueFeature");
+        PathStep stepToThis = owner->getStepToChild(current);
+        reversePath.emplace_back(stepToThis);
+        current = owner;        
+    }
+}
+
+babelwires::ValueFeature::RootAndPath<babelwires::SimpleValueFeature> babelwires::ValueFeature::getRootValueFeature() {
+    ValueFeature* current = this;
+    std::vector<PathStep> reversePath;
+    while (1) {
+        if (SimpleValueFeature* currentAsRootValueFeature = current->as<SimpleValueFeature>()) {
+            std::reverse(reversePath.begin(), reversePath.end());
+            return { *currentAsRootValueFeature, FeaturePath(std::move(reversePath))};
+        }
+        assert(getOwner() && "You can only get the RootValueFeature from a ValueFeature in a hierarchy.");
+        ValueFeature *const owner = getOwnerNonConst()->as<ValueFeature>();
+        assert(owner && "The owner of a ChildValueFeature must be a ValueFeature");
+        PathStep stepToThis = owner->getStepToChild(current);
+        reversePath.emplace_back(stepToThis);
+        current = owner;        
     }
 }

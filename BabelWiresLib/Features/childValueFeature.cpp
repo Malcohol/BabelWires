@@ -16,17 +16,3 @@ babelwires::ChildValueFeature::ChildValueFeature(TypeRef typeRef, const ValueHol
 const babelwires::ValueHolder& babelwires::ChildValueFeature::doGetValue() const {
     return m_value;
 }
-
-const babelwires::SimpleValueFeature& babelwires::ChildValueFeature::getRootValueFeature() const {
-    assert(getOwner() && "You can only get the RootValueFeature from a ValueFeature in a hierarchy.");
-    const ValueFeature *const owner = getOwner()->as<ValueFeature>();
-    assert(owner && "The owner of a ChildValueFeature must be a ValueFeature");
-    return owner->getRootValueFeature();
-}
-
-babelwires::SimpleValueFeature& babelwires::ChildValueFeature::getRootValueFeature() {
-    assert(getOwner() && "You can only get the RootValueFeature from a ValueFeature in a hierarchy.");
-    ValueFeature *const owner = getOwnerNonConst()->as<ValueFeature>();
-    assert(owner && "The owner of a ChildValueFeature must be a ValueFeature");
-    return owner->getRootValueFeature();
-}

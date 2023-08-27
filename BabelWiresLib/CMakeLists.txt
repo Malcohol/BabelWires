@@ -112,6 +112,7 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/typeConstructorArguments.cpp
 	TypeSystem/typeConstructor.cpp
 	TypeSystem/value.cpp
+	TypeSystem/valuePath.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp
 	ValueNames/contiguousValueNamesImpl.cpp

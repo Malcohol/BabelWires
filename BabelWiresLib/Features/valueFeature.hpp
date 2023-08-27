@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Features/compoundFeature.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
 
 #include <Common/multiKeyMap.hpp>
 
@@ -49,12 +50,6 @@ namespace babelwires {
         /// If the value is compound, synchronize the m_children data structure with the current children of the value.
         void synchronizeSubfeatures();
 
-        /// All value features must be below a single SimpleValueFeature.
-        virtual const SimpleValueFeature& getRootValueFeature() const = 0;
-
-        /// All value features must be below a single SimpleValueFeature.
-        virtual SimpleValueFeature& getRootValueFeature() = 0;
-
       public:
         virtual int getNumFeatures() const override;
         virtual PathStep getStepToChild(const Feature* child) const override;
@@ -69,6 +64,19 @@ namespace babelwires {
 
       protected:
         virtual const ValueHolder& doGetValue() const = 0;
+
+
+        template<typename ROOT_VALUE_FEATURE>
+        struct RootAndPath {
+          ROOT_VALUE_FEATURE& m_root;
+          FeaturePath m_pathFromRoot;
+        };
+
+        /// All value features must be below a single SimpleValueFeature.
+        RootAndPath<const SimpleValueFeature> getRootValueFeature() const;
+
+        /// All value features must be below a single SimpleValueFeature.
+        RootAndPath<SimpleValueFeature> getRootValueFeature();
 
       private:
         TypeRef m_typeRef;

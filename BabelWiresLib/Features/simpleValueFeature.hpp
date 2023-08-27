@@ -21,13 +21,17 @@ namespace babelwires {
         /// Construct a ValueFeature which carries values of the given type.
         SimpleValueFeature(TypeRef typeRef);
 
-        const SimpleValueFeature& getRootValueFeature() const override;
-        SimpleValueFeature& getRootValueFeature() override;
+        /// Create or access a stored non-const copy of the contained value
+        ValueHolder& getNonConstValueCopy();
+
+        /// Apply the copy to the contained value.
+        void applyValueCopy();
 
       protected:
         const ValueHolder& doGetValue() const override;
 
       private:
         ValueHolder m_value;
+        ValueHolder m_valueCopy;
     };
 } // namespace babelwires
