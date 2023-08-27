@@ -46,11 +46,19 @@ testUtils::TestFeatureElement::TestFeatureElement(const babelwires::ProjectConte
 
 void testUtils::TestFeatureElement::doProcess(babelwires::UserLogger&) {}
 
-babelwires::RootFeature* testUtils::TestFeatureElement::getInputFeature() {
+const babelwires::RootFeature* testUtils::TestFeatureElement::getInputFeature() const {
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElement::getOutputFeature() {
+const babelwires::RootFeature* testUtils::TestFeatureElement::getOutputFeature() const {
+    return m_feature.get();
+}
+
+babelwires::RootFeature* testUtils::TestFeatureElement::getInputFeatureNonConst() {
+    return m_feature.get();
+}
+
+babelwires::RootFeature* testUtils::TestFeatureElement::getOutputFeatureNonConst() {
     return m_feature.get();
 }
 

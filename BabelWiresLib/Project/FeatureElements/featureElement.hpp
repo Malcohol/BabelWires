@@ -48,11 +48,10 @@ namespace babelwires {
         /// Get a description of the failure.
         std::string getReasonForFailure() const;
 
-        virtual RootFeature* getInputFeature();
-        virtual RootFeature* getOutputFeature();
-
-        const RootFeature* getInputFeature() const;
-        const RootFeature* getOutputFeature() const;
+        virtual RootFeature* getInputFeatureNonConst();
+        virtual RootFeature* getOutputFeatureNonConst();
+        virtual const RootFeature* getInputFeature() const;
+        virtual const RootFeature* getOutputFeature() const;
 
         /// Get a description of the type of element (e.g. format name).
         virtual std::string getLabel() const;

@@ -37,7 +37,7 @@ babelwires::FeatureElement::FeatureElement(const ElementData& data, ElementId ne
 }
 
 void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
-    Feature* inputFeature = getInputFeature();
+    Feature* inputFeature = getInputFeatureNonConst();
     if (inputFeature) {
         inputFeature->setToDefault();
     }
@@ -51,20 +51,20 @@ void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
 
 babelwires::FeatureElement::~FeatureElement() = default;
 
-babelwires::RootFeature* babelwires::FeatureElement::getOutputFeature() {
+babelwires::RootFeature* babelwires::FeatureElement::getOutputFeatureNonConst() {
     return nullptr;
 }
 
 const babelwires::RootFeature* babelwires::FeatureElement::getOutputFeature() const {
-    return const_cast<babelwires::FeatureElement*>(this)->getOutputFeature();
+    return nullptr;
 }
 
-babelwires::RootFeature* babelwires::FeatureElement::getInputFeature() {
+babelwires::RootFeature* babelwires::FeatureElement::getInputFeatureNonConst() {
     return nullptr;
 }
 
 const babelwires::RootFeature* babelwires::FeatureElement::getInputFeature() const {
-    return const_cast<babelwires::FeatureElement*>(this)->getInputFeature();
+    return nullptr;
 }
 
 babelwires::ElementId babelwires::FeatureElement::getElementId() const {
@@ -112,7 +112,7 @@ babelwires::Modifier* babelwires::FeatureElement::addModifierWithoutApplyingIt(c
 babelwires::Modifier* babelwires::FeatureElement::addModifier(UserLogger& userLogger,
                                                               const ModifierData& modifierData) {
     Modifier* newModifier = addModifierWithoutApplyingIt(modifierData);
-    newModifier->applyIfLocal(userLogger, getInputFeature());
+    newModifier->applyIfLocal(userLogger, getInputFeatureNonConst());
     return newModifier;
 }
 
@@ -121,7 +121,7 @@ void babelwires::FeatureElement::removeModifier(Modifier* modifier) {
            "This FeatureElement is not the owner of the modifier");
 
     m_removedModifiers.emplace_back(std::move(m_edits.removeModifier(modifier)));
-    Feature* inputFeature = getInputFeature();
+    Feature* inputFeature = getInputFeatureNonConst();
     assert(inputFeature && "Modifiable elements always have input features");
     if (!modifier->isFailed()) {
         modifier->unapply(inputFeature);
@@ -195,10 +195,10 @@ bool babelwires::FeatureElement::isChanged(Changes changes) const {
 }
 
 void babelwires::FeatureElement::clearChanges() {
-    if (Feature* f = getInputFeature()) {
+    if (Feature* f = getInputFeatureNonConst()) {
         f->clearChanges();
     }
-    if (Feature* f = getOutputFeature()) {
+    if (Feature* f = getOutputFeatureNonConst()) {
         f->clearChanges();
     }
     if (isChanged(Changes::ModifierChangesMask | Changes::CompoundExpandedOrCollapsed | Changes::FeatureElementIsNew)) {

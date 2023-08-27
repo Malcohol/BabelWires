@@ -91,10 +91,18 @@ testUtils::TestFeatureElementWithOptionals::TestFeatureElementWithOptionals(cons
 
 void testUtils::TestFeatureElementWithOptionals::doProcess(babelwires::UserLogger&) {}
 
-babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::getInputFeature() {
+const babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::getInputFeature() const {
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::getOutputFeature() {
+const babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::getOutputFeature() const {
+    return m_feature.get();
+}
+
+babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::getInputFeatureNonConst() {
+    return m_feature.get();
+}
+
+babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::getOutputFeatureNonConst() {
     return m_feature.get();
 }

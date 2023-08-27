@@ -68,7 +68,7 @@ struct FeatureElementConnectionTest : ::testing::Test {
         babelwires::Modifier* modifier = m_featureElement->addModifier(m_context.m_log, m_assignData);
         EXPECT_TRUE(modifier->asConnectionModifier());
         modifier->asConnectionModifier()->applyConnection(m_context.m_project, m_context.m_log,
-                                                          m_featureElement->getInputFeature());
+                                                          m_featureElement->getInputFeatureNonConst());
 
         m_featureElement->clearChanges();
         m_sourceElement->clearChanges();
@@ -99,7 +99,7 @@ TEST_F(FeatureElementConnectionTest, addAConnection) {
     babelwires::Modifier* modifier = m_featureElement->addModifier(m_context.m_log, m_assignData);
     ASSERT_TRUE(modifier->asConnectionModifier());
     modifier->asConnectionModifier()->applyConnection(m_context.m_project, m_context.m_log,
-                                                      m_featureElement->getInputFeature());
+                                                      m_featureElement->getInputFeatureNonConst());
     EXPECT_FALSE(modifier->isFailed());
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierAdded));
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
@@ -113,7 +113,7 @@ TEST_F(FeatureElementConnectionTest, changeSourceValueFromDefault) {
     auto modifier = setUpConnectionModifier(0);
 
     m_sourceElement->addModifier(m_context.m_log, m_arrayElemData);
-    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeature());
+    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeatureNonConst());
 
     EXPECT_FALSE(modifier->isFailed());
     EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
@@ -130,7 +130,7 @@ TEST_F(FeatureElementConnectionTest, changeSourceValueToDefault) {
     auto modifier = setUpConnectionModifier(1);
 
     m_sourceElement->removeModifier(m_sourceElement->findModifier(m_arrayElemPath));
-    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeature());
+    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeatureNonConst());
 
     EXPECT_FALSE(modifier->isFailed());
     EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
@@ -150,7 +150,7 @@ TEST_F(FeatureElementConnectionTest, removedAndRestoreSourceFeature) {
     m_sourceElement->clearChanges();
     m_sourceElement->removeModifier(m_sourceElement->findModifier(m_arrayElemPath));
     m_sourceElement->removeModifier(m_sourceElement->findModifier(m_arrayPath));
-    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeature());
+    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeatureNonConst());
 
     EXPECT_TRUE(modifier->isFailed());
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
@@ -165,7 +165,7 @@ TEST_F(FeatureElementConnectionTest, removedAndRestoreSourceFeature) {
     m_sourceElement->clearChanges();
     m_sourceElement->addModifier(m_context.m_log, m_arrayInitData);
     m_sourceElement->addModifier(m_context.m_log, m_arrayElemData);
-    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeature());
+    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeatureNonConst());
 
     EXPECT_FALSE(modifier->isFailed());
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierRecovered));
@@ -182,7 +182,7 @@ TEST_F(FeatureElementConnectionTest, failedButStillConnected) {
 
     m_sourceElement->removeModifier(m_sourceElement->findModifier(m_arrayElemPath));
     m_sourceElement->addModifier(m_context.m_log, m_arrayElemDataHigh);
-    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeature());
+    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeatureNonConst());
 
     EXPECT_TRUE(modifier->isFailed());
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
@@ -197,7 +197,7 @@ TEST_F(FeatureElementConnectionTest, failedButStillConnected) {
     m_sourceElement->clearChanges();
     m_sourceElement->removeModifier(m_sourceElement->findModifier(m_arrayElemPath));
     m_sourceElement->addModifier(m_context.m_log, m_arrayElemData);
-    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeature());
+    modifier->applyConnection(m_context.m_project, m_context.m_log, m_featureElement->getInputFeatureNonConst());
 
     EXPECT_FALSE(modifier->isFailed());
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierRecovered));

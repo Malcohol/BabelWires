@@ -149,7 +149,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
 
     if (FeatureElement* const element = getFeatureElement(elementId)) {
-        if (Feature* const inputFeature = element->getInputFeature()) {
+        if (Feature* const inputFeature = element->getInputFeatureNonConst()) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should lead to an array");
 
@@ -196,7 +196,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
     assert((indexOfElementToRemove >= 0) && "indexOfEntriesToRemove must be positive");
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     if (FeatureElement* const element = getFeatureElement(elementId)) {
-        if (Feature* const inputFeature = element->getInputFeature()) {
+        if (Feature* const inputFeature = element->getInputFeatureNonConst()) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should lead to an array");
 
@@ -480,7 +480,7 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         for (auto&& pair : connections) {
             ConnectionModifier* connection = std::get<0>(pair);
             FeatureElement* targetElement = std::get<1>(pair);
-            connection->applyConnection(*this, m_userLogger, targetElement->getInputFeature());
+            connection->applyConnection(*this, m_userLogger, targetElement->getInputFeatureNonConst());
         }
     }
 
@@ -489,7 +489,7 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         ConnectionModifier* connection = std::get<0>(pair);
         FeatureElement* owner = std::get<1>(pair);
         if (!connection->isFailed()) {
-            connection->applyConnection(*this, m_userLogger, owner->getInputFeature());
+            connection->applyConnection(*this, m_userLogger, owner->getInputFeatureNonConst());
         }
     }
 }
@@ -593,7 +593,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert (elementToModify);
     
-    Feature* const inputFeature = elementToModify->getInputFeature();
+    Feature* const inputFeature = elementToModify->getInputFeatureNonConst();
     assert (inputFeature);
 
     ActivateOptionalsModifierData* modifierData = nullptr;
@@ -627,7 +627,7 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert (elementToModify);
     
-    Feature* const inputFeature = elementToModify->getInputFeature();
+    Feature* const inputFeature = elementToModify->getInputFeatureNonConst();
     assert (inputFeature);
 
     Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord);

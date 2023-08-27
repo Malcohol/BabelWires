@@ -43,10 +43,10 @@ namespace testUtils {
         TestFeatureElement(const babelwires::ProjectContext& context, const TestFeatureElementData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;
 
-        babelwires::RootFeature* getInputFeature() override;
-        babelwires::RootFeature* getOutputFeature() override;
-        using babelwires::FeatureElement::getInputFeature;
-        using babelwires::FeatureElement::getOutputFeature;
+        babelwires::RootFeature* getInputFeatureNonConst() override;
+        babelwires::RootFeature* getOutputFeatureNonConst() override;
+        const babelwires::RootFeature* getInputFeature() const override;
+        const babelwires::RootFeature* getOutputFeature() const override;
 
         void simulateFailure(const babelwires::ProjectContext& context);
         void simulateRecovery(const babelwires::ProjectContext& context);

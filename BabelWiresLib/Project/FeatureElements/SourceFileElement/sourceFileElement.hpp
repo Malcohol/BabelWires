@@ -28,9 +28,9 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const SourceFileElementData& getElementData() const;
 
-        virtual RootFeature* getOutputFeature() override;
-        using FileElement::getOutputFeature;
-
+        virtual RootFeature* getOutputFeatureNonConst() override;
+        virtual const RootFeature* getOutputFeature() const override;
+        
         virtual std::filesystem::path getFilePath() const override;
         virtual void setFilePath(std::filesystem::path newFilePath) override;
         virtual const FileTypeEntry* getFileFormatInformation(const ProjectContext& context) const override;

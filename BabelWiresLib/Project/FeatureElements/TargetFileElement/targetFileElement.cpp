@@ -57,7 +57,11 @@ babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData
     return static_cast<TargetFileElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::RootFeature* babelwires::TargetFileElement::getInputFeature() {
+babelwires::RootFeature* babelwires::TargetFileElement::getInputFeatureNonConst() {
+    return m_feature.get();
+}
+
+const babelwires::RootFeature* babelwires::TargetFileElement::getInputFeature() const {
     return m_feature.get();
 }
 
