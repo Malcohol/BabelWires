@@ -2,7 +2,7 @@
  * Describes the steps to follow within a tree of features to reach a particular feature.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
@@ -11,9 +11,9 @@
 #include <BabelWiresLib/Features/compoundFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
+#include <Common/Hash/hash.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Log/debugLogger.hpp>
-#include <Common/Hash/hash.hpp>
 #include <Common/types.hpp>
 
 #include <algorithm>
@@ -35,6 +35,9 @@ babelwires::FeaturePath::FeaturePath(const Feature* feature) {
     m_steps.reserve(steps.size());
     std::move(steps.rbegin(), steps.rend(), std::back_inserter(m_steps));
 }
+
+babelwires::FeaturePath::FeaturePath(std::vector<PathStep> steps)
+    : m_steps(std::move(steps)) {}
 
 void babelwires::FeaturePath::pushStep(PathStep step) {
     m_steps.emplace_back(std::move(step));

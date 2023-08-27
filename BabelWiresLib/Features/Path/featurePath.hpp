@@ -31,6 +31,9 @@ namespace babelwires {
 
         FeaturePath(const FeaturePath& other) = default;
 
+        /// Construct a path from a vector of steps.
+        FeaturePath(std::vector<PathStep> steps);
+
         FeaturePath& operator=(const FeaturePath& other) = default;
 
         FeaturePath& operator=(FeaturePath&& other) = default;
