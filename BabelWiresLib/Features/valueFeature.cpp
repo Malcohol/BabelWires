@@ -37,7 +37,7 @@ void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
             auto rootAndPath = getRootValueFeature();
-            ValueHolder& rootValueCopy = rootAndPath.m_root.getNonConstValueCopy();
+            ValueHolder& rootValueCopy = rootAndPath.m_root.getValueCopy();
             const ProjectContext& context = RootFeature::getProjectContextAt(*this);
             auto [_, valueInCopy] = followNonConst(context.m_typeSystem, rootAndPath.m_root.getType(), rootAndPath.m_pathFromRoot, rootValueCopy);
             valueInCopy = newValue;

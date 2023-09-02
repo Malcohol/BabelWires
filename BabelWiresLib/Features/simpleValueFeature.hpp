@@ -21,8 +21,8 @@ namespace babelwires {
         /// Construct a ValueFeature which carries values of the given type.
         SimpleValueFeature(TypeRef typeRef);
 
-        /// Create or access a stored non-const copy of the contained value
-        ValueHolder& getNonConstValueCopy();
+        /// Create or access a stored copy of the contained value
+        ValueHolder& getValueCopy();
 
         /// Apply the copy to the contained value.
         void applyValueCopy();

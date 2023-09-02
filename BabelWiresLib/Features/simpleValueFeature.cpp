@@ -22,9 +22,9 @@ const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() cons
     return m_value;
 }
 
-babelwires::ValueHolder& babelwires::SimpleValueFeature::getNonConstValueCopy() {
+babelwires::ValueHolder& babelwires::SimpleValueFeature::getValueCopy() {
     if (!m_valueCopy) {
-        m_valueCopy = m_value->cloneShared();
+        m_valueCopy = m_value;
     } 
     return m_valueCopy;
 }
