@@ -156,11 +156,8 @@ namespace babelwires {
         /// Obtain the right to modify the feature at the given path.
         /// Returns false if the modifier will be applied later anyway, so there's no
         /// work for the caller to do.
-        /// Throws a ModelException if the path cannot be followed.
+        /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
         bool modifyFeatureAt(const FeaturePath& p);
-
-        /// When all the modifications of one operation have been applied, this should be called.
-        void finishModifications(const Project& project, UserLogger& userLogger);
 
       protected:
         virtual void doProcess(UserLogger& userLogger) = 0;
@@ -194,6 +191,9 @@ namespace babelwires {
         /// Apply the element's local modifiers.
         friend babelwires::ElementData;
         void applyLocalModifiers(UserLogger& userLogger);
+
+        /// This is called by process, to signal that all modifications are finished.
+        void finishModifications(const Project& project, UserLogger& userLogger);
 
       private:
         std::string m_internalFailure;
