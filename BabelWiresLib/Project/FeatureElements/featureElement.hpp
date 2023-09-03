@@ -88,7 +88,7 @@ namespace babelwires {
         void setUiSize(const UiSize& newSize);
 
         /// Update state of the feature and feature caches if there are changes.
-        void process(UserLogger& userLogger);
+        void process(Project& project, UserLogger& userLogger);
 
         // clang-format off
         /// Describes the way an element may have changed.
@@ -154,7 +154,13 @@ namespace babelwires {
                                 int adjustment);
 
         /// Obtain the right to modify the feature at the given path.
-        std::tuple<ModifyFeatureScope, Feature*> modifyFeatureAt(const FeaturePath& p);
+        /// Returns false if the modifier will be applied later anyway, so there's no
+        /// work for the caller to do.
+        /// Throws a ModelException if the path cannot be followed.
+        bool modifyFeatureAt(const FeaturePath& p);
+
+        /// When all the modifications of one operation have been applied, this should be called.
+        void finishModifications(const Project& project, UserLogger& userLogger);
 
       protected:
         virtual void doProcess(UserLogger& userLogger) = 0;
@@ -189,11 +195,6 @@ namespace babelwires {
         friend babelwires::ElementData;
         void applyLocalModifiers(UserLogger& userLogger);
 
-        friend ModifyFeatureScope;
-
-        /// Called by the destructor of ModifyFeatureScope.
-        void finishModification(const ModifyFeatureScope& closingScope);
-
       private:
         std::string m_internalFailure;
         bool m_isInDependencyLoop = false;
@@ -213,6 +214,12 @@ namespace babelwires {
 
         /// The accumulated change since the last time they were cleared.
         Changes m_changes = Changes::FeatureElementIsNew;
+
+        /// If a modifier wants to modify a value feature, one of these will be created.
+        std::unique_ptr<ModifyFeatureScope> m_modifyFeatureScope;
+
+        /// Ignore modifyFeatureScope and apply modifications directly.
+        bool m_isFinishingModifications = false;
 
       protected:
         ContentsCache m_contentsCache;

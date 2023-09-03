@@ -17,6 +17,8 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/TypeSystem/compoundType.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/types.hpp>
@@ -271,8 +273,9 @@ const babelwires::ContentsCache& babelwires::FeatureElement::getContentsCache() 
     return m_contentsCache;
 }
 
-void babelwires::FeatureElement::process(UserLogger& userLogger) {
+void babelwires::FeatureElement::process(Project& project, UserLogger& userLogger) {
     doProcess(userLogger);
+    finishModifications(project, userLogger);
 }
 
 void babelwires::FeatureElement::adjustArrayIndices(const babelwires::FeaturePath& pathToArray,
@@ -296,59 +299,78 @@ void babelwires::FeatureElement::setModifierMoving(const babelwires::Modifier& m
 
 namespace {
 
-    babelwires::Feature* followPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p, int& index) {
+    babelwires::Feature* tryFollowPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p, int& index) {
         if ((index < p.getNumSteps()) || (start->as<babelwires::SimpleValueFeature>())) {
             if (auto* compound = start->as<babelwires::CompoundFeature>()) {
                 babelwires::Feature& child = compound->getChildFromStep(p.getStep(index));
                 ++index;
-                return followPathToValue(&child, p, index);
+                return tryFollowPathToValue(&child, p, index);
             } else {
-                throw babelwires::ModelException() << "Tried to step into a non-compound feature";
+                return nullptr;
             }
         } else {
             return start;
         }
     }
 
-    babelwires::Feature* followPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p, int& index) {
-        try {
-            return followPathToValue(start, p, index);
-        } catch (const std::exception& e) {
-            throw babelwires::ModelException()
-                << e.what() << "; when trying to follow step #" << index + 1 << " in path \"" << p << '\"';
-        }
-    }
-
 } // namespace
 
-std::tuple<babelwires::ModifyFeatureScope, babelwires::Feature*>
-babelwires::FeatureElement::modifyFeatureAt(const FeaturePath& p) {
+bool babelwires::FeatureElement::modifyFeatureAt(const FeaturePath& p) {
+    if (m_isFinishingModifications) {
+        // Do apply modifications now.
+        return true;
+    }
+
     RootFeature* inputFeature = getInputFeatureNonConst();
     assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
     int index = 0;
-    Feature* target = followPathToValue(inputFeature, p, index);
+    Feature* target = tryFollowPathToValue(inputFeature, p, index);
+    if (!target) {
+        // For now, it's not the job of this method to handle failures.
+        // The modifier will reattempt the traversal and capture the failure properly.
+        return true;
+    }
 
     if (SimpleValueFeature* const rootValueFeature = target->as<SimpleValueFeature>()) {
         FeaturePath pathToRootFeature = p;
         pathToRootFeature.truncate(index);
-        target = &p.follow(*target, index);
-        return {ModifyFeatureScope(this, std::move(pathToRootFeature), rootValueFeature), target};
+        // Assume there's only ever one compound type in a feature tree.
+        if (rootValueFeature->getType().as<CompoundType>()) {
+            if (m_modifyFeatureScope == nullptr) {
+                m_modifyFeatureScope = std::make_unique<ModifyFeatureScope>(this, std::move(pathToRootFeature), rootValueFeature);
+            } else {
+                // The modification will happen later anyway, so the caller shouldn't bother.
+                return false;
+            }
+        }
     } else {
         assert((index == p.getNumSteps()) && "Path didn't lead to a root value feature, but was not fully explored");
-        return {ModifyFeatureScope(), target};
     }
+    return true;
 }
 
-void babelwires::FeatureElement::finishModification(const ModifyFeatureScope& closingScope) {
-    // First, apply any other modifiers which apply beneath the path
-    for (auto it : m_edits.modifierRange(closingScope.m_pathToRootValue)) {
-        if (const auto & connection = it->as<ConnectionModifier>()) {
-            //connection->applyConnection();
-        } else {
-            //it->applyIfLocal();
+void babelwires::FeatureElement::finishModifications(const Project& project, UserLogger& userLogger) {
+    if (m_modifyFeatureScope) {
+        try {
+            m_isFinishingModifications = true;
+            m_modifyFeatureScope->m_rootValueFeature->synchronizeSubfeatures();
+            Feature* container = getInputFeatureNonConst();
+            // First, apply any other modifiers which apply beneath the path
+            for (auto it : m_edits.modifierRange(m_modifyFeatureScope->m_pathToRootValue)) {
+                if (const auto& connection = it->as<ConnectionModifier>()) {
+                    connection->applyConnection(project, userLogger, container);
+                } else {
+                    it->applyIfLocal(userLogger, container);
+                }
+            }
+
+            // Next, tell the SimpleValueFeature to apply the changes from its copy to the real value.
+            m_modifyFeatureScope->m_rootValueFeature->applyValueCopy();
+            m_modifyFeatureScope = nullptr;
+        }
+        catch (...) {
+            m_isFinishingModifications = false;
+            throw;
         }
     }
-
-    // Next, tell the SimpleValueFeature to apply its changes.
-    closingScope.m_rootValueFeature->applyValueCopy();
 }

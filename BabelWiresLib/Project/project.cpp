@@ -545,7 +545,7 @@ void babelwires::Project::process() {
 
     // Now iterate in dependency order.
     for (auto&& element : sortedElements) {
-        element->process(m_userLogger);
+        element->process(*this, m_userLogger);
         // Existing connections only apply their contents if their source has changed,
         // so this doesn't unnecessarily change dependent data.
         // We do need to visit all out-going connections in case some are new.
