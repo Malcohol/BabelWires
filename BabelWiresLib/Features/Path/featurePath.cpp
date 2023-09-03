@@ -116,8 +116,7 @@ namespace {
         }
     }
 
-    template <typename T> T& followPath(T& start, const babelwires::FeaturePath& p) {
-        int index = 0;
+    template <typename T> T& followPathWithTry(T& start, const babelwires::FeaturePath& p, int index) {
         try {
             return followPath(start, p, index);
         } catch (const std::exception& e) {
@@ -128,12 +127,12 @@ namespace {
 
 } // namespace
 
-babelwires::Feature& babelwires::FeaturePath::follow(Feature& start) const {
-    return followPath<Feature>(start, *this);
+babelwires::Feature& babelwires::FeaturePath::follow(Feature& start, int startStepIndex) const {
+    return followPathWithTry<Feature>(start, *this, startStepIndex);
 }
 
-const babelwires::Feature& babelwires::FeaturePath::follow(const Feature& start) const {
-    return followPath<const Feature>(start, *this);
+const babelwires::Feature& babelwires::FeaturePath::follow(const Feature& start, int startStepIndex) const {
+    return followPathWithTry<const Feature>(start, *this, startStepIndex);
 }
 
 namespace {

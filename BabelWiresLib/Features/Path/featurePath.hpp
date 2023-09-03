@@ -50,9 +50,10 @@ namespace babelwires {
         /// Parse a serialized representation of a path.
         static FeaturePath deserializeFromString(const std::string& pathString);
 
+        /// Follow the path into start from step startStepIndex.
         /// Throws if the path cannot be followed.
-        Feature& follow(Feature& start) const;
-        const Feature& follow(const Feature& start) const;
+        Feature& follow(Feature& start, int startStepIndex = 0) const;
+        const Feature& follow(const Feature& start, int startStepIndex = 0) const;
 
         /// Returns nullptr if the path cannot be followed.
         Feature* tryFollow(Feature& start) const;

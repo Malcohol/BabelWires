@@ -10,6 +10,7 @@
 
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
+#include <BabelWiresLib/Project/FeatureElements/modifyFeatureScope.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <Common/Utilities/enumFlags.hpp>
@@ -152,6 +153,9 @@ namespace babelwires {
         void adjustArrayIndices(const babelwires::FeaturePath& pathToArray, babelwires::ArrayIndex startIndex,
                                 int adjustment);
 
+        /// Obtain the right to modify the feature at the given path.
+        std::tuple<ModifyFeatureScope, Feature*> modifyFeatureAt(const FeaturePath& p);
+
       protected:
         virtual void doProcess(UserLogger& userLogger) = 0;
 
@@ -184,6 +188,11 @@ namespace babelwires {
         /// Apply the element's local modifiers.
         friend babelwires::ElementData;
         void applyLocalModifiers(UserLogger& userLogger);
+
+        friend ModifyFeatureScope;
+
+        /// Called by the destructor of ModifyFeatureScope.
+        void finishModification(const ModifyFeatureScope& closingScope);
 
       private:
         std::string m_internalFailure;

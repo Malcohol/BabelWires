@@ -14,6 +14,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/FeatureElements/ProcessorElement/processorElementData.cpp
 	Project/FeatureElements/ValueElement/valueElement.cpp
 	Project/FeatureElements/ValueElement/valueElementData.cpp
+	Project/FeatureElements/modifyFeatureScope.cpp
 	Project/Modifiers/modifier.cpp
 	Project/Modifiers/modifierData.cpp
 	Project/Modifiers/localModifier.cpp

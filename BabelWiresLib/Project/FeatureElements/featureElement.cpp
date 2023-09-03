@@ -3,21 +3,23 @@
  * They expose input and output Features, and carry edits.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <Common/types.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/types.hpp>
 
 #include <algorithm>
 
@@ -290,4 +292,63 @@ void babelwires::FeatureElement::setExpanded(const babelwires::FeaturePath& feat
 void babelwires::FeatureElement::setModifierMoving(const babelwires::Modifier& modifierAboutToMove) {
     setChanged(Changes::ModifierMoved);
     m_removedModifiers.emplace_back(modifierAboutToMove.clone());
+}
+
+namespace {
+
+    babelwires::Feature* followPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p, int& index) {
+        if ((index < p.getNumSteps()) || (start->as<babelwires::SimpleValueFeature>())) {
+            if (auto* compound = start->as<babelwires::CompoundFeature>()) {
+                babelwires::Feature& child = compound->getChildFromStep(p.getStep(index));
+                ++index;
+                return followPathToValue(&child, p, index);
+            } else {
+                throw babelwires::ModelException() << "Tried to step into a non-compound feature";
+            }
+        } else {
+            return start;
+        }
+    }
+
+    babelwires::Feature* followPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p, int& index) {
+        try {
+            return followPathToValue(start, p, index);
+        } catch (const std::exception& e) {
+            throw babelwires::ModelException()
+                << e.what() << "; when trying to follow step #" << index + 1 << " in path \"" << p << '\"';
+        }
+    }
+
+} // namespace
+
+std::tuple<babelwires::ModifyFeatureScope, babelwires::Feature*>
+babelwires::FeatureElement::modifyFeatureAt(const FeaturePath& p) {
+    RootFeature* inputFeature = getInputFeatureNonConst();
+    assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
+    int index = 0;
+    Feature* target = followPathToValue(inputFeature, p, index);
+
+    if (SimpleValueFeature* const rootValueFeature = target->as<SimpleValueFeature>()) {
+        FeaturePath pathToRootFeature = p;
+        pathToRootFeature.truncate(index);
+        target = &p.follow(*target, index);
+        return {ModifyFeatureScope(this, std::move(pathToRootFeature), rootValueFeature), target};
+    } else {
+        assert((index == p.getNumSteps()) && "Path didn't lead to a root value feature, but was not fully explored");
+        return {ModifyFeatureScope(), target};
+    }
+}
+
+void babelwires::FeatureElement::finishModification(const ModifyFeatureScope& closingScope) {
+    // First, apply any other modifiers which apply beneath the path
+    for (auto it : m_edits.modifierRange(closingScope.m_pathToRootValue)) {
+        if (const auto & connection = it->as<ConnectionModifier>()) {
+            //connection->applyConnection();
+        } else {
+            //it->applyIfLocal();
+        }
+    }
+
+    // Next, tell the SimpleValueFeature to apply its changes.
+    closingScope.m_rootValueFeature->applyValueCopy();
 }
