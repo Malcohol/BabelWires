@@ -28,3 +28,7 @@ babelwires::ValueHolder& babelwires::SimpleValueFeature::getValueCopy() {
     } 
     return m_valueCopy;
 }
+
+void babelwires::SimpleValueFeature::applyValueCopy() {
+    // TODO
+}

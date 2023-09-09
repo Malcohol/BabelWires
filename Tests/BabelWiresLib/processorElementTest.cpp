@@ -41,7 +41,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, valueSettingData);
-    processorElement->process(testEnvironment.m_log);
+    processorElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     // The default.
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
@@ -56,7 +56,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, arraySettingData);
-    processorElement->process(testEnvironment.m_log);
+    processorElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 6);
     EXPECT_FALSE(processorElement->isFailed());
@@ -71,7 +71,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     processorElement->clearChanges();
     processorElement->removeModifier(processorElement->findModifier(arraySettingIntPath));
     processorElement->addModifier(testEnvironment.m_log, badArraySettingData);
-    processorElement->process(testEnvironment.m_log);
+    processorElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_TRUE(processorElement->isFailed());
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
@@ -84,7 +84,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     processorElement->clearChanges();
     processorElement->removeModifier(processorElement->findModifier(arraySettingIntPath));
     processorElement->addModifier(testEnvironment.m_log, arraySettingData);
-    processorElement->process(testEnvironment.m_log);
+    processorElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_FALSE(processorElement->isFailed());
     EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 6);

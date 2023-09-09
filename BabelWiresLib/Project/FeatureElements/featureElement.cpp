@@ -13,12 +13,12 @@
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/modifyFeatureScope.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/types.hpp>
@@ -299,7 +299,8 @@ void babelwires::FeatureElement::setModifierMoving(const babelwires::Modifier& m
 
 namespace {
 
-    babelwires::Feature* tryFollowPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p, int& index) {
+    babelwires::Feature* tryFollowPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p,
+                                              int& index) {
         if ((index < p.getNumSteps()) || (start->as<babelwires::SimpleValueFeature>())) {
             if (auto* compound = start->as<babelwires::CompoundFeature>()) {
                 babelwires::Feature& child = compound->getChildFromStep(p.getStep(index));
@@ -337,7 +338,8 @@ bool babelwires::FeatureElement::modifyFeatureAt(const FeaturePath& p) {
         // Assume there's only ever one compound type in a feature tree.
         if (rootValueFeature->getType().as<CompoundType>()) {
             if (m_modifyFeatureScope == nullptr) {
-                m_modifyFeatureScope = std::make_unique<ModifyFeatureScope>(this, std::move(pathToRootFeature), rootValueFeature);
+                m_modifyFeatureScope =
+                    std::make_unique<ModifyFeatureScope>(std::move(pathToRootFeature), rootValueFeature);
             } else {
                 // The modification will happen later anyway, so the caller shouldn't bother.
                 return false;
@@ -367,8 +369,7 @@ void babelwires::FeatureElement::finishModifications(const Project& project, Use
             // Next, tell the SimpleValueFeature to apply the changes from its copy to the real value.
             m_modifyFeatureScope->m_rootValueFeature->applyValueCopy();
             m_modifyFeatureScope = nullptr;
-        }
-        catch (...) {
+        } catch (...) {
             m_isFinishingModifications = false;
             throw;
         }

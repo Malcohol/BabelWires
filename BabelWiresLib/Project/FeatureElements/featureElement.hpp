@@ -10,7 +10,6 @@
 
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
-#include <BabelWiresLib/Project/FeatureElements/modifyFeatureScope.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <Common/Utilities/enumFlags.hpp>
@@ -32,6 +31,7 @@ namespace babelwires {
     struct UiSize;
     struct ProjectContext;
     class RootFeature;
+    class ModifyFeatureScope;
 
     /// The fundimental constituent of the project.
     /// FeatureElements expose input and output Features, and carry edits.

@@ -57,7 +57,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
         targetFileElement->addModifier(testEnvironment.m_log, intMod);
     }
 
-    targetFileElement->process(testEnvironment.m_log);
+    targetFileElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     // Note: There's a small chance this will fail because hash collisions. If it does, change the intMod.m_value above.
     EXPECT_TRUE(endsWithStar(targetFileElement->getLabel()));
@@ -65,7 +65,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
     EXPECT_FALSE(endsWithStar(targetFileElement->getLabel()));
 
     targetFileElement->removeModifier(targetFileElement->findModifier(pathToInt));
-    targetFileElement->process(testEnvironment.m_log);
+    targetFileElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_TRUE(endsWithStar(targetFileElement->getLabel()));
     EXPECT_TRUE(targetFileElement->save(testEnvironment.m_projectContext, testEnvironment.m_log));
@@ -101,7 +101,7 @@ TEST(TargetFileElementTest, changeFile) {
 
     targetFileElement->clearChanges();
     targetFileElement->setFilePath(tempFilePath2.m_filePath);
-    targetFileElement->process(testEnvironment.m_log);
+    targetFileElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FileChanged));
     EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementLabelChanged));
@@ -110,7 +110,7 @@ TEST(TargetFileElementTest, changeFile) {
 
     targetFileElement->clearChanges();
     targetFileElement->setFilePath(tempFilePath1.m_filePath);
-    targetFileElement->process(testEnvironment.m_log);
+    targetFileElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     // setFilePath is not expected to trigger a reload.
     EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FileChanged));
