@@ -41,7 +41,7 @@ babelwires::FeatureElement::FeatureElement(const ElementData& data, ElementId ne
 }
 
 void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
-    Feature* inputFeature = getInputFeatureNonConst();
+    Feature* inputFeature = getInputFeatureNonConst(FeaturePath());
     if (inputFeature) {
         inputFeature->setToDefault();
     }
@@ -63,8 +63,12 @@ const babelwires::RootFeature* babelwires::FeatureElement::getOutputFeature() co
     return nullptr;
 }
 
-babelwires::RootFeature* babelwires::FeatureElement::getInputFeatureNonConst() {
-    return doGetInputFeatureNonConst();
+babelwires::RootFeature* babelwires::FeatureElement::getInputFeatureNonConst(const FeaturePath& pathToModify) {
+    RootFeature* inputFeature = doGetInputFeatureNonConst();
+    if (modifyFeatureAt(inputFeature, pathToModify)) {
+        return inputFeature;
+    }
+    return nullptr;
 }
 
 babelwires::RootFeature* babelwires::FeatureElement::doGetInputFeatureNonConst() {
@@ -120,7 +124,7 @@ babelwires::Modifier* babelwires::FeatureElement::addModifierWithoutApplyingIt(c
 babelwires::Modifier* babelwires::FeatureElement::addModifier(UserLogger& userLogger,
                                                               const ModifierData& modifierData) {
     Modifier* newModifier = addModifierWithoutApplyingIt(modifierData);
-    newModifier->applyIfLocal(userLogger, getInputFeatureNonConst());
+    newModifier->applyIfLocal(userLogger, getInputFeatureNonConst(newModifier->getPathToFeature()));
     return newModifier;
 }
 
@@ -129,7 +133,7 @@ void babelwires::FeatureElement::removeModifier(Modifier* modifier) {
            "This FeatureElement is not the owner of the modifier");
 
     m_removedModifiers.emplace_back(std::move(m_edits.removeModifier(modifier)));
-    Feature* inputFeature = getInputFeatureNonConst();
+    Feature* inputFeature = getInputFeatureNonConst(modifier->getPathToFeature());
     assert(inputFeature && "Modifiable elements always have input features");
     if (!modifier->isFailed()) {
         modifier->unapply(inputFeature);
@@ -203,7 +207,7 @@ bool babelwires::FeatureElement::isChanged(Changes changes) const {
 }
 
 void babelwires::FeatureElement::clearChanges() {
-    if (Feature* f = getInputFeatureNonConst()) {
+    if (Feature* f = doGetInputFeatureNonConst()) {
         f->clearChanges();
     }
     if (Feature* f = doGetOutputFeatureNonConst()) {
@@ -320,14 +324,14 @@ namespace {
 
 } // namespace
 
-bool babelwires::FeatureElement::modifyFeatureAt(const FeaturePath& p) {
+bool babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const FeaturePath& p) {
+    assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
+
     if (m_isFinishingModifications) {
         // Do apply modifications now.
         return true;
     }
 
-    RootFeature* inputFeature = getInputFeatureNonConst();
-    assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
     int index = 0;
     Feature* target = tryFollowPathToValue(inputFeature, p, index);
     if (!target) {
@@ -360,7 +364,7 @@ void babelwires::FeatureElement::finishModifications(const Project& project, Use
         try {
             m_isFinishingModifications = true;
             m_modifyFeatureScope->m_rootValueFeature->synchronizeSubfeatures();
-            Feature* container = getInputFeatureNonConst();
+            Feature* container = doGetInputFeatureNonConst();
             // First, apply any other modifiers which apply beneath the path
             for (auto it : m_edits.modifierRange(m_modifyFeatureScope->m_pathToRootValue)) {
                 if (const auto& connection = it->as<ConnectionModifier>()) {

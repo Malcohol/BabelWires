@@ -49,7 +49,12 @@ namespace babelwires {
         /// Get a description of the failure.
         std::string getReasonForFailure() const;
 
-        RootFeature* getInputFeatureNonConst();
+        /// Get a non-const pointer to the input feature and obtain the right to modify the feature at the given path.
+        /// Returns nullptr if the modifier will be applied later anyway, so there's no
+        /// work for the caller to do.
+        /// This does not attempt to deal with errors, so it returns the feature if the path cannot be followed.
+        RootFeature* getInputFeatureNonConst(const FeaturePath& pathToModify);
+
         virtual const RootFeature* getInputFeature() const;
         virtual const RootFeature* getOutputFeature() const;
 
@@ -152,14 +157,10 @@ namespace babelwires {
         void adjustArrayIndices(const babelwires::FeaturePath& pathToArray, babelwires::ArrayIndex startIndex,
                                 int adjustment);
 
-        /// Obtain the right to modify the feature at the given path.
-        /// Returns false if the modifier will be applied later anyway, so there's no
-        /// work for the caller to do.
-        /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
-        bool modifyFeatureAt(const FeaturePath& p);
-
       protected:
+        /// Get a non-const pointer to the input feature. The default implementation returns null.
         virtual RootFeature* doGetInputFeatureNonConst();
+        /// Get a non-const pointer to the output feature. The default implementation returns null.
         virtual RootFeature* doGetOutputFeatureNonConst();
         virtual void doProcess(UserLogger& userLogger) = 0;
 
@@ -193,6 +194,12 @@ namespace babelwires {
         /// Apply the element's local modifiers.
         friend babelwires::ElementData;
         void applyLocalModifiers(UserLogger& userLogger);
+
+        /// Obtain the right to modify the feature at the given path.
+        /// Returns false if the modifier will be applied later anyway, so there's no
+        /// work for the caller to do.
+        /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
+        bool modifyFeatureAt(Feature* inputFeature, const FeaturePath& p);
 
         /// This is called by process, to signal that all modifications are finished.
         void finishModifications(const Project& project, UserLogger& userLogger);
