@@ -55,7 +55,7 @@ void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
 
 babelwires::FeatureElement::~FeatureElement() = default;
 
-babelwires::RootFeature* babelwires::FeatureElement::getOutputFeatureNonConst() {
+babelwires::RootFeature* babelwires::FeatureElement::doGetOutputFeatureNonConst() {
     return nullptr;
 }
 
@@ -64,6 +64,10 @@ const babelwires::RootFeature* babelwires::FeatureElement::getOutputFeature() co
 }
 
 babelwires::RootFeature* babelwires::FeatureElement::getInputFeatureNonConst() {
+    return doGetInputFeatureNonConst();
+}
+
+babelwires::RootFeature* babelwires::FeatureElement::doGetInputFeatureNonConst() {
     return nullptr;
 }
 
@@ -202,7 +206,7 @@ void babelwires::FeatureElement::clearChanges() {
     if (Feature* f = getInputFeatureNonConst()) {
         f->clearChanges();
     }
-    if (Feature* f = getOutputFeatureNonConst()) {
+    if (Feature* f = doGetOutputFeatureNonConst()) {
         f->clearChanges();
     }
     if (isChanged(Changes::ModifierChangesMask | Changes::CompoundExpandedOrCollapsed | Changes::FeatureElementIsNew)) {

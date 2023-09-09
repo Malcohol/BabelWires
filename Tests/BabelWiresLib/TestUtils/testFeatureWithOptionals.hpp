@@ -84,8 +84,8 @@ namespace testUtils {
         TestFeatureElementWithOptionals(const babelwires::ProjectContext& context, const TestFeatureElementWithOptionalsData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;
 
-        babelwires::RootFeature* getInputFeatureNonConst() override;
-        babelwires::RootFeature* getOutputFeatureNonConst() override;
+        babelwires::RootFeature* doGetInputFeatureNonConst() override;
+        babelwires::RootFeature* doGetOutputFeatureNonConst() override;
         const babelwires::RootFeature* getInputFeature() const override;
         const babelwires::RootFeature* getOutputFeature() const override;
 

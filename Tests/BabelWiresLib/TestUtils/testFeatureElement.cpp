@@ -54,11 +54,11 @@ const babelwires::RootFeature* testUtils::TestFeatureElement::getOutputFeature()
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElement::getInputFeatureNonConst() {
+babelwires::RootFeature* testUtils::TestFeatureElement::doGetInputFeatureNonConst() {
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElement::getOutputFeatureNonConst() {
+babelwires::RootFeature* testUtils::TestFeatureElement::doGetOutputFeatureNonConst() {
     return m_feature.get();
 }
 

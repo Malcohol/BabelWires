@@ -24,12 +24,12 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const ValueElementData& getElementData() const;
 
-        virtual RootFeature* getInputFeatureNonConst() override;
-        virtual RootFeature* getOutputFeatureNonConst() override;
         virtual const RootFeature* getInputFeature() const override;
         virtual const RootFeature* getOutputFeature() const override;
 
       protected:
+        RootFeature* doGetInputFeatureNonConst() override;
+        RootFeature* doGetOutputFeatureNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
       private:

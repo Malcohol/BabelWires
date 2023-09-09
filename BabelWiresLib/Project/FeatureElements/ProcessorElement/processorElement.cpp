@@ -42,7 +42,7 @@ const babelwires::ProcessorElementData& babelwires::ProcessorElement::getElement
     return static_cast<const ProcessorElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::RootFeature* babelwires::ProcessorElement::getOutputFeatureNonConst() {
+babelwires::RootFeature* babelwires::ProcessorElement::doGetOutputFeatureNonConst() {
     if (m_processor) {
         return m_processor->getOutputFeature();
     } else {
@@ -50,7 +50,7 @@ babelwires::RootFeature* babelwires::ProcessorElement::getOutputFeatureNonConst(
     }
 }
 
-babelwires::RootFeature* babelwires::ProcessorElement::getInputFeatureNonConst() {
+babelwires::RootFeature* babelwires::ProcessorElement::doGetInputFeatureNonConst() {
     if (m_processor) {
         return m_processor->getInputFeature();
     } else {

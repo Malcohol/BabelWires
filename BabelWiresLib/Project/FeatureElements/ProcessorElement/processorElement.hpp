@@ -24,14 +24,16 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const ProcessorElementData& getElementData() const;
 
-        virtual RootFeature* getInputFeatureNonConst() override;
-        virtual RootFeature* getOutputFeatureNonConst() override;
         virtual const RootFeature* getInputFeature() const override;
         virtual const RootFeature* getOutputFeature() const override;
 
       protected:
+        RootFeature* doGetInputFeatureNonConst() override;
+        RootFeature* doGetOutputFeatureNonConst() override;
+        void doProcess(UserLogger& userLogger) override;
+
+      protected:
         void setProcessor(std::unique_ptr<Processor> processor);
-        virtual void doProcess(UserLogger& userLogger) override;
 
       private:
         std::unique_ptr<Processor> m_processor;

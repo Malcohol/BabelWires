@@ -99,10 +99,10 @@ const babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::getOu
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::getInputFeatureNonConst() {
+babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::doGetInputFeatureNonConst() {
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::getOutputFeatureNonConst() {
+babelwires::RootFeature* testUtils::TestFeatureElementWithOptionals::doGetOutputFeatureNonConst() {
     return m_feature.get();
 }

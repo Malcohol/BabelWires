@@ -131,10 +131,10 @@ const babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::getOutput
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::getInputFeatureNonConst() {
+babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::doGetInputFeatureNonConst() {
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::getOutputFeatureNonConst() {
+babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::doGetOutputFeatureNonConst() {
     return m_feature.get();
 }

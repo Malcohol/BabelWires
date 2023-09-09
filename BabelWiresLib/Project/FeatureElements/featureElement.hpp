@@ -49,8 +49,7 @@ namespace babelwires {
         /// Get a description of the failure.
         std::string getReasonForFailure() const;
 
-        virtual RootFeature* getInputFeatureNonConst();
-        virtual RootFeature* getOutputFeatureNonConst();
+        RootFeature* getInputFeatureNonConst();
         virtual const RootFeature* getInputFeature() const;
         virtual const RootFeature* getOutputFeature() const;
 
@@ -160,8 +159,11 @@ namespace babelwires {
         bool modifyFeatureAt(const FeaturePath& p);
 
       protected:
+        virtual RootFeature* doGetInputFeatureNonConst();
+        virtual RootFeature* doGetOutputFeatureNonConst();
         virtual void doProcess(UserLogger& userLogger) = 0;
 
+      protected:
         void clearInternalFailure();
         void setInternalFailure(std::string reasonForFailure);
 
