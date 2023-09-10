@@ -227,9 +227,6 @@ namespace babelwires {
         /// If a modifier wants to modify a value feature, one of these will be created.
         std::unique_ptr<ModifyFeatureScope> m_modifyFeatureScope;
 
-        /// Ignore modifyFeatureScope and apply modifications directly.
-        bool m_isFinishingModifications = false;
-
       protected:
         ContentsCache m_contentsCache;
     };

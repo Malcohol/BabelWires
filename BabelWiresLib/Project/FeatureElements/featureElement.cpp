@@ -327,11 +327,6 @@ namespace {
 bool babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const FeaturePath& p) {
     assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
 
-    if (m_isFinishingModifications) {
-        // Do apply modifications now.
-        return true;
-    }
-
     int index = 0;
     Feature* target = tryFollowPathToValue(inputFeature, p, index);
     if (!target) {
@@ -361,25 +356,20 @@ bool babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const Fe
 
 void babelwires::FeatureElement::finishModifications(const Project& project, UserLogger& userLogger) {
     if (m_modifyFeatureScope) {
-        try {
-            m_isFinishingModifications = true;
-            m_modifyFeatureScope->m_rootValueFeature->synchronizeSubfeatures();
-            Feature* container = doGetInputFeatureNonConst();
-            // First, apply any other modifiers which apply beneath the path
-            for (auto it : m_edits.modifierRange(m_modifyFeatureScope->m_pathToRootValue)) {
-                if (const auto& connection = it->as<ConnectionModifier>()) {
-                    connection->applyConnection(project, userLogger, container);
-                } else {
-                    it->applyIfLocal(userLogger, container);
-                }
+        m_modifyFeatureScope->m_rootValueFeature->synchronizeSubfeatures();
+        // Get the input feature directly.
+        Feature* inputFeature = doGetInputFeatureNonConst();
+        // First, apply any other modifiers which apply beneath the path
+        for (auto it : m_edits.modifierRange(m_modifyFeatureScope->m_pathToRootValue)) {
+            if (const auto& connection = it->as<ConnectionModifier>()) {
+                connection->applyConnection(project, userLogger, inputFeature);
+            } else {
+                it->applyIfLocal(userLogger, inputFeature);
             }
-
-            // Next, tell the SimpleValueFeature to apply the changes from its copy to the real value.
-            m_modifyFeatureScope->m_rootValueFeature->applyValueCopy();
-            m_modifyFeatureScope = nullptr;
-        } catch (...) {
-            m_isFinishingModifications = false;
-            throw;
         }
+
+        // Next, tell the SimpleValueFeature to apply the changes from its copy to the real value.
+        m_modifyFeatureScope->m_rootValueFeature->applyValueCopy();
+        m_modifyFeatureScope = nullptr;
     }
 }
