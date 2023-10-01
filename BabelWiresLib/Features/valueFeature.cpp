@@ -224,7 +224,7 @@ void babelwires::ValueFeature::reconcileChanges(const ValueHolder& backup) {
 
         std::map<PathStep, ValueFeature*> currentChildFeatures;
         for (const auto& it : m_children) {
-            currentChildFeatures.emplace(std::pair{&it.getKey0(), it.getValue().get()});
+            currentChildFeatures.emplace(std::pair{it.getKey0(), it.getValue().get()});
         }
         
         std::map<PathStep, const ValueHolder*> backupChildValues;
