@@ -42,7 +42,12 @@ namespace babelwires {
         /// made available outside the current context.
         template <typename T, typename... ARGS> static NewValueHolderTemplate<VALUE> makeValue(ARGS&&... args);
 
+        /// Is this currently holding anything?
         operator bool() const;
+
+        /// No longer hold anything.
+        void clear();
+
         const VALUE& operator*() const;
         const VALUE* operator->() const;
 

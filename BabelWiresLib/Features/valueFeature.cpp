@@ -32,21 +32,18 @@ const babelwires::ValueHolder& babelwires::ValueFeature::getValue() const {
 
 void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
     const ValueHolder& currentValue = doGetValue();
-    const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
-    const Type& type = getType();
-    if (type.isValidValue(typeSystem, *newValue)) {
-        auto rootAndPath = getRootValueFeature();
-        // Don't check whether the new value matches the current value of the feature, since we're going to update the
-        // value in the copy and that might already be different because of setValue calls at ancestor features.
-        // TODO We _could_ check whether new value compares to the value in the copy. Unsure whether this is useful.
-        ValueHolder& rootValueCopy = rootAndPath.m_root.getValueCopy();
-        const ProjectContext& context = RootFeature::getProjectContextAt(*this);
-        auto [_, valueInCopy] = followNonConst(context.m_typeSystem, rootAndPath.m_root.getType(),
-                                               rootAndPath.m_pathFromRoot, rootValueCopy);
-        valueInCopy = newValue;
-        // Note: We've only changed data in a copy, so we don't adjust the change flags here.
-    } else {
-        throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
+    if (currentValue != newValue) {
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+        const Type& type = getType();
+        if (type.isValidValue(typeSystem, *newValue)) {
+            auto rootAndPath = getRootValueFeature();
+            ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);
+            modifiableValueHolder = newValue;
+            // Changing the modifiableValueHolder, can change the value.
+            synchronizeSubfeatures();
+        } else {
+            throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
+        }
     }
 }
 
@@ -216,5 +213,46 @@ babelwires::ValueFeature::RootAndPath<babelwires::SimpleValueFeature> babelwires
         PathStep stepToThis = owner->getStepToChild(current);
         reversePath.emplace_back(stepToThis);
         current = owner;
+    }
+}
+
+void babelwires::ValueFeature::reconcileChanges(const ValueHolder& backup) {
+    const Value& value = *getValue();
+    const Value& backupValue = *backup;
+    if (auto* compound = getType().as<CompoundType>()) {
+        // Should only be here if the type hasn't changed, so we can use compound with backup.
+
+        std::map<PathStep, ValueFeature*> currentChildFeatures;
+        for (const auto& it : m_children) {
+            currentChildFeatures.emplace(std::pair{&it.getKey0(), it.getValue().get()});
+        }
+        
+        std::map<PathStep, const ValueHolder*> backupChildValues;
+        for (int i = 0; i < compound->getNumChildren(backupValue); ++i) {
+            backupChildValues.emplace(std::pair{compound->getStepToChild(backupValue, i), compound->getChild(backupValue, i)});
+        }
+
+        auto currentIt = currentChildFeatures.begin();
+        auto backupIt = backupChildValues.begin();
+
+        while ((currentIt != currentChildFeatures.end()) && (backupIt != backupChildValues.end())) {
+            if (currentIt->first < backupIt->first) {
+                setChanged(Changes::StructureChanged);                
+                ++currentIt;
+            } else if (backupIt->first < currentIt->first) {
+                setChanged(Changes::StructureChanged);                
+                ++backupIt;
+            } else {
+                // TODO Assert types are the same.
+                currentIt->second->reconcileChanges(*backupIt->second);
+                ++currentIt;
+                ++backupIt;
+            }
+        }
+        if ((currentIt != currentChildFeatures.end()) || (backupIt != backupChildValues.end())) {
+            setChanged(Changes::StructureChanged);                
+        }
+    } else if (getValue() != backup) {
+        setChanged(Changes::ValueChanged);
     }
 }

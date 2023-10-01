@@ -341,6 +341,7 @@ bool babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const Fe
         // Assume there's only ever one compound type in a feature tree.
         if (rootValueFeature->getType().as<CompoundType>()) {
             if (m_modifyFeatureScope == nullptr) {
+                rootValueFeature->backUpValue();
                 m_modifyFeatureScope =
                     std::make_unique<ModifyFeatureScope>(std::move(pathToRootFeature), rootValueFeature);
             } else {
@@ -356,7 +357,6 @@ bool babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const Fe
 
 void babelwires::FeatureElement::finishModifications(const Project& project, UserLogger& userLogger) {
     if (m_modifyFeatureScope) {
-        m_modifyFeatureScope->m_rootValueFeature->synchronizeSubfeatures();
         // Get the input feature directly.
         Feature* inputFeature = doGetInputFeatureNonConst();
         // First, apply any other modifiers which apply beneath the path
@@ -369,7 +369,7 @@ void babelwires::FeatureElement::finishModifications(const Project& project, Use
         }
 
         // Next, tell the SimpleValueFeature to apply the changes from its copy to the real value.
-        m_modifyFeatureScope->m_rootValueFeature->applyValueCopy();
+        m_modifyFeatureScope->m_rootValueFeature->reconcileChangesFromBackup();
         m_modifyFeatureScope = nullptr;
     }
 }

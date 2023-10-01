@@ -50,6 +50,8 @@ namespace babelwires {
         /// If the value is compound, synchronize the m_children data structure with the current children of the value.
         void synchronizeSubfeatures();
 
+        void reconcileChanges(const ValueHolder& backup);
+
       public:
         virtual int getNumFeatures() const override;
         virtual PathStep getStepToChild(const Feature* child) const override;

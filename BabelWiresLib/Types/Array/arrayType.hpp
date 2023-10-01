@@ -37,7 +37,6 @@ namespace babelwires {
         std::optional<std::tuple<TypeRef, ValueHolder&>> tryGetChildFromStepNonConst(ValueHolder& compoundValue, const PathStep& step) const override;
         std::optional<std::tuple<TypeRef, const ValueHolder&>> tryGetChildFromStep(const Value& compoundValue, const PathStep& step) const override;
 
-
       private:
         TypeRef m_entryType;
         unsigned int m_initialSize;
