@@ -74,8 +74,8 @@ template <typename VALUE> babelwires::ValueHolderTemplate<VALUE>::operator bool(
     return m_pointerToValue.get();
 }
 
-template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::clear() const {
-    m_pointerToValue.clear();
+template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::clear() {
+    m_pointerToValue = nullptr;
 }
 
 template <typename VALUE> const VALUE& babelwires::ValueHolderTemplate<VALUE>::operator*() const {
