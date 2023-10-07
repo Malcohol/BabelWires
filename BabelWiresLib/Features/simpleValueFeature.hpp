@@ -25,6 +25,7 @@ namespace babelwires {
         void backUpValue();
 
         /// Clone the value, and return a modifiable value to the value at the given path.
+        /// If the type is compound, this asserts that the feature has been backed up already.
         // TODO Find better name.
         ValueHolder& setModifiable(const FeaturePath& pathFromHere);
 
@@ -40,8 +41,8 @@ namespace babelwires {
         ValueHolder m_value;
 
         /// A backup of the value before modification.
-        /// This could be managed externally, but it is kept here to ensure setModifiable is only
-        /// called by code which knows how to manage a back-up.
+        // This could be managed externally, but it is kept here to ensure setModifiable is only
+        // called by code which knows how to manage a back-up.
         ValueHolder m_valueBackUp;
     };
 } // namespace babelwires

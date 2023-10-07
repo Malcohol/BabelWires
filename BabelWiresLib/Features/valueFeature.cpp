@@ -172,9 +172,10 @@ void babelwires::ValueFeature::synchronizeSubfeatures() {
 
         for (auto it : toAdd) {
             const ValueHolder* child = compound->getChild(value, it.second);
+            auto newChildFeature = std::make_unique<ChildValueFeature>(compound->getChildType(value, it.second), *child);
+            newChildFeature->setOwner(this);
             m_children.insert_or_assign(
-                compound->getStepToChild(value, it.second), it.second,
-                std::make_unique<ChildValueFeature>(compound->getChildType(value, it.second), *child));
+                compound->getStepToChild(value, it.second), it.second, std::move(newChildFeature));
         }
     }
 }
