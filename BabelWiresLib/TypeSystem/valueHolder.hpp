@@ -51,6 +51,8 @@ namespace babelwires {
         const VALUE& operator*() const;
         const VALUE* operator->() const;
 
+        void swap(ValueHolderTemplate& other);
+
         /// Clone the contents to ensure they are not shared and return a non-const pointer.
         /// Any manipulations must be performed before the ValueHolder is shared.
         VALUE& copyContentsAndGetNonConst();

@@ -86,6 +86,11 @@ template <typename VALUE> const VALUE* babelwires::ValueHolderTemplate<VALUE>::o
     return m_pointerToValue.get();
 }
 
+template <typename VALUE> 
+void babelwires::ValueHolderTemplate<VALUE>::swap(ValueHolderTemplate& other) {
+    m_pointerToValue.swap(other.m_pointerToValue);
+}
+
 template <typename VALUE> VALUE& babelwires::ValueHolderTemplate<VALUE>::copyContentsAndGetNonConst() {
     // TODO Is there an optimization when we _know_ it isn't shared? See the non-const FeaturePath::follow
     std::shared_ptr<VALUE> clone = m_pointerToValue->cloneShared();
