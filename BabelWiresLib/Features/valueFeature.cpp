@@ -47,6 +47,17 @@ void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
     }
 }
 
+void babelwires::ValueFeature::doSetToDefault() {
+    assert(m_typeRef && "The type must be set to something non-trivial before doSetToDefault is called");
+    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
+    auto [newValue, _] = getType().createValue(context.m_typeSystem);
+    auto rootAndPath = getRootValueFeature();
+    ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);
+    modifiableValueHolder = newValue;
+    // Changing the modifiableValueHolder, can change the value.
+    synchronizeSubfeatures();
+}
+
 void babelwires::ValueFeature::assign(const ValueFeature& other) {
     if (getKind() != other.getKind()) {
         throw ModelException() << "Assigning an incompatible value";
@@ -114,19 +125,6 @@ const babelwires::Feature* babelwires::ValueFeature::doGetFeature(int i) const {
 
 std::size_t babelwires::ValueFeature::doGetHash() const {
     return hash::mixtureOf(m_typeRef, *doGetValue());
-}
-
-void babelwires::ValueFeature::doSetToDefault() {
-    /*
-    assert(m_typeRef && "The type must be set to something non-trivial before doSetToDefault is called");
-    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
-    auto [newValue, _] = getType().createValue(context.m_typeSystem);
-    ValueHolder& currentValue = doGetValue();
-    if (!currentValue || (*newValue != *currentValue)) {
-        currentValue = std::move(newValue);
-        setChanged(Changes::ValueChanged);
-    }
-    */
 }
 
 void babelwires::ValueFeature::synchronizeSubfeatures() {

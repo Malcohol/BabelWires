@@ -23,6 +23,17 @@ const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() cons
     return m_value;
 }
 
+void babelwires::SimpleValueFeature::doSetToDefault() {
+    assert(getTypeRef() && "The type must be set to something non-trivial before doSetToDefault is called");
+    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
+    auto [newValue, _] = getType().createValue(context.m_typeSystem);
+    if (m_value != newValue) {
+        m_value.swap(newValue);
+        synchronizeSubfeatures();
+        reconcileChanges(newValue);
+    }
+}
+
 void babelwires::SimpleValueFeature::backUpValue() {
     assert(!m_valueBackUp && "The value is already backed-up");
     m_valueBackUp = m_value;
