@@ -309,7 +309,7 @@ namespace {
 
     babelwires::Feature* tryFollowPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p,
                                               int& index) {
-        if ((index < p.getNumSteps()) || (start->as<babelwires::SimpleValueFeature>())) {
+        if ((index < p.getNumSteps()) && !start->as<babelwires::SimpleValueFeature>()) {
             if (auto* compound = start->as<babelwires::CompoundFeature>()) {
                 babelwires::Feature& child = compound->getChildFromStep(p.getStep(index));
                 ++index;

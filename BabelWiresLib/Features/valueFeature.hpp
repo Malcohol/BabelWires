@@ -50,7 +50,8 @@ namespace babelwires {
         /// If the value is compound, synchronize the m_children data structure with the current children of the value.
         void synchronizeSubfeatures();
 
-        void reconcileChanges(const ValueHolder& backup);
+        /// Set change flags in this feature and its subfeatures by comparing the current value with that of other.
+        void reconcileChanges(const ValueHolder& other);
 
       public:
         virtual int getNumFeatures() const override;
@@ -66,7 +67,6 @@ namespace babelwires {
 
       protected:
         virtual const ValueHolder& doGetValue() const = 0;
-
 
         template<typename ROOT_VALUE_FEATURE>
         struct RootAndPath {

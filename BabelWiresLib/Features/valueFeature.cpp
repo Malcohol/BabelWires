@@ -214,11 +214,11 @@ babelwires::ValueFeature::RootAndPath<babelwires::SimpleValueFeature> babelwires
     }
 }
 
-void babelwires::ValueFeature::reconcileChanges(const ValueHolder& backup) {
+void babelwires::ValueFeature::reconcileChanges(const ValueHolder& other) {
     const Value& value = *getValue();
-    const Value& backupValue = *backup;
+    const Value& otherValue = *other;
     if (auto* compound = getType().as<CompoundType>()) {
-        // Should only be here if the type hasn't changed, so we can use compound with backup.
+        // Should only be here if the type hasn't changed, so we can use compound with other.
 
         std::map<PathStep, ValueFeature*> currentChildFeatures;
         for (const auto& it : m_children) {
@@ -226,8 +226,8 @@ void babelwires::ValueFeature::reconcileChanges(const ValueHolder& backup) {
         }
         
         std::map<PathStep, const ValueHolder*> backupChildValues;
-        for (int i = 0; i < compound->getNumChildren(backupValue); ++i) {
-            backupChildValues.emplace(std::pair{compound->getStepToChild(backupValue, i), compound->getChild(backupValue, i)});
+        for (int i = 0; i < compound->getNumChildren(otherValue); ++i) {
+            backupChildValues.emplace(std::pair{compound->getStepToChild(otherValue, i), compound->getChild(otherValue, i)});
         }
 
         auto currentIt = currentChildFeatures.begin();
@@ -250,7 +250,7 @@ void babelwires::ValueFeature::reconcileChanges(const ValueHolder& backup) {
         if ((currentIt != currentChildFeatures.end()) || (backupIt != backupChildValues.end())) {
             setChanged(Changes::StructureChanged);                
         }
-    } else if (getValue() != backup) {
+    } else if (getValue() != other) {
         setChanged(Changes::ValueChanged);
     }
 }

@@ -30,7 +30,11 @@ void babelwires::SimpleValueFeature::doSetToDefault() {
     if (m_value != newValue) {
         m_value.swap(newValue);
         synchronizeSubfeatures();
-        reconcileChanges(newValue);
+        if (newValue) {
+            reconcileChanges(newValue);
+        } else {
+            setChanged(Changes::StructureChanged);
+        }
     }
 }
 
@@ -40,14 +44,21 @@ void babelwires::SimpleValueFeature::backUpValue() {
 }
 
 babelwires::ValueHolder& babelwires::SimpleValueFeature::setModifiable(const FeaturePath& pathFromHere) {
-    assert(m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
-    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
-    auto [_, valueInCopy] = followNonConst(context.m_typeSystem, getType(), pathFromHere, m_value);
-    synchronizeSubfeatures();
-    return valueInCopy;
+    if (pathFromHere.getNumSteps() > 0) {
+        assert(getType().as<CompoundType>() && "Path leading into a non-compound type");
+        assert(m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
+        const ProjectContext& context = RootFeature::getProjectContextAt(*this);
+        auto [_, valueInCopy] = followNonConst(context.m_typeSystem, getType(), pathFromHere, m_value);
+        synchronizeSubfeatures();
+        return valueInCopy;
+    } else {
+        return m_value;
+    }
 }
 
 void babelwires::SimpleValueFeature::reconcileChangesFromBackup() {
-    reconcileChanges(m_valueBackUp);
-    m_valueBackUp.clear();
+    if (m_valueBackUp) {
+        reconcileChanges(m_valueBackUp);
+        m_valueBackUp.clear();
+    }
 }
