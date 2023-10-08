@@ -27,12 +27,8 @@ namespace babelwires {
 
         virtual int getNumFeatures() const override;
         virtual PathStep getStepToChild(const Feature* child) const override;
-        virtual Feature* tryGetChildFromStep(const PathStep& step) override;
-        virtual const Feature* tryGetChildFromStep(const PathStep& step) const override;
 
-        /// Returns -1 if not found.
-        /// Sets the descriminator of identifier on a match.
-        int getChildIndexFromStep(const ShortId& identifier) const;
+        int getChildIndexFromStep(const PathStep& identifier) const override;
 
       protected:
         virtual void doSetToDefault() override;

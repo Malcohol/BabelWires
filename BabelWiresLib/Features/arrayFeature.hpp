@@ -30,8 +30,8 @@ namespace babelwires {
 
         virtual int getNumFeatures() const override;
         virtual PathStep getStepToChild(const Feature* child) const override;
-        virtual Feature* tryGetChildFromStep(const PathStep& step) override;
-        virtual const Feature* tryGetChildFromStep(const PathStep& step) const override;
+
+        int getChildIndexFromStep(const PathStep& identifier) const override;
 
         /// Throws a ModelException if the newSize is outside the size range.
         void setSize(unsigned int newSize);

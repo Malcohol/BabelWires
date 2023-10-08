@@ -43,6 +43,29 @@ void babelwires::CompoundFeature::doClearChanges() {
     }
 }
 
+
+namespace {
+
+    template <typename COMPOUND>
+    typename babelwires::CopyConst<COMPOUND, babelwires::Feature>::type*
+    tryGetChildFromStepT(COMPOUND* compound, const babelwires::PathStep& step) {
+        const int childIndex = compound->getChildIndexFromStep(step);
+        if (childIndex >= 0) {
+            return compound->getFeature(childIndex);
+        }
+        return nullptr;
+    }
+
+} // namespace
+
+babelwires::Feature* babelwires::CompoundFeature::tryGetChildFromStep(const PathStep& step) {
+    return tryGetChildFromStepT(this, step);
+}
+
+const babelwires::Feature* babelwires::CompoundFeature::tryGetChildFromStep(const PathStep& step) const {
+    return tryGetChildFromStepT(this, step);
+}
+
 babelwires::Feature& babelwires::CompoundFeature::getChildFromStep(const PathStep& step) {
     if (Feature* f = tryGetChildFromStep(step)) {
         return *f;
