@@ -65,7 +65,7 @@ const babelwires::RootFeature* babelwires::FeatureElement::getOutputFeature() co
 
 babelwires::RootFeature* babelwires::FeatureElement::getInputFeatureNonConst(const FeaturePath& pathToModify) {
     RootFeature* inputFeature = doGetInputFeatureNonConst();
-    if (modifyFeatureAt(inputFeature, pathToModify)) {
+    if (inputFeature && modifyFeatureAt(inputFeature, pathToModify)) {
         return inputFeature;
     }
     return nullptr;
