@@ -35,6 +35,8 @@ namespace babelwires {
       public:
         typename decltype(m_map0)::size_type size() const { return m_map0.size(); }
 
+        void swap(MultiKeyMap& other) { m_map0.swap(other.m_map0); m_map1.swap(other.m_map1); }
+
         template <typename V> class iteratorT {
           public:
             const Key0& getKey0() const { return m_it0->first; }
