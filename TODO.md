@@ -45,6 +45,7 @@ Refactor:
 * Try to use Value to store value in a value feature, and use it in set value modifiers.
 * Clean up uses of toString, operator<<, serializeToString, etc. Make clear which resolves identifiers.
 * deserializeToString methods should return a tuple which includes the position after the parsed object.
+* Try to sort out the various toString methods, possibly providing a "readableStream", constructed with an IdentiferRegistry::ReadAccess.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.
