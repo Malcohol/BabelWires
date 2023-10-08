@@ -13,12 +13,22 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
-babelwires::ChildValueFeature::ChildValueFeature(TypeRef typeRef, const ValueHolder& valueHolder)
+babelwires::ChildValueFeature::ChildValueFeature(TypeRef typeRef, const ValueHolder* valueHolder)
     : ValueFeature(std::move(typeRef))
-    , m_value(valueHolder) {}
+    , m_value(valueHolder) {
+    assert(valueHolder);
+}
+
+void babelwires::ChildValueFeature::ensureSynchronized(const ValueHolder* valueHolder) {
+    assert(valueHolder);
+    if (m_value != valueHolder) {
+        m_value = valueHolder;
+        synchronizeSubfeatures();
+    }
+}
 
 const babelwires::ValueHolder& babelwires::ChildValueFeature::doGetValue() const {
-    return m_value;
+    return *m_value;
 }
 
 void babelwires::ChildValueFeature::doSetValue(const ValueHolder& newValue) {

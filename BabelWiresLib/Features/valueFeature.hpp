@@ -18,12 +18,14 @@ namespace babelwires {
     class TypeRef;
     class Type;
     class SimpleValueFeature;
+    class ChildValueFeature;
 
     /// A ValueFeature is a feature which provides access to a value.
     class ValueFeature : public CompoundFeature {
       public:
         /// Construct a ValueFeature which carries values of the given type.
         ValueFeature(TypeRef typeRef);
+        ~ValueFeature();
 
         /// Get the TypeRef which describes the type of the value.
         const TypeRef& getTypeRef() const;
@@ -81,6 +83,7 @@ namespace babelwires {
 
       private:
         TypeRef m_typeRef;
-        MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ValueFeature>> m_children;
+        using ChildMap = MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ChildValueFeature>>;
+        ChildMap m_children;
     };
 }

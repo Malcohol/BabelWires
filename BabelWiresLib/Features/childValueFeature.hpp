@@ -19,7 +19,10 @@ namespace babelwires {
     class ChildValueFeature : public ValueFeature {
       public:
         /// Construct a ValueFeature which carries values of the given type.
-        ChildValueFeature(TypeRef typeRef, const ValueHolder& valueHolder);
+        ChildValueFeature(TypeRef typeRef, const ValueHolder* valueHolder);
+
+        /// If the new valueHolder pointer is different, update m_value and synchronizeSubfeatures.
+        void ensureSynchronized(const ValueHolder* valueHolder);
 
       protected:
         const ValueHolder& doGetValue() const override;
@@ -27,6 +30,6 @@ namespace babelwires {
         void doSetToDefault() override;
 
       private:
-        const ValueHolder& m_value;
+        const ValueHolder* m_value;
     };
 } // namespace babelwires

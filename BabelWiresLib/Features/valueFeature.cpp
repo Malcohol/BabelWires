@@ -22,6 +22,8 @@
 babelwires::ValueFeature::ValueFeature(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
 
+babelwires::ValueFeature::~ValueFeature() = default;
+
 const babelwires::TypeRef& babelwires::ValueFeature::getTypeRef() const {
     return m_typeRef;
 }
@@ -97,55 +99,29 @@ std::size_t babelwires::ValueFeature::doGetHash() const {
 
 void babelwires::ValueFeature::synchronizeSubfeatures() {
     const Value& value = *getValue();
-
-    if (auto* compound = getType().as<CompoundType>()) {
-
-        std::map<const ValueHolder*, unsigned int> childValuesNow;
-
-        const unsigned int numChildrenNow = compound->getNumChildren(value);
-        for (unsigned int i = 0; i < numChildrenNow; ++i) {
-            childValuesNow.emplace(std::pair{compound->getChild(value, i), i});
-        }
-
-        std::map<const ValueHolder*, PathStep> currentChildFeatures;
-        for (const auto& it : m_children) {
-            currentChildFeatures.emplace(std::pair{&it.getValue()->getValue(), it.getKey0()});
-        }
-
-        std::vector<std::pair<const ValueHolder*, unsigned int>> toAdd;
-
-        auto itValue = childValuesNow.begin();
-        auto itFeature = currentChildFeatures.begin();
-        while ((itValue != childValuesNow.end()) && (itFeature != currentChildFeatures.end())) {
-            if (itValue->first < itFeature->first) {
-                toAdd.emplace_back(*itValue);
-                ++itValue;
-            } else if (itValue->first > itFeature->first) {
-                m_children.erase0(itFeature->second);
-                ++itFeature;
-            } else {
-                m_children.find0(itFeature->second).getValue()->synchronizeSubfeatures();
-                ++itValue;
-                ++itFeature;
-            }
-        }
-        while (itValue != childValuesNow.end()) {
-            toAdd.emplace_back(*itValue);
-            ++itValue;
-        }
-        while (itFeature != currentChildFeatures.end()) {
-            m_children.erase0(itFeature->second);
-            ++itFeature;
-        }
-
-        for (auto it : toAdd) {
-            const ValueHolder* child = compound->getChild(value, it.second);
-            auto newChildFeature = std::make_unique<ChildValueFeature>(compound->getChildType(value, it.second), *child);
-            newChildFeature->setOwner(this);
-            m_children.insert_or_assign(
-                compound->getStepToChild(value, it.second), it.second, std::move(newChildFeature));
-        }
+    auto* compound = getType().as<CompoundType>();
+    if (!compound) {
+        return;
     }
+
+    ChildMap newChildMap;
+    const unsigned int numChildrenNow = compound->getNumChildren(value);
+    for (unsigned int i = 0; i < numChildrenNow; ++i) {
+        const ValueHolder* childValue = compound->getChild(value, i);
+        PathStep step = compound->getStepToChild(value, i);
+        std::unique_ptr<ChildValueFeature> childFeature;
+        auto it = m_children.find0(step);
+        if (it != m_children.end()) {
+            childFeature = std::move(it.getValue());
+            childFeature->ensureSynchronized(childValue);
+        } else {
+            childFeature = std::make_unique<ChildValueFeature>(compound->getChildType(value, i), childValue);
+            childFeature->setOwner(this);
+            childFeature->synchronizeSubfeatures();
+        }
+        newChildMap.insert_or_assign(step, i, std::move(childFeature));
+    }
+    m_children.swap(newChildMap);
 }
 
 babelwires::ValueFeature::RootAndPath<const babelwires::SimpleValueFeature>
