@@ -41,7 +41,7 @@ bool babelwires::ArrayType::isValidValue(const TypeSystem& typeSystem, const Val
         return false;
     }
     const unsigned int size = arrayValue->getSize();
-    if ((size < m_minimumSize) || (size < m_maximumSize)) {
+    if ((size < m_minimumSize) || (size > m_maximumSize)) {
         return false;
     }
     const Type& entryType = m_entryType.resolve(typeSystem);
