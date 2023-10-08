@@ -31,31 +31,7 @@ const babelwires::ValueHolder& babelwires::ValueFeature::getValue() const {
 }
 
 void babelwires::ValueFeature::setValue(const ValueHolder& newValue) {
-    const ValueHolder& currentValue = doGetValue();
-    if (currentValue != newValue) {
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
-        const Type& type = getType();
-        if (type.isValidValue(typeSystem, *newValue)) {
-            auto rootAndPath = getRootValueFeature();
-            ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);
-            modifiableValueHolder = newValue;
-            // Changing the modifiableValueHolder, can change the value.
-            synchronizeSubfeatures();
-        } else {
-            throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
-        }
-    }
-}
-
-void babelwires::ValueFeature::doSetToDefault() {
-    assert(m_typeRef && "The type must be set to something non-trivial before doSetToDefault is called");
-    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
-    auto [newValue, _] = getType().createValue(context.m_typeSystem);
-    auto rootAndPath = getRootValueFeature();
-    ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);
-    modifiableValueHolder = newValue;
-    // Changing the modifiableValueHolder, can change the value.
-    synchronizeSubfeatures();
+    doSetValue(newValue);
 }
 
 void babelwires::ValueFeature::assign(const ValueFeature& other) {
@@ -91,20 +67,12 @@ babelwires::PathStep babelwires::ValueFeature::getStepToChild(const Feature* chi
     throw ModelException() << "Child not found in owner";
 }
 
-babelwires::Feature* babelwires::ValueFeature::tryGetChildFromStep(const PathStep& step) {
+int babelwires::ValueFeature::getChildIndexFromStep(const PathStep& step) const {
     const auto it = m_children.find0(step);
     if (it != m_children.end()) {
-        return it.getValue().get();
+        return it.getKey1();
     }
-    return nullptr;
-}
-
-const babelwires::Feature* babelwires::ValueFeature::tryGetChildFromStep(const PathStep& step) const {
-    const auto it = m_children.find0(step);
-    if (it != m_children.end()) {
-        return it.getValue().get();
-    }
-    return nullptr;
+    return -1;
 }
 
 babelwires::Feature* babelwires::ValueFeature::doGetFeature(int i) {

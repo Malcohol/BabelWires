@@ -23,6 +23,25 @@ const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() cons
     return m_value;
 }
 
+void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
+    if (m_value != newValue) {
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+        const Type& type = getType();
+        if (type.isValidValue(typeSystem, *newValue)) {
+            ValueHolder backup = m_value;
+            m_value = newValue;
+            synchronizeSubfeatures();
+            if (backup) {
+                reconcileChanges(backup);
+            } else {
+                setChanged(Changes::StructureChanged);
+            }
+        } else {
+            throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
+        }
+    }
+}
+
 void babelwires::SimpleValueFeature::doSetToDefault() {
     assert(getTypeRef() && "The type must be set to something non-trivial before doSetToDefault is called");
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);

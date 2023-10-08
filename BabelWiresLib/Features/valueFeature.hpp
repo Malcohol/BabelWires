@@ -56,17 +56,16 @@ namespace babelwires {
       public:
         virtual int getNumFeatures() const override;
         virtual PathStep getStepToChild(const Feature* child) const override;
-        virtual Feature* tryGetChildFromStep(const PathStep& step) override;
-        virtual const Feature* tryGetChildFromStep(const PathStep& step) const override;
+        virtual int getChildIndexFromStep(const PathStep& identifier) const override;
         virtual Feature* doGetFeature(int i) override;
         virtual const Feature* doGetFeature(int i) const override;
         /// Calls doSetToDefault.
         virtual void doSetToDefaultNonRecursive() override;
         virtual std::size_t doGetHash() const override;
-        virtual void doSetToDefault() override;
 
       protected:
         virtual const ValueHolder& doGetValue() const = 0;
+        virtual void doSetValue(const ValueHolder& newValue) = 0;
 
         template<typename ROOT_VALUE_FEATURE>
         struct RootAndPath {

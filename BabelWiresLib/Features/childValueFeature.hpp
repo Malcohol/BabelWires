@@ -23,6 +23,8 @@ namespace babelwires {
 
       protected:
         const ValueHolder& doGetValue() const override;
+        void doSetValue(const ValueHolder& newValue) override;
+        void doSetToDefault() override;
 
       private:
         const ValueHolder& m_value;
