@@ -56,13 +56,8 @@ std::ostream& babelwires::operator<<(std::ostream& os, const FeaturePath& p) {
         for (int i = 0; i < numSteps; ++i) {
             os << delimiter;
             delimiter = s_pathDelimiterString;
-
             const PathStep step = p.getStep(i);
-            if (step.isField()) {
-                os << identifierRegistry->getName(step.getField());
-            } else {
-                os << "[" << step.getIndex() << "]";
-            }
+            step.writeToStreamReadable(os, *identifierRegistry);
         }
     } else {
         os << ".";

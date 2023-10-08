@@ -15,6 +15,8 @@ namespace babelwires {
 
     using ArrayIndex = std::uint16_t;
 
+    class IdentifierRegistry;
+
     /// A PathStep is a union of a ShortId and an ArrayIndex.
     union PathStep {
       public:
@@ -83,6 +85,8 @@ namespace babelwires {
             step.writeToStream(os);
             return os;
         }
+
+        void writeToStreamReadable(std::ostream& os, const IdentifierRegistry& identifierRegistry) const;
 
         std::uint64_t getDataAsCode() const { return m_code & 0xffffffffffffff00; }
 
