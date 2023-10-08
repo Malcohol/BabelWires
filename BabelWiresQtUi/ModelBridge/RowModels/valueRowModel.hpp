@@ -11,7 +11,7 @@
 
 namespace babelwires {
 
-    class SimpleValueFeature;
+    class ValueFeature;
 
     class ValueRowModel : public RowModel {
       public:
@@ -37,7 +37,7 @@ namespace babelwires {
 
         virtual void getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const override;
       public:
-        const SimpleValueFeature& getValueFeature() const;
+        const ValueFeature& getValueFeature() const;
     };
 
 } // namespace babelwires
