@@ -64,8 +64,8 @@ const babelwires::RootFeature* babelwires::FeatureElement::getOutputFeature() co
 }
 
 babelwires::RootFeature* babelwires::FeatureElement::getInputFeatureNonConst(const FeaturePath& pathToModify) {
-    RootFeature* inputFeature = doGetInputFeatureNonConst();
-    if (inputFeature && modifyFeatureAt(inputFeature, pathToModify)) {
+    if (RootFeature* inputFeature = doGetInputFeatureNonConst()) {
+        modifyFeatureAt(inputFeature, pathToModify);
         return inputFeature;
     }
     return nullptr;
@@ -324,7 +324,7 @@ namespace {
 
 } // namespace
 
-bool babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const FeaturePath& p) {
+void babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const FeaturePath& p) {
     assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
 
     int index = 0;
@@ -332,7 +332,7 @@ bool babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const Fe
     if (!target) {
         // For now, it's not the job of this method to handle failures.
         // The modifier will reattempt the traversal and capture the failure properly.
-        return true;
+        return;
     }
 
     if (SimpleValueFeature* const rootValueFeature = target->as<SimpleValueFeature>()) {
@@ -344,15 +344,12 @@ bool babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const Fe
                 rootValueFeature->backUpValue();
                 m_modifyFeatureScope =
                     std::make_unique<ModifyFeatureScope>(std::move(pathToRootFeature), rootValueFeature);
-            } else {
-                // The modification will happen later anyway, so the caller shouldn't bother.
-                return false;
             }
         }
     } else {
         assert((index == p.getNumSteps()) && "Path didn't lead to a root value feature, but was not fully explored");
     }
-    return true;
+    return;
 }
 
 void babelwires::FeatureElement::finishModifications(const Project& project, UserLogger& userLogger) {
@@ -362,13 +359,14 @@ void babelwires::FeatureElement::finishModifications(const Project& project, Use
         // First, apply any other modifiers which apply beneath the path
         for (auto it : m_edits.modifierRange(m_modifyFeatureScope->m_pathToRootValue)) {
             if (const auto& connection = it->as<ConnectionModifier>()) {
-                connection->applyConnection(project, userLogger, inputFeature);
+                // We force connections in this case.
+                connection->applyConnection(project, userLogger, inputFeature, true);
             } else {
                 it->applyIfLocal(userLogger, inputFeature);
             }
         }
 
-        // Next, tell the SimpleValueFeature to apply the changes from its copy to the real value.
+        // The SimpleValueFeature can now determine its change flags.
         m_modifyFeatureScope->m_rootValueFeature->reconcileChangesFromBackup();
         m_modifyFeatureScope = nullptr;
     }

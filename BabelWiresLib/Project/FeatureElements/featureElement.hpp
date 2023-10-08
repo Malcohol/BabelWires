@@ -196,10 +196,8 @@ namespace babelwires {
         void applyLocalModifiers(UserLogger& userLogger);
 
         /// Obtain the right to modify the feature at the given path.
-        /// Returns false if the modifier will be applied later anyway, so there's no
-        /// work for the caller to do.
         /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
-        bool modifyFeatureAt(Feature* inputFeature, const FeaturePath& p);
+        void modifyFeatureAt(Feature* inputFeature, const FeaturePath& p);
 
         /// This is called by process, to signal that all modifications are finished.
         void finishModifications(const Project& project, UserLogger& userLogger);
