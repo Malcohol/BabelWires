@@ -99,14 +99,14 @@ const babelwires::TypeRef& babelwires::ArrayType::getChildType(const Value& comp
     return m_entryType;
 }
 
-babelwires::ValueHolder* babelwires::ArrayType::getChildNonConst(Value& compoundValue, unsigned int i) const {
-    ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
-    return &arrayValue.getValue(i);
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&> babelwires::ArrayType::getChild(const Value& compoundValue, unsigned int i) const {
+    const ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+    return {&arrayValue.getValue(i), i, m_entryType};
 }
 
-const babelwires::ValueHolder* babelwires::ArrayType::getChild(const Value& compoundValue, unsigned int i) const {
-    const ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
-    return &arrayValue.getValue(i);
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&> babelwires::ArrayType::getChildNonConst(Value& compoundValue, unsigned int i) const {
+    ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+    return {&arrayValue.getValue(i), i, m_entryType};
 }
 
 babelwires::PathStep babelwires::ArrayType::getStepToChild(const Value& compoundValue, unsigned int i) const {

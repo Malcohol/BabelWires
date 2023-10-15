@@ -107,15 +107,14 @@ void babelwires::ValueFeature::synchronizeSubfeatures() {
     ChildMap newChildMap;
     const unsigned int numChildrenNow = compound->getNumChildren(value);
     for (unsigned int i = 0; i < numChildrenNow; ++i) {
-        const ValueHolder* childValue = compound->getChild(value, i);
-        PathStep step = compound->getStepToChild(value, i);
+        auto [childValue, step, type] = compound->getChild(value, i);
         std::unique_ptr<ChildValueFeature> childFeature;
         auto it = m_children.find0(step);
         if (it != m_children.end()) {
             childFeature = std::move(it.getValue());
             childFeature->ensureSynchronized(childValue);
         } else {
-            childFeature = std::make_unique<ChildValueFeature>(compound->getChildType(value, i), childValue);
+            childFeature = std::make_unique<ChildValueFeature>(type, childValue);
             childFeature->setOwner(this);
             childFeature->synchronizeSubfeatures();
         }
@@ -172,7 +171,8 @@ void babelwires::ValueFeature::reconcileChanges(const ValueHolder& other) {
         
         std::map<PathStep, const ValueHolder*> backupChildValues;
         for (int i = 0; i < compound->getNumChildren(otherValue); ++i) {
-            backupChildValues.emplace(std::pair{compound->getStepToChild(otherValue, i), compound->getChild(otherValue, i)});
+            auto [child, step, _] = compound->getChild(otherValue, i);
+            backupChildValues.emplace(std::pair{step, child});
         }
 
         auto currentIt = currentChildFeatures.begin();
