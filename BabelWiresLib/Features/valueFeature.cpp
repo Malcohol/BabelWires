@@ -159,8 +159,7 @@ babelwires::ValueFeature::RootAndPath<babelwires::SimpleValueFeature> babelwires
 }
 
 void babelwires::ValueFeature::reconcileChanges(const ValueHolder& other) {
-    const Value& value = *getValue();
-    const Value& otherValue = *other;
+    const ValueHolder& value = getValue();
     if (auto* compound = getType().as<CompoundType>()) {
         // Should only be here if the type hasn't changed, so we can use compound with other.
 
@@ -170,8 +169,8 @@ void babelwires::ValueFeature::reconcileChanges(const ValueHolder& other) {
         }
         
         std::map<PathStep, const ValueHolder*> backupChildValues;
-        for (int i = 0; i < compound->getNumChildren(otherValue); ++i) {
-            auto [child, step, _] = compound->getChild(otherValue, i);
+        for (int i = 0; i < compound->getNumChildren(other); ++i) {
+            auto [child, step, _] = compound->getChild(other, i);
             backupChildValues.emplace(std::pair{step, child});
         }
 
