@@ -20,10 +20,9 @@ namespace babelwires {
         virtual const TypeRef& getChildType(const Value& compoundValue, unsigned int i) const = 0;
         
         virtual std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const Value& compoundValue, unsigned int i) const = 0;
-        virtual std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(Value& compoundValue, unsigned int i) const = 0;
+        virtual std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue, unsigned int i) const = 0;
         virtual PathStep getStepToChild(const Value& compoundValue, unsigned int i) const = 0;
 
-        virtual std::optional<std::tuple<TypeRef, ValueHolder&>> tryGetChildFromStepNonConst(ValueHolder& compoundValue, const PathStep& step) const = 0;
-        virtual std::optional<std::tuple<TypeRef, const ValueHolder&>> tryGetChildFromStep(const Value& compoundValue, const PathStep& step) const = 0;
+        virtual int getChildIndexFromStep(const Value& compoundValue, const PathStep& step) const = 0;
     };
 }

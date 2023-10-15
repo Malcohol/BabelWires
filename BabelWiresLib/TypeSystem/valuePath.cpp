@@ -16,10 +16,11 @@ namespace {
     std::tuple<const babelwires::Type&, babelwires::ValueHolder&> followPathNonConst(const babelwires::TypeSystem& typeSystem, const babelwires::Type& type, babelwires::ValueHolder& valueHolder, const babelwires::FeaturePath& p, int& index) {
         if (index < p.getNumSteps()) {
             if (auto* compoundType = type.as<babelwires::CompoundType>()) {
-                if (auto hasChild = compoundType->tryGetChildFromStepNonConst(valueHolder, p.getStep(index))) {
-                    auto [childType, childValue] = *hasChild;
+                const int childIndex = compoundType->getChildIndexFromStep(*valueHolder, p.getStep(index));
+                if (childIndex >= 0) {
+                    auto [childValue, _, childType] = compoundType->getChildNonConst(valueHolder, childIndex);
                     ++index;
-                    return followPathNonConst(typeSystem, childType.resolve(typeSystem), childValue, p, index);
+                    return followPathNonConst(typeSystem, childType.resolve(typeSystem), *childValue, p, index);
                 } else {
                     throw babelwires::ModelException() << "No such child";
                 }
