@@ -44,7 +44,7 @@ bool babelwires::SetExpandedCommand::initialize(const Project& project) {
         return false;
     }
 
-    return true;
+    return compoundFeature->getNumFeatures() > 0;
 }
 
 void babelwires::SetExpandedCommand::execute(Project& project) const {
