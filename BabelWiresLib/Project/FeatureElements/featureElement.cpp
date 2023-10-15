@@ -322,13 +322,22 @@ namespace {
         }
     }
 
+    babelwires::Feature* tryFollowPathToValueSafe(babelwires::Feature* start, const babelwires::FeaturePath& p,
+                                                  int& index) {
+        try {
+            return tryFollowPathToValue(start, p, index);
+        } catch (...) {
+            return nullptr;
+        }
+    }
+
 } // namespace
 
 void babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const FeaturePath& p) {
     assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
 
     int index = 0;
-    Feature* target = tryFollowPathToValue(inputFeature, p, index);
+    Feature* target = tryFollowPathToValueSafe(inputFeature, p, index);
     if (!target) {
         // For now, it's not the job of this method to handle failures.
         // The modifier will reattempt the traversal and capture the failure properly.
@@ -346,8 +355,6 @@ void babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const Fe
                     std::make_unique<ModifyFeatureScope>(std::move(pathToRootFeature), rootValueFeature);
             }
         }
-    } else {
-        assert((index == p.getNumSteps()) && "Path didn't lead to a root value feature, but was not fully explored");
     }
     return;
 }
