@@ -98,7 +98,7 @@ std::size_t babelwires::ValueFeature::doGetHash() const {
 }
 
 void babelwires::ValueFeature::synchronizeSubfeatures() {
-    const Value& value = *getValue();
+    const ValueHolder& value = getValue();
     auto* compound = getType().as<CompoundType>();
     if (!compound) {
         return;

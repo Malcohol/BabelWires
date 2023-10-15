@@ -90,17 +90,17 @@ babelwires::SubtypeOrder babelwires::ArrayType::compareSubtypeHelper(const TypeS
     }
 }
 
-int babelwires::ArrayType::getNumChildren(const Value& compoundValue) const {
-    const ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+int babelwires::ArrayType::getNumChildren(const ValueHolder& compoundValue) const {
+    const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
     return arrayValue.getSize();
 }
 
-const babelwires::TypeRef& babelwires::ArrayType::getChildType(const Value& compoundValue, unsigned int i) const {
+const babelwires::TypeRef& babelwires::ArrayType::getChildType(const ValueHolder& compoundValue, unsigned int i) const {
     return m_entryType;
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&> babelwires::ArrayType::getChild(const Value& compoundValue, unsigned int i) const {
-    const ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&> babelwires::ArrayType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
+    const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
     return {&arrayValue.getValue(i), i, m_entryType};
 }
 
@@ -109,12 +109,12 @@ std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::Typ
     return {&arrayValue.getValue(i), i, m_entryType};
 }
 
-babelwires::PathStep babelwires::ArrayType::getStepToChild(const Value& compoundValue, unsigned int i) const {
+babelwires::PathStep babelwires::ArrayType::getStepToChild(const ValueHolder& compoundValue, unsigned int i) const {
     return PathStep(i);
 }
 
-int babelwires::ArrayType::getChildIndexFromStep(const Value& compoundValue, const PathStep& step) const {
-    const ArrayValue& arrayValue = compoundValue.is<ArrayValue>();
+int babelwires::ArrayType::getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const {
+    const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
     if (const ArrayIndex* index = step.asIndex()) {
         if (*index < arrayValue.getSize()) {
             return *index;
