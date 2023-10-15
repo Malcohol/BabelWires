@@ -34,7 +34,7 @@ void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
             if (backup) {
                 reconcileChanges(backup);
             } else {
-                setChanged(Changes::StructureChanged);
+                setChanged(type.as<CompoundType>() ? Changes::StructureChanged : Changes::ValueChanged);
             }
         } else {
             throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
@@ -45,14 +45,15 @@ void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
 void babelwires::SimpleValueFeature::doSetToDefault() {
     assert(getTypeRef() && "The type must be set to something non-trivial before doSetToDefault is called");
     const ProjectContext& context = RootFeature::getProjectContextAt(*this);
-    auto [newValue, _] = getType().createValue(context.m_typeSystem);
+    const Type& type = getType();
+    auto [newValue, _] = type.createValue(context.m_typeSystem);
     if (m_value != newValue) {
         m_value.swap(newValue);
         synchronizeSubfeatures();
         if (newValue) {
             reconcileChanges(newValue);
         } else {
-            setChanged(Changes::StructureChanged);
+            setChanged(type.as<CompoundType>() ? Changes::StructureChanged : Changes::ValueChanged);
         }
     }
 }
