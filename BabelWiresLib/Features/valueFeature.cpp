@@ -151,7 +151,7 @@ babelwires::ValueFeature::RootAndPath<babelwires::SimpleValueFeature> babelwires
             return {*currentAsRootValueFeature, FeaturePath(std::move(reversePath))};
         }
         assert(getOwner() && "You can only get the RootValueFeature from a ValueFeature in a hierarchy.");
-        ValueFeature* const owner = getOwnerNonConst()->as<ValueFeature>();
+        ValueFeature* const owner = current->getOwnerNonConst()->as<ValueFeature>();
         assert(owner && "The owner of a ChildValueFeature must be a ValueFeature");
         PathStep stepToThis = owner->getStepToChild(current);
         reversePath.emplace_back(stepToThis);

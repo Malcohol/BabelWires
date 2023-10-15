@@ -35,4 +35,5 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
 
     // TODO Remove
     context.m_typeSystem.addEntry<TestArrayType>();
+    context.m_typeSystem.addEntry<TestArrayType2>();
 }

@@ -16,6 +16,9 @@
 babelwires::TestArrayType::TestArrayType()
     : ArrayType(DefaultIntType::getThisIdentifier(), 1, 10, 3) {}
 
+babelwires::TestArrayType2::TestArrayType2()
+    : ArrayType(TestArrayType::getThisIdentifier(), 1, 4, 2) {}
+
 babelwires::ArrayType::ArrayType(TypeRef entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
     : m_entryType(std::move(entryType))
     , m_minimumSize(minimumSize)
