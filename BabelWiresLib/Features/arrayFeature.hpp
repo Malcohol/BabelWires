@@ -13,7 +13,7 @@
 namespace babelwires {
     class ValueNames;
 
-    /// An dynamically-sized sequence of features.
+    /// A dynamically-sized sequence of features.
     /// Because "element" is used elsewhere, I'm fixed on "entry" for the contents.
     class ArrayFeature : public CompoundFeature {
       public:

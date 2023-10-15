@@ -1,5 +1,5 @@
 /**
- * A type describes an array value.
+ * ArrayTypes have values which contain a dynamically-sized sequence of child values.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,6 +13,8 @@
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 namespace babelwires {
+
+    /// ArrayTypes have values which contain a dynamically-sized sequence of child values.
     class ArrayType : public CompoundType {
       public:
         /// An initialSize of -1 means the initial size is the minimum size.
@@ -30,10 +32,8 @@ namespace babelwires {
 
       public:
         int getNumChildren(const ValueHolder& compoundValue) const override;
-        const TypeRef& getChildType(const ValueHolder& compoundValue, unsigned int i) const override;
         std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue, unsigned int i) const override;
         std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue, unsigned int i) const override;
-        PathStep getStepToChild(const ValueHolder& compoundValue, unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
 
       private:

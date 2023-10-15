@@ -1,5 +1,5 @@
 /**
- * A type describes an array value.
+ * ArrayTypes have values which contain a dynamically-sized sequence of child values.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -95,10 +95,6 @@ int babelwires::ArrayType::getNumChildren(const ValueHolder& compoundValue) cons
     return arrayValue.getSize();
 }
 
-const babelwires::TypeRef& babelwires::ArrayType::getChildType(const ValueHolder& compoundValue, unsigned int i) const {
-    return m_entryType;
-}
-
 std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&> babelwires::ArrayType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
     return {&arrayValue.getValue(i), i, m_entryType};
@@ -107,10 +103,6 @@ std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwire
 std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&> babelwires::ArrayType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     ArrayValue& arrayValue = compoundValue.copyContentsAndGetNonConst().is<ArrayValue>();
     return {&arrayValue.getValue(i), i, m_entryType};
-}
-
-babelwires::PathStep babelwires::ArrayType::getStepToChild(const ValueHolder& compoundValue, unsigned int i) const {
-    return PathStep(i);
 }
 
 int babelwires::ArrayType::getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const {

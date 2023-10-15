@@ -14,6 +14,7 @@
 #include <vector>
 
 namespace babelwires {
+    /// An ArrayValue can contain a dynamically-sized sequence of child values.
     class ArrayValue : public Value {
       public:
         CLONEABLE(ArrayValue);
