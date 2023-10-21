@@ -48,13 +48,13 @@ namespace babelwires {
       public:
         TestArrayType();
         
-        PRIMITIVE_TYPE("array", "Array", "0171a8a6-9ff7-4fed-a7fe-836529b690ae", 1);
+        PRIMITIVE_TYPE("arrayT", "Array", "0171a8a6-9ff7-4fed-a7fe-836529b690ae", 1);
     };
 
     class TestArrayType2 : public ArrayType {
       public:
         TestArrayType2();
         
-        PRIMITIVE_TYPE("array2", "Array2", "0171a8a6-9ff7-4fed-a7fe-836529b690af", 1);
+        PRIMITIVE_TYPE("arrayT2", "Array2", "0171a8a6-9ff7-4fed-a7fe-836529b690af", 1);
     };
 } // namespace babelwires
