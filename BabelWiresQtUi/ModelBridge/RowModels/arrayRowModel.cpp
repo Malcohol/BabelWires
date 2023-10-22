@@ -31,10 +31,6 @@ void babelwires::ArrayRowModel::getContextMenuActions(
     RowModel::getContextMenuActions(actionsOut);
     if (hasInputFeature()) {
         const babelwires::ArrayFeature& arrayFeature = getArrayFeature();
-        const auto sizeRange = arrayFeature.getSizeRange();
-        const auto currentSize = arrayFeature.getNumFeatures();
-        auto addElement = std::make_unique<SetArraySizeAction>(m_contentsCacheEntry->getPath());
-        addElement->setEnabled(sizeRange.contains(currentSize + 1));
-        actionsOut.emplace_back(std::move(addElement));
+        actionsOut.emplace_back(std::make_unique<SetArraySizeAction>(m_contentsCacheEntry->getPath()));
     }
 }
