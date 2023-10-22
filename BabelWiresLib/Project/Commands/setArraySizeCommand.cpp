@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
@@ -38,24 +39,13 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    auto compoundFeature = m_pathToArray.tryFollow(*inputFeature)->as<const CompoundFeature>();
+    auto [compoundFeature, currentSize, range, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*inputFeature));
+
     if (!compoundFeature) {
         return false;
     }
 
-    if (auto arrayFeature = compoundFeature->as<const ArrayFeature>()) {
-        if (!arrayFeature->getSizeRange().contains(m_newSize)) {
-            return false;
-        }
-    } else if (auto valueFeature = compoundFeature->as<const ValueFeature>()) {
-        if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
-            if (!arrayType->getSizeRange().contains(m_newSize)) {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    } else {
+    if (!range.contains(m_newSize)) {
         return false;
     }
 

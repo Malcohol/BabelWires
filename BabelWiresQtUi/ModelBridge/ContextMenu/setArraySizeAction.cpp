@@ -17,6 +17,7 @@
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setArraySizeCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
@@ -33,25 +34,20 @@ void babelwires::SetArraySizeAction::actionTriggered(babelwires::FeatureModel& m
     ProjectBridge& projectBridge = model.getProjectBridge();
     const ElementId elementId = model.getElementId();
 
-    Range<unsigned int> range;
     unsigned int currentSize;
+    Range<unsigned int> range;
     // Don't keep the project locked.
     {
         AccessModelScope scope(projectBridge);
         const FeatureElement* const featureElement = scope.getProject().getFeatureElement(elementId);
+
         const babelwires::Feature* const inputFeature = m_pathToArray.tryFollow(*featureElement->getInputFeature());
-        const babelwires::ArrayFeature* const arrayFeature = inputFeature->as<babelwires::ArrayFeature>();
-        if (arrayFeature) {
-            range = arrayFeature->getSizeRange();
-            currentSize = arrayFeature->getNumFeatures();
-        } else {
-            if (const babelwires::ValueFeature* const valueFeature = inputFeature->as<babelwires::ValueFeature>()) {
-                if (const ArrayType* const arrayType = valueFeature->getType().as<ArrayType>()) {
-                    range = arrayType->getSizeRange();
-                    currentSize = arrayType->getNumChildren(valueFeature->getValue());
-                }
-            }
+        auto [compoundFeature, s, r, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(inputFeature);
+        if (!compoundFeature) {
+            return;
         }
+        currentSize = s;
+        range = r;
     }
 
     bool ok;

@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
@@ -38,22 +39,12 @@ bool babelwires::AddEntriesToArrayCommand::initialize(const Project& project) {
         return false;
     }
 
-    int currentSize = -1;
-    unsigned int maximumSize = 0;
-    if (auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<ArrayFeature>()) {
-        currentSize = arrayFeature->getNumFeatures();
-        maximumSize = arrayFeature->getSizeRange().m_max;
-    } else if (auto valueFeature = m_pathToArray.tryFollow(*inputFeature)->as<ValueFeature>()) {
-        if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
-            currentSize = arrayType->getNumChildren(valueFeature->getValue());
-            maximumSize = arrayType->getSizeRange().m_max;
-        }
-    }
-    if (currentSize < 0) {
+    auto [compoundFeature, currentSize, range, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*inputFeature));
+    if (!compoundFeature) {
         return false;
     }
 
-    if (currentSize + m_numEntriesToAdd > maximumSize) {
+    if (!range.contains(currentSize + m_numEntriesToAdd)) {
         return false;
     }
 

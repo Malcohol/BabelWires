@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
@@ -53,26 +54,15 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     // TODO: There should be a way to move this to a virtual function on modifiers, so these modifiers know how to
     // remove themselves cleanly.
     if (modifier->getModifierData().as<ArraySizeModifierData>()) {
-        int currentSize = -1;
-        unsigned int defaultSize = 0;
-        if (auto arrayFeature = path.tryFollow(*inputFeature)->as<ArrayFeature>()) {
-            defaultSize = arrayFeature->getSizeRange().m_min;
-            currentSize = arrayFeature->getNumFeatures();
-        } else if (auto valueFeature = path.tryFollow(*inputFeature)->as<ValueFeature>()) {
-            if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
-                defaultSize = arrayType->getInitialSize();
-                currentSize = arrayType->getNumChildren(valueFeature->getValue());
+        auto [compoundFeature, currentSize, range, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(path.tryFollow(*inputFeature));
+        if (compoundFeature) {
+            if (currentSize > initialSize) {
+                addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>(
+                    "RemoveEntryFromArrayCommand subcommand", elementId, path, initialSize, currentSize - initialSize));
+            } else if (initialSize > currentSize) {
+                addSubCommand(std::make_unique<AddEntriesToArrayCommand>("AddEntryToArrayCommand subcommand", elementId, path,
+                                                                    currentSize, initialSize - currentSize));
             }
-        }
-        if (currentSize < 0) {
-            return false;
-        }
-        if (currentSize > defaultSize) {
-            addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>(
-                "RemoveEntryFromArrayCommand subcommand", elementId, path, defaultSize, currentSize - defaultSize));
-        } else if (defaultSize > currentSize) {
-            addSubCommand(std::make_unique<AddEntriesToArrayCommand>("AddEntryToArrayCommand subcommand", elementId, path,
-                                                                   currentSize, defaultSize - currentSize));
         }
     } else if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
         if (auto optionalFeature = path.tryFollow(*inputFeature)->as<const RecordWithOptionalsFeature>()) {
