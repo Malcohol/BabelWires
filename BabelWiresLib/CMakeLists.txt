@@ -80,7 +80,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/moveElementCommand.cpp
 	Project/Commands/addModifierCommand.cpp
 	Project/Commands/removeModifierCommand.cpp
-	Project/Commands/addEntryToArrayCommand.cpp
+	Project/Commands/addEntriesToArrayCommand.cpp
 	Project/Commands/removeEntryFromArrayCommand.cpp
 	Project/Commands/changeFileCommand.cpp
 	Project/Commands/pasteElementsCommand.cpp

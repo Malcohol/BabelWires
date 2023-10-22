@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include <BabelWiresLib/Project/Commands/addEntryToArrayCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-babelwires::AddEntryToArrayCommand::AddEntryToArrayCommand(std::string commandName, ElementId elementId,
+babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string commandName, ElementId elementId,
                                                            FeaturePath featurePath, unsigned int indexOfNewEntries, unsigned int numEntriesToAdd)
     : SimpleCommand(commandName)
     , m_elementId(elementId)
@@ -27,7 +27,7 @@ babelwires::AddEntryToArrayCommand::AddEntryToArrayCommand(std::string commandNa
     , m_indexOfNewEntries(indexOfNewEntries)
     , m_numEntriesToAdd(numEntriesToAdd) {}
 
-bool babelwires::AddEntryToArrayCommand::initialize(const Project& project) {
+bool babelwires::AddEntriesToArrayCommand::initialize(const Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
     if (!elementToModify) {
         return false;
@@ -70,10 +70,10 @@ bool babelwires::AddEntryToArrayCommand::initialize(const Project& project) {
     return true;
 }
 
-void babelwires::AddEntryToArrayCommand::execute(Project& project) const {
+void babelwires::AddEntriesToArrayCommand::execute(Project& project) const {
     project.addArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
 }
 
-void babelwires::AddEntryToArrayCommand::undo(Project& project) const {
+void babelwires::AddEntriesToArrayCommand::undo(Project& project) const {
     project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, m_wasModifier);
 }

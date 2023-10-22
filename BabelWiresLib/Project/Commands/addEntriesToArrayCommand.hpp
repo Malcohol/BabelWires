@@ -16,9 +16,9 @@ namespace babelwires {
     class Project;
 
     /// Add an element to an array feature.
-    class AddEntryToArrayCommand : public SimpleCommand<Project> {
+    class AddEntriesToArrayCommand : public SimpleCommand<Project> {
       public:
-        AddEntryToArrayCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+        AddEntriesToArrayCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                unsigned int indexOfNewEntries, unsigned int numEntriesToAdd = 1);
 
         virtual bool initialize(const Project& project) override;

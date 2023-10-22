@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Project/Commands/addEntryToArrayCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
@@ -71,7 +71,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>(
                 "RemoveEntryFromArrayCommand subcommand", elementId, path, defaultSize, currentSize - defaultSize));
         } else if (defaultSize > currentSize) {
-            addSubCommand(std::make_unique<AddEntryToArrayCommand>("AddEntryToArrayCommand subcommand", elementId, path,
+            addSubCommand(std::make_unique<AddEntriesToArrayCommand>("AddEntryToArrayCommand subcommand", elementId, path,
                                                                    currentSize, defaultSize - currentSize));
         }
     } else if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
