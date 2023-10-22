@@ -22,6 +22,7 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
         
         // Confirm that not all the discriminators in a test record are default.
         {
+            // A failure in this section _can_ indicate that one of the identifiers is now being used in BabelWires itself.
             testUtils::TestRecordFeature testRecord;
             testUtils::TestFileFeature testFileFeature(testEnvironment.m_projectContext);
             EXPECT_EQ(babelwires::FeaturePath(testRecord.m_intFeature).getLastStep().asField()->getDiscriminator(), 4);
