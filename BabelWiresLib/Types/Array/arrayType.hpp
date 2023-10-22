@@ -41,7 +41,7 @@ namespace babelwires {
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
 
       public:
-        int getNumChildren(const ValueHolder& compoundValue) const override;
+        unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
         std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue, unsigned int i) const override;
         std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue, unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;

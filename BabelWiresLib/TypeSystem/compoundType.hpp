@@ -16,7 +16,7 @@ namespace babelwires {
     class CompoundType : public Type {
       public:
         /// Get the number of children in the given value of this type.
-        virtual int getNumChildren(const ValueHolder& compoundValue) const = 0;
+        virtual unsigned int getNumChildren(const ValueHolder& compoundValue) const = 0;
 
         /// Get the ith child of the given value of this type.
         virtual std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue,

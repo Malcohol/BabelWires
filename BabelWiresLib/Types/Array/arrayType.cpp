@@ -145,7 +145,7 @@ babelwires::SubtypeOrder babelwires::ArrayType::compareSubtypeHelper(const TypeS
     }
 }
 
-int babelwires::ArrayType::getNumChildren(const ValueHolder& compoundValue) const {
+unsigned int babelwires::ArrayType::getNumChildren(const ValueHolder& compoundValue) const {
     const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
     return arrayValue.getSize();
 }
