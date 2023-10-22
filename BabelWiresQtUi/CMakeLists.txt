@@ -57,6 +57,7 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/MapContextMenuActions/changeEntryKindContextMenuAction.cpp
     ContextMenu/contextMenu.cpp
     ContextMenu/contextMenuAction.cpp
+    ValueModels/arrayValueModel.cpp
     ValueModels/enumValueModel.cpp
     ValueModels/intValueModel.cpp
     ValueModels/rationalValueModel.cpp

@@ -8,10 +8,14 @@
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
@@ -19,9 +23,20 @@
 void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
     if (ArrayFeature* array = targetFeature->as<ArrayFeature>()) {
         array->setSize(m_size);
-    } else {
-        throw babelwires::ModelException() << "Cannot initialize size of non-array";
+        return;
     }
+
+    if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
+        if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
+            const ProjectContext& context = RootFeature::getProjectContextAt(*value);
+            ValueHolder newValue = value->getValue();
+            arrayType->setSize(context.m_typeSystem, newValue, m_size);
+            value->setValue(newValue);
+            return;
+        }
+    }
+
+    throw babelwires::ModelException() << "Cannot initialize size of non-array";
 }
 
 std::unique_ptr<babelwires::Modifier> babelwires::ArraySizeModifierData::createModifier() const {
@@ -46,9 +61,20 @@ void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int i
         for (int i = 0; i < numEntriesToAdd; ++i) {
             array->addEntry(indexOfNewElement);
         }
-    } else {
-        throw babelwires::ModelException() << "Cannot resize non-array";
+        return;
+    } 
+    
+    if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
+        if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
+            const ProjectContext& context = RootFeature::getProjectContextAt(*value);
+            ValueHolder newValue = value->getValue();
+            arrayType->insertEntries(context.m_typeSystem, newValue, indexOfNewElement, numEntriesToAdd);
+            value->setValue(newValue);
+            return;
+        }
     }
+
+    throw babelwires::ModelException() << "Cannot resize non-array";
 }
 
 void babelwires::ArraySizeModifierData::removeEntries(Feature* targetFeature, int indexOfElementToRemove,
@@ -60,7 +86,18 @@ void babelwires::ArraySizeModifierData::removeEntries(Feature* targetFeature, in
         for (int i = 0; i < numEntriesToRemove; ++i) {
             array->removeEntry(indexOfElementToRemove);
         }
-    } else {
-        throw babelwires::ModelException() << "Cannot resize non-array";
+        return;
     }
+    
+    if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
+        if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
+            const ProjectContext& context = RootFeature::getProjectContextAt(*value);
+            ValueHolder newValue = value->getValue();
+            arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove);
+            value->setValue(newValue);
+            return;
+        }
+    }
+
+    throw babelwires::ModelException() << "Cannot resize non-array";
 }

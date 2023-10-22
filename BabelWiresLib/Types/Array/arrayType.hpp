@@ -20,6 +20,13 @@ namespace babelwires {
         /// An initialSize of -1 means the initial size is the minimum size.
         ArrayType(TypeRef entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize = -1);
 
+        /// Get the valid size range of this array.
+        Range<unsigned int> getSizeRange() const;
+
+        void setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
+        void insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement, unsigned int numEntriesToAdd) const;
+        void removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove, unsigned int numEntriesToRemove) const;
+
         const TypeRef& getEntryType() const;
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

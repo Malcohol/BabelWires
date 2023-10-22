@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 
 // TODO Remove
 #include <BabelWiresLib/Types/Int/intType.hpp>
@@ -27,6 +28,56 @@ babelwires::ArrayType::ArrayType(TypeRef entryType, unsigned int minimumSize, un
     assert((minimumSize <= maximumSize) && "The minimum is not smaller than the maximum");
     assert((m_initialSize >= minimumSize) && "The initial size is too big");
     assert((m_initialSize <= maximumSize) && "The initial size is too small");
+}
+
+babelwires::Range<unsigned int> babelwires::ArrayType::getSizeRange() const {
+    return {m_minimumSize, m_maximumSize};
+}
+
+void babelwires::ArrayType::setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const {
+    if (newSize < m_minimumSize) {
+        throw ModelException() << "The new array size " << newSize << " is below the minimum " << m_minimumSize;
+    }
+    if (newSize > m_maximumSize) {
+        throw ModelException() << "The new array size " << newSize << " is above the maximum " << m_maximumSize;
+    }
+    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().is<ArrayValue>();
+    arrayValue.setSize(typeSystem, m_entryType.resolve(typeSystem), newSize);
+}
+
+void babelwires::ArrayType::insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement, unsigned int numEntriesToAdd) const {
+    assert((numEntriesToAdd > 0) && "insertEntries must actually add entries");
+    const ArrayValue& current = value->is<ArrayValue>();
+    const unsigned int currentSize = current.getSize();
+    if (currentSize + numEntriesToAdd > m_maximumSize) {
+        throw ModelException() << "Adding " << numEntriesToAdd << " new entries will make the array bigger than its maximum size " << m_maximumSize;
+    }
+    if (indexOfNewElement > currentSize) {
+        throw ModelException() << "The index " << indexOfNewElement << " at which to add is not currently in the array";
+    }
+    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().is<ArrayValue>();
+    const Type& entryType = m_entryType.resolve(typeSystem);
+    for (unsigned int i = 0; i < numEntriesToAdd; ++i )
+    {
+        arrayValue.insertValue(typeSystem, entryType, indexOfNewElement + i);
+    }
+}
+
+void babelwires::ArrayType::removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove, unsigned int numEntriesToRemove) const {
+    assert((numEntriesToRemove > 0) && "removeEntries must actually remove entries");
+    const ArrayValue& current = value->is<ArrayValue>();
+    const unsigned int currentSize = current.getSize();
+    if (currentSize - numEntriesToRemove < m_minimumSize) {
+        throw ModelException() << "Removing " << numEntriesToRemove << " entries will make the array smaller than its minimum size " << m_minimumSize;
+    }
+    if (indexOfElementToRemove > currentSize) {
+        throw ModelException() << "The index " << indexOfElementToRemove << " at which to remove is not currently in the array";
+    }
+    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().is<ArrayValue>();
+    for (unsigned int i = 0; i < numEntriesToRemove; ++i )
+    {
+        arrayValue.removeValue(indexOfElementToRemove);
+    }
 }
 
 const babelwires::TypeRef& babelwires::ArrayType::getEntryType() const {

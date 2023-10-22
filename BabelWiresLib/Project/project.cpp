@@ -10,21 +10,23 @@
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #include <Common/IO/fileDataSource.hpp>
 #include <Common/Log/userLogger.hpp>
@@ -141,7 +143,8 @@ namespace {
 } // namespace
 
 // TODO These assume that the operation should always apply to output features.
-// If this assumption is not valid, we may need to make the stated assumptions about how input/output paths match tighter.
+// If this assumption is not valid, we may need to make the stated assumptions about how input/output paths match
+// tighter.
 
 void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath& pathToArray, int indexOfNewElement,
                                           int numEntriesToAdd, bool ensureModifier) {
@@ -151,41 +154,42 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
     if (FeatureElement* const element = getFeatureElement(elementId)) {
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
-            assert(featureAtPath && "Path should lead to an array");
+            assert(featureAtPath && "Path should resolve");
+            auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
+            assert(arrayFeature && "Path should lead to a compound");
+            assert(arrayFeature->as<ArrayFeature>() || (arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>()));
 
-            if (ArrayFeature* const arrayFeature = featureAtPath->as<ArrayFeature>()) {
-                // First, ensure there is an appropriate modifier at the array.
-                ArraySizeModifier* arrayModifier = nullptr;
-                if (Modifier* const modifier = element->findModifier(pathToArray)) {
-                    arrayModifier = modifier->as<ArraySizeModifier>();
-                    if (!arrayModifier) {
-                        // Defensive: Wasn't an array modifier at the path, so let it be replaced.
-                        // This won't be restored by an undo, but that shouldn't matter since it isn't
-                        // useful.
-                        element->removeModifier(modifier);
-                    }
-                }
+            // First, ensure there is an appropriate modifier at the array.
+            ArraySizeModifier* arrayModifier = nullptr;
+            if (Modifier* const modifier = element->findModifier(pathToArray)) {
+                arrayModifier = modifier->as<ArraySizeModifier>();
                 if (!arrayModifier) {
-                    if (ensureModifier) {
-                        ArraySizeModifierData arrayInitDataPtr;
-                        arrayInitDataPtr.m_pathToFeature = pathToArray;
-                        arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
-                        arrayModifier =
-                            static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
-                    }
+                    // Defensive: Wasn't an array modifier at the path, so let it be replaced.
+                    // This won't be restored by an undo, but that shouldn't matter since it isn't
+                    // useful.
+                    element->removeModifier(modifier);
                 }
+            }
+            if (!arrayModifier) {
+                if (ensureModifier) {
+                    ArraySizeModifierData arrayInitDataPtr;
+                    arrayInitDataPtr.m_pathToFeature = pathToArray;
+                    arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
+                    arrayModifier =
+                        static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
+                }
+            }
 
-                // Next, set the array size.
-                if (arrayModifier->addArrayEntries(m_userLogger, inputFeature, indexOfNewElement, numEntriesToAdd)) {
-                    // We do this even if indexOfNewElement is at the end, because there may be
-                    // failed modifiers beyond the end of the array.
-                    adjustModifiersInArrayElements(element, pathToArray, getConnectionInfo(), indexOfNewElement,
-                                                   numEntriesToAdd);
-                }
+            // Next, set the array size.
+            if (arrayModifier->addArrayEntries(m_userLogger, inputFeature, indexOfNewElement, numEntriesToAdd)) {
+                // We do this even if indexOfNewElement is at the end, because there may be
+                // failed modifiers beyond the end of the array.
+                adjustModifiersInArrayElements(element, pathToArray, getConnectionInfo(), indexOfNewElement,
+                                               numEntriesToAdd);
+            }
 
-                if (arrayModifier && !ensureModifier) {
-                    element->removeModifier(arrayModifier);
-                }
+            if (arrayModifier && !ensureModifier) {
+                element->removeModifier(arrayModifier);
             }
         }
     }
@@ -198,42 +202,43 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
     if (FeatureElement* const element = getFeatureElement(elementId)) {
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
-            assert(featureAtPath && "Path should lead to an array");
+            assert(featureAtPath && "Path should resolve");
+            auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
+            assert(arrayFeature && "Path should lead to a compound");
+            assert(arrayFeature->as<ArrayFeature>() || (arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>()));
 
-            if (ArrayFeature* const arrayFeature = featureAtPath->as<ArrayFeature>()) {
-                // First, check if there is a modifier at the array.
-                ArraySizeModifier* arrayModifier = nullptr;
-                if (Modifier* const modifier = element->findModifier(pathToArray)) {
-                    arrayModifier = modifier->as<ArraySizeModifier>();
-                    if (!arrayModifier) {
-                        // Defensive: Wasn't an array modifier at the path, so let it be replaced.
-                        // This won't be restored by an undo, but that shouldn't matter since it isn't
-                        // useful.
-                        element->removeModifier(modifier);
-                    }
-                }
+            // First, check if there is a modifier at the array.
+            ArraySizeModifier* arrayModifier = nullptr;
+            if (Modifier* const modifier = element->findModifier(pathToArray)) {
+                arrayModifier = modifier->as<ArraySizeModifier>();
                 if (!arrayModifier) {
-                    if (ensureModifier) {
-                        ArraySizeModifierData arrayInitDataPtr;
-                        arrayInitDataPtr.m_pathToFeature = pathToArray;
-                        arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
-                        arrayModifier =
-                            static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
-                    }
+                    // Defensive: Wasn't an array modifier at the path, so let it be replaced.
+                    // This won't be restored by an undo, but that shouldn't matter since it isn't
+                    // useful.
+                    element->removeModifier(modifier);
                 }
+            }
+            if (!arrayModifier) {
+                if (ensureModifier) {
+                    ArraySizeModifierData arrayInitDataPtr;
+                    arrayInitDataPtr.m_pathToFeature = pathToArray;
+                    arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
+                    arrayModifier =
+                        static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
+                }
+            }
 
-                // Next, set the array size.
-                if (arrayModifier->removeArrayEntries(m_userLogger, inputFeature, indexOfElementToRemove,
-                                                      numEntriesToRemove)) {
-                    // We do this even if indexOfElementToRemove is at the end, because there may be
-                    // failed modifiers beyond the end of the array.
-                    adjustModifiersInArrayElements(element, pathToArray, m_connectionCache,
-                                                   indexOfElementToRemove + numEntriesToRemove, -numEntriesToRemove);
-                }
+            // Next, set the array size.
+            if (arrayModifier->removeArrayEntries(m_userLogger, inputFeature, indexOfElementToRemove,
+                                                    numEntriesToRemove)) {
+                // We do this even if indexOfElementToRemove is at the end, because there may be
+                // failed modifiers beyond the end of the array.
+                adjustModifiersInArrayElements(element, pathToArray, m_connectionCache,
+                                                indexOfElementToRemove + numEntriesToRemove, -numEntriesToRemove);
+            }
 
-                if (arrayModifier && !ensureModifier) {
-                    element->removeModifier(arrayModifier);
-                }
+            if (arrayModifier && !ensureModifier) {
+                element->removeModifier(arrayModifier);
             }
         }
     }
@@ -593,19 +598,21 @@ babelwires::ProjectId babelwires::Project::getProjectId() const {
     return m_projectId;
 }
 
-void babelwires::Project::activateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional, bool ensureModifier) {
+void babelwires::Project::activateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+                                           bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
-    assert (elementToModify);
-    
+    assert(elementToModify);
+
     Feature* const inputFeature = elementToModify->getInputFeatureNonConst(pathToRecord);
     if (!inputFeature) {
         return; // Path cannot be followed.
     }
 
     ActivateOptionalsModifierData* modifierData = nullptr;
-    
+
     if (Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord)) {
-        if (auto activateOptionalsModifierData = existingModifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+        if (auto activateOptionalsModifierData =
+                existingModifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             auto localModifier = existingModifier->as<LocalModifier>();
             assert(localModifier && "Non-local modifier carrying local data");
             modifierData = activateOptionalsModifierData;
@@ -613,7 +620,8 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
             localModifier->applyIfLocal(m_userLogger, inputFeature);
         } else {
             // Discard the existing modifier, since it should be broken anyway.
-            assert(existingModifier->isFailed() && "A non-failed inapplicable modifier was found at a RecordWithOptionalsFeature");
+            assert(existingModifier->isFailed() &&
+                   "A non-failed inapplicable modifier was found at a RecordWithOptionalsFeature");
             removeModifier(elementId, pathToRecord);
         }
     }
@@ -629,10 +637,11 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
     }
 }
 
-void babelwires::Project::deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional, bool ensureModifier) {
+void babelwires::Project::deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+                                             bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
-    assert (elementToModify);
-    
+    assert(elementToModify);
+
     Feature* const inputFeature = elementToModify->getInputFeatureNonConst(pathToRecord);
     if (!inputFeature) {
         return; // Path cannot be followed.
@@ -646,7 +655,8 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
     assert(existingModifier->as<LocalModifier>() && "Non-local modifier carrying local data");
     auto localModifier = static_cast<LocalModifier*>(existingModifier);
 
-    auto it = std::find(activateOptionalsModifierData->m_selectedOptionals.begin(), activateOptionalsModifierData->m_selectedOptionals.end(), optional);
+    auto it = std::find(activateOptionalsModifierData->m_selectedOptionals.begin(),
+                        activateOptionalsModifierData->m_selectedOptionals.end(), optional);
     activateOptionalsModifierData->m_selectedOptionals.erase(it);
     localModifier->applyIfLocal(m_userLogger, inputFeature);
 
