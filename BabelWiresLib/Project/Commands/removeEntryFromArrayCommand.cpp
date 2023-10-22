@@ -9,12 +9,14 @@
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #include <cassert>
 
@@ -42,15 +44,27 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
     }
 
     auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<const ArrayFeature>();
-    if (!arrayFeature) {
+
+    int currentSize = -1;
+    unsigned int minimumSize = 0;
+    if (auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<ArrayFeature>()) {
+        currentSize = arrayFeature->getNumFeatures();
+        minimumSize = arrayFeature->getSizeRange().m_min;
+    } else if (auto valueFeature = m_pathToArray.tryFollow(*inputFeature)->as<ValueFeature>()) {
+        if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
+            currentSize = arrayType->getNumChildren(valueFeature->getValue());
+            minimumSize = arrayType->getSizeRange().m_min;
+        }
+    }
+    if (currentSize < 0) {
         return false;
     }
 
-    if (!arrayFeature->getSizeRange().contains(arrayFeature->getNumFeatures() - m_numEntriesToRemove)) {
+    if (currentSize - m_numEntriesToRemove < minimumSize) {
         return false;
     }
 
-    if (arrayFeature->getNumFeatures() <= m_indexOfEntryToRemove) {
+    if (m_indexOfEntryToRemove > currentSize - 1) {
         return false;
     }
 

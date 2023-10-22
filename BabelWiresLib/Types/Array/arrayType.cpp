@@ -34,6 +34,10 @@ babelwires::Range<unsigned int> babelwires::ArrayType::getSizeRange() const {
     return {m_minimumSize, m_maximumSize};
 }
 
+unsigned int babelwires::ArrayType::getInitialSize() const {
+    return m_initialSize;
+}
+
 void babelwires::ArrayType::setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const {
     if (newSize < m_minimumSize) {
         throw ModelException() << "The new array size " << newSize << " is below the minimum " << m_minimumSize;

@@ -2,23 +2,26 @@
  * Commands which removes modifiers from an element.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 
-#include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
-#include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Project/Commands/addEntryToArrayCommand.hpp>
+#include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
-#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #include <cassert>
 
@@ -50,20 +53,33 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     // TODO: There should be a way to move this to a virtual function on modifiers, so these modifiers know how to
     // remove themselves cleanly.
     if (modifier->getModifierData().as<ArraySizeModifierData>()) {
-        if (auto arrayFeature = path.tryFollow(*inputFeature)->as<const ArrayFeature>()) {
-            const int numEntriesToRemove = arrayFeature->getNumFeatures() - arrayFeature->getSizeRange().m_min;
-            if (numEntriesToRemove > 0) {
-                const int lastEntryIndex = arrayFeature->getSizeRange().m_min;
-                addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>("RemoveArrayEntry subcommand", elementId, path,
-                                                                            lastEntryIndex, numEntriesToRemove));
+        int currentSize = -1;
+        unsigned int defaultSize = 0;
+        if (auto arrayFeature = path.tryFollow(*inputFeature)->as<ArrayFeature>()) {
+            defaultSize = arrayFeature->getSizeRange().m_min;
+            currentSize = arrayFeature->getNumFeatures();
+        } else if (auto valueFeature = path.tryFollow(*inputFeature)->as<ValueFeature>()) {
+            if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
+                defaultSize = arrayType->getInitialSize();
+                currentSize = arrayType->getNumChildren(valueFeature->getValue());
             }
         }
-    }
-    else if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+        if (currentSize < 0) {
+            return false;
+        }
+        if (currentSize > defaultSize) {
+            addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>(
+                "RemoveEntryFromArrayCommand subcommand", elementId, path, defaultSize, currentSize - defaultSize));
+        } else if (defaultSize > currentSize) {
+            addSubCommand(std::make_unique<AddEntryToArrayCommand>("AddEntryToArrayCommand subcommand", elementId, path,
+                                                                   currentSize, defaultSize - currentSize));
+        }
+    } else if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
         if (auto optionalFeature = path.tryFollow(*inputFeature)->as<const RecordWithOptionalsFeature>()) {
             for (auto optionalField : optionalFeature->getOptionalFields()) {
                 if (optionalFeature->isActivated(optionalField)) {
-                    addSubCommand(std::make_unique<DeactivateOptionalCommand>("DeactivateOptionalCommand subcommand", elementId, path, optionalField));
+                    addSubCommand(std::make_unique<DeactivateOptionalCommand>("DeactivateOptionalCommand subcommand",
+                                                                              elementId, path, optionalField));
                 }
             }
         }

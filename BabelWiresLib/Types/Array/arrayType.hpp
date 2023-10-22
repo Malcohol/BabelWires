@@ -23,6 +23,9 @@ namespace babelwires {
         /// Get the valid size range of this array.
         Range<unsigned int> getSizeRange() const;
 
+        /// Get the size of a newly initialized value of this array.
+        unsigned int getInitialSize() const;
+
         void setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
         void insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement, unsigned int numEntriesToAdd) const;
         void removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove, unsigned int numEntriesToRemove) const;
