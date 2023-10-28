@@ -16,6 +16,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/projectUtilities.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #include <cassert>
@@ -58,13 +59,25 @@ bool babelwires::AddEntriesToArrayCommand::initialize(const Project& project) {
         }
     }
 
+    m_indirectlyAffectedArrays = projectUtilities::getAllDerivedValues(project, m_elementId, m_pathToArray);
+
     return true;
 }
 
 void babelwires::AddEntriesToArrayCommand::execute(Project& project) const {
+    for (auto a : m_indirectlyAffectedArrays) {
+        const ElementId elementId = std::get<0>(a);
+        const FeaturePath& pathToArray = std::get<1>(a);
+        project.adjustModifiersInArrayElements(elementId, pathToArray, m_indexOfNewEntries, m_numEntriesToAdd);
+    }
     project.addArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
 }
 
 void babelwires::AddEntriesToArrayCommand::undo(Project& project) const {
     project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, m_wasModifier);
+    for (auto it = m_indirectlyAffectedArrays.rbegin(); it != m_indirectlyAffectedArrays.rend(); ++it) {
+        const ElementId elementId = std::get<0>(*it);
+        const FeaturePath& pathToArray = std::get<1>(*it);
+        project.adjustModifiersInArrayElements(elementId, pathToArray, m_indexOfNewEntries, -m_numEntriesToAdd);
+    }
 }
