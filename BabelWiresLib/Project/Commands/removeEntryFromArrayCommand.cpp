@@ -77,9 +77,9 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         }
     }
 
-    m_affectedArrays = projectUtilities::getAllDerivedValues(project, m_elementId, m_pathToArray);
+    m_indirectlyAffectedArrays = projectUtilities::getAllDerivedValues(project, m_elementId, m_pathToArray);
 
-    for (auto a : m_affectedArrays) {
+    for (auto a : m_indirectlyAffectedArrays) {
         const ElementId elementId = std::get<0>(a);
         for (int i = 0; i < m_numEntriesToRemove; ++i) {
             FeaturePath p = std::get<1>(a);
@@ -87,7 +87,7 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
             addSubCommand(std::make_unique<RemoveAllEditsCommand>("Remove array entry subcommand", elementId, p));
         }
     }
-    
+
     for (int i = 0; i < m_numEntriesToRemove; ++i) {
         FeaturePath p = m_pathToArray;
         p.pushStep(PathStep(m_indexOfEntryToRemove + i));
@@ -96,10 +96,10 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
-    for (auto a : m_affectedArrays) {
+    for (auto a : m_indirectlyAffectedArrays) {
         const ElementId elementId = std::get<0>(a);
         const FeaturePath& pathToArray = std::get<1>(a);
-        project.removeArrayEntries(elementId, pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, false);
+        project.adjustModifiersInArrayElements(elementId, pathToArray, m_indexOfEntryToRemove, -m_numEntriesToRemove);
     }
     project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, true);
     return true;
@@ -107,20 +107,20 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
 
 void babelwires::RemoveEntryFromArrayCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    for (auto a : m_affectedArrays) {
+    for (auto a : m_indirectlyAffectedArrays) {
         const ElementId elementId = std::get<0>(a);
         const FeaturePath& pathToArray = std::get<1>(a);
-        project.removeArrayEntries(elementId, pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, false);
+        project.adjustModifiersInArrayElements(elementId, pathToArray, m_indexOfEntryToRemove, -m_numEntriesToRemove);
     }
     project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, true);
 }
 
 void babelwires::RemoveEntryFromArrayCommand::undo(Project& project) const {
     project.addArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, m_wasModifier);
-    for (auto it = m_affectedArrays.rbegin(); it != m_affectedArrays.rend(); ++it) {
+    for (auto it = m_indirectlyAffectedArrays.rbegin(); it != m_indirectlyAffectedArrays.rend(); ++it) {
         const ElementId elementId = std::get<0>(*it);
         const FeaturePath& pathToArray = std::get<1>(*it);
-        project.addArrayEntries(elementId, pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, false);
+        project.adjustModifiersInArrayElements(elementId, pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove);
     }
     CompoundCommand::undo(project);
 }

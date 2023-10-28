@@ -121,26 +121,27 @@ void babelwires::Project::removeModifier(ElementId elementId, const FeaturePath&
     element->removeModifier(modifier);
 }
 
-namespace {
-    void adjustModifiersInArrayElements(babelwires::FeatureElement* element, const babelwires::FeaturePath& pathToArray,
-                                        const babelwires::Project::ConnectionInfo& connectionInfo,
-                                        babelwires::ArrayIndex startIndex, int adjustment) {
-        element->adjustArrayIndices(pathToArray, startIndex, adjustment);
+void babelwires::Project::adjustModifiersInArrayElements(ElementId elementId, const babelwires::FeaturePath& pathToArray,
+                                    babelwires::ArrayIndex startIndex, int adjustment) {
+    if (adjustment < 0) {
+        startIndex -= adjustment;
+    }
+    FeatureElement* element = getFeatureElement(elementId);
+    element->adjustArrayIndices(pathToArray, startIndex, adjustment);
 
-        // Adjust modifiers of other elements affected by the addition.
-        // The addition would seem to affect only input features, so this may seem unneccessary.
-        // However, we allow input and output features of processors to share paths,
-        // in which case, we want any matching output connections to update too.
-        const auto r = connectionInfo.m_requiredFor.find(element);
-        if (r != connectionInfo.m_requiredFor.end()) {
-            const babelwires::Project::ConnectionInfo::Connections& connections = r->second;
-            for (auto&& pair : connections) {
-                babelwires::ConnectionModifier& modifier = *std::get<0>(pair);
-                modifier.adjustSourceArrayIndices(pathToArray, startIndex, adjustment);
-            }
+    // Adjust modifiers of other elements affected by the addition.
+    // The addition would seem to affect only input features, so this may seem unneccessary.
+    // However, we allow input and output features of processors to share paths,
+    // in which case, we want any matching output connections to update too.
+    const auto r = m_connectionCache.m_requiredFor.find(element);
+    if (r != m_connectionCache.m_requiredFor.end()) {
+        const babelwires::Project::ConnectionInfo::Connections& connections = r->second;
+        for (auto&& pair : connections) {
+            babelwires::ConnectionModifier& modifier = *std::get<0>(pair);
+            modifier.adjustSourceArrayIndices(pathToArray, startIndex, adjustment);
         }
     }
-} // namespace
+}
 
 // TODO These assume that the operation should always apply to output features.
 // If this assumption is not valid, we may need to make the stated assumptions about how input/output paths match
@@ -188,7 +189,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
             }
             // We do this even if indexOfNewElement is at the end, because there may be
             // failed modifiers beyond the end of the array.
-            adjustModifiersInArrayElements(element, pathToArray, getConnectionInfo(), indexOfNewElement,
+            adjustModifiersInArrayElements(elementId, pathToArray, indexOfNewElement,
                                            numEntriesToAdd);
 
             if (arrayModifier && !ensureModifier) {
@@ -240,8 +241,8 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
 
             // We do this even if indexOfElementToRemove is at the end, because there may be
             // failed modifiers beyond the end of the array.
-            adjustModifiersInArrayElements(element, pathToArray, m_connectionCache,
-                                           indexOfElementToRemove + numEntriesToRemove, -numEntriesToRemove);
+            adjustModifiersInArrayElements(elementId, pathToArray,
+                                           indexOfElementToRemove, -numEntriesToRemove);
 
             if (arrayModifier && !ensureModifier) {
                 element->removeModifier(arrayModifier);
