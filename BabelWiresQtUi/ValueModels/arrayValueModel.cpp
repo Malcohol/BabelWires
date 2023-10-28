@@ -20,6 +20,9 @@ void babelwires::ArrayValueModel::getContextMenuActions(
     if (!m_isReadOnly) {
         const ArrayType* const arrayType = m_type->as<ArrayType>();
         const ArrayValue* arrayValue = m_value->as<ArrayValue>();
-        actionsOut.emplace_back(std::make_unique<SetArraySizeAction>(location.getPathToValue()));
+        auto setArraySize = std::make_unique<SetArraySizeAction>(location.getPathToValue());
+        // TODO tooltip.
+        setArraySize->setEnabled(m_isStructureEditable);
+        actionsOut.emplace_back(std::move(setArraySize));
     }
 }

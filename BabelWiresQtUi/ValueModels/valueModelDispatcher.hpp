@@ -14,7 +14,9 @@ namespace babelwires {
 
     class ValueModelDispatcher {
       public:
-        void init(const ValueModelRegistry& valueModelRegistry, const Type& type, const Value& value, bool isReadOnly);
+        /// If isStructureEditable is true, then the value is derived from another value.
+        /// This is used to prohibit array modification if an array is the target of a connection.
+        void init(const ValueModelRegistry& valueModelRegistry, const Type& type, const Value& value, bool isReadOnly, bool isStructureEditable);
 
         const ValueModel* operator->() const { return m_valueModel; }
 

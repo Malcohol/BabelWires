@@ -32,7 +32,7 @@ namespace babelwires {
     class ContentsCacheEntry {
       public:
         ContentsCacheEntry(std::string label, const Feature* inputFeature, const Feature* outputFeature,
-                           const FeaturePath& path, std::uint8_t indent);
+                           const FeaturePath& path, std::uint8_t depth, std::uint8_t indent);
 
         const std::string& getLabel() const { return m_label; }
         const Feature* getInputFeature() const { return m_inputFeature; }
@@ -45,7 +45,7 @@ namespace babelwires {
         bool isExpandable() const { return m_isExpandable; }
         bool isExpanded() const { return m_isExpanded; }
         bool hasModifier() const { return m_hasModifier; }
-        bool hasLocalModifier() const { return m_hasLocalModifier; }
+        bool isStructureEditable() const { return m_isStructureEditable; }
         bool hasFailedModifier() const { return m_hasFailedModifier; }
         bool hasHiddenModifier() const { return m_hasHiddenModifiers; }
         bool hasFailedHiddenModifiers() const { return m_hasFailedHiddenModifiers; }
@@ -66,7 +66,10 @@ namespace babelwires {
         /// A path which is common to both input and output features.
         const FeaturePath m_path;
 
-        /// The number of apparent levels of nesting.
+        /// The number of levels of nesting.
+        std::uint8_t m_depth;
+
+        /// The number of apparent levels of nesting, accounting for inlining.
         std::uint8_t m_indent;
 
         /// Does the underlying feature have child features?
@@ -80,8 +83,9 @@ namespace babelwires {
         /// Is this entry modified?
         bool m_hasModifier : 1;
 
-        /// The modifier is a local edit (as opposed to a ConnectionModifier)
-        bool m_hasLocalModifier : 1;
+        /// Is it permitted to edit the structure of this row (if compound).
+        /// False if this row is at or beneath the target of a connection modifier.
+        bool m_isStructureEditable : 1;
 
         /// Has that modifier failed?
         bool m_hasFailedModifier : 1;

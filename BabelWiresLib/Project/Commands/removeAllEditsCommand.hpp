@@ -18,7 +18,6 @@ namespace babelwires {
     /// Remove all modifiers and expanded paths at and beneath a given feature.
     class RemoveAllEditsCommand : public SimpleCommand<Project> {
       public:
-        /// If indexOfEntryToRemove is negative, the element is removed from the end.
         RemoveAllEditsCommand(std::string commandName, ElementId elementId, FeaturePath pathToFeature);
 
         virtual bool initialize(const Project& project) override;

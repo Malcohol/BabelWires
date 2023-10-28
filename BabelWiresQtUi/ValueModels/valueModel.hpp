@@ -51,5 +51,7 @@ namespace babelwires {
         const Value* m_value;
         /// Does the context make this value readonly.
         bool m_isReadOnly;
+        /// Are structural modifications permitted to this value.
+        bool m_isStructureEditable;
     };
 } // namespace babelwires

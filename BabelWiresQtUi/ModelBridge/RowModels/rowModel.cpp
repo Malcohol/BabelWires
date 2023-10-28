@@ -141,24 +141,26 @@ void babelwires::RowModel::getContextMenuActions(
     if (const babelwires::Feature* inputFeature = getInputFeature()) {
         auto [compoundFeature, currentSize, range, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(inputFeature->getOwner());
         if (compoundFeature) {
+            const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
+            //QString tooltip = "Array actions are not permitted when an array is a connection target";
             FeaturePath pathToArray(compoundFeature);
             const PathStep step = compoundFeature->getStepToChild(inputFeature);
             const ArrayIndex index = step.getIndex();
             {
                 auto insertElement =
                     std::make_unique<InsertArrayEntryAction>("Add element before", pathToArray, index);
-                insertElement->setEnabled(range.contains(currentSize + 1));
+                insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }
             {
                 auto insertElement =
                     std::make_unique<InsertArrayEntryAction>("Add element after", pathToArray, index + 1);
-                insertElement->setEnabled(range.contains(currentSize + 1));
+                insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }
             {
                 auto removeElement = std::make_unique<RemoveArrayEntryAction>(pathToArray, index);
-                removeElement->setEnabled(range.contains(currentSize - 1));
+                removeElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize - 1));
                 actionsOut.emplace_back(std::move(removeElement));
             }
         }
