@@ -218,6 +218,17 @@ void babelwires::FeaturePath::truncate(unsigned int newNumSteps) {
     m_steps.resize(newNumSteps, PathStep(0));
 }
 
+void babelwires::FeaturePath::removePrefix(unsigned int numSteps) {
+    assert((numSteps <= m_steps.size()) && "Cannot remove that many steps");
+    if (numSteps > 0) {
+        m_steps.erase(m_steps.begin(), m_steps.begin() + numSteps);
+    }
+}
+
+void babelwires::FeaturePath::append(const FeaturePath& subpath) {
+    m_steps.insert(m_steps.end(), subpath.m_steps.begin(), subpath.m_steps.end());
+}
+
 babelwires::PathStep& babelwires::FeaturePath::getStep(unsigned int i) {
     assert((i < m_steps.size()) && "There is no ith step");
     return m_steps[i];
