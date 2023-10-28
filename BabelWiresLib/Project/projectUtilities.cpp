@@ -22,9 +22,8 @@ void babelwires::projectUtilities::translate(const UiPosition& offset, ProjectDa
 }
 
 namespace {
-    void addDerivedValues(
-        const babelwires::Project& project, unsigned int valueIndex,
-        std::vector<std::tuple<const babelwires::FeatureElement*, babelwires::FeaturePath>>& values) {
+    void addDerivedValues(const babelwires::Project& project, unsigned int valueIndex,
+                          std::vector<std::tuple<const babelwires::FeatureElement*, babelwires::FeaturePath>>& values) {
         assert(valueIndex < values.size());
         const babelwires::FeatureElement* element = std::get<0>(values[valueIndex]);
         const babelwires::FeaturePath& pathToValue = std::get<1>(values[valueIndex]);
@@ -36,35 +35,35 @@ namespace {
                 const babelwires::ConnectionModifierData& connectionData = connectionModifier->getModifierData();
                 if (connectionData.m_pathToSourceFeature.isPrefixOf(pathToValue)) {
                     // There is a connection between an ancestor features and some feature in the element.
-                    babelwires::FeaturePath pathToPossibleArrayInTarget;
+                    babelwires::FeaturePath pathToPossibleValueInTarget;
                     {
                         babelwires::FeaturePath pathFromAncestor = pathToValue;
                         pathFromAncestor.removePrefix(connectionData.m_pathToSourceFeature.getNumSteps());
-                        pathToPossibleArrayInTarget = connectionData.m_pathToFeature;
-                        pathToPossibleArrayInTarget.append(pathFromAncestor);
+                        pathToPossibleValueInTarget = connectionData.m_pathToFeature;
+                        pathToPossibleValueInTarget.append(pathFromAncestor);
                     }
                     // See if there is a more specific modifier in the target which means this connection does not
-                    // actually affect the possible array in the target. Since only connection modifiers can modified
-                    // the structure if an array already has a connected ancestor, it should be sufficient to check
+                    // actually affect the value in the target. Since only connection modifiers can modify
+                    // structure if a value already has a connected ancestor, it should be sufficient to check
                     // connection modifiers.
                     bool foundOverridingModifier = false;
                     const babelwires::FeatureElement* const targetElement = std::get<1>(cit);
-                    // TODO The edit tree could provide a O(log N) algorithm for this.
+                    // TODO The edit tree could provide an O(log N) algorithm for this.
                     for (auto modifier : targetElement->getConnectionModifiers()) {
                         // Using strict here means that connectionModifier itself is exempt from consideration.
                         if (connectionData.m_pathToFeature.isStrictPrefixOf(modifier->getPathToFeature()) &&
-                            modifier->getPathToFeature().isPrefixOf(pathToPossibleArrayInTarget)) {
+                            modifier->getPathToFeature().isPrefixOf(pathToPossibleValueInTarget)) {
                             foundOverridingModifier = true;
                             break;
                         }
                     }
                     if (!foundOverridingModifier) {
-                        assert(pathToPossibleArrayInTarget.tryFollow(*targetElement->getInputFeature()) &&
+                        assert(pathToPossibleValueInTarget.tryFollow(*targetElement->getInputFeature()) &&
                                "Expected to find a matching feature in the target, since ancestors are connected and "
                                "there "
                                "are no overriding modifiers");
                         values.emplace_back(std::tuple<const babelwires::FeatureElement*, babelwires::FeaturePath>{
-                            targetElement, std::move(pathToPossibleArrayInTarget)});
+                            targetElement, std::move(pathToPossibleValueInTarget)});
                     }
                 }
             }
