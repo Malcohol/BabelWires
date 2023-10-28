@@ -157,7 +157,8 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
             assert(featureAtPath && "Path should resolve");
             auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
             assert(arrayFeature && "Path should lead to a compound");
-            assert(arrayFeature->as<ArrayFeature>() || (arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>()));
+            assert(arrayFeature->as<ArrayFeature>() ||
+                   (arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>()));
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -181,12 +182,14 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
             }
 
             // Next, set the array size.
-            if (arrayModifier->addArrayEntries(m_userLogger, inputFeature, indexOfNewElement, numEntriesToAdd)) {
-                // We do this even if indexOfNewElement is at the end, because there may be
-                // failed modifiers beyond the end of the array.
-                adjustModifiersInArrayElements(element, pathToArray, getConnectionInfo(), indexOfNewElement,
-                                               numEntriesToAdd);
+            if (arrayModifier)
+            { 
+                arrayModifier->addArrayEntries(m_userLogger, inputFeature, indexOfNewElement, numEntriesToAdd); 
             }
+            // We do this even if indexOfNewElement is at the end, because there may be
+            // failed modifiers beyond the end of the array.
+            adjustModifiersInArrayElements(element, pathToArray, getConnectionInfo(), indexOfNewElement,
+                                           numEntriesToAdd);
 
             if (arrayModifier && !ensureModifier) {
                 element->removeModifier(arrayModifier);
@@ -205,7 +208,8 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
             assert(featureAtPath && "Path should resolve");
             auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
             assert(arrayFeature && "Path should lead to a compound");
-            assert(arrayFeature->as<ArrayFeature>() || (arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>()));
+            assert(arrayFeature->as<ArrayFeature>() ||
+                   (arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>()));
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -229,13 +233,15 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
             }
 
             // Next, set the array size.
-            if (arrayModifier->removeArrayEntries(m_userLogger, inputFeature, indexOfElementToRemove,
-                                                    numEntriesToRemove)) {
-                // We do this even if indexOfElementToRemove is at the end, because there may be
-                // failed modifiers beyond the end of the array.
-                adjustModifiersInArrayElements(element, pathToArray, m_connectionCache,
-                                                indexOfElementToRemove + numEntriesToRemove, -numEntriesToRemove);
+            if (arrayModifier) {
+                arrayModifier->removeArrayEntries(m_userLogger, inputFeature, indexOfElementToRemove,
+                                                  numEntriesToRemove);
             }
+
+            // We do this even if indexOfElementToRemove is at the end, because there may be
+            // failed modifiers beyond the end of the array.
+            adjustModifiersInArrayElements(element, pathToArray, m_connectionCache,
+                                           indexOfElementToRemove + numEntriesToRemove, -numEntriesToRemove);
 
             if (arrayModifier && !ensureModifier) {
                 element->removeModifier(arrayModifier);

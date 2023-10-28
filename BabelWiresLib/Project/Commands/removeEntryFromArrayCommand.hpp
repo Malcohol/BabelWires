@@ -30,6 +30,9 @@ namespace babelwires {
         unsigned int m_indexOfEntryToRemove;
         unsigned int m_numEntriesToRemove;
 
+        /// All arrays in the project whose structure derives from this array and therefore need to be adjusted.
+        std::vector<std::tuple<ElementId, FeaturePath>> m_affectedArrays;
+
         /// Did an old modifier get replaced (otherwise this is the first modification).
         bool m_wasModifier = false;
     };
