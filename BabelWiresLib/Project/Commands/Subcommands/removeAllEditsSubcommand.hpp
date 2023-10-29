@@ -16,9 +16,9 @@ namespace babelwires {
     struct ModifierData;
 
     /// Remove all modifiers and expanded paths at and beneath a given feature.
-    class RemoveAllEditsCommand : public SimpleCommand<Project> {
+    class RemoveAllEditsSubcommand : public SimpleCommand<Project> {
       public:
-        RemoveAllEditsCommand(std::string commandName, ElementId elementId, FeaturePath pathToFeature);
+        RemoveAllEditsSubcommand(std::string commandName, ElementId elementId, FeaturePath pathToFeature);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;

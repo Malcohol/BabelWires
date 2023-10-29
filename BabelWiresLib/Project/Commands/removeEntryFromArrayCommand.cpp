@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
@@ -84,14 +84,14 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         for (int i = 0; i < m_numEntriesToRemove; ++i) {
             FeaturePath p = std::get<1>(a);
             p.pushStep(PathStep(m_indexOfEntryToRemove + i));
-            addSubCommand(std::make_unique<RemoveAllEditsCommand>("Remove array entry subcommand", elementId, p));
+            addSubCommand(std::make_unique<RemoveAllEditsSubcommand>("Remove array entry subcommand", elementId, p));
         }
     }
 
     for (int i = 0; i < m_numEntriesToRemove; ++i) {
         FeaturePath p = m_pathToArray;
         p.pushStep(PathStep(m_indexOfEntryToRemove + i));
-        addSubCommand(std::make_unique<RemoveAllEditsCommand>("Remove array entry subcommand", m_elementId, p));
+        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>("Remove array entry subcommand", m_elementId, p));
     }
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;

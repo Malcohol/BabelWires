@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
-#include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -61,7 +61,7 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
     for (int i = m_newSize; i < m_oldSize; ++i) {
         FeaturePath p = m_pathToArray;
         p.pushStep(PathStep(i));
-        addSubCommand(std::make_unique<RemoveAllEditsCommand>("Set array size subcommand", m_elementId, p));
+        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>("Set array size subcommand", m_elementId, p));
     }
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;

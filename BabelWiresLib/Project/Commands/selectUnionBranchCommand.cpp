@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 
 babelwires::SelectUnionBranchCommand::SelectUnionBranchCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
@@ -56,7 +56,7 @@ bool babelwires::SelectUnionBranchCommand::initializeAndExecute(Project& project
     for (const auto& field : unionFeature->getFieldsRemovedByChangeOfBranch(m_tagToSelect)) {
         FeaturePath pathToField = m_pathToUnion;
         pathToField.pushStep(PathStep(field));
-        addSubCommand(std::make_unique<RemoveAllEditsCommand>("Remove union branch subcommand", m_elementId, pathToField));
+        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>("Remove union branch subcommand", m_elementId, pathToField));
     }
 
     if (!CompoundCommand::initializeAndExecute(project)) {

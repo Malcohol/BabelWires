@@ -118,7 +118,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
 
         std::unique_ptr<ElementData> newElementData = element->extractElementData();
 
-        // Move any connections described in the connections into the m_connection vector.
+        // Move any connections described in the connections into the m_connections vector.
         auto newEnd = std::remove_if(
             newElementData->m_modifiers.begin(), newElementData->m_modifiers.end(),
             [this, elementId, &connectionsBeingRemoved](const std::unique_ptr<ModifierData>& modData) {

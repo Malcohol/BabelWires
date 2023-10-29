@@ -86,7 +86,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/changeFileCommand.cpp
 	Project/Commands/pasteElementsCommand.cpp
 	Project/Commands/setExpandedCommand.cpp
-	Project/Commands/removeAllEditsCommand.cpp
+	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
 	Project/Commands/removeFailedModifiersCommand.cpp
 	Project/Commands/resizeElementCommand.cpp
 	Project/Commands/selectUnionBranchCommand.cpp

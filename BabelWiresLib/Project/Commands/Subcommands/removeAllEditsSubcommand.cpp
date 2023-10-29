@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
@@ -17,14 +17,14 @@
 
 #include <cassert>
 
-babelwires::RemoveAllEditsCommand::RemoveAllEditsCommand(std::string commandName, ElementId elementId,
+babelwires::RemoveAllEditsSubcommand::RemoveAllEditsSubcommand(std::string commandName, ElementId elementId,
                                                                      FeaturePath pathToFeatureToRemove)
     : SimpleCommand(commandName)
     , m_elementId(elementId)
     , m_pathToFeature(std::move(pathToFeatureToRemove)) {
 }
 
-bool babelwires::RemoveAllEditsCommand::initialize(const Project& project) {
+bool babelwires::RemoveAllEditsSubcommand::initialize(const Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
 
     if (!elementToModify) {
@@ -70,7 +70,7 @@ bool babelwires::RemoveAllEditsCommand::initialize(const Project& project) {
     return true;
 }
 
-void babelwires::RemoveAllEditsCommand::execute(Project& project) const {
+void babelwires::RemoveAllEditsSubcommand::execute(Project& project) const {
     for (auto&& modifierData : Span<decltype(m_modifiersRemoved.rbegin())>{m_modifiersRemoved.rbegin(), m_modifiersRemoved.rend()}) {
         project.removeModifier(m_elementId, modifierData->m_pathToFeature);
     }
@@ -88,7 +88,7 @@ void babelwires::RemoveAllEditsCommand::execute(Project& project) const {
     }
 }
 
-void babelwires::RemoveAllEditsCommand::undo(Project& project) const {
+void babelwires::RemoveAllEditsSubcommand::undo(Project& project) const {
     {
         FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
         assert(elementToModify && "The element must exist");
