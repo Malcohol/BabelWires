@@ -29,6 +29,7 @@ namespace {
         const babelwires::FeaturePath& pathToValue = std::get<1>(values[valueIndex]);
         const babelwires::Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
         const auto& rit = connectionInfo.m_requiredFor.find(element);
+        // TODO Need to exclude features elements which have the dependency loop flag.
         if (rit != connectionInfo.m_requiredFor.end()) {
             for (auto cit : rit->second) {
                 const babelwires::ConnectionModifier* connectionModifier = std::get<0>(cit);
