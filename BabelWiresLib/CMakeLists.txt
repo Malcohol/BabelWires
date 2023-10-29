@@ -90,6 +90,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/resizeElementCommand.cpp
 	Project/Commands/selectUnionBranchCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
+	Project/Commands/Subcommands/removeSimpleModifierSubcommand.cpp
 	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
 	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp
 	TypeSystem/typeSystem.cpp
