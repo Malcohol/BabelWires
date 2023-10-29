@@ -75,7 +75,7 @@ bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project&
         for (int i = 0; i < -m_adjustment; ++i) {
             FeaturePath p = m_pathToArray;
             p.pushStep(PathStep(m_startIndex + i));
-            addSubCommand(std::make_unique<RemoveAllEditsSubcommand>("Remove edits subcommand", m_elementId, p));
+            addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, p));
         }
     }
 

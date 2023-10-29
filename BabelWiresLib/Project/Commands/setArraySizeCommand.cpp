@@ -61,7 +61,7 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
     for (int i = m_newSize; i < m_oldSize; ++i) {
         FeaturePath p = m_pathToArray;
         p.pushStep(PathStep(i));
-        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>("Set array size subcommand", m_elementId, p));
+        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, p));
     }
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;

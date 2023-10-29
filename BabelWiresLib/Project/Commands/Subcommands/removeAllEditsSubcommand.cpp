@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
@@ -17,20 +18,21 @@
 
 #include <cassert>
 
-babelwires::RemoveAllEditsSubcommand::RemoveAllEditsSubcommand(std::string commandName, ElementId elementId,
+babelwires::RemoveAllEditsSubcommand::RemoveAllEditsSubcommand(ElementId elementId,
                                                                      FeaturePath pathToFeatureToRemove)
-    : SimpleCommand(commandName)
+    : CompoundCommand("RemoveAllEditsSubcommand")
     , m_elementId(elementId)
     , m_pathToFeature(std::move(pathToFeatureToRemove)) {
 }
 
-bool babelwires::RemoveAllEditsSubcommand::initialize(const Project& project) {
-    const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project) {
+    FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
 
     if (!elementToModify) {
         return false;
     }
 
+/*
     const Feature* const inputFeature = elementToModify->getInputFeature();
     if (!inputFeature) {
         return false;
@@ -40,10 +42,13 @@ bool babelwires::RemoveAllEditsSubcommand::initialize(const Project& project) {
     if (!featureToRemove) {
         return false;
     }
+*/
+
+    std::vector<std::unique_ptr<Command>> subcommands;
 
     for (const auto& modifier : elementToModify->getEdits().modifierRange(m_pathToFeature)) {
         const auto& modifierData = modifier->getModifierData();
-        m_modifiersRemoved.emplace_back(modifierData.clone());
+        subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_elementId, modifierData.m_pathToFeature));
     }
 
     {
@@ -56,54 +61,48 @@ bool babelwires::RemoveAllEditsSubcommand::initialize(const Project& project) {
                 const FeaturePath& modifierPath = modifierData.m_pathToSourceFeature;
                 if (m_pathToFeature.isPrefixOf(modifierPath)) {
                     const FeatureElement* const target = std::get<1>(connection);
-                    m_outgoingConnectionsRemoved.emplace_back(OutgoingConnection{
-                        modifierData.m_pathToSourceFeature, target->getElementId(), modifierData.m_pathToFeature});
+                    subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", target->getElementId(), modifierData.m_pathToFeature));
                 }
             }
         }
+    }
+
+    for (auto it = subcommands.rbegin(); it != subcommands.rend(); ++it) {
+        addSubCommand(std::move(*it));
     }
 
     const auto pathsInThisEntry = elementToModify->getEdits().getAllExplicitlyExpandedPaths(m_pathToFeature);
     m_expandedPathsRemoved.insert(m_expandedPathsRemoved.end(), pathsInThisEntry.begin(),
                                                pathsInThisEntry.end());
 
+    if (!CompoundCommand::initializeAndExecute(project)) {
+        return false;
+    }
+    // This may not seem necessary, but it means we won't assert when expanding the
+    // moved down entries.
+    for (const auto& p : m_expandedPathsRemoved) {
+        elementToModify->getEdits().setExpanded(p, false);
+    }
+
     return true;
 }
 
 void babelwires::RemoveAllEditsSubcommand::execute(Project& project) const {
-    for (auto&& modifierData : Span<decltype(m_modifiersRemoved.rbegin())>{m_modifiersRemoved.rbegin(), m_modifiersRemoved.rend()}) {
-        project.removeModifier(m_elementId, modifierData->m_pathToFeature);
-    }
-    for (auto&& outgoingConnection : m_outgoingConnectionsRemoved) {
-        project.removeModifier(outgoingConnection.m_targetId, outgoingConnection.m_pathInTarget);
-    }
-    {
-        FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
-        assert(elementToModify && "The element must exist");
-        // This may not seem necessary, but it means we won't assert when expanding the
-        // moved down entries.
-        for (const auto& p : m_expandedPathsRemoved) {
-            elementToModify->getEdits().setExpanded(p, false);
-        }
+    CompoundCommand::execute(project);
+    FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+    assert(elementToModify && "The element must exist");
+    // This may not seem necessary, but it means we won't assert when expanding the
+    // moved down entries.
+    for (const auto& p : m_expandedPathsRemoved) {
+        elementToModify->getEdits().setExpanded(p, false);
     }
 }
 
 void babelwires::RemoveAllEditsSubcommand::undo(Project& project) const {
-    {
-        FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
-        assert(elementToModify && "The element must exist");
-        for (const auto& p : m_expandedPathsRemoved) {
-            elementToModify->getEdits().setExpanded(p, true);
-        }
+    FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+    assert(elementToModify && "The element must exist");
+    for (const auto& p : m_expandedPathsRemoved) {
+        elementToModify->getEdits().setExpanded(p, true);
     }
-    for (auto&& outgoingConnection : m_outgoingConnectionsRemoved) {
-        ConnectionModifierData newModifier;
-        newModifier.m_pathToFeature = outgoingConnection.m_pathInTarget;
-        newModifier.m_sourceId = m_elementId;
-        newModifier.m_pathToSourceFeature = outgoingConnection.m_pathInSource;
-        project.addModifier(outgoingConnection.m_targetId, newModifier);
-    }
-    for (auto&& modifierData : m_modifiersRemoved) {
-        project.addModifier(m_elementId, *modifierData);
-    }
+    CompoundCommand::undo(project);
 }

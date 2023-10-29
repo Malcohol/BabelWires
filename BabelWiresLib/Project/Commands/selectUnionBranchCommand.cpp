@@ -56,7 +56,7 @@ bool babelwires::SelectUnionBranchCommand::initializeAndExecute(Project& project
     for (const auto& field : unionFeature->getFieldsRemovedByChangeOfBranch(m_tagToSelect)) {
         FeaturePath pathToField = m_pathToUnion;
         pathToField.pushStep(PathStep(field));
-        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>("Remove union branch subcommand", m_elementId, pathToField));
+        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToField));
     }
 
     if (!CompoundCommand::initializeAndExecute(project)) {

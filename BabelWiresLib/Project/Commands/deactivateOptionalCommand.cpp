@@ -58,7 +58,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
 
     FeaturePath pathToOptional = m_pathToRecord;
     pathToOptional.pushStep(PathStep(m_optional));
-    addSubCommand(std::make_unique<RemoveAllEditsSubcommand>("Remove optional field subcommand", m_elementId, pathToOptional));
+    addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToOptional));
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
