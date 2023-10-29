@@ -5,12 +5,12 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
@@ -21,25 +21,25 @@
 
 #include <cassert>
 
-babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId,
-                                                                     FeaturePath featurePath,
-                                                                     unsigned int indexOfEntryToRemove,
-                                                                     unsigned int numEntriesToRemove)
-    : CompoundCommand(commandName)
+babelwires::AdjustModifiersInArraySubcommand::AdjustModifiersInArraySubcommand(
+    ElementId elementId, const babelwires::FeaturePath& pathToArray,
+    babelwires::ArrayIndex startIndex, int adjustment)
+    : CompoundCommand("AdjustModifiersInArraySubcommand")
     , m_elementId(elementId)
-    , m_pathToArray(std::move(featurePath))
-    , m_indexOfEntryToRemove(indexOfEntryToRemove)
-    , m_numEntriesToRemove(numEntriesToRemove) {
-    assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
+    , m_pathToArray(std::move(pathToArray))
+    , m_startIndex(startIndex)
+    , m_adjustment(adjustment) {
+    assert((m_adjustment != 0) && "There must be some adjustment");
 }
 
-bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& project) {
+bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
 
     if (!elementToModify) {
         return false;
     }
 
+    /*
     const Feature* const inputFeature = elementToModify->getInputFeature();
     if (!inputFeature) {
         return false;
@@ -69,29 +69,39 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
     if (m_indexOfEntryToRemove > currentSize - 1) {
         return false;
     }
+    */
 
-    if (const Modifier* modifier = elementToModify->getEdits().findModifier(m_pathToArray)) {
-        const auto& modifierData = modifier->getModifierData();
-        if (modifier->getModifierData().as<ArraySizeModifierData>()) {
-            m_wasModifier = true;
+    if (m_adjustment < 0) {
+        for (int i = 0; i < -m_adjustment; ++i) {
+            FeaturePath p = m_pathToArray;
+            p.pushStep(PathStep(m_startIndex + i));
+            addSubCommand(std::make_unique<RemoveAllEditsSubcommand>("Remove edits subcommand", m_elementId, p));
         }
     }
 
-    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_elementId, m_pathToArray, m_indexOfEntryToRemove, -m_numEntriesToRemove));
+    auto derivedArrays = projectUtilities::getDerivedValues(project, m_elementId, m_pathToArray);
+
+    for (auto a : derivedArrays) {
+        const ElementId elementId = std::get<0>(a);
+        const FeaturePath& pathToArray = std::get<1>(a);
+        addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(elementId, pathToArray, m_startIndex, m_adjustment));
+    }
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, true);
+
+    project.adjustModifiersInArrayElements(m_elementId, m_pathToArray, m_startIndex, m_adjustment);
+
     return true;
 }
 
-void babelwires::RemoveEntryFromArrayCommand::execute(Project& project) const {
+void babelwires::AdjustModifiersInArraySubcommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, true);
+    project.adjustModifiersInArrayElements(m_elementId, m_pathToArray, m_startIndex, m_adjustment);
 }
 
-void babelwires::RemoveEntryFromArrayCommand::undo(Project& project) const {
-    project.addArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, m_wasModifier);
+void babelwires::AdjustModifiersInArraySubcommand::undo(Project& project) const {
+    project.adjustModifiersInArrayElements(m_elementId, m_pathToArray, m_startIndex, -m_adjustment);
     CompoundCommand::undo(project);
 }

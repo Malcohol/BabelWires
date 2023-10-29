@@ -2,7 +2,7 @@
  * The command which removes an entry from an array.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -14,11 +14,14 @@
 namespace babelwires {
     class Project;
 
-    /// Remove an element from an array feature.
-    class RemoveEntryFromArrayCommand : public CompoundCommand<Project> {
+    /// Adjust modifiers and connections which point into an array to adapt to shifted array elements.
+    class AdjustModifiersInArraySubcommand : public CompoundCommand<Project> {
       public:
-        RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                                    unsigned int indexOfEntryToRemove, unsigned int numEntriesToRemove);
+        /// If adjustments is negative, then the range startIndex to (startIndex - adjustment) is considered as being
+        /// removed.
+        AdjustModifiersInArraySubcommand(ElementId elementId,
+                                          const babelwires::FeaturePath& pathToArray, babelwires::ArrayIndex startIndex,
+                                          int adjustment);
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
@@ -27,11 +30,8 @@ namespace babelwires {
       private:
         ElementId m_elementId;
         FeaturePath m_pathToArray;
-        unsigned int m_indexOfEntryToRemove;
-        unsigned int m_numEntriesToRemove;
-
-        /// Did an old modifier get replaced (otherwise this is the first modification).
-        bool m_wasModifier = false;
+        unsigned int m_startIndex;
+        int m_adjustment;
     };
 
 } // namespace babelwires

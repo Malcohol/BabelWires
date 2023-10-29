@@ -29,9 +29,13 @@ namespace {
         const babelwires::FeaturePath& pathToValue = std::get<1>(values[valueIndex]);
         const babelwires::Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
         const auto& rit = connectionInfo.m_requiredFor.find(element);
-        // TODO Need to exclude features elements which have the dependency loop flag.
         if (rit != connectionInfo.m_requiredFor.end()) {
             for (auto cit : rit->second) {
+                const babelwires::FeatureElement* const targetElement = std::get<1>(cit);
+                // TODO: Build an interface in the project that avoids the need to query this.
+                if (targetElement->isInDependencyLoop()) {
+                    continue;
+                }
                 const babelwires::ConnectionModifier* connectionModifier = std::get<0>(cit);
                 const babelwires::ConnectionModifierData& connectionData = connectionModifier->getModifierData();
                 if (connectionData.m_pathToSourceFeature.isPrefixOf(pathToValue)) {
@@ -48,7 +52,6 @@ namespace {
                     // structure if a value already has a connected ancestor, it should be sufficient to check
                     // connection modifiers.
                     bool foundOverridingModifier = false;
-                    const babelwires::FeatureElement* const targetElement = std::get<1>(cit);
                     // TODO The edit tree could provide an O(log N) algorithm for this.
                     for (auto modifier : targetElement->getConnectionModifiers()) {
                         // Using strict here means that connectionModifier itself is exempt from consideration.
@@ -72,6 +75,28 @@ namespace {
     }
 
 } // namespace
+
+std::vector<std::tuple<babelwires::ElementId, babelwires::FeaturePath>>
+babelwires::projectUtilities::getDerivedValues(const Project& project, ElementId elementId,
+                                                  const FeaturePath& pathToValue) {
+                                                        std::vector<std::tuple<const FeatureElement*, FeaturePath>> values;
+    values.reserve(16);
+    unsigned int valueIndex = 0;
+    const FeatureElement* element = project.getFeatureElement(elementId);
+    values.emplace_back(std::tuple<const FeatureElement*, FeaturePath>{element, pathToValue});
+    //do {
+        addDerivedValues(project, valueIndex, values);
+    //    ++valueIndex;
+    //} while (valueIndex < values.size());
+    std::vector<std::tuple<ElementId, FeaturePath>> convertedValues;
+    convertedValues.reserve(values.size());
+    // Don't add the first element.
+    for (unsigned int i = values.size() - 1; i > 0; --i) {
+        convertedValues.emplace_back(std::tuple<ElementId, FeaturePath>{std::get<0>(values[i])->getElementId(),
+                                                                        std::move(std::get<1>(values[i]))});
+    }
+    return convertedValues;
+}
 
 std::vector<std::tuple<babelwires::ElementId, babelwires::FeaturePath>>
 babelwires::projectUtilities::getAllDerivedValues(const Project& project, ElementId elementId,

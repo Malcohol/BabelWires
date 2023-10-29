@@ -16,12 +16,12 @@ namespace babelwires {
     class Project;
 
     /// Add an element to an array feature.
-    class AddEntriesToArrayCommand : public SimpleCommand<Project> {
+    class AddEntriesToArrayCommand : public CompoundCommand<Project> {
       public:
         AddEntriesToArrayCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                unsigned int indexOfNewEntries, unsigned int numEntriesToAdd = 1);
 
-        virtual bool initialize(const Project& project) override;
+        virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
@@ -30,9 +30,6 @@ namespace babelwires {
         FeaturePath m_pathToArray;
         unsigned int m_indexOfNewEntries;
         unsigned int m_numEntriesToAdd;
-
-        /// All arrays in the project whose structure derives from this array and therefore need to be adjusted.
-        std::vector<std::tuple<ElementId, FeaturePath>> m_indirectlyAffectedArrays;
 
         /// Did an old modifier get replaced (otherwise this is the first modification).
         bool m_wasModifier = false;

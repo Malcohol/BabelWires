@@ -86,11 +86,12 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/changeFileCommand.cpp
 	Project/Commands/pasteElementsCommand.cpp
 	Project/Commands/setExpandedCommand.cpp
-	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
 	Project/Commands/removeFailedModifiersCommand.cpp
 	Project/Commands/resizeElementCommand.cpp
 	Project/Commands/selectUnionBranchCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
+	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
+	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp
 	TypeSystem/typeSystem.cpp
 	Types/Enum/addBlankToEnum.cpp
 	Types/Enum/enumFeature.cpp

@@ -187,10 +187,6 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
             { 
                 arrayModifier->addArrayEntries(m_userLogger, inputFeature, indexOfNewElement, numEntriesToAdd); 
             }
-            // We do this even if indexOfNewElement is at the end, because there may be
-            // failed modifiers beyond the end of the array.
-            adjustModifiersInArrayElements(elementId, pathToArray, indexOfNewElement,
-                                           numEntriesToAdd);
 
             if (arrayModifier && !ensureModifier) {
                 element->removeModifier(arrayModifier);
@@ -238,11 +234,6 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
                 arrayModifier->removeArrayEntries(m_userLogger, inputFeature, indexOfElementToRemove,
                                                   numEntriesToRemove);
             }
-
-            // We do this even if indexOfElementToRemove is at the end, because there may be
-            // failed modifiers beyond the end of the array.
-            adjustModifiersInArrayElements(elementId, pathToArray,
-                                           indexOfElementToRemove, -numEntriesToRemove);
 
             if (arrayModifier && !ensureModifier) {
                 element->removeModifier(arrayModifier);

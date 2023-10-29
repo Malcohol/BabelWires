@@ -1,20 +1,20 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
-#include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
-#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
@@ -65,7 +65,8 @@ TEST(ProjectTest, projectId) {
 TEST(ProjectTest, addGetAndRemoveElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     EXPECT_NE(element, nullptr);
@@ -93,7 +94,8 @@ TEST(ProjectTest, addGetAndRemoveElement) {
 TEST(ProjectTest, addAndRemoveLocalModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
     const testUtils::TestFeatureElement* element =
         testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
@@ -152,7 +154,8 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
 TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
     const testUtils::TestFeatureElement* element =
         testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
@@ -193,10 +196,29 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     EXPECT_EQ(element->findModifier(pathToArray), nullptr);
 }
 
+namespace {
+    // Adapt tests to slightly changed API.
+    void addArrayEntries(babelwires::Project& project, babelwires::ElementId elementId,
+                         const babelwires::FeaturePath& pathToArray, int indexOfNewElement, int numEntriesToAdd,
+                         bool ensureModifier) {
+        project.addArrayEntries(elementId, pathToArray, indexOfNewElement, numEntriesToAdd, ensureModifier);
+        project.adjustModifiersInArrayElements(elementId, pathToArray, indexOfNewElement, numEntriesToAdd);
+    };
+
+    void removeArrayEntries(babelwires::Project& project, babelwires::ElementId elementId,
+                            const babelwires::FeaturePath& pathToArray, int indexOfElementToRemove,
+                            int numEntriesToRemove, bool ensureModifier) {
+        project.removeArrayEntries(elementId, pathToArray, indexOfElementToRemove, numEntriesToRemove,
+                                   ensureModifier);
+        project.adjustModifiersInArrayElements(elementId, pathToArray, indexOfElementToRemove, -numEntriesToRemove);
+    }
+} // namespace
+
 TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
     const testUtils::TestFeatureElement* element =
         testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
@@ -212,25 +234,25 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     testEnvironment.m_project.process();
 
     // Add after.
-    testEnvironment.m_project.addArrayEntries(elementId, pathToArray, 2, 2, true);
+    addArrayEntries(testEnvironment.m_project, elementId, pathToArray, 2, 2, true);
     EXPECT_NE(element->findModifier(testUtils::TestRootFeature::s_pathToArray_1), nullptr);
 
     testEnvironment.m_project.process();
 
     // Add before.
-    testEnvironment.m_project.addArrayEntries(elementId, pathToArray, 1, 3, true);
+    addArrayEntries(testEnvironment.m_project, elementId, pathToArray, 1, 3, true);
     EXPECT_EQ(element->findModifier(testUtils::TestRootFeature::s_pathToArray_1), nullptr);
     EXPECT_NE(element->findModifier(testUtils::TestRootFeature::s_pathToArray_4), nullptr);
 
     testEnvironment.m_project.process();
 
     // Remove after
-    testEnvironment.m_project.removeArrayEntries(elementId, pathToArray, 5, 1, true);
+    removeArrayEntries(testEnvironment.m_project, elementId, pathToArray, 5, 1, true);
     EXPECT_NE(element->findModifier(testUtils::TestRootFeature::s_pathToArray_4), nullptr);
 
     // Remove before.
     testEnvironment.m_project.process();
-    testEnvironment.m_project.removeArrayEntries(elementId, pathToArray, 0, 2, true);
+    removeArrayEntries(testEnvironment.m_project, elementId, pathToArray, 0, 2, true);
     EXPECT_NE(element->findModifier(testUtils::TestRootFeature::s_pathToArray_2), nullptr);
 
     // We don't test removal of modifiers, because responsibility for doing this is left to the
@@ -264,30 +286,30 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
         modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToArray_1;
         testEnvironment.m_project.addModifier(targetElementId, modData);
     }
-    const babelwires::ConnectionModifierData& connectionData = 
+    const babelwires::ConnectionModifierData& connectionData =
         *targetElement->findModifier(pathToTargetFeature)->getModifierData().as<babelwires::ConnectionModifierData>();
 
     testEnvironment.m_project.process();
 
     // The new elements are after the modifier, so it should be in the same place.
-    testEnvironment.m_project.addArrayEntries(sourceElementId, pathToArray, 2, 2, true);
+    addArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 2, 2, true);
     EXPECT_EQ(connectionData.m_pathToSourceFeature, testUtils::TestRootFeature::s_pathToArray_1);
 
     testEnvironment.m_project.process();
 
     // The new elements should mean the modifier moved.
-    testEnvironment.m_project.addArrayEntries(sourceElementId, pathToArray, 1, 3, true);
+    addArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 1, 3, true);
     EXPECT_EQ(connectionData.m_pathToSourceFeature, testUtils::TestRootFeature::s_pathToArray_4);
 
     testEnvironment.m_project.process();
 
     // Remove after
-    testEnvironment.m_project.removeArrayEntries(sourceElementId, pathToArray, 5, 1, true);
+    removeArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 5, 1, true);
     EXPECT_EQ(connectionData.m_pathToSourceFeature, testUtils::TestRootFeature::s_pathToArray_4);
 
     // Remove before.
     testEnvironment.m_project.process();
-    testEnvironment.m_project.removeArrayEntries(sourceElementId, pathToArray, 0, 2, true);
+    removeArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 0, 2, true);
     EXPECT_EQ(connectionData.m_pathToSourceFeature, testUtils::TestRootFeature::s_pathToArray_2);
 
     // We don't test removal of modifiers, because responsibility for doing this is left to the
@@ -327,7 +349,8 @@ TEST(ProjectTest, uiProperties) {
 TEST(ProjectTest, elementIds) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
     EXPECT_NE(elementId, babelwires::INVALID_ELEMENT_ID);
     ASSERT_NE(elementId, 3);
 
@@ -483,7 +506,7 @@ TEST(ProjectTest, process) {
 
     // Removing this modifier will mean the output array is shorter than the modifier at the target requires.
     testEnvironment.m_project.removeModifier(testUtils::TestProjectData::c_processorId,
-                                     testUtils::TestRootFeature::s_pathToInt);
+                                             testUtils::TestRootFeature::s_pathToInt);
     testEnvironment.m_project.process();
     EXPECT_TRUE(targetElement->findModifier(testUtils::TestFileFeature::s_pathToIntChild)->isFailed());
     EXPECT_EQ(targetInput->m_intChildFeature->get(), 0);
@@ -650,7 +673,7 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     EXPECT_FALSE(element4->isInDependencyLoop());
 
     ASSERT_NE(element3->getOutputFeature()->as<testUtils::TestRootFeature>(), nullptr);
-    EXPECT_EQ(element3->getOutputFeature()->as<testUtils::TestRootFeature>()->m_intFeature2->get(), 16);              
+    EXPECT_EQ(element3->getOutputFeature()->as<testUtils::TestRootFeature>()->m_intFeature2->get(), 16);
 
     testEnvironment.m_project.removeModifier(elementId2, testUtils::TestRootFeature::s_pathToInt2);
     testEnvironment.m_project.process();
