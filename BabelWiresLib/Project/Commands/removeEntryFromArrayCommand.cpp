@@ -29,7 +29,21 @@ babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string
     , m_elementId(elementId)
     , m_pathToArray(std::move(featurePath))
     , m_indexOfEntryToRemove(indexOfEntryToRemove)
-    , m_numEntriesToRemove(numEntriesToRemove) {
+    , m_numEntriesToRemove(numEntriesToRemove)
+    , m_isSubcommand(false) {
+    assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
+}
+
+babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(ElementId elementId,
+                                                                     FeaturePath featurePath,
+                                                                     unsigned int indexOfEntryToRemove,
+                                                                     unsigned int numEntriesToRemove)
+    : CompoundCommand("RemoveEntryFromArrayCommand")
+    , m_elementId(elementId)
+    , m_pathToArray(std::move(featurePath))
+    , m_indexOfEntryToRemove(indexOfEntryToRemove)
+    , m_numEntriesToRemove(numEntriesToRemove)
+    , m_isSubcommand(true) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
 }
 
@@ -82,13 +96,13 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, true);
+    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, !m_isSubcommand);
     return true;
 }
 
 void babelwires::RemoveEntryFromArrayCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, true);
+    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, !m_isSubcommand);
 }
 
 void babelwires::RemoveEntryFromArrayCommand::undo(Project& project) const {

@@ -64,7 +64,8 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         }
     }
 
-    if (!hasAncestorConnection) {
+    if (!hasAncestorConnection) 
+    {
         // TODO: There should be a way to move this to a virtual function on modifiers, so these modifiers know how to
         // remove themselves cleanly.
         if (modifier->asConnectionModifier() || modifier->getModifierData().as<ArraySizeModifierData>()) {
@@ -72,8 +73,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                 ValueFeatureHelper::getInfoFromArrayFeature(m_featurePath.tryFollow(*inputFeature));
             if (compoundFeature) {
                 if (currentSize > initialSize) {
-                    addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>(
-                        "RemoveEntryFromArrayCommand subcommand", m_elementId, m_featurePath, initialSize,
+                    addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>(m_elementId, m_featurePath, initialSize,
                         currentSize - initialSize));
                 } else if (initialSize > currentSize) {
                     addSubCommand(std::make_unique<AddEntriesToArrayCommand>("AddEntryToArrayCommand subcommand",

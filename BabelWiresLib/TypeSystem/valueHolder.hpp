@@ -23,6 +23,7 @@ namespace babelwires {
         ValueHolderTemplate(const ValueHolderTemplate& other);
         ValueHolderTemplate(ValueHolderTemplate&& other);
 
+        // TODO Remove this constructor: It makes it far too easy to do a shallow clone.
         ValueHolderTemplate(const VALUE& value);
         ValueHolderTemplate(VALUE&& value);
         ValueHolderTemplate(std::unique_ptr<VALUE> ptr);

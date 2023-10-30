@@ -212,7 +212,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
             ArraySizeModifier* arrayModifier = nullptr;
             if (Modifier* const modifier = element->findModifier(pathToArray)) {
                 arrayModifier = modifier->as<ArraySizeModifier>();
-                if (!arrayModifier) {
+                if (!arrayModifier && ensureModifier) {
                     // Defensive: Wasn't an array modifier at the path, so let it be replaced.
                     // This won't be restored by an undo, but that shouldn't matter since it isn't
                     // useful.

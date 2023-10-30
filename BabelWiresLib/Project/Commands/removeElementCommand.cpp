@@ -67,7 +67,7 @@ bool babelwires::RemoveElementCommand::addConnection(const babelwires::Connectio
             }
         }
     } else {
-        // In this case, there is a single connection, but the desc may not acurately
+        // In this case, there is a single connection, but the desc may not accurately
         // describe it if the source is collapsed. This is important when it is restored
         // on undo. Hence, we look up the actual connection and store it.
         const Modifier* const modifierAtTarget = targetEdits.findModifier(desc.m_pathToTargetFeature);
