@@ -1,3 +1,10 @@
+Structured Data Flow WIP:
+1. Remove connection should probably use remove modifier
+1. Adding a connection above structural modification (e.g. setArraySize). The structural modification should either be stored in the command OR set as failed.
+1. Unit tests
+1. Removing a connection and exposing the contents to a different structure
+1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
+
 Bugs:
 * Sometimes elements get creation twice in the UI.
   - This is probably a symptom of the weird factory re-factor in nodeeditor.
