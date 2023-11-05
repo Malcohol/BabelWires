@@ -1,5 +1,4 @@
 Structured Data Flow WIP:
-1. Adding a connection above structural modification (e.g. setArraySize). The structural modification should either be stored in the command OR set as failed.
 1. Unit tests
 1. Removing a connection and exposing the contents to a different structure
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
@@ -54,6 +53,7 @@ Refactor:
 * Clean up uses of toString, operator<<, serializeToString, etc. Make clear which resolves identifiers.
 * deserializeToString methods should return a tuple which includes the position after the parsed object.
 * Try to sort out the various toString methods, possibly providing a "readableStream", constructed with an IdentiferRegistry::ReadAccess.
+* Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.

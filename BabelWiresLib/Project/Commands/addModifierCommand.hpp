@@ -17,11 +17,11 @@ namespace babelwires {
     struct ModifierData;
 
     /// Add a modifier to a feature element.
-    class AddModifierCommand : public SimpleCommand<Project> {
+    class AddModifierCommand : public CompoundCommand<Project> {
       public:
         AddModifierCommand(std::string commandName, ElementId targetId, std::unique_ptr<ModifierData> modifierToAdd);
 
-        virtual bool initialize(const Project& project) override;
+        virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
@@ -30,9 +30,6 @@ namespace babelwires {
 
         /// Describes the modifier which will be added.
         std::unique_ptr<ModifierData> m_modifierToAdd;
-
-        /// Describes the modifier which got replaced, if there was one.
-        std::unique_ptr<ModifierData> m_modifierToRemove;
     };
 
 } // namespace babelwires
