@@ -1,8 +1,6 @@
 Structured Data Flow WIP:
 1. Unit tests
-1. Removing a connection and exposing the contents to a different structure
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
-1. Optimization: Edit tree could offer "getModifiersAbove(path)" for use in some commands. (See hasAncestorConnection)
 
 Bugs:
 * Sometimes elements get creation twice in the UI.
@@ -54,6 +52,7 @@ Refactor:
 * deserializeToString methods should return a tuple which includes the position after the parsed object.
 * Try to sort out the various toString methods, possibly providing a "readableStream", constructed with an IdentiferRegistry::ReadAccess.
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
+* Model the API of compound features on that of compound types.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.
@@ -80,3 +79,6 @@ Ideas:
 * SelectableArrays: For arrays larger than 16 elements:
   - Each element has an input drop down which selects the output array element.
   - This would be useful for complex input formats.
+
+Optimizations:
+* Edit tree could offer "getModifiersAbove(path)" for use in some commands. (E.g. hasAncestorConnection)

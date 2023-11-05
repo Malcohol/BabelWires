@@ -39,38 +39,6 @@ bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project&
         return false;
     }
 
-    /*
-    const Feature* const inputFeature = elementToModify->getInputFeature();
-    if (!inputFeature) {
-        return false;
-    }
-
-    auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<const ArrayFeature>();
-
-    int currentSize = -1;
-    unsigned int minimumSize = 0;
-    if (auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<ArrayFeature>()) {
-        currentSize = arrayFeature->getNumFeatures();
-        minimumSize = arrayFeature->getSizeRange().m_min;
-    } else if (auto valueFeature = m_pathToArray.tryFollow(*inputFeature)->as<ValueFeature>()) {
-        if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
-            currentSize = arrayType->getNumChildren(valueFeature->getValue());
-            minimumSize = arrayType->getSizeRange().m_min;
-        }
-    }
-    if (currentSize < 0) {
-        return false;
-    }
-
-    if (currentSize - m_numEntriesToRemove < minimumSize) {
-        return false;
-    }
-
-    if (m_indexOfEntryToRemove > currentSize - 1) {
-        return false;
-    }
-    */
-
     if (m_adjustment < 0) {
         for (int i = 0; i < -m_adjustment; ++i) {
             FeaturePath p = m_pathToArray;

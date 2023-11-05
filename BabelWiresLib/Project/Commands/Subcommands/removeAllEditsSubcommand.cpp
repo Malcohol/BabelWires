@@ -32,18 +32,6 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
         return false;
     }
 
-/*
-    const Feature* const inputFeature = elementToModify->getInputFeature();
-    if (!inputFeature) {
-        return false;
-    }
-
-    auto featureToRemove = m_pathToFeature.tryFollow(*inputFeature);
-    if (!featureToRemove) {
-        return false;
-    }
-*/
-
     std::vector<std::unique_ptr<Command>> subcommands;
 
     for (const auto& modifier : elementToModify->getEdits().modifierRange(m_pathToFeature)) {
