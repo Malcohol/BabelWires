@@ -12,10 +12,9 @@
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
-#include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
-#include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
@@ -68,17 +67,13 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     {
         // TODO: There should be a way to move this to a virtual function on modifiers, so these modifiers know how to
         // remove themselves cleanly.
-        if (modifier->asConnectionModifier() || modifier->getModifierData().as<ArraySizeModifierData>()) {
+        if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             auto [compoundFeature, currentSize, range, initialSize] =
                 ValueFeatureHelper::getInfoFromArrayFeature(m_featurePath.tryFollow(*inputFeature));
             if (compoundFeature) {
-                if (currentSize > initialSize) {
-                    addSubCommand(std::make_unique<RemoveEntryFromArrayCommand>(m_elementId, m_featurePath, initialSize,
-                        currentSize - initialSize));
-                } else if (initialSize > currentSize) {
-                    addSubCommand(std::make_unique<AddEntriesToArrayCommand>("AddEntryToArrayCommand subcommand",
-                                                                             m_elementId, m_featurePath, currentSize,
-                                                                             initialSize - currentSize));
+                if (currentSize != initialSize) {
+                    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_elementId, m_featurePath, initialSize,
+                        initialSize - currentSize));
                 }
             }
         } else if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {

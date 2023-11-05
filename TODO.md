@@ -5,6 +5,7 @@ Structured Data Flow WIP:
 1. Unit tests
 1. Removing a connection and exposing the contents to a different structure
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
+1. Optimization: Edit tree could offer "getModifiersAbove(path)" for use in some commands. (See hasAncestorConnection)
 
 Bugs:
 * Sometimes elements get creation twice in the UI.

@@ -20,10 +20,6 @@ namespace babelwires {
         RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                     unsigned int indexOfEntryToRemove, unsigned int numEntriesToRemove);
 
-        /// For use as a subcommand. This never creates an array size modifier.
-        RemoveEntryFromArrayCommand(ElementId elementId, FeaturePath featurePath,
-                                    unsigned int indexOfEntryToRemove, unsigned int numEntriesToRemove);
-
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;

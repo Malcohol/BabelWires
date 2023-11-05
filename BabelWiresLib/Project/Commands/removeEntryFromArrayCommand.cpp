@@ -34,19 +34,6 @@ babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
 }
 
-babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(ElementId elementId,
-                                                                     FeaturePath featurePath,
-                                                                     unsigned int indexOfEntryToRemove,
-                                                                     unsigned int numEntriesToRemove)
-    : CompoundCommand("RemoveEntryFromArrayCommand")
-    , m_elementId(elementId)
-    , m_pathToArray(std::move(featurePath))
-    , m_indexOfEntryToRemove(indexOfEntryToRemove)
-    , m_numEntriesToRemove(numEntriesToRemove)
-    , m_isSubcommand(true) {
-    assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
-}
-
 bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
 
