@@ -41,9 +41,10 @@ babelwires::FeatureElement::FeatureElement(const ElementData& data, ElementId ne
 }
 
 void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
-    Feature* inputFeature = getInputFeatureNonConst(FeaturePath());
+    Feature* inputFeature = doGetInputFeatureNonConst();
     if (inputFeature) {
         inputFeature->setToDefault();
+        modifyFeatureAt(inputFeature, FeaturePath());
     }
     for (auto* m : m_edits.modifierRange<Modifier>()) {
         // The modifiers are stored in path order, so parents will come before
@@ -308,12 +309,11 @@ void babelwires::FeatureElement::setModifierMoving(const babelwires::Modifier& m
 namespace {
 
     babelwires::Feature* tryFollowPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p,
-                                              int& index) {
+                                              int index) {
         if ((index < p.getNumSteps()) && !start->as<babelwires::SimpleValueFeature>()) {
             if (auto* compound = start->as<babelwires::CompoundFeature>()) {
                 babelwires::Feature& child = compound->getChildFromStep(p.getStep(index));
-                ++index;
-                return tryFollowPathToValue(&child, p, index);
+                return tryFollowPathToValue(&child, p, index + 1);
             } else {
                 return nullptr;
             }
@@ -322,13 +322,27 @@ namespace {
         }
     }
 
-    babelwires::Feature* tryFollowPathToValueSafe(babelwires::Feature* start, const babelwires::FeaturePath& p,
-                                                  int& index) {
+    babelwires::Feature* tryFollowPathToValueSafe(babelwires::Feature* start, const babelwires::FeaturePath& p) {
         try {
-            return tryFollowPathToValue(start, p, index);
+            return tryFollowPathToValue(start, p, 0);
         } catch (...) {
             return nullptr;
         }
+    }
+
+    babelwires::SimpleValueFeature* exploreForCompoundRootValueFeature(babelwires::CompoundFeature* compound) {
+        for (auto* const subFeature : babelwires::subfeatures(compound)) {
+            if (auto* const simpleValueFeature = subFeature->as<babelwires::SimpleValueFeature>()) {
+                if (simpleValueFeature->getType().as<babelwires::CompoundType>()) {
+                    return simpleValueFeature;
+                }
+            } else if (auto* const compoundFeature = subFeature->as<babelwires::CompoundFeature>()) {
+                if (auto* const simpleValueFeature = exploreForCompoundRootValueFeature(compoundFeature)) {
+                    return simpleValueFeature;
+                }
+            }
+        }
+        return nullptr;
     }
 
 } // namespace
@@ -336,27 +350,38 @@ namespace {
 void babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const FeaturePath& p) {
     assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
 
-    int index = 0;
-    Feature* target = tryFollowPathToValueSafe(inputFeature, p, index);
+    // This code assumes there's only ever one compound value type in a feature tree.
+
+    if (m_modifyFeatureScope != nullptr) {
+        return;
+    }
+
+    // Look for a root value feature in the ancestor chain.
+    Feature* target = tryFollowPathToValueSafe(inputFeature, p);
     if (!target) {
         // For now, it's not the job of this method to handle failures.
         // The modifier will reattempt the traversal and capture the failure properly.
         return;
     }
 
-    if (SimpleValueFeature* const rootValueFeature = target->as<SimpleValueFeature>()) {
-        FeaturePath pathToRootFeature = p;
-        pathToRootFeature.truncate(index);
-        // Assume there's only ever one compound type in a feature tree.
-        if (rootValueFeature->getType().as<CompoundType>()) {
-            if (m_modifyFeatureScope == nullptr) {
-                rootValueFeature->backUpValue();
-                m_modifyFeatureScope =
-                    std::make_unique<ModifyFeatureScope>(std::move(pathToRootFeature), rootValueFeature);
-            }
+    SimpleValueFeature* rootValueFeature = nullptr;
+
+    if (SimpleValueFeature *const valueFeature = target->as<SimpleValueFeature>()) {
+        // Modification below a compound root value feature.
+        if (valueFeature->getType().as<CompoundType>()) {
+            rootValueFeature = valueFeature;
         }
+    } else if (CompoundFeature* compoundNonValue = target->as<CompoundFeature>()) {
+        // If a modification is being made _above_ a compound root value feature, we also need to back it up.
+        // This is necessary when deserializing nodes with modifications to sub-values, or when the deletion of
+        // a node is undone.
+        rootValueFeature = exploreForCompoundRootValueFeature(compoundNonValue);
     }
-    return;
+
+    if (rootValueFeature) {
+        rootValueFeature->backUpValue();
+        m_modifyFeatureScope = std::make_unique<ModifyFeatureScope>(FeaturePath(rootValueFeature), rootValueFeature);
+    }
 }
 
 void babelwires::FeatureElement::finishModifications(const Project& project, UserLogger& userLogger) {
