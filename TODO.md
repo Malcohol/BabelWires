@@ -1,5 +1,6 @@
 Structured Data Flow WIP:
 1. Remove connection should probably use remove modifier
+1. Add node with modifiers
 1. Adding a connection above structural modification (e.g. setArraySize). The structural modification should either be stored in the command OR set as failed.
 1. Unit tests
 1. Removing a connection and exposing the contents to a different structure

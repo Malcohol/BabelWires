@@ -130,7 +130,7 @@ namespace babelwires {
         };
         // clang-format on
 
-        /// Query the feature element for changes.
+        /// Query the feature element for any of the given changes.
         bool isChanged(Changes changes) const;
 
         /// Clear any changes the element is carrying.
