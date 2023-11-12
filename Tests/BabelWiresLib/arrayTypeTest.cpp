@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
@@ -131,8 +131,8 @@ TEST(ArrayTypeTest, setSizeArrayCanBeEmpty) {
     const babelwires::Type& entryType =
         testUtils::TestSimpleArrayType::getExpectedEntryType().resolve(testEnvironment.m_typeSystem);
 
-    babelwires::ValueHolder valueHolder = babelwires::ValueHolder::makeValue<babelwires::ArrayValue>(
-        testEnvironment.m_typeSystem, entryType, 0);
+    babelwires::ValueHolder valueHolder =
+        babelwires::ValueHolder::makeValue<babelwires::ArrayValue>(testEnvironment.m_typeSystem, entryType, 0);
 
     // Careful: Mutating a valueHolder cause its held value to be replaced, so don't try to keep a reference to the
     // contained value.
@@ -146,9 +146,10 @@ TEST(ArrayTypeTest, setSizeArrayCanBeEmpty) {
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 0);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    EXPECT_THROW(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testUtils::TestSimpleArrayType::s_maximumSize + 1), babelwires::ModelException);
+    EXPECT_THROW(
+        arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testUtils::TestSimpleArrayType::s_maximumSize + 1),
+        babelwires::ModelException);
 }
-
 
 TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
     testUtils::TestEnvironment testEnvironment;
@@ -177,5 +178,46 @@ TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), testUtils::TestCompoundArrayType::s_maximumSize);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    EXPECT_THROW(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testUtils::TestCompoundArrayType::s_minimumSize - 1), babelwires::ModelException);
+    EXPECT_THROW(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder,
+                                   testUtils::TestCompoundArrayType::s_minimumSize - 1),
+                 babelwires::ModelException);
+}
+
+TEST(ArrayTypeTest, insertEntries) {
+    testUtils::TestEnvironment testEnvironment;
+
+    // Test expects these sizes
+    EXPECT_EQ(testUtils::TestSimpleArrayType::s_minimumSize, 0);
+    EXPECT_EQ(testUtils::TestSimpleArrayType::s_maximumSize, 10);
+
+    testUtils::TestSimpleArrayType arrayType;
+    const babelwires::Type& entryType =
+        testUtils::TestSimpleArrayType::getExpectedEntryType().resolve(testEnvironment.m_typeSystem);
+
+    babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 4);
+    for (unsigned int i = 0; i < 4; ++i) {
+        initialArray.setValue(i, babelwires::IntValue(i + 1));
+    }
+    babelwires::ValueHolder valueHolder(initialArray);
+
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 4);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 0, 1);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 5);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 2, 2);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 7);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 7, 3);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 10);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+    {
+        const std::vector<unsigned int> expectedValues{0, 1, 0, 0, 2, 3, 4, 0, 0, 0};
+        for (unsigned int i = 0; i < expectedValues.size(); ++i) {
+            EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getValue(i), babelwires::IntValue(expectedValues[i]));
+        }
+    }
 }
