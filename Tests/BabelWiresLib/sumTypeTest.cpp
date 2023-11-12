@@ -118,7 +118,7 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
     // Just one summand
     EXPECT_THROW(babelwires::TypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
                                      babelwires::DefaultIntType::getThisIdentifier())
-                     .tryResolve(testEnvironment.m_typeSystem),
+                     .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 
     // Wrong value argument
@@ -126,7 +126,7 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
                                      {{babelwires::DefaultIntType::getThisIdentifier(),
                                        babelwires::DefaultRationalType::getThisIdentifier()},
                                       {babelwires::RationalValue(1)}})
-                     .tryResolve(testEnvironment.m_typeSystem),
+                     .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 
     // Too many value arguments
@@ -134,7 +134,7 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
                                      {{babelwires::DefaultIntType::getThisIdentifier(),
                                        babelwires::DefaultRationalType::getThisIdentifier()},
                                       {babelwires::IntValue(1), babelwires::IntValue(1)}})
-                     .tryResolve(testEnvironment.m_typeSystem),
+                     .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 
     // value argument out of range
@@ -142,6 +142,6 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
                                      {{babelwires::DefaultIntType::getThisIdentifier(),
                                        babelwires::DefaultRationalType::getThisIdentifier()},
                                       {babelwires::IntValue(2)}})
-                     .tryResolve(testEnvironment.m_typeSystem),
+                     .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 }

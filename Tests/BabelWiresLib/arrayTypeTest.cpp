@@ -2,8 +2,10 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
@@ -272,4 +274,121 @@ TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
     arrayType.removeEntries(valueHolder, 0, 3);
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 0);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+}
+
+TEST(ArrayTypeTest, removeEntriesArrayCannotBeEmpty) {
+    testUtils::TestEnvironment testEnvironment;
+
+    // Test expects these sizes
+    EXPECT_EQ(testUtils::TestCompoundArrayType::s_minimumSize, 2);
+    EXPECT_EQ(testUtils::TestCompoundArrayType::s_maximumSize, 4);
+
+    testUtils::TestCompoundArrayType arrayType;
+    const babelwires::Type& entryType =
+        testUtils::TestCompoundArrayType::getExpectedEntryType().resolve(testEnvironment.m_typeSystem);
+
+    babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 4);
+    babelwires::ValueHolder valueHolder(initialArray);
+
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 4);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    EXPECT_THROW(arrayType.removeEntries(valueHolder, 0, 3), babelwires::ModelException);
+
+    arrayType.removeEntries(valueHolder, 0, 1);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 3);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    EXPECT_THROW(arrayType.removeEntries(valueHolder, 0, 2), babelwires::ModelException);
+
+    arrayType.removeEntries(valueHolder, 0, 1);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 2);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    EXPECT_THROW(arrayType.removeEntries(valueHolder, 0, 1), babelwires::ModelException);
+}
+
+TEST(ArrayTypeTest, arrayTypeConstructorSucceed) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef arrayTypeRef(babelwires::ArrayTypeConstructor::getThisIdentifier(),
+                                     babelwires::TypeConstructorArguments{
+                                         {babelwires::StringType::getThisIdentifier()},
+                                         {babelwires::IntValue(1), babelwires::IntValue(5), babelwires::IntValue(3)}});
+
+    EXPECT_STREQ(arrayTypeRef.toString().c_str(), "Array<String>[1..5]");
+
+    const babelwires::Type* const newType = arrayTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    ASSERT_NE(newType, nullptr);
+
+    const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();
+    ASSERT_NE(arrayType, nullptr);
+
+    EXPECT_EQ(arrayType->getEntryType(), babelwires::StringType::getThisIdentifier());
+    EXPECT_EQ(arrayType->getSizeRange().m_min, 1);
+    EXPECT_EQ(arrayType->getSizeRange().m_max, 5);
+    EXPECT_EQ(arrayType->getInitialSize(), 3);
+}
+
+TEST(ArrayTypeTest, arrayTypeConstructorFail) {
+    testUtils::TestEnvironment testEnvironment;
+
+    {
+        babelwires::TypeRef arrayTypeRef(
+            babelwires::ArrayTypeConstructor::getThisIdentifier(),
+            babelwires::TypeConstructorArguments{
+                {babelwires::MediumId("NotAValidType")},
+                {babelwires::IntValue(1), babelwires::IntValue(5), babelwires::IntValue(3)}});
+
+        EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
+        EXPECT_THROW(arrayTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+    }
+    {
+        babelwires::TypeRef arrayTypeRef(
+            babelwires::ArrayTypeConstructor::getThisIdentifier(),
+            babelwires::TypeConstructorArguments{{babelwires::StringType::getThisIdentifier()}, {}});
+
+        EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
+        EXPECT_THROW(arrayTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+    }
+    {
+        babelwires::TypeRef arrayTypeRef(
+            babelwires::ArrayTypeConstructor::getThisIdentifier(),
+            babelwires::TypeConstructorArguments{
+                {babelwires::StringType::getThisIdentifier()},
+                {babelwires::IntValue(-1), babelwires::IntValue(5), babelwires::IntValue(3)}});
+
+        EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
+        EXPECT_THROW(arrayTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+    }
+    {
+        babelwires::TypeRef arrayTypeRef(
+            babelwires::ArrayTypeConstructor::getThisIdentifier(),
+            babelwires::TypeConstructorArguments{
+                {babelwires::StringType::getThisIdentifier()},
+                {babelwires::IntValue(6), babelwires::IntValue(2), babelwires::IntValue(7)}});
+
+        EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
+        EXPECT_THROW(arrayTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+    }
+    {
+        babelwires::TypeRef arrayTypeRef(
+            babelwires::ArrayTypeConstructor::getThisIdentifier(),
+            babelwires::TypeConstructorArguments{
+                {babelwires::StringType::getThisIdentifier()},
+                {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(3)}});
+
+        EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
+        EXPECT_THROW(arrayTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+    }
+    {
+        babelwires::TypeRef arrayTypeRef(
+            babelwires::ArrayTypeConstructor::getThisIdentifier(),
+            babelwires::TypeConstructorArguments{
+                {babelwires::StringType::getThisIdentifier()},
+                {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(12)}});
+
+        EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
+        EXPECT_THROW(arrayTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+    }
 }

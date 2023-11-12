@@ -1,5 +1,5 @@
 /**
- * A TypeConstructor which constructs an int type with a particular range and default.
+ * A TypeConstructor which constructs an array type with a particular entry type, size range and default size.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,18 +11,18 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 namespace babelwires {
-    /// Construct a new IntType from three IntValues: min, max and default.
-    class IntTypeConstructor : public TypeConstructor {
+    /// Construct a new IntType from a TypeRef and three IntValues: min, max and default.
+    class ArrayTypeConstructor : public TypeConstructor {
       public:
         /// Note that the we don't represent the default in the name.
-        TYPE_CONSTRUCTOR("Int", "{{{0}..{1}}}", "96dc61c3-5940-47c4-9d98-9f06d5f01157", 1);
+        TYPE_CONSTRUCTOR("Array", "Array<{0}>[{1}..{2}]", "3f8cac9a-2c0b-439f-97ed-bde16874b994", 1);
 
         std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
 
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
-        static std::tuple<Range<IntValue::NativeType>, IntValue::NativeType>
+        static std::tuple<unsigned int, unsigned int, unsigned int>
         extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
     };
 } // namespace babelwires

@@ -41,7 +41,7 @@ TEST(AddBlankToEnum, constructType) {
 
     babelwires::AddBlankToEnum addBlankToEnum;
     const babelwires::Type* const newType =
-        addBlankToEnum.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{{testUtils::TestEnum::getThisIdentifier()}});
+        addBlankToEnum.tryGetOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{{testUtils::TestEnum::getThisIdentifier()}});
     ASSERT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeRef(), babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
                                                          testUtils::TestEnum::getThisIdentifier()));
@@ -63,7 +63,7 @@ TEST(AddBlankToEnum, idempotency) {
 
     babelwires::AddBlankToEnum addBlankToEnum;
     const babelwires::Type* const newType =
-        addBlankToEnum.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{{babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
+        addBlankToEnum.tryGetOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{{babelwires::TypeRef(babelwires::AddBlankToEnum::getThisIdentifier(),
                                                                       testUtils::TestEnum::getThisIdentifier())}});
 
     ASSERT_NE(newType, nullptr);
