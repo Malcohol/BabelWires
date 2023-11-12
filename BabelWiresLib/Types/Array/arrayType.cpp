@@ -123,11 +123,11 @@ babelwires::SubtypeOrder babelwires::ArrayType::compareSubtypeHelper(const TypeS
     }
     SubtypeOrder rangeOrder;
     if ((m_minimumSize == otherArray->m_minimumSize) && (m_maximumSize == otherArray->m_maximumSize)) {
-        rangeOrder == SubtypeOrder::IsEquivalent;
+        rangeOrder = SubtypeOrder::IsEquivalent;
     } else if ((m_minimumSize >= otherArray->m_minimumSize) && (m_maximumSize <= otherArray->m_maximumSize)) {
-        rangeOrder == SubtypeOrder::IsSubtype;
+        rangeOrder = SubtypeOrder::IsSubtype;
     } else if ((m_minimumSize <= otherArray->m_minimumSize) && (m_maximumSize >= otherArray->m_maximumSize)) {
-        rangeOrder == SubtypeOrder::IsSupertype;
+        rangeOrder = SubtypeOrder::IsSupertype;
     } else {
         return SubtypeOrder::IsUnrelated;
     }

@@ -9,6 +9,7 @@
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(ArrayTypeTest, simpleArrayTypeCreateValue) {
@@ -391,4 +392,34 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
         EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
         EXPECT_THROW(arrayTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
     }
+}
+
+TEST(ArrayTypeTest, subtyping) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef arrayTypeRef(
+        babelwires::ArrayTypeConstructor::getThisIdentifier(),
+        babelwires::TypeConstructorArguments{
+            {testUtils::TestSubEnum::getThisIdentifier()},
+            {babelwires::IntValue(2), babelwires::IntValue(6), babelwires::IntValue(3)}});
+
+    babelwires::TypeRef biggerArrayTypeRef(
+        babelwires::ArrayTypeConstructor::getThisIdentifier(),
+        babelwires::TypeConstructorArguments{
+            {testUtils::TestSubEnum::getThisIdentifier()},
+            {babelwires::IntValue(1), babelwires::IntValue(7), babelwires::IntValue(3)}});
+
+    babelwires::TypeRef arrayOfSupertypeTypeRef(
+        babelwires::ArrayTypeConstructor::getThisIdentifier(),
+        babelwires::TypeConstructorArguments{
+            {testUtils::TestEnum::getThisIdentifier()},
+            {babelwires::IntValue(2), babelwires::IntValue(6), babelwires::IntValue(3)}});
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeRef, arrayTypeRef), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeRef, biggerArrayTypeRef), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(biggerArrayTypeRef, arrayTypeRef), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeRef, arrayOfSupertypeTypeRef), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfSupertypeTypeRef, arrayTypeRef), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(biggerArrayTypeRef, arrayOfSupertypeTypeRef), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfSupertypeTypeRef, biggerArrayTypeRef), babelwires::SubtypeOrder::IsUnrelated);
 }
