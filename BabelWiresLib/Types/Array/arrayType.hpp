@@ -26,17 +26,17 @@ namespace babelwires {
         /// Get the size of a newly initialized value of this array.
         unsigned int getInitialSize() const;
 
+        const TypeRef& getEntryType() const;
+
+        std::string getKind() const override;
+
         void setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
         void insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement, unsigned int numEntriesToAdd) const;
         void removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove, unsigned int numEntriesToRemove) const;
 
-        const TypeRef& getEntryType() const;
-
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
-
-        std::string getKind() const override;
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
 

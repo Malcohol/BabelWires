@@ -7,6 +7,7 @@ SET( LIB_TESTS_SRCS
     addEntryToArrayCommandTest.cpp
     addModifierCommandTest.cpp
     addEntryToMapCommandTest.cpp
+    arrayTypeTest.cpp
     changeEntryKindCommandTest.cpp
     changeFileCommandTest.cpp
     commandManagerTest.cpp

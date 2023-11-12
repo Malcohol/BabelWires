@@ -2,8 +2,16 @@
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
-testUtils::TestArrayType::TestArrayType()
-    : babelwires::ArrayType(babelwires::DefaultIntType::getThisIdentifier(), 1, 10, 3) {}
+testUtils::TestSimpleArrayType::TestSimpleArrayType()
+    : babelwires::ArrayType(getExpectedEntryType(), s_minimumSize, s_maximumSize, s_defaultSize) {}
 
-testUtils::TestArrayType2::TestArrayType2()
-    : babelwires::ArrayType(testUtils::TestArrayType::getThisIdentifier(), 1, 4, 2) {}
+babelwires::TypeRef testUtils::TestSimpleArrayType::getExpectedEntryType() {
+    return babelwires::DefaultIntType::getThisIdentifier();
+}
+
+testUtils::TestCompoundArrayType::TestCompoundArrayType()
+    : babelwires::ArrayType(getExpectedEntryType(), s_minimumSize, s_maximumSize, s_defaultSize) {}
+
+babelwires::TypeRef testUtils::TestCompoundArrayType::getExpectedEntryType() {
+    return testUtils::TestSimpleArrayType::getThisIdentifier();
+}

@@ -1,0 +1,181 @@
+#include <gtest/gtest.h>
+
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/Types/Array/arrayValue.hpp>
+#include <BabelWiresLib/Types/Int/intValue.hpp>
+#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Features/modelExceptions.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+
+TEST(ArrayTypeTest, simpleArrayTypeCreateValue) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestSimpleArrayType arrayType;
+
+    EXPECT_EQ(arrayType.getExpectedEntryType(), arrayType.getEntryType());
+    EXPECT_EQ(arrayType.getInitialSize(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(arrayType.getSizeRange().m_min, testUtils::TestSimpleArrayType::s_minimumSize);
+    EXPECT_EQ(arrayType.getSizeRange().m_max, testUtils::TestSimpleArrayType::s_maximumSize);
+    EXPECT_FALSE(arrayType.getKind().empty());
+
+    babelwires::ValueHolder newValue = arrayType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(newValue);
+
+    const auto* const newArrayValue = newValue->as<babelwires::ArrayValue>();
+    EXPECT_NE(newArrayValue, nullptr);
+    EXPECT_EQ(newArrayValue->getSize(), testUtils::TestSimpleArrayType::s_defaultSize);
+
+    const babelwires::Type& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
+    const babelwires::ValueHolder defaultEntryValue = entryType.createValue(testEnvironment.m_typeSystem);
+
+    for (int i = 0; i < newArrayValue->getSize(); ++i) {
+        EXPECT_TRUE(entryType.isValidValue(testEnvironment.m_typeSystem, *newArrayValue->getValue(i)));
+        // New entries start in default state
+        EXPECT_EQ(defaultEntryValue, *newArrayValue->getValue(i));
+    }
+}
+
+TEST(ArrayTypeTest, compoundArrayTypeCreateValue) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestCompoundArrayType arrayType;
+
+    EXPECT_EQ(arrayType.getExpectedEntryType(), arrayType.getEntryType());
+    EXPECT_EQ(arrayType.getInitialSize(), testUtils::TestCompoundArrayType::s_defaultSize);
+    EXPECT_EQ(arrayType.getSizeRange().m_min, testUtils::TestCompoundArrayType::s_minimumSize);
+    EXPECT_EQ(arrayType.getSizeRange().m_max, testUtils::TestCompoundArrayType::s_maximumSize);
+    EXPECT_FALSE(arrayType.getKind().empty());
+
+    babelwires::ValueHolder newValue = arrayType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(newValue);
+
+    const auto* const newArrayValue = newValue->as<babelwires::ArrayValue>();
+    EXPECT_NE(newArrayValue, nullptr);
+    EXPECT_EQ(newArrayValue->getSize(), testUtils::TestCompoundArrayType::s_defaultSize);
+
+    const babelwires::Type& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
+    const babelwires::ValueHolder defaultEntryValue = entryType.createValue(testEnvironment.m_typeSystem);
+
+    for (int i = 0; i < newArrayValue->getSize(); ++i) {
+        EXPECT_TRUE(entryType.isValidValue(testEnvironment.m_typeSystem, *newArrayValue->getValue(i)));
+        // New entries start in default state
+        EXPECT_EQ(defaultEntryValue, *newArrayValue->getValue(i));
+    }
+}
+
+TEST(ArrayTypeTest, isValidValueArrayCanBeEmpty) {
+    testUtils::TestEnvironment testEnvironment;
+
+    // Test expects 0 entries to be allowed.
+    EXPECT_EQ(testUtils::TestSimpleArrayType::s_minimumSize, 0);
+
+    testUtils::TestSimpleArrayType arrayType;
+    const babelwires::Type& entryType =
+        testUtils::TestSimpleArrayType::getExpectedEntryType().resolve(testEnvironment.m_typeSystem);
+
+    for (unsigned int i = testUtils::TestSimpleArrayType::s_minimumSize;
+         i <= testUtils::TestSimpleArrayType::s_maximumSize; ++i) {
+        babelwires::ArrayValue emptyValue(testEnvironment.m_typeSystem, entryType, i);
+        EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, emptyValue));
+    }
+
+    babelwires::ArrayValue overFullValue(testEnvironment.m_typeSystem, entryType,
+                                         testUtils::TestSimpleArrayType::s_maximumSize + 1);
+    EXPECT_FALSE(arrayType.isValidValue(testEnvironment.m_typeSystem, overFullValue));
+
+    babelwires::ArrayValue mixedValue(testEnvironment.m_typeSystem, entryType,
+                                      testUtils::TestSimpleArrayType::s_maximumSize);
+
+    // Make an entry not an element of the entry type.
+    mixedValue.setValue(testUtils::TestSimpleArrayType::s_minimumSize, babelwires::StringValue("Not valid"));
+    EXPECT_FALSE(arrayType.isValidValue(testEnvironment.m_typeSystem, mixedValue));
+
+    // Restore the entry to a value of the entry type.
+    mixedValue.setValue(testUtils::TestSimpleArrayType::s_minimumSize, babelwires::IntValue(12));
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, mixedValue));
+}
+
+TEST(ArrayTypeTest, isValidValueArrayCannotBeEmpty) {
+    testUtils::TestEnvironment testEnvironment;
+
+    // Test expects at least 2 entries to be required
+    EXPECT_GT(testUtils::TestCompoundArrayType::s_minimumSize, 1);
+
+    testUtils::TestCompoundArrayType arrayType;
+    const babelwires::Type& entryType =
+        testUtils::TestCompoundArrayType::getExpectedEntryType().resolve(testEnvironment.m_typeSystem);
+
+    for (unsigned int i = testUtils::TestCompoundArrayType::s_minimumSize;
+         i <= testUtils::TestCompoundArrayType::s_maximumSize; ++i) {
+        babelwires::ArrayValue emptyValue(testEnvironment.m_typeSystem, entryType, i);
+        EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, emptyValue));
+    }
+
+    babelwires::ArrayValue emptyArray(testEnvironment.m_typeSystem, entryType, 0);
+    EXPECT_FALSE(arrayType.isValidValue(testEnvironment.m_typeSystem, emptyArray));
+
+    babelwires::ArrayValue arrayTooSmall(testEnvironment.m_typeSystem, entryType,
+                                         testUtils::TestCompoundArrayType::s_minimumSize - 1);
+    EXPECT_FALSE(arrayType.isValidValue(testEnvironment.m_typeSystem, arrayTooSmall));
+}
+
+TEST(ArrayTypeTest, setSizeArrayCanBeEmpty) {
+    testUtils::TestEnvironment testEnvironment;
+
+    // Test expects 0 entries to be allowed.
+    EXPECT_EQ(testUtils::TestSimpleArrayType::s_minimumSize, 0);
+    // Test expects the array to have a flexible size
+    EXPECT_NE(testUtils::TestSimpleArrayType::s_minimumSize, testUtils::TestSimpleArrayType::s_maximumSize);
+
+    testUtils::TestSimpleArrayType arrayType;
+    const babelwires::Type& entryType =
+        testUtils::TestSimpleArrayType::getExpectedEntryType().resolve(testEnvironment.m_typeSystem);
+
+    babelwires::ValueHolder valueHolder = babelwires::ValueHolder::makeValue<babelwires::ArrayValue>(
+        testEnvironment.m_typeSystem, entryType, 0);
+
+    // Careful: Mutating a valueHolder cause its held value to be replaced, so don't try to keep a reference to the
+    // contained value.
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 0);
+
+    arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, 1);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 1);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, 0);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 0);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    EXPECT_THROW(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testUtils::TestSimpleArrayType::s_maximumSize + 1), babelwires::ModelException);
+}
+
+
+TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
+    testUtils::TestEnvironment testEnvironment;
+
+    // Test expects at least 2 entries to be required
+    EXPECT_GT(testUtils::TestCompoundArrayType::s_minimumSize, 1);
+    // Test expects the array to have a flexible size
+    EXPECT_NE(testUtils::TestCompoundArrayType::s_minimumSize, testUtils::TestCompoundArrayType::s_maximumSize);
+
+    testUtils::TestCompoundArrayType arrayType;
+    const babelwires::Type& entryType =
+        testUtils::TestCompoundArrayType::getExpectedEntryType().resolve(testEnvironment.m_typeSystem);
+
+    babelwires::ValueHolder valueHolder = babelwires::ValueHolder::makeValue<babelwires::ArrayValue>(
+        testEnvironment.m_typeSystem, entryType, testUtils::TestCompoundArrayType::s_maximumSize);
+
+    // Careful: Mutating a valueHolder cause its held value to be replaced, so don't try to keep a reference to the
+    // contained value.
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), testUtils::TestCompoundArrayType::s_maximumSize);
+
+    arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testUtils::TestCompoundArrayType::s_maximumSize - 1);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), testUtils::TestCompoundArrayType::s_maximumSize - 1);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testUtils::TestCompoundArrayType::s_maximumSize);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), testUtils::TestCompoundArrayType::s_maximumSize);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    EXPECT_THROW(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testUtils::TestCompoundArrayType::s_minimumSize - 1), babelwires::ModelException);
+}
