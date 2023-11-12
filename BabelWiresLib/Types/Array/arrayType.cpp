@@ -74,8 +74,8 @@ void babelwires::ArrayType::removeEntries(ValueHolder& value, unsigned int index
     if (currentSize - numEntriesToRemove < m_minimumSize) {
         throw ModelException() << "Removing " << numEntriesToRemove << " entries will make the array smaller than its minimum size " << m_minimumSize;
     }
-    if (indexOfElementToRemove > currentSize) {
-        throw ModelException() << "The index " << indexOfElementToRemove << " at which to remove is not currently in the array";
+    if (indexOfElementToRemove + numEntriesToRemove > currentSize) {
+        throw ModelException() << "The indices to remove are not all in the array";
     }
     ArrayValue& arrayValue = value.copyContentsAndGetNonConst().is<ArrayValue>();
     for (unsigned int i = 0; i < numEntriesToRemove; ++i )

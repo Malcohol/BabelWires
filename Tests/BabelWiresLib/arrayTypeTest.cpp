@@ -211,6 +211,8 @@ TEST(ArrayTypeTest, insertEntries) {
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 7);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
+    EXPECT_THROW(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 5, 4), babelwires::ModelException);
+
     arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 7, 3);
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 10);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
@@ -220,4 +222,54 @@ TEST(ArrayTypeTest, insertEntries) {
             EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getValue(i), babelwires::IntValue(expectedValues[i]));
         }
     }
+
+    EXPECT_THROW(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 5, 1), babelwires::ModelException);
+}
+
+TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
+    testUtils::TestEnvironment testEnvironment;
+
+    // Test expects these sizes
+    EXPECT_EQ(testUtils::TestSimpleArrayType::s_minimumSize, 0);
+    EXPECT_EQ(testUtils::TestSimpleArrayType::s_maximumSize, 10);
+
+    testUtils::TestSimpleArrayType arrayType;
+    const babelwires::Type& entryType =
+        testUtils::TestSimpleArrayType::getExpectedEntryType().resolve(testEnvironment.m_typeSystem);
+
+    babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 8);
+    for (unsigned int i = 0; i < 8; ++i) {
+        initialArray.setValue(i, babelwires::IntValue(i + 1));
+    }
+    babelwires::ValueHolder valueHolder(initialArray);
+
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 8);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    arrayType.removeEntries(valueHolder, 0, 1);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 7);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    arrayType.removeEntries(valueHolder, 2, 2);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 5);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+
+    arrayType.removeEntries(valueHolder, 3, 2);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 3);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
+    {
+        const std::vector<unsigned int> expectedValues{2, 3, 6};
+        for (unsigned int i = 0; i < expectedValues.size(); ++i) {
+            EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getValue(i), babelwires::IntValue(expectedValues[i]));
+        }
+    }
+
+    EXPECT_THROW(arrayType.removeEntries(valueHolder, 4, 1), babelwires::ModelException);
+    EXPECT_THROW(arrayType.removeEntries(valueHolder, 3, 1), babelwires::ModelException);
+    EXPECT_THROW(arrayType.removeEntries(valueHolder, 2, 2), babelwires::ModelException);
+    EXPECT_THROW(arrayType.removeEntries(valueHolder, 0, 4), babelwires::ModelException);
+
+    arrayType.removeEntries(valueHolder, 0, 3);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 0);
+    EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 }
