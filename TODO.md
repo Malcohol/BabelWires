@@ -1,4 +1,6 @@
 Structured Data Flow WIP:
+1. Unit tests for Arrays
+1. Records, Unions and Optionals Types
 1. Unit tests
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
 
