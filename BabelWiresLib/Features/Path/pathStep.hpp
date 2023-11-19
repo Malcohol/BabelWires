@@ -27,8 +27,8 @@ namespace babelwires {
         PathStep(ArrayIndex index)
             : m_arrayIndex(Index()) {
             m_arrayIndex.m_index = index;
-            assert((index < 255) && "overflow?");
-            assert((index < 65000) && "underflow?");
+            // Leave some spare values to detect issues, such as underflow.
+            assert((index < 65000) && "Index too large");
         }
 
         /// Identifier Discriminators are not permitted to reach this high.
@@ -86,11 +86,13 @@ namespace babelwires {
             return os;
         }
 
+        /// Write to the stream in a human-readable way.
         void writeToStreamReadable(std::ostream& os, const IdentifierRegistry& identifierRegistry) const;
 
-        std::uint64_t getDataAsCode() const { return m_code & 0xffffffffffffff00; }
-
       private:
+        /// Get a efficient representation of the contents of this object.
+        std::uint64_t getDataAsCode() const { return m_code & 0xffffffffffff0000; }
+
         void writeToStream(std::ostream& os) const;
 
       private:

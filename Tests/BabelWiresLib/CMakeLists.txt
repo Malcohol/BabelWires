@@ -35,6 +35,7 @@ SET( LIB_TESTS_SRCS
     moveElementCommandTest.cpp
     parallelProcessorTest.cpp
     pasteElementsCommandTest.cpp
+    pathStepTest.cpp
     processorElementTest.cpp
     projectBundleTest.cpp
     projectDataTest.cpp
