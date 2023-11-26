@@ -19,7 +19,7 @@ babelwires::TypeConstructor::tryGetOrConstructType(const TypeSystem& typeSystem,
                                                    const TypeConstructorArguments& arguments) const {
     const auto& storage = getOrConstructTypeInternal(typeSystem, arguments);
     struct VisitorMethods {
-        const babelwires::Type* operator()(std::monostate) { assert(false); }
+        const babelwires::Type* operator()(std::monostate) { assert(false && "Attempt to construct a null type"); return nullptr; }
         const babelwires::Type* operator()(const std::unique_ptr<Type>& type) { return type.get(); }
         const babelwires::Type* operator()(const std::string& error) { return nullptr; }
     };
@@ -31,7 +31,7 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
                                                 const TypeConstructorArguments& arguments) const {
     const auto& storage = getOrConstructTypeInternal(typeSystem, arguments);
     struct VisitorMethods {
-        const babelwires::Type& operator()(std::monostate) { assert(false); }
+        const babelwires::Type& operator()(std::monostate) { assert(false && "Attempt to construct a null type"); return *(const babelwires::Type*)0; }
         const babelwires::Type& operator()(const std::unique_ptr<Type>& type) { return *type; }
         const babelwires::Type& operator()(const std::string& error) { throw TypeSystemException() << error; }
     };
