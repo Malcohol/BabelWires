@@ -19,7 +19,6 @@ namespace babelwires {
         ModifyFeatureScope(FeaturePath pathToRootValue, SimpleValueFeature* rootValueFeature);
 
       public:
-        FeatureElement* m_element = nullptr;
         FeaturePath m_pathToRootValue;
         SimpleValueFeature* m_rootValueFeature = nullptr;
     };
