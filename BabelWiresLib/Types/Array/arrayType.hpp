@@ -53,6 +53,7 @@ namespace babelwires {
         unsigned int m_maximumSize;
     };
 
+/* For testing
     // TODO Remove
     class TestArrayType : public ArrayType {
       public:
@@ -67,4 +68,5 @@ namespace babelwires {
         
         PRIMITIVE_TYPE("arrayT2", "Array2", "0171a8a6-9ff7-4fed-a7fe-836529b690af", 1);
     };
+*/
 } // namespace babelwires
