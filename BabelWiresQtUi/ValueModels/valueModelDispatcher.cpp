@@ -13,6 +13,7 @@
 #include <BabelWiresQtUi/ValueModels/rationalValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/valueModelRegistry.hpp>
 #include <BabelWiresQtUi/ValueModels/mapValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/arrayValueModel.hpp>
 
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
@@ -20,9 +21,11 @@
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
 
-void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const Type& type, const Value& value, bool isReadOnly) {
+void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const Type& type, const Value& value, bool isReadOnly, bool isStructureEditable) {
     m_valueModel = &m_valueModelStorage;
+    // TODO Allow the UI to register callbacks into the corresponding ValueTypes.
     if (valueModelRegistry.handleFeature(&type, m_valueModel)) {
         // Handled by a registered handler.
     } else if (type.as<EnumType>()) {
@@ -40,10 +43,14 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     } else if (type.as<MapType>() || type.as<SumOfMapsType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::MapValueModel));
         new (m_valueModel) babelwires::MapValueModel();
+    } else if (type.as<ArrayType>()) {
+        static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::ArrayValueModel));
+        new (m_valueModel) babelwires::ArrayValueModel();
     } else {
         // The base row model is used.
     }
     m_valueModel->m_type = &type;
     m_valueModel->m_value = &value;
     m_valueModel->m_isReadOnly = isReadOnly;
+    m_valueModel->m_isStructureEditable = isStructureEditable;
 }

@@ -2,7 +2,7 @@
  * Base class of models corresponding to a row in a node of the flow graph.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
@@ -16,9 +16,12 @@
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #include <QBrush>
 
@@ -109,7 +112,8 @@ QWidget* babelwires::RowModel::createEditor(QWidget* parent, const QModelIndex& 
 
 void babelwires::RowModel::setEditorData(QWidget* editor) const {}
 
-std::unique_ptr<babelwires::Command<babelwires::Project>> babelwires::RowModel::createCommandFromEditor(QWidget* editor) const {
+std::unique_ptr<babelwires::Command<babelwires::Project>>
+babelwires::RowModel::createCommandFromEditor(QWidget* editor) const {
     return nullptr;
 }
 
@@ -135,25 +139,28 @@ void babelwires::RowModel::getContextMenuActions(
         actionsOut.emplace_back(std::make_unique<RemoveFailedModifiersAction>());
     }
     if (const babelwires::Feature* inputFeature = getInputFeature()) {
-        if (auto arrayFeature = inputFeature->getOwner()->as<const ArrayFeature>()) {
-            FeaturePath pathToArray(arrayFeature);
-            const PathStep step = arrayFeature->getStepToChild(inputFeature);
+        auto [compoundFeature, currentSize, range, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(inputFeature->getOwner());
+        if (compoundFeature) {
+            const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
+            //QString tooltip = "Array actions are not permitted when an array is a connection target";
+            FeaturePath pathToArray(compoundFeature);
+            const PathStep step = compoundFeature->getStepToChild(inputFeature);
             const ArrayIndex index = step.getIndex();
-            const auto sizeRange = arrayFeature->getSizeRange();
-            const auto currentSize = arrayFeature->getNumFeatures();
             {
-                auto insertElement = std::make_unique<InsertArrayEntryAction>("Add element before", pathToArray, index);
-                insertElement->setEnabled(sizeRange.contains(currentSize + 1));
+                auto insertElement =
+                    std::make_unique<InsertArrayEntryAction>("Add element before", pathToArray, index);
+                insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }
             {
-                auto insertElement = std::make_unique<InsertArrayEntryAction>("Add element after", pathToArray, index + 1);
-                insertElement->setEnabled(sizeRange.contains(currentSize + 1));
+                auto insertElement =
+                    std::make_unique<InsertArrayEntryAction>("Add element after", pathToArray, index + 1);
+                insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }
             {
                 auto removeElement = std::make_unique<RemoveArrayEntryAction>(pathToArray, index);
-                removeElement->setEnabled(sizeRange.contains(currentSize - 1));
+                removeElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize - 1));
                 actionsOut.emplace_back(std::move(removeElement));
             }
         }

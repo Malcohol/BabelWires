@@ -7,16 +7,26 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/compoundFeature.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
+
+#include <Common/multiKeyMap.hpp>
 
 namespace babelwires {
     class TypeRef;
     class Type;
+    class SimpleValueFeature;
+    class ChildValueFeature;
 
     /// A ValueFeature is a feature which provides access to a value.
-    class ValueFeature : public Feature {
+    class ValueFeature : public CompoundFeature {
       public:
+        /// Construct a ValueFeature which carries values of the given type.
+        ValueFeature(TypeRef typeRef);
+        ~ValueFeature();
+
         /// Get the TypeRef which describes the type of the value.
         const TypeRef& getTypeRef() const;
 
@@ -39,12 +49,41 @@ namespace babelwires {
         /// This will throw a ModelException if the assignment failed.
         void assign(const ValueFeature& other);
 
-      protected:
+        /// If the value is compound, synchronize the m_children data structure with the current children of the value.
+        void synchronizeSubfeatures();
+
+        /// Set change flags in this feature and its subfeatures by comparing the current value with that of other.
+        void reconcileChanges(const ValueHolder& other);
+
+      public:
+        virtual int getNumFeatures() const override;
+        virtual PathStep getStepToChild(const Feature* child) const override;
+        virtual int getChildIndexFromStep(const PathStep& identifier) const override;
+        virtual Feature* doGetFeature(int i) override;
+        virtual const Feature* doGetFeature(int i) const override;
         /// Calls doSetToDefault.
         virtual void doSetToDefaultNonRecursive() override;
+        virtual std::size_t doGetHash() const override;
 
-        virtual const TypeRef& doGetTypeRef() const = 0;
+      protected:
         virtual const ValueHolder& doGetValue() const = 0;
         virtual void doSetValue(const ValueHolder& newValue) = 0;
+
+        template<typename ROOT_VALUE_FEATURE>
+        struct RootAndPath {
+          ROOT_VALUE_FEATURE& m_root;
+          FeaturePath m_pathFromRoot;
+        };
+
+        /// All value features must be below a single SimpleValueFeature.
+        RootAndPath<const SimpleValueFeature> getRootValueFeature() const;
+
+        /// All value features must be below a single SimpleValueFeature.
+        RootAndPath<SimpleValueFeature> getRootValueFeature();
+
+      private:
+        TypeRef m_typeRef;
+        using ChildMap = MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ChildValueFeature>>;
+        ChildMap m_children;
     };
 }

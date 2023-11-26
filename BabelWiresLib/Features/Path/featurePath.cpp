@@ -2,7 +2,7 @@
  * Describes the steps to follow within a tree of features to reach a particular feature.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
@@ -11,9 +11,9 @@
 #include <BabelWiresLib/Features/compoundFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
+#include <Common/Hash/hash.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Log/debugLogger.hpp>
-#include <Common/Hash/hash.hpp>
 #include <Common/types.hpp>
 
 #include <algorithm>
@@ -36,6 +36,9 @@ babelwires::FeaturePath::FeaturePath(const Feature* feature) {
     std::move(steps.rbegin(), steps.rend(), std::back_inserter(m_steps));
 }
 
+babelwires::FeaturePath::FeaturePath(std::vector<PathStep> steps)
+    : m_steps(std::move(steps)) {}
+
 void babelwires::FeaturePath::pushStep(PathStep step) {
     m_steps.emplace_back(std::move(step));
 }
@@ -53,13 +56,8 @@ std::ostream& babelwires::operator<<(std::ostream& os, const FeaturePath& p) {
         for (int i = 0; i < numSteps; ++i) {
             os << delimiter;
             delimiter = s_pathDelimiterString;
-
             const PathStep step = p.getStep(i);
-            if (step.isField()) {
-                os << identifierRegistry->getName(step.getField());
-            } else {
-                os << "[" << step.getIndex() << "]";
-            }
+            step.writeToStreamReadable(os, *identifierRegistry);
         }
     } else {
         os << ".";
@@ -218,6 +216,17 @@ void babelwires::FeaturePath::truncate(unsigned int newNumSteps) {
     assert((newNumSteps <= m_steps.size()) && "You can only shrink with truncate");
     // Have to provide a fill value even though it is never used.
     m_steps.resize(newNumSteps, PathStep(0));
+}
+
+void babelwires::FeaturePath::removePrefix(unsigned int numSteps) {
+    assert((numSteps <= m_steps.size()) && "Cannot remove that many steps");
+    if (numSteps > 0) {
+        m_steps.erase(m_steps.begin(), m_steps.begin() + numSteps);
+    }
+}
+
+void babelwires::FeaturePath::append(const FeaturePath& subpath) {
+    m_steps.insert(m_steps.end(), subpath.m_steps.begin(), subpath.m_steps.end());
 }
 
 babelwires::PathStep& babelwires::FeaturePath::getStep(unsigned int i) {

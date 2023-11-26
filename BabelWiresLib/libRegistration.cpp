@@ -9,15 +9,21 @@
 
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Enum/addBlankToEnum.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/Rational/rationalType.hpp>
-#include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Rational/rationalType.hpp>
+#include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
+
+/*
+// TODO Remove
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
+*/
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<DefaultIntType>();
@@ -29,4 +35,12 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addTypeConstructor<RationalTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<SumTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<MapTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<ArrayTypeConstructor>();
+
+/*
+    // TODO Remove
+    context.m_typeSystem.addEntry<TestArrayType>();
+    context.m_typeSystem.addEntry<TestArrayType2>();
+
+*/
 }

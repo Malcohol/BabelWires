@@ -36,8 +36,8 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     data.apply(&arrayFeature);
     EXPECT_EQ(arrayFeature.getNumFeatures(), 5);
 
-    babelwires::IntFeature notArrayFeature;
-    EXPECT_THROW(data.apply(&notArrayFeature), babelwires::ModelException);
+    testUtils::RootedFeature<babelwires::IntFeature> notArrayFeature(testEnvironment.m_projectContext);
+    EXPECT_THROW(data.apply(&notArrayFeature.getFeature()), babelwires::ModelException);
 }
 
 TEST(ModifierDataTest, arrayInitializationClone) {

@@ -123,10 +123,18 @@ testUtils::TestFeatureElementWithUnion::TestFeatureElementWithUnion(const babelw
 
 void testUtils::TestFeatureElementWithUnion::doProcess(babelwires::UserLogger&) {}
 
-babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::getInputFeature() {
+const babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::getInputFeature() const {
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::getOutputFeature() {
+const babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::getOutputFeature() const {
+    return m_feature.get();
+}
+
+babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::doGetInputFeatureNonConst() {
+    return m_feature.get();
+}
+
+babelwires::RootFeature* testUtils::TestFeatureElementWithUnion::doGetOutputFeatureNonConst() {
     return m_feature.get();
 }

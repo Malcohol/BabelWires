@@ -24,7 +24,7 @@ const babelwires::RootFeature* babelwires::RootFeature::tryGetRootFeatureAt(cons
 
 const babelwires::ProjectContext& babelwires::RootFeature::getProjectContextAt(const Feature& feature) {
     const RootFeature* rootFeature = tryGetRootFeatureAt(feature);
-    assert(rootFeature && "You cannot only call getProjectContextAt in a feature hierarchy with a RootFeature at its root");
+    assert(rootFeature && "You can only call getProjectContextAt in a feature hierarchy with a RootFeature at its root");
     return rootFeature->m_projectContext;
 }
 

@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
 
-#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -30,7 +30,7 @@ bool babelwires::RemoveFailedModifiersCommand::initializeAndExecute(Project& pro
     int numFailedModifiers = 0;
     for (const Modifier* modifier : elementToModify->getEdits().modifierRange(m_featurePath)) {
         if (modifier->isFailed()) {
-            addSubCommand(std::make_unique<RemoveSimpleModifierCommand>("Remove failed modifier", m_targetId,
+            addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_targetId,
                                                                         modifier->getPathToFeature()));
             ++numFailedModifiers;
         }

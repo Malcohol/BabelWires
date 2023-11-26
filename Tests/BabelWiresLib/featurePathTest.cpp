@@ -19,84 +19,24 @@
 
 #include <Tests/TestUtils/testLog.hpp>
 
-TEST(FeaturePathTest, pathStepOps) {
-    babelwires::ShortId hello("Hello");
-    babelwires::ShortId hello1("Hello");
-    babelwires::ShortId goodbye("Byebye");
+TEST(FeaturePathTest, pathConstructFromSteps) {
+    std::vector<babelwires::PathStep> steps = {babelwires::PathStep::deserializeFromString("Hello'2"), 13,
+                                               babelwires::PathStep::deserializeFromString("Hello'3"),
+                                               babelwires::PathStep::deserializeFromString("World'1")};
+    babelwires::FeaturePath path(steps);
 
-    babelwires::PathStep helloStep(hello);
-    babelwires::PathStep hello1Step(hello1);
-    babelwires::PathStep goodbyeStep(goodbye);
-
-    EXPECT_TRUE(helloStep.isField());
-    EXPECT_EQ(helloStep.getField(), hello);
-
-    EXPECT_EQ(helloStep, hello1Step);
-    EXPECT_NE(helloStep, goodbyeStep);
-    EXPECT_LE(helloStep, hello1Step);
-    EXPECT_LE(goodbyeStep, helloStep);
-    EXPECT_LT(goodbyeStep, helloStep);
-
-    babelwires::PathStep zeroStep(0);
-    babelwires::PathStep sevenStep(7);
-
-    EXPECT_TRUE(sevenStep.isIndex());
-    EXPECT_EQ(sevenStep.getIndex(), 7);
-
-    EXPECT_NE(zeroStep, sevenStep);
-    EXPECT_LT(zeroStep, sevenStep);
-    EXPECT_LE(zeroStep, sevenStep);
-
-    EXPECT_NE(zeroStep, helloStep);
-    EXPECT_LT(zeroStep, goodbyeStep);
-}
-
-TEST(FeaturePathTest, pathStepDiscriminator) {
-    babelwires::PathStep helloStep(babelwires::ShortId("Hello"));
-
-    helloStep.asField()->setDiscriminator(12);
-    EXPECT_EQ(helloStep.asField()->getDiscriminator(), 12);
-
-    helloStep.getField().setDiscriminator(18);
-    EXPECT_EQ(helloStep.getField().getDiscriminator(), 18);
-}
-
-TEST(FeaturePathTest, pathStepSerialization) {
-    babelwires::PathStep hello("Hello");
-    EXPECT_EQ(hello.serializeToString(), "Hello");
-
-    babelwires::PathStep hello2("Hello");
-    hello2.getField().setDiscriminator(199);
-    EXPECT_EQ(hello2.serializeToString(), "Hello'199");
-
-    babelwires::PathStep index(10);
-    EXPECT_EQ(index.serializeToString(), "10");
-}
-
-TEST(FeaturePathTest, pathStepDeserialization) {
-    babelwires::PathStep step(0);
-    EXPECT_NO_THROW(step = babelwires::PathStep::deserializeFromString("Hello"));
-    EXPECT_TRUE(step.isField());
-    EXPECT_EQ(step.getField(), babelwires::ShortId("Hello"));
-    EXPECT_EQ(step.getField().getDiscriminator(), 0);
-
-    babelwires::PathStep step1(0);
-    EXPECT_NO_THROW(step1 = babelwires::PathStep::deserializeFromString("Hello'2"));
-    EXPECT_TRUE(step1.isField());
-    EXPECT_EQ(step1.getField(), babelwires::ShortId("Hello"));
-    EXPECT_EQ(step1.getField().getDiscriminator(), 2);
-
-    babelwires::PathStep step2("Erm");
-    EXPECT_NO_THROW(step2 = babelwires::PathStep::deserializeFromString("10"));
-    EXPECT_TRUE(step2.isIndex());
-    EXPECT_EQ(step2.getIndex(), 10);
-
-    EXPECT_THROW(babelwires::PathStep::deserializeFromString("'"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::PathStep::deserializeFromString("/"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::PathStep::deserializeFromString("Hællo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::PathStep::deserializeFromString("Hello'65536"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::PathStep::deserializeFromString("1'23"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::PathStep::deserializeFromString("3Hello"), babelwires::ParseException);
+    EXPECT_EQ(path.getNumSteps(), 4);
+    EXPECT_TRUE(path.getStep(0).isField());
+    EXPECT_TRUE(path.getStep(1).isIndex());
+    EXPECT_TRUE(path.getStep(2).isField());
+    EXPECT_TRUE(path.getStep(3).isField());
+    EXPECT_EQ(path.getStep(0).asField()->toString(), "Hello");
+    EXPECT_EQ(*path.getStep(1).asIndex(), 13);
+    EXPECT_EQ(path.getStep(2).asField()->toString(), "Hello");
+    EXPECT_EQ(path.getStep(3).asField()->toString(), "World");
+    EXPECT_EQ(path.getStep(0).asField()->getDiscriminator(), 2);
+    EXPECT_EQ(path.getStep(2).asField()->getDiscriminator(), 3);
+    EXPECT_EQ(path.getStep(3).asField()->getDiscriminator(), 1);
 }
 
 TEST(FeaturePathTest, pathOps) {
@@ -130,6 +70,37 @@ TEST(FeaturePathTest, pathOps) {
 
     path2.truncate(0);
     EXPECT_EQ(path2.getNumSteps(), 0);
+}
+
+TEST(FeaturePathTest, append) {
+    babelwires::FeaturePath path0(
+        std::vector<babelwires::PathStep>{babelwires::PathStep::deserializeFromString("Hello'2"), 13});
+    babelwires::FeaturePath path1(
+        std::vector<babelwires::PathStep>{babelwires::PathStep::deserializeFromString("Hello'3"),
+                                          babelwires::PathStep::deserializeFromString("World'1")});
+    babelwires::FeaturePath appendedPath = path0;
+    appendedPath.append(path1);
+
+    EXPECT_EQ(appendedPath.getNumSteps(), path0.getNumSteps() + path1.getNumSteps());
+    for (int i = 0; i < path0.getNumSteps(); ++i) {
+        EXPECT_EQ(appendedPath.getStep(i), path0.getStep(i));
+    }
+    for (int j = 0; j < path1.getNumSteps(); ++j) {
+        EXPECT_EQ(appendedPath.getStep(path0.getNumSteps() + j), path1.getStep(j));
+    }
+}
+
+TEST(FeaturePathTest, removePrefix) {
+    babelwires::FeaturePath path(
+        std::vector<babelwires::PathStep>{babelwires::PathStep::deserializeFromString("Hello'2"), 13,
+                                          babelwires::PathStep::deserializeFromString("Hello'3"),
+                                          babelwires::PathStep::deserializeFromString("World'1")});
+    babelwires::FeaturePath path2 = path;
+    path2.removePrefix(2);
+    EXPECT_EQ(path2.getNumSteps(), 2);
+    for (int i = 0; i < path2.getNumSteps(); ++i) {
+        EXPECT_EQ(path.getStep(i + 2), path2.getStep(i));
+    }    
 }
 
 TEST(FeaturePathTest, pathIteration) {

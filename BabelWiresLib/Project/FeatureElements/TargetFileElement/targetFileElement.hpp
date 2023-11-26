@@ -29,7 +29,7 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const TargetFileElementData& getElementData() const;
 
-        virtual RootFeature* getInputFeature() override;
+        virtual const RootFeature* getInputFeature() const override;
 
         virtual std::filesystem::path getFilePath() const override;
         virtual void setFilePath(std::filesystem::path newFilePath) override;
@@ -42,8 +42,11 @@ namespace babelwires {
         virtual std::string getLabel() const override;
 
       protected:
+        RootFeature* doGetInputFeatureNonConst() override;
+        void doProcess(UserLogger& userLogger) override;
+
+      protected:
         void setFeature(std::unique_ptr<RootFeature> feature);
-        virtual void doProcess(UserLogger& userLogger) override;
         TargetFileElementData& getElementData();
 
         /// Should be called when either the feature or the file path change.

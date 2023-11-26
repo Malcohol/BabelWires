@@ -2,30 +2,35 @@
  * The command which removes an entry from an array.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
-#include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/projectUtilities.hpp>
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #include <cassert>
 
 babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId,
-                                                                     FeaturePath featurePath, unsigned int indexOfEntryToRemove,
+                                                                     FeaturePath featurePath,
+                                                                     unsigned int indexOfEntryToRemove,
                                                                      unsigned int numEntriesToRemove)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToArray(std::move(featurePath))
     , m_indexOfEntryToRemove(indexOfEntryToRemove)
-    , m_numEntriesToRemove(numEntriesToRemove) {
+    , m_numEntriesToRemove(numEntriesToRemove)
+    , m_isSubcommand(false) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
 }
 
@@ -42,15 +47,27 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
     }
 
     auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<const ArrayFeature>();
-    if (!arrayFeature) {
+
+    int currentSize = -1;
+    unsigned int minimumSize = 0;
+    if (auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<ArrayFeature>()) {
+        currentSize = arrayFeature->getNumFeatures();
+        minimumSize = arrayFeature->getSizeRange().m_min;
+    } else if (auto valueFeature = m_pathToArray.tryFollow(*inputFeature)->as<ValueFeature>()) {
+        if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
+            currentSize = arrayType->getNumChildren(valueFeature->getValue());
+            minimumSize = arrayType->getSizeRange().m_min;
+        }
+    }
+    if (currentSize < 0) {
         return false;
     }
 
-    if (!arrayFeature->getSizeRange().contains(arrayFeature->getNumFeatures() - m_numEntriesToRemove)) {
+    if (currentSize - m_numEntriesToRemove < minimumSize) {
         return false;
     }
 
-    if (arrayFeature->getNumFeatures() <= m_indexOfEntryToRemove) {
+    if (m_indexOfEntryToRemove > currentSize - 1) {
         return false;
     }
 
@@ -61,21 +78,18 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         }
     }
 
-    for (int i = 0; i < m_numEntriesToRemove; ++i) {
-        FeaturePath p = m_pathToArray;
-        p.pushStep(PathStep(m_indexOfEntryToRemove + i));
-        addSubCommand(std::make_unique<RemoveAllEditsCommand>("Remove array entry subcommand", m_elementId, p));
-    }
+    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_elementId, m_pathToArray, m_indexOfEntryToRemove, -m_numEntriesToRemove));
+
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, true);
+    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, !m_isSubcommand);
     return true;
 }
 
 void babelwires::RemoveEntryFromArrayCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, true);
+    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, !m_isSubcommand);
 }
 
 void babelwires::RemoveEntryFromArrayCommand::undo(Project& project) const {

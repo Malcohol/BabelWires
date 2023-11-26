@@ -14,6 +14,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/FeatureElements/ProcessorElement/processorElementData.cpp
 	Project/FeatureElements/ValueElement/valueElement.cpp
 	Project/FeatureElements/ValueElement/valueElementData.cpp
+	Project/FeatureElements/modifyFeatureScope.cpp
 	Project/Modifiers/modifier.cpp
 	Project/Modifiers/modifierData.cpp
 	Project/Modifiers/localModifier.cpp
@@ -28,11 +29,14 @@ SET( BABELWIRESLIB_SRCS
 	Project/projectData.cpp
 	ProjectExtra/projectObserver.cpp
 	ProjectExtra/connectionDescription.cpp
-	ProjectExtra/projectUtilities.cpp
+	Project/projectUtilities.cpp
 	ProjectExtra/dataLocation.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
+	Types/Array/arrayValue.cpp
+	Types/Array/arrayType.cpp
+	Types/Array/arrayTypeConstructor.cpp
 	Types/Map/Commands/addEntryToMapCommand.cpp
 	Types/Map/Commands/removeEntryFromMapCommand.cpp
 	Types/Map/Commands/replaceMapEntryCommand.cpp
@@ -58,6 +62,7 @@ SET( BABELWIRESLIB_SRCS
 	Processors/processorFactory.cpp
 	Processors/commonProcessor.cpp
 	Features/feature.cpp
+	Features/childValueFeature.cpp
 	Features/compoundFeature.cpp
 	Features/recordFeature.cpp
 	Features/recordWithOptionalsFeature.cpp
@@ -67,6 +72,7 @@ SET( BABELWIRESLIB_SRCS
 	Features/Path/pathStep.cpp
 	Features/rootFeature.cpp
 	Features/valueFeature.cpp
+	Features/valueFeatureHelper.cpp
 	Features/unionFeature.cpp
 	Serialization/projectBundle.cpp
 	Project/Commands/activateOptionalCommand.cpp
@@ -76,16 +82,18 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/moveElementCommand.cpp
 	Project/Commands/addModifierCommand.cpp
 	Project/Commands/removeModifierCommand.cpp
-	Project/Commands/addEntryToArrayCommand.cpp
+	Project/Commands/addEntriesToArrayCommand.cpp
 	Project/Commands/removeEntryFromArrayCommand.cpp
 	Project/Commands/changeFileCommand.cpp
 	Project/Commands/pasteElementsCommand.cpp
 	Project/Commands/setExpandedCommand.cpp
-	Project/Commands/removeAllEditsCommand.cpp
 	Project/Commands/removeFailedModifiersCommand.cpp
 	Project/Commands/resizeElementCommand.cpp
 	Project/Commands/selectUnionBranchCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
+	Project/Commands/Subcommands/removeSimpleModifierSubcommand.cpp
+	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
+	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp
 	TypeSystem/typeSystem.cpp
 	Types/Enum/addBlankToEnum.cpp
 	Types/Enum/enumFeature.cpp
@@ -109,6 +117,7 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/typeConstructorArguments.cpp
 	TypeSystem/typeConstructor.cpp
 	TypeSystem/value.cpp
+	TypeSystem/valuePath.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp
 	ValueNames/contiguousValueNamesImpl.cpp

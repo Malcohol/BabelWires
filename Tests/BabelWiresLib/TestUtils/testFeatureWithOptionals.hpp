@@ -84,10 +84,10 @@ namespace testUtils {
         TestFeatureElementWithOptionals(const babelwires::ProjectContext& context, const TestFeatureElementWithOptionalsData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;
 
-        babelwires::RootFeature* getInputFeature() override;
-        babelwires::RootFeature* getOutputFeature() override;
-        using babelwires::FeatureElement::getInputFeature;
-        using babelwires::FeatureElement::getOutputFeature;
+        babelwires::RootFeature* doGetInputFeatureNonConst() override;
+        babelwires::RootFeature* doGetOutputFeatureNonConst() override;
+        const babelwires::RootFeature* getInputFeature() const override;
+        const babelwires::RootFeature* getOutputFeature() const override;
 
         std::unique_ptr<testUtils::TestFeatureWithOptionals> m_feature;
     };

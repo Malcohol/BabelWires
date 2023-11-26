@@ -21,7 +21,7 @@ namespace babelwires {
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
 
       private:
-        /// Throws a TypeSystem exception if the arguments are not of the expect type.
+        /// Throws a TypeSystem exception if the arguments are not of the expected type.
         static std::tuple<Range<IntValue::NativeType>, IntValue::NativeType>
         extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
     };

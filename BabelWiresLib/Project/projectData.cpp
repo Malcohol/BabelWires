@@ -10,8 +10,6 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-#include <iostream>
-
 void babelwires::ProjectData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("id", m_projectId);
     serializer.serializeArray("elements", m_elements);

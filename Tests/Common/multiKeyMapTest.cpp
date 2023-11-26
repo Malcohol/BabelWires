@@ -6,6 +6,8 @@
 #include <string_view>
 #include <array>
 
+#include <Tests/TestUtils/equalSets.hpp>
+
 using namespace babelwires;
 
 namespace {
@@ -134,7 +136,40 @@ TYPED_TEST_P(MultiKeyMapTest, basicOperations) {
     }
 }
 
-REGISTER_TYPED_TEST_SUITE_P(MultiKeyMapTest, basicOperations);
+TYPED_TEST_P(MultiKeyMapTest, iteration) {
+    using Key0Type = typename TypeParam::Key0Type;
+    using Key1Type = typename TypeParam::Key1Type;
+    using ValueType = typename TypeParam::ValueType;
+    auto& keys0 = TestData<Key0Type>::values;
+    auto& keys1 = TestData<Key1Type>::values;
+    auto& values = TestData<ValueType>::values;
+    auto& notAValue = TestData<ValueType>::notAValue;
+
+    MultiKeyMap<Key0Type, Key1Type, ValueType> map;
+
+    EXPECT_EQ(map.begin(), map.end());
+
+    for (const auto& it : map) {
+        EXPECT_TRUE(false);    
+    }
+
+    using Triple = std::tuple<Key0Type, Key1Type, ValueType>;
+    std::vector<Triple> source;
+    for (int i = 0; i < keys0.size(); ++i) {
+        map.insert_or_assign(keys0[i], keys1[i], values[i]);
+        source.emplace_back(Triple{keys0[i], keys1[i], values[i]});
+    }
+
+    std::vector<std::tuple<Key0Type, Key1Type, ValueType>> result;
+
+    for (const auto& it : map) {
+        result.emplace_back(Triple{it.getKey0(), it.getKey1(), it.getValue()});
+    }
+
+    EXPECT_TRUE(testUtils::areEqualSets(source, result));
+}
+
+REGISTER_TYPED_TEST_SUITE_P(MultiKeyMapTest, basicOperations, iteration);
 
 typedef ::testing::Types<Test0Types, Test1Types, Test2Types, Test3Types> TestTypes;
 INSTANTIATE_TYPED_TEST_SUITE_P(MultiKeyMapTest, MultiKeyMapTest, TestTypes);

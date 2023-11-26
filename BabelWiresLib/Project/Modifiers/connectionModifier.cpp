@@ -39,9 +39,9 @@ const babelwires::ConnectionModifier* babelwires::ConnectionModifier::doAsConnec
 }
 
 void babelwires::ConnectionModifier::applyConnection(const Project& project, UserLogger& userLogger,
-                                                     Feature* container) {
+                                                     Feature* container, bool shouldForce) {
     // Force the application if the modifier is new OR is currently failed, in case it now succeeds.
-    const bool shouldForce = isChanged(Changes::ModifierIsNew) || isFailed();
+    shouldForce = shouldForce || isChanged(Changes::ModifierIsNew) || isFailed();
 
     State state = State::TargetMissing;
     Feature* targetFeature = nullptr;

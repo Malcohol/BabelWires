@@ -16,12 +16,11 @@ namespace babelwires {
     struct ModifierData;
 
     /// Remove all modifiers and expanded paths at and beneath a given feature.
-    class RemoveAllEditsCommand : public SimpleCommand<Project> {
+    class RemoveAllEditsSubcommand : public CompoundCommand<Project> {
       public:
-        /// If indexOfEntryToRemove is negative, the element is removed from the end.
-        RemoveAllEditsCommand(std::string commandName, ElementId elementId, FeaturePath pathToFeature);
+        RemoveAllEditsSubcommand(ElementId elementId, FeaturePath pathToFeature);
 
-        virtual bool initialize(const Project& project) override;
+        virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
@@ -29,7 +28,6 @@ namespace babelwires {
         ElementId m_elementId;
         FeaturePath m_pathToFeature;
 
-        std::vector<std::unique_ptr<ModifierData>> m_modifiersRemoved;
         std::vector<FeaturePath> m_expandedPathsRemoved;
 
         struct OutgoingConnection {

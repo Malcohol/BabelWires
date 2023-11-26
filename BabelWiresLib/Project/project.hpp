@@ -2,7 +2,7 @@
  * The Project manages the graph of FeatureElements, and propagates data from sources to targets.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -83,12 +83,20 @@ namespace babelwires {
         void removeArrayEntries(ElementId elementId, const FeaturePath& featurePath, int indexOfElementToRemove,
                                 int numEntriesToRemove, bool ensureModifier);
 
+        /// Adjust modifiers and connections which point into an array to adapt to shifted array elements.
+        /// If adjustment is positive, then modifiers at and above startIndex are modified.
+        /// If adjustment is negative, then modifiers at (startIndex - adjustment) and above are modified.
+        void adjustModifiersInArrayElements(ElementId elementId, const FeaturePath& pathToArray, ArrayIndex startIndex,
+                                            int adjustment);
+
         /// Activate a modifier in a RecordWithOptionalsFeature.
-        void activateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional, bool ensureModifier);
+        void activateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+                              bool ensureModifier);
 
         /// Deactivate a modifier in a RecordWithOptionalsFeature.
         /// Note that this will not remove modifiers.
-        void deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional, bool ensureModifier);
+        void deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+                                bool ensureModifier);
 
         /// Set the Ui position of the element.
         void setElementPosition(ElementId elementId, const UiPosition& newPosition);

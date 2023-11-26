@@ -21,19 +21,29 @@ namespace babelwires {
         /// Construct a ValueFeature which carries values of the given type.
         SimpleValueFeature(TypeRef typeRef);
 
-        const Type& getType() const;
+        /// Back up the current value using a shallow clone.
+        void backUpValue();
+
+        /// Clone the value, and return a modifiable value to the value at the given path.
+        /// If the type is compound, this asserts that the feature has been backed up already.
+        // TODO Find better name.
+        ValueHolder& setModifiable(const FeaturePath& pathFromHere);
+
+        /// After changes are complete, compare the current value to the backup and set change flags.
+        /// This clears the backup.
+        void reconcileChangesFromBackup();
 
       protected:
-        virtual void doSetToDefault() override;
-
-        virtual std::size_t doGetHash() const override;
-
-        const TypeRef& doGetTypeRef() const override;
         const ValueHolder& doGetValue() const override;
+        void doSetToDefault() override;
         void doSetValue(const ValueHolder& newValue) override;
 
       private:
-        TypeRef m_typeRef;
         ValueHolder m_value;
+
+        /// A backup of the value before modification.
+        // This could be managed externally, but it is kept here to ensure setModifiable is only
+        // called by code which knows how to manage a back-up.
+        ValueHolder m_valueBackUp;
     };
 } // namespace babelwires

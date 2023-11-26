@@ -58,22 +58,14 @@ babelwires::PathStep babelwires::ArrayFeature::getStepToChild(const Feature* chi
     return PathStep(0);
 }
 
-babelwires::Feature* babelwires::ArrayFeature::tryGetChildFromStep(const PathStep& step) {
+int babelwires::ArrayFeature::getChildIndexFromStep(const PathStep& step) const {
     if (step.isIndex()) {
-        if (step.getIndex() < m_entries.size()) {
-            return m_entries[step.getIndex()].m_feature.get();
+        const babelwires::ArrayIndex index = step.getIndex();
+        if (index < m_entries.size()) {
+            return index;
         }
     }
-    return nullptr;
-}
-
-const babelwires::Feature* babelwires::ArrayFeature::tryGetChildFromStep(const PathStep& step) const {
-    if (step.isIndex()) {
-        if (step.getIndex() < m_entries.size()) {
-            return m_entries[step.getIndex()].m_feature.get();
-        }
-    }
-    return nullptr;
+    return -1;
 }
 
 babelwires::Feature* babelwires::ArrayFeature::doGetFeature(int i) {

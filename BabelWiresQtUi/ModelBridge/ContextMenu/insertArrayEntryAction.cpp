@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include <BabelWiresLib/Project/Commands/addEntryToArrayCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 
 babelwires::InsertArrayEntryAction::InsertArrayEntryAction(const QString& text, babelwires::FeaturePath pathToArray, int indexOfNewEntry)
     : FeatureContextMenuAction(text)
@@ -22,5 +22,5 @@ void babelwires::InsertArrayEntryAction::actionTriggered(babelwires::FeatureMode
     ProjectBridge& projectBridge = model.getProjectBridge();
     const ElementId elementId = model.getElementId();
     projectBridge.scheduleCommand(
-        std::make_unique<AddEntryToArrayCommand>("Add element to array", elementId, m_pathToArray, m_indexOfNewEntry));
+        std::make_unique<AddEntriesToArrayCommand>("Add element to array", elementId, m_pathToArray, m_indexOfNewEntry));
 }

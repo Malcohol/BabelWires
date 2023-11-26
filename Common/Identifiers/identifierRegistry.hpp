@@ -93,6 +93,9 @@ namespace babelwires {
             ReadAccess(ReadAccess&& other);
             ~ReadAccess();
             const IdentifierRegistry* operator->() const { return m_registry; }
+            // TODO Would prefer to avoid this, since it allows callers to keep the reference.
+            // However, I don't want to see ReadAccess showing up in method signatures.
+            const IdentifierRegistry& operator*() const { return *m_registry; }
 
           private:
             std::shared_mutex* m_mutex;

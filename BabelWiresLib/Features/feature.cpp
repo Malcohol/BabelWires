@@ -20,6 +20,10 @@ const babelwires::CompoundFeature* babelwires::Feature::getOwner() const {
     return m_owner;
 }
 
+babelwires::CompoundFeature* babelwires::Feature::getOwnerNonConst() {
+    return m_owner;
+}
+
 void babelwires::Feature::setChanged(Changes changes) {
     assert((changes != Changes::NothingChanged) && "You cannot call setChanged with no changes to set");
     assert(((changes & ~Changes::SomethingChanged) == Changes::NothingChanged) && "Not a supported change");

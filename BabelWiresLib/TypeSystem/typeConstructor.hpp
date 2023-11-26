@@ -14,6 +14,7 @@
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
 #include <shared_mutex>
+#include <variant>
 
 namespace babelwires {
 
@@ -26,16 +27,27 @@ namespace babelwires {
         virtual ~TypeConstructor();
 
         /// Get the constructed type from the cache, or construct a new one.
-        const Type* getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
+        /// Returns null if the type cannot be constructed.
+        const Type* tryGetOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
+
+        /// Get the constructed type from the cache, or construct a new one.
+        /// Throws a TypeSystemException if the type cannot be constructed.
+        const Type& getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 
         /// This is supplied by the TYPE_CONSTRUCTOR macro.
         virtual TypeConstructorId getTypeConstructorId() const = 0;
 
       protected:
-        /// Construct the new type.
+        /// Construct the new type or throw a TypeSystemException if it cannot be constructed.
         /// The newTypeRef is provided to allow implementations to move it into the constructed type.
-        virtual std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+        virtual std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+                                                    const std::vector<const Type*>& typeArguments,
                                                     const std::vector<EditableValueHolder>& valueArguments) const = 0;
+
+      private:
+        using PerTypeStorage = std::variant<std::monostate, std::unique_ptr<Type>, std::string>;
+
+        const PerTypeStorage& getOrConstructTypeInternal(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 
       private:
         /// A mutex which ensures thread-safe access to the cache.
@@ -44,7 +56,8 @@ namespace babelwires {
         mutable std::shared_mutex m_mutexForCache;
 
         /// A cache which stops the system ending up with multiple copies of the same constructed type.
-        mutable std::unordered_map<TypeConstructorArguments, std::unique_ptr<Type>> m_cache;
+        mutable std::unordered_map < TypeConstructorArguments,
+            PerTypeStorage> m_cache;
     };
 
     /// A convenience class which can used by type constructors for the type they want to construct.
@@ -66,9 +79,15 @@ namespace babelwires {
 
 /// Intended mainly for testing.
 #define TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                       \
-    static babelwires::TypeConstructorId getThisIdentifier() { return IDENTIFIER; }                                    \
-    static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
-    babelwires::TypeConstructorId getTypeConstructorId() const override { return getThisIdentifier(); }
+    static babelwires::TypeConstructorId getThisIdentifier() {                                                         \
+        return IDENTIFIER;                                                                                             \
+    }                                                                                                                  \
+    static babelwires::VersionNumber getVersion() {                                                                    \
+        return VERSION;                                                                                                \
+    }                                                                                                                  \
+    babelwires::TypeConstructorId getTypeConstructorId() const override {                                              \
+        return getThisIdentifier();                                                                                    \
+    }
 
 /// Type constructors need to be registered.
 /// For now, assume this is always done statically.

@@ -89,6 +89,7 @@ namespace babelwires {
         /// Protected implementation which sets this class' changes to NothingChanged.
         virtual void doClearChanges();
 
+        CompoundFeature* getOwnerNonConst();
       private:
         // For now.
         Feature(const Feature&) = delete;

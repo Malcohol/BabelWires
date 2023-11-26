@@ -31,6 +31,7 @@ namespace babelwires {
     struct UiSize;
     struct ProjectContext;
     class RootFeature;
+    class ModifyFeatureScope;
 
     /// The fundimental constituent of the project.
     /// FeatureElements expose input and output Features, and carry edits.
@@ -48,11 +49,14 @@ namespace babelwires {
         /// Get a description of the failure.
         std::string getReasonForFailure() const;
 
-        virtual RootFeature* getInputFeature();
-        virtual RootFeature* getOutputFeature();
+        /// Get a non-const pointer to the input feature and obtain the right to modify the feature at the given path.
+        /// Returns nullptr if the modifier will be applied later anyway, so there's no
+        /// work for the caller to do.
+        /// This does not attempt to deal with errors, so it returns the feature if the path cannot be followed.
+        RootFeature* getInputFeatureNonConst(const FeaturePath& pathToModify);
 
-        const RootFeature* getInputFeature() const;
-        const RootFeature* getOutputFeature() const;
+        virtual const RootFeature* getInputFeature() const;
+        virtual const RootFeature* getOutputFeature() const;
 
         /// Get a description of the type of element (e.g. format name).
         virtual std::string getLabel() const;
@@ -88,7 +92,7 @@ namespace babelwires {
         void setUiSize(const UiSize& newSize);
 
         /// Update state of the feature and feature caches if there are changes.
-        void process(UserLogger& userLogger);
+        void process(Project& project, UserLogger& userLogger);
 
         // clang-format off
         /// Describes the way an element may have changed.
@@ -126,7 +130,7 @@ namespace babelwires {
         };
         // clang-format on
 
-        /// Query the feature element for changes.
+        /// Query the feature element for any of the given changes.
         bool isChanged(Changes changes) const;
 
         /// Clear any changes the element is carrying.
@@ -154,8 +158,13 @@ namespace babelwires {
                                 int adjustment);
 
       protected:
+        /// Get a non-const pointer to the input feature. The default implementation returns null.
+        virtual RootFeature* doGetInputFeatureNonConst();
+        /// Get a non-const pointer to the output feature. The default implementation returns null.
+        virtual RootFeature* doGetOutputFeatureNonConst();
         virtual void doProcess(UserLogger& userLogger) = 0;
 
+      protected:
         void clearInternalFailure();
         void setInternalFailure(std::string reasonForFailure);
 
@@ -186,6 +195,13 @@ namespace babelwires {
         friend babelwires::ElementData;
         void applyLocalModifiers(UserLogger& userLogger);
 
+        /// Obtain the right to modify the feature at the given path.
+        /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
+        void modifyFeatureAt(Feature* inputFeature, const FeaturePath& p);
+
+        /// This is called by process, to signal that all modifications are finished.
+        void finishModifications(const Project& project, UserLogger& userLogger);
+
       private:
         std::string m_internalFailure;
         bool m_isInDependencyLoop = false;
@@ -205,6 +221,9 @@ namespace babelwires {
 
         /// The accumulated change since the last time they were cleared.
         Changes m_changes = Changes::FeatureElementIsNew;
+
+        /// If a modifier wants to modify a value feature, one of these will be created.
+        std::unique_ptr<ModifyFeatureScope> m_modifyFeatureScope;
 
       protected:
         ContentsCache m_contentsCache;

@@ -7,13 +7,16 @@
  **/
 #include <BabelWiresLib/Project/Commands/setArraySizeCommand.hpp>
 
-#include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #include <cassert>
 
@@ -36,12 +39,13 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<const ArrayFeature>();
-    if (!arrayFeature) {
+    auto [compoundFeature, currentSize, range, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*inputFeature));
+
+    if (!compoundFeature) {
         return false;
     }
 
-    if (!arrayFeature->getSizeRange().contains(m_newSize)) {
+    if (!range.contains(m_newSize)) {
         return false;
     }
 
@@ -52,12 +56,12 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         }
     }
 
-    m_oldSize = arrayFeature->getNumFeatures();
+    m_oldSize = compoundFeature->getNumFeatures();
 
     for (int i = m_newSize; i < m_oldSize; ++i) {
         FeaturePath p = m_pathToArray;
         p.pushStep(PathStep(i));
-        addSubCommand(std::make_unique<RemoveAllEditsCommand>("Set array size subcommand", m_elementId, p));
+        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, p));
     }
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;

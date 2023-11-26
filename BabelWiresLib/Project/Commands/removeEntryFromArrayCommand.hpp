@@ -32,6 +32,7 @@ namespace babelwires {
 
         /// Did an old modifier get replaced (otherwise this is the first modification).
         bool m_wasModifier = false;
+        bool m_isSubcommand;
     };
 
 } // namespace babelwires

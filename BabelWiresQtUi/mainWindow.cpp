@@ -26,7 +26,7 @@
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
-#include <BabelWiresLib/ProjectExtra/projectUtilities.hpp>
+#include <BabelWiresLib/Project/projectUtilities.hpp>
 #include <BabelWiresLib/Serialization/projectSerialization.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>

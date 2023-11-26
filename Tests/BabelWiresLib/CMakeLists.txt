@@ -7,6 +7,7 @@ SET( LIB_TESTS_SRCS
     addEntryToArrayCommandTest.cpp
     addModifierCommandTest.cpp
     addEntryToMapCommandTest.cpp
+    arrayTypeTest.cpp
     changeEntryKindCommandTest.cpp
     changeFileCommandTest.cpp
     commandManagerTest.cpp
@@ -34,6 +35,7 @@ SET( LIB_TESTS_SRCS
     moveElementCommandTest.cpp
     parallelProcessorTest.cpp
     pasteElementsCommandTest.cpp
+    pathStepTest.cpp
     processorElementTest.cpp
     projectBundleTest.cpp
     projectDataTest.cpp

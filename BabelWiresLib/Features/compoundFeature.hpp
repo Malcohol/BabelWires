@@ -22,16 +22,20 @@ namespace babelwires {
         virtual PathStep getStepToChild(const Feature* child) const = 0;
 
         /// Should return nullptr if the step does not lead to a child.
-        virtual Feature* tryGetChildFromStep(const PathStep& step) = 0;
+        Feature* tryGetChildFromStep(const PathStep& step);
 
         /// Should return nullptr if the step does not lead to a child.
-        virtual const Feature* tryGetChildFromStep(const PathStep& step) const = 0;
+        const Feature* tryGetChildFromStep(const PathStep& step) const;
 
         /// Throws a ModelException if the step does not lead to a child.
         Feature& getChildFromStep(const PathStep& step);
 
         /// Throws a ModelException if the step does not lead to a child.
         const Feature& getChildFromStep(const PathStep& step) const;
+
+        /// Returns -1 if not found.
+        /// Sets the descriminator of identifier on a match.
+        virtual int getChildIndexFromStep(const PathStep& step) const = 0;
 
       protected:
         /// Clears the changes of this class and all children.

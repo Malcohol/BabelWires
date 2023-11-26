@@ -2,11 +2,12 @@
  * A PathStep is a union of a ShortId and an ArrayIndex.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Features/Path/pathStep.hpp>
 
+#include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/exceptions.hpp>
 
 #include <charconv>
@@ -17,6 +18,14 @@ void babelwires::PathStep::writeToStream(std::ostream& os) const {
         os << *f;
     } else {
         os << getIndex();
+    }
+}
+
+void babelwires::PathStep::writeToStreamReadable(std::ostream& os, const IdentifierRegistry& identifierRegistry) const {
+    if (const ShortId* f = asField()) {
+        os << identifierRegistry.getName(*f);
+    } else {
+        os << "[" << getIndex() << "]";
     }
 }
 

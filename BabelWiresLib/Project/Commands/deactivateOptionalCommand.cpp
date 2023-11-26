@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
-#include <BabelWiresLib/Project/Commands/removeAllEditsCommand.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
@@ -58,7 +58,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
 
     FeaturePath pathToOptional = m_pathToRecord;
     pathToOptional.pushStep(PathStep(m_optional));
-    addSubCommand(std::make_unique<RemoveAllEditsCommand>("Remove optional field subcommand", m_elementId, pathToOptional));
+    addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToOptional));
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;

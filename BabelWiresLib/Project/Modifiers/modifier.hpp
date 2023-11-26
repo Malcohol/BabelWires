@@ -2,7 +2,7 @@
  * A Modifier changes the value of a feature in a FeatureElement, and corresponds to a user edit.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -75,30 +75,30 @@ namespace babelwires {
         void unapply(Feature* container) const;
 
         // clang-format off
-	/// Describes the way a modifier may have changed.
-	enum class Changes : unsigned int
-	{
-		NothingChanged            = 0b0000000,
-		
-		ModifierIsNew             = 0b0000001,
-		ModifierFailed            = 0b0000010,
-        ModifierRecovered         = 0b0000100,
-
-        /// This is not used during processing, but may be used by an UI.
-        /// If a modifier is moved, a clone of its old state added to a
-        /// FeatureElement's removedModifiers, also flagged with ModifierMoved.
-        ModifierMoved             = 0b0100000,
-
-        // Only apply to ConnectionModifiers:
-
-        ModifierConnected         = 0b0001000,
-        ModifierDisconnected      = 0b0010000,
-
-		ModifierChangesMask       = 0b0111111,
-	};
+        /// Describes the way a modifier may have changed.
+        enum class Changes : unsigned int
+        {
+            NothingChanged            = 0b0000000,
+            
+            ModifierIsNew             = 0b0000001,
+            ModifierFailed            = 0b0000010,
+            ModifierRecovered         = 0b0000100,
+    
+            /// This is not used during processing, but may be used by an UI.
+            /// If a modifier is moved, a clone of its old state added to a
+            /// FeatureElement's removedModifiers, also flagged with ModifierMoved.
+            ModifierMoved             = 0b0100000,
+    
+            // Only apply to ConnectionModifiers:
+    
+            ModifierConnected         = 0b0001000,
+            ModifierDisconnected      = 0b0010000,
+    
+            ModifierChangesMask       = 0b0111111,
+        };
         // clang-format on
 
-        /// Query the modifier for changes.
+        /// Query the modifier for any of the given changes.
         bool isChanged(Changes changes) const;
 
         /// Clear any changes the modifier is carrying.

@@ -35,11 +35,16 @@ const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSy
         const babelwires::Type* operator()(std::monostate) { return nullptr; }
         const babelwires::Type* operator()(PrimitiveTypeId typeId) { return m_typeSystem.tryGetPrimitiveType(typeId); }
         const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
-            const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-            if (const TypeConstructor* const typeConstructor = m_typeSystem.tryGetTypeConstructor(typeConstructorId)) {
-                return typeConstructor->getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+            try {
+                const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
+                if (const TypeConstructor* const typeConstructor =
+                        m_typeSystem.tryGetTypeConstructor(typeConstructorId)) {
+                    return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+                }
+                return nullptr;
+            } catch (babelwires::TypeSystemException&) {
+                return nullptr;
             }
-            return nullptr;
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
@@ -55,13 +60,23 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);
-            const Type* type = typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
-            assert(type);
-            return *type;
+            return typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
     return std::visit(visitorMethods, m_storage);
+}
+
+const babelwires::Type& babelwires::TypeRef::assertResolve(const TypeSystem& typeSystem) const {
+#ifndef NDEBUG
+    try {
+#endif
+        return resolve(typeSystem);
+#ifndef NDEBUG
+    } catch (TypeSystemException&) {
+        assert(false && "TypeSystemException thrown when resolving TypeRef");
+    }
+#endif
 }
 
 namespace {
@@ -173,8 +188,11 @@ void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
             m_serializer.serializeValue("typeConstructorId", std::get<0>(constructedTypeData));
             m_serializer.serializeArray("typeArguments", std::get<1>(constructedTypeData).m_typeArguments);
             std::vector<const EditableValue*> tmpValueArray;
-            std::for_each(std::get<1>(constructedTypeData).m_valueArguments.begin(), std::get<1>(constructedTypeData).m_valueArguments.end(),
-                [&tmpValueArray](const EditableValueHolder& valueHolder){tmpValueArray.emplace_back(valueHolder.getUnsafe());});
+            std::for_each(std::get<1>(constructedTypeData).m_valueArguments.begin(),
+                          std::get<1>(constructedTypeData).m_valueArguments.end(),
+                          [&tmpValueArray](const EditableValueHolder& valueHolder) {
+                              tmpValueArray.emplace_back(valueHolder.getUnsafe());
+                          });
             m_serializer.serializeArray("valueArguments", tmpValueArray);
         }
         Serializer& m_serializer;
@@ -197,7 +215,8 @@ void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
                 arguments.m_typeArguments.emplace_back(std::move(*typeIt.getObject()));
                 ++typeIt;
             }
-            auto valueIt = deserializer.deserializeArray<EditableValue>("valueArguments", Deserializer::IsOptional::Optional);
+            auto valueIt =
+                deserializer.deserializeArray<EditableValue>("valueArguments", Deserializer::IsOptional::Optional);
             while (valueIt.isValid()) {
                 arguments.m_valueArguments.emplace_back(valueIt.getObject());
                 ++valueIt;

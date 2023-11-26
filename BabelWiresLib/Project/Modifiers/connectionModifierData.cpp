@@ -51,7 +51,7 @@ const babelwires::Feature* babelwires::ConnectionModifierData::getSourceFeature(
 
 void babelwires::ConnectionModifierData::apply(const Feature* sourceFeature, Feature* targetFeature,
                                                bool applyEvenIfSourceUnchanged) const {
-    if (!(applyEvenIfSourceUnchanged || sourceFeature->isChanged(Feature::Changes::ValueChanged))) {
+    if (!(applyEvenIfSourceUnchanged || sourceFeature->isChanged(Feature::Changes::SomethingChanged))) {
         return;
     }
 

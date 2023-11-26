@@ -45,10 +45,16 @@ namespace babelwires {
         TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0, EditableValueHolder value1, EditableValueHolder value2);
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
+        /// Returns null if this TypeRef does not resolve.
         const Type* tryResolve(const TypeSystem& typeSystem) const;
 
         /// Find the type in the TypeSystem that this TypeRef describes.
+        /// Throws an exception if this TypeRef does not resolve.
         const Type& resolve(const TypeSystem& typeSystem) const;
+
+        /// Find the type in the TypeSystem that this TypeRef describes.
+        /// Asserts that this TypeRef resolves.
+        const Type& assertResolve(const TypeSystem& typeSystem) const;
 
         /// Return a human-readable version of the TypeRef.
         std::string toString() const;

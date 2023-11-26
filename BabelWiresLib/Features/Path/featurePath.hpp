@@ -31,6 +31,9 @@ namespace babelwires {
 
         FeaturePath(const FeaturePath& other) = default;
 
+        /// Construct a path from a vector of steps.
+        FeaturePath(std::vector<PathStep> steps);
+
         FeaturePath& operator=(const FeaturePath& other) = default;
 
         FeaturePath& operator=(FeaturePath&& other) = default;
@@ -70,6 +73,12 @@ namespace babelwires {
 
         /// Set the new size to be newNumSteps, which must be less than or equal to the current number of steps.
         void truncate(unsigned int newNumSteps);
+
+        /// Get the subpath starting at the given index.
+        void removePrefix(unsigned int numSteps);
+
+        /// Append the subpath to this path.
+        void append(const FeaturePath& subpath);
 
         /// Get the ith step of the path. Asserts that i is valid.
         const PathStep& getStep(unsigned int i) const;

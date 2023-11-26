@@ -1,3 +1,8 @@
+Structured Data Flow WIP:
+1. Records, Unions and Optionals Types
+1. Unit tests: Array values, New feature types, ValuePath, commands
+1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
+
 Bugs:
 * Sometimes elements get creation twice in the UI.
   - This is probably a symptom of the weird factory re-factor in nodeeditor.
@@ -30,6 +35,7 @@ Processors:
 Refactor: 
 * Consider replacing virtual deserialize() method by deserializing constructor
   - Tried this in PR #14. Breaks symmetry.
+* The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.
 * Move some of the logic in doProcess up into FeatureElement.
 * Split featureElementData into separate files - replace any dynamic casts.
 * Split Features & Import/Export out from the project lib. 
@@ -45,6 +51,9 @@ Refactor:
 * Try to use Value to store value in a value feature, and use it in set value modifiers.
 * Clean up uses of toString, operator<<, serializeToString, etc. Make clear which resolves identifiers.
 * deserializeToString methods should return a tuple which includes the position after the parsed object.
+* Try to sort out the various toString methods, possibly providing a "readableStream", constructed with an IdentiferRegistry::ReadAccess.
+* Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
+* Model the API of compound features on that of compound types.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.
@@ -71,3 +80,6 @@ Ideas:
 * SelectableArrays: For arrays larger than 16 elements:
   - Each element has an input drop down which selects the output array element.
   - This would be useful for complex input formats.
+
+Optimizations:
+* Edit tree could offer "getModifiersAbove(path)" for use in some commands. (E.g. hasAncestorConnection)

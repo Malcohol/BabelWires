@@ -30,7 +30,7 @@ namespace babelwires {
 
         /// Usually this modifier only does work if the source is changed.
         /// However, if the modifier IS_NEW, then it is applied anyway.
-        void applyConnection(const Project& project, UserLogger& userLogger, Feature* container);
+        void applyConnection(const Project& project, UserLogger& userLogger, Feature* container, bool shouldForce = false);
 
         /// Convenience method: Did source and target resolve?
         bool isConnected() const;

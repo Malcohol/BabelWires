@@ -187,7 +187,10 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
                                                                 const auto& modifiers) {
         for (const auto* modifier : modifiers) {
             if (const auto* connectionModifier = modifier->asConnectionModifier()) {
-                if (connectionModifier->isConnected()) {
+                // Exclude new connections since the UI won't have have seen them yet.
+                // TODO A change which caused a structural change AND caused a connection to recover might need extra treatment here.
+                // Possibly I need to exclude recovered connections too, but I'm not sure recovery is specific enough.
+                if (connectionModifier->isConnected() && !connectionModifier->isChanged(Modifier::Changes::ModifierIsNew)) {
                     addToConnections(connectionsToRemove, State::PreviousState,
                                      ConnectionDescription(targetId, connectionModifier->getModifierData()), m_project,
                                      targetElement);

@@ -67,7 +67,7 @@ bool babelwires::RemoveElementCommand::addConnection(const babelwires::Connectio
             }
         }
     } else {
-        // In this case, there is a single connection, but the desc may not acurately
+        // In this case, there is a single connection, but the desc may not accurately
         // describe it if the source is collapsed. This is important when it is restored
         // on undo. Hence, we look up the actual connection and store it.
         const Modifier* const modifierAtTarget = targetEdits.findModifier(desc.m_pathToTargetFeature);
@@ -118,7 +118,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
 
         std::unique_ptr<ElementData> newElementData = element->extractElementData();
 
-        // Move any connections described in the connections into the m_connection vector.
+        // Move any connections described in the connections into the m_connections vector.
         auto newEnd = std::remove_if(
             newElementData->m_modifiers.begin(), newElementData->m_modifiers.end(),
             [this, elementId, &connectionsBeingRemoved](const std::unique_ptr<ModifierData>& modData) {

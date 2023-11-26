@@ -34,10 +34,7 @@ TEST(AddModifierCommandTest, executeAndUndo) {
     EXPECT_EQ(command.getName(), "Test command");
 
     testEnvironment.m_project.process();
-    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
-    testEnvironment.m_project.process();
-
-    command.execute(testEnvironment.m_project);
+    EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
     EXPECT_NE(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
 
@@ -79,10 +76,7 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
     EXPECT_EQ(command.getName(), "Test command");
 
     testEnvironment.m_project.process();
-    EXPECT_TRUE(command.initialize(testEnvironment.m_project));
-    testEnvironment.m_project.process();
-
-    command.execute(testEnvironment.m_project);
+    EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
     EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
     EXPECT_NE(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
 
@@ -104,7 +98,7 @@ TEST(AddModifierCommandTest, failSafelyNoElement) {
     babelwires::AddModifierCommand command("Test command", 51, modData.clone());
 
     testEnvironment.m_project.process();
-    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }
 
 TEST(AddModifierCommandTest, failSafelyNoTarget) {
@@ -122,5 +116,5 @@ TEST(AddModifierCommandTest, failSafelyNoTarget) {
     EXPECT_EQ(elementId, 51);
 
     testEnvironment.m_project.process();
-    EXPECT_FALSE(command.initialize(testEnvironment.m_project));
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }

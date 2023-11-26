@@ -44,37 +44,15 @@ babelwires::PathStep babelwires::RecordFeature::getStepToChild(const Feature* ch
     throw ModelException() << "Child not found in owner";
 }
 
-namespace {
-
-    template <typename R>
-    typename babelwires::CopyConst<R, babelwires::Feature>::type*
-    tryGetChildFromStepT(R* record, const babelwires::PathStep& step) {
-        if (const babelwires::ShortId* field = step.asField()) {
-            const int childIndex = record->getChildIndexFromStep(*field);
-            if (childIndex >= 0) {
-                return record->getFeature(childIndex);
+int babelwires::RecordFeature::getChildIndexFromStep(const PathStep& step) const {
+    if (const babelwires::ShortId* identifier = step.asField()) {
+        for (int i = 0; i < getNumFeatures(); ++i) {
+            ShortId f = getFieldIdentifier(i);
+            if (f == *identifier) {
+                // Since step has resolved, ensure it gets the correct discriminator.
+                f.copyDiscriminatorTo(*identifier);
+                return i;
             }
-        }
-        return nullptr;
-    }
-
-} // namespace
-
-babelwires::Feature* babelwires::RecordFeature::tryGetChildFromStep(const PathStep& step) {
-    return tryGetChildFromStepT(this, step);
-}
-
-const babelwires::Feature* babelwires::RecordFeature::tryGetChildFromStep(const PathStep& step) const {
-    return tryGetChildFromStepT(this, step);
-}
-
-int babelwires::RecordFeature::getChildIndexFromStep(const ShortId& identifier) const {
-    for (int i = 0; i < getNumFeatures(); ++i) {
-        ShortId f = getFieldIdentifier(i);
-        if (f == identifier) {
-            // Since step has resolved, ensure it gets the correct discriminator.
-            f.copyDiscriminatorTo(identifier);
-            return i;
         }
     }
     return -1;

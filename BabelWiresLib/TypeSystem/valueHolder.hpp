@@ -23,6 +23,7 @@ namespace babelwires {
         ValueHolderTemplate(const ValueHolderTemplate& other);
         ValueHolderTemplate(ValueHolderTemplate&& other);
 
+        // TODO Remove this constructor: It makes it far too easy to do a shallow clone.
         ValueHolderTemplate(const VALUE& value);
         ValueHolderTemplate(VALUE&& value);
         ValueHolderTemplate(std::unique_ptr<VALUE> ptr);
@@ -42,9 +43,16 @@ namespace babelwires {
         /// made available outside the current context.
         template <typename T, typename... ARGS> static NewValueHolderTemplate<VALUE> makeValue(ARGS&&... args);
 
+        /// Is this currently holding anything?
         operator bool() const;
+
+        /// No longer hold anything.
+        void clear();
+
         const VALUE& operator*() const;
         const VALUE* operator->() const;
+
+        void swap(ValueHolderTemplate& other);
 
         /// Clone the contents to ensure they are not shared and return a non-const pointer.
         /// Any manipulations must be performed before the ValueHolder is shared.
