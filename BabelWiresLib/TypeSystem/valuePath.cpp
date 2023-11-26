@@ -43,9 +43,3 @@ std::tuple<const babelwires::Type&, babelwires::ValueHolder&> babelwires::follow
             << e.what() << "; when trying to follow step #" << index + 1 << " in path \"" << path << '\"';
     }
 }
-
-/*
-const babelwires::Value& babelwires::follow(const TypeSystem& typeSystem, const Type& type, const FeaturePath& path, const ValueHolder& start) {
-}
-
-*/
