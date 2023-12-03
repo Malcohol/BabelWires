@@ -44,4 +44,5 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<TestArrayType2>();
 */
     context.m_typeSystem.addEntry<TestRecordType>();
+    context.m_typeSystem.addEntry<TestRecordType2>();
 }
