@@ -43,14 +43,12 @@ namespace babelwires {
         std::vector<Field> m_fields;
     };
 
-/* For testing
     // TODO Remove
     class TestRecordType : public RecordType {
       public:
         TestRecordType();
         
-        PRIMITIVE_TYPE("arrayT", "Array", "0171a8a6-9ff7-4fed-a7fe-836529b690ae", 1);
+        PRIMITIVE_TYPE("recordT", "Record", "7ce48078-c2e2-45c8-8c0e-dbad1f9fd771", 1);
     };
 
-*/
 } // namespace babelwires

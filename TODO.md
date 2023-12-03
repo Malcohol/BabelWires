@@ -4,6 +4,13 @@ Structured Data Flow WIP:
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
 
 Bugs:
+* Three test record values. 
+  1. Wire two together. 
+  1. Expand and collapse the target node.
+  1. Move the target connection to the third
+  1. Expand the third record
+  1. Observe that the connection gets removed.
+
 * Sometimes elements get creation twice in the UI.
   - This is probably a symptom of the weird factory re-factor in nodeeditor.
   - Consider reverting that change in my custom branch.

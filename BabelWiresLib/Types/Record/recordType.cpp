@@ -2,6 +2,12 @@
 
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 
+// TODO Remove
+#include <BabelWiresLib/Types/Int/intType.hpp>
+
+babelwires::TestRecordType::TestRecordType()
+    : RecordType({{BW_SHORT_ID("foo", "Foo", "b36ab40f-c570-46f7-9dab-3af1b8f3216e"), DefaultIntType::getThisIdentifier()}}) {}
+
 babelwires::RecordType::RecordType(std::vector<Field> fields)
     : m_fields(std::move(fields)) {}
 
