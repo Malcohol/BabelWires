@@ -23,7 +23,7 @@ namespace babelwires {
         };
 
         /// An initialSize of -1 means the initial size is the minimum size.
-        RecordType(TypeRef entryType, std::vector<Field> fields);
+        RecordType(std::vector<Field> fields);
 
         std::string getKind() const override;
 

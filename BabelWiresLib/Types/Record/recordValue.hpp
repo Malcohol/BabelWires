@@ -7,9 +7,9 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 #include <vector>
@@ -20,15 +20,16 @@ namespace babelwires {
       public:
         CLONEABLE(RecordValue);
 
-        RecordValue(const TypeSystem& typeSystem, const std::vector<RecordType::Field>& initialFields);
+        RecordValue();
         RecordValue(const RecordValue& other);
         RecordValue(RecordValue&& other);
 
-        unsigned int getSize() const;
-        void setSize(const TypeSystem& typeSystem, const Type& entryType, unsigned int newSize);
-
         ValueHolder& getValue(ShortId fieldId);
         const ValueHolder& getValue(ShortId fieldId) const;
+
+        ValueHolder* tryGetValue(ShortId fieldId);
+        const ValueHolder* tryGetValue(ShortId fieldId) const;
+
         void setValue(ShortId fieldId, ValueHolder newValue);
 
         std::size_t getHash() const override;
