@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/compoundType.hpp>
+#include <BabelWiresLib/Types/Record/recordTypeBase.hpp>
 
 // TODO Remove
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
@@ -15,23 +15,14 @@
 namespace babelwires {
 
     /// RecordTypes are compound types containing a sequence of named children.
-    class RecordType : public CompoundType {
+    class RecordType : public RecordTypeBase {
       public:
-        struct Field {
-            ShortId m_identifier;
-            TypeRef m_type;
-        };
-
         /// An initialSize of -1 means the initial size is the minimum size.
         RecordType(std::vector<Field> fields);
 
-        std::string getKind() const override;
-
+      public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
-
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
-
-        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
 
       public:
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
@@ -40,6 +31,7 @@ namespace babelwires {
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
 
       private:
+        friend RecordTypeBase;
         std::vector<Field> m_fields;
     };
 

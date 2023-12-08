@@ -1,5 +1,5 @@
 /**
- * RecordValues are compound values containing a sequence of named children.
+ * RecordValues are compound values containing a set of named children.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -15,7 +15,7 @@
 #include <vector>
 
 namespace babelwires {
-    /// RecordValues are compound values containing a sequence of named children.
+    /// RecordValues are compound values containing a set of named children.
     class RecordValue : public Value {
       public:
         CLONEABLE(RecordValue);
@@ -31,6 +31,7 @@ namespace babelwires {
         const ValueHolder* tryGetValue(ShortId fieldId) const;
 
         void setValue(ShortId fieldId, ValueHolder newValue);
+        void removeValue(ShortId fieldId);
 
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;

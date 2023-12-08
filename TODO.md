@@ -2,6 +2,7 @@ Structured Data Flow WIP:
 1. Records, Unions and Optionals Types
 1. Unit tests: Array values, New feature types, ValuePath, commands
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
+1. Value::toString should probably be handled by the type.
 
 Bugs:
 * Three test record values. 

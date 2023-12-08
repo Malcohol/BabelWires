@@ -1,3 +1,10 @@
+/**
+ * RecordValues are compound values containing a sequence of named children.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 
 babelwires::RecordValue::RecordValue() = default;
@@ -34,6 +41,12 @@ const babelwires::ValueHolder* babelwires::RecordValue::tryGetValue(ShortId fiel
 
 void babelwires::RecordValue::setValue(ShortId fieldId, ValueHolder newValue) {
     m_fieldValues.insert({fieldId, newValue});
+}
+
+void babelwires::RecordValue::removeValue(ShortId fieldId) {
+    auto it = m_fieldValues.find(fieldId);
+    assert((it != m_fieldValues.end()) && "Fields not found in RecordValue");
+    m_fieldValues.erase(it);
 }
 
 std::size_t babelwires::RecordValue::getHash() const {
