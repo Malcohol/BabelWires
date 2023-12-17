@@ -60,6 +60,8 @@ SET( BABELWIRESLIB_SRCS
 	Types/Record/recordTypeBase.cpp
 	Types/Record/recordWithOptionalsType.cpp
 	Types/Record/recordValue.cpp
+	Types/RecordWithVariants/recordWithVariantsType.cpp
+	Types/RecordWithVariants/recordWithVariantsValue.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp

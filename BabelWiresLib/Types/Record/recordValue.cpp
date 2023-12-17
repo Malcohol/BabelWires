@@ -7,10 +7,6 @@
  **/
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 
-babelwires::RecordValue::RecordValue() = default;
-babelwires::RecordValue::RecordValue(const RecordValue& other) = default;
-babelwires::RecordValue::RecordValue(RecordValue&& other) = default;
-
 babelwires::ValueHolder& babelwires::RecordValue::getValue(ShortId fieldId) {
     auto it = m_fieldValues.find(fieldId);
     assert((it != m_fieldValues.end()) && "Field not found in RecordValue");

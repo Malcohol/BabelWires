@@ -20,10 +20,6 @@ namespace babelwires {
       public:
         CLONEABLE(RecordValue);
 
-        RecordValue();
-        RecordValue(const RecordValue& other);
-        RecordValue(RecordValue&& other);
-
         ValueHolder& getValue(ShortId fieldId);
         const ValueHolder& getValue(ShortId fieldId) const;
 
