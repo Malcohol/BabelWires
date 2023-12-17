@@ -23,7 +23,6 @@ namespace babelwires {
             Optionality m_optionality = Optionality::alwaysActive;
         };
 
-        /// An initialSize of -1 means the initial size is the minimum size.
         RecordWithOptionalsType(std::vector<FieldWithOptionality> fields);
 
         /// Active the field, so it appears in the record.
