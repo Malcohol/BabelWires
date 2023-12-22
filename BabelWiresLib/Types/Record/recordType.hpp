@@ -1,5 +1,5 @@
 /**
- * RecordTypes are compound types containing a sequence of named children.
+ * RecordType carries a sequence of Fields (some of which can be inactive).
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,32 +7,67 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Types/Record/recordTypeBase.hpp>
+#include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 // TODO Remove
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 namespace babelwires {
 
-    /// RecordTypes are compound types containing a sequence of named children.
-    class RecordType : public RecordTypeBase {
+    /// RecordType carries a sequence of Fields (some of which can be inactive).
+    class RecordType : public CompoundType {
       public:
-        /// An initialSize of -1 means the initial size is the minimum size.
+        enum class Optionality { alwaysActive, optionalDefaultInactive, optionalDefaultActive };
+
+        struct Field {
+            ShortId m_identifier;
+            TypeRef m_type;
+            Optionality m_optionality = Optionality::alwaysActive;
+        };
+
         RecordType(std::vector<Field> fields);
+
+        std::string getKind() const override;
+        
+        /// Active the field, so it appears in the record.
+        void activateField(const TypeSystem& typeSystem, ValueHolder& value, ShortId fieldId) const;
+
+        /// Deactivate the field, so it does not appear in the record.
+        /// This operation sets the subfeature to its default state.
+        void deactivateField(ValueHolder& value, ShortId fieldId) const;
+
+        /// Is the given field an optional.
+        bool isOptional(ShortId fieldId) const;
+
+        /// Is the given optional field activated?
+        bool isActivated(const ValueHolder& value, ShortId fieldId) const;
+
+        /// Get the set of optional fields.
+        const std::vector<ShortId>& getOptionalFieldIds() const;
+
+        /// Get the count of the currently active optional fields.
+        unsigned int getNumActiveFields(const ValueHolder& value) const;
 
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
 
-      public:
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
         std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue, unsigned int i) const override;
         std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue, unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
 
       private:
-        friend RecordTypeBase;
+        const Field& getField(ShortId fieldId) const;
+        const Field& getFieldFromChildIndex(const ValueHolder& compoundValue, unsigned int i) const;
+
+      private:
+        /// The inactive fields, sorted by activeIndex;
         std::vector<Field> m_fields;
+
+        /// Those fields which are optional.
+        std::vector<ShortId> m_optionalFieldIds;
     };
 
     // TODO Remove
@@ -49,6 +84,5 @@ namespace babelwires {
         
         PRIMITIVE_TYPE("recordT2", "Record2", "199e3fa7-5ddc-46c5-8eab-b66a121dac20", 1);
     };
-
 
 } // namespace babelwires

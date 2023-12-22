@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Types/Record/recordTypeBase.hpp>
+#include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 // TODO Remove
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
@@ -16,10 +16,15 @@ namespace babelwires {
 
     /// RecordWithVariantsType is like a RecordType but has a number of variants.
     /// Variants are selected using tags.
-    class RecordWithVariantsType : public RecordTypeBase {
+    // TODO Find a clean and efficient way to unite this with RecordType.
+    class RecordWithVariantsType : public CompoundType {
       public:
         using Tags = std::vector<ShortId>;
 
+        struct Field {
+            ShortId m_identifier;
+            TypeRef m_type;
+        };
         struct FieldWithTags : Field {
             Tags m_tags;
         };
