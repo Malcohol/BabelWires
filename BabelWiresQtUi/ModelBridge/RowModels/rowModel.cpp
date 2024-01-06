@@ -27,7 +27,7 @@
 
 #include <cassert>
 
-void babelwires::RowModel::init(const ValueModelRegistry& valueModelRegistry) {}
+void babelwires::RowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {}
 
 bool babelwires::RowModel::hasInputFeature() const {
     return m_contentsCacheEntry->getInputFeature();

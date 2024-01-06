@@ -8,15 +8,16 @@
 #include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 #include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <QSize>
 
 QVariant babelwires::ValueModel::getDisplayData(StyleHint styleHint) const {
-    return QString(m_value->toString().c_str());
+    return QString(m_type->valueToString(*m_typeSystem, *m_value).c_str());
 }
 
-const babelwires::Value* babelwires::ValueModel::getValue() const {
-    return m_value;
+const babelwires::ValueHolder& babelwires::ValueModel::getValue() const {
+    return *m_value;
 }
 
 const babelwires::Type* babelwires::ValueModel::getType() const {

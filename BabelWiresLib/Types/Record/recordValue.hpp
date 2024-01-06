@@ -31,7 +31,6 @@ namespace babelwires {
 
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
-        std::string toString() const override;
 
       private:
         std::unordered_map<ShortId, ValueHolder> m_fieldValues;

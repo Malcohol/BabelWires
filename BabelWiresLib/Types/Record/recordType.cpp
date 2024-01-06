@@ -250,3 +250,13 @@ babelwires::SubtypeOrder babelwires::RecordType::compareSubtypeHelper(const Type
     }
     return currentOrder;
 }
+
+std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    const RecordValue& recordValue = v->is<RecordValue>();
+    const unsigned int numActivatedFields = getNumActiveFields(v);
+    const unsigned int numOptionalFields = m_optionalFieldIds.size();
+    const unsigned int numChildren = m_fields.size() - numOptionalFields + numActivatedFields;
+    std::ostringstream os;
+    os << "{" << numChildren << " (" << numActivatedFields << "/" << numOptionalFields << " optional)" << "}";
+    return os.str();
+}

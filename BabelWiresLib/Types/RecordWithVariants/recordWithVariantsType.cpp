@@ -137,3 +137,9 @@ int babelwires::RecordWithVariantsType::getChildIndexFromStep(const ValueHolder&
     }
     return -1;
 }
+
+std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    std::ostringstream os;
+    os << "{" << getNumChildren(v) << "}";
+    return os.str();
+}

@@ -47,6 +47,9 @@ namespace babelwires {
         /// The default implementation asserts.
         virtual bool verifySupertype(const Type& supertype) const;
 
+        /// Used for display to the user, so it does not have to be parsable or even comprehensive.
+        virtual std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const = 0;
+
         /// Convenience function which returns a human-readable version of the type's TypeRef.
         std::string getName() const;
 

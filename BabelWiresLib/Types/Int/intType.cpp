@@ -62,5 +62,8 @@ babelwires::SubtypeOrder babelwires::IntType::compareSubtypeHelper(const TypeSys
     return SubtypeOrder::IsEquivalent;
 }
 
-babelwires::DefaultIntType::DefaultIntType() : IntType() {}
+std::string babelwires::IntType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    return v->is<IntValue>().toString();
+}
 
+babelwires::DefaultIntType::DefaultIntType() : IntType() {}

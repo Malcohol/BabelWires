@@ -41,6 +41,8 @@ Processors:
 * Provide basic processors for standard types (+, *, etc)
 
 Refactor: 
+* Abandon EditableValueHolder (and ValueHolder template).
+  - Will have to live with unimplemented asserts.
 * Consider replacing virtual deserialize() method by deserializing constructor
   - Tried this in PR #14. Breaks symmetry.
 * The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.

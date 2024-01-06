@@ -62,5 +62,9 @@ babelwires::SubtypeOrder babelwires::RationalType::compareSubtypeHelper(const Ty
     return SubtypeOrder::IsEquivalent;
 }
 
+std::string babelwires::RationalType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    return v->is<RationalValue>().toString();
+}
+
 babelwires::DefaultRationalType::DefaultRationalType() : RationalType() {}
 

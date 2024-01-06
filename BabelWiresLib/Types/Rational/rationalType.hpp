@@ -29,6 +29,7 @@ namespace babelwires {
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
 
+        std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
       private:
         Rational m_defaultValue;
         Range<Rational> m_range;

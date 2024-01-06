@@ -25,6 +25,7 @@
 
 babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowModelRegistry,
                                                    const ValueModelRegistry& valueModelRegistry,
+                                                   const TypeSystem& typeSystem,
                                                    const babelwires::ContentsCacheEntry* entry,
                                                    const babelwires::FeatureElement* element) {
     m_rowModel = &m_rowModelStorage;
@@ -51,5 +52,5 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     }
     m_rowModel->m_contentsCacheEntry = entry;
     m_rowModel->m_featureElement = element;
-    m_rowModel->init(valueModelRegistry);
+    m_rowModel->init(valueModelRegistry, typeSystem);
 }

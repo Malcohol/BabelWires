@@ -20,6 +20,7 @@ class QPainter;
 namespace babelwires {
     class Type;
     class Value;
+    class TypeSystem;
     class DataLocation;
 
     class ValueModel {
@@ -43,12 +44,13 @@ namespace babelwires {
         virtual void getContextMenuActions(const DataLocation& location, std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const;
 
       protected:
-        const Value* getValue() const;
+        const ValueHolder& getValue() const;
         const Type* getType() const;
 
       public:
+        const TypeSystem* m_typeSystem;
         const Type* m_type;
-        const Value* m_value;
+        const ValueHolder* m_value;
         /// Does the context make this value readonly.
         bool m_isReadOnly;
         /// Are structural modifications permitted to this value.

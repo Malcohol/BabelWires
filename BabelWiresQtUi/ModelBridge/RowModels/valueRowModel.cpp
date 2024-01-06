@@ -20,9 +20,9 @@
 
 #include <cassert>
 
-void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry) {
+void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {
     const babelwires::ValueFeature& valueFeature = getValueFeature();
-    m_valueModelDispatcher.init(valueModelRegistry, valueFeature.getType(), *valueFeature.getValue(),
+    m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueFeature.getType(), valueFeature.getValue(),
                                 (getInputFeature() == nullptr),
                                 m_contentsCacheEntry->isStructureEditable());
 }

@@ -60,6 +60,7 @@ namespace babelwires {
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
 
+        std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
       private:
         /// The enum values in their intended order.
         ValueSet m_values;

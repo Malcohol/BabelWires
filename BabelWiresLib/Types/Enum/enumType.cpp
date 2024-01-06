@@ -132,3 +132,7 @@ babelwires::SubtypeOrder babelwires::EnumType::compareSubtypeHelper(const TypeSy
         return SubtypeOrder::IsEquivalent;
     }
 }
+
+std::string babelwires::EnumType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    return v->is<EnumValue>().toString();
+}

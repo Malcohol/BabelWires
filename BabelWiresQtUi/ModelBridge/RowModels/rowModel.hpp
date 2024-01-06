@@ -36,7 +36,7 @@ namespace babelwires {
     class RowModel {
       public:
         // Note: No virtual destructor.
-        virtual void init(const ValueModelRegistry& valueModelRegistry);
+        virtual void init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem);
 
         virtual QVariant getValueDisplayData() const;
 

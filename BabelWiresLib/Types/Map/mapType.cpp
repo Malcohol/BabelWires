@@ -56,3 +56,7 @@ babelwires::SubtypeOrder babelwires::MapType::compareSubtypeHelper(const TypeSys
         typeSystem.compareSubtype(m_targetTypeRef, otherMapType->m_targetTypeRef);
     return orderTarget;
 }
+
+std::string babelwires::MapType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    return v->is<MapValue>().toString();
+}

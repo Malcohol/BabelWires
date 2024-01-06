@@ -171,3 +171,9 @@ int babelwires::ArrayType::getChildIndexFromStep(const ValueHolder& compoundValu
     }
     return -1;
 }
+
+std::string babelwires::ArrayType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    std::ostringstream os;
+    os << "[" << getNumChildren(v) << "]";
+    return os.str();
+}

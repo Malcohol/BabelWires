@@ -23,7 +23,7 @@
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
-void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const Type& type, const Value& value, bool isReadOnly, bool isStructureEditable) {
+void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const Type& type, const ValueHolder& value, bool isReadOnly, bool isStructureEditable) {
     m_valueModel = &m_valueModelStorage;
     // TODO Allow the UI to register callbacks into the corresponding ValueTypes.
     if (valueModelRegistry.handleFeature(&type, m_valueModel)) {
@@ -49,6 +49,7 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     } else {
         // The base row model is used.
     }
+    m_valueModel->m_typeSystem = &typeSystem;
     m_valueModel->m_type = &type;
     m_valueModel->m_value = &value;
     m_valueModel->m_isReadOnly = isReadOnly;

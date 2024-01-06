@@ -124,6 +124,13 @@ namespace babelwires {
     using ValueHolder = ValueHolderTemplate<Value>;
     using NewValueHolder = NewValueHolderTemplate<Value>;
     using EditableValueHolder = ValueHolderTemplate<EditableValue>;
+
+    /// Hack: Avoid creating a new value holder when the ValueHolder is constant.
+    // TODO Maybe Abandon EditableValueHolder entirely?
+    inline const ValueHolder& toRegularValueHolder(const EditableValueHolder& foo) {
+        return *reinterpret_cast<const ValueHolder*>(&foo);
+    }
+
 } // namespace babelwires
 
 namespace std {

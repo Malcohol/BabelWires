@@ -15,6 +15,7 @@
 
 namespace babelwires {
     class Type;
+    class TypeSystem;
     class MapProjectEntry;
     class MapEntryData;
     class ValueModelRegistry;
@@ -23,7 +24,7 @@ namespace babelwires {
     /// The class should always be constructed via the MapEntryModelDispatcher.
     class MapEntryModel {
       public:
-        virtual void init(const ValueModelRegistry& valueModelRegistry);
+        virtual void init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem);
 
         enum class Column
         {

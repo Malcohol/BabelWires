@@ -45,12 +45,6 @@ bool babelwires::ArrayValue::operator==(const Value& other) const {
     return true;
 }
 
-std::string babelwires::ArrayValue::toString() const {
-    std::ostringstream os;
-    os << "[" << m_values.size() << "]";
-    return os.str();
-}
-
 unsigned int babelwires::ArrayValue::getSize() const {
     return m_values.size();
 }

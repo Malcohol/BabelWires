@@ -27,7 +27,7 @@ QWidget* babelwires::EnumValueModel::createEditor(QWidget* parent, const QModelI
 }
 
 void babelwires::EnumValueModel::setEditorData(QWidget* editor) const {
-    const EnumValue* enumValue = m_value->as<EnumValue>();
+    const EnumValue* enumValue = getValue()->as<EnumValue>();
     const ShortId value = enumValue->get();
     auto dropDownBox = qobject_cast<DropDownValueEditor*>(editor);
     assert(dropDownBox && "Unexpected editor");
@@ -46,7 +46,7 @@ babelwires::EditableValueHolder babelwires::EnumValueModel::createValueFromEdito
     assert(newIndex < values.size());
     const ShortId newValue = values[newIndex];
 
-    const EnumValue* const enumValue = m_value->as<EnumValue>();
+    const EnumValue* const enumValue = getValue()->as<EnumValue>();
     assert(enumValue && "Expecting an enum value here");
     const ShortId currentValue = enumValue->get();
 
@@ -57,7 +57,7 @@ babelwires::EditableValueHolder babelwires::EnumValueModel::createValueFromEdito
 }
 
 bool babelwires::EnumValueModel::isItemEditable() const {
-    return m_value->as<EnumValue>();
+    return getValue()->as<EnumValue>();
 }
 
 bool babelwires::EnumValueModel::validateEditor(QWidget* editor) const {

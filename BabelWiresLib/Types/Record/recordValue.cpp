@@ -82,10 +82,3 @@ bool babelwires::RecordValue::operator==(const Value& other) const {
     }
     return true;
 }
-
-std::string babelwires::RecordValue::toString() const {
-    std::ostringstream os;
-    os << "{" << m_fieldValues.size() << "}";
-    return os.str();
-}
-
