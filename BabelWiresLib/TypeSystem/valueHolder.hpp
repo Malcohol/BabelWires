@@ -82,12 +82,13 @@ namespace babelwires {
         /// Use by EditableValueHolder to visit the value only if necessary.
         void visitFilePaths(FilePathVisitor& visitor);
 
-        /// Allows implicit assignment to related const ValueHolders.
-        /// Asserts if the types do not match.
+        /// Allows implicit assignment to related const ValueHolders, asserting that the type matches.
+        /// The implementation reinterprets this, which is safe because the storage does not
+        /// depend on the template argument.
         template<typename OTHER>
         operator const ValueHolderTemplate<OTHER>&() const;
 
-        /// Supports explicit downcasting to derived ValueHolder, where the holder is empty if the check fails.
+        /// Perform a checked downcast, and create an template ValueHolderTemplate if the check fails.
         template<typename DERIVED>
         ValueHolderTemplate<DERIVED> asValueHolder() const;
 
