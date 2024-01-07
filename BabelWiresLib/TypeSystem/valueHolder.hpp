@@ -15,13 +15,15 @@
 namespace babelwires {
     template <typename VALUE> class NewValueHolderTemplate;
 
-    /// A ValueHolder is a container which holds a single value.
+    /// A ValueHolderTemplate is a container which holds a single value.
     /// TODO in-place storage for small values.
     template <typename VALUE> class ValueHolderTemplate {
       public:
         ValueHolderTemplate() = default;
         ValueHolderTemplate(const ValueHolderTemplate& other);
         ValueHolderTemplate(ValueHolderTemplate&& other);
+        /// An assert checks the type at runtime.
+        template <typename OTHER> ValueHolderTemplate(const ValueHolderTemplate<OTHER>& other);
 
         // TODO Remove this constructor: It makes it far too easy to do a shallow clone.
         ValueHolderTemplate(const VALUE& value);
@@ -80,17 +82,14 @@ namespace babelwires {
         /// Use by EditableValueHolder to visit the value only if necessary.
         void visitFilePaths(FilePathVisitor& visitor);
 
-        /// Allows implicit assignment from derived ValueHolders.
-        template<typename BASE>
-        operator ValueHolderTemplate<BASE>() const;
+        /// Allows implicit assignment to related const ValueHolders.
+        /// Asserts if the types do not match.
+        template<typename OTHER>
+        operator const ValueHolderTemplate<OTHER>&() const;
 
         /// Supports explicit downcasting to derived ValueHolder, where the holder is empty if the check fails.
         template<typename DERIVED>
         ValueHolderTemplate<DERIVED> asValueHolder() const;
-
-        /// Supports explicit downcasting to derived ValueHolder, where method asserts if the check fails.
-        template<typename DERIVED>
-        ValueHolderTemplate<DERIVED> isValueHolder() const;
 
         /// Not recommended, but can be used to get a pointer to the contained value.
         /// This is unsafe only in the sense that a caller might be tempted to keep the pointer.
@@ -98,7 +97,7 @@ namespace babelwires {
         const VALUE* getUnsafe() const;
 
       private:
-        using PointerToValue = std::shared_ptr<const VALUE>;
+        using PointerToValue = std::shared_ptr<const Value>;
         PointerToValue m_pointerToValue;
     };
 
@@ -110,7 +109,7 @@ namespace babelwires {
         VALUE& m_nonConstReference;
         operator ValueHolderTemplate<VALUE>&&() && { return std::move(m_valueHolder); }
         template <typename DERIVED> NewValueHolderTemplate<DERIVED> is() && {
-            return NewValueHolderTemplate<DERIVED>{ std::move(m_valueHolder.template isValueHolder<DERIVED>()), m_nonConstReference.template is<DERIVED>()};
+            return NewValueHolderTemplate<DERIVED>{ std::move(m_valueHolder), m_nonConstReference.template is<DERIVED>()};
         }
     };
 
@@ -124,13 +123,6 @@ namespace babelwires {
     using ValueHolder = ValueHolderTemplate<Value>;
     using NewValueHolder = NewValueHolderTemplate<Value>;
     using EditableValueHolder = ValueHolderTemplate<EditableValue>;
-
-    /// Hack: Avoid creating a new value holder when the ValueHolder is constant.
-    // TODO Maybe Abandon EditableValueHolder entirely?
-    inline const ValueHolder& toRegularValueHolder(const EditableValueHolder& foo) {
-        return *reinterpret_cast<const ValueHolder*>(&foo);
-    }
-
 } // namespace babelwires
 
 namespace std {

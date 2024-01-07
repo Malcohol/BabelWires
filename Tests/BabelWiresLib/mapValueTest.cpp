@@ -289,7 +289,7 @@ TEST(MapValueTest, serializationTest) {
     EXPECT_EQ(dataPtr->m_targetTypeRef, testTypeId2);
     EXPECT_EQ(dataPtr->getNumMapEntries(), 2);
     EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::One21);
-    babelwires::ValueHolder sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
+    const babelwires::EditableValueHolder& sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
     ASSERT_NE(sourceValue, nullptr);
     const auto *const sourceAsTestValue = sourceValue->as<testUtils::TestValue>();
     ASSERT_NE(sourceAsTestValue, nullptr);
