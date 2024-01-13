@@ -8,11 +8,6 @@
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
 babelwires::Type::~Type() = default;
-
-bool babelwires::Type::verifySupertype(const Type& supertype) const {
-    assert(false);
-    return false;
-}
  
 std::string babelwires::Type::getName() const {
     return getTypeRef().toString();
