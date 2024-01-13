@@ -61,6 +61,7 @@ SET( BABELWIRESQTUI_SRCS
     ValueModels/enumValueModel.cpp
     ValueModels/intValueModel.cpp
     ValueModels/rationalValueModel.cpp
+    ValueModels/recordValueModel.cpp
     ValueModels/stringValueModel.cpp
     ValueModels/valueModel.cpp
     ValueModels/valueModelDispatcher.cpp

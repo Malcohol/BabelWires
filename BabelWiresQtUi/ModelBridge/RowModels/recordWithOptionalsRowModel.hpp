@@ -14,7 +14,7 @@ namespace babelwires {
     class RecordWithOptionalsFeature;
     class FeatureContextMenuAction;
 
-    /// The row model for ArrayFeatures.
+    /// The row model for RecordFeature.
     class RecordWithOptionalsRowModel : public RowModel {
       public:
         virtual QVariant getValueDisplayData() const override;
