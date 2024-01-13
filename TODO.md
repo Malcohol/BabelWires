@@ -11,6 +11,7 @@ Bugs:
   1. Move the target connection to the third
   1. Expand the third record
   1. Observe that the connection gets removed.
+* Moving a target connection from a valid record target to a record target of a different type does not cause the modifier to fail.
 
 * Sometimes elements get creation twice in the UI.
   - This is probably a symptom of the weird factory re-factor in nodeeditor.

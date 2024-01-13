@@ -115,12 +115,13 @@ TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
 }
 
 TEST(ActivateOptionalsModifierDataTest, failureNotARecordWithOptionals) {
+    testUtils::TestEnvironment testEnvironment;
     babelwires::ActivateOptionalsModifierData data;
     data.m_selectedOptionals.emplace_back("op");
 
-    babelwires::IntFeature notARecordWithOptionals;
+    testUtils::RootedFeature<babelwires::IntFeature> notARecordWithOptionals(testEnvironment.m_projectContext);
 
-    EXPECT_THROW(data.apply(&notARecordWithOptionals), babelwires::ModelException);
+    EXPECT_THROW(data.apply(&notARecordWithOptionals.getFeature()), babelwires::ModelException);
 }
 
 TEST(ActivateOptionalsModifierDataTest, clone) {

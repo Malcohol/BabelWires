@@ -80,14 +80,17 @@ void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) co
                 // TODO Warn? Will need to pass the logger into apply.
             }
         }
+        return;
     } else if (auto valueFeature = targetFeature->as<ValueFeature>()) {
         if (auto recordType = valueFeature->getType().as<RecordType>()) {
             const ProjectContext& context = RootFeature::getProjectContextAt(*valueFeature);
             ValueHolder newValue = valueFeature->getValue();
             recordType->ensureActivated(context.m_typeSystem, newValue, m_selectedOptionals);
             valueFeature->setValue(newValue);
+            return;
         }
     }
+    throw ModelException() << "Cannot activate optionals from a feature which does not have optionals";
 }
 
 void babelwires::ActivateOptionalsModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
