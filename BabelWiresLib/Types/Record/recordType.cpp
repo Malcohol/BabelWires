@@ -21,7 +21,8 @@ babelwires::TestRecordType::TestRecordType()
 babelwires::TestRecordType2::TestRecordType2()
     : RecordType(
           {{BW_SHORT_ID("bar", "Bar", "8e746efa-1db8-4c43-b80c-451b6ee5db55"), DefaultIntType::getThisIdentifier()},
-           {BW_SHORT_ID("obj", "Obj", "e4629b27-0286-4712-8cf4-6cce69bb3636"), TestRecordType::getThisIdentifier()}}) {}
+           {BW_SHORT_ID("obj", "Obj", "e4629b27-0286-4712-8cf4-6cce69bb3636"), TestRecordType::getThisIdentifier()},
+           {BW_SHORT_ID("merm", "Merm", "b69f16a6-fcfb-49e8-be4b-c7910bff15c7"), DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive}}) {}
 
 
 babelwires::RecordType::RecordType(std::vector<Field> fields)
@@ -257,6 +258,10 @@ std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, 
     const unsigned int numOptionalFields = m_optionalFieldIds.size();
     const unsigned int numChildren = m_fields.size() - numOptionalFields + numActivatedFields;
     std::ostringstream os;
-    os << "{" << numChildren << " (" << numActivatedFields << "/" << numOptionalFields << " optional)" << "}";
+    os << "{" << numChildren;
+    if (numOptionalFields > 0) {
+        os << " (" << numActivatedFields << "/" << numOptionalFields << " optional)";
+    } 
+    os << "}";
     return os.str();
 }
