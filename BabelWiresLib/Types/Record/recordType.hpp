@@ -17,6 +17,7 @@ namespace babelwires {
     /// RecordType carries a sequence of Fields (some of which can be inactive).
     class RecordType : public CompoundType {
       public:
+        // TODO: OptionalDefaultActive not yet fully supported.
         enum class Optionality { alwaysActive, optionalDefaultInactive, optionalDefaultActive };
 
         struct Field {
@@ -35,6 +36,9 @@ namespace babelwires {
         /// Deactivate the field, so it does not appear in the record.
         /// This operation sets the subfeature to its default state.
         void deactivateField(ValueHolder& value, ShortId fieldId) const;
+
+        /// Ensure the optionals in the value have the state as specified in the arrays.
+        void ensureActivated(const TypeSystem& typeSystem, ValueHolder& value, const std::vector<ShortId>& optionalsToEnsureActivated) const;
 
         /// Is the given field an optional.
         bool isOptional(ShortId fieldId) const;

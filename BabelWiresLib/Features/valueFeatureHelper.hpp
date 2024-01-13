@@ -8,6 +8,7 @@
 #pragma once
 
 #include <Common/types.hpp>
+#include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {
     class Feature;
@@ -17,5 +18,8 @@ namespace babelwires {
       public:
         /// Abstracts ArrayFeature and ValueFeatures holding ArrayTypes.
         static std::tuple<const CompoundFeature*, unsigned int, Range<unsigned int>, unsigned int> getInfoFromArrayFeature(const Feature* f);
+
+        /// Confirm that the feature is a record with the given optional, and return whether it is active or not.
+        static std::tuple<const CompoundFeature*, bool> getInfoFromRecordWithOptionalsFeature(const Feature* f, ShortId optionalId);
     };
 }
