@@ -25,6 +25,7 @@
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 */
 #include <BabelWiresLib/Types/Record/recordType.hpp>
+#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<DefaultIntType>();
@@ -45,4 +46,5 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
 */
     context.m_typeSystem.addEntry<TestRecordType>();
     context.m_typeSystem.addEntry<TestRecordType2>();
+    context.m_typeSystem.addEntry<TestRecordWithVariants>();
 }

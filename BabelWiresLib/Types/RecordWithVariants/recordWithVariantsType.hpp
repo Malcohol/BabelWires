@@ -15,8 +15,14 @@
 namespace babelwires {
 
     /// RecordWithVariantsType is like a RecordType but has a number of variants.
-    /// Variants are selected using tags.
-    // TODO Find a clean and efficient way to unite this with RecordType.
+    /// Variants are selected using tags. The first tag is the default tag.
+    // TODO Allow another tag to be specified as the default.
+    // It would be nicer if this shared its underlying representation with RecordType.
+    // So a values were interchangeable. Unfortunately, I haven't yet identified an acceptably cheap
+    // way to implement this without storing the variant tag in the value.
+    // Alternatively, finding a way to offer this functionality in the UI while implementing it by
+    // a union of record types would be nice.
+    // TODO Find an efficient way to unite this with RecordType.
     class RecordWithVariantsType : public CompoundType {
       public:
         using Tags = std::vector<ShortId>;
@@ -26,12 +32,14 @@ namespace babelwires {
             TypeRef m_type;
         };
         struct FieldWithTags : Field {
+            /// The tags of the variants containing this field.
+            /// Empty means that the field is in every variant.
             Tags m_tags;
         };
 
         /// The tags vector provides the tags in their preferred order.
         /// The tags used in the fields vector must be found in the tags vector.
-        RecordWithVariantsType(Tags tags, std::vector<FieldWithTags> fields);
+        RecordWithVariantsType(Tags tags, std::vector<FieldWithTags> fields, unsigned int defaultTagIndex = 0);
 
         // For now, this is a separate kind from RecordType.
         std::string getKind() const override;
@@ -74,6 +82,9 @@ namespace babelwires {
         /// The inactive fields, sorted by activeIndex;
         Tags m_tags;
 
+        /// The index of the default tag in the tag array.
+        ShortId m_defaultTag;
+
         // Keep private: see constructor.
         std::vector<FieldWithTags> m_fields;
 
@@ -82,13 +93,11 @@ namespace babelwires {
         std::unordered_map<ShortId, std::vector<const Field*>> m_tagToVariantCache;
     };
 
-    /*
-        class TestRecordType2 : public RecordType {
-          public:
-            TestRecordType2();
+      class TestRecordWithVariants : public RecordWithVariantsType {
+        public:
+          TestRecordWithVariants();
 
-            PRIMITIVE_TYPE("recordT2", "Record2", "199e3fa7-5ddc-46c5-8eab-b66a121dac20", 1);
-        };
-    */
+          PRIMITIVE_TYPE("recordV2", "RecordWithVariants", "08860254-fdb1-4272-bc0c-6ad44824e7eb", 1);
+      };
 
 } // namespace babelwires

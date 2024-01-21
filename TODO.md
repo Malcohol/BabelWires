@@ -37,6 +37,7 @@ Model
 * FileFeature: Remove this and the offset hack in the FeatureCache. 
   - Instead, allow the UI to add non-model rows at top for visualization, and use that.
 * Consider a coercion system so numeric types can always be assigned.
+* Implement RecordType Optionality::optionalDefaultActive
 
 Processors:
 * Provide basic processors for standard types (+, *, etc)

@@ -11,16 +11,52 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
-babelwires::RecordWithVariantsType::RecordWithVariantsType(Tags tags, std::vector<FieldWithTags> fields)
+// TODO Remove
+#include <BabelWiresLib/Types/Int/intType.hpp>
+
+namespace {
+    babelwires::ShortId getTag0() {
+        return BW_SHORT_ID("tag0", "Tag 0", "180b5292-5a1b-4849-8d0e-68444fc3554c");
+    }
+
+    babelwires::ShortId getTag1() {
+        return BW_SHORT_ID("tag1", "Tag 1", "791ccc74-8fd8-4c29-a6f8-0349d9b189ad");
+    }
+} // namespace
+
+babelwires::TestRecordWithVariants::TestRecordWithVariants()
+    : RecordWithVariantsType(
+          {getTag0(), getTag1()},
+          {{BW_SHORT_ID("foo", "Foo", "b36ab40f-c570-46f7-9dab-3af1b8f3216e"),
+            DefaultIntType::getThisIdentifier(),
+            {getTag0()}},
+           {BW_SHORT_ID("erm", "Erm", "bcb21539-6d10-41b2-886b-4b46f158f6bd"), DefaultIntType::getThisIdentifier()},
+           {BW_SHORT_ID("oom", "Oom", "2cb79b61-c3b3-4df4-b8a0-11ec286bf659"),
+            DefaultIntType::getThisIdentifier(),
+            {getTag1()}}}) {}
+
+babelwires::RecordWithVariantsType::RecordWithVariantsType(Tags tags, std::vector<FieldWithTags> fields,
+                                                           unsigned int defaultTagIndex)
     : m_tags(std::move(tags))
+    , m_defaultTag(m_tags[defaultTagIndex])
     , m_fields(std::move(fields)) {
+    assert((m_tags.size() > 0) && "Empty tags set not allowed");
+    assert(defaultTagIndex < m_tags.size());
     m_tagToVariantCache.reserve(m_tags.size());
     for (const auto& f : m_fields) {
-        for (const auto& t : f.m_tags) {
-            const auto it = std::find(m_tags.begin(), m_tags.end(), t);
-            assert((it != m_tags.end()) && "Field uses tag which is not in the tag set.");
-            // m_fields is private and there is no API for manipulating it after construction, so this should be safe.
-            m_tagToVariantCache[t].emplace_back(&f);
+        if (f.m_tags.empty()) {
+            // Empty means this field is in every variant.
+            for (const auto& t : m_tags) {
+                m_tagToVariantCache[t].emplace_back(&f);
+            }
+        } else {
+            for (const auto& t : f.m_tags) {
+                const auto it = std::find(m_tags.begin(), m_tags.end(), t);
+                assert((it != m_tags.end()) && "Field uses tag which is not in the tag set.");
+                // m_fields is private and there is no API for manipulating it after construction, so this should be
+                // safe.
+                m_tagToVariantCache[t].emplace_back(&f);
+            }
         }
     }
 }
@@ -138,8 +174,44 @@ int babelwires::RecordWithVariantsType::getChildIndexFromStep(const ValueHolder&
     return -1;
 }
 
-std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+babelwires::NewValueHolder babelwires::RecordWithVariantsType::createValue(const TypeSystem& typeSystem) const {
+    auto newValue = babelwires::ValueHolder::makeValue<RecordWithVariantsValue>(m_defaultTag);
+    for (const auto* f : m_tagToVariantCache.find(m_defaultTag)->second) {
+        const Type& fieldType = f->m_type.resolve(typeSystem);
+        newValue.m_nonConstReference.is<RecordWithVariantsValue>().setValue(f->m_identifier,
+                                                                            fieldType.createValue(typeSystem));
+    }
+    return newValue;
+}
+
+bool babelwires::RecordWithVariantsType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+    const RecordWithVariantsValue* const recordValue = v.as<RecordWithVariantsValue>();
+    if (!recordValue) {
+        return false;
+    }
+    const ShortId tag = recordValue->getTag();
+    if (!isTag(tag)) {
+        return false;
+    }
+    for (const auto* f : m_tagToVariantCache.find(tag)->second) {
+        const ValueHolder* const value = recordValue->tryGetValue(f->m_identifier);
+        if (!value) {
+            return false;
+        } else {
+            const Type& fieldType = f->m_type.resolve(typeSystem);
+            if (!fieldType.isValidValue(typeSystem, **value)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+std::string babelwires::RecordWithVariantsType::valueToString(const TypeSystem& typeSystem,
+                                                              const ValueHolder& v) const {
     std::ostringstream os;
-    os << "{" << getNumChildren(v) << "}";
+    const RecordWithVariantsValue* const recordValue = v->as<RecordWithVariantsValue>();
+    auto identifierRegistry = IdentifierRegistry::read();
+    os << "{" << getNumChildren(v) << " (" << identifierRegistry->getName(recordValue->getTag()) << ")}";
     return os.str();
 }
