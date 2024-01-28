@@ -7,8 +7,6 @@
  **/
 #include <BabelWiresQtUi/ValueModels/recordValueModel.hpp>
 
-//#include <BabelWiresQtUi/ModelBridge/ContextMenu/setArraySizeAction.hpp>
-//#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/optionalActivationAction.hpp>
 
 #include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
@@ -17,7 +15,7 @@
 
 void babelwires::RecordValueModel::getContextMenuActions(
     const DataLocation& location,
-    std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
+    std::vector<FeatureContextMenuEntry>& actionsOut) const {
     ValueModel::getContextMenuActions(location, actionsOut);
     if (!m_isReadOnly) {
         const RecordType& recordType = m_type->is<RecordType>();

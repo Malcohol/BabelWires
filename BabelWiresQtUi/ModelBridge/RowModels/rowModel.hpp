@@ -80,7 +80,7 @@ namespace babelwires {
 
         /// Add any context actions which should appear in the context menu for this row.
         /// Subclasses overriding this should use super-calls to collect standard actions.
-        virtual void getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const;
+        virtual void getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const;
 
       public:
         bool isFeatureModified() const;

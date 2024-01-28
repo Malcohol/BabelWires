@@ -41,7 +41,7 @@ namespace babelwires {
 
         /// Add any context actions which should appear in the context menu for this value.
         /// Subclasses overriding this should use super-calls to collect standard actions.
-        virtual void getContextMenuActions(const DataLocation& location, std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const;
+        virtual void getContextMenuActions(const DataLocation& location, std::vector<FeatureContextMenuEntry>& actionsOut) const;
 
       protected:
         const ValueHolder& getValue() const;

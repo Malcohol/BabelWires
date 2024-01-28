@@ -64,4 +64,4 @@ QString babelwires::ValueModel::getTooltip() const {
 }
 
 void babelwires::ValueModel::getContextMenuActions(
-    const DataLocation& location, std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {}
+    const DataLocation& location, std::vector<FeatureContextMenuEntry>& actionsOut) const {}

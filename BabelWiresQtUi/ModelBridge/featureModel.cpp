@@ -208,12 +208,12 @@ QMenu* babelwires::FeatureModel::getContextMenu(const QModelIndex& index) {
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
     RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, context.m_typeSystem, entry, element);
 
-    std::vector<std::unique_ptr<FeatureContextMenuAction>> actions;
-    rowModel->getContextMenuActions(actions);
-    if (!actions.empty()) {
+    std::vector<FeatureContextMenuEntry> entries;
+    rowModel->getContextMenuActions(entries);
+    if (!entries.empty()) {
         FeatureContextMenu* menu = new FeatureContextMenu(*this, index);
-        for (auto&& action : actions) {
-            menu->addFeatureContextMenuAction(action.release());
+        for (auto&& entry : entries) {
+            menu->addFeatureContextMenuEntry(std::move(entry));
         }
         return menu;
     }

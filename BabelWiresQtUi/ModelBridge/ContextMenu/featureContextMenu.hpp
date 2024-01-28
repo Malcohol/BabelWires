@@ -29,6 +29,20 @@ namespace babelwires {
         void onTriggeredFired();
     };
 
+    /// Holds a group of actions, which will be added to the menu in a QActionGroup.
+    /// By default, the actions will be exclusive.
+    class FeatureContextMenuGroup {
+      public:
+        FeatureContextMenuGroup(QString name) : m_groupName(name) {}
+
+        void addFeatureContextMenuAction(std::unique_ptr<FeatureContextMenuAction> action);
+
+        QString m_groupName;
+        std::vector<std::unique_ptr<FeatureContextMenuAction>> m_actions;
+    };
+
+    using FeatureContextMenuEntry = std::variant<std::unique_ptr<FeatureContextMenuAction>, std::unique_ptr<FeatureContextMenuGroup>>;
+
     /// The pop-up context menu used for the rows of the FeatureModel.
     class FeatureContextMenu : public QMenu {
         Q_OBJECT
@@ -36,11 +50,17 @@ namespace babelwires {
         FeatureContextMenu(FeatureModel& model, const QModelIndex& index);
         void leaveEvent(QEvent* event);
 
-        /// Add a context menu item and wire things up correctly.
-        void addFeatureContextMenuAction(FeatureContextMenuAction* action);
+        void addFeatureContextMenuEntry(FeatureContextMenuEntry entry);
 
         FeatureModel& getModel();
         const QModelIndex& getModelIndex() const;
+
+      private:
+        /// Add a context menu item and wire things up correctly.
+        void addFeatureContextMenuAction(FeatureContextMenuAction* action);
+
+        /// Add a group and wire things up correctly.
+        void addFeatureContextMenuGroup(FeatureContextMenuGroup* group);
 
       private:
         FeatureModel& m_model;

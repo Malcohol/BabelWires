@@ -14,6 +14,6 @@ namespace babelwires {
 
     class RecordValueModel : ValueModel {
       public:
-        void getContextMenuActions(const DataLocation& location, std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const override;
+        void getContextMenuActions(const DataLocation& location, std::vector<FeatureContextMenuEntry>& actionsOut) const override;
     };
 } // namespace babelwires
