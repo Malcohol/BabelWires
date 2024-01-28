@@ -27,6 +27,7 @@ void babelwires::FeatureContextMenu::addFeatureContextMenuAction(FeatureContextM
 void babelwires::FeatureContextMenu::addFeatureContextMenuGroup(FeatureContextMenuGroup* group) {
     addSeparator()->setText(group->m_groupName);
     QActionGroup *const qgroup = new QActionGroup(this);
+    qgroup->setExclusionPolicy(group->m_exclusionPolicy);
     for (auto& action : group->m_actions) {
         qgroup->addAction(action.get());
         // The menu becomes the parent of the action.
