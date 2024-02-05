@@ -14,6 +14,8 @@ namespace babelwires {
     class Feature;
     class CompoundFeature;
 
+    /// Abstract the difference between some features and their value type equivalents, so code doesn't always need to 
+    /// handle both cases.
     class ValueFeatureHelper {
       public:
         /// Abstracts ArrayFeature and ValueFeatures holding ArrayTypes.
