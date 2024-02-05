@@ -21,5 +21,9 @@ namespace babelwires {
 
         /// Confirm that the feature is a record with the given optional, and return whether it is active or not.
         static std::tuple<const CompoundFeature*, bool> getInfoFromRecordWithOptionalsFeature(const Feature* f, ShortId optionalId);
+
+        /// Confirm that the feature is a record with variants.
+        /// Return whether the tag is currently the selected tag and the set of fields to remove.
+        static std::tuple<const CompoundFeature*, bool, std::vector<ShortId>> getInfoFromRecordWithVariantsFeature(const Feature* f, ShortId tagId);
     };
 }

@@ -9,9 +9,12 @@
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
+#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
+#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 
 std::tuple<const babelwires::CompoundFeature*, unsigned int, babelwires::Range<unsigned int>, unsigned int>
 babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const Feature* f) {
@@ -46,6 +49,34 @@ babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feat
                 return {};
             } else {
                 return { valueFeature, recordType->isActivated(valueFeature->getValue(), optionalId)};
+            }
+        }
+    }
+    return {};
+}
+
+std::tuple<const babelwires::CompoundFeature*, bool, std::vector<babelwires::ShortId>> babelwires::ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(const Feature* f, ShortId tagId) {
+    if (!f) { 
+        return {};
+    }
+    if (auto unionFeature = f->as<const UnionFeature>()) {
+        if (!unionFeature->isTag(tagId)) {
+            return {};
+        }
+        if (unionFeature->getSelectedTag() == tagId) {
+            return { unionFeature, true, {} };
+        } else {
+            return { unionFeature, false, unionFeature->getFieldsRemovedByChangeOfBranch(tagId) };
+        }
+    } else if (auto valueFeature = f->as<const ValueFeature>()) {
+        if (auto recordWithVariantsType = valueFeature->getType().as<RecordWithVariantsType>()) {
+            if (!recordWithVariantsType->isTag(tagId)) {
+                return {};
+            }
+            if (recordWithVariantsType->getSelectedTag(valueFeature->getValue()) == tagId) {
+                return { valueFeature, true, {}};
+            } else {
+                return { valueFeature, false, recordWithVariantsType->getFieldsRemovedByChangeOfBranch(valueFeature->getValue(), tagId) };
             }
         }
     }

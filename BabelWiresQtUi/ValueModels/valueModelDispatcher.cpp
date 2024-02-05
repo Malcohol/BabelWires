@@ -15,6 +15,7 @@
 #include <BabelWiresQtUi/ValueModels/mapValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/arrayValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/recordValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/recordWithVariantsValueModel.hpp>
 
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
@@ -24,6 +25,7 @@
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
+#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const Type& type, const ValueHolder& value, bool isReadOnly, bool isStructureEditable) {
     m_valueModel = &m_valueModelStorage;
@@ -51,6 +53,9 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     } else if (type.as<RecordType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RecordValueModel));
         new (m_valueModel) babelwires::RecordValueModel();
+    } else if (type.as<RecordWithVariantsType>()) {
+        static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RecordWithVariantsValueModel));
+        new (m_valueModel) babelwires::RecordWithVariantsValueModel();
     } else {
         // The base row model is used.
     }

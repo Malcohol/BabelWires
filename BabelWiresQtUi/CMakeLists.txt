@@ -37,6 +37,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/saveFileAsAction.cpp
     ModelBridge/ContextMenu/removeFailedModifiersAction.cpp
     ModelBridge/ContextMenu/optionalActivationAction.cpp
+    ModelBridge/ContextMenu/selectVariantAction.cpp
     ModelBridge/ContextMenu/setArraySizeAction.cpp
     ModelBridge/ContextMenu/openValueEditorAction.cpp
     Utilities/fileDialogs.cpp
@@ -62,6 +63,7 @@ SET( BABELWIRESQTUI_SRCS
     ValueModels/intValueModel.cpp
     ValueModels/rationalValueModel.cpp
     ValueModels/recordValueModel.cpp
+    ValueModels/recordWithVariantsValueModel.cpp
     ValueModels/stringValueModel.cpp
     ValueModels/valueModel.cpp
     ValueModels/valueModelDispatcher.cpp

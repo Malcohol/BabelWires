@@ -2,28 +2,29 @@
  * The command which activates optionals in a RecordWithOptionalsFeature.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
 #include <BabelWiresLib/Project/Commands/selectUnionBranchCommand.hpp>
 
+#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/unionFeature.hpp>
+#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 
-babelwires::SelectUnionBranchCommand::SelectUnionBranchCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
-                               ShortId tagToSelect)
+babelwires::SelectUnionBranchCommand::SelectUnionBranchCommand(std::string commandName, ElementId elementId,
+                                                               FeaturePath featurePath, ShortId tagToSelect)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToUnion(std::move(featurePath))
-    , m_tagToSelect(tagToSelect)
-{
-}
+    , m_tagToSelect(tagToSelect) {}
+
+babelwires::SelectUnionBranchCommand::~SelectUnionBranchCommand() = default;
 
 bool babelwires::SelectUnionBranchCommand::initializeAndExecute(Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
@@ -36,24 +37,22 @@ bool babelwires::SelectUnionBranchCommand::initializeAndExecute(Project& project
         return false;
     }
 
-    auto unionFeature = m_pathToUnion.tryFollow(*inputFeature)->as<const UnionFeature>();
-    if (!unionFeature) {
+    const auto [compoundFeature, isCurrentTag, fieldsToRemove] =
+        ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(m_pathToUnion.tryFollow(*inputFeature), m_tagToSelect);
+
+    if (!compoundFeature) {
+        return false;   
+    }
+
+    if (isCurrentTag) {
         return false;
     }
 
-    if (!unionFeature->isTag(m_tagToSelect)) {
-        return false;
-    }
-
-    if (m_tagToSelect == unionFeature->getSelectedTag()) {
-        return false;
-    }
-
-    if (const Modifier *const modifier = elementToModify->findModifier(m_pathToUnion)) {
+    if (const Modifier* const modifier = elementToModify->findModifier(m_pathToUnion)) {
         m_unionModifierToRemove = modifier->getModifierData().clone();
     }
 
-    for (const auto& field : unionFeature->getFieldsRemovedByChangeOfBranch(m_tagToSelect)) {
+    for (const auto& field : fieldsToRemove) {
         FeaturePath pathToField = m_pathToUnion;
         pathToField.pushStep(PathStep(field));
         addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToField));
@@ -71,7 +70,7 @@ bool babelwires::SelectUnionBranchCommand::initializeAndExecute(Project& project
     modifierToAdd.m_pathToFeature = m_pathToUnion;
     modifierToAdd.m_tagToSelect = m_tagToSelect;
     m_unionModifierToAdd = std::make_unique<SelectUnionBranchModifierData>(std::move(modifierToAdd));
-    
+
     project.addModifier(m_elementId, *m_unionModifierToAdd);
 
     return true;
