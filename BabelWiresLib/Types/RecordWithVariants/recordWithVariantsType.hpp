@@ -54,7 +54,7 @@ namespace babelwires {
         bool isTag(ShortId tag) const;
 
         /// Select the tag.
-        void selectTag(const TypeSystem& typeSystem, ValueHolder& value, ShortId tag);
+        void selectTag(const TypeSystem& typeSystem, ValueHolder& value, ShortId tag) const;
 
         /// Return the tag which is currently selected.
         ShortId getSelectedTag(const ValueHolder& value) const;

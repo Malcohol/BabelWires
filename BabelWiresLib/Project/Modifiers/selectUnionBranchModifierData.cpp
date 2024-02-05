@@ -9,6 +9,10 @@
 
 #include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
@@ -24,11 +28,18 @@ void babelwires::SelectUnionBranchModifierData::deserializeContents(Deserializer
 }
 
 void babelwires::SelectUnionBranchModifierData::apply(Feature* targetFeature) const {
-    UnionFeature* unionFeature = targetFeature->as<UnionFeature>();
-    if (!unionFeature) {
-        throw ModelException() << "Union modifier applied to feature which is not a union";
+    if (UnionFeature* unionFeature = targetFeature->as<UnionFeature>()) {
+        unionFeature->selectTag(m_tagToSelect);
+    } else if (auto valueFeature = targetFeature->as<ValueFeature>()) {
+        if (auto recordType = valueFeature->getType().as<RecordWithVariantsType>()) {
+            const ProjectContext& context = RootFeature::getProjectContextAt(*valueFeature);
+            ValueHolder newValue = valueFeature->getValue();
+            recordType->selectTag(context.m_typeSystem, newValue, m_tagToSelect);
+            valueFeature->setValue(newValue);
+            return;
+        }
     }
-    unionFeature->selectTag(m_tagToSelect);
+    throw ModelException() << "Select variant modifier applied to feature which does not have variants";
 }
 
 void babelwires::SelectUnionBranchModifierData::visitIdentifiers(IdentifierVisitor& visitor) {

@@ -81,7 +81,7 @@ bool babelwires::RecordWithVariantsType::isTag(ShortId tag) const {
     return std::find(m_tags.begin(), m_tags.end(), tag) != m_tags.end();
 }
 
-void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem, ValueHolder& value, ShortId tag) {
+void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem, ValueHolder& value, ShortId tag) const {
     const ShortId currentTag = getSelectedTag(value);
     const FieldChanges changes = getFieldChanges(currentTag, tag);
     RecordWithVariantsValue& recordValue = value.copyContentsAndGetNonConst().is<RecordWithVariantsValue>();
