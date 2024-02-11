@@ -2,13 +2,14 @@
 
 #include <BabelWiresLib/libRegistration.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 testUtils::TestEnvironment::TestEnvironment()
     // Try to ensure the tests are deterministic by fixing the random seed.
@@ -59,6 +60,8 @@ testUtils::TestEnvironment::TestEnvironment()
     m_typeSystem.addEntry<testUtils::TestSubSubEnum2>();
     m_typeSystem.addEntry<testUtils::TestSimpleArrayType>();
     m_typeSystem.addEntry<testUtils::TestCompoundArrayType>();
+    m_typeSystem.addEntry<testUtils::TestSimpleRecordType>();
+    m_typeSystem.addEntry<testUtils::TestComplexRecordType>();
 
     m_typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
