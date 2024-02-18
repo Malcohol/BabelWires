@@ -294,3 +294,56 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
     auto [subvalue2, substep2, subtype2] = opRecType.getChild(*value2, 0);
     EXPECT_EQ(*subvalue2, *subvalue0);
 }
+
+TEST(RecordTypeTest, subtype) 
+{
+    testUtils::TestEnvironment testEnvironment;
+
+    struct RecordWithNoFields : babelwires::RecordType {
+        RecordWithNoFields() : RecordType({}) {}
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("NoFields"), 1);
+    };
+
+    struct RecordA0 : babelwires::RecordType {
+        RecordA0() : RecordType({
+            {testUtils::getTestRegisteredIdentifier("fieldA", 1), babelwires::DefaultIntType::getThisIdentifier()}
+        }) {}
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordA0"), 1);
+    };
+
+    struct RecordA1 : babelwires::RecordType {
+        RecordA1() : RecordType({
+            {testUtils::getTestRegisteredIdentifier("fieldA", 2), babelwires::DefaultIntType::getThisIdentifier()}
+        }) {}
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordA1"), 1);
+    };
+
+    struct RecordB : babelwires::RecordType {
+        RecordB() : RecordType({
+            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisIdentifier()}
+        }) {}
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordB"), 1);
+    };
+
+    struct RecordAB : babelwires::RecordType {
+        RecordAB() : RecordType({
+            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisIdentifier()},
+            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisIdentifier()}
+        }) {}
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAB"), 1);
+    };
+
+    testEnvironment.m_typeSystem.addEntry<RecordWithNoFields>();
+    testEnvironment.m_typeSystem.addEntry<RecordA0>();
+    testEnvironment.m_typeSystem.addEntry<RecordA1>();
+    testEnvironment.m_typeSystem.addEntry<RecordB>();
+    testEnvironment.m_typeSystem.addEntry<RecordAB>();
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordWithNoFields::getThisIdentifier(), RecordA0::getThisIdentifier()), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisIdentifier(), RecordWithNoFields::getThisIdentifier()), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisIdentifier(), RecordA1::getThisIdentifier()), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA1::getThisIdentifier(), RecordA0::getThisIdentifier()), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisIdentifier(), RecordAB::getThisIdentifier()), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordB::getThisIdentifier(), RecordAB::getThisIdentifier()), babelwires::SubtypeOrder::IsSupertype);
+}
+
