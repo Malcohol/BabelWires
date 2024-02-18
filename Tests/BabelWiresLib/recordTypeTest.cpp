@@ -77,6 +77,9 @@ namespace {
         EXPECT_NE(recordValue->tryGetValue(testUtils::TestComplexRecordType::getInt1Id()), nullptr);
         EXPECT_EQ(recordValue->tryGetValue(testUtils::TestComplexRecordType::getOpRecId()) != nullptr, isOpRecActive);
 
+        EXPECT_EQ(recordType.isActivated(value, testUtils::TestComplexRecordType::getOpIntId()), isOpIntActive);
+        EXPECT_EQ(recordType.isActivated(value, testUtils::TestComplexRecordType::getOpRecId()), isOpRecActive);
+
         EXPECT_TRUE(testUtils::areEqualSets(
             recordType.getOptionalFieldIds(),
             {testUtils::TestComplexRecordType::getOpIntId(), testUtils::TestComplexRecordType::getOpRecId()}));
@@ -183,4 +186,111 @@ TEST(RecordTypeTest, activateOptional) {
     recordType.deactivateField(newValue, testUtils::TestComplexRecordType::getOpRecId());
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false);
+}
+
+TEST(RecordTypeTest, ensureActivated) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestComplexRecordType recordType;
+
+    babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(newValue);
+
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false);
+
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { testUtils::TestComplexRecordType::getOpIntId() });
+
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, false);
+
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { testUtils::TestComplexRecordType::getOpIntId(), testUtils::TestComplexRecordType::getOpRecId() });
+
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true);
+
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { testUtils::TestComplexRecordType::getOpRecId() } );
+
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, true);
+
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { });
+
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false);
+
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { testUtils::TestComplexRecordType::getOpIntId(), testUtils::TestComplexRecordType::getOpRecId() });
+
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true);
+
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { });
+
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false);
+}
+
+TEST(RecordTypeTest, getChildNonConstFixedField) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestComplexRecordType recordType;
+
+    babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(value);
+
+    recordType.activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpRecId());
+
+    const unsigned int int0Index = 0;
+
+    EXPECT_EQ(*std::get<1>(recordType.getChild(value, int0Index)).asField(), testUtils::TestComplexRecordType::getInt0Id());    
+
+    auto [value0, step0, type0] = recordType.getChild(value, int0Index);
+
+    babelwires::ValueHolder valueHolder0 = *value0;
+
+    auto [value1, step1, type1] = recordType.getChildNonConst(value, int0Index);
+
+    EXPECT_EQ(*value0, *value1);
+    EXPECT_EQ(step0, step1);
+    EXPECT_EQ(type0, type1);
+
+    *value1 = babelwires::IntValue(15);
+
+    babelwires::ValueHolder valueHolder1 = *value1;
+
+    EXPECT_NE(valueHolder0, valueHolder1);
+
+    auto [value2, step2, type2] = recordType.getChild(value, int0Index);
+    EXPECT_EQ(*value2, valueHolder1);   
+}
+
+TEST(RecordTypeTest, getChildNonConstOptionalField) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestComplexRecordType recordType;
+
+    babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(value);
+
+    recordType.activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpRecId());
+
+    const unsigned int opRecIndex = 3;
+
+    EXPECT_EQ(*std::get<1>(recordType.getChild(value, opRecIndex)).asField(), testUtils::TestComplexRecordType::getOpRecId());
+
+    auto [value0, step0, type0] = recordType.getChild(value, opRecIndex);
+
+    babelwires::ValueHolder valueHolder0 = *value0;
+
+    auto [value1, step1, type1] = recordType.getChildNonConst(value, opRecIndex);
+
+    EXPECT_EQ(*value0, *value1);
+    EXPECT_EQ(step0, step1);
+    EXPECT_EQ(type0, type1);
+
+    const babelwires::RecordType& opRecType =  type0.resolve(testEnvironment.m_typeSystem).is<babelwires::RecordType>();
+
+    // Test modification by modifying a field within the field.
+
+    auto [subvalue0, substep0, subtype0] = opRecType.getChildNonConst(*value1, 0);
+
+    babelwires::ValueHolder valueHolder1 = *value1;
+
+    *subvalue0 = babelwires::IntValue(15);
+
+    auto [value2, step2, type2] = recordType.getChild(value, opRecIndex);
+    EXPECT_EQ(*value2, valueHolder1);
+    
+    auto [subvalue2, substep2, subtype2] = opRecType.getChild(*value2, 0);
+    EXPECT_EQ(*subvalue2, *subvalue0);
 }
