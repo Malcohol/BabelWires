@@ -333,11 +333,30 @@ TEST(RecordTypeTest, subtype)
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAB"), 1);
     };
 
+    struct RecordAOpt : babelwires::RecordType {
+        RecordAOpt() : RecordType({
+            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisIdentifier()},
+            {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisIdentifier(), babelwires::RecordType::Optionality::optionalDefaultInactive}
+        }) {}
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAOpt"), 1);
+    };
+
+    struct RecordABOpt : babelwires::RecordType {
+        RecordABOpt() : RecordType({
+            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisIdentifier()},
+            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisIdentifier()},
+            {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisIdentifier(), babelwires::RecordType::Optionality::optionalDefaultInactive}
+        }) {}
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordABOpt"), 1);
+    };
+
     testEnvironment.m_typeSystem.addEntry<RecordWithNoFields>();
     testEnvironment.m_typeSystem.addEntry<RecordA0>();
     testEnvironment.m_typeSystem.addEntry<RecordA1>();
     testEnvironment.m_typeSystem.addEntry<RecordB>();
     testEnvironment.m_typeSystem.addEntry<RecordAB>();
+    testEnvironment.m_typeSystem.addEntry<RecordAOpt>();
+    testEnvironment.m_typeSystem.addEntry<RecordABOpt>();
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordWithNoFields::getThisIdentifier(), RecordA0::getThisIdentifier()), babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisIdentifier(), RecordWithNoFields::getThisIdentifier()), babelwires::SubtypeOrder::IsSubtype);
@@ -345,5 +364,12 @@ TEST(RecordTypeTest, subtype)
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA1::getThisIdentifier(), RecordA0::getThisIdentifier()), babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisIdentifier(), RecordAB::getThisIdentifier()), babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordB::getThisIdentifier(), RecordAB::getThisIdentifier()), babelwires::SubtypeOrder::IsSupertype);
+
+    // With optionals: Optional fields do not impact subtyping since they are not part of the type's contract.
+    // However: Note the todo about the type of optional fields in RecordType::compareSubtypeHelper.
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisIdentifier(), RecordAOpt::getThisIdentifier()), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOpt::getThisIdentifier(), RecordA0::getThisIdentifier()), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisIdentifier(), RecordABOpt::getThisIdentifier()), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordABOpt::getThisIdentifier(), RecordA0::getThisIdentifier()), babelwires::SubtypeOrder::IsSubtype);
 }
 
