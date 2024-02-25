@@ -276,7 +276,6 @@ babelwires::SubtypeOrder babelwires::RecordType::compareSubtypeHelper(const Type
             // A record with an additional _required_ field can be a subtype of one without it.
             // A record with an additional _optional_ field can actually have the same set of valid values as one
             // without it, since we use "duck typing".
-            // TODO The _type_ of an optional field should affect subtyping.
             if ((thisIt->m_optionality == Optionality::alwaysActive) &&
                 updateAndCheckUnrelated(SubtypeOrder::IsSubtype)) {
                 return SubtypeOrder::IsUnrelated;
