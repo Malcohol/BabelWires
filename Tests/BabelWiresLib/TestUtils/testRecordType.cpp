@@ -7,11 +7,11 @@ testUtils::TestSimpleRecordType::TestSimpleRecordType()
                   {getInt1Id(), babelwires::DefaultIntType::getThisIdentifier()}}) {}
 
 babelwires::ShortId testUtils::TestSimpleRecordType::getInt0Id() {
-    return BW_SHORT_ID("int0", "Int0", "2cccd7da-2aea-4f4f-9a33-7d23f227b22d");
+    return BW_SHORT_ID("intR0", "Int0", "2cccd7da-2aea-4f4f-9a33-7d23f227b22d");
 }
 
 babelwires::ShortId testUtils::TestSimpleRecordType::getInt1Id() {
-    return BW_SHORT_ID("int1", "Int1", "7c8a4ca0-0c8a-48e4-82b8-0a77a6f42092");
+    return BW_SHORT_ID("intR1", "Int1", "7c8a4ca0-0c8a-48e4-82b8-0a77a6f42092");
 }
 
 testUtils::TestComplexRecordType::TestComplexRecordType()
@@ -22,7 +22,7 @@ testUtils::TestComplexRecordType::TestComplexRecordType()
                   {getOpRecId(), TestSimpleRecordType::getThisIdentifier(), Optionality::optionalDefaultInactive}}) {}
 
 babelwires::ShortId testUtils::TestComplexRecordType::getInt0Id() {
-    return BW_SHORT_ID("int0", "Int0", "1aafde9a-fb39-4a2d-8a29-55fc9d6d093b");
+    return BW_SHORT_ID("intR0", "Int0", "1aafde9a-fb39-4a2d-8a29-55fc9d6d093b");
 }
 
 babelwires::ShortId testUtils::TestComplexRecordType::getOpIntId() {
@@ -34,7 +34,7 @@ babelwires::ShortId testUtils::TestComplexRecordType::getSubrecordId() {
 }
 
 babelwires::ShortId testUtils::TestComplexRecordType::getInt1Id() {
-    return BW_SHORT_ID("int1", "Int1", "1d21e657-a292-40c2-8fbf-491c2eaa1f8e");
+    return BW_SHORT_ID("intR1", "Int1", "1d21e657-a292-40c2-8fbf-491c2eaa1f8e");
 }
 
 babelwires::ShortId testUtils::TestComplexRecordType::getOpRecId() {

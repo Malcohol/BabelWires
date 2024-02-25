@@ -30,6 +30,7 @@ void babelwires::SelectUnionBranchModifierData::deserializeContents(Deserializer
 void babelwires::SelectUnionBranchModifierData::apply(Feature* targetFeature) const {
     if (UnionFeature* unionFeature = targetFeature->as<UnionFeature>()) {
         unionFeature->selectTag(m_tagToSelect);
+        return;
     } else if (auto valueFeature = targetFeature->as<ValueFeature>()) {
         if (auto recordType = valueFeature->getType().as<RecordWithVariantsType>()) {
             const ProjectContext& context = RootFeature::getProjectContextAt(*valueFeature);

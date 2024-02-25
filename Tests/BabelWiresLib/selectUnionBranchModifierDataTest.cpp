@@ -84,10 +84,12 @@ TEST(SelectUnionBranchModifierDataTest, failureNotATag) {
 }
 
 TEST(SelectUnionBranchModifierDataTest, failureNotAUnion) {
+    testUtils::TestEnvironment testEnvironment;
     babelwires::SelectUnionBranchModifierData data;
     data.m_tagToSelect = "tag";
 
-    babelwires::IntFeature notAUnionFeature;
+    testUtils::RootedFeature<babelwires::IntFeature> rootFeature(testEnvironment.m_projectContext);
+    babelwires::IntFeature& notAUnionFeature = rootFeature.getFeature();
     
     EXPECT_THROW(data.apply(&notAUnionFeature), babelwires::ModelException);
 }
