@@ -3,6 +3,7 @@
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
 
@@ -12,6 +13,7 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>
@@ -159,4 +161,31 @@ TEST(ActivateOptionalsModifierDataTest, serialization) {
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("foo/bar/boo"));
     EXPECT_TRUE(testUtils::areEqualSets(dataPtr->m_selectedOptionals, {"op0", "op1"}));
+}
+
+TEST(ActivateOptionalsModifierDataTest, applyToTypes) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::RootedFeature<babelwires::SimpleValueFeature> rootedFeature(testEnvironment.m_projectContext, testUtils::TestComplexRecordType::getThisIdentifier());
+    babelwires::ValueFeature& valueFeature = rootedFeature.getFeature();
+    valueFeature.setToDefault();
+    const auto* type = valueFeature.getType().as<testUtils::TestComplexRecordType>();
+
+    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpIntId()));
+    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+
+    babelwires::ActivateOptionalsModifierData data;
+    data.m_selectedOptionals.emplace_back(testUtils::TestComplexRecordType::getOpIntId());
+    
+    data.apply(&valueFeature);
+
+    EXPECT_TRUE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpIntId()));
+    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+
+    babelwires::ActivateOptionalsModifierData data2;
+    data2.m_selectedOptionals.emplace_back(testUtils::TestComplexRecordType::getOpRecId());
+
+    data2.apply(&valueFeature);
+
+    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpIntId()));
+    EXPECT_TRUE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpRecId()));
 }
