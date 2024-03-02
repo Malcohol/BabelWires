@@ -47,6 +47,7 @@ SET( LIB_TESTS_SRCS
     rationalValueTest.cpp
     recordWithOptionalsFeatureTest.cpp
     recordTypeTest.cpp
+    recordWithVariantsTypeTest.cpp
     removeElementCommandTest.cpp
     removeEntryFromArrayCommandTest.cpp
     removeEntryFromMapCommandTest.cpp

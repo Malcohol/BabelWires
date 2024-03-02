@@ -17,12 +17,10 @@ namespace babelwires {
     /// RecordWithVariantsType is like a RecordType but has a number of variants.
     /// Variants are selected using tags. The first tag is the default tag.
     // TODO Allow another tag to be specified as the default.
-    // It would be nicer if this shared its underlying representation with RecordType.
-    // So a values were interchangeable. Unfortunately, I haven't yet identified an acceptably cheap
     // way to implement this without storing the variant tag in the value.
     // Alternatively, finding a way to offer this functionality in the UI while implementing it by
     // a union of record types would be nice.
-    // TODO Find an efficient way to unite this with RecordType.
+    // TODO Find an efficient way to unite this with RecordType or implement support for type coercion.
     class RecordWithVariantsType : public CompoundType {
       public:
         using Tags = std::vector<ShortId>;
