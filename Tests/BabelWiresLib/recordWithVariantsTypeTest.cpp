@@ -22,6 +22,8 @@ TEST(RecordWithVariantsTypeTest, tags) {
     EXPECT_TRUE(recordType.isTag(testUtils::TestRecordWithVariantsType::getTagBId()));
     EXPECT_TRUE(recordType.isTag(testUtils::TestRecordWithVariantsType::getTagCId()));
 
+    EXPECT_FALSE(recordType.isTag(testUtils::getTestRegisteredIdentifier("foo")));
+
     EXPECT_EQ(recordType.getIndexOfTag(testUtils::TestRecordWithVariantsType::getTagAId()), 0);
     EXPECT_EQ(recordType.getIndexOfTag(testUtils::TestRecordWithVariantsType::getTagBId()), 1);
     EXPECT_EQ(recordType.getIndexOfTag(testUtils::TestRecordWithVariantsType::getTagCId()), 2);
