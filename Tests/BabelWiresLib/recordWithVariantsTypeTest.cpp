@@ -40,12 +40,13 @@ TEST(RecordWithVariantsTypeTest, value) {
     babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
 
+    // The second tag of the test record is the default.
+    EXPECT_EQ(recordType.getSelectedTag(newValue), testUtils::TestRecordWithVariantsType::getTagBId());
+
     const auto* newRecordValue = newValue->as<babelwires::RecordWithVariantsValue>();
     EXPECT_NE(newRecordValue, nullptr);
 
-    // The second tag of the test record is the default.
     EXPECT_EQ(newRecordValue->getTag(), testUtils::TestRecordWithVariantsType::getTagBId());
-    EXPECT_EQ(recordType.getSelectedTag(newValue), testUtils::TestRecordWithVariantsType::getTagBId());
 
     EXPECT_NE(newRecordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFf0Id()), nullptr);
     EXPECT_NE(newRecordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFf1Id()), nullptr);
@@ -57,12 +58,11 @@ TEST(RecordWithVariantsTypeTest, value) {
     EXPECT_EQ(newRecordValue->tryGetValue(babelwires::ShortId("Foo")), nullptr);
 
     recordType.selectTag(testEnvironment.m_typeSystem, newValue, testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_EQ(recordType.getSelectedTag(newValue), testUtils::TestRecordWithVariantsType::getTagAId());
 
     newRecordValue = newValue->as<babelwires::RecordWithVariantsValue>();
     EXPECT_NE(newRecordValue, nullptr);
-
     EXPECT_EQ(newRecordValue->getTag(), testUtils::TestRecordWithVariantsType::getTagAId());
-    EXPECT_EQ(recordType.getSelectedTag(newValue), testUtils::TestRecordWithVariantsType::getTagAId());
 
     EXPECT_NE(newRecordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFf0Id()), nullptr);
     EXPECT_NE(newRecordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFf1Id()), nullptr);
@@ -74,12 +74,11 @@ TEST(RecordWithVariantsTypeTest, value) {
     EXPECT_EQ(newRecordValue->tryGetValue(babelwires::ShortId("Foo")), nullptr);
 
     recordType.selectTag(testEnvironment.m_typeSystem, newValue, testUtils::TestRecordWithVariantsType::getTagCId());
-    
+    EXPECT_EQ(recordType.getSelectedTag(newValue), testUtils::TestRecordWithVariantsType::getTagCId());
+
     newRecordValue = newValue->as<babelwires::RecordWithVariantsValue>();
     EXPECT_NE(newRecordValue, nullptr);
-
     EXPECT_EQ(newRecordValue->getTag(), testUtils::TestRecordWithVariantsType::getTagCId());
-    EXPECT_EQ(recordType.getSelectedTag(newValue), testUtils::TestRecordWithVariantsType::getTagCId());
 
     EXPECT_NE(newRecordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFf0Id()), nullptr);
     EXPECT_NE(newRecordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFf1Id()), nullptr);
@@ -91,3 +90,63 @@ TEST(RecordWithVariantsTypeTest, value) {
     EXPECT_EQ(newRecordValue->tryGetValue(babelwires::ShortId("Foo")), nullptr);
 }
 
+TEST(RecordWithVariantsTypeTest, getFieldsRemovedByChangeOfBranch) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestRecordWithVariantsType recordType;
+
+    babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(newValue);
+
+    EXPECT_EQ(recordType.getSelectedTag(newValue), testUtils::TestRecordWithVariantsType::getTagBId());
+
+    EXPECT_TRUE(testUtils::areEqualSets(
+        recordType.getFieldsRemovedByChangeOfBranch(newValue, testUtils::TestRecordWithVariantsType::getTagAId()),
+        {testUtils::TestRecordWithVariantsType::getFieldB0Id(),
+         testUtils::TestRecordWithVariantsType::getFieldBCId()}));
+    EXPECT_TRUE(testUtils::areEqualSets(
+        recordType.getFieldsRemovedByChangeOfBranch(newValue, testUtils::TestRecordWithVariantsType::getTagBId()), {}));
+    EXPECT_TRUE(testUtils::areEqualSets(
+        recordType.getFieldsRemovedByChangeOfBranch(newValue, testUtils::TestRecordWithVariantsType::getTagCId()),
+        {testUtils::TestRecordWithVariantsType::getFieldB0Id(),
+         testUtils::TestRecordWithVariantsType::getFieldABId()}));
+}
+
+TEST(RecordWithVariantsTypeTest, isValidValue) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestRecordWithVariantsType recordType;
+
+    babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(newValue);
+
+    EXPECT_TRUE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
+    EXPECT_FALSE(recordType.isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue()));
+
+    recordType.selectTag(testEnvironment.m_typeSystem, newValue, testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_TRUE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
+
+    recordType.selectTag(testEnvironment.m_typeSystem, newValue, testUtils::TestRecordWithVariantsType::getTagCId());
+    EXPECT_TRUE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
+
+    recordType.selectTag(testEnvironment.m_typeSystem, newValue, testUtils::TestRecordWithVariantsType::getTagBId());
+    EXPECT_TRUE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
+
+    babelwires::Value& nonConstValue = newValue.copyContentsAndGetNonConst();
+    auto* nonConstRecordValue = nonConstValue.as<babelwires::RecordWithVariantsValue>();    
+    EXPECT_NE(nonConstRecordValue, nullptr);
+
+    // An extra field is allowed
+    nonConstRecordValue->setValue(babelwires::ShortId("foo"), babelwires::IntValue());
+    EXPECT_TRUE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
+
+    // Inconsistent tag is not
+    nonConstRecordValue->setTag(testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_FALSE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
+
+    // Set back
+    nonConstRecordValue->setTag(testUtils::TestRecordWithVariantsType::getTagBId());
+    EXPECT_TRUE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
+
+    // Removing a field is not.
+    nonConstRecordValue->removeValue(testUtils::TestRecordWithVariantsType::getFieldABId());
+    EXPECT_FALSE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
+}
