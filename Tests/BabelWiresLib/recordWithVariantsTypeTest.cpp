@@ -233,3 +233,69 @@ TEST(RecordWithVariantsTypeTest, traversal) {
     recordType.selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagCId());
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value, testUtils::TestRecordWithVariantsType::getTagCId());
 }
+
+TEST(RecordWithVariantsTypeTest, getChildNonConstOfFixedField) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestRecordWithVariantsType recordType;
+
+    babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(value);   
+
+    const unsigned int ff1Index = 3;
+
+    EXPECT_EQ(*std::get<1>(recordType.getChild(value, ff1Index)).asField(), testUtils::TestRecordWithVariantsType::getFf1Id());    
+
+    auto [value0, step0, type0] = recordType.getChild(value, ff1Index);
+
+    babelwires::ValueHolder valueHolder0 = *value0;
+
+    auto [value1, step1, type1] = recordType.getChildNonConst(value, ff1Index);
+
+    EXPECT_EQ(*value0, *value1);
+    EXPECT_EQ(step0, step1);
+    EXPECT_EQ(type0, type1);
+
+    *value1 = babelwires::IntValue(15);
+
+    babelwires::ValueHolder valueHolder1 = *value1;
+
+    EXPECT_NE(valueHolder0, valueHolder1);
+
+    auto [value2, step2, type2] = recordType.getChild(value, ff1Index);
+    EXPECT_EQ(*value2, valueHolder1);   
+}
+
+
+TEST(RecordWithVariantsTypeTest, getChildNonConstOfFieldInBranch) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestRecordWithVariantsType recordType;
+
+    babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(value);   
+
+    recordType.selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagCId());
+
+    const unsigned int fieldBCIndex = 2;
+
+    EXPECT_EQ(*std::get<1>(recordType.getChild(value, fieldBCIndex)).asField(), testUtils::TestRecordWithVariantsType::getFieldBCId());    
+
+    auto [value0, step0, type0] = recordType.getChild(value, fieldBCIndex);
+
+    babelwires::ValueHolder valueHolder0 = *value0;
+
+    auto [value1, step1, type1] = recordType.getChildNonConst(value, fieldBCIndex);
+
+    EXPECT_EQ(*value0, *value1);
+    EXPECT_EQ(step0, step1);
+    EXPECT_EQ(type0, type1);
+
+    *value1 = babelwires::IntValue(15);
+
+    babelwires::ValueHolder valueHolder1 = *value1;
+
+    EXPECT_NE(valueHolder0, valueHolder1);
+
+    auto [value2, step2, type2] = recordType.getChild(value, fieldBCIndex);
+    EXPECT_EQ(*value2, valueHolder1);   
+}
+
