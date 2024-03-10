@@ -150,3 +150,86 @@ TEST(RecordWithVariantsTypeTest, isValidValue) {
     nonConstRecordValue->removeValue(testUtils::TestRecordWithVariantsType::getFieldABId());
     EXPECT_FALSE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
 }
+
+namespace {
+    void verifyComplexRecord(const babelwires::TypeSystem& typeSystem,
+                             const testUtils::TestRecordWithVariantsType& recordType, const babelwires::ValueHolder& value,
+                             babelwires::ShortId expectedTag) {
+        auto* const recordValue = value->as<babelwires::RecordWithVariantsValue>();
+        EXPECT_NE(recordValue, nullptr);
+
+        EXPECT_NE(recordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFf0Id()), nullptr);
+        EXPECT_NE(recordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFf1Id()), nullptr);
+
+        const bool isA = (expectedTag == testUtils::TestRecordWithVariantsType::getTagAId());
+        const bool isB = (expectedTag == testUtils::TestRecordWithVariantsType::getTagBId());
+        const bool isC = (expectedTag == testUtils::TestRecordWithVariantsType::getTagCId());
+
+        EXPECT_EQ((recordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFieldA0Id()) != nullptr), isA);
+        EXPECT_EQ((recordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFieldA1Id()) != nullptr), isA);
+        EXPECT_EQ((recordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFieldABId()) != nullptr), isA || isB);
+        EXPECT_EQ((recordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFieldB0Id()) != nullptr), isB);
+        EXPECT_EQ((recordValue->tryGetValue(testUtils::TestRecordWithVariantsType::getFieldBCId()) != nullptr), isB || isC);
+
+        const unsigned int numChildren = 2 + (isC ? 1 : 3);
+
+        EXPECT_EQ(recordType.getNumChildren(value), numChildren);
+
+        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>>
+            childInfos;
+        std::vector<const babelwires::Type*> types;
+
+        for (unsigned int i = 0; i < numChildren; ++i) {
+            childInfos.emplace_back(recordType.getChild(value, i));
+            types.emplace_back(&std::get<2>(childInfos.back()).resolve(typeSystem));
+        }
+
+        const unsigned int fieldA0Index = 0;
+        const unsigned int ff0Index = isA ? 1 : 0;
+        const unsigned int fieldB0Index = 1;
+        const unsigned int fieldABIndex = 2;
+        const unsigned int fieldA1Index = 3;
+        const unsigned int ff1Index = isA ? 4 : (isB ? 3 : 1);
+        const unsigned int fieldBCIndex = isB ? 4 : 2;
+
+        EXPECT_EQ(*std::get<1>(childInfos[ff0Index]).asField(), testUtils::TestRecordWithVariantsType::getFf0Id());
+        EXPECT_EQ(*std::get<1>(childInfos[ff1Index]).asField(), testUtils::TestRecordWithVariantsType::getFf1Id());
+
+        if (isA) {
+            EXPECT_EQ(*std::get<1>(childInfos[fieldA0Index]).asField(), testUtils::TestRecordWithVariantsType::getFieldA0Id());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldABIndex]).asField(), testUtils::TestRecordWithVariantsType::getFieldABId());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldA1Index]).asField(), testUtils::TestRecordWithVariantsType::getFieldA1Id());
+        }
+
+        if (isB) {
+            EXPECT_EQ(*std::get<1>(childInfos[fieldB0Index]).asField(), testUtils::TestRecordWithVariantsType::getFieldB0Id());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldABIndex]).asField(), testUtils::TestRecordWithVariantsType::getFieldABId());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldBCIndex]).asField(), testUtils::TestRecordWithVariantsType::getFieldBCId());
+        }
+
+        if (isC) {
+            EXPECT_EQ(*std::get<1>(childInfos[fieldBCIndex]).asField(), testUtils::TestRecordWithVariantsType::getFieldBCId());
+        }
+
+        for (unsigned int i = 0; i < numChildren; ++i) {
+            EXPECT_EQ(recordType.getChildIndexFromStep(value, std::get<1>(childInfos[i])), i);
+            EXPECT_TRUE(types[i]->isValidValue(typeSystem, *std::get<0>(childInfos[i])->getUnsafe()));
+        }
+    }
+}
+
+TEST(RecordWithVariantsTypeTest, traversal) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestRecordWithVariantsType recordType;
+
+    babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(value);   
+
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value, testUtils::TestRecordWithVariantsType::getTagBId());
+
+    recordType.selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagAId());
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value, testUtils::TestRecordWithVariantsType::getTagAId());
+
+    recordType.selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagCId());
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value, testUtils::TestRecordWithVariantsType::getTagCId());
+}
