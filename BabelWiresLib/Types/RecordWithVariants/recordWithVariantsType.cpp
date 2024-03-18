@@ -43,6 +43,11 @@ babelwires::RecordWithVariantsType::RecordWithVariantsType(Tags tags, std::vecto
     assert((m_tags.size() > 0) && "Empty tags set not allowed");
     assert(defaultTagIndex < m_tags.size());
     m_tagToVariantCache.reserve(m_tags.size());
+    for (const auto& t : m_tags) {
+        // It's allowed for a tag not to have any associated fields. 
+        // Ensure that it has an entry in the cache anyway.
+        m_tagToVariantCache[t] = {};
+    }
     for (const auto& f : m_fields) {
         if (f.m_tags.empty()) {
             // Empty means this field is in every variant.
@@ -205,6 +210,134 @@ bool babelwires::RecordWithVariantsType::isValidValue(const TypeSystem& typeSyst
         }
     }
     return true;
+}
+
+std::vector<const babelwires::RecordWithVariantsType::Field*> babelwires::RecordWithVariantsType::getFixedFields() const {
+    std::vector<const Field*> fixedFields;
+    for (const auto& f : m_fields) {
+        if (f.m_tags.empty()) {
+            fixedFields.emplace_back(&f);
+        }
+    }
+    return fixedFields;
+}
+
+namespace {
+    bool updateAndCheckUnrelated(babelwires::SubtypeOrder& currentOrder, babelwires::SubtypeOrder localOrder) {
+        currentOrder = subtypeOrderSupremum(currentOrder, localOrder);
+        return (currentOrder == babelwires::SubtypeOrder::IsUnrelated);
+    };
+
+    babelwires::SubtypeOrder sortAndCompareFieldSets(const babelwires::TypeSystem& typeSystem, std::vector<const babelwires::RecordWithVariantsType::Field*>& thisFields, std::vector<const babelwires::RecordWithVariantsType::Field*>& otherFields) {
+        babelwires::SubtypeOrder currentOrder = babelwires::SubtypeOrder::IsEquivalent;
+        auto fieldLess = [](const babelwires::RecordWithVariantsType::Field* a, const babelwires::RecordWithVariantsType::Field* b) { return a->m_identifier < b->m_identifier; };
+        std::sort(thisFields.begin(), thisFields.end(), fieldLess);
+        std::sort(otherFields.begin(), otherFields.end(), fieldLess);
+        auto thisIt = thisFields.begin();
+        auto otherIt = otherFields.begin();
+        while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
+            if ((*thisIt)->m_identifier == (*otherIt)->m_identifier) {
+                const babelwires::Type* const thisFieldType = (*thisIt)->m_type.tryResolve(typeSystem);
+                const babelwires::Type* const otherFieldType = (*otherIt)->m_type.tryResolve(typeSystem);
+                if (!thisFieldType || !otherFieldType) {
+                    return babelwires::SubtypeOrder::IsUnrelated;
+                }
+                const babelwires::SubtypeOrder fieldComparison = thisFieldType->compareSubtypeHelper(typeSystem, *otherFieldType);
+                if (updateAndCheckUnrelated(currentOrder, fieldComparison)) {
+                    return babelwires::SubtypeOrder::IsUnrelated;
+                }
+                ++thisIt;
+                ++otherIt;
+            } else if ((*thisIt)->m_identifier < (*otherIt)->m_identifier) {
+                // A record with an additional _required_ field can be a subtype of one without it.
+                // A record with an additional _optional_ field can actually have the same set of valid values as one
+                // without it, since we use "duck typing".
+                if (updateAndCheckUnrelated(currentOrder, babelwires::SubtypeOrder::IsSubtype)) {
+                    return babelwires::SubtypeOrder::IsUnrelated;
+                }
+                ++thisIt;
+            } else { // if ((*otherIt)->m_identifier < (*thisIt)->m_identifier) {
+                if (updateAndCheckUnrelated(currentOrder, babelwires::SubtypeOrder::IsSupertype)) {
+                    return babelwires::SubtypeOrder::IsUnrelated;
+                }
+                ++otherIt;
+            }
+        }
+        if (thisIt != thisFields.end()) {
+            if (updateAndCheckUnrelated(currentOrder, babelwires::SubtypeOrder::IsSubtype)) {
+                return babelwires::SubtypeOrder::IsUnrelated;
+            }
+        } else if (otherIt != otherFields.end()) {
+            if (updateAndCheckUnrelated(currentOrder, babelwires::SubtypeOrder::IsSupertype)) {
+                return babelwires::SubtypeOrder::IsUnrelated;
+            }
+        }
+        return currentOrder;
+    }
+}
+
+babelwires::SubtypeOrder babelwires::RecordWithVariantsType::compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                                      const Type& other) const {
+    const RecordWithVariantsType* const otherRecord = other.as<RecordWithVariantsType>();
+    if (!otherRecord) {
+        return SubtypeOrder::IsUnrelated;
+    }
+
+    // TODO This is not a complete solution (even considering that we don't yet support coercion). 
+    // In theory, if there was a fixed field in one which was in a branch of another that could mean they are subtypes, 
+    // but this algorithm would not identify that.
+
+    SubtypeOrder currentOrder = SubtypeOrder::IsEquivalent;
+
+    std::vector<const Field*> thisFixedFields = getFixedFields();
+    std::vector<const Field*> otherFixedFields = otherRecord->getFixedFields();
+
+    const SubtypeOrder fieldComparison = sortAndCompareFieldSets(typeSystem, thisFixedFields, otherFixedFields);
+    if (updateAndCheckUnrelated(currentOrder, fieldComparison)) {
+        return SubtypeOrder::IsUnrelated;
+    }
+
+    Tags tags = getTags();
+    Tags otherTags = otherRecord->getTags();
+
+    std::sort(tags.begin(), tags.end());
+    std::sort(otherTags.begin(), otherTags.end());
+    
+    auto thisIt = tags.begin();
+    auto otherIt = otherTags.begin();
+    while ((thisIt < tags.end()) && (otherIt < otherTags.end())) {
+        if (*thisIt == *otherIt) {
+            std::vector<const Field*> thisFields = m_tagToVariantCache.find(*thisIt)->second;
+            std::vector<const Field*> otherFields = otherRecord->m_tagToVariantCache.find(*otherIt)->second;
+
+            const SubtypeOrder fieldComparison = sortAndCompareFieldSets(typeSystem, thisFields, otherFields);
+            if (updateAndCheckUnrelated(currentOrder, fieldComparison)) {
+                return SubtypeOrder::IsUnrelated;
+            }
+            ++thisIt;
+            ++otherIt;
+        } else if (*thisIt < *otherIt) {
+            if (updateAndCheckUnrelated(currentOrder, SubtypeOrder::IsSubtype)) {
+                return SubtypeOrder::IsUnrelated;
+            }
+            ++thisIt;
+        } else { //if (*otherIt < *thisIt) {
+            if (updateAndCheckUnrelated(currentOrder, SubtypeOrder::IsSupertype)) {
+                return SubtypeOrder::IsUnrelated;
+            }
+            ++otherIt;
+        }
+    }
+    if (thisIt != tags.end()) {
+        if (updateAndCheckUnrelated(currentOrder, SubtypeOrder::IsSubtype)) {
+            return SubtypeOrder::IsUnrelated;
+        }
+    } else if (otherIt != otherTags.end()) {
+        if (updateAndCheckUnrelated(currentOrder, SubtypeOrder::IsSupertype)) {
+            return SubtypeOrder::IsUnrelated;
+        }
+    }
+    return currentOrder;
 }
 
 std::string babelwires::RecordWithVariantsType::valueToString(const TypeSystem& typeSystem,

@@ -66,6 +66,7 @@ namespace babelwires {
         std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue, unsigned int i) const override;
         std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue, unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
+        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
       private:
         struct FieldChanges {
@@ -75,6 +76,9 @@ namespace babelwires {
 
         /// How do fields change if the tag of a value is switched from currentTag to proposedTag.
         FieldChanges getFieldChanges(ShortId currentTag, ShortId proposedTag) const;
+
+        /// Get the set of fields that are not associated with any tag.
+        std::vector<const Field*> getFixedFields() const;
 
       private:
         /// The inactive fields, sorted by activeIndex;

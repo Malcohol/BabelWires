@@ -281,7 +281,7 @@ babelwires::SubtypeOrder babelwires::RecordType::compareSubtypeHelper(const Type
                 return SubtypeOrder::IsUnrelated;
             }
             ++thisIt;
-        } else if (otherIt->m_identifier < thisIt->m_identifier) {
+        } else { // if (otherIt->m_identifier < thisIt->m_identifier) {
             if ((otherIt->m_optionality == Optionality::alwaysActive) &&
                 updateAndCheckUnrelated(SubtypeOrder::IsSupertype)) {
                 return SubtypeOrder::IsUnrelated;
