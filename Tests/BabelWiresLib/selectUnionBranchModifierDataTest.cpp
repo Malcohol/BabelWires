@@ -1,18 +1,20 @@
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
-#include <Tests/TestUtils/testLog.hpp>
 #include <Tests/TestUtils/equalSets.hpp>
+#include <Tests/TestUtils/testLog.hpp>
 
 TEST(SelectUnionBranchModifierDataTest, apply) {
     babelwires::ShortId tagA("tagA");
@@ -24,7 +26,8 @@ TEST(SelectUnionBranchModifierDataTest, apply) {
 
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(
+        testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
     babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     babelwires::SelectUnionBranchModifierData data;
@@ -32,7 +35,8 @@ TEST(SelectUnionBranchModifierDataTest, apply) {
 
     babelwires::ShortId fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
-    babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
+    babelwires::IntFeature* fieldA0 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -40,7 +44,8 @@ TEST(SelectUnionBranchModifierDataTest, apply) {
 
     babelwires::ShortId fieldIdC0("fldC0");
     fieldIdC0.setDiscriminator(1);
-    babelwires::IntFeature* fieldC0 = unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
+    babelwires::IntFeature* fieldC0 =
+        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
 
     babelwires::ShortId ff1("ff1");
     ff1.setDiscriminator(1);
@@ -66,12 +71,14 @@ TEST(SelectUnionBranchModifierDataTest, failureNotATag) {
 
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
+    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(
+        testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
     babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
 
     babelwires::ShortId fieldIdA0("fldA0");
     fieldIdA0.setDiscriminator(1);
-    babelwires::IntFeature* fieldA0 = unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
+    babelwires::IntFeature* fieldA0 =
+        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
 
     babelwires::ShortId ff0("ff0");
     ff0.setDiscriminator(1);
@@ -90,7 +97,7 @@ TEST(SelectUnionBranchModifierDataTest, failureNotAUnion) {
 
     testUtils::RootedFeature<babelwires::IntFeature> rootFeature(testEnvironment.m_projectContext);
     babelwires::IntFeature& notAUnionFeature = rootFeature.getFeature();
-    
+
     EXPECT_THROW(data.apply(&notAUnionFeature), babelwires::ModelException);
 }
 
@@ -98,7 +105,7 @@ TEST(SelectUnionBranchModifierDataTest, clone) {
     babelwires::SelectUnionBranchModifierData data;
     data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("foo/bar/boo");
     data.m_tagToSelect = "tag";
-    
+
     auto clonePtr = data.clone();
     ASSERT_NE(clonePtr, nullptr);
     EXPECT_EQ(clonePtr->m_pathToFeature, data.m_pathToFeature);
@@ -111,7 +118,7 @@ TEST(SelectUnionBranchModifierDataTest, serialization) {
         babelwires::SelectUnionBranchModifierData data;
         data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("foo/bar/boo");
         data.m_tagToSelect = "tag";
-    
+
         babelwires::XmlSerializer serializer;
         serializer.serializeObject(data);
         std::ostringstream os;
@@ -127,4 +134,29 @@ TEST(SelectUnionBranchModifierDataTest, serialization) {
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("foo/bar/boo"));
     EXPECT_EQ(dataPtr->m_tagToSelect, "tag");
+}
+
+TEST(SelectUnionBranchModifierDataTest, applyToTypes) {
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::RootedFeature<babelwires::SimpleValueFeature> rootedFeature(
+        testEnvironment.m_projectContext, testUtils::TestRecordWithVariantsType::getThisIdentifier());
+    babelwires::ValueFeature& valueFeature = rootedFeature.getFeature();
+    valueFeature.setToDefault();
+    const auto* type = valueFeature.getType().as<testUtils::TestRecordWithVariantsType>();
+
+    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagBId());
+
+    babelwires::SelectUnionBranchModifierData data;
+    data.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagAId();
+
+    data.apply(&valueFeature);
+
+    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagAId());
+
+    babelwires::SelectUnionBranchModifierData data2;
+    data2.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagCId();
+
+    data2.apply(&valueFeature);
+
+    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagCId());
 }
