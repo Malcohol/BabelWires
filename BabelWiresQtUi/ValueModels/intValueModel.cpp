@@ -55,7 +55,7 @@ babelwires::EditableValueHolder babelwires::IntValueModel::createValueFromEditor
 }
 
 bool babelwires::IntValueModel::isItemEditable() const {
-    return m_value->as<IntValue>();
+    return getValue()->as<IntValue>();
 }
 
 bool babelwires::IntValueModel::validateEditor(QWidget* editor) const {

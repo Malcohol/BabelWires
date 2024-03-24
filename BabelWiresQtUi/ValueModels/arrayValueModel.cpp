@@ -15,11 +15,11 @@
 
 void babelwires::ArrayValueModel::getContextMenuActions(
     const DataLocation& location,
-    std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
+    std::vector<FeatureContextMenuEntry>& actionsOut) const {
     ValueModel::getContextMenuActions(location, actionsOut);
     if (!m_isReadOnly) {
         const ArrayType* const arrayType = m_type->as<ArrayType>();
-        const ArrayValue* arrayValue = m_value->as<ArrayValue>();
+        const ArrayValue* arrayValue = getValue()->as<ArrayValue>();
         auto setArraySize = std::make_unique<SetArraySizeAction>(location.getPathToValue());
         // TODO tooltip.
         setArraySize->setEnabled(m_isStructureEditable);

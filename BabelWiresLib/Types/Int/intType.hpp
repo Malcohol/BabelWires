@@ -28,6 +28,7 @@ namespace babelwires {
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
 
+        std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
       private:
         IntValue::NativeType m_defaultValue;
         Range<IntValue::NativeType> m_range;

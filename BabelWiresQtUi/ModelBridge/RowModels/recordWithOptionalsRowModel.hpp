@@ -14,13 +14,13 @@ namespace babelwires {
     class RecordWithOptionalsFeature;
     class FeatureContextMenuAction;
 
-    /// The row model for ArrayFeatures.
+    /// The row model for RecordFeature.
     class RecordWithOptionalsRowModel : public RowModel {
       public:
         virtual QVariant getValueDisplayData() const override;
 
         virtual void
-        getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const override;
+        getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const override;
 
       public:
         const RecordWithOptionalsFeature& getRecordWithOptionalsFeature() const;

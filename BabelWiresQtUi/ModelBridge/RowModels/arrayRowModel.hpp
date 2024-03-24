@@ -20,7 +20,7 @@ namespace babelwires {
         virtual QVariant getValueDisplayData() const override;
 
         virtual void
-        getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const override;
+        getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const override;
 
       public:
         const ArrayFeature& getArrayFeature() const;

@@ -34,7 +34,7 @@ namespace babelwires {
         unsigned int getIndexOfDefaultSummand() const;
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
-
+        std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
       private:
         Summands m_summands;
         unsigned int m_indexOfDefaultSummand;

@@ -45,12 +45,6 @@ bool babelwires::ArrayValue::operator==(const Value& other) const {
     return true;
 }
 
-std::string babelwires::ArrayValue::toString() const {
-    std::ostringstream os;
-    os << "[" << m_values.size() << "]";
-    return os.str();
-}
-
 unsigned int babelwires::ArrayValue::getSize() const {
     return m_values.size();
 }
@@ -90,43 +84,3 @@ void babelwires::ArrayValue::removeValue(unsigned int index) {
     assert(index < m_values.size());
     m_values.erase(m_values.begin() + index);
 }
-
-/*
-babelwires::ValueHolder babelwires::ArrayValue::assign(const TypeSystem& typeSystem, const ValueHolder& v) const
-{
-    // This should produce a new ValueHolder where as many of the pre-existing values as possible are maintained.
-    // If this and v are the same, the returned ValueHolder should carry this.
-
-    std::shared_ptr<ArrayValue> newClone = nullptr;
-    const auto ensureClone = [&newClone, this] () { newClone = newClone ? newClone : cloneShared(); return newClone; };
-
-    const ArrayValue* sourceArrayValue = v->as<ArrayValue>();
-    if (!sourceArrayValue) {
-        // Cannot assign.
-        return {};
-    }
-
-    if (!sourceArrayValue->getEntryType() != getEntryType()) {
-        // Cannot assign
-        return {};
-    }
-
-    if (sourceArrayValue->getSize() != getSize()) {
-        ensureClone()->setSize(sourceArrayValue->getSize());
-    }
-
-    for (int i = 0; i < sourceArrayValue->getSize(); ++i) {
-        const ValueHolder& thisEntry = getValue(i);
-        const ValueHolder& sourceEntry = sourceArrayValue->getValue(i);
-        if (thisEntry != sourceEntry) {
-            ensureClone()->setValue(typeSystem, i, thisEntry.assign(sourceEntry));
-        }
-    }
-
-    if (newClone) {
-        return {newClone};
-    } else {
-        return {};
-    }
-}
-*/

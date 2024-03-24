@@ -44,7 +44,7 @@ QString babelwires::FileRowModel::getTooltip() const {
 }
 
 void babelwires::FileRowModel::getContextMenuActions(
-    std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
+    std::vector<FeatureContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
     const FileElement& fileElement = getFileElement();
     if (isNonzero(fileElement.getSupportedFileOperations() & FileElement::FileOperations::reload)) {

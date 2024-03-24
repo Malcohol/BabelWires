@@ -31,3 +31,7 @@ babelwires::SubtypeOrder babelwires::StringType::compareSubtypeHelper(const Type
         return SubtypeOrder::IsUnrelated;
     }
 }
+
+std::string babelwires::StringType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    return v->is<StringValue>().toString();
+}

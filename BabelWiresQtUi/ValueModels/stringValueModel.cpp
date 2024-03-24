@@ -41,7 +41,7 @@ babelwires::EditableValueHolder babelwires::StringValueModel::createValueFromEdi
 }
 
 bool babelwires::StringValueModel::isItemEditable() const {
-    return m_value->as<StringValue>();
+    return getValue()->as<StringValue>();
 }
 
 bool babelwires::StringValueModel::validateEditor(QWidget* editor) const {

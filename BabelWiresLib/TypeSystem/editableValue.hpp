@@ -31,6 +31,11 @@ namespace babelwires {
         /// values can be shared. This query allows values to be skipped by the visit when it's known that there is
         /// nothing to do.
         virtual bool canContainFilePaths() const = 0;
+
+        /// Provide a standard representation of this object for display to the user, independent of
+        /// a specific type's preferred representation. Used by TypeRef::toString().
+        /// It does not have to be parsable or even comprehensive.
+        virtual std::string toString() const = 0;
     };
 
 } // namespace babelwires

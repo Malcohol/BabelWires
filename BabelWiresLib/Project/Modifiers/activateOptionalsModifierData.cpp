@@ -2,13 +2,18 @@
  * ActivateOptionalsModifierData is used to select a set of optionals in a RecordWithOptionalsFeature
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
+#include <BabelWiresLib/Types/Record/recordType.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
@@ -20,8 +25,8 @@ void babelwires::ActivateOptionalsModifierData::serializeContents(Serializer& se
 
 void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_pathToFeature);
-    for (auto it = deserializer.deserializeValueArray<ShortId>("optionals", Deserializer::IsOptional::Optional,
-                                                                   "activate");
+    for (auto it =
+             deserializer.deserializeValueArray<ShortId>("optionals", Deserializer::IsOptional::Optional, "activate");
          it.isValid(); ++it) {
         ShortId temp("__TEMP");
         m_selectedOptionals.emplace_back(it.deserializeValue(temp));
@@ -30,57 +35,62 @@ void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer
 }
 
 void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) const {
-    RecordWithOptionalsFeature* record = targetFeature->as<RecordWithOptionalsFeature>();
-    if (!record) {
-        throw ModelException() << "Cannot selection optionals from a feature which does not have optionals";
-    }
-    std::vector<ShortId> availableOptionals = record->getOptionalFields();
-    std::sort(availableOptionals.begin(), availableOptionals.end());
-    auto ait = availableOptionals.begin();
+    if (RecordWithOptionalsFeature* record = targetFeature->as<RecordWithOptionalsFeature>()) {
+        std::vector<ShortId> availableOptionals = record->getOptionalFields();
+        std::sort(availableOptionals.begin(), availableOptionals.end());
+        auto ait = availableOptionals.begin();
 
-    std::vector<ShortId> optionalsToEnsureActivated = m_selectedOptionals;
-    std::sort(optionalsToEnsureActivated.begin(), optionalsToEnsureActivated.end());
-    auto it = optionalsToEnsureActivated.begin();
+        std::vector<ShortId> optionalsToEnsureActivated = m_selectedOptionals;
+        std::sort(optionalsToEnsureActivated.begin(), optionalsToEnsureActivated.end());
+        auto it = optionalsToEnsureActivated.begin();
 
-    std::vector<ShortId> missingOptionals;
+        std::vector<ShortId> missingOptionals;
 
-    while ((ait != availableOptionals.end()) && (it != optionalsToEnsureActivated.end())) {
-        if (*ait == *it) {
-            if (!record->isActivated(*ait)) {
-                record->activateField(*ait);
+        while ((ait != availableOptionals.end()) && (it != optionalsToEnsureActivated.end())) {
+            if (*ait == *it) {
+                if (!record->isActivated(*ait)) {
+                    record->activateField(*ait);
+                }
+                ++ait;
+                ++it;
+            } else if (*ait < *it) {
+                if (record->isActivated(*ait)) {
+                    record->deactivateField(*ait);
+                }
+                ++ait;
+            } else {
+                missingOptionals.emplace_back(*it);
+                ++it;
             }
-            ++ait;
-            ++it;
         }
-        else if (*ait < *it) {
+        while (ait != availableOptionals.end()) {
             if (record->isActivated(*ait)) {
                 record->deactivateField(*ait);
             }
             ++ait;
         }
-        else {
+        while (it != optionalsToEnsureActivated.end()) {
             missingOptionals.emplace_back(*it);
             ++it;
         }
-    }
-    while (ait != availableOptionals.end()) {
-        if (record->isActivated(*ait)) {
-            record->deactivateField(*ait);
+        if (!missingOptionals.empty()) {
+            if (missingOptionals.size() == optionalsToEnsureActivated.size()) {
+                throw ModelException() << "None of the optionals could be activated";
+            } else {
+                // TODO Warn? Will need to pass the logger into apply.
+            }
         }
-        ++ait;
-    }
-    while (it != optionalsToEnsureActivated.end()) {
-        missingOptionals.emplace_back(*it);
-        ++it;
-    }
-    if (!missingOptionals.empty()) {
-        if (missingOptionals.size() == optionalsToEnsureActivated.size()) {
-            throw ModelException() << "None of the optionals could be selected";
-        }
-        else {
-            // TODO Warn? Will need to pass the logger into apply.
+        return;
+    } else if (auto valueFeature = targetFeature->as<ValueFeature>()) {
+        if (auto recordType = valueFeature->getType().as<RecordType>()) {
+            const ProjectContext& context = RootFeature::getProjectContextAt(*valueFeature);
+            ValueHolder newValue = valueFeature->getValue();
+            recordType->ensureActivated(context.m_typeSystem, newValue, m_selectedOptionals);
+            valueFeature->setValue(newValue);
+            return;
         }
     }
+    throw ModelException() << "Cannot activate optionals from a feature which does not have optionals";
 }
 
 void babelwires::ActivateOptionalsModifierData::visitIdentifiers(IdentifierVisitor& visitor) {

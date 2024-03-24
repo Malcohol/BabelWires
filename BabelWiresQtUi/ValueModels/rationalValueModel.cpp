@@ -38,7 +38,7 @@ namespace {
 } // namespace
 
 QString babelwires::RationalValueModel::getRichText() const {
-    const Rational value = m_value->is<RationalValue>().get();
+    const Rational value = getValue()->is<RationalValue>().get();
     return value.toHtmlString().c_str();
 }
 
@@ -78,7 +78,7 @@ babelwires::EditableValueHolder babelwires::RationalValueModel::createValueFromE
 }
 
 bool babelwires::RationalValueModel::isItemEditable() const {
-    return m_value->as<RationalValue>();
+    return getValue()->as<RationalValue>();
 }
 
 bool babelwires::RationalValueModel::validateEditor(QWidget* editor) const {

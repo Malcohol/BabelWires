@@ -162,7 +162,7 @@ std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::
             });
             const auto& valueArguments = std::get<1>(constructedTypeData).m_valueArguments;
             std::for_each(valueArguments.begin(), valueArguments.end(),
-                          [&argumentsStr](const ValueHolder& value) { argumentsStr.emplace_back(value->toString()); });
+                          [&argumentsStr](const EditableValueHolder& value) { argumentsStr.emplace_back(value->toString()); });
             return format(formatString, argumentsStr);
         }
         babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;

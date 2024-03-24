@@ -238,7 +238,7 @@ babelwires::ValueHolderTemplate<babelwires::MapValue> babelwires::MapEditor::try
         return {};
     }
 
-    return mapFeature->getValue().isValueHolder<MapValue>();
+    return mapFeature->getValue();
 }
 
 void babelwires::MapEditor::updateMapFromProject() {
@@ -417,7 +417,7 @@ void babelwires::MapEditor::setToDefault() {
     const TypeSystem& typeSystem = getProjectBridge().getContext().m_typeSystem;
     const MapType& mapType = m_typeRef.resolve(typeSystem).is<MapType>();
     ValueHolder defaultMapValue = mapType.createValue(typeSystem);
-    executeCommand(std::make_unique<SetMapCommand>("Restore default map", defaultMapValue.isValueHolder<MapValue>()));
+    executeCommand(std::make_unique<SetMapCommand>("Restore default map", defaultMapValue));
 }
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {

@@ -15,7 +15,7 @@ namespace babelwires {
 
     class ValueRowModel : public RowModel {
       public:
-        void init(const ValueModelRegistry& valueModelRegistry) override;
+        void init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) override;
 
         virtual QVariant getValueDisplayData() const override;
 
@@ -35,7 +35,7 @@ namespace babelwires {
 
         virtual QString getTooltip() const override;
 
-        virtual void getContextMenuActions(std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const override;
+        virtual void getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const override;
       public:
         const ValueFeature& getValueFeature() const;
     };

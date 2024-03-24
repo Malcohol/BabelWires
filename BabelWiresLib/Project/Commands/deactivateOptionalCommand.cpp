@@ -10,6 +10,8 @@
 
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
@@ -36,16 +38,14 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         return false;
     }
 
-    auto recordFeature = m_pathToRecord.tryFollow(*inputFeature)->as<const RecordWithOptionalsFeature>();
-    if (!recordFeature) {
-        return false;
+    const auto [compoundFeature, isActivated] =
+        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature), m_optional);
+
+    if (!compoundFeature) {
+        return false;   
     }
 
-    if (!recordFeature->isOptional(m_optional)) {
-        return false;
-    }
-
-    if (!recordFeature->isActivated(m_optional)) {
+    if (!isActivated) {
         return false;
     }
 

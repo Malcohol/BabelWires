@@ -43,7 +43,7 @@ QVariant babelwires::RecordWithOptionalsRowModel::getValueDisplayData() const {
 
 
 void babelwires::RecordWithOptionalsRowModel::getContextMenuActions(
-    std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
+    std::vector<FeatureContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
     if (hasInputFeature()) {
         const babelwires::RecordWithOptionalsFeature& recordFeature = getRecordWithOptionalsFeature();

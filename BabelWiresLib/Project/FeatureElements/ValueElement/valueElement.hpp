@@ -27,6 +27,9 @@ namespace babelwires {
         virtual const RootFeature* getInputFeature() const override;
         virtual const RootFeature* getOutputFeature() const override;
 
+        /// The root feature has a single step to the value feature, which always uses this identifier.
+        static ShortId getStepToValue();
+
       protected:
         RootFeature* doGetInputFeatureNonConst() override;
         RootFeature* doGetOutputFeatureNonConst() override;

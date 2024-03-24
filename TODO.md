@@ -2,8 +2,17 @@ Structured Data Flow WIP:
 1. Records, Unions and Optionals Types
 1. Unit tests: Array values, New feature types, ValuePath, commands
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
+1. Value::toString should probably be handled by the type.
 
 Bugs:
+* Three test record values. 
+  1. Wire two together. 
+  1. Expand and collapse the target node.
+  1. Move the target connection to the third
+  1. Expand the third record
+  1. Observe that the connection gets removed.
+* Moving a target connection from a valid record target to a record target of a different type does not cause the modifier to fail.
+
 * Sometimes elements get creation twice in the UI.
   - This is probably a symptom of the weird factory re-factor in nodeeditor.
   - Consider reverting that change in my custom branch.
@@ -28,11 +37,14 @@ Model
 * FileFeature: Remove this and the offset hack in the FeatureCache. 
   - Instead, allow the UI to add non-model rows at top for visualization, and use that.
 * Consider a coercion system so numeric types can always be assigned.
+* Implement RecordType Optionality::optionalDefaultActive
 
 Processors:
 * Provide basic processors for standard types (+, *, etc)
 
 Refactor: 
+* Abandon EditableValueHolder (and ValueHolder template).
+  - Will have to live with unimplemented asserts.
 * Consider replacing virtual deserialize() method by deserializing constructor
   - Tried this in PR #14. Breaks symmetry.
 * The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.

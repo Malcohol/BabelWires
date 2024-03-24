@@ -7,6 +7,8 @@ SET( LIB_TEST_UTILS_SRCS
     testEnvironment.cpp
     testProjectData.cpp
     testRecord.cpp
+    testRecordType.cpp
+    testRecordWithVariantsType.cpp
     testFeatureWithOptionals.cpp
     testRootFeature.cpp
     testFeatureWithUnion.cpp

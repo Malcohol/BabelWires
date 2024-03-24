@@ -7,7 +7,6 @@
  **/
 #pragma once
 
-
 #include <Common/Cloning/cloneable.hpp>
 #include <Common/Identifiers/identifier.hpp>
 
@@ -25,14 +24,14 @@ namespace babelwires {
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const Value& other) const = 0;
 
-        /// Used for display to the user (e.g. in the default value editor and in constructed type expressions).
-        /// It does not have to be comprehensive.
-        virtual std::string toString() const = 0;
-
         /// Convenience method for checking whether the value is an editable value.
         const EditableValue* asEditableValue() const;
 
         bool operator!=(const Value& other) const { return !(*this == other); }
+    };
+
+    class SimpleValue : Value {
+        public:
     };
 } // namespace babelwires
 
