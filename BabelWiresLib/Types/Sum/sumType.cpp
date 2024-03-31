@@ -73,3 +73,9 @@ babelwires::SubtypeOrder babelwires::SumType::compareSubtypeHelper(
     }
     return order;
 }
+
+std::string babelwires::SumType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    const int summandIndex = getIndexOfValue(typeSystem, *v);
+    const Type& type = m_summands[summandIndex].assertResolve(typeSystem);
+    return type.valueToString(typeSystem, v);
+}

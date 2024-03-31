@@ -39,6 +39,8 @@ namespace testUtils {
 
         babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem, const babelwires::Type& other) const override;
 
+        std::string valueToString(const babelwires::TypeSystem& typeSystem, const babelwires::ValueHolder& v) const override;
+
         /// The TestType is tagged with this tag.
         static Tag getTestTypeTag();
 

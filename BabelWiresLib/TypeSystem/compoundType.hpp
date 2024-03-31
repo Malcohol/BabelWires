@@ -19,6 +19,7 @@ namespace babelwires {
         virtual unsigned int getNumChildren(const ValueHolder& compoundValue) const = 0;
 
         /// Get the ith child of the given value of this type.
+        // TODO Clarify failure behaviour. Probably return reference.
         virtual std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue,
                                                                                   unsigned int i) const = 0;
 

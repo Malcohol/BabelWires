@@ -3,6 +3,8 @@
 #include <BabelWiresLib/Project/Commands/selectUnionBranchCommand.hpp>
 
 #include <BabelWiresLib/Features/unionFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
@@ -14,6 +16,8 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureWithUnion.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
 
 TEST(SelectUnionBranchCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
@@ -180,3 +184,111 @@ TEST(SelectUnionBranchCommandTest, failSafelyAlreadySelected) {
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }
+
+TEST(SelectUnionBranchCommandTest, applyToTypes) {
+    testUtils::TestEnvironment testEnvironment;
+
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
+        babelwires::ValueElementData(testUtils::TestRecordWithVariantsType::getThisIdentifier()));
+
+    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(
+        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisIdentifier()));
+    const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(
+        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisIdentifier()));
+
+    const babelwires::ValueElement* const element =
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
+    ASSERT_NE(element, nullptr);
+
+    const babelwires::ValueElement* const targetElement =
+        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
+    ASSERT_NE(element, nullptr);
+
+    const babelwires::FeaturePath pathToValue =
+        babelwires::FeaturePath({babelwires::PathStep(babelwires::ValueElement::getStepToValue())});
+
+    babelwires::FeaturePath pathToRecordBranchB = pathToValue;
+    pathToRecordBranchB.pushStep(babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldB0Id()));
+
+    babelwires::FeaturePath pathToIntInRecordInBranchB = pathToRecordBranchB;
+    pathToIntInRecordInBranchB.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
+
+    babelwires::FeaturePath pathToIntInSimpleRecord = pathToValue;
+    pathToIntInSimpleRecord.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
+
+    {
+        babelwires::SelectUnionBranchModifierData selectUnionBranchModifier;
+        selectUnionBranchModifier.m_pathToFeature = pathToValue;
+        selectUnionBranchModifier.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagBId();
+        testEnvironment.m_project.addModifier(elementId, selectUnionBranchModifier);
+    }
+    {
+        babelwires::ConnectionModifierData inputConnection;
+        inputConnection.m_pathToFeature = pathToRecordBranchB;
+        inputConnection.m_pathToSourceFeature = pathToValue;
+        inputConnection.m_sourceId = sourceId;
+        testEnvironment.m_project.addModifier(elementId, inputConnection);
+    }
+    {
+        babelwires::ConnectionModifierData outputConnection;
+        outputConnection.m_pathToFeature = pathToIntInSimpleRecord;
+        outputConnection.m_pathToSourceFeature = pathToIntInRecordInBranchB;
+        outputConnection.m_sourceId = elementId;
+        testEnvironment.m_project.addModifier(targetId, outputConnection);
+    }
+
+    const babelwires::RootFeature* const inputFeature = element->getInputFeature()->as<babelwires::RootFeature>();
+    ASSERT_NE(inputFeature, nullptr);
+    const babelwires::ValueFeature* const valueFeature = inputFeature->getFeature(0)->as<babelwires::ValueFeature>();
+    const testUtils::TestRecordWithVariantsType* const type = valueFeature->getType().as<testUtils::TestRecordWithVariantsType>();
+
+    babelwires::SelectUnionBranchCommand command("Test command", elementId, pathToValue,
+                                                  testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_EQ(command.getName(), "Test command");
+
+    const auto checkModifiers = [&testEnvironment, element, targetElement, pathToRecordBranchB, pathToIntInSimpleRecord](bool isCommandExecuted) {
+        const babelwires::Modifier* inputConnection =
+            element->findModifier(pathToRecordBranchB);
+        const babelwires::Modifier* outputConnection =
+            targetElement->findModifier(pathToIntInSimpleRecord);
+        int numModifiersAtElement = 0;
+        int numModifiersAtTarget = 0;
+        for (const auto* m : element->getEdits().modifierRange()) {
+            ++numModifiersAtElement;
+        }
+        for (const auto* m : targetElement->getEdits().modifierRange()) {
+            ++numModifiersAtTarget;
+        }
+        if (isCommandExecuted) {
+            EXPECT_EQ(inputConnection, nullptr);
+            EXPECT_EQ(outputConnection, nullptr);
+            EXPECT_EQ(numModifiersAtElement, 1);
+            EXPECT_EQ(numModifiersAtTarget, 0);
+        } else {
+            EXPECT_NE(inputConnection, nullptr);
+            EXPECT_NE(outputConnection, nullptr);
+            EXPECT_EQ(numModifiersAtElement, 2);
+            EXPECT_EQ(numModifiersAtTarget, 1);
+        }
+    };
+    testEnvironment.m_project.process();
+    checkModifiers(false);
+
+    EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
+
+    EXPECT_EQ(type->getSelectedTag(valueFeature->getValue()), testUtils::TestRecordWithVariantsType::getTagAId());
+    checkModifiers(true);
+
+    command.undo(testEnvironment.m_project);
+    testEnvironment.m_project.process();
+
+    EXPECT_EQ(type->getSelectedTag(valueFeature->getValue()), testUtils::TestRecordWithVariantsType::getTagBId());
+    checkModifiers(false);
+
+    command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
+
+    EXPECT_EQ(type->getSelectedTag(valueFeature->getValue()), testUtils::TestRecordWithVariantsType::getTagAId());
+    checkModifiers(true);
+}
+

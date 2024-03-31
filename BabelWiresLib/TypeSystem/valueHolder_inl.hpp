@@ -15,6 +15,11 @@ babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(ValueHolderTemplate&
     : m_pointerToValue(std::move(other.m_pointerToValue)) {}
 
 template <typename VALUE>
+template <typename OTHER>
+babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const ValueHolderTemplate<OTHER>& other)
+    : m_pointerToValue(other->template is<VALUE>().cloneShared()) {}
+
+template <typename VALUE>
 babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const VALUE& value)
     : m_pointerToValue(value.cloneShared()) {}
 
@@ -79,21 +84,20 @@ template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::clear() {
 }
 
 template <typename VALUE> const VALUE& babelwires::ValueHolderTemplate<VALUE>::operator*() const {
-    return *m_pointerToValue;
+    return m_pointerToValue->is<VALUE>();
 }
 
 template <typename VALUE> const VALUE* babelwires::ValueHolderTemplate<VALUE>::operator->() const {
-    return m_pointerToValue.get();
+    return &m_pointerToValue->is<VALUE>();
 }
 
-template <typename VALUE> 
-void babelwires::ValueHolderTemplate<VALUE>::swap(ValueHolderTemplate& other) {
+template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::swap(ValueHolderTemplate& other) {
     m_pointerToValue.swap(other.m_pointerToValue);
 }
 
 template <typename VALUE> VALUE& babelwires::ValueHolderTemplate<VALUE>::copyContentsAndGetNonConst() {
     // TODO Is there an optimization when we _know_ it isn't shared? See the non-const FeaturePath::follow
-    std::shared_ptr<VALUE> clone = m_pointerToValue->cloneShared();
+    std::shared_ptr<VALUE> clone = m_pointerToValue->is<VALUE>().cloneShared();
     VALUE* ptrToClone = clone.get();
     m_pointerToValue = clone;
     return *ptrToClone;
@@ -101,7 +105,7 @@ template <typename VALUE> VALUE& babelwires::ValueHolderTemplate<VALUE>::copyCon
 
 template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::visitIdentifiers(IdentifierVisitor& visitor) {
     if constexpr (std::is_base_of_v<EditableValue, VALUE>) {
-        if (m_pointerToValue && m_pointerToValue->canContainIdentifiers()) {
+        if (m_pointerToValue && m_pointerToValue->is<VALUE>().canContainIdentifiers()) {
             copyContentsAndGetNonConst().visitIdentifiers(visitor);
         }
     }
@@ -109,20 +113,21 @@ template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::visitIden
 
 template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::visitFilePaths(FilePathVisitor& visitor) {
     if constexpr (std::is_base_of_v<EditableValue, VALUE>) {
-        if (m_pointerToValue && m_pointerToValue->canContainFilePaths()) {
+        if (m_pointerToValue && m_pointerToValue->is<VALUE>().canContainFilePaths()) {
             copyContentsAndGetNonConst().visitFilePaths(visitor);
         }
     }
 }
 
 template <typename VALUE> const VALUE* babelwires::ValueHolderTemplate<VALUE>::getUnsafe() const {
-    return m_pointerToValue.get();
+    return &m_pointerToValue->is<VALUE>();
 }
 
 template <typename VALUE>
-template <typename BASE>
-babelwires::ValueHolderTemplate<VALUE>::operator ValueHolderTemplate<BASE>() const {
-    return ValueHolderTemplate<BASE>(m_pointerToValue);
+template <typename OTHER>
+babelwires::ValueHolderTemplate<VALUE>::operator const ValueHolderTemplate<OTHER>&() const {
+    assert(m_pointerToValue->as<OTHER>());
+    return *reinterpret_cast<const ValueHolderTemplate<OTHER>*>(this);
 }
 
 template <typename VALUE>
@@ -131,8 +136,3 @@ babelwires::ValueHolderTemplate<DERIVED> babelwires::ValueHolderTemplate<VALUE>:
     return ValueHolderTemplate<DERIVED>(*m_pointerToValue->template as<DERIVED>());
 }
 
-template <typename VALUE>
-template <typename DERIVED>
-babelwires::ValueHolderTemplate<DERIVED> babelwires::ValueHolderTemplate<VALUE>::isValueHolder() const {
-    return ValueHolderTemplate<DERIVED>(m_pointerToValue->template is<DERIVED>());
-}

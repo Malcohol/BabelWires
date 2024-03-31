@@ -126,7 +126,7 @@ QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) cons
     const Feature* feature = entry->getInputThenOutputFeature();
     assert(feature && "No feature for row model");
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-    RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, entry, element);
+    RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, context.m_typeSystem, entry, element);
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -183,7 +183,7 @@ Qt::ItemFlags babelwires::FeatureModel::flags(const QModelIndex& index) const {
     if (const FeatureElement* element = getFeatureElement(scope)) {
         if (const babelwires::ContentsCacheEntry* entry = getEntry(scope, index)) {
             const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-            RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, entry, element);
+            RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, context.m_typeSystem, entry, element);
 
             if (rowModel->isItemEditable()) {
                 flags = flags | Qt::ItemIsEditable;
@@ -206,14 +206,14 @@ QMenu* babelwires::FeatureModel::getContextMenu(const QModelIndex& index) {
     }
 
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-    RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, entry, element);
+    RowModelDispatcher rowModel(context.m_rowModelReg, context.m_valueModelReg, context.m_typeSystem, entry, element);
 
-    std::vector<std::unique_ptr<FeatureContextMenuAction>> actions;
-    rowModel->getContextMenuActions(actions);
-    if (!actions.empty()) {
+    std::vector<FeatureContextMenuEntry> entries;
+    rowModel->getContextMenuActions(entries);
+    if (!entries.empty()) {
         FeatureContextMenu* menu = new FeatureContextMenu(*this, index);
-        for (auto&& action : actions) {
-            menu->addFeatureContextMenuAction(action.release());
+        for (auto&& entry : entries) {
+            menu->addFeatureContextMenuEntry(std::move(entry));
         }
         return menu;
     }

@@ -22,8 +22,6 @@ namespace babelwires {
         ArrayValue(const ArrayValue& other);
         ArrayValue(ArrayValue&& other);
 
-        //ValueHolder assign(const TypeSystem& typeSystem, const ValueHolder& v) const;
-
         unsigned int getSize() const;
         void setSize(const TypeSystem& typeSystem, const Type& entryType, unsigned int newSize);
 
@@ -36,7 +34,6 @@ namespace babelwires {
 
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
-        std::string toString() const override;
 
       private:
         std::vector<ValueHolder> m_values;

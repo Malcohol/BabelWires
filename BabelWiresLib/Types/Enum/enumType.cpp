@@ -73,18 +73,6 @@ babelwires::NewValueHolder babelwires::EnumType::createValue(const TypeSystem& t
     return ValueHolder::makeValue<EnumValue>(getIdentifierFromIndex(getIndexOfDefaultValue()));
 }
 
-bool babelwires::EnumType::verifySupertype(const Type& supertype) const {
-    const EnumType& parentEnum = supertype.is<EnumType>();
-    for (const auto& v : m_values) {
-        ShortId parentId = v;
-        assert(parentEnum.isAValue(parentId));
-        // I don't _know_ that this would cause problems, but it simplifies things to require this.
-        assert((parentId.getDiscriminator() == v.getDiscriminator()) &&
-               "An enum cannot be related to another enum with a different value with the same identifier");
-    }
-    return true;
-}
-
 std::string babelwires::EnumType::getKind() const {
     return EnumValue::serializationType;
 }
@@ -131,4 +119,8 @@ babelwires::SubtypeOrder babelwires::EnumType::compareSubtypeHelper(const TypeSy
     } else {
         return SubtypeOrder::IsEquivalent;
     }
+}
+
+std::string babelwires::EnumType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+    return v->is<EnumValue>().toString();
 }

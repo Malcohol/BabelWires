@@ -27,7 +27,7 @@ QVariant babelwires::ArrayRowModel::getValueDisplayData() const {
 }
 
 void babelwires::ArrayRowModel::getContextMenuActions(
-    std::vector<std::unique_ptr<FeatureContextMenuAction>>& actionsOut) const {
+    std::vector<FeatureContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
     if (hasInputFeature()) {
         const babelwires::ArrayFeature& arrayFeature = getArrayFeature();

@@ -13,7 +13,7 @@
 namespace babelwires {
     class Value;
 
-    /// Data used to assign an SimpleValueFeature within a container to a certain value.
+    /// Data used to assign a SimpleValueFeature within a container to a certain value.
     class ValueAssignmentData : public LocalModifierData {
       public:
         CLONEABLE(ValueAssignmentData);

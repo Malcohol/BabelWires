@@ -21,6 +21,7 @@ namespace babelwires {
       public:
         SelectUnionBranchCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                ShortId tagToSelect);
+        virtual ~SelectUnionBranchCommand();
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;

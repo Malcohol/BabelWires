@@ -21,8 +21,7 @@ babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger
     setFactoryName(typeRef.toString());
     const Type* const type = typeRef.tryResolve(context.m_typeSystem);
     if (type) {
-        m_rootFeature->addField(std::make_unique<SimpleValueFeature>(typeRef),
-                                BW_SHORT_ID("value", "value", "46b077cb-da6a-4729-92ac-091e9995db7f"));
+        m_rootFeature->addField(std::make_unique<SimpleValueFeature>(typeRef), getStepToValue());
     } else {
         std::ostringstream message;
         message << "Type Reference " << typeRef << " could not be resolved";
@@ -32,6 +31,10 @@ babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger
 }
 
 babelwires::ValueElement::~ValueElement() = default;
+
+babelwires::ShortId babelwires::ValueElement::getStepToValue() {
+    return BW_SHORT_ID("value", "value", "46b077cb-da6a-4729-92ac-091e9995db7f");
+}
 
 const babelwires::ValueElementData& babelwires::ValueElement::getElementData() const {
     return static_cast<const ValueElementData&>(FeatureElement::getElementData());

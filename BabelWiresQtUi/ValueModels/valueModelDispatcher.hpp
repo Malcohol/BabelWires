@@ -16,7 +16,7 @@ namespace babelwires {
       public:
         /// If isStructureEditable is true, then the value is derived from another value.
         /// This is used to prohibit array modification if an array is the target of a connection.
-        void init(const ValueModelRegistry& valueModelRegistry, const Type& type, const Value& value, bool isReadOnly, bool isStructureEditable);
+        void init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const Type& type, const ValueHolder& value, bool isReadOnly, bool isStructureEditable);
 
         const ValueModel* operator->() const { return m_valueModel; }
 

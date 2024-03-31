@@ -80,3 +80,7 @@ babelwires::SubtypeOrder testUtils::TestType::compareSubtypeHelper(const babelwi
 babelwires::Type::Tag testUtils::TestType::getTestTypeTag() {
     return getTestRegisteredMediumIdentifier("TestTypeTag");
 }
+
+std::string testUtils::TestType::valueToString(const babelwires::TypeSystem& typeSystem, const babelwires::ValueHolder& v) const { 
+    return v->is<TestValue>().toString();
+}
