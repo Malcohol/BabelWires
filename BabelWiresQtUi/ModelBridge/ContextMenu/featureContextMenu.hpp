@@ -11,6 +11,8 @@
 #include <QMenu>
 #include <QModelIndex>
 
+#include <variant>
+
 namespace babelwires {
 
     class FeatureModel;
