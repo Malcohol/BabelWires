@@ -251,7 +251,7 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFixedField) {
 
     auto [value1, step1, type1] = recordType.getChildNonConst(value, ff1Index);
 
-    EXPECT_EQ(*value0, *value1);
+    EXPECT_EQ(*valueHolder0, *value1);
     EXPECT_EQ(step0, step1);
     EXPECT_EQ(type0, type1);
 
@@ -285,7 +285,7 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFieldInBranch) {
 
     auto [value1, step1, type1] = recordType.getChildNonConst(value, fieldBCIndex);
 
-    EXPECT_EQ(*value0, *value1);
+    EXPECT_EQ(*valueHolder0, *value1);
     EXPECT_EQ(step0, step1);
     EXPECT_EQ(type0, type1);
 

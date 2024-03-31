@@ -416,8 +416,8 @@ void babelwires::MapEditor::onUndoStateChanged() {
 void babelwires::MapEditor::setToDefault() {
     const TypeSystem& typeSystem = getProjectBridge().getContext().m_typeSystem;
     const MapType& mapType = m_typeRef.resolve(typeSystem).is<MapType>();
-    ValueHolder defaultMapValue = mapType.createValue(typeSystem);
-    executeCommand(std::make_unique<SetMapCommand>("Restore default map", defaultMapValue));
+    ValueHolderTemplate<MapValue> defaultMapValue = mapType.createValue(typeSystem).m_valueHolder;
+    executeCommand(std::make_unique<SetMapCommand>("Restore default map", std::move(defaultMapValue)));
 }
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {
