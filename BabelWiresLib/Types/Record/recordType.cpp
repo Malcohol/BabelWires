@@ -13,6 +13,7 @@
 // TODO Remove
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
+/*
 babelwires::TestRecordType::TestRecordType()
     : RecordType(
           {{BW_SHORT_ID("foo", "Foo", "b36ab40f-c570-46f7-9dab-3af1b8f3216e"), DefaultIntType::getThisIdentifier()},
@@ -24,6 +25,7 @@ babelwires::TestRecordType2::TestRecordType2()
            {BW_SHORT_ID("obj", "Obj", "e4629b27-0286-4712-8cf4-6cce69bb3636"), TestRecordType::getThisIdentifier()},
            {BW_SHORT_ID("merm", "Merm", "b69f16a6-fcfb-49e8-be4b-c7910bff15c7"), DefaultIntType::getThisIdentifier(),
             Optionality::optionalDefaultInactive}}) {}
+*/
 
 babelwires::RecordType::RecordType(std::vector<Field> fields)
     : m_fields(std::move(fields)) {

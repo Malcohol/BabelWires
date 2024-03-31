@@ -10,7 +10,7 @@
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 // TODO Remove
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+//#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 namespace babelwires {
 
@@ -73,6 +73,7 @@ namespace babelwires {
         std::vector<ShortId> m_optionalFieldIds;
     };
 
+/*
     // TODO Remove
     class TestRecordType : public RecordType {
       public:
@@ -87,5 +88,7 @@ namespace babelwires {
         
         PRIMITIVE_TYPE("recordT2", "Record2", "199e3fa7-5ddc-46c5-8eab-b66a121dac20", 1);
     };
+
+*/
 
 } // namespace babelwires

@@ -11,6 +11,7 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
+/*
 // TODO Remove
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
@@ -34,6 +35,7 @@ babelwires::TestRecordWithVariants::TestRecordWithVariants()
            {BW_SHORT_ID("oom", "Oom", "2cb79b61-c3b3-4df4-b8a0-11ec286bf659"),
             DefaultIntType::getThisIdentifier(),
             {getTag1()}}}) {}
+*/
 
 babelwires::RecordWithVariantsType::RecordWithVariantsType(Tags tags, std::vector<FieldWithTags> fields,
                                                            unsigned int defaultTagIndex)
