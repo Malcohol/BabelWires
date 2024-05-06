@@ -45,5 +45,8 @@ namespace babelwires {
         // This could be managed externally, but it is kept here to ensure setModifiable is only
         // called by code which knows how to manage a back-up.
         ValueHolder m_valueBackUp;
+
+        // Hack
+        bool m_isNew = true;
     };
 } // namespace babelwires
