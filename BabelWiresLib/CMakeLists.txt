@@ -58,6 +58,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/SumOfMaps/sumOfMapsType.cpp
 	Types/Record/recordType.cpp
 	Types/Record/recordValue.cpp
+	Types/Record/recordFeatureUtils.cpp
 	Types/RecordWithVariants/recordWithVariantsType.cpp
 	Types/RecordWithVariants/recordWithVariantsValue.cpp
 	Processors/parallelProcessor.cpp

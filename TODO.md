@@ -12,6 +12,7 @@ Bugs:
   1. Expand the third record
   1. Observe that the connection gets removed.
 * Moving a target connection from a valid record target to a record target of a different type does not cause the modifier to fail.
+* The "*" suffix of a target feature label is not always removed directly after saving.
 
 * Sometimes elements get creation twice in the UI.
   - This is probably a symptom of the weird factory re-factor in nodeeditor.
