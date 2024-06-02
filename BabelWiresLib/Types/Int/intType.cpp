@@ -15,6 +15,7 @@ babelwires::IntType::IntType(Range<IntValue::NativeType> range, IntValue::Native
     : m_range(range)
     , m_defaultValue(defaultValue)
 {
+    assert(m_range.contains(defaultValue));
 }
 
 babelwires::NewValueHolder babelwires::IntType::createValue(const TypeSystem& typeSystem) const {
