@@ -13,6 +13,8 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
+#include <optional>
+
 // The following Macros can be used in a record to provide accessors and mutators for fields of standard primitive
 // types.
 
