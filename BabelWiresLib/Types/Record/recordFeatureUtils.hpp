@@ -19,7 +19,7 @@
 // types.
 
 #define FIELD_INT(FIELD_NAME)                                                                                          \
-    static babelwires::IntValue::NativeType get##FIELD_NAME(const babelwires::ValueFeature& recordFeature) {        \
+    static babelwires::IntValue::NativeType get##FIELD_NAME(const babelwires::ValueFeature& recordFeature) {           \
         const auto& childFeature = babelwires::RecordFeatureUtils::getChild(recordFeature, #FIELD_NAME);               \
         const auto& intValue = childFeature.getValue()->is<babelwires::IntValue>();                                    \
         return intValue.get();                                                                                         \
@@ -69,14 +69,16 @@
         childFeature.setValue(babelwires::EnumValue(enumType.getIdentifierFromValue(newValue)));                       \
     }
 
+/// For custom types, which don't map to built-in types.
+// TODO A getter that returns a ValueHolder.
 #define FIELD_VALUE(FIELD_NAME, VALUE_TYPE)                                                                            \
-    static VALUE_TYPE get##FIELD_NAME(const babelwires::ValueFeature& recordFeature) {                                 \
+    static const VALUE_TYPE& get##FIELD_NAME(const babelwires::ValueFeature& recordFeature) {                          \
         const auto& childFeature = babelwires::RecordFeatureUtils::getChild(recordFeature, #FIELD_NAME);               \
         return childFeature.getValue()->is<VALUE_TYPE>();                                                              \
     }                                                                                                                  \
-    static void set##FIELD_NAME(babelwires::ValueFeature& recordFeature, VALUE_TYPE newValue) {                        \
+    static void set##FIELD_NAME(babelwires::ValueFeature& recordFeature, babelwires::ValueHolder newValue) {                        \
         auto& childFeature = babelwires::RecordFeatureUtils::getChild(recordFeature, #FIELD_NAME);                     \
-        childFeature.setValue(newValue);                                                                               \
+        childFeature.setValue(std::move(newValue));                                                                               \
     }
 
 namespace babelwires {
