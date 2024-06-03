@@ -18,15 +18,27 @@
 // The following Macros can be used in a record to provide accessors and mutators for fields of standard primitive
 // types.
 
+#define FIELD_INT(FIELD_NAME)                                                                                          \
+    static babelwires::IntValue::NativeType get##FIELD_NAME(const babelwires::ValueFeature& recordFeature) {        \
+        const auto& childFeature = babelwires::RecordFeatureUtils::getChild(recordFeature, #FIELD_NAME);               \
+        const auto& intValue = childFeature.getValue()->is<babelwires::IntValue>();                                    \
+        return intValue.get();                                                                                         \
+    }                                                                                                                  \
+    static void set##FIELD_NAME(babelwires::ValueFeature& recordFeature, babelwires::IntValue::NativeType newValue) {  \
+        auto& childFeature = babelwires::RecordFeatureUtils::getChild(recordFeature, #FIELD_NAME);                     \
+        childFeature.setValue(babelwires::IntValue(newValue));                                                         \
+    }
+
 #define FIELD_INT_OPTIONAL(FIELD_NAME)                                                                                 \
-    static std::optional<int> tryGet##FIELD_NAME(const babelwires::ValueFeature& recordFeature) {                      \
+    static std::optional<babelwires::IntValue::NativeType> tryGet##FIELD_NAME(                                         \
+        const babelwires::ValueFeature& recordFeature) {                                                               \
         if (const auto* childFeature = babelwires::RecordFeatureUtils::tryGetChild(recordFeature, #FIELD_NAME)) {      \
             const auto& intValue = childFeature->getValue()->is<babelwires::IntValue>();                               \
             return intValue.get();                                                                                     \
         }                                                                                                              \
         return {};                                                                                                     \
     }                                                                                                                  \
-    static void set##FIELD_NAME(babelwires::ValueFeature& recordFeature, int newValue) {                               \
+    static void set##FIELD_NAME(babelwires::ValueFeature& recordFeature, babelwires::IntValue::NativeType newValue) {  \
         auto& childFeature = babelwires::RecordFeatureUtils::activateAndGetChild(recordFeature, #FIELD_NAME);          \
         childFeature.setValue(babelwires::IntValue(newValue));                                                         \
     }
@@ -55,6 +67,16 @@
         auto& childFeature = babelwires::RecordFeatureUtils::getChild(recordFeature, #FIELD_NAME);                     \
         const ENUM_TYPE& enumType = childFeature.getType().is<ENUM_TYPE>();                                            \
         childFeature.setValue(babelwires::EnumValue(enumType.getIdentifierFromValue(newValue)));                       \
+    }
+
+#define FIELD_VALUE(FIELD_NAME, VALUE_TYPE)                                                                            \
+    static VALUE_TYPE get##FIELD_NAME(const babelwires::ValueFeature& recordFeature) {                                 \
+        const auto& childFeature = babelwires::RecordFeatureUtils::getChild(recordFeature, #FIELD_NAME);               \
+        return childFeature.getValue()->is<VALUE_TYPE>();                                                              \
+    }                                                                                                                  \
+    static void set##FIELD_NAME(babelwires::ValueFeature& recordFeature, VALUE_TYPE newValue) {                        \
+        auto& childFeature = babelwires::RecordFeatureUtils::getChild(recordFeature, #FIELD_NAME);                     \
+        childFeature.setValue(newValue);                                                                               \
     }
 
 namespace babelwires {
