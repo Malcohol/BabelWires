@@ -10,6 +10,9 @@
 #include <BabelWiresLib/TypeSystem/featureWrapper.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
+#define ARRAY_FEATURE_WRAPPER(ELEMENT_TYPE) \
+    using ElementTypeForFeatureWrapper = ELEMENT_TYPE;
+
 namespace babelwires {
     class ValueFeature;
 
@@ -43,13 +46,13 @@ namespace babelwires {
             assert(m_valueFeature);
             ArrayFeatureUtils::setArraySize(*m_valueFeature, newSize);
         }
-        FeatureWrapper<const ValueFeature, typename T::ELEMENT_TYPE> getArrayChild(unsigned int index) const {
+        FeatureWrapper<const ValueFeature, typename T::ElementTypeForFeatureWrapper> getArrayChild(unsigned int index) const {
             assert(m_valueFeature);
             return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,
-                         FeatureWrapper<VALUE_FEATURE, typename T::ELEMENT_TYPE>>
+                         FeatureWrapper<VALUE_FEATURE, typename T::ElementTypeForFeatureWrapper>>
             getArrayChild(unsigned int index) {
             return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
         }
