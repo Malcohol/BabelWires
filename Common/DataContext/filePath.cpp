@@ -9,6 +9,7 @@
 
 #include <Common/Log/userLogger.hpp>
 #include <Common/exceptions.hpp>
+#include <Common/types.hpp>
 
 #include <cassert>
 #include <cctype>
@@ -63,7 +64,7 @@ void babelwires::FilePath::interpretRelativeTo(const std::filesystem::path& base
 }
 
 std::string babelwires::FilePath::serializeToString() const {
-    return m_filePath.u8string();
+    return pathToString(m_filePath);
 }
 
 babelwires::FilePath babelwires::FilePath::deserializeFromString(const std::string& string) {

@@ -238,7 +238,7 @@ babelwires::ValueHolderTemplate<babelwires::MapValue> babelwires::MapEditor::try
         return {};
     }
 
-    return mapFeature->getValue();
+    return babelwires::ValueHolderTemplate<babelwires::MapValue>(mapFeature->getValue());
 }
 
 void babelwires::MapEditor::updateMapFromProject() {

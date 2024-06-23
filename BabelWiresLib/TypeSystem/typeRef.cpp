@@ -82,7 +82,7 @@ const babelwires::Type& babelwires::TypeRef::assertResolve(const TypeSystem& typ
 namespace {
     /// A very simple string formatting algorithm sufficient for this job.
     /// Hopefully could be replaced by std::format when that's properly supported.
-    std::string format(std::string_view format, const std::vector<std::string>& arguments) {
+    std::string simpleFormat(std::string_view format, const std::vector<std::string>& arguments) {
         if (format.size() < 2) {
             return {};
         }
@@ -163,7 +163,7 @@ std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::
             const auto& valueArguments = std::get<1>(constructedTypeData).m_valueArguments;
             std::for_each(valueArguments.begin(), valueArguments.end(),
                           [&argumentsStr](const EditableValueHolder& value) { argumentsStr.emplace_back(value->toString()); });
-            return format(formatString, argumentsStr);
+            return simpleFormat(formatString, argumentsStr);
         }
         babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;
     } visitorMethods{identifierRegistry};

@@ -26,3 +26,8 @@ bool babelwires::isValidIdentifier(const char* str) {
     }
     return true;
 }
+
+std::string babelwires::pathToString(const std::filesystem::path& path) {
+    return path.string();
+}
+

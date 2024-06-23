@@ -29,7 +29,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
 
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
-    projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
+    projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath), babelwires::pathToString(targetFilePath.m_filePath));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
     testEnvironment.m_project.setProjectData(projectData);
