@@ -29,7 +29,7 @@ TEST(ProjectTest, setAndExtractProjectData) {
     // Make real data for project.
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
-    projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
+    projectData.setFilePaths(babelwires::from_u8string(sourceFilePath.m_filePath.u8string()), babelwires::from_u8string(targetFilePath.m_filePath.u8string()));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
     testEnvironment.m_project.setProjectData(projectData);
@@ -466,7 +466,7 @@ TEST(ProjectTest, process) {
     // Make real data for project.
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
-    projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
+    projectData.setFilePaths(babelwires::from_u8string(sourceFilePath.m_filePath.u8string()), babelwires::from_u8string(targetFilePath.m_filePath.u8string()));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
     testEnvironment.m_project.setProjectData(projectData);
@@ -744,7 +744,7 @@ TEST(ProjectTest, processWithFailure) {
     // Make real data for project.
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
-    projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
+    projectData.setFilePaths(babelwires::from_u8string(sourceFilePath.m_filePath.u8string()), babelwires::from_u8string(targetFilePath.m_filePath.u8string()));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
     testEnvironment.m_project.setProjectData(projectData);

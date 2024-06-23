@@ -28,7 +28,7 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
 
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
-    projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
+    projectData.setFilePaths(babelwires::from_u8string(sourceFilePath.m_filePath.u8string()), babelwires::from_u8string(targetFilePath.m_filePath.u8string()));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
     babelwires::PasteElementsCommand command("Test command", std::move(projectData));
@@ -85,8 +85,8 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     // It's OK for sources to be duplicated. It's not so great for targets, but it won't affect this test.
-    projectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
-    originalProjectData.setFilePaths(sourceFilePath.m_filePath.u8string(), targetFilePath.m_filePath.u8string());
+    projectData.setFilePaths(babelwires::from_u8string(sourceFilePath.m_filePath.u8string()), babelwires::from_u8string(targetFilePath.m_filePath.u8string()));
+    originalProjectData.setFilePaths(babelwires::from_u8string(sourceFilePath.m_filePath.u8string()), babelwires::from_u8string(targetFilePath.m_filePath.u8string()));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
     {

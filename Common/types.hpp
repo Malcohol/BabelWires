@@ -7,11 +7,13 @@
  **/
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
 #include <limits>
 #include <memory>
+#include <type_traits>
 #include <vector>
-#include <algorithm>
+#include <string>
 
 namespace babelwires {
 
@@ -23,7 +25,7 @@ namespace babelwires {
 
     enum Endianness { IS_BIG_ENDIAN, IS_LITTLE_ENDIAN };
 
-    inline const babelwires::Endianness getPlatformEndianness() {
+    inline const Endianness getPlatformEndianness() {
         constexpr union {
             char m_bytes[4];
             uint32_t m_int;
@@ -39,15 +41,9 @@ namespace babelwires {
             : m_min(min)
             , m_max(max) {}
         bool contains(T value) const { return (m_min <= value) && (value <= m_max); }
-        bool contains(const Range& other) const { 
-            return contains(other.m_min) && contains(other.m_max);
-        }
-        bool operator==(const Range& other) const {
-            return (m_min == other.m_min) && (m_max == other.m_max);
-        }
-        bool operator!=(const Range& other) const {
-            return (m_min != other.m_min) || (m_max != other.m_max);
-        }
+        bool contains(const Range& other) const { return contains(other.m_min) && contains(other.m_max); }
+        bool operator==(const Range& other) const { return (m_min == other.m_min) && (m_max == other.m_max); }
+        bool operator!=(const Range& other) const { return (m_min != other.m_min) || (m_max != other.m_max); }
         T clamp(T value) const { return std::clamp(value, m_min, m_max); }
         T m_min;
         T m_max;
@@ -65,8 +61,9 @@ namespace babelwires {
         ITERATOR end() const { return m_end; }
     };
 
-    template<typename T>
-    auto&& reverseIterate(T&& iterable) { return Span{std::rbegin(iterable), std::rend(iterable)}; }
+    template <typename T> auto&& reverseIterate(T&& iterable) {
+        return Span{std::rbegin(iterable), std::rend(iterable)};
+    }
 
     /// Is str usable as an "identifier" ([a..zA..Z][_a..zA..Z0..9]*).
     /// This constraint is just used to keep certain strings sane.
@@ -79,8 +76,7 @@ namespace babelwires {
         typedef typename std::conditional<std::is_const<T>::value, typename std::add_const<U>::type, U>::type type;
     };
 
-    template<typename BASE, typename DERIVED> 
-    std::unique_ptr<BASE> uniquePtrCast(std::unique_ptr<DERIVED> ptr) {
+    template <typename BASE, typename DERIVED> std::unique_ptr<BASE> uniquePtrCast(std::unique_ptr<DERIVED> ptr) {
         return std::unique_ptr<BASE>(ptr.release());
     }
 
@@ -90,6 +86,12 @@ namespace babelwires {
     };
 
     template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+    // Hacky migration from C++17 to C++20
+    inline std::string from_u8string(const std::u8string& s) {
+        return std::string(s.begin(), s.end());
+    }
+
 } // namespace babelwires
 
 /// Adds "as" and "is" methods to a hierarchy.
