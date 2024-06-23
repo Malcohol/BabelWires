@@ -19,6 +19,14 @@ template <typename OTHER>
 babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const ValueHolderTemplate<OTHER>& other)
     : m_pointerToValue(other->template is<VALUE>().cloneShared()) {}
 
+
+template <typename VALUE>
+template <typename OTHER>
+babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(ValueHolderTemplate<OTHER>&& other)
+    : m_pointerToValue(std::static_pointer_cast<const VALUE>(std::move(other.m_pointerToValue))) {
+        assert(m_pointerToValue->as<VALUE>());
+    }
+
 template <typename VALUE>
 babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const VALUE& value)
     : m_pointerToValue(value.cloneShared()) {}
