@@ -34,7 +34,7 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
-	Types/Array/arrayFeatureUtils.cpp
+	Types/Array/arrayFeatureWrapper.cpp
 	Types/Array/arrayType.cpp
 	Types/Array/arrayTypeConstructor.cpp
 	Types/Array/arrayValue.cpp

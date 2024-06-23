@@ -19,7 +19,7 @@ namespace babelwires {
       public:
         FeatureWrapper(VALUE_FEATURE* valueFeature)
             : m_valueFeature(valueFeature) {
-            assert(!valueFeature || valueFeature.getType().template as<IntType>());
+            assert(!valueFeature || valueFeature->getType().template as<IntType>());
         }
         operator bool() const { return m_valueFeature; }
 
@@ -31,7 +31,7 @@ namespace babelwires {
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> set(typename IntValue::NativeType newValue) {
             assert(m_valueFeature);
-            m_valueFeature.setValue(IntValue(newValue));
+            m_valueFeature->setValue(IntValue(newValue));
         }
     };
 
