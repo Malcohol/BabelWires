@@ -9,12 +9,15 @@
 
 #define FEATURE_WRAPPER_BEGIN(TYPE)                                                                                    \
     template <typename VALUE_FEATURE> class FeatureWrapper {                                                           \
-        VALUE_FEATURE& m_valueFeature;                                                                                 \
+        VALUE_FEATURE* m_valueFeature;                                                                                 \
                                                                                                                        \
       public:                                                                                                          \
-        FeatureWrapper(VALUE_FEATURE& valueFeature)                                                                    \
+        FeatureWrapper(VALUE_FEATURE* valueFeature)                                                                    \
             : m_valueFeature(valueFeature) {                                                                           \
-            assert(valueFeature.getType().template as<TYPE>());                                                        \
+            assert(valueFeature->getType().template as<TYPE>());                                                       \
+        }                                                                                                              \
+        operator bool() const {                                                                                        \
+            return m_valueFeature;                                                                                     \
         }
 
 #define FEATURE_WRAPPER_END()                                                                                          \
@@ -29,7 +32,7 @@ namespace babelwires {
     template <typename VALUE_FEATURE, typename VALUE_TYPE>
     class FeatureWrapper : public VALUE_TYPE::FeatureWrapper<VALUE_FEATURE> {
       public:
-        FeatureWrapper(VALUE_FEATURE& valueFeature)
+        FeatureWrapper(VALUE_FEATURE* valueFeature)
             : VALUE_TYPE::FeatureWrapper<VALUE_FEATURE>(valueFeature) {}
     };
 } // namespace babelwires
