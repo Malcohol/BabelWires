@@ -64,7 +64,7 @@ void babelwires::FilePath::interpretRelativeTo(const std::filesystem::path& base
 }
 
 std::string babelwires::FilePath::serializeToString() const {
-    return from_u8string(m_filePath.u8string());
+    return pathToString(m_filePath);
 }
 
 babelwires::FilePath babelwires::FilePath::deserializeFromString(const std::string& string) {

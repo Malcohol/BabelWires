@@ -26,14 +26,14 @@ namespace {
 testUtils::TempFilePath::TempFilePath(std::string_view fileName, int discriminator)
     : m_filePath(std::filesystem::canonical(std::filesystem::temp_directory_path()) /
                  discriminateFileName(fileName, discriminator))
-    , m_asString(babelwires::from_u8string(m_filePath.u8string())) {
+    , m_asString(babelwires::pathToString(m_filePath)) {
     tryRemoveFile();
 }
 
 testUtils::TempFilePath::TempFilePath(std::string_view fileName, std::string_view discriminator)
     : m_filePath(std::filesystem::canonical(std::filesystem::temp_directory_path()) /
                  discriminateFileName(fileName, std::string(discriminator)))
-    , m_asString(babelwires::from_u8string(m_filePath.u8string())) {
+    , m_asString(babelwires::pathToString(m_filePath)) {
     tryRemoveFile();
 }
 
@@ -78,10 +78,10 @@ testUtils::TempDirectory::TempDirectory(std::string_view dirPath)
 }
 
 testUtils::TempDirectory::~TempDirectory() {
-    const std::string tmpString = babelwires::from_u8string(std::filesystem::canonical(std::filesystem::temp_directory_path()).u8string());
+    const std::string tmpString = babelwires::pathToString(std::filesystem::canonical(std::filesystem::temp_directory_path()));
 
     const auto isUnderTemp = [&tmpString](const std::filesystem::path& p) {
-        const std::string pString = babelwires::from_u8string(p.u8string());
+        const std::string pString = babelwires::pathToString(p);
         return (pString.find(tmpString) == 0);
     };
 

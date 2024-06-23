@@ -14,6 +14,7 @@
 #include <type_traits>
 #include <vector>
 #include <string>
+#include <filesystem>
 
 namespace babelwires {
 
@@ -87,11 +88,8 @@ namespace babelwires {
 
     template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
-    // Hacky migration from C++17 to C++20
-    inline std::string from_u8string(const std::u8string& s) {
-        return std::string(s.begin(), s.end());
-    }
-
+    /// Unified handling of path to string conversion. (I'm deferring Unicode issues to the future.)
+    std::string pathToString(const std::filesystem::path& path);
 } // namespace babelwires
 
 /// Adds "as" and "is" methods to a hierarchy.

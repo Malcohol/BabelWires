@@ -31,7 +31,7 @@ const babelwires::FileElement& babelwires::FileRowModel::getFileElement() const 
 }
 
 QVariant babelwires::FileRowModel::getValueDisplayData() const {
-    return QString(babelwires::from_u8string(getFileElement().getFilePath().filename().u8string()).c_str());
+    return QString(babelwires::pathToString(getFileElement().getFilePath().filename()).c_str());
 }
 
 QString babelwires::FileRowModel::getTooltip() const {
@@ -39,7 +39,7 @@ QString babelwires::FileRowModel::getTooltip() const {
         return RowModel::getTooltip();
     } else {
         // Full path.
-        return QString(babelwires::from_u8string(getFileElement().getFilePath().u8string()).c_str());
+        return QString(babelwires::pathToString(getFileElement().getFilePath()).c_str());
     }
 }
 
