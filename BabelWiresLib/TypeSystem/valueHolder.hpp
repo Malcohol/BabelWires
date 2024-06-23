@@ -24,6 +24,7 @@ namespace babelwires {
         ValueHolderTemplate(ValueHolderTemplate&& other);
         /// An assert checks the type at runtime.
         template <typename OTHER> ValueHolderTemplate(const ValueHolderTemplate<OTHER>& other);
+        template <typename OTHER> ValueHolderTemplate(ValueHolderTemplate<OTHER>&& other);
 
         // TODO Remove this constructor: It makes it far too easy to do a shallow clone.
         ValueHolderTemplate(const VALUE& value);
@@ -96,6 +97,8 @@ namespace babelwires {
         /// This is unsafe only in the sense that a caller might be tempted to keep the pointer.
         /// This is highly likely to dangle if the value is modified, so DO NOT KEEP IT.
         const VALUE* getUnsafe() const;
+
+        template <typename OTHER> friend class ValueHolderTemplate;
 
       private:
         using PointerToValue = std::shared_ptr<const Value>;
