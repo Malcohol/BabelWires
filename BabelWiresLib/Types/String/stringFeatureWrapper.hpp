@@ -21,7 +21,6 @@ namespace babelwires {
             : m_valueFeature(valueFeature) {
             assert(!valueFeature || valueFeature->getType().template as<StringType>());
         }
-        operator bool() const { return m_valueFeature; }
 
         std::string get() const {
             assert(m_valueFeature);

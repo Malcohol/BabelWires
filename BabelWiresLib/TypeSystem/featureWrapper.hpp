@@ -42,7 +42,6 @@ namespace babelwires {
             : m_valueFeature(valueFeature) {
             assert(!valueFeature || valueFeature->getType().template as<VALUE_TYPE>());
         }
-        operator bool() const { return m_valueFeature; }
         const VALUE_TYPE& getInstanceType() const { return m_valueFeature->getType().template is<VALUE_TYPE>(); }
         const babelwires::ValueHolder& getInstanceValue() const { return m_valueFeature->getValue(); }
 

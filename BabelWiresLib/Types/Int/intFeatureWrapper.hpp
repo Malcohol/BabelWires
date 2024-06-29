@@ -21,7 +21,6 @@ namespace babelwires {
             : m_valueFeature(valueFeature) {
             assert(!valueFeature || valueFeature->getType().template as<IntType>());
         }
-        operator bool() const { return m_valueFeature; }
 
         typename IntValue::NativeType get() const {
             assert(m_valueFeature);

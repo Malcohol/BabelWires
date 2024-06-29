@@ -35,7 +35,6 @@ namespace babelwires {
             : m_valueFeature(valueFeature) {
             assert(!valueFeature || valueFeature->getType().template as<ArrayType>());
         }
-        operator bool() const { return m_valueFeature; }
 
         unsigned int getSize() const {
             assert(m_valueFeature);
