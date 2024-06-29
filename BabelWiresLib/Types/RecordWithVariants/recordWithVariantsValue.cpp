@@ -11,3 +11,19 @@ babelwires::RecordWithVariantsValue::RecordWithVariantsValue(ShortId tag) : m_ta
 
 void babelwires::RecordWithVariantsValue::setTag(ShortId tag) { m_tag = tag; }
 babelwires::ShortId babelwires::RecordWithVariantsValue::getTag() const { return m_tag; }
+
+std::size_t babelwires::RecordWithVariantsValue::getHash() const {
+    return hash::mixtureOf(babelwires::RecordValue::getHash(), m_tag);
+}
+
+bool babelwires::RecordWithVariantsValue::operator==(const Value& other) const {
+    const auto* otherAsRecordWithVariants = other.as<RecordWithVariantsValue>();
+    if (!otherAsRecordWithVariants) {
+        return false;
+    }
+    if (getTag() != otherAsRecordWithVariants->getTag()) {
+        return false;
+    }
+    return RecordValue::operator==(other);
+}
+
