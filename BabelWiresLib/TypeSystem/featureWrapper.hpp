@@ -7,18 +7,18 @@
  **/
 #pragma once
 
-#define FEATURE_WRAPPER_BEGIN(TYPE)                                                                                    \
-    template <typename VALUE_FEATURE> class FeatureWrapper {                                                           \
-        VALUE_FEATURE* m_valueFeature;                                                                                 \
-                                                                                                                       \
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+
+#define FEATURE_WRAPPER_BEGIN_WITH_PARENT(TYPE, PARENT)                                                                \
+    template <typename VALUE_FEATURE> class FeatureWrapper : public PARENT {                                           \
       public:                                                                                                          \
         FeatureWrapper(VALUE_FEATURE* valueFeature)                                                                    \
-            : m_valueFeature(valueFeature) {                                                                           \
-            assert(valueFeature->getType().template as<TYPE>());                                                       \
-        }                                                                                                              \
-        operator bool() const {                                                                                        \
-            return m_valueFeature;                                                                                     \
-        }
+            : PARENT(valueFeature) {}
+
+#define MACRO_COMMA ,
+
+#define FEATURE_WRAPPER_BEGIN(TYPE)                                                                                    \
+    FEATURE_WRAPPER_BEGIN_WITH_PARENT(TYPE, babelwires::FeatureWrapperCommonBase<VALUE_FEATURE MACRO_COMMA TYPE>)
 
 #define FEATURE_WRAPPER_END()                                                                                          \
     }                                                                                                                  \
@@ -35,4 +35,19 @@ namespace babelwires {
         FeatureWrapper(VALUE_FEATURE* valueFeature)
             : VALUE_TYPE::FeatureWrapper<VALUE_FEATURE>(valueFeature) {}
     };
+
+    template <typename VALUE_FEATURE, typename VALUE_TYPE> class FeatureWrapperCommonBase {
+      public:
+        FeatureWrapperCommonBase(VALUE_FEATURE* valueFeature)
+            : m_valueFeature(valueFeature) {
+            assert(!valueFeature || valueFeature->getType().template as<VALUE_TYPE>());
+        }
+        operator bool() const { return m_valueFeature; }
+        const VALUE_TYPE& getInstanceType() const { return m_valueFeature->getType().template is<VALUE_TYPE>(); }
+        const babelwires::ValueHolder& getInstanceValue() const { return m_valueFeature->getValue(); }
+
+      protected:
+        VALUE_FEATURE* m_valueFeature;
+    };
+
 } // namespace babelwires

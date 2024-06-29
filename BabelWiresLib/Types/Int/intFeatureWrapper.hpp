@@ -25,7 +25,7 @@ namespace babelwires {
 
         typename IntValue::NativeType get() const {
             assert(m_valueFeature);
-            const IntValue& intValue = m_valueFeature.getValue()->template is<IntValue>();
+            const IntValue& intValue = m_valueFeature->getValue()->template is<IntValue>();
             return intValue.get();
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>

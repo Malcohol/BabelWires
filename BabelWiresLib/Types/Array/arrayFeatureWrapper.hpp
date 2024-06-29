@@ -37,23 +37,23 @@ namespace babelwires {
         }
         operator bool() const { return m_valueFeature; }
 
-        unsigned int getArraySize() const {
+        unsigned int getSize() const {
             assert(m_valueFeature);
             return ArrayFeatureUtils::getArraySize(*m_valueFeature);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> setArraySize(unsigned int newSize) {
+        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> setSize(unsigned int newSize) {
             assert(m_valueFeature);
             ArrayFeatureUtils::setArraySize(*m_valueFeature, newSize);
         }
-        FeatureWrapper<const ValueFeature, typename T::ElementTypeForFeatureWrapper> getArrayChild(unsigned int index) const {
+        FeatureWrapper<const ValueFeature, typename T::ElementTypeForFeatureWrapper> getEntry(unsigned int index) const {
             assert(m_valueFeature);
             return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,
                          FeatureWrapper<VALUE_FEATURE, typename T::ElementTypeForFeatureWrapper>>
-            getArrayChild(unsigned int index) {
+            getEntry(unsigned int index) {
             return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
         }
     };

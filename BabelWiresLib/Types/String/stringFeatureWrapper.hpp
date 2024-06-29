@@ -19,19 +19,19 @@ namespace babelwires {
       public:
         FeatureWrapper(VALUE_FEATURE* valueFeature)
             : m_valueFeature(valueFeature) {
-            assert(valueFeature.getType().template as<StringType>());
+            assert(!valueFeature || valueFeature->getType().template as<StringType>());
         }
         operator bool() const { return m_valueFeature; }
 
         std::string get() const {
             assert(m_valueFeature);
-            const StringValue& stringValue = m_valueFeature.getValue()->template is<StringValue>();
+            const StringValue& stringValue = m_valueFeature->getValue()->template is<StringValue>();
             return stringValue.get();
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> set(std::string newValue) {
             assert(m_valueFeature);
-            m_valueFeature.setValue(StringValue(std::move(newValue)));
+            m_valueFeature->setValue(StringValue(std::move(newValue)));
         }
     };
 
