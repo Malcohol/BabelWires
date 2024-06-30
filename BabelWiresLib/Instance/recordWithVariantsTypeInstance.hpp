@@ -8,26 +8,22 @@
 #pragma once
 
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Instance/recordTypeInstance.hpp>
 #include <BabelWiresLib/Instance/instanceOf.hpp>
-
-#define RECORD_WITH_VARIANTS_BEGIN(TYPE)                                                                               \
-    DECLARE_INSTANCE_BEGIN_WITH_PARENT(                                                                                 \
-        TYPE, babelwires::RecordWithVariantsInstanceBase<VALUE_FEATURE MACRO_COMMA TYPE>)
-
-#define RECORD_WITH_VARIANTS_END() DECLARE_INSTANCE_END()
+#include <BabelWiresLib/Instance/recordTypeInstance.hpp>
+#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 namespace babelwires {
     namespace RecordWithVariantsInstanceUtil {
         ShortId getSelectedTag(const ValueFeature& valueFeature);
         void selectTag(ValueFeature& valueFeature, ShortId tag);
-    }
+    } // namespace RecordWithVariantsInstanceUtil
 
-    template <typename VALUE_FEATURE, typename VALUE_TYPE>
-    class RecordWithVariantsInstanceBase : public InstanceCommonBase<VALUE_FEATURE, VALUE_TYPE> {
+    template <typename VALUE_FEATURE, typename T>
+        requires std::is_base_of_v<RecordWithVariantsType, T>
+    class InstanceParent<VALUE_FEATURE, T> : public InstanceCommonBase<VALUE_FEATURE, T> {
       public:
-        RecordWithVariantsInstanceBase(VALUE_FEATURE* valueFeature)
-            : InstanceCommonBase<VALUE_FEATURE, VALUE_TYPE>(valueFeature) {}
+        InstanceParent(VALUE_FEATURE* valueFeature)
+            : InstanceCommonBase<VALUE_FEATURE, T>(valueFeature) {}
         ShortId getSelectedTag() const { return RecordWithVariantsInstanceUtil::getSelectedTag(*this->m_valueFeature); }
 
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
@@ -35,6 +31,5 @@ namespace babelwires {
             RecordWithVariantsInstanceUtil::selectTag(*this->m_valueFeature, tag);
         }
     };
-
 
 } // namespace babelwires
