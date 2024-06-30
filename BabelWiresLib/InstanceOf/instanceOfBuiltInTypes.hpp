@@ -10,7 +10,7 @@
 #include <BabelWiresLib/InstanceOf/instanceOf.hpp>
 
 #include <BabelWiresLib/InstanceOf/instanceOfRecordType.hpp>
-#include <BabelWiresLib/Types/Enum/enumFeatureWrapper.hpp>
+#include <BabelWiresLib/InstanceOf/instanceOfEnumType.hpp>
 #include <BabelWiresLib/InstanceOf/instanceOfArrayType.hpp>
 #include <BabelWiresLib/InstanceOf/instanceOfIntType.hpp>
 #include <BabelWiresLib/InstanceOf/instanceOfStringType.hpp>
