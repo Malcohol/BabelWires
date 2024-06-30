@@ -17,35 +17,31 @@
 namespace babelwires {
     class ValueFeature;
 
-    template <typename VALUE_FEATURE, typename T>
-        requires std::is_base_of_v<ArrayType, T>
-    class Instance<VALUE_FEATURE, T> {
-        VALUE_FEATURE* m_valueFeature;
-
+    template <typename VALUE_FEATURE, typename ARRAY_TYPE>
+        requires std::is_base_of_v<ArrayType, ARRAY_TYPE>
+    class Instance<VALUE_FEATURE, ARRAY_TYPE> : public InstanceCommonBase<VALUE_FEATURE, ARRAY_TYPE> {
       public:
         Instance(VALUE_FEATURE* valueFeature)
-            : m_valueFeature(valueFeature) {
-            assert(!valueFeature || valueFeature->getType().template as<ArrayType>());
-        }
+            : InstanceCommonBase<VALUE_FEATURE, ARRAY_TYPE>(valueFeature) {}
 
         unsigned int getSize() const {
-            assert(m_valueFeature);
-            return InstanceUtils::getArraySize(*m_valueFeature);
+            assert(this->m_valueFeature);
+            return InstanceUtils::getArraySize(*this->m_valueFeature);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> setSize(unsigned int newSize) {
-            assert(m_valueFeature);
-            InstanceUtils::setArraySize(*m_valueFeature, newSize);
+            assert(this->m_valueFeature);
+            InstanceUtils::setArraySize(*this->m_valueFeature, newSize);
         }
-        Instance<const ValueFeature, typename T::EntryTypeForInstance> getEntry(unsigned int index) const {
-            assert(m_valueFeature);
-            return &InstanceUtils::getChild(*m_valueFeature, index);
+        Instance<const ValueFeature, typename ARRAY_TYPE::EntryTypeForInstance> getEntry(unsigned int index) const {
+            assert(this->m_valueFeature);
+            return &InstanceUtils::getChild(*this->m_valueFeature, index);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,
-                         Instance<VALUE_FEATURE, typename T::EntryTypeForInstance>>
+                         Instance<VALUE_FEATURE, typename ARRAY_TYPE::EntryTypeForInstance>>
             getEntry(unsigned int index) {
-            return &InstanceUtils::getChild(*m_valueFeature, index);
+            return &InstanceUtils::getChild(*this->m_valueFeature, index);
         }
     };
 } // namespace babelwires
