@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Instance/instance.hpp>
+#include <BabelWiresLib/Instance/instanceTemplates.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 

@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Instance/instance.hpp>
+#include <BabelWiresLib/Instance/instanceTemplates.hpp>
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 

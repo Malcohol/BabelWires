@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Instance/instance.hpp>
+#include <BabelWiresLib/Instance/instanceTemplates.hpp>
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
