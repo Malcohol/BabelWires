@@ -14,10 +14,10 @@ namespace babelwires {
     /// The default approach to finding the appropriate instance class is this template.
     /// For record-style types it "despatches to" (i.e. inherits from) a corresponding inner-class
     /// in the type's class. However, some types (e.g. built-ins) specialize the template instead.
-    template <typename VALUE_FEATURE, typename VALUE_TYPE> class Instance : public VALUE_TYPE::Instance<VALUE_FEATURE> {
+    template <typename VALUE_FEATURE, typename VALUE_TYPE> class Instance : public VALUE_TYPE::template Instance<VALUE_FEATURE> {
       public:
         Instance(VALUE_FEATURE& valueFeature)
-            : VALUE_TYPE::Instance<VALUE_FEATURE>(valueFeature) {}
+            : VALUE_TYPE::template Instance<VALUE_FEATURE>(valueFeature) {}
     };
 
     /// Methods that should be available for every instance.
