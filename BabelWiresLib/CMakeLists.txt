@@ -116,9 +116,9 @@ SET( BABELWIRESLIB_SRCS
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
 	Types/String/stringFeature.cpp
-	InstanceOf/instanceOfArrayType.cpp
-	InstanceOf/instanceOfRecordType.cpp
-	InstanceOf/instanceOfRecordWithVariantsType.cpp
+	Instance/arrayTypeInstance.cpp
+	Instance/recordTypeInstance.cpp
+	Instance/recordWithVariantsTypeInstance.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
 	TypeSystem/typeConstructorArguments.cpp

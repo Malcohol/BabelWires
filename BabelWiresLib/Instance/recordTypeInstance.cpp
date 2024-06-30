@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/InstanceOf/instanceOfRecordType.hpp>
+#include <BabelWiresLib/Instance/recordTypeInstance.hpp>
 
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
