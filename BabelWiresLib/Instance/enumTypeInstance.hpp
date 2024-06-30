@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
-#define FEATURE_WRAPPER_CPP_ENUM(ENUM_TYPE)                                                                            \
+#define DECLARE_INSTANCE_CPP_ENUM(ENUM_TYPE)                                                                            \
     typename ENUM_TYPE::Value get() const {                                                                            \
         const babelwires::EnumValue& enumValue =                                                                       \
             this->m_valueFeature->getValue()->template is<babelwires::EnumValue>();                                    \

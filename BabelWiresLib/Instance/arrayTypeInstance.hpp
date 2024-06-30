@@ -10,8 +10,8 @@
 #include <BabelWiresLib/Instance/instanceOf.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
-#define ARRAY_FEATURE_WRAPPER(ELEMENT_TYPE) \
-    using ElementTypeForFeatureWrapper = ELEMENT_TYPE;
+#define DECLARE_ARRAY_INSTANCE(ELEMENT_TYPE) \
+    using EntryTypeForInstance = ELEMENT_TYPE;
 
 namespace babelwires {
     class ValueFeature;
@@ -45,13 +45,13 @@ namespace babelwires {
             assert(m_valueFeature);
             ArrayFeatureUtils::setArraySize(*m_valueFeature, newSize);
         }
-        Instance<const ValueFeature, typename T::ElementTypeForFeatureWrapper> getEntry(unsigned int index) const {
+        Instance<const ValueFeature, typename T::EntryTypeForInstance> getEntry(unsigned int index) const {
             assert(m_valueFeature);
             return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,
-                         Instance<VALUE_FEATURE, typename T::ElementTypeForFeatureWrapper>>
+                         Instance<VALUE_FEATURE, typename T::EntryTypeForInstance>>
             getEntry(unsigned int index) {
             return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
         }

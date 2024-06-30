@@ -10,13 +10,13 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 
-babelwires::ShortId babelwires::RecordWithVariantsFeatureWrapperUtil::getSelectedTag(const ValueFeature& valueFeature) {
+babelwires::ShortId babelwires::RecordWithVariantsInstanceUtil::getSelectedTag(const ValueFeature& valueFeature) {
     const RecordWithVariantsType& type = valueFeature.getType().is<RecordWithVariantsType>();
     const ValueHolder& value = valueFeature.getValue();
     return type.getSelectedTag(value);
 }
 
-void babelwires::RecordWithVariantsFeatureWrapperUtil::selectTag(ValueFeature& valueFeature, ShortId tag) {
+void babelwires::RecordWithVariantsInstanceUtil::selectTag(ValueFeature& valueFeature, ShortId tag) {
     const RecordWithVariantsType& type = valueFeature.getType().is<RecordWithVariantsType>();
     ValueHolder value = valueFeature.getValue();
     if (tag != type.getSelectedTag(value)) {

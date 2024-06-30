@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
-#define FEATURE_WRAPPER_BEGIN_WITH_PARENT(TYPE, PARENT)                                                                \
+#define DECLARE_INSTANCE_BEGIN_WITH_PARENT(TYPE, PARENT)                                                                \
     template <typename VALUE_FEATURE> class Instance : public PARENT {                                           \
       public:                                                                                                          \
         Instance(VALUE_FEATURE* valueFeature)                                                                    \
@@ -17,10 +17,10 @@
 
 #define MACRO_COMMA ,
 
-#define FEATURE_WRAPPER_BEGIN(TYPE)                                                                                    \
-    FEATURE_WRAPPER_BEGIN_WITH_PARENT(TYPE, babelwires::FeatureWrapperCommonBase<VALUE_FEATURE MACRO_COMMA TYPE>)
+#define DECLARE_INSTANCE_BEGIN(TYPE)                                                                                    \
+    DECLARE_INSTANCE_BEGIN_WITH_PARENT(TYPE, babelwires::InstanceCommonBase<VALUE_FEATURE MACRO_COMMA TYPE>)
 
-#define FEATURE_WRAPPER_END()                                                                                          \
+#define DECLARE_INSTANCE_END()                                                                                          \
     }                                                                                                                  \
     ;
 
@@ -36,9 +36,9 @@ namespace babelwires {
             : VALUE_TYPE::Instance<VALUE_FEATURE>(valueFeature) {}
     };
 
-    template <typename VALUE_FEATURE, typename VALUE_TYPE> class FeatureWrapperCommonBase {
+    template <typename VALUE_FEATURE, typename VALUE_TYPE> class InstanceCommonBase {
       public:
-        FeatureWrapperCommonBase(VALUE_FEATURE* valueFeature)
+        InstanceCommonBase(VALUE_FEATURE* valueFeature)
             : m_valueFeature(valueFeature) {
             assert(!valueFeature || valueFeature->getType().template as<VALUE_TYPE>());
         }
