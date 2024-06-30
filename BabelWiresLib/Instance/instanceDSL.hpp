@@ -7,25 +7,31 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Instance/instanceUtils.hpp>
 
 #include <optional>
 
+#define DECLARE_INSTANCE_BEGIN(TYPE)                                                                                   \
+    template <typename VALUE_FEATURE> class Instance : public babelwires::InstanceParent<VALUE_FEATURE, TYPE> {        \
+      public:                                                                                                          \
+        Instance(VALUE_FEATURE* valueFeature)                                                                          \
+            : babelwires::InstanceParent<VALUE_FEATURE, TYPE>(valueFeature) {}
+
 #define DECLARE_INSTANCE_FIELD(FIELD_NAME, VALUE_TYPE)                                                                  \
     babelwires::Instance<const babelwires::ValueFeature, VALUE_TYPE> get##FIELD_NAME() const {                         \
-        return &babelwires::RecordFeatureUtils::getChild(*this->m_valueFeature, #FIELD_NAME);                          \
+        return &babelwires::InstanceUtils::getChild(*this->m_valueFeature, #FIELD_NAME);                          \
     }                                                                                                                  \
     template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, babelwires::Instance<babelwires::ValueFeature, VALUE_TYPE>>    \
         get##FIELD_NAME() {                                                                                            \
-        return &babelwires::RecordFeatureUtils::getChild(*this->m_valueFeature, #FIELD_NAME);                          \
+        return &babelwires::InstanceUtils::getChild(*this->m_valueFeature, #FIELD_NAME);                          \
     }
 
 #define DECLARE_INSTANCE_FIELD_OPTIONAL(FIELD_NAME, VALUE_TYPE)                                                         \
     DECLARE_INSTANCE_FIELD(FIELD_NAME, VALUE_TYPE)                                                                      \
     std::optional<babelwires::Instance<const babelwires::ValueFeature, VALUE_TYPE>> tryGet##FIELD_NAME() const {       \
         if (const babelwires::ValueFeature* valueFeature =                                                             \
-                babelwires::RecordFeatureUtils::tryGetChild(*this->m_valueFeature, #FIELD_NAME)) {                     \
+                babelwires::InstanceUtils::tryGetChild(*this->m_valueFeature, #FIELD_NAME)) {                     \
             return {valueFeature};                                                                                     \
         } else {                                                                                                       \
             return {};                                                                                                 \
@@ -34,16 +40,10 @@
     template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, babelwires::Instance<babelwires::ValueFeature, VALUE_TYPE>>    \
         activateAndGet##FIELD_NAME() {                                                                                 \
-        return &babelwires::RecordFeatureUtils::activateAndGetChild(*this->m_valueFeature, #FIELD_NAME);               \
+        return &babelwires::InstanceUtils::activateAndGetChild(*this->m_valueFeature, #FIELD_NAME);               \
     }
 
-namespace babelwires {
+#define DECLARE_INSTANCE_END()                                                                                         \
+    }                                                                                                                  \
+    ;
 
-    namespace RecordFeatureUtils {
-        const babelwires::ValueFeature& getChild(const babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
-        babelwires::ValueFeature& getChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
-        const babelwires::ValueFeature* tryGetChild(const babelwires::ValueFeature& recordFeature,
-                                                    babelwires::ShortId id);
-        babelwires::ValueFeature& activateAndGetChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
-    } // namespace RecordFeatureUtils
-} // namespace babelwires

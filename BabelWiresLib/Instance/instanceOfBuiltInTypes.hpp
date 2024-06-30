@@ -7,10 +7,11 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Instance/instanceOf.hpp>
+#include <BabelWiresLib/Instance/instance.hpp>
+#include <BabelWiresLib/Instance/instanceDSL.hpp>
 
-#include <BabelWiresLib/Instance/recordTypeInstance.hpp>
 #include <BabelWiresLib/Instance/enumTypeInstance.hpp>
 #include <BabelWiresLib/Instance/arrayTypeInstance.hpp>
 #include <BabelWiresLib/Instance/intTypeInstance.hpp>
 #include <BabelWiresLib/Instance/stringTypeInstance.hpp>
+#include <BabelWiresLib/Instance/recordWithVariantsTypeInstance.hpp>

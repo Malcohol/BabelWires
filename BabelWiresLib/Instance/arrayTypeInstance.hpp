@@ -7,7 +7,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Instance/instanceOf.hpp>
+#include <BabelWiresLib/Instance/instance.hpp>
+#include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #define DECLARE_ARRAY_INSTANCE(ELEMENT_TYPE) \
@@ -15,15 +16,6 @@
 
 namespace babelwires {
     class ValueFeature;
-
-    /// A set of useful functions for interacting with features of ArrayType.
-    namespace ArrayFeatureUtils {
-        unsigned int getArraySize(const ValueFeature& arrayFeature);
-        void setArraySize(ValueFeature& arrayFeature, unsigned int newSize);
-
-        const ValueFeature& getChild(const ValueFeature& arrayFeature, unsigned int index);
-        ValueFeature& getChild(ValueFeature& arrayFeature, unsigned int index);
-    }; // namespace ArrayFeatureUtils
 
     template <typename VALUE_FEATURE, typename T>
         requires std::is_base_of_v<ArrayType, T>
@@ -38,22 +30,22 @@ namespace babelwires {
 
         unsigned int getSize() const {
             assert(m_valueFeature);
-            return ArrayFeatureUtils::getArraySize(*m_valueFeature);
+            return InstanceUtils::getArraySize(*m_valueFeature);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> setSize(unsigned int newSize) {
             assert(m_valueFeature);
-            ArrayFeatureUtils::setArraySize(*m_valueFeature, newSize);
+            InstanceUtils::setArraySize(*m_valueFeature, newSize);
         }
         Instance<const ValueFeature, typename T::EntryTypeForInstance> getEntry(unsigned int index) const {
             assert(m_valueFeature);
-            return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
+            return &InstanceUtils::getChild(*m_valueFeature, index);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,
                          Instance<VALUE_FEATURE, typename T::EntryTypeForInstance>>
             getEntry(unsigned int index) {
-            return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
+            return &InstanceUtils::getChild(*m_valueFeature, index);
         }
     };
 } // namespace babelwires

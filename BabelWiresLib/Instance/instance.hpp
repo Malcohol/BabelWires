@@ -8,16 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
-
-#define DECLARE_INSTANCE_BEGIN(TYPE)                                                                                   \
-    template <typename VALUE_FEATURE> class Instance : public babelwires::InstanceParent<VALUE_FEATURE, TYPE> {        \
-      public:                                                                                                          \
-        Instance(VALUE_FEATURE* valueFeature)                                                                          \
-            : babelwires::InstanceParent<VALUE_FEATURE, TYPE>(valueFeature) {}
-
-#define DECLARE_INSTANCE_END()                                                                                         \
-    }                                                                                                                  \
-    ;
+#include <BabelWiresLib/Features/valueFeature.hpp>
 
 namespace babelwires {
     /// The default approach to finding feature wrappers is this template.
@@ -45,10 +36,11 @@ namespace babelwires {
     };
 
     /// Can be specialized to make additional methods available for instances of particular types.
-    template <typename VALUE_FEATURE, typename VALUE_TYPE> class InstanceParent : public InstanceCommonBase<VALUE_FEATURE, VALUE_TYPE> {
+    template <typename VALUE_FEATURE, typename VALUE_TYPE>
+    class InstanceParent : public InstanceCommonBase<VALUE_FEATURE, VALUE_TYPE> {
       public:
         InstanceParent(VALUE_FEATURE* valueFeature)
             : InstanceCommonBase<VALUE_FEATURE, VALUE_TYPE>(valueFeature) {}
     };
 
-} // namespace babelwires
+}
