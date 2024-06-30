@@ -34,9 +34,9 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
-	Types/Array/arrayValue.cpp
 	Types/Array/arrayType.cpp
 	Types/Array/arrayTypeConstructor.cpp
+	Types/Array/arrayValue.cpp
 	Types/Map/Commands/addEntryToMapCommand.cpp
 	Types/Map/Commands/removeEntryFromMapCommand.cpp
 	Types/Map/Commands/replaceMapEntryCommand.cpp
@@ -116,6 +116,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
 	Types/String/stringFeature.cpp
+	Instance/instanceUtils.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
 	TypeSystem/typeConstructorArguments.cpp

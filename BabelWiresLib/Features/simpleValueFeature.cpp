@@ -66,7 +66,7 @@ void babelwires::SimpleValueFeature::backUpValue() {
 babelwires::ValueHolder& babelwires::SimpleValueFeature::setModifiable(const FeaturePath& pathFromHere) {
     if (pathFromHere.getNumSteps() > 0) {
         assert(getType().as<CompoundType>() && "Path leading into a non-compound type");
-        assert(m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
+        assert(m_isNew || m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
         const ProjectContext& context = RootFeature::getProjectContextAt(*this);
         auto [_, valueInCopy] = followNonConst(context.m_typeSystem, getType(), pathFromHere, m_value);
         synchronizeSubfeatures();
@@ -81,4 +81,5 @@ void babelwires::SimpleValueFeature::reconcileChangesFromBackup() {
         reconcileChanges(m_valueBackUp);
         m_valueBackUp.clear();
     }
+    m_isNew = false;
 }

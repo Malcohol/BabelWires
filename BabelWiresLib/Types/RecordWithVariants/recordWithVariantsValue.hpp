@@ -22,6 +22,9 @@ namespace babelwires {
         void setTag(ShortId tag);
         ShortId getTag() const;
 
+        std::size_t getHash() const override;
+        bool operator==(const Value& other) const override;
+
       private:
         ShortId m_tag;
     };

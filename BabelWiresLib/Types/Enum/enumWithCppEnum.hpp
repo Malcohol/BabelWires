@@ -34,7 +34,8 @@
     }                                                                                                                  \
     Value getValueFromIdentifier(babelwires::ShortId id) const {                                                       \
         return static_cast<Value>(getIndexFromIdentifier(id));                                                         \
-    }
+    }                                                                                                                  \
+    static constexpr bool s_hasCppEnum = true;
 
 /// This defines a static which should be placed in a .cpp where the Enum will be constructed.
 #define ENUM_DEFINE_ENUM_VALUE_SOURCE(CLASS, Y)                                                                        \
