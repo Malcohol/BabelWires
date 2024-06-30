@@ -34,7 +34,6 @@ SET( BABELWIRESLIB_SRCS
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	FileFormat/fileFeature.cpp
-	Types/Array/arrayFeatureWrapper.cpp
 	Types/Array/arrayType.cpp
 	Types/Array/arrayTypeConstructor.cpp
 	Types/Array/arrayValue.cpp
@@ -59,10 +58,8 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/SumOfMaps/sumOfMapsType.cpp
 	Types/Record/recordType.cpp
 	Types/Record/recordValue.cpp
-	Types/Record/recordFeatureUtils.cpp
 	Types/RecordWithVariants/recordWithVariantsType.cpp
 	Types/RecordWithVariants/recordWithVariantsValue.cpp
-	Types/RecordWithVariants/recordWithVariantsFeatureWrapper.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
@@ -119,6 +116,9 @@ SET( BABELWIRESLIB_SRCS
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
 	Types/String/stringFeature.cpp
+	InstanceOf/instanceOfArrayType.cpp
+	InstanceOf/instanceOfRecordType.cpp
+	InstanceOf/instanceOfRecordWithVariantsType.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
 	TypeSystem/typeConstructorArguments.cpp

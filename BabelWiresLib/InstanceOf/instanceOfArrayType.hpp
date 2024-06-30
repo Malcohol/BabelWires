@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/featureWrapper.hpp>
+#include <BabelWiresLib/InstanceOf/instanceOf.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #define ARRAY_FEATURE_WRAPPER(ELEMENT_TYPE) \

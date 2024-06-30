@@ -8,8 +8,8 @@
 #pragma once
 
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Types/Record/recordFeatureWrapper.hpp>
-#include <BabelWiresLib/TypeSystem/featureWrapper.hpp>
+#include <BabelWiresLib/InstanceOf/instanceOfRecordType.hpp>
+#include <BabelWiresLib/InstanceOf/instanceOf.hpp>
 
 #define RECORD_WITH_VARIANTS_BEGIN(TYPE)                                                                               \
     FEATURE_WRAPPER_BEGIN_WITH_PARENT(                                                                                 \

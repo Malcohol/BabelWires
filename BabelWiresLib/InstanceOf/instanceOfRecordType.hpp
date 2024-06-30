@@ -7,6 +7,10 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/Features/valueFeature.hpp>
+
+#include <optional>
+
 #define FEATURE_WRAPPER_FIELD(FIELD_NAME, VALUE_TYPE)                                                                  \
     babelwires::FeatureWrapper<const babelwires::ValueFeature, VALUE_TYPE> get##FIELD_NAME() const {                   \
         return &babelwires::RecordFeatureUtils::getChild(*this->m_valueFeature, #FIELD_NAME);                          \
@@ -34,3 +38,15 @@
         activateAndGet##FIELD_NAME() {                                                                                 \
         return &babelwires::RecordFeatureUtils::activateAndGetChild(*this->m_valueFeature, #FIELD_NAME);               \
     }
+
+
+namespace babelwires {
+
+    namespace RecordFeatureUtils {
+        const babelwires::ValueFeature& getChild(const babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
+        babelwires::ValueFeature& getChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
+        const babelwires::ValueFeature* tryGetChild(const babelwires::ValueFeature& recordFeature,
+                                                    babelwires::ShortId id);
+        babelwires::ValueFeature& activateAndGetChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
+    } // namespace RecordFeatureUtils
+} // namespace babelwires

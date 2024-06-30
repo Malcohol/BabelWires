@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsFeatureWrapper.hpp>
+#include <BabelWiresLib/InstanceOf/instanceOfRecordWithVariantsType.hpp>
 
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>

@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Types/Array/arrayFeatureWrapper.hpp>
+#include <BabelWiresLib/InstanceOf/instanceOfArrayType.hpp>
 
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
