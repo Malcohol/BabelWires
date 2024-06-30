@@ -27,11 +27,11 @@ namespace babelwires {
 
     template <typename VALUE_FEATURE, typename T>
         requires std::is_base_of_v<ArrayType, T>
-    class FeatureWrapper<VALUE_FEATURE, T> {
+    class Instance<VALUE_FEATURE, T> {
         VALUE_FEATURE* m_valueFeature;
 
       public:
-        FeatureWrapper(VALUE_FEATURE* valueFeature)
+        Instance(VALUE_FEATURE* valueFeature)
             : m_valueFeature(valueFeature) {
             assert(!valueFeature || valueFeature->getType().template as<ArrayType>());
         }
@@ -45,13 +45,13 @@ namespace babelwires {
             assert(m_valueFeature);
             ArrayFeatureUtils::setArraySize(*m_valueFeature, newSize);
         }
-        FeatureWrapper<const ValueFeature, typename T::ElementTypeForFeatureWrapper> getEntry(unsigned int index) const {
+        Instance<const ValueFeature, typename T::ElementTypeForFeatureWrapper> getEntry(unsigned int index) const {
             assert(m_valueFeature);
             return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,
-                         FeatureWrapper<VALUE_FEATURE, typename T::ElementTypeForFeatureWrapper>>
+                         Instance<VALUE_FEATURE, typename T::ElementTypeForFeatureWrapper>>
             getEntry(unsigned int index) {
             return &ArrayFeatureUtils::getChild(*m_valueFeature, index);
         }

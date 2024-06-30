@@ -10,9 +10,9 @@
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #define FEATURE_WRAPPER_BEGIN_WITH_PARENT(TYPE, PARENT)                                                                \
-    template <typename VALUE_FEATURE> class FeatureWrapper : public PARENT {                                           \
+    template <typename VALUE_FEATURE> class Instance : public PARENT {                                           \
       public:                                                                                                          \
-        FeatureWrapper(VALUE_FEATURE* valueFeature)                                                                    \
+        Instance(VALUE_FEATURE* valueFeature)                                                                    \
             : PARENT(valueFeature) {}
 
 #define MACRO_COMMA ,
@@ -30,10 +30,10 @@ namespace babelwires {
     /// in the type. However, some types (e.g. built-ins) may prefer to
     /// specialize the template instead.
     template <typename VALUE_FEATURE, typename VALUE_TYPE>
-    class FeatureWrapper : public VALUE_TYPE::FeatureWrapper<VALUE_FEATURE> {
+    class Instance : public VALUE_TYPE::Instance<VALUE_FEATURE> {
       public:
-        FeatureWrapper(VALUE_FEATURE* valueFeature)
-            : VALUE_TYPE::FeatureWrapper<VALUE_FEATURE>(valueFeature) {}
+        Instance(VALUE_FEATURE* valueFeature)
+            : VALUE_TYPE::Instance<VALUE_FEATURE>(valueFeature) {}
     };
 
     template <typename VALUE_FEATURE, typename VALUE_TYPE> class FeatureWrapperCommonBase {
