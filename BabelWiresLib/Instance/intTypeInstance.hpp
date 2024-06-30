@@ -12,26 +12,20 @@
 
 namespace babelwires {
     /// Specialized instance handling for IntType.
-    template <typename VALUE_FEATURE, typename T>
-        requires std::is_base_of_v<IntType, T>
-    class Instance<VALUE_FEATURE, T> {
-        VALUE_FEATURE* m_valueFeature;
-
+    template <typename VALUE_FEATURE, typename INT_TYPE>
+        requires std::is_base_of_v<IntType, INT_TYPE>
+    class Instance<VALUE_FEATURE, INT_TYPE> : public InstanceCommonBase<VALUE_FEATURE, INT_TYPE> {
       public:
-        Instance(VALUE_FEATURE* valueFeature)
-            : m_valueFeature(valueFeature) {
-            assert(!valueFeature || valueFeature->getType().template as<IntType>());
-        }
+        Instance(VALUE_FEATURE& valueFeature)
+            : InstanceCommonBase<VALUE_FEATURE, INT_TYPE>(valueFeature) {}
 
         typename IntValue::NativeType get() const {
-            assert(m_valueFeature);
-            const IntValue& intValue = m_valueFeature->getValue()->template is<IntValue>();
+            const IntValue& intValue = this->m_valueFeature.getValue()->template is<IntValue>();
             return intValue.get();
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> set(typename IntValue::NativeType newValue) {
-            assert(m_valueFeature);
-            m_valueFeature->setValue(IntValue(newValue));
+            this->m_valueFeature.setValue(IntValue(newValue));
         }
     };
 

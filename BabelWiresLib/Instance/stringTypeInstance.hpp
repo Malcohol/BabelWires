@@ -12,26 +12,20 @@
 
 namespace babelwires {
     /// Specialized instance handling for StringType.
-    template <typename VALUE_FEATURE, typename T>
-        requires std::is_base_of_v<StringType, T>
-    class Instance<VALUE_FEATURE, T> {
-        VALUE_FEATURE* m_valueFeature;
-
+    template <typename VALUE_FEATURE, typename STRING_TYPE>
+        requires std::is_base_of_v<StringType, STRING_TYPE>
+    class Instance<VALUE_FEATURE, STRING_TYPE> : public InstanceCommonBase<VALUE_FEATURE, STRING_TYPE> {
       public:
-        Instance(VALUE_FEATURE* valueFeature)
-            : m_valueFeature(valueFeature) {
-            assert(!valueFeature || valueFeature->getType().template as<StringType>());
-        }
+        Instance(VALUE_FEATURE& valueFeature)
+            : InstanceCommonBase<VALUE_FEATURE, STRING_TYPE>(valueFeature) {}
 
         std::string get() const {
-            assert(m_valueFeature);
-            const StringValue& stringValue = m_valueFeature->getValue()->template is<StringValue>();
+            const StringValue& stringValue = this->m_valueFeature.getValue()->template is<StringValue>();
             return stringValue.get();
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> set(std::string newValue) {
-            assert(m_valueFeature);
-            m_valueFeature->setValue(StringValue(std::move(newValue)));
+            this->m_valueFeature.setValue(StringValue(std::move(newValue)));
         }
     };
 
