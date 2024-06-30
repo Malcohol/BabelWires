@@ -1,5 +1,5 @@
 /**
- * A set of useful functions for interacting with features of ArrayType.
+ * Specialized instance handling for ArrayTypes.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,12 +11,14 @@
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
+// TODO: Currently the array type must declare the class of its entry type. This seems awkward.
 #define DECLARE_ARRAY_INSTANCE(ELEMENT_TYPE) \
     using EntryTypeForInstance = ELEMENT_TYPE;
 
 namespace babelwires {
     class ValueFeature;
 
+    /// Specialized instance handling for ArrayTypes.
     template <typename VALUE_FEATURE, typename ARRAY_TYPE>
         requires std::is_base_of_v<ArrayType, ARRAY_TYPE>
     class Instance<VALUE_FEATURE, ARRAY_TYPE> : public InstanceCommonBase<VALUE_FEATURE, ARRAY_TYPE> {

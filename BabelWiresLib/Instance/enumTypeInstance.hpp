@@ -1,5 +1,5 @@
 /**
- *
+ * Specialized instance handling for EnumTypes using the ENUM_DEFINE_CPP_ENUM macro.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -12,6 +12,7 @@
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 namespace babelwires {
+    /// Specialized instance handling for EnumTypes using the ENUM_DEFINE_CPP_ENUM macro.
     template <typename VALUE_FEATURE, typename ENUM_TYPE>
         requires std::is_base_of_v<EnumType, ENUM_TYPE> && ENUM_TYPE::s_hasCppEnum
     class Instance<VALUE_FEATURE, ENUM_TYPE> : public InstanceCommonBase<VALUE_FEATURE, ENUM_TYPE> {

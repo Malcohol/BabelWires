@@ -1,5 +1,5 @@
 /**
- *
+ * Out-of-line utility functions used by instance methods.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -10,24 +10,25 @@
 #include <BabelWiresLib/Features/valueFeature.hpp>
 
 namespace babelwires {
+    /// Out-of-line utility functions used by instance methods.
     namespace InstanceUtils {
-        // Utility methods common between RecordTypes and RecordWithVariantTypes
+        // Utility functions common between RecordTypes and RecordWithVariantTypes
 
         const babelwires::ValueFeature& getChild(const babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
         babelwires::ValueFeature& getChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
 
-        // Utility methods for RecordTypes
+        // Utility functions for RecordTypes
 
         const babelwires::ValueFeature* tryGetChild(const babelwires::ValueFeature& recordFeature,
                                                     babelwires::ShortId id);
         babelwires::ValueFeature& activateAndGetChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
 
-        // Utility methods for RecordWithVariantTypes
+        // Utility functions for RecordWithVariantTypes
 
         ShortId getSelectedTag(const ValueFeature& valueFeature);
         void selectTag(ValueFeature& valueFeature, ShortId tag);
 
-        // Utility methods for ArrayTypes
+        // Utility functions for ArrayTypes
 
         unsigned int getArraySize(const ValueFeature& arrayFeature);
         void setArraySize(ValueFeature& arrayFeature, unsigned int newSize);

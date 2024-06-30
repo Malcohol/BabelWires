@@ -1,5 +1,5 @@
 /**
- *
+ * Specialized instance handling for StringType.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
 namespace babelwires {
+    /// Specialized instance handling for StringType.
     template <typename VALUE_FEATURE, typename T>
         requires std::is_base_of_v<StringType, T>
     class Instance<VALUE_FEATURE, T> {

@@ -1,5 +1,5 @@
 /**
- * 
+ * Out-of-line utility functions used by instance methods.
  *
  * (C) 2021 Malcolm Tyrrell
  *

@@ -1,5 +1,5 @@
 /**
- *
+ * Provides some standard methods for instances of RecordForVariantType.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,6 +13,7 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 namespace babelwires {
+    /// Provides some standard methods for instances of RecordForVariantType.
     template <typename VALUE_FEATURE, typename T>
         requires std::is_base_of_v<RecordWithVariantsType, T>
     class InstanceParent<VALUE_FEATURE, T> : public InstanceCommonBase<VALUE_FEATURE, T> {

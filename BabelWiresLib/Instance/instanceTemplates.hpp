@@ -1,5 +1,5 @@
 /**
- *
+ * The core templates used by the instance system.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,10 +11,9 @@
 #include <BabelWiresLib/Features/valueFeature.hpp>
 
 namespace babelwires {
-    /// The default approach to finding feature wrappers is this template.
-    /// It "despatches to" (i.e. inherits from) a corresponding inner-class
-    /// in the type. However, some types (e.g. built-ins) may prefer to
-    /// specialize the template instead.
+    /// The default approach to finding the appropriate instance class is this template.
+    /// For record-style types it "despatches to" (i.e. inherits from) a corresponding inner-class
+    /// in the type's class. However, some types (e.g. built-ins) specialize the template instead.
     template <typename VALUE_FEATURE, typename VALUE_TYPE> class Instance : public VALUE_TYPE::Instance<VALUE_FEATURE> {
       public:
         Instance(VALUE_FEATURE* valueFeature)
@@ -22,6 +21,7 @@ namespace babelwires {
     };
 
     /// Methods that should be available for every instance.
+    /// Inner-class instances and specializations should always inherit from this.
     template <typename VALUE_FEATURE, typename VALUE_TYPE> class InstanceCommonBase {
       public:
         InstanceCommonBase(VALUE_FEATURE* valueFeature)
@@ -35,7 +35,9 @@ namespace babelwires {
         VALUE_FEATURE* m_valueFeature;
     };
 
-    /// Can be specialized to make additional methods available for instances of particular types.
+    /// Can be specialized to make additional methods available for inner-class defined instances of particular types.
+    /// For example, RecordWithVariantType classes use this to have common methods (for variant handling) while having bespoke
+    /// fields defined by the instanceDSL macros.
     template <typename VALUE_FEATURE, typename VALUE_TYPE>
     class InstanceParent : public InstanceCommonBase<VALUE_FEATURE, VALUE_TYPE> {
       public:

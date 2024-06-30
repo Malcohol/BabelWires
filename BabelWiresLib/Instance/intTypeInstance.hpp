@@ -1,5 +1,5 @@
 /**
- *
+ * Specialized instance handling for IntType.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 namespace babelwires {
+    /// Specialized instance handling for IntType.
     template <typename VALUE_FEATURE, typename T>
         requires std::is_base_of_v<IntType, T>
     class Instance<VALUE_FEATURE, T> {
