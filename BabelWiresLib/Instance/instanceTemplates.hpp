@@ -7,14 +7,15 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
     /// The default approach to finding the appropriate instance class is this template.
     /// For record-style types it "despatches to" (i.e. inherits from) a corresponding inner-class
     /// in the type's class. However, some types (e.g. built-ins) specialize the template instead.
-    template <typename VALUE_FEATURE, typename VALUE_TYPE> class Instance : public VALUE_TYPE::template Instance<VALUE_FEATURE> {
+    template <typename VALUE_FEATURE, typename VALUE_TYPE>
+    class Instance : public VALUE_TYPE::template Instance<VALUE_FEATURE> {
       public:
         Instance(VALUE_FEATURE& valueFeature)
             : VALUE_TYPE::template Instance<VALUE_FEATURE>(valueFeature) {}
@@ -28,6 +29,11 @@ namespace babelwires {
             : m_valueFeature(valueFeature) {
             assert(valueFeature.getType().template as<VALUE_TYPE>());
         }
+        VALUE_FEATURE& getValueFeature() const { return m_valueFeature; }
+        template <typename VALUE_FEATURE_M = VALUE_FEATURE>
+        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_FEATURE> getValueFeature() {
+            return m_valueFeature;
+        }
         const VALUE_TYPE& getInstanceType() const { return m_valueFeature.getType().template is<VALUE_TYPE>(); }
         const babelwires::ValueHolder& getInstanceValue() const { return m_valueFeature.getValue(); }
 
@@ -36,8 +42,8 @@ namespace babelwires {
     };
 
     /// Can be specialized to make additional methods available for inner-class defined instances of particular types.
-    /// For example, RecordWithVariantType classes use this to have common methods (for variant handling) while having bespoke
-    /// fields defined by the instanceDSL macros.
+    /// For example, RecordWithVariantType classes use this to have common methods (for variant handling) while having
+    /// bespoke fields defined by the instanceDSL macros.
     template <typename VALUE_FEATURE, typename VALUE_TYPE>
     class InstanceParent : public InstanceCommonBase<VALUE_FEATURE, VALUE_TYPE> {
       public:
@@ -45,4 +51,4 @@ namespace babelwires {
             : InstanceCommonBase<VALUE_FEATURE, VALUE_TYPE>(valueFeature) {}
     };
 
-}
+} // namespace babelwires
