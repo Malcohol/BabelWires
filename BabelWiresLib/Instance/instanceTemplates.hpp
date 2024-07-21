@@ -31,7 +31,7 @@ namespace babelwires {
         }
         VALUE_FEATURE& getValueFeature() const { return m_valueFeature; }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_FEATURE> getValueFeature() {
+        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_FEATURE&> getValueFeature() {
             return m_valueFeature;
         }
         const VALUE_TYPE& getInstanceType() const { return m_valueFeature.getType().template is<VALUE_TYPE>(); }
