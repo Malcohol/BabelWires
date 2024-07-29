@@ -14,7 +14,6 @@ namespace babelwires {
     struct ProjectContext;
     struct ProcessorElementData;
     class Processor;
-    class RootFeature;
 
     class ProcessorElement : public FeatureElement {
       public:
@@ -24,12 +23,12 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const ProcessorElementData& getElementData() const;
 
-        virtual const RootFeature* getInputFeature() const override;
-        virtual const RootFeature* getOutputFeature() const override;
+        virtual const Feature* getInputFeature() const override;
+        virtual const Feature* getOutputFeature() const override;
 
       protected:
-        RootFeature* doGetInputFeatureNonConst() override;
-        RootFeature* doGetOutputFeatureNonConst() override;
+        Feature* doGetInputFeatureNonConst() override;
+        Feature* doGetOutputFeatureNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
       protected:

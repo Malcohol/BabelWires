@@ -27,7 +27,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     ASSERT_TRUE(featureElement->as<babelwires::ProcessorElement>());
     babelwires::ProcessorElement* processorElement = static_cast<babelwires::ProcessorElement*>(featureElement.get());
 
-    const babelwires::RecordFeature* outputFeature = processorElement->getOutputFeature();
+    const babelwires::Feature* outputFeature = processorElement->getOutputFeature();
     ASSERT_TRUE(outputFeature->as<const testUtils::TestRootFeature>());
     const testUtils::TestRootFeature* outputTestRecordFeature =
         static_cast<const testUtils::TestRootFeature*>(outputFeature);

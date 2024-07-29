@@ -35,16 +35,17 @@ TEST(ValueElementTest, simpleType) {
     EXPECT_EQ(valueElement->getElementData().m_id, 10);
     EXPECT_EQ(valueElementData->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
 
-    const babelwires::RootFeature* const inputFeature = valueElement->getInputFeature();
-    const babelwires::RootFeature* const outputFeature = valueElement->getOutputFeature();
+    const babelwires::Feature* const inputFeature = valueElement->getInputFeature();
+    const babelwires::Feature* const outputFeature = valueElement->getOutputFeature();
 
     ASSERT_NE(inputFeature, nullptr);
     ASSERT_NE(outputFeature, nullptr);
     EXPECT_EQ(inputFeature, outputFeature);
 
-    ASSERT_EQ(inputFeature->getNumFeatures(), 1);
+    ASSERT_TRUE(inputFeature->as<babelwires::CompoundFeature>());
+    ASSERT_EQ(inputFeature->is<babelwires::CompoundFeature>().getNumFeatures(), 1);
 
-    const babelwires::Feature* const child = inputFeature->getFeature(0);
+    const babelwires::Feature* const child = inputFeature->is<babelwires::CompoundFeature>().getFeature(0);
     ASSERT_NE(child, nullptr);
     const babelwires::ValueFeature* const childAsValue = child->as<babelwires::ValueFeature>();
     ASSERT_NE(childAsValue, nullptr);

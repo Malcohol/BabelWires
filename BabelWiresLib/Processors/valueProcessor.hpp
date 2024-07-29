@@ -15,7 +15,6 @@
 
 namespace babelwires {
     struct UserLogger;
-    class RootFeature;
     class TypeRef;
     class ProjectContext;
     class ValueFeature;
