@@ -19,6 +19,7 @@ namespace babelwires {
     class RecordFeature;
     struct ProjectContext;
     class FileFeature;
+    class RootFeature;
 
     /// TargetFileElements are FeatureElements which correspond to a target file.
     class TargetFileElement : public FileElement {

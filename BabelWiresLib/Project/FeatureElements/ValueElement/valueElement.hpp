@@ -13,6 +13,7 @@
 namespace babelwires {
     struct UserLogger;
     class ValueElementData;
+    class RootFeature;
 
     class ValueElement : public FeatureElement {
       public:

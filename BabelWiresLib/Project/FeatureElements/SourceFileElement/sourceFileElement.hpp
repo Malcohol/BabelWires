@@ -18,6 +18,7 @@ namespace babelwires {
     struct SourceFileElementData;
     class RecordFeature;
     struct ProjectContext;
+    class RootFeature;
 
     /// SourceFileElements are FeatureElements which correspond to a source file.
     class SourceFileElement : public FileElement {

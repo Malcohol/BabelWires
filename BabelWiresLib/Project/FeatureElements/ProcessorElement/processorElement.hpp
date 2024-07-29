@@ -38,7 +38,7 @@ namespace babelwires {
         std::unique_ptr<Processor> m_processor;
 
         /// Non-null when the defined processor could not be constructed.
-        std::unique_ptr<babelwires::RootFeature> m_sharedDummyFeature;
+        std::unique_ptr<babelwires::Feature> m_sharedDummyFeature;
     };
 
 } // namespace babelwires

@@ -20,7 +20,6 @@ namespace babelwires {
     class CompoundFeature;
     class RecordFeature;
     class ArrayFeature;
-    class RootFeature;
     class EditTree;
     class ContentsCache;
 
@@ -112,7 +111,7 @@ namespace babelwires {
         ContentsCache(EditTree& edits);
 
         /// Build the cache with the given input and output features.
-        void setFeatures(const RootFeature* inputFeature, const RootFeature* outputFeature);
+        void setFeatures(const Feature* inputFeature, const Feature* outputFeature);
 
         /// Update the part of the cache concerning modifiers.
         void updateModifierCache();

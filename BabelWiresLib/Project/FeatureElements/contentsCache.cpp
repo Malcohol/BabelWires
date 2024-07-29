@@ -195,7 +195,7 @@ namespace babelwires {
     } // namespace Detail
 } // namespace babelwires
 
-void babelwires::ContentsCache::setFeatures(const RootFeature* inputFeature, const RootFeature* outputFeature) {
+void babelwires::ContentsCache::setFeatures(const Feature* inputFeature, const Feature* outputFeature) {
     m_rows.clear();
     Detail::ContentsCacheBuilder builder(m_rows, m_edits);
     const babelwires::Feature* const rootFeature = inputFeature ? inputFeature : outputFeature;
