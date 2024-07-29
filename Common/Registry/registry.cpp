@@ -36,8 +36,8 @@ babelwires::RegistryEntry* babelwires::UntypedRegistry::addEntry(std::unique_ptr
     LongId id = newEntry->getIdentifier();
     assert((newEntry->getIdentifier().getDiscriminator() != 0) &&
            "A registered entry must have a registered identifier");
-    assert((getEntryByIdentifier(id) == nullptr) && "Format with that identifier already registered.");
-    assert((getEntryByName(newEntry->getName()) == nullptr) && "Format with that name already registered.");
+    assert((getEntryByIdentifier(id) == nullptr) && "Entry with that identifier already registered.");
+    assert((getEntryByName(newEntry->getName()) == nullptr) && "Entry with that name already registered.");
     RegistryEntry* const rawEntry = newEntry.get();
     m_entries.insert({ id, std::move(newEntry) });
     return rawEntry;

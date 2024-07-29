@@ -29,13 +29,15 @@ namespace babelwires {
             : m_valueFeature(valueFeature) {
             assert(valueFeature.getType().template as<VALUE_TYPE>());
         }
-        VALUE_FEATURE& getValueFeature() const { return m_valueFeature; }
+        /// Access the functionality of the ValueFeature.
+        const VALUE_FEATURE* operator->() const { return &m_valueFeature; }
+        /// Access the functionality of the ValueFeature.
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_FEATURE&> getValueFeature() {
-            return m_valueFeature;
+        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_FEATURE*> operator->() {
+            return &m_valueFeature;
         }
+        /// More specific than this->getType().
         const VALUE_TYPE& getInstanceType() const { return m_valueFeature.getType().template is<VALUE_TYPE>(); }
-        const babelwires::ValueHolder& getInstanceValue() const { return m_valueFeature.getValue(); }
 
       protected:
         VALUE_FEATURE& m_valueFeature;
