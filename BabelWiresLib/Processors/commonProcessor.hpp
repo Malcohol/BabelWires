@@ -12,6 +12,7 @@
 
 namespace babelwires {
     struct ProjectContext;
+    class RootFeature;
 
     /// A convenient base class for most processors which provides a default constructed recordFeature for input and
     /// output features.
@@ -19,8 +20,11 @@ namespace babelwires {
       public:
         CommonProcessor(const ProjectContext& projectContext);
 
-        virtual babelwires::RootFeature* getInputFeature() override;
-        virtual babelwires::RootFeature* getOutputFeature() override;
+        virtual babelwires::Feature* getInputFeature() override;
+        virtual babelwires::Feature* getOutputFeature() override;
+
+        babelwires::RootFeature* getInputRootFeature() { return m_inputFeature.get(); }
+        babelwires::RootFeature* getOutputRootFeature() { return m_outputFeature.get(); }
 
       protected:
         std::unique_ptr<babelwires::RootFeature> m_inputFeature;

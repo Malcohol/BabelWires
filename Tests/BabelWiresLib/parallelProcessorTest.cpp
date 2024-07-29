@@ -54,9 +54,9 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     processor.getOutputFeature()->setToDefault();
 
     babelwires::ArrayFeature* const inputArrayFeature =
-        processor.getInputFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
+        processor.getInputRootFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
     const babelwires::ArrayFeature* const outputArrayFeature =
-        processor.getOutputFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
+        processor.getOutputRootFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
 
     const auto getInputArrayEntry = [inputArrayFeature](int i) {
         return inputArrayFeature->getFeature(i)->as<babelwires::IntFeature>();
@@ -103,9 +103,9 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     processor.getOutputFeature()->setToDefault();
 
     babelwires::ArrayFeature* const inputArrayFeature =
-        processor.getInputFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
+        processor.getInputRootFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
     const babelwires::ArrayFeature* const outputArrayFeature =
-        processor.getOutputFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
+        processor.getOutputRootFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
 
     const auto getInputArrayEntry = [inputArrayFeature](int i) {
         return inputArrayFeature->getFeature(i)->as<babelwires::IntFeature>();
@@ -177,9 +177,9 @@ TEST(ParallelProcessorTest, testFailure) {
     processor.getOutputFeature()->setToDefault();
 
     babelwires::ArrayFeature* const inputArrayFeature =
-        processor.getInputFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
+        processor.getInputRootFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
     const babelwires::ArrayFeature* const outputArrayFeature =
-        processor.getOutputFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
+        processor.getOutputRootFeature()->getChildFromStep(babelwires::PathStep("array")).as<babelwires::ArrayFeature>();
 
     const auto getInputArrayEntry = [inputArrayFeature](int i) {
         return inputArrayFeature->getFeature(i)->as<babelwires::IntFeature>();

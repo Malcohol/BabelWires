@@ -13,10 +13,10 @@ babelwires::CommonProcessor::CommonProcessor(const ProjectContext& projectContex
     : m_inputFeature(std::make_unique<babelwires::RootFeature>(projectContext))
     , m_outputFeature(std::make_unique<babelwires::RootFeature>(projectContext)) {}
 
-babelwires::RootFeature* babelwires::CommonProcessor::getInputFeature() {
+babelwires::Feature* babelwires::CommonProcessor::getInputFeature() {
     return m_inputFeature.get();
 }
 
-babelwires::RootFeature* babelwires::CommonProcessor::getOutputFeature() {
+babelwires::Feature* babelwires::CommonProcessor::getOutputFeature() {
     return m_outputFeature.get();
 }

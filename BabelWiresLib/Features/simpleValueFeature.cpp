@@ -13,6 +13,10 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/valuePath.hpp>
 
+babelwires::SimpleValueFeature::SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef)
+    : ValueFeature(std::move(typeRef))
+    , m_typeSystem(&typeSystem) {}
+
 babelwires::SimpleValueFeature::SimpleValueFeature(TypeRef typeRef)
     : ValueFeature(std::move(typeRef)) {}
 
@@ -65,7 +69,8 @@ void babelwires::SimpleValueFeature::backUpValue() {
 babelwires::ValueHolder& babelwires::SimpleValueFeature::setModifiable(const FeaturePath& pathFromHere) {
     if (pathFromHere.getNumSteps() > 0) {
         assert(getType().as<CompoundType>() && "Path leading into a non-compound type");
-        assert(m_isNew || m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
+        assert(m_isNew ||
+               m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
         const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
         auto [_, valueInCopy] = followNonConst(typeSystem, getType(), pathFromHere, m_value);
         synchronizeSubfeatures();

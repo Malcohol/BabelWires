@@ -7,16 +7,17 @@
  **/
 #include <BabelWiresLib/Processors/valueProcessor.hpp>
 
+#include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
 babelwires::ValueProcessor::ValueProcessor(const ProjectContext& projectContext, const TypeRef& inputTypeRef,
                                            const TypeRef& outputTypeRef)
-    : CommonProcessor(projectContext) {
+    : m_inputFeature(std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, inputTypeRef))
+    , m_outputFeature(std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, outputTypeRef)) {
     const Type* const inputType = inputTypeRef.tryResolve(projectContext.m_typeSystem);
     if (!inputType) {
         throw ModelException() << "Input type reference " << inputTypeRef << " could not be resolved";
@@ -25,19 +26,18 @@ babelwires::ValueProcessor::ValueProcessor(const ProjectContext& projectContext,
     if (!outputType) {
         throw ModelException() << "Output type reference " << inputTypeRef << " could not be resolved";
     }
-    // TODO: Simple Value should be its own root.
-    m_inputFeature->addField(std::make_unique<SimpleValueFeature>(inputTypeRef), getStepToValue());
-    m_outputFeature->addField(std::make_unique<SimpleValueFeature>(outputTypeRef), getStepToValue());
 }
 
-babelwires::ShortId babelwires::ValueProcessor::getStepToValue() {
-    return BW_SHORT_ID("value", "value", "490ff1e6-95bf-4913-b3c6-c682e2db189a");
+babelwires::Feature* babelwires::ValueProcessor::getInputFeature() {
+    return m_inputFeature.get();
+}
+
+babelwires::Feature* babelwires::ValueProcessor::getOutputFeature() {
+    return m_outputFeature.get();
 }
 
 void babelwires::ValueProcessor::process(UserLogger& userLogger) {
-    const SimpleValueFeature& inputFeature = m_inputFeature->getChildFromStep(babelwires::PathStep(getStepToValue())).is<SimpleValueFeature>();
-    SimpleValueFeature& outputFeature = m_outputFeature->getChildFromStep(babelwires::PathStep(getStepToValue())).is<SimpleValueFeature>();
-    outputFeature.backUpValue();
-    processValue(userLogger, inputFeature, outputFeature);
-    outputFeature.reconcileChangesFromBackup();
+    m_outputFeature->backUpValue();
+    processValue(userLogger, *m_inputFeature, *m_outputFeature);
+    m_outputFeature->reconcileChangesFromBackup();
 }
