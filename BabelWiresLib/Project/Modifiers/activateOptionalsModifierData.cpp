@@ -82,7 +82,7 @@ void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) co
         return;
     } else if (auto valueFeature = targetFeature->as<ValueFeature>()) {
         if (auto recordType = valueFeature->getType().as<RecordType>()) {
-            const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*valueFeature);
+            const TypeSystem& typeSystem = valueFeature->getTypeSystem();
             ValueHolder newValue = valueFeature->getValue();
             recordType->ensureActivated(typeSystem, newValue, m_selectedOptionals);
             valueFeature->setValue(newValue);

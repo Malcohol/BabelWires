@@ -50,8 +50,22 @@ void babelwires::ValueFeature::doSetToDefaultNonRecursive() {
     setToDefault();
 }
 
+const babelwires::TypeSystem& babelwires::ValueFeature::getTypeSystem() const {
+    const ValueFeature* current = this;
+    while (1) {
+        if (const SimpleValueFeature* currentAsRootValueFeature = current->as<SimpleValueFeature>()) {
+            return currentAsRootValueFeature->getTypeSystem();
+        }
+        assert(getOwner() && "You can only get the RootValueFeature from a ValueFeature in a hierarchy.");
+        const ValueFeature* const owner = current->getOwner()->as<ValueFeature>();
+        assert(owner && "The owner of a ChildValueFeature must be a ValueFeature");
+        current = owner;
+    }
+}
+
+
 const babelwires::Type& babelwires::ValueFeature::getType() const {
-    const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+    const TypeSystem& typeSystem = getTypeSystem();
     return m_typeRef.resolve(typeSystem);
 }
 

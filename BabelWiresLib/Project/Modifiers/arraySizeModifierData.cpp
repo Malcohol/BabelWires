@@ -27,7 +27,7 @@ void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
 
     if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
-            const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*value);
+            const TypeSystem& typeSystem = value->getTypeSystem();
             ValueHolder newValue = value->getValue();
             arrayType->setSize(typeSystem, newValue, m_size);
             value->setValue(newValue);
@@ -65,7 +65,7 @@ void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int i
     
     if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
-            const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*value);
+            const TypeSystem& typeSystem = value->getTypeSystem();
             ValueHolder newValue = value->getValue();
             arrayType->insertEntries(typeSystem, newValue, indexOfNewElement, numEntriesToAdd);
             value->setValue(newValue);

@@ -36,6 +36,9 @@ namespace babelwires {
         /// This clears the backup.
         void reconcileChangesFromBackup();
 
+        /// Get the TypeSystem carried by this feature (or the one carried by the root of the hierarchy).
+        const TypeSystem& getTypeSystem() const;
+
       protected:
         const ValueHolder& doGetValue() const override;
         void doSetToDefault() override;

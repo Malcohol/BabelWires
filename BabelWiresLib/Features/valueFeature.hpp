@@ -36,6 +36,9 @@ namespace babelwires {
         /// Set this feature to hold a new value.
         void setValue(const ValueHolder& newValue);
 
+        /// Value features always exist within a hierarchy where the root carries a reference to the TypeSystem.
+        const TypeSystem& getTypeSystem() const;
+
         /// This is a convenience method which resolves the typeRef in the context of the TypeSystem
         /// carried by the rootFeature.
         const Type& getType() const;

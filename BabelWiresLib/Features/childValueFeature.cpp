@@ -33,7 +33,7 @@ const babelwires::ValueHolder& babelwires::ChildValueFeature::doGetValue() const
 void babelwires::ChildValueFeature::doSetValue(const ValueHolder& newValue) {
     const ValueHolder& currentValue = doGetValue();
     if (currentValue != newValue) {
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+        const TypeSystem& typeSystem = getTypeSystem();
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
             auto rootAndPath = getRootValueFeature();
@@ -48,7 +48,7 @@ void babelwires::ChildValueFeature::doSetValue(const ValueHolder& newValue) {
 }
 
 void babelwires::ChildValueFeature::doSetToDefault() {
-    const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+    const TypeSystem& typeSystem = getTypeSystem();
     auto [newValue, _] = getType().createValue(typeSystem);
     auto rootAndPath = getRootValueFeature();
     ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);

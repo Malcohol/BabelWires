@@ -28,7 +28,7 @@ const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() cons
 
 void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
     if (m_value != newValue) {
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+        const TypeSystem& typeSystem = getTypeSystem();
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
             ValueHolder backup = m_value;
@@ -47,7 +47,7 @@ void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
 
 void babelwires::SimpleValueFeature::doSetToDefault() {
     assert(getTypeRef() && "The type must be set to something non-trivial before doSetToDefault is called");
-    const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+    const TypeSystem& typeSystem = getTypeSystem();
     const Type& type = getType();
     auto [newValue, _] = type.createValue(typeSystem);
     if (m_value != newValue) {
@@ -71,7 +71,7 @@ babelwires::ValueHolder& babelwires::SimpleValueFeature::setModifiable(const Fea
         assert(getType().as<CompoundType>() && "Path leading into a non-compound type");
         assert(m_isNew ||
                m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+        const TypeSystem& typeSystem = getTypeSystem();
         auto [_, valueInCopy] = followNonConst(typeSystem, getType(), pathFromHere, m_value);
         synchronizeSubfeatures();
         return valueInCopy;
@@ -86,4 +86,12 @@ void babelwires::SimpleValueFeature::reconcileChangesFromBackup() {
         m_valueBackUp.clear();
     }
     m_isNew = false;
+}
+
+const babelwires::TypeSystem& babelwires::SimpleValueFeature::getTypeSystem() const {
+    if (m_typeSystem) {
+        return *m_typeSystem;
+    } else {
+        return RootFeature::getTypeSystemAt(*this);
+    }
 }
