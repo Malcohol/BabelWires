@@ -15,7 +15,9 @@
 
 babelwires::SimpleValueFeature::SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef)
     : ValueFeature(std::move(typeRef))
-    , m_typeSystem(&typeSystem) {}
+    , m_typeSystem(&typeSystem) {
+        // TODO assert the type resolves?
+    }
 
 babelwires::SimpleValueFeature::SimpleValueFeature(TypeRef typeRef)
     : ValueFeature(std::move(typeRef)) {}
@@ -94,4 +96,8 @@ const babelwires::TypeSystem& babelwires::SimpleValueFeature::getTypeSystem() co
     } else {
         return RootFeature::getTypeSystemAt(*this);
     }
+}
+
+babelwires::Feature::Style babelwires::SimpleValueFeature::getStyle() const {
+    return getOwner() ? Feature::Style() : babelwires::Feature::Style::isInlined;
 }
