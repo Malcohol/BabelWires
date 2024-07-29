@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/valuePath.hpp>
@@ -44,9 +43,9 @@ void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
 
 void babelwires::SimpleValueFeature::doSetToDefault() {
     assert(getTypeRef() && "The type must be set to something non-trivial before doSetToDefault is called");
-    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
+    const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
     const Type& type = getType();
-    auto [newValue, _] = type.createValue(context.m_typeSystem);
+    auto [newValue, _] = type.createValue(typeSystem);
     if (m_value != newValue) {
         m_value.swap(newValue);
         synchronizeSubfeatures();
@@ -67,8 +66,8 @@ babelwires::ValueHolder& babelwires::SimpleValueFeature::setModifiable(const Fea
     if (pathFromHere.getNumSteps() > 0) {
         assert(getType().as<CompoundType>() && "Path leading into a non-compound type");
         assert(m_isNew || m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
-        const ProjectContext& context = RootFeature::getProjectContextAt(*this);
-        auto [_, valueInCopy] = followNonConst(context.m_typeSystem, getType(), pathFromHere, m_value);
+        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+        auto [_, valueInCopy] = followNonConst(typeSystem, getType(), pathFromHere, m_value);
         synchronizeSubfeatures();
         return valueInCopy;
     } else {

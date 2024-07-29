@@ -12,7 +12,6 @@
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
@@ -33,9 +32,9 @@ void babelwires::SelectUnionBranchModifierData::apply(Feature* targetFeature) co
         return;
     } else if (auto valueFeature = targetFeature->as<ValueFeature>()) {
         if (auto recordType = valueFeature->getType().as<RecordWithVariantsType>()) {
-            const ProjectContext& context = RootFeature::getProjectContextAt(*valueFeature);
+            const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*valueFeature);
             ValueHolder newValue = valueFeature->getValue();
-            recordType->selectTag(context.m_typeSystem, newValue, m_tagToSelect);
+            recordType->selectTag(typeSystem, newValue, m_tagToSelect);
             valueFeature->setValue(newValue);
             return;
         }

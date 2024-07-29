@@ -11,7 +11,6 @@
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
@@ -52,8 +51,8 @@ void babelwires::ValueFeature::doSetToDefaultNonRecursive() {
 }
 
 const babelwires::Type& babelwires::ValueFeature::getType() const {
-    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
-    return m_typeRef.resolve(context.m_typeSystem);
+    const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+    return m_typeRef.resolve(typeSystem);
 }
 
 int babelwires::ValueFeature::getNumFeatures() const {

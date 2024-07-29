@@ -15,7 +15,6 @@
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
@@ -28,9 +27,9 @@ void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
 
     if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
-            const ProjectContext& context = RootFeature::getProjectContextAt(*value);
+            const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*value);
             ValueHolder newValue = value->getValue();
-            arrayType->setSize(context.m_typeSystem, newValue, m_size);
+            arrayType->setSize(typeSystem, newValue, m_size);
             value->setValue(newValue);
             return;
         }
@@ -66,9 +65,9 @@ void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int i
     
     if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
-            const ProjectContext& context = RootFeature::getProjectContextAt(*value);
+            const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*value);
             ValueHolder newValue = value->getValue();
-            arrayType->insertEntries(context.m_typeSystem, newValue, indexOfNewElement, numEntriesToAdd);
+            arrayType->insertEntries(typeSystem, newValue, indexOfNewElement, numEntriesToAdd);
             value->setValue(newValue);
             return;
         }
@@ -91,7 +90,6 @@ void babelwires::ArraySizeModifierData::removeEntries(Feature* targetFeature, in
     
     if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
-            const ProjectContext& context = RootFeature::getProjectContextAt(*value);
             ValueHolder newValue = value->getValue();
             arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove);
             value->setValue(newValue);
