@@ -14,9 +14,9 @@ namespace babelwires {
     /// Specialized instance handling for IntType.
     template <typename VALUE_FEATURE, typename INT_TYPE>
         requires std::is_base_of_v<IntType, INT_TYPE>
-    class Instance<VALUE_FEATURE, INT_TYPE> : public InstanceCommonBase<VALUE_FEATURE, INT_TYPE> {
+    class InstanceImpl<VALUE_FEATURE, INT_TYPE> : public InstanceCommonBase<VALUE_FEATURE, INT_TYPE> {
       public:
-        Instance(VALUE_FEATURE& valueFeature)
+        InstanceImpl(VALUE_FEATURE& valueFeature)
             : InstanceCommonBase<VALUE_FEATURE, INT_TYPE>(valueFeature) {}
 
         typename IntValue::NativeType get() const {

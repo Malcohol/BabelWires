@@ -19,9 +19,9 @@ namespace babelwires {
     /// Specialized instance handling for EnumTypes when the type _does_ use the ENUM_DEFINE_CPP_ENUM macro.
     template <typename VALUE_FEATURE, typename ENUM_TYPE>
         requires std::is_base_of_v<EnumType, ENUM_TYPE> && HasCppEnum<ENUM_TYPE>
-    class Instance<VALUE_FEATURE, ENUM_TYPE> : public InstanceCommonBase<VALUE_FEATURE, ENUM_TYPE> {
+    class InstanceImpl<VALUE_FEATURE, ENUM_TYPE> : public InstanceCommonBase<VALUE_FEATURE, ENUM_TYPE> {
       public:
-        Instance(VALUE_FEATURE& valueFeature)
+        InstanceImpl(VALUE_FEATURE& valueFeature)
             : InstanceCommonBase<VALUE_FEATURE, ENUM_TYPE>(valueFeature) {}
 
         typename ENUM_TYPE::Value get() const {
@@ -41,9 +41,9 @@ namespace babelwires {
     /// Specialized instance handling for EnumTypes when the type _does not_ use the ENUM_DEFINE_CPP_ENUM macro.
     template <typename VALUE_FEATURE, typename ENUM_TYPE>
         requires std::is_base_of_v<EnumType, ENUM_TYPE> && (!HasCppEnum<ENUM_TYPE>)
-    class Instance<VALUE_FEATURE, ENUM_TYPE> : public InstanceCommonBase<VALUE_FEATURE, ENUM_TYPE> {
+    class InstanceImpl<VALUE_FEATURE, ENUM_TYPE> : public InstanceCommonBase<VALUE_FEATURE, ENUM_TYPE> {
       public:
-        Instance(VALUE_FEATURE& valueFeature)
+        InstanceImpl(VALUE_FEATURE& valueFeature)
             : InstanceCommonBase<VALUE_FEATURE, ENUM_TYPE>(valueFeature) {}
 
         EnumValue get() const {

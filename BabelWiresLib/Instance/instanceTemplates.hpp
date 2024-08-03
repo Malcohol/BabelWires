@@ -15,12 +15,18 @@ namespace babelwires {
     /// For record-style types it "despatches to" (i.e. inherits from) a corresponding inner-class
     /// in the type's class. However, some types (e.g. built-ins) specialize the template instead.
     template <typename VALUE_FEATURE, typename VALUE_TYPE>
-    class Instance : public VALUE_TYPE::template Instance<VALUE_FEATURE> {
+    class InstanceImpl : public VALUE_TYPE::template InstanceImpl<VALUE_FEATURE> {
       public:
-        Instance(VALUE_FEATURE& valueFeature)
-            : VALUE_TYPE::template Instance<VALUE_FEATURE>(valueFeature) {}
+        InstanceImpl(VALUE_FEATURE& valueFeature)
+            : VALUE_TYPE::template InstanceImpl<VALUE_FEATURE>(valueFeature) {}
     };
 
+    template <typename VALUE_TYPE>
+    using Instance = InstanceImpl<ValueFeature, VALUE_TYPE>;
+
+    template <typename VALUE_TYPE>
+    using ConstInstance = InstanceImpl<const ValueFeature, VALUE_TYPE>;
+    
     /// Methods that should be available for every instance.
     /// Inner-class instances and specializations should always inherit from this.
     template <typename VALUE_FEATURE, typename VALUE_TYPE> class InstanceCommonBase {
