@@ -8,8 +8,8 @@
 #pragma once
 
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
-#include <BabelWiresLib/Processors/commonProcessor.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/Processors/processor.hpp>
 
 #include <memory>
 

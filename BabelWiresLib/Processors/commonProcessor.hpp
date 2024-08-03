@@ -30,16 +30,4 @@ namespace babelwires {
         std::unique_ptr<babelwires::RootFeature> m_inputFeature;
         std::unique_ptr<babelwires::RootFeature> m_outputFeature;
     };
-
-    /// A convenient base class for processor factories.
-    template <typename PROCESSOR> class CommonProcessorFactory : public ProcessorFactory {
-      public:
-        CommonProcessorFactory(LongId identifier, VersionNumber version)
-            : ProcessorFactory(identifier, version) {}
-
-        std::unique_ptr<babelwires::Processor> createNewProcessor(const ProjectContext& projectContext) const override {
-            return std::make_unique<PROCESSOR>(projectContext);
-        }
-    };
-
 } // namespace babelwires
