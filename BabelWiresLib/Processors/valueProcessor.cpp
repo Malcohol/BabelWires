@@ -24,7 +24,7 @@ babelwires::ValueProcessor::ValueProcessor(const ProjectContext& projectContext,
     }
     const Type* const outputType = outputTypeRef.tryResolve(projectContext.m_typeSystem);
     if (!outputType) {
-        throw ModelException() << "Output type reference " << inputTypeRef << " could not be resolved";
+        throw ModelException() << "Output type reference " << outputTypeRef << " could not be resolved";
     }
 }
 
