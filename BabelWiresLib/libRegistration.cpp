@@ -19,6 +19,7 @@
 #include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
 /*
 // TODO Remove
@@ -38,6 +39,7 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addTypeConstructor<SumTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<MapTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<ArrayTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<RecordTypeConstructor>();
 
 /*
     // TODO Remove
