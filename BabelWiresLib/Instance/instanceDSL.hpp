@@ -47,6 +47,18 @@
         return babelwires::InstanceUtils::activateAndGetChild(this->m_valueFeature, #FIELD_NAME);                      \
     }
 
+/// Declare a (non-optional) field.
+#define DECLARE_INSTANCE_ARRAY_FIELD(FIELD_NAME, ENTRY_TYPE)                                                           \
+    babelwires::ArrayInstanceImpl<const babelwires::ValueFeature, ENTRY_TYPE> get##FIELD_NAME() const {                \
+        return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
+    }                                                                                                                  \
+    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,                                                                \
+                     babelwires::ArrayInstanceImpl<babelwires::ValueFeature, ENTRY_TYPE>>                              \
+        get##FIELD_NAME() {                                                                                            \
+        return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
+    }
+
 /// Conclude the declaration.
 #define DECLARE_INSTANCE_END()                                                                                         \
     }                                                                                                                  \
