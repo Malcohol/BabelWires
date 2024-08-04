@@ -43,4 +43,5 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addTypeConstructor<ArrayTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<FileTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<TupleTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<RecordTypeConstructor>();
 }
