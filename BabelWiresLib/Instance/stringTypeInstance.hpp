@@ -14,9 +14,9 @@ namespace babelwires {
     /// Specialized instance handling for StringType.
     template <typename VALUE_FEATURE, typename STRING_TYPE>
         requires std::is_base_of_v<StringType, STRING_TYPE>
-    class Instance<VALUE_FEATURE, STRING_TYPE> : public InstanceCommonBase<VALUE_FEATURE, STRING_TYPE> {
+    class InstanceImpl<VALUE_FEATURE, STRING_TYPE> : public InstanceCommonBase<VALUE_FEATURE, STRING_TYPE> {
       public:
-        Instance(VALUE_FEATURE& valueFeature)
+        InstanceImpl(VALUE_FEATURE& valueFeature)
             : InstanceCommonBase<VALUE_FEATURE, STRING_TYPE>(valueFeature) {}
 
         std::string get() const {

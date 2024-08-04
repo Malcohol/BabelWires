@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 namespace babelwires {
-    /// Construct a new IntType from a TypeRef and three IntValues: min, max and default.
+    /// Construct a new ArrayType from a TypeRef and three IntValues: min size, max size and default size.
     class ArrayTypeConstructor : public TypeConstructor {
       public:
         /// Note that the default is not represented in the name.

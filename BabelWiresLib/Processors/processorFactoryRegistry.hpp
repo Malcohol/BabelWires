@@ -18,6 +18,11 @@ namespace babelwires {
     class ProcessorFactoryRegistry : public Registry<ProcessorFactory> {
       public:
         ProcessorFactoryRegistry();
+
+        template<typename PROCESSOR_SUBTYPE>
+        ProcessorFactory* addProcessor() {
+          return addEntry<typename PROCESSOR_SUBTYPE::ThisProcessorFactory<PROCESSOR_SUBTYPE>>();
+        }
     };
 
 } // namespace babelwires

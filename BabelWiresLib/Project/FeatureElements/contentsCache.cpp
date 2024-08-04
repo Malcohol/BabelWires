@@ -141,7 +141,7 @@ namespace babelwires {
                     ContentsCacheEntry(std::move(label), inputFeature, outputFeature, path, depth, indent));
                 if (const auto* const inputCompound = inputFeature->as<const babelwires::CompoundFeature>()) {
                     const auto* const outputCompound = outputFeature->as<const babelwires::CompoundFeature>();
-                    assert(outputCompound && "If the input is a record, the output must be a record too");
+                    assert(outputCompound && "If the input is a compound, the output must be a compound too");
                     addCompoundContentsToCache(inputCompound, outputCompound, path, depth, indent);
                 }
             }
@@ -195,7 +195,7 @@ namespace babelwires {
     } // namespace Detail
 } // namespace babelwires
 
-void babelwires::ContentsCache::setFeatures(const RootFeature* inputFeature, const RootFeature* outputFeature) {
+void babelwires::ContentsCache::setFeatures(const Feature* inputFeature, const Feature* outputFeature) {
     m_rows.clear();
     Detail::ContentsCacheBuilder builder(m_rows, m_edits);
     const babelwires::Feature* const rootFeature = inputFeature ? inputFeature : outputFeature;

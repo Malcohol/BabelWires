@@ -124,9 +124,9 @@ TEST(FeatureElementTest, modifiers) {
                       ->get(),
                   71);
     }
-    const babelwires::RecordFeature* const recordFeature = featureElement->getInputFeature();
-    ASSERT_TRUE(recordFeature);
-    const testUtils::TestRootFeature* const testRecordFeature = recordFeature->as<const testUtils::TestRootFeature>();
+    const babelwires::Feature* const rootFeature = featureElement->getInputFeature();
+    ASSERT_TRUE(rootFeature);
+    const testUtils::TestRootFeature* const testRecordFeature = rootFeature->as<const testUtils::TestRootFeature>();
     ASSERT_TRUE(testRecordFeature);
     EXPECT_EQ(testRecordFeature->m_arrayFeature->getNumFeatures(), 5);
     ASSERT_TRUE(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3)->as<const babelwires::IntFeature>());

@@ -56,27 +56,27 @@ void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
 
 babelwires::FeatureElement::~FeatureElement() = default;
 
-babelwires::RootFeature* babelwires::FeatureElement::doGetOutputFeatureNonConst() {
+babelwires::Feature* babelwires::FeatureElement::doGetOutputFeatureNonConst() {
     return nullptr;
 }
 
-const babelwires::RootFeature* babelwires::FeatureElement::getOutputFeature() const {
+const babelwires::Feature* babelwires::FeatureElement::getOutputFeature() const {
     return nullptr;
 }
 
-babelwires::RootFeature* babelwires::FeatureElement::getInputFeatureNonConst(const FeaturePath& pathToModify) {
-    if (RootFeature* inputFeature = doGetInputFeatureNonConst()) {
+babelwires::Feature* babelwires::FeatureElement::getInputFeatureNonConst(const FeaturePath& pathToModify) {
+    if (Feature* inputFeature = doGetInputFeatureNonConst()) {
         modifyFeatureAt(inputFeature, pathToModify);
         return inputFeature;
     }
     return nullptr;
 }
 
-babelwires::RootFeature* babelwires::FeatureElement::doGetInputFeatureNonConst() {
+babelwires::Feature* babelwires::FeatureElement::doGetInputFeatureNonConst() {
     return nullptr;
 }
 
-const babelwires::RootFeature* babelwires::FeatureElement::getInputFeature() const {
+const babelwires::Feature* babelwires::FeatureElement::getInputFeature() const {
     return nullptr;
 }
 

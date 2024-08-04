@@ -42,7 +42,7 @@ babelwires::ValueFeature& babelwires::InstanceUtils::activateAndGetChild(babelwi
     const RecordType& recordType = recordFeature.getType().is<RecordType>();
     babelwires::ValueHolder recordValue = recordFeature.getValue();
     if (!recordType.isActivated(recordValue, id)) {
-        const babelwires::TypeSystem& typeSystem = babelwires::RootFeature::getTypeSystemAt(recordFeature);
+        const babelwires::TypeSystem& typeSystem = recordFeature.getTypeSystem();
         recordType.activateField(typeSystem, recordValue, id);
         recordFeature.setValue(recordValue);
     }
@@ -60,7 +60,7 @@ void babelwires::InstanceUtils::selectTag(ValueFeature& valueFeature, ShortId ta
     const RecordWithVariantsType& type = valueFeature.getType().is<RecordWithVariantsType>();
     ValueHolder value = valueFeature.getValue();
     if (tag != type.getSelectedTag(value)) {
-        const babelwires::TypeSystem& typeSystem = babelwires::RootFeature::getTypeSystemAt(valueFeature);
+        const babelwires::TypeSystem& typeSystem = valueFeature.getTypeSystem();
         type.selectTag(typeSystem, value, tag);
         valueFeature.setValue(value);
     }
@@ -72,7 +72,7 @@ unsigned int babelwires::InstanceUtils::getArraySize(const babelwires::ValueFeat
 
 void babelwires::InstanceUtils::setArraySize(babelwires::ValueFeature& arrayFeature, unsigned int newSize) {
     const auto& type = arrayFeature.getType().is<babelwires::ArrayType>();
-    const auto& typeSystem = babelwires::RootFeature::getTypeSystemAt(arrayFeature);
+    const auto& typeSystem = arrayFeature.getTypeSystem();
     babelwires::ValueHolder value = arrayFeature.getValue();
     value.copyContentsAndGetNonConst();
     type.setSize(typeSystem, value, newSize);

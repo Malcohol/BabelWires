@@ -30,7 +30,6 @@ namespace babelwires {
     struct UiPosition;
     struct UiSize;
     struct ProjectContext;
-    class RootFeature;
     class ModifyFeatureScope;
 
     /// The fundimental constituent of the project.
@@ -53,10 +52,10 @@ namespace babelwires {
         /// Returns nullptr if the modifier will be applied later anyway, so there's no
         /// work for the caller to do.
         /// This does not attempt to deal with errors, so it returns the feature if the path cannot be followed.
-        RootFeature* getInputFeatureNonConst(const FeaturePath& pathToModify);
+        Feature* getInputFeatureNonConst(const FeaturePath& pathToModify);
 
-        virtual const RootFeature* getInputFeature() const;
-        virtual const RootFeature* getOutputFeature() const;
+        virtual const Feature* getInputFeature() const;
+        virtual const Feature* getOutputFeature() const;
 
         /// Get a description of the type of element (e.g. format name).
         virtual std::string getLabel() const;
@@ -159,9 +158,9 @@ namespace babelwires {
 
       protected:
         /// Get a non-const pointer to the input feature. The default implementation returns null.
-        virtual RootFeature* doGetInputFeatureNonConst();
+        virtual Feature* doGetInputFeatureNonConst();
         /// Get a non-const pointer to the output feature. The default implementation returns null.
-        virtual RootFeature* doGetOutputFeatureNonConst();
+        virtual Feature* doGetOutputFeatureNonConst();
         virtual void doProcess(UserLogger& userLogger) = 0;
 
       protected:

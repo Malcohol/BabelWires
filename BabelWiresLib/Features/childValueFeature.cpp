@@ -10,7 +10,6 @@
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
 babelwires::ChildValueFeature::ChildValueFeature(TypeRef typeRef, const ValueHolder* valueHolder)
@@ -34,7 +33,7 @@ const babelwires::ValueHolder& babelwires::ChildValueFeature::doGetValue() const
 void babelwires::ChildValueFeature::doSetValue(const ValueHolder& newValue) {
     const ValueHolder& currentValue = doGetValue();
     if (currentValue != newValue) {
-        const TypeSystem& typeSystem = RootFeature::getTypeSystemAt(*this);
+        const TypeSystem& typeSystem = getTypeSystem();
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
             auto rootAndPath = getRootValueFeature();
@@ -49,8 +48,8 @@ void babelwires::ChildValueFeature::doSetValue(const ValueHolder& newValue) {
 }
 
 void babelwires::ChildValueFeature::doSetToDefault() {
-    const ProjectContext& context = RootFeature::getProjectContextAt(*this);
-    auto [newValue, _] = getType().createValue(context.m_typeSystem);
+    const TypeSystem& typeSystem = getTypeSystem();
+    auto [newValue, _] = getType().createValue(typeSystem);
     auto rootAndPath = getRootValueFeature();
     ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);
     modifiableValueHolder = newValue;
