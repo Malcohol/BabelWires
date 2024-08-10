@@ -64,4 +64,16 @@ namespace babelwires {
         // I'm uncertain yet about client code in processors.
         bool m_isNew = true;
     };
+
+    struct BackupScope {
+        BackupScope(SimpleValueFeature& feature)
+            : m_backedUpValueFeature(feature) {
+            feature.backUpValue();
+        }
+
+        ~BackupScope() { m_backedUpValueFeature.reconcileChangesFromBackup(); }
+
+        SimpleValueFeature& m_backedUpValueFeature;
+    };
+
 } // namespace babelwires
