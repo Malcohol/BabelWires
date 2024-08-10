@@ -11,8 +11,10 @@
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/featureMixins.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Processors/commonProcessor.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Processors/commonProcessor.hpp>
+#include <BabelWiresLib/Processors/valueProcessor.hpp>
+#include <BabelWiresLib/Types/Record/recordType.hpp>
 
 namespace babelwires {
     constexpr int s_maxParallelFeatures = 16;
@@ -33,7 +35,8 @@ namespace babelwires {
     template <typename INPUT_ENTRY_FEATURE, typename OUTPUT_ENTRY_FEATURE>
     class ParallelProcessor : public CommonProcessor {
       public:
-        ParallelProcessor(const ProjectContext& projectContext) : CommonProcessor(projectContext) {}
+        ParallelProcessor(const ProjectContext& projectContext)
+            : CommonProcessor(projectContext) {}
 
         using InputEntryFeature = INPUT_ENTRY_FEATURE;
         using OutputEntryFeature = OUTPUT_ENTRY_FEATURE;
@@ -67,6 +70,29 @@ namespace babelwires {
       private:
         ArrayFeature* m_arrayIn = nullptr;
         ArrayFeature* m_arrayOut = nullptr;
+    };
+
+    class ParallelValueProcessorInputBase : public RecordType {
+      public:
+        ParallelValueProcessorInputBase(std::vector<RecordType::Field> commonInput, ShortId arrayId, TypeRef entryType);
+    };
+
+    class ParallelValueProcessorOutputBase : public RecordType {
+      public:
+        ParallelValueProcessorOutputBase(ShortId arrayId, TypeRef entryType);
+    };
+
+    class ParallelValueProcessor : public ValueProcessor {
+      public:
+        ParallelValueProcessor(const ProjectContext& projectContext, const TypeRef& parallelInput,
+                               const TypeRef& parallelOutput);
+
+      protected:
+        void processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
+                          ValueFeature& outputFeature) const override final;
+
+        virtual void processEntry(UserLogger& userLogger, const ValueFeature& inputFeature,
+                                  const ValueFeature& inputEntry, ValueFeature& outputEntry) const = 0;
     };
 
 } // namespace babelwires
