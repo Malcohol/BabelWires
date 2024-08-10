@@ -29,6 +29,7 @@
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<DefaultIntType>();
+    context.m_typeSystem.addEntry<NonNegativeIntType>();
     context.m_typeSystem.addEntry<StringType>();
     context.m_typeSystem.addEntry<DefaultRationalType>();
     context.m_typeSystem.addEntry<MapEntryFallbackKind>();
