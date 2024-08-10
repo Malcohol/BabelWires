@@ -134,6 +134,10 @@ bool babelwires::RecordType::isActivated(const ValueHolder& value, ShortId field
     return recordValue.tryGetValue(fieldId);
 }
 
+const std::vector<babelwires::RecordType::Field>& babelwires::RecordType::getFields() const {
+    return m_fields;
+}
+
 const std::vector<babelwires::ShortId>& babelwires::RecordType::getOptionalFieldIds() const {
     return m_optionalFieldIds;
 }
