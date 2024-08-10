@@ -31,7 +31,7 @@ namespace babelwires {
       public:
         babelwires::Feature* getInputFeature() override;
         babelwires::Feature* getOutputFeature() override;
-        void process(UserLogger& userLogger) override;
+        void process(UserLogger& userLogger) override final;
 
       protected:
         std::unique_ptr<babelwires::SimpleValueFeature> m_inputFeature;

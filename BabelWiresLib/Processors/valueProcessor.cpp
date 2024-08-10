@@ -38,6 +38,12 @@ babelwires::Feature* babelwires::ValueProcessor::getOutputFeature() {
 
 void babelwires::ValueProcessor::process(UserLogger& userLogger) {
     m_outputFeature->backUpValue();
-    processValue(userLogger, *m_inputFeature, *m_outputFeature);
-    m_outputFeature->reconcileChangesFromBackup();
+    try {
+        processValue(userLogger, *m_inputFeature, *m_outputFeature);
+        m_outputFeature->reconcileChangesFromBackup();
+    } catch(std::exception&) {
+        // TODO Maybe use a backup scope.
+        m_outputFeature->reconcileChangesFromBackup();
+        throw;
+    }
 }
