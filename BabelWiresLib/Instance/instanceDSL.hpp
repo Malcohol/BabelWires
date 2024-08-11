@@ -47,7 +47,7 @@
         return babelwires::InstanceUtils::activateAndGetChild(this->m_valueFeature, #FIELD_NAME);                      \
     }
 
-/// Declare a (non-optional) field.
+/// Declare a (non-optional) array field.
 #define DECLARE_INSTANCE_ARRAY_FIELD(FIELD_NAME, ENTRY_TYPE)                                                           \
     babelwires::ArrayInstanceImpl<const babelwires::ValueFeature, ENTRY_TYPE> get##FIELD_NAME() const {                \
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
@@ -55,6 +55,18 @@
     template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,                                                                \
                      babelwires::ArrayInstanceImpl<babelwires::ValueFeature, ENTRY_TYPE>>                              \
+        get##FIELD_NAME() {                                                                                            \
+        return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
+    }
+
+/// Declare a (non-optional) map field.
+#define DECLARE_INSTANCE_MAP_FIELD(FIELD_NAME, SOURCE_TYPE, TARGET_TYPE)                                               \
+    babelwires::MapInstanceImpl<const babelwires::ValueFeature, SOURCE_TYPE, TARGET_TYPE> get##FIELD_NAME() const {    \
+        return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
+    }                                                                                                                  \
+    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,                                                                \
+                     babelwires::MapInstanceImpl<babelwires::ValueFeature, SOURCE_TYPE, TARGET_TYPE>>                  \
         get##FIELD_NAME() {                                                                                            \
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
     }
