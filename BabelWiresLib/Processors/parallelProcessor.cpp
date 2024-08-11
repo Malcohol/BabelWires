@@ -37,31 +37,31 @@ namespace {
     }
 } // namespace
 
-babelwires::ParallelValueProcessorInputBase::ParallelValueProcessorInputBase(std::vector<RecordType::Field> commonData,
+babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(std::vector<RecordType::Field> commonData,
                                                                              ShortId arrayId, TypeRef entryType)
     : RecordType(addArray(std::move(commonData), arrayId, entryType)) {}
 
-babelwires::ParallelValueProcessorOutputBase::ParallelValueProcessorOutputBase(ShortId arrayId, TypeRef entryType)
+babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(ShortId arrayId, TypeRef entryType)
     : RecordType({{arrayId, getParallelArray(std::move(entryType))}}) {}
 
-babelwires::ParallelValueProcessor::ParallelValueProcessor(const ProjectContext& projectContext,
+babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext,
                                                            const TypeRef& parallelInput, const TypeRef& parallelOutput)
     : ValueProcessor(projectContext, parallelInput, parallelOutput) {
 #ifndef NDEBUG
-    const auto* inputType = parallelInput.resolve(projectContext.m_typeSystem).as<ParallelValueProcessorInputBase>();
-    assert(inputType && "The ParallelValueProcessor input type should be a ParallelValueProcessorInputBase");
-    const auto* outputType = parallelOutput.resolve(projectContext.m_typeSystem).as<ParallelValueProcessorOutputBase>();
-    assert(outputType && "The ParallelValueProcessor output type should be a ParallelValueProcessorOutputBase");
+    const auto* inputType = parallelInput.resolve(projectContext.m_typeSystem).as<ParallelProcessorInputBase>();
+    assert(inputType && "The ParallelProcessor input type should be a ParallelProcessorInputBase");
+    const auto* outputType = parallelOutput.resolve(projectContext.m_typeSystem).as<ParallelProcessorOutputBase>();
+    assert(outputType && "The ParallelProcessor output type should be a ParallelProcessorOutputBase");
     assert(inputType->getFields().size() >= 1);
     assert(outputType->getFields().size() == 1);
     // Note: The two IDs don't have to have the same distinguisher and can be registered separately.
     assert((inputType->getFields()[inputType->getFields().size() - 1].m_identifier ==
             outputType->getFields()[0].m_identifier) &&
-           "The ParallelValueProcessor input and output IDs must agree");
+           "The ParallelProcessor input and output IDs must agree");
 #endif
 }
 
-void babelwires::ParallelValueProcessor::processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
+void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
                                                       ValueFeature& outputFeature) const {
     bool shouldProcessAll = false;
     // Iterate through all features _except_ for the array, look for changes to the common input.

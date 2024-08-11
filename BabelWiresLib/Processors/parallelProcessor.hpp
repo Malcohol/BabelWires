@@ -24,9 +24,9 @@ namespace babelwires {
     /// settings separate from the per-entry inputs. A subclass can use the Instance DSL to provide convenient access
     /// to the fields of the type. It should not be necessary to reference the array in the instance, since the
     /// processor's ProcessEntry call provides direct access.
-    class ParallelValueProcessorInputBase : public RecordType {
+    class ParallelProcessorInputBase : public RecordType {
       public:
-        ParallelValueProcessorInputBase(std::vector<RecordType::Field> commonInput, ShortId arrayId, TypeRef entryType);
+        ParallelProcessorInputBase(std::vector<RecordType::Field> commonInput, ShortId arrayId, TypeRef entryType);
     };
 
     /// ParallelProcessors should override this for their output type. The type will contain an array of the right
@@ -35,17 +35,17 @@ namespace babelwires {
     /// per-entry outputs. Support could be added if a use-case arises.
     /// TODO: We could automatically create these output types using a RecordTypeConstructor. However, such a type could
     /// not be directly addressed in a versioning system. Have a think about whether that matters.
-    class ParallelValueProcessorOutputBase : public RecordType {
+    class ParallelProcessorOutputBase : public RecordType {
       public:
-        ParallelValueProcessorOutputBase(ShortId arrayId, TypeRef entryType);
+        ParallelProcessorOutputBase(ShortId arrayId, TypeRef entryType);
     };
 
     /// A base class for a common shape of processor which performs the same operation on several input features,
     /// producing several output features. Organizing suitable processors this way should reduce the number of
     /// elements in the project.
-    class ParallelValueProcessor : public ValueProcessor {
+    class ParallelProcessor : public ValueProcessor {
       public:
-        ParallelValueProcessor(const ProjectContext& projectContext, const TypeRef& parallelInput,
+        ParallelProcessor(const ProjectContext& projectContext, const TypeRef& parallelInput,
                                const TypeRef& parallelOutput);
 
       protected:

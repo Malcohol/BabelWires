@@ -27,27 +27,27 @@ namespace {
         return testUtils::getTestRegisteredIdentifier("array");
     }
 
-    class TestParallelProcessorInput : public babelwires::ParallelValueProcessorInputBase {
+    class TestParallelProcessorInput : public babelwires::ParallelProcessorInputBase {
       public:
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestProcIn"), 1);
 
         TestParallelProcessorInput()
-            : babelwires::ParallelValueProcessorInputBase(
+            : babelwires::ParallelProcessorInputBase(
                   {{testUtils::getTestRegisteredIdentifier("intVal"), getLimitedIntType()}}, getCommonArrayId(),
                   getLimitedIntType()) {}
     };
 
-    class TestParallelProcessorOutput : public babelwires::ParallelValueProcessorOutputBase {
+    class TestParallelProcessorOutput : public babelwires::ParallelProcessorOutputBase {
       public:
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestProcOut"), 1);
 
         TestParallelProcessorOutput()
-            : babelwires::ParallelValueProcessorOutputBase(getCommonArrayId(), getLimitedIntType()) {}
+            : babelwires::ParallelProcessorOutputBase(getCommonArrayId(), getLimitedIntType()) {}
     };
 
-    struct TestParallelProcessor : babelwires::ParallelValueProcessor {
+    struct TestParallelProcessor : babelwires::ParallelProcessor {
         TestParallelProcessor(const babelwires::ProjectContext& context)
-            : babelwires::ParallelValueProcessor(context, TestParallelProcessorInput::getThisIdentifier(),
+            : babelwires::ParallelProcessor(context, TestParallelProcessorInput::getThisIdentifier(),
                                                  TestParallelProcessorOutput::getThisIdentifier()) {}
 
         void processEntry(babelwires::UserLogger& userLogger, const babelwires::ValueFeature& inputFeature,
