@@ -71,6 +71,17 @@
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
     }
 
+/// Declare a (non-optional) field whose value type is not expected to have an instance specialization.
+#define DECLARE_INSTANCE_GENERIC_FIELD(FIELD_NAME)                                                                    \
+    babelwires::InstanceUntypedBase<const babelwires::ValueFeature> get##FIELD_NAME() const {                          \
+        return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
+    }                                                                                                                  \
+    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, babelwires::InstanceUntypedBase<babelwires::ValueFeature>>     \
+        get##FIELD_NAME() {                                                                                            \
+        return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
+    }
+
 /// Conclude the declaration.
 #define DECLARE_INSTANCE_END()                                                                                         \
     }                                                                                                                  \

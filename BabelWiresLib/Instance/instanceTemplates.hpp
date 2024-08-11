@@ -21,20 +21,16 @@ namespace babelwires {
             : VALUE_TYPE::template InstanceImpl<VALUE_FEATURE>(valueFeature) {}
     };
 
-    template <typename VALUE_TYPE>
-    using Instance = InstanceImpl<ValueFeature, VALUE_TYPE>;
+    template <typename VALUE_TYPE> using Instance = InstanceImpl<ValueFeature, VALUE_TYPE>;
 
-    template <typename VALUE_TYPE>
-    using ConstInstance = InstanceImpl<const ValueFeature, VALUE_TYPE>;
-    
-    /// Methods that should be available for every instance.
-    /// Inner-class instances and specializations should always inherit from this.
-    template <typename VALUE_FEATURE, typename VALUE_TYPE> class InstanceCommonBase {
+    template <typename VALUE_TYPE> using ConstInstance = InstanceImpl<const ValueFeature, VALUE_TYPE>;
+
+    /// Provides a base of methods which don't depend on the VALUE_TYPE and which can therefore
+    /// be used for generic fields which don't have instance specializations.
+    template <typename VALUE_FEATURE> class InstanceUntypedBase {
       public:
-        InstanceCommonBase(VALUE_FEATURE& valueFeature)
-            : m_valueFeature(valueFeature) {
-            assert(valueFeature.getType().template as<VALUE_TYPE>());
-        }
+        InstanceUntypedBase(VALUE_FEATURE& valueFeature)
+            : m_valueFeature(valueFeature) {}
         /// Access the functionality of the ValueFeature.
         const VALUE_FEATURE* operator->() const { return &m_valueFeature; }
         /// Access the functionality of the ValueFeature.
@@ -42,11 +38,22 @@ namespace babelwires {
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_FEATURE*> operator->() {
             return &m_valueFeature;
         }
-        /// More specific than this->getType().
-        const VALUE_TYPE& getInstanceType() const { return m_valueFeature.getType().template is<VALUE_TYPE>(); }
 
       protected:
         VALUE_FEATURE& m_valueFeature;
+    };
+
+    /// Methods that should be available for every instance.
+    /// Inner-class instances and specializations should always inherit from this.
+    template <typename VALUE_FEATURE, typename VALUE_TYPE>
+    class InstanceCommonBase : public InstanceUntypedBase<VALUE_FEATURE> {
+      public:
+        InstanceCommonBase(VALUE_FEATURE& valueFeature)
+            : InstanceUntypedBase<VALUE_FEATURE>(valueFeature) {
+            assert(this->m_valueFeature.getType().template as<VALUE_TYPE>());
+        }
+        /// More specific than this->getType().
+        const VALUE_TYPE& getInstanceType() const { return this->m_valueFeature.getType().template is<VALUE_TYPE>(); }
     };
 
     /// Can be specialized to make additional methods available for inner-class defined instances of particular types.
