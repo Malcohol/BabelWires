@@ -12,7 +12,6 @@
 #include <BabelWiresLib/Features/featureMixins.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/Processors/commonProcessor.hpp>
 #include <BabelWiresLib/Processors/valueProcessor.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
