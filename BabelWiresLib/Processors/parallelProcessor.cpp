@@ -183,7 +183,7 @@ void babelwires::ParallelValueProcessor::processValue(UserLogger& userLogger, co
         const char* newline = "";
         for (const auto& entry : entriesToProcess) {
             if (!entry.m_failureString.empty()) {
-                compositeException << newline << "Failure processing entry " << entry.m_index << ": "
+                compositeException << newline << "Failure processing entry " << FeaturePath(&entry.m_inputEntry) << ": "
                                    << entry.m_failureString;
                 newline = "\n";
             }

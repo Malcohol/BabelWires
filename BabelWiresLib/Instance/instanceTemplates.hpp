@@ -33,6 +33,7 @@ namespace babelwires {
             : m_valueFeature(valueFeature) {}
         /// Access the functionality of the ValueFeature.
         const VALUE_FEATURE* operator->() const { return &m_valueFeature; }
+        VALUE_FEATURE& operator*() const { return m_valueFeature; }
         /// Access the functionality of the ValueFeature.
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_FEATURE*> operator->() {
