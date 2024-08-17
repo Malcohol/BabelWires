@@ -52,7 +52,6 @@ testUtils::TestEnvironment::TestEnvironment()
 
     m_targetFileFormatReg.addEntry<TestTargetFileFormat>();
     m_sourceFileFormatReg.addEntry<TestSourceFileFormat>();
-    m_processorReg.addEntry<TestProcessorFactory>();
 
     m_typeSystem.addEntry<testUtils::TestType>();
     m_typeSystem.addEntry<testUtils::TestEnum>();

@@ -308,10 +308,10 @@ TEST(ElementDataTest, processorDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;
-    data.m_factoryIdentifier = testUtils::TestProcessorFactory::getThisIdentifier();
+    data.m_factoryIdentifier = testUtils::TestProcessor2::getFactoryIdentifier();
     data.m_factoryVersion = 1;
     setCommonFields(data);
-    setModifiers(data, testUtils::TestRootFeature::s_intIdInitializer);
+    setModifiers(data, testUtils::TestProcessorInputOutputType::s_intIdInitializer);
 
     const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
@@ -323,15 +323,16 @@ TEST(ElementDataTest, processorDataCreateElement) {
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::ProcessorElement>());
     EXPECT_TRUE(featureElement->getInputFeature());
-    EXPECT_TRUE(featureElement->getInputFeature()->as<const testUtils::TestRootFeature>());
+    EXPECT_TRUE(featureElement->getInputFeature()->as<const babelwires::ValueFeature>());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(featureElement->getElementData().as<babelwires::ProcessorElementData>());
 
-    const testUtils::TestRootFeature* inputFeature =
-        static_cast<const testUtils::TestRootFeature*>(featureElement->getInputFeature());
+    const auto& inputFeature = featureElement->getInputFeature()->is<babelwires::ValueFeature>();
 
-    EXPECT_EQ(inputFeature->m_intFeature->get(), 12);
+    testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};
+
+    EXPECT_EQ(input.getInt().get(), 12);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));
 }

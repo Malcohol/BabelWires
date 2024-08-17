@@ -72,25 +72,4 @@ namespace testUtils {
                           babelwires::ValueFeature& outputFeature) const override;
     };
 
-    struct TestProcessor : babelwires::Processor {
-        TestProcessor(const babelwires::ProjectContext& context);
-
-        void process(babelwires::UserLogger& userLogger) override;
-        babelwires::RootFeature* getInputFeature() override;
-        babelwires::RootFeature* getOutputFeature() override;
-        std::unique_ptr<TestRootFeature> m_inputFeature;
-        std::unique_ptr<TestRootFeature> m_outputFeature;
-    };
-
-    /// Constructs test processors.
-    /// This is given version 2, to allow version testing.
-    struct TestProcessorFactory : babelwires::ProcessorFactory {
-        TestProcessorFactory();
-
-        static babelwires::LongId getThisIdentifier();
-
-        std::unique_ptr<babelwires::Processor>
-        createNewProcessor(const babelwires::ProjectContext& projectContext) const override;
-    };
-
 } // namespace testUtils
