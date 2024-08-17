@@ -31,20 +31,20 @@ babelwires::Processor::Processor(const ProjectContext& projectContext, const Typ
 
 babelwires::Processor::~Processor() = default;
 
-babelwires::ValueFeature* babelwires::Processor::getInputFeature() {
-    return m_inputFeature.get();
+babelwires::ValueFeature& babelwires::Processor::getInputFeature() {
+    return *m_inputFeature;
 }
 
-babelwires::ValueFeature* babelwires::Processor::getOutputFeature() {
-    return m_outputFeature.get();
+babelwires::ValueFeature& babelwires::Processor::getOutputFeature() {
+    return *m_outputFeature;
 }
 
-const babelwires::ValueFeature* babelwires::Processor::getInputFeature() const {
-    return const_cast<Processor*>(this)->getInputFeature();
+const babelwires::ValueFeature& babelwires::Processor::getInputFeature() const {
+    return *m_inputFeature;
 }
 
-const babelwires::ValueFeature* babelwires::Processor::getOutputFeature() const {
-    return const_cast<Processor*>(this)->getOutputFeature();
+const babelwires::ValueFeature& babelwires::Processor::getOutputFeature() const {
+    return *m_outputFeature;
 }
 
 void babelwires::Processor::process(UserLogger& userLogger) {
