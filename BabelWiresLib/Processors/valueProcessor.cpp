@@ -16,27 +16,5 @@
 
 babelwires::ValueProcessor::ValueProcessor(const ProjectContext& projectContext, const TypeRef& inputTypeRef,
                                            const TypeRef& outputTypeRef)
-    : m_inputFeature(std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, inputTypeRef))
-    , m_outputFeature(std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, outputTypeRef)) {
-    const Type* const inputType = inputTypeRef.tryResolve(projectContext.m_typeSystem);
-    if (!inputType) {
-        throw ModelException() << "Input type reference " << inputTypeRef << " could not be resolved";
-    }
-    const Type* const outputType = outputTypeRef.tryResolve(projectContext.m_typeSystem);
-    if (!outputType) {
-        throw ModelException() << "Output type reference " << outputTypeRef << " could not be resolved";
-    }
-}
-
-babelwires::ValueFeature* babelwires::ValueProcessor::getInputFeature() {
-    return m_inputFeature.get();
-}
-
-babelwires::ValueFeature* babelwires::ValueProcessor::getOutputFeature() {
-    return m_outputFeature.get();
-}
-
-void babelwires::ValueProcessor::process(UserLogger& userLogger) {
-    BackupScope scope(*m_outputFeature);
-    processValue(userLogger, *m_inputFeature, *m_outputFeature);
-}
+    : Processor(projectContext, inputTypeRef, outputTypeRef) {}
+    
