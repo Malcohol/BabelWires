@@ -15,11 +15,14 @@
 /// Add this to processor subtypes to provide a default factory (then use ProcessorFactoryRegistry::addProcessor.)
 /// Having the factory be a template means the macro does not have to provide the processor type.
 /// Note: Default factories are assumed to have version 1.
-#define BW_PROCESSOR_WITH_DEFAULT_FACTORY(LONG_ID, NAME, UUID)                                                              \
+#define BW_PROCESSOR_WITH_DEFAULT_FACTORY(LONG_ID, NAME, UUID)                                                         \
+    static babelwires::LongId getFactoryIdentifier() {                                                                 \
+        return BW_LONG_ID(LONG_ID, NAME, UUID);                                                                        \
+    }                                                                                                                  \
     template <typename PROCESSOR_SUBTYPE>                                                                              \
     struct ThisProcessorFactory : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE> {                              \
         ThisProcessorFactory()                                                                                         \
-            : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE>(BW_LONG_ID(LONG_ID, NAME, UUID), 1) {}             \
+            : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE>(PROCESSOR_SUBTYPE::getFactoryIdentifier(), 1) {}   \
     };
 
 namespace babelwires {

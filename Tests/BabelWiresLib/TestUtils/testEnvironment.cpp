@@ -65,6 +65,10 @@ testUtils::TestEnvironment::TestEnvironment()
     m_typeSystem.addEntry<testUtils::TestComplexRecordType>();
     m_typeSystem.addEntry<testUtils::TestRecordWithVariantsType>();
 
+    m_typeSystem.addEntry<testUtils::TestProcessorInputOutputType>();
+
+    m_processorReg.addProcessor<TestProcessor2>();
+
     m_typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestMixedTypeConstructor>();

@@ -1,7 +1,11 @@
+#pragma once
 
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+
+#include <BabelWiresLib/Instance/instance.hpp>
+
 
 namespace testUtils {
     
@@ -13,6 +17,11 @@ namespace testUtils {
 
         static babelwires::ShortId getInt0Id();
         static babelwires::ShortId getInt1Id();
+
+        DECLARE_INSTANCE_BEGIN(TestSimpleRecordType)
+        DECLARE_INSTANCE_FIELD(intR0, babelwires::IntType)
+        DECLARE_INSTANCE_FIELD(intR1, babelwires::IntType)
+        DECLARE_INSTANCE_END()
     };
 
     class TestComplexRecordType : public babelwires::RecordType {

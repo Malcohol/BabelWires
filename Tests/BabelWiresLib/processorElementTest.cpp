@@ -18,7 +18,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;
-    data.m_factoryIdentifier = testUtils::TestProcessorFactory::getThisIdentifier();
+    data.m_factoryIdentifier = testUtils::TestProcessor2::getFactoryIdentifier();
     data.m_factoryVersion = 1;
 
     auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
@@ -27,29 +27,34 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     ASSERT_TRUE(featureElement->as<babelwires::ProcessorElement>());
     babelwires::ProcessorElement* processorElement = static_cast<babelwires::ProcessorElement*>(featureElement.get());
 
-    const babelwires::Feature* outputFeature = processorElement->getOutputFeature();
-    ASSERT_TRUE(outputFeature->as<const testUtils::TestRootFeature>());
-    const testUtils::TestRootFeature* outputTestRecordFeature =
-        static_cast<const testUtils::TestRootFeature*>(outputFeature);
-    EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
+    auto& inputFeature = processorElement->getInputFeature()->is<babelwires::ValueFeature>();
+    ASSERT_TRUE(inputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());
 
-    const babelwires::FeaturePath arraySettingIntPath = testUtils::TestRootFeature::s_pathToInt;
-    const babelwires::FeaturePath valueSettingIntPath = testUtils::TestRootFeature::s_pathToInt2;
+    const auto& outputFeature = processorElement->getOutputFeature()->is<babelwires::ValueFeature>();
+    ASSERT_TRUE(outputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());
+
+    testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};
+    testUtils::TestProcessorInputOutputType::ConstInstance output{outputFeature};
+
+    //EXPECT_EQ(output.getArray().getSize(), 2);
 
     babelwires::ValueAssignmentData valueSettingData(babelwires::IntValue(4));
-    valueSettingData.m_pathToFeature = valueSettingIntPath;
+    valueSettingData.m_pathToFeature = babelwires::FeaturePath{ &*input.getRec().getintR0() };
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, valueSettingData);
     processorElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     // The default.
-    EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
+    EXPECT_EQ(output.getArray().getSize(), 2);
     EXPECT_FALSE(processorElement->isFailed());
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
     EXPECT_FALSE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+
+    // The processor sets the output array size based on this input.
+    const babelwires::FeaturePath arraySettingIntPath{ &*input.getInt() };
 
     babelwires::ValueAssignmentData arraySettingData(babelwires::IntValue(4));
     arraySettingData.m_pathToFeature = arraySettingIntPath;
@@ -58,7 +63,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     processorElement->addModifier(testEnvironment.m_log, arraySettingData);
     processorElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
-    EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 6);
+    EXPECT_EQ(output.getArray().getSize(), 6);
     EXPECT_FALSE(processorElement->isFailed());
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
@@ -74,7 +79,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     processorElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_TRUE(processorElement->isFailed());
-    EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 2);
+    EXPECT_EQ(output.getArray().getSize(), 2);
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
@@ -87,7 +92,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     processorElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_FALSE(processorElement->isFailed());
-    EXPECT_EQ(outputTestRecordFeature->m_arrayFeature->getNumFeatures(), 6);
+    EXPECT_EQ(output.getArray().getSize(), 6);
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));

@@ -1,7 +1,9 @@
-#include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
+#include <BabelWiresLib/Processors/valueProcessor.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Instance/instance.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRootFeature.hpp>
 
 namespace testUtils {
@@ -15,6 +17,30 @@ namespace testUtils {
     // TODO The inconsistent sizing of the output and input arrays may violate assumptions
     // about adding and removing array elements via the project. It might be better if
     // the input had no array at all.
+
+    class TestProcessorInputOutputType : public babelwires::RecordType {
+      public:
+        TestProcessorInputOutputType();
+
+        PRIMITIVE_TYPE("TestProcInOut", "TestProcInputOutput", "a6dd948b-e9f4-4f03-bd5d-ecf2d608f026", 1);
+
+        DECLARE_INSTANCE_BEGIN(TestProcessorInputOutputType)
+        DECLARE_INSTANCE_FIELD(Int, babelwires::IntType)
+        DECLARE_INSTANCE_FIELD_OPTIONAL(OpInt, babelwires::IntType)
+        DECLARE_INSTANCE_ARRAY_FIELD(Array, babelwires::IntType)
+        DECLARE_INSTANCE_FIELD(Rec, TestSimpleRecordType)
+        DECLARE_INSTANCE_END()
+    };
+
+    struct TestProcessor2 : babelwires::ValueProcessor {
+        BW_PROCESSOR_WITH_DEFAULT_FACTORY("TestProcessor2", "TestProcessor", "8ec4249a-dc7f-4cd5-931b-cc83aaf7287b");
+
+        TestProcessor2(const babelwires::ProjectContext& context);
+
+        void processValue(babelwires::UserLogger& userLogger, const babelwires::ValueFeature& inputFeature,
+                          babelwires::ValueFeature& outputFeature) const override;
+    };
+
     struct TestProcessor : babelwires::Processor {
         TestProcessor(const babelwires::ProjectContext& context);
 
@@ -32,7 +58,8 @@ namespace testUtils {
 
         static babelwires::LongId getThisIdentifier();
 
-        std::unique_ptr<babelwires::Processor> createNewProcessor(const babelwires::ProjectContext& projectContext) const override;
+        std::unique_ptr<babelwires::Processor>
+        createNewProcessor(const babelwires::ProjectContext& projectContext) const override;
     };
 
 } // namespace testUtils
