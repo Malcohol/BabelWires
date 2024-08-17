@@ -45,6 +45,10 @@
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, babelwires::Instance<VALUE_TYPE>>                              \
         activateAndGet##FIELD_NAME() {                                                                                 \
         return babelwires::InstanceUtils::activateAndGetChild(this->m_valueFeature, #FIELD_NAME);                      \
+    }                                                                                                                  \
+    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> deactivate##FIELD_NAME() {                               \
+        return babelwires::InstanceUtils::deactivateChild(this->m_valueFeature, #FIELD_NAME);                          \
     }
 
 /// Declare a (non-optional) array field.
@@ -72,7 +76,7 @@
     }
 
 /// Declare a (non-optional) field whose value type is not expected to have an instance specialization.
-#define DECLARE_INSTANCE_GENERIC_FIELD(FIELD_NAME)                                                                    \
+#define DECLARE_INSTANCE_GENERIC_FIELD(FIELD_NAME)                                                                     \
     babelwires::InstanceUntypedBase<const babelwires::ValueFeature> get##FIELD_NAME() const {                          \
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
     }                                                                                                                  \

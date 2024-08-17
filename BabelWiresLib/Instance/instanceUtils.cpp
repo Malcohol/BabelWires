@@ -49,6 +49,15 @@ babelwires::ValueFeature& babelwires::InstanceUtils::activateAndGetChild(babelwi
     return getChild(recordFeature, id);
 }
 
+void babelwires::InstanceUtils::deactivateChild(babelwires::ValueFeature& recordFeature,
+                                                                 babelwires::ShortId id) {
+    const RecordType& recordType = recordFeature.getType().is<RecordType>();
+    babelwires::ValueHolder recordValue = recordFeature.getValue();
+    if (recordType.isActivated(recordValue, id)) {
+        recordType.deactivateField(recordValue, id);
+        recordFeature.setValue(recordValue);
+    }
+}
 
 babelwires::ShortId babelwires::InstanceUtils::getSelectedTag(const ValueFeature& valueFeature) {
     const RecordWithVariantsType& type = valueFeature.getType().is<RecordWithVariantsType>();
