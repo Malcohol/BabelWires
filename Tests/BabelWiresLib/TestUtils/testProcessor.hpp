@@ -1,7 +1,7 @@
+#include <BabelWiresLib/Instance/instance.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/valueProcessor.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
-#include <BabelWiresLib/Instance/instance.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRootFeature.hpp>
@@ -63,10 +63,16 @@ namespace testUtils {
         static const babelwires::FeaturePath s_pathToInt2;
     };
 
-    struct TestProcessor2 : babelwires::ValueProcessor {
-        BW_PROCESSOR_WITH_DEFAULT_FACTORY("TestProcessor2", "TestProcessor", "8ec4249a-dc7f-4cd5-931b-cc83aaf7287b");
+    struct TestProcessor : babelwires::ValueProcessor {
+        // Expand the BW_PROCESSOR_WITH_DEFAULT_FACTORY to allow the factory to be given version 2.
+        static babelwires::LongId getFactoryIdentifier() { return BW_LONG_ID("TestProcessor", "TestProcessor", "8ec4249a-dc7f-4cd5-931b-cc83aaf7287b"); }
+        template <typename PROCESSOR_SUBTYPE>
+        struct ThisProcessorFactory : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE> {
+            ThisProcessorFactory()
+                : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE>(PROCESSOR_SUBTYPE::getFactoryIdentifier(), 2) {}
+        };
 
-        TestProcessor2(const babelwires::ProjectContext& context);
+        TestProcessor(const babelwires::ProjectContext& context);
 
         void processValue(babelwires::UserLogger& userLogger, const babelwires::ValueFeature& inputFeature,
                           babelwires::ValueFeature& outputFeature) const override;

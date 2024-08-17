@@ -18,7 +18,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;
-    data.m_factoryIdentifier = testUtils::TestProcessor2::getFactoryIdentifier();
+    data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
     data.m_factoryVersion = 1;
 
     auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);

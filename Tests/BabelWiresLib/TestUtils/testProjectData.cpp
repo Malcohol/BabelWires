@@ -34,7 +34,7 @@ testUtils::TestProjectData::TestProjectData()
     }
     {
         babelwires::ProcessorElementData data;
-        data.m_factoryIdentifier = testUtils::TestProcessor2::getFactoryIdentifier();
+        data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
         data.m_id = c_processorId;
         {
             babelwires::ConnectionModifierData modData;

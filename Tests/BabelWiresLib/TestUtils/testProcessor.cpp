@@ -49,11 +49,11 @@ const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToR
 const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToInt2 =
     babelwires::FeaturePath::deserializeFromString("Record/intR0");
 
-testUtils::TestProcessor2::TestProcessor2(const babelwires::ProjectContext& context)
+testUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& context)
     : babelwires::ValueProcessor(context, testUtils::TestProcessorInputOutputType::getThisIdentifier(),
                                  testUtils::TestProcessorInputOutputType::getThisIdentifier()) {}
 
-void testUtils::TestProcessor2::processValue(babelwires::UserLogger& userLogger,
+void testUtils::TestProcessor::processValue(babelwires::UserLogger& userLogger,
                                              const babelwires::ValueFeature& inputFeature,
                                              babelwires::ValueFeature& outputFeature) const {
     TestProcessorInputOutputType::ConstInstance input{inputFeature};

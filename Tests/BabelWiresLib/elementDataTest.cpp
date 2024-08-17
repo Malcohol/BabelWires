@@ -308,7 +308,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorElementData data;
-    data.m_factoryIdentifier = testUtils::TestProcessor2::getFactoryIdentifier();
+    data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
     data.m_factoryVersion = 1;
     setCommonFields(data);
     setModifiers(data, testUtils::TestProcessorInputOutputType::s_intIdInitializer);

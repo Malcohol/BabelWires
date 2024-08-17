@@ -47,7 +47,7 @@ TEST(ProjectDataTest, serialization) {
         const babelwires::ElementData* data = dataPtr->m_elements[1].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 6);
-        EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestProcessor2::getFactoryIdentifier());
+        EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestProcessor::getFactoryIdentifier());
         const babelwires::ProcessorElementData* processorData = data->as<babelwires::ProcessorElementData>();
         ASSERT_TRUE(processorData);
     }

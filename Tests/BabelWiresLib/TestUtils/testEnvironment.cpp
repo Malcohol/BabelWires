@@ -66,7 +66,7 @@ testUtils::TestEnvironment::TestEnvironment()
 
     m_typeSystem.addEntry<testUtils::TestProcessorInputOutputType>();
 
-    m_processorReg.addProcessor<TestProcessor2>();
+    m_processorReg.addProcessor<TestProcessor>();
 
     m_typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();

@@ -150,7 +150,7 @@ TEST(ProjectBundleTest, factoryMetadata) {
 
     ASSERT_EQ(bundle.getFactoryMetadata().size(), 3);
     EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestTargetFileFormat::getThisIdentifier())->second, 1);
-    EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestProcessor2::getFactoryIdentifier())->second, 2);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestProcessor::getFactoryIdentifier())->second, 2);
     EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestSourceFileFormat::getThisIdentifier())->second, 3);
 
     babelwires::ProjectData resolvedData = std::move(bundle).resolveAgainstCurrentContext(
@@ -158,7 +158,7 @@ TEST(ProjectBundleTest, factoryMetadata) {
 
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(
         "Data for the factory \"testFactoryFormat\" (testFactoryFormat) corresponds to an old version (1)"));
-    EXPECT_FALSE(testEnvironment.m_log.hasSubstringIgnoreCase("Data for the factory \"testProcessor2\""));
+    EXPECT_FALSE(testEnvironment.m_log.hasSubstringIgnoreCase("Data for the factory \"testProcessor\""));
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(
         "Data for the factory \"testFileFormat\" (testFileFormat) has an unknown version (3)"));
 }
