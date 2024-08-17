@@ -29,12 +29,12 @@ namespace babelwires {
         virtual void processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
                                   ValueFeature& outputFeature) const = 0;
       public:
-        babelwires::Feature* getInputFeature() override;
-        babelwires::Feature* getOutputFeature() override;
+        ValueFeature* getInputFeature() override;
+        ValueFeature* getOutputFeature() override;
         void process(UserLogger& userLogger) override final;
 
       protected:
-        std::unique_ptr<babelwires::SimpleValueFeature> m_inputFeature;
-        std::unique_ptr<babelwires::SimpleValueFeature> m_outputFeature;
+        std::unique_ptr<SimpleValueFeature> m_inputFeature;
+        std::unique_ptr<SimpleValueFeature> m_outputFeature;
     };
 } // namespace babelwires

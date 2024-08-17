@@ -48,12 +48,12 @@ namespace {
     struct TestParallelProcessor : babelwires::ParallelProcessor {
         TestParallelProcessor(const babelwires::ProjectContext& context)
             : babelwires::ParallelProcessor(context, TestParallelProcessorInput::getThisIdentifier(),
-                                                 TestParallelProcessorOutput::getThisIdentifier()) {}
+                                            TestParallelProcessorOutput::getThisIdentifier()) {}
 
         void processEntry(babelwires::UserLogger& userLogger, const babelwires::ValueFeature& inputFeature,
                           const babelwires::ValueFeature& inputEntry,
                           babelwires::ValueFeature& outputEntry) const override {
-            
+
             {
                 // Log the input path.
                 userLogger.logInfo() << babelwires::FeaturePath(&inputEntry);
@@ -62,9 +62,8 @@ namespace {
             babelwires::ConstInstance<babelwires::IntType> entryIn{inputEntry};
             babelwires::Instance<babelwires::IntType> entryOut{outputEntry};
 
-            const babelwires::ValueFeature& intValueFeature = inputFeature.is<babelwires::ValueFeature>()
-                                                                  .getChildFromStep(babelwires::PathStep("intVal"))
-                                                                  .is<babelwires::ValueFeature>();
+            const babelwires::ValueFeature& intValueFeature =
+                inputFeature.getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueFeature>();
 
             entryOut.set(entryIn.get() + intValueFeature.getValue()->is<babelwires::IntValue>().get());
         }
@@ -89,13 +88,11 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     processor.getInputFeature()->setToDefault();
     processor.getOutputFeature()->setToDefault();
 
-    babelwires::ValueFeature& inputValueFeature = processor.getInputFeature()->is<babelwires::ValueFeature>();
-    const babelwires::ValueFeature& outputValueFeature = processor.getOutputFeature()->is<babelwires::ValueFeature>();
+    babelwires::ValueFeature& inputValueFeature = *processor.getInputFeature();
+    const babelwires::ValueFeature& outputValueFeature = *processor.getOutputFeature();
 
-    babelwires::ValueFeature& intValueFeature = processor.getInputFeature()
-                                                    ->is<babelwires::ValueFeature>()
-                                                    .getChildFromStep(babelwires::PathStep("intVal"))
-                                                    .is<babelwires::ValueFeature>();
+    babelwires::ValueFeature& intValueFeature =
+        processor.getInputFeature()->getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueFeature>();
 
     babelwires::ValueFeature& inputArrayFeature =
         inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueFeature>();
@@ -159,13 +156,11 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     processor.getInputFeature()->setToDefault();
     processor.getOutputFeature()->setToDefault();
 
-    babelwires::ValueFeature& inputValueFeature = processor.getInputFeature()->is<babelwires::ValueFeature>();
-    const babelwires::ValueFeature& outputValueFeature = processor.getOutputFeature()->is<babelwires::ValueFeature>();
+    babelwires::ValueFeature& inputValueFeature = *processor.getInputFeature();
+    const babelwires::ValueFeature& outputValueFeature = *processor.getOutputFeature();
 
-    babelwires::ValueFeature& intValueFeature = processor.getInputFeature()
-                                                    ->is<babelwires::ValueFeature>()
-                                                    .getChildFromStep(babelwires::PathStep("intVal"))
-                                                    .is<babelwires::ValueFeature>();
+    babelwires::ValueFeature& intValueFeature =
+        processor.getInputFeature()->getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueFeature>();
 
     babelwires::ValueFeature& inputArrayFeature =
         inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueFeature>();
@@ -238,13 +233,11 @@ TEST(ParallelProcessorTest, testFailure) {
     processor.getInputFeature()->setToDefault();
     processor.getOutputFeature()->setToDefault();
 
-    babelwires::ValueFeature& inputValueFeature = processor.getInputFeature()->is<babelwires::ValueFeature>();
-    const babelwires::ValueFeature& outputValueFeature = processor.getOutputFeature()->is<babelwires::ValueFeature>();
+    babelwires::ValueFeature& inputValueFeature = *processor.getInputFeature();
+    const babelwires::ValueFeature& outputValueFeature = *processor.getOutputFeature();
 
-    babelwires::ValueFeature& intValueFeature = processor.getInputFeature()
-                                                    ->is<babelwires::ValueFeature>()
-                                                    .getChildFromStep(babelwires::PathStep("intVal"))
-                                                    .is<babelwires::ValueFeature>();
+    babelwires::ValueFeature& intValueFeature =
+        processor.getInputFeature()->getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueFeature>();
 
     babelwires::ValueFeature& inputArrayFeature =
         inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueFeature>();

@@ -9,10 +9,10 @@
 
 babelwires::Processor::~Processor() = default;
 
-const babelwires::Feature* babelwires::Processor::getInputFeature() const {
+const babelwires::ValueFeature* babelwires::Processor::getInputFeature() const {
     return const_cast<Processor*>(this)->getInputFeature();
 }
 
-const babelwires::Feature* babelwires::Processor::getOutputFeature() const {
+const babelwires::ValueFeature* babelwires::Processor::getOutputFeature() const {
     return const_cast<Processor*>(this)->getOutputFeature();
 }

@@ -16,6 +16,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 
 #include <Common/Log/userLogger.hpp>
 

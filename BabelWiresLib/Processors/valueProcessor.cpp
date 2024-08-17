@@ -28,11 +28,11 @@ babelwires::ValueProcessor::ValueProcessor(const ProjectContext& projectContext,
     }
 }
 
-babelwires::Feature* babelwires::ValueProcessor::getInputFeature() {
+babelwires::ValueFeature* babelwires::ValueProcessor::getInputFeature() {
     return m_inputFeature.get();
 }
 
-babelwires::Feature* babelwires::ValueProcessor::getOutputFeature() {
+babelwires::ValueFeature* babelwires::ValueProcessor::getOutputFeature() {
     return m_outputFeature.get();
 }
 
