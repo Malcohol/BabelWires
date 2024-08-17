@@ -85,6 +85,7 @@ babelwires::PathStep babelwires::ValueFeature::getStepToChild(const Feature* chi
 int babelwires::ValueFeature::getChildIndexFromStep(const PathStep& step) const {
     const auto it = m_children.find0(step);
     if (it != m_children.end()) {
+        step.copyDiscriminatorFrom(it.getKey0());
         return it.getKey1();
     }
     return -1;
