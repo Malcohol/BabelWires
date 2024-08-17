@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Features/featureMixins.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/Processors/valueProcessor.hpp>
+#include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 namespace babelwires {
@@ -42,10 +42,10 @@ namespace babelwires {
     /// A base class for a common shape of processor which performs the same operation on several input features,
     /// producing several output features. Organizing suitable processors this way should reduce the number of
     /// elements in the project.
-    class ParallelProcessor : public ValueProcessor {
+    class ParallelProcessor : public Processor {
       public:
         ParallelProcessor(const ProjectContext& projectContext, const TypeRef& parallelInput,
-                               const TypeRef& parallelOutput);
+                          const TypeRef& parallelOutput);
 
       protected:
         void processValue(UserLogger& userLogger, const ValueFeature& inputFeature,

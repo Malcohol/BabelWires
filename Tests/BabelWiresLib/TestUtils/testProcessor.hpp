@@ -1,6 +1,6 @@
 #include <BabelWiresLib/Instance/instance.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
-#include <BabelWiresLib/Processors/valueProcessor.hpp>
+#include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
@@ -63,7 +63,7 @@ namespace testUtils {
         static const babelwires::FeaturePath s_pathToInt2;
     };
 
-    struct TestProcessor : babelwires::ValueProcessor {
+    struct TestProcessor : babelwires::Processor {
         // Expand the BW_PROCESSOR_WITH_DEFAULT_FACTORY to allow the factory to be given version 2.
         static babelwires::LongId getFactoryIdentifier() { return BW_LONG_ID("TestProcessor", "TestProcessor", "8ec4249a-dc7f-4cd5-931b-cc83aaf7287b"); }
         template <typename PROCESSOR_SUBTYPE>

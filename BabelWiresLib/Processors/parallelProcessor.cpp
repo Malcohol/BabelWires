@@ -8,20 +8,21 @@
  **/
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
-#include <BabelWiresLib/Instance/instanceUtils.hpp>
 
 #include <algorithm>
-#include <numeric>
 #include <array>
 #include <execution>
+#include <numeric>
 
 namespace {
     babelwires::TypeRef getParallelArray(babelwires::TypeRef&& entryType) {
@@ -38,15 +39,15 @@ namespace {
 } // namespace
 
 babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(std::vector<RecordType::Field> commonData,
-                                                                             ShortId arrayId, TypeRef entryType)
+                                                                   ShortId arrayId, TypeRef entryType)
     : RecordType(addArray(std::move(commonData), arrayId, entryType)) {}
 
 babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(ShortId arrayId, TypeRef entryType)
     : RecordType({{arrayId, getParallelArray(std::move(entryType))}}) {}
 
-babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext,
-                                                           const TypeRef& parallelInput, const TypeRef& parallelOutput)
-    : ValueProcessor(projectContext, parallelInput, parallelOutput) {
+babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeRef& parallelInput,
+                                                 const TypeRef& parallelOutput)
+    : Processor(projectContext, parallelInput, parallelOutput) {
 #ifndef NDEBUG
     const auto* inputType = parallelInput.resolve(projectContext.m_typeSystem).as<ParallelProcessorInputBase>();
     assert(inputType && "The ParallelProcessor input type should be a ParallelProcessorInputBase");
@@ -62,7 +63,7 @@ babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectCo
 }
 
 void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
-                                                      ValueFeature& outputFeature) const {
+                                                 ValueFeature& outputFeature) const {
     bool shouldProcessAll = false;
     // Iterate through all features _except_ for the array, look for changes to the common input.
     for (unsigned int i = 0; i < inputFeature.getNumFeatures() - 1; ++i) {
@@ -83,13 +84,13 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
     }
 
     struct EntryData {
-        EntryData(const TypeSystem& typeSystem, unsigned int index, const ValueFeature& inputEntry, const ValueFeature& outputEntry)
+        EntryData(const TypeSystem& typeSystem, unsigned int index, const ValueFeature& inputEntry,
+                  const ValueFeature& outputEntry)
             : m_index(index)
             , m_inputEntry(inputEntry)
-            , m_outputEntry(std::make_unique<SimpleValueFeature>(typeSystem, outputEntry.getTypeRef()))
-            {
-                m_outputEntry->setValue(outputEntry.getValue());
-            }
+            , m_outputEntry(std::make_unique<SimpleValueFeature>(typeSystem, outputEntry.getTypeRef())) {
+            m_outputEntry->setValue(outputEntry.getValue());
+        }
 
         const unsigned int m_index;
         const ValueFeature& m_inputEntry;
@@ -123,7 +124,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
                 isFailed = true;
             }
         });
-    
+
     if (isFailed) {
         // TODO: Need a more precise way to signal failure.
         ModelException compositeException;

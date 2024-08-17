@@ -50,7 +50,7 @@ const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToI
     babelwires::FeaturePath::deserializeFromString("Record/intR0");
 
 testUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& context)
-    : babelwires::ValueProcessor(context, testUtils::TestProcessorInputOutputType::getThisIdentifier(),
+    : babelwires::Processor(context, testUtils::TestProcessorInputOutputType::getThisIdentifier(),
                                  testUtils::TestProcessorInputOutputType::getThisIdentifier()) {}
 
 void testUtils::TestProcessor::processValue(babelwires::UserLogger& userLogger,
