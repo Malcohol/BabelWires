@@ -7,11 +7,11 @@ testUtils::TestSimpleRecordType::TestSimpleRecordType()
                   {getInt1Id(), babelwires::DefaultIntType::getThisIdentifier()}}) {}
 
 babelwires::ShortId testUtils::TestSimpleRecordType::getInt0Id() {
-    return BW_SHORT_ID("intR0", "Int0", "2cccd7da-2aea-4f4f-9a33-7d23f227b22d");
+    return BW_SHORT_ID(s_int0IdInitializer, s_int0FieldName, s_int0Uuid);
 }
 
 babelwires::ShortId testUtils::TestSimpleRecordType::getInt1Id() {
-    return BW_SHORT_ID("intR1", "Int1", "7c8a4ca0-0c8a-48e4-82b8-0a77a6f42092");
+    return BW_SHORT_ID(s_int1IdInitializer, s_int1FieldName, s_int1Uuid);
 }
 
 testUtils::TestComplexRecordType::TestComplexRecordType()

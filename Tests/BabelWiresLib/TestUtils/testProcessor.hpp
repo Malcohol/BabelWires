@@ -28,8 +28,39 @@ namespace testUtils {
         DECLARE_INSTANCE_FIELD(Int, babelwires::IntType)
         DECLARE_INSTANCE_FIELD_OPTIONAL(OpInt, babelwires::IntType)
         DECLARE_INSTANCE_ARRAY_FIELD(Array, babelwires::IntType)
-        DECLARE_INSTANCE_FIELD(Rec, TestSimpleRecordType)
+        DECLARE_INSTANCE_FIELD(Record, TestSimpleRecordType)
         DECLARE_INSTANCE_END()
+
+        static constexpr char s_intIdInitializer[] = "Int";
+        static constexpr char s_optIntIdInitializer[] = "OptInt";
+        static constexpr char s_arrayIdInitializer[] = "Array";
+        static constexpr char s_recordIdInitializer[] = "Record";
+
+        static constexpr char s_intFieldName[] = "the int";
+        static constexpr char s_optIntFieldName[] = "the optional int";
+        static constexpr char s_arrayFieldName[] = "the array";
+        static constexpr char s_recordFieldName[] = "the record";
+
+        static constexpr char s_intUuid[] = "00000000-1111-2222-3333-800050000001";
+        static constexpr char s_arrayUuid[] = "00000000-1111-2222-3333-800050000002";
+        static constexpr char s_recordUuid[] = "00000000-1111-2222-3333-800050000003";
+        static constexpr char s_optIntUuid[] = "00000000-1111-2222-3333-800050000005";
+
+        static babelwires::ShortId getIntId();
+        static babelwires::ShortId getOptIntId();
+        static babelwires::ShortId getArrayId();
+        static babelwires::ShortId getRecordId();
+
+        // Helps set up modifiers.
+        static const babelwires::FeaturePath s_pathToInt;
+        static const babelwires::FeaturePath s_pathToArray;
+        static const babelwires::FeaturePath s_pathToArray_0;
+        static const babelwires::FeaturePath s_pathToArray_1;
+        static const babelwires::FeaturePath s_pathToArray_2;
+        static const babelwires::FeaturePath s_pathToArray_3;
+        static const babelwires::FeaturePath s_pathToArray_4;
+        static const babelwires::FeaturePath s_pathToRecord;
+        static const babelwires::FeaturePath s_pathToInt2;
     };
 
     struct TestProcessor2 : babelwires::ValueProcessor {

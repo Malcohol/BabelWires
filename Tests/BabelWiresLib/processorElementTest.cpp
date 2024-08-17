@@ -36,10 +36,10 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};
     testUtils::TestProcessorInputOutputType::ConstInstance output{outputFeature};
 
-    //EXPECT_EQ(output.getArray().getSize(), 2);
+    EXPECT_EQ(output.getArray().getSize(), 2);
 
     babelwires::ValueAssignmentData valueSettingData(babelwires::IntValue(4));
-    valueSettingData.m_pathToFeature = babelwires::FeaturePath{ &*input.getRec().getintR0() };
+    valueSettingData.m_pathToFeature = babelwires::FeaturePath{ &*input.getRecord().getintR0() };
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, valueSettingData);

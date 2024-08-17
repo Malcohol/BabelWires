@@ -3,19 +3,20 @@
 #include <BabelWiresLib/Project/Commands/pasteElementsCommand.hpp>
 
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
@@ -28,7 +29,8 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
 
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
-    projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath), babelwires::pathToString(targetFilePath.m_filePath));
+    projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath),
+                             babelwires::pathToString(targetFilePath.m_filePath));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
     babelwires::PasteElementsCommand command("Test command", std::move(projectData));
@@ -39,7 +41,7 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
-
+ 
     const auto checkForProjectData = [&testEnvironment]() {
         // If there are no clashes, expect the IDs in the data to be respected.
         const babelwires::FeatureElement* sourceElement =
@@ -53,11 +55,11 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
         ASSERT_NE(targetElement, nullptr);
 
         // Confirm that some modifiers were pasted too.
-        ASSERT_NE(processor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt), nullptr);
-        EXPECT_FALSE(processor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt)->isFailed());
-        ASSERT_NE(targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild), nullptr);
+        ASSERT_NE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt), nullptr);
         EXPECT_FALSE(
-            targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild)->isFailed());
+            processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt)->isFailed());
+        ASSERT_NE(targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild), nullptr);
+        EXPECT_FALSE(targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild)->isFailed());
     };
     checkForProjectData();
 
@@ -85,8 +87,10 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     // It's OK for sources to be duplicated. It's not so great for targets, but it won't affect this test.
-    projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath), babelwires::pathToString(targetFilePath.m_filePath));
-    originalProjectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath), babelwires::pathToString(targetFilePath.m_filePath));
+    projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath),
+                             babelwires::pathToString(targetFilePath.m_filePath));
+    originalProjectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath),
+                                     babelwires::pathToString(targetFilePath.m_filePath));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
     {
@@ -100,8 +104,8 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
         const babelwires::FeatureElement* targetElement =
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
-        ASSERT_NE(processor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt), nullptr);
-        EXPECT_FALSE(processor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt)->isFailed());
+        ASSERT_NE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt), nullptr);
+        EXPECT_FALSE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt)->isFailed());
     };
 
     babelwires::PasteElementsCommand command("Test command", std::move(projectData));
@@ -159,7 +163,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
             EXPECT_NE(newProcessor, nullptr);
             EXPECT_NE(newTargetElement, nullptr);
             const babelwires::Modifier* modifier =
-                newProcessor->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt);
+                newProcessor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt);
             ASSERT_NE(modifier, nullptr);
             EXPECT_FALSE(modifier->isFailed());
             const babelwires::ConnectionModifierData* modData =
@@ -191,7 +195,7 @@ namespace {
     // will get wired back up.
     // If you paste into a different project, however, these connections are ignored.
     void testSourceElementsOutsideProjectData(bool isPastingIntoSameProject) {
-            testUtils::TestEnvironment testEnvironment;
+        testUtils::TestEnvironment testEnvironment;
 
         babelwires::ElementId sourceElementId =
             testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());

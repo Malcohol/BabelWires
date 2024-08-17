@@ -27,28 +27,28 @@ testUtils::TestProjectData::TestProjectData()
             babelwires::ConnectionModifierData modData;
             modData.m_pathToFeature = testUtils::TestFileFeature::s_pathToIntChild;
             modData.m_sourceId = c_processorId;
-            modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToArray_3;
+            modData.m_pathToSourceFeature = testUtils::TestProcessorInputOutputType::s_pathToArray_3;
             data.m_modifiers.emplace_back(modData.clone());
         }
         m_elements.emplace_back(data.clone());
     }
     {
         babelwires::ProcessorElementData data;
-        data.m_factoryIdentifier = testUtils::TestProcessorFactory::getThisIdentifier();
+        data.m_factoryIdentifier = testUtils::TestProcessor2::getFactoryIdentifier();
         data.m_id = c_processorId;
         {
             babelwires::ConnectionModifierData modData;
-            modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt;
+            modData.m_pathToFeature = testUtils::TestProcessorInputOutputType::s_pathToInt;
             modData.m_sourceId = c_sourceElementId;
             modData.m_pathToSourceFeature = testUtils::TestFileFeature::s_pathToIntChild;
             data.m_modifiers.emplace_back(modData.clone());
         }
         {
             babelwires::ValueAssignmentData modData(babelwires::IntValue(44));
-            modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+            modData.m_pathToFeature = testUtils::TestProcessorInputOutputType::s_pathToInt2;
             data.m_modifiers.emplace_back(modData.clone());
         }
-        data.m_expandedPaths.emplace_back(testUtils::TestRootFeature::s_pathToArray);
+        data.m_expandedPaths.emplace_back(testUtils::TestProcessorInputOutputType::s_pathToArray);
         m_elements.emplace_back(data.clone());
     }
     {
@@ -90,7 +90,7 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
 
         auto modData1 = sortedModifiers[0]->as<babelwires::ConnectionModifierData>();
         ASSERT_TRUE(modData1);
-        EXPECT_EQ(*modData1->m_pathToFeature.getStep(0).asField(), testUtils::TestRecordFeature::s_intIdInitializer);
+        EXPECT_EQ(*modData1->m_pathToFeature.getStep(0).asField(), testUtils::TestProcessorInputOutputType::s_intIdInitializer);
         EXPECT_EQ(modData1->m_pathToFeature.getStep(0).asField()->getDiscriminator(), recordIntDiscriminator);
         EXPECT_EQ(*modData1->m_pathToSourceFeature.getStep(0).asField(),
                   testUtils::TestFileFeature::s_intChildInitializer);
@@ -100,17 +100,17 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
         ASSERT_TRUE(modData2);
         ASSERT_GE(modData2->m_pathToFeature.getNumSteps(), 2);
         EXPECT_EQ(*modData2->m_pathToFeature.getStep(0).asField(),
-                  testUtils::TestRecordFeature::s_recordIdInitializer);
+                  testUtils::TestProcessorInputOutputType::s_recordIdInitializer);
         EXPECT_EQ(modData2->m_pathToFeature.getStep(0).asField()->getDiscriminator(), recordRecordDiscriminator);
         EXPECT_EQ(*modData2->m_pathToFeature.getStep(1).asField(),
-                  testUtils::TestRecordFeature::s_int2IdInitializer);
+                  testUtils::TestSimpleRecordType::s_int0IdInitializer);
         EXPECT_EQ(modData2->m_pathToFeature.getStep(1).asField()->getDiscriminator(), recordInt2Disciminator);
     }
 
     ASSERT_EQ(sortedElements[0]->m_expandedPaths.size(), 1);
     EXPECT_EQ(sortedElements[0]->m_expandedPaths[0].getNumSteps(), 1);
     EXPECT_EQ(*sortedElements[0]->m_expandedPaths[0].getStep(0).asField(),
-              testUtils::TestRecordFeature::s_arrayIdInitializer);
+              testUtils::TestProcessorInputOutputType::s_arrayIdInitializer);
     EXPECT_EQ(sortedElements[0]->m_expandedPaths[0].getStep(0).asField()->getDiscriminator(), recordArrayDiscriminator);
 
     EXPECT_EQ(sortedElements[1]->m_id, 12);
@@ -122,23 +122,26 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
     EXPECT_EQ(*modData0->m_pathToFeature.getStep(0).asField(), testUtils::TestFileFeature::s_intChildInitializer);
     EXPECT_EQ(modData0->m_pathToFeature.getStep(0).asField()->getDiscriminator(), fileIntChildDiscriminator);
     EXPECT_EQ(*modData0->m_pathToSourceFeature.getStep(0).asField(),
-              testUtils::TestRecordFeature::s_arrayIdInitializer);
+              testUtils::TestProcessorInputOutputType::s_arrayIdInitializer);
     EXPECT_EQ(modData0->m_pathToSourceFeature.getStep(0).asField()->getDiscriminator(), recordArrayDiscriminator);
     EXPECT_EQ(sortedElements[2]->m_expandedPaths.size(), 0);
 }
 
 void testUtils::TestProjectData::testProjectData(const babelwires::ProjectContext& context, const babelwires::ProjectData& projectData) {
-    testUtils::TestRecordFeature testRecord;
     testUtils::TestFileFeature testFileFeature(context);
 
+    babelwires::SimpleValueFeature testRecord(context.m_typeSystem, testUtils::TestProcessorInputOutputType::getThisIdentifier());
+    testRecord.setToDefault();
+
     testUtils::TestProjectData::testProjectDataAndDisciminators(
-        projectData, testRecord.m_intId.getDiscriminator(), testRecord.m_arrayId.getDiscriminator(),
-        testRecord.m_recordId.getDiscriminator(), testRecord.m_int2Id.getDiscriminator(),
+        projectData, TestProcessorInputOutputType::getIntId().getDiscriminator(), TestProcessorInputOutputType::getArrayId().getDiscriminator(),
+        TestProcessorInputOutputType::getRecordId().getDiscriminator(), TestSimpleRecordType::getInt0Id().getDiscriminator(),
         testFileFeature.m_intChildId.getDiscriminator());
 }
 
 void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::ProjectContext& context) {
-    testUtils::TestRecordFeature testRecord;
+    babelwires::SimpleValueFeature testRecord(context.m_typeSystem, testUtils::TestProcessorInputOutputType::getThisIdentifier());
+    testRecord.setToDefault();
     testUtils::TestFileFeature testFileFeature(context);
 
     // These have side-effects on the mutable field discriminators in the paths.

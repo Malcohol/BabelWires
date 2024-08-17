@@ -15,13 +15,24 @@ namespace testUtils {
         
         PRIMITIVE_TYPE("srecordT", "SimpleRecord", "ea96a409-6424-4924-aefe-ecbe66139f17", 1);
 
-        static babelwires::ShortId getInt0Id();
-        static babelwires::ShortId getInt1Id();
-
         DECLARE_INSTANCE_BEGIN(TestSimpleRecordType)
         DECLARE_INSTANCE_FIELD(intR0, babelwires::IntType)
         DECLARE_INSTANCE_FIELD(intR1, babelwires::IntType)
         DECLARE_INSTANCE_END()
+
+        // Specifically for unit testing.
+
+        static babelwires::ShortId getInt0Id();
+        static babelwires::ShortId getInt1Id();
+
+        static constexpr char s_int0IdInitializer[] = "intR0";
+        static constexpr char s_int1IdInitializer[] = "intR1";
+
+        static constexpr char s_int0FieldName[] = "Int0";
+        static constexpr char s_int1FieldName[] = "Int1";
+
+        static constexpr char s_int0Uuid[] = "00000000-1111-2222-3333-800070000001";
+        static constexpr char s_int1Uuid[] = "00000000-1111-2222-3333-800070000002";
     };
 
     class TestComplexRecordType : public babelwires::RecordType {

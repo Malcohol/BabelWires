@@ -29,11 +29,11 @@ namespace testUtils {
         static constexpr char s_int2FieldName[] = "the other int";
         static constexpr char s_extraIntFieldName[] = "the extra int";
 
-        static constexpr char s_intUuid[] = "00000000-1111-2222-3333-800000000001";
-        static constexpr char s_arrayUuid[] = "00000000-1111-2222-3333-800000000002";
-        static constexpr char s_recordUuid[] = "00000000-1111-2222-3333-800000000003";
-        static constexpr char s_int2Uuid[] = "00000000-1111-2222-3333-800000000004";
-        static constexpr char s_extraIntUuid[] = "00000000-1111-2222-3333-800000000005";
+        static constexpr char s_intUuid[] = "00000000-1111-2222-3333-800001000001";
+        static constexpr char s_arrayUuid[] = "00000000-1111-2222-3333-800001000002";
+        static constexpr char s_recordUuid[] = "00000000-1111-2222-3333-800001000003";
+        static constexpr char s_int2Uuid[] = "00000000-1111-2222-3333-800000100004";
+        static constexpr char s_extraIntUuid[] = "00000000-1111-2222-3333-800001000005";
 
         babelwires::ShortId m_intId;
         babelwires::ShortId m_arrayId;

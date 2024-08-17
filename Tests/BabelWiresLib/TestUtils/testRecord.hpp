@@ -49,7 +49,7 @@ namespace testUtils {
         babelwires::IntFeature* m_elem1;
         babelwires::RecordFeature* m_subRecordFeature;
         babelwires::IntFeature* m_intFeature2;
-        /// if addExtraInt is true, then there's another int feature at "record/aaa"
+        /// if addExtraInt is true, then there's another int feature at "record/extra"
         babelwires::IntFeature* m_extraIntFeature = nullptr;
 
         // Contained ints have an imposed value limit.

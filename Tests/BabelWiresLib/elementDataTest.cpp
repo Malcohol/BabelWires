@@ -311,7 +311,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     data.m_factoryIdentifier = testUtils::TestProcessorFactory::getThisIdentifier();
     data.m_factoryVersion = 1;
     setCommonFields(data);
-    setModifiers(data, testUtils::TestRecordFeature::s_intIdInitializer);
+    setModifiers(data, testUtils::TestRootFeature::s_intIdInitializer);
 
     const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
