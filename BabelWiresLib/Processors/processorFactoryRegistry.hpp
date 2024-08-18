@@ -21,7 +21,7 @@ namespace babelwires {
 
         template<typename PROCESSOR_SUBTYPE>
         ProcessorFactory* addProcessor() {
-          return addEntry<typename PROCESSOR_SUBTYPE::ThisProcessorFactory<PROCESSOR_SUBTYPE>>();
+          return addEntry<typename PROCESSOR_SUBTYPE::template ThisProcessorFactory<PROCESSOR_SUBTYPE> >();
         }
     };
 
