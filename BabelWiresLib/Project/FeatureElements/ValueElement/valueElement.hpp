@@ -12,8 +12,8 @@
 
 namespace babelwires {
     struct UserLogger;
-    class RootFeature;
     class ValueElementData;
+    class RootFeature;
 
     class ValueElement : public FeatureElement {
       public:
@@ -24,15 +24,15 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const ValueElementData& getElementData() const;
 
-        virtual const RootFeature* getInputFeature() const override;
-        virtual const RootFeature* getOutputFeature() const override;
+        virtual const Feature* getInputFeature() const override;
+        virtual const Feature* getOutputFeature() const override;
 
         /// The root feature has a single step to the value feature, which always uses this identifier.
         static ShortId getStepToValue();
 
       protected:
-        RootFeature* doGetInputFeatureNonConst() override;
-        RootFeature* doGetOutputFeatureNonConst() override;
+        Feature* doGetInputFeatureNonConst() override;
+        Feature* doGetOutputFeatureNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
       private:

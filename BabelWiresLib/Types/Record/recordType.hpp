@@ -45,6 +45,9 @@ namespace babelwires {
         /// Is the given optional field activated?
         bool isActivated(const ValueHolder& value, ShortId fieldId) const;
 
+        /// Get the field information.
+        const std::vector<Field>& getFields() const;
+
         /// Get the set of optional fields.
         const std::vector<ShortId>& getOptionalFieldIds() const;
 

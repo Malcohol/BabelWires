@@ -89,6 +89,17 @@ namespace babelwires {
         /// Write to the stream in a human-readable way.
         void writeToStreamReadable(std::ostream& os, const IdentifierRegistry& identifierRegistry) const;
 
+        /// Assuming this and other are equal fields, copy the discriminator from other to this.
+        /// TODO: Avoid needing this to be const and relying on discriminators being mutable.
+        void copyDiscriminatorFrom(const PathStep& other) const {
+            if (const ShortId* thisField = asField()) {
+                const ShortId* otherField = other.asField();
+                assert(otherField);
+                assert(*thisField == *otherField);
+                otherField->copyDiscriminatorTo(*thisField);
+            }
+        }
+
       private:
         /// Get a efficient representation of the contents of this object.
         std::uint64_t getDataAsCode() const { return m_code & 0xffffffffffff0000; }

@@ -482,11 +482,11 @@ TEST(ProjectTest, process) {
     const babelwires::FeatureElement* processor =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
-    const testUtils::TestRootFeature* processorInput =
-        processor->getInputFeature()->as<const testUtils::TestRootFeature>();
+    const babelwires::ValueFeature* processorInput =
+        processor->getInputFeature()->as<const babelwires::ValueFeature>();
     ASSERT_NE(processorInput, nullptr);
-    const testUtils::TestRootFeature* processorOutput =
-        processor->getOutputFeature()->as<const testUtils::TestRootFeature>();
+    const babelwires::ValueFeature* processorOutput =
+        processor->getOutputFeature()->as<const babelwires::ValueFeature>();
     ASSERT_NE(processorOutput, nullptr);
 
     const babelwires::FeatureElement* targetElement =
@@ -506,7 +506,7 @@ TEST(ProjectTest, process) {
 
     // Removing this modifier will mean the output array is shorter than the modifier at the target requires.
     testEnvironment.m_project.removeModifier(testUtils::TestProjectData::c_processorId,
-                                             testUtils::TestRootFeature::s_pathToInt);
+                                             testUtils::TestProcessorInputOutputType::s_pathToInt);
     testEnvironment.m_project.process();
     EXPECT_TRUE(targetElement->findModifier(testUtils::TestFileFeature::s_pathToIntChild)->isFailed());
     EXPECT_EQ(targetInput->m_intChildFeature->get(), 0);
@@ -514,10 +514,10 @@ TEST(ProjectTest, process) {
     babelwires::ElementId newProcId;
     {
         babelwires::ProcessorElementData procData;
-        procData.m_factoryIdentifier = testUtils::TestProcessorFactory::getThisIdentifier();
+        procData.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
 
         babelwires::ValueAssignmentData modData(babelwires::IntValue(5));
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = testUtils::TestProcessorInputOutputType::s_pathToInt2;
         procData.m_modifiers.emplace_back(modData.clone());
 
         newProcId = testEnvironment.m_project.addFeatureElement(procData);
@@ -525,9 +525,9 @@ TEST(ProjectTest, process) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt;
+        modData.m_pathToFeature = testUtils::TestProcessorInputOutputType::s_pathToInt;
         modData.m_sourceId = newProcId;
-        modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = testUtils::TestProcessorInputOutputType::s_pathToInt2;
         testEnvironment.m_project.addModifier(testUtils::TestProjectData::c_processorId, modData);
     }
     testEnvironment.m_project.process();

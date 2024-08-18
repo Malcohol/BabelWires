@@ -11,35 +11,27 @@
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
-// TODO: Currently the array type must declare the class of its entry type. This seems awkward.
-#define DECLARE_ARRAY_INSTANCE(ELEMENT_TYPE) \
-    using EntryTypeForInstance = ELEMENT_TYPE;
-
 namespace babelwires {
-    class ValueFeature;
-
-    /// Specialized instance handling for ArrayTypes.
-    template <typename VALUE_FEATURE, typename ARRAY_TYPE>
-        requires std::is_base_of_v<ArrayType, ARRAY_TYPE>
-    class Instance<VALUE_FEATURE, ARRAY_TYPE> : public InstanceCommonBase<VALUE_FEATURE, ARRAY_TYPE> {
+    /// It's useful to have instances for array types even when they do not have a dedicated C++ class.
+    /// For example, if they are defined using a type constructor.
+    /// The DSL provides a DECLARE_INSTANCE_ARRAY_FIELD macro which directly uses the following instance template.
+    /// Note: The second type parameter is the entry type, not array type.
+    template <typename VALUE_FEATURE, typename ENTRY_TYPE>
+    class ArrayInstanceImpl : public InstanceCommonBase<VALUE_FEATURE, ArrayType> {
       public:
-        Instance(VALUE_FEATURE& valueFeature)
-            : InstanceCommonBase<VALUE_FEATURE, ARRAY_TYPE>(valueFeature) {}
+        ArrayInstanceImpl(VALUE_FEATURE& valueFeature)
+            : InstanceCommonBase<VALUE_FEATURE, ArrayType>(valueFeature) {}
 
-        unsigned int getSize() const {
-            return InstanceUtils::getArraySize(this->m_valueFeature);
-        }
+        unsigned int getSize() const { return InstanceUtils::getArraySize(this->m_valueFeature); }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> setSize(unsigned int newSize) {
             InstanceUtils::setArraySize(this->m_valueFeature, newSize);
         }
-        Instance<const ValueFeature, typename ARRAY_TYPE::EntryTypeForInstance> getEntry(unsigned int index) const {
+        ConstInstance<ENTRY_TYPE> getEntry(unsigned int index) const {
             return InstanceUtils::getChild(this->m_valueFeature, index);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,
-                         Instance<VALUE_FEATURE, typename ARRAY_TYPE::EntryTypeForInstance>>
-            getEntry(unsigned int index) {
+        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, Instance<ENTRY_TYPE>> getEntry(unsigned int index) {
             return InstanceUtils::getChild(this->m_valueFeature, index);
         }
     };

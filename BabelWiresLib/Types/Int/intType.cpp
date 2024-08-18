@@ -11,10 +11,9 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::IntType::IntType(Range<IntValue::NativeType> range, IntValue::NativeType defaultValue) 
+babelwires::IntType::IntType(Range<IntValue::NativeType> range, IntValue::NativeType defaultValue)
     : m_range(range)
-    , m_defaultValue(defaultValue)
-{
+    , m_defaultValue(defaultValue) {
     assert(m_range.contains(defaultValue));
 }
 
@@ -38,8 +37,8 @@ std::string babelwires::IntType::getKind() const {
 }
 
 babelwires::SubtypeOrder babelwires::IntType::compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                                              const Type& other) const {
-    const IntType *const otherIntType = other.as<IntType>();
+                                                                   const Type& other) const {
+    const IntType* const otherIntType = other.as<IntType>();
     if (!otherIntType) {
         return SubtypeOrder::IsUnrelated;
     }
@@ -63,8 +62,12 @@ babelwires::SubtypeOrder babelwires::IntType::compareSubtypeHelper(const TypeSys
     return SubtypeOrder::IsEquivalent;
 }
 
-std::string babelwires::IntType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
+std::string babelwires::IntType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
     return v->is<IntValue>().toString();
 }
 
-babelwires::DefaultIntType::DefaultIntType() : IntType() {}
+babelwires::DefaultIntType::DefaultIntType()
+    : IntType() {}
+
+babelwires::NonNegativeIntType::NonNegativeIntType()
+    : IntType(Range<IntValue::NativeType>{0, std::numeric_limits<IntValue::NativeType>::max()}) {}

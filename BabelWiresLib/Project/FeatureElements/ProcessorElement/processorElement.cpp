@@ -16,6 +16,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 
 #include <Common/Log/userLogger.hpp>
 
@@ -26,8 +27,8 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
     try {
         const ProcessorFactory& factory = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
         auto newProcessor = factory.createNewProcessor(context);
-        newProcessor->getInputFeature()->setToDefault();
-        newProcessor->getOutputFeature()->setToDefault();
+        newProcessor->getInputFeature().setToDefault();
+        newProcessor->getOutputFeature().setToDefault();
         setProcessor(std::move(newProcessor));
         setFactoryName(factory.getName());
     } catch (const BaseException& e) {
@@ -42,40 +43,40 @@ const babelwires::ProcessorElementData& babelwires::ProcessorElement::getElement
     return static_cast<const ProcessorElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::RootFeature* babelwires::ProcessorElement::doGetOutputFeatureNonConst() {
+babelwires::Feature* babelwires::ProcessorElement::doGetOutputFeatureNonConst() {
     if (m_processor) {
-        return m_processor->getOutputFeature();
+        return &m_processor->getOutputFeature();
     } else {
         return m_sharedDummyFeature.get();
     }
 }
 
-babelwires::RootFeature* babelwires::ProcessorElement::doGetInputFeatureNonConst() {
+babelwires::Feature* babelwires::ProcessorElement::doGetInputFeatureNonConst() {
     if (m_processor) {
-        return m_processor->getInputFeature();
+        return &m_processor->getInputFeature();
     } else {
         return m_sharedDummyFeature.get();
     }
 }
 
-const babelwires::RootFeature* babelwires::ProcessorElement::getOutputFeature() const {
+const babelwires::Feature* babelwires::ProcessorElement::getOutputFeature() const {
     if (m_processor) {
-        return m_processor->getOutputFeature();
+        return &m_processor->getOutputFeature();
     } else {
         return m_sharedDummyFeature.get();
     }
 }
 
-const babelwires::RootFeature* babelwires::ProcessorElement::getInputFeature() const {
+const babelwires::Feature* babelwires::ProcessorElement::getInputFeature() const {
     if (m_processor) {
-        return m_processor->getInputFeature();
+        return &m_processor->getInputFeature();
     } else {
         return m_sharedDummyFeature.get();
     }
 }
 
 void babelwires::ProcessorElement::setProcessor(std::unique_ptr<Processor> processor) {
-    m_contentsCache.setFeatures(processor->getInputFeature(), processor->getOutputFeature());
+    m_contentsCache.setFeatures(&processor->getInputFeature(), &processor->getOutputFeature());
     m_processor = std::move(processor);
 }
 
@@ -92,13 +93,13 @@ void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
                                       << " failed to process correctly: " << e.what();
                 setInternalFailure(e.what());
                 // TODO: Is this definitely the desired outcome?
-                m_processor->getOutputFeature()->setToDefault();
+                m_processor->getOutputFeature().setToDefault();
             }
         }
     }
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
         if (m_processor) {
-            m_contentsCache.setFeatures(m_processor->getInputFeature(), m_processor->getOutputFeature());
+            m_contentsCache.setFeatures(&m_processor->getInputFeature(), &m_processor->getOutputFeature());
         }
     } else if (isChanged(Changes::ModifierChangesMask)) {
         m_contentsCache.updateModifierCache();

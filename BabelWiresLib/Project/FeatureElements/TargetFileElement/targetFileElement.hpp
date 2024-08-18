@@ -19,6 +19,7 @@ namespace babelwires {
     class RecordFeature;
     struct ProjectContext;
     class FileFeature;
+    class RootFeature;
 
     /// TargetFileElements are FeatureElements which correspond to a target file.
     class TargetFileElement : public FileElement {
@@ -29,7 +30,7 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const TargetFileElementData& getElementData() const;
 
-        virtual const RootFeature* getInputFeature() const override;
+        virtual const Feature* getInputFeature() const override;
 
         virtual std::filesystem::path getFilePath() const override;
         virtual void setFilePath(std::filesystem::path newFilePath) override;
@@ -42,7 +43,7 @@ namespace babelwires {
         virtual std::string getLabel() const override;
 
       protected:
-        RootFeature* doGetInputFeatureNonConst() override;
+        Feature* doGetInputFeatureNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
       protected:

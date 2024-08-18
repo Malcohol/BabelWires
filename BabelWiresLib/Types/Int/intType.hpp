@@ -42,4 +42,12 @@ namespace babelwires {
 
         PRIMITIVE_TYPE("int", "Integer", "90ed4c0c-2fa1-4373-9b67-e711358af824", 1);
     };
+
+    /// An Int type which covers the range between 0 and the maximum NativeInt value.
+    class NonNegativeIntType : public IntType {
+      public:
+        NonNegativeIntType();
+
+        PRIMITIVE_TYPE("NonNegInt", "Non-Negative Integer", "33d35b26-d8ab-4af9-bc63-958ffb37b261", 1);
+    };
 }

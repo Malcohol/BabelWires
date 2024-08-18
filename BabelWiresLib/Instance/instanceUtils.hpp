@@ -22,6 +22,7 @@ namespace babelwires {
         const babelwires::ValueFeature* tryGetChild(const babelwires::ValueFeature& recordFeature,
                                                     babelwires::ShortId id);
         babelwires::ValueFeature& activateAndGetChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
+        void deactivateChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
 
         // Utility functions for RecordWithVariantTypes
 

@@ -52,7 +52,6 @@ testUtils::TestEnvironment::TestEnvironment()
 
     m_targetFileFormatReg.addEntry<TestTargetFileFormat>();
     m_sourceFileFormatReg.addEntry<TestSourceFileFormat>();
-    m_processorReg.addEntry<TestProcessorFactory>();
 
     m_typeSystem.addEntry<testUtils::TestType>();
     m_typeSystem.addEntry<testUtils::TestEnum>();
@@ -64,6 +63,10 @@ testUtils::TestEnvironment::TestEnvironment()
     m_typeSystem.addEntry<testUtils::TestSimpleRecordType>();
     m_typeSystem.addEntry<testUtils::TestComplexRecordType>();
     m_typeSystem.addEntry<testUtils::TestRecordWithVariantsType>();
+
+    m_typeSystem.addEntry<testUtils::TestProcessorInputOutputType>();
+
+    m_processorReg.addProcessor<TestProcessor>();
 
     m_typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();

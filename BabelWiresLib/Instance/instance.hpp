@@ -14,11 +14,15 @@
 
 // TODO Describe usage here
 
+// clang-format off
 #include <BabelWiresLib/Instance/instanceTemplates.hpp>
 #include <BabelWiresLib/Instance/instanceDSL.hpp>
 
 #include <BabelWiresLib/Instance/enumTypeInstance.hpp>
 #include <BabelWiresLib/Instance/arrayTypeInstance.hpp>
 #include <BabelWiresLib/Instance/intTypeInstance.hpp>
+#include <BabelWiresLib/Instance/mapTypeInstance.hpp>
+#include <BabelWiresLib/Instance/rationalTypeInstance.hpp>
 #include <BabelWiresLib/Instance/stringTypeInstance.hpp>
 #include <BabelWiresLib/Instance/recordWithVariantsTypeInstance.hpp>
+// clang-format on

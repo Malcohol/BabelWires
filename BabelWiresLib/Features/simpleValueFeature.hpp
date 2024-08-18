@@ -18,6 +18,9 @@ namespace babelwires {
     /// A SimpleValueFeature is a feature which owns its value.
     class SimpleValueFeature : public ValueFeature {
       public:
+        /// Construct a rooted ValueFeature which carries values of the given type.
+        SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef);
+
         /// Construct a ValueFeature which carries values of the given type.
         SimpleValueFeature(TypeRef typeRef);
 
@@ -33,6 +36,12 @@ namespace babelwires {
         /// This clears the backup.
         void reconcileChangesFromBackup();
 
+        /// Get the TypeSystem carried by this feature (or the one carried by the root of the hierarchy).
+        const TypeSystem& getTypeSystem() const;
+
+        /// The root is not collapsable.
+        Style getStyle() const override;
+
       protected:
         const ValueHolder& doGetValue() const override;
         void doSetToDefault() override;
@@ -46,10 +55,25 @@ namespace babelwires {
         // called by code which knows how to manage a back-up.
         ValueHolder m_valueBackUp;
 
+        /// If the simpleValueFeature is a root feature, then it needs to carry its own TypeSystem.
+        const TypeSystem* m_typeSystem = nullptr;
+
         // TODO: Temporary hack (hopefully): This allows values to be modified without requiring a backup.
         // _Project_ code which modifies features should be aware of the need to back-up the value,
         // but client code (e.g. in a source format) should need to bother with this.
         // I'm uncertain yet about client code in processors.
         bool m_isNew = true;
     };
+
+    struct BackupScope {
+        BackupScope(SimpleValueFeature& feature)
+            : m_backedUpValueFeature(feature) {
+            feature.backUpValue();
+        }
+
+        ~BackupScope() { m_backedUpValueFeature.reconcileChangesFromBackup(); }
+
+        SimpleValueFeature& m_backedUpValueFeature;
+    };
+
 } // namespace babelwires

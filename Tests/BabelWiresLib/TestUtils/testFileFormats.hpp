@@ -14,7 +14,7 @@ namespace testUtils {
 
         /// The id of the child feature.
         /// Deliberately match the field in TestRecordFeature.
-        static constexpr char s_intChildInitializer[] = "aaa";
+        static constexpr char s_intChildInitializer[] = "intR0";
 
         static constexpr char s_intChildFieldName[] = "my int";
 

@@ -13,7 +13,6 @@
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
@@ -83,9 +82,9 @@ void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) co
         return;
     } else if (auto valueFeature = targetFeature->as<ValueFeature>()) {
         if (auto recordType = valueFeature->getType().as<RecordType>()) {
-            const ProjectContext& context = RootFeature::getProjectContextAt(*valueFeature);
+            const TypeSystem& typeSystem = valueFeature->getTypeSystem();
             ValueHolder newValue = valueFeature->getValue();
-            recordType->ensureActivated(context.m_typeSystem, newValue, m_selectedOptionals);
+            recordType->ensureActivated(typeSystem, newValue, m_selectedOptionals);
             valueFeature->setValue(newValue);
             return;
         }
