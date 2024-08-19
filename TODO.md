@@ -5,6 +5,7 @@ Structured Data Flow WIP:
 1. Value::toString should probably be handled by the type.
 
 Bugs:
+* Crash when wiring the tracks array of excerpt to the tracks array of repeat in the sample.
 * Three test record values. 
   1. Wire two together. 
   1. Expand and collapse the target node.
@@ -13,13 +14,15 @@ Bugs:
   1. Observe that the connection gets removed.
 * Moving a target connection from a valid record target to a record target of a different type does not cause the modifier to fail.
 * The "*" suffix of a target feature label is not always removed directly after saving.
-
+* Array element modifications can be wrongly removed when an array value of non-default size is set from another array of equivalent size.
+  - Probably the removal of the array size modifier triggers the removal of any modifier which applies to entries greater than non-default size.
 * Sometimes elements get creation twice in the UI.
   - This is probably a symptom of the weird factory re-factor in nodeeditor.
   - Consider reverting that change in my custom branch.
 * The UI does not update a row directly after a failed modifier is removed, so the row stays red.
 * RecordWithOptionalsFeatureTest::changes test only works if the values are default. Deactivating a non-default optional should not set the value changed flag.
 * Save with changes but no project file should offer "Save As", not "Save".
+
 
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.

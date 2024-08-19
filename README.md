@@ -15,9 +15,9 @@ Here's a screenshot of SeqWires:
 ![Screenshot showing several nodes wired together](Docs/screenshot.png "SeqWires screenshot showing several nodes wired together")
 
 The framework provides:
-* A generic way of representing data in a tree of self-describing data structures ([Feature](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/feature.hpp))
-    * The nodes of the data flow graph carry their data in one more [CompoundFeatures](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/compoundFeature.hpp).
-    * The leaves of the tree are [ValueFeatures](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Features/valueFeature.hpp), which appear in the UI as rows with connectable ports.
+* A type system for representing and manipulating structured data. Includes support for:
+    * Primitive types such as [IntType](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/Int/intType.hpp) and [StringType](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/String/stringType.hpp).
+    * Compound types such as [RecordType](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/Record/recordType.hpp) and [ArrayType](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/Array/arrayType.hpp).
 * Abstractions for source and target formats ([SourceFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/sourceFileFormat.hpp) and [TargetFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/targetFileFormat.hpp))
     * Plugins register factory functions to add support for new formats.
 * An abstraction for processing data ([Processor](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Processors/processor.hpp))
@@ -39,6 +39,10 @@ Here's a screenshot of the MapEditor defining a map between two types:
 ![Screenshot showing the MapEditor](Docs/mapEditor.png "Screenshot of the MapEditor")
 
 ## Status
+
+The current status is "not totally stable".
+There has been a significant refactor where the core representation of data has switched from hierarchies of Features to Values of Types.
+The motivation is to allow compound data to be manipulated directly.
 
 [![Build and test pipeline](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml/badge.svg)](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml)
 
