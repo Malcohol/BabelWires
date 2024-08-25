@@ -13,11 +13,7 @@
 namespace babelwires {
 
     /// An interface for objects which associate some values with human-friendly names.
-    /// This can be used for values of IntFeatures and entries of ArrayFeature.
-    /// If you are assigning a name to every value of an IntFeature, then perhaps you should
-    /// use an EnumFeature. It depends on whether the user should care about the particular 
-    /// integer value (use IntFeature with ValueNames) or whether they just care that an option
-    /// has been selected from a set (use EnumFeature).
+    // TODO This used to be available for IntFeature, but it's not available with IntType.
     // TODO Can this be generalized this so value types other than integers can have names?
     class ValueNames {
       public:

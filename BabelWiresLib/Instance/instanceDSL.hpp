@@ -51,6 +51,16 @@
         return babelwires::InstanceUtils::deactivateChild(this->m_valueFeature, #FIELD_NAME);                          \
     }
 
+/// Add convenience methods for specific tag.
+#define DECLARE_INSTANCE_VARIANT_TAG(TAG_NAME)                                                                         \
+    bool isTag##TAG_NAME##Selected() const {                                                                           \
+        return babelwires::InstanceUtils::getSelectedTag(this->m_valueFeature) == #TAG_NAME;                           \
+    }                                                                                                                  \
+    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> selectTag##TAG_NAME() {                                  \
+        return babelwires::InstanceUtils::selectTag(this->m_valueFeature, #TAG_NAME);                                  \
+    }
+
 /// Declare a (non-optional) array field.
 #define DECLARE_INSTANCE_ARRAY_FIELD(FIELD_NAME, ENTRY_TYPE)                                                           \
     babelwires::ArrayInstanceImpl<const babelwires::ValueFeature, ENTRY_TYPE> get##FIELD_NAME() const {                \
