@@ -74,7 +74,6 @@ SET( LIB_TESTS_SRCS
     typeRefTest.cpp
     typeSystemTest.cpp
     typeTest.cpp
-    unionFeatureTest.cpp
     valueNamesTest.cpp
     valueHolderTest.cpp
     valueElementTest.cpp
