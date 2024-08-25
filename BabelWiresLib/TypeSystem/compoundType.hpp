@@ -29,5 +29,11 @@ namespace babelwires {
                                                                                     unsigned int i) const = 0;
 
         virtual int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const = 0;
+
+        /// Check whether the two values have differences independent of whether their children are different.
+        /// This accounts for the fact that a compound type might have some data that isn't entirely defined by its
+        /// children. An example is the tag which selects the variants of a recordWithVariantsType.
+        /// The default implementation returns false.
+        virtual bool areDifferentNonRecursively(const ValueHolder& compoundValueA, const ValueHolder& compoundValueB) const;
     };
 } // namespace babelwires

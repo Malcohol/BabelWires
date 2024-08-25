@@ -11,8 +11,9 @@ namespace testUtils {
         PRIMITIVE_TYPE("vrecordT", "RecordWithVariants", "45442c6b-fa02-4a48-b7f8-9ca062c568ea", 1);
 
         static babelwires::ShortId getTagAId();
-        static babelwires::ShortId getTagBId();
+        static babelwires::ShortId getTagBId(); // The default tag.
         static babelwires::ShortId getTagCId();
+        static babelwires::ShortId getTagDId(); // Identical in effect to A.
 
         static babelwires::ShortId getFieldA0Id();
         static babelwires::ShortId getFf0Id();
