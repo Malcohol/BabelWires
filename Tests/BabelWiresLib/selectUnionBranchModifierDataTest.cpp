@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/unionFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
-#include <BabelWiresLib/Types/Int/intFeature.hpp>
+#include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
@@ -17,77 +17,40 @@
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(SelectUnionBranchModifierDataTest, apply) {
-    babelwires::ShortId tagA("tagA");
-    tagA.setDiscriminator(1);
-    babelwires::ShortId tagB("tagB");
-    tagB.setDiscriminator(1);
-    babelwires::ShortId tagC("tagC");
-    tagC.setDiscriminator(1);
-
     testUtils::TestEnvironment testEnvironment;
+    babelwires::SimpleValueFeature valueFeature(
+        testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisIdentifier());
+    valueFeature.setToDefault();
+    const auto* type = valueFeature.getType().as<testUtils::TestRecordWithVariantsType>();
 
-    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(
-        testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
-    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
+    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagBId());
 
     babelwires::SelectUnionBranchModifierData data;
-    data.m_tagToSelect = tagC;
+    data.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagAId();
 
-    babelwires::ShortId fieldIdA0("fldA0");
-    fieldIdA0.setDiscriminator(1);
-    babelwires::IntFeature* fieldA0 =
-        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
+    data.apply(&valueFeature);
 
-    babelwires::ShortId ff0("ff0");
-    ff0.setDiscriminator(1);
-    babelwires::IntFeature* fixedFeature0 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
+    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagAId());
 
-    babelwires::ShortId fieldIdC0("fldC0");
-    fieldIdC0.setDiscriminator(1);
-    babelwires::IntFeature* fieldC0 =
-        unionFeature.addFieldInBranch(tagC, std::make_unique<babelwires::IntFeature>(), fieldIdC0);
+    babelwires::SelectUnionBranchModifierData data2;
+    data2.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagCId();
 
-    babelwires::ShortId ff1("ff1");
-    ff1.setDiscriminator(1);
-    babelwires::IntFeature* fixedFeature1 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff1);
+    data2.apply(&valueFeature);
 
-    unionFeature.setToDefault();
-
-    data.apply(&unionFeature);
-
-    EXPECT_EQ(unionFeature.getSelectedTag(), tagC);
+    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagCId());
 }
 
 TEST(SelectUnionBranchModifierDataTest, failureNotATag) {
-    babelwires::ShortId tagA("tagA");
-    tagA.setDiscriminator(1);
-    babelwires::ShortId tagB("tagB");
-    tagB.setDiscriminator(1);
-    babelwires::ShortId tagC("tagC");
-    tagC.setDiscriminator(1);
-
     babelwires::SelectUnionBranchModifierData data;
     data.m_tagToSelect = "notTag";
 
     testUtils::TestEnvironment testEnvironment;
+    babelwires::SimpleValueFeature valueFeature(
+        testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisIdentifier());
 
-    testUtils::RootedFeature<babelwires::UnionFeature> rootFeature(
-        testEnvironment.m_projectContext, babelwires::UnionFeature::TagValues{tagA, tagB, tagC}, 0);
-    babelwires::UnionFeature& unionFeature = rootFeature.getFeature();
+    valueFeature.setToDefault();
 
-    babelwires::ShortId fieldIdA0("fldA0");
-    fieldIdA0.setDiscriminator(1);
-    babelwires::IntFeature* fieldA0 =
-        unionFeature.addFieldInBranch(tagA, std::make_unique<babelwires::IntFeature>(), fieldIdA0);
-
-    babelwires::ShortId ff0("ff0");
-    ff0.setDiscriminator(1);
-
-    babelwires::IntFeature* fixedFeature0 = unionFeature.addField(std::make_unique<babelwires::IntFeature>(), ff0);
-
-    unionFeature.setToDefault();
-
-    EXPECT_THROW(data.apply(&unionFeature), babelwires::ModelException);
+    EXPECT_THROW(data.apply(&valueFeature), babelwires::ModelException);
 }
 
 TEST(SelectUnionBranchModifierDataTest, failureNotAUnion) {
@@ -95,10 +58,10 @@ TEST(SelectUnionBranchModifierDataTest, failureNotAUnion) {
     babelwires::SelectUnionBranchModifierData data;
     data.m_tagToSelect = "tag";
 
-    testUtils::RootedFeature<babelwires::IntFeature> rootFeature(testEnvironment.m_projectContext);
-    babelwires::IntFeature& notAUnionFeature = rootFeature.getFeature();
+    babelwires::SimpleValueFeature notARecordWithVariants(
+        testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisIdentifier());
 
-    EXPECT_THROW(data.apply(&notAUnionFeature), babelwires::ModelException);
+    EXPECT_THROW(data.apply(&notARecordWithVariants), babelwires::ModelException);
 }
 
 TEST(SelectUnionBranchModifierDataTest, clone) {
@@ -136,27 +99,3 @@ TEST(SelectUnionBranchModifierDataTest, serialization) {
     EXPECT_EQ(dataPtr->m_tagToSelect, "tag");
 }
 
-TEST(SelectUnionBranchModifierDataTest, applyToTypes) {
-    testUtils::TestEnvironment testEnvironment;
-    testUtils::RootedFeature<babelwires::SimpleValueFeature> rootedFeature(
-        testEnvironment.m_projectContext, testUtils::TestRecordWithVariantsType::getThisIdentifier());
-    babelwires::ValueFeature& valueFeature = rootedFeature.getFeature();
-    valueFeature.setToDefault();
-    const auto* type = valueFeature.getType().as<testUtils::TestRecordWithVariantsType>();
-
-    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagBId());
-
-    babelwires::SelectUnionBranchModifierData data;
-    data.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagAId();
-
-    data.apply(&valueFeature);
-
-    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagAId());
-
-    babelwires::SelectUnionBranchModifierData data2;
-    data2.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagCId();
-
-    data2.apply(&valueFeature);
-
-    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagCId());
-}
