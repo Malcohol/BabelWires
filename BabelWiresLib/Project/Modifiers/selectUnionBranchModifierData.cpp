@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
 
-#include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
@@ -27,10 +26,7 @@ void babelwires::SelectUnionBranchModifierData::deserializeContents(Deserializer
 }
 
 void babelwires::SelectUnionBranchModifierData::apply(Feature* targetFeature) const {
-    if (UnionFeature* unionFeature = targetFeature->as<UnionFeature>()) {
-        unionFeature->selectTag(m_tagToSelect);
-        return;
-    } else if (auto valueFeature = targetFeature->as<ValueFeature>()) {
+    if (auto valueFeature = targetFeature->as<ValueFeature>()) {
         if (auto recordType = valueFeature->getType().as<RecordWithVariantsType>()) {
             const TypeSystem& typeSystem = valueFeature->getTypeSystem();
             ValueHolder newValue = valueFeature->getValue();

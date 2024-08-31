@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
@@ -59,16 +58,7 @@ std::tuple<const babelwires::CompoundFeature*, bool, std::vector<babelwires::Sho
     if (!f) { 
         return {};
     }
-    if (auto unionFeature = f->as<const UnionFeature>()) {
-        if (!unionFeature->isTag(tagId)) {
-            return {};
-        }
-        if (unionFeature->getSelectedTag() == tagId) {
-            return { unionFeature, true, {} };
-        } else {
-            return { unionFeature, false, unionFeature->getFieldsRemovedByChangeOfBranch(tagId) };
-        }
-    } else if (auto valueFeature = f->as<const ValueFeature>()) {
+    if (auto valueFeature = f->as<const ValueFeature>()) {
         if (auto recordWithVariantsType = valueFeature->getType().as<RecordWithVariantsType>()) {
             if (!recordWithVariantsType->isTag(tagId)) {
                 return {};

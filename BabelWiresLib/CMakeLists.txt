@@ -76,7 +76,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/rootFeature.cpp
 	Features/valueFeature.cpp
 	Features/valueFeatureHelper.cpp
-	Features/unionFeature.cpp
 	Serialization/projectBundle.cpp
 	Project/Commands/activateOptionalCommand.cpp
 	Project/Commands/addElementCommand.cpp

@@ -9,7 +9,6 @@
 #include <BabelWiresLib/Project/Commands/selectUnionBranchCommand.hpp>
 
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/Features/unionFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
