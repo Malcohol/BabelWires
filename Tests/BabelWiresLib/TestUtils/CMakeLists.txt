@@ -11,7 +11,6 @@ SET( LIB_TEST_UTILS_SRCS
     testRecordWithVariantsType.cpp
     testFeatureWithOptionals.cpp
     testRootFeature.cpp
-    testFeatureWithUnion.cpp
     testValueAndType.cpp
     testTypeConstructor.cpp
    )

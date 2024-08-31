@@ -20,6 +20,7 @@ namespace testUtils {
         // This is a TestSimpleRecordType
         static babelwires::ShortId getFieldB0Id();
         static babelwires::ShortId getFieldABId();
+        // This is a TestSimpleRecordType
         static babelwires::ShortId getFieldA1Id();
         static babelwires::ShortId getFf1Id();
         static babelwires::ShortId getFieldBCId();

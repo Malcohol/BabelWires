@@ -10,7 +10,7 @@ testUtils::TestRecordWithVariantsType::TestRecordWithVariantsType()
         { getFf0Id(), babelwires::DefaultIntType::getThisIdentifier() },
         { getFieldB0Id(), TestSimpleRecordType::getThisIdentifier(), { getTagBId() } },
         { getFieldABId(), babelwires::DefaultIntType::getThisIdentifier(), { getTagAId(), getTagBId(), getTagDId() } },
-        { getFieldA1Id(), babelwires::DefaultIntType::getThisIdentifier(), { getTagAId(), getTagDId() } },
+        { getFieldA1Id(), TestSimpleRecordType::getThisIdentifier(), { getTagAId(), getTagDId() } },
         { getFf1Id(), TestSimpleRecordType::getThisIdentifier() },
         { getFieldBCId(), babelwires::DefaultIntType::getThisIdentifier(), { getTagBId(), getTagCId() } }
     }, 1) {}
