@@ -5,7 +5,6 @@
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
-#include <BabelWiresLib/Types/Rational/rationalFeature.hpp>
 #include <BabelWiresLib/Types/String/stringFeature.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 
@@ -24,39 +23,23 @@ TEST(FeatureTest, valueCompatibility) {
     babelwires::StringFeature& stringFeature2 = *rootFeature.addField(std::make_unique<babelwires::StringFeature>(),
                                                                       testUtils::getTestRegisteredIdentifier("bbb"));
 
-    // Currently, int and rational are incompatible. (We could change that in the future)
     babelwires::IntFeature& intFeature = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
                                                                testUtils::getTestRegisteredIdentifier("ccc"));
     babelwires::IntFeature& intFeature2 = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
                                                                 testUtils::getTestRegisteredIdentifier("ddd"));
-    babelwires::RationalFeature& rationalFeature = *rootFeature.addField(
-        std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("eee"));
-    babelwires::RationalFeature& rationalFeature2 = *rootFeature.addField(
-        std::make_unique<babelwires::RationalFeature>(), testUtils::getTestRegisteredIdentifier("fff"));
+
     rootFeature.setToDefault();
 
     EXPECT_EQ(intFeature.getKind(), intFeature2.getKind());
     EXPECT_NE(intFeature.getKind(), stringFeature.getKind());
-    EXPECT_NE(intFeature.getKind(), rationalFeature.getKind());
-
-    EXPECT_EQ(rationalFeature.getKind(), rationalFeature2.getKind());
-    EXPECT_NE(rationalFeature.getKind(), intFeature.getKind());
-    EXPECT_NE(rationalFeature.getKind(), stringFeature.getKind());
 
     EXPECT_EQ(stringFeature.getKind(), stringFeature2.getKind());
-    EXPECT_NE(stringFeature.getKind(), rationalFeature.getKind());
     EXPECT_NE(stringFeature.getKind(), intFeature.getKind());
 
     EXPECT_NO_THROW(intFeature.assign(intFeature2));
     EXPECT_THROW(intFeature.assign(stringFeature), babelwires::ModelException);
-    EXPECT_THROW(intFeature.assign(rationalFeature), babelwires::ModelException);
-
-    EXPECT_NO_THROW(rationalFeature.assign(rationalFeature2));
-    EXPECT_THROW(rationalFeature.assign(intFeature), babelwires::ModelException);
-    EXPECT_THROW(rationalFeature.assign(stringFeature), babelwires::ModelException);
 
     EXPECT_NO_THROW(stringFeature.assign(stringFeature2));
-    EXPECT_THROW(stringFeature.assign(rationalFeature), babelwires::ModelException);
     EXPECT_THROW(stringFeature.assign(intFeature), babelwires::ModelException);
 }
 

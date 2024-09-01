@@ -42,7 +42,6 @@ SET( LIB_TESTS_SRCS
     projectObserverTest.cpp
     projectSerializationTest.cpp
     projectTest.cpp
-    rationalFeatureTest.cpp
     rationalTypeTest.cpp
     rationalValueTest.cpp
     recordWithOptionalsFeatureTest.cpp

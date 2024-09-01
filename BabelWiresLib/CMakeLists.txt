@@ -105,7 +105,6 @@ SET( BABELWIRESLIB_SRCS
 	Types/Int/intValue.cpp
 	Types/Int/intTypeConstructor.cpp
 	Types/Int/intFeature.cpp
-	Types/Rational/rationalFeature.cpp
 	Types/Rational/rationalValue.cpp
 	Types/Rational/rationalType.cpp
 	Types/Rational/rationalTypeConstructor.cpp

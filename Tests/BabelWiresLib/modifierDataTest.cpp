@@ -9,7 +9,6 @@
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
-#include <BabelWiresLib/Types/Rational/rationalFeature.hpp>
 #include <BabelWiresLib/Types/String/stringFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
