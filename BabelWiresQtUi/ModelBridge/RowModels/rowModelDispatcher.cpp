@@ -9,12 +9,10 @@
 
 #include <BabelWiresQtUi/ModelBridge/RowModels/arrayRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/fileRowModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/RowModels/recordWithOptionalsRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelRegistry.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/valueRowModel.hpp>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
@@ -37,9 +35,6 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     } else if (feature->as<const babelwires::FileFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::FileRowModel));
         new (m_rowModel) babelwires::FileRowModel();
-    } else if (feature->as<const babelwires::RecordWithOptionalsFeature>()) {
-        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::RecordWithOptionalsRowModel));
-        new (m_rowModel) babelwires::RecordWithOptionalsRowModel();
     } else {
         // The base row model is used.
     }

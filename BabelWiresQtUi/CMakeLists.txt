@@ -15,7 +15,6 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/accessModelScope.cpp
     ModelBridge/RowModels/arrayRowModel.cpp
     ModelBridge/RowModels/fileRowModel.cpp
-    ModelBridge/RowModels/recordWithOptionalsRowModel.cpp
     ModelBridge/RowModels/rowModel.cpp
     ModelBridge/RowModels/rowModelDispatcher.cpp
     ModelBridge/RowModels/rowModelRegistry.cpp
