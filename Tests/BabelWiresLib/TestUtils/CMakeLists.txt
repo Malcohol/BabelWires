@@ -9,7 +9,6 @@ SET( LIB_TEST_UTILS_SRCS
     testRecord.cpp
     testRecordType.cpp
     testRecordWithVariantsType.cpp
-    testFeatureWithOptionals.cpp
     testRootFeature.cpp
     testValueAndType.cpp
     testTypeConstructor.cpp
