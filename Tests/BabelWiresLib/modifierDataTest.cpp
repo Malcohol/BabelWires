@@ -9,13 +9,13 @@
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
-#include <BabelWiresLib/Types/String/stringFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
@@ -74,43 +74,59 @@ TEST(ModifierDataTest, arrayInitializationSerialization) {
 }
 
 TEST(ModifierDataTest, assignFromFeatureApply) {
-    babelwires::ConnectionModifierData data;
-
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::RootFeature srcRootFeature(testEnvironment.m_projectContext);
-    babelwires::IntFeature& srcIntFeature = *srcRootFeature.addField(std::make_unique<babelwires::IntFeature>(),
-                                                                     testUtils::getTestRegisteredIdentifier("foo"));
+    babelwires::SimpleValueFeature srcFeature{testEnvironment.m_typeSystem,
+                                              babelwires::DefaultIntType::getThisIdentifier()};
+    babelwires::SimpleValueFeature targetFeature{testEnvironment.m_typeSystem,
+                                                 babelwires::DefaultIntType::getThisIdentifier()};
 
-    babelwires::RootFeature targetRootFeature(testEnvironment.m_projectContext);
-    babelwires::IntFeature& targetIntFeature = *targetRootFeature.addField(
-        std::make_unique<babelwires::IntFeature>(), testUtils::getTestRegisteredIdentifier("foo"));
+    srcFeature.setToDefault();
+    targetFeature.setToDefault();
 
-    srcIntFeature.set(14);
-    targetIntFeature.set(0);
-    EXPECT_EQ(targetIntFeature.get(), 0);
+    babelwires::Instance<babelwires::IntType> srcInstance{srcFeature};
+    babelwires::Instance<babelwires::IntType> targetInstance{targetFeature};
+    srcInstance.set(14);
+    targetInstance.set(0);
 
-    data.apply(&srcIntFeature, &targetIntFeature, true);
-    EXPECT_EQ(targetIntFeature.get(), 14);
+    // This test is not about following paths, so the paths can be left default.
+    babelwires::ConnectionModifierData data;
 
-    targetIntFeature.set(0);
-    srcIntFeature.clearChanges();
-    data.apply(&srcIntFeature, &targetIntFeature, false);
-    EXPECT_EQ(targetIntFeature.get(), 0);
+    EXPECT_EQ(targetInstance.get(), 0);
 
-    srcIntFeature.set(28);
-    data.apply(&srcIntFeature, &targetIntFeature, false);
-    EXPECT_EQ(targetIntFeature.get(), 28);
+    data.apply(&srcFeature, &targetFeature, false);
+    EXPECT_EQ(targetInstance.get(), 14);
 
-    babelwires::StringFeature& notIntFeature = *srcRootFeature.addField(std::make_unique<babelwires::StringFeature>(),
-                                                                        testUtils::getTestRegisteredIdentifier("bar"));
-    EXPECT_THROW(data.apply(&srcIntFeature, &notIntFeature, true), babelwires::ModelException);
+    // Test that the target only gets updated when the source has changes.
+    targetInstance.set(0);
+    srcFeature.clearChanges();
+    data.apply(&srcFeature, &targetFeature, false);
+    EXPECT_EQ(targetInstance.get(), 0);
 
-    // An exception will try to print out a path, which will expect one of these singletons.
+    // Unless the third argument is true.
+    data.apply(&srcFeature, &targetFeature, true);
+    EXPECT_EQ(targetInstance.get(), 14);
 
-    babelwires::StandardArrayFeature<babelwires::IntFeature> notValueFeature;
-    EXPECT_THROW(data.apply(&notValueFeature, &targetIntFeature, true), babelwires::ModelException);
-    EXPECT_THROW(data.apply(&srcIntFeature, &notValueFeature, true), babelwires::ModelException);
+    // Respond to changes as normal.
+    targetInstance.set(28);
+    data.apply(&srcFeature, &targetFeature, false);
+    EXPECT_EQ(targetInstance.get(), 28);
+}
+
+TEST(ModifierDataTest, assignFromFeatureBadConnectionApply) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::SimpleValueFeature srcFeature{testEnvironment.m_typeSystem,
+                                              babelwires::DefaultIntType::getThisIdentifier()};
+    babelwires::SimpleValueFeature targetFeature{testEnvironment.m_typeSystem,
+                                                 babelwires::StringType::getThisIdentifier()};
+
+    srcFeature.setToDefault();
+    targetFeature.setToDefault();
+
+    babelwires::ConnectionModifierData data;
+
+    EXPECT_THROW(data.apply(&srcFeature, &targetFeature, false), babelwires::ModelException);
 }
 
 TEST(ModifierDataTest, assignFromFeatureClone) {

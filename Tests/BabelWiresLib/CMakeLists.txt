@@ -64,7 +64,6 @@ SET( LIB_TESTS_SRCS
     setMapSourceTypeCommandTest.cpp
     setMapTargetTypeCommandTest.cpp
     sourceFileElementTest.cpp
-    stringFeatureTest.cpp
     stringTypeTest.cpp
     stringValueTest.cpp
     sumOfMapsTypeTest.cpp

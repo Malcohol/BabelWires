@@ -112,7 +112,6 @@ SET( BABELWIRESLIB_SRCS
 	Types/Sum/sumTypeConstructor.cpp
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
-	Types/String/stringFeature.cpp
 	Instance/instanceUtils.cpp
 	TypeSystem/compoundType.cpp
 	TypeSystem/type.cpp
