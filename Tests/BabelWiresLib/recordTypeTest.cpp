@@ -108,13 +108,13 @@ namespace {
 
         EXPECT_EQ(recordType.getNumActiveFields(value), numOptionals);
 
-        EXPECT_EQ(recordType.getNumChildren(value), 3 + numOptionals);
+        EXPECT_EQ(recordType.getNumChildren(value), testUtils::TestComplexRecordType::s_numNonOptionalFields + numOptionals);
 
         std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>>
             childInfos;
         std::vector<const babelwires::Type*> types;
 
-        for (unsigned int i = 0; i < 3 + numOptionals; ++i) {
+        for (unsigned int i = 0; i < testUtils::TestComplexRecordType::s_numNonOptionalFields + numOptionals; ++i) {
             childInfos.emplace_back(recordType.getChild(value, i));
             types.emplace_back(&std::get<2>(childInfos.back()).resolve(typeSystem));
         }
@@ -146,7 +146,7 @@ namespace {
             EXPECT_NE(types[opRecIndex]->as<babelwires::RecordType>(), nullptr);
         }
 
-        for (unsigned int i = 0; i < 3 + numOptionals; ++i) {
+        for (unsigned int i = 0; i < testUtils::TestComplexRecordType::s_numNonOptionalFields + numOptionals; ++i) {
             EXPECT_EQ(recordType.getChildIndexFromStep(value, std::get<1>(childInfos[i])), i);
             EXPECT_TRUE(types[i]->isValidValue(typeSystem, *std::get<0>(childInfos[i])->getUnsafe()));
         }

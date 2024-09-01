@@ -19,7 +19,6 @@
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Types/Enum/enumFeature.hpp>
-#include <BabelWiresLib/Types/String/stringFeature.hpp>
 
 babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowModelRegistry,
                                                    const ValueModelRegistry& valueModelRegistry,
