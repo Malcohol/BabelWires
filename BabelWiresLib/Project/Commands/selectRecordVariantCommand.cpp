@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, ElementId elementId,
@@ -65,10 +65,10 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
         project.removeModifier(m_elementId, m_pathToUnion);
     }
 
-    SelectUnionBranchModifierData modifierToAdd;
+    SelectRecordVariantModifierData modifierToAdd;
     modifierToAdd.m_pathToFeature = m_pathToUnion;
     modifierToAdd.m_tagToSelect = m_tagToSelect;
-    m_unionModifierToAdd = std::make_unique<SelectUnionBranchModifierData>(std::move(modifierToAdd));
+    m_unionModifierToAdd = std::make_unique<SelectRecordVariantModifierData>(std::move(modifierToAdd));
 
     project.addModifier(m_elementId, *m_unionModifierToAdd);
 

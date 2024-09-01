@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
-#include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
@@ -16,7 +16,7 @@
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
-TEST(SelectUnionBranchModifierDataTest, apply) {
+TEST(SelectRecordVariantModifierDataTest, apply) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::SimpleValueFeature valueFeature(
         testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisIdentifier());
@@ -25,14 +25,14 @@ TEST(SelectUnionBranchModifierDataTest, apply) {
 
     EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagBId());
 
-    babelwires::SelectUnionBranchModifierData data;
+    babelwires::SelectRecordVariantModifierData data;
     data.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagAId();
 
     data.apply(&valueFeature);
 
     EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagAId());
 
-    babelwires::SelectUnionBranchModifierData data2;
+    babelwires::SelectRecordVariantModifierData data2;
     data2.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagCId();
 
     data2.apply(&valueFeature);
@@ -40,8 +40,8 @@ TEST(SelectUnionBranchModifierDataTest, apply) {
     EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagCId());
 }
 
-TEST(SelectUnionBranchModifierDataTest, failureNotATag) {
-    babelwires::SelectUnionBranchModifierData data;
+TEST(SelectRecordVariantModifierDataTest, failureNotATag) {
+    babelwires::SelectRecordVariantModifierData data;
     data.m_tagToSelect = "notTag";
 
     testUtils::TestEnvironment testEnvironment;
@@ -53,9 +53,9 @@ TEST(SelectUnionBranchModifierDataTest, failureNotATag) {
     EXPECT_THROW(data.apply(&valueFeature), babelwires::ModelException);
 }
 
-TEST(SelectUnionBranchModifierDataTest, failureNotAUnion) {
+TEST(SelectRecordVariantModifierDataTest, failureNotAUnion) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SelectUnionBranchModifierData data;
+    babelwires::SelectRecordVariantModifierData data;
     data.m_tagToSelect = "tag";
 
     babelwires::SimpleValueFeature notARecordWithVariants(
@@ -64,8 +64,8 @@ TEST(SelectUnionBranchModifierDataTest, failureNotAUnion) {
     EXPECT_THROW(data.apply(&notARecordWithVariants), babelwires::ModelException);
 }
 
-TEST(SelectUnionBranchModifierDataTest, clone) {
-    babelwires::SelectUnionBranchModifierData data;
+TEST(SelectRecordVariantModifierDataTest, clone) {
+    babelwires::SelectRecordVariantModifierData data;
     data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("foo/bar/boo");
     data.m_tagToSelect = "tag";
 
@@ -75,10 +75,10 @@ TEST(SelectUnionBranchModifierDataTest, clone) {
     EXPECT_EQ(clonePtr->m_tagToSelect, data.m_tagToSelect);
 }
 
-TEST(SelectUnionBranchModifierDataTest, serialization) {
+TEST(SelectRecordVariantModifierDataTest, serialization) {
     std::string serializedContents;
     {
-        babelwires::SelectUnionBranchModifierData data;
+        babelwires::SelectRecordVariantModifierData data;
         data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("foo/bar/boo");
         data.m_tagToSelect = "tag";
 
@@ -91,7 +91,7 @@ TEST(SelectUnionBranchModifierDataTest, serialization) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::SelectUnionBranchModifierData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::SelectRecordVariantModifierData>();
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);

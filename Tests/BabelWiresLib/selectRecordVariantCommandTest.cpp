@@ -6,7 +6,7 @@
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
@@ -74,10 +74,10 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     ASSERT_NE(getInputValueFeature(), nullptr);
 
     {
-        babelwires::SelectUnionBranchModifierData selectUnionBranchData;
-        selectUnionBranchData.m_pathToFeature = getPathToRecordWithVariants();
-        selectUnionBranchData.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagAId();
-        testEnvironment.m_project.addModifier(elementId, selectUnionBranchData);
+        babelwires::SelectRecordVariantModifierData selectRecordVariantData;
+        selectRecordVariantData.m_pathToFeature = getPathToRecordWithVariants();
+        selectRecordVariantData.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagAId();
+        testEnvironment.m_project.addModifier(elementId, selectRecordVariantData);
     }
     {
         babelwires::ConnectionModifierData inputConnection;
