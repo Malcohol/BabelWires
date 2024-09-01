@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Commands/selectUnionBranchCommand.hpp>
+#include <BabelWiresLib/Project/Commands/selectRecordVariantCommand.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
@@ -45,7 +45,7 @@ namespace {
 
 } // namespace testUtils
 
-TEST(SelectUnionBranchCommandTest, executeAndUndo) {
+TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
@@ -130,7 +130,7 @@ TEST(SelectUnionBranchCommandTest, executeAndUndo) {
         }
     };
 
-    babelwires::SelectUnionBranchCommand command("Test command", elementId,
+    babelwires::SelectRecordVariantCommand command("Test command", elementId,
                                                  getPathToRecordWithVariants(),
                                                  testUtils::TestRecordWithVariantsType::getTagBId());
 
@@ -157,18 +157,18 @@ TEST(SelectUnionBranchCommandTest, executeAndUndo) {
     checkModifiers(true);
 }
 
-TEST(SelectUnionBranchCommandTest, failSafelyNoElement) {
+TEST(SelectRecordVariantCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SelectUnionBranchCommand command("Test command", 51,
+    babelwires::SelectRecordVariantCommand command("Test command", 51,
                                                  getPathToRecordWithVariants(), "tag");
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }
 
-TEST(SelectUnionBranchCommandTest, failSafelyNoRecord) {
+TEST(SelectRecordVariantCommandTest, failSafelyNoRecord) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SelectUnionBranchCommand command("Test command", 51,
+    babelwires::SelectRecordVariantCommand command("Test command", 51,
                                                  babelwires::FeaturePath::deserializeFromString("qqq/zzz"), "tag");
 
     TestElementWithVariantsData elementData;
@@ -181,7 +181,7 @@ TEST(SelectUnionBranchCommandTest, failSafelyNoRecord) {
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }
 
-TEST(SelectUnionBranchCommandTest, failSafelyNotATag) {
+TEST(SelectRecordVariantCommandTest, failSafelyNotATag) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
@@ -193,19 +193,19 @@ TEST(SelectUnionBranchCommandTest, failSafelyNotATag) {
 
     babelwires::ShortId notATag("notTag");
     notATag.setDiscriminator(1);
-    babelwires::SelectUnionBranchCommand command("Test command", 51,
+    babelwires::SelectRecordVariantCommand command("Test command", 51,
                                                  getPathToRecordWithVariants(), notATag);
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }
 
-TEST(SelectUnionBranchCommandTest, failSafelyAlreadySelected) {
+TEST(SelectRecordVariantCommandTest, failSafelyAlreadySelected) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(TestElementWithVariantsData());
 
-    babelwires::SelectUnionBranchCommand command(
+    babelwires::SelectRecordVariantCommand command(
         "Test command", elementId, getPathToRecordWithVariants(), testUtils::TestRecordWithVariantsType::getTagBId());
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));

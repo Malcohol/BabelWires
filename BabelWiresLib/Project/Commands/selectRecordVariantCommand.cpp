@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include <BabelWiresLib/Project/Commands/selectUnionBranchCommand.hpp>
+#include <BabelWiresLib/Project/Commands/selectRecordVariantCommand.hpp>
 
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
@@ -16,16 +16,16 @@
 #include <BabelWiresLib/Project/Modifiers/selectUnionBranchModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::SelectUnionBranchCommand::SelectUnionBranchCommand(std::string commandName, ElementId elementId,
+babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, ElementId elementId,
                                                                FeaturePath featurePath, ShortId tagToSelect)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToUnion(std::move(featurePath))
     , m_tagToSelect(tagToSelect) {}
 
-babelwires::SelectUnionBranchCommand::~SelectUnionBranchCommand() = default;
+babelwires::SelectRecordVariantCommand::~SelectRecordVariantCommand() = default;
 
-bool babelwires::SelectUnionBranchCommand::initializeAndExecute(Project& project) {
+bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
     if (!elementToModify) {
         return false;
@@ -75,7 +75,7 @@ bool babelwires::SelectUnionBranchCommand::initializeAndExecute(Project& project
     return true;
 }
 
-void babelwires::SelectUnionBranchCommand::execute(Project& project) const {
+void babelwires::SelectRecordVariantCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
     if (m_unionModifierToRemove) {
         project.removeModifier(m_elementId, m_pathToUnion);
@@ -83,7 +83,7 @@ void babelwires::SelectUnionBranchCommand::execute(Project& project) const {
     project.addModifier(m_elementId, *m_unionModifierToAdd);
 }
 
-void babelwires::SelectUnionBranchCommand::undo(Project& project) const {
+void babelwires::SelectRecordVariantCommand::undo(Project& project) const {
     project.removeModifier(m_elementId, m_pathToUnion);
     if (m_unionModifierToRemove) {
         project.addModifier(m_elementId, *m_unionModifierToRemove);

@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include <BabelWiresLib/Project/Commands/selectUnionBranchCommand.hpp>
+#include <BabelWiresLib/Project/Commands/selectRecordVariantCommand.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -27,6 +27,6 @@ void babelwires::SelectVariantAction::actionTriggered(babelwires::FeatureModel& 
     std::unique_ptr<Command<Project>> command;
     std::string fieldName = IdentifierRegistry::read()->getName(m_tag).c_str();
     command =
-        std::make_unique<SelectUnionBranchCommand>("Select variant " + fieldName, elementId, m_pathToRecord, m_tag);
+        std::make_unique<SelectRecordVariantCommand>("Select variant " + fieldName, elementId, m_pathToRecord, m_tag);
     projectBridge.scheduleCommand(std::move(command));
 }

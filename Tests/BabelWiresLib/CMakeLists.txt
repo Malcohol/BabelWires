@@ -58,7 +58,7 @@ SET( LIB_TESTS_SRCS
     resizeElementCommandTest.cpp
     rootFeatureTest.cpp
     selectUnionBranchModifierDataTest.cpp
-    selectUnionBranchCommandTest.cpp
+    selectRecordVariantCommandTest.cpp
     setArraySizeCommandTest.cpp
     setExpandedCommandTest.cpp
     setMapCommandTest.cpp

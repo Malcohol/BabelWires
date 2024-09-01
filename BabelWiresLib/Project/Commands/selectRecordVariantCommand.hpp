@@ -17,11 +17,11 @@ namespace babelwires {
     struct ModifierData;
 
     /// Activate an optional in a RecordWithOptionalsFeature
-    class SelectUnionBranchCommand : public CompoundCommand<Project> {
+    class SelectRecordVariantCommand : public CompoundCommand<Project> {
       public:
-        SelectUnionBranchCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+        SelectRecordVariantCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                ShortId tagToSelect);
-        virtual ~SelectUnionBranchCommand();
+        virtual ~SelectRecordVariantCommand();
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
