@@ -76,16 +76,18 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                         initialSize - currentSize));
                 }
             }
-        } else if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
-            if (auto optionalFeature = m_featurePath.tryFollow(*inputFeature)->as<const RecordWithOptionalsFeature>()) {
-                for (auto optionalField : optionalFeature->getOptionalFields()) {
-                    if (optionalFeature->isActivated(optionalField)) {
+        } else if (const auto* optModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+            auto [compoundFeature, optionals] = ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_featurePath.tryFollow(*inputFeature));
+            if (compoundFeature) {
+                for (auto optionalField : optionals) {
+                    if (optionalField.second) {
                         addSubCommand(std::make_unique<DeactivateOptionalCommand>(
-                            "DeactivateOptionalCommand subcommand", m_elementId, m_featurePath, optionalField));
+                            "DeactivateOptionalCommand subcommand", m_elementId, m_featurePath, optionalField.first));
                     }
                 }
             }
         }
+        // TODO Variants!!!
     }
 
     addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_elementId, m_featurePath));

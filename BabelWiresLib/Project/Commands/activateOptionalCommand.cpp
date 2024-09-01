@@ -36,14 +36,20 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
         return false;
     }
 
-    const auto [compoundFeature, isActivated] =
-        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature), m_optional);
+    const auto [compoundFeature, optionals] =
+        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature));
 
     if (!compoundFeature) {
         return false;   
     }
 
-    if (isActivated) {
+    auto it = optionals.find(m_optional);
+    
+    if (it == optionals.end()) {
+        return false;
+    }
+
+    if (it->second) {
         return false;
     }
 

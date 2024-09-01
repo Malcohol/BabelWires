@@ -32,23 +32,18 @@ babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const Feature* f) {
     return {};
 }
 
-std::tuple<const babelwires::CompoundFeature*, bool>
-babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feature* f, ShortId optionalId) {
+std::tuple<const babelwires::CompoundFeature*, std::map<babelwires::ShortId, bool>>
+babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feature* f) {
     if (!f) {
         return {};
     }
-    if (auto recordWithOptionalsFeature = f->as<const RecordWithOptionalsFeature>()) {
-        if (!recordWithOptionalsFeature->isOptional(optionalId)) {
-            return {};
-        }
-        return { recordWithOptionalsFeature, recordWithOptionalsFeature->isActivated(optionalId) };
-    } else if (auto valueFeature = f->as<const ValueFeature>()) {
+    if (auto valueFeature = f->as<const ValueFeature>()) {
         if (auto recordType = valueFeature->getType().as<RecordType>()) {
-            if (!recordType->isOptional(optionalId)) {
-                return {};
-            } else {
-                return { valueFeature, recordType->isActivated(valueFeature->getValue(), optionalId)};
+            std::map<ShortId, bool> currentlyActivatedOptionals;
+            for (auto opt : recordType->getOptionalFieldIds()) {
+                currentlyActivatedOptionals.insert(std::pair{ opt, recordType->isActivated(valueFeature->getValue(), opt)});
             }
+            return { valueFeature, currentlyActivatedOptionals};
         }
     }
     return {};
