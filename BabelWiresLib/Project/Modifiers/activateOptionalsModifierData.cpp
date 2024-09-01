@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>

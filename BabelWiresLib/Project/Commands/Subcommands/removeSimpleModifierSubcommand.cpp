@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>

@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
