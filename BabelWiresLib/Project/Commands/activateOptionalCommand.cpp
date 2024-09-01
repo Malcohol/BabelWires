@@ -8,7 +8,6 @@
 
 #include <BabelWiresLib/Project/Commands/activateOptionalCommand.hpp>
 
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>

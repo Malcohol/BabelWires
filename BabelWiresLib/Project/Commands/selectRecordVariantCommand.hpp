@@ -1,5 +1,5 @@
 /**
- * The command which activates optionals in a RecordWithOptionalsFeature.
+ * The command which selects the variant in a RecordWithVariantType.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
