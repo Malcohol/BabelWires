@@ -25,8 +25,7 @@ namespace babelwires {
     /// The data held by a map.
     /// To support scenarios such as deserialization after an awkward versioning step, or copy and
     /// paste from similar but non-identical types, entries are not presumed to be valid.
-    /// However, an assignment of MapValue to a MapFeature will fail if there are
-    /// invalid entries.
+    /// However, an assignment of MapValue will fail if there are invalid entries.
     class MapValue : public EditableValue {
       public:
         SERIALIZABLE(MapValue, "mapValue", void, 1);
