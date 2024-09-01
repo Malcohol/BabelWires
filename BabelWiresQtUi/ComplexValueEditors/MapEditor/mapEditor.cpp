@@ -25,6 +25,7 @@
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>

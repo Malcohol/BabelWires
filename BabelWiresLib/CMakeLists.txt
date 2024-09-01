@@ -97,7 +97,6 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp
 	TypeSystem/typeSystem.cpp
 	Types/Enum/addBlankToEnum.cpp
-	Types/Enum/enumFeature.cpp
 	Types/Enum/enumType.cpp
 	Types/Enum/enumValue.cpp
 	Types/Int/intType.cpp
