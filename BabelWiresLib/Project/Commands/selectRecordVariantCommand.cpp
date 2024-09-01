@@ -20,7 +20,7 @@ babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string c
                                                                FeaturePath featurePath, ShortId tagToSelect)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
-    , m_pathToUnion(std::move(featurePath))
+    , m_pathToRecord(std::move(featurePath))
     , m_tagToSelect(tagToSelect) {}
 
 babelwires::SelectRecordVariantCommand::~SelectRecordVariantCommand() = default;
@@ -37,7 +37,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
     }
 
     const auto [compoundFeature, isCurrentTag, fieldsToRemove] =
-        ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(m_pathToUnion.tryFollow(*inputFeature), m_tagToSelect);
+        ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(m_pathToRecord.tryFollow(*inputFeature), m_tagToSelect);
 
     if (!compoundFeature) {
         return false;   
@@ -47,12 +47,12 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
         return false;
     }
 
-    if (const Modifier* const modifier = elementToModify->findModifier(m_pathToUnion)) {
-        m_unionModifierToRemove = modifier->getModifierData().clone();
+    if (const Modifier* const modifier = elementToModify->findModifier(m_pathToRecord)) {
+        m_recordModifierToRemove = modifier->getModifierData().clone();
     }
 
     for (const auto& field : fieldsToRemove) {
-        FeaturePath pathToField = m_pathToUnion;
+        FeaturePath pathToField = m_pathToRecord;
         pathToField.pushStep(PathStep(field));
         addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToField));
     }
@@ -61,32 +61,32 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
         return false;
     }
 
-    if (m_unionModifierToRemove) {
-        project.removeModifier(m_elementId, m_pathToUnion);
+    if (m_recordModifierToRemove) {
+        project.removeModifier(m_elementId, m_pathToRecord);
     }
 
     SelectRecordVariantModifierData modifierToAdd;
-    modifierToAdd.m_pathToFeature = m_pathToUnion;
+    modifierToAdd.m_pathToFeature = m_pathToRecord;
     modifierToAdd.m_tagToSelect = m_tagToSelect;
-    m_unionModifierToAdd = std::make_unique<SelectRecordVariantModifierData>(std::move(modifierToAdd));
+    m_recordModifierToAdd = std::make_unique<SelectRecordVariantModifierData>(std::move(modifierToAdd));
 
-    project.addModifier(m_elementId, *m_unionModifierToAdd);
+    project.addModifier(m_elementId, *m_recordModifierToAdd);
 
     return true;
 }
 
 void babelwires::SelectRecordVariantCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    if (m_unionModifierToRemove) {
-        project.removeModifier(m_elementId, m_pathToUnion);
+    if (m_recordModifierToRemove) {
+        project.removeModifier(m_elementId, m_pathToRecord);
     }
-    project.addModifier(m_elementId, *m_unionModifierToAdd);
+    project.addModifier(m_elementId, *m_recordModifierToAdd);
 }
 
 void babelwires::SelectRecordVariantCommand::undo(Project& project) const {
-    project.removeModifier(m_elementId, m_pathToUnion);
-    if (m_unionModifierToRemove) {
-        project.addModifier(m_elementId, *m_unionModifierToRemove);
+    project.removeModifier(m_elementId, m_pathToRecord);
+    if (m_recordModifierToRemove) {
+        project.addModifier(m_elementId, *m_recordModifierToRemove);
     }
     CompoundCommand::undo(project);
 }

@@ -29,10 +29,10 @@ namespace babelwires {
 
       private:
         ElementId m_elementId;
-        FeaturePath m_pathToUnion;
+        FeaturePath m_pathToRecord;
         ShortId m_tagToSelect;
 
-        std::unique_ptr<ModifierData> m_unionModifierToAdd;
-        std::unique_ptr<ModifierData> m_unionModifierToRemove;
+        std::unique_ptr<ModifierData> m_recordModifierToAdd;
+        std::unique_ptr<ModifierData> m_recordModifierToRemove;
     };
 } // namespace babelwires
