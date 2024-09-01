@@ -618,7 +618,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
         } else {
             // Discard the existing modifier, since it should be broken anyway.
             assert(existingModifier->isFailed() &&
-                   "A non-failed inapplicable modifier was found at a RecordWithOptionalsFeature");
+                   "A non-failed inapplicable modifier was found at an instance of a RecordType");
             removeModifier(elementId, pathToRecord);
         }
     }

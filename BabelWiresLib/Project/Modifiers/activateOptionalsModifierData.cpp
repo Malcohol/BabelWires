@@ -1,5 +1,5 @@
 /**
- * ActivateOptionalsModifierData is used to select a set of optionals in a RecordWithOptionalsFeature
+ * ActivateOptionalsModifierData is used to select a set of optionals in a RecordType
  *
  * (C) 2021 Malcolm Tyrrell
  *

@@ -1,5 +1,5 @@
 /**
- * The command which deactivates an optional in a RecordWithOptionalsFeature.
+ * The command which deactivates an optional in a RecordType.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

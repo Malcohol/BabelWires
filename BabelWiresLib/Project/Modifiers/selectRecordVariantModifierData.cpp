@@ -1,5 +1,5 @@
 /**
- * SelectRecordVariantModifierData is used to select a set of optionals in a RecordWithOptionalsFeature
+ * SelectRecordVariantModifierData is used to select the variant of a RecordWithVariantsType.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

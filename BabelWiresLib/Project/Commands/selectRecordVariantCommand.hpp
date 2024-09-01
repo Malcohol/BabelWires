@@ -16,7 +16,7 @@ namespace babelwires {
     class Project;
     struct ModifierData;
 
-    /// Activate an optional in a RecordWithOptionalsFeature
+    /// Activate an optional in a RecordWithVariantType
     class SelectRecordVariantCommand : public CompoundCommand<Project> {
       public:
         SelectRecordVariantCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
