@@ -74,62 +74,6 @@ TEST(ModifierDataTest, arrayInitializationSerialization) {
     EXPECT_EQ(dataPtr->m_size, 5);
 }
 
-/*
-TEST(ModifierDataTest, rationalValueAssignmentApply) {
-    testUtils::TestEnvironment testEnvironment;
-
-    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
-    babelwires::RationalFeature& ratFeature = *rootFeature.addField(std::make_unique<babelwires::RationalFeature>(),
-                                                                    testUtils::getTestRegisteredIdentifier("foo"));
-
-    babelwires::RationalValueAssignmentData data;
-    data.m_value = babelwires::Rational(19 / 57);
-
-    EXPECT_EQ(ratFeature.get(), 0);
-
-    data.apply(&ratFeature);
-    EXPECT_EQ(ratFeature.get(), babelwires::Rational(19 / 57));
-
-    babelwires::IntFeature& notRatFeature = *rootFeature.addField(std::make_unique<babelwires::IntFeature>(),
-                                                                  testUtils::getTestRegisteredIdentifier("bar"));
-    EXPECT_THROW(data.apply(&notRatFeature), babelwires::ModelException);
-}
-
-TEST(ModifierDataTest, rationalValueAssignmentClone) {
-    babelwires::RationalValueAssignmentData data;
-    data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
-    data.m_value = babelwires::Rational(19 / 57);
-    auto dataPtr = data.clone();
-    ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("aa/bb/6"));
-    EXPECT_EQ(dataPtr->m_value, babelwires::Rational(19 / 57));
-}
-
-TEST(ModifierDataTest, rationalValueAssignmentSerialization) {
-    std::string serializedContents;
-    {
-        babelwires::RationalValueAssignmentData data;
-        data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("aa/bb/6");
-        data.m_value = babelwires::Rational(19 / 57);
-
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(data);
-        std::ostringstream os;
-        serializer.write(os);
-        serializedContents = std::move(os.str());
-    }
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::RationalValueAssignmentData>();
-    deserializer.finalize();
-
-    ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("aa/bb/6"));
-    EXPECT_EQ(dataPtr->m_value, babelwires::Rational(19 / 57));
-}
-*/
-
 TEST(ModifierDataTest, assignFromFeatureApply) {
     babelwires::ConnectionModifierData data;
 
