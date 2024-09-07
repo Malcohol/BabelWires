@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
@@ -400,3 +401,123 @@ TEST(RecordTypeTest, subtype)
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOptS::getThisIdentifier(), RecordAOpt::getThisIdentifier()), babelwires::SubtypeOrder::IsUnrelated);    
 }
 
+TEST(RecordTypeTest, featureChanges)
+{
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_typeSystem, testUtils::TestComplexRecordType::getThisIdentifier());
+    valueFeature.setToDefault();
+
+    const testUtils::TestComplexRecordType* recordType = valueFeature.getType().as<testUtils::TestComplexRecordType>();
+    ASSERT_NE(recordType, nullptr);
+
+    valueFeature.clearChanges();
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
+    {
+        babelwires::BackupScope scope(valueFeature);
+        babelwires::ValueHolder value = valueFeature.getValue();
+        recordType->activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpRecId());
+        valueFeature.setValue(value);
+    }
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+
+    valueFeature.clearChanges();
+    {
+        babelwires::BackupScope scope(valueFeature);
+        babelwires::FeaturePath pathToInt;
+        pathToInt.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
+        pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
+        babelwires::ValueHolder& value = valueFeature.setModifiable(pathToInt);
+        value = babelwires::IntValue(15);
+    }
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+
+    valueFeature.clearChanges();
+    {
+        babelwires::BackupScope scope(valueFeature);
+        babelwires::ValueHolder value = valueFeature.getValue();
+        recordType->deactivateField(value, testUtils::TestComplexRecordType::getOpRecId());
+        valueFeature.setValue(value);
+    }
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+}
+
+TEST(RecordTypeTest, valueEquality)
+{
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestComplexRecordType recordType;
+
+    babelwires::ValueHolder value0 = recordType.createValue(testEnvironment.m_typeSystem);
+    babelwires::ValueHolder value1 = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(value0);
+    EXPECT_EQ(value0, value1);
+
+    recordType.activateField(testEnvironment.m_typeSystem, value0, testUtils::TestComplexRecordType::getOpRecId());
+
+    EXPECT_NE(value0, value1);
+
+    recordType.deactivateField(value0, testUtils::TestComplexRecordType::getOpRecId());
+
+    EXPECT_EQ(value0, value1);
+
+    recordType.activateField(testEnvironment.m_typeSystem, value0, testUtils::TestComplexRecordType::getOpIntId());
+
+    EXPECT_NE(value0, value1);
+
+    recordType.activateField(testEnvironment.m_typeSystem, value1, testUtils::TestComplexRecordType::getOpIntId());
+
+    EXPECT_EQ(value0, value1);
+}
+
+TEST(RecordTypeTest, valueHash)
+{
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestComplexRecordType recordType;
+
+    babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(value);
+
+    const std::size_t hash0 = value->getHash();
+
+    recordType.activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpIntId());
+
+    const std::size_t hash1 = value->getHash();
+
+    EXPECT_NE(hash0, hash1);
+
+    recordType.deactivateField(value, testUtils::TestComplexRecordType::getOpIntId());
+
+    const std::size_t hash2 = value->getHash();
+
+    EXPECT_EQ(hash0, hash2);
+
+    // Prepare to modify a child.
+    auto index = recordType.getChildIndexFromStep(value, babelwires::PathStep(testUtils::TestComplexRecordType::getInt0Id()));
+    auto child = recordType.getChildNonConst(value, index);
+
+    // Still unmodified.
+    const std::size_t hash3 = value->getHash();
+    EXPECT_EQ(hash0, hash3);
+
+    // Now modified
+    std::get<0>(child)->operator=(babelwires::IntValue(43));
+    const std::size_t hash4 = value->getHash();
+    EXPECT_NE(hash0, hash4);
+}
+
+TEST(RecordTypeTest, exceptions)
+{
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestComplexRecordType recordType;
+
+    babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(value);
+
+    EXPECT_THROW(recordType.deactivateField(value, testUtils::TestComplexRecordType::getOpIntId()), babelwires::ModelException);
+    EXPECT_NO_THROW(recordType.activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpIntId()));
+    EXPECT_THROW(recordType.activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpIntId()), babelwires::ModelException);
+    EXPECT_THROW(recordType.activateField(testEnvironment.m_typeSystem, value, "foo"), babelwires::ModelException);
+}
