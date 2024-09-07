@@ -54,6 +54,9 @@ void babelwires::RecordType::activateField(const TypeSystem& typeSystem, ValueHo
 
     if (field.m_optionality == Optionality::alwaysActive) {
         throw ModelException() << "Field " << fieldId << " is not an optional and cannot be activated";
+    } 
+    if (isActivated(value, fieldId)) {
+        throw ModelException() << "Field " << fieldId << " is already activated";
     }
 
     RecordValue& recordValue = value.copyContentsAndGetNonConst().is<RecordValue>();
@@ -67,6 +70,9 @@ void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId
 
     if (field.m_optionality == Optionality::alwaysActive) {
         throw ModelException() << "Field " << fieldId << " is not an optional and cannot be deactivated";
+    }
+    if (!isActivated(value, fieldId)) {
+        throw ModelException() << "Field " << fieldId << " is not activated";
     }
 
     RecordValue& recordValue = value.copyContentsAndGetNonConst().is<RecordValue>();

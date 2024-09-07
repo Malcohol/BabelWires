@@ -8,7 +8,6 @@
 
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
