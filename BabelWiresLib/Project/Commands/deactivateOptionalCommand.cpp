@@ -1,5 +1,5 @@
 /**
- * The command which deactivates an optional in a RecordWithOptionalsFeature.
+ * The command which deactivates an optional in a RecordType.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -8,7 +8,6 @@
 
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
@@ -38,14 +37,19 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         return false;
     }
 
-    const auto [compoundFeature, isActivated] =
-        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature), m_optional);
+    const auto [compoundFeature, optionals] =
+        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature));
 
     if (!compoundFeature) {
         return false;   
     }
+    auto it = optionals.find(m_optional);
+    
+    if (it == optionals.end()) {
+        return false;
+    }
 
-    if (!isActivated) {
+    if (!it->second) {
         return false;
     }
 

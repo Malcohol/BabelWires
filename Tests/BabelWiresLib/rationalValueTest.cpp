@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Types/Rational/rationalFeature.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>

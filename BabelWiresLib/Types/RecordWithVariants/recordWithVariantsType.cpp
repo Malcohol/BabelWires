@@ -46,7 +46,7 @@ babelwires::RecordWithVariantsType::RecordWithVariantsType(Tags tags, std::vecto
     assert(defaultTagIndex < m_tags.size());
     m_tagToVariantCache.reserve(m_tags.size());
     for (const auto& t : m_tags) {
-        // It's allowed for a tag not to have any associated fields. 
+        // It's allowed for a tag not to have any associated fields.
         // Ensure that it has an entry in the cache anyway.
         m_tagToVariantCache[t] = {};
     }
@@ -88,7 +88,8 @@ bool babelwires::RecordWithVariantsType::isTag(ShortId tag) const {
     return std::find(m_tags.begin(), m_tags.end(), tag) != m_tags.end();
 }
 
-void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem, ValueHolder& value, ShortId tag) const {
+void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem, ValueHolder& value,
+                                                   ShortId tag) const {
     const ShortId currentTag = getSelectedTag(value);
     const FieldChanges changes = getFieldChanges(currentTag, tag);
     RecordWithVariantsValue& recordValue = value.copyContentsAndGetNonConst().is<RecordWithVariantsValue>();
@@ -214,7 +215,8 @@ bool babelwires::RecordWithVariantsType::isValidValue(const TypeSystem& typeSyst
     return true;
 }
 
-std::vector<const babelwires::RecordWithVariantsType::Field*> babelwires::RecordWithVariantsType::getFixedFields() const {
+std::vector<const babelwires::RecordWithVariantsType::Field*>
+babelwires::RecordWithVariantsType::getFixedFields() const {
     std::vector<const Field*> fixedFields;
     for (const auto& f : m_fields) {
         if (f.m_tags.empty()) {
@@ -230,9 +232,15 @@ namespace {
         return (currentOrder == babelwires::SubtypeOrder::IsUnrelated);
     };
 
-    babelwires::SubtypeOrder sortAndCompareFieldSets(const babelwires::TypeSystem& typeSystem, std::vector<const babelwires::RecordWithVariantsType::Field*>& thisFields, std::vector<const babelwires::RecordWithVariantsType::Field*>& otherFields) {
+    babelwires::SubtypeOrder
+    sortAndCompareFieldSets(const babelwires::TypeSystem& typeSystem,
+                            std::vector<const babelwires::RecordWithVariantsType::Field*>& thisFields,
+                            std::vector<const babelwires::RecordWithVariantsType::Field*>& otherFields) {
         babelwires::SubtypeOrder currentOrder = babelwires::SubtypeOrder::IsEquivalent;
-        auto fieldLess = [](const babelwires::RecordWithVariantsType::Field* a, const babelwires::RecordWithVariantsType::Field* b) { return a->m_identifier < b->m_identifier; };
+        auto fieldLess = [](const babelwires::RecordWithVariantsType::Field* a,
+                            const babelwires::RecordWithVariantsType::Field* b) {
+            return a->m_identifier < b->m_identifier;
+        };
         std::sort(thisFields.begin(), thisFields.end(), fieldLess);
         std::sort(otherFields.begin(), otherFields.end(), fieldLess);
         auto thisIt = thisFields.begin();
@@ -244,7 +252,8 @@ namespace {
                 if (!thisFieldType || !otherFieldType) {
                     return babelwires::SubtypeOrder::IsUnrelated;
                 }
-                const babelwires::SubtypeOrder fieldComparison = thisFieldType->compareSubtypeHelper(typeSystem, *otherFieldType);
+                const babelwires::SubtypeOrder fieldComparison =
+                    thisFieldType->compareSubtypeHelper(typeSystem, *otherFieldType);
                 if (updateAndCheckUnrelated(currentOrder, fieldComparison)) {
                     return babelwires::SubtypeOrder::IsUnrelated;
                 }
@@ -276,17 +285,17 @@ namespace {
         }
         return currentOrder;
     }
-}
+} // namespace
 
 babelwires::SubtypeOrder babelwires::RecordWithVariantsType::compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                                      const Type& other) const {
+                                                                                  const Type& other) const {
     const RecordWithVariantsType* const otherRecord = other.as<RecordWithVariantsType>();
     if (!otherRecord) {
         return SubtypeOrder::IsUnrelated;
     }
 
-    // TODO This is not a complete solution (even considering that we don't yet support coercion). 
-    // In theory, if there was a fixed field in one which was in a branch of another that could mean they are subtypes, 
+    // TODO This is not a complete solution (even considering that we don't yet support coercion).
+    // In theory, if there was a fixed field in one which was in a branch of another that could mean they are subtypes,
     // but this algorithm would not identify that.
 
     SubtypeOrder currentOrder = SubtypeOrder::IsEquivalent;
@@ -304,7 +313,7 @@ babelwires::SubtypeOrder babelwires::RecordWithVariantsType::compareSubtypeHelpe
 
     std::sort(tags.begin(), tags.end());
     std::sort(otherTags.begin(), otherTags.end());
-    
+
     auto thisIt = tags.begin();
     auto otherIt = otherTags.begin();
     while ((thisIt < tags.end()) && (otherIt < otherTags.end())) {
@@ -323,7 +332,7 @@ babelwires::SubtypeOrder babelwires::RecordWithVariantsType::compareSubtypeHelpe
                 return SubtypeOrder::IsUnrelated;
             }
             ++thisIt;
-        } else { //if (*otherIt < *thisIt) {
+        } else { // if (*otherIt < *thisIt) {
             if (updateAndCheckUnrelated(currentOrder, SubtypeOrder::IsSupertype)) {
                 return SubtypeOrder::IsUnrelated;
             }
@@ -349,4 +358,17 @@ std::string babelwires::RecordWithVariantsType::valueToString(const TypeSystem& 
     auto identifierRegistry = IdentifierRegistry::read();
     os << "{" << getNumChildren(v) << " (" << identifierRegistry->getName(recordValue->getTag()) << ")}";
     return os.str();
+}
+
+bool babelwires::RecordWithVariantsType::areDifferentNonRecursively(const ValueHolder& compoundValueA,
+                                                                    const ValueHolder& compoundValueB) const {
+    const RecordWithVariantsValue* const recordA = compoundValueA->as<RecordWithVariantsValue>();
+    const RecordWithVariantsValue* const recordB = compoundValueB->as<RecordWithVariantsValue>();
+    if (recordA && recordB) {
+        return recordA->getTag() != recordB->getTag();
+    } else {
+        // Not really the job of this method to distinguish in this case. However, we might as well
+        // return true if the types don't match.
+        return (recordA == nullptr) != (recordB == nullptr);
+    }
 }

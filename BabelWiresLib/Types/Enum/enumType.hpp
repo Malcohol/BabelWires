@@ -16,7 +16,7 @@ namespace babelwires {
     /// A type offering a choice from a set of named values.
     /// The user should care only about the selected value, and not about the particular index, which is
     /// an implementation detail and could change in future.
-    /// The particular advantage of an EnumFeature is that values can be reordered and new values can be added
+    /// The particular advantage of an EnumType is that values can be reordered and new values can be added
     /// without requiring versioning code to adapt old serialized data.
     /// If the index is meaningful to the user, consider using an integer with with ValueNames.
     class EnumType : public Type {

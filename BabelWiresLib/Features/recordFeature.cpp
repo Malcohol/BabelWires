@@ -97,8 +97,6 @@ babelwires::RecordFeature::FieldAndIndex babelwires::RecordFeature::removeField(
 std::size_t babelwires::RecordFeature::doGetHash() const {
     std::size_t hash = hash::mixtureOf(static_cast<const char*>("Record"));
     for (const auto& f : m_fields) {
-        // Records can change their set of active fields (see RecordWithOptionalsFeature and UnionFeature), so we mix in
-        // the field's identifier as well as its hash.
         hash::mixInto(hash, f.m_identifier);
         hash::mixInto(hash, f.m_feature->getHash());
     }

@@ -63,7 +63,6 @@ const babelwires::TypeSystem& babelwires::ValueFeature::getTypeSystem() const {
     }
 }
 
-
 const babelwires::Type& babelwires::ValueFeature::getType() const {
     const TypeSystem& typeSystem = getTypeSystem();
     return m_typeRef.resolve(typeSystem);
@@ -181,7 +180,7 @@ void babelwires::ValueFeature::reconcileChanges(const ValueHolder& other) {
         for (const auto& it : m_children) {
             currentChildFeatures.emplace(std::pair{it.getKey0(), it.getValue().get()});
         }
-        
+
         std::map<PathStep, const ValueHolder*> backupChildValues;
         for (int i = 0; i < compound->getNumChildren(other); ++i) {
             auto [child, step, _] = compound->getChild(other, i);
@@ -193,10 +192,10 @@ void babelwires::ValueFeature::reconcileChanges(const ValueHolder& other) {
 
         while ((currentIt != currentChildFeatures.end()) && (backupIt != backupChildValues.end())) {
             if (currentIt->first < backupIt->first) {
-                setChanged(Changes::StructureChanged);                
+                setChanged(Changes::StructureChanged);
                 ++currentIt;
             } else if (backupIt->first < currentIt->first) {
-                setChanged(Changes::StructureChanged);                
+                setChanged(Changes::StructureChanged);
                 ++backupIt;
             } else {
                 // TODO Assert types are the same.
@@ -206,7 +205,12 @@ void babelwires::ValueFeature::reconcileChanges(const ValueHolder& other) {
             }
         }
         if ((currentIt != currentChildFeatures.end()) || (backupIt != backupChildValues.end())) {
-            setChanged(Changes::StructureChanged);                
+            setChanged(Changes::StructureChanged);
+        }
+        if (!isChanged(Changes::SomethingChanged)) {
+            if (compound->areDifferentNonRecursively(value, other)) {
+                setChanged(Changes::ValueChanged);
+            }
         }
     } else if (getValue() != other) {
         setChanged(Changes::ValueChanged);

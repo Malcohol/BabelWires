@@ -19,7 +19,6 @@
 
 namespace babelwires {
     class ProjectBridge;
-    class MapFeature;
     class MapModel;
     class MapView;
     struct ValueAssignmentData;

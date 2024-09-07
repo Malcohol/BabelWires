@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
-#include <BabelWiresLib/Types/Enum/enumFeature.hpp>
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -15,11 +14,11 @@ namespace babelwires {
 /// The TestEnum uses some of the enumWithCppEnum macros. It doesn't use the full set, since they register identifiers
 /// using in standard ways (using magic statics) which don't work in the the Common and BabelWires tests libs.
 #define TESTENUM_VALUES(X)                                                                                            \
-    X(Foo, "Foo", "UUID")                                                                                              \
-    X(Bar, "Bar", "UUID")                                                                                              \
-    X(Erm, "Erm", "UUID")                                                                                              \
-    X(Oom, "Oom", "UUID")                                                                                              \
-    X(Boo, "Boo", "UUID")
+    X(Foo, "Foo", "9aa73d97-4f7b-4fb3-b57d-e5be55c4e659")                                                                                              \
+    X(Bar, "Bar", "dc65b741-5599-43f1-ab9d-b884132821ef")                                                                                              \
+    X(Erm, "Erm", "56932f30-a1e8-46e8-b55a-78080cfbafc5")                                                                                              \
+    X(Oom, "Oom", "9fb8e407-2413-4600-83c8-c7ac42fbd365")                                                                                              \
+    X(Boo, "Boo", "df6e11db-1351-4fc4-b9c1-3d0afacd5284")
 
 namespace testUtils {
     /// Get values for the test enum.

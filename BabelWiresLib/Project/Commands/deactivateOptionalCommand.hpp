@@ -1,5 +1,5 @@
 /**
- * The command which deactivates an optional in a RecordWithOptionalsFeature.
+ * The command which deactivates an optional in a RecordType.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -15,7 +15,7 @@
 namespace babelwires {
     class Project;
 
-    /// Deactivate an optional in a RecordWithOptionalsFeature
+    /// Deactivate an optional in a RecordType
     class DeactivateOptionalCommand : public CompoundCommand<Project> {
       public:
         DeactivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,

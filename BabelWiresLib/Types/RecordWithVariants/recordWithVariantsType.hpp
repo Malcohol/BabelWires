@@ -68,6 +68,8 @@ namespace babelwires {
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
+
+        bool areDifferentNonRecursively(const ValueHolder& compoundValue, const ValueHolder& otherCompoundValue) const override;
       private:
         struct FieldChanges {
           std::vector<unsigned int> m_fieldsRemoved;

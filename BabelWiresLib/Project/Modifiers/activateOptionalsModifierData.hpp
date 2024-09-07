@@ -1,5 +1,5 @@
 /**
- * ActivateOptionalsModifierData is used to select a set of optionals in a RecordWithOptionalsFeature
+ * ActivateOptionalsModifierData is used to select a set of optionals in a RecordType
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 namespace babelwires {
-    /// Data used to select a set of optionals in a RecordWithOptionalsFeature
+    /// ActivateOptionalsModifierData is used to select a set of optionals in a RecordType
     struct ActivateOptionalsModifierData : LocalModifierData {
         virtual void apply(Feature* targetFeature) const override;
         CLONEABLE(ActivateOptionalsModifierData);

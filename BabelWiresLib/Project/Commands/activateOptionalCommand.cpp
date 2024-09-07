@@ -1,5 +1,5 @@
 /**
- * The command which activates optionals in a RecordWithOptionalsFeature.
+ * The command which activates optionals in a RecordType.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -8,7 +8,6 @@
 
 #include <BabelWiresLib/Project/Commands/activateOptionalCommand.hpp>
 
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
@@ -37,14 +36,20 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
         return false;
     }
 
-    const auto [compoundFeature, isActivated] =
-        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature), m_optional);
+    const auto [compoundFeature, optionals] =
+        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature));
 
     if (!compoundFeature) {
         return false;   
     }
 
-    if (isActivated) {
+    auto it = optionals.find(m_optional);
+    
+    if (it == optionals.end()) {
+        return false;
+    }
+
+    if (it->second) {
         return false;
     }
 

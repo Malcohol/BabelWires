@@ -42,10 +42,8 @@ SET( LIB_TESTS_SRCS
     projectObserverTest.cpp
     projectSerializationTest.cpp
     projectTest.cpp
-    rationalFeatureTest.cpp
     rationalTypeTest.cpp
     rationalValueTest.cpp
-    recordWithOptionalsFeatureTest.cpp
     recordTypeTest.cpp
     recordWithVariantsTypeTest.cpp
     removeElementCommandTest.cpp
@@ -57,15 +55,14 @@ SET( LIB_TESTS_SRCS
     replaceMapEntryCommandTest.cpp
     resizeElementCommandTest.cpp
     rootFeatureTest.cpp
-    selectUnionBranchModifierDataTest.cpp
-    selectUnionBranchCommandTest.cpp
+    selectRecordVariantModifierDataTest.cpp
+    selectRecordVariantCommandTest.cpp
     setArraySizeCommandTest.cpp
     setExpandedCommandTest.cpp
     setMapCommandTest.cpp
     setMapSourceTypeCommandTest.cpp
     setMapTargetTypeCommandTest.cpp
     sourceFileElementTest.cpp
-    stringFeatureTest.cpp
     stringTypeTest.cpp
     stringValueTest.cpp
     sumOfMapsTypeTest.cpp
@@ -74,7 +71,6 @@ SET( LIB_TESTS_SRCS
     typeRefTest.cpp
     typeSystemTest.cpp
     typeTest.cpp
-    unionFeatureTest.cpp
     valueNamesTest.cpp
     valueHolderTest.cpp
     valueElementTest.cpp

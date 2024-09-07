@@ -10,7 +10,6 @@
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
@@ -619,7 +618,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
         } else {
             // Discard the existing modifier, since it should be broken anyway.
             assert(existingModifier->isFailed() &&
-                   "A non-failed inapplicable modifier was found at a RecordWithOptionalsFeature");
+                   "A non-failed inapplicable modifier was found at an instance of a RecordType");
             removeModifier(elementId, pathToRecord);
         }
     }

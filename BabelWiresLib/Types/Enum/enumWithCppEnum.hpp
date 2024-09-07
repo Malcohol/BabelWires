@@ -7,7 +7,6 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Types/Enum/enumFeature.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
@@ -41,23 +40,3 @@
 #define ENUM_DEFINE_ENUM_VALUE_SOURCE(CLASS, Y)                                                                        \
     const babelwires::IdentifiersSource CLASS::s_enumValueInitializers = {Y(ENUM_ARGUMENTS_AS_INITIALIZERS)};
 
-namespace babelwires {
-    /// This provides convenience methods which allow the contained value of an EnumFeature
-    /// to be queried or set using the corresponding C++ enum (assuming the latter was added to
-    /// the Enum with ENUM_DEFINE_CPP_ENUM).
-    template <typename E> class EnumWithCppEnumFeature : public EnumFeature {
-      public:
-        EnumWithCppEnumFeature()
-            : EnumFeature(E::getThisIdentifier()) {}
-
-        /// Get the stored value as a C++ enum value.
-        typename E::Value getAsValue() const {
-            return static_cast<const E&>(this->getEnum()).getValueFromIdentifier(this->get());
-        }
-
-        /// Set the value using a C++ enum value.
-        void setFromValue(typename E::Value value) {
-            this->set(static_cast<const E&>(this->getEnum()).getIdentifierFromValue(value));
-        }
-    };
-} // namespace babelwires

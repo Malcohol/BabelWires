@@ -1,5 +1,5 @@
 /**
- * The command which activates optionals in a RecordWithOptionalsFeature.
+ * The command which activates optionals in a RecordType.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -15,7 +15,7 @@
 namespace babelwires {
     class Project;
 
-    /// Activate an optional in a RecordWithOptionalsFeature
+    /// Activate an optional in a RecordType
     class ActivateOptionalCommand : public SimpleCommand<Project> {
       public:
         ActivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,

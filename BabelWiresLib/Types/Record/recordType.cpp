@@ -54,6 +54,9 @@ void babelwires::RecordType::activateField(const TypeSystem& typeSystem, ValueHo
 
     if (field.m_optionality == Optionality::alwaysActive) {
         throw ModelException() << "Field " << fieldId << " is not an optional and cannot be activated";
+    } 
+    if (isActivated(value, fieldId)) {
+        throw ModelException() << "Field " << fieldId << " is already activated";
     }
 
     RecordValue& recordValue = value.copyContentsAndGetNonConst().is<RecordValue>();
@@ -68,6 +71,9 @@ void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId
     if (field.m_optionality == Optionality::alwaysActive) {
         throw ModelException() << "Field " << fieldId << " is not an optional and cannot be deactivated";
     }
+    if (!isActivated(value, fieldId)) {
+        throw ModelException() << "Field " << fieldId << " is not activated";
+    }
 
     RecordValue& recordValue = value.copyContentsAndGetNonConst().is<RecordValue>();
     recordValue.removeValue(field.m_identifier);
@@ -75,7 +81,9 @@ void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId
 
 void babelwires::RecordType::ensureActivated(const TypeSystem& typeSystem, ValueHolder& value,
                                              const std::vector<ShortId>& optionalsToEnsureActivated) const {
-    RecordValue& recordValue = value.copyContentsAndGetNonConst().is<RecordValue>();
+    // Avoid modifying the value if we throw after partially processing the fields.
+    ValueHolder temp = value;
+    RecordValue& recordValue = temp.copyContentsAndGetNonConst().is<RecordValue>();
 
     std::vector<ShortId> availableOptionals = getOptionalFieldIds();
     std::sort(availableOptionals.begin(), availableOptionals.end());
@@ -117,12 +125,9 @@ void babelwires::RecordType::ensureActivated(const TypeSystem& typeSystem, Value
         ++it;
     }
     if (!missingOptionals.empty()) {
-        if (missingOptionals.size() == ensureActivated.size()) {
-            throw ModelException() << "None of the optionals could be activated";
-        } else {
-            // TODO Warn? Will need to pass the logger into apply.
-        }
+        throw ModelException() << "Not all of the optionals could be activated";
     }
+    value = temp;
 }
 
 bool babelwires::RecordType::isOptional(ShortId fieldId) const {

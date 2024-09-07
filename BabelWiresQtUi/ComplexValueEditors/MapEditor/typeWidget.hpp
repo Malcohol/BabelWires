@@ -16,8 +16,6 @@
 #include <optional>
 
 namespace babelwires {
-    class MapFeature;
-
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:

@@ -89,12 +89,12 @@ namespace babelwires {
         void adjustModifiersInArrayElements(ElementId elementId, const FeaturePath& pathToArray, ArrayIndex startIndex,
                                             int adjustment);
 
-        /// Activate a modifier in a RecordWithOptionalsFeature.
+        /// Activate an optional in a RecordType.
         void activateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
                               bool ensureModifier);
 
-        /// Deactivate a modifier in a RecordWithOptionalsFeature.
-        /// Note that this will not remove modifiers.
+        /// Deactivate an optional in a RecordType.
+        /// Note that this method is not responsible for removing modifiers.
         void deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
                                 bool ensureModifier);
 

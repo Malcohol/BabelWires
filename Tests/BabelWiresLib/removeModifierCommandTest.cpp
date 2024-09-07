@@ -2,19 +2,21 @@
 
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFeatureWithOptionals.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     testUtils::TestEnvironment testEnvironment;
@@ -49,8 +51,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     testEnvironment.m_project.process();
 
-    const auto* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
     ASSERT_NE(element, nullptr);
 
     const auto getInputFeature = [element]() {
@@ -59,12 +60,10 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     const auto checkModifiers = [&testEnvironment, element](bool isCommandExecuted) {
         const babelwires::Modifier* arrayInitialization =
             element->findModifier(testUtils::TestRootFeature::s_pathToArray);
-        const babelwires::Modifier* intAssignment =
-            element->findModifier(testUtils::TestRootFeature::s_pathToArray_1);
+        const babelwires::Modifier* intAssignment = element->findModifier(testUtils::TestRootFeature::s_pathToArray_1);
         const babelwires::Modifier* inputConnection =
             element->findModifier(testUtils::TestRootFeature::s_pathToArray_3);
-        const babelwires::Modifier* intAssignment2 =
-            element->findModifier(testUtils::TestRootFeature::s_pathToArray_4);
+        const babelwires::Modifier* intAssignment2 = element->findModifier(testUtils::TestRootFeature::s_pathToArray_4);
         int numModifiersAtElement = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
             ++numModifiersAtElement;
@@ -88,8 +87,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 5);
     checkModifiers(false);
 
-    babelwires::RemoveModifierCommand command("Test command", elementId,
-                                              testUtils::TestRootFeature::s_pathToArray);
+    babelwires::RemoveModifierCommand command("Test command", elementId, testUtils::TestRootFeature::s_pathToArray);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -109,101 +107,110 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     checkModifiers(true);
 }
 
-TEST(RemoveModifierCommandTest, executeAndUndoOptionals)
-{
+TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementWithOptionalsData());
-    const testUtils::TestFeatureElementWithOptionals* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElementWithOptionals>();
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
+        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisIdentifier()));
+
+    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(
+        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisIdentifier()));
+    const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(
+        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisIdentifier()));
+
+    const babelwires::ValueElement* const element =
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
 
-    const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<testUtils::TestFeatureWithOptionals>();
-    };
+    const babelwires::ValueElement* const targetElement =
+        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
+    ASSERT_NE(element, nullptr);
 
-    ASSERT_NE(getInputFeature(), nullptr);
+    const babelwires::FeaturePath pathToValue =
+        babelwires::FeaturePath({babelwires::PathStep(babelwires::ValueElement::getStepToValue())});
+
+    babelwires::FeaturePath pathToOptional = pathToValue;
+    pathToOptional.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
+
+    babelwires::FeaturePath pathToIntInOptional = pathToOptional;
+    pathToIntInOptional.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
+
+    babelwires::FeaturePath pathToIntInSimpleRecord = pathToValue;
+    pathToIntInSimpleRecord.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
 
     {
         babelwires::ActivateOptionalsModifierData activateOptionalsModifierData;
-        activateOptionalsModifierData.m_pathToFeature = testUtils::TestFeatureWithOptionals::s_pathToSubrecord;
-        activateOptionalsModifierData.m_selectedOptionals.emplace_back(getInputFeature()->m_op0Id);
-        activateOptionalsModifierData.m_selectedOptionals.emplace_back(getInputFeature()->m_op1Id);
+        activateOptionalsModifierData.m_pathToFeature = pathToValue;
+        activateOptionalsModifierData.m_selectedOptionals.emplace_back(testUtils::TestComplexRecordType::getOpRecId());
         testEnvironment.m_project.addModifier(elementId, activateOptionalsModifierData);
     }
     {
-        babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(-19));
-        intAssignment.m_pathToFeature = testUtils::TestFeatureWithOptionals::s_pathToOp0;
-        testEnvironment.m_project.addModifier(elementId, intAssignment);
+        babelwires::ConnectionModifierData inputConnection;
+        inputConnection.m_pathToFeature = pathToOptional;
+        inputConnection.m_pathToSourceFeature = pathToValue;
+        inputConnection.m_sourceId = sourceId;
+        testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
-        babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
-        intAssignment.m_pathToFeature = testUtils::TestFeatureWithOptionals::s_pathToOp1_Array_1;
-        testEnvironment.m_project.addModifier(elementId, intAssignment);
-    }
-    {
-        babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(100));
-        intAssignment.m_pathToFeature = testUtils::TestFeatureWithOptionals::s_pathToFf0;
-        testEnvironment.m_project.addModifier(elementId, intAssignment);
+        babelwires::ConnectionModifierData outputConnection;
+        outputConnection.m_pathToFeature = pathToIntInSimpleRecord;
+        outputConnection.m_pathToSourceFeature = pathToIntInOptional;
+        outputConnection.m_sourceId = elementId;
+        testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
 
-    const auto checkModifiers = [&testEnvironment, element](bool isCommandExecuted) {
-        const babelwires::Modifier* activateOptionals =
-            element->findModifier(testUtils::TestFeatureWithOptionals::s_pathToSubrecord);
-        const babelwires::Modifier* intAssignment =
-            element->findModifier(testUtils::TestFeatureWithOptionals::s_pathToOp0);
-        const babelwires::Modifier* intAssignment2 =
-            element->findModifier(testUtils::TestFeatureWithOptionals::s_pathToOp1_Array_1);
-        const babelwires::Modifier* intAssignment3 =
-            element->findModifier(testUtils::TestFeatureWithOptionals::s_pathToFf0);
+    const babelwires::RootFeature* const inputFeature = element->getInputFeature()->as<babelwires::RootFeature>();
+    ASSERT_NE(inputFeature, nullptr);
+    const babelwires::ValueFeature* const valueFeature = inputFeature->getFeature(0)->as<babelwires::ValueFeature>();
+    const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
+
+    babelwires::RemoveModifierCommand command("Test command", elementId, pathToValue);
+
+    EXPECT_EQ(command.getName(), "Test command");
+    EXPECT_EQ(command.getName(), "Test command");
+
+    const auto checkModifiers = [&testEnvironment, element, targetElement, pathToOptional,
+                                 pathToIntInSimpleRecord](bool isCommandExecuted) {
+        const babelwires::Modifier* inputConnection = element->findModifier(pathToOptional);
+        const babelwires::Modifier* outputConnection = targetElement->findModifier(pathToIntInSimpleRecord);
         int numModifiersAtElement = 0;
+        int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
             ++numModifiersAtElement;
         }
+        for (const auto* m : targetElement->getEdits().modifierRange()) {
+            ++numModifiersAtTarget;
+        }
         if (isCommandExecuted) {
-            EXPECT_EQ(activateOptionals, nullptr);
-            EXPECT_EQ(intAssignment, nullptr);
-            EXPECT_EQ(intAssignment2, nullptr);
-            EXPECT_NE(intAssignment3, nullptr);
-            EXPECT_EQ(numModifiersAtElement, 1);
+            EXPECT_EQ(inputConnection, nullptr);
+            EXPECT_EQ(outputConnection, nullptr);
+            EXPECT_EQ(numModifiersAtElement, 0);
+            EXPECT_EQ(numModifiersAtTarget, 0);
         } else {
-            EXPECT_NE(activateOptionals, nullptr);
-            EXPECT_NE(intAssignment, nullptr);
-            EXPECT_NE(intAssignment2, nullptr);
-            EXPECT_NE(intAssignment3, nullptr);
-            EXPECT_EQ(numModifiersAtElement, 4);
+            EXPECT_NE(inputConnection, nullptr);
+            EXPECT_NE(outputConnection, nullptr);
+            EXPECT_EQ(numModifiersAtElement, 2);
+            EXPECT_EQ(numModifiersAtTarget, 1);
         }
     };
-
-    babelwires::RemoveModifierCommand command("Test command", elementId,
-                                              testUtils::TestFeatureWithOptionals::s_pathToSubrecord);
-
-    EXPECT_EQ(command.getName(), "Test command");
-
-    EXPECT_TRUE(getInputFeature()->m_subrecord->isActivated(getInputFeature()->m_op0Id));
-    EXPECT_TRUE(getInputFeature()->m_subrecord->isActivated(getInputFeature()->m_op1Id));
-    EXPECT_EQ(getInputFeature()->m_subrecord->getNumFeatures(), 4);
+    testEnvironment.m_project.process();
     checkModifiers(false);
 
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_FALSE(getInputFeature()->m_subrecord->isActivated(getInputFeature()->m_op0Id));
-    EXPECT_FALSE(getInputFeature()->m_subrecord->isActivated(getInputFeature()->m_op1Id));
-    EXPECT_EQ(getInputFeature()->m_subrecord->getNumFeatures(), 2);
+    EXPECT_FALSE(type->isActivated(valueFeature->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
-    EXPECT_TRUE(getInputFeature()->m_subrecord->isActivated(getInputFeature()->m_op0Id));
-    EXPECT_TRUE(getInputFeature()->m_subrecord->isActivated(getInputFeature()->m_op1Id));
-    EXPECT_EQ(getInputFeature()->m_subrecord->getNumFeatures(), 4);
+    EXPECT_TRUE(type->isActivated(valueFeature->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
+    testEnvironment.m_project.process();
 
-    EXPECT_FALSE(getInputFeature()->m_subrecord->isActivated(getInputFeature()->m_op0Id));
-    EXPECT_FALSE(getInputFeature()->m_subrecord->isActivated(getInputFeature()->m_op1Id));
-    EXPECT_EQ(getInputFeature()->m_subrecord->getNumFeatures(), 2);
+    EXPECT_FALSE(type->isActivated(valueFeature->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
     checkModifiers(true);
 }
 

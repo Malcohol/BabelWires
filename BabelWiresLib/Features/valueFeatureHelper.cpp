@@ -9,8 +9,6 @@
 
 #include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Features/unionFeature.hpp>
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
@@ -33,23 +31,18 @@ babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const Feature* f) {
     return {};
 }
 
-std::tuple<const babelwires::CompoundFeature*, bool>
-babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feature* f, ShortId optionalId) {
+std::tuple<const babelwires::CompoundFeature*, std::map<babelwires::ShortId, bool>>
+babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feature* f) {
     if (!f) {
         return {};
     }
-    if (auto recordWithOptionalsFeature = f->as<const RecordWithOptionalsFeature>()) {
-        if (!recordWithOptionalsFeature->isOptional(optionalId)) {
-            return {};
-        }
-        return { recordWithOptionalsFeature, recordWithOptionalsFeature->isActivated(optionalId) };
-    } else if (auto valueFeature = f->as<const ValueFeature>()) {
+    if (auto valueFeature = f->as<const ValueFeature>()) {
         if (auto recordType = valueFeature->getType().as<RecordType>()) {
-            if (!recordType->isOptional(optionalId)) {
-                return {};
-            } else {
-                return { valueFeature, recordType->isActivated(valueFeature->getValue(), optionalId)};
+            std::map<ShortId, bool> currentlyActivatedOptionals;
+            for (auto opt : recordType->getOptionalFieldIds()) {
+                currentlyActivatedOptionals.insert(std::pair{ opt, recordType->isActivated(valueFeature->getValue(), opt)});
             }
+            return { valueFeature, currentlyActivatedOptionals};
         }
     }
     return {};
@@ -59,16 +52,7 @@ std::tuple<const babelwires::CompoundFeature*, bool, std::vector<babelwires::Sho
     if (!f) { 
         return {};
     }
-    if (auto unionFeature = f->as<const UnionFeature>()) {
-        if (!unionFeature->isTag(tagId)) {
-            return {};
-        }
-        if (unionFeature->getSelectedTag() == tagId) {
-            return { unionFeature, true, {} };
-        } else {
-            return { unionFeature, false, unionFeature->getFieldsRemovedByChangeOfBranch(tagId) };
-        }
-    } else if (auto valueFeature = f->as<const ValueFeature>()) {
+    if (auto valueFeature = f->as<const ValueFeature>()) {
         if (auto recordWithVariantsType = valueFeature->getType().as<RecordWithVariantsType>()) {
             if (!recordWithVariantsType->isTag(tagId)) {
                 return {};

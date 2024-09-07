@@ -23,7 +23,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/connectionModifier.cpp
 	Project/Modifiers/connectionModifierData.cpp
 	Project/Modifiers/activateOptionalsModifierData.cpp
-	Project/Modifiers/selectUnionBranchModifierData.cpp
+	Project/Modifiers/selectRecordVariantModifierData.cpp
 	Project/Modifiers/valueAssignmentData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp
@@ -44,7 +44,6 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/Commands/setMapTargetTypeCommand.cpp
 	Types/Map/Commands/changeEntryKindCommand.cpp
 	Types/Map/Commands/setMapCommand.cpp
-	Types/Map/mapFeature.cpp
 	Types/Map/mapValue.cpp
 	Types/Map/MapEntries/mapEntryData.cpp
 	Types/Map/MapEntries/oneToOneMapEntryData.cpp
@@ -68,7 +67,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/childValueFeature.cpp
 	Features/compoundFeature.cpp
 	Features/recordFeature.cpp
-	Features/recordWithOptionalsFeature.cpp
 	Features/arrayFeature.cpp
 	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp
@@ -76,7 +74,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/rootFeature.cpp
 	Features/valueFeature.cpp
 	Features/valueFeatureHelper.cpp
-	Features/unionFeature.cpp
 	Serialization/projectBundle.cpp
 	Project/Commands/activateOptionalCommand.cpp
 	Project/Commands/addElementCommand.cpp
@@ -92,21 +89,19 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/setExpandedCommand.cpp
 	Project/Commands/removeFailedModifiersCommand.cpp
 	Project/Commands/resizeElementCommand.cpp
-	Project/Commands/selectUnionBranchCommand.cpp
+	Project/Commands/selectRecordVariantCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
 	Project/Commands/Subcommands/removeSimpleModifierSubcommand.cpp
 	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
 	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp
 	TypeSystem/typeSystem.cpp
 	Types/Enum/addBlankToEnum.cpp
-	Types/Enum/enumFeature.cpp
 	Types/Enum/enumType.cpp
 	Types/Enum/enumValue.cpp
 	Types/Int/intType.cpp
 	Types/Int/intValue.cpp
 	Types/Int/intTypeConstructor.cpp
 	Types/Int/intFeature.cpp
-	Types/Rational/rationalFeature.cpp
 	Types/Rational/rationalValue.cpp
 	Types/Rational/rationalType.cpp
 	Types/Rational/rationalTypeConstructor.cpp
@@ -114,8 +109,8 @@ SET( BABELWIRESLIB_SRCS
 	Types/Sum/sumTypeConstructor.cpp
 	Types/String/stringType.cpp
 	Types/String/stringValue.cpp
-	Types/String/stringFeature.cpp
 	Instance/instanceUtils.cpp
+	TypeSystem/compoundType.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
 	TypeSystem/typeConstructorArguments.cpp

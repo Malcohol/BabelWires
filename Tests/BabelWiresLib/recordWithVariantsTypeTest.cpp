@@ -7,9 +7,11 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
@@ -30,7 +32,8 @@ TEST(RecordWithVariantsTypeTest, tags) {
 
     EXPECT_TRUE(testUtils::areEqualSets(recordType.getTags(), {testUtils::TestRecordWithVariantsType::getTagAId(),
                                                                testUtils::TestRecordWithVariantsType::getTagBId(),
-                                                               testUtils::TestRecordWithVariantsType::getTagCId()}));
+                                                               testUtils::TestRecordWithVariantsType::getTagCId(),
+                                                               testUtils::TestRecordWithVariantsType::getTagDId()}));
 }
 
 TEST(RecordWithVariantsTypeTest, value) {
@@ -417,3 +420,95 @@ TEST(RecordWithVariantsTypeTest, subtype)
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAB::getThisIdentifier(), RecordAVB::getThisIdentifier()), babelwires::SubtypeOrder::IsUnrelated);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAVB::getThisIdentifier(), RecordAB::getThisIdentifier()), babelwires::SubtypeOrder::IsUnrelated);
 }
+
+TEST(RecordWithVariantsTypeTest, featureChanges)
+{
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisIdentifier());
+    valueFeature.setToDefault();
+
+    const testUtils::TestRecordWithVariantsType* recordWithVariantsType = valueFeature.getType().as<testUtils::TestRecordWithVariantsType>();
+    ASSERT_NE(recordWithVariantsType, nullptr);
+
+    valueFeature.clearChanges();
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
+    {
+        babelwires::BackupScope scope(valueFeature);
+        babelwires::ValueHolder value = valueFeature.getValue();
+        recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagAId());
+        valueFeature.setValue(value);
+    }
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+
+    valueFeature.clearChanges();
+    {
+        babelwires::BackupScope scope(valueFeature);
+        babelwires::ValueHolder value = valueFeature.getValue();
+        recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagDId());
+        valueFeature.setValue(value);
+    }
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+
+    valueFeature.clearChanges();
+    {
+        babelwires::BackupScope scope(valueFeature);
+        babelwires::FeaturePath pathToInt;
+        pathToInt.pushStep(babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFf1Id()));
+        pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
+        babelwires::ValueHolder& value = valueFeature.setModifiable(pathToInt);
+        value = babelwires::IntValue(15);
+    }
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+}
+
+TEST(RecordWithVariantsTypeTest, valueEquality)
+{
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestRecordWithVariantsType recordType;
+
+    babelwires::ValueHolder value0 = recordType.createValue(testEnvironment.m_typeSystem);
+    babelwires::ValueHolder value1 = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(value0);
+    EXPECT_EQ(value0, value1);
+
+    recordType.selectTag(testEnvironment.m_typeSystem, value1, testUtils::TestRecordWithVariantsType::getTagAId());
+
+    EXPECT_NE(value0, value1);
+
+    recordType.selectTag(testEnvironment.m_typeSystem, value0, testUtils::TestRecordWithVariantsType::getTagDId());
+
+    EXPECT_NE(value0, value1);
+
+    recordType.selectTag(testEnvironment.m_typeSystem, value0, testUtils::TestRecordWithVariantsType::getTagAId());
+
+    EXPECT_EQ(value0, value1);
+}
+
+TEST(RecordWithVariantsTypeTest, valueHash)
+{
+    testUtils::TestEnvironment testEnvironment;
+    testUtils::TestRecordWithVariantsType recordType;
+
+    babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(newValue);
+
+    const std::size_t hash0 = newValue->getHash();
+
+    recordType.selectTag(testEnvironment.m_typeSystem, newValue, testUtils::TestRecordWithVariantsType::getTagAId());
+
+    const std::size_t hash1 = newValue->getHash();
+
+    EXPECT_NE(hash0, hash1);
+
+    recordType.selectTag(testEnvironment.m_typeSystem, newValue, testUtils::TestRecordWithVariantsType::getTagDId());
+
+    const std::size_t hash2 = newValue->getHash();
+
+    EXPECT_NE(hash0, hash2);
+    EXPECT_NE(hash1, hash2);
+}
+

@@ -5,12 +5,12 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 testUtils::TestRecordWithVariantsType::TestRecordWithVariantsType()
-    : RecordWithVariantsType({getTagAId(), getTagBId(), getTagCId()}, {
-        { getFieldA0Id(), babelwires::DefaultIntType::getThisIdentifier(), { getTagAId() } },
+    : RecordWithVariantsType({getTagAId(), getTagBId(), getTagCId(), getTagDId()}, {
+        { getFieldA0Id(), babelwires::DefaultIntType::getThisIdentifier(), { getTagAId(), getTagDId() } },
         { getFf0Id(), babelwires::DefaultIntType::getThisIdentifier() },
         { getFieldB0Id(), TestSimpleRecordType::getThisIdentifier(), { getTagBId() } },
-        { getFieldABId(), babelwires::DefaultIntType::getThisIdentifier(), { getTagAId(), getTagBId() } },
-        { getFieldA1Id(), babelwires::DefaultIntType::getThisIdentifier(), { getTagAId() } },
+        { getFieldABId(), babelwires::DefaultIntType::getThisIdentifier(), { getTagAId(), getTagBId(), getTagDId() } },
+        { getFieldA1Id(), TestSimpleRecordType::getThisIdentifier(), { getTagAId(), getTagDId() } },
         { getFf1Id(), TestSimpleRecordType::getThisIdentifier() },
         { getFieldBCId(), babelwires::DefaultIntType::getThisIdentifier(), { getTagBId(), getTagCId() } }
     }, 1) {}
@@ -25,6 +25,10 @@ babelwires::ShortId testUtils::TestRecordWithVariantsType::getTagBId() {
 
 babelwires::ShortId testUtils::TestRecordWithVariantsType::getTagCId() {
     return BW_SHORT_ID("tagC", "Tag C", "ad6769b3-1cab-4afa-986e-ca8739264dc9");
+}
+
+babelwires::ShortId testUtils::TestRecordWithVariantsType::getTagDId() {
+    return BW_SHORT_ID("tagD", "Tag D", "cfc32664-3a00-47f4-9102-87319bff0cb6");
 }
 
 babelwires::ShortId testUtils::TestRecordWithVariantsType::getFf0Id() {

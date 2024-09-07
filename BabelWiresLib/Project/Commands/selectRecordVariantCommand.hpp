@@ -1,5 +1,5 @@
 /**
- * The command which activates optionals in a RecordWithOptionalsFeature.
+ * The command which selects the variant in a RecordWithVariantType.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -16,12 +16,12 @@ namespace babelwires {
     class Project;
     struct ModifierData;
 
-    /// Activate an optional in a RecordWithOptionalsFeature
-    class SelectUnionBranchCommand : public CompoundCommand<Project> {
+    /// Activate an optional in a RecordWithVariantType
+    class SelectRecordVariantCommand : public CompoundCommand<Project> {
       public:
-        SelectUnionBranchCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+        SelectRecordVariantCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                ShortId tagToSelect);
-        virtual ~SelectUnionBranchCommand();
+        virtual ~SelectRecordVariantCommand();
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
@@ -29,10 +29,10 @@ namespace babelwires {
 
       private:
         ElementId m_elementId;
-        FeaturePath m_pathToUnion;
+        FeaturePath m_pathToRecord;
         ShortId m_tagToSelect;
 
-        std::unique_ptr<ModifierData> m_unionModifierToAdd;
-        std::unique_ptr<ModifierData> m_unionModifierToRemove;
+        std::unique_ptr<ModifierData> m_recordModifierToAdd;
+        std::unique_ptr<ModifierData> m_recordModifierToRemove;
     };
 } // namespace babelwires

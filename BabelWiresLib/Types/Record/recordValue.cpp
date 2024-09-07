@@ -50,7 +50,7 @@ std::size_t babelwires::RecordValue::getHash() const {
     using FieldRef = std::tuple<ShortId, const ValueHolder*>;
     std::vector<FieldRef> sortedFields;
     sortedFields.reserve(m_fieldValues.size());
-    for (auto f : m_fieldValues) {
+    for (const auto& f : m_fieldValues) {
         sortedFields.emplace_back(FieldRef{f.first, &f.second});
     }
     std::sort(sortedFields.begin(), sortedFields.end(),
@@ -58,9 +58,9 @@ std::size_t babelwires::RecordValue::getHash() const {
 
     std::size_t hash = hash::mixtureOf(sortedFields.size());
     for (auto f : sortedFields) {
-        hash::mixInto(hash, std::get<0>(f), std::get<1>(f));
+        hash::mixInto(hash, std::get<0>(f), *std::get<1>(f));
     }
-    return hash;    
+    return hash;
 }
 
 bool babelwires::RecordValue::operator==(const Value& other) const {

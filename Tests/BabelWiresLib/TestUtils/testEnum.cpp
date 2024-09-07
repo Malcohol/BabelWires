@@ -2,6 +2,8 @@
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+ENUM_DEFINE_ENUM_VALUE_SOURCE(testUtils::TestEnum, TESTENUM_VALUES);
+
 const babelwires::EnumType::ValueSet testUtils::g_enumValues = {
     testUtils::getTestRegisteredIdentifier("Foo", 1), testUtils::getTestRegisteredIdentifier("Bar", 2),
     testUtils::getTestRegisteredIdentifier("Erm", 3), testUtils::getTestRegisteredIdentifier("Oom", 4),
