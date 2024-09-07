@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Features/recordWithOptionalsFeature.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 
@@ -33,53 +32,7 @@ void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer
 }
 
 void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) const {
-    if (RecordWithOptionalsFeature* record = targetFeature->as<RecordWithOptionalsFeature>()) {
-        std::vector<ShortId> availableOptionals = record->getOptionalFields();
-        std::sort(availableOptionals.begin(), availableOptionals.end());
-        auto ait = availableOptionals.begin();
-
-        std::vector<ShortId> optionalsToEnsureActivated = m_selectedOptionals;
-        std::sort(optionalsToEnsureActivated.begin(), optionalsToEnsureActivated.end());
-        auto it = optionalsToEnsureActivated.begin();
-
-        std::vector<ShortId> missingOptionals;
-
-        while ((ait != availableOptionals.end()) && (it != optionalsToEnsureActivated.end())) {
-            if (*ait == *it) {
-                if (!record->isActivated(*ait)) {
-                    record->activateField(*ait);
-                }
-                ++ait;
-                ++it;
-            } else if (*ait < *it) {
-                if (record->isActivated(*ait)) {
-                    record->deactivateField(*ait);
-                }
-                ++ait;
-            } else {
-                missingOptionals.emplace_back(*it);
-                ++it;
-            }
-        }
-        while (ait != availableOptionals.end()) {
-            if (record->isActivated(*ait)) {
-                record->deactivateField(*ait);
-            }
-            ++ait;
-        }
-        while (it != optionalsToEnsureActivated.end()) {
-            missingOptionals.emplace_back(*it);
-            ++it;
-        }
-        if (!missingOptionals.empty()) {
-            if (missingOptionals.size() == optionalsToEnsureActivated.size()) {
-                throw ModelException() << "None of the optionals could be activated";
-            } else {
-                // TODO Warn? Will need to pass the logger into apply.
-            }
-        }
-        return;
-    } else if (auto valueFeature = targetFeature->as<ValueFeature>()) {
+    if (auto valueFeature = targetFeature->as<ValueFeature>()) {
         if (auto recordType = valueFeature->getType().as<RecordType>()) {
             const TypeSystem& typeSystem = valueFeature->getTypeSystem();
             ValueHolder newValue = valueFeature->getValue();
