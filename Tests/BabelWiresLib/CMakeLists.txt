@@ -20,7 +20,6 @@ SET( LIB_TESTS_SRCS
     featureElementConnectionTest.cpp
     featureElementTest.cpp
     featurePathTest.cpp
-    featureTest.cpp
     editTreeTest.cpp
     intFeatureTest.cpp
     intValueTest.cpp
