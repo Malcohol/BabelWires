@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
-#include <BabelWiresLib/Types/Int/intFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
@@ -17,26 +17,31 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(ModifierDataTest, arrayInitializationApply) {
     testUtils::TestEnvironment testEnvironment;
 
+    const unsigned int newSize = 8;
+    ASSERT_GT(newSize, testUtils::TestSimpleArrayType::s_minimumSize);
+    ASSERT_LT(newSize, testUtils::TestSimpleArrayType::s_maximumSize);
+    ASSERT_NE(newSize, testUtils::TestSimpleArrayType::s_defaultSize);
+
     babelwires::ArraySizeModifierData data;
-    data.m_size = 5;
+    data.m_size = newSize;
 
-    testUtils::RootedFeature<babelwires::StandardArrayFeature<babelwires::IntFeature>> rootFeature(
-        testEnvironment.m_projectContext);
-    babelwires::ArrayFeature& arrayFeature = rootFeature.getFeature();
+    babelwires::SimpleValueFeature arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisIdentifier());
+    arrayFeature.setToDefault();
 
-    EXPECT_EQ(arrayFeature.getNumFeatures(), 0);
+    EXPECT_EQ(arrayFeature.getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     data.apply(&arrayFeature);
-    EXPECT_EQ(arrayFeature.getNumFeatures(), 5);
+    EXPECT_EQ(arrayFeature.getNumFeatures(), newSize);
 
-    testUtils::RootedFeature<babelwires::IntFeature> notArrayFeature(testEnvironment.m_projectContext);
-    EXPECT_THROW(data.apply(&notArrayFeature.getFeature()), babelwires::ModelException);
+    babelwires::SimpleValueFeature notArrayFeature(testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_THROW(data.apply(&notArrayFeature), babelwires::ModelException);
 }
 
 TEST(ModifierDataTest, arrayInitializationClone) {
