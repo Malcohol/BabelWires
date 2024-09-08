@@ -24,13 +24,8 @@
 TEST(ModifierDataTest, arrayInitializationApply) {
     testUtils::TestEnvironment testEnvironment;
 
-    const unsigned int newSize = 8;
-    ASSERT_GT(newSize, testUtils::TestSimpleArrayType::s_minimumSize);
-    ASSERT_LT(newSize, testUtils::TestSimpleArrayType::s_maximumSize);
-    ASSERT_NE(newSize, testUtils::TestSimpleArrayType::s_defaultSize);
-
     babelwires::ArraySizeModifierData data;
-    data.m_size = newSize;
+    data.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
 
     babelwires::SimpleValueFeature arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisIdentifier());
     arrayFeature.setToDefault();
@@ -38,7 +33,7 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     EXPECT_EQ(arrayFeature.getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     data.apply(&arrayFeature);
-    EXPECT_EQ(arrayFeature.getNumFeatures(), newSize);
+    EXPECT_EQ(arrayFeature.getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
 
     babelwires::SimpleValueFeature notArrayFeature(testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_THROW(data.apply(&notArrayFeature), babelwires::ModelException);

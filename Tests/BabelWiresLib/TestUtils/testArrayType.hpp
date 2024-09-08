@@ -10,6 +10,7 @@ namespace testUtils {
         static constexpr unsigned int s_minimumSize = 0;
         static constexpr unsigned int s_maximumSize = 10;
         static constexpr unsigned int s_defaultSize = 4;
+        static constexpr unsigned int s_nonDefaultSize = 6;
 
         static babelwires::TypeRef getExpectedEntryType();
 
