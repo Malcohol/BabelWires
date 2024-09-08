@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>

@@ -7,9 +7,12 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/arrayFeature.hpp>
+#include <BabelWiresLib/Features/Path/pathStep.hpp>
+
 #include <Common/Cloning/cloneable.hpp>
 #include <Common/Utilities/enumFlags.hpp>
+#include <Common/types.hpp>
+
 
 #include <memory>
 
