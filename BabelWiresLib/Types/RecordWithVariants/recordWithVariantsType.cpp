@@ -372,3 +372,7 @@ bool babelwires::RecordWithVariantsType::areDifferentNonRecursively(const ValueH
         return (recordA == nullptr) != (recordB == nullptr);
     }
 }
+
+babelwires::ShortId babelwires::RecordWithVariantsType::getDefaultTag() const {
+    return m_defaultTag;
+}

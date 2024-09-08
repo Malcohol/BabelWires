@@ -11,6 +11,7 @@
 #include <Common/Identifiers/identifier.hpp>
 
 #include <map>
+#include <optional>
 
 namespace babelwires {
     class Feature;
@@ -28,6 +29,7 @@ namespace babelwires {
 
         /// Confirm that the feature is a record with variants.
         /// Return whether the tag is currently the selected tag and the set of fields to remove.
-        static std::tuple<const CompoundFeature*, bool, std::vector<ShortId>> getInfoFromRecordWithVariantsFeature(const Feature* f, ShortId tagId);
+        /// If no tag is provided, the default tag is assumed.
+        static std::tuple<const CompoundFeature*, bool, std::vector<ShortId>> getInfoFromRecordWithVariantsFeature(const Feature* f, std::optional<ShortId> tagId = {});
     };
 }

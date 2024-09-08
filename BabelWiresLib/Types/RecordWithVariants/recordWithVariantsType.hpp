@@ -57,6 +57,8 @@ namespace babelwires {
         /// Return the tag which is currently selected.
         ShortId getSelectedTag(const ValueHolder& value) const;
         
+        ShortId getDefaultTag() const;
+
         std::vector<ShortId> getFieldsRemovedByChangeOfBranch(const ValueHolder& value, ShortId proposedTag) const;
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

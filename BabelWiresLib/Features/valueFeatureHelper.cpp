@@ -48,19 +48,21 @@ babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feat
     return {};
 }
 
-std::tuple<const babelwires::CompoundFeature*, bool, std::vector<babelwires::ShortId>> babelwires::ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(const Feature* f, ShortId tagId) {
+std::tuple<const babelwires::CompoundFeature*, bool, std::vector<babelwires::ShortId>> babelwires::ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(const Feature* f, std::optional<ShortId> tagId) {
     if (!f) { 
         return {};
     }
     if (auto valueFeature = f->as<const ValueFeature>()) {
         if (auto recordWithVariantsType = valueFeature->getType().as<RecordWithVariantsType>()) {
-            if (!recordWithVariantsType->isTag(tagId)) {
+            if (!tagId) {
+                tagId = recordWithVariantsType->getDefaultTag();
+            } else if (!recordWithVariantsType->isTag(*tagId)) {
                 return {};
             }
             if (recordWithVariantsType->getSelectedTag(valueFeature->getValue()) == tagId) {
                 return { valueFeature, true, {}};
             } else {
-                return { valueFeature, false, recordWithVariantsType->getFieldsRemovedByChangeOfBranch(valueFeature->getValue(), tagId) };
+                return { valueFeature, false, recordWithVariantsType->getFieldsRemovedByChangeOfBranch(valueFeature->getValue(), *tagId) };
             }
         }
     }
