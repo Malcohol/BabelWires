@@ -2,63 +2,68 @@
 
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 // TODO Test default array with non-minimum default size.
 
 TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestArrayElementData());
+    const babelwires::ElementId sourceId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+    const babelwires::ElementId targetId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+
     {
         babelwires::ArraySizeModifierData arrayInitialization;
-        arrayInitialization.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray;
+        arrayInitialization.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray();
         arrayInitialization.m_size = 5;
         testEnvironment.m_project.addModifier(elementId, arrayInitialization);
     }
     {
         babelwires::ConnectionModifierData inputConnection;
-        inputConnection.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
-        inputConnection.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        inputConnection.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray_1();
+        inputConnection.m_pathToSourceFeature = testUtils::TestRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-        outputConnection.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToArray_1;
+        outputConnection.m_pathToFeature = testUtils::TestRecordElementData::getPathToRecordInt0();
+        outputConnection.m_pathToSourceFeature = testUtils::TestArrayElementData::getPathToArray_1();
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
     testEnvironment.m_project.process();
 
-    const auto* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
-    const auto* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<testUtils::TestFeatureElement>();
-    ASSERT_NE(element, nullptr);
+    const auto* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
+    ASSERT_NE(targetElement, nullptr);
 
-    const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const testUtils::TestRootFeature>();
+    const auto getArrayFeature = [element]() {
+        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
+        return root->getFeature(0)->as<babelwires::ValueFeature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element, targetElement](bool isCommandExecuted) {
         const babelwires::Modifier* inputConnection =
-            element->findModifier(testUtils::TestRootFeature::s_pathToArray_1);
+            element->findModifier(testUtils::TestArrayElementData::getPathToArray_1());
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(testUtils::TestRootFeature::s_pathToInt2);
+            targetElement->findModifier(testUtils::TestRecordElementData::getPathToRecordInt0());
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
@@ -80,12 +85,12 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
         }
     };
 
-    ASSERT_NE(getInputFeature(), nullptr);
+    ASSERT_NE(getArrayFeature(), nullptr);
 
-    EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 5);
+    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 5);
 
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
-                                                    testUtils::TestRootFeature::s_pathToArray, 1, 1);
+                                                    testUtils::TestArrayElementData::getPathToArray(), 1, 1);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -94,19 +99,19 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 4);
+    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 4);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 5);
+    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 5);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getInputFeature()->m_arrayFeature->getNumFeatures(), 4);
+    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 4);
     checkModifiers(true);
 }
 
@@ -121,14 +126,11 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoElement) {
 
 TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::RemoveEntryFromArrayCommand command("Test command", 51,
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+
+    babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
                                                     babelwires::FeaturePath::deserializeFromString("qqq/zzz"), 1, 1);
-
-    testUtils::TestFeatureElementData elementData;
-    elementData.m_id = 51;
-
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    EXPECT_EQ(elementId, 51);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -137,18 +139,23 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
 TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestArrayElementData());
 
-    const auto* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
-    const auto* inputFeature = element->getInputFeature()->as<const testUtils::TestRootFeature>();
-    ASSERT_NE(inputFeature, nullptr);
-    EXPECT_EQ(inputFeature->m_arrayFeature->getNumFeatures(), 2);
+    const auto getArrayFeature = [element]() {
+        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
+        return root->getFeature(0)->as<babelwires::ValueFeature>();
+    };
+
+    ASSERT_NE(getArrayFeature(), nullptr);
+    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
-                                                    testUtils::TestRootFeature::s_pathToArray, 3, 1);
+                                                    testUtils::TestArrayElementData::getPathToArray(), 12, 1);
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
+    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 }
