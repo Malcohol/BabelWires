@@ -2,17 +2,16 @@
 
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
+#include <BabelWiresLib/Instance/instance.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
-#include <BabelWiresLib/Instance/instance.hpp>
-
-
 namespace testUtils {
-    
+
     class TestSimpleRecordType : public babelwires::RecordType {
       public:
         TestSimpleRecordType();
-        
+
         PRIMITIVE_TYPE("srecordT", "SimpleRecord", "ea96a409-6424-4924-aefe-ecbe66139f17", 1);
 
         DECLARE_INSTANCE_BEGIN(TestSimpleRecordType)
@@ -60,4 +59,13 @@ namespace testUtils {
         DECLARE_INSTANCE_END()
     };
 
-}
+    /// ValueElementData which creates an element carrying a simple record type.
+    class TestRecordElementData : public babelwires::ValueElementData {
+      public:
+        TestRecordElementData();
+
+        static babelwires::FeaturePath getPathToRecord();
+        static babelwires::FeaturePath getPathToRecordInt0();
+    };
+
+} // namespace testUtils
