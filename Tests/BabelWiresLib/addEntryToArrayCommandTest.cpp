@@ -2,15 +2,16 @@
 
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 
-#include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
@@ -40,7 +41,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     checkModifiers(false);
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
-                                               testUtils::TestArrayElementData::getPathToArray(), 1);
+                                                 testUtils::TestArrayElementData::getPathToArray(), 1);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -93,7 +94,8 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
 
     /// Insert one beyond the last element.
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
-                                               testUtils::TestArrayElementData::getPathToArray(), testUtils::TestSimpleArrayType::s_defaultSize);
+                                                 testUtils::TestArrayElementData::getPathToArray(),
+                                                 testUtils::TestSimpleArrayType::s_defaultSize);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -149,7 +151,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
     checkModifiers(false);
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
-                                               testUtils::TestArrayElementData::getPathToArray(), 1);
+                                                 testUtils::TestArrayElementData::getPathToArray(), 1);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -177,7 +179,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
 TEST(AddEntryToArrayCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::AddEntriesToArrayCommand command("Test command", 51,
-                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"), -1);
+                                                 babelwires::FeaturePath::deserializeFromString("qqq/zzz"), -1);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -190,7 +192,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyNoArray) {
         testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
-                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"), -1);
+                                                 babelwires::FeaturePath::deserializeFromString("qqq/zzz"), -1);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -213,7 +215,8 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
     EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
-                                            testUtils::TestArrayElementData::getPathToArray(), testUtils::TestSimpleArrayType::s_maximumSize + 5);
+                                                 testUtils::TestArrayElementData::getPathToArray(),
+                                                 testUtils::TestSimpleArrayType::s_maximumSize + 5);
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 
@@ -221,51 +224,71 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
 }
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
-    testUtils::TestEnvironment testEnvironment;
+    for (auto p : std::vector<std::tuple<int, int>>{{testUtils::TestSimpleArrayType::s_defaultSize, 0}, {0, 1}}) {
+        const unsigned int insertLocation = std::get<0>(p);
+        const unsigned int offsetForValues = std::get<1>(p);
 
-    const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestArrayElementData());
-    auto* element = testEnvironment.m_project.getFeatureElement(elementId);
-    ASSERT_NE(element, nullptr);
+        testUtils::TestEnvironment testEnvironment;
 
-    const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
-    };
+        // Initialize with some values.
+        testUtils::TestArrayElementData elementData;
+        {
+            // This is in the default size of the array, so should be unaffected.
+            babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(3));
+            intAssignment.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray_1();
+            elementData.m_modifiers.emplace_back(intAssignment.clone());
+        }
+        {
+            // This is in the default size of the array, so should be unaffected.
+            babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(-18));
+            intAssignment.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray_2();
+            elementData.m_modifiers.emplace_back(intAssignment.clone());
+        }
 
-    ASSERT_NE(getArrayFeature(), nullptr);
+        const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+        auto* element = testEnvironment.m_project.getFeatureElement(elementId);
+        ASSERT_NE(element, nullptr);
 
-    EXPECT_GT(getArrayFeature()->getNumFeatures(), 2);
+        const auto getArrayFeature = [element]() {
+            auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
+            return root->getFeature(0)->as<babelwires::ValueFeature>();
+        };
 
-    // Initialize with some values.
-    {
-        babelwires::CompoundFeature* inputFeature = element->getInputFeatureNonConst(testUtils::TestArrayElementData::getPathToArray())->as<babelwires::CompoundFeature>();
-        babelwires::ValueFeature* arrayFeature = inputFeature->getFeature(0)->as<babelwires::ValueFeature>();
-        arrayFeature->getFeature(0)->as<babelwires::ValueFeature>()->setValue(babelwires::IntValue(3));
-        arrayFeature->getFeature(1)->as<babelwires::ValueFeature>()->setValue(babelwires::IntValue(-18));
-        
+        ASSERT_NE(getArrayFeature(), nullptr);
+
+        EXPECT_GT(getArrayFeature()->getNumFeatures(), 2);
+
+        // insert at the end
+        babelwires::AddEntriesToArrayCommand command("Test command", elementId,
+                                                     testUtils::TestArrayElementData::getPathToArray(),
+                                                     insertLocation);
+
+        testEnvironment.m_project.process();
+
+        EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+        EXPECT_EQ(getArrayFeature()->getFeature(1)->as<babelwires::ValueFeature>()->getValue(),
+                  babelwires::IntValue(3));
+        EXPECT_EQ(getArrayFeature()->getFeature(2)->as<babelwires::ValueFeature>()->getValue(),
+                  babelwires::IntValue(-18));
+
+        EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
+
+        testEnvironment.m_project.process();
+
+        EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
+        EXPECT_EQ(getArrayFeature()->getFeature(offsetForValues + 1)->as<babelwires::ValueFeature>()->getValue(),
+                  babelwires::IntValue(3));
+        EXPECT_EQ(getArrayFeature()->getFeature(offsetForValues + 2)->as<babelwires::ValueFeature>()->getValue(),
+                  babelwires::IntValue(-18));
+
+        command.undo(testEnvironment.m_project);
+        testEnvironment.m_project.process();
+
+        EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+
+        EXPECT_EQ(getArrayFeature()->getFeature(1)->as<babelwires::ValueFeature>()->getValue(),
+                  babelwires::IntValue(3));
+        EXPECT_EQ(getArrayFeature()->getFeature(2)->as<babelwires::ValueFeature>()->getValue(),
+                  babelwires::IntValue(-18));
     }
-
-    // insert at the end
-    babelwires::AddEntriesToArrayCommand insertAtEndCommand("Test command", elementId,
-                                               testUtils::TestArrayElementData::getPathToArray(), testUtils::TestSimpleArrayType::s_defaultSize);
-
-    testEnvironment.m_project.process();
-    EXPECT_TRUE(insertAtEndCommand.initializeAndExecute(testEnvironment.m_project));
-
-    testEnvironment.m_project.process();
-
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
-    EXPECT_EQ(getArrayFeature()->getFeature(0)->as<babelwires::ValueFeature>()->getValue(), babelwires::IntValue(3));
-    EXPECT_EQ(getArrayFeature()->getFeature(1)->as<babelwires::ValueFeature>()->getValue(), babelwires::IntValue(-18));
-
-    insertAtEndCommand.undo(testEnvironment.m_project);
-    testEnvironment.m_project.process();
-
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
-
-    // This fails, which means there's a bug when undoing this operation.
-
-    EXPECT_EQ(getArrayFeature()->getFeature(0)->as<babelwires::ValueFeature>()->getValue(), babelwires::IntValue(3));
-    EXPECT_EQ(getArrayFeature()->getFeature(1)->as<babelwires::ValueFeature>()->getValue(), babelwires::IntValue(-18));
 }
