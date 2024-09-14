@@ -114,3 +114,16 @@ babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecord
     path.pushStep(babelwires::PathStep(TestComplexRecordType::getStringId()));
     return path;
 }
+
+
+babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecordArray() {
+    babelwires::FeaturePath path = getPathToRecord();
+    path.pushStep(babelwires::PathStep(TestComplexRecordType::getArrayId()));
+    return path;
+}
+
+babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(unsigned int i) {
+    babelwires::FeaturePath path = getPathToRecordArray();
+    path.pushStep(babelwires::PathStep(i));
+    return path;
+}

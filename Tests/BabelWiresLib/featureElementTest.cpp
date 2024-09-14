@@ -11,6 +11,8 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>
@@ -64,34 +66,33 @@ TEST(FeatureElementTest, uiData) {
 
 TEST(FeatureElementTest, modifiers) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestFeatureElementData featureElementData;
+    testUtils::TestComplexRecordElementData elementData;
 
-    const babelwires::FeaturePath arrayPath =
-        babelwires::FeaturePath::deserializeFromString(testUtils::TestRecordFeature::s_arrayIdInitializer);
-    const babelwires::FeaturePath arrayElemPath = babelwires::FeaturePath::deserializeFromString("array/3");
-    const babelwires::FeaturePath arrayElemPath2 = babelwires::FeaturePath::deserializeFromString("array/4");
+    const babelwires::FeaturePath arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::FeaturePath arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::FeaturePath arrayElemPath2 =
+        testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
     const babelwires::FeaturePath failedPath = babelwires::FeaturePath::deserializeFromString("foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
     {
         auto arrayElemData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(16));
         arrayElemData->m_pathToFeature = arrayElemPath;
-        featureElementData.m_modifiers.emplace_back(std::move(arrayElemData));
+        elementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
         auto arrayInitData = std::make_unique<babelwires::ArraySizeModifierData>();
         arrayInitData->m_pathToFeature = arrayPath;
         arrayInitData->m_size = 5;
-        featureElementData.m_modifiers.emplace_back(std::move(arrayInitData));
+        elementData.m_modifiers.emplace_back(std::move(arrayInitData));
     }
     {
         auto failedModifier = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(71));
         failedModifier->m_pathToFeature = failedPath;
-        featureElementData.m_modifiers.emplace_back(std::move(failedModifier));
+        elementData.m_modifiers.emplace_back(std::move(failedModifier));
     }
 
-    auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement = elementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
 
@@ -124,15 +125,17 @@ TEST(FeatureElementTest, modifiers) {
                       ->get(),
                   71);
     }
+
     const babelwires::Feature* const rootFeature = featureElement->getInputFeature();
     ASSERT_TRUE(rootFeature);
-    const testUtils::TestRootFeature* const testRecordFeature = rootFeature->as<const testUtils::TestRootFeature>();
+    const auto* const testRecordFeature =
+        rootFeature->as<babelwires::CompoundFeature>()->getFeature(0)->as<babelwires::ValueFeature>();
     ASSERT_TRUE(testRecordFeature);
-    EXPECT_EQ(testRecordFeature->m_arrayFeature->getNumFeatures(), 5);
-    ASSERT_TRUE(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3)->as<const babelwires::IntFeature>());
-    EXPECT_EQ(
-        static_cast<const babelwires::IntFeature*>(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3))->get(),
-        16);
+
+    testUtils::TestComplexRecordType::ConstInstance testRecord(*testRecordFeature);
+    EXPECT_EQ(testRecord.getarray().getSize(), 5);
+    EXPECT_EQ(testRecord.getarray().getEntry(3).get(), 16);
+
     {
         featureElement->removeModifier(featureElement->findModifier(failedPath));
         EXPECT_EQ(featureElement->findModifier(failedPath), nullptr);
@@ -141,31 +144,25 @@ TEST(FeatureElementTest, modifiers) {
         babelwires::ValueAssignmentData arrayElemData2(babelwires::IntValue(12));
         arrayElemData2.m_pathToFeature = arrayElemPath2;
         featureElement->addModifier(testEnvironment.m_log, arrayElemData2);
-        EXPECT_EQ(static_cast<const babelwires::IntFeature*>(testRecordFeature->m_arrayFeature->tryGetChildFromStep(4))
-                      ->get(),
-                  12);
+
+        EXPECT_EQ(testRecord.getarray().getEntry(4).get(), 12);
     }
     {
         featureElement->removeModifier(featureElement->findModifier(arrayElemPath));
         EXPECT_EQ(featureElement->findModifier(arrayElemPath), nullptr);
         // The value should return to default.
-        EXPECT_EQ(static_cast<const babelwires::IntFeature*>(testRecordFeature->m_arrayFeature->tryGetChildFromStep(3))
-                      ->get(),
-                  0);
+        EXPECT_EQ(testRecord.getarray().getEntry(3).get(), 0);
     }
     {
         featureElement->removeModifier(featureElement->findModifier(arrayElemPath2));
         EXPECT_EQ(featureElement->findModifier(arrayElemPath2), nullptr);
         // The value should return to default.
-        EXPECT_EQ(static_cast<const babelwires::IntFeature*>(testRecordFeature->m_arrayFeature->tryGetChildFromStep(4))
-                      ->get(),
-                  0);
+        EXPECT_EQ(testRecord.getarray().getEntry(4).get(), 0);
     }
     {
         featureElement->removeModifier(featureElement->findModifier(arrayPath));
         EXPECT_EQ(featureElement->findModifier(arrayPath), nullptr);
-        // The array should return to default size, which in this case is 2.
-        EXPECT_EQ(testRecordFeature->m_arrayFeature->getNumFeatures(), 2);
+        EXPECT_EQ(testRecord.getarray().getSize(), testUtils::TestSimpleArrayType::s_defaultSize);
     }
 }
 

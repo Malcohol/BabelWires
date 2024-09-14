@@ -81,6 +81,8 @@ namespace testUtils {
         static babelwires::FeaturePath getPathToRecordInt1();
         static babelwires::FeaturePath getPathToRecordOpRec();
         static babelwires::FeaturePath getPathToRecordString();
+        static babelwires::FeaturePath getPathToRecordArray();
+        static babelwires::FeaturePath getPathToRecordArrayEntry(unsigned int i);
     };
 
 } // namespace testUtils
