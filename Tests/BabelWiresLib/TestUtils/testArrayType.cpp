@@ -26,14 +26,17 @@ babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArray() {
     return pathToArray;
 }
 
-babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArray_1() {
+
+babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArrayEntry(unsigned int i) {
     babelwires::FeaturePath pathToArray_1 = getPathToArray();
-    pathToArray_1.pushStep(babelwires::PathStep(1));
+    pathToArray_1.pushStep(babelwires::PathStep(i));
     return pathToArray_1;
 }
 
+babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArray_1() {
+    return getPathToArrayEntry(1);
+}
+
 babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArray_2() {
-    babelwires::FeaturePath pathToArray_2 = getPathToArray();
-    pathToArray_2.pushStep(babelwires::PathStep(2));
-    return pathToArray_2;
+    return getPathToArrayEntry(2);
 }

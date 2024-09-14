@@ -36,6 +36,7 @@ namespace testUtils {
         TestArrayElementData();
 
         static babelwires::FeaturePath getPathToArray();
+        static babelwires::FeaturePath getPathToArrayEntry(unsigned int i);
         static babelwires::FeaturePath getPathToArray_1();
         static babelwires::FeaturePath getPathToArray_2();
     };
