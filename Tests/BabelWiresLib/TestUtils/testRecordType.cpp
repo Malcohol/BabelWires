@@ -51,13 +51,58 @@ testUtils::TestSimpleRecordElementData::TestSimpleRecordElementData()
     : babelwires::ValueElementData(TestSimpleRecordType::getThisIdentifier()) {}
 
 babelwires::FeaturePath testUtils::TestSimpleRecordElementData::getPathToRecord() {
-    babelwires::FeaturePath pathToArray;
-    pathToArray.pushStep(babelwires::PathStep(babelwires::ValueElement::getStepToValue()));
-    return pathToArray;
+    babelwires::FeaturePath path;
+    path.pushStep(babelwires::PathStep(babelwires::ValueElement::getStepToValue()));
+    return path;
 }
 
 babelwires::FeaturePath testUtils::TestSimpleRecordElementData::getPathToRecordInt0() {
-    babelwires::FeaturePath pathToArray_1 = getPathToRecord();
-    pathToArray_1.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt0Id()));
-    return pathToArray_1;
+    babelwires::FeaturePath path = getPathToRecord();
+    path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt0Id()));
+    return path;
+}
+
+testUtils::TestComplexRecordElementData::TestComplexRecordElementData()
+    : babelwires::ValueElementData(TestComplexRecordType::getThisIdentifier()) {}
+
+babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecord() {
+    babelwires::FeaturePath path;
+    path.pushStep(babelwires::PathStep(babelwires::ValueElement::getStepToValue()));
+    return path;
+}
+
+babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecordInt0() {
+    babelwires::FeaturePath path = getPathToRecord();
+    path.pushStep(babelwires::PathStep(TestComplexRecordType::getInt0Id()));
+    return path;
+}
+
+babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecordOpInt() {
+    babelwires::FeaturePath path = getPathToRecord();
+    path.pushStep(babelwires::PathStep(TestComplexRecordType::getOpIntId()));
+    return path;
+}
+
+babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecordSubrecord() {
+    babelwires::FeaturePath path = getPathToRecord();
+    path.pushStep(babelwires::PathStep(TestComplexRecordType::getSubrecordId()));
+    return path;
+}
+
+babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecordInt1() {
+    babelwires::FeaturePath path = getPathToRecord();
+    path.pushStep(babelwires::PathStep(TestComplexRecordType::getInt1Id()));
+    return path;
+}
+
+babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecordOpRec() {
+    babelwires::FeaturePath path = getPathToRecord();
+    path.pushStep(babelwires::PathStep(TestComplexRecordType::getOpRecId()));
+    return path;
+}
+
+babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecordString() {
+    babelwires::FeaturePath path = getPathToRecord();
+    path.pushStep(babelwires::PathStep(TestComplexRecordType::getStringId()));
+    return path;
 }

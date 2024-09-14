@@ -68,4 +68,17 @@ namespace testUtils {
         static babelwires::FeaturePath getPathToRecordInt0();
     };
 
+    class TestComplexRecordElementData : public babelwires::ValueElementData {
+      public:
+        TestComplexRecordElementData();
+
+        static babelwires::FeaturePath getPathToRecord();
+        static babelwires::FeaturePath getPathToRecordInt0();
+        static babelwires::FeaturePath getPathToRecordOpInt();
+        static babelwires::FeaturePath getPathToRecordSubrecord();
+        static babelwires::FeaturePath getPathToRecordInt1();
+        static babelwires::FeaturePath getPathToRecordOpRec();
+        static babelwires::FeaturePath getPathToRecordString();
+    };
+
 } // namespace testUtils
