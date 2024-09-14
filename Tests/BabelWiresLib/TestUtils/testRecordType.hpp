@@ -60,9 +60,9 @@ namespace testUtils {
     };
 
     /// ValueElementData which creates an element carrying a simple record type.
-    class TestRecordElementData : public babelwires::ValueElementData {
+    class TestSimpleRecordElementData : public babelwires::ValueElementData {
       public:
-        TestRecordElementData();
+        TestSimpleRecordElementData();
 
         static babelwires::FeaturePath getPathToRecord();
         static babelwires::FeaturePath getPathToRecordInt0();

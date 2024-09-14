@@ -23,9 +23,9 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestArrayElementData());
     const babelwires::ElementId sourceId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
     const babelwires::ElementId targetId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     {
         babelwires::ArraySizeModifierData arrayInitialization;
@@ -36,13 +36,13 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
     {
         babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray_1();
-        inputConnection.m_pathToSourceFeature = testUtils::TestRecordElementData::getPathToRecordInt0();
+        inputConnection.m_pathToSourceFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = testUtils::TestRecordElementData::getPathToRecordInt0();
+        outputConnection.m_pathToFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         outputConnection.m_pathToSourceFeature = testUtils::TestArrayElementData::getPathToArray_2();
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
@@ -63,7 +63,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
         const babelwires::Modifier* inputConnection =
             element->findModifier(testUtils::TestArrayElementData::getPathToArray_1());
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(testUtils::TestRecordElementData::getPathToRecordInt0());
+            targetElement->findModifier(testUtils::TestSimpleRecordElementData::getPathToRecordInt0());
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
@@ -115,9 +115,9 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestArrayElementData());
     const babelwires::ElementId sourceId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
     const babelwires::ElementId targetId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     {
         babelwires::ArraySizeModifierData arrayInitialization;
@@ -128,13 +128,13 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
     {
         babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray_1();
-        inputConnection.m_pathToSourceFeature = testUtils::TestRecordElementData::getPathToRecordInt0();
+        inputConnection.m_pathToSourceFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = testUtils::TestRecordElementData::getPathToRecordInt0();
+        outputConnection.m_pathToFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         outputConnection.m_pathToSourceFeature = testUtils::TestArrayElementData::getPathToArray_2();
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
@@ -155,7 +155,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
         const babelwires::Modifier* inputConnection =
             element->findModifier(testUtils::TestArrayElementData::getPathToArray_1());
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(testUtils::TestRecordElementData::getPathToRecordInt0());
+            targetElement->findModifier(testUtils::TestSimpleRecordElementData::getPathToRecordInt0());
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
@@ -278,7 +278,7 @@ TEST(SetArraySizeCommandTest, failSafelyNoArray) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
                                             babelwires::FeaturePath::deserializeFromString("qqq/zzz"), 4);

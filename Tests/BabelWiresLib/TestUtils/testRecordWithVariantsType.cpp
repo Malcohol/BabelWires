@@ -1,19 +1,21 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 testUtils::TestRecordWithVariantsType::TestRecordWithVariantsType()
-    : RecordWithVariantsType({getTagAId(), getTagBId(), getTagCId(), getTagDId()}, {
-        { getFieldA0Id(), babelwires::DefaultIntType::getThisIdentifier(), { getTagAId(), getTagDId() } },
-        { getFf0Id(), babelwires::DefaultIntType::getThisIdentifier() },
-        { getFieldB0Id(), TestSimpleRecordType::getThisIdentifier(), { getTagBId() } },
-        { getFieldABId(), babelwires::DefaultIntType::getThisIdentifier(), { getTagAId(), getTagBId(), getTagDId() } },
-        { getFieldA1Id(), TestSimpleRecordType::getThisIdentifier(), { getTagAId(), getTagDId() } },
-        { getFf1Id(), TestSimpleRecordType::getThisIdentifier() },
-        { getFieldBCId(), babelwires::DefaultIntType::getThisIdentifier(), { getTagBId(), getTagCId() } }
-    }, 1) {}
+    : RecordWithVariantsType(
+          {getTagAId(), getTagBId(), getTagCId(), getTagDId()},
+          {{getFieldA0Id(), babelwires::DefaultIntType::getThisIdentifier(), {getTagAId(), getTagDId()}},
+           {getFf0Id(), babelwires::DefaultIntType::getThisIdentifier()},
+           {getFieldB0Id(), TestSimpleRecordType::getThisIdentifier(), {getTagBId()}},
+           {getFieldABId(), babelwires::DefaultIntType::getThisIdentifier(), {getTagAId(), getTagBId(), getTagDId()}},
+           {getFieldA1Id(), TestSimpleRecordType::getThisIdentifier(), {getTagAId(), getTagDId()}},
+           {getFf1Id(), TestSimpleRecordType::getThisIdentifier()},
+           {getFieldBCId(), babelwires::DefaultIntType::getThisIdentifier(), {getTagBId(), getTagCId()}}},
+          1) {}
 
 babelwires::ShortId testUtils::TestRecordWithVariantsType::getTagAId() {
     return BW_SHORT_ID("tagA", "Tag A", "942734bc-c048-43e0-8a2d-a428292b9d1d");
@@ -57,4 +59,30 @@ babelwires::ShortId testUtils::TestRecordWithVariantsType::getFieldABId() {
 
 babelwires::ShortId testUtils::TestRecordWithVariantsType::getFieldBCId() {
     return BW_SHORT_ID("BC", "Field BC", "2fe76d96-014b-401c-af1e-35784c05c60a");
+}
+
+testUtils::TestRecordWithVariantsElementData::TestRecordWithVariantsElementData()
+    : ValueElementData(testUtils::TestRecordWithVariantsType::getThisIdentifier()) {}
+
+babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants() {
+    return std::vector<babelwires::PathStep>{babelwires::PathStep(babelwires::ValueElement::getStepToValue())};
+}
+
+const babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToFieldA0() {
+    return std::vector<babelwires::PathStep>{
+        babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
+        babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA0Id())};
+}
+
+const babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0() {
+    return std::vector<babelwires::PathStep>{
+        babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
+        babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA1Id()),
+        babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id())};
+}
+
+const babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToFieldAB() {
+    return std::vector<babelwires::PathStep>{
+        babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
+        babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldABId())};
 }

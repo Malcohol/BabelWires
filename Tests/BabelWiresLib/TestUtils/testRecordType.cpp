@@ -47,16 +47,16 @@ babelwires::ShortId testUtils::TestComplexRecordType::getStringId() {
     return BW_SHORT_ID("string", "String", "0f5c8454-89ed-4b66-a3f1-0174a620234c");
 }
 
-testUtils::TestRecordElementData::TestRecordElementData()
+testUtils::TestSimpleRecordElementData::TestSimpleRecordElementData()
     : babelwires::ValueElementData(TestSimpleRecordType::getThisIdentifier()) {}
 
-babelwires::FeaturePath testUtils::TestRecordElementData::getPathToRecord() {
+babelwires::FeaturePath testUtils::TestSimpleRecordElementData::getPathToRecord() {
     babelwires::FeaturePath pathToArray;
     pathToArray.pushStep(babelwires::PathStep(babelwires::ValueElement::getStepToValue()));
     return pathToArray;
 }
 
-babelwires::FeaturePath testUtils::TestRecordElementData::getPathToRecordInt0() {
+babelwires::FeaturePath testUtils::TestSimpleRecordElementData::getPathToRecordInt0() {
     babelwires::FeaturePath pathToArray_1 = getPathToRecord();
     pathToArray_1.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt0Id()));
     return pathToArray_1;

@@ -1,13 +1,15 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
+
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 namespace testUtils {
-  
+
     class TestRecordWithVariantsType : public babelwires::RecordWithVariantsType {
       public:
         TestRecordWithVariantsType();
-        
+
         PRIMITIVE_TYPE("vrecordT", "RecordWithVariants", "45442c6b-fa02-4a48-b7f8-9ca062c568ea", 1);
 
         static babelwires::ShortId getTagAId();
@@ -25,4 +27,14 @@ namespace testUtils {
         static babelwires::ShortId getFf1Id();
         static babelwires::ShortId getFieldBCId();
     };
-}
+
+    struct TestRecordWithVariantsElementData : babelwires::ValueElementData {
+        TestRecordWithVariantsElementData();
+
+        static babelwires::FeaturePath getPathToRecordWithVariants();
+        static const babelwires::FeaturePath getPathToFieldA0();
+        static const babelwires::FeaturePath getPathToFieldA1_Int0();
+        static const babelwires::FeaturePath getPathToFieldAB();
+    };
+
+} // namespace testUtils

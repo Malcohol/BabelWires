@@ -189,7 +189,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyNoArray) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
                                                  babelwires::FeaturePath::deserializeFromString("qqq/zzz"), -1);

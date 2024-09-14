@@ -24,9 +24,9 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestArrayElementData());
     const babelwires::ElementId sourceId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
     const babelwires::ElementId targetId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     const unsigned int initialArraySize = testUtils::TestSimpleArrayType::s_defaultSize + 2;
     const babelwires::FeaturePath pathToArrayEntry =
@@ -41,13 +41,13 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     {
         babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_pathToFeature = pathToArrayEntry;
-        inputConnection.m_pathToSourceFeature = testUtils::TestRecordElementData::getPathToRecordInt0();
+        inputConnection.m_pathToSourceFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = testUtils::TestRecordElementData::getPathToRecordInt0();
+        outputConnection.m_pathToFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         outputConnection.m_pathToSourceFeature = pathToArrayEntry;
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
@@ -68,7 +68,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
         const babelwires::Modifier* inputConnection =
             element->findModifier(pathToArrayEntry);
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(testUtils::TestRecordElementData::getPathToRecordInt0());
+            targetElement->findModifier(testUtils::TestSimpleRecordElementData::getPathToRecordInt0());
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
@@ -240,7 +240,7 @@ TEST(RemoveModifierCommandTest, failSafelyNoModifier) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     babelwires::RemoveModifierCommand command("Test command", elementId,
                                               babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
