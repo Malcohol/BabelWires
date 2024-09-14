@@ -4,7 +4,6 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRootFeature.hpp>
 
 namespace testUtils {
     struct TestRecordFeature;
