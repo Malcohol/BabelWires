@@ -1,7 +1,10 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
+
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 testUtils::TestSimpleRecordType::TestSimpleRecordType()
     : RecordType({{getInt0Id(), babelwires::DefaultIntType::getThisIdentifier()},
@@ -21,7 +24,8 @@ testUtils::TestComplexRecordType::TestComplexRecordType()
                   {getSubrecordId(), TestSimpleRecordType::getThisIdentifier()},
                   {getInt1Id(), babelwires::DefaultIntType::getThisIdentifier()},
                   {getOpRecId(), TestSimpleRecordType::getThisIdentifier(), Optionality::optionalDefaultInactive},
-                  {getStringId(), babelwires::StringType::getThisIdentifier()}}) {}
+                  {getStringId(), babelwires::StringType::getThisIdentifier()},
+                  {getArrayId(), testUtils::TestSimpleArrayType::getThisIdentifier()}}) {}
 
 babelwires::ShortId testUtils::TestComplexRecordType::getInt0Id() {
     return BW_SHORT_ID("intR0", "Int0", "1aafde9a-fb39-4a2d-8a29-55fc9d6d093b");
@@ -45,6 +49,10 @@ babelwires::ShortId testUtils::TestComplexRecordType::getOpRecId() {
 
 babelwires::ShortId testUtils::TestComplexRecordType::getStringId() {
     return BW_SHORT_ID("string", "String", "0f5c8454-89ed-4b66-a3f1-0174a620234c");
+}
+
+babelwires::ShortId testUtils::TestComplexRecordType::getArrayId() {
+    return BW_SHORT_ID("array", "Array", "5da653f4-44d5-4030-a956-771fc06fb769");
 }
 
 testUtils::TestSimpleRecordElementData::TestSimpleRecordElementData()

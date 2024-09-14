@@ -46,8 +46,9 @@ namespace testUtils {
         static babelwires::ShortId getInt1Id();
         static babelwires::ShortId getOpRecId();
         static babelwires::ShortId getStringId();
+        static babelwires::ShortId getArrayId();
 
-        static constexpr unsigned int s_numNonOptionalFields = 4;
+        static constexpr unsigned int s_numNonOptionalFields = 5;
 
         DECLARE_INSTANCE_BEGIN(TestComplexRecordType)
         DECLARE_INSTANCE_FIELD(intR0, babelwires::IntType)
@@ -56,6 +57,7 @@ namespace testUtils {
         DECLARE_INSTANCE_FIELD(intR1, babelwires::IntType)
         DECLARE_INSTANCE_FIELD(opRec, TestSimpleRecordType)
         DECLARE_INSTANCE_FIELD(string, babelwires::StringType)
+        DECLARE_INSTANCE_ARRAY_FIELD(array, babelwires::IntType)
         DECLARE_INSTANCE_END()
     };
 
