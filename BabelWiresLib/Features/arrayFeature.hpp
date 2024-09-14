@@ -72,10 +72,4 @@ namespace babelwires {
         EntryId m_nextId = 0;
     };
 
-    /// An arbitrarily sized array feature which always creates default constructed entries.
-    template <typename ENTRY_FEATURE> class StandardArrayFeature : public ArrayFeature {
-      public:
-        virtual std::unique_ptr<Feature> createNextEntry() const override { return std::make_unique<ENTRY_FEATURE>(); }
-    };
-
 } // namespace babelwires
