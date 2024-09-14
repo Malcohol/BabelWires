@@ -18,8 +18,6 @@ namespace babelwires {
 
     class Feature;
     class CompoundFeature;
-    class RecordFeature;
-    class ArrayFeature;
     class EditTree;
     class ContentsCache;
 
