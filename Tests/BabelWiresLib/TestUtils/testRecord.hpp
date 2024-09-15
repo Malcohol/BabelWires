@@ -15,8 +15,6 @@ namespace testUtils {
         // This is used to test failed applications.
         TestRecordFeature(int intValueLimit = 255, bool addExtraInt = false);
 
-        void doSetToDefault() override;
-
         static constexpr char s_intIdInitializer[] = "int0";
         static constexpr char s_arrayIdInitializer[] = "array";
         static constexpr char s_recordIdInitializer[] = "record";
@@ -43,8 +41,6 @@ namespace testUtils {
         babelwires::ShortId m_extraIntId;
 
         babelwires::IntFeature* m_intFeature;
-        // This has a min and default size of 2.
-        babelwires::ArrayFeature* m_arrayFeature;
         babelwires::IntFeature* m_elem0;
         babelwires::IntFeature* m_elem1;
         babelwires::RecordFeature* m_subRecordFeature;

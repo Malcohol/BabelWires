@@ -38,10 +38,6 @@ testUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtra
     auto intFeaturePtr = std::make_unique<LimitedIntFeature>(m_intValueLimit);
     m_intFeature = intFeaturePtr.get();
     addField(std::move(intFeaturePtr), m_intId);
-
-    auto arrayFeaturePtr = std::make_unique<LimitedArrayFeature>(m_intValueLimit);
-    m_arrayFeature = arrayFeaturePtr.get();
-    addField(std::move(arrayFeaturePtr), m_arrayId);
     
     auto subRecordPtr = std::make_unique<babelwires::RecordFeature>();
     m_subRecordFeature = subRecordPtr.get();
@@ -56,11 +52,4 @@ testUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtra
         m_extraIntFeature = extraIntPtr.get();
         m_subRecordFeature->addField(std::move(extraIntPtr), m_extraIntId);
     }
-}
-
-void testUtils::TestRecordFeature::doSetToDefault() {
-    RecordFeature::doSetToDefault();
-    // These elements won't exist until now.
-    m_elem0 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(0));
-    m_elem1 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(1));
 }
