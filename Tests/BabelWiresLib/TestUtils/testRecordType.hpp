@@ -114,6 +114,7 @@ namespace testUtils {
         const babelwires::ValueFeature& m_elem0;
         const babelwires::ValueFeature& m_elem1;
 
+        // These paths are obtained from the features (which tests some FeaturePath functionality).
         babelwires::FeaturePath m_pathToRecord;
         babelwires::FeaturePath m_pathToSubRecord;
         babelwires::FeaturePath m_pathToSubRecordInt;

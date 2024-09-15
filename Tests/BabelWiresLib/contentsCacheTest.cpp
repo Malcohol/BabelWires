@@ -9,6 +9,7 @@
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
@@ -213,7 +214,7 @@ namespace {
         // Expand the array
         editTree.setExpanded(info->m_pathToArray, true);
         cache.setFeatures(inputFeature, outputFeature);
-        ASSERT_EQ(cache.getNumRows(), 11);
+        ASSERT_EQ(cache.getNumRows(), 7 + testUtils::TestSimpleArrayType::s_defaultSize);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
             checkFirstIntEntry(entry, inputInfo.get(), outputInfo.get());
@@ -261,8 +262,8 @@ namespace {
         editTree.addModifier(createIntModifier(info->m_pathToInt));
         cache.updateModifierCache();
 
-        ASSERT_EQ(cache.getNumRows(), 11);
-        for (int i = 1; i < 11; ++i) {
+        ASSERT_EQ(cache.getNumRows(), 7 + testUtils::TestSimpleArrayType::s_defaultSize);
+        for (int i = 1; i < 7 + testUtils::TestSimpleArrayType::s_defaultSize; ++i) {
             checkUnmodified(cache.getEntry(i));
         }
         {
@@ -277,7 +278,7 @@ namespace {
         // Add a submodifier to the array
         editTree.addModifier(createIntModifier(info->m_pathToElem1));
         cache.updateModifierCache();
-        ASSERT_EQ(cache.getNumRows(), 11);
+        ASSERT_EQ(cache.getNumRows(), 7 + testUtils::TestSimpleArrayType::s_defaultSize);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(6);
             checkArrayEntry(entry, inputInfo.get(), outputInfo.get());
@@ -306,7 +307,7 @@ namespace {
             editTree.addModifier(std::move(modifier));
         }
         cache.updateModifierCache();
-        ASSERT_EQ(cache.getNumRows(), 11);
+        ASSERT_EQ(cache.getNumRows(), 7 + testUtils::TestSimpleArrayType::s_defaultSize);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(6);
             checkArrayEntry(entry, inputInfo.get(), outputInfo.get());
@@ -411,78 +412,58 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
 }
 
-/*
-
 TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    testUtils::TestRootFeature inputFeature(testEnvironment.m_projectContext, 255, true);
-    testUtils::TestRootFeature outputFeature(testEnvironment.m_projectContext);
+    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+                                                testUtils::TestComplexRecordType::getThisIdentifier());
+    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+                                                 testUtils::TestComplexRecordType::getThisIdentifier());
+
     inputFeature.setToDefault();
     outputFeature.setToDefault();
 
-    outputFeature.m_arrayFeature->setSize(3);
+    testUtils::TestComplexRecordTypeFeatureInfo inputInfo(inputFeature);
+    testUtils::TestComplexRecordTypeFeatureInfo outputInfo(outputFeature);
 
-    cache.setFeatures(&inputFeature, &outputFeature);
-    ASSERT_EQ(cache.getNumRows(), 3);
+    testUtils::TestComplexRecordType::Instance output(outputFeature);
+    output.getarray().setSize(testUtils::TestSimpleArrayType::s_nonDefaultSize);
 
-    editTree.setExpanded(testUtils::TestRootFeature::s_pathToRecord, true);
     cache.setFeatures(&inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 5);
 
-    editTree.setExpanded(testUtils::TestRootFeature::s_pathToArray, true);
+    editTree.setExpanded(inputInfo.m_pathToSubRecord, true);
     cache.setFeatures(&inputFeature, &outputFeature);
-    ASSERT_EQ(cache.getNumRows(), 8);
+    ASSERT_EQ(cache.getNumRows(), 7);
+
+    editTree.setExpanded(inputInfo.m_pathToArray, true);
+    cache.setFeatures(&inputFeature, &outputFeature);
+    ASSERT_EQ(cache.getNumRows(), 7 + testUtils::TestSimpleArrayType::s_nonDefaultSize);
 
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
-        checkFirstIntEntry(entry, &inputFeature, &outputFeature);
-        checkUnmodified(entry);
-    }
-    {
-        const babelwires::ContentsCacheEntry* const entry = cache.getEntry(1);
-        checkArrayEntry(entry, &inputFeature, &outputFeature);
-        checkUnmodified(entry);
-    }
-    {
-        const babelwires::ContentsCacheEntry* const entry = cache.getEntry(2);
-        checkFirstArrayEntry(entry, &inputFeature, &outputFeature);
-        checkUnmodified(entry);
-    }
-    {
-        const babelwires::ContentsCacheEntry* const entry = cache.getEntry(3);
-        checkSecondArrayEntry(entry, &inputFeature, &outputFeature);
-        checkUnmodified(entry);
-    }
-    {
-        const babelwires::ContentsCacheEntry* const entry = cache.getEntry(4);
-        EXPECT_EQ(entry->getLabel(), "[2]");
-        EXPECT_FALSE(entry->getInputFeature());
-        EXPECT_EQ(entry->getOutputFeature(), outputFeature.m_arrayFeature->getFeature(2));
-        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToArray_2);
-        EXPECT_FALSE(entry->isExpandable());
-        EXPECT_FALSE(entry->isExpanded());
-        checkUnmodified(entry);
-    }
-    {
-        const babelwires::ContentsCacheEntry* const entry = cache.getEntry(5);
-        checkSubRecordEntry(entry, &inputFeature, &outputFeature);
+        checkFirstIntEntry(entry, &inputInfo, &outputInfo);
         checkUnmodified(entry);
     }
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(6);
-        checkSubRecordIntEntry(entry, &inputFeature, &outputFeature);
+        checkArrayEntry(entry, &inputInfo, &outputInfo);
         checkUnmodified(entry);
     }
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
-        EXPECT_EQ(entry->getLabel(), testUtils::TestRootFeature::s_extraIntFieldName);
-        EXPECT_FALSE(entry->getOutputFeature());
-        EXPECT_EQ(entry->getInputFeature(), inputFeature.m_extraIntFeature);
-        EXPECT_EQ(entry->getPath(), testUtils::TestRootFeature::s_pathToExtraInt);
+        checkFirstArrayEntry(entry, &inputInfo, &outputInfo);
+        checkUnmodified(entry);
+    }
+    {
+        const babelwires::ContentsCacheEntry* const entry =
+            cache.getEntry(7 + testUtils::TestSimpleArrayType::s_nonDefaultSize - 1);
+        EXPECT_FALSE(entry->getInputFeature());
+        EXPECT_EQ(entry->getOutputFeature(),
+                  outputInfo.m_arrayFeature.getFeature(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1));
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
         checkUnmodified(entry);
@@ -495,13 +476,16 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    testUtils::TestRootFeature inputFeature(testEnvironment.m_projectContext);
-    testUtils::TestRootFeature outputFeature(testEnvironment.m_projectContext);
+    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+                                                testUtils::TestComplexRecordType::getThisIdentifier());
+    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+                                                 testUtils::TestComplexRecordType::getThisIdentifier());
+
     inputFeature.setToDefault();
     outputFeature.setToDefault();
 
     cache.setFeatures(&inputFeature, &outputFeature);
-    ASSERT_EQ(cache.getNumRows(), 3);
+    ASSERT_EQ(cache.getNumRows(), 5);
 
     // Adding a hidden failed modifier whose parent is logically the root requires us to present
     // a root entry to the user, so the UI functionality for failed modifiers has somewhere to live.
@@ -511,11 +495,14 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     auto modifier = modifierPtr.get();
     editTree.addModifier(std::move(modifierPtr));
 
+    testUtils::TestComplexRecordTypeFeatureInfo inputInfo(inputFeature);
+    testUtils::TestComplexRecordTypeFeatureInfo outputInfo(outputFeature);
+
     cache.clearChanges();
     cache.updateModifierCache();
 
     EXPECT_TRUE(cache.isChanged(babelwires::ContentsCache::Changes::StructureChanged));
-    EXPECT_EQ(cache.getNumRows(), 4);
+    EXPECT_EQ(cache.getNumRows(), 6);
 
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -533,17 +520,17 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     }
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(1);
-        checkFirstIntEntry(entry, &inputFeature, &outputFeature);
+        checkFirstIntEntry(entry, &inputInfo, &outputInfo);
         checkUnmodified(entry);
     }
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(2);
-        checkArrayEntry(entry, &inputFeature, &outputFeature);
+        checkSubRecordEntry(entry, &inputInfo, &outputInfo);
         checkUnmodified(entry);
     }
     {
-        const babelwires::ContentsCacheEntry* const entry = cache.getEntry(3);
-        checkSubRecordEntry(entry, &inputFeature, &outputFeature);
+        const babelwires::ContentsCacheEntry* const entry = cache.getEntry(5);
+        checkArrayEntry(entry, &inputInfo, &outputInfo);
         checkUnmodified(entry);
     }
 
@@ -552,20 +539,20 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     cache.updateModifierCache();
 
     EXPECT_TRUE(cache.isChanged(babelwires::ContentsCache::Changes::StructureChanged));
-    EXPECT_EQ(cache.getNumRows(), 3);
+    EXPECT_EQ(cache.getNumRows(), 5);
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
-        checkFirstIntEntry(entry, &inputFeature, &outputFeature);
+        checkFirstIntEntry(entry, &inputInfo, &outputInfo);
         checkUnmodified(entry);
     }
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(1);
-        checkArrayEntry(entry, &inputFeature, &outputFeature);
+        checkSubRecordEntry(entry, &inputInfo, &outputInfo);
         checkUnmodified(entry);
     }
     {
-        const babelwires::ContentsCacheEntry* const entry = cache.getEntry(2);
-        checkSubRecordEntry(entry, &inputFeature, &outputFeature);
+        const babelwires::ContentsCacheEntry* const entry = cache.getEntry(4);
+        checkArrayEntry(entry, &inputInfo, &outputInfo);
         checkUnmodified(entry);
     }
 }
@@ -767,4 +754,3 @@ TEST(ContentsCacheTest, style) {
     EXPECT_EQ(cache.getEntry(6)->getIndent(), 0);
     EXPECT_EQ(cache.getEntry(7)->getIndent(), 0);
 }
-*/
