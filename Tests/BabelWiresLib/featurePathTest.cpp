@@ -117,44 +117,6 @@ TEST(FeaturePathTest, pathIteration) {
     EXPECT_EQ(path2, path1);
 }
 
-namespace {
-    struct RecordInfo {
-        const babelwires::ValueFeature& m_intFeature;
-        const babelwires::ValueFeature& m_arrayFeature;
-        const babelwires::ValueFeature& m_elem0;
-        const babelwires::ValueFeature& m_elem1;
-        const babelwires::ValueFeature& m_subRecordFeature;
-        const babelwires::ValueFeature& m_intFeature2;
-
-        babelwires::FeaturePath m_pathToRecord;
-        babelwires::FeaturePath m_pathToInt;
-        babelwires::FeaturePath m_pathToArray;
-        babelwires::FeaturePath m_pathToElem0;
-        babelwires::FeaturePath m_pathToElem1;
-        babelwires::FeaturePath m_pathToSubRecord;
-        babelwires::FeaturePath m_pathToInt2;
-
-        RecordInfo(const babelwires::ValueFeature& testRecord)
-            : m_intFeature(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getInt0Id()))
-                         .is<babelwires::ValueFeature>())
-            , m_arrayFeature(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getArrayId()))
-                          .is<babelwires::ValueFeature>())
-            , m_elem0(m_arrayFeature.getChildFromStep(babelwires::PathStep(0)).is<babelwires::ValueFeature>())
-            , m_elem1(m_arrayFeature.getChildFromStep(babelwires::PathStep(1)).is<babelwires::ValueFeature>())
-            , m_subRecordFeature(
-                  testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getSubrecordId()))
-                      .is<babelwires::ValueFeature>())
-            , m_intFeature2(m_subRecordFeature.getChildFromStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()))
-                         .is<babelwires::ValueFeature>())
-            , m_pathToRecord(&testRecord)
-            , m_pathToInt(&m_intFeature)
-            , m_pathToArray(&m_arrayFeature)
-            , m_pathToElem0(&m_elem0)
-            , m_pathToElem1(&m_elem1)
-            , m_pathToSubRecord(&m_subRecordFeature)
-            , m_pathToInt2(&m_intFeature2) {}
-    };
-} // namespace
 
 TEST(FeaturePathTest, pathFollow) {
     testUtils::TestEnvironment testEnvironment;
@@ -163,7 +125,7 @@ TEST(FeaturePathTest, pathFollow) {
                                                      testUtils::TestComplexRecordType::getThisIdentifier());
     testRecordFeature.setToDefault();
 
-    RecordInfo info(testRecordFeature);
+    testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     EXPECT_EQ(&info.m_pathToRecord.follow(testRecordFeature), &testRecordFeature);
     EXPECT_EQ(&info.m_pathToInt.follow(testRecordFeature), &info.m_intFeature);
@@ -171,7 +133,7 @@ TEST(FeaturePathTest, pathFollow) {
     EXPECT_EQ(&info.m_pathToElem0.follow(testRecordFeature), &info.m_elem0);
     EXPECT_EQ(&info.m_pathToElem1.follow(testRecordFeature), &info.m_elem1);
     EXPECT_EQ(&info.m_pathToSubRecord.follow(testRecordFeature), &info.m_subRecordFeature);
-    EXPECT_EQ(&info.m_pathToInt2.follow(testRecordFeature), &info.m_intFeature2);
+    EXPECT_EQ(&info.m_pathToSubRecordInt.follow(testRecordFeature), &info.m_subRecordIntFeature);
 
     EXPECT_EQ(info.m_pathToRecord.getNumSteps(), 0);
 
@@ -192,9 +154,9 @@ TEST(FeaturePathTest, pathFollow) {
     EXPECT_EQ(info.m_pathToSubRecord.getNumSteps(), 1);
     EXPECT_EQ(info.m_pathToSubRecord.getStep(0).getField(), testUtils::TestComplexRecordType::getSubrecordId());
 
-    EXPECT_EQ(info.m_pathToInt2.getNumSteps(), 2);
-    EXPECT_EQ(info.m_pathToInt2.getStep(0).getField(), testUtils::TestComplexRecordType::getSubrecordId());
-    EXPECT_EQ(info.m_pathToInt2.getStep(1).getField(), testUtils::TestSimpleRecordType::getInt0Id());
+    EXPECT_EQ(info.m_pathToSubRecordInt.getNumSteps(), 2);
+    EXPECT_EQ(info.m_pathToSubRecordInt.getStep(0).getField(), testUtils::TestComplexRecordType::getSubrecordId());
+    EXPECT_EQ(info.m_pathToSubRecordInt.getStep(1).getField(), testUtils::TestSimpleRecordType::getInt0Id());
 }
 
 TEST(FeaturePathTest, pathResolve) {
@@ -229,7 +191,7 @@ TEST(FeaturePathTest, pathResolve) {
                                                      testUtils::TestComplexRecordType::getThisIdentifier());
     testRecordFeature.setToDefault();
 
-    RecordInfo info(testRecordFeature);
+    testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     // The paths should work even though they didn't use registered field identifiers.
     EXPECT_EQ(&pathToInt.follow(testRecordFeature), &info.m_intFeature);
@@ -237,7 +199,7 @@ TEST(FeaturePathTest, pathResolve) {
     EXPECT_EQ(&pathToElem0.follow(testRecordFeature), &info.m_elem0);
     EXPECT_EQ(&pathToElem1.follow(testRecordFeature), &info.m_elem1);
     EXPECT_EQ(&pathToSubRecord.follow(testRecordFeature), &info.m_subRecordFeature);
-    EXPECT_EQ(&pathToInt2.follow(testRecordFeature), &info.m_intFeature2);
+    EXPECT_EQ(&pathToInt2.follow(testRecordFeature), &info.m_subRecordIntFeature);
 
     // The field identifiers in the paths should now be resolved.
     EXPECT_NE(pathToInt.getStep(0).getField().getDiscriminator(), 0);
@@ -266,7 +228,7 @@ TEST(FeaturePathTest, pathTryFollow) {
                                                      testUtils::TestComplexRecordType::getThisIdentifier());
     testRecordFeature.setToDefault();
 
-    RecordInfo info(testRecordFeature);
+    testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     EXPECT_EQ(info.m_pathToRecord.tryFollow(testRecordFeature), &testRecordFeature);
     EXPECT_EQ(info.m_pathToInt.tryFollow(testRecordFeature), &info.m_intFeature);
@@ -274,7 +236,7 @@ TEST(FeaturePathTest, pathTryFollow) {
     EXPECT_EQ(info.m_pathToElem0.tryFollow(testRecordFeature), &info.m_elem0);
     EXPECT_EQ(info.m_pathToElem1.tryFollow(testRecordFeature), &info.m_elem1);
     EXPECT_EQ(info.m_pathToSubRecord.tryFollow(testRecordFeature), &info.m_subRecordFeature);
-    EXPECT_EQ(info.m_pathToInt2.tryFollow(testRecordFeature), &info.m_intFeature2);
+    EXPECT_EQ(info.m_pathToSubRecordInt.tryFollow(testRecordFeature), &info.m_subRecordIntFeature);
 }
 
 TEST(FeaturePathTest, pathFollowFail) {
@@ -299,7 +261,7 @@ TEST(FeaturePathTest, pathFollowFail) {
                                                      testUtils::TestComplexRecordType::getThisIdentifier());
     testRecordFeature.setToDefault();
 
-    RecordInfo info(testRecordFeature);
+    testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     EXPECT_THROW(pathToNonField.follow(testRecordFeature), babelwires::ModelException);
     EXPECT_THROW(pathToNonIndex.follow(testRecordFeature), babelwires::ModelException);

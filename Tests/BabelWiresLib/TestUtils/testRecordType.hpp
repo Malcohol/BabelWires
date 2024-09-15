@@ -47,7 +47,15 @@ namespace testUtils {
         static constexpr char s_opRecIdInitializer[] = "opRec";
         static constexpr char s_stringIdInitializer[] = "string";
         static constexpr char s_arrayIdInitializer[] = "array";
-        
+
+        static constexpr char s_intFieldName[] = "Int0";
+        static constexpr char s_opIntFieldName[] = "OptionalInt";
+        static constexpr char s_subRecordFieldName[] = "Subrecord";
+        static constexpr char s_int1FieldName[] = "Int1";
+        static constexpr char s_opRecFieldName[] = "OptionalRecord";
+        static constexpr char s_stringFieldName[] = "String";
+        static constexpr char s_arrayFieldName[] = "Array";
+
         static babelwires::ShortId getInt0Id();
         static babelwires::ShortId getOpIntId();
         static babelwires::ShortId getSubrecordId();
@@ -94,4 +102,26 @@ namespace testUtils {
         static babelwires::FeaturePath getPathToRecordArrayEntry(unsigned int i);
     };
 
+
+    /// Useful for unit tests which want to access parts of the feature hierarchy of this record type
+    /// without using the Instance system.
+    // Currently not all features are represented.
+    struct TestComplexRecordTypeFeatureInfo {
+        const babelwires::ValueFeature& m_intFeature;
+        const babelwires::ValueFeature& m_subRecordFeature;
+        const babelwires::ValueFeature& m_subRecordIntFeature;
+        const babelwires::ValueFeature& m_arrayFeature;
+        const babelwires::ValueFeature& m_elem0;
+        const babelwires::ValueFeature& m_elem1;
+
+        babelwires::FeaturePath m_pathToRecord;
+        babelwires::FeaturePath m_pathToSubRecord;
+        babelwires::FeaturePath m_pathToSubRecordInt;
+        babelwires::FeaturePath m_pathToInt;
+        babelwires::FeaturePath m_pathToArray;
+        babelwires::FeaturePath m_pathToElem0;
+        babelwires::FeaturePath m_pathToElem1;
+
+        TestComplexRecordTypeFeatureInfo(const babelwires::ValueFeature& testRecord);
+    };
 } // namespace testUtils
