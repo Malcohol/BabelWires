@@ -40,6 +40,14 @@ namespace testUtils {
 
         PRIMITIVE_TYPE("crecordT", "ComplexRecord", "87291871-677d-41a1-81e7-bf1206b1d396", 1);
 
+        static constexpr char s_intIdInitializer[] = "intR0";
+        static constexpr char s_opIntIdInitializer[] = "opInt";
+        static constexpr char s_subRecordIdInitializer[] = "rec";
+        static constexpr char s_int1IdInitializer[] = "intR1";
+        static constexpr char s_opRecIdInitializer[] = "opRec";
+        static constexpr char s_stringIdInitializer[] = "string";
+        static constexpr char s_arrayIdInitializer[] = "array";
+        
         static babelwires::ShortId getInt0Id();
         static babelwires::ShortId getOpIntId();
         static babelwires::ShortId getSubrecordId();
