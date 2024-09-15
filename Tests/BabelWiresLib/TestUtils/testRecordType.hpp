@@ -51,6 +51,7 @@ namespace testUtils {
         static babelwires::ShortId getInt0Id();
         static babelwires::ShortId getOpIntId();
         static babelwires::ShortId getSubrecordId();
+        // Has a range from -10 to 10 with a default of 2.
         static babelwires::ShortId getInt1Id();
         static babelwires::ShortId getOpRecId();
         static babelwires::ShortId getStringId();
