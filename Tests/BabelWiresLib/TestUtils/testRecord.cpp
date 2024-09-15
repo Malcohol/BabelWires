@@ -5,27 +5,11 @@ namespace {
         LimitedIntFeature(int intValueLimit)
             : IntFeature(-intValueLimit, intValueLimit) {}
     };
-
-    struct LimitedArrayFeature : babelwires::ArrayFeature {
-        LimitedArrayFeature(int intValueLimit)
-            : m_intValueLimit(intValueLimit) {}
-
-        virtual std::unique_ptr<Feature> createNextEntry() const override {
-            return std::make_unique<LimitedIntFeature>(m_intValueLimit);
-        }
-
-        virtual babelwires::Range<unsigned int> doGetSizeRange() const override { return {2, 8}; }
-
-        int m_intValueLimit;
-    };
 } // namespace
 
 testUtils::TestRecordFeature::TestRecordFeature(int intValueLimit, bool addExtraInt)
     : m_intId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_intIdInitializer, s_intFieldName, s_intUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_arrayId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-          s_arrayIdInitializer, s_arrayFieldName, s_arrayUuid,
-          babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_recordId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_recordIdInitializer, s_recordFieldName, s_recordUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative))
