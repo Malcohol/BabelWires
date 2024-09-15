@@ -2,41 +2,43 @@
 
 #include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
 
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 namespace {
     void testRemoveFailedModifiers(bool isWholeRecord) {
-            testUtils::TestEnvironment testEnvironment;
+        testUtils::TestEnvironment testEnvironment;
 
-        testUtils::TestFeatureElementData elementData;
+        testUtils::TestComplexRecordElementData elementData;
         {
             // Will fail.
             babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
-            intAssignment.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_4;
+            intAssignment.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(
+                testUtils::TestSimpleArrayType::s_maximumSize);
             elementData.m_modifiers.emplace_back(intAssignment.clone());
         }
         {
             // OK
             babelwires::ArraySizeModifierData arrayInitialization;
-            arrayInitialization.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray;
-            arrayInitialization.m_size = 3;
+            arrayInitialization.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+            arrayInitialization.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
             elementData.m_modifiers.emplace_back(arrayInitialization.clone());
         }
         {
             // Will fail.
             babelwires::ConnectionModifierData inputConnection;
-            inputConnection.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-            inputConnection.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+            inputConnection.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
+            inputConnection.m_pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
             inputConnection.m_sourceId = 57;
             elementData.m_modifiers.emplace_back(inputConnection.clone());
         }
@@ -44,17 +46,17 @@ namespace {
         const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
         testEnvironment.m_project.process();
 
-        const auto* element =
-            testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+        const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
         ASSERT_NE(element, nullptr);
 
         const auto checkModifiers = [&testEnvironment, element, isWholeRecord](bool isCommandExecuted) {
             const babelwires::Modifier* intAssignment =
-                element->findModifier(testUtils::TestRootFeature::s_pathToArray_4);
+                element->findModifier(testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(
+                    testUtils::TestSimpleArrayType::s_maximumSize));
             const babelwires::Modifier* arrayInitialization =
-                element->findModifier(testUtils::TestRootFeature::s_pathToArray);
+                element->findModifier(testUtils::TestComplexRecordElementData::getPathToRecordArray());
             const babelwires::Modifier* inputConnection =
-                element->findModifier(testUtils::TestRootFeature::s_pathToInt2);
+                element->findModifier(testUtils::TestComplexRecordElementData::getPathToRecordInt1());
             int numModifiersAtElement = 0;
             int numModifiersAtTarget = 0;
             for (const auto* m : element->getEdits().modifierRange()) {
@@ -84,7 +86,7 @@ namespace {
         checkModifiers(false);
 
         const babelwires::FeaturePath commandPath =
-            isWholeRecord ? babelwires::FeaturePath() : testUtils::TestRootFeature::s_pathToArray;
+            isWholeRecord ? babelwires::FeaturePath() : testUtils::TestComplexRecordElementData::getPathToRecordArray();
         babelwires::RemoveFailedModifiersCommand command("Test command", elementId, commandPath);
 
         EXPECT_EQ(command.getName(), "Test command");
@@ -125,14 +127,12 @@ TEST(RemoveFailedModifiersCommandTest, failSafelyNoElement) {
 
 TEST(RemoveFailedModifiersCommandTest, failSafelyNoSubFeature) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::RemoveFailedModifiersCommand command("Test command", 51,
+
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+
+    babelwires::RemoveFailedModifiersCommand command("Test command", elementId,
                                                      babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
-
-    testUtils::TestFeatureElementData elementData;
-    elementData.m_id = 51;
-
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    EXPECT_EQ(elementId, 51);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
