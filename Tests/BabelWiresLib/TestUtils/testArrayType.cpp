@@ -4,16 +4,16 @@
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 
 testUtils::TestSimpleArrayType::TestSimpleArrayType()
-    : babelwires::ArrayType(getExpectedEntryType(), s_minimumSize, s_maximumSize, s_defaultSize) {}
+    : babelwires::ArrayType(getEntryTypeStatic(), s_minimumSize, s_maximumSize, s_defaultSize) {}
 
-babelwires::TypeRef testUtils::TestSimpleArrayType::getExpectedEntryType() {
+babelwires::TypeRef testUtils::TestSimpleArrayType::getEntryTypeStatic() {
     return babelwires::DefaultIntType::getThisIdentifier();
 }
 
 testUtils::TestCompoundArrayType::TestCompoundArrayType()
-    : babelwires::ArrayType(getExpectedEntryType(), s_minimumSize, s_maximumSize, s_defaultSize) {}
+    : babelwires::ArrayType(getEntryTypeStatic(), s_minimumSize, s_maximumSize, s_defaultSize) {}
 
-babelwires::TypeRef testUtils::TestCompoundArrayType::getExpectedEntryType() {
+babelwires::TypeRef testUtils::TestCompoundArrayType::getEntryTypeStatic() {
     return testUtils::TestSimpleArrayType::getThisIdentifier();
 }
 
