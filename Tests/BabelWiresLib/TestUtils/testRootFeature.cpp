@@ -2,23 +2,6 @@
 
 const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToInt =
     babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_intIdInitializer);
-const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray =
-    babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_arrayIdInitializer);
-const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_0 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
-                                                   "/0");
-const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_1 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
-                                                   "/1");
-const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_2 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
-                                                   "/2");
-const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_3 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
-                                                   "/3");
-const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToArray_4 =
-    babelwires::FeaturePath::deserializeFromString(std::string(testUtils::TestRootFeature::s_arrayIdInitializer) +
-                                                   "/4");
 const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToRecord =
     babelwires::FeaturePath::deserializeFromString(testUtils::TestRootFeature::s_recordIdInitializer);
 const babelwires::FeaturePath testUtils::TestRootFeature::s_pathToInt2 =
@@ -32,28 +15,12 @@ namespace {
     struct LimitedIntFeature : babelwires::IntFeature {
         LimitedIntFeature(int intValueLimit) : IntFeature(-intValueLimit, intValueLimit) {}
     };
-
-    struct LimitedArrayFeature : babelwires::ArrayFeature {
-        LimitedArrayFeature(int intValueLimit)
-            : m_intValueLimit(intValueLimit) {}
-
-        virtual std::unique_ptr<Feature> createNextEntry() const override {
-            return std::make_unique<LimitedIntFeature>(m_intValueLimit);
-        }
-
-        virtual babelwires::Range<unsigned int> doGetSizeRange() const override { return {2, 8}; }
-
-        int m_intValueLimit;
-    };
 } // namespace
 
 testUtils::TestRootFeature::TestRootFeature(const babelwires::ProjectContext& context, int intValueLimit, bool addExtraInt)
     : RootFeature(context)
     , m_intId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_intIdInitializer, s_intFieldName, s_intUuid, babelwires::IdentifierRegistry::Authority::isAuthoritative))
-    , m_arrayId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-          s_arrayIdInitializer, s_arrayFieldName, s_arrayUuid,
-          babelwires::IdentifierRegistry::Authority::isAuthoritative))
     , m_recordId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_recordIdInitializer, s_recordFieldName, s_recordUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative))
@@ -66,12 +33,6 @@ testUtils::TestRootFeature::TestRootFeature(const babelwires::ProjectContext& co
     auto intFeaturePtr = std::make_unique<LimitedIntFeature>(m_intValueLimit);
     m_intFeature = intFeaturePtr.get();
     addField(std::move(intFeaturePtr), m_intId);
-
-    auto arrayFeaturePtr = std::make_unique<LimitedArrayFeature>(m_intValueLimit);
-    m_arrayFeature = arrayFeaturePtr.get();
-    addField(std::move(arrayFeaturePtr), m_arrayId)->setToDefault();
-    m_elem0 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(0));
-    m_elem1 = static_cast<babelwires::IntFeature*>(&m_arrayFeature->getChildFromStep(1));
 
     auto subRecordPtr = std::make_unique<babelwires::RecordFeature>();
     m_subRecordFeature = subRecordPtr.get();

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
@@ -24,28 +23,21 @@ namespace testUtils {
         static constexpr char s_extraIntIdInitializer[] = "extra";
 
         static constexpr char s_intFieldName[] = "the int";
-        static constexpr char s_arrayFieldName[] = "the array";
         static constexpr char s_recordFieldName[] = "the record";
         static constexpr char s_int2FieldName[] = "the other int";
         static constexpr char s_extraIntFieldName[] = "the extra int";
 
         static constexpr char s_intUuid[] = "00000000-1111-2222-3333-800001000001";
-        static constexpr char s_arrayUuid[] = "00000000-1111-2222-3333-800001000002";
         static constexpr char s_recordUuid[] = "00000000-1111-2222-3333-800001000003";
         static constexpr char s_int2Uuid[] = "00000000-1111-2222-3333-800000100004";
         static constexpr char s_extraIntUuid[] = "00000000-1111-2222-3333-800001000005";
 
         babelwires::ShortId m_intId;
-        babelwires::ShortId m_arrayId;
         babelwires::ShortId m_recordId;
         babelwires::ShortId m_int2Id;
         babelwires::ShortId m_extraIntId;
 
         babelwires::IntFeature* m_intFeature;
-        // This has a min and default size of 2.
-        babelwires::ArrayFeature* m_arrayFeature;
-        babelwires::IntFeature* m_elem0;
-        babelwires::IntFeature* m_elem1;
         babelwires::RecordFeature* m_subRecordFeature;
         babelwires::IntFeature* m_intFeature2;
         /// if addExtraInt is true, then there's another int feature at "record/aaa"
@@ -57,12 +49,6 @@ namespace testUtils {
 
         // For convenience
         static const babelwires::FeaturePath s_pathToInt;
-        static const babelwires::FeaturePath s_pathToArray;
-        static const babelwires::FeaturePath s_pathToArray_0;
-        static const babelwires::FeaturePath s_pathToArray_1;
-        static const babelwires::FeaturePath s_pathToArray_2;
-        static const babelwires::FeaturePath s_pathToArray_3;
-        static const babelwires::FeaturePath s_pathToArray_4;
         static const babelwires::FeaturePath s_pathToRecord;
         static const babelwires::FeaturePath s_pathToInt2;
         static const babelwires::FeaturePath s_pathToExtraInt;
