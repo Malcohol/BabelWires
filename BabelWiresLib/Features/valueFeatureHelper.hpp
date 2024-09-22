@@ -21,7 +21,7 @@ namespace babelwires {
     /// handle both cases.
     class ValueFeatureHelper {
       public:
-        /// Abstracts ArrayFeature and ValueFeatures holding ArrayTypes.
+        /// Obtain details about an array.
         static std::tuple<const CompoundFeature*, unsigned int, Range<unsigned int>, unsigned int> getInfoFromArrayFeature(const Feature* f);
 
         /// Confirm that the feature is a record and return the state of the optionals.

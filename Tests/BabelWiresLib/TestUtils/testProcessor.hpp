@@ -4,11 +4,8 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRootFeature.hpp>
 
 namespace testUtils {
-    struct TestRecordFeature;
-
     /// Carries a TestRecord for input and output.
     /// The effect of the processor ensures:
     /// * the array of the output has a size equal to the int at "int0" in the input.

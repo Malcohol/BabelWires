@@ -13,7 +13,6 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/featureModelDelegate.cpp
     ModelBridge/modifyModelScope.cpp
     ModelBridge/accessModelScope.cpp
-    ModelBridge/RowModels/arrayRowModel.cpp
     ModelBridge/RowModels/fileRowModel.cpp
     ModelBridge/RowModels/rowModel.cpp
     ModelBridge/RowModels/rowModelDispatcher.cpp

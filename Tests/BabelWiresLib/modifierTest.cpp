@@ -14,12 +14,13 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
+#include <BabelWiresLib/Features/rootFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 namespace {
     struct TestOwner : babelwires::FeatureElement {
@@ -176,94 +177,68 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
 TEST(ModifierTest, arraySizeModifierSuccess) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::RootFeature recordFeature(testEnvironment.m_projectContext);
-
-    babelwires::ShortId id0("aa");
-    id0.setDiscriminator(1);
-    babelwires::ArrayFeature* arrayFeature =
-        recordFeature.addField(std::make_unique<babelwires::StandardArrayFeature<babelwires::IntFeature>>(), id0);
-
-    babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa");
+    babelwires::SimpleValueFeature recordFeature(testEnvironment.m_typeSystem, testUtils::TestComplexRecordType::getThisIdentifier());
+    recordFeature.setToDefault();
 
     auto arrayModData = std::make_unique<babelwires::ArraySizeModifierData>();
-    arrayModData->m_pathToFeature = path;
-    arrayModData->m_size = 3;
+    arrayModData->m_pathToFeature.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getArrayId()));
+    arrayModData->m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
 
     babelwires::ArraySizeModifier arrayMod(std::move(arrayModData));
 
     TestOwner owner;
     arrayMod.setOwner(&owner);
 
-    testUtils::TestLogWithListener testLog;
+    testUtils::TestComplexRecordType::ConstInstance record(recordFeature);
+    EXPECT_EQ(record.getarray().getSize(), testUtils::TestSimpleArrayType::s_defaultSize);
 
-    // An exception will try to print out a path, which will expect one of these singletons.
-
-    arrayMod.applyIfLocal(testLog, &recordFeature);
+    arrayMod.applyIfLocal(testEnvironment.m_log, &recordFeature);
     EXPECT_FALSE(arrayMod.isFailed());
     EXPECT_EQ(arrayMod.getState(), babelwires::Modifier::State::Success);
-    EXPECT_EQ(arrayFeature->getNumFeatures(), 3);
 
-    arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->set(10);
-    arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->set(11);
-    arrayFeature->getFeature(2)->as<babelwires::IntFeature>()->set(12);
-
-    EXPECT_TRUE(arrayMod.addArrayEntries(testLog, &recordFeature, 1, 2));
-
-    EXPECT_EQ(arrayFeature->getNumFeatures(), 5);
-    EXPECT_EQ(arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->get(), 10);
-    EXPECT_EQ(arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->get(), 0);
-    EXPECT_EQ(arrayFeature->getFeature(2)->as<babelwires::IntFeature>()->get(), 0);
-    EXPECT_EQ(arrayFeature->getFeature(3)->as<babelwires::IntFeature>()->get(), 11);
-    EXPECT_EQ(arrayFeature->getFeature(4)->as<babelwires::IntFeature>()->get(), 12);
-
-    EXPECT_TRUE(arrayMod.removeArrayEntries(testLog, &recordFeature, 2, 2));
-
-    EXPECT_EQ(arrayFeature->getNumFeatures(), 3);
-    EXPECT_EQ(arrayFeature->getFeature(0)->as<babelwires::IntFeature>()->get(), 10);
-    EXPECT_EQ(arrayFeature->getFeature(1)->as<babelwires::IntFeature>()->get(), 0);
-    EXPECT_EQ(arrayFeature->getFeature(2)->as<babelwires::IntFeature>()->get(), 12);
+    EXPECT_EQ(record.getarray().getSize(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
+    
+    EXPECT_TRUE(arrayMod.addArrayEntries(testEnvironment.m_log, &recordFeature, 1, 2));
+    EXPECT_EQ(record.getarray().getSize(), testUtils::TestSimpleArrayType::s_nonDefaultSize + 2);
+    
+    EXPECT_TRUE(arrayMod.removeArrayEntries(testEnvironment.m_log, &recordFeature, 2, 2));
+    EXPECT_EQ(record.getarray().getSize(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
 }
 
 TEST(ModifierTest, arraySizeModifierFailure) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::RootFeature recordFeature(testEnvironment.m_projectContext);
+    babelwires::SimpleValueFeature recordFeature(testEnvironment.m_typeSystem, testUtils::TestComplexRecordType::getThisIdentifier());
+    recordFeature.setToDefault();
 
-    babelwires::ShortId id0("aa");
-    id0.setDiscriminator(1);
-    babelwires::ArrayFeature* arrayFeature =
-        recordFeature.addField(std::make_unique<babelwires::StandardArrayFeature<babelwires::IntFeature>>(), id0);
-
-    babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa");
+    testUtils::TestComplexRecordType::ConstInstance record(recordFeature);
+    EXPECT_EQ(record.getarray().getSize(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     auto arrayModData = std::make_unique<babelwires::ArraySizeModifierData>();
-    arrayModData->m_pathToFeature = path;
-    // The default max size range is 16.
-    arrayModData->m_size = 17;
+    arrayModData->m_pathToFeature.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getArrayId()));
+    arrayModData->m_size = testUtils::TestSimpleArrayType::s_maximumSize + 1;
 
     babelwires::ArraySizeModifier arrayMod(std::move(arrayModData));
 
     TestOwner owner;
     arrayMod.setOwner(&owner);
 
-    testUtils::TestLogWithListener testLog;
-
-    // An exception will try to print out a path, which will expect one of these singletons.
-
-    arrayMod.applyIfLocal(testLog, &recordFeature);
+    arrayMod.applyIfLocal(testEnvironment.m_log, &recordFeature);
     EXPECT_TRUE(arrayMod.isFailed());
     EXPECT_EQ(arrayMod.getState(), babelwires::Modifier::State::ApplicationFailed);
-    EXPECT_EQ(arrayFeature->getNumFeatures(), 0);
-    EXPECT_TRUE(testLog.hasSubstringIgnoreCase("Failed to apply operation"));
-    EXPECT_TRUE(testLog.hasSubstringIgnoreCase("array"));
-    EXPECT_TRUE(testLog.hasSubstringIgnoreCase("size"));
+
+    EXPECT_EQ(record.getarray().getSize(), testUtils::TestSimpleArrayType::s_defaultSize);
+
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("array"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("size"));
 }
 
 TEST(ModifierTest, connectionModifierSuccess) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
+    testUtils::TestSimpleRecordElementData elementData;
+    const babelwires::FeaturePath sourcePath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
     babelwires::ValueAssignmentData sourceData(babelwires::IntValue(100));
     sourceData.m_pathToFeature = sourcePath;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));
@@ -361,8 +336,8 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
 TEST(ModifierTest, connectionModifierSourcePathFailure) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData elementData;
-    const babelwires::FeaturePath sourcePath = testUtils::TestRootFeature::s_pathToInt;
+    testUtils::TestSimpleRecordElementData elementData;
+    const babelwires::FeaturePath sourcePath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
     babelwires::ValueAssignmentData sourceData(babelwires::IntValue(100));
     sourceData.m_pathToFeature = sourcePath;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));
@@ -407,7 +382,6 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
                                           babelwires::PathStep(testUtils::TestComplexRecordType::getSubrecordId()),
                                           babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id())}};
 
-    testUtils::TestRootFeature::s_pathToInt;
     babelwires::ValueAssignmentData sourceData(babelwires::IntValue(100));
     sourceData.m_pathToFeature = sourcePath;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));

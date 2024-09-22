@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
@@ -157,8 +156,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
             assert(featureAtPath && "Path should resolve");
             auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
             assert(arrayFeature && "Path should lead to a compound");
-            assert(arrayFeature->as<ArrayFeature>() ||
-                   (arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>()));
+            assert(arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>());
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -204,8 +202,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
             assert(featureAtPath && "Path should resolve");
             auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
             assert(arrayFeature && "Path should lead to a compound");
-            assert(arrayFeature->as<ArrayFeature>() ||
-                   (arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>()));
+            assert(arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>());
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;

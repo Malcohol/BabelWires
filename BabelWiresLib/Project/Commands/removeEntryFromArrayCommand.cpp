@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 
-#include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
+#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
@@ -46,19 +46,15 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         return false;
     }
 
-    auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<const ArrayFeature>();
+    auto [compoundFeature, currentSize, range, initialSize] =
+        ValueFeatureHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*inputFeature));
 
-    int currentSize = -1;
-    unsigned int minimumSize = 0;
-    if (auto arrayFeature = m_pathToArray.tryFollow(*inputFeature)->as<ArrayFeature>()) {
-        currentSize = arrayFeature->getNumFeatures();
-        minimumSize = arrayFeature->getSizeRange().m_min;
-    } else if (auto valueFeature = m_pathToArray.tryFollow(*inputFeature)->as<ValueFeature>()) {
-        if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
-            currentSize = arrayType->getNumChildren(valueFeature->getValue());
-            minimumSize = arrayType->getSizeRange().m_min;
-        }
+    if (!compoundFeature) {
+        return false;
     }
+
+    const unsigned int minimumSize = range.m_min;
+
     if (currentSize < 0) {
         return false;
     }

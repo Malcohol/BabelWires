@@ -6,6 +6,9 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testRootFeature.hpp>
 
+// TODO: Need to preserve SimulateFailure and SimulateRecovery if this gets replaced !!!
+// See Commented code in FeatureElementTest.
+
 namespace testUtils {
     struct TestFailedFeature : babelwires::RootFeature {
         TestFailedFeature(const babelwires::ProjectContext& context);

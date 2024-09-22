@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 
 #include <Common/Log/userLogger.hpp>
 

@@ -7,12 +7,10 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/RowModels/arrayRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/fileRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelRegistry.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/valueRowModel.hpp>
 
-#include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
@@ -29,9 +27,6 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const RowModelRegistry& rowMo
     } else if (feature->as<const babelwires::ValueFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ValueRowModel));
         new (m_rowModel) babelwires::ValueRowModel();
-    } else if (feature->as<const babelwires::ArrayFeature>()) {
-        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ArrayRowModel));
-        new (m_rowModel) babelwires::ArrayRowModel();
     } else if (feature->as<const babelwires::FileFeature>()) {
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::FileRowModel));
         new (m_rowModel) babelwires::FileRowModel();

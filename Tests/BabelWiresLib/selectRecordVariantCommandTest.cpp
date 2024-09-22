@@ -9,61 +9,33 @@
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Features/valueFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
-
-namespace {
-    struct TestElementWithVariantsData : babelwires::ValueElementData {
-        TestElementWithVariantsData()
-            : ValueElementData(testUtils::TestRecordWithVariantsType::getThisIdentifier()) {}
-    };
-
-    static babelwires::FeaturePath getPathToRecordWithVariants() {
-        return std::vector<babelwires::PathStep>{babelwires::PathStep(babelwires::ValueElement::getStepToValue())};
-    }
-
-    static const babelwires::FeaturePath getPathToFieldA0() {
-        return std::vector<babelwires::PathStep>{babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
-                                                    babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA0Id())};
-    }
-
-    static const babelwires::FeaturePath getPathToFieldA1_Int0() {
-        return std::vector<babelwires::PathStep>{babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
-                                                    babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA1Id()),
-                                                    babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id())};
-    }
-
-    static const babelwires::FeaturePath getPathToFieldAB() {
-        return std::vector<babelwires::PathStep>{babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
-                                                    babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldABId())};
-    }
-
-} // namespace testUtils
 
 TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(TestElementWithVariantsData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordWithVariantsElementData());
     const babelwires::ElementId sourceId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
     const babelwires::ElementId targetId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     const babelwires::ValueElement* element =
         testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<testUtils::TestFeatureElement>();
+        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
     ASSERT_NE(targetElement, nullptr);
 
     const auto getInputValueFeature = [element]() {
-        const auto* root = element->getInputFeature()->as<babelwires::RootFeature>();
+        const auto* root = element->getInputFeature()->as<babelwires::CompoundFeature>();
         return root->getFeature(0)->as<babelwires::ValueFeature>();
     };
     const auto getSelectedTag = [](const babelwires::ValueFeature* valueFeature) {
@@ -75,40 +47,39 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
 
     {
         babelwires::SelectRecordVariantModifierData selectRecordVariantData;
-        selectRecordVariantData.m_pathToFeature = getPathToRecordWithVariants();
+        selectRecordVariantData.m_pathToFeature = testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants();
         selectRecordVariantData.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagAId();
         testEnvironment.m_project.addModifier(elementId, selectRecordVariantData);
     }
     {
         babelwires::ConnectionModifierData inputConnection;
-        inputConnection.m_pathToFeature = getPathToFieldA1_Int0();
-        inputConnection.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        inputConnection.m_pathToFeature = testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0();
+        inputConnection.m_pathToSourceFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-        outputConnection.m_pathToSourceFeature = getPathToFieldA0();
+        outputConnection.m_pathToFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
+        outputConnection.m_pathToSourceFeature = testUtils::TestRecordWithVariantsElementData::getPathToFieldA0();
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
     {
         babelwires::ValueAssignmentData assignInt(babelwires::IntValue(12));
-        assignInt.m_pathToFeature = getPathToFieldAB();
+        assignInt.m_pathToFeature = testUtils::TestRecordWithVariantsElementData::getPathToFieldAB();
         testEnvironment.m_project.addModifier(elementId, assignInt);
     }
     {
         babelwires::ValueAssignmentData assignInt(babelwires::IntValue(4));
-        assignInt.m_pathToFeature = getPathToFieldA0();
+        assignInt.m_pathToFeature = testUtils::TestRecordWithVariantsElementData::getPathToFieldA0();
         testEnvironment.m_project.addModifier(elementId, assignInt);
     }
 
     const auto checkModifiers = [&testEnvironment, element, targetElement](bool isCommandExecuted) {
-        const babelwires::Modifier* inputConnection =
-            element->findModifier(getPathToFieldA1_Int0());
+        const babelwires::Modifier* inputConnection = element->findModifier(testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0());
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(testUtils::TestRootFeature::s_pathToInt2);
+            targetElement->findModifier(testUtils::TestSimpleRecordElementData::getPathToRecordInt0());
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
@@ -130,9 +101,8 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
         }
     };
 
-    babelwires::SelectRecordVariantCommand command("Test command", elementId,
-                                                 getPathToRecordWithVariants(),
-                                                 testUtils::TestRecordWithVariantsType::getTagBId());
+    babelwires::SelectRecordVariantCommand command("Test command", elementId, testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants(),
+                                                   testUtils::TestRecordWithVariantsType::getTagBId());
 
     EXPECT_EQ(command.getName(), "Test command");
     EXPECT_EQ(getSelectedTag(getInputValueFeature()), testUtils::TestRecordWithVariantsType::getTagAId());
@@ -159,8 +129,7 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
 
 TEST(SelectRecordVariantCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SelectRecordVariantCommand command("Test command", 51,
-                                                 getPathToRecordWithVariants(), "tag");
+    babelwires::SelectRecordVariantCommand command("Test command", 51, testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants(), "tag");
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -169,9 +138,9 @@ TEST(SelectRecordVariantCommandTest, failSafelyNoElement) {
 TEST(SelectRecordVariantCommandTest, failSafelyNoRecord) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::SelectRecordVariantCommand command("Test command", 51,
-                                                 babelwires::FeaturePath::deserializeFromString("qqq/zzz"), "tag");
+                                                   babelwires::FeaturePath::deserializeFromString("qqq/zzz"), "tag");
 
-    TestElementWithVariantsData elementData;
+    testUtils::TestRecordWithVariantsElementData elementData;
     elementData.m_id = 51;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
@@ -185,16 +154,14 @@ TEST(SelectRecordVariantCommandTest, failSafelyNotATag) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(TestElementWithVariantsData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordWithVariantsElementData());
 
-    const auto* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
+    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
 
     babelwires::ShortId notATag("notTag");
     notATag.setDiscriminator(1);
-    babelwires::SelectRecordVariantCommand command("Test command", 51,
-                                                 getPathToRecordWithVariants(), notATag);
+    babelwires::SelectRecordVariantCommand command("Test command", 51, testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants(), notATag);
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }
@@ -203,10 +170,10 @@ TEST(SelectRecordVariantCommandTest, failSafelyAlreadySelected) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(TestElementWithVariantsData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordWithVariantsElementData());
 
-    babelwires::SelectRecordVariantCommand command(
-        "Test command", elementId, getPathToRecordWithVariants(), testUtils::TestRecordWithVariantsType::getTagBId());
+    babelwires::SelectRecordVariantCommand command("Test command", elementId, testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants(),
+                                                   testUtils::TestRecordWithVariantsType::getTagBId());
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }

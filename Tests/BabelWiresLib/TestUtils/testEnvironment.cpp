@@ -32,12 +32,6 @@ testUtils::TestEnvironment::TestEnvironment()
             testUtils::TestRecordFeature::s_intIdInitializer, "test int 2", "43000000-1111-2222-3333-800000000001",
             babelwires::IdentifierRegistry::Authority::isAuthoritative);
         babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-            testUtils::TestRecordFeature::s_arrayIdInitializer, "test array", "41000000-1111-2222-3333-800000000002",
-            babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-            testUtils::TestRecordFeature::s_arrayIdInitializer, "test array 1", "42000000-1111-2222-3333-800000000002",
-            babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
             testUtils::TestRecordFeature::s_recordIdInitializer, "test record", "41000000-1111-2222-3333-800000000003",
             babelwires::IdentifierRegistry::Authority::isAuthoritative);
 

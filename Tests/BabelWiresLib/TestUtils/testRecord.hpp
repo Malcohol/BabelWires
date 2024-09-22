@@ -1,7 +1,6 @@
 #pragma once
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
 
@@ -15,10 +14,7 @@ namespace testUtils {
         // This is used to test failed applications.
         TestRecordFeature(int intValueLimit = 255, bool addExtraInt = false);
 
-        void doSetToDefault() override;
-
         static constexpr char s_intIdInitializer[] = "int0";
-        static constexpr char s_arrayIdInitializer[] = "array";
         static constexpr char s_recordIdInitializer[] = "record";
         // Deliberately match the field in TestFileFeature.
         static constexpr char s_int2IdInitializer[] = "aaa";
@@ -31,20 +27,16 @@ namespace testUtils {
         static constexpr char s_extraIntFieldName[] = "the extra int";
 
         static constexpr char s_intUuid[] = "00000000-1111-2222-3333-800000000001";
-        static constexpr char s_arrayUuid[] = "00000000-1111-2222-3333-800000000002";
         static constexpr char s_recordUuid[] = "00000000-1111-2222-3333-800000000003";
         static constexpr char s_int2Uuid[] = "00000000-1111-2222-3333-800000000004";
         static constexpr char s_extraIntUuid[] = "00000000-1111-2222-3333-800000000005";
 
         babelwires::ShortId m_intId;
-        babelwires::ShortId m_arrayId;
         babelwires::ShortId m_recordId;
         babelwires::ShortId m_int2Id;
         babelwires::ShortId m_extraIntId;
 
         babelwires::IntFeature* m_intFeature;
-        // This has a min and default size of 2.
-        babelwires::ArrayFeature* m_arrayFeature;
         babelwires::IntFeature* m_elem0;
         babelwires::IntFeature* m_elem1;
         babelwires::RecordFeature* m_subRecordFeature;
