@@ -95,6 +95,7 @@ namespace testUtils {
         static babelwires::FeaturePath getPathToRecordInt0();
         static babelwires::FeaturePath getPathToRecordOpInt();
         static babelwires::FeaturePath getPathToRecordSubrecord();
+        static babelwires::FeaturePath getPathToRecordSubrecordInt1();
         static babelwires::FeaturePath getPathToRecordInt1();
         static babelwires::FeaturePath getPathToRecordOpRec();
         static babelwires::FeaturePath getPathToRecordString();
