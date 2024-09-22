@@ -98,13 +98,12 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
 
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
+    const babelwires::FeaturePath pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
     EXPECT_EQ(element->findModifier(pathToFeature), nullptr);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(199));
@@ -124,19 +123,19 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId sourceElementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const testUtils::TestFeatureElement* sourceElement =
-        testEnvironment.m_project.getFeatureElement(sourceElementId)->as<testUtils::TestFeatureElement>();
+        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+    const babelwires::FeatureElement* sourceElement =
+        testEnvironment.m_project.getFeatureElement(sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
 
     const babelwires::ElementId targetElementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const testUtils::TestFeatureElement* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetElementId)->as<testUtils::TestFeatureElement>();
+        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+    const babelwires::FeatureElement* targetElement =
+        testEnvironment.m_project.getFeatureElement(targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
-    const babelwires::FeaturePath pathToTargetFeature = testUtils::TestRootFeature::s_pathToArray_1;
-    const babelwires::FeaturePath pathToSourceFeature = testUtils::TestRootFeature::s_pathToArray_0;
+    const babelwires::FeaturePath pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::FeaturePath pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(0);
 
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
     babelwires::ConnectionModifierData modData;

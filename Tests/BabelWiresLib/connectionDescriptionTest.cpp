@@ -2,13 +2,13 @@
 
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 TEST(ConnectionDescriptionTest, equalityAndHash) {
     const babelwires::FeaturePath path0 = babelwires::FeaturePath::deserializeFromString("a/b");
@@ -66,25 +66,24 @@ TEST(ConnectionDescriptionTest, getCommands) {
     const babelwires::ElementId targetId = 14;
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_pathToFeature = testUtils::TestRootFeature::s_pathToArray_1;
-    connectionData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+    connectionData.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    connectionData.m_pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
     connectionData.m_sourceId = sourceId;
 
     babelwires::ConnectionDescription connection(14, connectionData);
 
     {
-        testUtils::TestFeatureElementData sourceElementData;
+        testUtils::TestComplexRecordElementData sourceElementData;
         sourceElementData.m_id = sourceId;
         testEnvironment.m_project.addFeatureElement(sourceElementData);
     }
     {
-        testUtils::TestFeatureElementData targetElementData;
+        testUtils::TestComplexRecordElementData targetElementData;
         targetElementData.m_id = targetId;
         testEnvironment.m_project.addFeatureElement(targetElementData);
     }
 
-    const testUtils::TestFeatureElement* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<testUtils::TestFeatureElement>();
+    const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
     ASSERT_NE(targetElement, nullptr);
 
     testEnvironment.m_project.process();
@@ -94,11 +93,10 @@ TEST(ConnectionDescriptionTest, getCommands) {
 
     const auto checkModifier = [&testEnvironment, targetElement, &connectionData](bool isAdded) {
         const babelwires::Modifier* modifier =
-            targetElement->findModifier(testUtils::TestRootFeature::s_pathToArray_1);
+            targetElement->findModifier(testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
         if (isAdded) {
             ASSERT_NE(modifier, nullptr);
-            const babelwires::ConnectionModifier* connection =
-                modifier->as<babelwires::ConnectionModifier>();
+            const babelwires::ConnectionModifier* connection = modifier->as<babelwires::ConnectionModifier>();
             ASSERT_NE(connection, nullptr);
             EXPECT_EQ(connection->getModifierData().m_pathToFeature, connectionData.m_pathToFeature);
             EXPECT_EQ(connection->getModifierData().m_pathToSourceFeature, connectionData.m_pathToSourceFeature);
