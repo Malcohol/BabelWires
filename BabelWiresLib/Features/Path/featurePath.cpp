@@ -28,6 +28,7 @@ babelwires::FeaturePath::FeaturePath(const Feature* feature) {
     const CompoundFeature* parent = current->getOwner();
     while (parent) {
         steps.push_back(parent->getStepToChild(current));
+        assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
@@ -37,9 +38,12 @@ babelwires::FeaturePath::FeaturePath(const Feature* feature) {
 }
 
 babelwires::FeaturePath::FeaturePath(std::vector<PathStep> steps)
-    : m_steps(std::move(steps)) {}
+    : m_steps(std::move(steps)) {
+        assert(std::none_of(m_steps.begin(), m_steps.end(), [](auto p) { return p.isNotAStep(); }) && "Attempt to construct a path from a vector containing a non-step");
+    }
 
 void babelwires::FeaturePath::pushStep(PathStep step) {
+    assert(!step.isNotAStep() && "Attempt to push a non-step onto a path");
     m_steps.emplace_back(std::move(step));
 }
 
@@ -89,6 +93,9 @@ babelwires::FeaturePath babelwires::FeaturePath::deserializeFromString(const std
         const int next = pathString.find(s_pathDelimiter, start);
         const std::string stepString = pathString.substr(start, next - start);
         path.m_steps.emplace_back(PathStep::deserializeFromString(stepString));
+        if (path.m_steps.back().isNotAStep()) {
+            throw ParseException() << "Parsing a path encountered a step which is not a step";
+        }
         start = next;
     } while (start != std::string::npos);
 

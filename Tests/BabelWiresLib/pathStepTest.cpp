@@ -16,6 +16,11 @@ TEST(PathStepTest, projection) {
     babelwires::ShortId hello1("Hello");
     babelwires::ShortId goodbye("Byebye");
 
+    babelwires::PathStep notAStep;
+    EXPECT_TRUE(notAStep.isNotAStep());
+    EXPECT_FALSE(notAStep.isField());
+    EXPECT_FALSE(notAStep.isIndex());
+
     babelwires::PathStep helloStep(hello);
     babelwires::PathStep hello1Step(hello1);
     babelwires::PathStep goodbyeStep(goodbye);
@@ -90,6 +95,9 @@ TEST(PathStepTest, serialization) {
 
     babelwires::PathStep index(10);
     EXPECT_EQ(index.serializeToString(), "10");
+
+    babelwires::PathStep notAStep;
+    EXPECT_EQ(notAStep.serializeToString(), babelwires::PathStep::c_notAStepRepresentation);
 }
 
 TEST(PathStepTest, deserialization) {
@@ -110,6 +118,10 @@ TEST(PathStepTest, deserialization) {
     EXPECT_TRUE(step2.isIndex());
     EXPECT_EQ(step2.getIndex(), 10);
 
+    babelwires::PathStep notAStep;
+    EXPECT_NO_THROW(notAStep = babelwires::PathStep::deserializeFromString(babelwires::PathStep::c_notAStepRepresentation));
+    EXPECT_TRUE(notAStep.isNotAStep());
+    
     EXPECT_THROW(babelwires::PathStep::deserializeFromString("'"), babelwires::ParseException);
     EXPECT_THROW(babelwires::PathStep::deserializeFromString("/"), babelwires::ParseException);
     EXPECT_THROW(babelwires::PathStep::deserializeFromString("Hællo"), babelwires::ParseException);
@@ -130,6 +142,7 @@ TEST(PathStepTest, stringRepresentations) {
 
     babelwires::PathStep helloStep(hello2);
     babelwires::PathStep index(10);
+    babelwires::PathStep notAStep;
 
     {
         std::ostringstream os;
@@ -141,6 +154,11 @@ TEST(PathStepTest, stringRepresentations) {
         os << index;
         EXPECT_EQ(os.str(), "10");
     }
+    {
+        std::ostringstream os;
+        os << notAStep;
+        EXPECT_EQ(os.str(), babelwires::PathStep::c_notAStepRepresentation);
+    }
 
     {
         std::ostringstream os;
@@ -151,6 +169,11 @@ TEST(PathStepTest, stringRepresentations) {
         std::ostringstream os;
         index.writeToStreamReadable(os, reg);
         EXPECT_EQ(os.str(), "[10]");
+    }
+    {
+        std::ostringstream os;
+        notAStep.writeToStreamReadable(os, reg);
+        EXPECT_EQ(os.str(), babelwires::PathStep::c_notAStepRepresentation);
     }
 }
 
