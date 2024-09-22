@@ -16,7 +16,6 @@ namespace testUtils {
         TestRootFeature(const babelwires::ProjectContext& context, int intValueLimit = 255, bool addExtraInt = false);
 
         static constexpr char s_intIdInitializer[] = "int0";
-        static constexpr char s_arrayIdInitializer[] = "array";
         static constexpr char s_recordIdInitializer[] = "record";
         // Deliberately match the field in TestFileFeature.
         static constexpr char s_int2IdInitializer[] = "aaa";

@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 
-#include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
@@ -20,11 +19,6 @@
 #include <Common/Serialization/serializer.hpp>
 
 void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
-    if (ArrayFeature* array = targetFeature->as<ArrayFeature>()) {
-        array->setSize(m_size);
-        return;
-    }
-
     if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
             const TypeSystem& typeSystem = value->getTypeSystem();
@@ -56,13 +50,7 @@ void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int i
                                                      int numEntriesToAdd) {
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     m_size += numEntriesToAdd;
-    if (ArrayFeature* array = targetFeature->as<ArrayFeature>()) {
-        for (int i = 0; i < numEntriesToAdd; ++i) {
-            array->addEntry(indexOfNewElement);
-        }
-        return;
-    } 
-    
+
     if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
             const TypeSystem& typeSystem = value->getTypeSystem();
@@ -81,12 +69,6 @@ void babelwires::ArraySizeModifierData::removeEntries(Feature* targetFeature, in
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     assert((m_size >= numEntriesToRemove) && "You can't have ArraySizeModifierData with negative size");
     m_size -= numEntriesToRemove;
-    if (ArrayFeature* array = targetFeature->as<ArrayFeature>()) {
-        for (int i = 0; i < numEntriesToRemove; ++i) {
-            array->removeEntry(indexOfElementToRemove);
-        }
-        return;
-    }
     
     if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {

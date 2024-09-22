@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 
-#include <BabelWiresLib/Features/arrayFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
@@ -19,10 +18,7 @@ babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const Feature* f) {
     if (!f) {
         return {};
     }
-    if (auto arrayFeature = f->as<const ArrayFeature>()) {
-        return {arrayFeature, arrayFeature->getNumFeatures(), arrayFeature->getSizeRange(),
-                arrayFeature->getSizeRange().m_min};
-    } else if (auto valueFeature = f->as<const ValueFeature>()) {
+    if (auto valueFeature = f->as<const ValueFeature>()) {
         if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
             return {valueFeature, arrayType->getNumChildren(valueFeature->getValue()), arrayType->getSizeRange(),
                     arrayType->getInitialSize()};
