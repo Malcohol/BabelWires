@@ -2,63 +2,34 @@
  * The EditTree arranges edits (modifiers and expand/collapse) in a tree organized by paths.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
+/// Iterate over a RootedPath.
 struct babelwires::EditTree::RootedPathIterator {
-    inline void operator++() {
-        if (m_isAtRoot) {
-            m_isAtRoot = false;
-        } else {
-            ++m_it;
-        }
-    }
-
-    inline bool operator==(const RootedPathIterator& other) const {
-        return (m_it == other.m_it) && (m_isAtRoot == other.m_isAtRoot);
-    }
-
-    inline bool operator!=(const RootedPathIterator& other) const { return !(*this == other); };
-    
-    inline int distanceFrom(const RootedPathIterator& other) const {
-        int itDist = m_it - other.m_it;
-        if (m_isAtRoot) {
-            --itDist;
-        }
-        if (other.m_isAtRoot) {
-            ++itDist;
-        }
-        return itDist;
-    }
-
-    inline PathStep operator*() const {
-        if (m_isAtRoot) {
-            return {};
-        } else {
-            return *m_it;
-        }
-    }
+    void operator++();
+    bool operator==(const RootedPathIterator& other) const;
+    bool operator!=(const RootedPathIterator& other) const;
+    int distanceFrom(const RootedPathIterator& other) const;
+    PathStep operator*() const;
 
     FeaturePath::const_iterator m_it;
     bool m_isAtRoot;
 };
 
-/// Acts like a path, but has an extra "NotAStep" at the front to indicate the non-step to the root.
-struct babelwires::EditTree::RootedPath
-{
-    inline RootedPath(const FeaturePath& path) : m_path(path) {}
-
-    inline RootedPathIterator begin() const { return RootedPathIterator{ m_path.begin(), true }; }
-    inline RootedPathIterator end() const { return RootedPathIterator{ m_path.end(), false}; };
-
-    inline unsigned int getNumSteps() const {
-        return m_path.getNumSteps() + 1;
-    }
+/// Acts like the path it wraps, but has an extra "NotAStep" at the front to indicate
+/// the non-step to the root. This is a convenience structure which simplifies
+/// a lot of the EditTree code, since RootedPaths correspond in a nicer way to
+/// nodes of the EditTree.
+struct babelwires::EditTree::RootedPath {
+    RootedPath(const FeaturePath& path);
+    RootedPathIterator begin() const;
+    RootedPathIterator end() const;
+    unsigned int getNumSteps() const;
 
     const FeaturePath& m_path;
 };
-
 
 template <typename EDIT_TREE> struct babelwires::EditTree::Iterator {
     using EDIT_TREE_PARAM = EDIT_TREE;
@@ -182,7 +153,7 @@ babelwires::EditTree::modifierRange(const FeaturePath& path) {
     RootedPath featurePath(path);
     auto it = featurePath.begin();
     const auto end = featurePath.end();
-    
+
     const auto [beginIndex, _] = findNodeIndex(it, end);
     if (it == featurePath.end()) {
         const TreeNodeIndex endIndex = beginIndex + m_nodes[beginIndex].m_numDescendents + 1;
@@ -198,7 +169,7 @@ babelwires::EditTree::modifierRange(const FeaturePath& path) const {
     RootedPath featurePath(path);
     auto it = featurePath.begin();
     const auto end = featurePath.end();
-    
+
     const auto [beginIndex, _] = findNodeIndex(it, end);
     if (it == featurePath.end()) {
         const TreeNodeIndex endIndex = beginIndex + m_nodes[beginIndex].m_numDescendents + 1;

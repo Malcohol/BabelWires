@@ -13,13 +13,60 @@
 #include <cassert>
 #include <optional>
 
+inline void babelwires::EditTree::RootedPathIterator::operator++() {
+    if (m_isAtRoot) {
+        m_isAtRoot = false;
+    } else {
+        ++m_it;
+    }
+}
+
+inline bool babelwires::EditTree::RootedPathIterator::operator==(const RootedPathIterator& other) const {
+    return (m_it == other.m_it) && (m_isAtRoot == other.m_isAtRoot);
+}
+
+inline bool babelwires::EditTree::RootedPathIterator::operator!=(const RootedPathIterator& other) const {
+    return !(*this == other);
+};
+
+inline int babelwires::EditTree::RootedPathIterator::distanceFrom(const RootedPathIterator& other) const {
+    int itDist = m_it - other.m_it;
+    if (m_isAtRoot) {
+        --itDist;
+    }
+    if (other.m_isAtRoot) {
+        ++itDist;
+    }
+    return itDist;
+}
+
+inline babelwires::PathStep babelwires::EditTree::RootedPathIterator::operator*() const {
+    if (m_isAtRoot) {
+        return {};
+    } else {
+        return *m_it;
+    }
+}
+
+inline babelwires::EditTree::RootedPath::RootedPath(const FeaturePath& path)
+    : m_path(path) {}
+
+inline babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::begin() const {
+    return RootedPathIterator{m_path.begin(), true};
+}
+inline babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::end() const {
+    return RootedPathIterator{m_path.end(), false};
+};
+
+inline unsigned int babelwires::EditTree::RootedPath::getNumSteps() const {
+    return m_path.getNumSteps() + 1;
+}
 
 babelwires::EditTree::~EditTree() = default;
 
-babelwires::EditTree::FindNodeIndexResult
-babelwires::EditTree::findNodeIndex(RootedPathIterator& current,
-                                    const RootedPathIterator& end,
-                                    AncestorStack* ancestorStackOut) const {
+babelwires::EditTree::FindNodeIndexResult babelwires::EditTree::findNodeIndex(RootedPathIterator& current,
+                                                                              const RootedPathIterator& end,
+                                                                              AncestorStack* ancestorStackOut) const {
     if (m_nodes.empty()) {
         return {-1, 0};
     }
@@ -173,8 +220,8 @@ const babelwires::Modifier* babelwires::EditTree::findModifier(const FeaturePath
     }
 }
 
-void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& path,
-                                              babelwires::ArrayIndex startIndex, int adjustment) {
+void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& path, babelwires::ArrayIndex startIndex,
+                                              int adjustment) {
     const RootedPath pathToArray{path};
     auto it = pathToArray.begin();
     const auto end = pathToArray.end();
@@ -287,7 +334,6 @@ bool babelwires::EditTree::validateTree() const {
     if (m_nodes.size() == 0) {
         return true;
     }
-
 
     std::vector<int> endOfChildrenStack;
     endOfChildrenStack.emplace_back(m_nodes.size());
@@ -423,7 +469,8 @@ void babelwires::EditTree::truncatePathAtFirstCollapsedNode(babelwires::FeatureP
     }
 }
 
-std::vector<babelwires::FeaturePath> babelwires::EditTree::getAllExplicitlyExpandedPaths(const FeaturePath& path) const {
+std::vector<babelwires::FeaturePath>
+babelwires::EditTree::getAllExplicitlyExpandedPaths(const FeaturePath& path) const {
     std::vector<FeaturePath> expandedPaths;
 
     const RootedPath featurePath(path);
