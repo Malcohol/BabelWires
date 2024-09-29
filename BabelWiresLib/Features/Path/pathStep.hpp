@@ -134,7 +134,7 @@ namespace babelwires {
         } m_arrayIndex;
 
         struct NotAStep {
-            std::uint16_t m_notAStep[4] = { paddingVal, 0, paddingVal, 0 };
+            std::uint16_t m_notAStep[4] = { paddingVal, 0, paddingVal, paddingVal };
         } m_notAStep;
 
         /// Used for efficient comparison.
