@@ -33,6 +33,22 @@ namespace {
     }
 } // namespace
 
+TEST(EditTreeTest, fieldAddFindRemoveEmptyPath) {
+    babelwires::EditTree tree;
+
+    babelwires::FeaturePath path;
+    auto modPtr = createModifier(path, 1);
+    babelwires::Modifier* mod = modPtr.get();
+
+    tree.addModifier(std::move(modPtr));
+    EXPECT_EQ(tree.findModifier(path), mod);
+
+    auto modPtr2 = tree.removeModifier(mod);
+    EXPECT_EQ(modPtr2.get(), mod);
+    EXPECT_EQ(tree.findModifier(path), nullptr);
+}
+
+
 TEST(EditTreeTest, fieldAddFindRemove) {
     babelwires::EditTree tree;
 
@@ -479,6 +495,7 @@ TEST(EditTreeTest, adjustArrayIndices) {
 
 TEST(EditTreeTest, truncatePaths) {
     babelwires::EditTree tree;
+    tree.setImplicitlyExpanded(babelwires::FeaturePath(), true);
 
     {
         babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
@@ -572,6 +589,7 @@ TEST(EditTreeTest, truncatePaths) {
 
 TEST(EditTreeTest, truncatePathsWithImplicitlyExpandedPaths) {
     babelwires::EditTree tree;
+    tree.setImplicitlyExpanded(babelwires::FeaturePath(), true);
 
     {
         babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
@@ -691,8 +709,11 @@ TEST(EditTreeTest, treeIteration) {
     tree.addModifier(createModifier(path5, 5));
     tree.setExpanded(path6, true);
 
-    auto it = tree.begin();
-    EXPECT_NE(it, tree.end());
+    auto rit = tree.begin();
+    EXPECT_NE(rit, tree.end());
+    
+    auto it = rit.childrenBegin();
+    EXPECT_NE(it, rit.childrenEnd());
     EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("aa")));
     EXPECT_EQ(it.getModifier(), nullptr);
     {
@@ -705,7 +726,7 @@ TEST(EditTreeTest, treeIteration) {
         EXPECT_EQ(cit, it.childrenEnd());
     }
     it.nextSibling();
-    EXPECT_NE(it, tree.end());
+    EXPECT_NE(it, rit.childrenEnd());
     EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("bb")));
     ASSERT_NE(it.getModifier(), nullptr);
     EXPECT_EQ(it.getModifier()->getModifierData().m_pathToFeature, path3);
@@ -723,7 +744,7 @@ TEST(EditTreeTest, treeIteration) {
         EXPECT_EQ(cit, it.childrenEnd());
     }
     it.nextSibling();
-    EXPECT_NE(it, tree.end());
+    EXPECT_NE(it, rit.childrenEnd());
     EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("cc")));
     ASSERT_EQ(it.getModifier(), nullptr);
     {
@@ -739,7 +760,10 @@ TEST(EditTreeTest, treeIteration) {
         EXPECT_EQ(cit, it.childrenEnd());
     }
     it.nextSibling();
-    EXPECT_EQ(it, tree.end());
+    EXPECT_EQ(it, rit.childrenEnd());
+
+    rit.nextSibling();
+    EXPECT_EQ(rit, tree.end());
 }
 
 TEST(EditTreeTest, modifierIteration) {

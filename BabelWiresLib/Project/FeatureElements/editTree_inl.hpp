@@ -5,6 +5,61 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
+
+struct babelwires::EditTree::RootedPathIterator {
+    inline void operator++() {
+        if (m_isAtRoot) {
+            m_isAtRoot = false;
+        } else {
+            ++m_it;
+        }
+    }
+
+    inline bool operator==(const RootedPathIterator& other) const {
+        return (m_it == other.m_it) && (m_isAtRoot == other.m_isAtRoot);
+    }
+
+    inline bool operator!=(const RootedPathIterator& other) const { return !(*this == other); };
+    
+    inline int distanceFrom(const RootedPathIterator& other) const {
+        int itDist = m_it - other.m_it;
+        if (m_isAtRoot) {
+            --itDist;
+        }
+        if (other.m_isAtRoot) {
+            ++itDist;
+        }
+        return itDist;
+    }
+
+    inline PathStep operator*() const {
+        if (m_isAtRoot) {
+            return {};
+        } else {
+            return *m_it;
+        }
+    }
+
+    FeaturePath::const_iterator m_it;
+    bool m_isAtRoot;
+};
+
+/// Acts like a path, but has an extra "NotAStep" at the front to indicate the non-step to the root.
+struct babelwires::EditTree::RootedPath
+{
+    inline RootedPath(const FeaturePath& path) : m_path(path) {}
+
+    inline RootedPathIterator begin() const { return RootedPathIterator{ m_path.begin(), true }; }
+    inline RootedPathIterator end() const { return RootedPathIterator{ m_path.end(), false}; };
+
+    inline unsigned int getNumSteps() const {
+        return m_path.getNumSteps() + 1;
+    }
+
+    const FeaturePath& m_path;
+};
+
+
 template <typename EDIT_TREE> struct babelwires::EditTree::Iterator {
     using EDIT_TREE_PARAM = EDIT_TREE;
 
@@ -123,12 +178,12 @@ babelwires::EditTree::modifierRange() const {
 
 template <typename MODIFIER_TYPE>
 babelwires::EditTree::IteratorRange<babelwires::EditTree::ModifierIterator<babelwires::EditTree, MODIFIER_TYPE>>
-babelwires::EditTree::modifierRange(const FeaturePath& featurePath) {
-    if (featurePath.getNumSteps() == 0) {
-        return modifierRange();
-    }
+babelwires::EditTree::modifierRange(const FeaturePath& path) {
+    RootedPath featurePath(path);
     auto it = featurePath.begin();
-    const auto [beginIndex, _] = findNodeIndex(it, featurePath.end());
+    const auto end = featurePath.end();
+    
+    const auto [beginIndex, _] = findNodeIndex(it, end);
     if (it == featurePath.end()) {
         const TreeNodeIndex endIndex = beginIndex + m_nodes[beginIndex].m_numDescendents + 1;
         return {*this, static_cast<TreeNodeIndex>(beginIndex), endIndex};
@@ -139,12 +194,12 @@ babelwires::EditTree::modifierRange(const FeaturePath& featurePath) {
 
 template <typename MODIFIER_TYPE>
 babelwires::EditTree::IteratorRange<babelwires::EditTree::ModifierIterator<const babelwires::EditTree, MODIFIER_TYPE>>
-babelwires::EditTree::modifierRange(const FeaturePath& featurePath) const {
-    if (featurePath.getNumSteps() == 0) {
-        return modifierRange<MODIFIER_TYPE>();
-    }
+babelwires::EditTree::modifierRange(const FeaturePath& path) const {
+    RootedPath featurePath(path);
     auto it = featurePath.begin();
-    const auto [beginIndex, _] = findNodeIndex(it, featurePath.end());
+    const auto end = featurePath.end();
+    
+    const auto [beginIndex, _] = findNodeIndex(it, end);
     if (it == featurePath.end()) {
         const TreeNodeIndex endIndex = beginIndex + m_nodes[beginIndex].m_numDescendents + 1;
         return {*this, static_cast<TreeNodeIndex>(beginIndex), endIndex};
