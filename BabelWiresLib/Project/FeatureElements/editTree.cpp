@@ -11,13 +11,62 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 #include <cassert>
+#include <optional>
+
+inline void babelwires::EditTree::RootedPathIterator::operator++() {
+    if (m_isAtRoot) {
+        m_isAtRoot = false;
+    } else {
+        ++m_it;
+    }
+}
+
+inline bool babelwires::EditTree::RootedPathIterator::operator==(const RootedPathIterator& other) const {
+    return (m_it == other.m_it) && (m_isAtRoot == other.m_isAtRoot);
+}
+
+inline bool babelwires::EditTree::RootedPathIterator::operator!=(const RootedPathIterator& other) const {
+    return !(*this == other);
+};
+
+inline int babelwires::EditTree::RootedPathIterator::distanceFrom(const RootedPathIterator& other) const {
+    int itDist = m_it - other.m_it;
+    if (m_isAtRoot) {
+        --itDist;
+    }
+    if (other.m_isAtRoot) {
+        ++itDist;
+    }
+    return itDist;
+}
+
+inline babelwires::PathStep babelwires::EditTree::RootedPathIterator::operator*() const {
+    if (m_isAtRoot) {
+        return {};
+    } else {
+        return *m_it;
+    }
+}
+
+inline babelwires::EditTree::RootedPath::RootedPath(const FeaturePath& path)
+    : m_path(path) {}
+
+inline babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::begin() const {
+    return RootedPathIterator{m_path.begin(), true};
+}
+inline babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::end() const {
+    return RootedPathIterator{m_path.end(), false};
+};
+
+inline unsigned int babelwires::EditTree::RootedPath::getNumSteps() const {
+    return m_path.getNumSteps() + 1;
+}
 
 babelwires::EditTree::~EditTree() = default;
 
-babelwires::EditTree::FindNodeIndexResult
-babelwires::EditTree::findNodeIndex(babelwires::FeaturePath::const_iterator& current,
-                                    const babelwires::FeaturePath::const_iterator& end,
-                                    AncestorStack* ancestorStackOut) const {
+babelwires::EditTree::FindNodeIndexResult babelwires::EditTree::findNodeIndex(RootedPathIterator& current,
+                                                                              const RootedPathIterator& end,
+                                                                              AncestorStack* ancestorStackOut) const {
     if (m_nodes.empty()) {
         return {-1, 0};
     }
@@ -25,7 +74,7 @@ babelwires::EditTree::findNodeIndex(babelwires::FeaturePath::const_iterator& cur
     int nodeIndex = -1;
     int endOfChildren = m_nodes.size();
 
-    while (current < end) {
+    while (current != end) {
         int childIndex = nodeIndex + 1;
         while (childIndex < endOfChildren) {
             const TreeNode& child = m_nodes[childIndex];
@@ -59,13 +108,14 @@ bool babelwires::EditTree::TreeNode::isNeeded() const {
            m_isExpandedChanged || (m_numDescendents > 0);
 }
 
-void babelwires::EditTree::addEdit(const FeaturePath& featurePath, const EditNodeFunc& applyFunc) {
-    assert((featurePath.getNumSteps() > 0) && "The root cannot carry edits");
+void babelwires::EditTree::addEdit(const FeaturePath& path, const EditNodeFunc& applyFunc) {
+    RootedPath featurePath(path);
     auto it = featurePath.begin();
+    const auto end = featurePath.end();
     AncestorStack ancestorStack;
     ancestorStack.reserve(16);
-    auto [nodeIndex, childIndex] = findNodeIndex(it, featurePath.end(), &ancestorStack);
-    const auto numMissingNodes = std::distance(it, featurePath.end());
+    auto [nodeIndex, childIndex] = findNodeIndex(it, end, &ancestorStack);
+    const auto numMissingNodes = end.distanceFrom(it);
     if (numMissingNodes > 0) {
         const auto oldSize = m_nodes.size();
         m_nodes.resize(m_nodes.size() + numMissingNodes);
@@ -87,12 +137,14 @@ void babelwires::EditTree::addEdit(const FeaturePath& featurePath, const EditNod
     assert(validateTree());
 }
 
-void babelwires::EditTree::removeEdit(const FeaturePath& featurePath, const EditNodeFunc& applyFunc) {
+void babelwires::EditTree::removeEdit(const FeaturePath& path, const EditNodeFunc& applyFunc) {
+    RootedPath featurePath(path);
     auto it = featurePath.begin();
+    const auto end = featurePath.end();
     AncestorStack ancestorStack;
     ancestorStack.reserve(16);
     const auto [nodeIndex, _] = findNodeIndex(it, featurePath.end(), &ancestorStack);
-    assert((it == featurePath.end()) && "The expected edit was not in the tree");
+    assert((it == end) && "The expected edit was not in the tree");
     {
         TreeNode& nodeToEdit = m_nodes[nodeIndex];
         applyFunc(nodeToEdit);
@@ -144,30 +196,37 @@ std::unique_ptr<babelwires::Modifier> babelwires::EditTree::removeModifier(const
     return result;
 }
 
-babelwires::Modifier* babelwires::EditTree::findModifier(const FeaturePath& featurePath) {
+babelwires::Modifier* babelwires::EditTree::findModifier(const FeaturePath& path) {
+    const RootedPath featurePath(path);
     auto it = featurePath.begin();
-    const auto [nodeIndex, _] = findNodeIndex(it, featurePath.end());
-    if ((nodeIndex == -1) || (it != featurePath.end())) {
+    const auto end = featurePath.end();
+    const auto [nodeIndex, _] = findNodeIndex(it, end);
+    if ((nodeIndex == -1) || (it != end)) {
         return nullptr;
     } else {
         return m_nodes[nodeIndex].m_modifier.get();
     }
 }
 
-const babelwires::Modifier* babelwires::EditTree::findModifier(const FeaturePath& featurePath) const {
+const babelwires::Modifier* babelwires::EditTree::findModifier(const FeaturePath& path) const {
+    const RootedPath featurePath(path);
     auto it = featurePath.begin();
-    const auto [nodeIndex, _] = findNodeIndex(it, featurePath.end());
-    if ((nodeIndex == -1) || (it != featurePath.end())) {
+    const auto end = featurePath.end();
+    const auto [nodeIndex, _] = findNodeIndex(it, end);
+    if ((nodeIndex == -1) || (it != end)) {
         return nullptr;
     } else {
         return m_nodes[nodeIndex].m_modifier.get();
     }
 }
 
-void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& pathToArray,
-                                              babelwires::ArrayIndex startIndex, int adjustment) {
+void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& path, babelwires::ArrayIndex startIndex,
+                                              int adjustment) {
+    const RootedPath pathToArray{path};
     auto it = pathToArray.begin();
-    const auto [nodeIndex, _] = findNodeIndex(it, pathToArray.end());
+    const auto end = pathToArray.end();
+
+    const auto [nodeIndex, _] = findNodeIndex(it, end);
     if ((nodeIndex == -1) || (it != pathToArray.end())) {
         return;
     }
@@ -207,7 +266,7 @@ void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& pat
 
         for (const auto& m : modifiersToAdjust) {
             auto modPtr = removeModifier(m);
-            modPtr->adjustArrayIndex(pathToArray, startIndex, adjustment);
+            modPtr->adjustArrayIndex(pathToArray.m_path, startIndex, adjustment);
             modifiersAdjusted.emplace_back(std::move(modPtr));
         }
         for (auto& m : modifiersAdjusted) {
@@ -219,10 +278,10 @@ void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& pat
         setExpanded(p, c_expandedByDefault);
     }
 
-    const unsigned int pathIndexOfStepIntoArray = pathToArray.getNumSteps();
+    const unsigned int pathIndexOfStepIntoArray = path.getNumSteps();
 
     for (auto p : pathsToToggleExpansion) {
-        assert(pathToArray.isStrictPrefixOf(p));
+        assert(pathToArray.m_path.isStrictPrefixOf(p));
         babelwires::PathStep& stepIntoArray = p.getStep(pathIndexOfStepIntoArray);
         auto index = stepIntoArray.getIndex();
         assert((index >= startIndex) && "This code only applies when the index is correct.");
@@ -231,10 +290,13 @@ void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& pat
     }
 }
 
-bool babelwires::EditTree::isExpanded(const FeaturePath& featurePath) const {
-    auto it = featurePath.begin();
-    const auto [nodeIndex, _] = findNodeIndex(it, featurePath.end());
-    if ((nodeIndex == -1) || (it != featurePath.end())) {
+bool babelwires::EditTree::isExpanded(const FeaturePath& path) const {
+    const RootedPath pathToArray(path);
+    auto it = pathToArray.begin();
+    const auto end = pathToArray.end();
+
+    const auto [nodeIndex, _] = findNodeIndex(it, end);
+    if ((nodeIndex == -1) || (it != end)) {
         return c_expandedByDefault;
     } else {
         return m_nodes[nodeIndex].m_isExpanded || m_nodes[nodeIndex].m_isImplicitlyExpanded;
@@ -269,13 +331,20 @@ void babelwires::EditTree::setImplicitlyExpanded(const FeaturePath& featurePath,
 }
 
 bool babelwires::EditTree::validateTree() const {
+    if (m_nodes.size() == 0) {
+        return true;
+    }
+
+    assert(m_nodes[0].m_step.isNotAStep());
+    assert(m_nodes.size() == m_nodes[0].m_numDescendents + 1);
+
     std::vector<int> endOfChildrenStack;
     endOfChildrenStack.emplace_back(m_nodes.size());
 
     FeaturePath path;
     FeaturePath previousPath;
 
-    for (int i = 0; i < m_nodes.size(); ++i) {
+    for (int i = 1; i < m_nodes.size(); ++i) {
         assert(i <= endOfChildrenStack.back() && "Structural error in tree");
         const TreeNode& node = m_nodes[i];
         assert(node.isNeeded() && "Unnecessary node in the tree");
@@ -308,15 +377,17 @@ bool babelwires::EditTree::validateTree() const {
 babelwires::FeaturePath babelwires::EditTree::getPathToNode(TreeNodeIndex soughtIndex) const {
     assert((soughtIndex < m_nodes.size()) && "soughtIndex is out of range");
     FeaturePath path;
-    int currentIndex = 0;
+    if (soughtIndex != 0) {
+        int currentIndex = 1;
 
-    while (currentIndex <= soughtIndex) {
-        const int endOfChildren = currentIndex + m_nodes[currentIndex].m_numDescendents + 1;
-        if (soughtIndex < endOfChildren) {
-            path.pushStep(m_nodes[currentIndex].m_step);
-            ++currentIndex;
-        } else {
-            currentIndex = endOfChildren;
+        while (currentIndex <= soughtIndex) {
+            const int endOfChildren = currentIndex + m_nodes[currentIndex].m_numDescendents + 1;
+            if (soughtIndex < endOfChildren) {
+                path.pushStep(m_nodes[currentIndex].m_step);
+                ++currentIndex;
+            } else {
+                currentIndex = endOfChildren;
+            }
         }
     }
     return path;
@@ -352,37 +423,39 @@ void babelwires::EditTree::truncatePathAtFirstCollapsedNode(babelwires::FeatureP
     if (m_nodes.empty()) {
         // Path is not collapsed.
         if constexpr (!c_expandedByDefault) {
-            path.truncate(1);
+            path.truncate(0);
         }
         return;
     }
 
+    RootedPath rootedPath(path);
+    auto current = rootedPath.begin();
+    const auto end = rootedPath.end();
     int pathIndex = 0;
-    const int numPathSteps = path.getNumSteps();
 
     int nodeIndex = -1;
     int endOfChildren = m_nodes.size();
 
-    while (pathIndex < numPathSteps) {
-        const PathStep& current = path.getStep(pathIndex);
+    while (current != end) {
         int childIndex = nodeIndex + 1;
         while (childIndex < endOfChildren) {
             const TreeNode& child = m_nodes[childIndex];
-            if (child.m_step == current) {
+            if (child.m_step == *current) {
                 if (!child.m_isImplicitlyExpanded &&
                     (((state == State::CurrentState) && !child.m_isExpanded) ||
                      ((state == State::PreviousState) && (child.m_isExpanded == child.m_isExpandedChanged)))) {
-                    path.truncate(pathIndex + 1);
+                    path.truncate(pathIndex);
                     return;
                 }
+                ++current;
                 ++pathIndex;
                 nodeIndex = childIndex;
                 endOfChildren = nodeIndex + child.m_numDescendents + 1;
                 break;
-            } else if (current < child.m_step) {
+            } else if (*current < child.m_step) {
                 // The path leads outside the tree.
                 if constexpr (!c_expandedByDefault) {
-                    path.truncate(pathIndex + 1);
+                    path.truncate(pathIndex);
                 }
                 return;
             }
@@ -392,21 +465,26 @@ void babelwires::EditTree::truncatePathAtFirstCollapsedNode(babelwires::FeatureP
         if (childIndex == endOfChildren) {
             // The path leads outside the tree.
             if constexpr (!c_expandedByDefault) {
-                path.truncate(pathIndex + 1);
+                path.truncate(pathIndex);
             }
             return;
         }
     }
 }
 
-std::vector<babelwires::FeaturePath> babelwires::EditTree::getAllExplicitlyExpandedPaths(const FeaturePath& featurePath) const {
+std::vector<babelwires::FeaturePath>
+babelwires::EditTree::getAllExplicitlyExpandedPaths(const FeaturePath& path) const {
     std::vector<FeaturePath> expandedPaths;
+
+    const RootedPath featurePath(path);
+    auto it = featurePath.begin();
+    const auto end = featurePath.end();
 
     int beginIndex = 0;
     int endIndex = m_nodes.size();
     if (featurePath.getNumSteps() != 0) {
         auto it = featurePath.begin();
-        const auto [nodeIndex, _] = findNodeIndex(it, featurePath.end());
+        const auto [nodeIndex, _] = findNodeIndex(it, end);
         if ((nodeIndex == -1) || (it != featurePath.end())) {
             return expandedPaths;
         }

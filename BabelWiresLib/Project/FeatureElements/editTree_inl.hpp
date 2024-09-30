@@ -2,9 +2,35 @@
  * The EditTree arranges edits (modifiers and expand/collapse) in a tree organized by paths.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
+
+/// Iterate over a RootedPath.
+struct babelwires::EditTree::RootedPathIterator {
+    void operator++();
+    bool operator==(const RootedPathIterator& other) const;
+    bool operator!=(const RootedPathIterator& other) const;
+    int distanceFrom(const RootedPathIterator& other) const;
+    PathStep operator*() const;
+
+    FeaturePath::const_iterator m_it;
+    bool m_isAtRoot;
+};
+
+/// Acts like the path it wraps, but has an extra "NotAStep" at the front to indicate
+/// the non-step to the root. This is a convenience structure which simplifies
+/// a lot of the EditTree code, since RootedPaths correspond in a nicer way to
+/// nodes of the EditTree.
+struct babelwires::EditTree::RootedPath {
+    RootedPath(const FeaturePath& path);
+    RootedPathIterator begin() const;
+    RootedPathIterator end() const;
+    unsigned int getNumSteps() const;
+
+    const FeaturePath& m_path;
+};
+
 template <typename EDIT_TREE> struct babelwires::EditTree::Iterator {
     using EDIT_TREE_PARAM = EDIT_TREE;
 
@@ -123,12 +149,12 @@ babelwires::EditTree::modifierRange() const {
 
 template <typename MODIFIER_TYPE>
 babelwires::EditTree::IteratorRange<babelwires::EditTree::ModifierIterator<babelwires::EditTree, MODIFIER_TYPE>>
-babelwires::EditTree::modifierRange(const FeaturePath& featurePath) {
-    if (featurePath.getNumSteps() == 0) {
-        return modifierRange();
-    }
+babelwires::EditTree::modifierRange(const FeaturePath& path) {
+    RootedPath featurePath(path);
     auto it = featurePath.begin();
-    const auto [beginIndex, _] = findNodeIndex(it, featurePath.end());
+    const auto end = featurePath.end();
+
+    const auto [beginIndex, _] = findNodeIndex(it, end);
     if (it == featurePath.end()) {
         const TreeNodeIndex endIndex = beginIndex + m_nodes[beginIndex].m_numDescendents + 1;
         return {*this, static_cast<TreeNodeIndex>(beginIndex), endIndex};
@@ -139,12 +165,12 @@ babelwires::EditTree::modifierRange(const FeaturePath& featurePath) {
 
 template <typename MODIFIER_TYPE>
 babelwires::EditTree::IteratorRange<babelwires::EditTree::ModifierIterator<const babelwires::EditTree, MODIFIER_TYPE>>
-babelwires::EditTree::modifierRange(const FeaturePath& featurePath) const {
-    if (featurePath.getNumSteps() == 0) {
-        return modifierRange<MODIFIER_TYPE>();
-    }
+babelwires::EditTree::modifierRange(const FeaturePath& path) const {
+    RootedPath featurePath(path);
     auto it = featurePath.begin();
-    const auto [beginIndex, _] = findNodeIndex(it, featurePath.end());
+    const auto end = featurePath.end();
+
+    const auto [beginIndex, _] = findNodeIndex(it, end);
     if (it == featurePath.end()) {
         const TreeNodeIndex endIndex = beginIndex + m_nodes[beginIndex].m_numDescendents + 1;
         return {*this, static_cast<TreeNodeIndex>(beginIndex), endIndex};

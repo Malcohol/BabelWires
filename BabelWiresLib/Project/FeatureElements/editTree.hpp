@@ -91,6 +91,9 @@ namespace babelwires {
         modifierRange(const FeaturePath& featurePath) const;
 
       private:
+        struct RootedPath;
+        struct RootedPathIterator;
+
         struct FindNodeIndexResult {
             int m_nodeIndex = -1;
             /// If there is a missing child, this is the index where the missing child would be.
@@ -102,7 +105,7 @@ namespace babelwires {
 
         /// Advance current along the nodes and return the index of the last node reached.
         /// If ancestorStackOut is provided, the indices of the path will be pushed on.
-        FindNodeIndexResult findNodeIndex(FeaturePath::const_iterator& current, const FeaturePath::const_iterator& end,
+        FindNodeIndexResult findNodeIndex(RootedPathIterator& current, const RootedPathIterator& end,
                                           AncestorStack* ancestorStackOut = nullptr) const;
 
         /// Check assertions about the validity of the tree.
@@ -137,7 +140,7 @@ namespace babelwires {
             /// Non-null for leaf nodes.
             std::unique_ptr<Modifier> m_modifier;
             /// The step to this node from its parent.
-            PathStep m_step = 0;
+            PathStep m_step;
             /// The total number of descendents of this node (not including this node).
             std::uint16_t m_numDescendents = 0;
 

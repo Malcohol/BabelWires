@@ -77,9 +77,7 @@ namespace babelwires {
                         return row.m_isExpanded;
                     }
                 } else {
-                    if (path.getNumSteps() > 0) {
-                        m_edits.setImplicitlyExpanded(path, true);
-                    }
+                    m_edits.setImplicitlyExpanded(path, true);
                     row.m_isExpandable = false;
                 }
                 return true;
@@ -252,12 +250,12 @@ void babelwires::ContentsCache::updateModifierFlags() {
     std::vector<StackData> stackDataStack;
 
     stackDataStack.emplace_back(0);
-    // The need for three variables here is a consequence of there being no root node in the Edit tree. Hmmm.
-    auto editIt = m_edits.end();
-    auto childBegin = m_edits.begin();
-    auto childEnd = m_edits.end();
     const static unsigned int notADepth = std::numeric_limits<unsigned int>::max();
     unsigned int depthOfLastConnectionModifier = notADepth;
+
+    // The edit iterator which matches the current row.
+    // It's set to m_edit.end() if there aren't any edits at or below this row.
+    auto editIt = m_edits.begin();
 
     for (int index = 0; index < m_rows.size(); ++index) {
         if (index > 0) {
@@ -268,13 +266,9 @@ void babelwires::ContentsCache::updateModifierFlags() {
             const auto it = parentStackData.m_iteratorFromStep.find(stepToHere);
             if (it != parentStackData.m_iteratorFromStep.end()) {
                 editIt = it->second;
-                childBegin = editIt.childrenBegin();
-                childEnd = editIt.childrenEnd();
                 parentStackData.m_iteratorFromStep.erase(it);
             } else {
                 editIt = m_edits.end();
-                childBegin = m_edits.end();
-                childEnd = m_edits.end();
             }
         }
 
@@ -308,9 +302,9 @@ void babelwires::ContentsCache::updateModifierFlags() {
         }
 
         // Find the set of edits for children at this row.
-        {
+        if (editIt != m_edits.end()) {
             StackData& stackData = stackDataStack.back();
-            for (auto childIt = childBegin; childIt != childEnd; childIt.nextSibling()) {
+            for (auto childIt = editIt.childrenBegin(); childIt != editIt.childrenEnd(); childIt.nextSibling()) {
                 stackData.m_iteratorFromStep.insert(std::make_pair(childIt.getStep(), childIt));
             }
         }

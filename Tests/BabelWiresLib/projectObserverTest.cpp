@@ -249,7 +249,7 @@ TEST(ProjectObserverTest, featureElementResizedIgnore) {
 
 namespace {
     void testConnectionAdded(bool shouldIgnore, bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
-            testUtils::TestEnvironment testEnvironment;
+        testUtils::TestEnvironment testEnvironment;
 
         testUtils::TestComplexRecordElementData sourceElementData;
         sourceElementData.m_expandedPaths.emplace_back(testUtils::TestComplexRecordElementData::getPathToRecord());

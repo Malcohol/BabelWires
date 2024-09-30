@@ -16,24 +16,30 @@
 void babelwires::PathStep::writeToStream(std::ostream& os) const {
     if (const ShortId* f = asField()) {
         os << *f;
+    } else if (const ArrayIndex* index = asIndex()) {
+        os << *index;
     } else {
-        os << getIndex();
+        os << c_notAStepRepresentation;
     }
 }
 
 void babelwires::PathStep::writeToStreamReadable(std::ostream& os, const IdentifierRegistry& identifierRegistry) const {
     if (const ShortId* f = asField()) {
         os << identifierRegistry.getName(*f);
+    } else if (const ArrayIndex* index = asIndex()) {
+        os << "[" << *index << "]";
     } else {
-        os << "[" << getIndex() << "]";
+        os << c_notAStepRepresentation;
     }
 }
 
 std::string babelwires::PathStep::serializeToString() const {
     if (const ShortId* f = asField()) {
         return f->serializeToString();
+    } else if (const ArrayIndex* index = asIndex()) {
+        return std::to_string(*index);
     } else {
-        return std::to_string(getIndex());
+        return c_notAStepRepresentation;
     }
 }
 
@@ -49,6 +55,8 @@ babelwires::PathStep babelwires::PathStep::deserializeFromString(std::string_vie
             throw ParseException() << "Could not parse \"" << str << "\" as an array index";
         }
         return arrayIndex;
+    } else if (str == c_notAStepRepresentation) {
+        return PathStep();
     } else {
         return PathStep(ShortId::deserializeFromString(str));
     }

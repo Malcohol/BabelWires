@@ -20,10 +20,19 @@ namespace babelwires {
     /// A PathStep is a union of a ShortId and an ArrayIndex.
     union PathStep {
       public:
+        /// A default constructed step is neither a field nor an index.
+        /// Not-step steps are not permitted in paths, so most code can ignore this type of step
+        /// (or assert that it is not expected).
+        /// This is just a convenient way of representing an optional step.
+        PathStep() : m_notAStep() {}
+
         // explicit, because a temporary PathStep contains a copy of f, and any modification to its mutable
         // discriminator will be lost.
+        // TODO This was a mistake. Allow implicit construction from a field, and approach discriminator resolution
+        // a different way.
         explicit PathStep(const ShortId& f)
             : m_fieldIdentifier(f) {}
+
         PathStep(ArrayIndex index)
             : m_arrayIndex(Index()) {
             m_arrayIndex.m_index = index;
@@ -35,10 +44,13 @@ namespace babelwires {
         static constexpr ArrayIndex paddingVal = 0xffff;
 
         /// Does this step contain a field?
-        bool isField() const { return m_arrayIndex.m_padding[2] != paddingVal; }
+        bool isField() const { return m_arrayIndex.m_padding[0] != paddingVal; }
 
-        /// Do this step contain an array index?
-        bool isIndex() const { return !isField(); }
+        /// Does this step contain an array index?
+        bool isIndex() const { return m_arrayIndex.m_padding[1] == paddingVal; }
+
+        /// Does this step actually not represent a step at all.
+        bool isNotAStep() const { return m_arrayIndex.m_padding[2] == paddingVal; }
 
         /// Get the contained field identifier or assert.
         const ShortId& getField() const {
@@ -100,6 +112,9 @@ namespace babelwires {
             }
         }
 
+        /// How the not-a-step value is represented as a string.
+        static constexpr char c_notAStepRepresentation[] = "(notAStep)";
+
       private:
         /// Get a efficient representation of the contents of this object.
         std::uint64_t getDataAsCode() const { return m_code & 0xffffffffffff0000; }
@@ -114,9 +129,13 @@ namespace babelwires {
 
         struct Index {
             /// The last two bytes are used as the tag.
-            std::uint16_t m_padding[3] = {paddingVal, paddingVal, paddingVal};
+            std::uint16_t m_padding[3] = {paddingVal, paddingVal, 0};
             ArrayIndex m_index;
         } m_arrayIndex;
+
+        struct NotAStep {
+            std::uint16_t m_notAStep[4] = { paddingVal, 0, paddingVal, paddingVal };
+        } m_notAStep;
 
         /// Used for efficient comparison.
         std::uint64_t m_code;
