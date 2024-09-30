@@ -197,7 +197,10 @@ TEST(EditTreeTest, expandCollapse) {
     // These tests assume c_expandedByDefault is false.
     static_assert(babelwires::EditTree::c_expandedByDefault == false);
 
-    // TODO This is a little inconsistent with the fact that the system always treats the first level as expanded.
+    EXPECT_FALSE(tree.isExpanded(babelwires::FeaturePath()));
+    tree.setExpanded(babelwires::FeaturePath(), true);
+    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath()));
+    tree.setExpanded(babelwires::FeaturePath(), false);
     EXPECT_FALSE(tree.isExpanded(babelwires::FeaturePath()));
 
     const babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("bb/4");
