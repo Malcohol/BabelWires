@@ -335,6 +335,9 @@ bool babelwires::EditTree::validateTree() const {
         return true;
     }
 
+    assert(m_nodes[0].m_step.isNotAStep());
+    assert(m_nodes.size() == m_nodes[0].m_numDescendents + 1);
+
     std::vector<int> endOfChildrenStack;
     endOfChildrenStack.emplace_back(m_nodes.size());
 
