@@ -77,9 +77,7 @@ namespace babelwires {
                         return row.m_isExpanded;
                     }
                 } else {
-                    if (path.getNumSteps() > 0) {
-                        m_edits.setImplicitlyExpanded(path, true);
-                    }
+                    m_edits.setImplicitlyExpanded(path, true);
                     row.m_isExpandable = false;
                 }
                 return true;
