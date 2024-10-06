@@ -22,7 +22,6 @@ namespace babelwires {
 
 namespace babelwires {
 
-    class RecordFeature;
     class TargetFileFormatRegistry;
     class SourceFileFormatRegistry;
     class ProcessorFactoryRegistry;

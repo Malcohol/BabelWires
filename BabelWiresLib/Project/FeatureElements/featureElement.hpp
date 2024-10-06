@@ -25,7 +25,6 @@ namespace babelwires {
     struct ModifierData;
     class ConnectionModifier;
     struct ElementData;
-    class RecordFeature;
     class FeaturePath;
     struct UiPosition;
     struct UiSize;
