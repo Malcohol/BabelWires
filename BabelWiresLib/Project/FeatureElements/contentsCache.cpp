@@ -193,39 +193,25 @@ namespace babelwires {
     } // namespace Detail
 } // namespace babelwires
 
-void babelwires::ContentsCache::setFeatures(const Feature* inputFeature, const Feature* outputFeature) {
+void babelwires::ContentsCache::setFeatures(std::string rootLabel, const Feature* inputFeature, const Feature* outputFeature) {
     m_rows.clear();
     Detail::ContentsCacheBuilder builder(m_rows, m_edits);
     const babelwires::Feature* const rootFeature = inputFeature ? inputFeature : outputFeature;
-    // TODO Instead of this hack, make the extra "file" row a UI feature.
-    const char* rootLabel = rootFeature->as<const babelwires::FileFeature>() ? "File" : "Root";
     if (inputFeature && outputFeature) {
-        builder.addFeatureToCache(rootLabel, inputFeature, outputFeature, FeaturePath(), 0, 0);
+        builder.addFeatureToCache(std::move(rootLabel), inputFeature, outputFeature, FeaturePath(), 0, 0);
     } else if (inputFeature) {
-        builder.addInputFeatureToCache(rootLabel, inputFeature, FeaturePath(), 0, 0);
+        builder.addInputFeatureToCache(std::move(rootLabel), inputFeature, FeaturePath(), 0, 0);
     } else if (outputFeature) {
-        builder.addOutputFeatureToCache(rootLabel, outputFeature, FeaturePath(), 0, 0);
+        builder.addOutputFeatureToCache(std::move(rootLabel), outputFeature, FeaturePath(), 0, 0);
     } else {
         assert(!"Unimplemented");
     }
     setChanged(Changes::StructureChanged);
     updateModifierFlags();
-    setIndexOffset();
 }
 
 void babelwires::ContentsCache::updateModifierCache() {
     updateModifierFlags();
-    setIndexOffset();
-}
-
-void babelwires::ContentsCache::setIndexOffset() {
-    const int oldIndexOffset = m_indexOffset;
-    const ContentsCacheEntry& rootEntry = m_rows[0];
-    const babelwires::Feature* const rootFeature = rootEntry.getInputThenOutputFeature();
-    m_indexOffset = (rootEntry.hasFailedHiddenModifiers() || rootFeature->as<const babelwires::FileFeature>()) ? 0 : 1;
-    if (oldIndexOffset != m_indexOffset) {
-        setChanged(Changes::StructureChanged);
-    }
 }
 
 void babelwires::ContentsCache::updateModifierFlags() {
@@ -344,26 +330,25 @@ void babelwires::ContentsCache::updateModifierFlags() {
 }
 
 const babelwires::ContentsCacheEntry* babelwires::ContentsCache::getEntry(int i) const {
-    const int adjustedI = i + m_indexOffset;
-    if ((0 <= adjustedI) && (adjustedI < m_rows.size())) {
-        return &m_rows[adjustedI];
+    if ((0 <= i) && (i < m_rows.size())) {
+        return &m_rows[i];
     }
     // TODO This is defensive. Is this necessary?
     return nullptr;
 }
 
 int babelwires::ContentsCache::getNumRows() const {
-    return m_rows.size() - m_indexOffset;
+    return m_rows.size();
 }
 
 int babelwires::ContentsCache::getIndexOfPath(bool seekInputFeature, const FeaturePath& path) const {
-    for (int i = m_indexOffset; i < m_rows.size(); ++i) {
+    for (int i = 0; i < m_rows.size(); ++i) {
         const ContentsCacheEntry& entry = m_rows[i];
         if ((seekInputFeature && !entry.m_inputFeature) || (!seekInputFeature && !entry.m_outputFeature)) {
             continue;
         }
         if (path == m_rows[i].m_path) {
-            return i - m_indexOffset;
+            return i;
         }
     }
     return -1;

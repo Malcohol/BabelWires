@@ -108,6 +108,7 @@ namespace testUtils {
     /// without using the Instance system.
     // Currently not all features are represented.
     struct TestComplexRecordTypeFeatureInfo {
+        const babelwires::ValueFeature& m_record;
         const babelwires::ValueFeature& m_intFeature;
         const babelwires::ValueFeature& m_subRecordFeature;
         const babelwires::ValueFeature& m_subRecordIntFeature;

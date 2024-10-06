@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
-#include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>

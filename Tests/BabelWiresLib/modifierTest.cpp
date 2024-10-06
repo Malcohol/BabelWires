@@ -378,8 +378,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     babelwires::ValueElementData elementData{testUtils::TestComplexRecordType::getThisIdentifier()};
 
     const babelwires::FeaturePath sourcePath{
-        std::vector<babelwires::PathStep>{babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
-                                          babelwires::PathStep(testUtils::TestComplexRecordType::getSubrecordId()),
+        std::vector<babelwires::PathStep>{babelwires::PathStep(testUtils::TestComplexRecordType::getSubrecordId()),
                                           babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id())}};
 
     babelwires::ValueAssignmentData sourceData(babelwires::IntValue(100));

@@ -21,9 +21,7 @@ testUtils::TestArrayElementData::TestArrayElementData()
     : babelwires::ValueElementData(TestSimpleArrayType::getThisIdentifier()) {}
 
 babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArray() {
-    babelwires::FeaturePath pathToArray;
-    pathToArray.pushStep(babelwires::PathStep(babelwires::ValueElement::getStepToValue()));
-    return pathToArray;
+    return babelwires::FeaturePath();
 }
 
 

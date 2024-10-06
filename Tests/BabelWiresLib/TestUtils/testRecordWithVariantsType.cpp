@@ -65,24 +65,21 @@ testUtils::TestRecordWithVariantsElementData::TestRecordWithVariantsElementData(
     : ValueElementData(testUtils::TestRecordWithVariantsType::getThisIdentifier()) {}
 
 babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants() {
-    return std::vector<babelwires::PathStep>{babelwires::PathStep(babelwires::ValueElement::getStepToValue())};
+    return babelwires::FeaturePath();
 }
 
 const babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToFieldA0() {
     return std::vector<babelwires::PathStep>{
-        babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
         babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA0Id())};
 }
 
 const babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0() {
     return std::vector<babelwires::PathStep>{
-        babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
         babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA1Id()),
         babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id())};
 }
 
 const babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToFieldAB() {
     return std::vector<babelwires::PathStep>{
-        babelwires::PathStep(babelwires::ValueElement::getStepToValue()),
         babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldABId())};
 }

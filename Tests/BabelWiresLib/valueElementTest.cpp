@@ -18,7 +18,6 @@ TEST(ValueElementTest, simpleType) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData assignmentData(babelwires::EditableValueHolder::makeValue<babelwires::IntValue>(-4));
-    assignmentData.m_pathToFeature.pushStep(babelwires::PathStep("value"));
 
     babelwires::ValueElementData data(babelwires::DefaultIntType::getThisIdentifier());
     data.m_modifiers.emplace_back(assignmentData.clone());
@@ -42,16 +41,11 @@ TEST(ValueElementTest, simpleType) {
     ASSERT_NE(outputFeature, nullptr);
     EXPECT_EQ(inputFeature, outputFeature);
 
-    ASSERT_TRUE(inputFeature->as<babelwires::CompoundFeature>());
-    ASSERT_EQ(inputFeature->is<babelwires::CompoundFeature>().getNumFeatures(), 1);
+    const babelwires::ValueFeature* const valueFeature = inputFeature->as<babelwires::ValueFeature>();
+    ASSERT_TRUE(valueFeature);
 
-    const babelwires::Feature* const child = inputFeature->is<babelwires::CompoundFeature>().getFeature(0);
-    ASSERT_NE(child, nullptr);
-    const babelwires::ValueFeature* const childAsValue = child->as<babelwires::ValueFeature>();
-    ASSERT_NE(childAsValue, nullptr);
-
-    EXPECT_EQ(childAsValue->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
-    const babelwires::ValueHolder value = childAsValue->getValue();
+    EXPECT_EQ(valueFeature->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
+    const babelwires::ValueHolder value = valueFeature->getValue();
     const babelwires::IntValue* intValue = value->as<babelwires::IntValue>();
     ASSERT_NE(intValue, nullptr);
     EXPECT_EQ(intValue->get(), -4);

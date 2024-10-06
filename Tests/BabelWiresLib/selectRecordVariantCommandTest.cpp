@@ -35,8 +35,7 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     ASSERT_NE(targetElement, nullptr);
 
     const auto getInputValueFeature = [element]() {
-        const auto* root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
     const auto getSelectedTag = [](const babelwires::ValueFeature* valueFeature) {
         const auto& type = valueFeature->getType().is<testUtils::TestRecordWithVariantsType>();
