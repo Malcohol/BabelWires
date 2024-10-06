@@ -280,10 +280,10 @@ namespace {
         // The connection we expect to observe.
         babelwires::ConnectionDescription connectionDescription(targetElementId, connectionData);
         if (!sourceRecordIsExpanded) {
-            connectionDescription.m_pathToSourceFeature.truncate(2);
+            connectionDescription.m_pathToSourceFeature.truncate(1);
         }
         if (!targetArrayIsExpanded) {
-            connectionDescription.m_pathToTargetFeature.truncate(2);
+            connectionDescription.m_pathToTargetFeature.truncate(1);
         }
 
         testEnvironment.m_project.addModifier(targetElementId, connectionData);
@@ -381,10 +381,10 @@ namespace {
         // The connection we expect to observe.
         babelwires::ConnectionDescription connectionDescription(targetElementId, connectionData);
         if (!sourceRecordIsExpanded) {
-            connectionDescription.m_pathToSourceFeature.truncate(2);
+            connectionDescription.m_pathToSourceFeature.truncate(1);
         }
         if (!targetArrayIsExpanded) {
-            connectionDescription.m_pathToTargetFeature.truncate(2);
+            connectionDescription.m_pathToTargetFeature.truncate(1);
         }
 
         testEnvironment.m_project.removeModifier(targetElementId, connectionData.m_pathToFeature);

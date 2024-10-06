@@ -12,29 +12,20 @@
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/FailedType/failedType.hpp>
 
 babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger& userLogger,
                                        const ValueElementData& data, ElementId newId)
     : FeatureElement(data, newId) {
-    m_rootFeature = std::make_unique<RootFeature>(context);
-    const TypeRef& typeRef = data.getTypeRef();
-    setFactoryName(typeRef.toString());
-    const Type* const type = typeRef.tryResolve(context.m_typeSystem);
-    if (type) {
-        m_rootFeature->addField(std::make_unique<SimpleValueFeature>(typeRef), getStepToValue());
-    } else {
-        std::ostringstream message;
-        message << "Type Reference " << typeRef << " could not be resolved";
-        setInternalFailure(message.str());
-        userLogger.logError() << "Failed to create ValueElement id=" << newId << ": " << message.str();
+    setFactoryName(data.getTypeRef().toString());
+    TypeRef typeRefForConstruction = data.getTypeRef();
+    if (!typeRefForConstruction.tryResolve(context.m_typeSystem)) {
+        typeRefForConstruction = FailedType::getThisIdentifier();
     }
+    m_rootFeature = std::make_unique<SimpleValueFeature>(context.m_typeSystem, typeRefForConstruction);
 }
 
 babelwires::ValueElement::~ValueElement() = default;
-
-babelwires::ShortId babelwires::ValueElement::getStepToValue() {
-    return BW_SHORT_ID("value", "value", "46b077cb-da6a-4729-92ac-091e9995db7f");
-}
 
 const babelwires::ValueElementData& babelwires::ValueElement::getElementData() const {
     return static_cast<const ValueElementData&>(FeatureElement::getElementData());

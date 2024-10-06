@@ -55,8 +55,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
     ASSERT_NE(targetElement, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element, targetElement]() {
@@ -147,8 +146,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
     ASSERT_NE(targetElement, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element, targetElement](bool isCommandExecuted) {
@@ -219,8 +217,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
     ASSERT_NE(element, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element](bool isCommandExecuted) {
@@ -296,8 +293,7 @@ TEST(SetArraySizeCommandTest, failSafelyOutOfRange) {
     ASSERT_NE(element, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     ASSERT_NE(getArrayFeature(), nullptr);

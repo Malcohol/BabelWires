@@ -63,9 +63,7 @@ testUtils::TestSimpleRecordElementData::TestSimpleRecordElementData()
     : babelwires::ValueElementData(TestSimpleRecordType::getThisIdentifier()) {}
 
 babelwires::FeaturePath testUtils::TestSimpleRecordElementData::getPathToRecord() {
-    babelwires::FeaturePath path;
-    path.pushStep(babelwires::PathStep(babelwires::ValueElement::getStepToValue()));
-    return path;
+    return babelwires::FeaturePath();
 }
 
 babelwires::FeaturePath testUtils::TestSimpleRecordElementData::getPathToRecordInt0() {
@@ -78,9 +76,7 @@ testUtils::TestComplexRecordElementData::TestComplexRecordElementData()
     : babelwires::ValueElementData(TestComplexRecordType::getThisIdentifier()) {}
 
 babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecord() {
-    babelwires::FeaturePath path;
-    path.pushStep(babelwires::PathStep(babelwires::ValueElement::getStepToValue()));
-    return path;
+    return babelwires::FeaturePath();
 }
 
 babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecordInt0() {
