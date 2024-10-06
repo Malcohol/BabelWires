@@ -222,7 +222,7 @@ void babelwires::ContentsCache::setIndexOffset() {
     const int oldIndexOffset = m_indexOffset;
     const ContentsCacheEntry& rootEntry = m_rows[0];
     const babelwires::Feature* const rootFeature = rootEntry.getInputThenOutputFeature();
-    m_indexOffset = (rootEntry.hasFailedHiddenModifiers() || rootFeature->as<const babelwires::FileFeature>()) ? 0 : 1;
+    m_indexOffset = 0; // (rootEntry.hasFailedHiddenModifiers() || rootFeature->as<const babelwires::FileFeature>()) ? 0 : 1;
     if (oldIndexOffset != m_indexOffset) {
         setChanged(Changes::StructureChanged);
     }

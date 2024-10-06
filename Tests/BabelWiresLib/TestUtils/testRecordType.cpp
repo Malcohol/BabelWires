@@ -140,7 +140,8 @@ babelwires::FeaturePath testUtils::TestComplexRecordElementData::getPathToRecord
 
 testUtils::TestComplexRecordTypeFeatureInfo::TestComplexRecordTypeFeatureInfo(
     const babelwires::ValueFeature& testRecord)
-    : m_intFeature(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getInt0Id()))
+    : m_record(testRecord)
+    , m_intFeature(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getInt0Id()))
                        .is<babelwires::ValueFeature>())
     , m_arrayFeature(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getArrayId()))
                          .is<babelwires::ValueFeature>())
