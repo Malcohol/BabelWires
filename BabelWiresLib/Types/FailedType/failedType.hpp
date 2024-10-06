@@ -1,0 +1,28 @@
+/**
+ * A type which can stand in when a type or element fails to resolve.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <BabelWiresLib/Types/Record/recordType.hpp>
+
+#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+
+namespace babelwires {
+
+    /// A type which can stand in when a type or element fails to resolve.
+    /// For now, just implement as an empty record.
+    /// TODO: Probably should have values which carry a string.
+    class FailedType : public RecordType {
+      public:
+        PRIMITIVE_TYPE("failed", "Failed", "d58040ff-00dc-4f25-a9a7-17c54b56d57d", 1);
+
+        FailedType() : RecordType({}) {}
+
+        std::string getKind() const override { return "Failed"; }
+    };
+
+}
