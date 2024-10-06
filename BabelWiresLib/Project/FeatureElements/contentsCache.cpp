@@ -193,18 +193,16 @@ namespace babelwires {
     } // namespace Detail
 } // namespace babelwires
 
-void babelwires::ContentsCache::setFeatures(const Feature* inputFeature, const Feature* outputFeature) {
+void babelwires::ContentsCache::setFeatures(std::string rootLabel, const Feature* inputFeature, const Feature* outputFeature) {
     m_rows.clear();
     Detail::ContentsCacheBuilder builder(m_rows, m_edits);
     const babelwires::Feature* const rootFeature = inputFeature ? inputFeature : outputFeature;
-    // TODO Instead of this hack, make the extra "file" row a UI feature.
-    const char* rootLabel = rootFeature->as<const babelwires::FileFeature>() ? "File" : "Root";
     if (inputFeature && outputFeature) {
-        builder.addFeatureToCache(rootLabel, inputFeature, outputFeature, FeaturePath(), 0, 0);
+        builder.addFeatureToCache(std::move(rootLabel), inputFeature, outputFeature, FeaturePath(), 0, 0);
     } else if (inputFeature) {
-        builder.addInputFeatureToCache(rootLabel, inputFeature, FeaturePath(), 0, 0);
+        builder.addInputFeatureToCache(std::move(rootLabel), inputFeature, FeaturePath(), 0, 0);
     } else if (outputFeature) {
-        builder.addOutputFeatureToCache(rootLabel, outputFeature, FeaturePath(), 0, 0);
+        builder.addOutputFeatureToCache(std::move(rootLabel), outputFeature, FeaturePath(), 0, 0);
     } else {
         assert(!"Unimplemented");
     }

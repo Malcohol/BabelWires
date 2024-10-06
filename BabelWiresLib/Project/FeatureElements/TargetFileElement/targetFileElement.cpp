@@ -66,7 +66,7 @@ const babelwires::Feature* babelwires::TargetFileElement::getInputFeature() cons
 }
 
 void babelwires::TargetFileElement::setFeature(std::unique_ptr<RootFeature> feature) {
-    m_contentsCache.setFeatures(feature.get(), nullptr);
+    m_contentsCache.setFeatures("File", feature.get(), nullptr);
     m_feature = std::move(feature);
 }
 
@@ -129,7 +129,7 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
 
 void babelwires::TargetFileElement::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setFeatures(m_feature.get(), nullptr);
+        m_contentsCache.setFeatures("File", m_feature.get(), nullptr);
     } else if (isChanged(Changes::ModifierChangesMask)) {
         m_contentsCache.updateModifierCache();
     }

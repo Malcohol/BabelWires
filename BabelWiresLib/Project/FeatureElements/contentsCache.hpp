@@ -109,7 +109,7 @@ namespace babelwires {
         ContentsCache(EditTree& edits);
 
         /// Build the cache with the given input and output features.
-        void setFeatures(const Feature* inputFeature, const Feature* outputFeature);
+        void setFeatures(std::string rootName, const Feature* inputFeature, const Feature* outputFeature);
 
         /// Update the part of the cache concerning modifiers.
         void updateModifierCache();

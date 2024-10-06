@@ -186,7 +186,7 @@ namespace {
 
     void testCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
                              babelwires::ValueFeature* inputFeature, babelwires::ValueFeature* outputFeature) {
-        cache.setFeatures(inputFeature, outputFeature);
+        cache.setFeatures("Test", inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 6);
         auto inputInfo =
             inputFeature ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*inputFeature) : nullptr;
@@ -215,7 +215,7 @@ namespace {
         }
         // Expand the record
         editTree.setExpanded(info->m_pathToSubRecord, true);
-        cache.setFeatures(inputFeature, outputFeature);
+        cache.setFeatures("Test", inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 8);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -244,7 +244,7 @@ namespace {
         }
         // Expand the array
         editTree.setExpanded(info->m_pathToArray, true);
-        cache.setFeatures(inputFeature, outputFeature);
+        cache.setFeatures("Test", inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 8 + testUtils::TestSimpleArrayType::s_defaultSize);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -365,7 +365,7 @@ namespace {
 
         // Collapse the array
         editTree.setExpanded(info->m_pathToArray, false);
-        cache.setFeatures(inputFeature, outputFeature);
+        cache.setFeatures("Test", inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 8);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
@@ -468,15 +468,15 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     testUtils::TestComplexRecordType::Instance output(outputFeature);
     output.getarray().setSize(testUtils::TestSimpleArrayType::s_nonDefaultSize);
 
-    cache.setFeatures(&inputFeature, &outputFeature);
+    cache.setFeatures("Test", &inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 6);
 
     editTree.setExpanded(inputInfo.m_pathToSubRecord, true);
-    cache.setFeatures(&inputFeature, &outputFeature);
+    cache.setFeatures("Test", &inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 8);
 
     editTree.setExpanded(inputInfo.m_pathToArray, true);
-    cache.setFeatures(&inputFeature, &outputFeature);
+    cache.setFeatures("Test", &inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 8 + testUtils::TestSimpleArrayType::s_nonDefaultSize);
 
     {
@@ -525,7 +525,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     inputFeature.setToDefault();
     outputFeature.setToDefault();
 
-    cache.setFeatures(&inputFeature, &outputFeature);
+    cache.setFeatures("Test", &inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 6);
 
     // Adding a hidden failed modifier whose parent is logically the root requires us to present
@@ -547,7 +547,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
 
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
-        EXPECT_EQ(entry->getLabel(), "Root");
+        EXPECT_EQ(entry->getLabel(), "Test");
         EXPECT_EQ(entry->getInputFeature(), &inputFeature);
         EXPECT_EQ(entry->getOutputFeature(), &outputFeature);
         EXPECT_EQ(entry->getPath(), babelwires::FeaturePath());
@@ -601,7 +601,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
 namespace {
     void checkFileRootEntry(const babelwires::ContentsCacheEntry* entry, testUtils::TestFileFeature* inputFeature,
                             testUtils::TestFileFeature* outputFeature) {
-        EXPECT_EQ(entry->getLabel(), "File");
+        EXPECT_EQ(entry->getLabel(), "Test");
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature);
         } else {
@@ -696,7 +696,7 @@ TEST(ContentsCacheTest, inputFileFeatureOnly) {
     testUtils::TestFileFeature inputFeature(testEnvironment.m_projectContext);
     inputFeature.setToDefault();
 
-    cache.setFeatures(&inputFeature, nullptr);
+    cache.setFeatures("Test", &inputFeature, nullptr);
     testFileCommonBehaviour(cache, editTree, &inputFeature, nullptr);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, nullptr);
 }
@@ -710,7 +710,7 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
     testUtils::TestFileFeature outputFeature(testEnvironment.m_projectContext);
     outputFeature.setToDefault();
 
-    cache.setFeatures(nullptr, &outputFeature);
+    cache.setFeatures("Test", nullptr, &outputFeature);
     testFileCommonBehaviour(cache, editTree, nullptr, &outputFeature);
 }
 
@@ -725,7 +725,7 @@ TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     inputFeature.setToDefault();
     outputFeature.setToDefault();
 
-    cache.setFeatures(&inputFeature, &outputFeature);
+    cache.setFeatures("Test", &inputFeature, &outputFeature);
     testFileCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
 }
@@ -763,7 +763,7 @@ TEST(ContentsCacheTest, style) {
 
     TestRecordWithChildStyles record(testEnvironment.m_projectContext);
     // Handling of style should be unaffected by input / output features.
-    cache.setFeatures(&record, nullptr);
+    cache.setFeatures("Test", &record, nullptr);
 
     EXPECT_EQ(cache.getNumRows(), 7);
     EXPECT_EQ(cache.getEntry(0)->getIndent(), 0);
@@ -785,7 +785,7 @@ TEST(ContentsCacheTest, style) {
     editTree.setExpanded(cache.getEntry(3)->getPath(), true);
     editTree.setExpanded(cache.getEntry(4)->getPath(), true);
 
-    cache.setFeatures(&record, nullptr);
+    cache.setFeatures("Test", &record, nullptr);
 
     EXPECT_EQ(cache.getNumRows(), 8);
     EXPECT_EQ(cache.getEntry(0)->getIndent(), 0);

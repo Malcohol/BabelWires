@@ -32,6 +32,9 @@ namespace babelwires {
         Feature* doGetOutputFeatureNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
+      protected:
+        std::string getRootLabel() const;
+
       private:
         std::unique_ptr<babelwires::SimpleValueFeature> m_rootFeature;
     };

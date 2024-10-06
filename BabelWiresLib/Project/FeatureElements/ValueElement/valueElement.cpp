@@ -47,9 +47,17 @@ const babelwires::Feature* babelwires::ValueElement::getOutputFeature() const {
     return m_rootFeature.get();
 }
 
+std::string babelwires::ValueElement::getRootLabel() const {
+    if (m_rootFeature->getTypeRef() == FailedType::getThisIdentifier()) {
+        return "Failed";
+    } else {
+        return "Value";
+    }
+}
+
 void babelwires::ValueElement::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setFeatures(m_rootFeature.get(), m_rootFeature.get());
+        m_contentsCache.setFeatures(getRootLabel(), m_rootFeature.get(), m_rootFeature.get());
     } else if (isChanged(Changes::ModifierChangesMask)) {
         m_contentsCache.updateModifierCache();
     }
