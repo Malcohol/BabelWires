@@ -13,7 +13,7 @@
 namespace babelwires {
     struct UserLogger;
     class ValueElementData;
-    class RootFeature;
+    class SimpleValueFeature;
 
     class ValueElement : public FeatureElement {
       public:
@@ -27,16 +27,16 @@ namespace babelwires {
         virtual const Feature* getInputFeature() const override;
         virtual const Feature* getOutputFeature() const override;
 
-        /// The root feature has a single step to the value feature, which always uses this identifier.
-        static ShortId getStepToValue();
-
       protected:
         Feature* doGetInputFeatureNonConst() override;
         Feature* doGetOutputFeatureNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
+      protected:
+        std::string getRootLabel() const;
+
       private:
-        std::unique_ptr<babelwires::RootFeature> m_rootFeature;
+        std::unique_ptr<babelwires::SimpleValueFeature> m_rootFeature;
     };
 
 } // namespace babelwires

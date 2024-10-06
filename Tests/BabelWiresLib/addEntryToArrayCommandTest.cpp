@@ -23,8 +23,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     ASSERT_NE(element, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     const auto checkModifiers = [element](bool isCommandExecuted) {
@@ -75,8 +74,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
     ASSERT_NE(element, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     const auto checkModifiers = [element](bool isCommandExecuted) {
@@ -137,8 +135,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
     testEnvironment.m_project.process();
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     const auto checkModifiers = [element](bool isCommandExecuted) {
@@ -207,8 +204,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
     ASSERT_NE(element, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     ASSERT_NE(getArrayFeature(), nullptr);
@@ -250,8 +246,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
         ASSERT_NE(element, nullptr);
 
         const auto getArrayFeature = [element]() {
-            auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-            return root->getFeature(0)->as<babelwires::ValueFeature>();
+            return element->getInputFeature()->as<babelwires::ValueFeature>();
         };
 
         ASSERT_NE(getArrayFeature(), nullptr);

@@ -16,7 +16,6 @@ namespace babelwires {
 namespace babelwires {
 
     struct SourceFileElementData;
-    class RecordFeature;
     struct ProjectContext;
     class RootFeature;
 

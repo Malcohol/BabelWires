@@ -15,6 +15,7 @@
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(ProjectDataTest, serialization) {
+    testUtils::TestLog log;
     std::string serializedContents;
     {
         testUtils::TestProjectData projectData;
@@ -26,7 +27,6 @@ TEST(ProjectDataTest, serialization) {
         serializedContents = std::move(os.str());
     }
 
-    testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
     auto dataPtr = deserializer.deserializeObject<babelwires::ProjectData>();

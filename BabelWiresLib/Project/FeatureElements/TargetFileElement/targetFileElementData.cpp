@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
 
-#include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>

@@ -54,8 +54,7 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     ASSERT_NE(targetElement, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element, targetElement](bool isCommandExecuted) {
@@ -145,8 +144,7 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
     ASSERT_NE(element, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     ASSERT_NE(getArrayFeature(), nullptr);
