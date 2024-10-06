@@ -18,7 +18,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Types/FailedType/failedType.hpp>
+#include <BabelWiresLib/Types/Failure/failureType.hpp>
 
 #include <Common/Log/userLogger.hpp>
 
@@ -37,7 +37,7 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
         setFactoryName(elementData.m_factoryIdentifier);
         setInternalFailure(e.what());
         m_failedFeature =
-            std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem, FailedType::getThisIdentifier());
+            std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier());
         userLogger.logError() << "Failed to create processor id=" << elementData.m_id << ": " << e.what();
     }
 }
@@ -94,8 +94,8 @@ std::string babelwires::ProcessorElement::getRootLabel() const {
 }
 
 void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
-    if (getInputFeature()->isChanged(Feature::Changes::SomethingChanged)) {
-        if (m_processor) {
+    if (m_processor) {
+        if (getInputFeature()->isChanged(Feature::Changes::SomethingChanged)) {
             try {
                 m_processor->process(userLogger);
                 if (isFailed()) {
@@ -109,12 +109,13 @@ void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
                 m_processor->getOutputFeature().setToDefault();
             }
         }
-    }
-    if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        if (m_processor) {
-            m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInputFeature(), &m_processor->getOutputFeature());
+        if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
+            m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInputFeature(),
+                                        &m_processor->getOutputFeature());
+        } else if (isChanged(Changes::ModifierChangesMask)) {
+            m_contentsCache.updateModifierCache();
         }
-    } else if (isChanged(Changes::ModifierChangesMask)) {
-        m_contentsCache.updateModifierCache();
+    } else {
+        m_contentsCache.setFeatures(getRootLabel(), m_failedFeature.get(), m_failedFeature.get());
     }
 }

@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Types/FailedType/failedType.hpp>
+#include <BabelWiresLib/Types/Failure/failureType.hpp>
 
 babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger& userLogger,
                                        const ValueElementData& data, ElementId newId)
@@ -20,7 +20,10 @@ babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger
     setFactoryName(data.getTypeRef().toString());
     TypeRef typeRefForConstruction = data.getTypeRef();
     if (!typeRefForConstruction.tryResolve(context.m_typeSystem)) {
-        typeRefForConstruction = FailedType::getThisIdentifier();
+        typeRefForConstruction = FailureType::getThisIdentifier();
+        std::ostringstream message;
+        message << "Type Reference " << data.getTypeRef().toString() << " could not be resolved";
+        setInternalFailure(message.str());
     }
     m_rootFeature = std::make_unique<SimpleValueFeature>(context.m_typeSystem, typeRefForConstruction);
 }
@@ -48,7 +51,7 @@ const babelwires::Feature* babelwires::ValueElement::getOutputFeature() const {
 }
 
 std::string babelwires::ValueElement::getRootLabel() const {
-    if (m_rootFeature->getTypeRef() == FailedType::getThisIdentifier()) {
+    if (m_rootFeature->getTypeRef() == FailureType::getThisIdentifier()) {
         return "Failed";
     } else {
         return "Value";
