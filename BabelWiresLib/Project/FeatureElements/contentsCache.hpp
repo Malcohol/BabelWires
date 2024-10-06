@@ -140,9 +140,6 @@ namespace babelwires {
         void clearChanges();
 
       private:
-        /// Determine whether the root is visible and set the indexOffset accordingly.
-        void setIndexOffset();
-
         /// Set flags recording a change.
         void setChanged(Changes changes);
 
@@ -157,9 +154,6 @@ namespace babelwires {
         /// Non-const because the cache builder can encounter features whose style states that they are not collapsable
         /// (i.e. that they are expanded without required an edit) and we have to update the edit tree with that fact.
         EditTree& m_edits;
-
-        /// We hide the roots unless necessary (root is a file or there are hidden failed modifiers)
-        int m_indexOffset = 0;
 
         Changes m_changes;
     };
