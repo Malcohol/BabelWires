@@ -42,13 +42,13 @@ const babelwires::Feature* babelwires::SourceFileElement::getOutputFeature() con
 }
 
 void babelwires::SourceFileElement::setFeature(std::unique_ptr<RootFeature> feature) {
-    m_contentsCache.setFeatures(nullptr, feature.get());
+    m_contentsCache.setFeatures("File", nullptr, feature.get());
     m_feature = std::move(feature);
 }
 
 void babelwires::SourceFileElement::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setFeatures(nullptr, m_feature.get());
+        m_contentsCache.setFeatures("File", nullptr, m_feature.get());
     }
 }
 

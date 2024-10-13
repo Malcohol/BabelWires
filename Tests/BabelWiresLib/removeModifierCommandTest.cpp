@@ -60,8 +60,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     ASSERT_NE(targetElement, nullptr);
 
     const auto getArrayFeature = [element]() {
-        auto root = element->getInputFeature()->as<babelwires::CompoundFeature>();
-        return root->getFeature(0)->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::ValueFeature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element, targetElement, pathToArrayEntry](bool isCommandExecuted) {
@@ -139,8 +138,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
         testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToValue =
-        babelwires::FeaturePath({babelwires::PathStep(babelwires::ValueElement::getStepToValue())});
+    const babelwires::FeaturePath pathToValue;
 
     babelwires::FeaturePath pathToOptional = pathToValue;
     pathToOptional.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
@@ -172,9 +170,8 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
 
-    const babelwires::CompoundFeature* const inputFeature = element->getInputFeature()->as<babelwires::CompoundFeature>();
-    ASSERT_NE(inputFeature, nullptr);
-    const babelwires::ValueFeature* const valueFeature = inputFeature->getFeature(0)->as<babelwires::ValueFeature>();
+    const babelwires::ValueFeature* const valueFeature = element->getInputFeature()->as<babelwires::ValueFeature>();
+    ASSERT_NE(valueFeature, nullptr);
     const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
 
     babelwires::RemoveModifierCommand command("Test command", elementId, pathToValue);

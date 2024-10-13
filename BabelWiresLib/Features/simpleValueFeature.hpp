@@ -39,9 +39,6 @@ namespace babelwires {
         /// Get the TypeSystem carried by this feature (or the one carried by the root of the hierarchy).
         const TypeSystem& getTypeSystem() const;
 
-        /// The root is not collapsable.
-        Style getStyle() const override;
-
       protected:
         const ValueHolder& doGetValue() const override;
         void doSetToDefault() override;

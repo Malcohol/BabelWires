@@ -2,7 +2,6 @@
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/recordFeature.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/Types/Int/intFeature.hpp>
 

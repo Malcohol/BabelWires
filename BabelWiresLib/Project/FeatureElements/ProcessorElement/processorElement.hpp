@@ -14,11 +14,13 @@ namespace babelwires {
     struct ProjectContext;
     struct ProcessorElementData;
     class Processor;
+    class SimpleValueFeature;
 
     class ProcessorElement : public FeatureElement {
       public:
         ProcessorElement(const ProjectContext& context, UserLogger& userLogger, const ProcessorElementData& data,
                          ElementId newId);
+        ~ProcessorElement();
 
         /// Down-cast version of the parent's method.
         const ProcessorElementData& getElementData() const;
@@ -32,13 +34,14 @@ namespace babelwires {
         void doProcess(UserLogger& userLogger) override;
 
       protected:
+        std::string getRootLabel() const;
         void setProcessor(std::unique_ptr<Processor> processor);
 
       private:
         std::unique_ptr<Processor> m_processor;
 
         /// Non-null when the defined processor could not be constructed.
-        std::unique_ptr<babelwires::Feature> m_sharedDummyFeature;
+        std::unique_ptr<babelwires::SimpleValueFeature> m_failedFeature;
     };
 
 } // namespace babelwires
