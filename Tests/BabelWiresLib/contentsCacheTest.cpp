@@ -53,8 +53,8 @@ namespace {
         } else {
             EXPECT_FALSE(entry->getOutputFeature());
         }
-        // EXPECT_FALSE(entry->isExpandable());
-        // EXPECT_TRUE(entry->isExpanded());
+        EXPECT_TRUE(entry->isExpandable());
+        EXPECT_TRUE(entry->isExpanded());
     }
 
 
@@ -413,6 +413,7 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
     babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
     inputFeature.setToDefault();
+    editTree.setExpanded(babelwires::FeaturePath(), true);
 
     testCommonBehaviour(cache, editTree, &inputFeature, nullptr);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, nullptr);
@@ -427,6 +428,7 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
     babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
     outputFeature.setToDefault();
+    editTree.setExpanded(babelwires::FeaturePath(), true);
 
     testCommonBehaviour(cache, editTree, nullptr, &outputFeature);
 }
@@ -443,6 +445,7 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
+    editTree.setExpanded(babelwires::FeaturePath(), true);
 
     testCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
@@ -461,6 +464,7 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
+    editTree.setExpanded(babelwires::FeaturePath(), true);
 
     testUtils::TestComplexRecordTypeFeatureInfo inputInfo(inputFeature);
     testUtils::TestComplexRecordTypeFeatureInfo outputInfo(outputFeature);
@@ -524,6 +528,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
+    editTree.setExpanded(babelwires::FeaturePath(), true);
 
     cache.setFeatures("Test", &inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 6);
@@ -551,8 +556,8 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
         EXPECT_EQ(entry->getInputFeature(), &inputFeature);
         EXPECT_EQ(entry->getOutputFeature(), &outputFeature);
         EXPECT_EQ(entry->getPath(), babelwires::FeaturePath());
-        EXPECT_FALSE(entry->isExpandable());
-        EXPECT_FALSE(entry->isExpanded());
+        EXPECT_TRUE(entry->isExpandable());
+        EXPECT_TRUE(entry->isExpanded());
         EXPECT_FALSE(entry->hasModifier());
         EXPECT_TRUE(entry->hasSubmodifiers());
         EXPECT_FALSE(entry->hasFailedModifier());

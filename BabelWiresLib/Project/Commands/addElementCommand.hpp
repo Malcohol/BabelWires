@@ -19,6 +19,8 @@ namespace babelwires {
     /// Add a feature element to the project.
     class AddElementCommand : public SimpleCommand<Project> {
       public:
+        /// Create a command which adds the given element.
+        /// NOTE: An expanded path entry is always added for the root path, so the constructor asserts it is not already present.
         AddElementCommand(std::string commandName, std::unique_ptr<ElementData> elementToAdd);
 
         virtual bool initialize(const Project& project) override;
