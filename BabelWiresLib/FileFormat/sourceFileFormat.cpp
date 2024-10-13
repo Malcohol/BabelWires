@@ -12,3 +12,10 @@ babelwires::SourceFileFormatRegistry::SourceFileFormatRegistry()
 
 babelwires::SourceFileFormat::SourceFileFormat(LongId identifier, VersionNumber version, Extensions extensions)
     : FileTypeEntry(identifier, version, std::move(extensions)) {}
+
+
+babelwires::SourceFileFormatRegistry2::SourceFileFormatRegistry2()
+    : FileTypeRegistry("File Format Registry") {}
+
+babelwires::SourceFileFormat2::SourceFileFormat2(LongId identifier, VersionNumber version, Extensions extensions)
+    : FileTypeEntry(identifier, version, std::move(extensions)) {}

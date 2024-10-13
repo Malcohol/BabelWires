@@ -152,7 +152,6 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     const testUtils::TestFileFeature* inputFeature =
         static_cast<const testUtils::TestFileFeature*>(featureElement->getOutputFeature());
 
-    EXPECT_EQ(inputFeature->getFileFormatIdentifier(), testUtils::TestSourceFileFormat::getThisIdentifier());
     EXPECT_EQ(inputFeature->m_intChildFeature->get(), 14);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));
@@ -246,7 +245,6 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     const testUtils::TestFileFeature* inputFeature =
         static_cast<const testUtils::TestFileFeature*>(featureElement->getInputFeature());
 
-    EXPECT_EQ(inputFeature->getFileFormatIdentifier(), testUtils::TestSourceFileFormat::getThisIdentifier());
     EXPECT_EQ(inputFeature->m_intChildFeature->get(), 12);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));

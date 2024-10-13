@@ -15,6 +15,8 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Types/Failure/failureType.hpp>
+#include <BabelWiresLib/Types/File/fileType.hpp>
 
 #include <Common/IO/fileDataSource.hpp>
 #include <Common/Log/userLogger.hpp>
@@ -41,7 +43,7 @@ const babelwires::Feature* babelwires::SourceFileElement::getOutputFeature() con
     return m_feature.get();
 }
 
-void babelwires::SourceFileElement::setFeature(std::unique_ptr<RootFeature> feature) {
+void babelwires::SourceFileElement::setFeature(std::unique_ptr<SimpleValueFeature> feature) {
     m_contentsCache.setFeatures("File", nullptr, feature.get());
     m_feature = std::move(feature);
 }
@@ -82,7 +84,7 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
     const SourceFileElementData& data = getElementData();
 
     try {
-        const SourceFileFormat& format = context.m_sourceFileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
+        const SourceFileFormat2& format = context.m_sourceFileFormatReg2.getRegisteredEntry(data.m_factoryIdentifier);
         setFactoryName(format.getName());
 
         if (data.m_filePath.empty()) {
@@ -98,12 +100,12 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
         setFactoryName(data.m_factoryIdentifier);
         setInternalFailure(e.what());
         // A dummy feature
-        setFeature(std::make_unique<FailedFeature>(context));
+        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier()));
     } catch (const BaseException& e) {
         userLogger.logError() << "Source File Feature id=" << data.m_id << " could not be loaded: " << e.what();
         setInternalFailure(e.what());
         // A dummy file feature which allows the user to change the file via the context menu.
-        setFeature(std::make_unique<FileFeature>(context, data.m_factoryIdentifier));
+        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailedFileType::getThisIdentifier()));
     }
     return false;
 }
