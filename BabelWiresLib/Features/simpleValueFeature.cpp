@@ -97,7 +97,3 @@ const babelwires::TypeSystem& babelwires::SimpleValueFeature::getTypeSystem() co
         return RootFeature::getTypeSystemAt(*this);
     }
 }
-
-babelwires::Feature::Style babelwires::SimpleValueFeature::getStyle() const {
-    return getOwner() ? Feature::getStyle() : babelwires::Feature::Style::isInlined;
-}
