@@ -53,7 +53,6 @@ SET( LIB_TESTS_SRCS
     removeModifierCommandTest.cpp
     replaceMapEntryCommandTest.cpp
     resizeElementCommandTest.cpp
-    rootFeatureTest.cpp
     selectRecordVariantModifierDataTest.cpp
     selectRecordVariantCommandTest.cpp
     setArraySizeCommandTest.cpp
