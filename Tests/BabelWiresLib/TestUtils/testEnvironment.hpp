@@ -16,7 +16,7 @@ namespace testUtils {
 
         babelwires::TargetFileFormatRegistry m_targetFileFormatReg;
         babelwires::SourceFileFormatRegistry m_sourceFileFormatReg;
-        babelwires::SourceFileFormatRegistry2 m_sourceFileFormatReg2;
+        babelwires::SourceFileFormatRegistry m_sourceFileFormatReg2;
         babelwires::ProcessorFactoryRegistry m_processorReg;
         testUtils::TestDeserializationRegistry m_deserializationReg;
         babelwires::TypeSystem m_typeSystem;

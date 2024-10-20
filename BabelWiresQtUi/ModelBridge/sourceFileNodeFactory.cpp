@@ -19,7 +19,7 @@
 
 #include <nodes/FlowScene>
 
-babelwires::SourceFileNodeFactory::SourceFileNodeFactory(ProjectBridge* projectBridge, const SourceFileFormat2* sourceFileFormat)
+babelwires::SourceFileNodeFactory::SourceFileNodeFactory(ProjectBridge* projectBridge, const SourceFileFormat* sourceFileFormat)
     : NodeFactoryBase(projectBridge)
     , m_sourceFileFormat(sourceFileFormat) {}
 

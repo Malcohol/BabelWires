@@ -1,9 +1,14 @@
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 
+#include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+
 #include <Common/IO/fileDataSource.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
 #include <Common/exceptions.hpp>
+
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <fstream>
 
@@ -72,13 +77,15 @@ char testUtils::TestSourceFileFormat::getFileData(const std::filesystem::path& p
     return getFileDataInternal(dataSource);
 }
 
-std::unique_ptr<babelwires::FileFeature>
+std::unique_ptr<babelwires::SimpleValueFeature>
 testUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource,
                                               const babelwires::ProjectContext& projectContext,
                                               babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
-    auto newFeature = std::make_unique<TestFileFeature>(projectContext);
-    newFeature->m_intChildFeature->set(value);
+    auto newFeature = std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, 
+      babelwires::FileTypeConstructor::makeTypeRef(TestSimpleRecordType::getThisIdentifier()));
+    TestSimpleRecordType::Instance instance{*newFeature};
+    instance.getintR0().set(value);
     return newFeature;
 }
 

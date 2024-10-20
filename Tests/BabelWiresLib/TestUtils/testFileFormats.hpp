@@ -38,7 +38,7 @@ namespace testUtils {
         TestSourceFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::FileFeature> loadFromFile(babelwires::DataSource& dataSource,
+        std::unique_ptr<babelwires::SimpleValueFeature> loadFromFile(babelwires::DataSource& dataSource,
                                                               const babelwires::ProjectContext& projectContext,
                                                               babelwires::UserLogger& userLogger) const override;
 
