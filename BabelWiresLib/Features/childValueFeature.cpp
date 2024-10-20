@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Features/childValueFeature.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
