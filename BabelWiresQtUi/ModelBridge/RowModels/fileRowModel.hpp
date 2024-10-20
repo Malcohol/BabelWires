@@ -11,7 +11,6 @@
 
 namespace babelwires {
 
-    class FileFeature;
     class FileElement;
 
     /// The file-model is special-cased to query the feature element for the fileName.
@@ -25,7 +24,6 @@ namespace babelwires {
         getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const override;
 
       public:
-        const FileFeature& getFileFeature() const;
         const FileElement& getFileElement() const;
     };
 
