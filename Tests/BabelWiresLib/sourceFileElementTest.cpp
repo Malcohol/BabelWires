@@ -20,6 +20,7 @@ namespace {
 
         auto fileFormat = std::make_unique<testUtils::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<babelwires::SimpleValueFeature>(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+        fileFeature->setToDefault();
         testUtils::TestSimpleRecordType::Instance instance{fileFeature->getFeature(0)->is<babelwires::ValueFeature>()};
         instance.getintR0().set(value);
         fileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFile);

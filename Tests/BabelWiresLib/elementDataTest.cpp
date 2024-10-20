@@ -56,6 +56,14 @@ namespace {
         EXPECT_EQ(mod.m_pathToFeature, path);
         EXPECT_EQ(mod.getValue()->as<babelwires::IntValue>()->get(), 12);
     }
+
+    void setModifiers(babelwires::ElementData& data, babelwires::ShortId fieldId) {
+        setModifiers(data, babelwires::FeaturePath({babelwires::PathStep(fieldId)}));
+    }
+
+    void checkModifiers(const babelwires::ElementData& data, babelwires::ShortId fieldId) {
+        checkModifiers(data, babelwires::FeaturePath({babelwires::PathStep(fieldId)}));
+    }
 } // namespace
 
 TEST(ElementDataTest, sourceFileDataClone) {
@@ -122,6 +130,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
 
         auto targetFileFormat = std::make_unique<testUtils::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<babelwires::SimpleValueFeature>(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+        fileFeature->setToDefault();
         testUtils::TestSimpleRecordType::Instance instance{fileFeature->getFeature(0)->is<babelwires::ValueFeature>()};
         instance.getintR0().set(14);
         targetFileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFile);
@@ -250,12 +259,12 @@ TEST(ElementDataTest, processorDataClone) {
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
-    setModifiers(data, testUtils::getTestFileElementPathToInt0());
+    setModifiers(data, testUtils::TestRecordFeature::s_intIdInitializer);
     auto clone = data.clone();
     EXPECT_EQ(data.m_factoryIdentifier, "foo");
     EXPECT_EQ(data.m_factoryVersion, 14);
     checkCommonFields(*clone);
-    checkModifiers(*clone, testUtils::getTestFileElementPathToInt0());
+    checkModifiers(*clone, testUtils::TestRecordFeature::s_intIdInitializer);
 }
 
 TEST(ElementDataTest, processorDataCustomClone) {
@@ -263,7 +272,7 @@ TEST(ElementDataTest, processorDataCustomClone) {
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
-    setModifiers(data, testUtils::getTestFileElementPathToInt0());
+    setModifiers(data, testUtils::TestRecordFeature::s_intIdInitializer);
     auto clone = data.customClone();
     EXPECT_EQ(data.m_factoryIdentifier, "foo");
     EXPECT_EQ(data.m_factoryVersion, 14);
@@ -277,7 +286,7 @@ TEST(ElementDataTest, processorDataSerialize) {
         babelwires::ProcessorElementData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
-        setModifiers(data, testUtils::getTestFileElementPathToInt0());
+        setModifiers(data, testUtils::TestRecordFeature::s_intIdInitializer);
 
         babelwires::XmlSerializer serializer;
         serializer.serializeObject(data);
@@ -294,7 +303,7 @@ TEST(ElementDataTest, processorDataSerialize) {
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
     checkCommonFields(*dataPtr);
-    checkModifiers(*dataPtr, testUtils::getTestFileElementPathToInt0());
+    checkModifiers(*dataPtr, testUtils::TestRecordFeature::s_intIdInitializer);
 }
 
 TEST(ElementDataTest, processorDataCreateElement) {
@@ -304,7 +313,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
     data.m_factoryVersion = 1;
     setCommonFields(data);
-    setModifiers(data, testUtils::getTestFileElementPathToInt0());
+    setModifiers(data, testUtils::TestProcessorInputOutputType::s_intIdInitializer);
 
     const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
