@@ -20,7 +20,6 @@ namespace babelwires {
 } // namespace babelwires
 
 namespace babelwires {
-    class FileFeature;
     class SimpleValueFeature;
     struct ProjectContext;
 

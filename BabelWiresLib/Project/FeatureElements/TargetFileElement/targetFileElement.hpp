@@ -17,8 +17,6 @@ namespace babelwires {
     class SimpleValueFeature;
     struct TargetFileElementData;
     struct ProjectContext;
-    class FileFeature;
-    class RootFeature;
 
     /// TargetFileElements are FeatureElements which correspond to a target file.
     class TargetFileElement : public FileElement {
