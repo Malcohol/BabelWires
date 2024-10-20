@@ -11,7 +11,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>

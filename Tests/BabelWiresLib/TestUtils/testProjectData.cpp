@@ -12,7 +12,6 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 testUtils::TestProjectData::TestProjectData()

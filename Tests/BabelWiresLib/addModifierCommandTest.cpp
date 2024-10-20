@@ -10,7 +10,6 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(AddModifierCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
