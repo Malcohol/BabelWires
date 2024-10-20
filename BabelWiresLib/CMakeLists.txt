@@ -33,7 +33,6 @@ SET( BABELWIRESLIB_SRCS
 	ProjectExtra/dataLocation.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
-	FileFormat/fileFeature.cpp
 	Types/Array/arrayType.cpp
 	Types/Array/arrayTypeConstructor.cpp
 	Types/Array/arrayValue.cpp
