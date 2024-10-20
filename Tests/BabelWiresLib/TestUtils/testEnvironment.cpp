@@ -6,7 +6,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
@@ -21,20 +20,6 @@ testUtils::TestEnvironment::TestEnvironment()
     babelwires::registerLib(m_projectContext);
 
     {
-        // Ensure some of the test discriminators are not default.
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-            testUtils::TestRecordFeature::s_intIdInitializer, "test int", "41000000-1111-2222-3333-800000000001",
-            babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-            testUtils::TestRecordFeature::s_intIdInitializer, "test int 1", "42000000-1111-2222-3333-800000000001",
-            babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-            testUtils::TestRecordFeature::s_intIdInitializer, "test int 2", "43000000-1111-2222-3333-800000000001",
-            babelwires::IdentifierRegistry::Authority::isAuthoritative);
-        babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-            testUtils::TestRecordFeature::s_recordIdInitializer, "test record", "41000000-1111-2222-3333-800000000003",
-            babelwires::IdentifierRegistry::Authority::isAuthoritative);
-
         // Also register some irrelevant field names.
         babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
             "Flum", "Flum", "41000000-1111-2222-3333-800000000100",
