@@ -9,17 +9,18 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/rootFeature.hpp>
-#include <BabelWiresLib/FileFormat/fileFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
-#include <BabelWiresLib/Project/FeatureElements/failedFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/failedFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Types/Failure/failureType.hpp>
 
+#include <Common/Hash/hash.hpp>
 #include <Common/IO/outFileStream.hpp>
 #include <Common/Log/userLogger.hpp>
-#include <Common/Hash/hash.hpp>
 
 #include <fstream>
 
@@ -37,17 +38,17 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
         setFeature(std::move(newFeature));
     } catch (const RegistryException& e) {
         setInternalFailure(e.what());
-        // This is the wrong kind of identifier, but it shouldn't matter because this failure is unrecoverable.
-        setFeature(std::make_unique<FailedFeature>(context));
+        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier()));
         userLogger.logError() << "Failed to create target feature id=" << elementData.m_id << ": " << e.what();
     } catch (const BaseException& e) {
         setInternalFailure(e.what());
-        // This is the wrong kind of identifier, but it shouldn't matter because this failure is unrecoverable.
-        setFeature(std::make_unique<FileFeature>(context, elementData.m_factoryIdentifier));
+        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier()));
         userLogger.logError() << "Failed to create target feature \"" << elementData.m_factoryIdentifier
                               << "\": " << e.what();
     }
 }
+
+babelwires::TargetFileElement::~TargetFileElement() = default;
 
 const babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData() const {
     return static_cast<const TargetFileElementData&>(FeatureElement::getElementData());
@@ -65,7 +66,7 @@ const babelwires::Feature* babelwires::TargetFileElement::getInputFeature() cons
     return m_feature.get();
 }
 
-void babelwires::TargetFileElement::setFeature(std::unique_ptr<RootFeature> feature) {
+void babelwires::TargetFileElement::setFeature(std::unique_ptr<SimpleValueFeature> feature) {
     m_contentsCache.setFeatures("File", feature.get(), nullptr);
     m_feature = std::move(feature);
 }
@@ -111,10 +112,9 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
     }
     try {
         OutFileStream outStream(data.m_filePath);
-        const auto* fileFeature = m_feature.get()->as<FileFeature>();
         const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
         assert(format && "FileFeature with unregistered file format");
-        format->writeToFile(context, userLogger, *fileFeature, outStream);
+        format->writeToFile(context, userLogger, *m_feature, outStream);
         outStream.close();
         if (m_saveHashWhenSaved != m_saveHash) {
             setChanged(Changes::FeatureElementLabelChanged);

@@ -28,6 +28,9 @@ namespace testUtils {
         static const babelwires::FeaturePath s_pathToIntChild;
     };
 
+    /// A file type which wraps a TestSimpleRecordType.
+    babelwires::TypeRef getTestFileType();
+
     /// A file format that can save and load some test data.
     /// The serialized format is just the identifier followed by a single byte which carries the value of
     /// intChildFeature. This has version 1.
@@ -54,10 +57,10 @@ namespace testUtils {
         TestTargetFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::FileFeature>
+        std::unique_ptr<babelwires::SimpleValueFeature>
         createNewFeature(const babelwires::ProjectContext& projectContext) const override;
         void writeToFile(const babelwires::ProjectContext& projectContext, babelwires::UserLogger& userLogger,
-                         const babelwires::FileFeature& fileFeature, std::ostream& os) const override;
+                         const babelwires::SimpleValueFeature& contents, std::ostream& os) const override;
     };
 
 } // namespace testUtils

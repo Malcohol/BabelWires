@@ -1,7 +1,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 
-#include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
 
 #include <Common/IO/fileDataSource.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -21,13 +21,16 @@ namespace {
     const char s_product[] = "Test Product";
 } // namespace
 
+babelwires::TypeRef testUtils::getTestFileType() {
+    return babelwires::FileTypeConstructor::makeTypeRef(TestSimpleRecordType::getThisIdentifier());
+}
+
 testUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext& context)
     : babelwires::FileFeature(context, s_fileFormatId)
     , m_intChildId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
           s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
           babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
-    m_intChildFeature =
-        addField(std::make_unique<babelwires::IntFeature>(0, 255), m_intChildId);
+    m_intChildFeature = addField(std::make_unique<babelwires::IntFeature>(0, 255), m_intChildId);
 }
 
 babelwires::LongId testUtils::TestSourceFileFormat::getThisIdentifier() {
@@ -82,9 +85,8 @@ testUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource
                                               const babelwires::ProjectContext& projectContext,
                                               babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
-    auto newFeature = std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, 
-      babelwires::FileTypeConstructor::makeTypeRef(TestSimpleRecordType::getThisIdentifier()));
-    TestSimpleRecordType::Instance instance{*newFeature};
+    auto newFeature = std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, getTestFileType());
+    TestSimpleRecordType::Instance instance{newFeature->getFeature(0)->is<babelwires::ValueFeature>()};
     instance.getintR0().set(value);
     return newFeature;
 }
@@ -112,14 +114,15 @@ std::string testUtils::TestTargetFileFormat::getProductName() const {
     return s_product;
 }
 
-std::unique_ptr<babelwires::FileFeature>
+std::unique_ptr<babelwires::SimpleValueFeature>
 testUtils::TestTargetFileFormat::createNewFeature(const babelwires::ProjectContext& projectContext) const {
-    return std::make_unique<TestFileFeature>(projectContext);
+    return std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, getTestFileType());
 }
 
 void testUtils::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
                                                   babelwires::UserLogger& userLogger,
-                                                  const babelwires::FileFeature& fileFeature, std::ostream& os) const {
-    const TestFileFeature& testFileFeature = *fileFeature.as<TestFileFeature>();
-    os << s_fileFormatId << char(testFileFeature.m_intChildFeature->get());
+                                                  const babelwires::SimpleValueFeature& contents,
+                                                  std::ostream& os) const {
+    TestSimpleRecordType::ConstInstance instance{contents.getFeature(0)->is<babelwires::ValueFeature>()};
+    os << s_fileFormatId << char(instance.getintR0().get());
 }
