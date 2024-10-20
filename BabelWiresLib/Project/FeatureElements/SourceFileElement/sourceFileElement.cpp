@@ -84,7 +84,7 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
     const SourceFileElementData& data = getElementData();
 
     try {
-        const SourceFileFormat& format = context.m_sourceFileFormatReg2.getRegisteredEntry(data.m_factoryIdentifier);
+        const SourceFileFormat& format = context.m_sourceFileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
         setFactoryName(format.getName());
 
         if (data.m_filePath.empty()) {
@@ -100,12 +100,16 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
         setFactoryName(data.m_factoryIdentifier);
         setInternalFailure(e.what());
         // A dummy feature
-        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier()));
+        auto failure = std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier());
+        failure->setToDefault();
+        setFeature(std::move(failure));
     } catch (const BaseException& e) {
         userLogger.logError() << "Source File Feature id=" << data.m_id << " could not be loaded: " << e.what();
         setInternalFailure(e.what());
         // A dummy file feature which allows the user to change the file via the context menu.
-        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier()));
+        auto failure = std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier());
+        failure->setToDefault();
+        setFeature(std::move(failure));
     }
     return false;
 }

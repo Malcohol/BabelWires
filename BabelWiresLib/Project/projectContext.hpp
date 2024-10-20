@@ -27,7 +27,6 @@ namespace babelwires {
     /// * The IdentifierRegistry, because I judged it too painful to pass around.
     struct ProjectContext : DataContext {
         SourceFileFormatRegistry& m_sourceFileFormatReg;
-        SourceFileFormatRegistry& m_sourceFileFormatReg2;
         TargetFileFormatRegistry& m_targetFileFormatReg;
         ProcessorFactoryRegistry& m_processorReg;
         TypeSystem& m_typeSystem;

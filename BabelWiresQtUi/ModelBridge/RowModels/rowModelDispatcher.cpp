@@ -14,6 +14,7 @@
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
+#include <BabelWiresLib/Types/Failure/failureType.hpp>
 
 babelwires::RowModelDispatcher::RowModelDispatcher(const ValueModelRegistry& valueModelRegistry,
                                                    const TypeSystem& typeSystem,
@@ -21,7 +22,8 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const ValueModelRegistry& val
                                                    const babelwires::FeatureElement* element) {
     m_rowModel = &m_rowModelStorage;
     const babelwires::ValueFeature* feature = &entry->getInputThenOutputFeature()->is<babelwires::ValueFeature>();
-    if (feature->getType().as<FileType>()) {
+    if (element->as<FileElement>() && (entry->getDepth() == 0)) {
+        assert((feature->is<ValueFeature>().getType().as<FileType>()) || (feature->is<ValueFeature>().getType().as<FailureType>()));
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::FileRowModel));
         new (m_rowModel) babelwires::FileRowModel();
     } else {
