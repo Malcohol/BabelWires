@@ -2,6 +2,7 @@
 
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
+#include <BabelWiresLib/Types/File/fileType.hpp>
 
 #include <Common/IO/fileDataSource.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -12,8 +13,6 @@
 
 #include <fstream>
 
-const babelwires::FeaturePath testUtils::TestFileFeature::s_pathToIntChild =
-    babelwires::FeaturePath::deserializeFromString(testUtils::TestFileFeature::s_intChildInitializer);
 namespace {
     const char s_fileFormatId[] = "testFileFormat";
     const char s_factoryFormatId[] = "testFactoryFormat";
@@ -25,12 +24,11 @@ babelwires::TypeRef testUtils::getTestFileType() {
     return babelwires::FileTypeConstructor::makeTypeRef(TestSimpleRecordType::getThisIdentifier());
 }
 
-testUtils::TestFileFeature::TestFileFeature(const babelwires::ProjectContext& context)
-    : babelwires::FileFeature(context, s_fileFormatId)
-    , m_intChildId(babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-          s_intChildInitializer, s_intChildFieldName, s_intChildUuid,
-          babelwires::IdentifierRegistry::Authority::isAuthoritative)) {
-    m_intChildFeature = addField(std::make_unique<babelwires::IntFeature>(0, 255), m_intChildId);
+babelwires::FeaturePath testUtils::getTestFileElementPathToInt0() {
+    babelwires::FeaturePath path;
+    path.pushStep(babelwires::PathStep(babelwires::FileType::getStepToContents()));
+    path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt0Id()));
+    return path;
 }
 
 babelwires::LongId testUtils::TestSourceFileFormat::getThisIdentifier() {
@@ -86,6 +84,7 @@ testUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource
                                               babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
     auto newFeature = std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, getTestFileType());
+    newFeature->setToDefault();
     TestSimpleRecordType::Instance instance{newFeature->getFeature(0)->is<babelwires::ValueFeature>()};
     instance.getintR0().set(value);
     return newFeature;

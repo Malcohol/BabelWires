@@ -58,8 +58,8 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
         ASSERT_NE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt), nullptr);
         EXPECT_FALSE(
             processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt)->isFailed());
-        ASSERT_NE(targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild), nullptr);
-        EXPECT_FALSE(targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild)->isFailed());
+        ASSERT_NE(targetElement->getEdits().findModifier(testUtils::getTestFileElementPathToInt0()), nullptr);
+        EXPECT_FALSE(targetElement->getEdits().findModifier(testUtils::getTestFileElementPathToInt0())->isFailed());
     };
     checkForProjectData();
 

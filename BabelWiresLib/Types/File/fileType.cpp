@@ -8,8 +8,12 @@
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
 babelwires::FileType::FileType(TypeRef typeOfContents)
-    : RecordType({{BW_SHORT_ID("Conts", "Contents", "5144fef7-7361-495b-8967-ac6a28aa13bd"), typeOfContents}}) {}
+    : RecordType({{getStepToContents(), typeOfContents}}) {}
 
 std::string babelwires::FileType::getKind() const {
     return "";
+}
+
+babelwires::ShortId babelwires::FileType::getStepToContents() {
+    return BW_SHORT_ID("Conts", "Contents", "5144fef7-7361-495b-8967-ac6a28aa13bd");
 }

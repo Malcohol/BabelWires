@@ -13,6 +13,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 namespace {
@@ -39,13 +40,12 @@ namespace {
         ASSERT_NE(element, nullptr);
 
         const auto getOutputFeature = [element]() {
-            return element->getOutputFeature()->as<const testUtils::TestFileFeature>();
+            return testUtils::TestSimpleRecordType::ConstInstance(element->getOutputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>()); 
         };
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
         if (source1Present) {
-            ASSERT_NE(getOutputFeature(), nullptr);
-            EXPECT_EQ(getOutputFeature()->m_intChildFeature->get(), 'x');
+            EXPECT_EQ(getOutputFeature().getintR0().get(), 'x');
         }
 
         babelwires::ChangeFileCommand command("Test command", elementId, filePath2.m_filePath);
@@ -59,7 +59,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
-            EXPECT_EQ(getOutputFeature()->m_intChildFeature->get(), 'q');
+            EXPECT_EQ(getOutputFeature().getintR0().get(), 'q');
         }
 
         command.undo(testEnvironment.m_project);
@@ -67,7 +67,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
         if (source1Present) {
-            EXPECT_EQ(getOutputFeature()->m_intChildFeature->get(), 'x');
+            EXPECT_EQ(getOutputFeature().getintR0().get(), 'x');
         }
 
         command.execute(testEnvironment.m_project);
@@ -75,7 +75,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
-            EXPECT_EQ(getOutputFeature()->m_intChildFeature->get(), 'q');
+            EXPECT_EQ(getOutputFeature().getintR0().get(), 'q');
         }
     }
 } // namespace

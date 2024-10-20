@@ -48,8 +48,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
 
     targetFileElement->clearChanges();
 
-    const babelwires::FeaturePath pathToInt =
-        babelwires::FeaturePath::deserializeFromString(testUtils::TestFileFeature::s_intChildInitializer);
+    const babelwires::FeaturePath pathToInt = testUtils::getTestFileElementPathToInt0();
 
     {
         babelwires::ValueAssignmentData intMod(babelwires::IntValue(30));

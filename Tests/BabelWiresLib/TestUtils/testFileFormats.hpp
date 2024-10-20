@@ -7,29 +7,11 @@
 #include <filesystem>
 
 namespace testUtils {
-
-    /// A record with an int feature at path "aaa".
-    struct TestFileFeature : babelwires::FileFeature {
-        TestFileFeature(const babelwires::ProjectContext& context);
-
-        /// The id of the child feature.
-        /// Deliberately match the field in TestRecordFeature.
-        static constexpr char s_intChildInitializer[] = "intR0";
-
-        static constexpr char s_intChildFieldName[] = "my int";
-
-        static constexpr char s_intChildUuid[] = "00000000-1111-2222-3333-800000000BBB";
-
-        babelwires::ShortId m_intChildId;
-
-        /// A shortcut for accessing at the child feature.
-        babelwires::IntFeature* m_intChildFeature;
-
-        static const babelwires::FeaturePath s_pathToIntChild;
-    };
-
     /// A file type which wraps a TestSimpleRecordType.
     babelwires::TypeRef getTestFileType();
+
+    /// Get the path in a FileElement to Int0 in TestSimpleRecordType.
+    babelwires::FeaturePath getTestFileElementPathToInt0();
 
     /// A file format that can save and load some test data.
     /// The serialized format is just the identifier followed by a single byte which carries the value of
