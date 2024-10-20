@@ -13,17 +13,11 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
-#include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
 
 #include <QString>
 
 #include <cassert>
-
-const babelwires::FileFeature& babelwires::FileRowModel::getFileFeature() const {
-    assert(getInputThenOutputFeature()->as<const FileFeature>() && "Wrong type of feature stored");
-    return *static_cast<const FileFeature*>(getInputThenOutputFeature());
-}
 
 const babelwires::FileElement& babelwires::FileRowModel::getFileElement() const {
     assert(m_featureElement->as<FileElement>() && "A file feature should only appear in a file element");

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
 namespace babelwires {
     struct UserLogger;
@@ -17,7 +18,7 @@ namespace babelwires {
 
     struct SourceFileElementData;
     struct ProjectContext;
-    class RootFeature;
+    class SimpleValueFeature;
 
     /// SourceFileElements are FeatureElements which correspond to a source file.
     class SourceFileElement : public FileElement {
@@ -41,11 +42,11 @@ namespace babelwires {
         void doProcess(UserLogger& userLogger) override;
 
       protected:
-        void setFeature(std::unique_ptr<RootFeature> feature);
+        void setFeature(std::unique_ptr<SimpleValueFeature> feature);
         SourceFileElementData& getElementData();
 
       private:
-        std::unique_ptr<RootFeature> m_feature;
+        std::unique_ptr<SimpleValueFeature> m_feature;
     };
 
 } // namespace babelwires

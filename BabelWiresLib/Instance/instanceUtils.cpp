@@ -8,9 +8,7 @@
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 
 #include <BabelWiresLib/Types/Record/recordType.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 const babelwires::ValueFeature& babelwires::InstanceUtils::getChild(const babelwires::ValueFeature& recordFeature,

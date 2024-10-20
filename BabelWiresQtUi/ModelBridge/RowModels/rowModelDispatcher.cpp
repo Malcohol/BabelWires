@@ -11,23 +11,24 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/valueRowModel.hpp>
 
 #include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/FileFormat/fileFeature.hpp>
+#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Types/File/fileType.hpp>
+#include <BabelWiresLib/Types/Failure/failureType.hpp>
 
 babelwires::RowModelDispatcher::RowModelDispatcher(const ValueModelRegistry& valueModelRegistry,
                                                    const TypeSystem& typeSystem,
                                                    const babelwires::ContentsCacheEntry* entry,
                                                    const babelwires::FeatureElement* element) {
     m_rowModel = &m_rowModelStorage;
-    const babelwires::Feature* feature = entry->getInputThenOutputFeature();
-    if (feature->as<const babelwires::ValueFeature>()) {
-        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ValueRowModel));
-        new (m_rowModel) babelwires::ValueRowModel();
-    } else if (feature->as<const babelwires::FileFeature>()) {
+    const babelwires::ValueFeature* feature = &entry->getInputThenOutputFeature()->is<babelwires::ValueFeature>();
+    if (element->as<FileElement>() && (entry->getDepth() == 0)) {
+        assert((feature->is<ValueFeature>().getType().as<FileType>()) || (feature->is<ValueFeature>().getType().as<FailureType>()));
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::FileRowModel));
         new (m_rowModel) babelwires::FileRowModel();
     } else {
-        // The base row model is used.
+        static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::ValueRowModel));
+        new (m_rowModel) babelwires::ValueRowModel();
     }
     m_rowModel->m_contentsCacheEntry = entry;
     m_rowModel->m_featureElement = element;

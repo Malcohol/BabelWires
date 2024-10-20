@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>

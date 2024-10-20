@@ -50,7 +50,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
         const babelwires::Modifier* targetModifier =
-            targetElement->getEdits().findModifier(testUtils::TestFileFeature::s_pathToIntChild);
+            targetElement->getEdits().findModifier(testUtils::getTestFileElementPathToInt0());
         if (isCommandExecuted) {
             ASSERT_EQ(targetModifier, nullptr);
         } else {

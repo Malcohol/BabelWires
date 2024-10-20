@@ -15,6 +15,7 @@ namespace babelwires {
 
     class TargetFileFormatRegistry;
     class SourceFileFormatRegistry;
+    class SourceFileFormatRegistry;
     class ProcessorFactoryRegistry;
     class TypeSystem;
 

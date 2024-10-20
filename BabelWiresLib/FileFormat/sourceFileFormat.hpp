@@ -20,20 +20,19 @@ namespace babelwires {
 } // namespace babelwires
 
 namespace babelwires {
-    class FileFeature;
+    class SimpleValueFeature;
     struct ProjectContext;
 
-    /// Format which can create a feature by loading a file.
     class SourceFileFormat : public FileTypeEntry, ProductInfo {
       public:
         SourceFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
-        virtual std::unique_ptr<babelwires::FileFeature> loadFromFile(DataSource& dataSource, const ProjectContext& projectContext,
+        virtual std::unique_ptr<babelwires::SimpleValueFeature> loadFromFile(DataSource& dataSource, const ProjectContext& projectContext,
                                                                       UserLogger& userLogger) const = 0;
     };
 
-    /// Registry of SourceFileFormats.
     class SourceFileFormatRegistry : public FileTypeRegistry<SourceFileFormat> {
       public:
         SourceFileFormatRegistry();
     };
+
 }

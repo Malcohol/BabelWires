@@ -19,6 +19,7 @@ namespace babelwires {
     /// A bit of a hack to avoid an unnecessary allocation:
     /// Allocate the appropriate rowModel on top of its same-sized base class.
     /// Neither require destruction, so it should be safe.
+    /// TODO: This abstraction is mostly a legacy feature and is now only used to special-case FileType at the element level.
     class RowModelDispatcher {
       public:
         RowModelDispatcher(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem,

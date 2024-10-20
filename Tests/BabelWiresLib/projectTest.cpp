@@ -124,18 +124,18 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
 
     const babelwires::ElementId sourceElementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* sourceElement =
-        testEnvironment.m_project.getFeatureElement(sourceElementId);
+    const babelwires::FeatureElement* sourceElement = testEnvironment.m_project.getFeatureElement(sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
 
     const babelwires::ElementId targetElementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetElementId);
+    const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
-    const babelwires::FeaturePath pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    const babelwires::FeaturePath pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(0);
+    const babelwires::FeaturePath pathToTargetFeature =
+        testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::FeaturePath pathToSourceFeature =
+        testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(0);
 
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
     babelwires::ConnectionModifierData modData;
@@ -403,21 +403,27 @@ TEST(ProjectTest, reloadSource) {
         testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getOutputFeature(), nullptr);
-    ASSERT_NE(element->getOutputFeature()->as<const testUtils::TestFileFeature>(), nullptr);
-    EXPECT_EQ(static_cast<const testUtils::TestFileFeature*>(element->getOutputFeature())->m_intChildFeature->get(),
-              14);
+
+    auto getIntInElement =
+        [element]() {
+            testUtils::TestSimpleRecordType::ConstInstance instance(element->getOutputFeature()
+                                                                        ->is<babelwires::ValueFeature>()
+                                                                        .getFeature(0)
+                                                                        ->is<babelwires::ValueFeature>());
+            return instance.getintR0().get();
+        };
+
+    EXPECT_EQ(getIntInElement(), 14);
 
     testUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 88);
 
     testEnvironment.m_project.tryToReloadSource(elementId);
-    EXPECT_EQ(static_cast<const testUtils::TestFileFeature*>(element->getOutputFeature())->m_intChildFeature->get(),
-              88);
+    EXPECT_EQ(getIntInElement(), 88);
 
     testUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 55);
 
     testEnvironment.m_project.tryToReloadAllSources();
-    EXPECT_EQ(static_cast<const testUtils::TestFileFeature*>(element->getOutputFeature())->m_intChildFeature->get(),
-              55);
+    EXPECT_EQ(getIntInElement(), 55);
 
     tempFilePath.tryRemoveFile();
 
@@ -441,20 +447,20 @@ TEST(ProjectTest, saveTarget) {
         testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getInputFeature(), nullptr);
-    auto* inputFeature = element->getInputFeature()->as<testUtils::TestFileFeature>();
-    ASSERT_NE(inputFeature, nullptr);
 
-    inputFeature->m_intChildFeature->set(47);
+    testUtils::TestSimpleRecordType::Instance instance(element->getInputFeatureNonConst(babelwires::FeaturePath())->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
+    
+    instance.getintR0().set(47);
 
     testEnvironment.m_project.tryToSaveTarget(elementId);
 
     EXPECT_EQ(testUtils::TestSourceFileFormat::getFileData(tempFilePath), 47);
 
-    inputFeature->m_intChildFeature->set(30);
+    instance.getintR0().set(30);
     testEnvironment.m_project.tryToSaveTarget(elementId);
     EXPECT_EQ(testUtils::TestSourceFileFormat::getFileData(tempFilePath), 30);
 
-    inputFeature->m_intChildFeature->set(79);
+    instance.getintR0().set(79);
     testEnvironment.m_project.tryToSaveAllTargets();
     EXPECT_EQ(testUtils::TestSourceFileFormat::getFileData(tempFilePath), 79);
 
@@ -483,9 +489,6 @@ TEST(ProjectTest, process) {
     const babelwires::FeatureElement* sourceElement =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
-    const testUtils::TestFileFeature* sourceOutput =
-        sourceElement->getOutputFeature()->as<const testUtils::TestFileFeature>();
-    ASSERT_NE(sourceOutput, nullptr);
 
     const babelwires::FeatureElement* processor =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
@@ -499,24 +502,22 @@ TEST(ProjectTest, process) {
     const babelwires::FeatureElement* targetElement =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
-    const testUtils::TestFileFeature* targetInput =
-        targetElement->getInputFeature()->as<const testUtils::TestFileFeature>();
-    ASSERT_NE(targetInput, nullptr);
 
+    testUtils::TestSimpleRecordType::ConstInstance targetInput(targetElement->getInputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
     // 4rd array entry, where they count up from the input value (3).
-    EXPECT_EQ(targetInput->m_intChildFeature->get(), 6);
+    EXPECT_EQ(targetInput.getintR0().get(), 6);
 
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 4);
     testEnvironment.m_project.tryToReloadSource(testUtils::TestProjectData::c_sourceElementId);
     testEnvironment.m_project.process();
-    EXPECT_EQ(targetInput->m_intChildFeature->get(), 7);
+    EXPECT_EQ(targetInput.getintR0().get(), 7);
 
     // Removing this modifier will mean the output array is shorter than the modifier at the target requires.
     testEnvironment.m_project.removeModifier(testUtils::TestProjectData::c_processorId,
                                              testUtils::TestProcessorInputOutputType::s_pathToInt);
     testEnvironment.m_project.process();
-    EXPECT_TRUE(targetElement->findModifier(testUtils::TestFileFeature::s_pathToIntChild)->isFailed());
-    EXPECT_EQ(targetInput->m_intChildFeature->get(), 0);
+    EXPECT_TRUE(targetElement->findModifier(testUtils::getTestFileElementPathToInt0())->isFailed());
+    EXPECT_EQ(targetInput.getintR0().get(), 0);
 
     babelwires::ElementId newProcId;
     {
@@ -538,7 +539,7 @@ TEST(ProjectTest, process) {
         testEnvironment.m_project.addModifier(testUtils::TestProjectData::c_processorId, modData);
     }
     testEnvironment.m_project.process();
-    EXPECT_EQ(targetInput->m_intChildFeature->get(), 8);
+    EXPECT_EQ(targetInput.getintR0().get(), 8);
 }
 
 TEST(ProjectTest, dependencyLoop) {
@@ -761,9 +762,6 @@ TEST(ProjectTest, processWithFailure) {
     const babelwires::FeatureElement* sourceElement =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
-    const testUtils::TestFileFeature* sourceOutput =
-        sourceElement->getOutputFeature()->as<const testUtils::TestFileFeature>();
-    ASSERT_NE(sourceOutput, nullptr);
 
     const babelwires::FeatureElement* processor =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
@@ -773,7 +771,4 @@ TEST(ProjectTest, processWithFailure) {
     const babelwires::FeatureElement* targetElement =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
-    const testUtils::TestFileFeature* targetInput =
-        targetElement->getInputFeature()->as<const testUtils::TestFileFeature>();
-    ASSERT_NE(targetInput, nullptr);
 }

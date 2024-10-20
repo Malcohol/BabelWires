@@ -33,10 +33,11 @@ SET( BABELWIRESLIB_SRCS
 	ProjectExtra/dataLocation.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
-	FileFormat/fileFeature.cpp
 	Types/Array/arrayType.cpp
 	Types/Array/arrayTypeConstructor.cpp
 	Types/Array/arrayValue.cpp
+	Types/File/fileType.cpp
+	Types/File/fileTypeConstructor.cpp
 	Types/Map/Commands/addEntryToMapCommand.cpp
 	Types/Map/Commands/removeEntryFromMapCommand.cpp
 	Types/Map/Commands/replaceMapEntryCommand.cpp

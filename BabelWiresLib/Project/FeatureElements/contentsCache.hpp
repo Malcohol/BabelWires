@@ -39,6 +39,9 @@ namespace babelwires {
         /// Get the indent of this row.
         std::uint8_t getIndent() const { return m_indent; }
 
+        /// Get the number of levels of nesting.
+        std::uint8_t getDepth() const { return m_depth; }
+
         bool isExpandable() const { return m_isExpandable; }
         bool isExpanded() const { return m_isExpanded; }
         bool hasModifier() const { return m_hasModifier; }

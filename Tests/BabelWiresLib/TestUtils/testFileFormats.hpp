@@ -1,4 +1,3 @@
-#include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
@@ -7,26 +6,11 @@
 #include <filesystem>
 
 namespace testUtils {
+    /// A file type which wraps a TestSimpleRecordType.
+    babelwires::TypeRef getTestFileType();
 
-    /// A record with an int feature at path "aaa".
-    struct TestFileFeature : babelwires::FileFeature {
-        TestFileFeature(const babelwires::ProjectContext& context);
-
-        /// The id of the child feature.
-        /// Deliberately match the field in TestRecordFeature.
-        static constexpr char s_intChildInitializer[] = "intR0";
-
-        static constexpr char s_intChildFieldName[] = "my int";
-
-        static constexpr char s_intChildUuid[] = "00000000-1111-2222-3333-800000000BBB";
-
-        babelwires::ShortId m_intChildId;
-
-        /// A shortcut for accessing at the child feature.
-        babelwires::IntFeature* m_intChildFeature;
-
-        static const babelwires::FeaturePath s_pathToIntChild;
-    };
+    /// Get the path in a FileElement to Int0 in TestSimpleRecordType.
+    babelwires::FeaturePath getTestFileElementPathToInt0();
 
     /// A file format that can save and load some test data.
     /// The serialized format is just the identifier followed by a single byte which carries the value of
@@ -38,7 +22,7 @@ namespace testUtils {
         TestSourceFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::FileFeature> loadFromFile(babelwires::DataSource& dataSource,
+        std::unique_ptr<babelwires::SimpleValueFeature> loadFromFile(babelwires::DataSource& dataSource,
                                                               const babelwires::ProjectContext& projectContext,
                                                               babelwires::UserLogger& userLogger) const override;
 
@@ -54,10 +38,10 @@ namespace testUtils {
         TestTargetFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::FileFeature>
+        std::unique_ptr<babelwires::SimpleValueFeature>
         createNewFeature(const babelwires::ProjectContext& projectContext) const override;
         void writeToFile(const babelwires::ProjectContext& projectContext, babelwires::UserLogger& userLogger,
-                         const babelwires::FileFeature& fileFeature, std::ostream& os) const override;
+                         const babelwires::SimpleValueFeature& contents, std::ostream& os) const override;
     };
 
 } // namespace testUtils

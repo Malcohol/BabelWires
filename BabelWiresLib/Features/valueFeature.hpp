@@ -46,6 +46,7 @@ namespace babelwires {
         /// This is a convenience method which calls getType().getKind().
         /// The need for connectable features to provide a string description is not fundamental to the data model.
         /// It is imposed by the current UI.
+        /// Returning the empty string tells the project that values of this kind cannot be wired together.
         std::string getKind() const;
 
         /// Set this to hold the same value as other.

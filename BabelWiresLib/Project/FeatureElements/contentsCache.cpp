@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Features/compoundFeature.hpp>
-#include <BabelWiresLib/FileFormat/fileFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/ValueNames/valueNames.hpp>
