@@ -105,7 +105,7 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
         userLogger.logError() << "Source File Feature id=" << data.m_id << " could not be loaded: " << e.what();
         setInternalFailure(e.what());
         // A dummy file feature which allows the user to change the file via the context menu.
-        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailedFileType::getThisIdentifier()));
+        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier()));
     }
     return false;
 }

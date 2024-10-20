@@ -11,6 +11,8 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Enum/addBlankToEnum.hpp>
+#include <BabelWiresLib/Types/Failure/failureType.hpp>
+#include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
@@ -19,8 +21,6 @@
 #include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
-#include <BabelWiresLib/Types/Failure/failureType.hpp>
-#include <BabelWiresLib/Types/File/fileType.hpp>
 
 /*
 // TODO Remove
@@ -36,20 +36,20 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<DefaultRationalType>();
     context.m_typeSystem.addEntry<MapEntryFallbackKind>();
     context.m_typeSystem.addEntry<FailureType>();
-    context.m_typeSystem.addEntry<FailedFileType>();
     context.m_typeSystem.addTypeConstructor<AddBlankToEnum>();
     context.m_typeSystem.addTypeConstructor<IntTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<RationalTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<SumTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<MapTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<ArrayTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<FileTypeConstructor>();
 
-/*
-    // TODO Remove
-    context.m_typeSystem.addEntry<TestArrayType>();
-    context.m_typeSystem.addEntry<TestArrayType2>();
-    context.m_typeSystem.addEntry<TestRecordType>();
-    context.m_typeSystem.addEntry<TestRecordType2>();
-    context.m_typeSystem.addEntry<TestRecordWithVariants>();
-*/
+    /*
+        // TODO Remove
+        context.m_typeSystem.addEntry<TestArrayType>();
+        context.m_typeSystem.addEntry<TestArrayType2>();
+        context.m_typeSystem.addEntry<TestRecordType>();
+        context.m_typeSystem.addEntry<TestRecordType2>();
+        context.m_typeSystem.addEntry<TestRecordWithVariants>();
+    */
 }
