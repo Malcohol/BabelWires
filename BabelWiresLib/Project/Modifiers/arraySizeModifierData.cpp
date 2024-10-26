@@ -18,14 +18,12 @@
 #include <Common/Serialization/serializer.hpp>
 
 void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
-    if (Feature* value = targetFeature->as<Feature>()) {
-        if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
-            const TypeSystem& typeSystem = value->getTypeSystem();
-            ValueHolder newValue = value->getValue();
-            arrayType->setSize(typeSystem, newValue, m_size);
-            value->setValue(newValue);
-            return;
-        }
+    if (const ArrayType* arrayType = targetFeature->getType().as<ArrayType>()) {
+        const TypeSystem& typeSystem = targetFeature->getTypeSystem();
+        ValueHolder newValue = targetFeature->getValue();
+        arrayType->setSize(typeSystem, newValue, m_size);
+        targetFeature->setValue(newValue);
+        return;
     }
 
     throw babelwires::ModelException() << "Cannot initialize size of non-array";
@@ -50,14 +48,12 @@ void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int i
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     m_size += numEntriesToAdd;
 
-    if (Feature* value = targetFeature->as<Feature>()) {
-        if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
-            const TypeSystem& typeSystem = value->getTypeSystem();
-            ValueHolder newValue = value->getValue();
-            arrayType->insertEntries(typeSystem, newValue, indexOfNewElement, numEntriesToAdd);
-            value->setValue(newValue);
-            return;
-        }
+    if (const ArrayType* arrayType = targetFeature->getType().as<ArrayType>()) {
+        const TypeSystem& typeSystem = targetFeature->getTypeSystem();
+        ValueHolder newValue = targetFeature->getValue();
+        arrayType->insertEntries(typeSystem, newValue, indexOfNewElement, numEntriesToAdd);
+        targetFeature->setValue(newValue);
+        return;
     }
 
     throw babelwires::ModelException() << "Cannot resize non-array";
@@ -69,13 +65,11 @@ void babelwires::ArraySizeModifierData::removeEntries(Feature* targetFeature, in
     assert((m_size >= numEntriesToRemove) && "You can't have ArraySizeModifierData with negative size");
     m_size -= numEntriesToRemove;
     
-    if (Feature* value = targetFeature->as<Feature>()) {
-        if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
-            ValueHolder newValue = value->getValue();
-            arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove);
-            value->setValue(newValue);
-            return;
-        }
+    if (const ArrayType* arrayType = targetFeature->getType().as<ArrayType>()) {
+        ValueHolder newValue = targetFeature->getValue();
+        arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove);
+        targetFeature->setValue(newValue);
+        return;
     }
 
     throw babelwires::ModelException() << "Cannot resize non-array";

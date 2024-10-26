@@ -171,12 +171,12 @@ void babelwires::Feature::doSetToDefaultNonRecursive() {
 const babelwires::TypeSystem& babelwires::Feature::getTypeSystem() const {
     const Feature* current = this;
     while (1) {
+        // TODO Query owner first and do a checking downcast when at root.
         if (const SimpleValueFeature* currentAsRootValueFeature = current->as<SimpleValueFeature>()) {
             return currentAsRootValueFeature->getTypeSystem();
         }
-        assert(getOwner() && "You can only get the RootValueFeature from a Feature in a hierarchy.");
-        const Feature* const owner = current->getOwner()->as<Feature>();
-        assert(owner && "The owner of a ChildValueFeature must be a Feature");
+        const Feature* const owner = current->getOwner();
+        assert(owner && "You can only get the RootValueFeature from a Feature in a hierarchy.");
         current = owner;
     }
 }

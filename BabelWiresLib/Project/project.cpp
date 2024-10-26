@@ -153,7 +153,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
-            assert(featureAtPath->as<Feature>() && featureAtPath->as<Feature>()->getType().as<ArrayType>());
+            assert(featureAtPath->getType().as<ArrayType>());
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -197,7 +197,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
-            assert(featureAtPath->as<Feature>() && featureAtPath->as<Feature>()->getType().as<ArrayType>());
+            assert(featureAtPath->getType().as<ArrayType>());
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;

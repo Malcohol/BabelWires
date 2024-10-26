@@ -28,11 +28,7 @@ babelwires::ValueAssignmentData::ValueAssignmentData(EditableValueHolder value)
 }
 
 void babelwires::ValueAssignmentData::apply(Feature* targetFeature) const {
-    if (Feature* valueFeature = targetFeature->as<Feature>()) {
-        valueFeature->setValue(m_value);
-    } else {
-        throw babelwires::ModelException() << "Could not assign a value to a non-SimpleValueFeature";
-    }
+    targetFeature->setValue(m_value);
 }
 
 void babelwires::ValueAssignmentData::serializeContents(Serializer& serializer) const {

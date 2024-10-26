@@ -31,14 +31,12 @@ void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer
 }
 
 void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) const {
-    if (auto valueFeature = targetFeature->as<Feature>()) {
-        if (auto recordType = valueFeature->getType().as<RecordType>()) {
-            const TypeSystem& typeSystem = valueFeature->getTypeSystem();
-            ValueHolder newValue = valueFeature->getValue();
-            recordType->ensureActivated(typeSystem, newValue, m_selectedOptionals);
-            valueFeature->setValue(newValue);
-            return;
-        }
+    if (auto recordType = targetFeature->getType().as<RecordType>()) {
+        const TypeSystem& typeSystem = targetFeature->getTypeSystem();
+        ValueHolder newValue = targetFeature->getValue();
+        recordType->ensureActivated(typeSystem, newValue, m_selectedOptionals);
+        targetFeature->setValue(newValue);
+        return;
     }
     throw ModelException() << "Cannot activate optionals from a feature which does not have optionals";
 }

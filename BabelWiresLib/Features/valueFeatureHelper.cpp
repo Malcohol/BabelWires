@@ -18,11 +18,9 @@ babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const Feature* f) {
     if (!f) {
         return {};
     }
-    if (auto valueFeature = f->as<const Feature>()) {
-        if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
-            return {valueFeature, arrayType->getNumChildren(valueFeature->getValue()), arrayType->getSizeRange(),
-                    arrayType->getInitialSize()};
-        }
+    if (auto arrayType = f->getType().as<ArrayType>()) {
+        return {f, arrayType->getNumChildren(f->getValue()), arrayType->getSizeRange(),
+                arrayType->getInitialSize()};
     }
     return {};
 }
@@ -32,14 +30,12 @@ babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feat
     if (!f) {
         return {};
     }
-    if (auto valueFeature = f->as<const Feature>()) {
-        if (auto recordType = valueFeature->getType().as<RecordType>()) {
-            std::map<ShortId, bool> currentlyActivatedOptionals;
-            for (auto opt : recordType->getOptionalFieldIds()) {
-                currentlyActivatedOptionals.insert(std::pair{ opt, recordType->isActivated(valueFeature->getValue(), opt)});
-            }
-            return { valueFeature, currentlyActivatedOptionals};
+    if (auto recordType = f->getType().as<RecordType>()) {
+        std::map<ShortId, bool> currentlyActivatedOptionals;
+        for (auto opt : recordType->getOptionalFieldIds()) {
+            currentlyActivatedOptionals.insert(std::pair{ opt, recordType->isActivated(f->getValue(), opt)});
         }
+        return { f, currentlyActivatedOptionals};
     }
     return {};
 }
@@ -48,18 +44,16 @@ std::tuple<const babelwires::Feature*, bool, std::vector<babelwires::ShortId>> b
     if (!f) { 
         return {};
     }
-    if (auto valueFeature = f->as<const Feature>()) {
-        if (auto recordWithVariantsType = valueFeature->getType().as<RecordWithVariantsType>()) {
-            if (!tagId) {
-                tagId = recordWithVariantsType->getDefaultTag();
-            } else if (!recordWithVariantsType->isTag(*tagId)) {
-                return {};
-            }
-            if (recordWithVariantsType->getSelectedTag(valueFeature->getValue()) == tagId) {
-                return { valueFeature, true, {}};
-            } else {
-                return { valueFeature, false, recordWithVariantsType->getFieldsRemovedByChangeOfBranch(valueFeature->getValue(), *tagId) };
-            }
+    if (auto recordWithVariantsType = f->getType().as<RecordWithVariantsType>()) {
+        if (!tagId) {
+            tagId = recordWithVariantsType->getDefaultTag();
+        } else if (!recordWithVariantsType->isTag(*tagId)) {
+            return {};
+        }
+        if (recordWithVariantsType->getSelectedTag(f->getValue()) == tagId) {
+            return { f, true, {}};
+        } else {
+            return { f, false, recordWithVariantsType->getFieldsRemovedByChangeOfBranch(f->getValue(), *tagId) };
         }
     }
     return {};

@@ -59,7 +59,7 @@ babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, 
         throw ModelException() << "The element does not have editable features.";
     }
 
-    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<Feature>();
+    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature);
     if (!valueFeature) {
         throw ModelException() << "There is no value at that location.";
     }
@@ -81,7 +81,7 @@ const babelwires::Feature* babelwires::ComplexValueEditor::tryGetValueFeature(Ac
         return nullptr;
     }
 
-    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<Feature>();
+    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature);
     if (!valueFeature) {
         return nullptr;
     }
