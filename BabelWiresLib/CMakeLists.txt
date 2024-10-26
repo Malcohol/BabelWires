@@ -70,7 +70,6 @@ SET( BABELWIRESLIB_SRCS
 	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp
 	Features/Path/pathStep.cpp
-	Features/rootFeature.cpp
 	Features/valueFeature.cpp
 	Features/valueFeatureHelper.cpp
 	Serialization/projectBundle.cpp
@@ -100,7 +99,6 @@ SET( BABELWIRESLIB_SRCS
 	Types/Int/intType.cpp
 	Types/Int/intValue.cpp
 	Types/Int/intTypeConstructor.cpp
-	Types/Int/intFeature.cpp
 	Types/Rational/rationalValue.cpp
 	Types/Rational/rationalType.cpp
 	Types/Rational/rationalTypeConstructor.cpp

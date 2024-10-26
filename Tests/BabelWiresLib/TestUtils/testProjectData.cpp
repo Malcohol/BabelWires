@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>

@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
-#include <BabelWiresLib/Types/Int/intFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

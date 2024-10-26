@@ -21,9 +21,6 @@ namespace babelwires {
         /// Construct a rooted ValueFeature which carries values of the given type.
         SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef);
 
-        /// Construct a ValueFeature which carries values of the given type.
-        SimpleValueFeature(TypeRef typeRef);
-
         /// Back up the current value using a shallow clone.
         void backUpValue();
 
