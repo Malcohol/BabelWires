@@ -3,14 +3,12 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElement.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 

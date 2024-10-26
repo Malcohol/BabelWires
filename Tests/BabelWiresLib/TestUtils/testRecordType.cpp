@@ -20,16 +20,13 @@ babelwires::ShortId testUtils::TestSimpleRecordType::getInt1Id() {
 }
 
 testUtils::TestComplexRecordType::TestComplexRecordType()
-    : RecordType(
-          {{getInt0Id(), babelwires::DefaultIntType::getThisIdentifier()},
-           {getOpIntId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive},
-           {getSubrecordId(), TestSimpleRecordType::getThisIdentifier()},
-           {getInt1Id(),
-            babelwires::TypeRef(babelwires::IntTypeConstructor::getThisIdentifier(),
-                                {{}, {babelwires::IntValue(-10), babelwires::IntValue(10), babelwires::IntValue(2)}})},
-           {getOpRecId(), TestSimpleRecordType::getThisIdentifier(), Optionality::optionalDefaultInactive},
-           {getStringId(), babelwires::StringType::getThisIdentifier()},
-           {getArrayId(), testUtils::TestSimpleArrayType::getThisIdentifier()}}) {}
+    : RecordType({{getInt0Id(), babelwires::DefaultIntType::getThisIdentifier()},
+                  {getOpIntId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive},
+                  {getSubrecordId(), TestSimpleRecordType::getThisIdentifier()},
+                  {getInt1Id(), babelwires::IntTypeConstructor::makeTypeRef(c_int1min, c_int1max, c_int1default)},
+                  {getOpRecId(), TestSimpleRecordType::getThisIdentifier(), Optionality::optionalDefaultInactive},
+                  {getStringId(), babelwires::StringType::getThisIdentifier()},
+                  {getArrayId(), testUtils::TestSimpleArrayType::getThisIdentifier()}}) {}
 
 babelwires::ShortId testUtils::TestComplexRecordType::getInt0Id() {
     return BW_SHORT_ID(s_intIdInitializer, s_intFieldName, "1aafde9a-fb39-4a2d-8a29-55fc9d6d093b");

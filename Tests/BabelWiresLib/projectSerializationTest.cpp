@@ -7,7 +7,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>

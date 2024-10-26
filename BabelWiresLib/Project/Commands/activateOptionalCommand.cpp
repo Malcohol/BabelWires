@@ -14,7 +14,6 @@
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 
 babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
                                ShortId optional)

@@ -16,7 +16,6 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>

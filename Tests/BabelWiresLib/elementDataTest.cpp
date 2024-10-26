@@ -16,7 +16,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 #include <fstream>
@@ -259,12 +258,12 @@ TEST(ElementDataTest, processorDataClone) {
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
-    setModifiers(data, testUtils::TestRecordFeature::s_intIdInitializer);
+    setModifiers(data, testUtils::TestSimpleRecordType::s_int0IdInitializer);
     auto clone = data.clone();
     EXPECT_EQ(data.m_factoryIdentifier, "foo");
     EXPECT_EQ(data.m_factoryVersion, 14);
     checkCommonFields(*clone);
-    checkModifiers(*clone, testUtils::TestRecordFeature::s_intIdInitializer);
+    checkModifiers(*clone, testUtils::TestSimpleRecordType::s_int0IdInitializer);
 }
 
 TEST(ElementDataTest, processorDataCustomClone) {
@@ -272,7 +271,7 @@ TEST(ElementDataTest, processorDataCustomClone) {
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
-    setModifiers(data, testUtils::TestRecordFeature::s_intIdInitializer);
+    setModifiers(data, testUtils::TestSimpleRecordType::s_int0IdInitializer);
     auto clone = data.customClone();
     EXPECT_EQ(data.m_factoryIdentifier, "foo");
     EXPECT_EQ(data.m_factoryVersion, 14);
@@ -286,7 +285,7 @@ TEST(ElementDataTest, processorDataSerialize) {
         babelwires::ProcessorElementData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
-        setModifiers(data, testUtils::TestRecordFeature::s_intIdInitializer);
+        setModifiers(data, testUtils::TestSimpleRecordType::s_int0IdInitializer);
 
         babelwires::XmlSerializer serializer;
         serializer.serializeObject(data);
@@ -303,7 +302,7 @@ TEST(ElementDataTest, processorDataSerialize) {
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
     checkCommonFields(*dataPtr);
-    checkModifiers(*dataPtr, testUtils::TestRecordFeature::s_intIdInitializer);
+    checkModifiers(*dataPtr, testUtils::TestSimpleRecordType::s_int0IdInitializer);
 }
 
 TEST(ElementDataTest, processorDataCreateElement) {

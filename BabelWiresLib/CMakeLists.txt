@@ -6,7 +6,6 @@ SET( BABELWIRESLIB_SRCS
 	Project/FeatureElements/SourceFileElement/sourceFileElement.cpp
 	Project/FeatureElements/TargetFileElement/targetFileElement.cpp
 	Project/FeatureElements/fileElement.cpp
-	Project/FeatureElements/failedFeature.cpp
 	Project/FeatureElements/editTree.cpp
 	Project/FeatureElements/contentsCache.cpp
 	Project/FeatureElements/SourceFileElement/sourceFileElementData.cpp
@@ -67,11 +66,9 @@ SET( BABELWIRESLIB_SRCS
 	Features/feature.cpp
 	Features/childValueFeature.cpp
 	Features/compoundFeature.cpp
-	Features/recordFeature.cpp
 	Features/simpleValueFeature.cpp
 	Features/Path/featurePath.cpp
 	Features/Path/pathStep.cpp
-	Features/rootFeature.cpp
 	Features/valueFeature.cpp
 	Features/valueFeatureHelper.cpp
 	Serialization/projectBundle.cpp
@@ -101,7 +98,6 @@ SET( BABELWIRESLIB_SRCS
 	Types/Int/intType.cpp
 	Types/Int/intValue.cpp
 	Types/Int/intTypeConstructor.cpp
-	Types/Int/intFeature.cpp
 	Types/Rational/rationalValue.cpp
 	Types/Rational/rationalType.cpp
 	Types/Rational/rationalTypeConstructor.cpp

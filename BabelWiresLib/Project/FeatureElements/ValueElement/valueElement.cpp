@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>

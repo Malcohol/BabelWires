@@ -2,32 +2,34 @@
 
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 TEST(AddModifierCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    testUtils::TestComplexRecordElementData elementData;
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
-    const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const testUtils::TestRootFeature>();
-    };
-    ASSERT_NE(getInputFeature(), nullptr);
-    EXPECT_NE(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_EQ(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
+    testUtils::TestComplexRecordType::ConstInstance instance(
+        element->getInputFeature()->is<const babelwires::ValueFeature>());
 
-    babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+    static_assert(8 != testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
+
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(8));
+    modData.m_pathToFeature = elementData.getPathToRecordInt1();
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
 
@@ -35,58 +37,90 @@ TEST(AddModifierCommandTest, executeAndUndo) {
 
     testEnvironment.m_project.process();
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
-    EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_NE(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
+    EXPECT_EQ(instance.getintR1().get(), 8);
+    EXPECT_NE(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     command.undo(testEnvironment.m_project);
-    EXPECT_NE(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_EQ(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
+    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     command.execute(testEnvironment.m_project);
-    EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_NE(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
+    EXPECT_EQ(instance.getintR1().get(), 8);
+    EXPECT_NE(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
+}
+
+TEST(AddModifierCommandTest, executeAndUndoFail) {
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::TestComplexRecordElementData elementData;
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    ASSERT_NE(element, nullptr);
+    testUtils::TestComplexRecordType::ConstInstance instance(
+        element->getInputFeature()->is<const babelwires::ValueFeature>());
+
+    static_assert(12 > testUtils::TestComplexRecordType::c_int1max);
+    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
+
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(12));
+    modData.m_pathToFeature = elementData.getPathToRecordInt1();
+
+    babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
+    EXPECT_EQ(command.getName(), "Test command");
+
+    testEnvironment.m_project.process();
+    EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
+    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_NE(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
+    EXPECT_TRUE(element->getEdits().findModifier(elementData.getPathToRecordInt1())->isFailed());
+
+    command.undo(testEnvironment.m_project);
+    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
+
+    command.execute(testEnvironment.m_project);
+    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_NE(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
+    EXPECT_TRUE(element->getEdits().findModifier(elementData.getPathToRecordInt1())->isFailed());
 }
 
 TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData elementData;
+    testUtils::TestComplexRecordElementData elementData;
     {
-        babelwires::ValueAssignmentData modData(babelwires::IntValue(77));
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-       elementData.m_modifiers.emplace_back(modData.clone());
+        static_assert(5 != testUtils::TestComplexRecordType::c_int1default);
+        babelwires::ValueAssignmentData modData(babelwires::IntValue(5));
+        modData.m_pathToFeature = elementData.getPathToRecordInt1();
+        elementData.m_modifiers.emplace_back(modData.clone());
     }
-
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
-    const auto getInputFeature = [element]() {
-        return element->getInputFeature()->as<const testUtils::TestRootFeature>();
-    };
-    ASSERT_NE(getInputFeature(), nullptr);
-    EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 77);
-    EXPECT_NE(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
+    testUtils::TestComplexRecordType::ConstInstance instance(
+        element->getInputFeature()->is<const babelwires::ValueFeature>());
+    EXPECT_EQ(instance.getintR1().get(), 5);
 
-    babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+    static_assert(8 != testUtils::TestComplexRecordType::c_int1default);
+    babelwires::ValueAssignmentData modData(babelwires::IntValue(8));
+    modData.m_pathToFeature = elementData.getPathToRecordInt1();
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
-
     EXPECT_EQ(command.getName(), "Test command");
 
     testEnvironment.m_project.process();
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
-    EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_NE(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
+    EXPECT_EQ(instance.getintR1().get(), 8);
+    EXPECT_NE(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     command.undo(testEnvironment.m_project);
-    EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 77);
-    EXPECT_NE(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
+    EXPECT_EQ(instance.getintR1().get(), 5);
+    EXPECT_NE(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     command.execute(testEnvironment.m_project);
-    EXPECT_EQ(getInputFeature()->m_intFeature2->get(), 86);
-    EXPECT_NE(element->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2), nullptr);
+    EXPECT_EQ(instance.getintR1().get(), 8);
+    EXPECT_NE(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 }
 
 TEST(AddModifierCommandTest, failSafelyNoElement) {
@@ -104,16 +138,14 @@ TEST(AddModifierCommandTest, failSafelyNoElement) {
 TEST(AddModifierCommandTest, failSafelyNoTarget) {
     testUtils::TestEnvironment testEnvironment;
 
+    testUtils::TestComplexRecordElementData elementData;
+    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+    testEnvironment.m_project.getFeatureElement(elementId);
+
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
 
-    babelwires::AddModifierCommand command("Test command", 51, modData.clone());
-
-    testUtils::TestFeatureElementData elementData;
-    elementData.m_id = 51;
-
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    EXPECT_EQ(elementId, 51);
+    babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));

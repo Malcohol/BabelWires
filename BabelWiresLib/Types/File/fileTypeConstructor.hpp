@@ -17,6 +17,7 @@ namespace babelwires {
         /// Note that the we don't represent the default in the name.
         TYPE_CONSTRUCTOR("File", "{{{0}}}", "a1fb6071-1a75-4568-b0fa-dce4e1d26610", 1);
 
+        /// Convenience method.
         static TypeRef makeTypeRef(TypeRef typeOfContents);
 
         std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,

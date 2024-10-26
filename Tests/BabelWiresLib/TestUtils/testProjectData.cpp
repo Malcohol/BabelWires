@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
@@ -12,7 +14,6 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 testUtils::TestProjectData::TestProjectData()

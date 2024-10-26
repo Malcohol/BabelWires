@@ -11,7 +11,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
@@ -28,8 +27,6 @@ TEST(FeatureElementTest, basicAccessors) {
     EXPECT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->getInputFeature());
     EXPECT_TRUE(featureElement->getOutputFeature());
-    EXPECT_TRUE(featureElement->getInputFeature()->as<const testUtils::TestRootFeature>());
-    EXPECT_TRUE(featureElement->getOutputFeature()->as<const testUtils::TestRootFeature>());
     EXPECT_EQ(featureElement->getElementId(), 54);
 }
 

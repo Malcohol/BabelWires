@@ -4,12 +4,12 @@
 
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Types/Int/intValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 TEST(ResizeElementCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;

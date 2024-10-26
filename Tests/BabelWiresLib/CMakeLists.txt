@@ -21,7 +21,6 @@ SET( LIB_TESTS_SRCS
     featureElementTest.cpp
     featurePathTest.cpp
     editTreeTest.cpp
-    intFeatureTest.cpp
     intValueTest.cpp
     intTypeTest.cpp
     mapValueTest.cpp
@@ -53,7 +52,6 @@ SET( LIB_TESTS_SRCS
     removeModifierCommandTest.cpp
     replaceMapEntryCommandTest.cpp
     resizeElementCommandTest.cpp
-    rootFeatureTest.cpp
     selectRecordVariantModifierDataTest.cpp
     selectRecordVariantCommandTest.cpp
     setArraySizeCommandTest.cpp

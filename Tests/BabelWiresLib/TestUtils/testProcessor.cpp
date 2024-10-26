@@ -1,5 +1,4 @@
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecord.hpp>
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>

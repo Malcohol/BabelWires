@@ -20,6 +20,8 @@ namespace babelwires {
         std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
 
+        /// Convenience method.
+        static TypeRef makeTypeRef(IntValue::NativeType min, IntValue::NativeType max, IntValue::NativeType defaultValue = 0);
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
         static std::tuple<Range<IntValue::NativeType>, IntValue::NativeType>
