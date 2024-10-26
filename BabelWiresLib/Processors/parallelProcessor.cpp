@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/Features/valueTreeRoot.hpp>
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>

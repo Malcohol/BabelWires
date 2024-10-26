@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Path/pathStep.hpp>
 #include <BabelWiresLib/Features/valueTreeNode.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/Features/valueTreeRoot.hpp>
 
 #include <Common/Hash/hash.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>

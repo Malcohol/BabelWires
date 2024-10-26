@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/Features/valueTreeRoot.hpp>
 
 namespace babelwires {
     struct UserLogger;
