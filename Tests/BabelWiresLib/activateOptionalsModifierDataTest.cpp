@@ -74,7 +74,7 @@ TEST(ActivateOptionalsModifierDataTest, failureNotARecordWithOptionals) {
 
 TEST(ActivateOptionalsModifierDataTest, clone) {
     babelwires::ActivateOptionalsModifierData data;
-    data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("foo/bar/boo");
+    data.m_pathToFeature = babelwires::Path::deserializeFromString("foo/bar/boo");
     data.m_selectedOptionals.emplace_back("op0");
     data.m_selectedOptionals.emplace_back("op1");
 
@@ -88,7 +88,7 @@ TEST(ActivateOptionalsModifierDataTest, serialization) {
     std::string serializedContents;
     {
         babelwires::ActivateOptionalsModifierData data;
-        data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("foo/bar/boo");
+        data.m_pathToFeature = babelwires::Path::deserializeFromString("foo/bar/boo");
         data.m_selectedOptionals.emplace_back("op0");
         data.m_selectedOptionals.emplace_back("op1");
 
@@ -105,6 +105,6 @@ TEST(ActivateOptionalsModifierDataTest, serialization) {
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("foo/bar/boo"));
+    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::Path::deserializeFromString("foo/bar/boo"));
     EXPECT_TRUE(testUtils::areEqualSets(dataPtr->m_selectedOptionals, {"op0", "op1"}));
 }

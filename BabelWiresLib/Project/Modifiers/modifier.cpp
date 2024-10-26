@@ -51,7 +51,7 @@ const babelwires::ModifierData& babelwires::Modifier::getModifierData() const {
     return *m_data;
 }
 
-const babelwires::FeaturePath& babelwires::Modifier::getPathToFeature() const {
+const babelwires::Path& babelwires::Modifier::getPathToFeature() const {
     return m_data->m_pathToFeature;
 }
 
@@ -121,10 +121,10 @@ void babelwires::Modifier::setFailed(State failureState, std::string reasonForFa
     m_reasonForFailure = std::move(reasonForFailure);
 }
 
-void babelwires::Modifier::adjustArrayIndex(const babelwires::FeaturePath& pathToArray,
+void babelwires::Modifier::adjustArrayIndex(const babelwires::Path& pathToArray,
                                             babelwires::ArrayIndex startIndex, int adjustment) {
     babelwires::ModifierData& modifierData = getModifierData();
-    FeaturePath& modifierPath = modifierData.m_pathToFeature;
+    Path& modifierPath = modifierData.m_pathToFeature;
 
     assert(pathToArray.isStrictPrefixOf(modifierPath) && "This code only applies when the path is correct.");
     const unsigned int pathIndexOfStepIntoArray = pathToArray.getNumSteps();

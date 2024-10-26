@@ -27,7 +27,7 @@
 #include <cassert>
 
 babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName, ElementId targetId,
-                                                         FeaturePath featurePath)
+                                                         Path featurePath)
     : CompoundCommand(std::move(commandName))
     , m_elementId(targetId)
     , m_featurePath(featurePath) {}
@@ -90,7 +90,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                 ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(m_featurePath.tryFollow(*inputFeature));
             if (!isDefault) {
                 for (auto fieldToRemove : fieldsToRemove) {
-                    FeaturePath pathToFieldToRemove = m_featurePath;
+                    Path pathToFieldToRemove = m_featurePath;
                     pathToFieldToRemove.pushStep(babelwires::PathStep(fieldToRemove));
                     addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToFieldToRemove));
                 }

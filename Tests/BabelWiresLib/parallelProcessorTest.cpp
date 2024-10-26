@@ -56,7 +56,7 @@ namespace {
 
             {
                 // Log the input path.
-                userLogger.logInfo() << babelwires::FeaturePath(&inputEntry);
+                userLogger.logInfo() << babelwires::Path(&inputEntry);
             }
 
             babelwires::ConstInstance<babelwires::IntType> entryIn{inputEntry};
@@ -70,7 +70,7 @@ namespace {
     };
 
     bool findPath(const std::string& log, const babelwires::Feature& f) {
-        const babelwires::FeaturePath path(&f);
+        const babelwires::Path path(&f);
         std::ostringstream pathStream;
         pathStream << path;
         std::string pathString = pathStream.str();

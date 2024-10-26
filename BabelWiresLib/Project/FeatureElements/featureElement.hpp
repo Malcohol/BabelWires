@@ -25,7 +25,7 @@ namespace babelwires {
     struct ModifierData;
     class ConnectionModifier;
     struct ElementData;
-    class FeaturePath;
+    class Path;
     struct UiPosition;
     struct UiSize;
     struct ProjectContext;
@@ -51,7 +51,7 @@ namespace babelwires {
         /// Returns nullptr if the modifier will be applied later anyway, so there's no
         /// work for the caller to do.
         /// This does not attempt to deal with errors, so it returns the feature if the path cannot be followed.
-        Feature* getInputFeatureNonConst(const FeaturePath& pathToModify);
+        Feature* getInputFeatureNonConst(const Path& pathToModify);
 
         virtual const Feature* getInputFeature() const;
         virtual const Feature* getOutputFeature() const;
@@ -63,8 +63,8 @@ namespace babelwires {
         const ElementData& getElementData() const;
 
         /// Find the modifier at the path, if there is one.
-        Modifier* findModifier(const FeaturePath& featurePath);
-        const Modifier* findModifier(const FeaturePath& featurePath) const;
+        Modifier* findModifier(const Path& featurePath);
+        const Modifier* findModifier(const Path& featurePath) const;
 
         /// Client code should not call this directly, but via the project.
         Modifier* addModifier(UserLogger& userLogger, const ModifierData& modifier);
@@ -74,10 +74,10 @@ namespace babelwires {
         void removeModifier(Modifier* modifier);
 
         /// Is the feature at the path expanded?
-        bool isExpanded(const FeaturePath& featurePath) const;
+        bool isExpanded(const Path& featurePath) const;
 
         /// Set the feature at the path to be expanded or not.
-        void setExpanded(const FeaturePath& featurePath, bool expanded);
+        void setExpanded(const Path& featurePath, bool expanded);
 
         /// Get a clone of the element data with the modifiers, if there are any, re-attached.
         /// Expanded paths which do not currently lead to a feature are not included.
@@ -152,7 +152,7 @@ namespace babelwires {
         void setInDependencyLoop(bool isInLoop);
 
         /// Adjust modifiers which refer to an array at the path, starting at the startIndex.
-        void adjustArrayIndices(const babelwires::FeaturePath& pathToArray, babelwires::ArrayIndex startIndex,
+        void adjustArrayIndices(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                                 int adjustment);
 
       protected:
@@ -195,7 +195,7 @@ namespace babelwires {
 
         /// Obtain the right to modify the feature at the given path.
         /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
-        void modifyFeatureAt(Feature* inputFeature, const FeaturePath& p);
+        void modifyFeatureAt(Feature* inputFeature, const Path& p);
 
         /// This is called by process, to signal that all modifications are finished.
         void finishModifications(const Project& project, UserLogger& userLogger);

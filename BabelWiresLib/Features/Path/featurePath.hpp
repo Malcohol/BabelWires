@@ -20,24 +20,24 @@ namespace babelwires {
     class SimpleValueFeature;
 
     /// Describes the steps to follow within a tree of features to reach a particular feature.
-    class FeaturePath {
+    class Path {
       public:
         /// Construct an empty path.
-        FeaturePath();
+        Path();
 
         /// Construct a feature path which leads to the given feature.
-        explicit FeaturePath(const Feature* feature);
+        explicit Path(const Feature* feature);
 
-        FeaturePath(FeaturePath&& other) = default;
+        Path(Path&& other) = default;
 
-        FeaturePath(const FeaturePath& other) = default;
+        Path(const Path& other) = default;
 
         /// Construct a path from a vector of steps.
-        FeaturePath(std::vector<PathStep> steps);
+        Path(std::vector<PathStep> steps);
 
-        FeaturePath& operator=(const FeaturePath& other) = default;
+        Path& operator=(const Path& other) = default;
 
-        FeaturePath& operator=(FeaturePath&& other) = default;
+        Path& operator=(Path&& other) = default;
 
         template <typename ROOT_VALUE_FEATURE> struct RootAndPath;
 
@@ -57,7 +57,7 @@ namespace babelwires {
         std::string serializeToString() const;
 
         /// Parse a serialized representation of a path.
-        static FeaturePath deserializeFromString(const std::string& pathString);
+        static Path deserializeFromString(const std::string& pathString);
 
         /// Throws if the path cannot be followed.
         Feature& follow(Feature& start) const;
@@ -67,16 +67,16 @@ namespace babelwires {
         Feature* tryFollow(Feature& start) const;
         const Feature* tryFollow(const Feature& start) const;
 
-        bool operator==(const FeaturePath& other) const;
-        bool operator!=(const FeaturePath& other) const;
-        bool operator<(const FeaturePath& other) const;
-        bool operator<=(const FeaturePath& other) const;
+        bool operator==(const Path& other) const;
+        bool operator!=(const Path& other) const;
+        bool operator<(const Path& other) const;
+        bool operator<=(const Path& other) const;
 
         /// Does the path lead to the feature described by other, or one of its ancestors.
-        bool isPrefixOf(const FeaturePath& other) const;
+        bool isPrefixOf(const Path& other) const;
 
         /// Does the path lead to one of its ancestors of the feature described by other.
-        bool isStrictPrefixOf(const FeaturePath& other) const;
+        bool isStrictPrefixOf(const Path& other) const;
 
         unsigned int getNumSteps() const;
 
@@ -87,7 +87,7 @@ namespace babelwires {
         void removePrefix(unsigned int numSteps);
 
         /// Append the subpath to this path.
-        void append(const FeaturePath& subpath);
+        void append(const Path& subpath);
 
         /// Get the ith step of the path. Asserts that i is valid.
         const PathStep& getStep(unsigned int i) const;
@@ -111,24 +111,24 @@ namespace babelwires {
 
       private:
         /// Returns -1, 0 or 1.
-        int compare(const FeaturePath& other) const;
+        int compare(const Path& other) const;
 
       private:
         std::vector<PathStep> m_steps;
     };
 
     /// Write a path to an ostream.
-    std::ostream& operator<<(std::ostream& os, const FeaturePath& p);
+    std::ostream& operator<<(std::ostream& os, const Path& p);
 
-    template <typename ROOT_VALUE_FEATURE> struct FeaturePath::RootAndPath {
+    template <typename ROOT_VALUE_FEATURE> struct Path::RootAndPath {
         ROOT_VALUE_FEATURE& m_root;
-        FeaturePath m_pathFromRoot;
+        Path m_pathFromRoot;
     };
 
 } // namespace babelwires
 
 namespace std {
-    template <> struct hash<babelwires::FeaturePath> {
-        inline std::size_t operator()(const babelwires::FeaturePath& path) const { return path.getHash(); }
+    template <> struct hash<babelwires::Path> {
+        inline std::size_t operator()(const babelwires::Path& path) const { return path.getHash(); }
     };
 } // namespace std

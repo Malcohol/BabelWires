@@ -20,18 +20,18 @@ namespace babelwires {
     /// an array size modifier. See RemoveModifierCommand.
     class RemoveSimpleModifierSubcommand : public SimpleCommand<Project> {
       public:
-        RemoveSimpleModifierSubcommand(ElementId targetId, FeaturePath featurePath);
+        RemoveSimpleModifierSubcommand(ElementId targetId, Path featurePath);
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
         ElementId getTargetElementId() const;
-        const FeaturePath& getFeaturePath() const;
+        const Path& getFeaturePath() const;
 
       private:
         ElementId m_targetElementId;
 
-        FeaturePath m_featurePath;
+        Path m_featurePath;
 
         /// Describes the modifier which got removed.
         std::unique_ptr<ModifierData> m_modifierToRestore;

@@ -35,10 +35,10 @@ namespace testUtils {
       public:
         TestArrayElementData();
 
-        static babelwires::FeaturePath getPathToArray();
-        static babelwires::FeaturePath getPathToArrayEntry(unsigned int i);
-        static babelwires::FeaturePath getPathToArray_1();
-        static babelwires::FeaturePath getPathToArray_2();
+        static babelwires::Path getPathToArray();
+        static babelwires::Path getPathToArrayEntry(unsigned int i);
+        static babelwires::Path getPathToArray_1();
+        static babelwires::Path getPathToArray_2();
     };
 
 } // namespace testUtils

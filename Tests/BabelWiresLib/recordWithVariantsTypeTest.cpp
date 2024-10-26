@@ -455,7 +455,7 @@ TEST(RecordWithVariantsTypeTest, featureChanges)
     valueFeature.clearChanges();
     {
         babelwires::BackupScope scope(valueFeature);
-        babelwires::FeaturePath pathToInt;
+        babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFf1Id()));
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
         babelwires::ValueHolder& value = valueFeature.setModifiable(pathToInt);

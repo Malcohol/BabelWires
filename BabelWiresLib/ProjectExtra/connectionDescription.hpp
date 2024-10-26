@@ -36,9 +36,9 @@ namespace babelwires {
         std::size_t getHash() const;
 
         ElementId m_sourceId = INVALID_ELEMENT_ID;
-        FeaturePath m_pathToSourceFeature;
+        Path m_pathToSourceFeature;
         ElementId m_targetId = INVALID_ELEMENT_ID;
-        FeaturePath m_pathToTargetFeature;
+        Path m_pathToTargetFeature;
     };
 
 } // namespace babelwires

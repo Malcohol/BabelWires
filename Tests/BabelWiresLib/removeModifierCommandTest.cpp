@@ -29,7 +29,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
         testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     const unsigned int initialArraySize = testUtils::TestSimpleArrayType::s_defaultSize + 2;
-    const babelwires::FeaturePath pathToArrayEntry =
+    const babelwires::Path pathToArrayEntry =
         testUtils::TestArrayElementData::getPathToArrayEntry(testUtils::TestSimpleArrayType::s_defaultSize + 1);
 
     {
@@ -134,15 +134,15 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
         testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToValue;
+    const babelwires::Path pathToValue;
 
-    babelwires::FeaturePath pathToOptional = pathToValue;
+    babelwires::Path pathToOptional = pathToValue;
     pathToOptional.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
 
-    babelwires::FeaturePath pathToIntInOptional = pathToOptional;
+    babelwires::Path pathToIntInOptional = pathToOptional;
     pathToIntInOptional.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
 
-    babelwires::FeaturePath pathToIntInSimpleRecord = pathToValue;
+    babelwires::Path pathToIntInSimpleRecord = pathToValue;
     pathToIntInSimpleRecord.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
 
     {
@@ -223,7 +223,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
 TEST(RemoveModifierCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveModifierCommand command("Test command", 51,
-                                              babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
+                                              babelwires::Path::deserializeFromString("qqq/zzz"));
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -236,7 +236,7 @@ TEST(RemoveModifierCommandTest, failSafelyNoModifier) {
         testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     babelwires::RemoveModifierCommand command("Test command", elementId,
-                                              babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
+                                              babelwires::Path::deserializeFromString("qqq/zzz"));
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));

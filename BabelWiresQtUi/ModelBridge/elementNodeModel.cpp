@@ -94,7 +94,7 @@ QtNodes::NodeDataType babelwires::ElementNodeModel::getDataTypeFromFeature(const
     return QtNodes::NodeDataType();
 }
 
-const babelwires::FeaturePath& babelwires::ElementNodeModel::getPathAtPort(AccessModelScope& scope,
+const babelwires::Path& babelwires::ElementNodeModel::getPathAtPort(AccessModelScope& scope,
                                                                            QtNodes::PortType portType,
                                                                            QtNodes::PortIndex portIndex) const {
     const ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex);
@@ -104,7 +104,7 @@ const babelwires::FeaturePath& babelwires::ElementNodeModel::getPathAtPort(Acces
 }
 
 QtNodes::PortIndex babelwires::ElementNodeModel::getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
-                                                               const FeaturePath& path) const {
+                                                               const Path& path) const {
     const FeatureElement* element = m_model->getFeatureElement(scope);
     assert(element && "Check before calling this.");
     const int row = element->getContentsCache().getIndexOfPath((portType == QtNodes::PortType::In), path);

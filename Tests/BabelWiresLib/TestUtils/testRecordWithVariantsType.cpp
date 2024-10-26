@@ -64,22 +64,22 @@ babelwires::ShortId testUtils::TestRecordWithVariantsType::getFieldBCId() {
 testUtils::TestRecordWithVariantsElementData::TestRecordWithVariantsElementData()
     : ValueElementData(testUtils::TestRecordWithVariantsType::getThisIdentifier()) {}
 
-babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants() {
-    return babelwires::FeaturePath();
+babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants() {
+    return babelwires::Path();
 }
 
-const babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToFieldA0() {
+const babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToFieldA0() {
     return std::vector<babelwires::PathStep>{
         babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA0Id())};
 }
 
-const babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0() {
+const babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0() {
     return std::vector<babelwires::PathStep>{
         babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA1Id()),
         babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id())};
 }
 
-const babelwires::FeaturePath testUtils::TestRecordWithVariantsElementData::getPathToFieldAB() {
+const babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToFieldAB() {
     return std::vector<babelwires::PathStep>{
         babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldABId())};
 }

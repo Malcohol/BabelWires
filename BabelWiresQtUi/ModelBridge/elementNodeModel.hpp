@@ -14,7 +14,7 @@ namespace babelwires {
     class Feature;
     class FeatureElement;
     class ContentsCache;
-    class FeaturePath;
+    class Path;
 
     class FeatureView;
     class FeatureModel;
@@ -37,10 +37,10 @@ namespace babelwires {
         babelwires::ElementId getElementId() const;
         virtual QString caption() const override;
 
-        const FeaturePath& getPathAtPort(AccessModelScope& scope, QtNodes::PortType portType,
+        const Path& getPathAtPort(AccessModelScope& scope, QtNodes::PortType portType,
                                          QtNodes::PortIndex portIndex) const;
         QtNodes::PortIndex getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
-                                         const FeaturePath& path) const;
+                                         const Path& path) const;
 
         ResizableAxes resizable() const override { return HorizontallyResizable; }
 

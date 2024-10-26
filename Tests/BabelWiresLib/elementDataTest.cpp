@@ -26,7 +26,7 @@ namespace {
         data.m_uiData.m_uiPosition.m_x = 12;
         data.m_uiData.m_uiPosition.m_y = -44;
         data.m_uiData.m_uiSize.m_width = 300;
-        data.m_expandedPaths.emplace_back(babelwires::FeaturePath::deserializeFromString("aa/bb"));
+        data.m_expandedPaths.emplace_back(babelwires::Path::deserializeFromString("aa/bb"));
     }
 
     void checkCommonFields(const babelwires::ElementData& data, bool testExpandedPaths = true) {
@@ -36,19 +36,19 @@ namespace {
         EXPECT_EQ(data.m_uiData.m_uiSize.m_width, 300);
         if (testExpandedPaths) {
             ASSERT_EQ(data.m_expandedPaths.size(), 1);
-            EXPECT_EQ(data.m_expandedPaths[0], babelwires::FeaturePath::deserializeFromString("aa/bb"));
+            EXPECT_EQ(data.m_expandedPaths[0], babelwires::Path::deserializeFromString("aa/bb"));
         } else {
             EXPECT_EQ(data.m_expandedPaths.size(), 0);
         }
     }
 
-    void setModifiers(babelwires::ElementData& data, const babelwires::FeaturePath& path) {
+    void setModifiers(babelwires::ElementData& data, const babelwires::Path& path) {
         auto newMod = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(12));
         newMod->m_pathToFeature = path;
         data.m_modifiers.emplace_back(std::move(newMod));
     }
 
-    void checkModifiers(const babelwires::ElementData& data, const babelwires::FeaturePath& path) {
+    void checkModifiers(const babelwires::ElementData& data, const babelwires::Path& path) {
         EXPECT_EQ(data.m_modifiers.size(), 1);
         EXPECT_NE(data.m_modifiers[0]->as<babelwires::ValueAssignmentData>(), nullptr);
         const auto& mod = static_cast<const babelwires::ValueAssignmentData&>(*data.m_modifiers[0]);
@@ -57,11 +57,11 @@ namespace {
     }
 
     void setModifiers(babelwires::ElementData& data, babelwires::ShortId fieldId) {
-        setModifiers(data, babelwires::FeaturePath({babelwires::PathStep(fieldId)}));
+        setModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
     }
 
     void checkModifiers(const babelwires::ElementData& data, babelwires::ShortId fieldId) {
-        checkModifiers(data, babelwires::FeaturePath({babelwires::PathStep(fieldId)}));
+        checkModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
     }
 } // namespace
 
@@ -141,7 +141,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
-    const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
@@ -231,7 +231,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     setCommonFields(data);
     setModifiers(data, testUtils::getTestFileElementPathToInt0());
 
-    const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
@@ -314,7 +314,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     setCommonFields(data);
     setModifiers(data, testUtils::TestProcessorInputOutputType::s_intIdInitializer);
 
-    const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =

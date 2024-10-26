@@ -86,7 +86,7 @@ TEST(RemoveElementCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
+    modData.m_pathToFeature = babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::RemoveElementCommand command("Test command", 57);
 

@@ -21,7 +21,7 @@
 #include <cassert>
 
 babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string commandName, ElementId elementId,
-                                                               FeaturePath featurePath, unsigned int indexOfNewEntries,
+                                                               Path featurePath, unsigned int indexOfNewEntries,
                                                                unsigned int numEntriesToAdd)
     : CompoundCommand(commandName)
     , m_elementId(elementId)

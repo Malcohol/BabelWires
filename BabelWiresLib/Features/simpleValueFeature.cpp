@@ -65,7 +65,7 @@ void babelwires::SimpleValueFeature::backUpValue() {
     m_valueBackUp = m_value;
 }
 
-babelwires::ValueHolder& babelwires::SimpleValueFeature::setModifiable(const FeaturePath& pathFromHere) {
+babelwires::ValueHolder& babelwires::SimpleValueFeature::setModifiable(const Path& pathFromHere) {
     if (pathFromHere.getNumSteps() > 0) {
         assert(getType().as<CompoundType>() && "Path leading into a non-compound type");
         assert(m_isNew ||

@@ -36,7 +36,7 @@ namespace babelwires {
         bool isConnected() const;
 
         /// If the modifier targets an element in the array below the startIndex, apply the adjustment.
-        void adjustSourceArrayIndices(const babelwires::FeaturePath& pathToArray, babelwires::ArrayIndex startIndex,
+        void adjustSourceArrayIndices(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                                       int adjustment);
 
       protected:

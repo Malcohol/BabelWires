@@ -28,12 +28,12 @@ namespace babelwires {
     class ContentsCacheEntry {
       public:
         ContentsCacheEntry(std::string label, const Feature* inputFeature, const Feature* outputFeature,
-                           const FeaturePath& path, std::uint8_t depth, std::uint8_t indent);
+                           const Path& path, std::uint8_t depth, std::uint8_t indent);
 
         const std::string& getLabel() const { return m_label; }
         const Feature* getInputFeature() const { return m_inputFeature; }
         const Feature* getOutputFeature() const { return m_outputFeature; }
-        const FeaturePath& getPath() const { return m_path; }
+        const Path& getPath() const { return m_path; }
 
         /// Get the indent of this row.
         std::uint8_t getIndent() const { return m_indent; }
@@ -63,7 +63,7 @@ namespace babelwires {
         const Feature* m_outputFeature;
 
         /// A path which is common to both input and output features.
-        const FeaturePath m_path;
+        const Path m_path;
 
         /// The number of levels of nesting.
         std::uint8_t m_depth;
@@ -124,7 +124,7 @@ namespace babelwires {
 
         /// Return the index if the path is in one of the visible rows.
         /// Otherwise return -1.
-        int getIndexOfPath(bool seekInputFeature, const FeaturePath& path) const;
+        int getIndexOfPath(bool seekInputFeature, const Path& path) const;
 
         /// Describes the way an element may have changed.
         enum class Changes : unsigned int {

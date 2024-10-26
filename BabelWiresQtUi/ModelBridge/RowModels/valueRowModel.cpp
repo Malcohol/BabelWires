@@ -50,7 +50,7 @@ babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
     if (EditableValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
         const babelwires::Feature& valueFeature = getValueFeature();
         auto modifier = std::make_unique<babelwires::ValueAssignmentData>(std::move(newValue));
-        modifier->m_pathToFeature = babelwires::FeaturePath(&valueFeature);
+        modifier->m_pathToFeature = babelwires::Path(&valueFeature);
         return std::make_unique<AddModifierCommand>("Set value", m_featureElement->getElementId(), std::move(modifier));
     }
     return nullptr;
@@ -90,5 +90,5 @@ void babelwires::ValueRowModel::getContextMenuActions(
     RowModel::getContextMenuActions(actionsOut);
     const babelwires::Feature& valueFeature = getValueFeature();
     m_valueModelDispatcher->getContextMenuActions(
-        DataLocation{m_featureElement->getElementId(), babelwires::FeaturePath(&valueFeature)}, actionsOut);
+        DataLocation{m_featureElement->getElementId(), babelwires::Path(&valueFeature)}, actionsOut);
 }

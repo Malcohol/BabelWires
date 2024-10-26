@@ -44,7 +44,7 @@ TEST(ResizeElementCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
+    modData.m_pathToFeature = babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::ResizeElementCommand command("Test command", 57, babelwires::UiSize{113});
 

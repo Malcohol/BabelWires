@@ -103,7 +103,7 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::Path pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
     EXPECT_EQ(element->findModifier(pathToFeature), nullptr);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(199));
@@ -132,9 +132,9 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
     const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
-    const babelwires::FeaturePath pathToTargetFeature =
+    const babelwires::Path pathToTargetFeature =
         testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    const babelwires::FeaturePath pathToSourceFeature =
+    const babelwires::Path pathToSourceFeature =
         testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(0);
 
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
@@ -162,7 +162,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
     EXPECT_EQ(element->findModifier(pathToArray), nullptr);
 
     testEnvironment.m_project.process();
@@ -203,14 +203,14 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
 namespace {
     // Adapt tests to slightly changed API.
     void addArrayEntries(babelwires::Project& project, babelwires::ElementId elementId,
-                         const babelwires::FeaturePath& pathToArray, int indexOfNewElement, int numEntriesToAdd,
+                         const babelwires::Path& pathToArray, int indexOfNewElement, int numEntriesToAdd,
                          bool ensureModifier) {
         project.addArrayEntries(elementId, pathToArray, indexOfNewElement, numEntriesToAdd, ensureModifier);
         project.adjustModifiersInArrayElements(elementId, pathToArray, indexOfNewElement, numEntriesToAdd);
     };
 
     void removeArrayEntries(babelwires::Project& project, babelwires::ElementId elementId,
-                            const babelwires::FeaturePath& pathToArray, int indexOfElementToRemove,
+                            const babelwires::Path& pathToArray, int indexOfElementToRemove,
                             int numEntriesToRemove, bool ensureModifier) {
         project.removeArrayEntries(elementId, pathToArray, indexOfElementToRemove, numEntriesToRemove, ensureModifier);
         project.adjustModifiersInArrayElements(elementId, pathToArray, indexOfElementToRemove, -numEntriesToRemove);
@@ -226,10 +226,10 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::FeaturePath pathToArray1 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    const babelwires::FeaturePath pathToArray2 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(2);
-    const babelwires::FeaturePath pathToArray4 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
+    const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path pathToArray1 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::Path pathToArray2 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(2);
+    const babelwires::Path pathToArray4 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(702));
     modData.m_pathToFeature = pathToArray1;
@@ -278,11 +278,11 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
     const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
-    const babelwires::FeaturePath pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt0();
-    const babelwires::FeaturePath pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::FeaturePath pathToArray1 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    const babelwires::FeaturePath pathToArray2 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(2);
-    const babelwires::FeaturePath pathToArray4 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
+    const babelwires::Path pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt0();
+    const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path pathToArray1 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::Path pathToArray2 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(2);
+    const babelwires::Path pathToArray4 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
 
     EXPECT_EQ(sourceElement->findModifier(pathToArray), nullptr);
 
@@ -441,7 +441,7 @@ TEST(ProjectTest, saveTarget) {
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getInputFeature(), nullptr);
 
-    testUtils::TestSimpleRecordType::Instance instance(element->getInputFeatureNonConst(babelwires::FeaturePath())
+    testUtils::TestSimpleRecordType::Instance instance(element->getInputFeatureNonConst(babelwires::Path())
                                                            ->is<babelwires::Feature>()
                                                            .getFeature(0)
                                                            ->is<babelwires::Feature>());

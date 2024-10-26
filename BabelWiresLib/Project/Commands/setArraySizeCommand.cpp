@@ -19,7 +19,7 @@
 #include <cassert>
 
 babelwires::SetArraySizeCommand::SetArraySizeCommand(std::string commandName, ElementId elementId,
-                                                     FeaturePath featurePath, int newSize)
+                                                     Path featurePath, int newSize)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToArray(std::move(featurePath))
@@ -57,7 +57,7 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
     m_oldSize = compoundFeature->getNumFeatures();
 
     for (int i = m_newSize; i < m_oldSize; ++i) {
-        FeaturePath p = m_pathToArray;
+        Path p = m_pathToArray;
         p.pushStep(PathStep(i));
         addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, p));
     }

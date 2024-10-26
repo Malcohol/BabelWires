@@ -14,7 +14,7 @@
 #include <cassert>
 
 babelwires::SetExpandedCommand::SetExpandedCommand(std::string commandName, ElementId elementId,
-                                                   FeaturePath pathToCompound, bool expanded)
+                                                   Path pathToCompound, bool expanded)
     : SimpleCommand(std::move(commandName))
     , m_elementId(elementId)
     , m_pathToCompound(std::move(pathToCompound))

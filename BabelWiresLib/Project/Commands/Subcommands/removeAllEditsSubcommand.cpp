@@ -17,7 +17,7 @@
 #include <cassert>
 
 babelwires::RemoveAllEditsSubcommand::RemoveAllEditsSubcommand(ElementId elementId,
-                                                                     FeaturePath pathToFeatureToRemove)
+                                                                     Path pathToFeatureToRemove)
     : CompoundCommand("RemoveAllEditsSubcommand")
     , m_elementId(elementId)
     , m_pathToFeature(std::move(pathToFeatureToRemove)) {
@@ -44,7 +44,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
             for (auto&& connection : it->second) {
                 const ConnectionModifier* const cmod = std::get<0>(connection);
                 const ConnectionModifierData& modifierData = cmod->getModifierData();
-                const FeaturePath& modifierPath = modifierData.m_pathToSourceFeature;
+                const Path& modifierPath = modifierData.m_pathToSourceFeature;
                 if (m_pathToFeature.isPrefixOf(modifierPath)) {
                     const FeatureElement* const target = std::get<1>(connection);
                     subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", target->getElementId(), modifierData.m_pathToFeature));

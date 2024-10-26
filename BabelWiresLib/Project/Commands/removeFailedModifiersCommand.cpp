@@ -15,7 +15,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::RemoveFailedModifiersCommand::RemoveFailedModifiersCommand(std::string commandName, ElementId targetId,
-                                                                       FeaturePath featurePath)
+                                                                       Path featurePath)
     : CompoundCommand(commandName)
     , m_targetId(targetId)
     , m_featurePath(featurePath) {}

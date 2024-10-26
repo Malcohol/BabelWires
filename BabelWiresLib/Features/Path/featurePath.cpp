@@ -20,9 +20,9 @@
 #include <algorithm>
 #include <type_traits>
 
-babelwires::FeaturePath::FeaturePath() {}
+babelwires::Path::Path() {}
 
-babelwires::FeaturePath::FeaturePath(const Feature* feature) {
+babelwires::Path::Path(const Feature* feature) {
     const Feature* current = feature;
     const Feature* parent = current->getOwner();
     while (parent) {
@@ -35,14 +35,14 @@ babelwires::FeaturePath::FeaturePath(const Feature* feature) {
     std::reverse(m_steps.begin(), m_steps.end());
 }
 
-babelwires::FeaturePath::FeaturePath(std::vector<PathStep> steps)
+babelwires::Path::Path(std::vector<PathStep> steps)
     : m_steps(std::move(steps)) {
     assert(std::none_of(m_steps.begin(), m_steps.end(), [](auto p) { return p.isNotAStep(); }) &&
            "Attempt to construct a path from a vector containing a non-step");
 }
 
-babelwires::FeaturePath::RootAndPath<const babelwires::SimpleValueFeature>
-babelwires::FeaturePath::getRootAndPath(const Feature& feature) {
+babelwires::Path::RootAndPath<const babelwires::SimpleValueFeature>
+babelwires::Path::getRootAndPath(const Feature& feature) {
     std::vector<PathStep> steps;
     const Feature* current = &feature;
     const Feature* parent = feature.getOwner();
@@ -53,10 +53,10 @@ babelwires::FeaturePath::getRootAndPath(const Feature& feature) {
         parent = current->getOwner();
     }
     std::reverse(steps.begin(), steps.end());
-    return { current->is<SimpleValueFeature>(), FeaturePath(std::move(steps)) };
+    return { current->is<SimpleValueFeature>(), Path(std::move(steps)) };
 }
 
-babelwires::FeaturePath::RootAndPath<babelwires::SimpleValueFeature> babelwires::FeaturePath::getRootAndPath(Feature& feature) {
+babelwires::Path::RootAndPath<babelwires::SimpleValueFeature> babelwires::Path::getRootAndPath(Feature& feature) {
     std::vector<PathStep> steps;
     Feature* current = &feature;
     Feature* parent = feature.getOwnerNonConst();
@@ -67,20 +67,20 @@ babelwires::FeaturePath::RootAndPath<babelwires::SimpleValueFeature> babelwires:
         parent = current->getOwnerNonConst();
     }
     std::reverse(steps.begin(), steps.end());
-    return { current->is<SimpleValueFeature>(), FeaturePath(std::move(steps)) };
+    return { current->is<SimpleValueFeature>(), Path(std::move(steps)) };
 }
 
-void babelwires::FeaturePath::pushStep(PathStep step) {
+void babelwires::Path::pushStep(PathStep step) {
     assert(!step.isNotAStep() && "Attempt to push a non-step onto a path");
     m_steps.emplace_back(std::move(step));
 }
 
-void babelwires::FeaturePath::popStep() {
+void babelwires::Path::popStep() {
     assert(!m_steps.empty() && "You can't pop from an empty path");
     m_steps.pop_back();
 }
 
-std::ostream& babelwires::operator<<(std::ostream& os, const FeaturePath& p) {
+std::ostream& babelwires::operator<<(std::ostream& os, const Path& p) {
     const IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
     const int numSteps = p.getNumSteps();
     if (numSteps) {
@@ -97,7 +97,7 @@ std::ostream& babelwires::operator<<(std::ostream& os, const FeaturePath& p) {
     return os;
 }
 
-std::string babelwires::FeaturePath::serializeToString() const {
+std::string babelwires::Path::serializeToString() const {
     std::ostringstream os;
     const char* delimiter = "";
     for (int i = 0; i < getNumSteps(); ++i) {
@@ -108,12 +108,12 @@ std::string babelwires::FeaturePath::serializeToString() const {
     return os.str();
 }
 
-babelwires::FeaturePath babelwires::FeaturePath::deserializeFromString(const std::string& pathString) {
+babelwires::Path babelwires::Path::deserializeFromString(const std::string& pathString) {
     if (pathString.empty()) {
         return {};
     }
 
-    FeaturePath path;
+    Path path;
 
     int start = -1;
     do {
@@ -132,7 +132,7 @@ babelwires::FeaturePath babelwires::FeaturePath::deserializeFromString(const std
 
 namespace {
 
-    template <typename T> T& followPath(T& start, const babelwires::FeaturePath& p, int& index) {
+    template <typename T> T& followPath(T& start, const babelwires::Path& p, int& index) {
         if (index < p.getNumSteps()) {
             T& child = start.getChildFromStep(p.getStep(index));
             ++index;
@@ -142,7 +142,7 @@ namespace {
         }
     }
 
-    template <typename T> T& followPath(T& start, const babelwires::FeaturePath& p) {
+    template <typename T> T& followPath(T& start, const babelwires::Path& p) {
         int index = 0;
         try {
             return followPath(start, p, index);
@@ -154,17 +154,17 @@ namespace {
 
 } // namespace
 
-babelwires::Feature& babelwires::FeaturePath::follow(Feature& start) const {
+babelwires::Feature& babelwires::Path::follow(Feature& start) const {
     return followPath<Feature>(start, *this);
 }
 
-const babelwires::Feature& babelwires::FeaturePath::follow(const Feature& start) const {
+const babelwires::Feature& babelwires::Path::follow(const Feature& start) const {
     return followPath<const Feature>(start, *this);
 }
 
 namespace {
 
-    template <typename T> T* tryFollowPath(T* start, const babelwires::FeaturePath& p, int index = 0) {
+    template <typename T> T* tryFollowPath(T* start, const babelwires::Path& p, int index = 0) {
         if (start && index < p.getNumSteps()) {
             T* child = start->tryGetChildFromStep(p.getStep(index));
             return tryFollowPath(child, p, index + 1);
@@ -175,15 +175,15 @@ namespace {
 
 } // namespace
 
-babelwires::Feature* babelwires::FeaturePath::tryFollow(Feature& start) const {
+babelwires::Feature* babelwires::Path::tryFollow(Feature& start) const {
     return tryFollowPath<Feature>(&start, *this);
 }
 
-const babelwires::Feature* babelwires::FeaturePath::tryFollow(const Feature& start) const {
+const babelwires::Feature* babelwires::Path::tryFollow(const Feature& start) const {
     return tryFollowPath<const Feature>(&start, *this);
 }
 
-int babelwires::FeaturePath::compare(const FeaturePath& other) const {
+int babelwires::Path::compare(const Path& other) const {
     auto it = m_steps.begin();
     auto oit = other.m_steps.begin();
     while (true) {
@@ -204,23 +204,23 @@ int babelwires::FeaturePath::compare(const FeaturePath& other) const {
     return 0;
 }
 
-bool babelwires::FeaturePath::operator==(const FeaturePath& other) const {
+bool babelwires::Path::operator==(const Path& other) const {
     return compare(other) == 0;
 }
 
-bool babelwires::FeaturePath::operator!=(const FeaturePath& other) const {
+bool babelwires::Path::operator!=(const Path& other) const {
     return compare(other);
 }
 
-bool babelwires::FeaturePath::operator<(const FeaturePath& other) const {
+bool babelwires::Path::operator<(const Path& other) const {
     return compare(other) == -1;
 }
 
-bool babelwires::FeaturePath::operator<=(const FeaturePath& other) const {
+bool babelwires::Path::operator<=(const Path& other) const {
     return compare(other) <= 0;
 }
 
-bool babelwires::FeaturePath::isPrefixOf(const FeaturePath& other) const {
+bool babelwires::Path::isPrefixOf(const Path& other) const {
     if (m_steps.size() > other.m_steps.size()) {
         return false;
     }
@@ -228,50 +228,50 @@ bool babelwires::FeaturePath::isPrefixOf(const FeaturePath& other) const {
     return pair.first == m_steps.end();
 }
 
-bool babelwires::FeaturePath::isStrictPrefixOf(const FeaturePath& other) const {
+bool babelwires::Path::isStrictPrefixOf(const Path& other) const {
     if (isPrefixOf(other)) {
         return m_steps.size() != other.m_steps.size();
     }
     return false;
 }
 
-unsigned int babelwires::FeaturePath::getNumSteps() const {
+unsigned int babelwires::Path::getNumSteps() const {
     return m_steps.size();
 }
 
-void babelwires::FeaturePath::truncate(unsigned int newNumSteps) {
+void babelwires::Path::truncate(unsigned int newNumSteps) {
     assert((newNumSteps <= m_steps.size()) && "You can only shrink with truncate");
     // Have to provide a fill value even though it is never used.
     m_steps.resize(newNumSteps, PathStep(0));
 }
 
-void babelwires::FeaturePath::removePrefix(unsigned int numSteps) {
+void babelwires::Path::removePrefix(unsigned int numSteps) {
     assert((numSteps <= m_steps.size()) && "Cannot remove that many steps");
     if (numSteps > 0) {
         m_steps.erase(m_steps.begin(), m_steps.begin() + numSteps);
     }
 }
 
-void babelwires::FeaturePath::append(const FeaturePath& subpath) {
+void babelwires::Path::append(const Path& subpath) {
     m_steps.insert(m_steps.end(), subpath.m_steps.begin(), subpath.m_steps.end());
 }
 
-babelwires::PathStep& babelwires::FeaturePath::getStep(unsigned int i) {
+babelwires::PathStep& babelwires::Path::getStep(unsigned int i) {
     assert((i < m_steps.size()) && "There is no ith step");
     return m_steps[i];
 }
 
-const babelwires::PathStep& babelwires::FeaturePath::getStep(unsigned int i) const {
+const babelwires::PathStep& babelwires::Path::getStep(unsigned int i) const {
     assert((i < m_steps.size()) && "There is no ith step");
     return m_steps[i];
 }
 
-const babelwires::PathStep& babelwires::FeaturePath::getLastStep() const {
+const babelwires::PathStep& babelwires::Path::getLastStep() const {
     assert((m_steps.size() > 0) && "There are no steps.");
     return m_steps.back();
 }
 
-std::size_t babelwires::FeaturePath::getHash() const {
+std::size_t babelwires::Path::getHash() const {
     // Arbitrary value.
     std::size_t hash = 0xa73be88;
     for (const auto& step : m_steps) {

@@ -27,6 +27,6 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
         ElementId m_sourceId;
-        FeaturePath m_pathToSourceFeature;
+        Path m_pathToSourceFeature;
     };
 }

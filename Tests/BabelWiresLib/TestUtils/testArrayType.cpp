@@ -20,21 +20,21 @@ babelwires::TypeRef testUtils::TestCompoundArrayType::getEntryTypeStatic() {
 testUtils::TestArrayElementData::TestArrayElementData()
     : babelwires::ValueElementData(TestSimpleArrayType::getThisIdentifier()) {}
 
-babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArray() {
-    return babelwires::FeaturePath();
+babelwires::Path testUtils::TestArrayElementData::getPathToArray() {
+    return babelwires::Path();
 }
 
 
-babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArrayEntry(unsigned int i) {
-    babelwires::FeaturePath pathToArray_1 = getPathToArray();
+babelwires::Path testUtils::TestArrayElementData::getPathToArrayEntry(unsigned int i) {
+    babelwires::Path pathToArray_1 = getPathToArray();
     pathToArray_1.pushStep(babelwires::PathStep(i));
     return pathToArray_1;
 }
 
-babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArray_1() {
+babelwires::Path testUtils::TestArrayElementData::getPathToArray_1() {
     return getPathToArrayEntry(1);
 }
 
-babelwires::FeaturePath testUtils::TestArrayElementData::getPathToArray_2() {
+babelwires::Path testUtils::TestArrayElementData::getPathToArray_2() {
     return getPathToArrayEntry(2);
 }

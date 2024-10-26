@@ -43,7 +43,7 @@ void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
     Feature* inputFeature = doGetInputFeatureNonConst();
     if (inputFeature) {
         inputFeature->setToDefault();
-        modifyFeatureAt(inputFeature, FeaturePath());
+        modifyFeatureAt(inputFeature, Path());
     }
     for (auto* m : m_edits.modifierRange<Modifier>()) {
         // The modifiers are stored in path order, so parents will come before
@@ -63,7 +63,7 @@ const babelwires::Feature* babelwires::FeatureElement::getOutputFeature() const 
     return nullptr;
 }
 
-babelwires::Feature* babelwires::FeatureElement::getInputFeatureNonConst(const FeaturePath& pathToModify) {
+babelwires::Feature* babelwires::FeatureElement::getInputFeatureNonConst(const Path& pathToModify) {
     if (Feature* inputFeature = doGetInputFeatureNonConst()) {
         modifyFeatureAt(inputFeature, pathToModify);
         return inputFeature;
@@ -103,11 +103,11 @@ void babelwires::FeatureElement::setFactoryName(LongId identifier) {
     m_factoryName = IdentifierRegistry::read()->getName(identifier);
 }
 
-babelwires::Modifier* babelwires::FeatureElement::findModifier(const FeaturePath& featurePath) {
+babelwires::Modifier* babelwires::FeatureElement::findModifier(const Path& featurePath) {
     return m_edits.findModifier(featurePath);
 }
 
-const babelwires::Modifier* babelwires::FeatureElement::findModifier(const FeaturePath& featurePath) const {
+const babelwires::Modifier* babelwires::FeatureElement::findModifier(const Path& featurePath) const {
     return m_edits.findModifier(featurePath);
 }
 
@@ -149,7 +149,7 @@ std::unique_ptr<babelwires::ElementData> babelwires::FeatureElement::extractElem
     }
     data->m_expandedPaths = m_edits.getAllExplicitlyExpandedPaths();
     // Strip out the currently unused paths.
-    auto it = std::remove_if(data->m_expandedPaths.begin(), data->m_expandedPaths.end(), [this](const FeaturePath& p) {
+    auto it = std::remove_if(data->m_expandedPaths.begin(), data->m_expandedPaths.end(), [this](const Path& p) {
         if (const Feature* inputFeature = getInputFeature()) {
             if (p.tryFollow(*inputFeature)) {
                 return false;
@@ -286,16 +286,16 @@ void babelwires::FeatureElement::process(Project& project, UserLogger& userLogge
     doProcess(userLogger);
 }
 
-void babelwires::FeatureElement::adjustArrayIndices(const babelwires::FeaturePath& pathToArray,
+void babelwires::FeatureElement::adjustArrayIndices(const babelwires::Path& pathToArray,
                                                     babelwires::ArrayIndex startIndex, int adjustment) {
     m_edits.adjustArrayIndices(pathToArray, startIndex, adjustment);
 }
 
-bool babelwires::FeatureElement::isExpanded(const babelwires::FeaturePath& featurePath) const {
+bool babelwires::FeatureElement::isExpanded(const babelwires::Path& featurePath) const {
     return m_edits.isExpanded(featurePath);
 }
 
-void babelwires::FeatureElement::setExpanded(const babelwires::FeaturePath& featurePath, bool expanded) {
+void babelwires::FeatureElement::setExpanded(const babelwires::Path& featurePath, bool expanded) {
     m_edits.setExpanded(featurePath, expanded);
     setChanged(Changes::CompoundExpandedOrCollapsed);
 }
@@ -307,7 +307,7 @@ void babelwires::FeatureElement::setModifierMoving(const babelwires::Modifier& m
 
 namespace {
 
-    babelwires::Feature* tryFollowPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p,
+    babelwires::Feature* tryFollowPathToValue(babelwires::Feature* start, const babelwires::Path& p,
                                               int index) {
         if ((index < p.getNumSteps()) && !start->as<babelwires::SimpleValueFeature>()) {
             if (auto* compound = start) {
@@ -321,7 +321,7 @@ namespace {
         }
     }
 
-    babelwires::Feature* tryFollowPathToValueSafe(babelwires::Feature* start, const babelwires::FeaturePath& p) {
+    babelwires::Feature* tryFollowPathToValueSafe(babelwires::Feature* start, const babelwires::Path& p) {
         try {
             return tryFollowPathToValue(start, p, 0);
         } catch (...) {
@@ -347,7 +347,7 @@ namespace {
 
 } // namespace
 
-void babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const FeaturePath& p) {
+void babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const Path& p) {
     assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
 
     // This code assumes there's only ever one compound value type in a feature tree.
@@ -380,7 +380,7 @@ void babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const Fe
 
     if (rootValueFeature) {
         rootValueFeature->backUpValue();
-        m_modifyFeatureScope = std::make_unique<ModifyFeatureScope>(FeaturePath(rootValueFeature), rootValueFeature);
+        m_modifyFeatureScope = std::make_unique<ModifyFeatureScope>(Path(rootValueFeature), rootValueFeature);
     }
 }
 

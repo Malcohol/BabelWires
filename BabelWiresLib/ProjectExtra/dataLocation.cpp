@@ -11,7 +11,7 @@
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
-babelwires::DataLocation::DataLocation(ElementId elementId, FeaturePath pathToValue)
+babelwires::DataLocation::DataLocation(ElementId elementId, Path pathToValue)
     : m_elementId(elementId)
     , m_pathToValue(std::move(pathToValue)) {
 
@@ -21,7 +21,7 @@ babelwires::ElementId babelwires::DataLocation::getElementId() const {
     return m_elementId;
 }
 
-const babelwires::FeaturePath& babelwires::DataLocation::getPathToValue() const {
+const babelwires::Path& babelwires::DataLocation::getPathToValue() const {
     return m_pathToValue;
 }
 

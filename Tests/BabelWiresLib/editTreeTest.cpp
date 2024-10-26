@@ -13,7 +13,7 @@
 #include <Tests/TestUtils/equalSets.hpp>
 
 namespace {
-    std::unique_ptr<babelwires::Modifier> createModifier(babelwires::FeaturePath path, int x,
+    std::unique_ptr<babelwires::Modifier> createModifier(babelwires::Path path, int x,
                                                          babelwires::FeatureElement* owner = nullptr) {
         auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(x));
         data->m_pathToFeature = std::move(path);
@@ -23,10 +23,10 @@ namespace {
     }
 
     std::unique_ptr<babelwires::ConnectionModifier>
-    createConnectionModifier(babelwires::FeaturePath path, babelwires::FeatureElement* owner = nullptr) {
+    createConnectionModifier(babelwires::Path path, babelwires::FeatureElement* owner = nullptr) {
         auto data = std::make_unique<babelwires::ConnectionModifierData>();
         data->m_pathToFeature = std::move(path);
-        data->m_pathToSourceFeature = babelwires::FeaturePath();
+        data->m_pathToSourceFeature = babelwires::Path();
         auto modPtr = std::make_unique<babelwires::ConnectionModifier>(std::move(data));
         modPtr->setOwner(owner);
         return modPtr;
@@ -36,7 +36,7 @@ namespace {
 TEST(EditTreeTest, fieldAddFindRemoveEmptyPath) {
     babelwires::EditTree tree;
 
-    babelwires::FeaturePath path;
+    babelwires::Path path;
     auto modPtr = createModifier(path, 1);
     babelwires::Modifier* mod = modPtr.get();
 
@@ -52,7 +52,7 @@ TEST(EditTreeTest, fieldAddFindRemoveEmptyPath) {
 TEST(EditTreeTest, fieldAddFindRemove) {
     babelwires::EditTree tree;
 
-    babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa");
+    babelwires::Path path = babelwires::Path::deserializeFromString("aa");
     auto modPtr = createModifier(path, 1);
     babelwires::Modifier* mod = modPtr.get();
 
@@ -67,7 +67,7 @@ TEST(EditTreeTest, fieldAddFindRemove) {
 TEST(EditTreeTest, indexAddFindRemove) {
     babelwires::EditTree tree;
 
-    babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("4");
+    babelwires::Path path = babelwires::Path::deserializeFromString("4");
     auto modPtr = createModifier(path, 1);
     babelwires::Modifier* mod = modPtr.get();
 
@@ -82,12 +82,12 @@ TEST(EditTreeTest, indexAddFindRemove) {
 TEST(EditTreeTest, severalModifier) {
     babelwires::EditTree tree;
 
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path2 = babelwires::FeaturePath::deserializeFromString("2/5");
-    const babelwires::FeaturePath path3 = babelwires::FeaturePath::deserializeFromString("bb");
-    const babelwires::FeaturePath path4 = babelwires::FeaturePath::deserializeFromString("cc/1");
-    const babelwires::FeaturePath path5 = babelwires::FeaturePath::deserializeFromString("aa/3");
-    const babelwires::FeaturePath path6 = babelwires::FeaturePath::deserializeFromString("cc/6");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path2 = babelwires::Path::deserializeFromString("2/5");
+    const babelwires::Path path3 = babelwires::Path::deserializeFromString("bb");
+    const babelwires::Path path4 = babelwires::Path::deserializeFromString("cc/1");
+    const babelwires::Path path5 = babelwires::Path::deserializeFromString("aa/3");
+    const babelwires::Path path6 = babelwires::Path::deserializeFromString("cc/6");
 
     tree.addModifier(createModifier(path1, 1));
     tree.addModifier(createModifier(path2, 2));
@@ -167,7 +167,7 @@ TEST(EditTreeTest, severalModifier) {
     tree.removeModifier(tree.findModifier(path2));
     tree.removeModifier(tree.findModifier(path6));
 
-    const babelwires::FeaturePath path22 = babelwires::FeaturePath::deserializeFromString("2/xx/2");
+    const babelwires::Path path22 = babelwires::Path::deserializeFromString("2/xx/2");
     tree.addModifier(createModifier(path22, 22));
 
     EXPECT_TRUE(tree.findModifier(path1));
@@ -197,13 +197,13 @@ TEST(EditTreeTest, expandCollapse) {
     // These tests assume c_expandedByDefault is false.
     static_assert(babelwires::EditTree::c_expandedByDefault == false);
 
-    EXPECT_FALSE(tree.isExpanded(babelwires::FeaturePath()));
-    tree.setExpanded(babelwires::FeaturePath(), true);
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath()));
-    tree.setExpanded(babelwires::FeaturePath(), false);
-    EXPECT_FALSE(tree.isExpanded(babelwires::FeaturePath()));
+    EXPECT_FALSE(tree.isExpanded(babelwires::Path()));
+    tree.setExpanded(babelwires::Path(), true);
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path()));
+    tree.setExpanded(babelwires::Path(), false);
+    EXPECT_FALSE(tree.isExpanded(babelwires::Path()));
 
-    const babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("bb/4");
+    const babelwires::Path path = babelwires::Path::deserializeFromString("bb/4");
     EXPECT_EQ(tree.isExpanded(path), false);
 
     tree.setExpanded(path, true);
@@ -217,12 +217,12 @@ TEST(EditTreeTest, expandCollapse) {
 TEST(EditTreeTest, severalExpandsAndCollapses) {
     babelwires::EditTree tree;
 
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("0/xxx/31");
-    const babelwires::FeaturePath path2 = babelwires::FeaturePath::deserializeFromString("qtwe/34");
-    const babelwires::FeaturePath path3 = babelwires::FeaturePath::deserializeFromString("34/qtwe");
-    const babelwires::FeaturePath path4 = babelwires::FeaturePath::deserializeFromString("0/xxx/0");
-    const babelwires::FeaturePath path5 = babelwires::FeaturePath::deserializeFromString("35");
-    const babelwires::FeaturePath path6 = babelwires::FeaturePath::deserializeFromString("35/36");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("0/xxx/31");
+    const babelwires::Path path2 = babelwires::Path::deserializeFromString("qtwe/34");
+    const babelwires::Path path3 = babelwires::Path::deserializeFromString("34/qtwe");
+    const babelwires::Path path4 = babelwires::Path::deserializeFromString("0/xxx/0");
+    const babelwires::Path path5 = babelwires::Path::deserializeFromString("35");
+    const babelwires::Path path6 = babelwires::Path::deserializeFromString("35/36");
 
     tree.setExpanded(path1, true);
     tree.setExpanded(path2, true);
@@ -268,12 +268,12 @@ TEST(EditTreeTest, severalExpandsAndCollapses) {
 TEST(EditTreeTest, expandsAndCollapsesChanges) {
     babelwires::EditTree tree;
 
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("tt/tt/tt/4");
-    const babelwires::FeaturePath path2 = babelwires::FeaturePath::deserializeFromString("89/www");
-    const babelwires::FeaturePath path3 = babelwires::FeaturePath::deserializeFromString("89/www/0");
-    const babelwires::FeaturePath path4 = babelwires::FeaturePath::deserializeFromString("et/tt/5");
-    const babelwires::FeaturePath path5 = babelwires::FeaturePath::deserializeFromString("tt/tt/tt/2");
-    const babelwires::FeaturePath path6 = babelwires::FeaturePath::deserializeFromString("tt/tt/tt/3");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("tt/tt/tt/4");
+    const babelwires::Path path2 = babelwires::Path::deserializeFromString("89/www");
+    const babelwires::Path path3 = babelwires::Path::deserializeFromString("89/www/0");
+    const babelwires::Path path4 = babelwires::Path::deserializeFromString("et/tt/5");
+    const babelwires::Path path5 = babelwires::Path::deserializeFromString("tt/tt/tt/2");
+    const babelwires::Path path6 = babelwires::Path::deserializeFromString("tt/tt/tt/3");
 
     tree.setExpanded(path1, true);
     tree.setExpanded(path2, true);
@@ -328,12 +328,12 @@ TEST(EditTreeTest, expandsAndCollapsesChanges) {
 TEST(EditTreeTest, modifiersAndExpansion) {
     babelwires::EditTree tree;
 
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path2 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path3 = babelwires::FeaturePath::deserializeFromString("bb");
-    const babelwires::FeaturePath path4 = babelwires::FeaturePath::deserializeFromString("cc/1");
-    const babelwires::FeaturePath path5 = babelwires::FeaturePath::deserializeFromString("aa/3");
-    const babelwires::FeaturePath path6 = babelwires::FeaturePath::deserializeFromString("cc/6");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path2 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path3 = babelwires::Path::deserializeFromString("bb");
+    const babelwires::Path path4 = babelwires::Path::deserializeFromString("cc/1");
+    const babelwires::Path path5 = babelwires::Path::deserializeFromString("aa/3");
+    const babelwires::Path path6 = babelwires::Path::deserializeFromString("cc/6");
 
     tree.setExpanded(path1, true);
     tree.addModifier(createModifier(path2, 2));
@@ -401,12 +401,12 @@ TEST(EditTreeTest, modifiersAndExpansion) {
 TEST(EditTreeTest, getAllExplicitlyExpandedPaths) {
     babelwires::EditTree tree;
 
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("tt/tt/tt/4");
-    const babelwires::FeaturePath path2 = babelwires::FeaturePath::deserializeFromString("89/www");
-    const babelwires::FeaturePath path3 = babelwires::FeaturePath::deserializeFromString("89/www/0");
-    const babelwires::FeaturePath path4 = babelwires::FeaturePath::deserializeFromString("et/tt/5");
-    const babelwires::FeaturePath path5 = babelwires::FeaturePath::deserializeFromString("tt/tt/tt/2");
-    const babelwires::FeaturePath path6 = babelwires::FeaturePath::deserializeFromString("tt/tt/tt/3");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("tt/tt/tt/4");
+    const babelwires::Path path2 = babelwires::Path::deserializeFromString("89/www");
+    const babelwires::Path path3 = babelwires::Path::deserializeFromString("89/www/0");
+    const babelwires::Path path4 = babelwires::Path::deserializeFromString("et/tt/5");
+    const babelwires::Path path5 = babelwires::Path::deserializeFromString("tt/tt/tt/2");
+    const babelwires::Path path6 = babelwires::Path::deserializeFromString("tt/tt/tt/3");
 
     tree.setExpanded(path1, true);
     tree.setExpanded(path2, true);
@@ -416,7 +416,7 @@ TEST(EditTreeTest, getAllExplicitlyExpandedPaths) {
     tree.addModifier(createModifier(path5, 5));
     tree.setExpanded(path6, true);
 
-    using setOfPaths = std::vector<babelwires::FeaturePath>;
+    using setOfPaths = std::vector<babelwires::Path>;
 
     EXPECT_TRUE(
         testUtils::areEqualSets(tree.getAllExplicitlyExpandedPaths(), setOfPaths{path1, path2, path4, path5, path6}));
@@ -460,250 +460,250 @@ TEST(EditTreeTest, adjustArrayIndices) {
 
     babelwires::EditTree tree;
 
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("bb/4"), true);
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("bb/5"), true);
-    tree.addModifier(createModifier(babelwires::FeaturePath::deserializeFromString("bb/1"), 3, &owner));
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("bb/3/erm/2"), true);
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("bb/3/erm/3"), true);
-    tree.addModifier(createModifier(babelwires::FeaturePath::deserializeFromString("bb/3/erm/3"), 5, &owner));
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("cc/6"), true);
+    tree.setExpanded(babelwires::Path::deserializeFromString("bb/4"), true);
+    tree.setExpanded(babelwires::Path::deserializeFromString("bb/5"), true);
+    tree.addModifier(createModifier(babelwires::Path::deserializeFromString("bb/1"), 3, &owner));
+    tree.setExpanded(babelwires::Path::deserializeFromString("bb/3/erm/2"), true);
+    tree.setExpanded(babelwires::Path::deserializeFromString("bb/3/erm/3"), true);
+    tree.addModifier(createModifier(babelwires::Path::deserializeFromString("bb/3/erm/3"), 5, &owner));
+    tree.setExpanded(babelwires::Path::deserializeFromString("cc/6"), true);
 
-    tree.adjustArrayIndices(babelwires::FeaturePath::deserializeFromString("bb"), 0, 1);
+    tree.adjustArrayIndices(babelwires::Path::deserializeFromString("bb"), 0, 1);
 
-    EXPECT_FALSE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/4")));
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/5")));
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/6")));
-    EXPECT_FALSE(tree.findModifier(babelwires::FeaturePath::deserializeFromString("bb/1")));
-    EXPECT_TRUE(tree.findModifier(babelwires::FeaturePath::deserializeFromString("bb/2")));
-    EXPECT_FALSE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/3/erm/2")));
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/4/erm/2")));
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/4/erm/3")));
-    EXPECT_FALSE(tree.findModifier(babelwires::FeaturePath::deserializeFromString("bb/3/erm/3")));
-    EXPECT_TRUE(tree.findModifier(babelwires::FeaturePath::deserializeFromString("bb/4/erm/3")));
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("cc/6")));
+    EXPECT_FALSE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/4")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/5")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/6")));
+    EXPECT_FALSE(tree.findModifier(babelwires::Path::deserializeFromString("bb/1")));
+    EXPECT_TRUE(tree.findModifier(babelwires::Path::deserializeFromString("bb/2")));
+    EXPECT_FALSE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/3/erm/2")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/4/erm/2")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/4/erm/3")));
+    EXPECT_FALSE(tree.findModifier(babelwires::Path::deserializeFromString("bb/3/erm/3")));
+    EXPECT_TRUE(tree.findModifier(babelwires::Path::deserializeFromString("bb/4/erm/3")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("cc/6")));
 
-    tree.adjustArrayIndices(babelwires::FeaturePath::deserializeFromString("bb/4/erm"), 2, -2);
+    tree.adjustArrayIndices(babelwires::Path::deserializeFromString("bb/4/erm"), 2, -2);
 
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/5")));
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/6")));
-    EXPECT_TRUE(tree.findModifier(babelwires::FeaturePath::deserializeFromString("bb/2")));
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/4/erm/0")));
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/4/erm/1")));
-    EXPECT_TRUE(tree.findModifier(babelwires::FeaturePath::deserializeFromString("bb/4/erm/1")));
-    EXPECT_FALSE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/4/erm/2")));
-    EXPECT_FALSE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("bb/4/erm/2")));
-    EXPECT_FALSE(tree.findModifier(babelwires::FeaturePath::deserializeFromString("bb/4/erm/3")));
-    EXPECT_TRUE(tree.isExpanded(babelwires::FeaturePath::deserializeFromString("cc/6")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/5")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/6")));
+    EXPECT_TRUE(tree.findModifier(babelwires::Path::deserializeFromString("bb/2")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/4/erm/0")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/4/erm/1")));
+    EXPECT_TRUE(tree.findModifier(babelwires::Path::deserializeFromString("bb/4/erm/1")));
+    EXPECT_FALSE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/4/erm/2")));
+    EXPECT_FALSE(tree.isExpanded(babelwires::Path::deserializeFromString("bb/4/erm/2")));
+    EXPECT_FALSE(tree.findModifier(babelwires::Path::deserializeFromString("bb/4/erm/3")));
+    EXPECT_TRUE(tree.isExpanded(babelwires::Path::deserializeFromString("cc/6")));
 }
 
 TEST(EditTreeTest, truncatePaths) {
     babelwires::EditTree tree;
-    tree.setImplicitlyExpanded(babelwires::FeaturePath(), true);
+    tree.setImplicitlyExpanded(babelwires::Path(), true);
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
 
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa"), true);
+    tree.setExpanded(babelwires::Path::deserializeFromString("aa"), true);
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
 
     tree.clearChanges();
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5"));
     }
 
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa/5"), true);
+    tree.setExpanded(babelwires::Path::deserializeFromString("aa/5"), true);
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5"));
     }
 
     tree.clearChanges();
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb"));
     }
 
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa"), false);
+    tree.setExpanded(babelwires::Path::deserializeFromString("aa"), false);
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb"));
     }
 
     tree.clearChanges();
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
 }
 
 TEST(EditTreeTest, truncatePathsWithImplicitlyExpandedPaths) {
     babelwires::EditTree tree;
-    tree.setImplicitlyExpanded(babelwires::FeaturePath(), true);
+    tree.setImplicitlyExpanded(babelwires::Path(), true);
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
 
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa"), true);
+    tree.setExpanded(babelwires::Path::deserializeFromString("aa"), true);
     // An implicitly expanded path might only be encountered after a path was expanded.
-    tree.setImplicitlyExpanded(babelwires::FeaturePath::deserializeFromString("aa/5"), true);
+    tree.setImplicitlyExpanded(babelwires::Path::deserializeFromString("aa/5"), true);
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
 
     tree.clearChanges();
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb"));
     }
 
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa/5/bb"), true);
+    tree.setExpanded(babelwires::Path::deserializeFromString("aa/5/bb"), true);
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb/cc"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb"));
     }
 
     tree.clearChanges();
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb/cc"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb/cc"));
     }
 
     EXPECT_TRUE(testUtils::areEqualSets(
-        std::vector<babelwires::FeaturePath>{babelwires::FeaturePath::deserializeFromString("aa"),
-                                             babelwires::FeaturePath::deserializeFromString("aa/5/bb")},
+        std::vector<babelwires::Path>{babelwires::Path::deserializeFromString("aa"),
+                                             babelwires::Path::deserializeFromString("aa/5/bb")},
         tree.getAllExplicitlyExpandedPaths()));
 
-    tree.setExpanded(babelwires::FeaturePath::deserializeFromString("aa"), false);
+    tree.setExpanded(babelwires::Path::deserializeFromString("aa"), false);
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa/5/bb/cc"));
     }
 
     tree.clearChanges();
 
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::CurrentState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
     {
-        babelwires::FeaturePath path = babelwires::FeaturePath::deserializeFromString("aa/5/bb/cc");
+        babelwires::Path path = babelwires::Path::deserializeFromString("aa/5/bb/cc");
         tree.truncatePathAtFirstCollapsedNode(path, babelwires::EditTree::State::PreviousState);
-        EXPECT_EQ(path, babelwires::FeaturePath::deserializeFromString("aa"));
+        EXPECT_EQ(path, babelwires::Path::deserializeFromString("aa"));
     }
 
     EXPECT_TRUE(testUtils::areEqualSets(
-        std::vector<babelwires::FeaturePath>{babelwires::FeaturePath::deserializeFromString("aa/5/bb")},
+        std::vector<babelwires::Path>{babelwires::Path::deserializeFromString("aa/5/bb")},
         tree.getAllExplicitlyExpandedPaths()));
 }
 
 TEST(EditTreeTest, treeIteration) {
     babelwires::EditTree tree;
 
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("bb/6");
-    const babelwires::FeaturePath path2 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path3 = babelwires::FeaturePath::deserializeFromString("bb");
-    const babelwires::FeaturePath path4 = babelwires::FeaturePath::deserializeFromString("cc/1");
-    const babelwires::FeaturePath path5 = babelwires::FeaturePath::deserializeFromString("aa/3");
-    const babelwires::FeaturePath path6 = babelwires::FeaturePath::deserializeFromString("cc/6");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("bb/6");
+    const babelwires::Path path2 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path3 = babelwires::Path::deserializeFromString("bb");
+    const babelwires::Path path4 = babelwires::Path::deserializeFromString("cc/1");
+    const babelwires::Path path5 = babelwires::Path::deserializeFromString("aa/3");
+    const babelwires::Path path6 = babelwires::Path::deserializeFromString("cc/6");
 
     tree.setExpanded(path1, true);
     tree.addModifier(createModifier(path2, 2));
@@ -772,12 +772,12 @@ TEST(EditTreeTest, treeIteration) {
 TEST(EditTreeTest, modifierIteration) {
     babelwires::EditTree tree;
 
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path2 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path3 = babelwires::FeaturePath::deserializeFromString("bb");
-    const babelwires::FeaturePath path4 = babelwires::FeaturePath::deserializeFromString("cc/1");
-    const babelwires::FeaturePath path5 = babelwires::FeaturePath::deserializeFromString("aa/3");
-    const babelwires::FeaturePath path6 = babelwires::FeaturePath::deserializeFromString("cc/6");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path2 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path3 = babelwires::Path::deserializeFromString("bb");
+    const babelwires::Path path4 = babelwires::Path::deserializeFromString("cc/1");
+    const babelwires::Path path5 = babelwires::Path::deserializeFromString("aa/3");
+    const babelwires::Path path6 = babelwires::Path::deserializeFromString("cc/6");
 
     tree.setExpanded(path1, true);
     tree.addModifier(createModifier(path2, 2));
@@ -815,12 +815,12 @@ TEST(EditTreeTest, modifierIteration) {
 TEST(EditTreeTest, modifierIterationAtSubPath) {
     babelwires::EditTree tree;
 
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path2 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path3 = babelwires::FeaturePath::deserializeFromString("bb");
-    const babelwires::FeaturePath path4 = babelwires::FeaturePath::deserializeFromString("cc/1");
-    const babelwires::FeaturePath path5 = babelwires::FeaturePath::deserializeFromString("aa/3");
-    const babelwires::FeaturePath path6 = babelwires::FeaturePath::deserializeFromString("cc/6");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path2 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path3 = babelwires::Path::deserializeFromString("bb");
+    const babelwires::Path path4 = babelwires::Path::deserializeFromString("cc/1");
+    const babelwires::Path path5 = babelwires::Path::deserializeFromString("aa/3");
+    const babelwires::Path path6 = babelwires::Path::deserializeFromString("cc/6");
 
     tree.setExpanded(path1, true);
     tree.addModifier(createModifier(path2, 2));
@@ -851,12 +851,12 @@ TEST(EditTreeTest, modifierIterationAtSubPath) {
 TEST(EditTreeTest, filteredModifierIteration) {
     babelwires::EditTree tree;
 
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path2 = babelwires::FeaturePath::deserializeFromString("bb/4");
-    const babelwires::FeaturePath path3 = babelwires::FeaturePath::deserializeFromString("bb");
-    const babelwires::FeaturePath path4 = babelwires::FeaturePath::deserializeFromString("cc/1");
-    const babelwires::FeaturePath path5 = babelwires::FeaturePath::deserializeFromString("aa/3");
-    const babelwires::FeaturePath path6 = babelwires::FeaturePath::deserializeFromString("cc/6");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path2 = babelwires::Path::deserializeFromString("bb/4");
+    const babelwires::Path path3 = babelwires::Path::deserializeFromString("bb");
+    const babelwires::Path path4 = babelwires::Path::deserializeFromString("cc/1");
+    const babelwires::Path path5 = babelwires::Path::deserializeFromString("aa/3");
+    const babelwires::Path path6 = babelwires::Path::deserializeFromString("cc/6");
 
     tree.setExpanded(path1, true);
     tree.addModifier(createConnectionModifier(path2));

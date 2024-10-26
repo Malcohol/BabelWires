@@ -16,7 +16,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, ElementId elementId,
-                                                               FeaturePath featurePath, ShortId tagToSelect)
+                                                               Path featurePath, ShortId tagToSelect)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToRecord(std::move(featurePath))
@@ -51,7 +51,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
     }
 
     for (const auto& field : fieldsToRemove) {
-        FeaturePath pathToField = m_pathToRecord;
+        Path pathToField = m_pathToRecord;
         pathToField.pushStep(PathStep(field));
         addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToField));
     }

@@ -10,7 +10,7 @@ namespace testUtils {
     babelwires::TypeRef getTestFileType();
 
     /// Get the path in a FileElement to Int0 in TestSimpleRecordType.
-    babelwires::FeaturePath getTestFileElementPathToInt0();
+    babelwires::Path getTestFileElementPathToInt0();
 
     /// A file format that can save and load some test data.
     /// The serialized format is just the identifier followed by a single byte which carries the value of

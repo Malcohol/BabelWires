@@ -16,7 +16,7 @@
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, ElementId elementId, Path featurePath,
                                ShortId optional)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
@@ -59,7 +59,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         }
     }
 
-    FeaturePath pathToOptional = m_pathToRecord;
+    Path pathToOptional = m_pathToRecord;
     pathToOptional.pushStep(PathStep(m_optional));
     addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToOptional));
 

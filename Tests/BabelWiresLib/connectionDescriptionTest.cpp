@@ -11,8 +11,8 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 TEST(ConnectionDescriptionTest, equalityAndHash) {
-    const babelwires::FeaturePath path0 = babelwires::FeaturePath::deserializeFromString("a/b");
-    const babelwires::FeaturePath path1 = babelwires::FeaturePath::deserializeFromString("c/d");
+    const babelwires::Path path0 = babelwires::Path::deserializeFromString("a/b");
+    const babelwires::Path path1 = babelwires::Path::deserializeFromString("c/d");
     const babelwires::ElementId sourceId0 = 14;
     const babelwires::ElementId sourceId1 = 15;
     const babelwires::ElementId targetId0 = 4;

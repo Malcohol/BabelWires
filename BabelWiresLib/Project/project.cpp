@@ -107,7 +107,7 @@ void babelwires::Project::addModifier(ElementId elementId, const ModifierData& m
     }
 }
 
-void babelwires::Project::removeModifier(ElementId elementId, const FeaturePath& featurePath) {
+void babelwires::Project::removeModifier(ElementId elementId, const Path& featurePath) {
     FeatureElement* const element = getFeatureElement(elementId);
     assert(element && "Cannot remove a modifier from an element that does not exist");
     Modifier* const modifier = element->findModifier(featurePath);
@@ -118,7 +118,7 @@ void babelwires::Project::removeModifier(ElementId elementId, const FeaturePath&
     element->removeModifier(modifier);
 }
 
-void babelwires::Project::adjustModifiersInArrayElements(ElementId elementId, const babelwires::FeaturePath& pathToArray,
+void babelwires::Project::adjustModifiersInArrayElements(ElementId elementId, const babelwires::Path& pathToArray,
                                     babelwires::ArrayIndex startIndex, int adjustment) {
     if (adjustment < 0) {
         startIndex -= adjustment;
@@ -144,7 +144,7 @@ void babelwires::Project::adjustModifiersInArrayElements(ElementId elementId, co
 // If this assumption is not valid, we may need to make the stated assumptions about how input/output paths match
 // tighter.
 
-void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath& pathToArray, int indexOfNewElement,
+void babelwires::Project::addArrayEntries(ElementId elementId, const Path& pathToArray, int indexOfNewElement,
                                           int numEntriesToAdd, bool ensureModifier) {
     assert((indexOfNewElement >= 0) && "indexOfNewElement must be positive");
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
@@ -189,7 +189,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
     }
 }
 
-void babelwires::Project::removeArrayEntries(ElementId elementId, const FeaturePath& pathToArray,
+void babelwires::Project::removeArrayEntries(ElementId elementId, const Path& pathToArray,
                                              int indexOfElementToRemove, int numEntriesToRemove, bool ensureModifier) {
     assert((indexOfElementToRemove >= 0) && "indexOfEntriesToRemove must be positive");
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
@@ -587,7 +587,7 @@ babelwires::ProjectId babelwires::Project::getProjectId() const {
     return m_projectId;
 }
 
-void babelwires::Project::activateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+void babelwires::Project::activateOptional(ElementId elementId, const Path& pathToRecord, ShortId optional,
                                            bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert(elementToModify);
@@ -626,7 +626,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
     }
 }
 
-void babelwires::Project::deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+void babelwires::Project::deactivateOptional(ElementId elementId, const Path& pathToRecord, ShortId optional,
                                              bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert(elementToModify);

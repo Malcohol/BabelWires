@@ -142,7 +142,7 @@ void babelwires::RowModel::getContextMenuActions(
         if (compoundFeature) {
             const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
             //QString tooltip = "Array actions are not permitted when an array is a connection target";
-            FeaturePath pathToArray(compoundFeature);
+            Path pathToArray(compoundFeature);
             const PathStep step = compoundFeature->getStepToChild(inputFeature);
             const ArrayIndex index = step.getIndex();
             {

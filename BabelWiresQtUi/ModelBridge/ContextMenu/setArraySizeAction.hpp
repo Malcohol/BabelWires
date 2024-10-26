@@ -13,12 +13,12 @@
 namespace babelwires {
 
     struct SetArraySizeAction : babelwires::FeatureContextMenuAction {
-        SetArraySizeAction(babelwires::FeaturePath pathToArray);
+        SetArraySizeAction(babelwires::Path pathToArray);
 
         virtual void actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const override;
 
       private:
-        babelwires::FeaturePath m_pathToArray;
+        babelwires::Path m_pathToArray;
     };
 
 } // namespace babelwires

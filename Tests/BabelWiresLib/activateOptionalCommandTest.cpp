@@ -26,7 +26,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     ASSERT_NE(valueFeature, nullptr);
     const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
 
-    const babelwires::FeaturePath pathToValue;
+    const babelwires::Path pathToValue;
 
     babelwires::ActivateOptionalCommand command("Test command", elementId, pathToValue,
                                                 testUtils::TestComplexRecordType::getOpRecId());
@@ -72,7 +72,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoElement) {
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
     babelwires::ActivateOptionalCommand command("Test command", 51,
-                                                babelwires::FeaturePath(), opId);
+                                                babelwires::Path(), opId);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initialize(testEnvironment.m_project));
@@ -83,7 +83,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
     babelwires::ActivateOptionalCommand command("Test command", 51,
-                                                babelwires::FeaturePath::deserializeFromString("qqq/zzz"), opId);
+                                                babelwires::Path::deserializeFromString("qqq/zzz"), opId);
 
     babelwires::ValueElementData elementData(testUtils::TestComplexRecordType::getThisIdentifier());
     elementData.m_id = 51;
@@ -101,7 +101,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
         babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisIdentifier()));
 
-    const babelwires::FeaturePath pathToValue;
+    const babelwires::Path pathToValue;
 
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
@@ -123,7 +123,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     opId.setDiscriminator(1);
 
     // Subrecord is a TestSimpleRecordType and has no optionals.
-    const babelwires::FeaturePath pathToValue;
+    const babelwires::Path pathToValue;
 
     babelwires::ActivateOptionalCommand command(
         "Test command", elementId, pathToValue, opId);
@@ -140,7 +140,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
         testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToValue;
+    const babelwires::Path pathToValue;
 
     auto* const inputRecord = element->getInputFeatureNonConst(pathToValue);
     ASSERT_NE(inputRecord, nullptr);

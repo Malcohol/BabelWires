@@ -69,10 +69,10 @@ bool babelwires::ConnectionModifier::isConnected() const {
     return ((state == State::Success) || (state == State::ApplicationFailed));
 }
 
-void babelwires::ConnectionModifier::adjustSourceArrayIndices(const babelwires::FeaturePath& pathToArray,
+void babelwires::ConnectionModifier::adjustSourceArrayIndices(const babelwires::Path& pathToArray,
                                                               babelwires::ArrayIndex startIndex, int adjustment) {
     babelwires::ConnectionModifierData& modifierData = getModifierData();
-    babelwires::FeaturePath& modifierPath = modifierData.m_pathToSourceFeature;
+    babelwires::Path& modifierPath = modifierData.m_pathToSourceFeature;
     if (pathToArray.isStrictPrefixOf(modifierPath)) {
         // Is the modifier affected?
         const unsigned int pathIndexOfStepIntoArray = pathToArray.getNumSteps();

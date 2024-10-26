@@ -24,7 +24,7 @@
 
 #include <QInputDialog>
 
-babelwires::SetArraySizeAction::SetArraySizeAction(babelwires::FeaturePath pathToArray)
+babelwires::SetArraySizeAction::SetArraySizeAction(babelwires::Path pathToArray)
     : FeatureContextMenuAction(tr("Set array size"))
     , m_pathToArray(std::move(pathToArray)) {}
 

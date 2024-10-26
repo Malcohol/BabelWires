@@ -49,7 +49,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
 
     targetFileElement->clearChanges();
 
-    const babelwires::FeaturePath pathToInt = testUtils::getTestFileElementPathToInt0();
+    const babelwires::Path pathToInt = testUtils::getTestFileElementPathToInt0();
 
     {
         babelwires::ValueAssignmentData intMod(babelwires::IntValue(30));

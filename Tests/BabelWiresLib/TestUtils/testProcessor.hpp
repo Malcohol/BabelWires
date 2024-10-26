@@ -49,15 +49,15 @@ namespace testUtils {
         static babelwires::ShortId getRecordId();
 
         // Helps set up modifiers.
-        static const babelwires::FeaturePath s_pathToInt;
-        static const babelwires::FeaturePath s_pathToArray;
-        static const babelwires::FeaturePath s_pathToArray_0;
-        static const babelwires::FeaturePath s_pathToArray_1;
-        static const babelwires::FeaturePath s_pathToArray_2;
-        static const babelwires::FeaturePath s_pathToArray_3;
-        static const babelwires::FeaturePath s_pathToArray_4;
-        static const babelwires::FeaturePath s_pathToRecord;
-        static const babelwires::FeaturePath s_pathToInt2;
+        static const babelwires::Path s_pathToInt;
+        static const babelwires::Path s_pathToArray;
+        static const babelwires::Path s_pathToArray_0;
+        static const babelwires::Path s_pathToArray_1;
+        static const babelwires::Path s_pathToArray_2;
+        static const babelwires::Path s_pathToArray_3;
+        static const babelwires::Path s_pathToArray_4;
+        static const babelwires::Path s_pathToRecord;
+        static const babelwires::Path s_pathToInt2;
     };
 
     struct TestProcessor : babelwires::Processor {

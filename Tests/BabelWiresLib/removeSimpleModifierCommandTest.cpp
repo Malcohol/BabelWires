@@ -62,7 +62,7 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
 
 TEST(RemoveSimpleModifierCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::RemoveSimpleModifierSubcommand command(51, babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
+    babelwires::RemoveSimpleModifierSubcommand command(51, babelwires::Path::deserializeFromString("qqq/zzz"));
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -73,7 +73,7 @@ TEST(RemoveSimpleModifierCommandTest, failSafelyNoModifier) {
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
 
-    babelwires::RemoveSimpleModifierSubcommand command(elementId, babelwires::FeaturePath::deserializeFromString("qqq/zzz"));
+    babelwires::RemoveSimpleModifierSubcommand command(elementId, babelwires::Path::deserializeFromString("qqq/zzz"));
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));

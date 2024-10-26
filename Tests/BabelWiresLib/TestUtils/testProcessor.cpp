@@ -29,24 +29,24 @@ testUtils::TestProcessorInputOutputType::TestProcessorInputOutputType()
                                  {babelwires::IntValue(2), babelwires::IntValue(8), babelwires::IntValue(2)}}}},
            {getRecordId(), TestSimpleRecordType::getThisIdentifier()}}) {}
 
-const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToInt =
-    babelwires::FeaturePath::deserializeFromString("Int");
-const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToArray =
-    babelwires::FeaturePath::deserializeFromString("Array");
-const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToArray_0 =
-    babelwires::FeaturePath::deserializeFromString("Array/0");
-const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToArray_1 =
-    babelwires::FeaturePath::deserializeFromString("Array/1");
-const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToArray_2 =
-    babelwires::FeaturePath::deserializeFromString("Array/2");
-const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToArray_3 =
-    babelwires::FeaturePath::deserializeFromString("Array/3");
-const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToArray_4 =
-    babelwires::FeaturePath::deserializeFromString("Array/4");
-const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToRecord =
-    babelwires::FeaturePath::deserializeFromString("Record");
-const babelwires::FeaturePath testUtils::TestProcessorInputOutputType::s_pathToInt2 =
-    babelwires::FeaturePath::deserializeFromString("Record/intR0");
+const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToInt =
+    babelwires::Path::deserializeFromString("Int");
+const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToArray =
+    babelwires::Path::deserializeFromString("Array");
+const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToArray_0 =
+    babelwires::Path::deserializeFromString("Array/0");
+const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToArray_1 =
+    babelwires::Path::deserializeFromString("Array/1");
+const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToArray_2 =
+    babelwires::Path::deserializeFromString("Array/2");
+const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToArray_3 =
+    babelwires::Path::deserializeFromString("Array/3");
+const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToArray_4 =
+    babelwires::Path::deserializeFromString("Array/4");
+const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToRecord =
+    babelwires::Path::deserializeFromString("Record");
+const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToInt2 =
+    babelwires::Path::deserializeFromString("Record/intR0");
 
 testUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& context)
     : babelwires::Processor(context, testUtils::TestProcessorInputOutputType::getThisIdentifier(),

@@ -18,7 +18,7 @@
 #include <unordered_set>
 
 babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Feature* inputFeature,
-                                                   const Feature* outputFeature, const FeaturePath& path,
+                                                   const Feature* outputFeature, const Path& path,
                                                    std::uint8_t depth, std::uint8_t indent)
     : m_label(std::move(label))
     , m_inputFeature(inputFeature)
@@ -61,7 +61,7 @@ namespace babelwires {
 
             /// Sets some compound details and returns whether the compound is expanded or not.
             /// indentInOut will be set to the indent level of children.
-            bool setAndGetCompoundIsExpanded(const babelwires::Feature* compound, const FeaturePath& path,
+            bool setAndGetCompoundIsExpanded(const babelwires::Feature* compound, const Path& path,
                                              bool hasChildren, std::uint8_t& indentInOut) {
                 assert(compound);
                 ++indentInOut;
@@ -74,7 +74,7 @@ namespace babelwires {
                 return true;
             }
 
-            void addInputFeatureToCache(std::string label, const babelwires::Feature* f, const FeaturePath& path,
+            void addInputFeatureToCache(std::string label, const babelwires::Feature* f, const Path& path,
                                         std::uint8_t depth, std::uint8_t indent) {
                 m_rows.emplace_back(ContentsCacheEntry(std::move(label), f, nullptr, path, depth, indent));
                 if (setAndGetCompoundIsExpanded(f, path, f->getNumFeatures(), indent)) {
@@ -83,7 +83,7 @@ namespace babelwires {
                         const Feature* child = f->getFeature(i);
                         // TODO Needless cost doing this.
                         PathStep step = f->getStepToChild(child);
-                        FeaturePath pathToChild = path;
+                        Path pathToChild = path;
                         pathToChild.pushStep(step);
                         std::ostringstream os;
                         step.writeToStreamReadable(os, *m_identifierRegistry);
@@ -92,7 +92,7 @@ namespace babelwires {
                 }
             }
 
-            void addOutputFeatureToCache(std::string label, const babelwires::Feature* f, const FeaturePath& path,
+            void addOutputFeatureToCache(std::string label, const babelwires::Feature* f, const Path& path,
                                          std::uint8_t depth, std::uint8_t indent) {
                 m_rows.emplace_back(ContentsCacheEntry(std::move(label), nullptr, f, path, depth, indent));
                 if (setAndGetCompoundIsExpanded(f, path, f->getNumFeatures(), indent)) {
@@ -101,7 +101,7 @@ namespace babelwires {
                         const Feature* child = f->getFeature(i);
                         // TODO Needless cost doing this.
                         PathStep step = f->getStepToChild(child);
-                        FeaturePath pathToChild = path;
+                        Path pathToChild = path;
                         pathToChild.pushStep(step);
                         std::ostringstream os;
                         step.writeToStreamReadable(os, *m_identifierRegistry);
@@ -111,7 +111,7 @@ namespace babelwires {
             }
 
             void addFeatureToCache(std::string label, const Feature* inputFeature, const Feature* outputFeature,
-                                   const FeaturePath& path, std::uint8_t depth, std::uint8_t indent) {
+                                   const Path& path, std::uint8_t depth, std::uint8_t indent) {
                 m_rows.emplace_back(
                     ContentsCacheEntry(std::move(label), inputFeature, outputFeature, path, depth, indent));
                 // Assume expandability is common to input and output feature.
@@ -123,7 +123,7 @@ namespace babelwires {
                         const Feature* child = inputFeature->getFeature(i);
                         // TODO Needless cost doing this.
                         PathStep step = inputFeature->getStepToChild(child);
-                        FeaturePath pathToChild = path;
+                        Path pathToChild = path;
                         const int outputChildIndex = outputFeature->getChildIndexFromStep(step);
                         pathToChild.pushStep(PathStep(step));
                         std::ostringstream os;
@@ -143,7 +143,7 @@ namespace babelwires {
                             const Feature* child = outputFeature->getFeature(i);
                             // TODO Needless cost doing this.
                             PathStep step = outputFeature->getStepToChild(child);
-                            FeaturePath pathToChild = path;
+                            Path pathToChild = path;
                             pathToChild.pushStep(step);
                             std::ostringstream os;
                             step.writeToStreamReadable(os, *m_identifierRegistry);
@@ -166,11 +166,11 @@ void babelwires::ContentsCache::setFeatures(std::string rootLabel, const Feature
     Detail::ContentsCacheBuilder builder(m_rows, m_edits);
     const babelwires::Feature* const rootFeature = inputFeature ? inputFeature : outputFeature;
     if (inputFeature && outputFeature) {
-        builder.addFeatureToCache(std::move(rootLabel), inputFeature, outputFeature, FeaturePath(), 0, 0);
+        builder.addFeatureToCache(std::move(rootLabel), inputFeature, outputFeature, Path(), 0, 0);
     } else if (inputFeature) {
-        builder.addInputFeatureToCache(std::move(rootLabel), inputFeature, FeaturePath(), 0, 0);
+        builder.addInputFeatureToCache(std::move(rootLabel), inputFeature, Path(), 0, 0);
     } else if (outputFeature) {
-        builder.addOutputFeatureToCache(std::move(rootLabel), outputFeature, FeaturePath(), 0, 0);
+        builder.addOutputFeatureToCache(std::move(rootLabel), outputFeature, Path(), 0, 0);
     } else {
         assert(!"Unimplemented");
     }
@@ -309,7 +309,7 @@ int babelwires::ContentsCache::getNumRows() const {
     return m_rows.size();
 }
 
-int babelwires::ContentsCache::getIndexOfPath(bool seekInputFeature, const FeaturePath& path) const {
+int babelwires::ContentsCache::getIndexOfPath(bool seekInputFeature, const Path& path) const {
     for (int i = 0; i < m_rows.size(); ++i) {
         const ContentsCacheEntry& entry = m_rows[i];
         if ((seekInputFeature && !entry.m_inputFeature) || (!seekInputFeature && !entry.m_outputFeature)) {

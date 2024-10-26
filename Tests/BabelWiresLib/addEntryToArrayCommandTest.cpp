@@ -164,7 +164,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
 TEST(AddEntryToArrayCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::AddEntriesToArrayCommand command("Test command", 51,
-                                                 babelwires::FeaturePath::deserializeFromString("qqq/zzz"), -1);
+                                                 babelwires::Path::deserializeFromString("qqq/zzz"), -1);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -177,7 +177,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyNoArray) {
         testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
-                                                 babelwires::FeaturePath::deserializeFromString("qqq/zzz"), -1);
+                                                 babelwires::Path::deserializeFromString("qqq/zzz"), -1);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));

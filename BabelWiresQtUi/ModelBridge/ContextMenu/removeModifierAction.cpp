@@ -38,7 +38,7 @@ void babelwires::RemoveModifierAction::actionTriggered(babelwires::FeatureModel&
     }
     const Feature* const feature = entry->getInputThenOutputFeature();
     assert(feature && "No feature for row model");
-    const bool isModified = (feature == entry->getInputFeature()) && element->findModifier(FeaturePath(feature));
+    const bool isModified = (feature == entry->getInputFeature()) && element->findModifier(Path(feature));
     if (isModified) {
         projectBridge.scheduleCommand(
             std::make_unique<RemoveModifierCommand>("Remove modifier", elementId, entry->getPath()));

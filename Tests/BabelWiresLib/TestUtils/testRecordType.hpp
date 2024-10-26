@@ -87,24 +87,24 @@ namespace testUtils {
       public:
         TestSimpleRecordElementData();
 
-        static babelwires::FeaturePath getPathToRecord();
-        static babelwires::FeaturePath getPathToRecordInt0();
+        static babelwires::Path getPathToRecord();
+        static babelwires::Path getPathToRecordInt0();
     };
 
     class TestComplexRecordElementData : public babelwires::ValueElementData {
       public:
         TestComplexRecordElementData();
 
-        static babelwires::FeaturePath getPathToRecord();
-        static babelwires::FeaturePath getPathToRecordInt0();
-        static babelwires::FeaturePath getPathToRecordOpInt();
-        static babelwires::FeaturePath getPathToRecordSubrecord();
-        static babelwires::FeaturePath getPathToRecordSubrecordInt1();
-        static babelwires::FeaturePath getPathToRecordInt1();
-        static babelwires::FeaturePath getPathToRecordOpRec();
-        static babelwires::FeaturePath getPathToRecordString();
-        static babelwires::FeaturePath getPathToRecordArray();
-        static babelwires::FeaturePath getPathToRecordArrayEntry(unsigned int i);
+        static babelwires::Path getPathToRecord();
+        static babelwires::Path getPathToRecordInt0();
+        static babelwires::Path getPathToRecordOpInt();
+        static babelwires::Path getPathToRecordSubrecord();
+        static babelwires::Path getPathToRecordSubrecordInt1();
+        static babelwires::Path getPathToRecordInt1();
+        static babelwires::Path getPathToRecordOpRec();
+        static babelwires::Path getPathToRecordString();
+        static babelwires::Path getPathToRecordArray();
+        static babelwires::Path getPathToRecordArrayEntry(unsigned int i);
     };
 
 
@@ -121,13 +121,13 @@ namespace testUtils {
         const babelwires::Feature& m_elem1;
 
         // These paths are obtained from the features (which tests some FeaturePath functionality).
-        babelwires::FeaturePath m_pathToRecord;
-        babelwires::FeaturePath m_pathToSubRecord;
-        babelwires::FeaturePath m_pathToSubRecordInt;
-        babelwires::FeaturePath m_pathToInt;
-        babelwires::FeaturePath m_pathToArray;
-        babelwires::FeaturePath m_pathToElem0;
-        babelwires::FeaturePath m_pathToElem1;
+        babelwires::Path m_pathToRecord;
+        babelwires::Path m_pathToSubRecord;
+        babelwires::Path m_pathToSubRecordInt;
+        babelwires::Path m_pathToInt;
+        babelwires::Path m_pathToArray;
+        babelwires::Path m_pathToElem0;
+        babelwires::Path m_pathToElem1;
 
         TestComplexRecordTypeFeatureInfo(const babelwires::Feature& testRecord);
     };

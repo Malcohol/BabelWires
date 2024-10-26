@@ -37,7 +37,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     EXPECT_EQ(output.getArray().getSize(), 2);
 
     babelwires::ValueAssignmentData valueSettingData(babelwires::IntValue(4));
-    valueSettingData.m_pathToFeature = babelwires::FeaturePath{ &*input.getRecord().getintR0() };
+    valueSettingData.m_pathToFeature = babelwires::Path{ &*input.getRecord().getintR0() };
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, valueSettingData);
@@ -52,7 +52,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
     // The processor sets the output array size based on this input.
-    const babelwires::FeaturePath arraySettingIntPath{ &*input.getInt() };
+    const babelwires::Path arraySettingIntPath{ &*input.getInt() };
 
     babelwires::ValueAssignmentData arraySettingData(babelwires::IntValue(4));
     arraySettingData.m_pathToFeature = arraySettingIntPath;

@@ -27,7 +27,7 @@ namespace babelwires {
         DOWNCASTABLE_TYPE_HIERARCHY(ModifierData);
 
         /// Identifies the feature being modified.
-        FeaturePath m_pathToFeature;
+        Path m_pathToFeature;
 
         /// Find the target feature within the container, or throw.
         Feature* getTargetFeature(Feature* container) const;

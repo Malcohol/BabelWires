@@ -65,11 +65,11 @@ TEST(FeatureElementTest, modifiers) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData elementData;
 
-    const babelwires::FeaturePath arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::FeaturePath arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
-    const babelwires::FeaturePath arrayElemPath2 =
+    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path arrayElemPath2 =
         testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
-    const babelwires::FeaturePath failedPath = babelwires::FeaturePath::deserializeFromString("foo/bar");
+    const babelwires::Path failedPath = babelwires::Path::deserializeFromString("foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
     {
@@ -165,11 +165,11 @@ TEST(FeatureElementTest, expandedPaths) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData featureElementData;
 
-    const babelwires::FeaturePath arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::FeaturePath arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
-    const babelwires::FeaturePath arrayElemPath2 =
+    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path arrayElemPath2 =
         testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
-    const babelwires::FeaturePath fooBar = babelwires::FeaturePath::deserializeFromString("foo/bar");
+    const babelwires::Path fooBar = babelwires::Path::deserializeFromString("foo/bar");
 
     featureElementData.m_expandedPaths.emplace_back(arrayElemPath);
     featureElementData.m_expandedPaths.emplace_back(arrayPath);
@@ -220,11 +220,11 @@ TEST(FeatureElementTest, extractElementData) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData featureElementData;
 
-    const babelwires::FeaturePath arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::FeaturePath arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
-    const babelwires::FeaturePath arrayElemPath2 =
+    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path arrayElemPath2 =
         testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
-    const babelwires::FeaturePath failedPath = babelwires::FeaturePath::deserializeFromString("value/foo/bar");
+    const babelwires::Path failedPath = babelwires::Path::deserializeFromString("value/foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
     {
@@ -302,9 +302,9 @@ TEST(FeatureElementTest, removedModifiers) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData featureElementData;
 
-    const babelwires::FeaturePath arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::FeaturePath arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
-    const babelwires::FeaturePath failedPath = babelwires::FeaturePath::deserializeFromString("foo/bar");
+    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path failedPath = babelwires::Path::deserializeFromString("foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
     {
@@ -392,8 +392,8 @@ TEST(FeatureElementTest, simpleChanges) {
     featureElement->clearChanges();
     EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
-    const babelwires::FeaturePath arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::FeaturePath arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
 
     {
         featureElement->clearChanges();

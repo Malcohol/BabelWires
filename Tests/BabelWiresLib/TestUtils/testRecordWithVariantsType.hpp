@@ -31,10 +31,10 @@ namespace testUtils {
     struct TestRecordWithVariantsElementData : babelwires::ValueElementData {
         TestRecordWithVariantsElementData();
 
-        static babelwires::FeaturePath getPathToRecordWithVariants();
-        static const babelwires::FeaturePath getPathToFieldA0();
-        static const babelwires::FeaturePath getPathToFieldA1_Int0();
-        static const babelwires::FeaturePath getPathToFieldAB();
+        static babelwires::Path getPathToRecordWithVariants();
+        static const babelwires::Path getPathToFieldA0();
+        static const babelwires::Path getPathToFieldA1_Int0();
+        static const babelwires::Path getPathToFieldAB();
     };
 
 } // namespace testUtils

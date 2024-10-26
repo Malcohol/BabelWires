@@ -23,11 +23,11 @@ namespace babelwires {
         SERIALIZABLE(DataLocation, "location", void, 1);
 
         DataLocation() = default;
-        DataLocation(ElementId elementId, FeaturePath pathToValue);
+        DataLocation(ElementId elementId, Path pathToValue);
         DataLocation(const DataLocation& other) = default;
 
         ElementId getElementId() const;
-        const FeaturePath& getPathToValue() const;
+        const Path& getPathToValue() const;
 
       public:
         // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
@@ -50,7 +50,7 @@ namespace babelwires {
 
       private:
         ElementId m_elementId;
-        FeaturePath m_pathToValue;
+        Path m_pathToValue;
     };
 }
 

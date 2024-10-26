@@ -25,7 +25,7 @@
 #include <cassert>
 
 babelwires::RemoveSimpleModifierSubcommand::RemoveSimpleModifierSubcommand(ElementId targetId,
-                                                                     FeaturePath featurePath)
+                                                                     Path featurePath)
     : SimpleCommand("RemoveSimpleModifierSubcommand")
     , m_targetElementId(targetId)
     , m_featurePath(std::move(featurePath)) {}
@@ -57,6 +57,6 @@ babelwires::ElementId babelwires::RemoveSimpleModifierSubcommand::getTargetEleme
     return m_targetElementId;
 }
 
-const babelwires::FeaturePath& babelwires::RemoveSimpleModifierSubcommand::getFeaturePath() const {
+const babelwires::Path& babelwires::RemoveSimpleModifierSubcommand::getFeaturePath() const {
     return m_featurePath;
 }

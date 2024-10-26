@@ -25,7 +25,7 @@ namespace babelwires {
     struct ModifierData;
     class Project;
     class Feature;
-    class FeaturePath;
+    class Path;
     class FeatureElement;
     class ConnectionModifier;
 
@@ -65,7 +65,7 @@ namespace babelwires {
         const ModifierData& getModifierData() const;
 
         /// Convenience function for finding the feature affected by this modifier.
-        const FeaturePath& getPathToFeature() const;
+        const Path& getPathToFeature() const;
 
         /// If the modifier is a local modifier, apply it. Otherwise, do nothing.
         virtual void applyIfLocal(UserLogger& userLogger, Feature* container);
@@ -110,7 +110,7 @@ namespace babelwires {
         /// Adjust the pathToFeature of this modifier by the adjustment.
         /// Asserts that this feature leads into the array and that its
         /// index is greater than startIndex.
-        void adjustArrayIndex(const babelwires::FeaturePath& pathToArray, babelwires::ArrayIndex startIndex,
+        void adjustArrayIndex(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                               int adjustment);
 
       public:

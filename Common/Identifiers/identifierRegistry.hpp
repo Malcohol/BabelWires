@@ -23,7 +23,7 @@ namespace babelwires {
     /// A singleton that associates global metadata with identifiers.
     /// This has support for acting as a "thread-safe singleton".
     /// Singletons are usually a mistake and for the most part, "dependency injection" has been used to provide
-    /// the project with its dependencies. However, passing the registry through to every use of FeaturePath was
+    /// the project with its dependencies. However, passing the registry through to every use of Path was
     /// just too painful, so a singleton was adopted in this case.
     class IdentifierRegistry : public Serializable {
       public:

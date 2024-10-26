@@ -33,15 +33,15 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
         testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::FeaturePath pathToValue;
+    const babelwires::Path pathToValue;
 
-    babelwires::FeaturePath pathToOptional = pathToValue;
+    babelwires::Path pathToOptional = pathToValue;
     pathToOptional.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
 
-    babelwires::FeaturePath pathToIntInOptional = pathToOptional;
+    babelwires::Path pathToIntInOptional = pathToOptional;
     pathToIntInOptional.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
 
-    babelwires::FeaturePath pathToIntInSimpleRecord = pathToValue;
+    babelwires::Path pathToIntInSimpleRecord = pathToValue;
     pathToIntInSimpleRecord.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
 
     {
@@ -123,7 +123,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
-    babelwires::DeactivateOptionalCommand command("Test command", 51, babelwires::FeaturePath(), opId);
+    babelwires::DeactivateOptionalCommand command("Test command", 51, babelwires::Path(), opId);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -134,7 +134,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
     babelwires::DeactivateOptionalCommand command("Test command", 51,
-                                                  babelwires::FeaturePath::deserializeFromString("qqq/zzz"), opId);
+                                                  babelwires::Path::deserializeFromString("qqq/zzz"), opId);
 
     babelwires::ValueElementData elementData(testUtils::TestComplexRecordType::getThisIdentifier());
     elementData.m_id = 51;
@@ -152,7 +152,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
         babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisIdentifier()));
 
-    const babelwires::FeaturePath pathToValue;
+    const babelwires::Path pathToValue;
 
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
@@ -172,7 +172,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     opId.setDiscriminator(1);
 
     // Subrecord is a TestSimpleRecordType and has no optionals.
-    const babelwires::FeaturePath pathToValue;
+    const babelwires::Path pathToValue;
 
     babelwires::DeactivateOptionalCommand command(
         "Test command", elementId, pathToValue, opId);
@@ -186,7 +186,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
         babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisIdentifier()));
 
-    const babelwires::FeaturePath pathToValue;
+    const babelwires::Path pathToValue;
 
     babelwires::DeactivateOptionalCommand command(
         "Test command", elementId, pathToValue, testUtils::TestComplexRecordType::getOpIntId());

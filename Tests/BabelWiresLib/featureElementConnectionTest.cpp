@@ -72,9 +72,9 @@ struct FeatureElementConnectionTest : ::testing::Test {
     }
 
     testUtils::TestEnvironment m_context;
-    babelwires::FeaturePath m_arrayPath;
-    babelwires::FeaturePath m_arrayElemPath;
-    babelwires::FeaturePath m_targetPath;
+    babelwires::Path m_arrayPath;
+    babelwires::Path m_arrayElemPath;
+    babelwires::Path m_targetPath;
 
     babelwires::ElementId m_elementId;
     babelwires::FeatureElement* m_featureElement;

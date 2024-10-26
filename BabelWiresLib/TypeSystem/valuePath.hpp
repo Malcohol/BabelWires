@@ -10,10 +10,10 @@
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
-    class FeaturePath;
+    class Path;
     class TypeSystem;
 
     /// Obtain a reference to a ValueHolder to data in a copy of start.
     /// Throws if the path cannot be followed.
-    std::tuple<const Type&, ValueHolder&> followNonConst(const TypeSystem& typeSystem, const Type& type, const FeaturePath& path, ValueHolder& start);
+    std::tuple<const Type&, ValueHolder&> followNonConst(const TypeSystem& typeSystem, const Type& type, const Path& path, ValueHolder& start);
 }

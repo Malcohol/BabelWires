@@ -14,7 +14,7 @@
 namespace babelwires {
     class Type;
     class Value;
-    class FeaturePath;
+    class Path;
 
     /// A SimpleValueFeature is a feature which owns its value.
     class SimpleValueFeature : public Feature {
@@ -28,7 +28,7 @@ namespace babelwires {
         /// Clone the value, and return a modifiable value to the value at the given path.
         /// If the type is compound, this asserts that the feature has been backed up already.
         // TODO Find better name.
-        ValueHolder& setModifiable(const FeaturePath& pathFromHere);
+        ValueHolder& setModifiable(const Path& pathFromHere);
 
         /// After changes are complete, compare the current value to the backup and set change flags.
         /// This clears the backup.

@@ -447,7 +447,7 @@ TEST(ArrayTypeTest, featureChanges) {
     arrayFeature.clearChanges();
     {
         babelwires::BackupScope scope(arrayFeature);
-        babelwires::FeaturePath pathToInt;
+        babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(1));
         babelwires::ValueHolder& value = arrayFeature.setModifiable(pathToInt);
         value = babelwires::IntValue(15);

@@ -21,7 +21,7 @@
 #include <cassert>
 
 babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId,
-                                                                     FeaturePath featurePath,
+                                                                     Path featurePath,
                                                                      unsigned int indexOfEntryToRemove,
                                                                      unsigned int numEntriesToRemove)
     : CompoundCommand(commandName)
