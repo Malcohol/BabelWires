@@ -9,8 +9,11 @@
 
 #include <Common/Utilities/enumFlags.hpp>
 #include <Common/types.hpp>
+#include <Common/multiKeyMap.hpp>
 
 #include <BabelWiresLib/Features/Path/pathStep.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <cassert>
 #include <functional>
@@ -21,13 +24,17 @@
 #include <vector>
 
 namespace babelwires {
+    class Type;
+    class SimpleValueFeature;
+    class ChildValueFeature;
+
     /// A feature is a self-describing data-structure which stores the data in the model.
     /// Features are structured in a tree, which also defines ownership.
     class Feature {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Feature);
 
-        Feature() = default;
+        Feature(TypeRef typeRef);
         virtual ~Feature();
 
         void setOwner(Feature* owner);
@@ -59,12 +66,12 @@ namespace babelwires {
         std::size_t getHash() const;
 
       public:
-        virtual int getNumFeatures() const = 0;
+        virtual int getNumFeatures() const;
 
         Feature* getFeature(int i);
         const Feature* getFeature(int i) const;
 
-        virtual PathStep getStepToChild(const Feature* child) const = 0;
+        virtual PathStep getStepToChild(const Feature* child) const;
 
         /// Should return nullptr if the step does not lead to a child.
         Feature* tryGetChildFromStep(const PathStep& step);
@@ -80,7 +87,40 @@ namespace babelwires {
 
         /// Returns -1 if not found.
         /// Sets the descriminator of identifier on a match.
-        virtual int getChildIndexFromStep(const PathStep& step) const = 0;
+        virtual int getChildIndexFromStep(const PathStep& step) const;
+
+      public:
+        /// Get the TypeRef which describes the type of the value.
+        const TypeRef& getTypeRef() const;
+
+        /// Get the value currently held by this feature.
+        const ValueHolder& getValue() const;
+
+        /// Set this feature to hold a new value.
+        void setValue(const ValueHolder& newValue);
+
+        /// Value features always exist within a hierarchy where the root carries a reference to the TypeSystem.
+        const TypeSystem& getTypeSystem() const;
+
+        /// This is a convenience method which resolves the typeRef in the context of the TypeSystem
+        /// carried by the root.
+        const Type& getType() const;
+
+        /// This is a convenience method which calls getType().getKind().
+        /// The need for connectable features to provide a string description is not fundamental to the data model.
+        /// It is imposed by the current UI.
+        /// Returning the empty string tells the project that values of this kind cannot be wired together.
+        std::string getKind() const;
+
+        /// Set this to hold the same value as other.
+        /// This will throw a ModelException if the assignment failed.
+        void assign(const Feature& other);
+
+        /// If the value is compound, synchronize the m_children data structure with the current children of the value.
+        void synchronizeSubfeatures();
+
+        /// Set change flags in this feature and its subfeatures by comparing the current value with that of other.
+        void reconcileChanges(const ValueHolder& other);
 
       protected:
         /// Set the isChanged flag and that of all parents.
@@ -90,10 +130,10 @@ namespace babelwires {
         virtual void doSetToDefault() = 0;
 
         /// Protected implementation of setToDefaultNonRecursive.
-        virtual void doSetToDefaultNonRecursive() = 0;
+        virtual void doSetToDefaultNonRecursive();
 
         /// Protected implementation of getHash.
-        virtual std::size_t doGetHash() const = 0;
+        virtual std::size_t doGetHash() const;
 
         /// Clears the changes of this class and all children.
         virtual void doClearChanges();
@@ -102,8 +142,12 @@ namespace babelwires {
         void setSubfeaturesToDefault();
 
       protected:
-        virtual Feature* doGetFeature(int i) = 0;
-        virtual const Feature* doGetFeature(int i) const = 0;
+        virtual Feature* doGetFeature(int i);
+        virtual const Feature* doGetFeature(int i) const;
+
+      protected:
+        virtual const ValueHolder& doGetValue() const = 0;
+        virtual void doSetValue(const ValueHolder& newValue) = 0;
 
       private:
         // For now.
@@ -113,6 +157,10 @@ namespace babelwires {
       private:
         Feature* m_owner = nullptr;
         Changes m_changes = Changes::SomethingChanged;
+
+        TypeRef m_typeRef;
+        using ChildMap = MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ChildValueFeature>>;
+        ChildMap m_children;
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(Feature::Changes);

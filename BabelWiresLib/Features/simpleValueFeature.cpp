@@ -7,6 +7,7 @@
  **/
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
@@ -15,8 +16,8 @@
 babelwires::SimpleValueFeature::SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef)
     : ValueFeature(std::move(typeRef))
     , m_typeSystem(&typeSystem) {
-        // TODO assert the type resolves?
-    }
+    // TODO assert the type resolves?
+}
 
 const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() const {
     // Not sure if this assert is necessary.

@@ -14,6 +14,7 @@
 namespace babelwires {
     class Type;
     class Value;
+    class FeaturePath;
 
     /// A SimpleValueFeature is a feature which owns its value.
     class SimpleValueFeature : public ValueFeature {
