@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Features/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <unordered_set>

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Features/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <filesystem>

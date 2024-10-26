@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Features/Path/path.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>

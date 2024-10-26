@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Features/Path/path.hpp>
 #include <BabelWiresLib/Instance/instance.hpp>
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>

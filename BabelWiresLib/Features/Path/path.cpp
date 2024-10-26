@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Features/Path/path.hpp>
 
 #include <BabelWiresLib/Features/Path/pathStep.hpp>
 #include <BabelWiresLib/Features/feature.hpp>

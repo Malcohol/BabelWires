@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectIds.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Features/Path/path.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
 #include <Common/Serialization/serializable.hpp>
