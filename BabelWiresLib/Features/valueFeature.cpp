@@ -135,41 +135,6 @@ void babelwires::ValueFeature::synchronizeSubfeatures() {
     m_children.swap(newChildMap);
 }
 
-babelwires::ValueFeature::RootAndPath<const babelwires::SimpleValueFeature>
-babelwires::ValueFeature::getRootValueFeature() const {
-    const ValueFeature* current = this;
-    std::vector<PathStep> reversePath;
-    while (1) {
-        if (const SimpleValueFeature* currentAsRootValueFeature = current->as<SimpleValueFeature>()) {
-            std::reverse(reversePath.begin(), reversePath.end());
-            return {*currentAsRootValueFeature, FeaturePath(std::move(reversePath))};
-        }
-        assert(getOwner() && "You can only get the RootValueFeature from a ValueFeature in a hierarchy.");
-        const ValueFeature* const owner = getOwner()->as<ValueFeature>();
-        assert(owner && "The owner of a ChildValueFeature must be a ValueFeature");
-        PathStep stepToThis = owner->getStepToChild(current);
-        reversePath.emplace_back(stepToThis);
-        current = owner;
-    }
-}
-
-babelwires::ValueFeature::RootAndPath<babelwires::SimpleValueFeature> babelwires::ValueFeature::getRootValueFeature() {
-    ValueFeature* current = this;
-    std::vector<PathStep> reversePath;
-    while (1) {
-        if (SimpleValueFeature* currentAsRootValueFeature = current->as<SimpleValueFeature>()) {
-            std::reverse(reversePath.begin(), reversePath.end());
-            return {*currentAsRootValueFeature, FeaturePath(std::move(reversePath))};
-        }
-        assert(getOwner() && "You can only get the RootValueFeature from a ValueFeature in a hierarchy.");
-        ValueFeature* const owner = current->getOwnerNonConst()->as<ValueFeature>();
-        assert(owner && "The owner of a ChildValueFeature must be a ValueFeature");
-        PathStep stepToThis = owner->getStepToChild(current);
-        reversePath.emplace_back(stepToThis);
-        current = owner;
-    }
-}
-
 void babelwires::ValueFeature::reconcileChanges(const ValueHolder& other) {
     const ValueHolder& value = getValue();
     if (auto* compound = getType().as<CompoundType>()) {

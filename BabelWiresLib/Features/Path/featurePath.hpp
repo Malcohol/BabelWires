@@ -2,7 +2,7 @@
  * Describes the steps to follow within a tree of features to reach a particular feature.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -17,6 +17,7 @@
 namespace babelwires {
 
     class Feature;
+    class SimpleValueFeature;
 
     /// Describes the steps to follow within a tree of features to reach a particular feature.
     class FeaturePath {
@@ -37,6 +38,14 @@ namespace babelwires {
         FeaturePath& operator=(const FeaturePath& other) = default;
 
         FeaturePath& operator=(FeaturePath&& other) = default;
+
+        template <typename ROOT_VALUE_FEATURE> struct RootAndPath;
+
+        /// All value features must be below a single SimpleValueFeature.
+        static RootAndPath<const SimpleValueFeature> getRootAndPath(const Feature& feature);
+
+        /// All value features must be below a single SimpleValueFeature.
+        static RootAndPath<SimpleValueFeature> getRootAndPath(Feature& feature);
 
         /// Add a step to the path.
         void pushStep(PathStep step);
@@ -110,6 +119,11 @@ namespace babelwires {
 
     /// Write a path to an ostream.
     std::ostream& operator<<(std::ostream& os, const FeaturePath& p);
+
+    template <typename ROOT_VALUE_FEATURE> struct FeaturePath::RootAndPath {
+        ROOT_VALUE_FEATURE& m_root;
+        FeaturePath m_pathFromRoot;
+    };
 
 } // namespace babelwires
 

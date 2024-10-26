@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Features/Path/pathStep.hpp>
 #include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
 #include <Common/Hash/hash.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -22,25 +23,51 @@
 babelwires::FeaturePath::FeaturePath() {}
 
 babelwires::FeaturePath::FeaturePath(const Feature* feature) {
-    std::vector<PathStep> steps;
-
     const Feature* current = feature;
     const Feature* parent = current->getOwner();
     while (parent) {
-        steps.push_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
+        m_steps.push_back(parent->getStepToChild(current));
+        assert(!m_steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
 
-    m_steps.reserve(steps.size());
-    std::move(steps.rbegin(), steps.rend(), std::back_inserter(m_steps));
+    std::reverse(m_steps.begin(), m_steps.end());
 }
 
 babelwires::FeaturePath::FeaturePath(std::vector<PathStep> steps)
     : m_steps(std::move(steps)) {
     assert(std::none_of(m_steps.begin(), m_steps.end(), [](auto p) { return p.isNotAStep(); }) &&
            "Attempt to construct a path from a vector containing a non-step");
+}
+
+babelwires::FeaturePath::RootAndPath<const babelwires::SimpleValueFeature>
+babelwires::FeaturePath::getRootAndPath(const Feature& feature) {
+    std::vector<PathStep> steps;
+    const Feature* current = &feature;
+    const Feature* parent = feature.getOwner();
+    while (parent) {
+        steps.emplace_back(parent->getStepToChild(current));
+        assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
+        current = parent;
+        parent = current->getOwner();
+    }
+    std::reverse(steps.begin(), steps.end());
+    return { current->is<SimpleValueFeature>(), FeaturePath(std::move(steps)) };
+}
+
+babelwires::FeaturePath::RootAndPath<babelwires::SimpleValueFeature> babelwires::FeaturePath::getRootAndPath(Feature& feature) {
+    std::vector<PathStep> steps;
+    Feature* current = &feature;
+    Feature* parent = feature.getOwnerNonConst();
+    while (parent) {
+        steps.emplace_back(parent->getStepToChild(current));
+        assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
+        current = parent;
+        parent = current->getOwnerNonConst();
+    }
+    std::reverse(steps.begin(), steps.end());
+    return { current->is<SimpleValueFeature>(), FeaturePath(std::move(steps)) };
 }
 
 void babelwires::FeaturePath::pushStep(PathStep step) {

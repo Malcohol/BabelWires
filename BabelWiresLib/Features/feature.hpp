@@ -32,6 +32,7 @@ namespace babelwires {
 
         void setOwner(Feature* owner);
         const Feature* getOwner() const;
+        Feature* getOwnerNonConst();
 
         /// Set to the default value.
         void setToDefault();
@@ -109,8 +110,6 @@ namespace babelwires {
 
         /// Clears the changes of this class and all children.
         virtual void doClearChanges();
-
-        Feature* getOwnerNonConst();
 
         /// Call setToDefault on each subfeature.
         void setSubfeaturesToDefault();

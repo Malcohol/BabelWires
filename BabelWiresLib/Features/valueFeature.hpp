@@ -73,18 +73,6 @@ namespace babelwires {
         virtual const ValueHolder& doGetValue() const = 0;
         virtual void doSetValue(const ValueHolder& newValue) = 0;
 
-        template<typename ROOT_VALUE_FEATURE>
-        struct RootAndPath {
-          ROOT_VALUE_FEATURE& m_root;
-          FeaturePath m_pathFromRoot;
-        };
-
-        /// All value features must be below a single SimpleValueFeature.
-        RootAndPath<const SimpleValueFeature> getRootValueFeature() const;
-
-        /// All value features must be below a single SimpleValueFeature.
-        RootAndPath<SimpleValueFeature> getRootValueFeature();
-
       private:
         TypeRef m_typeRef;
         using ChildMap = MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ChildValueFeature>>;

@@ -35,7 +35,7 @@ void babelwires::ChildValueFeature::doSetValue(const ValueHolder& newValue) {
         const TypeSystem& typeSystem = getTypeSystem();
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
-            auto rootAndPath = getRootValueFeature();
+            auto rootAndPath = FeaturePath::getRootAndPath(*this);
             ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);
             modifiableValueHolder = newValue;
             // Changing the modifiableValueHolder, can change the value.
@@ -49,7 +49,7 @@ void babelwires::ChildValueFeature::doSetValue(const ValueHolder& newValue) {
 void babelwires::ChildValueFeature::doSetToDefault() {
     const TypeSystem& typeSystem = getTypeSystem();
     auto [newValue, _] = getType().createValue(typeSystem);
-    auto rootAndPath = getRootValueFeature();
+    auto rootAndPath = FeaturePath::getRootAndPath(*this);
     ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);
     modifiableValueHolder = newValue;
     // Changing the modifiableValueHolder can change the structure of the hierarchy at this point.
