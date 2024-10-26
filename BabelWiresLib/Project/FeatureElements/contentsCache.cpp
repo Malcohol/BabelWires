@@ -64,20 +64,12 @@ namespace babelwires {
             bool setAndGetCompoundIsExpanded(const babelwires::Feature* compound, const FeaturePath& path,
                                              bool hasChildren, std::uint8_t& indentInOut) {
                 assert(compound);
-                const Feature::Style style = compound->getStyle();
-                if (isZero(style & babelwires::Feature::Style::isInlined)) {
-                    ++indentInOut;
-                }
+                ++indentInOut;
                 ContentsCacheEntry& row = m_rows.back();
-                if (isNonzero(style & babelwires::Feature::Style::isCollapsable)) {
-                    row.m_isExpandable = hasChildren;
-                    if (hasChildren) {
-                        row.m_isExpanded = m_edits.isExpanded(path);
-                        return row.m_isExpanded;
-                    }
-                } else {
-                    m_edits.setImplicitlyExpanded(path, true);
-                    row.m_isExpandable = false;
+                row.m_isExpandable = hasChildren;
+                if (hasChildren) {
+                    row.m_isExpanded = m_edits.isExpanded(path);
+                    return row.m_isExpanded;
                 }
                 return true;
             }

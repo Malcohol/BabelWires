@@ -128,7 +128,3 @@ const babelwires::Feature& babelwires::Feature::getChildFromStep(const PathStep&
         throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
     }
 }
-
-babelwires::Feature::Style babelwires::Feature::getStyle() const {
-    return Style::isCollapsable;
-}

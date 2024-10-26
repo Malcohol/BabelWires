@@ -58,19 +58,6 @@ namespace babelwires {
         /// This is not required to distinguish the contents of features of different types.
         std::size_t getHash() const;
 
-        /// Flags defining aspects of how a feature appears in a feature element.
-        enum class Style : unsigned int {
-            // Applies only to compound features.
-            /// By default, compounds are collapsed and can be expanded. If false, they will be in a permanently expanded state.
-            isCollapsable = 0b0001,
-            /// By default, the children of compounds are indented. If true, this will present the children at the top level.
-            isInlined = 0b0010,
-        };
-
-        /// How should this feature appear in a feature element?
-        /// The system assumes that styles do not change over the lifetime of a feature.
-        virtual Style getStyle() const;
-
       public:
         virtual int getNumFeatures() const = 0;
 
@@ -129,6 +116,5 @@ namespace babelwires {
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(Feature::Changes);
-    DEFINE_ENUM_FLAG_OPERATORS(Feature::Style);
 
 } // namespace babelwires
