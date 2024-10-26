@@ -40,7 +40,7 @@ namespace babelwires {
         const TypeSystem& getTypeSystem() const;
 
         /// This is a convenience method which resolves the typeRef in the context of the TypeSystem
-        /// carried by the rootFeature.
+        /// carried by the root.
         const Type& getType() const;
 
         /// This is a convenience method which calls getType().getKind().

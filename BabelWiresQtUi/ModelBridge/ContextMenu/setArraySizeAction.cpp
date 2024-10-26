@@ -14,7 +14,6 @@
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>

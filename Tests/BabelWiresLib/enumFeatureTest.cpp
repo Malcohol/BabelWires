@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Instance/instance.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 

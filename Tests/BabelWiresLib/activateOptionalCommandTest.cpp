@@ -7,7 +7,6 @@
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

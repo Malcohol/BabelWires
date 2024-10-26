@@ -9,7 +9,6 @@
 #pragma once
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 

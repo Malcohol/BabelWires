@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>

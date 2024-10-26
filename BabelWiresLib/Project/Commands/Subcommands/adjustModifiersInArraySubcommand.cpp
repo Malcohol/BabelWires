@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>

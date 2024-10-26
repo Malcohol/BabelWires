@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
 
 #include <Common/Log/userLogger.hpp>

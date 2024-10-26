@@ -13,7 +13,6 @@
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
