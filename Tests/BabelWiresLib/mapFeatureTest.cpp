@@ -57,7 +57,6 @@ TEST(MapFeatureTest, setToDefault) {
 
 TEST(MapFeatureTest, isCompatible) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::RootFeature rootFeature(testEnvironment.m_projectContext);
 
     babelwires::SimpleValueFeature mapFeature1(testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestType, babelwires::DefaultIntType>());
     babelwires::SimpleValueFeature mapFeature2(testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestType, babelwires::DefaultIntType>());
