@@ -67,7 +67,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         // remove themselves cleanly.
         if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             auto [compoundFeature, currentSize, range, initialSize] =
-                ValueFeatureHelper::getInfoFromArrayFeature(m_featurePath.tryFollow(*inputFeature));
+                ValueTreeHelper::getInfoFromArrayFeature(m_featurePath.tryFollow(*inputFeature));
             if (compoundFeature) {
                 if (currentSize != initialSize) {
                     addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(
@@ -76,7 +76,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             }
         } else if (const auto* optModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             auto [compoundFeature, optionals] =
-                ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_featurePath.tryFollow(*inputFeature));
+                ValueTreeHelper::getInfoFromRecordWithOptionalsFeature(m_featurePath.tryFollow(*inputFeature));
             if (compoundFeature) {
                 for (auto optionalField : optionals) {
                     if (optionalField.second) {
@@ -87,7 +87,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             }
         } else if (const auto* varModifierData = modifier->getModifierData().as<SelectRecordVariantModifierData>()) {
             auto [compoundFeature, isDefault, fieldsToRemove] =
-                ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(m_featurePath.tryFollow(*inputFeature));
+                ValueTreeHelper::getInfoFromRecordWithVariantsFeature(m_featurePath.tryFollow(*inputFeature));
             if (!isDefault) {
                 for (auto fieldToRemove : fieldsToRemove) {
                     Path pathToFieldToRemove = m_featurePath;

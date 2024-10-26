@@ -40,7 +40,7 @@ void babelwires::SetArraySizeAction::actionTriggered(babelwires::FeatureModel& m
         const FeatureElement* const featureElement = scope.getProject().getFeatureElement(elementId);
 
         const babelwires::ValueTreeNode* const inputFeature = m_pathToArray.tryFollow(*featureElement->getInputFeature());
-        auto [compoundFeature, s, r, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(inputFeature);
+        auto [compoundFeature, s, r, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(inputFeature);
         if (!compoundFeature) {
             return;
         }

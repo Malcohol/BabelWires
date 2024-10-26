@@ -37,7 +37,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
     }
 
     const auto [compoundFeature, optionals] =
-        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature));
+        ValueTreeHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature));
 
     if (!compoundFeature) {
         return false;   

@@ -14,7 +14,7 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 
 std::tuple<const babelwires::ValueTreeNode*, unsigned int, babelwires::Range<unsigned int>, unsigned int>
-babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const ValueTreeNode* f) {
+babelwires::ValueTreeHelper::getInfoFromArrayFeature(const ValueTreeNode* f) {
     if (!f) {
         return {};
     }
@@ -26,7 +26,7 @@ babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const ValueTreeNode* f) 
 }
 
 std::tuple<const babelwires::ValueTreeNode*, std::map<babelwires::ShortId, bool>>
-babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const ValueTreeNode* f) {
+babelwires::ValueTreeHelper::getInfoFromRecordWithOptionalsFeature(const ValueTreeNode* f) {
     if (!f) {
         return {};
     }
@@ -40,7 +40,7 @@ babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Valu
     return {};
 }
 
-std::tuple<const babelwires::ValueTreeNode*, bool, std::vector<babelwires::ShortId>> babelwires::ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(const ValueTreeNode* f, std::optional<ShortId> tagId) {
+std::tuple<const babelwires::ValueTreeNode*, bool, std::vector<babelwires::ShortId>> babelwires::ValueTreeHelper::getInfoFromRecordWithVariantsFeature(const ValueTreeNode* f, std::optional<ShortId> tagId) {
     if (!f) { 
         return {};
     }

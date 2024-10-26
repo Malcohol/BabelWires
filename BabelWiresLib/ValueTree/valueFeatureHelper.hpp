@@ -18,7 +18,7 @@ namespace babelwires {
 
     /// Abstract the difference between some features and their value type equivalents, so code doesn't always need to 
     /// handle both cases.
-    class ValueFeatureHelper {
+    class ValueTreeHelper {
       public:
         /// Obtain details about an array.
         static std::tuple<const ValueTreeNode*, unsigned int, Range<unsigned int>, unsigned int> getInfoFromArrayFeature(const ValueTreeNode* f);

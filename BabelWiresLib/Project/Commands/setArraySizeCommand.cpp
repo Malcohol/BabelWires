@@ -37,7 +37,7 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    auto [compoundFeature, currentSize, range, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*inputFeature));
+    auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*inputFeature));
 
     if (!compoundFeature) {
         return false;

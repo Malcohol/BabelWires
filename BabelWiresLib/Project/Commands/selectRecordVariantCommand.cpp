@@ -36,7 +36,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
     }
 
     const auto [compoundFeature, isCurrentTag, fieldsToRemove] =
-        ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(m_pathToRecord.tryFollow(*inputFeature), m_tagToSelect);
+        ValueTreeHelper::getInfoFromRecordWithVariantsFeature(m_pathToRecord.tryFollow(*inputFeature), m_tagToSelect);
 
     if (!compoundFeature) {
         return false;   
