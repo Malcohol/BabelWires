@@ -144,9 +144,9 @@ void testUtils::TestProjectData::testProjectData(const babelwires::ProjectContex
 }
 
 void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::ProjectContext& context) {
-    babelwires::SimpleValueFeature testRecord(context.m_typeSystem, testUtils::TestProcessorInputOutputType::getThisIdentifier());
+    babelwires::ValueTreeRoot testRecord(context.m_typeSystem, testUtils::TestProcessorInputOutputType::getThisIdentifier());
     testRecord.setToDefault();
-    babelwires::SimpleValueFeature testFileFeature(context.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot testFileFeature(context.m_typeSystem, testUtils::getTestFileType());
 
     // These have side-effects on the mutable field discriminators in the paths.
     auto modData0 = m_elements[0]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();

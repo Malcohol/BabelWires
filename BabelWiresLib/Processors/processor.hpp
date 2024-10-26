@@ -14,7 +14,7 @@ namespace babelwires {
     class ValueTreeNode;
     struct ProjectContext;
     class TypeRef;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
     /// Defines a processing operation from an input feature to an output feature.
     /// This should not store any state.
@@ -39,8 +39,8 @@ namespace babelwires {
                                   ValueTreeNode& outputFeature) const = 0;
 
       protected:
-        std::unique_ptr<SimpleValueFeature> m_inputFeature;
-        std::unique_ptr<SimpleValueFeature> m_outputFeature;
+        std::unique_ptr<ValueTreeRoot> m_inputFeature;
+        std::unique_ptr<ValueTreeRoot> m_outputFeature;
     };
 
 } // namespace babelwires

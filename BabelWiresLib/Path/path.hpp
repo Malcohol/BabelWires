@@ -17,7 +17,7 @@
 namespace babelwires {
 
     class ValueTreeNode;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
     /// Describes the steps to follow within a tree of features to reach a particular feature.
     class Path {
@@ -41,11 +41,11 @@ namespace babelwires {
 
         template <typename ROOT_VALUE_FEATURE> struct RootAndPath;
 
-        /// All value features must be below a single SimpleValueFeature.
-        static RootAndPath<const SimpleValueFeature> getRootAndPath(const ValueTreeNode& feature);
+        /// All value features must be below a single ValueTreeRoot.
+        static RootAndPath<const ValueTreeRoot> getRootAndPath(const ValueTreeNode& feature);
 
-        /// All value features must be below a single SimpleValueFeature.
-        static RootAndPath<SimpleValueFeature> getRootAndPath(ValueTreeNode& feature);
+        /// All value features must be below a single ValueTreeRoot.
+        static RootAndPath<ValueTreeRoot> getRootAndPath(ValueTreeNode& feature);
 
         /// Add a step to the path.
         void pushStep(PathStep step);

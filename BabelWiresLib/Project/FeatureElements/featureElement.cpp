@@ -309,7 +309,7 @@ namespace {
 
     babelwires::ValueTreeNode* tryFollowPathToValue(babelwires::ValueTreeNode* start, const babelwires::Path& p,
                                               int index) {
-        if ((index < p.getNumSteps()) && !start->as<babelwires::SimpleValueFeature>()) {
+        if ((index < p.getNumSteps()) && !start->as<babelwires::ValueTreeRoot>()) {
             if (auto* compound = start) {
                 babelwires::ValueTreeNode& child = compound->getChildFromStep(p.getStep(index));
                 return tryFollowPathToValue(&child, p, index + 1);
@@ -329,10 +329,10 @@ namespace {
         }
     }
 
-    babelwires::SimpleValueFeature* exploreForCompoundRootValueFeature(babelwires::ValueTreeNode* compound) {
+    babelwires::ValueTreeRoot* exploreForCompoundRootValueFeature(babelwires::ValueTreeNode* compound) {
         // TODO: Out of date.
         for (auto* const subFeature : babelwires::subfeatures(compound)) {
-            if (auto* const simpleValueFeature = subFeature->as<babelwires::SimpleValueFeature>()) {
+            if (auto* const simpleValueFeature = subFeature->as<babelwires::ValueTreeRoot>()) {
                 if (simpleValueFeature->getType().as<babelwires::CompoundType>()) {
                     return simpleValueFeature;
                 }
@@ -364,9 +364,9 @@ void babelwires::FeatureElement::modifyFeatureAt(ValueTreeNode* inputFeature, co
         return;
     }
 
-    SimpleValueFeature* rootValueFeature = nullptr;
+    ValueTreeRoot* rootValueFeature = nullptr;
 
-    if (SimpleValueFeature *const valueFeature = target->as<SimpleValueFeature>()) {
+    if (ValueTreeRoot *const valueFeature = target->as<ValueTreeRoot>()) {
         // Modification below a compound root value feature.
         if (valueFeature->getType().as<CompoundType>()) {
             rootValueFeature = valueFeature;

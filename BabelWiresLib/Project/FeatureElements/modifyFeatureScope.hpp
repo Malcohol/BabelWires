@@ -11,15 +11,15 @@
 
 namespace babelwires {
     class FeatureElement;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
     class ModifyFeatureScope {
       public:
         ModifyFeatureScope() = default;
-        ModifyFeatureScope(Path pathToRootValue, SimpleValueFeature* rootValueFeature);
+        ModifyFeatureScope(Path pathToRootValue, ValueTreeRoot* rootValueFeature);
 
       public:
         Path m_pathToRootValue;
-        SimpleValueFeature* m_rootValueFeature = nullptr;
+        ValueTreeRoot* m_rootValueFeature = nullptr;
     };
 } // namespace babelwires

@@ -119,7 +119,7 @@ TEST(FeaturePathTest, pathIteration) {
 TEST(FeaturePathTest, pathFollow) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature testRecordFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
                                                      testUtils::TestComplexRecordType::getThisIdentifier());
     testRecordFeature.setToDefault();
 
@@ -185,7 +185,7 @@ TEST(FeaturePathTest, pathResolve) {
     EXPECT_EQ(pathToInt2.getStep(0).getField().getDiscriminator(), 0);
     EXPECT_EQ(pathToInt2.getStep(1).getField().getDiscriminator(), 0);
 
-    babelwires::SimpleValueFeature testRecordFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
                                                      testUtils::TestComplexRecordType::getThisIdentifier());
     testRecordFeature.setToDefault();
 
@@ -222,7 +222,7 @@ TEST(FeaturePathTest, pathResolve) {
 TEST(FeaturePathTest, pathTryFollow) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature testRecordFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
                                                      testUtils::TestComplexRecordType::getThisIdentifier());
     testRecordFeature.setToDefault();
 
@@ -255,7 +255,7 @@ TEST(FeaturePathTest, pathFollowFail) {
     pathValueAsArray.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getInt1Id()));
     pathValueAsArray.pushStep(babelwires::PathStep(12));
 
-    babelwires::SimpleValueFeature testRecordFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
                                                      testUtils::TestComplexRecordType::getThisIdentifier());
     testRecordFeature.setToDefault();
 

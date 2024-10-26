@@ -164,7 +164,7 @@ const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
     const ValueTreeNode* current = this;
     while (1) {
         // TODO Query owner first and do a checking downcast when at root.
-        if (const SimpleValueFeature* currentAsRootValueFeature = current->as<SimpleValueFeature>()) {
+        if (const ValueTreeRoot* currentAsRootValueFeature = current->as<ValueTreeRoot>()) {
             return currentAsRootValueFeature->getTypeSystem();
         }
         const ValueTreeNode* const owner = current->getOwner();

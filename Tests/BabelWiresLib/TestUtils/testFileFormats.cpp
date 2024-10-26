@@ -79,12 +79,12 @@ char testUtils::TestSourceFileFormat::getFileData(const std::filesystem::path& p
     return getFileDataInternal(dataSource);
 }
 
-std::unique_ptr<babelwires::SimpleValueFeature>
+std::unique_ptr<babelwires::ValueTreeRoot>
 testUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource,
                                               const babelwires::ProjectContext& projectContext,
                                               babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
-    auto newFeature = std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, getTestFileType());
+    auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
     newFeature->setToDefault();
     TestSimpleRecordType::Instance instance{newFeature->getFeature(0)->is<babelwires::ValueTreeNode>()};
     instance.getintR0().set(value);
@@ -114,14 +114,14 @@ std::string testUtils::TestTargetFileFormat::getProductName() const {
     return s_product;
 }
 
-std::unique_ptr<babelwires::SimpleValueFeature>
+std::unique_ptr<babelwires::ValueTreeRoot>
 testUtils::TestTargetFileFormat::createNewFeature(const babelwires::ProjectContext& projectContext) const {
-    return std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, getTestFileType());
+    return std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
 }
 
 void testUtils::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
                                                   babelwires::UserLogger& userLogger,
-                                                  const babelwires::SimpleValueFeature& contents,
+                                                  const babelwires::ValueTreeRoot& contents,
                                                   std::ostream& os) const {
     TestSimpleRecordType::ConstInstance instance{contents.getFeature(0)->is<babelwires::ValueTreeNode>()};
     os << s_fileFormatId << char(instance.getintR0().get());

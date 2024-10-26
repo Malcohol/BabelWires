@@ -14,7 +14,7 @@ namespace babelwires {
     struct ProjectContext;
     struct ProcessorElementData;
     class Processor;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
     class ProcessorElement : public FeatureElement {
       public:
@@ -41,7 +41,7 @@ namespace babelwires {
         std::unique_ptr<Processor> m_processor;
 
         /// Non-null when the defined processor could not be constructed.
-        std::unique_ptr<babelwires::SimpleValueFeature> m_failedFeature;
+        std::unique_ptr<babelwires::ValueTreeRoot> m_failedFeature;
     };
 
 } // namespace babelwires

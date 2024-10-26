@@ -1,5 +1,5 @@
 /**
- * A SimpleValueFeature is a ValueTreeNode which owns its value.
+ * A ValueTreeRoot is a ValueTreeNode which owns its value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -16,11 +16,11 @@ namespace babelwires {
     class Value;
     class Path;
 
-    /// A SimpleValueFeature is a feature which owns its value.
-    class SimpleValueFeature : public ValueTreeNode {
+    /// A ValueTreeRoot is a feature which owns its value.
+    class ValueTreeRoot : public ValueTreeNode {
       public:
         /// Construct a rooted ValueTreeNode which carries values of the given type.
-        SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef);
+        ValueTreeRoot(const TypeSystem& typeSystem, TypeRef typeRef);
 
         /// Back up the current value using a shallow clone.
         void backUpValue();
@@ -61,14 +61,14 @@ namespace babelwires {
     };
 
     struct BackupScope {
-        BackupScope(SimpleValueFeature& feature)
+        BackupScope(ValueTreeRoot& feature)
             : m_backedUpValueFeature(feature) {
             feature.backUpValue();
         }
 
         ~BackupScope() { m_backedUpValueFeature.reconcileChangesFromBackup(); }
 
-        SimpleValueFeature& m_backedUpValueFeature;
+        ValueTreeRoot& m_backedUpValueFeature;
     };
 
 } // namespace babelwires

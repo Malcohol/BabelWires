@@ -13,7 +13,7 @@
 namespace babelwires {
     struct UserLogger;
     class ValueElementData;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
     class ValueElement : public FeatureElement {
       public:
@@ -36,7 +36,7 @@ namespace babelwires {
         std::string getRootLabel() const;
 
       private:
-        std::unique_ptr<babelwires::SimpleValueFeature> m_rootFeature;
+        std::unique_ptr<babelwires::ValueTreeRoot> m_rootFeature;
     };
 
 } // namespace babelwires

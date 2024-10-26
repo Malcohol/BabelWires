@@ -22,7 +22,7 @@ namespace testUtils {
         TestSourceFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::SimpleValueFeature> loadFromFile(babelwires::DataSource& dataSource,
+        std::unique_ptr<babelwires::ValueTreeRoot> loadFromFile(babelwires::DataSource& dataSource,
                                                               const babelwires::ProjectContext& projectContext,
                                                               babelwires::UserLogger& userLogger) const override;
 
@@ -38,10 +38,10 @@ namespace testUtils {
         TestTargetFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::SimpleValueFeature>
+        std::unique_ptr<babelwires::ValueTreeRoot>
         createNewFeature(const babelwires::ProjectContext& projectContext) const override;
         void writeToFile(const babelwires::ProjectContext& projectContext, babelwires::UserLogger& userLogger,
-                         const babelwires::SimpleValueFeature& contents, std::ostream& os) const override;
+                         const babelwires::ValueTreeRoot& contents, std::ostream& os) const override;
     };
 
 } // namespace testUtils

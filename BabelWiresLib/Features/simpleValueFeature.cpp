@@ -1,5 +1,5 @@
 /**
- * A SimpleValueFeature is a ValueTreeNode which owns its value.
+ * A ValueTreeRoot is a ValueTreeNode which owns its value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,19 +13,19 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/valuePath.hpp>
 
-babelwires::SimpleValueFeature::SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef)
+babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypeRef typeRef)
     : ValueTreeNode(std::move(typeRef))
     , m_typeSystem(&typeSystem) {
     // TODO assert the type resolves?
 }
 
-const babelwires::ValueHolder& babelwires::SimpleValueFeature::doGetValue() const {
+const babelwires::ValueHolder& babelwires::ValueTreeRoot::doGetValue() const {
     // Not sure if this assert is necessary.
-    assert(m_value && "The SimpleValueFeature has not been initialized");
+    assert(m_value && "The ValueTreeRoot has not been initialized");
     return m_value;
 }
 
-void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
+void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
     if (m_value != newValue) {
         const TypeSystem& typeSystem = getTypeSystem();
         const Type& type = getType();
@@ -44,7 +44,7 @@ void babelwires::SimpleValueFeature::doSetValue(const ValueHolder& newValue) {
     }
 }
 
-void babelwires::SimpleValueFeature::doSetToDefault() {
+void babelwires::ValueTreeRoot::doSetToDefault() {
     assert(getTypeRef() && "The type must be set to something non-trivial before doSetToDefault is called");
     const TypeSystem& typeSystem = getTypeSystem();
     const Type& type = getType();
@@ -60,12 +60,12 @@ void babelwires::SimpleValueFeature::doSetToDefault() {
     }
 }
 
-void babelwires::SimpleValueFeature::backUpValue() {
+void babelwires::ValueTreeRoot::backUpValue() {
     assert(!m_valueBackUp && "The value is already backed-up");
     m_valueBackUp = m_value;
 }
 
-babelwires::ValueHolder& babelwires::SimpleValueFeature::setModifiable(const Path& pathFromHere) {
+babelwires::ValueHolder& babelwires::ValueTreeRoot::setModifiable(const Path& pathFromHere) {
     if (pathFromHere.getNumSteps() > 0) {
         assert(getType().as<CompoundType>() && "Path leading into a non-compound type");
         assert(m_isNew ||
@@ -79,7 +79,7 @@ babelwires::ValueHolder& babelwires::SimpleValueFeature::setModifiable(const Pat
     }
 }
 
-void babelwires::SimpleValueFeature::reconcileChangesFromBackup() {
+void babelwires::ValueTreeRoot::reconcileChangesFromBackup() {
     if (m_valueBackUp) {
         reconcileChanges(m_valueBackUp);
         m_valueBackUp.clear();
@@ -87,6 +87,6 @@ void babelwires::SimpleValueFeature::reconcileChangesFromBackup() {
     m_isNew = false;
 }
 
-const babelwires::TypeSystem& babelwires::SimpleValueFeature::getTypeSystem() const {
+const babelwires::TypeSystem& babelwires::ValueTreeRoot::getTypeSystem() const {
     return *m_typeSystem;
 }

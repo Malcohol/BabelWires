@@ -88,13 +88,13 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
                   const ValueTreeNode& outputEntry)
             : m_index(index)
             , m_inputEntry(inputEntry)
-            , m_outputEntry(std::make_unique<SimpleValueFeature>(typeSystem, outputEntry.getTypeRef())) {
+            , m_outputEntry(std::make_unique<ValueTreeRoot>(typeSystem, outputEntry.getTypeRef())) {
             m_outputEntry->setValue(outputEntry.getValue());
         }
 
         const unsigned int m_index;
         const ValueTreeNode& m_inputEntry;
-        std::unique_ptr<SimpleValueFeature> m_outputEntry;
+        std::unique_ptr<ValueTreeRoot> m_outputEntry;
         std::string m_failureString;
     };
     std::vector<EntryData> entriesToProcess;

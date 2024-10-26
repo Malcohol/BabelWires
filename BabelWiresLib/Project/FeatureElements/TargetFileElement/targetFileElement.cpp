@@ -36,11 +36,11 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
         setFeature(std::move(newFeature));
     } catch (const RegistryException& e) {
         setInternalFailure(e.what());
-        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier()));
+        setFeature(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
         userLogger.logError() << "Failed to create target feature id=" << elementData.m_id << ": " << e.what();
     } catch (const BaseException& e) {
         setInternalFailure(e.what());
-        setFeature(std::make_unique<SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier()));
+        setFeature(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
         userLogger.logError() << "Failed to create target feature \"" << elementData.m_factoryIdentifier
                               << "\": " << e.what();
     }
@@ -64,7 +64,7 @@ const babelwires::ValueTreeNode* babelwires::TargetFileElement::getInputFeature(
     return m_feature.get();
 }
 
-void babelwires::TargetFileElement::setFeature(std::unique_ptr<SimpleValueFeature> feature) {
+void babelwires::TargetFileElement::setFeature(std::unique_ptr<ValueTreeRoot> feature) {
     m_contentsCache.setFeatures("File", feature.get(), nullptr);
     m_feature = std::move(feature);
 }

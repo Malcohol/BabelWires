@@ -111,7 +111,7 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
 
     processor.getInputFeature().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::SimpleValueFeature>());
+        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
         intValueFeature.setValue(babelwires::IntValue(1));
     }
     processor.process(testEnvironment.m_log);
@@ -119,7 +119,7 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
 
     processor.getInputFeature().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::SimpleValueFeature>());
+        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
         inputArray.getEntry(0).set(2);
     }
     processor.process(testEnvironment.m_log);
@@ -127,7 +127,7 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
 
     processor.getInputFeature().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::SimpleValueFeature>());
+        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
         inputArray.setSize(2);
     }
     processor.process(testEnvironment.m_log);
@@ -138,7 +138,7 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
 
     processor.getInputFeature().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::SimpleValueFeature>());
+        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
         inputArray.setSize(1);
     }
     processor.process(testEnvironment.m_log);
@@ -173,7 +173,7 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
 
     processor.getInputFeature().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::SimpleValueFeature>());
+        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
         intValueFeature.setValue(babelwires::IntValue(4));
         inputArray.setSize(2);
         inputArray.getEntry(0).set(5);
@@ -193,7 +193,7 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
 
     processor.getInputFeature().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::SimpleValueFeature>());
+        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
         inputArray.getEntry(0).set(7);
     }
     processor.process(testEnvironment.m_log);
@@ -208,7 +208,7 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     processor.getInputFeature().clearChanges();
     testEnvironment.m_log.clear();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::SimpleValueFeature>());
+        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
         inputArray.getEntry(0).set(0);
     }
     processor.process(testEnvironment.m_log);
@@ -256,7 +256,7 @@ TEST(ParallelProcessorTest, testFailure) {
 
     processor.getInputFeature().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::SimpleValueFeature>());
+        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
         intValueFeature.setValue(babelwires::IntValue(4));
         inputArray.setSize(2);
         inputArray.getEntry(0).set(17);

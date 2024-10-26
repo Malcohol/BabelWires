@@ -427,7 +427,7 @@ TEST(ArrayTypeTest, subtyping) {
 
 TEST(ArrayTypeTest, featureChanges) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisIdentifier());
+    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisIdentifier());
     arrayFeature.setToDefault();
 
     const testUtils::TestSimpleArrayType* arrayType = arrayFeature.getType().as<testUtils::TestSimpleArrayType>();

@@ -405,7 +405,7 @@ TEST(RecordTypeTest, featureChanges)
 {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_typeSystem, testUtils::TestComplexRecordType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_typeSystem, testUtils::TestComplexRecordType::getThisIdentifier());
     valueFeature.setToDefault();
 
     const testUtils::TestComplexRecordType* recordType = valueFeature.getType().as<testUtils::TestComplexRecordType>();

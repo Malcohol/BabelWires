@@ -409,7 +409,7 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
     inputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
@@ -424,7 +424,7 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
@@ -438,9 +438,9 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
@@ -456,9 +456,9 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
 
     inputFeature.setToDefault();
@@ -520,9 +520,9 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
 
     inputFeature.setToDefault();
@@ -603,8 +603,8 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
 }
 
 namespace {
-    void checkFileRootEntry(const babelwires::ContentsCacheEntry* entry, babelwires::SimpleValueFeature* inputFeature,
-                            babelwires::SimpleValueFeature* outputFeature) {
+    void checkFileRootEntry(const babelwires::ContentsCacheEntry* entry, babelwires::ValueTreeRoot* inputFeature,
+                            babelwires::ValueTreeRoot* outputFeature) {
         EXPECT_EQ(entry->getLabel(), "Test");
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature);
@@ -621,8 +621,8 @@ namespace {
         EXPECT_TRUE(entry->isExpanded());
     }
 
-    void checkFileContentsEntry(const babelwires::ContentsCacheEntry* entry, babelwires::SimpleValueFeature* inputFeature,
-                           babelwires::SimpleValueFeature* outputFeature, bool isExpanded) {
+    void checkFileContentsEntry(const babelwires::ContentsCacheEntry* entry, babelwires::ValueTreeRoot* inputFeature,
+                           babelwires::ValueTreeRoot* outputFeature, bool isExpanded) {
         EXPECT_EQ(entry->getLabel(), "Contents");
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature->getFeature(0));
@@ -640,8 +640,8 @@ namespace {
         EXPECT_EQ(entry->isExpanded(), isExpanded);
     }
 
-    void checkFileIntEntry(const babelwires::ContentsCacheEntry* entry, babelwires::SimpleValueFeature* inputFeature,
-                           babelwires::SimpleValueFeature* outputFeature) {
+    void checkFileIntEntry(const babelwires::ContentsCacheEntry* entry, babelwires::ValueTreeRoot* inputFeature,
+                           babelwires::ValueTreeRoot* outputFeature) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestSimpleRecordType::s_int0FieldName);
         if (inputFeature) {
             EXPECT_EQ(entry->getInputFeature(), inputFeature->getFeature(0)->is<babelwires::ValueTreeNode>().getFeature(0));
@@ -659,8 +659,8 @@ namespace {
     }
 
     void testFileCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                                 babelwires::SimpleValueFeature* inputFeature,
-                                 babelwires::SimpleValueFeature* outputFeature) {
+                                 babelwires::ValueTreeRoot* inputFeature,
+                                 babelwires::ValueTreeRoot* outputFeature) {
                                     
         ASSERT_EQ(cache.getNumRows(), 2);
         {
@@ -694,8 +694,8 @@ namespace {
     }
 
     void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache,
-                               babelwires::EditTree& editTree, babelwires::SimpleValueFeature* inputFeature,
-                               babelwires::SimpleValueFeature* outputFeature) {
+                               babelwires::EditTree& editTree, babelwires::ValueTreeRoot* inputFeature,
+                               babelwires::ValueTreeRoot* outputFeature) {
         ASSERT_TRUE(inputFeature);
 
         // Adding a hidden failed modifier whose parent is logically the root.
@@ -736,7 +736,7 @@ TEST(ContentsCacheTest, inputFileFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
     inputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
     
@@ -751,7 +751,7 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -765,8 +765,8 @@ TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);

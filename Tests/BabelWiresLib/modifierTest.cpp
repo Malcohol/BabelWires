@@ -85,7 +85,7 @@ TEST(ModifierTest, clone) {
 TEST(ModifierTest, localApplySuccess) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature recordFeature{testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot recordFeature{testEnvironment.m_projectContext.m_typeSystem,
                                                  testUtils::TestSimpleRecordType::getThisIdentifier()};
     recordFeature.setToDefault();
 
@@ -112,7 +112,7 @@ TEST(ModifierTest, localApplySuccess) {
 TEST(ModifierTest, localApplyFailureWrongType) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature recordFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot recordFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestSimpleRecordType::getThisIdentifier());
     recordFeature.setToDefault();
 
@@ -138,7 +138,7 @@ TEST(ModifierTest, localApplyFailureWrongType) {
 TEST(ModifierTest, localApplyFailureNoTarget) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature recordFeature{testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot recordFeature{testEnvironment.m_projectContext.m_typeSystem,
                                                  testUtils::TestSimpleRecordType::getThisIdentifier()};
     recordFeature.setToDefault();
 
@@ -167,7 +167,7 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
 TEST(ModifierTest, arraySizeModifierSuccess) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature recordFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot recordFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
     recordFeature.setToDefault();
 
@@ -199,7 +199,7 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
 TEST(ModifierTest, arraySizeModifierFailure) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature recordFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot recordFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
     recordFeature.setToDefault();
 
@@ -237,7 +237,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
 
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
-    babelwires::SimpleValueFeature targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                        testUtils::TestSimpleRecordType::getThisIdentifier());
     targetRecordFeature.setToDefault();
 
@@ -263,7 +263,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
 TEST(ModifierTest, connectionModifierTargetPathFailure) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                        testUtils::TestSimpleRecordType::getThisIdentifier());
     targetRecordFeature.setToDefault();
 
@@ -293,7 +293,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
 TEST(ModifierTest, connectionModifierSourceIdFailure) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                        testUtils::TestSimpleRecordType::getThisIdentifier());
     targetRecordFeature.setToDefault();
 
@@ -333,7 +333,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
-    babelwires::SimpleValueFeature targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                        testUtils::TestSimpleRecordType::getThisIdentifier());
     targetRecordFeature.setToDefault();
 
@@ -376,7 +376,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
 
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
-    babelwires::SimpleValueFeature targetRecordFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_typeSystem,
                                                        testUtils::TestComplexRecordType::getThisIdentifier());
     targetRecordFeature.setToDefault();
     testUtils::TestComplexRecordType::Instance targetInstance{targetRecordFeature};

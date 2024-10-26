@@ -25,7 +25,7 @@
 
 namespace babelwires {
     class Type;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
     class ChildValueFeature;
 
     /// A feature is a self-describing data-structure which stores the data in the model.

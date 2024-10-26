@@ -36,7 +36,7 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
         setFactoryName(elementData.m_factoryIdentifier);
         setInternalFailure(e.what());
         m_failedFeature =
-            std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier());
+            std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
         userLogger.logError() << "Failed to create processor id=" << elementData.m_id << ": " << e.what();
     }
 }

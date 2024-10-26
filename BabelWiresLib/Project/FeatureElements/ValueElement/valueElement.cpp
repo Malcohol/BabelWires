@@ -24,7 +24,7 @@ babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger
         message << "Type Reference " << data.getTypeRef().toString() << " could not be resolved";
         setInternalFailure(message.str());
     }
-    m_rootFeature = std::make_unique<SimpleValueFeature>(context.m_typeSystem, typeRefForConstruction);
+    m_rootFeature = std::make_unique<ValueTreeRoot>(context.m_typeSystem, typeRefForConstruction);
 }
 
 babelwires::ValueElement::~ValueElement() = default;

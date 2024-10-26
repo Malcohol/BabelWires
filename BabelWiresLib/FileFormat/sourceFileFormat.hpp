@@ -20,13 +20,13 @@ namespace babelwires {
 } // namespace babelwires
 
 namespace babelwires {
-    class SimpleValueFeature;
+    class ValueTreeRoot;
     struct ProjectContext;
 
     class SourceFileFormat : public FileTypeEntry, ProductInfo {
       public:
         SourceFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
-        virtual std::unique_ptr<babelwires::SimpleValueFeature> loadFromFile(DataSource& dataSource, const ProjectContext& projectContext,
+        virtual std::unique_ptr<babelwires::ValueTreeRoot> loadFromFile(DataSource& dataSource, const ProjectContext& projectContext,
                                                                       UserLogger& userLogger) const = 0;
     };
 

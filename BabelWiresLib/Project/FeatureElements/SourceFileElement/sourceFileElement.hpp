@@ -18,7 +18,7 @@ namespace babelwires {
 
     struct SourceFileElementData;
     struct ProjectContext;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
     /// SourceFileElements are FeatureElements which correspond to a source file.
     class SourceFileElement : public FileElement {
@@ -42,11 +42,11 @@ namespace babelwires {
         void doProcess(UserLogger& userLogger) override;
 
       protected:
-        void setFeature(std::unique_ptr<SimpleValueFeature> feature);
+        void setFeature(std::unique_ptr<ValueTreeRoot> feature);
         SourceFileElementData& getElementData();
 
       private:
-        std::unique_ptr<SimpleValueFeature> m_feature;
+        std::unique_ptr<ValueTreeRoot> m_feature;
     };
 
 } // namespace babelwires

@@ -17,7 +17,7 @@
 
 TEST(ActivateOptionalsModifierDataTest, apply) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
     valueFeature.setToDefault();
     const auto* type = valueFeature.getType().as<testUtils::TestComplexRecordType>();
@@ -44,7 +44,7 @@ TEST(ActivateOptionalsModifierDataTest, apply) {
 
 TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
     valueFeature.setToDefault();
     const auto* type = valueFeature.getType().as<testUtils::TestComplexRecordType>();
@@ -62,7 +62,7 @@ TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
 
 TEST(ActivateOptionalsModifierDataTest, failureNotARecordWithOptionals) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testUtils::TestSimpleRecordType::getThisIdentifier());
     valueFeature.setToDefault();
 

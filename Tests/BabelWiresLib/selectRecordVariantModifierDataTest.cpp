@@ -17,7 +17,7 @@
 
 TEST(SelectRecordVariantModifierDataTest, apply) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature valueFeature(
+    babelwires::ValueTreeRoot valueFeature(
         testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisIdentifier());
     valueFeature.setToDefault();
     const auto* type = valueFeature.getType().as<testUtils::TestRecordWithVariantsType>();
@@ -44,7 +44,7 @@ TEST(SelectRecordVariantModifierDataTest, failureNotATag) {
     data.m_tagToSelect = "notTag";
 
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature valueFeature(
+    babelwires::ValueTreeRoot valueFeature(
         testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisIdentifier());
 
     valueFeature.setToDefault();
@@ -57,7 +57,7 @@ TEST(SelectRecordVariantModifierDataTest, failureNotAUnion) {
     babelwires::SelectRecordVariantModifierData data;
     data.m_tagToSelect = "tag";
 
-    babelwires::SimpleValueFeature notARecordWithVariants(
+    babelwires::ValueTreeRoot notARecordWithVariants(
         testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisIdentifier());
 
     EXPECT_THROW(data.apply(&notARecordWithVariants), babelwires::ModelException);

@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
-babelwires::ModifyFeatureScope::ModifyFeatureScope(Path pathToRootValue, SimpleValueFeature* rootValueFeature)
+babelwires::ModifyFeatureScope::ModifyFeatureScope(Path pathToRootValue, ValueTreeRoot* rootValueFeature)
     : m_pathToRootValue(std::move(pathToRootValue))
     , m_rootValueFeature(rootValueFeature) {}
 

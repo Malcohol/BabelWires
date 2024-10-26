@@ -41,7 +41,7 @@ babelwires::Path::Path(std::vector<PathStep> steps)
            "Attempt to construct a path from a vector containing a non-step");
 }
 
-babelwires::Path::RootAndPath<const babelwires::SimpleValueFeature>
+babelwires::Path::RootAndPath<const babelwires::ValueTreeRoot>
 babelwires::Path::getRootAndPath(const ValueTreeNode& feature) {
     std::vector<PathStep> steps;
     const ValueTreeNode* current = &feature;
@@ -53,10 +53,10 @@ babelwires::Path::getRootAndPath(const ValueTreeNode& feature) {
         parent = current->getOwner();
     }
     std::reverse(steps.begin(), steps.end());
-    return { current->is<SimpleValueFeature>(), Path(std::move(steps)) };
+    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
 }
 
-babelwires::Path::RootAndPath<babelwires::SimpleValueFeature> babelwires::Path::getRootAndPath(ValueTreeNode& feature) {
+babelwires::Path::RootAndPath<babelwires::ValueTreeRoot> babelwires::Path::getRootAndPath(ValueTreeNode& feature) {
     std::vector<PathStep> steps;
     ValueTreeNode* current = &feature;
     ValueTreeNode* parent = feature.getOwnerNonConst();
@@ -67,7 +67,7 @@ babelwires::Path::RootAndPath<babelwires::SimpleValueFeature> babelwires::Path::
         parent = current->getOwnerNonConst();
     }
     std::reverse(steps.begin(), steps.end());
-    return { current->is<SimpleValueFeature>(), Path(std::move(steps)) };
+    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
 }
 
 void babelwires::Path::pushStep(PathStep step) {
