@@ -11,7 +11,6 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>

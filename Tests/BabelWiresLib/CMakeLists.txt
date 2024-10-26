@@ -21,7 +21,6 @@ SET( LIB_TESTS_SRCS
     featureElementTest.cpp
     featurePathTest.cpp
     editTreeTest.cpp
-    intFeatureTest.cpp
     intValueTest.cpp
     intTypeTest.cpp
     mapValueTest.cpp
