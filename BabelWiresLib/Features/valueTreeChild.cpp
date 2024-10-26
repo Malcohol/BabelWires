@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Features/childValueFeature.hpp>
+#include <BabelWiresLib/Features/valueTreeChild.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/valueTreeRoot.hpp>

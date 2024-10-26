@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Features/valueTreeNode.hpp>
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/childValueFeature.hpp>
+#include <BabelWiresLib/Features/valueTreeChild.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/valueTreeRoot.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
