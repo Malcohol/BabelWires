@@ -88,7 +88,7 @@ const babelwires::Feature* babelwires::ElementNodeModel::getOutputFeature(Access
 }
 
 QtNodes::NodeDataType babelwires::ElementNodeModel::getDataTypeFromFeature(const babelwires::Feature* f) {
-    if (f->getKind() != "") {
+    if (f && f->getKind() != "") {
         return QtNodes::NodeDataType{f->getKind().c_str(), ""};
     }
     return QtNodes::NodeDataType();
