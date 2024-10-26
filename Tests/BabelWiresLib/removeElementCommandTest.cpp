@@ -14,10 +14,10 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
@@ -97,15 +97,17 @@ TEST(RemoveElementCommandTest, failSafelyNoElement) {
 TEST(RemoveElementCommandTest, subsumption) {
     testUtils::TestEnvironment testEnvironment;
 
+    testUtils::TestComplexRecordElementData elementData;
+
     const babelwires::ElementId element1Id =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(elementData);
     const babelwires::ElementId element2Id =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(elementData);
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-        modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = elementData.getPathToRecordInt0();
+        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         modData.m_sourceId = element1Id;
 
         testEnvironment.m_project.addModifier(element2Id, modData);
@@ -134,7 +136,7 @@ TEST(RemoveElementCommandTest, subsumption) {
     {
         const babelwires::Modifier* modifier = testEnvironment.m_project.getFeatureElement(element2Id)
                                                    ->getEdits()
-                                                   .findModifier(testUtils::TestRootFeature::s_pathToInt2);
+                                                   .findModifier(elementData.getPathToRecordInt0());
         EXPECT_NE(modifier, nullptr);
         EXPECT_FALSE(modifier->isFailed());
     }
