@@ -14,10 +14,10 @@
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
@@ -196,8 +196,9 @@ namespace {
     void testSourceElementsOutsideProjectData(bool isPastingIntoSameProject) {
         testUtils::TestEnvironment testEnvironment;
 
+        testUtils::TestComplexRecordElementData sourceElementData;
         babelwires::ElementId sourceElementId =
-            testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+            testEnvironment.m_project.addFeatureElement(sourceElementData);
 
         const babelwires::ElementId newElementId = sourceElementId + 1;
         EXPECT_EQ(testEnvironment.m_project.getFeatureElement(newElementId), nullptr);
@@ -209,15 +210,16 @@ namespace {
             projectData.m_projectId = testEnvironment.m_project.getProjectId();
         }
 
+        testUtils::TestComplexRecordElementData targetElementData;
         {
             babelwires::ConnectionModifierData modifierData;
-            modifierData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
-            modifierData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+            modifierData.m_pathToFeature = targetElementData.getPathToRecordInt0();
+            modifierData.m_pathToSourceFeature = sourceElementData.getPathToRecordInt0();
             modifierData.m_sourceId = sourceElementId;
-            testUtils::TestFeatureElementData elementData;
-            elementData.m_modifiers.emplace_back(modifierData.clone());
-            elementData.m_id = newElementId;
-            projectData.m_elements.emplace_back(elementData.clone());
+            
+            targetElementData.m_modifiers.emplace_back(modifierData.clone());
+            targetElementData.m_id = newElementId;
+            projectData.m_elements.emplace_back(targetElementData.clone());
         }
 
         babelwires::PasteElementsCommand command("Test command", std::move(projectData));
@@ -227,13 +229,13 @@ namespace {
         command.execute(testEnvironment.m_project);
         testEnvironment.m_project.process();
 
-        const auto checkForProjectData = [&testEnvironment, newElementId, isPastingIntoSameProject]() {
+        const auto checkForProjectData = [&testEnvironment, newElementId, targetElementData, isPastingIntoSameProject]() {
             // The newElementId, should be available.
             const babelwires::FeatureElement* newElement = testEnvironment.m_project.getFeatureElement(newElementId);
             ASSERT_NE(newElement, nullptr);
 
             const babelwires::Modifier* modifier =
-                newElement->getEdits().findModifier(testUtils::TestRootFeature::s_pathToInt2);
+                newElement->getEdits().findModifier(targetElementData.getPathToRecordInt0());
             if (isPastingIntoSameProject) {
                 ASSERT_NE(modifier, nullptr);
                 EXPECT_FALSE(modifier->isFailed());
