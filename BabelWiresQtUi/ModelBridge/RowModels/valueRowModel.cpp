@@ -28,8 +28,7 @@ void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistr
 }
 
 const babelwires::Feature& babelwires::ValueRowModel::getValueFeature() const {
-    assert(getInputThenOutputFeature()->as<const babelwires::Feature>() && "Wrong type of feature stored");
-    return *static_cast<const babelwires::Feature*>(getInputThenOutputFeature());
+    return *getInputThenOutputFeature();
 }
 
 QVariant babelwires::ValueRowModel::getValueDisplayData() const {

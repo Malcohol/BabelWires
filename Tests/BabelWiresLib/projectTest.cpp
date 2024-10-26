@@ -489,10 +489,10 @@ TEST(ProjectTest, process) {
     const babelwires::FeatureElement* processor =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
-    const babelwires::Feature* processorInput = processor->getInputFeature()->as<const babelwires::Feature>();
+    const babelwires::Feature* processorInput = processor->getInputFeature();
     ASSERT_NE(processorInput, nullptr);
     const babelwires::Feature* processorOutput =
-        processor->getOutputFeature()->as<const babelwires::Feature>();
+        processor->getOutputFeature();
     ASSERT_NE(processorOutput, nullptr);
 
     const babelwires::FeatureElement* targetElement =
