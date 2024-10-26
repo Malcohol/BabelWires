@@ -25,10 +25,10 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     ASSERT_TRUE(featureElement->as<babelwires::ProcessorElement>());
     babelwires::ProcessorElement* processorElement = static_cast<babelwires::ProcessorElement*>(featureElement.get());
 
-    auto& inputFeature = processorElement->getInputFeature()->is<babelwires::ValueFeature>();
+    auto& inputFeature = processorElement->getInputFeature()->is<babelwires::Feature>();
     ASSERT_TRUE(inputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());
 
-    const auto& outputFeature = processorElement->getOutputFeature()->is<babelwires::ValueFeature>();
+    const auto& outputFeature = processorElement->getOutputFeature()->is<babelwires::Feature>();
     ASSERT_TRUE(outputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());
 
     testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};

@@ -9,7 +9,7 @@
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -35,9 +35,9 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     ASSERT_NE(targetElement, nullptr);
 
     const auto getInputValueFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::Feature>();
     };
-    const auto getSelectedTag = [](const babelwires::ValueFeature* valueFeature) {
+    const auto getSelectedTag = [](const babelwires::Feature* valueFeature) {
         const auto& type = valueFeature->getType().is<testUtils::TestRecordWithVariantsType>();
         return type.getSelectedTag(valueFeature->getValue());
     };

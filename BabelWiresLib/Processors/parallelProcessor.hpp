@@ -45,11 +45,11 @@ namespace babelwires {
                           const TypeRef& parallelOutput);
 
       protected:
-        void processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
-                          ValueFeature& outputFeature) const override final;
+        void processValue(UserLogger& userLogger, const Feature& inputFeature,
+                          Feature& outputFeature) const override final;
 
-        virtual void processEntry(UserLogger& userLogger, const ValueFeature& inputFeature,
-                                  const ValueFeature& inputEntry, ValueFeature& outputEntry) const = 0;
+        virtual void processEntry(UserLogger& userLogger, const Feature& inputFeature,
+                                  const Feature& inputEntry, Feature& outputEntry) const = 0;
     };
 
 } // namespace babelwires

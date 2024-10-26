@@ -402,7 +402,7 @@ TEST(ProjectTest, reloadSource) {
 
     auto getIntInElement = [element]() {
         testUtils::TestSimpleRecordType::ConstInstance instance(
-            element->getOutputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
+            element->getOutputFeature()->is<babelwires::Feature>().getFeature(0)->is<babelwires::Feature>());
         return instance.getintR0().get();
     };
 
@@ -442,9 +442,9 @@ TEST(ProjectTest, saveTarget) {
     ASSERT_NE(element->getInputFeature(), nullptr);
 
     testUtils::TestSimpleRecordType::Instance instance(element->getInputFeatureNonConst(babelwires::FeaturePath())
-                                                           ->is<babelwires::ValueFeature>()
+                                                           ->is<babelwires::Feature>()
                                                            .getFeature(0)
-                                                           ->is<babelwires::ValueFeature>());
+                                                           ->is<babelwires::Feature>());
 
     instance.getintR0().set(47);
 
@@ -489,10 +489,10 @@ TEST(ProjectTest, process) {
     const babelwires::FeatureElement* processor =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
-    const babelwires::ValueFeature* processorInput = processor->getInputFeature()->as<const babelwires::ValueFeature>();
+    const babelwires::Feature* processorInput = processor->getInputFeature()->as<const babelwires::Feature>();
     ASSERT_NE(processorInput, nullptr);
-    const babelwires::ValueFeature* processorOutput =
-        processor->getOutputFeature()->as<const babelwires::ValueFeature>();
+    const babelwires::Feature* processorOutput =
+        processor->getOutputFeature()->as<const babelwires::Feature>();
     ASSERT_NE(processorOutput, nullptr);
 
     const babelwires::FeatureElement* targetElement =
@@ -500,7 +500,7 @@ TEST(ProjectTest, process) {
     ASSERT_NE(targetElement, nullptr);
 
     testUtils::TestSimpleRecordType::ConstInstance targetInput(
-        targetElement->getInputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
+        targetElement->getInputFeature()->is<babelwires::Feature>().getFeature(0)->is<babelwires::Feature>());
     // 4rd array entry, where they count up from the input value (3).
     EXPECT_EQ(targetInput.getintR0().get(), 6);
 
@@ -675,7 +675,7 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     EXPECT_FALSE(element4->isInDependencyLoop());
 
     ASSERT_NE(element3->getOutputFeature(), nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(element3->getOutputFeature()->is<babelwires::ValueFeature>());
+    testUtils::TestComplexRecordType::ConstInstance instance(element3->getOutputFeature()->is<babelwires::Feature>());
     EXPECT_EQ(instance.getintR0().get(), 16);
 
     testEnvironment.m_project.removeModifier(elementId2, elementData.getPathToRecordInt0());

@@ -13,7 +13,7 @@
 #include <BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp>
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
@@ -88,7 +88,7 @@ const babelwires::Feature* babelwires::ElementNodeModel::getOutputFeature(Access
 }
 
 QtNodes::NodeDataType babelwires::ElementNodeModel::getDataTypeFromFeature(const babelwires::Feature* f) {
-    if (auto v = f->as<const ValueFeature>()) {
+    if (auto v = f->as<const Feature>()) {
         if (v->getKind() != "") {
             return QtNodes::NodeDataType{v->getKind().c_str(), ""};
         }

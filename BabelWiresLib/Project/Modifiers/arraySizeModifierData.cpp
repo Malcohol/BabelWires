@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
@@ -18,7 +18,7 @@
 #include <Common/Serialization/serializer.hpp>
 
 void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
-    if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
+    if (Feature* value = targetFeature->as<Feature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
             const TypeSystem& typeSystem = value->getTypeSystem();
             ValueHolder newValue = value->getValue();
@@ -50,7 +50,7 @@ void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int i
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     m_size += numEntriesToAdd;
 
-    if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
+    if (Feature* value = targetFeature->as<Feature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
             const TypeSystem& typeSystem = value->getTypeSystem();
             ValueHolder newValue = value->getValue();
@@ -69,7 +69,7 @@ void babelwires::ArraySizeModifierData::removeEntries(Feature* targetFeature, in
     assert((m_size >= numEntriesToRemove) && "You can't have ArraySizeModifierData with negative size");
     m_size -= numEntriesToRemove;
     
-    if (ValueFeature* value = targetFeature->as<ValueFeature>()) {
+    if (Feature* value = targetFeature->as<Feature>()) {
         if (const ArrayType* arrayType = value->getType().as<ArrayType>()) {
             ValueHolder newValue = value->getValue();
             arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove);

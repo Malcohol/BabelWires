@@ -7,35 +7,35 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 
 namespace babelwires {
     /// Out-of-line utility functions used by instance methods.
     namespace InstanceUtils {
         // Utility functions common between RecordTypes and RecordWithVariantTypes
 
-        const babelwires::ValueFeature& getChild(const babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
-        babelwires::ValueFeature& getChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
+        const babelwires::Feature& getChild(const babelwires::Feature& recordFeature, babelwires::ShortId id);
+        babelwires::Feature& getChild(babelwires::Feature& recordFeature, babelwires::ShortId id);
 
         // Utility functions for RecordTypes
 
-        const babelwires::ValueFeature* tryGetChild(const babelwires::ValueFeature& recordFeature,
+        const babelwires::Feature* tryGetChild(const babelwires::Feature& recordFeature,
                                                     babelwires::ShortId id);
-        babelwires::ValueFeature& activateAndGetChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
-        void deactivateChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id);
+        babelwires::Feature& activateAndGetChild(babelwires::Feature& recordFeature, babelwires::ShortId id);
+        void deactivateChild(babelwires::Feature& recordFeature, babelwires::ShortId id);
 
         // Utility functions for RecordWithVariantTypes
 
-        ShortId getSelectedTag(const ValueFeature& valueFeature);
-        void selectTag(ValueFeature& valueFeature, ShortId tag);
+        ShortId getSelectedTag(const Feature& valueFeature);
+        void selectTag(Feature& valueFeature, ShortId tag);
 
         // Utility functions for ArrayTypes
 
-        unsigned int getArraySize(const ValueFeature& arrayFeature);
-        void setArraySize(ValueFeature& arrayFeature, unsigned int newSize);
+        unsigned int getArraySize(const Feature& arrayFeature);
+        void setArraySize(Feature& arrayFeature, unsigned int newSize);
 
-        const ValueFeature& getChild(const ValueFeature& arrayFeature, unsigned int index);
-        ValueFeature& getChild(ValueFeature& arrayFeature, unsigned int index);
+        const Feature& getChild(const Feature& arrayFeature, unsigned int index);
+        Feature& getChild(Feature& arrayFeature, unsigned int index);
     } // namespace InstanceUtils
 
 } // namespace babelwires

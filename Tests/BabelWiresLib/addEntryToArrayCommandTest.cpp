@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
@@ -23,7 +23,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     ASSERT_NE(element, nullptr);
 
     const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::Feature>();
     };
 
     const auto checkModifiers = [element](bool isCommandExecuted) {
@@ -74,7 +74,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
     ASSERT_NE(element, nullptr);
 
     const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::Feature>();
     };
 
     const auto checkModifiers = [element](bool isCommandExecuted) {
@@ -135,7 +135,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
     testEnvironment.m_project.process();
 
     const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::Feature>();
     };
 
     const auto checkModifiers = [element](bool isCommandExecuted) {
@@ -204,7 +204,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
     ASSERT_NE(element, nullptr);
 
     const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::Feature>();
     };
 
     ASSERT_NE(getArrayFeature(), nullptr);
@@ -246,7 +246,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
         ASSERT_NE(element, nullptr);
 
         const auto getArrayFeature = [element]() {
-            return element->getInputFeature()->as<babelwires::ValueFeature>();
+            return element->getInputFeature()->as<babelwires::Feature>();
         };
 
         ASSERT_NE(getArrayFeature(), nullptr);
@@ -261,9 +261,9 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
         testEnvironment.m_project.process();
 
         EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
-        EXPECT_EQ(getArrayFeature()->getFeature(1)->as<babelwires::ValueFeature>()->getValue(),
+        EXPECT_EQ(getArrayFeature()->getFeature(1)->as<babelwires::Feature>()->getValue(),
                   babelwires::IntValue(3));
-        EXPECT_EQ(getArrayFeature()->getFeature(2)->as<babelwires::ValueFeature>()->getValue(),
+        EXPECT_EQ(getArrayFeature()->getFeature(2)->as<babelwires::Feature>()->getValue(),
                   babelwires::IntValue(-18));
 
         EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
@@ -271,9 +271,9 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
         testEnvironment.m_project.process();
 
         EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
-        EXPECT_EQ(getArrayFeature()->getFeature(offsetForValues + 1)->as<babelwires::ValueFeature>()->getValue(),
+        EXPECT_EQ(getArrayFeature()->getFeature(offsetForValues + 1)->as<babelwires::Feature>()->getValue(),
                   babelwires::IntValue(3));
-        EXPECT_EQ(getArrayFeature()->getFeature(offsetForValues + 2)->as<babelwires::ValueFeature>()->getValue(),
+        EXPECT_EQ(getArrayFeature()->getFeature(offsetForValues + 2)->as<babelwires::Feature>()->getValue(),
                   babelwires::IntValue(-18));
 
         command.undo(testEnvironment.m_project);
@@ -281,9 +281,9 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
 
         EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 
-        EXPECT_EQ(getArrayFeature()->getFeature(1)->as<babelwires::ValueFeature>()->getValue(),
+        EXPECT_EQ(getArrayFeature()->getFeature(1)->as<babelwires::Feature>()->getValue(),
                   babelwires::IntValue(3));
-        EXPECT_EQ(getArrayFeature()->getFeature(2)->as<babelwires::ValueFeature>()->getValue(),
+        EXPECT_EQ(getArrayFeature()->getFeature(2)->as<babelwires::Feature>()->getValue(),
                   babelwires::IntValue(-18));
     }
 }

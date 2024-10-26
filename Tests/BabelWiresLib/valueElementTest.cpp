@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
@@ -40,7 +40,7 @@ TEST(ValueElementTest, simpleType) {
     ASSERT_NE(outputFeature, nullptr);
     EXPECT_EQ(inputFeature, outputFeature);
 
-    const babelwires::ValueFeature* const valueFeature = inputFeature->as<babelwires::ValueFeature>();
+    const babelwires::Feature* const valueFeature = inputFeature->as<babelwires::Feature>();
     ASSERT_TRUE(valueFeature);
 
     EXPECT_EQ(valueFeature->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());

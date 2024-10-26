@@ -14,11 +14,11 @@
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 
 babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data) {
     AccessModelScope scope(projectBridge);
-    const ValueFeature& valueFeature = ComplexValueEditor::getValueFeatureOrThrow(scope, data);
+    const Feature& valueFeature = ComplexValueEditor::getValueFeatureOrThrow(scope, data);
     const Type& type = valueFeature.getType();
 
     // TODO: For now, assume ComplexValueEditors are all built-in, so we don't need a registry.

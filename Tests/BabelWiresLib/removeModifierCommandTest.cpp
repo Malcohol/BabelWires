@@ -60,7 +60,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     ASSERT_NE(targetElement, nullptr);
 
     const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::ValueFeature>();
+        return element->getInputFeature()->as<babelwires::Feature>();
     };
 
     const auto checkModifiers = [&testEnvironment, element, targetElement, pathToArrayEntry](bool isCommandExecuted) {
@@ -170,7 +170,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
 
-    const babelwires::ValueFeature* const valueFeature = element->getInputFeature()->as<babelwires::ValueFeature>();
+    const babelwires::Feature* const valueFeature = element->getInputFeature()->as<babelwires::Feature>();
     ASSERT_NE(valueFeature, nullptr);
     const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
 

@@ -1,5 +1,5 @@
 /**
- * A SimpleValueFeature is a ValueFeature which owns its value.
+ * A SimpleValueFeature is a Feature which owns its value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -14,7 +14,7 @@
 #include <BabelWiresLib/TypeSystem/valuePath.hpp>
 
 babelwires::SimpleValueFeature::SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef)
-    : ValueFeature(std::move(typeRef))
+    : Feature(std::move(typeRef))
     , m_typeSystem(&typeSystem) {
     // TODO assert the type resolves?
 }

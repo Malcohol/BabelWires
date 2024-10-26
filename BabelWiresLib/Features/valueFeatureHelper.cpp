@@ -1,5 +1,5 @@
 /**
- * A ValueFeature is a feature which provides access to a value.
+ * A Feature is a feature which provides access to a value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
@@ -18,7 +18,7 @@ babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const Feature* f) {
     if (!f) {
         return {};
     }
-    if (auto valueFeature = f->as<const ValueFeature>()) {
+    if (auto valueFeature = f->as<const Feature>()) {
         if (auto arrayType = valueFeature->getType().as<ArrayType>()) {
             return {valueFeature, arrayType->getNumChildren(valueFeature->getValue()), arrayType->getSizeRange(),
                     arrayType->getInitialSize()};
@@ -32,7 +32,7 @@ babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feat
     if (!f) {
         return {};
     }
-    if (auto valueFeature = f->as<const ValueFeature>()) {
+    if (auto valueFeature = f->as<const Feature>()) {
         if (auto recordType = valueFeature->getType().as<RecordType>()) {
             std::map<ShortId, bool> currentlyActivatedOptionals;
             for (auto opt : recordType->getOptionalFieldIds()) {
@@ -48,7 +48,7 @@ std::tuple<const babelwires::Feature*, bool, std::vector<babelwires::ShortId>> b
     if (!f) { 
         return {};
     }
-    if (auto valueFeature = f->as<const ValueFeature>()) {
+    if (auto valueFeature = f->as<const Feature>()) {
         if (auto recordWithVariantsType = valueFeature->getType().as<RecordWithVariantsType>()) {
             if (!tagId) {
                 tagId = recordWithVariantsType->getDefaultTag();

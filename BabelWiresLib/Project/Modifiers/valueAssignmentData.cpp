@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
@@ -28,7 +28,7 @@ babelwires::ValueAssignmentData::ValueAssignmentData(EditableValueHolder value)
 }
 
 void babelwires::ValueAssignmentData::apply(Feature* targetFeature) const {
-    if (ValueFeature* valueFeature = targetFeature->as<ValueFeature>()) {
+    if (Feature* valueFeature = targetFeature->as<Feature>()) {
         valueFeature->setValue(m_value);
     } else {
         throw babelwires::ModelException() << "Could not assign a value to a non-SimpleValueFeature";

@@ -40,7 +40,7 @@ namespace {
         ASSERT_NE(element, nullptr);
 
         const auto getOutputFeature = [element]() {
-            return testUtils::TestSimpleRecordType::ConstInstance(element->getOutputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>()); 
+            return testUtils::TestSimpleRecordType::ConstInstance(element->getOutputFeature()->is<babelwires::Feature>().getFeature(0)->is<babelwires::Feature>()); 
         };
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);

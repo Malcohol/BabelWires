@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
@@ -25,7 +25,7 @@ void babelwires::SelectRecordVariantModifierData::deserializeContents(Deserializ
 }
 
 void babelwires::SelectRecordVariantModifierData::apply(Feature* targetFeature) const {
-    if (auto valueFeature = targetFeature->as<ValueFeature>()) {
+    if (auto valueFeature = targetFeature->as<Feature>()) {
         if (auto recordType = valueFeature->getType().as<RecordWithVariantsType>()) {
             const TypeSystem& typeSystem = valueFeature->getTypeSystem();
             ValueHolder newValue = valueFeature->getValue();

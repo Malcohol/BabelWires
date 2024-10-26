@@ -1,5 +1,5 @@
 /**
- * ConnectionModifierData used to assign a ValueFeature within a container to a value from another element.
+ * ConnectionModifierData used to assign a Feature within a container to a value from another element.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 namespace babelwires {
-    /// Data used to assign a ValueFeature within a container to a value from another element.
+    /// Data used to assign a Feature within a container to a value from another element.
     struct ConnectionModifierData : ModifierData {
         /// Find the source feature in the project, or throw.
         const Feature* getSourceFeature(const Project& project) const;

@@ -15,7 +15,7 @@
 #include <BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp>
 
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>

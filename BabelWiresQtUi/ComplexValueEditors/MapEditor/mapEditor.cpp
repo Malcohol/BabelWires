@@ -25,7 +25,7 @@
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -86,7 +86,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             AccessModelScope scope(getProjectBridge());
             const UiProjectContext& context = projectBridge.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
-            const ValueFeature& mapFeature = getMapFeature(scope);
+            const Feature& mapFeature = getMapFeature(scope);
             m_typeRef = mapFeature.getTypeRef();
             const MapValue& mapValue = getMapValueFromProject(scope);
             if (mapFeature.getType().as<MapType>()) {
@@ -186,8 +186,8 @@ void babelwires::MapEditor::applyMapToProject() {
     }
 }
 
-const babelwires::ValueFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) const {
-    const ValueFeature& valueFeature = ComplexValueEditor::getValueFeature(scope, getData());
+const babelwires::Feature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) const {
+    const Feature& valueFeature = ComplexValueEditor::getValueFeature(scope, getData());
     assert(valueFeature.getType().as<MapType>() || valueFeature.getType().as<SumOfMapsType>());
     return valueFeature;
 }
@@ -201,8 +201,8 @@ const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(Access
     return getMapFeature(scope).getValue()->is<MapValue>();
 }
 
-const babelwires::ValueFeature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {
-    const ValueFeature* valueFeature = ComplexValueEditor::tryGetValueFeature(scope, getData());
+const babelwires::Feature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {
+    const Feature* valueFeature = ComplexValueEditor::tryGetValueFeature(scope, getData());
     if (valueFeature->getType().as<MapType>() || valueFeature->getType().as<SumOfMapsType>()) {
         return valueFeature;
     }
@@ -233,7 +233,7 @@ babelwires::ValueHolderTemplate<babelwires::MapValue> babelwires::MapEditor::try
         }
     }
 
-    const babelwires::ValueFeature* const mapFeature = tryGetMapFeature(scope);
+    const babelwires::Feature* const mapFeature = tryGetMapFeature(scope);
     if (!mapFeature) {
         return {};
     }

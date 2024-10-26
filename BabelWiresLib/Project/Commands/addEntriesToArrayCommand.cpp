@@ -8,7 +8,7 @@
 
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Features/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>

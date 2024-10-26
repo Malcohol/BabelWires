@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
@@ -21,9 +21,9 @@ namespace babelwires {
             : VALUE_TYPE::template InstanceImpl<VALUE_FEATURE>(valueFeature) {}
     };
 
-    template <typename VALUE_TYPE> using Instance = InstanceImpl<ValueFeature, VALUE_TYPE>;
+    template <typename VALUE_TYPE> using Instance = InstanceImpl<Feature, VALUE_TYPE>;
 
-    template <typename VALUE_TYPE> using ConstInstance = InstanceImpl<const ValueFeature, VALUE_TYPE>;
+    template <typename VALUE_TYPE> using ConstInstance = InstanceImpl<const Feature, VALUE_TYPE>;
 
     /// Provides a base of methods which don't depend on the VALUE_TYPE and which can therefore
     /// be used for generic fields which don't have instance specializations.
@@ -31,10 +31,10 @@ namespace babelwires {
       public:
         InstanceUntypedBase(VALUE_FEATURE& valueFeature)
             : m_valueFeature(valueFeature) {}
-        /// Access the functionality of the ValueFeature.
+        /// Access the functionality of the Feature.
         const VALUE_FEATURE* operator->() const { return &m_valueFeature; }
         VALUE_FEATURE& operator*() const { return m_valueFeature; }
-        /// Access the functionality of the ValueFeature.
+        /// Access the functionality of the Feature.
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_FEATURE*> operator->() {
             return &m_valueFeature;

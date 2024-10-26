@@ -62,8 +62,8 @@ babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectCo
 #endif
 }
 
-void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
-                                                 ValueFeature& outputFeature) const {
+void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const Feature& inputFeature,
+                                                 Feature& outputFeature) const {
     bool shouldProcessAll = false;
     // Iterate through all features _except_ for the array, look for changes to the common input.
     for (unsigned int i = 0; i < inputFeature.getNumFeatures() - 1; ++i) {
@@ -72,8 +72,8 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         }
     }
 
-    const auto& arrayInputFeature = inputFeature.getFeature(inputFeature.getNumFeatures() - 1)->is<ValueFeature>();
-    auto& arrayOutputFeature = outputFeature.getFeature(outputFeature.getNumFeatures() - 1)->is<ValueFeature>();
+    const auto& arrayInputFeature = inputFeature.getFeature(inputFeature.getNumFeatures() - 1)->is<Feature>();
+    auto& arrayOutputFeature = outputFeature.getFeature(outputFeature.getNumFeatures() - 1)->is<Feature>();
 
     if (arrayInputFeature.isChanged(Feature::Changes::StructureChanged)) {
         // TODO: This is very inefficient in cases where a single entry has been added or removed.
@@ -84,8 +84,8 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
     }
 
     struct EntryData {
-        EntryData(const TypeSystem& typeSystem, unsigned int index, const ValueFeature& inputEntry,
-                  const ValueFeature& outputEntry)
+        EntryData(const TypeSystem& typeSystem, unsigned int index, const Feature& inputEntry,
+                  const Feature& outputEntry)
             : m_index(index)
             , m_inputEntry(inputEntry)
             , m_outputEntry(std::make_unique<SimpleValueFeature>(typeSystem, outputEntry.getTypeRef())) {
@@ -93,7 +93,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         }
 
         const unsigned int m_index;
-        const ValueFeature& m_inputEntry;
+        const Feature& m_inputEntry;
         std::unique_ptr<SimpleValueFeature> m_outputEntry;
         std::string m_failureString;
     };
@@ -103,9 +103,9 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
     const TypeSystem& typeSystem = inputFeature.getTypeSystem();
 
     for (unsigned int i = 0; i < arrayInputFeature.getNumFeatures(); ++i) {
-        const ValueFeature& inputEntry = arrayInputFeature.getFeature(i)->is<ValueFeature>();
+        const Feature& inputEntry = arrayInputFeature.getFeature(i)->is<Feature>();
         if (shouldProcessAll || arrayInputFeature.getFeature(i)->isChanged(Feature::Changes::SomethingChanged)) {
-            ValueFeature& outputEntry = arrayOutputFeature.getFeature(i)->is<ValueFeature>();
+            Feature& outputEntry = arrayOutputFeature.getFeature(i)->is<Feature>();
             entriesToProcess.emplace_back(EntryData{typeSystem, i, inputEntry, outputEntry});
         }
     }

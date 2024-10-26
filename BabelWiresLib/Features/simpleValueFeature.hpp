@@ -1,5 +1,5 @@
 /**
- * A SimpleValueFeature is a ValueFeature which owns its value.
+ * A SimpleValueFeature is a Feature which owns its value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
@@ -17,9 +17,9 @@ namespace babelwires {
     class FeaturePath;
 
     /// A SimpleValueFeature is a feature which owns its value.
-    class SimpleValueFeature : public ValueFeature {
+    class SimpleValueFeature : public Feature {
       public:
-        /// Construct a rooted ValueFeature which carries values of the given type.
+        /// Construct a rooted Feature which carries values of the given type.
         SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef);
 
         /// Back up the current value using a shallow clone.

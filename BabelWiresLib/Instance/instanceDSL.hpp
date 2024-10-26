@@ -34,7 +34,7 @@
 #define DECLARE_INSTANCE_FIELD_OPTIONAL(FIELD_NAME, VALUE_TYPE)                                                        \
     DECLARE_INSTANCE_FIELD(FIELD_NAME, VALUE_TYPE)                                                                     \
     std::optional<babelwires::ConstInstance<VALUE_TYPE>> tryGet##FIELD_NAME() const {                                  \
-        if (const babelwires::ValueFeature* valueFeature =                                                             \
+        if (const babelwires::Feature* valueFeature =                                                             \
                 babelwires::InstanceUtils::tryGetChild(this->m_valueFeature, #FIELD_NAME)) {                           \
             return {*valueFeature};                                                                                    \
         } else {                                                                                                       \
@@ -63,35 +63,35 @@
 
 /// Declare a (non-optional) array field.
 #define DECLARE_INSTANCE_ARRAY_FIELD(FIELD_NAME, ENTRY_TYPE)                                                           \
-    babelwires::ArrayInstanceImpl<const babelwires::ValueFeature, ENTRY_TYPE> get##FIELD_NAME() const {                \
+    babelwires::ArrayInstanceImpl<const babelwires::Feature, ENTRY_TYPE> get##FIELD_NAME() const {                \
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
     }                                                                                                                  \
     template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,                                                                \
-                     babelwires::ArrayInstanceImpl<babelwires::ValueFeature, ENTRY_TYPE>>                              \
+                     babelwires::ArrayInstanceImpl<babelwires::Feature, ENTRY_TYPE>>                              \
         get##FIELD_NAME() {                                                                                            \
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
     }
 
 /// Declare a (non-optional) map field.
 #define DECLARE_INSTANCE_MAP_FIELD(FIELD_NAME, SOURCE_TYPE, TARGET_TYPE)                                               \
-    babelwires::MapInstanceImpl<const babelwires::ValueFeature, SOURCE_TYPE, TARGET_TYPE> get##FIELD_NAME() const {    \
+    babelwires::MapInstanceImpl<const babelwires::Feature, SOURCE_TYPE, TARGET_TYPE> get##FIELD_NAME() const {    \
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
     }                                                                                                                  \
     template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,                                                                \
-                     babelwires::MapInstanceImpl<babelwires::ValueFeature, SOURCE_TYPE, TARGET_TYPE>>                  \
+                     babelwires::MapInstanceImpl<babelwires::Feature, SOURCE_TYPE, TARGET_TYPE>>                  \
         get##FIELD_NAME() {                                                                                            \
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
     }
 
 /// Declare a (non-optional) field whose value type is not expected to have an instance specialization.
 #define DECLARE_INSTANCE_GENERIC_FIELD(FIELD_NAME)                                                                     \
-    babelwires::InstanceUntypedBase<const babelwires::ValueFeature> get##FIELD_NAME() const {                          \
+    babelwires::InstanceUntypedBase<const babelwires::Feature> get##FIELD_NAME() const {                          \
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
     }                                                                                                                  \
     template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
-    std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, babelwires::InstanceUntypedBase<babelwires::ValueFeature>>     \
+    std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, babelwires::InstanceUntypedBase<babelwires::Feature>>     \
         get##FIELD_NAME() {                                                                                            \
         return babelwires::InstanceUtils::getChild(this->m_valueFeature, #FIELD_NAME);                                 \
     }
@@ -100,5 +100,5 @@
 #define DECLARE_INSTANCE_END()                                                                                         \
     }                                                                                                                  \
     ;                                                                                                                  \
-    using Instance = InstanceImpl<babelwires::ValueFeature>;                                                           \
-    using ConstInstance = InstanceImpl<const babelwires::ValueFeature>;
+    using Instance = InstanceImpl<babelwires::Feature>;                                                           \
+    using ConstInstance = InstanceImpl<const babelwires::Feature>;

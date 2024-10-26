@@ -11,31 +11,31 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
-const babelwires::ValueFeature& babelwires::InstanceUtils::getChild(const babelwires::ValueFeature& recordFeature,
+const babelwires::Feature& babelwires::InstanceUtils::getChild(const babelwires::Feature& recordFeature,
                                                             babelwires::ShortId id) {
     const int index = recordFeature.getChildIndexFromStep(babelwires::PathStep(id));
     assert(index >= 0);
-    return recordFeature.getFeature(index)->is<babelwires::ValueFeature>();
+    return recordFeature.getFeature(index)->is<babelwires::Feature>();
 }
 
-babelwires::ValueFeature& babelwires::InstanceUtils::getChild(babelwires::ValueFeature& recordFeature, babelwires::ShortId id) {
+babelwires::Feature& babelwires::InstanceUtils::getChild(babelwires::Feature& recordFeature, babelwires::ShortId id) {
     const int index = recordFeature.getChildIndexFromStep(babelwires::PathStep(id));
     assert(index >= 0);
-    return recordFeature.getFeature(index)->is<babelwires::ValueFeature>();
+    return recordFeature.getFeature(index)->is<babelwires::Feature>();
 }
 
 
-const babelwires::ValueFeature* babelwires::InstanceUtils::tryGetChild(const babelwires::ValueFeature& recordFeature,
+const babelwires::Feature* babelwires::InstanceUtils::tryGetChild(const babelwires::Feature& recordFeature,
                                                                babelwires::ShortId id) {
     const int index = recordFeature.getChildIndexFromStep(babelwires::PathStep(id));
     if (index >= 0) {
-        return &recordFeature.getFeature(index)->is<babelwires::ValueFeature>();
+        return &recordFeature.getFeature(index)->is<babelwires::Feature>();
     } else {
         return nullptr;
     }
 }
 
-babelwires::ValueFeature& babelwires::InstanceUtils::activateAndGetChild(babelwires::ValueFeature& recordFeature,
+babelwires::Feature& babelwires::InstanceUtils::activateAndGetChild(babelwires::Feature& recordFeature,
                                                                  babelwires::ShortId id) {
     const RecordType& recordType = recordFeature.getType().is<RecordType>();
     babelwires::ValueHolder recordValue = recordFeature.getValue();
@@ -47,7 +47,7 @@ babelwires::ValueFeature& babelwires::InstanceUtils::activateAndGetChild(babelwi
     return getChild(recordFeature, id);
 }
 
-void babelwires::InstanceUtils::deactivateChild(babelwires::ValueFeature& recordFeature,
+void babelwires::InstanceUtils::deactivateChild(babelwires::Feature& recordFeature,
                                                                  babelwires::ShortId id) {
     const RecordType& recordType = recordFeature.getType().is<RecordType>();
     babelwires::ValueHolder recordValue = recordFeature.getValue();
@@ -57,13 +57,13 @@ void babelwires::InstanceUtils::deactivateChild(babelwires::ValueFeature& record
     }
 }
 
-babelwires::ShortId babelwires::InstanceUtils::getSelectedTag(const ValueFeature& valueFeature) {
+babelwires::ShortId babelwires::InstanceUtils::getSelectedTag(const Feature& valueFeature) {
     const RecordWithVariantsType& type = valueFeature.getType().is<RecordWithVariantsType>();
     const ValueHolder& value = valueFeature.getValue();
     return type.getSelectedTag(value);
 }
 
-void babelwires::InstanceUtils::selectTag(ValueFeature& valueFeature, ShortId tag) {
+void babelwires::InstanceUtils::selectTag(Feature& valueFeature, ShortId tag) {
     const RecordWithVariantsType& type = valueFeature.getType().is<RecordWithVariantsType>();
     ValueHolder value = valueFeature.getValue();
     if (tag != type.getSelectedTag(value)) {
@@ -73,11 +73,11 @@ void babelwires::InstanceUtils::selectTag(ValueFeature& valueFeature, ShortId ta
     }
 }
 
-unsigned int babelwires::InstanceUtils::getArraySize(const babelwires::ValueFeature& arrayFeature) {
+unsigned int babelwires::InstanceUtils::getArraySize(const babelwires::Feature& arrayFeature) {
     return arrayFeature.getNumFeatures();
 }
 
-void babelwires::InstanceUtils::setArraySize(babelwires::ValueFeature& arrayFeature, unsigned int newSize) {
+void babelwires::InstanceUtils::setArraySize(babelwires::Feature& arrayFeature, unsigned int newSize) {
     const auto& type = arrayFeature.getType().is<babelwires::ArrayType>();
     const auto& typeSystem = arrayFeature.getTypeSystem();
     babelwires::ValueHolder value = arrayFeature.getValue();
@@ -86,10 +86,10 @@ void babelwires::InstanceUtils::setArraySize(babelwires::ValueFeature& arrayFeat
     arrayFeature.setValue(value);
 }
 
-const babelwires::ValueFeature& babelwires::InstanceUtils::getChild(const babelwires::ValueFeature& arrayFeature, unsigned int index) {
-    return arrayFeature.getFeature(index)->is<babelwires::ValueFeature>();
+const babelwires::Feature& babelwires::InstanceUtils::getChild(const babelwires::Feature& arrayFeature, unsigned int index) {
+    return arrayFeature.getFeature(index)->is<babelwires::Feature>();
 }
 
-babelwires::ValueFeature& babelwires::InstanceUtils::getChild(babelwires::ValueFeature& arrayFeature, unsigned int index) {
-    return arrayFeature.getFeature(index)->is<babelwires::ValueFeature>();
+babelwires::Feature& babelwires::InstanceUtils::getChild(babelwires::Feature& arrayFeature, unsigned int index) {
+    return arrayFeature.getFeature(index)->is<babelwires::Feature>();
 }

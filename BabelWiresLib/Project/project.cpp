@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
@@ -153,7 +153,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
-            assert(featureAtPath->as<ValueFeature>() && featureAtPath->as<ValueFeature>()->getType().as<ArrayType>());
+            assert(featureAtPath->as<Feature>() && featureAtPath->as<Feature>()->getType().as<ArrayType>());
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -197,7 +197,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
-            assert(featureAtPath->as<ValueFeature>() && featureAtPath->as<ValueFeature>()->getType().as<ArrayType>());
+            assert(featureAtPath->as<Feature>() && featureAtPath->as<Feature>()->getType().as<ArrayType>());
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;

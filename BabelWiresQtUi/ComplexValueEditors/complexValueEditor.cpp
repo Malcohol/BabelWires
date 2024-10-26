@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <QCloseEvent>
@@ -44,7 +44,7 @@ void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
     }
 }
 
-const babelwires::ValueFeature&
+const babelwires::Feature&
 babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data) {
     const Project& project = scope.getProject();
 
@@ -59,14 +59,14 @@ babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, 
         throw ModelException() << "The element does not have editable features.";
     }
 
-    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<ValueFeature>();
+    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<Feature>();
     if (!valueFeature) {
         throw ModelException() << "There is no value at that location.";
     }
     return *valueFeature;
 }
 
-const babelwires::ValueFeature* babelwires::ComplexValueEditor::tryGetValueFeature(AccessModelScope& scope,
+const babelwires::Feature* babelwires::ComplexValueEditor::tryGetValueFeature(AccessModelScope& scope,
                                                                                    const DataLocation& data) {
     const Project& project = scope.getProject();
 
@@ -81,16 +81,16 @@ const babelwires::ValueFeature* babelwires::ComplexValueEditor::tryGetValueFeatu
         return nullptr;
     }
 
-    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<ValueFeature>();
+    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<Feature>();
     if (!valueFeature) {
         return nullptr;
     }
     return valueFeature;
 }
 
-const babelwires::ValueFeature& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope,
+const babelwires::Feature& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope,
                                                                                 const DataLocation& data) {
-    const ValueFeature* const valueFeature = tryGetValueFeature(scope, data);
+    const Feature* const valueFeature = tryGetValueFeature(scope, data);
     assert(valueFeature && "There was not value feature");
     return *valueFeature;
 }

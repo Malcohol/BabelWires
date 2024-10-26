@@ -30,19 +30,19 @@ babelwires::Processor::Processor(const ProjectContext& projectContext, const Typ
 
 babelwires::Processor::~Processor() = default;
 
-babelwires::ValueFeature& babelwires::Processor::getInputFeature() {
+babelwires::Feature& babelwires::Processor::getInputFeature() {
     return *m_inputFeature;
 }
 
-babelwires::ValueFeature& babelwires::Processor::getOutputFeature() {
+babelwires::Feature& babelwires::Processor::getOutputFeature() {
     return *m_outputFeature;
 }
 
-const babelwires::ValueFeature& babelwires::Processor::getInputFeature() const {
+const babelwires::Feature& babelwires::Processor::getInputFeature() const {
     return *m_inputFeature;
 }
 
-const babelwires::ValueFeature& babelwires::Processor::getOutputFeature() const {
+const babelwires::Feature& babelwires::Processor::getOutputFeature() const {
     return *m_outputFeature;
 }
 

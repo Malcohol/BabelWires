@@ -174,9 +174,9 @@ const babelwires::TypeSystem& babelwires::Feature::getTypeSystem() const {
         if (const SimpleValueFeature* currentAsRootValueFeature = current->as<SimpleValueFeature>()) {
             return currentAsRootValueFeature->getTypeSystem();
         }
-        assert(getOwner() && "You can only get the RootValueFeature from a ValueFeature in a hierarchy.");
-        const ValueFeature* const owner = current->getOwner()->as<ValueFeature>();
-        assert(owner && "The owner of a ChildValueFeature must be a ValueFeature");
+        assert(getOwner() && "You can only get the RootValueFeature from a Feature in a hierarchy.");
+        const Feature* const owner = current->getOwner()->as<Feature>();
+        assert(owner && "The owner of a ChildValueFeature must be a Feature");
         current = owner;
     }
 }
@@ -259,7 +259,7 @@ void babelwires::Feature::reconcileChanges(const ValueHolder& other) {
     if (auto* compound = getType().as<CompoundType>()) {
         // Should only be here if the type hasn't changed, so we can use compound with other.
 
-        std::map<PathStep, ValueFeature*> currentChildFeatures;
+        std::map<PathStep, Feature*> currentChildFeatures;
         for (const auto& it : m_children) {
             currentChildFeatures.emplace(std::pair{it.getKey0(), it.getValue().get()});
         }

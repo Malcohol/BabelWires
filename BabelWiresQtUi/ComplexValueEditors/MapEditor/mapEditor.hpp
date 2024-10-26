@@ -38,13 +38,13 @@ namespace babelwires {
         void applyMapToProject();
 
         /// Get the MapFeature or assert.
-        const ValueFeature& getMapFeature(AccessModelScope& scope) const;
+        const Feature& getMapFeature(AccessModelScope& scope) const;
 
         /// Get the mapValue from the project or assert.
         const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
 
         /// Get the MapFeature or return nullptr.
-        const ValueFeature* tryGetMapFeature(AccessModelScope& scope) const;
+        const Feature* tryGetMapFeature(AccessModelScope& scope) const;
 
         /// See if there is a map assignment.
         /// If there is, return its data.

@@ -11,7 +11,7 @@
 
 namespace babelwires {
     struct UserLogger;
-    class ValueFeature;
+    class Feature;
     struct ProjectContext;
     class TypeRef;
     class SimpleValueFeature;
@@ -28,15 +28,15 @@ namespace babelwires {
         /// Implementation of process are allowed to throw. If they do, the ProcessorElement will be marked as failed,
         /// the exception will be logged, and the output feature will be set to default.
         void process(UserLogger& userLogger);
-        ValueFeature& getInputFeature();
-        ValueFeature& getOutputFeature();
-        const ValueFeature& getInputFeature() const;
-        const ValueFeature& getOutputFeature() const;
+        Feature& getInputFeature();
+        Feature& getOutputFeature();
+        const Feature& getInputFeature() const;
+        const Feature& getOutputFeature() const;
 
       protected:
         /// Note: Implementations do not need to worry about backing-up or resolving changes in the output feature.
-        virtual void processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
-                                  ValueFeature& outputFeature) const = 0;
+        virtual void processValue(UserLogger& userLogger, const Feature& inputFeature,
+                                  Feature& outputFeature) const = 0;
 
       protected:
         std::unique_ptr<SimpleValueFeature> m_inputFeature;

@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
@@ -31,7 +31,7 @@ void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer
 }
 
 void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) const {
-    if (auto valueFeature = targetFeature->as<ValueFeature>()) {
+    if (auto valueFeature = targetFeature->as<Feature>()) {
         if (auto recordType = valueFeature->getType().as<RecordType>()) {
             const TypeSystem& typeSystem = valueFeature->getTypeSystem();
             ValueHolder newValue = valueFeature->getValue();

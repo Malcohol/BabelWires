@@ -1,5 +1,5 @@
 /**
- * ConnectionModifierData used to assign a ValueFeature within a container to a value from another element.
+ * ConnectionModifierData used to assign a Feature within a container to a value from another element.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
@@ -53,12 +53,12 @@ void babelwires::ConnectionModifierData::apply(const Feature* sourceFeature, Fea
         return;
     }
 
-    auto targetValueFeature = targetFeature->as<babelwires::ValueFeature>();
+    auto targetValueFeature = targetFeature->as<babelwires::Feature>();
     if (!targetValueFeature) {
         throw babelwires::ModelException() << "Cannot modify a non-value field";
     }
 
-    auto sourceValueFeature = sourceFeature->as<const babelwires::ValueFeature>();
+    auto sourceValueFeature = sourceFeature->as<const babelwires::Feature>();
     if (!sourceValueFeature) {
         throw babelwires::ModelException()
             << "Cannot apply from the non-value field at " << m_pathToSourceFeature << " in element id=" << m_sourceId;

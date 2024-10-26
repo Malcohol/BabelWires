@@ -86,7 +86,7 @@ testUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource
     const int value = getFileDataInternal(dataSource);
     auto newFeature = std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, getTestFileType());
     newFeature->setToDefault();
-    TestSimpleRecordType::Instance instance{newFeature->getFeature(0)->is<babelwires::ValueFeature>()};
+    TestSimpleRecordType::Instance instance{newFeature->getFeature(0)->is<babelwires::Feature>()};
     instance.getintR0().set(value);
     return newFeature;
 }
@@ -123,6 +123,6 @@ void testUtils::TestTargetFileFormat::writeToFile(const babelwires::ProjectConte
                                                   babelwires::UserLogger& userLogger,
                                                   const babelwires::SimpleValueFeature& contents,
                                                   std::ostream& os) const {
-    TestSimpleRecordType::ConstInstance instance{contents.getFeature(0)->is<babelwires::ValueFeature>()};
+    TestSimpleRecordType::ConstInstance instance{contents.getFeature(0)->is<babelwires::Feature>()};
     os << s_fileFormatId << char(instance.getintR0().get());
 }
