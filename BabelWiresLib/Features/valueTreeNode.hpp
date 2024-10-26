@@ -26,7 +26,7 @@
 namespace babelwires {
     class Type;
     class ValueTreeRoot;
-    class ChildValueFeature;
+    class ValueTreeChild;
 
     /// A feature is a self-describing data-structure which stores the data in the model.
     /// Features are structured in a tree, which also defines ownership.
@@ -141,7 +141,7 @@ namespace babelwires {
         Changes m_changes = Changes::SomethingChanged;
 
         TypeRef m_typeRef;
-        using ChildMap = MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ChildValueFeature>>;
+        using ChildMap = MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ValueTreeChild>>;
         ChildMap m_children;
     };
 

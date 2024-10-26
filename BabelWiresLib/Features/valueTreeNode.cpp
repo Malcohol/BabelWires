@@ -211,13 +211,13 @@ void babelwires::ValueTreeNode::synchronizeSubfeatures() {
     const unsigned int numChildrenNow = compound->getNumChildren(value);
     for (unsigned int i = 0; i < numChildrenNow; ++i) {
         auto [childValue, step, type] = compound->getChild(value, i);
-        std::unique_ptr<ChildValueFeature> childFeature;
+        std::unique_ptr<ValueTreeChild> childFeature;
         auto it = m_children.find0(step);
         if (it != m_children.end()) {
             childFeature = std::move(it.getValue());
             childFeature->ensureSynchronized(childValue);
         } else {
-            childFeature = std::make_unique<ChildValueFeature>(type, childValue);
+            childFeature = std::make_unique<ValueTreeChild>(type, childValue);
             childFeature->setOwner(this);
             childFeature->synchronizeSubfeatures();
         }

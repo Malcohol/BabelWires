@@ -1,5 +1,5 @@
 /**
- * A ChildValueFeature is a ValueTreeNode whose value is owned by an ancestor feature.
+ * A ValueTreeChild is a ValueTreeNode whose value is owned by an ancestor feature.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -12,13 +12,13 @@
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 
-babelwires::ChildValueFeature::ChildValueFeature(TypeRef typeRef, const ValueHolder* valueHolder)
+babelwires::ValueTreeChild::ValueTreeChild(TypeRef typeRef, const ValueHolder* valueHolder)
     : ValueTreeNode(std::move(typeRef))
     , m_value(valueHolder) {
     assert(valueHolder);
 }
 
-void babelwires::ChildValueFeature::ensureSynchronized(const ValueHolder* valueHolder) {
+void babelwires::ValueTreeChild::ensureSynchronized(const ValueHolder* valueHolder) {
     assert(valueHolder);
     if (m_value != valueHolder) {
         m_value = valueHolder;
@@ -26,11 +26,11 @@ void babelwires::ChildValueFeature::ensureSynchronized(const ValueHolder* valueH
     }
 }
 
-const babelwires::ValueHolder& babelwires::ChildValueFeature::doGetValue() const {
+const babelwires::ValueHolder& babelwires::ValueTreeChild::doGetValue() const {
     return *m_value;
 }
 
-void babelwires::ChildValueFeature::doSetValue(const ValueHolder& newValue) {
+void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
     const ValueHolder& currentValue = doGetValue();
     if (currentValue != newValue) {
         const TypeSystem& typeSystem = getTypeSystem();
@@ -47,7 +47,7 @@ void babelwires::ChildValueFeature::doSetValue(const ValueHolder& newValue) {
     }
 }
 
-void babelwires::ChildValueFeature::doSetToDefault() {
+void babelwires::ValueTreeChild::doSetToDefault() {
     const TypeSystem& typeSystem = getTypeSystem();
     auto [newValue, _] = getType().createValue(typeSystem);
     auto rootAndPath = Path::getRootAndPath(*this);
