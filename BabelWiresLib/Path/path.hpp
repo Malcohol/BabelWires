@@ -16,7 +16,7 @@
 
 namespace babelwires {
 
-    class Feature;
+    class ValueTreeNode;
     class SimpleValueFeature;
 
     /// Describes the steps to follow within a tree of features to reach a particular feature.
@@ -26,7 +26,7 @@ namespace babelwires {
         Path();
 
         /// Construct a feature path which leads to the given feature.
-        explicit Path(const Feature* feature);
+        explicit Path(const ValueTreeNode* feature);
 
         Path(Path&& other) = default;
 
@@ -42,10 +42,10 @@ namespace babelwires {
         template <typename ROOT_VALUE_FEATURE> struct RootAndPath;
 
         /// All value features must be below a single SimpleValueFeature.
-        static RootAndPath<const SimpleValueFeature> getRootAndPath(const Feature& feature);
+        static RootAndPath<const SimpleValueFeature> getRootAndPath(const ValueTreeNode& feature);
 
         /// All value features must be below a single SimpleValueFeature.
-        static RootAndPath<SimpleValueFeature> getRootAndPath(Feature& feature);
+        static RootAndPath<SimpleValueFeature> getRootAndPath(ValueTreeNode& feature);
 
         /// Add a step to the path.
         void pushStep(PathStep step);
@@ -60,12 +60,12 @@ namespace babelwires {
         static Path deserializeFromString(const std::string& pathString);
 
         /// Throws if the path cannot be followed.
-        Feature& follow(Feature& start) const;
-        const Feature& follow(const Feature& start) const;
+        ValueTreeNode& follow(ValueTreeNode& start) const;
+        const ValueTreeNode& follow(const ValueTreeNode& start) const;
 
         /// Returns nullptr if the path cannot be followed.
-        Feature* tryFollow(Feature& start) const;
-        const Feature* tryFollow(const Feature& start) const;
+        ValueTreeNode* tryFollow(ValueTreeNode& start) const;
+        const ValueTreeNode* tryFollow(const ValueTreeNode& start) const;
 
         bool operator==(const Path& other) const;
         bool operator!=(const Path& other) const;

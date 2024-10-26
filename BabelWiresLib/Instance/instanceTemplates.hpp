@@ -21,9 +21,9 @@ namespace babelwires {
             : VALUE_TYPE::template InstanceImpl<VALUE_FEATURE>(valueFeature) {}
     };
 
-    template <typename VALUE_TYPE> using Instance = InstanceImpl<Feature, VALUE_TYPE>;
+    template <typename VALUE_TYPE> using Instance = InstanceImpl<ValueTreeNode, VALUE_TYPE>;
 
-    template <typename VALUE_TYPE> using ConstInstance = InstanceImpl<const Feature, VALUE_TYPE>;
+    template <typename VALUE_TYPE> using ConstInstance = InstanceImpl<const ValueTreeNode, VALUE_TYPE>;
 
     /// Provides a base of methods which don't depend on the VALUE_TYPE and which can therefore
     /// be used for generic fields which don't have instance specializations.

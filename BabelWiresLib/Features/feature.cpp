@@ -1,5 +1,5 @@
 /**
- * A Feature is a self-describing data-structure which stores the data in the model.
+ * A ValueTreeNode is a self-describing data-structure which stores the data in the model.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -18,24 +18,24 @@
 
 #include <map>
 
-babelwires::Feature::Feature(TypeRef typeRef)
+babelwires::ValueTreeNode::ValueTreeNode(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
 
-babelwires::Feature::~Feature() = default;
+babelwires::ValueTreeNode::~ValueTreeNode() = default;
 
-void babelwires::Feature::setOwner(Feature* owner) {
+void babelwires::ValueTreeNode::setOwner(ValueTreeNode* owner) {
     m_owner = owner;
 }
 
-const babelwires::Feature* babelwires::Feature::getOwner() const {
+const babelwires::ValueTreeNode* babelwires::ValueTreeNode::getOwner() const {
     return m_owner;
 }
 
-babelwires::Feature* babelwires::Feature::getOwnerNonConst() {
+babelwires::ValueTreeNode* babelwires::ValueTreeNode::getOwnerNonConst() {
     return m_owner;
 }
 
-void babelwires::Feature::setChanged(Changes changes) {
+void babelwires::ValueTreeNode::setChanged(Changes changes) {
     assert((changes != Changes::NothingChanged) && "You cannot call setChanged with no changes to set");
     assert(((changes & ~Changes::SomethingChanged) == Changes::NothingChanged) && "Not a supported change");
     if ((m_changes | changes) != m_changes) {
@@ -46,27 +46,27 @@ void babelwires::Feature::setChanged(Changes changes) {
     }
 }
 
-bool babelwires::Feature::isChanged(Changes changes) const {
+bool babelwires::ValueTreeNode::isChanged(Changes changes) const {
     return (m_changes & changes) != Changes::NothingChanged;
 }
 
-void babelwires::Feature::clearChanges() {
+void babelwires::ValueTreeNode::clearChanges() {
     m_changes = Changes::NothingChanged;
     for (auto&& child : subfeatures(*this)) {
         child->clearChanges();
     }
 }
 
-void babelwires::Feature::setToDefault() {
+void babelwires::ValueTreeNode::setToDefault() {
     doSetToDefault();
 }
 
-std::size_t babelwires::Feature::getHash() const {
+std::size_t babelwires::ValueTreeNode::getHash() const {
     return hash::mixtureOf(m_typeRef, *doGetValue());
 }
 
 namespace {
-    void checkIndex(const babelwires::Feature* f, int i) {
+    void checkIndex(const babelwires::ValueTreeNode* f, int i) {
         if ((i < 0) || (i >= f->getNumFeatures())) {
             throw babelwires::ModelException()
                 << "Compound feature with " << f->getNumFeatures() << " children queried by index " << i;
@@ -75,7 +75,7 @@ namespace {
 
 } // namespace
 
-babelwires::Feature* babelwires::Feature::getFeature(int i) {
+babelwires::ValueTreeNode* babelwires::ValueTreeNode::getFeature(int i) {
     checkIndex(this, i);
     const auto it = m_children.find1(i);
     if (it != m_children.end()) {
@@ -84,7 +84,7 @@ babelwires::Feature* babelwires::Feature::getFeature(int i) {
     return nullptr;
 }
 
-const babelwires::Feature* babelwires::Feature::getFeature(int i) const {
+const babelwires::ValueTreeNode* babelwires::ValueTreeNode::getFeature(int i) const {
     checkIndex(this, i);
     const auto it = m_children.find1(i);
     if (it != m_children.end()) {
@@ -93,7 +93,7 @@ const babelwires::Feature* babelwires::Feature::getFeature(int i) const {
     return nullptr;
 }
 
-void babelwires::Feature::setSubfeaturesToDefault() {
+void babelwires::ValueTreeNode::setSubfeaturesToDefault() {
     for (auto&& child : subfeatures(*this)) {
         child->setToDefault();
     }
@@ -102,7 +102,7 @@ void babelwires::Feature::setSubfeaturesToDefault() {
 namespace {
 
     template <typename COMPOUND>
-    typename babelwires::CopyConst<COMPOUND, babelwires::Feature>::type*
+    typename babelwires::CopyConst<COMPOUND, babelwires::ValueTreeNode>::type*
     tryGetChildFromStepT(COMPOUND* compound, const babelwires::PathStep& step) {
         const int childIndex = compound->getChildIndexFromStep(step);
         if (childIndex >= 0) {
@@ -113,76 +113,76 @@ namespace {
 
 } // namespace
 
-babelwires::Feature* babelwires::Feature::tryGetChildFromStep(const PathStep& step) {
+babelwires::ValueTreeNode* babelwires::ValueTreeNode::tryGetChildFromStep(const PathStep& step) {
     return tryGetChildFromStepT(this, step);
 }
 
-const babelwires::Feature* babelwires::Feature::tryGetChildFromStep(const PathStep& step) const {
+const babelwires::ValueTreeNode* babelwires::ValueTreeNode::tryGetChildFromStep(const PathStep& step) const {
     return tryGetChildFromStepT(this, step);
 }
 
-babelwires::Feature& babelwires::Feature::getChildFromStep(const PathStep& step) {
-    if (Feature* f = tryGetChildFromStep(step)) {
+babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) {
+    if (ValueTreeNode* f = tryGetChildFromStep(step)) {
         return *f;
     } else {
         throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
     }
 }
 
-const babelwires::Feature& babelwires::Feature::getChildFromStep(const PathStep& step) const {
-    if (const Feature* f = tryGetChildFromStep(step)) {
+const babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) const {
+    if (const ValueTreeNode* f = tryGetChildFromStep(step)) {
         return *f;
     } else {
         throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
     }
 }
 
-const babelwires::TypeRef& babelwires::Feature::getTypeRef() const {
+const babelwires::TypeRef& babelwires::ValueTreeNode::getTypeRef() const {
     return m_typeRef;
 }
 
-const babelwires::ValueHolder& babelwires::Feature::getValue() const {
+const babelwires::ValueHolder& babelwires::ValueTreeNode::getValue() const {
     return doGetValue();
 }
 
-void babelwires::Feature::setValue(const ValueHolder& newValue) {
+void babelwires::ValueTreeNode::setValue(const ValueHolder& newValue) {
     doSetValue(newValue);
 }
 
-void babelwires::Feature::assign(const Feature& other) {
+void babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
     if (getKind() != other.getKind()) {
         throw ModelException() << "Assigning an incompatible value";
     }
     setValue(other.getValue());
 }
 
-std::string babelwires::Feature::getKind() const {
+std::string babelwires::ValueTreeNode::getKind() const {
     return getType().getKind();
 }
 
-const babelwires::TypeSystem& babelwires::Feature::getTypeSystem() const {
-    const Feature* current = this;
+const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
+    const ValueTreeNode* current = this;
     while (1) {
         // TODO Query owner first and do a checking downcast when at root.
         if (const SimpleValueFeature* currentAsRootValueFeature = current->as<SimpleValueFeature>()) {
             return currentAsRootValueFeature->getTypeSystem();
         }
-        const Feature* const owner = current->getOwner();
-        assert(owner && "You can only get the RootValueFeature from a Feature in a hierarchy.");
+        const ValueTreeNode* const owner = current->getOwner();
+        assert(owner && "You can only get the RootValueFeature from a ValueTreeNode in a hierarchy.");
         current = owner;
     }
 }
 
-const babelwires::Type& babelwires::Feature::getType() const {
+const babelwires::Type& babelwires::ValueTreeNode::getType() const {
     const TypeSystem& typeSystem = getTypeSystem();
     return m_typeRef.resolve(typeSystem);
 }
 
-int babelwires::Feature::getNumFeatures() const {
+int babelwires::ValueTreeNode::getNumFeatures() const {
     return m_children.size();
 }
 
-babelwires::PathStep babelwires::Feature::getStepToChild(const Feature* child) const {
+babelwires::PathStep babelwires::ValueTreeNode::getStepToChild(const ValueTreeNode* child) const {
     for (const auto& it : m_children) {
         if (it.getValue().get() == child) {
             return it.getKey0();
@@ -191,7 +191,7 @@ babelwires::PathStep babelwires::Feature::getStepToChild(const Feature* child) c
     throw ModelException() << "Child not found in owner";
 }
 
-int babelwires::Feature::getChildIndexFromStep(const PathStep& step) const {
+int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const {
     const auto it = m_children.find0(step);
     if (it != m_children.end()) {
         step.copyDiscriminatorFrom(it.getKey0());
@@ -200,7 +200,7 @@ int babelwires::Feature::getChildIndexFromStep(const PathStep& step) const {
     return -1;
 }
 
-void babelwires::Feature::synchronizeSubfeatures() {
+void babelwires::ValueTreeNode::synchronizeSubfeatures() {
     const ValueHolder& value = getValue();
     auto* compound = getType().as<CompoundType>();
     if (!compound) {
@@ -226,12 +226,12 @@ void babelwires::Feature::synchronizeSubfeatures() {
     m_children.swap(newChildMap);
 }
 
-void babelwires::Feature::reconcileChanges(const ValueHolder& other) {
+void babelwires::ValueTreeNode::reconcileChanges(const ValueHolder& other) {
     const ValueHolder& value = getValue();
     if (auto* compound = getType().as<CompoundType>()) {
         // Should only be here if the type hasn't changed, so we can use compound with other.
 
-        std::map<PathStep, Feature*> currentChildFeatures;
+        std::map<PathStep, ValueTreeNode*> currentChildFeatures;
         for (const auto& it : m_children) {
             currentChildFeatures.emplace(std::pair{it.getKey0(), it.getValue().get()});
         }

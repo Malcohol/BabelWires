@@ -25,7 +25,7 @@ class QPainter;
 
 namespace babelwires {
 
-    class Feature;
+    class ValueTreeNode;
     class FeatureElement;
     class ContentsCacheEntry;
     class Modifier;
@@ -87,10 +87,10 @@ namespace babelwires {
 
       protected:
         bool hasInputFeature() const;
-        const Feature* getInputFeature() const;
-        const Feature* getOutputFeature() const;
-        const Feature* getInputThenOutputFeature() const;
-        const Feature* getOutputThenInputFeature() const;
+        const ValueTreeNode* getInputFeature() const;
+        const ValueTreeNode* getOutputFeature() const;
+        const ValueTreeNode* getInputThenOutputFeature() const;
+        const ValueTreeNode* getOutputThenInputFeature() const;
 
       public:
         const ContentsCacheEntry* m_contentsCacheEntry = nullptr;

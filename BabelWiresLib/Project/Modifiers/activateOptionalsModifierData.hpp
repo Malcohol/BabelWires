@@ -12,7 +12,7 @@
 namespace babelwires {
     /// ActivateOptionalsModifierData is used to select a set of optionals in a RecordType
     struct ActivateOptionalsModifierData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
+        virtual void apply(ValueTreeNode* targetFeature) const override;
         CLONEABLE(ActivateOptionalsModifierData);
         SERIALIZABLE(ActivateOptionalsModifierData, "activatedOptionals", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;

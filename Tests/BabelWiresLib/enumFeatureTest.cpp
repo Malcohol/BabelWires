@@ -37,29 +37,29 @@ TEST(EnumFeatureTest, enumFeatureChanges) {
     babelwires::Instance<testUtils::TestEnum> enumInstance{enumFeature};
     
     // After construction, everything has changed.
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_TRUE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
+    EXPECT_TRUE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
+    EXPECT_TRUE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
 
     enumFeature.clearChanges();
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_FALSE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
+    EXPECT_FALSE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
+    EXPECT_FALSE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
 
     enumFeature.setToDefault();
     // Don't assume anything about the constructed value, so don't test for value changed.
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_FALSE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
 
     enumInstance.set(testUtils::TestEnum::Value::Boo);
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_TRUE(enumFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_TRUE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
+    EXPECT_TRUE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
+    EXPECT_FALSE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
 
     enumFeature.clearChanges();
     enumInstance.set(testUtils::TestEnum::Value::Boo);
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
-    EXPECT_FALSE(enumFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
+    EXPECT_FALSE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
+    EXPECT_FALSE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
+    EXPECT_FALSE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
 }
 
 TEST(EnumFeatureTest, enumFeatureHash) {

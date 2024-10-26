@@ -32,7 +32,7 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    const Feature* const inputFeature = elementToModify->getInputFeature();
+    const ValueTreeNode* const inputFeature = elementToModify->getInputFeature();
     if (!inputFeature) {
         return false;
     }

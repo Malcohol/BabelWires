@@ -19,7 +19,7 @@ namespace babelwires {
             void operator++() { ++m_index; }
             bool operator==(const iterator& other) { return m_index == other.m_index; }
             bool operator!=(const iterator& other) { return !(*this == other); }
-            typename CopyConst<COMPOUND_FEATURE, Feature>::type* operator*() { return m_container.getFeature(m_index); }
+            typename CopyConst<COMPOUND_FEATURE, ValueTreeNode>::type* operator*() { return m_container.getFeature(m_index); }
 
             COMPOUND_FEATURE& m_container;
             int m_index;

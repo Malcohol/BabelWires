@@ -47,7 +47,7 @@ const babelwires::ProcessorElementData& babelwires::ProcessorElement::getElement
     return static_cast<const ProcessorElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::Feature* babelwires::ProcessorElement::doGetOutputFeatureNonConst() {
+babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetOutputFeatureNonConst() {
     if (m_processor) {
         return &m_processor->getOutputFeature();
     } else {
@@ -55,7 +55,7 @@ babelwires::Feature* babelwires::ProcessorElement::doGetOutputFeatureNonConst() 
     }
 }
 
-babelwires::Feature* babelwires::ProcessorElement::doGetInputFeatureNonConst() {
+babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetInputFeatureNonConst() {
     if (m_processor) {
         return &m_processor->getInputFeature();
     } else {
@@ -63,7 +63,7 @@ babelwires::Feature* babelwires::ProcessorElement::doGetInputFeatureNonConst() {
     }
 }
 
-const babelwires::Feature* babelwires::ProcessorElement::getOutputFeature() const {
+const babelwires::ValueTreeNode* babelwires::ProcessorElement::getOutputFeature() const {
     if (m_processor) {
         return &m_processor->getOutputFeature();
     } else {
@@ -71,7 +71,7 @@ const babelwires::Feature* babelwires::ProcessorElement::getOutputFeature() cons
     }
 }
 
-const babelwires::Feature* babelwires::ProcessorElement::getInputFeature() const {
+const babelwires::ValueTreeNode* babelwires::ProcessorElement::getInputFeature() const {
     if (m_processor) {
         return &m_processor->getInputFeature();
     } else {
@@ -94,7 +94,7 @@ std::string babelwires::ProcessorElement::getRootLabel() const {
 
 void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
     if (m_processor) {
-        if (getInputFeature()->isChanged(Feature::Changes::SomethingChanged)) {
+        if (getInputFeature()->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
             try {
                 m_processor->process(userLogger);
                 if (isFailed()) {

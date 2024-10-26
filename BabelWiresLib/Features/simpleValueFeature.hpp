@@ -1,5 +1,5 @@
 /**
- * A SimpleValueFeature is a Feature which owns its value.
+ * A SimpleValueFeature is a ValueTreeNode which owns its value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -17,9 +17,9 @@ namespace babelwires {
     class Path;
 
     /// A SimpleValueFeature is a feature which owns its value.
-    class SimpleValueFeature : public Feature {
+    class SimpleValueFeature : public ValueTreeNode {
       public:
-        /// Construct a rooted Feature which carries values of the given type.
+        /// Construct a rooted ValueTreeNode which carries values of the given type.
         SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef);
 
         /// Back up the current value using a shallow clone.

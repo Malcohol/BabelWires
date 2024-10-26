@@ -44,7 +44,7 @@ void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
     }
 }
 
-const babelwires::Feature&
+const babelwires::ValueTreeNode&
 babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data) {
     const Project& project = scope.getProject();
 
@@ -54,7 +54,7 @@ babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, 
         throw ModelException() << "The element does not exist.";
     }
 
-    const Feature* const inputFeature = element->getInputFeature();
+    const ValueTreeNode* const inputFeature = element->getInputFeature();
     if (!inputFeature) {
         throw ModelException() << "The element does not have editable features.";
     }
@@ -66,7 +66,7 @@ babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, 
     return *valueFeature;
 }
 
-const babelwires::Feature* babelwires::ComplexValueEditor::tryGetValueFeature(AccessModelScope& scope,
+const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueFeature(AccessModelScope& scope,
                                                                                    const DataLocation& data) {
     const Project& project = scope.getProject();
 
@@ -76,7 +76,7 @@ const babelwires::Feature* babelwires::ComplexValueEditor::tryGetValueFeature(Ac
         return nullptr;
     }
 
-    const Feature* const inputFeature = element->getInputFeature();
+    const ValueTreeNode* const inputFeature = element->getInputFeature();
     if (!inputFeature) {
         return nullptr;
     }
@@ -88,9 +88,9 @@ const babelwires::Feature* babelwires::ComplexValueEditor::tryGetValueFeature(Ac
     return valueFeature;
 }
 
-const babelwires::Feature& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope,
+const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope,
                                                                                 const DataLocation& data) {
-    const Feature* const valueFeature = tryGetValueFeature(scope, data);
+    const ValueTreeNode* const valueFeature = tryGetValueFeature(scope, data);
     assert(valueFeature && "There was not value feature");
     return *valueFeature;
 }

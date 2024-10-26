@@ -412,15 +412,15 @@ TEST(RecordTypeTest, featureChanges)
     ASSERT_NE(recordType, nullptr);
 
     valueFeature.clearChanges();
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     {
         babelwires::BackupScope scope(valueFeature);
         babelwires::ValueHolder value = valueFeature.getValue();
         recordType->activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpRecId());
         valueFeature.setValue(value);
     }
-    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 
     valueFeature.clearChanges();
     {
@@ -431,8 +431,8 @@ TEST(RecordTypeTest, featureChanges)
         babelwires::ValueHolder& value = valueFeature.setModifiable(pathToInt);
         value = babelwires::IntValue(15);
     }
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 
     valueFeature.clearChanges();
     {
@@ -441,8 +441,8 @@ TEST(RecordTypeTest, featureChanges)
         recordType->deactivateField(value, testUtils::TestComplexRecordType::getOpRecId());
         valueFeature.setValue(value);
     }
-    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 }
 
 TEST(RecordTypeTest, valueEquality)

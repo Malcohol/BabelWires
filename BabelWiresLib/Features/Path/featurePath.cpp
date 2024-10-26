@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Path/path.hpp>
+#include <BabelWiresLib/Features/Path/featurePath.hpp>
 
-#include <BabelWiresLib/Path/pathStep.hpp>
+#include <BabelWiresLib/Features/Path/pathStep.hpp>
 #include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
@@ -27,7 +27,7 @@ babelwires::Path::Path(const ValueTreeNode* feature) {
     const ValueTreeNode* parent = current->getOwner();
     while (parent) {
         m_steps.push_back(parent->getStepToChild(current));
-        assert(!m_steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
+        assert(!m_steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
@@ -48,7 +48,7 @@ babelwires::Path::getRootAndPath(const ValueTreeNode& feature) {
     const ValueTreeNode* parent = feature.getOwner();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
@@ -62,7 +62,7 @@ babelwires::Path::RootAndPath<babelwires::SimpleValueFeature> babelwires::Path::
     ValueTreeNode* parent = feature.getOwnerNonConst();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwnerNonConst();
     }

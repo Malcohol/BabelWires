@@ -27,7 +27,7 @@ babelwires::ValueAssignmentData::ValueAssignmentData(EditableValueHolder value)
     assert(m_value->asEditableValue());
 }
 
-void babelwires::ValueAssignmentData::apply(Feature* targetFeature) const {
+void babelwires::ValueAssignmentData::apply(ValueTreeNode* targetFeature) const {
     targetFeature->setValue(m_value);
 }
 

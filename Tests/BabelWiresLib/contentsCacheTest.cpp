@@ -184,7 +184,7 @@ namespace {
     }
 
     void testCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                             babelwires::Feature* inputFeature, babelwires::Feature* outputFeature) {
+                             babelwires::ValueTreeNode* inputFeature, babelwires::ValueTreeNode* outputFeature) {
         cache.setFeatures("Test", inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 6);
         auto inputInfo =
@@ -283,8 +283,8 @@ namespace {
     }
 
     void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache,
-                               babelwires::EditTree& editTree, babelwires::Feature* inputFeature,
-                               babelwires::Feature* outputFeature) {
+                               babelwires::EditTree& editTree, babelwires::ValueTreeNode* inputFeature,
+                               babelwires::ValueTreeNode* outputFeature) {
         ASSERT_TRUE(inputFeature);
 
         auto inputInfo =
@@ -644,12 +644,12 @@ namespace {
                            babelwires::SimpleValueFeature* outputFeature) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestSimpleRecordType::s_int0FieldName);
         if (inputFeature) {
-            EXPECT_EQ(entry->getInputFeature(), inputFeature->getFeature(0)->is<babelwires::Feature>().getFeature(0));
+            EXPECT_EQ(entry->getInputFeature(), inputFeature->getFeature(0)->is<babelwires::ValueTreeNode>().getFeature(0));
         } else {
             EXPECT_FALSE(entry->getInputFeature());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutputFeature(), outputFeature->getFeature(0)->is<babelwires::Feature>().getFeature(0));
+            EXPECT_EQ(entry->getOutputFeature(), outputFeature->getFeature(0)->is<babelwires::ValueTreeNode>().getFeature(0));
         } else {
             EXPECT_FALSE(entry->getOutputFeature());
         }

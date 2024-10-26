@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ModelBridge/baseNodeModel.hpp>
 
 namespace babelwires {
-    class Feature;
+    class ValueTreeNode;
     class FeatureElement;
     class ContentsCache;
     class Path;
@@ -56,10 +56,10 @@ namespace babelwires {
         /// Set up the contents to match the state of element.
         void setContents(std::string label, ElementId elementId);
 
-        static QtNodes::NodeDataType getDataTypeFromFeature(const Feature* f);
+        static QtNodes::NodeDataType getDataTypeFromFeature(const ValueTreeNode* f);
 
-        const Feature* getInputFeature(AccessModelScope& scope, int portIndex) const;
-        const Feature* getOutputFeature(AccessModelScope& scope, int portIndex) const;
+        const ValueTreeNode* getInputFeature(AccessModelScope& scope, int portIndex) const;
+        const ValueTreeNode* getOutputFeature(AccessModelScope& scope, int portIndex) const;
 
       protected:
         ElementId m_elementId;

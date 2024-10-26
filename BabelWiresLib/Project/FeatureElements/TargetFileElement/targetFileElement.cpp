@@ -56,11 +56,11 @@ babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData
     return static_cast<TargetFileElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::Feature* babelwires::TargetFileElement::doGetInputFeatureNonConst() {
+babelwires::ValueTreeNode* babelwires::TargetFileElement::doGetInputFeatureNonConst() {
     return m_feature.get();
 }
 
-const babelwires::Feature* babelwires::TargetFileElement::getInputFeature() const {
+const babelwires::ValueTreeNode* babelwires::TargetFileElement::getInputFeature() const {
     return m_feature.get();
 }
 
@@ -132,7 +132,7 @@ void babelwires::TargetFileElement::doProcess(UserLogger& userLogger) {
         m_contentsCache.updateModifierCache();
     }
 
-    if (m_feature->isChanged(Feature::Changes::SomethingChanged)) {
+    if (m_feature->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
         updateSaveHash();
     }
 }

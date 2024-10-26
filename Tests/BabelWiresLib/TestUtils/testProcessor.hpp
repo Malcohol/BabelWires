@@ -71,8 +71,8 @@ namespace testUtils {
 
         TestProcessor(const babelwires::ProjectContext& context);
 
-        void processValue(babelwires::UserLogger& userLogger, const babelwires::Feature& inputFeature,
-                          babelwires::Feature& outputFeature) const override;
+        void processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& inputFeature,
+                          babelwires::ValueTreeNode& outputFeature) const override;
     };
 
 } // namespace testUtils

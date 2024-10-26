@@ -30,7 +30,7 @@ namespace babelwires {
         Path m_pathToFeature;
 
         /// Find the target feature within the container, or throw.
-        Feature* getTargetFeature(Feature* container) const;
+        ValueTreeNode* getTargetFeature(ValueTreeNode* container) const;
 
         /// A factory method constructing the appropriate modifier.
         virtual std::unique_ptr<Modifier> createModifier() const = 0;
@@ -51,7 +51,7 @@ namespace babelwires {
         SERIALIZABLE_ABSTRACT(LocalModifierData, ModifierData);
 
         /// Perform the modification on the target feature, or throw.
-        virtual void apply(Feature* targetFeature) const = 0;
+        virtual void apply(ValueTreeNode* targetFeature) const = 0;
 
         virtual std::unique_ptr<Modifier> createModifier() const;
     };

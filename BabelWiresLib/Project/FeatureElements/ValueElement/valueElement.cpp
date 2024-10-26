@@ -33,19 +33,19 @@ const babelwires::ValueElementData& babelwires::ValueElement::getElementData() c
     return static_cast<const ValueElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::Feature* babelwires::ValueElement::doGetInputFeatureNonConst() {
+babelwires::ValueTreeNode* babelwires::ValueElement::doGetInputFeatureNonConst() {
     return m_rootFeature.get();
 }
 
-babelwires::Feature* babelwires::ValueElement::doGetOutputFeatureNonConst() {
+babelwires::ValueTreeNode* babelwires::ValueElement::doGetOutputFeatureNonConst() {
     return m_rootFeature.get();
 }
 
-const babelwires::Feature* babelwires::ValueElement::getInputFeature() const {
+const babelwires::ValueTreeNode* babelwires::ValueElement::getInputFeature() const {
     return m_rootFeature.get();
 }
 
-const babelwires::Feature* babelwires::ValueElement::getOutputFeature() const {
+const babelwires::ValueTreeNode* babelwires::ValueElement::getOutputFeature() const {
     return m_rootFeature.get();
 }
 

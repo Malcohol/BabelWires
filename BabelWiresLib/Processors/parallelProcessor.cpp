@@ -62,20 +62,20 @@ babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectCo
 #endif
 }
 
-void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const Feature& inputFeature,
-                                                 Feature& outputFeature) const {
+void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueTreeNode& inputFeature,
+                                                 ValueTreeNode& outputFeature) const {
     bool shouldProcessAll = false;
     // Iterate through all features _except_ for the array, look for changes to the common input.
     for (unsigned int i = 0; i < inputFeature.getNumFeatures() - 1; ++i) {
-        if (inputFeature.getFeature(i)->isChanged(Feature::Changes::SomethingChanged)) {
+        if (inputFeature.getFeature(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
             shouldProcessAll = true;
         }
     }
 
-    const auto& arrayInputFeature = inputFeature.getFeature(inputFeature.getNumFeatures() - 1)->is<Feature>();
-    auto& arrayOutputFeature = outputFeature.getFeature(outputFeature.getNumFeatures() - 1)->is<Feature>();
+    const auto& arrayInputFeature = inputFeature.getFeature(inputFeature.getNumFeatures() - 1)->is<ValueTreeNode>();
+    auto& arrayOutputFeature = outputFeature.getFeature(outputFeature.getNumFeatures() - 1)->is<ValueTreeNode>();
 
-    if (arrayInputFeature.isChanged(Feature::Changes::StructureChanged)) {
+    if (arrayInputFeature.isChanged(ValueTreeNode::Changes::StructureChanged)) {
         // TODO: This is very inefficient in cases where a single entry has been added or removed.
         // In the old feature system I was able to maintain a mapping between input and output entries
         // to avoid this inefficiency. Perhaps that can be done with values too.
@@ -84,8 +84,8 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const F
     }
 
     struct EntryData {
-        EntryData(const TypeSystem& typeSystem, unsigned int index, const Feature& inputEntry,
-                  const Feature& outputEntry)
+        EntryData(const TypeSystem& typeSystem, unsigned int index, const ValueTreeNode& inputEntry,
+                  const ValueTreeNode& outputEntry)
             : m_index(index)
             , m_inputEntry(inputEntry)
             , m_outputEntry(std::make_unique<SimpleValueFeature>(typeSystem, outputEntry.getTypeRef())) {
@@ -93,7 +93,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const F
         }
 
         const unsigned int m_index;
-        const Feature& m_inputEntry;
+        const ValueTreeNode& m_inputEntry;
         std::unique_ptr<SimpleValueFeature> m_outputEntry;
         std::string m_failureString;
     };
@@ -103,9 +103,9 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const F
     const TypeSystem& typeSystem = inputFeature.getTypeSystem();
 
     for (unsigned int i = 0; i < arrayInputFeature.getNumFeatures(); ++i) {
-        const Feature& inputEntry = arrayInputFeature.getFeature(i)->is<Feature>();
-        if (shouldProcessAll || arrayInputFeature.getFeature(i)->isChanged(Feature::Changes::SomethingChanged)) {
-            Feature& outputEntry = arrayOutputFeature.getFeature(i)->is<Feature>();
+        const ValueTreeNode& inputEntry = arrayInputFeature.getFeature(i)->is<ValueTreeNode>();
+        if (shouldProcessAll || arrayInputFeature.getFeature(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
+            ValueTreeNode& outputEntry = arrayOutputFeature.getFeature(i)->is<ValueTreeNode>();
             entriesToProcess.emplace_back(EntryData{typeSystem, i, inputEntry, outputEntry});
         }
     }

@@ -53,8 +53,8 @@ testUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& contex
                                  testUtils::TestProcessorInputOutputType::getThisIdentifier()) {}
 
 void testUtils::TestProcessor::processValue(babelwires::UserLogger& userLogger,
-                                             const babelwires::Feature& inputFeature,
-                                             babelwires::Feature& outputFeature) const {
+                                             const babelwires::ValueTreeNode& inputFeature,
+                                             babelwires::ValueTreeNode& outputFeature) const {
     TestProcessorInputOutputType::ConstInstance input{inputFeature};
     TestProcessorInputOutputType::Instance output{outputFeature};
 

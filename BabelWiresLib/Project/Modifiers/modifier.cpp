@@ -55,10 +55,10 @@ const babelwires::Path& babelwires::Modifier::getPathToFeature() const {
     return m_data->m_pathToFeature;
 }
 
-void babelwires::Modifier::unapply(Feature* container) const {
+void babelwires::Modifier::unapply(ValueTreeNode* container) const {
     assert(!isFailed() && "Don't try to unapply a failed modifier.");
     try {
-        Feature& f = m_data->m_pathToFeature.follow(*container);
+        ValueTreeNode& f = m_data->m_pathToFeature.follow(*container);
         // When undone, array size modifiers should not reset the remaining children.
         f.setToDefault();
     } catch (const BaseException& e) {
@@ -66,7 +66,7 @@ void babelwires::Modifier::unapply(Feature* container) const {
     }
 }
 
-void babelwires::Modifier::applyIfLocal(UserLogger& userLogger, Feature* container) {}
+void babelwires::Modifier::applyIfLocal(UserLogger& userLogger, ValueTreeNode* container) {}
 
 bool babelwires::Modifier::isChanged(Changes changes) const {
     return (m_changes & changes) != Changes::NothingChanged;

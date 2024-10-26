@@ -1,5 +1,5 @@
 /**
- * A ChildValueFeature is a Feature whose value is owned by an ancestor feature.
+ * A ChildValueFeature is a ValueTreeNode whose value is owned by an ancestor feature.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Path/path.hpp>
 
 babelwires::ChildValueFeature::ChildValueFeature(TypeRef typeRef, const ValueHolder* valueHolder)
-    : Feature(std::move(typeRef))
+    : ValueTreeNode(std::move(typeRef))
     , m_value(valueHolder) {
     assert(valueHolder);
 }

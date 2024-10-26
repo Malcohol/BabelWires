@@ -17,7 +17,7 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-void babelwires::ArraySizeModifierData::apply(Feature* targetFeature) const {
+void babelwires::ArraySizeModifierData::apply(ValueTreeNode* targetFeature) const {
     if (const ArrayType* arrayType = targetFeature->getType().as<ArrayType>()) {
         const TypeSystem& typeSystem = targetFeature->getTypeSystem();
         ValueHolder newValue = targetFeature->getValue();
@@ -43,7 +43,7 @@ void babelwires::ArraySizeModifierData::deserializeContents(Deserializer& deseri
     deserializer.deserializeValue("size", m_size);
 }
 
-void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int indexOfNewElement,
+void babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* targetFeature, int indexOfNewElement,
                                                      int numEntriesToAdd) {
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     m_size += numEntriesToAdd;
@@ -59,7 +59,7 @@ void babelwires::ArraySizeModifierData::addEntries(Feature* targetFeature, int i
     throw babelwires::ModelException() << "Cannot resize non-array";
 }
 
-void babelwires::ArraySizeModifierData::removeEntries(Feature* targetFeature, int indexOfElementToRemove,
+void babelwires::ArraySizeModifierData::removeEntries(ValueTreeNode* targetFeature, int indexOfElementToRemove,
                                                         int numEntriesToRemove) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     assert((m_size >= numEntriesToRemove) && "You can't have ArraySizeModifierData with negative size");

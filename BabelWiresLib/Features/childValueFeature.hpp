@@ -1,5 +1,5 @@
 /**
- * A ChildValueFeature is a Feature whose value is owned by an ancestor feature.
+ * A ChildValueFeature is a ValueTreeNode whose value is owned by an ancestor feature.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -15,10 +15,10 @@ namespace babelwires {
     class Type;
     class Value;
 
-    /// A ChildValueFeature is a Feature whose value is owned by an ancestor feature.
-    class ChildValueFeature : public Feature {
+    /// A ChildValueFeature is a ValueTreeNode whose value is owned by an ancestor feature.
+    class ChildValueFeature : public ValueTreeNode {
       public:
-        /// Construct a Feature which carries values of the given type.
+        /// Construct a ValueTreeNode which carries values of the given type.
         ChildValueFeature(TypeRef typeRef, const ValueHolder* valueHolder);
 
         /// If the new valueHolder pointer is different, update m_value and synchronizeSubfeatures.

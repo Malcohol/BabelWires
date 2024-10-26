@@ -166,7 +166,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
 
-    const babelwires::Feature* const valueFeature = element->getInputFeature();
+    const babelwires::ValueTreeNode* const valueFeature = element->getInputFeature();
     ASSERT_NE(valueFeature, nullptr);
     const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
 

@@ -29,7 +29,7 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    const Feature* const inputFeature = element->getInputFeature();
+    const ValueTreeNode* const inputFeature = element->getInputFeature();
     if (!inputFeature) {
         return false;
     }

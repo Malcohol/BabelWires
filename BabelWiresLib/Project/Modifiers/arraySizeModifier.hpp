@@ -24,9 +24,9 @@ namespace babelwires {
         ArraySizeModifierData& getModifierData();
         const ArraySizeModifierData& getModifierData() const;
 
-        bool addArrayEntries(UserLogger& userLogger, Feature* container, int indexOfNewElement, int numEntriesToAdd);
+        bool addArrayEntries(UserLogger& userLogger, ValueTreeNode* container, int indexOfNewElement, int numEntriesToAdd);
 
-        bool removeArrayEntries(UserLogger& userLogger, Feature* container, int indexOfElementToRemove,
+        bool removeArrayEntries(UserLogger& userLogger, ValueTreeNode* container, int indexOfElementToRemove,
                                 int numEntriesToRemove);
     };
 

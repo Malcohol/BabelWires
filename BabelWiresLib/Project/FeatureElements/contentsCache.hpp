@@ -16,7 +16,7 @@
 
 namespace babelwires {
 
-    class Feature;
+    class ValueTreeNode;
     class EditTree;
     class ContentsCache;
 
@@ -27,12 +27,12 @@ namespace babelwires {
     /// The information cached about a single row in the contents of a feature element.
     class ContentsCacheEntry {
       public:
-        ContentsCacheEntry(std::string label, const Feature* inputFeature, const Feature* outputFeature,
+        ContentsCacheEntry(std::string label, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature,
                            const Path& path, std::uint8_t depth, std::uint8_t indent);
 
         const std::string& getLabel() const { return m_label; }
-        const Feature* getInputFeature() const { return m_inputFeature; }
-        const Feature* getOutputFeature() const { return m_outputFeature; }
+        const ValueTreeNode* getInputFeature() const { return m_inputFeature; }
+        const ValueTreeNode* getOutputFeature() const { return m_outputFeature; }
         const Path& getPath() const { return m_path; }
 
         /// Get the indent of this row.
@@ -50,17 +50,17 @@ namespace babelwires {
         bool hasFailedHiddenModifiers() const { return m_hasFailedHiddenModifiers; }
         bool hasSubmodifiers() const { return m_hasSubModifiers; }
 
-        const Feature* getInputThenOutputFeature() const { return m_inputFeature ? m_inputFeature : m_outputFeature; }
+        const ValueTreeNode* getInputThenOutputFeature() const { return m_inputFeature ? m_inputFeature : m_outputFeature; }
 
-        const Feature* getOutputThenInputFeature() const { return m_outputFeature ? m_outputFeature : m_inputFeature; }
+        const ValueTreeNode* getOutputThenInputFeature() const { return m_outputFeature ? m_outputFeature : m_inputFeature; }
 
       private:
         friend ContentsCache;
         friend Detail::ContentsCacheBuilder;
 
         std::string m_label;
-        const Feature* m_inputFeature;
-        const Feature* m_outputFeature;
+        const ValueTreeNode* m_inputFeature;
+        const ValueTreeNode* m_outputFeature;
 
         /// A path which is common to both input and output features.
         const Path m_path;
@@ -111,7 +111,7 @@ namespace babelwires {
         ContentsCache(EditTree& edits);
 
         /// Build the cache with the given input and output features.
-        void setFeatures(std::string rootName, const Feature* inputFeature, const Feature* outputFeature);
+        void setFeatures(std::string rootName, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature);
 
         /// Update the part of the cache concerning modifiers.
         void updateModifierCache();

@@ -40,7 +40,7 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         return false;
     }
 
-    const Feature* const inputFeature = elementToModify->getInputFeature();
+    const ValueTreeNode* const inputFeature = elementToModify->getInputFeature();
     if (!inputFeature) {
         return false;
     }

@@ -30,7 +30,7 @@ void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer
     }
 }
 
-void babelwires::ActivateOptionalsModifierData::apply(Feature* targetFeature) const {
+void babelwires::ActivateOptionalsModifierData::apply(ValueTreeNode* targetFeature) const {
     if (auto recordType = targetFeature->getType().as<RecordType>()) {
         const TypeSystem& typeSystem = targetFeature->getTypeSystem();
         ValueHolder newValue = targetFeature->getValue();

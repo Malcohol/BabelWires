@@ -22,7 +22,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
         testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::Feature* const valueFeature = element->getInputFeature();
+    const babelwires::ValueTreeNode* const valueFeature = element->getInputFeature();
     ASSERT_NE(valueFeature, nullptr);
     const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
 

@@ -112,13 +112,13 @@ namespace testUtils {
     /// without using the Instance system.
     // Currently not all features are represented.
     struct TestComplexRecordTypeFeatureInfo {
-        const babelwires::Feature& m_record;
-        const babelwires::Feature& m_intFeature;
-        const babelwires::Feature& m_subRecordFeature;
-        const babelwires::Feature& m_subRecordIntFeature;
-        const babelwires::Feature& m_arrayFeature;
-        const babelwires::Feature& m_elem0;
-        const babelwires::Feature& m_elem1;
+        const babelwires::ValueTreeNode& m_record;
+        const babelwires::ValueTreeNode& m_intFeature;
+        const babelwires::ValueTreeNode& m_subRecordFeature;
+        const babelwires::ValueTreeNode& m_subRecordIntFeature;
+        const babelwires::ValueTreeNode& m_arrayFeature;
+        const babelwires::ValueTreeNode& m_elem0;
+        const babelwires::ValueTreeNode& m_elem1;
 
         // These paths are obtained from the features (which tests some FeaturePath functionality).
         babelwires::Path m_pathToRecord;
@@ -129,6 +129,6 @@ namespace testUtils {
         babelwires::Path m_pathToElem0;
         babelwires::Path m_pathToElem1;
 
-        TestComplexRecordTypeFeatureInfo(const babelwires::Feature& testRecord);
+        TestComplexRecordTypeFeatureInfo(const babelwires::ValueTreeNode& testRecord);
     };
 } // namespace testUtils

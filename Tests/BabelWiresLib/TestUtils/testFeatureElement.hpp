@@ -34,14 +34,14 @@ namespace testUtils {
         TestFeatureElement(const babelwires::ProjectContext& context, const TestFeatureElementData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;
 
-        babelwires::Feature* doGetInputFeatureNonConst() override;
-        babelwires::Feature* doGetOutputFeatureNonConst() override;
-        const babelwires::Feature* getInputFeature() const override;
-        const babelwires::Feature* getOutputFeature() const override;
+        babelwires::ValueTreeNode* doGetInputFeatureNonConst() override;
+        babelwires::ValueTreeNode* doGetOutputFeatureNonConst() override;
+        const babelwires::ValueTreeNode* getInputFeature() const override;
+        const babelwires::ValueTreeNode* getOutputFeature() const override;
 
         void simulateFailure(const babelwires::ProjectContext& context);
         void simulateRecovery(const babelwires::ProjectContext& context);
 
-        std::unique_ptr<babelwires::Feature> m_feature;
+        std::unique_ptr<babelwires::ValueTreeNode> m_feature;
     };
 } // namespace testUtils

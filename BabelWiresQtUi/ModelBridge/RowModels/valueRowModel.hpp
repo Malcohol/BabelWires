@@ -11,7 +11,7 @@
 
 namespace babelwires {
 
-    class Feature;
+    class ValueTreeNode;
 
     class ValueRowModel : public RowModel {
       public:
@@ -37,7 +37,7 @@ namespace babelwires {
 
         virtual void getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const override;
       public:
-        const Feature& getValueFeature() const;
+        const ValueTreeNode& getValueFeature() const;
     };
 
 } // namespace babelwires

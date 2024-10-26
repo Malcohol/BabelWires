@@ -50,9 +50,9 @@ namespace {
             : babelwires::ParallelProcessor(context, TestParallelProcessorInput::getThisIdentifier(),
                                             TestParallelProcessorOutput::getThisIdentifier()) {}
 
-        void processEntry(babelwires::UserLogger& userLogger, const babelwires::Feature& inputFeature,
-                          const babelwires::Feature& inputEntry,
-                          babelwires::Feature& outputEntry) const override {
+        void processEntry(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& inputFeature,
+                          const babelwires::ValueTreeNode& inputEntry,
+                          babelwires::ValueTreeNode& outputEntry) const override {
 
             {
                 // Log the input path.
@@ -62,14 +62,14 @@ namespace {
             babelwires::ConstInstance<babelwires::IntType> entryIn{inputEntry};
             babelwires::Instance<babelwires::IntType> entryOut{outputEntry};
 
-            const babelwires::Feature& intValueFeature =
-                inputFeature.getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::Feature>();
+            const babelwires::ValueTreeNode& intValueFeature =
+                inputFeature.getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
             entryOut.set(entryIn.get() + intValueFeature.getValue()->is<babelwires::IntValue>().get());
         }
     };
 
-    bool findPath(const std::string& log, const babelwires::Feature& f) {
+    bool findPath(const std::string& log, const babelwires::ValueTreeNode& f) {
         const babelwires::Path path(&f);
         std::ostringstream pathStream;
         pathStream << path;
@@ -88,19 +88,19 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     processor.getInputFeature().setToDefault();
     processor.getOutputFeature().setToDefault();
 
-    babelwires::Feature& inputValueFeature = processor.getInputFeature();
-    const babelwires::Feature& outputValueFeature = processor.getOutputFeature();
+    babelwires::ValueTreeNode& inputValueFeature = processor.getInputFeature();
+    const babelwires::ValueTreeNode& outputValueFeature = processor.getOutputFeature();
 
-    babelwires::Feature& intValueFeature =
-        processor.getInputFeature().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::Feature>();
+    babelwires::ValueTreeNode& intValueFeature =
+        processor.getInputFeature().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
-    babelwires::Feature& inputArrayFeature =
-        inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::Feature>();
-    const babelwires::Feature& outputArrayFeature =
-        outputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::Feature>();
+    babelwires::ValueTreeNode& inputArrayFeature =
+        inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+    const babelwires::ValueTreeNode& outputArrayFeature =
+        outputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
 
-    babelwires::ArrayInstanceImpl<babelwires::Feature, babelwires::IntType> inputArray(inputArrayFeature);
-    const babelwires::ArrayInstanceImpl<const babelwires::Feature, babelwires::IntType> outputArray(
+    babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayFeature);
+    const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
         outputArrayFeature);
 
     EXPECT_EQ(inputArray.getSize(), 1);
@@ -156,19 +156,19 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     processor.getInputFeature().setToDefault();
     processor.getOutputFeature().setToDefault();
 
-    babelwires::Feature& inputValueFeature = processor.getInputFeature();
-    const babelwires::Feature& outputValueFeature = processor.getOutputFeature();
+    babelwires::ValueTreeNode& inputValueFeature = processor.getInputFeature();
+    const babelwires::ValueTreeNode& outputValueFeature = processor.getOutputFeature();
 
-    babelwires::Feature& intValueFeature =
-        processor.getInputFeature().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::Feature>();
+    babelwires::ValueTreeNode& intValueFeature =
+        processor.getInputFeature().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
-    babelwires::Feature& inputArrayFeature =
-        inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::Feature>();
-    const babelwires::Feature& outputArrayFeature =
-        outputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::Feature>();
+    babelwires::ValueTreeNode& inputArrayFeature =
+        inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+    const babelwires::ValueTreeNode& outputArrayFeature =
+        outputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
 
-    babelwires::ArrayInstanceImpl<babelwires::Feature, babelwires::IntType> inputArray(inputArrayFeature);
-    const babelwires::ArrayInstanceImpl<const babelwires::Feature, babelwires::IntType> outputArray(
+    babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayFeature);
+    const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
         outputArrayFeature);
 
     processor.getInputFeature().clearChanges();
@@ -233,19 +233,19 @@ TEST(ParallelProcessorTest, testFailure) {
     processor.getInputFeature().setToDefault();
     processor.getOutputFeature().setToDefault();
 
-    babelwires::Feature& inputValueFeature = processor.getInputFeature();
-    const babelwires::Feature& outputValueFeature = processor.getOutputFeature();
+    babelwires::ValueTreeNode& inputValueFeature = processor.getInputFeature();
+    const babelwires::ValueTreeNode& outputValueFeature = processor.getOutputFeature();
 
-    babelwires::Feature& intValueFeature =
-        processor.getInputFeature().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::Feature>();
+    babelwires::ValueTreeNode& intValueFeature =
+        processor.getInputFeature().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
-    babelwires::Feature& inputArrayFeature =
-        inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::Feature>();
-    const babelwires::Feature& outputArrayFeature =
-        outputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::Feature>();
+    babelwires::ValueTreeNode& inputArrayFeature =
+        inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+    const babelwires::ValueTreeNode& outputArrayFeature =
+        outputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
 
-    babelwires::ArrayInstanceImpl<babelwires::Feature, babelwires::IntType> inputArray(inputArrayFeature);
-    const babelwires::ArrayInstanceImpl<const babelwires::Feature, babelwires::IntType> outputArray(
+    babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayFeature);
+    const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
         outputArrayFeature);
 
     EXPECT_EQ(inputArray.getSize(), 1);

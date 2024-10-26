@@ -21,13 +21,13 @@
 #include <cassert>
 
 void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {
-    const babelwires::Feature& valueFeature = getValueFeature();
+    const babelwires::ValueTreeNode& valueFeature = getValueFeature();
     m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueFeature.getType(), valueFeature.getValue(),
                                 (getInputFeature() == nullptr),
                                 m_contentsCacheEntry->isStructureEditable());
 }
 
-const babelwires::Feature& babelwires::ValueRowModel::getValueFeature() const {
+const babelwires::ValueTreeNode& babelwires::ValueRowModel::getValueFeature() const {
     return *getInputThenOutputFeature();
 }
 
@@ -48,7 +48,7 @@ void babelwires::ValueRowModel::setEditorData(QWidget* editor) const {
 std::unique_ptr<babelwires::Command<babelwires::Project>>
 babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
     if (EditableValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
-        const babelwires::Feature& valueFeature = getValueFeature();
+        const babelwires::ValueTreeNode& valueFeature = getValueFeature();
         auto modifier = std::make_unique<babelwires::ValueAssignmentData>(std::move(newValue));
         modifier->m_pathToFeature = babelwires::Path(&valueFeature);
         return std::make_unique<AddModifierCommand>("Set value", m_featureElement->getElementId(), std::move(modifier));
@@ -88,7 +88,7 @@ QString babelwires::ValueRowModel::getTooltip() const {
 void babelwires::ValueRowModel::getContextMenuActions(
     std::vector<FeatureContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
-    const babelwires::Feature& valueFeature = getValueFeature();
+    const babelwires::ValueTreeNode& valueFeature = getValueFeature();
     m_valueModelDispatcher->getContextMenuActions(
         DataLocation{m_featureElement->getElementId(), babelwires::Path(&valueFeature)}, actionsOut);
 }

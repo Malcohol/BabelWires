@@ -18,7 +18,7 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-const babelwires::Feature* babelwires::ConnectionModifierData::getSourceFeature(const Project& project) const {
+const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceFeature(const Project& project) const {
     const FeatureElement* sourceElement = project.getFeatureElement(m_sourceId);
     if (!sourceElement) {
         throw babelwires::ModelException()
@@ -33,7 +33,7 @@ const babelwires::Feature* babelwires::ConnectionModifierData::getSourceFeature(
     }
     */
 
-    const Feature* const outputFeature = sourceElement->getOutputFeature();
+    const ValueTreeNode* const outputFeature = sourceElement->getOutputFeature();
     if (!outputFeature) {
         throw babelwires::ModelException()
             << "The connection source (element with id=" << m_sourceId << ") has no outputs";
@@ -47,9 +47,9 @@ const babelwires::Feature* babelwires::ConnectionModifierData::getSourceFeature(
     }
 }
 
-void babelwires::ConnectionModifierData::apply(const Feature* sourceFeature, Feature* targetFeature,
+void babelwires::ConnectionModifierData::apply(const ValueTreeNode* sourceFeature, ValueTreeNode* targetFeature,
                                                bool applyEvenIfSourceUnchanged) const {
-    if (!(applyEvenIfSourceUnchanged || sourceFeature->isChanged(Feature::Changes::SomethingChanged))) {
+    if (!(applyEvenIfSourceUnchanged || sourceFeature->isChanged(ValueTreeNode::Changes::SomethingChanged))) {
         return;
     }
 

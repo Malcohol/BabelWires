@@ -70,7 +70,7 @@ QtNodes::NodeDataType babelwires::ElementNodeModel::dataType(QtNodes::PortType p
     }
 }
 
-const babelwires::Feature* babelwires::ElementNodeModel::getInputFeature(AccessModelScope& scope, int portIndex) const {
+const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getInputFeature(AccessModelScope& scope, int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
         return entry->getInputFeature();
     } else {
@@ -78,7 +78,7 @@ const babelwires::Feature* babelwires::ElementNodeModel::getInputFeature(AccessM
     }
 }
 
-const babelwires::Feature* babelwires::ElementNodeModel::getOutputFeature(AccessModelScope& scope,
+const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getOutputFeature(AccessModelScope& scope,
                                                                           int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
         return entry->getOutputFeature();
@@ -87,7 +87,7 @@ const babelwires::Feature* babelwires::ElementNodeModel::getOutputFeature(Access
     }
 }
 
-QtNodes::NodeDataType babelwires::ElementNodeModel::getDataTypeFromFeature(const babelwires::Feature* f) {
+QtNodes::NodeDataType babelwires::ElementNodeModel::getDataTypeFromFeature(const babelwires::ValueTreeNode* f) {
     if (f && f->getKind() != "") {
         return QtNodes::NodeDataType{f->getKind().c_str(), ""};
     }

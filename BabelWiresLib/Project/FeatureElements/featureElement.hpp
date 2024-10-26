@@ -51,10 +51,10 @@ namespace babelwires {
         /// Returns nullptr if the modifier will be applied later anyway, so there's no
         /// work for the caller to do.
         /// This does not attempt to deal with errors, so it returns the feature if the path cannot be followed.
-        Feature* getInputFeatureNonConst(const Path& pathToModify);
+        ValueTreeNode* getInputFeatureNonConst(const Path& pathToModify);
 
-        virtual const Feature* getInputFeature() const;
-        virtual const Feature* getOutputFeature() const;
+        virtual const ValueTreeNode* getInputFeature() const;
+        virtual const ValueTreeNode* getOutputFeature() const;
 
         /// Get a description of the type of element (e.g. format name).
         virtual std::string getLabel() const;
@@ -157,9 +157,9 @@ namespace babelwires {
 
       protected:
         /// Get a non-const pointer to the input feature. The default implementation returns null.
-        virtual Feature* doGetInputFeatureNonConst();
+        virtual ValueTreeNode* doGetInputFeatureNonConst();
         /// Get a non-const pointer to the output feature. The default implementation returns null.
-        virtual Feature* doGetOutputFeatureNonConst();
+        virtual ValueTreeNode* doGetOutputFeatureNonConst();
         virtual void doProcess(UserLogger& userLogger) = 0;
 
       protected:
@@ -195,7 +195,7 @@ namespace babelwires {
 
         /// Obtain the right to modify the feature at the given path.
         /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
-        void modifyFeatureAt(Feature* inputFeature, const Path& p);
+        void modifyFeatureAt(ValueTreeNode* inputFeature, const Path& p);
 
         /// This is called by process, to signal that all modifications are finished.
         void finishModifications(const Project& project, UserLogger& userLogger);

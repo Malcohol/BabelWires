@@ -1,5 +1,5 @@
 /**
- * A Feature is a self-describing data-structure which stores the data in the model.
+ * A ValueTreeNode is a self-describing data-structure which stores the data in the model.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -30,16 +30,16 @@ namespace babelwires {
 
     /// A feature is a self-describing data-structure which stores the data in the model.
     /// Features are structured in a tree, which also defines ownership.
-    class Feature {
+    class ValueTreeNode {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(Feature);
+        DOWNCASTABLE_TYPE_HIERARCHY(ValueTreeNode);
 
-        Feature(TypeRef typeRef);
-        virtual ~Feature();
+        ValueTreeNode(TypeRef typeRef);
+        virtual ~ValueTreeNode();
 
-        void setOwner(Feature* owner);
-        const Feature* getOwner() const;
-        Feature* getOwnerNonConst();
+        void setOwner(ValueTreeNode* owner);
+        const ValueTreeNode* getOwner() const;
+        ValueTreeNode* getOwnerNonConst();
 
         /// Set to the default value.
         void setToDefault();
@@ -65,22 +65,22 @@ namespace babelwires {
       public:
         int getNumFeatures() const;
 
-        Feature* getFeature(int i);
-        const Feature* getFeature(int i) const;
+        ValueTreeNode* getFeature(int i);
+        const ValueTreeNode* getFeature(int i) const;
 
-        PathStep getStepToChild(const Feature* child) const;
-
-        /// Should return nullptr if the step does not lead to a child.
-        Feature* tryGetChildFromStep(const PathStep& step);
+        PathStep getStepToChild(const ValueTreeNode* child) const;
 
         /// Should return nullptr if the step does not lead to a child.
-        const Feature* tryGetChildFromStep(const PathStep& step) const;
+        ValueTreeNode* tryGetChildFromStep(const PathStep& step);
+
+        /// Should return nullptr if the step does not lead to a child.
+        const ValueTreeNode* tryGetChildFromStep(const PathStep& step) const;
 
         /// Throws a ModelException if the step does not lead to a child.
-        Feature& getChildFromStep(const PathStep& step);
+        ValueTreeNode& getChildFromStep(const PathStep& step);
 
         /// Throws a ModelException if the step does not lead to a child.
-        const Feature& getChildFromStep(const PathStep& step) const;
+        const ValueTreeNode& getChildFromStep(const PathStep& step) const;
 
         /// Returns -1 if not found.
         /// Sets the descriminator of identifier on a match.
@@ -111,7 +111,7 @@ namespace babelwires {
 
         /// Set this to hold the same value as other.
         /// This will throw a ModelException if the assignment failed.
-        void assign(const Feature& other);
+        void assign(const ValueTreeNode& other);
 
         /// If the value is compound, synchronize the m_children data structure with the current children of the value.
         void synchronizeSubfeatures();
@@ -133,11 +133,11 @@ namespace babelwires {
 
       private:
         // For now.
-        Feature(const Feature&) = delete;
-        Feature& operator=(const Feature&) = delete;
+        ValueTreeNode(const ValueTreeNode&) = delete;
+        ValueTreeNode& operator=(const ValueTreeNode&) = delete;
 
       private:
-        Feature* m_owner = nullptr;
+        ValueTreeNode* m_owner = nullptr;
         Changes m_changes = Changes::SomethingChanged;
 
         TypeRef m_typeRef;
@@ -145,6 +145,6 @@ namespace babelwires {
         ChildMap m_children;
     };
 
-    DEFINE_ENUM_FLAG_OPERATORS(Feature::Changes);
+    DEFINE_ENUM_FLAG_OPERATORS(ValueTreeNode::Changes);
 
 } // namespace babelwires

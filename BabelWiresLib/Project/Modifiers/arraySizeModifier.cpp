@@ -29,13 +29,13 @@ babelwires::ArraySizeModifierData& babelwires::ArraySizeModifier::getModifierDat
     return *Modifier::getModifierData().as<babelwires::ArraySizeModifierData>();
 }
 
-bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, Feature* container, int indexOfNewElement,
+bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, ValueTreeNode* container, int indexOfNewElement,
                                                     int numEntriesToAdd) {
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     State state = State::TargetMissing;
     try {
         ArraySizeModifierData& data = getModifierData();
-        Feature* targetFeature = data.getTargetFeature(container);
+        ValueTreeNode* targetFeature = data.getTargetFeature(container);
         state = State::ApplicationFailed;
         data.addEntries(targetFeature, indexOfNewElement, numEntriesToAdd);
         setSucceeded();
@@ -47,13 +47,13 @@ bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, Feat
     }
 }
 
-bool babelwires::ArraySizeModifier::removeArrayEntries(UserLogger& userLogger, Feature* container,
+bool babelwires::ArraySizeModifier::removeArrayEntries(UserLogger& userLogger, ValueTreeNode* container,
                                                        int indexOfElementToRemove, int numEntriesToRemove) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     State state = State::TargetMissing;
     try {
         ArraySizeModifierData& data = getModifierData();
-        Feature* targetFeature = data.getTargetFeature(container);
+        ValueTreeNode* targetFeature = data.getTargetFeature(container);
         state = State::ApplicationFailed;
         data.removeEntries(targetFeature, indexOfElementToRemove, numEntriesToRemove);
         setSucceeded();

@@ -14,7 +14,7 @@
 namespace babelwires {
     class ProjectBridge;
     struct UserLogger;
-    class Feature;
+    class ValueTreeNode;
     class AccessModelScope;
 
     /// Base class of widgets which provide type-specific UIs for editing values.
@@ -30,15 +30,15 @@ namespace babelwires {
 
             /// Convenience Function: Get the Feature referred to by the data, or assert.
             /// Note: This returns const because editors never modify features directly.
-            static const Feature& getValueFeature(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode& getValueFeature(AccessModelScope& scope, const DataLocation& data);
 
             /// Convenience Function: Get the Feature referred to by the data, or return nullptr.
             /// Note: This returns const because editors never modify features directly.
-            static const Feature* tryGetValueFeature(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode* tryGetValueFeature(AccessModelScope& scope, const DataLocation& data);
 
             /// Convenience Function: Get the Feature referred to by the data, or throw a ModelException.
             /// Note: This returns const because editors never modify features directly.
-            static const Feature& getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode& getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data);
 
         signals:
             void editorClosing();

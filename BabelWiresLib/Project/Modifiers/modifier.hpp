@@ -24,7 +24,7 @@ namespace babelwires {
 
     struct ModifierData;
     class Project;
-    class Feature;
+    class ValueTreeNode;
     class Path;
     class FeatureElement;
     class ConnectionModifier;
@@ -68,14 +68,14 @@ namespace babelwires {
         const Path& getPathToFeature() const;
 
         /// If the modifier is a local modifier, apply it. Otherwise, do nothing.
-        virtual void applyIfLocal(UserLogger& userLogger, Feature* container);
+        virtual void applyIfLocal(UserLogger& userLogger, ValueTreeNode* container);
 
         /// Returns this if this modifier is a connection modifier, otherwise returns nullptr;
         const ConnectionModifier* asConnectionModifier() const;
         ConnectionModifier* asConnectionModifier();
 
         /// If the modifier modified some data, set it back to the default.
-        void unapply(Feature* container) const;
+        void unapply(ValueTreeNode* container) const;
 
         // clang-format off
         /// Describes the way a modifier may have changed.

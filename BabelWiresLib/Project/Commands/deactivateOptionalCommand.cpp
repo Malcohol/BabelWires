@@ -31,7 +31,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         return false;
     }
 
-    const Feature* const inputFeature = elementToModify->getInputFeature();
+    const ValueTreeNode* const inputFeature = elementToModify->getInputFeature();
     if (!inputFeature) {
         return false;
     }

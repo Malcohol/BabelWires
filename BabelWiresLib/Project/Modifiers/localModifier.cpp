@@ -34,9 +34,9 @@ const babelwires::ConnectionModifier* babelwires::LocalModifier::doAsConnectionM
     return nullptr;
 }
 
-void babelwires::LocalModifier::applyIfLocal(UserLogger& userLogger, Feature* container) {
+void babelwires::LocalModifier::applyIfLocal(UserLogger& userLogger, ValueTreeNode* container) {
     State state = State::TargetMissing;
-    Feature* targetFeature = nullptr;
+    ValueTreeNode* targetFeature = nullptr;
     try {
         const LocalModifierData& data = getModifierData();
         targetFeature = data.getTargetFeature(container);

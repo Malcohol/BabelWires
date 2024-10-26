@@ -40,18 +40,18 @@ const babelwires::ConnectionModifier* babelwires::ConnectionModifier::doAsConnec
 }
 
 void babelwires::ConnectionModifier::applyConnection(const Project& project, UserLogger& userLogger,
-                                                     Feature* container, bool shouldForce) {
+                                                     ValueTreeNode* container, bool shouldForce) {
     // Force the application if the modifier is new OR is currently failed, in case it now succeeds.
     shouldForce = shouldForce || isChanged(Changes::ModifierIsNew) || isFailed();
 
     State state = State::TargetMissing;
-    Feature* targetFeature = nullptr;
+    ValueTreeNode* targetFeature = nullptr;
 
     try {
         const babelwires::ConnectionModifierData& data = getModifierData();
         targetFeature = data.getTargetFeature(container);
         state = State::SourceMissing;
-        const Feature* sourceFeature = data.getSourceFeature(project);
+        const ValueTreeNode* sourceFeature = data.getSourceFeature(project);
         state = State::ApplicationFailed;
         data.apply(sourceFeature, targetFeature, shouldForce);
         setSucceeded();

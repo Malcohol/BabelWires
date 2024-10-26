@@ -34,7 +34,7 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
         testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
     ASSERT_NE(targetElement, nullptr);
 
-    const auto getSelectedTag = [](const babelwires::Feature* valueFeature) {
+    const auto getSelectedTag = [](const babelwires::ValueTreeNode* valueFeature) {
         const auto& type = valueFeature->getType().is<testUtils::TestRecordWithVariantsType>();
         return type.getSelectedTag(valueFeature->getValue());
     };
