@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/Features/valueFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
@@ -12,16 +11,14 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRootedFeature.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(ActivateOptionalsModifierDataTest, apply) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::RootedFeature<babelwires::SimpleValueFeature> rootedFeature(
-        testEnvironment.m_projectContext, testUtils::TestComplexRecordType::getThisIdentifier());
-    babelwires::ValueFeature& valueFeature = rootedFeature.getFeature();
+    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_projectContext.m_typeSystem,
+                                                testUtils::TestComplexRecordType::getThisIdentifier());
     valueFeature.setToDefault();
     const auto* type = valueFeature.getType().as<testUtils::TestComplexRecordType>();
 
@@ -47,9 +44,8 @@ TEST(ActivateOptionalsModifierDataTest, apply) {
 
 TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::RootedFeature<babelwires::SimpleValueFeature> rootedFeature(
-        testEnvironment.m_projectContext, testUtils::TestComplexRecordType::getThisIdentifier());
-    babelwires::ValueFeature& valueFeature = rootedFeature.getFeature();
+    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_projectContext.m_typeSystem,
+                                                testUtils::TestComplexRecordType::getThisIdentifier());
     valueFeature.setToDefault();
     const auto* type = valueFeature.getType().as<testUtils::TestComplexRecordType>();
 
@@ -66,9 +62,8 @@ TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
 
 TEST(ActivateOptionalsModifierDataTest, failureNotARecordWithOptionals) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::RootedFeature<babelwires::SimpleValueFeature> rootedFeature(
-        testEnvironment.m_projectContext, testUtils::TestSimpleRecordType::getThisIdentifier());
-    babelwires::ValueFeature& valueFeature = rootedFeature.getFeature();
+    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_projectContext.m_typeSystem,
+                                                testUtils::TestSimpleRecordType::getThisIdentifier());
     valueFeature.setToDefault();
 
     babelwires::ActivateOptionalsModifierData data;
