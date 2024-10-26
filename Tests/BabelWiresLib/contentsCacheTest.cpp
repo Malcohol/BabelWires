@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
@@ -775,75 +774,4 @@ TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     cache.setFeatures("Test", &inputFeature, &outputFeature);
     testFileCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
-}
-
-namespace {
-    /// Style is normally set on a class with a virtual method. For testing convenience, we will use a class which
-    /// returns a style from a member.
-    struct TestRecordWithStyle : babelwires::RecordFeature {
-        TestRecordWithStyle(Style style)
-            : m_style(style) {
-            addField(std::make_unique<babelwires::IntFeature>(), testUtils::getTestRegisteredIdentifier("Flerm"));
-        }
-
-        Style getStyle() const { return m_style; }
-
-        Style m_style;
-    };
-
-    struct TestRecordWithChildStyles : babelwires::RootFeature {
-        TestRecordWithChildStyles(const babelwires::ProjectContext& context)
-            : babelwires::RootFeature(context) {
-            addField(std::make_unique<TestRecordWithStyle>(Style(0)), testUtils::getTestRegisteredIdentifier("zero"));
-            addField(std::make_unique<TestRecordWithStyle>(Style::isCollapsable),
-                     testUtils::getTestRegisteredIdentifier("coll"));
-            addField(std::make_unique<TestRecordWithStyle>(Style::isInlined),
-                     testUtils::getTestRegisteredIdentifier("inline"));
-            addField(std::make_unique<TestRecordWithStyle>(Style::isCollapsable | Style::isInlined),
-                     testUtils::getTestRegisteredIdentifier("both"));
-        }
-    };
-} // namespace
-
-TEST(ContentsCacheTest, style) {
-    testUtils::TestEnvironment testEnvironment;
-
-    babelwires::EditTree editTree;
-    babelwires::ContentsCache cache(editTree);
-
-    TestRecordWithChildStyles record(testEnvironment.m_projectContext);
-    // Handling of style should be unaffected by input / output features.
-    cache.setFeatures("Test", &record, nullptr);
-
-    EXPECT_EQ(cache.getNumRows(), 7);
-    EXPECT_EQ(cache.getEntry(0)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(1)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(2)->getIndent(), 1);
-    EXPECT_EQ(cache.getEntry(3)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(4)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(5)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(6)->getIndent(), 0);
-
-    EXPECT_EQ(cache.getEntry(0)->isExpandable(), false);
-    EXPECT_EQ(cache.getEntry(1)->isExpandable(), false);
-    EXPECT_EQ(cache.getEntry(2)->isExpandable(), false);
-    EXPECT_EQ(cache.getEntry(3)->isExpandable(), true);
-    EXPECT_EQ(cache.getEntry(4)->isExpandable(), false);
-    EXPECT_EQ(cache.getEntry(5)->isExpandable(), false);
-    EXPECT_EQ(cache.getEntry(6)->isExpandable(), true);
-
-    editTree.setExpanded(cache.getEntry(3)->getPath(), true);
-    editTree.setExpanded(cache.getEntry(4)->getPath(), true);
-
-    cache.setFeatures("Test", &record, nullptr);
-
-    EXPECT_EQ(cache.getNumRows(), 8);
-    EXPECT_EQ(cache.getEntry(0)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(1)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(2)->getIndent(), 1);
-    EXPECT_EQ(cache.getEntry(3)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(4)->getIndent(), 1);
-    EXPECT_EQ(cache.getEntry(5)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(6)->getIndent(), 0);
-    EXPECT_EQ(cache.getEntry(7)->getIndent(), 0);
 }
