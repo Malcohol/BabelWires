@@ -1,13 +1,10 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/failedFeature.hpp>
+#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/Types/Failure/failureType.hpp>
 
-testUtils::TestFailedFeature::TestFailedFeature(const babelwires::ProjectContext& context)
-    : RootFeature(context) {
-    addField(std::make_unique<RecordFeature>(), babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
-                                                    "Failed", "Failed", "00000000-1111-2222-3333-800000000888",
-                                                    babelwires::IdentifierRegistry::Authority::isAuthoritative));
-}
+#include <BabelWiresLib/Features/rootFeature.hpp>
 
 testUtils::TestFeatureElementData::TestFeatureElementData() {
     m_factoryIdentifier = "TestFactory";
@@ -15,12 +12,11 @@ testUtils::TestFeatureElementData::TestFeatureElementData() {
 }
 
 testUtils::TestFeatureElementData::TestFeatureElementData(const TestFeatureElementData& other,
-                                                             babelwires::ShallowCloneContext context)
-    : ElementData(other, context)
-    , m_intValueLimit(other.m_intValueLimit) {}
+                                                          babelwires::ShallowCloneContext context)
+    : ElementData(other, context) {}
 
 bool testUtils::TestFeatureElementData::checkFactoryVersion(const babelwires::ProjectContext& context,
-                                                               babelwires::UserLogger& userLogger) {
+                                                            babelwires::UserLogger& userLogger) {
     return true;
 }
 
@@ -37,38 +33,37 @@ testUtils::TestFeatureElement::TestFeatureElement(const babelwires::ProjectConte
     : TestFeatureElement(context, TestFeatureElementData(), 10) {}
 
 testUtils::TestFeatureElement::TestFeatureElement(const babelwires::ProjectContext& context,
-                                                     const TestFeatureElementData& data, babelwires::ElementId newId)
+                                                  const TestFeatureElementData& data, babelwires::ElementId newId)
     : FeatureElement(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
-    m_feature = std::make_unique<TestRootFeature>(
-        context, static_cast<const TestFeatureElementData*>(&getElementData())->m_intValueLimit);
+    m_feature = std::make_unique<TestRootFeature>(context);
 }
 
 void testUtils::TestFeatureElement::doProcess(babelwires::UserLogger&) {}
 
-const babelwires::RootFeature* testUtils::TestFeatureElement::getInputFeature() const {
+const babelwires::Feature* testUtils::TestFeatureElement::getInputFeature() const {
     return m_feature.get();
 }
 
-const babelwires::RootFeature* testUtils::TestFeatureElement::getOutputFeature() const {
+const babelwires::Feature* testUtils::TestFeatureElement::getOutputFeature() const {
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElement::doGetInputFeatureNonConst() {
+babelwires::Feature* testUtils::TestFeatureElement::doGetInputFeatureNonConst() {
     return m_feature.get();
 }
 
-babelwires::RootFeature* testUtils::TestFeatureElement::doGetOutputFeatureNonConst() {
+babelwires::Feature* testUtils::TestFeatureElement::doGetOutputFeatureNonConst() {
     return m_feature.get();
 }
 
 void testUtils::TestFeatureElement::simulateFailure(const babelwires::ProjectContext& context) {
     setInternalFailure("Simulated failure");
-    m_feature = std::make_unique<TestFailedFeature>(context);
+    m_feature = std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem,
+                                                                 babelwires::FailureType::getThisIdentifier());
 }
 
 void testUtils::TestFeatureElement::simulateRecovery(const babelwires::ProjectContext& context) {
-    m_feature = std::make_unique<TestRootFeature>(
-        context, static_cast<const TestFeatureElementData*>(&getElementData())->m_intValueLimit);
+    m_feature = std::make_unique<TestRootFeature>(context);
     clearInternalFailure();
 }

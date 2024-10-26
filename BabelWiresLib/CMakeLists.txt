@@ -6,7 +6,6 @@ SET( BABELWIRESLIB_SRCS
 	Project/FeatureElements/SourceFileElement/sourceFileElement.cpp
 	Project/FeatureElements/TargetFileElement/targetFileElement.cpp
 	Project/FeatureElements/fileElement.cpp
-	Project/FeatureElements/failedFeature.cpp
 	Project/FeatureElements/editTree.cpp
 	Project/FeatureElements/contentsCache.cpp
 	Project/FeatureElements/SourceFileElement/sourceFileElementData.cpp

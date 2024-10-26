@@ -14,7 +14,6 @@
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/failedFeature.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>

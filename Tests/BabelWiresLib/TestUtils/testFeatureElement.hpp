@@ -1,6 +1,5 @@
 #pragma once
 
-#include <BabelWiresLib/Features/rootFeature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
@@ -10,10 +9,6 @@
 // See Commented code in FeatureElementTest.
 
 namespace testUtils {
-    struct TestFailedFeature : babelwires::RootFeature {
-        TestFailedFeature(const babelwires::ProjectContext& context);
-    };
-
     ///
     struct TestFeatureElementData : babelwires::ElementData {
         CLONEABLE(TestFeatureElementData);
@@ -35,10 +30,6 @@ namespace testUtils {
         std::unique_ptr<babelwires::FeatureElement> doCreateFeatureElement(const babelwires::ProjectContext& context,
                                                                            babelwires::UserLogger& userLogger,
                                                                            babelwires::ElementId newId) const override;
-
-        // The limit on int value features in the TestRecordFeature.
-        // This is used to test failed applications.
-        int m_intValueLimit = 255;
     };
 
     struct TestFeatureElement : babelwires::FeatureElement {
@@ -46,14 +37,14 @@ namespace testUtils {
         TestFeatureElement(const babelwires::ProjectContext& context, const TestFeatureElementData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;
 
-        babelwires::RootFeature* doGetInputFeatureNonConst() override;
-        babelwires::RootFeature* doGetOutputFeatureNonConst() override;
-        const babelwires::RootFeature* getInputFeature() const override;
-        const babelwires::RootFeature* getOutputFeature() const override;
+        babelwires::Feature* doGetInputFeatureNonConst() override;
+        babelwires::Feature* doGetOutputFeatureNonConst() override;
+        const babelwires::Feature* getInputFeature() const override;
+        const babelwires::Feature* getOutputFeature() const override;
 
         void simulateFailure(const babelwires::ProjectContext& context);
         void simulateRecovery(const babelwires::ProjectContext& context);
 
-        std::unique_ptr<babelwires::RootFeature> m_feature;
+        std::unique_ptr<babelwires::Feature> m_feature;
     };
 } // namespace testUtils
