@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Processors/processor.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 

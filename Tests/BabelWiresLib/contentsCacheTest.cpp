@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>

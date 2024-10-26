@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
-#include <BabelWiresLib/Features/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>

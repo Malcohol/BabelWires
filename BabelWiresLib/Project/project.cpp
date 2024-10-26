@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <Common/types.hpp>
 
@@ -20,4 +20,4 @@ namespace babelwires {
     template <typename COMPOUND_FEATURE> SubFeaturesRange<COMPOUND_FEATURE> subfeatures(COMPOUND_FEATURE& container);
 } // namespace babelwires
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities_inl.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities_inl.hpp>

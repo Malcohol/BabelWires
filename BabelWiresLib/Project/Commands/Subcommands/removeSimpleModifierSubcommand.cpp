@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
 
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
-#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueFeatureHelper.hpp>
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>

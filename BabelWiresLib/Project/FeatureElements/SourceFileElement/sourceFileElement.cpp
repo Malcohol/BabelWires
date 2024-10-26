@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElement.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>

@@ -9,9 +9,9 @@
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 
-#include <BabelWiresLib/Features/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>

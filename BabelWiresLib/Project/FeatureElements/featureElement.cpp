@@ -8,9 +8,9 @@
  **/
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/modifyFeatureScope.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>

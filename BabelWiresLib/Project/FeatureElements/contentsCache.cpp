@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/ValueNames/valueNames.hpp>

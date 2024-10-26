@@ -14,7 +14,7 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/Types/Map/Commands/setMapCommand.hpp>
 #include <BabelWiresLib/Types/Map/Commands/setMapSourceTypeCommand.hpp>
@@ -25,7 +25,7 @@
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>

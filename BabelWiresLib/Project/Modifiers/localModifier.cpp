@@ -7,10 +7,10 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <Common/Log/userLogger.hpp>
 

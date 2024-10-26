@@ -1,6 +1,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 
 babelwires::ShortId testUtils::TestProcessorInputOutputType::getIntId() {

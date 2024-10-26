@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
  
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>

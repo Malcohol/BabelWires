@@ -1,16 +1,16 @@
 /**
- * A ValueTreeNode is a self-describing data-structure which stores the data in the model.
+ * A ValueTreeNode is the base class of nodes in the ValueTree.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/valueTreeChild.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeChild.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>

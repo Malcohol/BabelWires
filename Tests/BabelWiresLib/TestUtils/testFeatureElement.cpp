@@ -1,6 +1,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 
-#include <BabelWiresLib/Features/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 

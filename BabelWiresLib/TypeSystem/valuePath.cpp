@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/TypeSystem/valuePath.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 

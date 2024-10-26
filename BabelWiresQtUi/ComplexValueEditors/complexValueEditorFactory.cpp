@@ -13,8 +13,8 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data) {
     AccessModelScope scope(projectBridge);

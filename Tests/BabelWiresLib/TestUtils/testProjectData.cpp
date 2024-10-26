@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>

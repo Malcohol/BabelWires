@@ -63,12 +63,12 @@ SET( BABELWIRESLIB_SRCS
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
 	Processors/processorFactory.cpp
-	Features/valueTreeNode.cpp
-	Features/valueTreeChild.cpp
-	Features/valueTreeRoot.cpp
+	ValueTree/valueTreeNode.cpp
+	ValueTree/valueTreeChild.cpp
+	ValueTree/valueTreeRoot.cpp
+	ValueTree/valueFeatureHelper.cpp
 	Path/path.cpp
 	Path/pathStep.cpp
-	Features/valueFeatureHelper.cpp
 	Serialization/projectBundle.cpp
 	Project/Commands/activateOptionalCommand.cpp
 	Project/Commands/addElementCommand.cpp

@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/fileRowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/valueRowModel.hpp>
 
-#include <BabelWiresLib/Features/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>

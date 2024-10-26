@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorManager.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <Common/Log/userLogger.hpp>
 

@@ -1,5 +1,5 @@
 /**
- * A ValueTreeNode is a self-describing data-structure which stores the data in the model.
+ * A ValueTreeNode is the base class of nodes in the ValueTree.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -28,8 +28,7 @@ namespace babelwires {
     class ValueTreeRoot;
     class ValueTreeChild;
 
-    /// A feature is a self-describing data-structure which stores the data in the model.
-    /// Features are structured in a tree, which also defines ownership.
+    /// A ValueTreeNode is the base class of nodes in the ValueTree.
     class ValueTreeNode {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(ValueTreeNode);

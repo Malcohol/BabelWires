@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
