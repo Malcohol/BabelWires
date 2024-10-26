@@ -11,7 +11,7 @@
 #include <Common/types.hpp>
 #include <Common/multiKeyMap.hpp>
 
-#include <BabelWiresLib/Features/Path/pathStep.hpp>
+#include <BabelWiresLib/Path/pathStep.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 

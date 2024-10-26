@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/Path/path.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 
 namespace babelwires {
     class FeatureElement;

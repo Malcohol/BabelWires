@@ -5,9 +5,9 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Features/Path/path.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 
-#include <BabelWiresLib/Features/Path/pathStep.hpp>
+#include <BabelWiresLib/Path/pathStep.hpp>
 #include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>

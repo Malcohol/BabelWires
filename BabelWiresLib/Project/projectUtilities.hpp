@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectIds.hpp>
-#include <BabelWiresLib/Features/Path/path.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 
 namespace babelwires {
     struct UiPosition;

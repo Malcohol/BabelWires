@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/Path/pathStep.hpp>
+#include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <Common/Cloning/cloneable.hpp>
 #include <Common/Utilities/enumFlags.hpp>

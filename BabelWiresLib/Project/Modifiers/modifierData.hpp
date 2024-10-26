@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/Path/path.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 

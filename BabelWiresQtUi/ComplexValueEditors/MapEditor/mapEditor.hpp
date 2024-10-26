@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Features/Path/path.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 
 #include <BabelWiresLib/Project/projectIds.hpp>

@@ -8,7 +8,7 @@
  **/
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
-#include <BabelWiresLib/Features/Path/path.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>

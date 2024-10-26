@@ -8,7 +8,7 @@
 #include <BabelWiresLib/TypeSystem/valuePath.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/Path/path.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 namespace {

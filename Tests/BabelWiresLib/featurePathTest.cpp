@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/Path/path.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 
