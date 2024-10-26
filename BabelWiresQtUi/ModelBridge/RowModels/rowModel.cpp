@@ -16,7 +16,7 @@
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>

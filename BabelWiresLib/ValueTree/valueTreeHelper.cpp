@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/ValueTree/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>

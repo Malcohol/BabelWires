@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>

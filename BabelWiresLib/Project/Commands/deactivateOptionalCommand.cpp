@@ -9,7 +9,7 @@
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>

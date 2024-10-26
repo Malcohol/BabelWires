@@ -15,7 +15,7 @@
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setArraySizeCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
