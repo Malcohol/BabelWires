@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Features/feature.hpp>
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/childValueFeature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
@@ -51,30 +50,19 @@ bool babelwires::Feature::isChanged(Changes changes) const {
     return (m_changes & changes) != Changes::NothingChanged;
 }
 
-void babelwires::Feature::doClearChanges() {
+void babelwires::Feature::clearChanges() {
     m_changes = Changes::NothingChanged;
     for (auto&& child : subfeatures(*this)) {
         child->clearChanges();
     }
 }
 
-void babelwires::Feature::clearChanges() {
-    doClearChanges();
-    // I could do this here, but it makes the interface less intuitive.
-    assert((m_changes == Changes::NothingChanged) &&
-           "doClearChanges did not make a super-call to Feature::doClearChanges");
-}
-
 void babelwires::Feature::setToDefault() {
     doSetToDefault();
 }
 
-void babelwires::Feature::setToDefaultNonRecursive() {
-    doSetToDefaultNonRecursive();
-}
-
 std::size_t babelwires::Feature::getHash() const {
-    return doGetHash();
+    return hash::mixtureOf(m_typeRef, *doGetValue());
 }
 
 namespace {
@@ -89,12 +77,20 @@ namespace {
 
 babelwires::Feature* babelwires::Feature::getFeature(int i) {
     checkIndex(this, i);
-    return doGetFeature(i);
+    const auto it = m_children.find1(i);
+    if (it != m_children.end()) {
+        return it.getValue().get();
+    }
+    return nullptr;
 }
 
 const babelwires::Feature* babelwires::Feature::getFeature(int i) const {
     checkIndex(this, i);
-    return doGetFeature(i);
+    const auto it = m_children.find1(i);
+    if (it != m_children.end()) {
+        return it.getValue().get();
+    }
+    return nullptr;
 }
 
 void babelwires::Feature::setSubfeaturesToDefault() {
@@ -164,10 +160,6 @@ std::string babelwires::Feature::getKind() const {
     return getType().getKind();
 }
 
-void babelwires::Feature::doSetToDefaultNonRecursive() {
-    setToDefault();
-}
-
 const babelwires::TypeSystem& babelwires::Feature::getTypeSystem() const {
     const Feature* current = this;
     while (1) {
@@ -206,26 +198,6 @@ int babelwires::Feature::getChildIndexFromStep(const PathStep& step) const {
         return it.getKey1();
     }
     return -1;
-}
-
-babelwires::Feature* babelwires::Feature::doGetFeature(int i) {
-    const auto it = m_children.find1(i);
-    if (it != m_children.end()) {
-        return it.getValue().get();
-    }
-    return nullptr;
-}
-
-const babelwires::Feature* babelwires::Feature::doGetFeature(int i) const {
-    const auto it = m_children.find1(i);
-    if (it != m_children.end()) {
-        return it.getValue().get();
-    }
-    return nullptr;
-}
-
-std::size_t babelwires::Feature::doGetHash() const {
-    return hash::mixtureOf(m_typeRef, *doGetValue());
 }
 
 void babelwires::Feature::synchronizeSubfeatures() {

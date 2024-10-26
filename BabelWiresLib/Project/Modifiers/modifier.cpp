@@ -60,7 +60,7 @@ void babelwires::Modifier::unapply(Feature* container) const {
     try {
         Feature& f = m_data->m_pathToFeature.follow(*container);
         // When undone, array size modifiers should not reset the remaining children.
-        f.setToDefaultNonRecursive();
+        f.setToDefault();
     } catch (const BaseException& e) {
         assert(!"It should always be possible to unapply a modifier.");
     }

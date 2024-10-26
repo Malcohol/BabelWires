@@ -44,9 +44,6 @@ namespace babelwires {
         /// Set to the default value.
         void setToDefault();
 
-        /// Set to this to default but, in the case of compound features, leave remaining subfeatures untouched.
-        void setToDefaultNonRecursive();
-
         /// Describes the way a feature may have changed.
         enum class Changes : unsigned int {
             NothingChanged = 0b0000,
@@ -66,12 +63,12 @@ namespace babelwires {
         std::size_t getHash() const;
 
       public:
-        virtual int getNumFeatures() const;
+        int getNumFeatures() const;
 
         Feature* getFeature(int i);
         const Feature* getFeature(int i) const;
 
-        virtual PathStep getStepToChild(const Feature* child) const;
+        PathStep getStepToChild(const Feature* child) const;
 
         /// Should return nullptr if the step does not lead to a child.
         Feature* tryGetChildFromStep(const PathStep& step);
@@ -87,7 +84,7 @@ namespace babelwires {
 
         /// Returns -1 if not found.
         /// Sets the descriminator of identifier on a match.
-        virtual int getChildIndexFromStep(const PathStep& step) const;
+        int getChildIndexFromStep(const PathStep& step) const;
 
       public:
         /// Get the TypeRef which describes the type of the value.
@@ -126,26 +123,11 @@ namespace babelwires {
         /// Set the isChanged flag and that of all parents.
         void setChanged(Changes changes);
 
-        /// Protected implementation of setToDefault.
-        virtual void doSetToDefault() = 0;
-
-        /// Protected implementation of setToDefaultNonRecursive.
-        virtual void doSetToDefaultNonRecursive();
-
-        /// Protected implementation of getHash.
-        virtual std::size_t doGetHash() const;
-
-        /// Clears the changes of this class and all children.
-        virtual void doClearChanges();
-
         /// Call setToDefault on each subfeature.
         void setSubfeaturesToDefault();
 
       protected:
-        virtual Feature* doGetFeature(int i);
-        virtual const Feature* doGetFeature(int i) const;
-
-      protected:
+        virtual void doSetToDefault() = 0;
         virtual const ValueHolder& doGetValue() const = 0;
         virtual void doSetValue(const ValueHolder& newValue) = 0;
 
