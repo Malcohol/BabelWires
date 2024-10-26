@@ -8,7 +8,6 @@ SET( LIB_TEST_UTILS_SRCS
     testProjectData.cpp
     testRecordType.cpp
     testRecordWithVariantsType.cpp
-    testRootFeature.cpp
     testValueAndType.cpp
     testTypeConstructor.cpp
    )

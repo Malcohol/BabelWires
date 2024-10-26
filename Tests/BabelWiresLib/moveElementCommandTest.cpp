@@ -4,6 +4,7 @@
 
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Types/Int/intValue.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

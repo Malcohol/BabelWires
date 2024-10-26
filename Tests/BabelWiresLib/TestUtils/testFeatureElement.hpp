@@ -3,8 +3,6 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testRootFeature.hpp>
-
 // TODO: Need to preserve SimulateFailure and SimulateRecovery if this gets replaced !!!
 // See Commented code in FeatureElementTest.
 
