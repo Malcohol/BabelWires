@@ -59,10 +59,6 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     const auto* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
     ASSERT_NE(targetElement, nullptr);
 
-    const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::Feature>();
-    };
-
     const auto checkModifiers = [&testEnvironment, element, targetElement, pathToArrayEntry](bool isCommandExecuted) {
         const babelwires::Modifier* inputConnection =
             element->findModifier(pathToArrayEntry);
@@ -89,9 +85,9 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
         }
     };
 
-    ASSERT_NE(getArrayFeature(), nullptr);
+    ASSERT_NE(element->getInputFeature(), nullptr);
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), initialArraySize);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), initialArraySize);
 
     babelwires::RemoveModifierCommand command("Test command", elementId,
                                               testUtils::TestArrayElementData::getPathToArray());
@@ -103,19 +99,19 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), initialArraySize);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), initialArraySize);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(true);
 }
 
@@ -170,7 +166,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
 
-    const babelwires::Feature* const valueFeature = element->getInputFeature()->as<babelwires::Feature>();
+    const babelwires::Feature* const valueFeature = element->getInputFeature();
     ASSERT_NE(valueFeature, nullptr);
     const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
 

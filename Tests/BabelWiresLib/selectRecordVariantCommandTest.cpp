@@ -34,15 +34,12 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
         testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
     ASSERT_NE(targetElement, nullptr);
 
-    const auto getInputValueFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::Feature>();
-    };
     const auto getSelectedTag = [](const babelwires::Feature* valueFeature) {
         const auto& type = valueFeature->getType().is<testUtils::TestRecordWithVariantsType>();
         return type.getSelectedTag(valueFeature->getValue());
     };
 
-    ASSERT_NE(getInputValueFeature(), nullptr);
+    ASSERT_NE(element->getInputFeature(), nullptr);
 
     {
         babelwires::SelectRecordVariantModifierData selectRecordVariantData;
@@ -104,25 +101,25 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
                                                    testUtils::TestRecordWithVariantsType::getTagBId());
 
     EXPECT_EQ(command.getName(), "Test command");
-    EXPECT_EQ(getSelectedTag(getInputValueFeature()), testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_EQ(getSelectedTag(element->getInputFeature()), testUtils::TestRecordWithVariantsType::getTagAId());
     checkModifiers(false);
 
     testEnvironment.m_project.process();
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_EQ(getSelectedTag(getInputValueFeature()), testUtils::TestRecordWithVariantsType::getTagBId());
+    EXPECT_EQ(getSelectedTag(element->getInputFeature()), testUtils::TestRecordWithVariantsType::getTagBId());
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getSelectedTag(getInputValueFeature()), testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_EQ(getSelectedTag(element->getInputFeature()), testUtils::TestRecordWithVariantsType::getTagAId());
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getSelectedTag(getInputValueFeature()), testUtils::TestRecordWithVariantsType::getTagBId());
+    EXPECT_EQ(getSelectedTag(element->getInputFeature()), testUtils::TestRecordWithVariantsType::getTagBId());
     checkModifiers(true);
 }
 

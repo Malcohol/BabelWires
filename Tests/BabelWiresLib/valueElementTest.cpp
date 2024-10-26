@@ -40,11 +40,8 @@ TEST(ValueElementTest, simpleType) {
     ASSERT_NE(outputFeature, nullptr);
     EXPECT_EQ(inputFeature, outputFeature);
 
-    const babelwires::Feature* const valueFeature = inputFeature->as<babelwires::Feature>();
-    ASSERT_TRUE(valueFeature);
-
-    EXPECT_EQ(valueFeature->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
-    const babelwires::ValueHolder value = valueFeature->getValue();
+    EXPECT_EQ(inputFeature->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
+    const babelwires::ValueHolder value = inputFeature->getValue();
     const babelwires::IntValue* intValue = value->as<babelwires::IntValue>();
     ASSERT_NE(intValue, nullptr);
     EXPECT_EQ(intValue->get(), -4);

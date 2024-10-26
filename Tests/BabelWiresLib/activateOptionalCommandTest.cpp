@@ -22,7 +22,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
         testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::Feature* const valueFeature = element->getInputFeature()->as<babelwires::Feature>();
+    const babelwires::Feature* const valueFeature = element->getInputFeature();
     ASSERT_NE(valueFeature, nullptr);
     const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
 
@@ -142,7 +142,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
 
     const babelwires::FeaturePath pathToValue;
 
-    auto* const inputRecord = element->getInputFeatureNonConst(pathToValue)->as<babelwires::Feature>();
+    auto* const inputRecord = element->getInputFeatureNonConst(pathToValue);
     ASSERT_NE(inputRecord, nullptr);
 
     // Active the optional first.

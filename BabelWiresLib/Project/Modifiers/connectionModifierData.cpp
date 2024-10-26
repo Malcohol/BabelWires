@@ -53,18 +53,7 @@ void babelwires::ConnectionModifierData::apply(const Feature* sourceFeature, Fea
         return;
     }
 
-    auto targetValueFeature = targetFeature->as<babelwires::Feature>();
-    if (!targetValueFeature) {
-        throw babelwires::ModelException() << "Cannot modify a non-value field";
-    }
-
-    auto sourceValueFeature = sourceFeature->as<const babelwires::Feature>();
-    if (!sourceValueFeature) {
-        throw babelwires::ModelException()
-            << "Cannot apply from the non-value field at " << m_pathToSourceFeature << " in element id=" << m_sourceId;
-    }
-
-    targetValueFeature->assign(*sourceValueFeature);
+    targetFeature->assign(*sourceFeature);
 }
 
 void babelwires::ConnectionModifierData::serializeContents(Serializer& serializer) const {

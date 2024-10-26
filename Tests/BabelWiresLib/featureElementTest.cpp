@@ -124,7 +124,7 @@ TEST(FeatureElementTest, modifiers) {
     }
 
     const auto* const testRecordFeature =
-        featureElement->getInputFeature()->as<babelwires::Feature>();
+        featureElement->getInputFeature();
     ASSERT_TRUE(testRecordFeature);
 
     testUtils::TestComplexRecordType::ConstInstance testRecord(*testRecordFeature);

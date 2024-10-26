@@ -54,10 +54,6 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
     const auto* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
     ASSERT_NE(targetElement, nullptr);
 
-    const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::Feature>();
-    };
-
     const auto checkModifiers = [&testEnvironment, element, targetElement]() {
         const babelwires::Modifier* inputConnection =
             element->findModifier(testUtils::TestArrayElementData::getPathToArray_1());
@@ -77,9 +73,9 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
         EXPECT_EQ(numModifiersAtTarget, 1);
     };
 
-    ASSERT_NE(getArrayFeature(), nullptr);
+    ASSERT_NE(element->getInputFeature(), nullptr);
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 3);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 3);
     checkModifiers();
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
@@ -92,19 +88,19 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 5);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 5);
     checkModifiers();
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 3);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 3);
     checkModifiers();
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 5);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 5);
     checkModifiers();
 }
 
@@ -145,10 +141,6 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
     const auto* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
     ASSERT_NE(targetElement, nullptr);
 
-    const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::Feature>();
-    };
-
     const auto checkModifiers = [&testEnvironment, element, targetElement](bool isCommandExecuted) {
         const babelwires::Modifier* inputConnection =
             element->findModifier(testUtils::TestArrayElementData::getPathToArray_1());
@@ -175,9 +167,9 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
         }
     };
 
-    ASSERT_NE(getArrayFeature(), nullptr);
+    ASSERT_NE(element->getInputFeature(), nullptr);
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 3);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 3);
     checkModifiers(false);
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
@@ -190,19 +182,19 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 1);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 1);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 3);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 3);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), 1);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 1);
     checkModifiers(true);
 }
 
@@ -216,10 +208,6 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
     const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
-    const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::Feature>();
-    };
-
     const auto checkModifiers = [&testEnvironment, element](bool isCommandExecuted) {
         const babelwires::Modifier* arrayModifier =
             element->findModifier(testUtils::TestArrayElementData::getPathToArray());
@@ -230,9 +218,9 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
         }
     };
 
-    ASSERT_NE(getArrayFeature(), nullptr);
+    ASSERT_NE(element->getInputFeature(), nullptr);
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(false);
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
@@ -246,19 +234,19 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
     checkModifiers(true);
 }
 
@@ -292,17 +280,13 @@ TEST(SetArraySizeCommandTest, failSafelyOutOfRange) {
     const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
-    const auto getArrayFeature = [element]() {
-        return element->getInputFeature()->as<babelwires::Feature>();
-    };
-
-    ASSERT_NE(getArrayFeature(), nullptr);
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    ASSERT_NE(element->getInputFeature(), nullptr);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
                                             testUtils::TestArrayElementData::getPathToArray(), 12);
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_EQ(getArrayFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 }
