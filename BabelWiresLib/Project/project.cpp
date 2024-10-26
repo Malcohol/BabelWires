@@ -153,7 +153,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
-            auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
+            auto* const arrayFeature = featureAtPath->as<Feature>();
             assert(arrayFeature && "Path should lead to a compound");
             assert(arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>());
 
@@ -199,7 +199,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
-            auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
+            auto* const arrayFeature = featureAtPath->as<Feature>();
             assert(arrayFeature && "Path should lead to a compound");
             assert(arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>());
 

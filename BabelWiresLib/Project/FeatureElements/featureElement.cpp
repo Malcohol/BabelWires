@@ -310,7 +310,7 @@ namespace {
     babelwires::Feature* tryFollowPathToValue(babelwires::Feature* start, const babelwires::FeaturePath& p,
                                               int index) {
         if ((index < p.getNumSteps()) && !start->as<babelwires::SimpleValueFeature>()) {
-            if (auto* compound = start->as<babelwires::CompoundFeature>()) {
+            if (auto* compound = start) {
                 babelwires::Feature& child = compound->getChildFromStep(p.getStep(index));
                 return tryFollowPathToValue(&child, p, index + 1);
             } else {
@@ -329,14 +329,15 @@ namespace {
         }
     }
 
-    babelwires::SimpleValueFeature* exploreForCompoundRootValueFeature(babelwires::CompoundFeature* compound) {
+    babelwires::SimpleValueFeature* exploreForCompoundRootValueFeature(babelwires::Feature* compound) {
+        // TODO: Out of date.
         for (auto* const subFeature : babelwires::subfeatures(compound)) {
             if (auto* const simpleValueFeature = subFeature->as<babelwires::SimpleValueFeature>()) {
                 if (simpleValueFeature->getType().as<babelwires::CompoundType>()) {
                     return simpleValueFeature;
                 }
-            } else if (auto* const compoundFeature = subFeature->as<babelwires::CompoundFeature>()) {
-                if (auto* const simpleValueFeature = exploreForCompoundRootValueFeature(compoundFeature)) {
+            } else {
+                if (auto* const simpleValueFeature = exploreForCompoundRootValueFeature(subFeature)) {
                     return simpleValueFeature;
                 }
             }
@@ -370,11 +371,11 @@ void babelwires::FeatureElement::modifyFeatureAt(Feature* inputFeature, const Fe
         if (valueFeature->getType().as<CompoundType>()) {
             rootValueFeature = valueFeature;
         }
-    } else if (CompoundFeature* compoundNonValue = target->as<CompoundFeature>()) {
+    } else {
         // If a modification is being made _above_ a compound root value feature, we also need to back it up.
         // This is necessary when deserializing nodes with modifications to sub-values, or when the deletion of
         // a node is undone.
-        rootValueFeature = exploreForCompoundRootValueFeature(compoundNonValue);
+        rootValueFeature = exploreForCompoundRootValueFeature(target);
     }
 
     if (rootValueFeature) {

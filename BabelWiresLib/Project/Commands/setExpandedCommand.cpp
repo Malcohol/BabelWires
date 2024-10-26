@@ -1,5 +1,5 @@
 /**
- * The command which expands or collapses a CompoundFeature of a FeatureElement.
+ * The command which expands or collapses a Feature of a FeatureElement.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -10,7 +10,6 @@
 #include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Features/compoundFeature.hpp>
 
 #include <cassert>
 
@@ -31,13 +30,13 @@ bool babelwires::SetExpandedCommand::initialize(const Project& project) {
         return false;
     }
 
-    const CompoundFeature* compoundFeature = nullptr;
+    const Feature* compoundFeature = nullptr;
     if (const Feature* feature = element->getInputFeature()) {
-        compoundFeature = m_pathToCompound.tryFollow(*feature)->as<const CompoundFeature>();
+        compoundFeature = m_pathToCompound.tryFollow(*feature)->as<const Feature>();
     }
     if (!compoundFeature) {
         if (const Feature* feature = element->getOutputFeature()) {
-            compoundFeature = m_pathToCompound.tryFollow(*feature)->as<const CompoundFeature>();
+            compoundFeature = m_pathToCompound.tryFollow(*feature)->as<const Feature>();
         }
     }
     if (!compoundFeature) {

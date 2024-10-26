@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 
 #include <BabelWiresLib/Features/Path/pathStep.hpp>
-#include <BabelWiresLib/Features/compoundFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 
 #include <Common/Hash/hash.hpp>
@@ -25,7 +25,7 @@ babelwires::FeaturePath::FeaturePath(const Feature* feature) {
     std::vector<PathStep> steps;
 
     const Feature* current = feature;
-    const CompoundFeature* parent = current->getOwner();
+    const Feature* parent = current->getOwner();
     while (parent) {
         steps.push_back(parent->getStepToChild(current));
         assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
@@ -106,7 +106,7 @@ namespace {
 
     template <typename T> T& followPath(T& start, const babelwires::FeaturePath& p, int& index) {
         if (index < p.getNumSteps()) {
-            if (auto* compound = start.template as<babelwires::CompoundFeature>()) {
+            if (auto* compound = start.template as<babelwires::Feature>()) {
                 T& child = compound->getChildFromStep(p.getStep(index));
                 ++index;
                 return followPath(child, p, index);
@@ -142,7 +142,7 @@ namespace {
 
     template <typename T> T* tryFollowPath(T* start, const babelwires::FeaturePath& p, int index = 0) {
         if (index < p.getNumSteps()) {
-            if (auto* compound = start->template as<babelwires::CompoundFeature>()) {
+            if (auto* compound = start->template as<babelwires::Feature>()) {
                 T* child = compound->tryGetChildFromStep(p.getStep(index));
                 return tryFollowPath(child, p, index + 1);
             } else {

@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/compoundFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
@@ -21,7 +21,7 @@ namespace babelwires {
     class ChildValueFeature;
 
     /// A ValueFeature is a feature which provides access to a value.
-    class ValueFeature : public CompoundFeature {
+    class ValueFeature : public Feature {
       public:
         /// Construct a ValueFeature which carries values of the given type.
         ValueFeature(TypeRef typeRef);

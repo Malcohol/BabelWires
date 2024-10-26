@@ -21,9 +21,6 @@
 #include <vector>
 
 namespace babelwires {
-
-    class CompoundFeature;
-
     /// A feature is a self-describing data-structure which stores the data in the model.
     /// Features are structured in a tree, which also defines ownership.
     class Feature {
@@ -33,8 +30,8 @@ namespace babelwires {
         Feature() = default;
         virtual ~Feature();
 
-        void setOwner(CompoundFeature* owner);
-        const CompoundFeature* getOwner() const;
+        void setOwner(Feature* owner);
+        const Feature* getOwner() const;
 
         /// Set to the default value.
         void setToDefault();
@@ -73,6 +70,30 @@ namespace babelwires {
         /// The system assumes that styles do not change over the lifetime of a feature.
         virtual Style getStyle() const;
 
+      public:
+        virtual int getNumFeatures() const = 0;
+
+        Feature* getFeature(int i);
+        const Feature* getFeature(int i) const;
+
+        virtual PathStep getStepToChild(const Feature* child) const = 0;
+
+        /// Should return nullptr if the step does not lead to a child.
+        Feature* tryGetChildFromStep(const PathStep& step);
+
+        /// Should return nullptr if the step does not lead to a child.
+        const Feature* tryGetChildFromStep(const PathStep& step) const;
+
+        /// Throws a ModelException if the step does not lead to a child.
+        Feature& getChildFromStep(const PathStep& step);
+
+        /// Throws a ModelException if the step does not lead to a child.
+        const Feature& getChildFromStep(const PathStep& step) const;
+
+        /// Returns -1 if not found.
+        /// Sets the descriminator of identifier on a match.
+        virtual int getChildIndexFromStep(const PathStep& step) const = 0;
+
       protected:
         /// Set the isChanged flag and that of all parents.
         void setChanged(Changes changes);
@@ -86,17 +107,25 @@ namespace babelwires {
         /// Protected implementation of getHash.
         virtual std::size_t doGetHash() const = 0;
 
-        /// Protected implementation which sets this class' changes to NothingChanged.
+        /// Clears the changes of this class and all children.
         virtual void doClearChanges();
 
-        CompoundFeature* getOwnerNonConst();
+        Feature* getOwnerNonConst();
+
+        /// Call setToDefault on each subfeature.
+        void setSubfeaturesToDefault();
+
+      protected:
+        virtual Feature* doGetFeature(int i) = 0;
+        virtual const Feature* doGetFeature(int i) const = 0;
+
       private:
         // For now.
         Feature(const Feature&) = delete;
         Feature& operator=(const Feature&) = delete;
 
       private:
-        CompoundFeature* m_owner = nullptr;
+        Feature* m_owner = nullptr;
         Changes m_changes = Changes::SomethingChanged;
     };
 

@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/compoundFeature.hpp>
+#include <BabelWiresLib/Features/feature.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/ValueNames/valueNames.hpp>
@@ -61,7 +61,7 @@ namespace babelwires {
 
             /// Sets some compound details and returns whether the compound is expanded or not.
             /// indentInOut will be set to the indent level of children.
-            bool setAndGetCompoundIsExpanded(const babelwires::CompoundFeature* compound, const FeaturePath& path,
+            bool setAndGetCompoundIsExpanded(const babelwires::Feature* compound, const FeaturePath& path,
                                              bool hasChildren, std::uint8_t& indentInOut) {
                 assert(compound);
                 const Feature::Style style = compound->getStyle();
@@ -85,12 +85,12 @@ namespace babelwires {
             void addInputFeatureToCache(std::string label, const babelwires::Feature* f, const FeaturePath& path,
                                         std::uint8_t depth, std::uint8_t indent) {
                 m_rows.emplace_back(ContentsCacheEntry(std::move(label), f, nullptr, path, depth, indent));
-                if (const auto* compound = f->as<const babelwires::CompoundFeature>()) {
+                if (const auto* compound = f->as<const babelwires::Feature>()) {
                     addInputCompoundFeatureToCache(compound, path, depth, indent);
                 }
             }
 
-            void addInputCompoundFeatureToCache(const babelwires::CompoundFeature* compound, const FeaturePath& path,
+            void addInputCompoundFeatureToCache(const babelwires::Feature* compound, const FeaturePath& path,
                                                 std::uint8_t depth, std::uint8_t indent) {
                 if (setAndGetCompoundIsExpanded(compound, path, compound->getNumFeatures(), indent)) {
                     ++depth;
@@ -110,12 +110,12 @@ namespace babelwires {
             void addOutputFeatureToCache(std::string label, const babelwires::Feature* f, const FeaturePath& path,
                                          std::uint8_t depth, std::uint8_t indent) {
                 m_rows.emplace_back(ContentsCacheEntry(std::move(label), nullptr, f, path, depth, indent));
-                if (const auto* compound = f->as<const babelwires::CompoundFeature>()) {
+                if (const auto* compound = f->as<const babelwires::Feature>()) {
                     addOutputCompoundFeatureToCache(compound, path, depth, indent);
                 }
             }
 
-            void addOutputCompoundFeatureToCache(const babelwires::CompoundFeature* compound, const FeaturePath& path,
+            void addOutputCompoundFeatureToCache(const babelwires::Feature* compound, const FeaturePath& path,
                                                  std::uint8_t depth, std::uint8_t indent) {
                 if (setAndGetCompoundIsExpanded(compound, path, compound->getNumFeatures(), indent)) {
                     ++depth;
@@ -136,14 +136,14 @@ namespace babelwires {
                                    const FeaturePath& path, std::uint8_t depth, std::uint8_t indent) {
                 m_rows.emplace_back(
                     ContentsCacheEntry(std::move(label), inputFeature, outputFeature, path, depth, indent));
-                if (const auto* const inputCompound = inputFeature->as<const babelwires::CompoundFeature>()) {
-                    const auto* const outputCompound = outputFeature->as<const babelwires::CompoundFeature>();
+                if (const auto* const inputCompound = inputFeature->as<const babelwires::Feature>()) {
+                    const auto* const outputCompound = outputFeature->as<const babelwires::Feature>();
                     assert(outputCompound && "If the input is a compound, the output must be a compound too");
                     addCompoundContentsToCache(inputCompound, outputCompound, path, depth, indent);
                 }
             }
 
-            void addCompoundContentsToCache(const CompoundFeature* inputFeature, const CompoundFeature* outputFeature,
+            void addCompoundContentsToCache(const Feature* inputFeature, const Feature* outputFeature,
                                             const FeaturePath& path, std::uint8_t depth, std::uint8_t indent) {
                 // Assume expandability is common to input and output feature.
                 if (setAndGetCompoundIsExpanded(

@@ -17,7 +17,6 @@
 namespace babelwires {
 
     class Feature;
-    class CompoundFeature;
     class EditTree;
     class ContentsCache;
 

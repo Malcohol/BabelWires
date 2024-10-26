@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 
-std::tuple<const babelwires::CompoundFeature*, unsigned int, babelwires::Range<unsigned int>, unsigned int>
+std::tuple<const babelwires::Feature*, unsigned int, babelwires::Range<unsigned int>, unsigned int>
 babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const Feature* f) {
     if (!f) {
         return {};
@@ -27,7 +27,7 @@ babelwires::ValueFeatureHelper::getInfoFromArrayFeature(const Feature* f) {
     return {};
 }
 
-std::tuple<const babelwires::CompoundFeature*, std::map<babelwires::ShortId, bool>>
+std::tuple<const babelwires::Feature*, std::map<babelwires::ShortId, bool>>
 babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feature* f) {
     if (!f) {
         return {};
@@ -44,7 +44,7 @@ babelwires::ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(const Feat
     return {};
 }
 
-std::tuple<const babelwires::CompoundFeature*, bool, std::vector<babelwires::ShortId>> babelwires::ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(const Feature* f, std::optional<ShortId> tagId) {
+std::tuple<const babelwires::Feature*, bool, std::vector<babelwires::ShortId>> babelwires::ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(const Feature* f, std::optional<ShortId> tagId) {
     if (!f) { 
         return {};
     }

@@ -7,20 +7,20 @@
  **/
 #include <BabelWiresLib/Features/feature.hpp>
 
+#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/compoundFeature.hpp>
 
 babelwires::Feature::~Feature() {}
 
-void babelwires::Feature::setOwner(CompoundFeature* owner) {
+void babelwires::Feature::setOwner(Feature* owner) {
     m_owner = owner;
 }
 
-const babelwires::CompoundFeature* babelwires::Feature::getOwner() const {
+const babelwires::Feature* babelwires::Feature::getOwner() const {
     return m_owner;
 }
 
-babelwires::CompoundFeature* babelwires::Feature::getOwnerNonConst() {
+babelwires::Feature* babelwires::Feature::getOwnerNonConst() {
     return m_owner;
 }
 
@@ -41,6 +41,9 @@ bool babelwires::Feature::isChanged(Changes changes) const {
 
 void babelwires::Feature::doClearChanges() {
     m_changes = Changes::NothingChanged;
+    for (auto&& child : subfeatures(*this)) {
+        child->clearChanges();
+    }
 }
 
 void babelwires::Feature::clearChanges() {
@@ -60,6 +63,70 @@ void babelwires::Feature::setToDefaultNonRecursive() {
 
 std::size_t babelwires::Feature::getHash() const {
     return doGetHash();
+}
+
+namespace {
+    void checkIndex(const babelwires::Feature* f, int i) {
+        if ((i < 0) || (i >= f->getNumFeatures())) {
+            throw babelwires::ModelException()
+                << "Compound feature with " << f->getNumFeatures() << " children queried by index " << i;
+        }
+    }
+
+} // namespace
+
+babelwires::Feature* babelwires::Feature::getFeature(int i) {
+    checkIndex(this, i);
+    return doGetFeature(i);
+}
+
+const babelwires::Feature* babelwires::Feature::getFeature(int i) const {
+    checkIndex(this, i);
+    return doGetFeature(i);
+}
+
+void babelwires::Feature::setSubfeaturesToDefault() {
+    for (auto&& child : subfeatures(*this)) {
+        child->setToDefault();
+    }
+}
+
+namespace {
+
+    template <typename COMPOUND>
+    typename babelwires::CopyConst<COMPOUND, babelwires::Feature>::type*
+    tryGetChildFromStepT(COMPOUND* compound, const babelwires::PathStep& step) {
+        const int childIndex = compound->getChildIndexFromStep(step);
+        if (childIndex >= 0) {
+            return compound->getFeature(childIndex);
+        }
+        return nullptr;
+    }
+
+} // namespace
+
+babelwires::Feature* babelwires::Feature::tryGetChildFromStep(const PathStep& step) {
+    return tryGetChildFromStepT(this, step);
+}
+
+const babelwires::Feature* babelwires::Feature::tryGetChildFromStep(const PathStep& step) const {
+    return tryGetChildFromStepT(this, step);
+}
+
+babelwires::Feature& babelwires::Feature::getChildFromStep(const PathStep& step) {
+    if (Feature* f = tryGetChildFromStep(step)) {
+        return *f;
+    } else {
+        throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
+    }
+}
+
+const babelwires::Feature& babelwires::Feature::getChildFromStep(const PathStep& step) const {
+    if (const Feature* f = tryGetChildFromStep(step)) {
+        return *f;
+    } else {
+        throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
+    }
 }
 
 babelwires::Feature::Style babelwires::Feature::getStyle() const {
