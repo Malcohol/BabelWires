@@ -3,6 +3,7 @@
 #include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -13,7 +14,6 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
@@ -69,11 +69,11 @@ TEST(ProjectTest, addGetAndRemoveElement) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
 
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     EXPECT_NE(element, nullptr);
-    EXPECT_NE(element->as<testUtils::TestFeatureElement>(), nullptr);
+    EXPECT_NE(element->as<babelwires::ValueElement>(), nullptr);
     EXPECT_TRUE(element->isChanged(babelwires::FeatureElement::Changes::FeatureElementIsNew));
 
     testEnvironment.m_project.removeElement(elementId);
@@ -326,15 +326,14 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 TEST(ProjectTest, uiProperties) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData testFeatureData;
+    testUtils::TestComplexRecordElementData testFeatureData;
     testFeatureData.m_uiData.m_uiPosition.m_x = 8;
     testFeatureData.m_uiData.m_uiPosition.m_y = 2;
     testFeatureData.m_uiData.m_uiSize.m_width = 77;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testFeatureData);
 
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
     EXPECT_EQ(element->getUiPosition().m_x, 8);
@@ -357,22 +356,20 @@ TEST(ProjectTest, elementIds) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
     EXPECT_NE(elementId, babelwires::INVALID_ELEMENT_ID);
     ASSERT_NE(elementId, 3);
 
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
-    testUtils::TestFeatureElementData elementData;
+    testUtils::TestComplexRecordElementData elementData;
     elementData.m_id = 3;
 
     const babelwires::ElementId elementId1 = testEnvironment.m_project.addFeatureElement(elementData);
     EXPECT_EQ(elementId1, 3);
 
-    const testUtils::TestFeatureElement* element1 =
-        testEnvironment.m_project.getFeatureElement(elementId1)->as<testUtils::TestFeatureElement>();
+    const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
     ASSERT_NE(element1, nullptr);
     EXPECT_EQ(element1->getElementData().m_id, elementId1);
     EXPECT_NE(element, element1);
@@ -381,8 +378,7 @@ TEST(ProjectTest, elementIds) {
     EXPECT_NE(elementId2, babelwires::INVALID_ELEMENT_ID);
     EXPECT_NE(elementId2, elementId1);
 
-    const testUtils::TestFeatureElement* element2 =
-        testEnvironment.m_project.getFeatureElement(elementId2)->as<testUtils::TestFeatureElement>();
+    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
     EXPECT_NE(element2, nullptr);
     EXPECT_NE(element1, element2);
 }
@@ -404,14 +400,11 @@ TEST(ProjectTest, reloadSource) {
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getOutputFeature(), nullptr);
 
-    auto getIntInElement =
-        [element]() {
-            testUtils::TestSimpleRecordType::ConstInstance instance(element->getOutputFeature()
-                                                                        ->is<babelwires::ValueFeature>()
-                                                                        .getFeature(0)
-                                                                        ->is<babelwires::ValueFeature>());
-            return instance.getintR0().get();
-        };
+    auto getIntInElement = [element]() {
+        testUtils::TestSimpleRecordType::ConstInstance instance(
+            element->getOutputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
+        return instance.getintR0().get();
+    };
 
     EXPECT_EQ(getIntInElement(), 14);
 
@@ -448,8 +441,11 @@ TEST(ProjectTest, saveTarget) {
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getInputFeature(), nullptr);
 
-    testUtils::TestSimpleRecordType::Instance instance(element->getInputFeatureNonConst(babelwires::FeaturePath())->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
-    
+    testUtils::TestSimpleRecordType::Instance instance(element->getInputFeatureNonConst(babelwires::FeaturePath())
+                                                           ->is<babelwires::ValueFeature>()
+                                                           .getFeature(0)
+                                                           ->is<babelwires::ValueFeature>());
+
     instance.getintR0().set(47);
 
     testEnvironment.m_project.tryToSaveTarget(elementId);
@@ -503,7 +499,8 @@ TEST(ProjectTest, process) {
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
-    testUtils::TestSimpleRecordType::ConstInstance targetInput(targetElement->getInputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
+    testUtils::TestSimpleRecordType::ConstInstance targetInput(
+        targetElement->getInputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
     // 4rd array entry, where they count up from the input value (3).
     EXPECT_EQ(targetInput.getintR0().get(), 6);
 
@@ -545,12 +542,11 @@ TEST(ProjectTest, process) {
 TEST(ProjectTest, dependencyLoop) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId1 =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const babelwires::ElementId elementId2 =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const babelwires::ElementId elementId3 =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    testUtils::TestComplexRecordElementData elementData;
+
+    const babelwires::ElementId elementId1 = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId2 = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId3 = testEnvironment.m_project.addFeatureElement(elementData);
 
     const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
     const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
@@ -560,16 +556,16 @@ TEST(ProjectTest, dependencyLoop) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId2;
-        modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId3;
-        modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId2, modData);
     }
 
@@ -584,9 +580,9 @@ TEST(ProjectTest, dependencyLoop) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId1;
-        modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId3, modData);
     }
 
@@ -599,7 +595,7 @@ TEST(ProjectTest, dependencyLoop) {
     EXPECT_TRUE(element2->isInDependencyLoop());
     EXPECT_TRUE(element3->isInDependencyLoop());
 
-    testEnvironment.m_project.removeModifier(elementId2, testUtils::TestRootFeature::s_pathToInt2);
+    testEnvironment.m_project.removeModifier(elementId2, elementData.getPathToRecordInt0());
     testEnvironment.m_project.process();
 
     EXPECT_FALSE(element1->isFailed());
@@ -614,14 +610,12 @@ TEST(ProjectTest, dependencyLoop) {
 TEST(ProjectTest, dependencyLoopAndProcessing) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId1 =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const babelwires::ElementId elementId2 =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const babelwires::ElementId elementId3 =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
-    const babelwires::ElementId elementId4 =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    testUtils::TestComplexRecordElementData elementData;
+
+    const babelwires::ElementId elementId1 = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId2 = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId3 = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId4 = testEnvironment.m_project.addFeatureElement(elementData);
 
     const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
     const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
@@ -632,16 +626,16 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId2;
-        modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId4;
-        modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId3, modData);
     }
 
@@ -658,14 +652,14 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId1;
-        modData.m_pathToSourceFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId2, modData);
     }
     {
         babelwires::ValueAssignmentData modData(babelwires::IntValue(16));
-        modData.m_pathToFeature = testUtils::TestRootFeature::s_pathToInt2;
+        modData.m_pathToFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId4, modData);
     }
 
@@ -680,10 +674,11 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     EXPECT_FALSE(element3->isInDependencyLoop());
     EXPECT_FALSE(element4->isInDependencyLoop());
 
-    ASSERT_NE(element3->getOutputFeature()->as<testUtils::TestRootFeature>(), nullptr);
-    EXPECT_EQ(element3->getOutputFeature()->as<testUtils::TestRootFeature>()->m_intFeature2->get(), 16);
+    ASSERT_NE(element3->getOutputFeature(), nullptr);
+    testUtils::TestComplexRecordType::ConstInstance instance(element3->getOutputFeature()->is<babelwires::ValueFeature>());
+    EXPECT_EQ(instance.getintR0().get(), 16);
 
-    testEnvironment.m_project.removeModifier(elementId2, testUtils::TestRootFeature::s_pathToInt2);
+    testEnvironment.m_project.removeModifier(elementId2, elementData.getPathToRecordInt0());
     testEnvironment.m_project.process();
 
     EXPECT_FALSE(element1->isFailed());
@@ -722,7 +717,7 @@ TEST(ProjectTest, updateWithAvailableIds) {
     EXPECT_NE(idsToCheck1[2], idsToCheck1[0]);
 
     for (int i = 0; i < 3; ++i) {
-        testUtils::TestFeatureElementData data;
+        testUtils::TestComplexRecordElementData data;
         data.m_id = idsToCheck1[i];
         EXPECT_EQ(testEnvironment.m_project.addFeatureElement(data), idsToCheck1[i]);
     }
