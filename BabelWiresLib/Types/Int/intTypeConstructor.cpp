@@ -38,3 +38,7 @@ babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, Type
     auto [range, defaultValue] = extractValueArguments(valueArguments);
     return std::make_unique<ConstructedType<IntType>>(std::move(newTypeRef), range, defaultValue);
 }
+
+babelwires::TypeRef babelwires::IntTypeConstructor::makeTypeRef(IntValue::NativeType min, IntValue::NativeType max, IntValue::NativeType defaultValue) {
+    return TypeRef(getThisIdentifier(), IntValue(min), IntValue(max), IntValue(defaultValue));
+}
