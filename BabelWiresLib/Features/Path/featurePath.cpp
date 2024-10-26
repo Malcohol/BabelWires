@@ -39,8 +39,9 @@ babelwires::FeaturePath::FeaturePath(const Feature* feature) {
 
 babelwires::FeaturePath::FeaturePath(std::vector<PathStep> steps)
     : m_steps(std::move(steps)) {
-        assert(std::none_of(m_steps.begin(), m_steps.end(), [](auto p) { return p.isNotAStep(); }) && "Attempt to construct a path from a vector containing a non-step");
-    }
+    assert(std::none_of(m_steps.begin(), m_steps.end(), [](auto p) { return p.isNotAStep(); }) &&
+           "Attempt to construct a path from a vector containing a non-step");
+}
 
 void babelwires::FeaturePath::pushStep(PathStep step) {
     assert(!step.isNotAStep() && "Attempt to push a non-step onto a path");
@@ -106,13 +107,9 @@ namespace {
 
     template <typename T> T& followPath(T& start, const babelwires::FeaturePath& p, int& index) {
         if (index < p.getNumSteps()) {
-            if (auto* compound = start.template as<babelwires::Feature>()) {
-                T& child = compound->getChildFromStep(p.getStep(index));
-                ++index;
-                return followPath(child, p, index);
-            } else {
-                throw babelwires::ModelException() << "Tried to step into a non-compound feature";
-            }
+            T& child = start.getChildFromStep(p.getStep(index));
+            ++index;
+            return followPath(child, p, index);
         } else {
             return start;
         }
@@ -141,13 +138,9 @@ const babelwires::Feature& babelwires::FeaturePath::follow(const Feature& start)
 namespace {
 
     template <typename T> T* tryFollowPath(T* start, const babelwires::FeaturePath& p, int index = 0) {
-        if (index < p.getNumSteps()) {
-            if (auto* compound = start->template as<babelwires::Feature>()) {
-                T* child = compound->tryGetChildFromStep(p.getStep(index));
-                return tryFollowPath(child, p, index + 1);
-            } else {
-                return nullptr;
-            }
+        if (start && index < p.getNumSteps()) {
+            T* child = start->tryGetChildFromStep(p.getStep(index));
+            return tryFollowPath(child, p, index + 1);
         } else {
             return start;
         }

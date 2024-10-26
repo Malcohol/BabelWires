@@ -153,9 +153,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
-            auto* const arrayFeature = featureAtPath->as<Feature>();
-            assert(arrayFeature && "Path should lead to a compound");
-            assert(arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>());
+            assert(featureAtPath->as<ValueFeature>() && featureAtPath->as<ValueFeature>()->getType().as<ArrayType>());
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -172,7 +170,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
                     arrayInitDataPtr.m_pathToFeature = pathToArray;
-                    arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
+                    arrayInitDataPtr.m_size = featureAtPath->getNumFeatures();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
                 }
@@ -199,9 +197,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
         if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
             Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
-            auto* const arrayFeature = featureAtPath->as<Feature>();
-            assert(arrayFeature && "Path should lead to a compound");
-            assert(arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>());
+            assert(featureAtPath->as<ValueFeature>() && featureAtPath->as<ValueFeature>()->getType().as<ArrayType>());
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -218,7 +214,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
                     arrayInitDataPtr.m_pathToFeature = pathToArray;
-                    arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
+                    arrayInitDataPtr.m_size = featureAtPath->getNumFeatures();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
                 }
