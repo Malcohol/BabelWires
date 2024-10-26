@@ -331,7 +331,7 @@ namespace {
 
     babelwires::ValueTreeRoot* exploreForCompoundRootValueFeature(babelwires::ValueTreeNode* compound) {
         // TODO: Out of date.
-        for (auto* const subFeature : babelwires::subfeatures(compound)) {
+        for (auto* const subFeature : babelwires::getChildRange(compound)) {
             if (auto* const simpleValueFeature = subFeature->as<babelwires::ValueTreeRoot>()) {
                 if (simpleValueFeature->getType().as<babelwires::CompoundType>()) {
                     return simpleValueFeature;

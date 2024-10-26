@@ -52,7 +52,7 @@ bool babelwires::ValueTreeNode::isChanged(Changes changes) const {
 
 void babelwires::ValueTreeNode::clearChanges() {
     m_changes = Changes::NothingChanged;
-    for (auto&& child : subfeatures(*this)) {
+    for (auto&& child : getChildRange(*this)) {
         child->clearChanges();
     }
 }
@@ -94,7 +94,7 @@ const babelwires::ValueTreeNode* babelwires::ValueTreeNode::getFeature(int i) co
 }
 
 void babelwires::ValueTreeNode::setSubfeaturesToDefault() {
-    for (auto&& child : subfeatures(*this)) {
+    for (auto&& child : getChildRange(*this)) {
         child->setToDefault();
     }
 }

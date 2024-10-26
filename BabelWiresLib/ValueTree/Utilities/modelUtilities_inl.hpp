@@ -6,8 +6,8 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 namespace babelwires {
-    template <typename COMPOUND_FEATURE> struct SubFeaturesRange {
-        SubFeaturesRange(COMPOUND_FEATURE& container)
+    template <typename COMPOUND_FEATURE> struct ValueTreeChildRange {
+        ValueTreeChildRange(COMPOUND_FEATURE& container)
             : m_container(container) {}
 
         // Convenience
@@ -32,11 +32,11 @@ namespace babelwires {
         COMPOUND_FEATURE& m_container;
     };
 
-    template <typename COMPOUND_FEATURE> SubFeaturesRange<COMPOUND_FEATURE> subfeatures(COMPOUND_FEATURE* container) {
-        return SubFeaturesRange<COMPOUND_FEATURE>(*container);
+    template <typename COMPOUND_FEATURE> ValueTreeChildRange<COMPOUND_FEATURE> getChildRange(COMPOUND_FEATURE* container) {
+        return ValueTreeChildRange<COMPOUND_FEATURE>(*container);
     }
 
-    template <typename COMPOUND_FEATURE> SubFeaturesRange<COMPOUND_FEATURE> subfeatures(COMPOUND_FEATURE& container) {
-        return SubFeaturesRange<COMPOUND_FEATURE>(container);
+    template <typename COMPOUND_FEATURE> ValueTreeChildRange<COMPOUND_FEATURE> getChildRange(COMPOUND_FEATURE& container) {
+        return ValueTreeChildRange<COMPOUND_FEATURE>(container);
     }
 } // namespace babelwires

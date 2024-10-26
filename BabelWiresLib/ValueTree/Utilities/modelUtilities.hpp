@@ -14,10 +14,10 @@
 
 namespace babelwires {
     /// Convenience functions supporting ranged for loop.
-    /// E.g. for(auto&& f : subfeatures(compoundFeature)) {...}
-    template <typename COMPOUND_FEATURE> struct SubFeaturesRange;
-    template <typename COMPOUND_FEATURE> SubFeaturesRange<COMPOUND_FEATURE> subfeatures(COMPOUND_FEATURE* container);
-    template <typename COMPOUND_FEATURE> SubFeaturesRange<COMPOUND_FEATURE> subfeatures(COMPOUND_FEATURE& container);
+    /// E.g. for(auto&& f : getChildRange(compoundFeature)) {...}
+    template <typename COMPOUND_FEATURE> struct ValueTreeChildRange;
+    template <typename COMPOUND_FEATURE> ValueTreeChildRange<COMPOUND_FEATURE> getChildRange(COMPOUND_FEATURE* container);
+    template <typename COMPOUND_FEATURE> ValueTreeChildRange<COMPOUND_FEATURE> getChildRange(COMPOUND_FEATURE& container);
 } // namespace babelwires
 
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities_inl.hpp>
