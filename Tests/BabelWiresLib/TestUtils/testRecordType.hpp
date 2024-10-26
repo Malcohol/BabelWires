@@ -40,9 +40,9 @@ namespace testUtils {
 
         PRIMITIVE_TYPE("crecordT", "ComplexRecord", "87291871-677d-41a1-81e7-bf1206b1d396", 1);
 
-        static constexpr unsigned int c_int1min = -10;
-        static constexpr unsigned int c_int1max = 10;
-        static constexpr unsigned int c_int1default = 2;
+        static constexpr int c_int1min = -10;
+        static constexpr int c_int1max = 10;
+        static constexpr int c_int1default = 2;
 
         static constexpr char s_intIdInitializer[] = "intR0";
         static constexpr char s_opIntIdInitializer[] = "opInt";

@@ -27,8 +27,6 @@ TEST(FeatureElementTest, basicAccessors) {
     EXPECT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->getInputFeature());
     EXPECT_TRUE(featureElement->getOutputFeature());
-    EXPECT_TRUE(featureElement->getInputFeature()->as<const testUtils::TestRootFeature>());
-    EXPECT_TRUE(featureElement->getOutputFeature()->as<const testUtils::TestRootFeature>());
     EXPECT_EQ(featureElement->getElementId(), 54);
 }
 

@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 
-#include <BabelWiresLib/Features/rootFeature.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 testUtils::TestFeatureElementData::TestFeatureElementData() {
     m_factoryIdentifier = "TestFactory";
@@ -36,7 +36,7 @@ testUtils::TestFeatureElement::TestFeatureElement(const babelwires::ProjectConte
                                                   const TestFeatureElementData& data, babelwires::ElementId newId)
     : FeatureElement(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
-    m_feature = std::make_unique<TestRootFeature>(context);
+    m_feature = std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem, TestComplexRecordType::getThisIdentifier());
 }
 
 void testUtils::TestFeatureElement::doProcess(babelwires::UserLogger&) {}
@@ -64,6 +64,6 @@ void testUtils::TestFeatureElement::simulateFailure(const babelwires::ProjectCon
 }
 
 void testUtils::TestFeatureElement::simulateRecovery(const babelwires::ProjectContext& context) {
-    m_feature = std::make_unique<TestRootFeature>(context);
+    m_feature = std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem, TestComplexRecordType::getThisIdentifier());
     clearInternalFailure();
 }

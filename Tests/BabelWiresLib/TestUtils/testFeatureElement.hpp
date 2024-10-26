@@ -15,7 +15,6 @@ namespace testUtils {
         CUSTOM_CLONEABLE(TestFeatureElementData);
         SERIALIZABLE(TestFeatureElementData, "TestFeatureElementData", babelwires::ElementData, 1);
 
-        // By default, create a TestRecordFeature.
         TestFeatureElementData();
         TestFeatureElementData(const TestFeatureElementData& other) = default;
         TestFeatureElementData(const TestFeatureElementData& other, babelwires::ShallowCloneContext);
