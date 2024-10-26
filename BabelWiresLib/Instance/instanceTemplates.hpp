@@ -12,7 +12,7 @@
 
 namespace babelwires {
     /// The default approach to finding the appropriate instance class is this template.
-    /// For record-style types it "despatches to" (i.e. inherits from) a corresponding inner-class
+    /// For record-style types it "dispatches to" (i.e. inherits from) a corresponding inner-class
     /// in the type's class. However, some types (e.g. built-ins) specialize the template instead.
     template <typename VALUE_FEATURE, typename VALUE_TYPE>
     class InstanceImpl : public VALUE_TYPE::template InstanceImpl<VALUE_FEATURE> {
