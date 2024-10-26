@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Features/Path/featurePath.hpp>
 
 #include <BabelWiresLib/Features/Path/pathStep.hpp>
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
 

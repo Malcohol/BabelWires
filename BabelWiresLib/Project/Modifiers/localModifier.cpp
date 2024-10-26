@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 
 #include <Common/Log/userLogger.hpp>
 

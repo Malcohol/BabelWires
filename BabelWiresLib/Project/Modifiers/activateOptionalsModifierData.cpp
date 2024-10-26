@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 #include <Common/Serialization/deserializer.hpp>

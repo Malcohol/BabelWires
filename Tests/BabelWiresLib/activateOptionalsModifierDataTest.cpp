@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
 #include <BabelWiresLib/Features/simpleValueFeature.hpp>
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>

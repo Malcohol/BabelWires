@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 
 #include <Common/types.hpp>
 

@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 #include <Common/Serialization/deserializer.hpp>

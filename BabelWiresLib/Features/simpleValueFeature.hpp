@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 

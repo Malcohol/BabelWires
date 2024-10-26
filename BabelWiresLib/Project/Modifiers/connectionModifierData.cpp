@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>

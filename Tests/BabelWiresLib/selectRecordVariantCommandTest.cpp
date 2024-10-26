@@ -9,7 +9,7 @@
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

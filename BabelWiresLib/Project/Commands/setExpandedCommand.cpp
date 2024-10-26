@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
 
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 

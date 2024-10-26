@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/Features/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
