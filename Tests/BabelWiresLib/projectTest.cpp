@@ -401,7 +401,7 @@ TEST(ProjectTest, reloadSource) {
     auto getIntInElement = [element]() {
         testUtils::TestSimpleRecordType::ConstInstance instance(element->getOutput()
                                                                     ->is<babelwires::ValueTreeNode>()
-                                                                    .getFeature(0)
+                                                                    .getChild(0)
                                                                     ->is<babelwires::ValueTreeNode>());
         return instance.getintR0().get();
     };
@@ -498,7 +498,7 @@ TEST(ProjectTest, process) {
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
-    testUtils::TestSimpleRecordType::ConstInstance targetInput(*targetElement->getInput()->getFeature(0));
+    testUtils::TestSimpleRecordType::ConstInstance targetInput(*targetElement->getInput()->getChild(0));
     // 4rd array entry, where they count up from the input value (3).
     EXPECT_EQ(targetInput.getintR0().get(), 6);
 

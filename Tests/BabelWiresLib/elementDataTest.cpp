@@ -157,7 +157,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     EXPECT_EQ(static_cast<const babelwires::SourceFileElementData&>(featureElement->getElementData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getOutput()->getFeature(0));
+    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getOutput()->getChild(0));
     EXPECT_EQ(instance.getintR0().get(), 14);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));
@@ -247,7 +247,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     EXPECT_EQ(static_cast<const babelwires::TargetFileElementData&>(featureElement->getElementData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getInput()->getFeature(0));
+    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getInput()->getChild(0));
     EXPECT_EQ(instance.getintR0().get(), 12);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));
