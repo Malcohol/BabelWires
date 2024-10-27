@@ -43,7 +43,7 @@ void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
     ValueTreeNode* inputFeature = doGetInputNonConst();
     if (inputFeature) {
         inputFeature->setToDefault();
-        modifyFeatureAt(inputFeature, Path());
+        modifyValueAt(inputFeature, Path());
     }
     for (auto* m : m_edits.modifierRange<Modifier>()) {
         // The modifiers are stored in path order, so parents will come before
@@ -65,7 +65,7 @@ const babelwires::ValueTreeNode* babelwires::FeatureElement::getOutput() const {
 
 babelwires::ValueTreeNode* babelwires::FeatureElement::getInputNonConst(const Path& pathToModify) {
     if (ValueTreeNode* inputFeature = doGetInputNonConst()) {
-        modifyFeatureAt(inputFeature, pathToModify);
+        modifyValueAt(inputFeature, pathToModify);
         return inputFeature;
     }
     return nullptr;
@@ -347,7 +347,7 @@ namespace {
 
 } // namespace
 
-void babelwires::FeatureElement::modifyFeatureAt(ValueTreeNode* inputFeature, const Path& p) {
+void babelwires::FeatureElement::modifyValueAt(ValueTreeNode* inputFeature, const Path& p) {
     assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
 
     // This code assumes there's only ever one compound value type in a feature tree.
