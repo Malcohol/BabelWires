@@ -443,7 +443,7 @@ TEST(ProjectTest, saveTarget) {
 
     testUtils::TestSimpleRecordType::Instance instance(element->getInputNonConst(babelwires::Path())
                                                            ->is<babelwires::ValueTreeNode>()
-                                                           .getFeature(0)
+                                                           .getChild(0)
                                                            ->is<babelwires::ValueTreeNode>());
 
     instance.getintR0().set(47);

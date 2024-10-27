@@ -32,7 +32,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
         }
     };
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(false);
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
@@ -45,19 +45,19 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
     checkModifiers(true);
 }
 
@@ -79,7 +79,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
         }
     };
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(false);
 
     /// Insert one beyond the last element.
@@ -94,19 +94,19 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
     checkModifiers(true);
 }
 
@@ -132,7 +132,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
         EXPECT_NE(arrayModifier, nullptr);
     };
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
     checkModifiers(false);
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
@@ -145,19 +145,19 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize + 1);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_nonDefaultSize + 1);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize + 1);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_nonDefaultSize + 1);
     checkModifiers(true);
 }
 
@@ -192,7 +192,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
     ASSERT_NE(element, nullptr);
 
     ASSERT_NE(element->getInput(), nullptr);
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
                                                  testUtils::TestArrayElementData::getPathToArray(),
@@ -200,7 +200,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
 }
 
 TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
@@ -231,7 +231,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
 
         ASSERT_NE(element->getInput(), nullptr);
 
-        EXPECT_GT(element->getInput()->getNumFeatures(), 2);
+        EXPECT_GT(element->getInput()->getNumChildren(), 2);
 
         // insert at the end
         babelwires::AddEntriesToArrayCommand command("Test command", elementId,
@@ -240,30 +240,30 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
 
         testEnvironment.m_project.process();
 
-        EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
-        EXPECT_EQ(element->getInput()->getFeature(1)->getValue(),
+        EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
+        EXPECT_EQ(element->getInput()->getChild(1)->getValue(),
                   babelwires::IntValue(3));
-        EXPECT_EQ(element->getInput()->getFeature(2)->getValue(),
+        EXPECT_EQ(element->getInput()->getChild(2)->getValue(),
                   babelwires::IntValue(-18));
 
         EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 
         testEnvironment.m_project.process();
 
-        EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
-        EXPECT_EQ(element->getInput()->getFeature(offsetForValues + 1)->getValue(),
+        EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize + 1);
+        EXPECT_EQ(element->getInput()->getChild(offsetForValues + 1)->getValue(),
                   babelwires::IntValue(3));
-        EXPECT_EQ(element->getInput()->getFeature(offsetForValues + 2)->getValue(),
+        EXPECT_EQ(element->getInput()->getChild(offsetForValues + 2)->getValue(),
                   babelwires::IntValue(-18));
 
         command.undo(testEnvironment.m_project);
         testEnvironment.m_project.process();
 
-        EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+        EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
 
-        EXPECT_EQ(element->getInput()->getFeature(1)->getValue(),
+        EXPECT_EQ(element->getInput()->getChild(1)->getValue(),
                   babelwires::IntValue(3));
-        EXPECT_EQ(element->getInput()->getFeature(2)->getValue(),
+        EXPECT_EQ(element->getInput()->getChild(2)->getValue(),
                   babelwires::IntValue(-18));
     }
 }

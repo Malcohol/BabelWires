@@ -170,7 +170,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const Path& pathT
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
                     arrayInitDataPtr.m_targetPath = pathToArray;
-                    arrayInitDataPtr.m_size = featureAtPath->getNumFeatures();
+                    arrayInitDataPtr.m_size = featureAtPath->getNumChildren();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
                 }
@@ -214,7 +214,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const Path& pa
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
                     arrayInitDataPtr.m_targetPath = pathToArray;
-                    arrayInitDataPtr.m_size = featureAtPath->getNumFeatures();
+                    arrayInitDataPtr.m_size = featureAtPath->getNumChildren();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
                 }

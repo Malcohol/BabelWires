@@ -507,7 +507,7 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
             cache.getEntry(8 + testUtils::TestSimpleArrayType::s_nonDefaultSize - 1);
         EXPECT_FALSE(entry->getInput());
         EXPECT_EQ(entry->getOutput(),
-                  outputInfo.m_arrayFeature.getFeature(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1));
+                  outputInfo.m_arrayFeature.getChild(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1));
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
         checkUnmodified(entry);
@@ -625,12 +625,12 @@ namespace {
                            babelwires::ValueTreeRoot* outputFeature, bool isExpanded) {
         EXPECT_EQ(entry->getLabel(), "Contents");
         if (inputFeature) {
-            EXPECT_EQ(entry->getInput(), inputFeature->getFeature(0));
+            EXPECT_EQ(entry->getInput(), inputFeature->getChild(0));
         } else {
             EXPECT_FALSE(entry->getInput());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutput(), outputFeature->getFeature(0));
+            EXPECT_EQ(entry->getOutput(), outputFeature->getChild(0));
         } else {
             EXPECT_FALSE(entry->getOutput());
         }
@@ -644,12 +644,12 @@ namespace {
                            babelwires::ValueTreeRoot* outputFeature) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestSimpleRecordType::s_int0FieldName);
         if (inputFeature) {
-            EXPECT_EQ(entry->getInput(), inputFeature->getFeature(0)->is<babelwires::ValueTreeNode>().getFeature(0));
+            EXPECT_EQ(entry->getInput(), inputFeature->getChild(0)->is<babelwires::ValueTreeNode>().getChild(0));
         } else {
             EXPECT_FALSE(entry->getInput());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutput(), outputFeature->getFeature(0)->is<babelwires::ValueTreeNode>().getFeature(0));
+            EXPECT_EQ(entry->getOutput(), outputFeature->getChild(0)->is<babelwires::ValueTreeNode>().getChild(0));
         } else {
             EXPECT_FALSE(entry->getOutput());
         }

@@ -62,10 +62,10 @@ namespace babelwires {
         std::size_t getHash() const;
 
       public:
-        int getNumFeatures() const;
+        int getNumChildren() const;
 
-        ValueTreeNode* getFeature(int i);
-        const ValueTreeNode* getFeature(int i) const;
+        ValueTreeNode* getChild(int i);
+        const ValueTreeNode* getChild(int i) const;
 
         PathStep getStepToChild(const ValueTreeNode* child) const;
 

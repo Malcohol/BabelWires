@@ -66,21 +66,21 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
                                                  ValueTreeNode& outputFeature) const {
     bool shouldProcessAll = false;
     // Iterate through all features _except_ for the array, look for changes to the common input.
-    for (unsigned int i = 0; i < inputFeature.getNumFeatures() - 1; ++i) {
-        if (inputFeature.getFeature(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
+    for (unsigned int i = 0; i < inputFeature.getNumChildren() - 1; ++i) {
+        if (inputFeature.getChild(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
             shouldProcessAll = true;
         }
     }
 
-    const auto& arrayInputFeature = inputFeature.getFeature(inputFeature.getNumFeatures() - 1)->is<ValueTreeNode>();
-    auto& arrayOutputFeature = outputFeature.getFeature(outputFeature.getNumFeatures() - 1)->is<ValueTreeNode>();
+    const auto& arrayInputFeature = inputFeature.getChild(inputFeature.getNumChildren() - 1)->is<ValueTreeNode>();
+    auto& arrayOutputFeature = outputFeature.getChild(outputFeature.getNumChildren() - 1)->is<ValueTreeNode>();
 
     if (arrayInputFeature.isChanged(ValueTreeNode::Changes::StructureChanged)) {
         // TODO: This is very inefficient in cases where a single entry has been added or removed.
         // In the old feature system I was able to maintain a mapping between input and output entries
         // to avoid this inefficiency. Perhaps that can be done with values too.
         shouldProcessAll = true;
-        InstanceUtils::setArraySize(arrayOutputFeature, arrayInputFeature.getNumFeatures());
+        InstanceUtils::setArraySize(arrayOutputFeature, arrayInputFeature.getNumChildren());
     }
 
     struct EntryData {
@@ -102,10 +102,10 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
 
     const TypeSystem& typeSystem = inputFeature.getTypeSystem();
 
-    for (unsigned int i = 0; i < arrayInputFeature.getNumFeatures(); ++i) {
-        const ValueTreeNode& inputEntry = arrayInputFeature.getFeature(i)->is<ValueTreeNode>();
-        if (shouldProcessAll || arrayInputFeature.getFeature(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
-            ValueTreeNode& outputEntry = arrayOutputFeature.getFeature(i)->is<ValueTreeNode>();
+    for (unsigned int i = 0; i < arrayInputFeature.getNumChildren(); ++i) {
+        const ValueTreeNode& inputEntry = arrayInputFeature.getChild(i)->is<ValueTreeNode>();
+        if (shouldProcessAll || arrayInputFeature.getChild(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
+            ValueTreeNode& outputEntry = arrayOutputFeature.getChild(i)->is<ValueTreeNode>();
             entriesToProcess.emplace_back(EntryData{typeSystem, i, inputEntry, outputEntry});
         }
     }

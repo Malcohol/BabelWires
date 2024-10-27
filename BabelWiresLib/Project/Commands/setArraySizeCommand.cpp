@@ -54,7 +54,7 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         }
     }
 
-    m_oldSize = compoundFeature->getNumFeatures();
+    m_oldSize = compoundFeature->getNumChildren();
 
     for (int i = m_newSize; i < m_oldSize; ++i) {
         Path p = m_pathToArray;

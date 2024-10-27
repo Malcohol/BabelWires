@@ -40,7 +40,7 @@ namespace {
         ASSERT_NE(element, nullptr);
 
         const auto getOutput = [element]() {
-            return testUtils::TestSimpleRecordType::ConstInstance(*element->getOutput()->getFeature(0));
+            return testUtils::TestSimpleRecordType::ConstInstance(*element->getOutput()->getChild(0));
         };
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);

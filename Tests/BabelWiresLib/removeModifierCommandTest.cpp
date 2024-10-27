@@ -87,7 +87,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 
     ASSERT_NE(element->getInput(), nullptr);
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), initialArraySize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), initialArraySize);
 
     babelwires::RemoveModifierCommand command("Test command", elementId,
                                               testUtils::TestArrayElementData::getPathToArray());
@@ -99,19 +99,19 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), initialArraySize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), initialArraySize);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(true);
 }
 

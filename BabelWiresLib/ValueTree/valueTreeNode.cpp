@@ -67,15 +67,15 @@ std::size_t babelwires::ValueTreeNode::getHash() const {
 
 namespace {
     void checkIndex(const babelwires::ValueTreeNode* f, int i) {
-        if ((i < 0) || (i >= f->getNumFeatures())) {
+        if ((i < 0) || (i >= f->getNumChildren())) {
             throw babelwires::ModelException()
-                << "Compound feature with " << f->getNumFeatures() << " children queried by index " << i;
+                << "Compound feature with " << f->getNumChildren() << " children queried by index " << i;
         }
     }
 
 } // namespace
 
-babelwires::ValueTreeNode* babelwires::ValueTreeNode::getFeature(int i) {
+babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) {
     checkIndex(this, i);
     const auto it = m_children.find1(i);
     if (it != m_children.end()) {
@@ -84,7 +84,7 @@ babelwires::ValueTreeNode* babelwires::ValueTreeNode::getFeature(int i) {
     return nullptr;
 }
 
-const babelwires::ValueTreeNode* babelwires::ValueTreeNode::getFeature(int i) const {
+const babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) const {
     checkIndex(this, i);
     const auto it = m_children.find1(i);
     if (it != m_children.end()) {
@@ -106,7 +106,7 @@ namespace {
     tryGetChildFromStepT(COMPOUND* compound, const babelwires::PathStep& step) {
         const int childIndex = compound->getChildIndexFromStep(step);
         if (childIndex >= 0) {
-            return compound->getFeature(childIndex);
+            return compound->getChild(childIndex);
         }
         return nullptr;
     }
@@ -178,7 +178,7 @@ const babelwires::Type& babelwires::ValueTreeNode::getType() const {
     return m_typeRef.resolve(typeSystem);
 }
 
-int babelwires::ValueTreeNode::getNumFeatures() const {
+int babelwires::ValueTreeNode::getNumChildren() const {
     return m_children.size();
 }
 

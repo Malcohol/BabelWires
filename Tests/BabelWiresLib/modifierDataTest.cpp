@@ -29,10 +29,10 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisIdentifier());
     arrayFeature.setToDefault();
 
-    EXPECT_EQ(arrayFeature.getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(arrayFeature.getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     data.apply(&arrayFeature);
-    EXPECT_EQ(arrayFeature.getNumFeatures(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
+    EXPECT_EQ(arrayFeature.getNumChildren(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
 
     babelwires::ValueTreeRoot notArrayFeature(testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_THROW(data.apply(&notArrayFeature), babelwires::ModelException);

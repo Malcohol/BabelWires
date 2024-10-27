@@ -15,13 +15,13 @@ const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babel
                                                             babelwires::ShortId id) {
     const int index = recordFeature.getChildIndexFromStep(babelwires::PathStep(id));
     assert(index >= 0);
-    return recordFeature.getFeature(index)->is<babelwires::ValueTreeNode>();
+    return recordFeature.getChild(index)->is<babelwires::ValueTreeNode>();
 }
 
 babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(babelwires::ValueTreeNode& recordFeature, babelwires::ShortId id) {
     const int index = recordFeature.getChildIndexFromStep(babelwires::PathStep(id));
     assert(index >= 0);
-    return recordFeature.getFeature(index)->is<babelwires::ValueTreeNode>();
+    return recordFeature.getChild(index)->is<babelwires::ValueTreeNode>();
 }
 
 
@@ -29,7 +29,7 @@ const babelwires::ValueTreeNode* babelwires::InstanceUtils::tryGetChild(const ba
                                                                babelwires::ShortId id) {
     const int index = recordFeature.getChildIndexFromStep(babelwires::PathStep(id));
     if (index >= 0) {
-        return &recordFeature.getFeature(index)->is<babelwires::ValueTreeNode>();
+        return &recordFeature.getChild(index)->is<babelwires::ValueTreeNode>();
     } else {
         return nullptr;
     }
@@ -74,7 +74,7 @@ void babelwires::InstanceUtils::selectTag(ValueTreeNode& valueFeature, ShortId t
 }
 
 unsigned int babelwires::InstanceUtils::getArraySize(const babelwires::ValueTreeNode& arrayFeature) {
-    return arrayFeature.getNumFeatures();
+    return arrayFeature.getNumChildren();
 }
 
 void babelwires::InstanceUtils::setArraySize(babelwires::ValueTreeNode& arrayFeature, unsigned int newSize) {
@@ -87,9 +87,9 @@ void babelwires::InstanceUtils::setArraySize(babelwires::ValueTreeNode& arrayFea
 }
 
 const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babelwires::ValueTreeNode& arrayFeature, unsigned int index) {
-    return arrayFeature.getFeature(index)->is<babelwires::ValueTreeNode>();
+    return arrayFeature.getChild(index)->is<babelwires::ValueTreeNode>();
 }
 
 babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(babelwires::ValueTreeNode& arrayFeature, unsigned int index) {
-    return arrayFeature.getFeature(index)->is<babelwires::ValueTreeNode>();
+    return arrayFeature.getChild(index)->is<babelwires::ValueTreeNode>();
 }
