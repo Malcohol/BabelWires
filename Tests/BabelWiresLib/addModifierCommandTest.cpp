@@ -4,10 +4,10 @@
 
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -21,8 +21,7 @@ TEST(AddModifierCommandTest, executeAndUndo) {
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(
-        element->getInputFeature()->is<const babelwires::ValueTreeNode>());
+    testUtils::TestComplexRecordType::ConstInstance instance(*element->getInputFeature());
 
     static_assert(8 != testUtils::TestComplexRecordType::c_int1default);
     EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
@@ -56,8 +55,7 @@ TEST(AddModifierCommandTest, executeAndUndoFail) {
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(
-        element->getInputFeature()->is<const babelwires::ValueTreeNode>());
+    testUtils::TestComplexRecordType::ConstInstance instance(*element->getInputFeature());
 
     static_assert(12 > testUtils::TestComplexRecordType::c_int1max);
     EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
@@ -98,8 +96,7 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(
-        element->getInputFeature()->is<const babelwires::ValueTreeNode>());
+    testUtils::TestComplexRecordType::ConstInstance instance(*element->getInputFeature());
     EXPECT_EQ(instance.getintR1().get(), 5);
 
     static_assert(8 != testUtils::TestComplexRecordType::c_int1default);

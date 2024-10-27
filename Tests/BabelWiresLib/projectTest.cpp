@@ -132,10 +132,8 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
     const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
-    const babelwires::Path pathToTargetFeature =
-        testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    const babelwires::Path pathToSourceFeature =
-        testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(0);
+    const babelwires::Path pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::Path pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(0);
 
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
     babelwires::ConnectionModifierData modData;
@@ -210,8 +208,8 @@ namespace {
     };
 
     void removeArrayEntries(babelwires::Project& project, babelwires::ElementId elementId,
-                            const babelwires::Path& pathToArray, int indexOfElementToRemove,
-                            int numEntriesToRemove, bool ensureModifier) {
+                            const babelwires::Path& pathToArray, int indexOfElementToRemove, int numEntriesToRemove,
+                            bool ensureModifier) {
         project.removeArrayEntries(elementId, pathToArray, indexOfElementToRemove, numEntriesToRemove, ensureModifier);
         project.adjustModifiersInArrayElements(elementId, pathToArray, indexOfElementToRemove, -numEntriesToRemove);
     }
@@ -401,8 +399,10 @@ TEST(ProjectTest, reloadSource) {
     ASSERT_NE(element->getOutputFeature(), nullptr);
 
     auto getIntInElement = [element]() {
-        testUtils::TestSimpleRecordType::ConstInstance instance(
-            element->getOutputFeature()->is<babelwires::ValueTreeNode>().getFeature(0)->is<babelwires::ValueTreeNode>());
+        testUtils::TestSimpleRecordType::ConstInstance instance(element->getOutputFeature()
+                                                                    ->is<babelwires::ValueTreeNode>()
+                                                                    .getFeature(0)
+                                                                    ->is<babelwires::ValueTreeNode>());
         return instance.getintR0().get();
     };
 
@@ -491,16 +491,14 @@ TEST(ProjectTest, process) {
     ASSERT_NE(processor, nullptr);
     const babelwires::ValueTreeNode* processorInput = processor->getInputFeature();
     ASSERT_NE(processorInput, nullptr);
-    const babelwires::ValueTreeNode* processorOutput =
-        processor->getOutputFeature();
+    const babelwires::ValueTreeNode* processorOutput = processor->getOutputFeature();
     ASSERT_NE(processorOutput, nullptr);
 
     const babelwires::FeatureElement* targetElement =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
-    testUtils::TestSimpleRecordType::ConstInstance targetInput(
-        targetElement->getInputFeature()->is<babelwires::ValueTreeNode>().getFeature(0)->is<babelwires::ValueTreeNode>());
+    testUtils::TestSimpleRecordType::ConstInstance targetInput(*targetElement->getInputFeature()->getFeature(0));
     // 4rd array entry, where they count up from the input value (3).
     EXPECT_EQ(targetInput.getintR0().get(), 6);
 
@@ -675,7 +673,7 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     EXPECT_FALSE(element4->isInDependencyLoop());
 
     ASSERT_NE(element3->getOutputFeature(), nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(element3->getOutputFeature()->is<babelwires::ValueTreeNode>());
+    testUtils::TestComplexRecordType::ConstInstance instance(*element3->getOutputFeature());
     EXPECT_EQ(instance.getintR0().get(), 16);
 
     testEnvironment.m_project.removeModifier(elementId2, elementData.getPathToRecordInt0());

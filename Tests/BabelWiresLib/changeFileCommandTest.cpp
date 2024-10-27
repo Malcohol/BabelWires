@@ -2,23 +2,23 @@
 
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 namespace {
     void testSourceFileChange(bool source1Present, bool source2Present) {
-            testUtils::TestEnvironment testEnvironment;
+        testUtils::TestEnvironment testEnvironment;
 
         testUtils::TempFilePath filePath1("foo" + testUtils::TestSourceFileFormat::getFileExtension());
         testUtils::TempFilePath filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
@@ -40,7 +40,7 @@ namespace {
         ASSERT_NE(element, nullptr);
 
         const auto getOutputFeature = [element]() {
-            return testUtils::TestSimpleRecordType::ConstInstance(element->getOutputFeature()->is<babelwires::ValueTreeNode>().getFeature(0)->is<babelwires::ValueTreeNode>()); 
+            return testUtils::TestSimpleRecordType::ConstInstance(*element->getOutputFeature()->getFeature(0));
         };
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
@@ -107,8 +107,7 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     elementData.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const auto* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::TargetFileElement>();
+    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::TargetFileElement>();
     ASSERT_NE(element, nullptr);
 
     EXPECT_EQ(element->getFilePath(), filePath1);
@@ -149,7 +148,8 @@ TEST(ChangeFileCommandTest, failSafelyNoElement) {
 TEST(ChangeFileCommandTest, failSafelyNotAFileElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+    const babelwires::ElementId elementId =
+        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
 
     std::string filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
     babelwires::ChangeFileCommand command("Test command", elementId, filePath2);
