@@ -69,7 +69,7 @@ namespace {
     void checkIndex(const babelwires::ValueTreeNode* f, int i) {
         if ((i < 0) || (i >= f->getNumChildren())) {
             throw babelwires::ModelException()
-                << "Compound feature with " << f->getNumChildren() << " children queried by index " << i;
+                << "Compound with " << f->getNumChildren() << " children queried by index " << i;
         }
     }
 
@@ -158,11 +158,11 @@ const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
     const ValueTreeNode* current = this;
     while (1) {
         // TODO Query owner first and do a checking downcast when at root.
-        if (const ValueTreeRoot* currentAsRootValueFeature = current->as<ValueTreeRoot>()) {
-            return currentAsRootValueFeature->getTypeSystem();
+        if (const ValueTreeRoot* currentAsRoot = current->as<ValueTreeRoot>()) {
+            return currentAsRoot->getTypeSystem();
         }
         const ValueTreeNode* const owner = current->getOwner();
-        assert(owner && "You can only get the RootValueFeature from a ValueTreeNode in a hierarchy.");
+        assert(owner && "You can only get the ValueTreeRoot from a ValueTreeNode in a hierarchy.");
         current = owner;
     }
 }
@@ -205,17 +205,17 @@ void babelwires::ValueTreeNode::synchronizeChildren() {
     const unsigned int numChildrenNow = compound->getNumChildren(value);
     for (unsigned int i = 0; i < numChildrenNow; ++i) {
         auto [childValue, step, type] = compound->getChild(value, i);
-        std::unique_ptr<ValueTreeChild> childFeature;
+        std::unique_ptr<ValueTreeChild> child;
         auto it = m_children.find0(step);
         if (it != m_children.end()) {
-            childFeature = std::move(it.getValue());
-            childFeature->ensureSynchronized(childValue);
+            child = std::move(it.getValue());
+            child->ensureSynchronized(childValue);
         } else {
-            childFeature = std::make_unique<ValueTreeChild>(type, childValue);
-            childFeature->setOwner(this);
-            childFeature->synchronizeChildren();
+            child = std::make_unique<ValueTreeChild>(type, childValue);
+            child->setOwner(this);
+            child->synchronizeChildren();
         }
-        newChildMap.insert_or_assign(step, i, std::move(childFeature));
+        newChildMap.insert_or_assign(step, i, std::move(child));
     }
     m_children.swap(newChildMap);
 }
@@ -225,9 +225,9 @@ void babelwires::ValueTreeNode::reconcileChanges(const ValueHolder& other) {
     if (auto* compound = getType().as<CompoundType>()) {
         // Should only be here if the type hasn't changed, so we can use compound with other.
 
-        std::map<PathStep, ValueTreeNode*> currentChildFeatures;
+        std::map<PathStep, ValueTreeNode*> currentChildren;
         for (const auto& it : m_children) {
-            currentChildFeatures.emplace(std::pair{it.getKey0(), it.getValue().get()});
+            currentChildren.emplace(std::pair{it.getKey0(), it.getValue().get()});
         }
 
         std::map<PathStep, const ValueHolder*> backupChildValues;
@@ -236,10 +236,10 @@ void babelwires::ValueTreeNode::reconcileChanges(const ValueHolder& other) {
             backupChildValues.emplace(std::pair{step, child});
         }
 
-        auto currentIt = currentChildFeatures.begin();
+        auto currentIt = currentChildren.begin();
         auto backupIt = backupChildValues.begin();
 
-        while ((currentIt != currentChildFeatures.end()) && (backupIt != backupChildValues.end())) {
+        while ((currentIt != currentChildren.end()) && (backupIt != backupChildValues.end())) {
             if (currentIt->first < backupIt->first) {
                 setChanged(Changes::StructureChanged);
                 ++currentIt;
@@ -253,7 +253,7 @@ void babelwires::ValueTreeNode::reconcileChanges(const ValueHolder& other) {
                 ++backupIt;
             }
         }
-        if ((currentIt != currentChildFeatures.end()) || (backupIt != backupChildValues.end())) {
+        if ((currentIt != currentChildren.end()) || (backupIt != backupChildValues.end())) {
             setChanged(Changes::StructureChanged);
         }
         if (!isChanged(Changes::SomethingChanged)) {
