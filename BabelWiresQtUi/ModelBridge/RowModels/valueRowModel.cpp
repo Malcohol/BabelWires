@@ -28,7 +28,7 @@ void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistr
 }
 
 const babelwires::ValueTreeNode& babelwires::ValueRowModel::getValueFeature() const {
-    return *getInputThenOutputFeature();
+    return *getInputThenOutput();
 }
 
 QVariant babelwires::ValueRowModel::getValueDisplayData() const {

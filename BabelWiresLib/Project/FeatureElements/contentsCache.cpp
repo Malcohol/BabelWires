@@ -161,7 +161,7 @@ namespace babelwires {
     } // namespace Detail
 } // namespace babelwires
 
-void babelwires::ContentsCache::setFeatures(std::string rootLabel, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature) {
+void babelwires::ContentsCache::setValueTrees(std::string rootLabel, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature) {
     m_rows.clear();
     Detail::ContentsCacheBuilder builder(m_rows, m_edits);
     const babelwires::ValueTreeNode* const rootFeature = inputFeature ? inputFeature : outputFeature;

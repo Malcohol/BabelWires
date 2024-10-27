@@ -89,8 +89,8 @@ namespace babelwires {
         bool hasInputFeature() const;
         const ValueTreeNode* getInput() const;
         const ValueTreeNode* getOutput() const;
-        const ValueTreeNode* getInputThenOutputFeature() const;
-        const ValueTreeNode* getOutputThenInputFeature() const;
+        const ValueTreeNode* getInputThenOutput() const;
+        const ValueTreeNode* getOutputThenInput() const;
 
       public:
         const ContentsCacheEntry* m_contentsCacheEntry = nullptr;

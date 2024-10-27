@@ -81,7 +81,7 @@ const babelwires::ValueTreeNode* babelwires::ProcessorElement::getInput() const 
 
 void babelwires::ProcessorElement::setProcessor(std::unique_ptr<Processor> processor) {
     m_processor = std::move(processor);
-    m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInput(), &m_processor->getOutput());
+    m_contentsCache.setValueTrees(getRootLabel(), &m_processor->getInput(), &m_processor->getOutput());
 }
 
 std::string babelwires::ProcessorElement::getRootLabel() const {
@@ -109,12 +109,12 @@ void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
             }
         }
         if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-            m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInput(),
+            m_contentsCache.setValueTrees(getRootLabel(), &m_processor->getInput(),
                                         &m_processor->getOutput());
         } else if (isChanged(Changes::ModifierChangesMask)) {
             m_contentsCache.updateModifierCache();
         }
     } else {
-        m_contentsCache.setFeatures(getRootLabel(), m_failedFeature.get(), m_failedFeature.get());
+        m_contentsCache.setValueTrees(getRootLabel(), m_failedFeature.get(), m_failedFeature.get());
     }
 }

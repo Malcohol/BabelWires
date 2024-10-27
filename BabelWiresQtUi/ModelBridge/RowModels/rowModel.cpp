@@ -40,12 +40,12 @@ const babelwires::ValueTreeNode* babelwires::RowModel::getOutput() const {
     return m_contentsCacheEntry->getOutput();
 }
 
-const babelwires::ValueTreeNode* babelwires::RowModel::getInputThenOutputFeature() const {
-    return m_contentsCacheEntry->getInputThenOutputFeature();
+const babelwires::ValueTreeNode* babelwires::RowModel::getInputThenOutput() const {
+    return m_contentsCacheEntry->getInputThenOutput();
 }
 
-const babelwires::ValueTreeNode* babelwires::RowModel::getOutputThenInputFeature() const {
-    return m_contentsCacheEntry->getOutputThenInputFeature();
+const babelwires::ValueTreeNode* babelwires::RowModel::getOutputThenInput() const {
+    return m_contentsCacheEntry->getOutputThenInput();
 }
 
 bool babelwires::RowModel::isFeatureModified() const {

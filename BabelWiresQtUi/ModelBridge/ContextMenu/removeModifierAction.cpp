@@ -36,7 +36,7 @@ void babelwires::RemoveModifierAction::actionTriggered(babelwires::FeatureModel&
     if (!entry) {
         return;
     }
-    const ValueTreeNode* const feature = entry->getInputThenOutputFeature();
+    const ValueTreeNode* const feature = entry->getInputThenOutput();
     assert(feature && "No feature for row model");
     const bool isModified = (feature == entry->getInput()) && element->findModifier(Path(feature));
     if (isModified) {

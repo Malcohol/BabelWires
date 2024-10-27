@@ -42,13 +42,13 @@ const babelwires::ValueTreeNode* babelwires::SourceFileElement::getOutput() cons
 }
 
 void babelwires::SourceFileElement::setFeature(std::unique_ptr<ValueTreeRoot> feature) {
-    m_contentsCache.setFeatures("File", nullptr, feature.get());
+    m_contentsCache.setValueTrees("File", nullptr, feature.get());
     m_valueTreeRoot = std::move(feature);
 }
 
 void babelwires::SourceFileElement::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setFeatures("File", nullptr, m_valueTreeRoot.get());
+        m_contentsCache.setValueTrees("File", nullptr, m_valueTreeRoot.get());
     }
 }
 

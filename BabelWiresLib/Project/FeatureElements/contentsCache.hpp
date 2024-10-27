@@ -50,9 +50,9 @@ namespace babelwires {
         bool hasFailedHiddenModifiers() const { return m_hasFailedHiddenModifiers; }
         bool hasSubmodifiers() const { return m_hasSubModifiers; }
 
-        const ValueTreeNode* getInputThenOutputFeature() const { return m_input ? m_input : m_output; }
+        const ValueTreeNode* getInputThenOutput() const { return m_input ? m_input : m_output; }
 
-        const ValueTreeNode* getOutputThenInputFeature() const { return m_output ? m_output : m_input; }
+        const ValueTreeNode* getOutputThenInput() const { return m_output ? m_output : m_input; }
 
       private:
         friend ContentsCache;
@@ -111,7 +111,7 @@ namespace babelwires {
         ContentsCache(EditTree& edits);
 
         /// Build the cache with the given input and output features.
-        void setFeatures(std::string rootName, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature);
+        void setValueTrees(std::string rootName, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature);
 
         /// Update the part of the cache concerning modifiers.
         void updateModifierCache();
