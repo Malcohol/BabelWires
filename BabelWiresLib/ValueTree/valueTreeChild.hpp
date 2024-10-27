@@ -30,6 +30,7 @@ namespace babelwires {
         void doSetToDefault() override;
 
       private:
+        // TODO: This looks unsafe (could be confused by new value reusing old memory?): Redo!!!
         const ValueHolder* m_value;
     };
 } // namespace babelwires

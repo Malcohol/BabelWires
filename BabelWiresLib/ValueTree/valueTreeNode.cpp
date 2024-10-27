@@ -93,12 +93,6 @@ const babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) cons
     return nullptr;
 }
 
-void babelwires::ValueTreeNode::setChildrenToDefault() {
-    for (auto&& child : getChildRange(*this)) {
-        child->setToDefault();
-    }
-}
-
 namespace {
 
     template <typename COMPOUND>

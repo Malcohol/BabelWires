@@ -122,9 +122,6 @@ namespace babelwires {
         /// Set the isChanged flag and that of all parents.
         void setChanged(Changes changes);
 
-        /// Call setToDefault on each subfeature.
-        void setChildrenToDefault();
-
       protected:
         virtual void doSetToDefault() = 0;
         virtual const ValueHolder& doGetValue() const = 0;
