@@ -31,8 +31,8 @@ namespace babelwires {
             return enumType.getValueFromIdentifier(enumValue.get());
         }
 
-        template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> set(typename ENUM_TYPE::Value newValue) {
+        template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
+        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> set(typename ENUM_TYPE::Value newValue) {
             const ENUM_TYPE& enumType = this->m_valueTreeNode.getType().template is<ENUM_TYPE>();
             this->m_valueTreeNode.setValue(babelwires::EnumValue(enumType.getIdentifierFromValue(newValue)));
         }
@@ -50,8 +50,8 @@ namespace babelwires {
             return this->m_valueTreeNode.getValue()->template is<babelwires::EnumValue>();
         }
 
-        template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> set(EnumValue newValue) {
+        template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
+        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> set(EnumValue newValue) {
             const ENUM_TYPE& enumType = this->m_valueTreeNode.getType().template is<ENUM_TYPE>();
             this->m_valueTreeNode.setValue(newValue);
         }

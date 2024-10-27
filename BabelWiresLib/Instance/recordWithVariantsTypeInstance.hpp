@@ -22,8 +22,8 @@ namespace babelwires {
             : InstanceCommonBase<VALUE_TREE_NODE, T>(valueFeature) {}
         ShortId getSelectedTag() const { return InstanceUtils::getSelectedTag(this->m_valueTreeNode); }
 
-        template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> selectTag(ShortId tag) {
+        template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
+        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> selectTag(ShortId tag) {
             InstanceUtils::selectTag(this->m_valueTreeNode, tag);
         }
     };

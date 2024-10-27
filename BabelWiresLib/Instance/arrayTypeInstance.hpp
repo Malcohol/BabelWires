@@ -23,15 +23,15 @@ namespace babelwires {
             : InstanceCommonBase<VALUE_TREE_NODE, ArrayType>(valueFeature) {}
 
         unsigned int getSize() const { return InstanceUtils::getArraySize(this->m_valueTreeNode); }
-        template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> setSize(unsigned int newSize) {
+        template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
+        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> setSize(unsigned int newSize) {
             InstanceUtils::setArraySize(this->m_valueTreeNode, newSize);
         }
         ConstInstance<ENTRY_TYPE> getEntry(unsigned int index) const {
             return InstanceUtils::getChild(this->m_valueTreeNode, index);
         }
-        template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, Instance<ENTRY_TYPE>> getEntry(unsigned int index) {
+        template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
+        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, Instance<ENTRY_TYPE>> getEntry(unsigned int index) {
             return InstanceUtils::getChild(this->m_valueTreeNode, index);
         }
     };

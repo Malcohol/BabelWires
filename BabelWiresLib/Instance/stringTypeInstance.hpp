@@ -23,8 +23,8 @@ namespace babelwires {
             const StringValue& stringValue = this->m_valueTreeNode.getValue()->template is<StringValue>();
             return stringValue.get();
         }
-        template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> set(std::string newValue) {
+        template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
+        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> set(std::string newValue) {
             this->m_valueTreeNode.setValue(StringValue(std::move(newValue)));
         }
     };

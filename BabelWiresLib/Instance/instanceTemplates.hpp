@@ -35,8 +35,8 @@ namespace babelwires {
         const VALUE_TREE_NODE* operator->() const { return &m_valueTreeNode; }
         VALUE_TREE_NODE& operator*() const { return m_valueTreeNode; }
         /// Access the functionality of the Feature.
-        template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>
-        std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_TREE_NODE*> operator->() {
+        template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
+        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, VALUE_TREE_NODE*> operator->() {
             return &m_valueTreeNode;
         }
 
