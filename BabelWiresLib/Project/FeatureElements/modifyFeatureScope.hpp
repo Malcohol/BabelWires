@@ -20,6 +20,6 @@ namespace babelwires {
 
       public:
         Path m_pathToRootValue;
-        ValueTreeRoot* m_rootValueFeature = nullptr;
+        ValueTreeRoot* m_valueTreeRoot = nullptr;
     };
 } // namespace babelwires

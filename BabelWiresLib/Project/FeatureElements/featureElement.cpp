@@ -353,7 +353,7 @@ void babelwires::FeatureElement::modifyFeatureAt(ValueTreeNode* inputFeature, co
     // This code assumes there's only ever one compound value type in a feature tree.
     // TODO This algorithm is out of date: The root is now always a compound value.
 
-    if (m_modifyFeatureScope != nullptr) {
+    if (m_modifyValueScope != nullptr) {
         return;
     }
 
@@ -381,16 +381,16 @@ void babelwires::FeatureElement::modifyFeatureAt(ValueTreeNode* inputFeature, co
 
     if (rootValueFeature) {
         rootValueFeature->backUpValue();
-        m_modifyFeatureScope = std::make_unique<ModifyValueScope>(Path(rootValueFeature), rootValueFeature);
+        m_modifyValueScope = std::make_unique<ModifyValueScope>(Path(rootValueFeature), rootValueFeature);
     }
 }
 
 void babelwires::FeatureElement::finishModifications(const Project& project, UserLogger& userLogger) {
-    if (m_modifyFeatureScope) {
+    if (m_modifyValueScope) {
         // Get the input feature directly.
         ValueTreeNode* inputFeature = doGetInputNonConst();
         // First, apply any other modifiers which apply beneath the path
-        for (auto it : m_edits.modifierRange(m_modifyFeatureScope->m_pathToRootValue)) {
+        for (auto it : m_edits.modifierRange(m_modifyValueScope->m_pathToRootValue)) {
             if (const auto& connection = it->as<ConnectionModifier>()) {
                 // We force connections in this case.
                 connection->applyConnection(project, userLogger, inputFeature, true);
@@ -400,7 +400,7 @@ void babelwires::FeatureElement::finishModifications(const Project& project, Use
         }
 
         // The SimpleValueFeature can now determine its change flags.
-        m_modifyFeatureScope->m_rootValueFeature->reconcileChangesFromBackup();
-        m_modifyFeatureScope = nullptr;
+        m_modifyValueScope->m_valueTreeRoot->reconcileChangesFromBackup();
+        m_modifyValueScope = nullptr;
     }
 }

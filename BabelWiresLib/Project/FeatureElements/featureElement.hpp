@@ -221,7 +221,7 @@ namespace babelwires {
         Changes m_changes = Changes::FeatureElementIsNew;
 
         /// If a modifier wants to modify a value feature, one of these will be created.
-        std::unique_ptr<ModifyValueScope> m_modifyFeatureScope;
+        std::unique_ptr<ModifyValueScope> m_modifyValueScope;
 
       protected:
         ContentsCache m_contentsCache;

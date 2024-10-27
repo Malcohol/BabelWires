@@ -11,5 +11,5 @@
 
 babelwires::ModifyValueScope::ModifyValueScope(Path pathToRootValue, ValueTreeRoot* rootValueFeature)
     : m_pathToRootValue(std::move(pathToRootValue))
-    , m_rootValueFeature(rootValueFeature) {}
+    , m_valueTreeRoot(rootValueFeature) {}
 
