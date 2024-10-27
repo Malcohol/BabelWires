@@ -29,7 +29,7 @@ namespace babelwires {
     struct UiPosition;
     struct UiSize;
     struct ProjectContext;
-    class ModifyFeatureScope;
+    class ModifyValueScope;
 
     /// The fundimental constituent of the project.
     /// FeatureElements expose input and output Features, and carry edits.
@@ -221,7 +221,7 @@ namespace babelwires {
         Changes m_changes = Changes::FeatureElementIsNew;
 
         /// If a modifier wants to modify a value feature, one of these will be created.
-        std::unique_ptr<ModifyFeatureScope> m_modifyFeatureScope;
+        std::unique_ptr<ModifyValueScope> m_modifyFeatureScope;
 
       protected:
         ContentsCache m_contentsCache;

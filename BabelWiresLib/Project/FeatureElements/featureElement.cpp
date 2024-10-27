@@ -351,6 +351,7 @@ void babelwires::FeatureElement::modifyFeatureAt(ValueTreeNode* inputFeature, co
     assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
 
     // This code assumes there's only ever one compound value type in a feature tree.
+    // TODO This algorithm is out of date: The root is now always a compound value.
 
     if (m_modifyFeatureScope != nullptr) {
         return;
@@ -380,7 +381,7 @@ void babelwires::FeatureElement::modifyFeatureAt(ValueTreeNode* inputFeature, co
 
     if (rootValueFeature) {
         rootValueFeature->backUpValue();
-        m_modifyFeatureScope = std::make_unique<ModifyFeatureScope>(Path(rootValueFeature), rootValueFeature);
+        m_modifyFeatureScope = std::make_unique<ModifyValueScope>(Path(rootValueFeature), rootValueFeature);
     }
 }
 

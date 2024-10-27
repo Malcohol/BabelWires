@@ -1,5 +1,5 @@
 /**
- * A ModifyFeatureScope encloses the modification of values within the input feature of a FeatureElement.
+ * A ModifyValueScope encloses the modification of values within the input feature of a FeatureElement.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,10 +13,10 @@ namespace babelwires {
     class FeatureElement;
     class ValueTreeRoot;
 
-    class ModifyFeatureScope {
+    class ModifyValueScope {
       public:
-        ModifyFeatureScope() = default;
-        ModifyFeatureScope(Path pathToRootValue, ValueTreeRoot* rootValueFeature);
+        ModifyValueScope() = default;
+        ModifyValueScope(Path pathToRootValue, ValueTreeRoot* rootValueFeature);
 
       public:
         Path m_pathToRootValue;
