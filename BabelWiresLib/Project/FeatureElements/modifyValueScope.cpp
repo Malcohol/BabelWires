@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/FeatureElements/modifyFeatureScope.hpp>
+#include <BabelWiresLib/Project/FeatureElements/modifyValueScope.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
