@@ -15,17 +15,17 @@
 
 /// Start the declaration of an instance.
 #define DECLARE_INSTANCE_BEGIN(TYPE)                                                                                   \
-    template <typename VALUE_FEATURE> class InstanceImpl : public babelwires::InstanceParent<VALUE_FEATURE, TYPE> {    \
+    template <typename VALUE_TREE_NODE> class InstanceImpl : public babelwires::InstanceParent<VALUE_TREE_NODE, TYPE> {    \
       public:                                                                                                          \
-        InstanceImpl(VALUE_FEATURE& valueFeature)                                                                      \
-            : babelwires::InstanceParent<VALUE_FEATURE, TYPE>(valueFeature) {}
+        InstanceImpl(VALUE_TREE_NODE& valueFeature)                                                                      \
+            : babelwires::InstanceParent<VALUE_TREE_NODE, TYPE>(valueFeature) {}
 
 /// Declare a (non-optional) field.
 #define DECLARE_INSTANCE_FIELD(FIELD_NAME, VALUE_TYPE)                                                                 \
     babelwires::ConstInstance<VALUE_TYPE> get##FIELD_NAME() const {                                                    \
         return babelwires::InstanceUtils::getChild(this->m_valueTreeNode, #FIELD_NAME);                                 \
     }                                                                                                                  \
-    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, babelwires::Instance<VALUE_TYPE>> get##FIELD_NAME() {          \
         return babelwires::InstanceUtils::getChild(this->m_valueTreeNode, #FIELD_NAME);                                 \
     }
@@ -41,12 +41,12 @@
             return {};                                                                                                 \
         }                                                                                                              \
     }                                                                                                                  \
-    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, babelwires::Instance<VALUE_TYPE>>                              \
         activateAndGet##FIELD_NAME() {                                                                                 \
         return babelwires::InstanceUtils::activateAndGetChild(this->m_valueTreeNode, #FIELD_NAME);                      \
     }                                                                                                                  \
-    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> deactivate##FIELD_NAME() {                               \
         return babelwires::InstanceUtils::deactivateChild(this->m_valueTreeNode, #FIELD_NAME);                          \
     }
@@ -56,7 +56,7 @@
     bool isTag##TAG_NAME##Selected() const {                                                                           \
         return babelwires::InstanceUtils::getSelectedTag(this->m_valueTreeNode) == #TAG_NAME;                           \
     }                                                                                                                  \
-    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> selectTag##TAG_NAME() {                                  \
         return babelwires::InstanceUtils::selectTag(this->m_valueTreeNode, #TAG_NAME);                                  \
     }
@@ -66,7 +66,7 @@
     babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, ENTRY_TYPE> get##FIELD_NAME() const {                \
         return babelwires::InstanceUtils::getChild(this->m_valueTreeNode, #FIELD_NAME);                                 \
     }                                                                                                                  \
-    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,                                                                \
                      babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, ENTRY_TYPE>>                              \
         get##FIELD_NAME() {                                                                                            \
@@ -78,7 +78,7 @@
     babelwires::MapInstanceImpl<const babelwires::ValueTreeNode, SOURCE_TYPE, TARGET_TYPE> get##FIELD_NAME() const {    \
         return babelwires::InstanceUtils::getChild(this->m_valueTreeNode, #FIELD_NAME);                                 \
     }                                                                                                                  \
-    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>,                                                                \
                      babelwires::MapInstanceImpl<babelwires::ValueTreeNode, SOURCE_TYPE, TARGET_TYPE>>                  \
         get##FIELD_NAME() {                                                                                            \
@@ -90,7 +90,7 @@
     babelwires::InstanceUntypedBase<const babelwires::ValueTreeNode> get##FIELD_NAME() const {                          \
         return babelwires::InstanceUtils::getChild(this->m_valueTreeNode, #FIELD_NAME);                                 \
     }                                                                                                                  \
-    template <typename VALUE_FEATURE_M = VALUE_FEATURE>                                                                \
+    template <typename VALUE_FEATURE_M = VALUE_TREE_NODE>                                                                \
     std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, babelwires::InstanceUntypedBase<babelwires::ValueTreeNode>>     \
         get##FIELD_NAME() {                                                                                            \
         return babelwires::InstanceUtils::getChild(this->m_valueTreeNode, #FIELD_NAME);                                 \
