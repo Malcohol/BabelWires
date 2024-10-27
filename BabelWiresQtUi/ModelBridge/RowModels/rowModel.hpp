@@ -86,7 +86,7 @@ namespace babelwires {
         bool isFeatureModified() const;
 
       protected:
-        bool hasInputFeature() const;
+        bool hasInput() const;
         const ValueTreeNode* getInput() const;
         const ValueTreeNode* getOutput() const;
         const ValueTreeNode* getInputThenOutput() const;

@@ -45,7 +45,7 @@ void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
 }
 
 const babelwires::ValueTreeNode&
-babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data) {
+babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope, const DataLocation& data) {
     const Project& project = scope.getProject();
 
     const FeatureElement* element = project.getFeatureElement(data.getElementId());
@@ -66,7 +66,7 @@ babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, 
     return *valueFeature;
 }
 
-const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueFeature(AccessModelScope& scope,
+const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTreeNode(AccessModelScope& scope,
                                                                                    const DataLocation& data) {
     const Project& project = scope.getProject();
 
@@ -88,9 +88,9 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueFeat
     return valueFeature;
 }
 
-const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope,
+const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueTreeNode(AccessModelScope& scope,
                                                                                 const DataLocation& data) {
-    const ValueTreeNode* const valueFeature = tryGetValueFeature(scope, data);
+    const ValueTreeNode* const valueFeature = tryGetValueTreeNode(scope, data);
     assert(valueFeature && "There was not value feature");
     return *valueFeature;
 }

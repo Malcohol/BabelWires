@@ -30,15 +30,15 @@ namespace babelwires {
 
             /// Convenience Function: Get the Feature referred to by the data, or assert.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueTreeNode& getValueFeature(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode& getValueTreeNode(AccessModelScope& scope, const DataLocation& data);
 
             /// Convenience Function: Get the Feature referred to by the data, or return nullptr.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueTreeNode* tryGetValueFeature(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode* tryGetValueTreeNode(AccessModelScope& scope, const DataLocation& data);
 
             /// Convenience Function: Get the Feature referred to by the data, or throw a ModelException.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueTreeNode& getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode& getValueTreeNodeOrThrow(AccessModelScope& scope, const DataLocation& data);
 
         signals:
             void editorClosing();

@@ -21,13 +21,13 @@
 #include <cassert>
 
 void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {
-    const babelwires::ValueTreeNode& valueFeature = getValueFeature();
+    const babelwires::ValueTreeNode& valueFeature = getValueTreeNode();
     m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueFeature.getType(), valueFeature.getValue(),
                                 (getInput() == nullptr),
                                 m_contentsCacheEntry->isStructureEditable());
 }
 
-const babelwires::ValueTreeNode& babelwires::ValueRowModel::getValueFeature() const {
+const babelwires::ValueTreeNode& babelwires::ValueRowModel::getValueTreeNode() const {
     return *getInputThenOutput();
 }
 
@@ -48,7 +48,7 @@ void babelwires::ValueRowModel::setEditorData(QWidget* editor) const {
 std::unique_ptr<babelwires::Command<babelwires::Project>>
 babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
     if (EditableValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
-        const babelwires::ValueTreeNode& valueFeature = getValueFeature();
+        const babelwires::ValueTreeNode& valueFeature = getValueTreeNode();
         auto modifier = std::make_unique<babelwires::ValueAssignmentData>(std::move(newValue));
         modifier->m_targetPath = babelwires::Path(&valueFeature);
         return std::make_unique<AddModifierCommand>("Set value", m_featureElement->getElementId(), std::move(modifier));
@@ -88,7 +88,7 @@ QString babelwires::ValueRowModel::getTooltip() const {
 void babelwires::ValueRowModel::getContextMenuActions(
     std::vector<FeatureContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
-    const babelwires::ValueTreeNode& valueFeature = getValueFeature();
+    const babelwires::ValueTreeNode& valueFeature = getValueTreeNode();
     m_valueModelDispatcher->getContextMenuActions(
         DataLocation{m_featureElement->getElementId(), babelwires::Path(&valueFeature)}, actionsOut);
 }

@@ -37,7 +37,7 @@ namespace babelwires {
 
         virtual void getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const override;
       public:
-        const ValueTreeNode& getValueFeature() const;
+        const ValueTreeNode& getValueTreeNode() const;
     };
 
 } // namespace babelwires

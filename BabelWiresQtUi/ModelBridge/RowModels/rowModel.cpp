@@ -28,7 +28,7 @@
 
 void babelwires::RowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {}
 
-bool babelwires::RowModel::hasInputFeature() const {
+bool babelwires::RowModel::hasInput() const {
     return m_contentsCacheEntry->getInput();
 }
 
@@ -50,7 +50,7 @@ const babelwires::ValueTreeNode* babelwires::RowModel::getOutputThenInput() cons
 
 bool babelwires::RowModel::isFeatureModified() const {
     assert(!m_contentsCacheEntry->hasModifier() ||
-           hasInputFeature() && "It does not make sense for a modifier to be present when there is no input feature");
+           hasInput() && "It does not make sense for a modifier to be present when there is no input feature");
     return m_contentsCacheEntry->hasModifier();
 }
 
@@ -93,7 +93,7 @@ babelwires::RowModel::BackgroundStyle babelwires::RowModel::getBackgroundStyle(C
         return BackgroundStyle::failed;
     } else if (m_contentsCacheEntry->hasFailedHiddenModifiers()) {
         return BackgroundStyle::failedHidden;
-    } else if ((c == ColumnType::Value) && hasInputFeature()) {
+    } else if ((c == ColumnType::Value) && hasInput()) {
         if (isItemEditable()) {
             return BackgroundStyle::editable;
         }
