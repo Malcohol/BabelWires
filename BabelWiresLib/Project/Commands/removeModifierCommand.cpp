@@ -30,7 +30,7 @@ babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName
                                                          Path featurePath)
     : CompoundCommand(std::move(commandName))
     , m_elementId(targetId)
-    , m_featurePath(featurePath) {}
+    , m_path(featurePath) {}
 
 bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
@@ -44,7 +44,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    auto* modifier = elementToModify->getEdits().findModifier(m_featurePath);
+    auto* modifier = elementToModify->getEdits().findModifier(m_path);
     if (!modifier) {
         return false;
     }
@@ -56,7 +56,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     // so the user is informed.
     bool hasAncestorConnection = false;
     for (auto connectionModifier : elementToModify->getConnectionModifiers()) {
-        if (connectionModifier->getTargetPath().isStrictPrefixOf(m_featurePath)) {
+        if (connectionModifier->getTargetPath().isStrictPrefixOf(m_path)) {
             hasAncestorConnection = true;
             break;
         }
@@ -67,30 +67,30 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         // remove themselves cleanly.
         if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             auto [compoundFeature, currentSize, range, initialSize] =
-                ValueTreeHelper::getInfoFromArrayFeature(m_featurePath.tryFollow(*inputFeature));
+                ValueTreeHelper::getInfoFromArrayFeature(m_path.tryFollow(*inputFeature));
             if (compoundFeature) {
                 if (currentSize != initialSize) {
                     addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(
-                        m_elementId, m_featurePath, initialSize, initialSize - currentSize));
+                        m_elementId, m_path, initialSize, initialSize - currentSize));
                 }
             }
         } else if (const auto* optModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             auto [compoundFeature, optionals] =
-                ValueTreeHelper::getInfoFromRecordWithOptionalsFeature(m_featurePath.tryFollow(*inputFeature));
+                ValueTreeHelper::getInfoFromRecordWithOptionalsFeature(m_path.tryFollow(*inputFeature));
             if (compoundFeature) {
                 for (auto optionalField : optionals) {
                     if (optionalField.second) {
                         addSubCommand(std::make_unique<DeactivateOptionalCommand>(
-                            "DeactivateOptionalCommand subcommand", m_elementId, m_featurePath, optionalField.first));
+                            "DeactivateOptionalCommand subcommand", m_elementId, m_path, optionalField.first));
                     }
                 }
             }
         } else if (const auto* varModifierData = modifier->getModifierData().as<SelectRecordVariantModifierData>()) {
             auto [compoundFeature, isDefault, fieldsToRemove] =
-                ValueTreeHelper::getInfoFromRecordWithVariantsFeature(m_featurePath.tryFollow(*inputFeature));
+                ValueTreeHelper::getInfoFromRecordWithVariantsFeature(m_path.tryFollow(*inputFeature));
             if (!isDefault) {
                 for (auto fieldToRemove : fieldsToRemove) {
-                    Path pathToFieldToRemove = m_featurePath;
+                    Path pathToFieldToRemove = m_path;
                     pathToFieldToRemove.pushStep(babelwires::PathStep(fieldToRemove));
                     addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToFieldToRemove));
                 }
@@ -98,7 +98,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         }
     }
 
-    addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_elementId, m_featurePath));
+    addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_elementId, m_path));
 
     return CompoundCommand::initializeAndExecute(project);
 }
