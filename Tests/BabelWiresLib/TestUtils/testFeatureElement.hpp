@@ -42,6 +42,6 @@ namespace testUtils {
         void simulateFailure(const babelwires::ProjectContext& context);
         void simulateRecovery(const babelwires::ProjectContext& context);
 
-        std::unique_ptr<babelwires::ValueTreeNode> m_feature;
+        std::unique_ptr<babelwires::ValueTreeNode> m_valueTreeRoot;
     };
 } // namespace testUtils
