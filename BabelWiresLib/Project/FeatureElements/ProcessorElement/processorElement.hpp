@@ -41,7 +41,7 @@ namespace babelwires {
         std::unique_ptr<Processor> m_processor;
 
         /// Non-null when the defined processor could not be constructed.
-        std::unique_ptr<babelwires::ValueTreeRoot> m_failedFeature;
+        std::unique_ptr<babelwires::ValueTreeRoot> m_failedValueTree;
     };
 
 } // namespace babelwires

@@ -35,7 +35,7 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
     } catch (const BaseException& e) {
         setFactoryName(elementData.m_factoryIdentifier);
         setInternalFailure(e.what());
-        m_failedFeature =
+        m_failedValueTree =
             std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
         userLogger.logError() << "Failed to create processor id=" << elementData.m_id << ": " << e.what();
     }
@@ -51,7 +51,7 @@ babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetOutputNonConst() {
     if (m_processor) {
         return &m_processor->getOutput();
     } else {
-        return m_failedFeature.get();
+        return m_failedValueTree.get();
     }
 }
 
@@ -59,7 +59,7 @@ babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetInputNonConst() {
     if (m_processor) {
         return &m_processor->getInput();
     } else {
-        return m_failedFeature.get();
+        return m_failedValueTree.get();
     }
 }
 
@@ -67,7 +67,7 @@ const babelwires::ValueTreeNode* babelwires::ProcessorElement::getOutput() const
     if (m_processor) {
         return &m_processor->getOutput();
     } else {
-        return m_failedFeature.get();
+        return m_failedValueTree.get();
     }
 }
 
@@ -75,7 +75,7 @@ const babelwires::ValueTreeNode* babelwires::ProcessorElement::getInput() const 
     if (m_processor) {
         return &m_processor->getInput();
     } else {
-        return m_failedFeature.get();
+        return m_failedValueTree.get();
     }
 }
 
@@ -115,6 +115,6 @@ void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
             m_contentsCache.updateModifierCache();
         }
     } else {
-        m_contentsCache.setValueTrees(getRootLabel(), m_failedFeature.get(), m_failedFeature.get());
+        m_contentsCache.setValueTrees(getRootLabel(), m_failedValueTree.get(), m_failedValueTree.get());
     }
 }
