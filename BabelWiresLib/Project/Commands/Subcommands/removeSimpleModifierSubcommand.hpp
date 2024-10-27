@@ -26,12 +26,12 @@ namespace babelwires {
         virtual void undo(Project& project) const override;
 
         ElementId getTargetElementId() const;
-        const Path& getFeaturePath() const;
+        const Path& getTargetPath() const;
 
       private:
         ElementId m_targetElementId;
 
-        Path m_featurePath;
+        Path m_targetPath;
 
         /// Describes the modifier which got removed.
         std::unique_ptr<ModifierData> m_modifierToRestore;

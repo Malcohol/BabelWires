@@ -28,7 +28,7 @@ babelwires::RemoveSimpleModifierSubcommand::RemoveSimpleModifierSubcommand(Eleme
                                                                      Path featurePath)
     : SimpleCommand("RemoveSimpleModifierSubcommand")
     , m_targetElementId(targetId)
-    , m_featurePath(std::move(featurePath)) {}
+    , m_targetPath(std::move(featurePath)) {}
 
 bool babelwires::RemoveSimpleModifierSubcommand::initialize(const Project& project) {
     const FeatureElement* element = project.getFeatureElement(m_targetElementId);
@@ -36,7 +36,7 @@ bool babelwires::RemoveSimpleModifierSubcommand::initialize(const Project& proje
         return false;
     }
 
-    const Modifier* modifier = element->findModifier(m_featurePath);
+    const Modifier* modifier = element->findModifier(m_targetPath);
     if (!modifier) {
         return false;
     }
@@ -46,7 +46,7 @@ bool babelwires::RemoveSimpleModifierSubcommand::initialize(const Project& proje
 }
 
 void babelwires::RemoveSimpleModifierSubcommand::execute(Project& project) const {
-    project.removeModifier(m_targetElementId, m_featurePath);
+    project.removeModifier(m_targetElementId, m_targetPath);
 }
 
 void babelwires::RemoveSimpleModifierSubcommand::undo(Project& project) const {
@@ -57,6 +57,6 @@ babelwires::ElementId babelwires::RemoveSimpleModifierSubcommand::getTargetEleme
     return m_targetElementId;
 }
 
-const babelwires::Path& babelwires::RemoveSimpleModifierSubcommand::getFeaturePath() const {
-    return m_featurePath;
+const babelwires::Path& babelwires::RemoveSimpleModifierSubcommand::getTargetPath() const {
+    return m_targetPath;
 }

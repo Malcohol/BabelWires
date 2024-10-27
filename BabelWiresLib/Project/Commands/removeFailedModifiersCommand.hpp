@@ -23,7 +23,7 @@ namespace babelwires {
 
       private:
         ElementId m_targetId;
-        Path m_featurePath;
+        Path m_targetPath;
     };
 
 } // namespace babelwires
