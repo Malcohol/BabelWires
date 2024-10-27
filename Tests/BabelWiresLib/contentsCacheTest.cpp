@@ -62,13 +62,13 @@ namespace {
                             testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestComplexRecordType::s_intFieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInput(), &inputInfo->m_intFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_int);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToInt);
         } else {
             EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutput(), &outputInfo->m_intFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_int);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToInt);
         } else {
             EXPECT_FALSE(entry->getOutput());
@@ -82,13 +82,13 @@ namespace {
                              testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestComplexRecordType::s_subRecordFieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInput(), &inputInfo->m_subRecordFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_subRecord);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToSubRecord);
         } else {
             EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutput(), &outputInfo->m_subRecordFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_subRecord);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToSubRecord);
         } else {
             EXPECT_FALSE(entry->getOutput());
@@ -101,13 +101,13 @@ namespace {
                                 testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestSimpleRecordType::s_int0FieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInput(), &inputInfo->m_subRecordIntFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_subRecordInt);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToSubRecordInt);
         } else {
             EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutput(), &outputInfo->m_subRecordIntFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_subRecordInt);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToSubRecordInt);
         } else {
             EXPECT_FALSE(entry->getOutput());
@@ -121,13 +121,13 @@ namespace {
                          testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestComplexRecordType::s_arrayFieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInput(), &inputInfo->m_arrayFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_array);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToArray);
         } else {
             EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutput(), &outputInfo->m_arrayFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_array);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToArray);
         } else {
             EXPECT_FALSE(entry->getOutput());
@@ -507,7 +507,7 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
             cache.getEntry(8 + testUtils::TestSimpleArrayType::s_nonDefaultSize - 1);
         EXPECT_FALSE(entry->getInput());
         EXPECT_EQ(entry->getOutput(),
-                  outputInfo.m_arrayFeature.getChild(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1));
+                  outputInfo.m_array.getChild(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1));
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
         checkUnmodified(entry);

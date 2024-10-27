@@ -113,10 +113,10 @@ namespace testUtils {
     // Currently not all features are represented.
     struct TestComplexRecordTypeFeatureInfo {
         const babelwires::ValueTreeNode& m_record;
-        const babelwires::ValueTreeNode& m_intFeature;
-        const babelwires::ValueTreeNode& m_subRecordFeature;
-        const babelwires::ValueTreeNode& m_subRecordIntFeature;
-        const babelwires::ValueTreeNode& m_arrayFeature;
+        const babelwires::ValueTreeNode& m_int;
+        const babelwires::ValueTreeNode& m_subRecord;
+        const babelwires::ValueTreeNode& m_subRecordInt;
+        const babelwires::ValueTreeNode& m_array;
         const babelwires::ValueTreeNode& m_elem0;
         const babelwires::ValueTreeNode& m_elem1;
 

@@ -29,11 +29,11 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
             // itself or one of the features or types registered in the TestEnvironment.
             testUtils::TestRecordFeature testRecord;
             testUtils::TestFileFeature testFileFeature(testEnvironment.m_projectContext);
-            EXPECT_EQ(babelwires::Path(testRecord.m_intFeature).getLastStep().asField()->getDiscriminator(), 4);
-            EXPECT_EQ(babelwires::Path(testRecord.m_arrayFeature).getLastStep().asField()->getDiscriminator(),
+            EXPECT_EQ(babelwires::Path(testRecord.m_int).getLastStep().asField()->getDiscriminator(), 4);
+            EXPECT_EQ(babelwires::Path(testRecord.m_array).getLastStep().asField()->getDiscriminator(),
                       3);
             EXPECT_EQ(
-                babelwires::Path(testRecord.m_subRecordFeature).getLastStep().asField()->getDiscriminator(), 2);
+                babelwires::Path(testRecord.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
             EXPECT_EQ(babelwires::Path(testRecord.m_intFeature2).getLastStep().asField()->getDiscriminator(), 1);
             EXPECT_EQ(
                 babelwires::Path(testFileFeature.m_intChildFeature).getLastStep().asField()->getDiscriminator(),
@@ -42,11 +42,11 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
             // Sanity check that the ids are unaffected by the registration re-running.
             testUtils::TestRecordFeature testRecord2;
             testUtils::TestFileFeature testFileFeature2(testEnvironment.m_projectContext);
-            EXPECT_EQ(babelwires::Path(testRecord2.m_intFeature).getLastStep().asField()->getDiscriminator(), 4);
-            EXPECT_EQ(babelwires::Path(testRecord2.m_arrayFeature).getLastStep().asField()->getDiscriminator(),
+            EXPECT_EQ(babelwires::Path(testRecord2.m_int).getLastStep().asField()->getDiscriminator(), 4);
+            EXPECT_EQ(babelwires::Path(testRecord2.m_array).getLastStep().asField()->getDiscriminator(),
                       3);
             EXPECT_EQ(
-                babelwires::Path(testRecord2.m_subRecordFeature).getLastStep().asField()->getDiscriminator(), 2);
+                babelwires::Path(testRecord2.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
             EXPECT_EQ(babelwires::Path(testRecord2.m_intFeature2).getLastStep().asField()->getDiscriminator(),
                       1);
             EXPECT_EQ(

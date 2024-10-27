@@ -134,22 +134,22 @@ babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordArrayEn
 testUtils::TestComplexRecordTypeFeatureInfo::TestComplexRecordTypeFeatureInfo(
     const babelwires::ValueTreeNode& testRecord)
     : m_record(testRecord)
-    , m_intFeature(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getInt0Id()))
+    , m_int(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getInt0Id()))
                        .is<babelwires::ValueTreeNode>())
-    , m_arrayFeature(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getArrayId()))
+    , m_array(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getArrayId()))
                          .is<babelwires::ValueTreeNode>())
-    , m_elem0(m_arrayFeature.getChildFromStep(babelwires::PathStep(0)).is<babelwires::ValueTreeNode>())
-    , m_elem1(m_arrayFeature.getChildFromStep(babelwires::PathStep(1)).is<babelwires::ValueTreeNode>())
-    , m_subRecordFeature(
+    , m_elem0(m_array.getChildFromStep(babelwires::PathStep(0)).is<babelwires::ValueTreeNode>())
+    , m_elem1(m_array.getChildFromStep(babelwires::PathStep(1)).is<babelwires::ValueTreeNode>())
+    , m_subRecord(
           testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getSubrecordId()))
               .is<babelwires::ValueTreeNode>())
-    , m_subRecordIntFeature(
-          m_subRecordFeature.getChildFromStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()))
+    , m_subRecordInt(
+          m_subRecord.getChildFromStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()))
               .is<babelwires::ValueTreeNode>())
     , m_pathToRecord(&testRecord)
-    , m_pathToInt(&m_intFeature)
-    , m_pathToArray(&m_arrayFeature)
+    , m_pathToInt(&m_int)
+    , m_pathToArray(&m_array)
     , m_pathToElem0(&m_elem0)
     , m_pathToElem1(&m_elem1)
-    , m_pathToSubRecord(&m_subRecordFeature)
-    , m_pathToSubRecordInt(&m_subRecordIntFeature) {}
+    , m_pathToSubRecord(&m_subRecord)
+    , m_pathToSubRecordInt(&m_subRecordInt) {}

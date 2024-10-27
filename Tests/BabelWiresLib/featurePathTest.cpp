@@ -126,12 +126,12 @@ TEST(FeaturePathTest, pathFollow) {
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     EXPECT_EQ(&info.m_pathToRecord.follow(testRecordFeature), &testRecordFeature);
-    EXPECT_EQ(&info.m_pathToInt.follow(testRecordFeature), &info.m_intFeature);
-    EXPECT_EQ(&info.m_pathToArray.follow(testRecordFeature), &info.m_arrayFeature);
+    EXPECT_EQ(&info.m_pathToInt.follow(testRecordFeature), &info.m_int);
+    EXPECT_EQ(&info.m_pathToArray.follow(testRecordFeature), &info.m_array);
     EXPECT_EQ(&info.m_pathToElem0.follow(testRecordFeature), &info.m_elem0);
     EXPECT_EQ(&info.m_pathToElem1.follow(testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(&info.m_pathToSubRecord.follow(testRecordFeature), &info.m_subRecordFeature);
-    EXPECT_EQ(&info.m_pathToSubRecordInt.follow(testRecordFeature), &info.m_subRecordIntFeature);
+    EXPECT_EQ(&info.m_pathToSubRecord.follow(testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(&info.m_pathToSubRecordInt.follow(testRecordFeature), &info.m_subRecordInt);
 
     EXPECT_EQ(info.m_pathToRecord.getNumSteps(), 0);
 
@@ -192,12 +192,12 @@ TEST(FeaturePathTest, pathResolve) {
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     // The paths should work even though they didn't use registered field identifiers.
-    EXPECT_EQ(&pathToInt.follow(testRecordFeature), &info.m_intFeature);
-    EXPECT_EQ(&pathToArray.follow(testRecordFeature), &info.m_arrayFeature);
+    EXPECT_EQ(&pathToInt.follow(testRecordFeature), &info.m_int);
+    EXPECT_EQ(&pathToArray.follow(testRecordFeature), &info.m_array);
     EXPECT_EQ(&pathToElem0.follow(testRecordFeature), &info.m_elem0);
     EXPECT_EQ(&pathToElem1.follow(testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(&pathToSubRecord.follow(testRecordFeature), &info.m_subRecordFeature);
-    EXPECT_EQ(&pathToInt2.follow(testRecordFeature), &info.m_subRecordIntFeature);
+    EXPECT_EQ(&pathToSubRecord.follow(testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(&pathToInt2.follow(testRecordFeature), &info.m_subRecordInt);
 
     // The field identifiers in the paths should now be resolved.
     EXPECT_NE(pathToInt.getStep(0).getField().getDiscriminator(), 0);
@@ -229,12 +229,12 @@ TEST(FeaturePathTest, pathTryFollow) {
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     EXPECT_EQ(info.m_pathToRecord.tryFollow(testRecordFeature), &testRecordFeature);
-    EXPECT_EQ(info.m_pathToInt.tryFollow(testRecordFeature), &info.m_intFeature);
-    EXPECT_EQ(info.m_pathToArray.tryFollow(testRecordFeature), &info.m_arrayFeature);
+    EXPECT_EQ(info.m_pathToInt.tryFollow(testRecordFeature), &info.m_int);
+    EXPECT_EQ(info.m_pathToArray.tryFollow(testRecordFeature), &info.m_array);
     EXPECT_EQ(info.m_pathToElem0.tryFollow(testRecordFeature), &info.m_elem0);
     EXPECT_EQ(info.m_pathToElem1.tryFollow(testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(info.m_pathToSubRecord.tryFollow(testRecordFeature), &info.m_subRecordFeature);
-    EXPECT_EQ(info.m_pathToSubRecordInt.tryFollow(testRecordFeature), &info.m_subRecordIntFeature);
+    EXPECT_EQ(info.m_pathToSubRecord.tryFollow(testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(info.m_pathToSubRecordInt.tryFollow(testRecordFeature), &info.m_subRecordInt);
 }
 
 TEST(FeaturePathTest, pathFollowFail) {
