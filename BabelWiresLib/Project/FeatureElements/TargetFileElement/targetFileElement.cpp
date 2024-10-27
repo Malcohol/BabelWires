@@ -57,16 +57,16 @@ babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData
 }
 
 babelwires::ValueTreeNode* babelwires::TargetFileElement::doGetInputNonConst() {
-    return m_feature.get();
+    return m_valueTreeRoot.get();
 }
 
 const babelwires::ValueTreeNode* babelwires::TargetFileElement::getInput() const {
-    return m_feature.get();
+    return m_valueTreeRoot.get();
 }
 
 void babelwires::TargetFileElement::setFeature(std::unique_ptr<ValueTreeRoot> feature) {
     m_contentsCache.setFeatures("File", feature.get(), nullptr);
-    m_feature = std::move(feature);
+    m_valueTreeRoot = std::move(feature);
 }
 
 std::filesystem::path babelwires::TargetFileElement::getFilePath() const {
@@ -112,7 +112,7 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
         OutFileStream outStream(data.m_filePath);
         const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
         assert(format && "FileFeature with unregistered file format");
-        format->writeToFile(context, userLogger, *m_feature, outStream);
+        format->writeToFile(context, userLogger, *m_valueTreeRoot, outStream);
         outStream.close();
         if (m_saveHashWhenSaved != m_saveHash) {
             setChanged(Changes::FeatureElementLabelChanged);
@@ -127,12 +127,12 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
 
 void babelwires::TargetFileElement::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setFeatures("File", m_feature.get(), nullptr);
+        m_contentsCache.setFeatures("File", m_valueTreeRoot.get(), nullptr);
     } else if (isChanged(Changes::ModifierChangesMask)) {
         m_contentsCache.updateModifierCache();
     }
 
-    if (m_feature->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
+    if (m_valueTreeRoot->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
         updateSaveHash();
     }
 }
@@ -146,7 +146,7 @@ std::string babelwires::TargetFileElement::getLabel() const {
 }
 
 void babelwires::TargetFileElement::updateSaveHash() {
-    std::size_t newHash = m_feature->getHash();
+    std::size_t newHash = m_valueTreeRoot->getHash();
     hash::mixInto(newHash, getFilePath().u8string());
 
     if (m_saveHash != newHash) {

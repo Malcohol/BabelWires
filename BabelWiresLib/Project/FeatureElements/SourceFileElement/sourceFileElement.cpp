@@ -34,21 +34,21 @@ babelwires::SourceFileElementData& babelwires::SourceFileElement::getElementData
 }
 
 babelwires::ValueTreeNode* babelwires::SourceFileElement::doGetOutputNonConst() {
-    return m_feature.get();
+    return m_valueTreeRoot.get();
 }
 
 const babelwires::ValueTreeNode* babelwires::SourceFileElement::getOutput() const {
-    return m_feature.get();
+    return m_valueTreeRoot.get();
 }
 
 void babelwires::SourceFileElement::setFeature(std::unique_ptr<ValueTreeRoot> feature) {
     m_contentsCache.setFeatures("File", nullptr, feature.get());
-    m_feature = std::move(feature);
+    m_valueTreeRoot = std::move(feature);
 }
 
 void babelwires::SourceFileElement::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setFeatures("File", nullptr, m_feature.get());
+        m_contentsCache.setFeatures("File", nullptr, m_valueTreeRoot.get());
     }
 }
 

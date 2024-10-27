@@ -52,7 +52,7 @@ namespace babelwires {
         void updateSaveHash();
 
       private:
-        std::unique_ptr<ValueTreeRoot> m_feature;
+        std::unique_ptr<ValueTreeRoot> m_valueTreeRoot;
 
         /// The current hash of the feature and filePath.
         std::size_t m_saveHash = 1;

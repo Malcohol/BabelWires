@@ -36,7 +36,7 @@ namespace babelwires {
         std::string getRootLabel() const;
 
       private:
-        std::unique_ptr<babelwires::ValueTreeRoot> m_rootFeature;
+        std::unique_ptr<babelwires::ValueTreeRoot> m_valueTreeRoot;
     };
 
 } // namespace babelwires

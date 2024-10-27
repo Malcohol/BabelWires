@@ -39,8 +39,8 @@ namespace babelwires {
                                   ValueTreeNode& outputFeature) const = 0;
 
       protected:
-        std::unique_ptr<ValueTreeRoot> m_inputFeature;
-        std::unique_ptr<ValueTreeRoot> m_outputFeature;
+        std::unique_ptr<ValueTreeRoot> m_inputValueTreeRoot;
+        std::unique_ptr<ValueTreeRoot> m_outputValueTreeRoot;
     };
 
 } // namespace babelwires

@@ -24,7 +24,7 @@ babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger
         message << "Type Reference " << data.getTypeRef().toString() << " could not be resolved";
         setInternalFailure(message.str());
     }
-    m_rootFeature = std::make_unique<ValueTreeRoot>(context.m_typeSystem, typeRefForConstruction);
+    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.m_typeSystem, typeRefForConstruction);
 }
 
 babelwires::ValueElement::~ValueElement() = default;
@@ -34,23 +34,23 @@ const babelwires::ValueElementData& babelwires::ValueElement::getElementData() c
 }
 
 babelwires::ValueTreeNode* babelwires::ValueElement::doGetInputNonConst() {
-    return m_rootFeature.get();
+    return m_valueTreeRoot.get();
 }
 
 babelwires::ValueTreeNode* babelwires::ValueElement::doGetOutputNonConst() {
-    return m_rootFeature.get();
+    return m_valueTreeRoot.get();
 }
 
 const babelwires::ValueTreeNode* babelwires::ValueElement::getInput() const {
-    return m_rootFeature.get();
+    return m_valueTreeRoot.get();
 }
 
 const babelwires::ValueTreeNode* babelwires::ValueElement::getOutput() const {
-    return m_rootFeature.get();
+    return m_valueTreeRoot.get();
 }
 
 std::string babelwires::ValueElement::getRootLabel() const {
-    if (m_rootFeature->getTypeRef() == FailureType::getThisIdentifier()) {
+    if (m_valueTreeRoot->getTypeRef() == FailureType::getThisIdentifier()) {
         return "Failed";
     } else {
         return "Value";
@@ -59,7 +59,7 @@ std::string babelwires::ValueElement::getRootLabel() const {
 
 void babelwires::ValueElement::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setFeatures(getRootLabel(), m_rootFeature.get(), m_rootFeature.get());
+        m_contentsCache.setFeatures(getRootLabel(), m_valueTreeRoot.get(), m_valueTreeRoot.get());
     } else if (isChanged(Changes::ModifierChangesMask)) {
         m_contentsCache.updateModifierCache();
     }

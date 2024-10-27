@@ -46,7 +46,7 @@ namespace babelwires {
         SourceFileElementData& getElementData();
 
       private:
-        std::unique_ptr<ValueTreeRoot> m_feature;
+        std::unique_ptr<ValueTreeRoot> m_valueTreeRoot;
     };
 
 } // namespace babelwires
