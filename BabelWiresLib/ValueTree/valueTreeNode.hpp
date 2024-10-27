@@ -113,7 +113,7 @@ namespace babelwires {
         void assign(const ValueTreeNode& other);
 
         /// If the value is compound, synchronize the m_children data structure with the current children of the value.
-        void synchronizeSubfeatures();
+        void synchronizeChildren();
 
         /// Set change flags in this feature and its subfeatures by comparing the current value with that of other.
         void reconcileChanges(const ValueHolder& other);
@@ -123,7 +123,7 @@ namespace babelwires {
         void setChanged(Changes changes);
 
         /// Call setToDefault on each subfeature.
-        void setSubfeaturesToDefault();
+        void setChildrenToDefault();
 
       protected:
         virtual void doSetToDefault() = 0;

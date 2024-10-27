@@ -93,7 +93,7 @@ const babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) cons
     return nullptr;
 }
 
-void babelwires::ValueTreeNode::setSubfeaturesToDefault() {
+void babelwires::ValueTreeNode::setChildrenToDefault() {
     for (auto&& child : getChildRange(*this)) {
         child->setToDefault();
     }
@@ -200,7 +200,7 @@ int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const
     return -1;
 }
 
-void babelwires::ValueTreeNode::synchronizeSubfeatures() {
+void babelwires::ValueTreeNode::synchronizeChildren() {
     const ValueHolder& value = getValue();
     auto* compound = getType().as<CompoundType>();
     if (!compound) {
@@ -219,7 +219,7 @@ void babelwires::ValueTreeNode::synchronizeSubfeatures() {
         } else {
             childFeature = std::make_unique<ValueTreeChild>(type, childValue);
             childFeature->setOwner(this);
-            childFeature->synchronizeSubfeatures();
+            childFeature->synchronizeChildren();
         }
         newChildMap.insert_or_assign(step, i, std::move(childFeature));
     }

@@ -22,7 +22,7 @@ void babelwires::ValueTreeChild::ensureSynchronized(const ValueHolder* valueHold
     assert(valueHolder);
     if (m_value != valueHolder) {
         m_value = valueHolder;
-        synchronizeSubfeatures();
+        synchronizeChildren();
     }
 }
 
@@ -40,7 +40,7 @@ void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
             ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);
             modifiableValueHolder = newValue;
             // Changing the modifiableValueHolder, can change the value.
-            synchronizeSubfeatures();
+            synchronizeChildren();
         } else {
             throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
         }
@@ -54,5 +54,5 @@ void babelwires::ValueTreeChild::doSetToDefault() {
     ValueHolder& modifiableValueHolder = rootAndPath.m_root.setModifiable(rootAndPath.m_pathFromRoot);
     modifiableValueHolder = newValue;
     // Changing the modifiableValueHolder can change the structure of the hierarchy at this point.
-    synchronizeSubfeatures();
+    synchronizeChildren();
 }

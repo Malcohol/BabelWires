@@ -21,7 +21,7 @@ namespace babelwires {
         /// Construct a ValueTreeNode which carries values of the given type.
         ValueTreeChild(TypeRef typeRef, const ValueHolder* valueHolder);
 
-        /// If the new valueHolder pointer is different, update m_value and synchronizeSubfeatures.
+        /// If the new valueHolder pointer is different, update m_value and synchronizeChildren.
         void ensureSynchronized(const ValueHolder* valueHolder);
 
       protected:

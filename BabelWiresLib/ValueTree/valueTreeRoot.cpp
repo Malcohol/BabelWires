@@ -32,7 +32,7 @@ void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
         if (type.isValidValue(typeSystem, *newValue)) {
             ValueHolder backup = m_value;
             m_value = newValue;
-            synchronizeSubfeatures();
+            synchronizeChildren();
             if (backup) {
                 reconcileChanges(backup);
             } else {
@@ -51,7 +51,7 @@ void babelwires::ValueTreeRoot::doSetToDefault() {
     auto [newValue, _] = type.createValue(typeSystem);
     if (m_value != newValue) {
         m_value.swap(newValue);
-        synchronizeSubfeatures();
+        synchronizeChildren();
         if (newValue) {
             reconcileChanges(newValue);
         } else {
@@ -72,7 +72,7 @@ babelwires::ValueHolder& babelwires::ValueTreeRoot::setModifiable(const Path& pa
                m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
         const TypeSystem& typeSystem = getTypeSystem();
         auto [_, valueInCopy] = followNonConst(typeSystem, getType(), pathFromHere, m_value);
-        synchronizeSubfeatures();
+        synchronizeChildren();
         return valueInCopy;
     } else {
         return m_value;
