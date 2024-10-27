@@ -31,8 +31,8 @@ namespace babelwires {
                            const Path& path, std::uint8_t depth, std::uint8_t indent);
 
         const std::string& getLabel() const { return m_label; }
-        const ValueTreeNode* getInput() const { return m_inputFeature; }
-        const ValueTreeNode* getOutput() const { return m_outputFeature; }
+        const ValueTreeNode* getInput() const { return m_input; }
+        const ValueTreeNode* getOutput() const { return m_output; }
         const Path& getPath() const { return m_path; }
 
         /// Get the indent of this row.
@@ -50,17 +50,17 @@ namespace babelwires {
         bool hasFailedHiddenModifiers() const { return m_hasFailedHiddenModifiers; }
         bool hasSubmodifiers() const { return m_hasSubModifiers; }
 
-        const ValueTreeNode* getInputThenOutputFeature() const { return m_inputFeature ? m_inputFeature : m_outputFeature; }
+        const ValueTreeNode* getInputThenOutputFeature() const { return m_input ? m_input : m_output; }
 
-        const ValueTreeNode* getOutputThenInputFeature() const { return m_outputFeature ? m_outputFeature : m_inputFeature; }
+        const ValueTreeNode* getOutputThenInputFeature() const { return m_output ? m_output : m_input; }
 
       private:
         friend ContentsCache;
         friend Detail::ContentsCacheBuilder;
 
         std::string m_label;
-        const ValueTreeNode* m_inputFeature;
-        const ValueTreeNode* m_outputFeature;
+        const ValueTreeNode* m_input;
+        const ValueTreeNode* m_output;
 
         /// A path which is common to both input and output features.
         const Path m_path;

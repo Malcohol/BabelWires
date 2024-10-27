@@ -21,8 +21,8 @@ babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Valu
                                                    const ValueTreeNode* outputFeature, const Path& path,
                                                    std::uint8_t depth, std::uint8_t indent)
     : m_label(std::move(label))
-    , m_inputFeature(inputFeature)
-    , m_outputFeature(outputFeature)
+    , m_input(inputFeature)
+    , m_output(outputFeature)
     , m_path(path)
     , m_depth(depth)
     , m_indent(indent)
@@ -312,7 +312,7 @@ int babelwires::ContentsCache::getNumRows() const {
 int babelwires::ContentsCache::getIndexOfPath(bool seekInputFeature, const Path& path) const {
     for (int i = 0; i < m_rows.size(); ++i) {
         const ContentsCacheEntry& entry = m_rows[i];
-        if ((seekInputFeature && !entry.m_inputFeature) || (!seekInputFeature && !entry.m_outputFeature)) {
+        if ((seekInputFeature && !entry.m_input) || (!seekInputFeature && !entry.m_output)) {
             continue;
         }
         if (path == m_rows[i].m_path) {
