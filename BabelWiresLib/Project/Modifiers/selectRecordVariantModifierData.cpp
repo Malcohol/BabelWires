@@ -15,12 +15,12 @@
 #include <Common/Serialization/serializer.hpp>
 
 void babelwires::SelectRecordVariantModifierData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    serializer.serializeValue("path", m_targetPath);
     serializer.serializeValue("select", m_tagToSelect);
 }
 
 void babelwires::SelectRecordVariantModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+    deserializer.deserializeValue("path", m_targetPath);
     deserializer.deserializeValue("select", m_tagToSelect);
 }
 

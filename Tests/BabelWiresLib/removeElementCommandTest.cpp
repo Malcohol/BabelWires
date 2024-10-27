@@ -86,7 +86,7 @@ TEST(RemoveElementCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_pathToFeature = babelwires::Path::deserializeFromString("qqq/zzz");
+    modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::RemoveElementCommand command("Test command", 57);
 
@@ -106,7 +106,7 @@ TEST(RemoveElementCommandTest, subsumption) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = elementData.getPathToRecordInt0();
+        modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         modData.m_sourceId = element1Id;
 

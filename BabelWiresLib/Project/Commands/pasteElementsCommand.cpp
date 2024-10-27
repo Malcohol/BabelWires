@@ -104,7 +104,7 @@ void babelwires::PasteElementsCommand::execute(Project& project) const {
     }
     for (const auto& connection : m_connectionsToPaste) {
         auto newModifier = std::make_unique<ConnectionModifierData>();
-        newModifier->m_pathToFeature = connection.m_pathToTargetFeature;
+        newModifier->m_targetPath = connection.m_pathToTargetFeature;
         newModifier->m_sourceId = connection.m_sourceId;
         newModifier->m_pathToSourceFeature = connection.m_pathToSourceFeature;
         project.addModifier(connection.m_targetId, *newModifier);

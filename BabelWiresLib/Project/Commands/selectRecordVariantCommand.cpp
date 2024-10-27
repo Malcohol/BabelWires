@@ -65,7 +65,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
     }
 
     SelectRecordVariantModifierData modifierToAdd;
-    modifierToAdd.m_pathToFeature = m_pathToRecord;
+    modifierToAdd.m_targetPath = m_pathToRecord;
     modifierToAdd.m_tagToSelect = m_tagToSelect;
     m_recordModifierToAdd = std::make_unique<SelectRecordVariantModifierData>(std::move(modifierToAdd));
 

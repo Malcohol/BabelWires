@@ -37,18 +37,18 @@ struct FeatureElementConnectionTest : ::testing::Test {
         m_sourceElement = m_context.m_project.getFeatureElement(m_sourceId);
         ASSERT_TRUE(m_sourceElement);
 
-        m_arrayInitData.m_pathToFeature = m_arrayPath;
+        m_arrayInitData.m_targetPath = m_arrayPath;
         m_arrayInitData.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
 
         // The target int has a limit range, but this value is within the range.
         m_arrayElemData = babelwires::ValueAssignmentData(babelwires::IntValue(4));
-        m_arrayElemData.m_pathToFeature = m_arrayElemPath;
+        m_arrayElemData.m_targetPath = m_arrayElemPath;
 
         // The target int has a limit range, and this exceeds that range.
         m_arrayElemDataHigh = babelwires::ValueAssignmentData(babelwires::IntValue(700));
-        m_arrayElemDataHigh.m_pathToFeature = m_arrayElemPath;
+        m_arrayElemDataHigh.m_targetPath = m_arrayElemPath;
 
-        m_assignData.m_pathToFeature = m_targetPath;
+        m_assignData.m_targetPath = m_targetPath;
         m_assignData.m_pathToSourceFeature = m_arrayElemPath;
         m_assignData.m_sourceId = m_sourceId;
     }
@@ -63,12 +63,12 @@ struct FeatureElementConnectionTest : ::testing::Test {
         m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
         if (sourceValue != 0) {
             babelwires::ValueAssignmentData sourceData{babelwires::IntValue(sourceValue)};
-            sourceData.m_pathToFeature = m_arrayElemPath;
+            sourceData.m_targetPath = m_arrayElemPath;
             m_context.m_project.addModifier(m_sourceId, sourceData);
         }
 
         m_context.m_project.addModifier(m_elementId, m_assignData);
-        return m_featureElement->findModifier(m_assignData.m_pathToFeature)->asConnectionModifier(); 
+        return m_featureElement->findModifier(m_assignData.m_targetPath)->asConnectionModifier(); 
     }
 
     testUtils::TestEnvironment m_context;
@@ -96,7 +96,7 @@ TEST_F(FeatureElementConnectionTest, addAConnection) {
     m_context.m_project.addModifier(m_elementId, m_assignData);
     m_context.m_project.process();
 
-    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_pathToFeature);
+    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_FALSE(modifier->isFailed());
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierAdded));
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
@@ -115,7 +115,7 @@ TEST_F(FeatureElementConnectionTest, changeSourceValueFromDefault) {
     m_context.m_project.addModifier(m_sourceId, m_arrayElemData);
     m_context.m_project.process();
 
-    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_pathToFeature);
+    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_FALSE(modifier->isFailed());
     EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
     EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));
@@ -137,7 +137,7 @@ TEST_F(FeatureElementConnectionTest, changeSourceValueToDefault) {
     m_context.m_project.removeModifier(m_sourceId, m_arrayElemPath);
     m_context.m_project.process();
     
-    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_pathToFeature);
+    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_FALSE(modifier->isFailed());
     EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
     EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));
@@ -160,7 +160,7 @@ TEST_F(FeatureElementConnectionTest, removedAndRestoreSourceFeature) {
     m_context.m_project.removeModifier(m_sourceId, m_arrayPath);
     m_context.m_project.process();
 
-    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_pathToFeature);
+    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_TRUE(modifier->isFailed());
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
     EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));
@@ -194,7 +194,7 @@ TEST_F(FeatureElementConnectionTest, failedButStillConnected) {
     m_context.m_project.addModifier(m_elementId, m_assignData);
     m_context.m_project.process();
 
-    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_pathToFeature);
+    babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_TRUE(modifier->isFailed());
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
     EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));

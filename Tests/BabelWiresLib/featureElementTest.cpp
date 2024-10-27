@@ -74,18 +74,18 @@ TEST(FeatureElementTest, modifiers) {
     // Deliberately have modifiers in non-canonical order.
     {
         auto arrayElemData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(16));
-        arrayElemData->m_pathToFeature = arrayElemPath;
+        arrayElemData->m_targetPath = arrayElemPath;
         elementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
         auto arrayInitData = std::make_unique<babelwires::ArraySizeModifierData>();
-        arrayInitData->m_pathToFeature = arrayPath;
+        arrayInitData->m_targetPath = arrayPath;
         arrayInitData->m_size = 5;
         elementData.m_modifiers.emplace_back(std::move(arrayInitData));
     }
     {
         auto failedModifier = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(71));
-        failedModifier->m_pathToFeature = failedPath;
+        failedModifier->m_targetPath = failedPath;
         elementData.m_modifiers.emplace_back(std::move(failedModifier));
     }
 
@@ -137,7 +137,7 @@ TEST(FeatureElementTest, modifiers) {
     }
     {
         babelwires::ValueAssignmentData arrayElemData2(babelwires::IntValue(12));
-        arrayElemData2.m_pathToFeature = arrayElemPath2;
+        arrayElemData2.m_targetPath = arrayElemPath2;
         featureElement->addModifier(testEnvironment.m_log, arrayElemData2);
 
         EXPECT_EQ(testRecord.getarray().getEntry(4).get(), 12);
@@ -229,18 +229,18 @@ TEST(FeatureElementTest, extractElementData) {
     // Deliberately have modifiers in non-canonical order.
     {
         auto arrayElemData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(16));
-        arrayElemData->m_pathToFeature = arrayElemPath;
+        arrayElemData->m_targetPath = arrayElemPath;
         featureElementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
         auto arrayInitData = std::make_unique<babelwires::ArraySizeModifierData>();
-        arrayInitData->m_pathToFeature = arrayPath;
+        arrayInitData->m_targetPath = arrayPath;
         arrayInitData->m_size = 5;
         featureElementData.m_modifiers.emplace_back(std::move(arrayInitData));
     }
     {
         auto failedModifier = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(71));
-        failedModifier->m_pathToFeature = failedPath;
+        failedModifier->m_targetPath = failedPath;
         featureElementData.m_modifiers.emplace_back(std::move(failedModifier));
     }
     featureElementData.m_expandedPaths.emplace_back(arrayElemPath2);
@@ -256,7 +256,7 @@ TEST(FeatureElementTest, extractElementData) {
 
     {
         babelwires::ValueAssignmentData arrayElemData2(babelwires::IntValue(12));
-        arrayElemData2.m_pathToFeature = arrayElemPath2;
+        arrayElemData2.m_targetPath = arrayElemPath2;
         featureElement->addModifier(testEnvironment.m_log, arrayElemData2);
     }
     featureElement->removeModifier(featureElement->findModifier(arrayElemPath));
@@ -270,10 +270,10 @@ TEST(FeatureElementTest, extractElementData) {
 
     ASSERT_EQ(extractedData->m_modifiers.size(), 3);
     // We assume extracted data is sorted, though that assumption is not part of the guarantee.
-    EXPECT_EQ(extractedData->m_modifiers[0]->m_pathToFeature, arrayPath);
+    EXPECT_EQ(extractedData->m_modifiers[0]->m_targetPath, arrayPath);
     EXPECT_TRUE(extractedData->m_modifiers[0].get()->as<babelwires::ArraySizeModifierData>());
     EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData*>(extractedData->m_modifiers[0].get())->m_size, 5);
-    EXPECT_EQ(extractedData->m_modifiers[1]->m_pathToFeature, arrayElemPath2);
+    EXPECT_EQ(extractedData->m_modifiers[1]->m_targetPath, arrayElemPath2);
     EXPECT_TRUE(extractedData->m_modifiers[1]->as<babelwires::ValueAssignmentData>());
     EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(extractedData->m_modifiers[1].get())
                   ->getValue()
@@ -281,7 +281,7 @@ TEST(FeatureElementTest, extractElementData) {
                   ->get(),
               12);
     // Even though this modifier is currently failed, its data is still important.
-    EXPECT_EQ(extractedData->m_modifiers[2]->m_pathToFeature, failedPath);
+    EXPECT_EQ(extractedData->m_modifiers[2]->m_targetPath, failedPath);
     EXPECT_TRUE(extractedData->m_modifiers[2]->as<babelwires::ValueAssignmentData>());
     EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(extractedData->m_modifiers[2].get())
                   ->getValue()
@@ -309,18 +309,18 @@ TEST(FeatureElementTest, removedModifiers) {
     // Deliberately have modifiers in non-canonical order.
     {
         auto arrayElemData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(16));
-        arrayElemData->m_pathToFeature = arrayElemPath;
+        arrayElemData->m_targetPath = arrayElemPath;
         featureElementData.m_modifiers.emplace_back(std::move(arrayElemData));
     }
     {
         auto arrayInitData = std::make_unique<babelwires::ArraySizeModifierData>();
-        arrayInitData->m_pathToFeature = arrayPath;
+        arrayInitData->m_targetPath = arrayPath;
         arrayInitData->m_size = 5;
         featureElementData.m_modifiers.emplace_back(std::move(arrayInitData));
     }
     {
         auto failedModifier = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(71));
-        failedModifier->m_pathToFeature = failedPath;
+        failedModifier->m_targetPath = failedPath;
         featureElementData.m_modifiers.emplace_back(std::move(failedModifier));
     }
 
@@ -337,7 +337,7 @@ TEST(FeatureElementTest, removedModifiers) {
     int numCorrectMods = 0;
     for (const auto modifier : featureElement->getRemovedModifiers()) {
         ++numMods;
-        if (modifier->getModifierData().m_pathToFeature == arrayElemPath) {
+        if (modifier->getModifierData().m_targetPath == arrayElemPath) {
             ASSERT_TRUE(modifier->getModifierData().as<babelwires::ValueAssignmentData>());
             EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(&modifier->getModifierData())
                           ->getValue()
@@ -346,7 +346,7 @@ TEST(FeatureElementTest, removedModifiers) {
                       16);
             ++numCorrectMods;
         }
-        if (modifier->getModifierData().m_pathToFeature == failedPath) {
+        if (modifier->getModifierData().m_targetPath == failedPath) {
             ASSERT_TRUE(modifier->getModifierData().as<babelwires::ValueAssignmentData>());
             EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(&modifier->getModifierData())
                           ->getValue()
@@ -412,7 +412,7 @@ TEST(FeatureElementTest, simpleChanges) {
     {
         featureElement->clearChanges();
         babelwires::ArraySizeModifierData arrayInitData;
-        arrayInitData.m_pathToFeature = arrayPath;
+        arrayInitData.m_targetPath = arrayPath;
         arrayInitData.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
         featureElement->addModifier(testEnvironment.m_log, arrayInitData);
         featureElement->process(testEnvironment.m_project, testEnvironment.m_log);
@@ -427,7 +427,7 @@ TEST(FeatureElementTest, simpleChanges) {
     {
         featureElement->clearChanges();
         babelwires::ValueAssignmentData arrayElemData(babelwires::IntValue(12));
-        arrayElemData.m_pathToFeature = arrayElemPath;
+        arrayElemData.m_targetPath = arrayElemPath;
         featureElement->addModifier(testEnvironment.m_log, arrayElemData);
         featureElement->process(testEnvironment.m_project, testEnvironment.m_log);
 

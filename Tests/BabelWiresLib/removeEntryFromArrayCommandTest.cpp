@@ -28,20 +28,20 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
 
     {
         babelwires::ArraySizeModifierData arrayInitialization;
-        arrayInitialization.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray();
+        arrayInitialization.m_targetPath = testUtils::TestArrayElementData::getPathToArray();
         arrayInitialization.m_size = 5;
         testEnvironment.m_project.addModifier(elementId, arrayInitialization);
     }
     {
         babelwires::ConnectionModifierData inputConnection;
-        inputConnection.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray_1();
+        inputConnection.m_targetPath = testUtils::TestArrayElementData::getPathToArray_1();
         inputConnection.m_pathToSourceFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
+        outputConnection.m_targetPath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         outputConnection.m_pathToSourceFeature = testUtils::TestArrayElementData::getPathToArray_1();
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);

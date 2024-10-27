@@ -107,7 +107,7 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
     EXPECT_EQ(element->findModifier(pathToFeature), nullptr);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(199));
-    modData.m_pathToFeature = pathToFeature;
+    modData.m_targetPath = pathToFeature;
 
     testEnvironment.m_project.addModifier(elementId, modData);
 
@@ -137,7 +137,7 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
 
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
     babelwires::ConnectionModifierData modData;
-    modData.m_pathToFeature = pathToTargetFeature;
+    modData.m_targetPath = pathToTargetFeature;
     modData.m_sourceId = sourceElementId;
     modData.m_pathToSourceFeature = pathToSourceFeature;
 
@@ -230,7 +230,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     const babelwires::Path pathToArray4 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(702));
-    modData.m_pathToFeature = pathToArray1;
+    modData.m_targetPath = pathToArray1;
     testEnvironment.m_project.addModifier(elementId, modData);
 
     EXPECT_EQ(element->findModifier(pathToArray), nullptr);
@@ -286,7 +286,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = pathToTargetFeature;
+        modData.m_targetPath = pathToTargetFeature;
         modData.m_sourceId = sourceElementId;
         modData.m_pathToSourceFeature = pathToArray1;
         testEnvironment.m_project.addModifier(targetElementId, modData);
@@ -520,7 +520,7 @@ TEST(ProjectTest, process) {
         procData.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
 
         babelwires::ValueAssignmentData modData(babelwires::IntValue(5));
-        modData.m_pathToFeature = testUtils::TestProcessorInputOutputType::s_pathToInt2;
+        modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt2;
         procData.m_modifiers.emplace_back(modData.clone());
 
         newProcId = testEnvironment.m_project.addFeatureElement(procData);
@@ -528,7 +528,7 @@ TEST(ProjectTest, process) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = testUtils::TestProcessorInputOutputType::s_pathToInt;
+        modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt;
         modData.m_sourceId = newProcId;
         modData.m_pathToSourceFeature = testUtils::TestProcessorInputOutputType::s_pathToInt2;
         testEnvironment.m_project.addModifier(testUtils::TestProjectData::c_processorId, modData);
@@ -554,14 +554,14 @@ TEST(ProjectTest, dependencyLoop) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = elementData.getPathToRecordInt0();
+        modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId2;
         modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = elementData.getPathToRecordInt0();
+        modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId3;
         modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId2, modData);
@@ -578,7 +578,7 @@ TEST(ProjectTest, dependencyLoop) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = elementData.getPathToRecordInt0();
+        modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId1;
         modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId3, modData);
@@ -624,14 +624,14 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = elementData.getPathToRecordInt0();
+        modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId2;
         modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = elementData.getPathToRecordInt0();
+        modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId4;
         modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId3, modData);
@@ -650,14 +650,14 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_pathToFeature = elementData.getPathToRecordInt0();
+        modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId1;
         modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId2, modData);
     }
     {
         babelwires::ValueAssignmentData modData(babelwires::IntValue(16));
-        modData.m_pathToFeature = elementData.getPathToRecordInt0();
+        modData.m_targetPath = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId4, modData);
     }
 

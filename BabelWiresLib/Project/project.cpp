@@ -169,7 +169,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const Path& pathT
             if (!arrayModifier) {
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
-                    arrayInitDataPtr.m_pathToFeature = pathToArray;
+                    arrayInitDataPtr.m_targetPath = pathToArray;
                     arrayInitDataPtr.m_size = featureAtPath->getNumFeatures();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
@@ -213,7 +213,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const Path& pa
             if (!arrayModifier) {
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
-                    arrayInitDataPtr.m_pathToFeature = pathToArray;
+                    arrayInitDataPtr.m_targetPath = pathToArray;
                     arrayInitDataPtr.m_size = featureAtPath->getNumFeatures();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
@@ -617,7 +617,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const Path& path
 
     if (!modifierData) {
         ActivateOptionalsModifierData newData;
-        newData.m_pathToFeature = pathToRecord;
+        newData.m_targetPath = pathToRecord;
         newData.m_selectedOptionals.emplace_back(optional);
         addModifier(elementId, newData);
     }

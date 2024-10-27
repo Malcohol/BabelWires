@@ -16,7 +16,7 @@ namespace {
     std::unique_ptr<babelwires::Modifier> createModifier(babelwires::Path path, int x,
                                                          babelwires::FeatureElement* owner = nullptr) {
         auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(x));
-        data->m_pathToFeature = std::move(path);
+        data->m_targetPath = std::move(path);
         auto modPtr = std::make_unique<babelwires::LocalModifier>(std::move(data));
         modPtr->setOwner(owner);
         return modPtr;
@@ -25,7 +25,7 @@ namespace {
     std::unique_ptr<babelwires::ConnectionModifier>
     createConnectionModifier(babelwires::Path path, babelwires::FeatureElement* owner = nullptr) {
         auto data = std::make_unique<babelwires::ConnectionModifierData>();
-        data->m_pathToFeature = std::move(path);
+        data->m_targetPath = std::move(path);
         data->m_pathToSourceFeature = babelwires::Path();
         auto modPtr = std::make_unique<babelwires::ConnectionModifier>(std::move(data));
         modPtr->setOwner(owner);
@@ -724,7 +724,7 @@ TEST(EditTreeTest, treeIteration) {
         EXPECT_NE(cit, it.childrenEnd());
         EXPECT_EQ(cit.getStep(), babelwires::PathStep(3));
         ASSERT_NE(cit.getModifier(), nullptr);
-        EXPECT_EQ(cit.getModifier()->getModifierData().m_pathToFeature, path5);
+        EXPECT_EQ(cit.getModifier()->getModifierData().m_targetPath, path5);
         cit.nextSibling();
         EXPECT_EQ(cit, it.childrenEnd());
     }
@@ -732,13 +732,13 @@ TEST(EditTreeTest, treeIteration) {
     EXPECT_NE(it, rit.childrenEnd());
     EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("bb")));
     ASSERT_NE(it.getModifier(), nullptr);
-    EXPECT_EQ(it.getModifier()->getModifierData().m_pathToFeature, path3);
+    EXPECT_EQ(it.getModifier()->getModifierData().m_targetPath, path3);
     {
         auto cit = it.childrenBegin();
         EXPECT_NE(cit, it.childrenEnd());
         EXPECT_EQ(cit.getStep(), babelwires::PathStep(4));
         ASSERT_NE(cit.getModifier(), nullptr);
-        EXPECT_EQ(cit.getModifier()->getModifierData().m_pathToFeature, path2);
+        EXPECT_EQ(cit.getModifier()->getModifierData().m_targetPath, path2);
         cit.nextSibling();
         EXPECT_NE(cit, it.childrenEnd());
         EXPECT_EQ(cit.getStep(), babelwires::PathStep(6));
@@ -792,21 +792,21 @@ TEST(EditTreeTest, modifierIteration) {
     {
         babelwires::Modifier* mod = *it;
         ASSERT_TRUE(mod);
-        EXPECT_EQ(mod->getModifierData().m_pathToFeature, path5);
+        EXPECT_EQ(mod->getModifierData().m_targetPath, path5);
     }
     ++it;
     EXPECT_NE(it, range.end());
     {
         babelwires::Modifier* mod = *it;
         ASSERT_TRUE(mod);
-        EXPECT_EQ(mod->getModifierData().m_pathToFeature, path3);
+        EXPECT_EQ(mod->getModifierData().m_targetPath, path3);
     }
     ++it;
     EXPECT_NE(it, range.end());
     {
         babelwires::Modifier* mod = *it;
         ASSERT_TRUE(mod);
-        EXPECT_EQ(mod->getModifierData().m_pathToFeature, path2);
+        EXPECT_EQ(mod->getModifierData().m_targetPath, path2);
     }
     ++it;
     EXPECT_EQ(it, range.end());
@@ -835,14 +835,14 @@ TEST(EditTreeTest, modifierIterationAtSubPath) {
     {
         babelwires::Modifier* mod = *it;
         ASSERT_TRUE(mod);
-        EXPECT_EQ(mod->getModifierData().m_pathToFeature, path3);
+        EXPECT_EQ(mod->getModifierData().m_targetPath, path3);
     }
     ++it;
     EXPECT_NE(it, range.end());
     {
         babelwires::Modifier* mod = *it;
         ASSERT_TRUE(mod);
-        EXPECT_EQ(mod->getModifierData().m_pathToFeature, path2);
+        EXPECT_EQ(mod->getModifierData().m_targetPath, path2);
     }
     ++it;
     EXPECT_EQ(it, range.end());
@@ -871,14 +871,14 @@ TEST(EditTreeTest, filteredModifierIteration) {
     {
         babelwires::Modifier* mod = *it;
         ASSERT_TRUE(mod);
-        EXPECT_EQ(mod->getModifierData().m_pathToFeature, path5);
+        EXPECT_EQ(mod->getModifierData().m_targetPath, path5);
     }
     ++it;
     EXPECT_NE(it, range.end());
     {
         babelwires::Modifier* mod = *it;
         ASSERT_TRUE(mod);
-        EXPECT_EQ(mod->getModifierData().m_pathToFeature, path2);
+        EXPECT_EQ(mod->getModifierData().m_targetPath, path2);
     }
     ++it;
     EXPECT_EQ(it, range.end());

@@ -40,11 +40,11 @@ TEST(ModifierDataTest, arrayInitializationApply) {
 
 TEST(ModifierDataTest, arrayInitializationClone) {
     babelwires::ArraySizeModifierData data;
-    data.m_pathToFeature = babelwires::Path::deserializeFromString("aa/bb/6");
+    data.m_targetPath = babelwires::Path::deserializeFromString("aa/bb/6");
     data.m_size = 5;
     auto dataPtr = data.clone();
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::Path::deserializeFromString("aa/bb/6"));
+    EXPECT_EQ(dataPtr->m_targetPath, babelwires::Path::deserializeFromString("aa/bb/6"));
     EXPECT_EQ(dataPtr->m_size, 5);
 }
 
@@ -52,7 +52,7 @@ TEST(ModifierDataTest, arrayInitializationSerialization) {
     std::string serializedContents;
     {
         babelwires::ArraySizeModifierData data;
-        data.m_pathToFeature = babelwires::Path::deserializeFromString("aa/bb/6");
+        data.m_targetPath = babelwires::Path::deserializeFromString("aa/bb/6");
         data.m_size = 5;
 
         babelwires::XmlSerializer serializer;
@@ -68,7 +68,7 @@ TEST(ModifierDataTest, arrayInitializationSerialization) {
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::Path::deserializeFromString("aa/bb/6"));
+    EXPECT_EQ(dataPtr->m_targetPath, babelwires::Path::deserializeFromString("aa/bb/6"));
     EXPECT_EQ(dataPtr->m_size, 5);
 }
 
@@ -130,11 +130,11 @@ TEST(ModifierDataTest, assignFromFeatureBadConnectionApply) {
 
 TEST(ModifierDataTest, assignFromFeatureClone) {
     babelwires::ConnectionModifierData data;
-    data.m_pathToFeature = babelwires::Path::deserializeFromString("aa/bb/6");
+    data.m_targetPath = babelwires::Path::deserializeFromString("aa/bb/6");
     data.m_pathToSourceFeature = babelwires::Path::deserializeFromString("10/ee/ff");
     auto dataPtr = data.clone();
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::Path::deserializeFromString("aa/bb/6"));
+    EXPECT_EQ(dataPtr->m_targetPath, babelwires::Path::deserializeFromString("aa/bb/6"));
     EXPECT_EQ(dataPtr->m_pathToSourceFeature, babelwires::Path::deserializeFromString("10/ee/ff"));
 }
 
@@ -142,7 +142,7 @@ TEST(ModifierDataTest, assignFromFeatureSerialization) {
     std::string serializedContents;
     {
         babelwires::ConnectionModifierData data;
-        data.m_pathToFeature = babelwires::Path::deserializeFromString("aa/bb/6");
+        data.m_targetPath = babelwires::Path::deserializeFromString("aa/bb/6");
         data.m_pathToSourceFeature = babelwires::Path::deserializeFromString("10/ee/ff");
 
         babelwires::XmlSerializer serializer;
@@ -158,7 +158,7 @@ TEST(ModifierDataTest, assignFromFeatureSerialization) {
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::Path::deserializeFromString("aa/bb/6"));
+    EXPECT_EQ(dataPtr->m_targetPath, babelwires::Path::deserializeFromString("aa/bb/6"));
     EXPECT_EQ(dataPtr->m_pathToSourceFeature, babelwires::Path::deserializeFromString("10/ee/ff"));
 }
 

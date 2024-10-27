@@ -172,7 +172,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 
 void babelwires::MapEditor::applyMapToProject() {
     auto modifierData = std::make_unique<ValueAssignmentData>(m_map.extractMapValue());
-    modifierData->m_pathToFeature = getData().getPathToValue();
+    modifierData->m_targetPath = getData().getPathToValue();
 
     auto setValueCommand =
         std::make_unique<AddModifierCommand>("Set map value", getData().getElementId(), std::move(modifierData));

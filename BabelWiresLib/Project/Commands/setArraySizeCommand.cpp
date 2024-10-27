@@ -75,7 +75,7 @@ void babelwires::SetArraySizeCommand::executeBody(Project& project) const {
         project.addArrayEntries(m_elementId, m_pathToArray, m_oldSize, m_newSize - m_oldSize, true);
     } else {
         ArraySizeModifierData arraySizeModifierData;
-        arraySizeModifierData.m_pathToFeature = m_pathToArray;
+        arraySizeModifierData.m_targetPath = m_pathToArray;
         arraySizeModifierData.m_size = m_newSize;
         project.addModifier(m_elementId, arraySizeModifierData);
     }

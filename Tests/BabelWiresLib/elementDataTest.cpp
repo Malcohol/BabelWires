@@ -44,7 +44,7 @@ namespace {
 
     void setModifiers(babelwires::ElementData& data, const babelwires::Path& path) {
         auto newMod = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(12));
-        newMod->m_pathToFeature = path;
+        newMod->m_targetPath = path;
         data.m_modifiers.emplace_back(std::move(newMod));
     }
 
@@ -52,7 +52,7 @@ namespace {
         EXPECT_EQ(data.m_modifiers.size(), 1);
         EXPECT_NE(data.m_modifiers[0]->as<babelwires::ValueAssignmentData>(), nullptr);
         const auto& mod = static_cast<const babelwires::ValueAssignmentData&>(*data.m_modifiers[0]);
-        EXPECT_EQ(mod.m_pathToFeature, path);
+        EXPECT_EQ(mod.m_targetPath, path);
         EXPECT_EQ(mod.getValue()->as<babelwires::IntValue>()->get(), 12);
     }
 

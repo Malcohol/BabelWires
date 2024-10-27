@@ -32,12 +32,12 @@ void babelwires::ValueAssignmentData::apply(ValueTreeNode* targetFeature) const 
 }
 
 void babelwires::ValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    serializer.serializeValue("path", m_targetPath);
     serializer.serializeObject(m_value->is<EditableValue>(), "value");
 }
 
 void babelwires::ValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+    deserializer.deserializeValue("path", m_targetPath);
     m_value = deserializer.deserializeObject<EditableValue>("value");
 }
 

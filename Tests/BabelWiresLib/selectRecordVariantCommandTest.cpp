@@ -43,32 +43,32 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
 
     {
         babelwires::SelectRecordVariantModifierData selectRecordVariantData;
-        selectRecordVariantData.m_pathToFeature = testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants();
+        selectRecordVariantData.m_targetPath = testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants();
         selectRecordVariantData.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagAId();
         testEnvironment.m_project.addModifier(elementId, selectRecordVariantData);
     }
     {
         babelwires::ConnectionModifierData inputConnection;
-        inputConnection.m_pathToFeature = testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0();
+        inputConnection.m_targetPath = testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0();
         inputConnection.m_pathToSourceFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_pathToFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
+        outputConnection.m_targetPath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         outputConnection.m_pathToSourceFeature = testUtils::TestRecordWithVariantsElementData::getPathToFieldA0();
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
     {
         babelwires::ValueAssignmentData assignInt(babelwires::IntValue(12));
-        assignInt.m_pathToFeature = testUtils::TestRecordWithVariantsElementData::getPathToFieldAB();
+        assignInt.m_targetPath = testUtils::TestRecordWithVariantsElementData::getPathToFieldAB();
         testEnvironment.m_project.addModifier(elementId, assignInt);
     }
     {
         babelwires::ValueAssignmentData assignInt(babelwires::IntValue(4));
-        assignInt.m_pathToFeature = testUtils::TestRecordWithVariantsElementData::getPathToFieldA0();
+        assignInt.m_targetPath = testUtils::TestRecordWithVariantsElementData::getPathToFieldA0();
         testEnvironment.m_project.addModifier(elementId, assignInt);
     }
 

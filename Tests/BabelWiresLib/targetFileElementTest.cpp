@@ -53,7 +53,7 @@ TEST(TargetFileElementTest, targetFileDataCreateElement) {
 
     {
         babelwires::ValueAssignmentData intMod(babelwires::IntValue(30));
-        intMod.m_pathToFeature = pathToInt;
+        intMod.m_targetPath = pathToInt;
         targetFileElement->addModifier(testEnvironment.m_log, intMod);
     }
 

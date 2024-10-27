@@ -19,7 +19,7 @@ std::unique_ptr<babelwires::Command<babelwires::Project>>
 babelwires::ConnectionDescription::getConnectionCommand() const {
     auto modifier = std::make_unique<babelwires::ConnectionModifierData>();
     modifier->m_sourceId = m_sourceId;
-    modifier->m_pathToFeature = m_pathToTargetFeature;
+    modifier->m_targetPath = m_pathToTargetFeature;
     modifier->m_pathToSourceFeature = m_pathToSourceFeature;
     return std::make_unique<babelwires::AddModifierCommand>("Add connection", m_targetId, std::move(modifier));
 }
@@ -53,7 +53,7 @@ babelwires::ConnectionDescription::ConnectionDescription(ElementId targetId, con
     : m_sourceId(data.m_sourceId)
     , m_targetId(targetId)
     , m_pathToSourceFeature(data.m_pathToSourceFeature)
-    , m_pathToTargetFeature(data.m_pathToFeature) {}
+    , m_pathToTargetFeature(data.m_targetPath) {}
 
 bool babelwires::ConnectionDescription::operator==(const ConnectionDescription& other) const {
     return (m_sourceId == other.m_sourceId) && (m_targetId == other.m_targetId) &&

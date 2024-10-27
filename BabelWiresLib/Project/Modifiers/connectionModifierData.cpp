@@ -57,13 +57,13 @@ void babelwires::ConnectionModifierData::apply(const ValueTreeNode* sourceFeatur
 }
 
 void babelwires::ConnectionModifierData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    serializer.serializeValue("path", m_targetPath);
     serializer.serializeValue("sourceId", m_sourceId);
     serializer.serializeValue("sourcePath", m_pathToSourceFeature);
 }
 
 void babelwires::ConnectionModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+    deserializer.deserializeValue("path", m_targetPath);
     deserializer.deserializeValue("sourceId", m_sourceId);
     deserializer.deserializeValue("sourcePath", m_pathToSourceFeature);
 }

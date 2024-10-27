@@ -43,7 +43,7 @@ namespace {
                     {
                         babelwires::Path pathFromAncestor = pathToValue;
                         pathFromAncestor.removePrefix(connectionData.m_pathToSourceFeature.getNumSteps());
-                        pathToPossibleValueInTarget = connectionData.m_pathToFeature;
+                        pathToPossibleValueInTarget = connectionData.m_targetPath;
                         pathToPossibleValueInTarget.append(pathFromAncestor);
                     }
                     // See if there is a more specific modifier in the target which means this connection does not
@@ -54,7 +54,7 @@ namespace {
                     // TODO The edit tree could provide an O(log N) algorithm for this.
                     for (auto modifier : targetElement->getConnectionModifiers()) {
                         // Using strict here means that connectionModifier itself is exempt from consideration.
-                        if (connectionData.m_pathToFeature.isStrictPrefixOf(modifier->getPathToModify()) &&
+                        if (connectionData.m_targetPath.isStrictPrefixOf(modifier->getPathToModify()) &&
                             modifier->getPathToModify().isPrefixOf(pathToPossibleValueInTarget)) {
                             foundOverridingModifier = true;
                             break;

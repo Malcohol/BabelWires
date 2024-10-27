@@ -23,21 +23,21 @@ namespace {
         {
             // Will fail.
             babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
-            intAssignment.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(
+            intAssignment.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(
                 testUtils::TestSimpleArrayType::s_maximumSize);
             elementData.m_modifiers.emplace_back(intAssignment.clone());
         }
         {
             // OK
             babelwires::ArraySizeModifierData arrayInitialization;
-            arrayInitialization.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+            arrayInitialization.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
             arrayInitialization.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
             elementData.m_modifiers.emplace_back(arrayInitialization.clone());
         }
         {
             // Will fail.
             babelwires::ConnectionModifierData inputConnection;
-            inputConnection.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
+            inputConnection.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
             inputConnection.m_pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
             inputConnection.m_sourceId = 57;
             elementData.m_modifiers.emplace_back(inputConnection.clone());

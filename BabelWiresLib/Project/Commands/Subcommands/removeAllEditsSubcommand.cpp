@@ -34,7 +34,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
 
     for (const auto& modifier : elementToModify->getEdits().modifierRange(m_pathToFeature)) {
         const auto& modifierData = modifier->getModifierData();
-        subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_elementId, modifierData.m_pathToFeature));
+        subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_elementId, modifierData.m_targetPath));
     }
 
     {
@@ -47,7 +47,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
                 const Path& modifierPath = modifierData.m_pathToSourceFeature;
                 if (m_pathToFeature.isPrefixOf(modifierPath)) {
                     const FeatureElement* const target = std::get<1>(connection);
-                    subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", target->getElementId(), modifierData.m_pathToFeature));
+                    subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", target->getElementId(), modifierData.m_targetPath));
                 }
             }
         }

@@ -52,13 +52,13 @@ const babelwires::ModifierData& babelwires::Modifier::getModifierData() const {
 }
 
 const babelwires::Path& babelwires::Modifier::getPathToModify() const {
-    return m_data->m_pathToFeature;
+    return m_data->m_targetPath;
 }
 
 void babelwires::Modifier::unapply(ValueTreeNode* container) const {
     assert(!isFailed() && "Don't try to unapply a failed modifier.");
     try {
-        ValueTreeNode& f = m_data->m_pathToFeature.follow(*container);
+        ValueTreeNode& f = m_data->m_targetPath.follow(*container);
         // When undone, array size modifiers should not reset the remaining children.
         f.setToDefault();
     } catch (const BaseException& e) {
@@ -124,7 +124,7 @@ void babelwires::Modifier::setFailed(State failureState, std::string reasonForFa
 void babelwires::Modifier::adjustArrayIndex(const babelwires::Path& pathToArray,
                                             babelwires::ArrayIndex startIndex, int adjustment) {
     babelwires::ModifierData& modifierData = getModifierData();
-    Path& modifierPath = modifierData.m_pathToFeature;
+    Path& modifierPath = modifierData.m_targetPath;
 
     assert(pathToArray.isStrictPrefixOf(modifierPath) && "This code only applies when the path is correct.");
     const unsigned int pathIndexOfStepIntoArray = pathToArray.getNumSteps();

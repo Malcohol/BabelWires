@@ -15,12 +15,12 @@
 #include <Common/Serialization/serializer.hpp>
 
 void babelwires::ActivateOptionalsModifierData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    serializer.serializeValue("path", m_targetPath);
     serializer.serializeValueArray("optionals", m_selectedOptionals, "activate");
 }
 
 void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+    deserializer.deserializeValue("path", m_targetPath);
     for (auto it =
              deserializer.deserializeValueArray<ShortId>("optionals", Deserializer::IsOptional::Optional, "activate");
          it.isValid(); ++it) {

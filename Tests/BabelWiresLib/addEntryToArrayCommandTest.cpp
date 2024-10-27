@@ -120,7 +120,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
 
     {
         babelwires::ArraySizeModifierData arrayInitialization;
-        arrayInitialization.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray();
+        arrayInitialization.m_targetPath = testUtils::TestArrayElementData::getPathToArray();
         arrayInitialization.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
         testEnvironment.m_project.addModifier(elementId, arrayInitialization);
     }
@@ -215,13 +215,13 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
         {
             // This is in the default size of the array, so should be unaffected.
             babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(3));
-            intAssignment.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray_1();
+            intAssignment.m_targetPath = testUtils::TestArrayElementData::getPathToArray_1();
             elementData.m_modifiers.emplace_back(intAssignment.clone());
         }
         {
             // This is in the default size of the array, so should be unaffected.
             babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(-18));
-            intAssignment.m_pathToFeature = testUtils::TestArrayElementData::getPathToArray_2();
+            intAssignment.m_targetPath = testUtils::TestArrayElementData::getPathToArray_2();
             elementData.m_modifiers.emplace_back(intAssignment.clone());
         }
 

@@ -37,7 +37,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     EXPECT_EQ(output.getArray().getSize(), 2);
 
     babelwires::ValueAssignmentData valueSettingData(babelwires::IntValue(4));
-    valueSettingData.m_pathToFeature = babelwires::Path{ &*input.getRecord().getintR0() };
+    valueSettingData.m_targetPath = babelwires::Path{ &*input.getRecord().getintR0() };
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, valueSettingData);
@@ -55,7 +55,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     const babelwires::Path arraySettingIntPath{ &*input.getInt() };
 
     babelwires::ValueAssignmentData arraySettingData(babelwires::IntValue(4));
-    arraySettingData.m_pathToFeature = arraySettingIntPath;
+    arraySettingData.m_targetPath = arraySettingIntPath;
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, arraySettingData);
@@ -69,7 +69,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
     babelwires::ValueAssignmentData badArraySettingData(babelwires::IntValue(-1));
-    badArraySettingData.m_pathToFeature = arraySettingIntPath;
+    badArraySettingData.m_targetPath = arraySettingIntPath;
 
     processorElement->clearChanges();
     processorElement->removeModifier(processorElement->findModifier(arraySettingIntPath));

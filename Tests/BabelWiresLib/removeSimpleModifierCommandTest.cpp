@@ -18,7 +18,7 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
     testUtils::TestComplexRecordElementData elementData;
     {
         babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
-        intAssignment.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+        intAssignment.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
         elementData.m_modifiers.emplace_back(intAssignment.clone());
     }
 

@@ -112,7 +112,7 @@ const babelwires::Modifier* babelwires::FeatureElement::findModifier(const Path&
 }
 
 babelwires::Modifier* babelwires::FeatureElement::addModifierWithoutApplyingIt(const ModifierData& modifierData) {
-    assert(!findModifier(modifierData.m_pathToFeature) && "There's already a modifier at that path");
+    assert(!findModifier(modifierData.m_targetPath) && "There's already a modifier at that path");
     auto modifier = modifierData.createModifier();
     Modifier* rawModifierPtr = modifier.get();
     modifier->setOwner(this);

@@ -17,11 +17,11 @@
 #include <Common/Serialization/serializer.hpp>
 
 babelwires::ValueTreeNode* babelwires::ModifierData::getTargetFeature(ValueTreeNode* container) const {
-    return &m_pathToFeature.follow(*container);
+    return &m_targetPath.follow(*container);
 }
 
 void babelwires::ModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
-    for (auto& s : m_pathToFeature) {
+    for (auto& s : m_targetPath) {
         if (s.isField()) {
             visitor(s.getField());
         }
