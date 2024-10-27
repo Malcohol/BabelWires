@@ -40,7 +40,7 @@ const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceFe
     }
 
     try {
-        return &m_pathToSourceFeature.follow(*outputFeature);
+        return &m_sourcePath.follow(*outputFeature);
     } catch (const std::exception& e) {
         throw babelwires::ModelException()
             << e.what() << "; when looking for source feature in element with id=" << m_sourceId;
@@ -59,13 +59,13 @@ void babelwires::ConnectionModifierData::apply(const ValueTreeNode* sourceFeatur
 void babelwires::ConnectionModifierData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_targetPath);
     serializer.serializeValue("sourceId", m_sourceId);
-    serializer.serializeValue("sourcePath", m_pathToSourceFeature);
+    serializer.serializeValue("sourcePath", m_sourcePath);
 }
 
 void babelwires::ConnectionModifierData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_targetPath);
     deserializer.deserializeValue("sourceId", m_sourceId);
-    deserializer.deserializeValue("sourcePath", m_pathToSourceFeature);
+    deserializer.deserializeValue("sourcePath", m_sourcePath);
 }
 
 std::unique_ptr<babelwires::Modifier> babelwires::ConnectionModifierData::createModifier() const {
@@ -74,7 +74,7 @@ std::unique_ptr<babelwires::Modifier> babelwires::ConnectionModifierData::create
 
 void babelwires::ConnectionModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
     ModifierData::visitIdentifiers(visitor);
-    for (auto& s : m_pathToSourceFeature) {
+    for (auto& s : m_sourcePath) {
         if (s.isField()) {
             visitor(s.getField());
         }

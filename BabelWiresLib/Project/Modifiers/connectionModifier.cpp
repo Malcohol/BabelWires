@@ -72,7 +72,7 @@ bool babelwires::ConnectionModifier::isConnected() const {
 void babelwires::ConnectionModifier::adjustSourceArrayIndices(const babelwires::Path& pathToArray,
                                                               babelwires::ArrayIndex startIndex, int adjustment) {
     babelwires::ConnectionModifierData& modifierData = getModifierData();
-    babelwires::Path& modifierPath = modifierData.m_pathToSourceFeature;
+    babelwires::Path& modifierPath = modifierData.m_sourcePath;
     if (pathToArray.isStrictPrefixOf(modifierPath)) {
         // Is the modifier affected?
         const unsigned int pathIndexOfStepIntoArray = pathToArray.getNumSteps();

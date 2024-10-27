@@ -26,7 +26,7 @@ namespace {
     createConnectionModifier(babelwires::Path path, babelwires::FeatureElement* owner = nullptr) {
         auto data = std::make_unique<babelwires::ConnectionModifierData>();
         data->m_targetPath = std::move(path);
-        data->m_pathToSourceFeature = babelwires::Path();
+        data->m_sourcePath = babelwires::Path();
         auto modPtr = std::make_unique<babelwires::ConnectionModifier>(std::move(data));
         modPtr->setOwner(owner);
         return modPtr;

@@ -84,8 +84,8 @@ namespace {
                           babelwires::ConnectionDescription&& connectionDesc,
                           const babelwires::FeatureElement* sourceElement,
                           const babelwires::FeatureElement* targetElement) {
-        sourceElement->getEdits().truncatePathAtFirstCollapsedNode(connectionDesc.m_pathToSourceFeature, state);
-        targetElement->getEdits().truncatePathAtFirstCollapsedNode(connectionDesc.m_pathToTargetFeature, state);
+        sourceElement->getEdits().truncatePathAtFirstCollapsedNode(connectionDesc.m_sourcePath, state);
+        targetElement->getEdits().truncatePathAtFirstCollapsedNode(connectionDesc.m_targetPath, state);
         connections.emplace(std::move(connectionDesc));
     }
 

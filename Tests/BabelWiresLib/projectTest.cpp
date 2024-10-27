@@ -139,7 +139,7 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
     babelwires::ConnectionModifierData modData;
     modData.m_targetPath = pathToTargetFeature;
     modData.m_sourceId = sourceElementId;
-    modData.m_pathToSourceFeature = pathToSourceFeature;
+    modData.m_sourcePath = pathToSourceFeature;
 
     testEnvironment.m_project.addModifier(targetElementId, modData);
 
@@ -288,7 +288,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = pathToTargetFeature;
         modData.m_sourceId = sourceElementId;
-        modData.m_pathToSourceFeature = pathToArray1;
+        modData.m_sourcePath = pathToArray1;
         testEnvironment.m_project.addModifier(targetElementId, modData);
     }
     const babelwires::ConnectionModifierData& connectionData =
@@ -298,24 +298,24 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 
     // The new elements are after the modifier, so it should be in the same place.
     addArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 2, 2, true);
-    EXPECT_EQ(connectionData.m_pathToSourceFeature, pathToArray1);
+    EXPECT_EQ(connectionData.m_sourcePath, pathToArray1);
 
     testEnvironment.m_project.process();
 
     // The new elements should mean the modifier moved.
     addArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 1, 3, true);
-    EXPECT_EQ(connectionData.m_pathToSourceFeature, pathToArray4);
+    EXPECT_EQ(connectionData.m_sourcePath, pathToArray4);
 
     testEnvironment.m_project.process();
 
     // Remove after
     removeArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 5, 1, true);
-    EXPECT_EQ(connectionData.m_pathToSourceFeature, pathToArray4);
+    EXPECT_EQ(connectionData.m_sourcePath, pathToArray4);
 
     // Remove before.
     testEnvironment.m_project.process();
     removeArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 0, 2, true);
-    EXPECT_EQ(connectionData.m_pathToSourceFeature, pathToArray2);
+    EXPECT_EQ(connectionData.m_sourcePath, pathToArray2);
 
     // We don't test removal of modifiers, because responsibility for doing this is left to the
     // commands. (In fact, add/removeArrayEntries already does more than it should.)
@@ -530,7 +530,7 @@ TEST(ProjectTest, process) {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt;
         modData.m_sourceId = newProcId;
-        modData.m_pathToSourceFeature = testUtils::TestProcessorInputOutputType::s_pathToInt2;
+        modData.m_sourcePath = testUtils::TestProcessorInputOutputType::s_pathToInt2;
         testEnvironment.m_project.addModifier(testUtils::TestProjectData::c_processorId, modData);
     }
     testEnvironment.m_project.process();
@@ -556,14 +556,14 @@ TEST(ProjectTest, dependencyLoop) {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId2;
-        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
+        modData.m_sourcePath = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId3;
-        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
+        modData.m_sourcePath = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId2, modData);
     }
 
@@ -580,7 +580,7 @@ TEST(ProjectTest, dependencyLoop) {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId1;
-        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
+        modData.m_sourcePath = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId3, modData);
     }
 
@@ -626,14 +626,14 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId2;
-        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
+        modData.m_sourcePath = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId4;
-        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
+        modData.m_sourcePath = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId3, modData);
     }
 
@@ -652,7 +652,7 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId1;
-        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
+        modData.m_sourcePath = elementData.getPathToRecordInt0();
         testEnvironment.m_project.addModifier(elementId2, modData);
     }
     {

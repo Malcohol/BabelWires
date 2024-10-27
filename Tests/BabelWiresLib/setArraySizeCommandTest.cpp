@@ -36,14 +36,14 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
     {
         babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_targetPath = testUtils::TestArrayElementData::getPathToArray_1();
-        inputConnection.m_pathToSourceFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
+        inputConnection.m_sourcePath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
         outputConnection.m_targetPath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
-        outputConnection.m_pathToSourceFeature = testUtils::TestArrayElementData::getPathToArray_2();
+        outputConnection.m_sourcePath = testUtils::TestArrayElementData::getPathToArray_2();
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
@@ -123,14 +123,14 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
     {
         babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_targetPath = testUtils::TestArrayElementData::getPathToArray_1();
-        inputConnection.m_pathToSourceFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
+        inputConnection.m_sourcePath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
         outputConnection.m_targetPath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
-        outputConnection.m_pathToSourceFeature = testUtils::TestArrayElementData::getPathToArray_2();
+        outputConnection.m_sourcePath = testUtils::TestArrayElementData::getPathToArray_2();
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }

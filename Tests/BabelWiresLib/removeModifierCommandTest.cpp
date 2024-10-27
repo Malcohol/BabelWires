@@ -41,14 +41,14 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     {
         babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_targetPath = pathToArrayEntry;
-        inputConnection.m_pathToSourceFeature = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
+        inputConnection.m_sourcePath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
         outputConnection.m_targetPath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
-        outputConnection.m_pathToSourceFeature = pathToArrayEntry;
+        outputConnection.m_sourcePath = pathToArrayEntry;
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
@@ -154,14 +154,14 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     {
         babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_targetPath = pathToOptional;
-        inputConnection.m_pathToSourceFeature = pathToValue;
+        inputConnection.m_sourcePath = pathToValue;
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
         outputConnection.m_targetPath = pathToIntInSimpleRecord;
-        outputConnection.m_pathToSourceFeature = pathToIntInOptional;
+        outputConnection.m_sourcePath = pathToIntInOptional;
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }

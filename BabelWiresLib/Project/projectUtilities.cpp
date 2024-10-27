@@ -37,12 +37,12 @@ namespace {
                 }
                 const babelwires::ConnectionModifier* connectionModifier = std::get<0>(cit);
                 const babelwires::ConnectionModifierData& connectionData = connectionModifier->getModifierData();
-                if (connectionData.m_pathToSourceFeature.isPrefixOf(pathToValue)) {
+                if (connectionData.m_sourcePath.isPrefixOf(pathToValue)) {
                     // There is a connection between an ancestor features and some feature in the element.
                     babelwires::Path pathToPossibleValueInTarget;
                     {
                         babelwires::Path pathFromAncestor = pathToValue;
-                        pathFromAncestor.removePrefix(connectionData.m_pathToSourceFeature.getNumSteps());
+                        pathFromAncestor.removePrefix(connectionData.m_sourcePath.getNumSteps());
                         pathToPossibleValueInTarget = connectionData.m_targetPath;
                         pathToPossibleValueInTarget.append(pathFromAncestor);
                     }

@@ -49,7 +49,7 @@ struct FeatureElementConnectionTest : ::testing::Test {
         m_arrayElemDataHigh.m_targetPath = m_arrayElemPath;
 
         m_assignData.m_targetPath = m_targetPath;
-        m_assignData.m_pathToSourceFeature = m_arrayElemPath;
+        m_assignData.m_sourcePath = m_arrayElemPath;
         m_assignData.m_sourceId = m_sourceId;
     }
 

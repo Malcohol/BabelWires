@@ -107,7 +107,7 @@ TEST(RemoveElementCommandTest, subsumption) {
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
-        modData.m_pathToSourceFeature = elementData.getPathToRecordInt0();
+        modData.m_sourcePath = elementData.getPathToRecordInt0();
         modData.m_sourceId = element1Id;
 
         testEnvironment.m_project.addModifier(element2Id, modData);

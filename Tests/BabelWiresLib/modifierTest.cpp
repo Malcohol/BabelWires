@@ -246,7 +246,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
-    assignFromData->m_pathToSourceFeature = sourcePath;
+    assignFromData->m_sourcePath = sourcePath;
     assignFromData->m_sourceId = sourceId;
 
     babelwires::ConnectionModifier connectionMod(std::move(assignFromData));
@@ -272,7 +272,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
-    assignFromData->m_pathToSourceFeature = sourcePath;
+    assignFromData->m_sourcePath = sourcePath;
     assignFromData->m_sourceId = 10;
 
     babelwires::ConnectionModifier connectionMod(std::move(assignFromData));
@@ -303,7 +303,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
-    assignFromData->m_pathToSourceFeature = sourcePath;
+    assignFromData->m_sourcePath = sourcePath;
     assignFromData->m_sourceId = 99;
 
     babelwires::ConnectionModifier connectionMod(std::move(assignFromData));
@@ -342,7 +342,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
-    assignFromData->m_pathToSourceFeature = babelwires::Path::deserializeFromString("xx");
+    assignFromData->m_sourcePath = babelwires::Path::deserializeFromString("xx");
     assignFromData->m_sourceId = sourceId;
 
     babelwires::ConnectionModifier connectionMod(std::move(assignFromData));
@@ -387,7 +387,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
-    assignFromData->m_pathToSourceFeature = sourcePath;
+    assignFromData->m_sourcePath = sourcePath;
     assignFromData->m_sourceId = sourceId;
 
     babelwires::ConnectionModifier connectionMod(std::move(assignFromData));

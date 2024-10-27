@@ -38,7 +38,7 @@ namespace {
             // Will fail.
             babelwires::ConnectionModifierData inputConnection;
             inputConnection.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
-            inputConnection.m_pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
+            inputConnection.m_sourcePath = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
             inputConnection.m_sourceId = 57;
             elementData.m_modifiers.emplace_back(inputConnection.clone());
         }

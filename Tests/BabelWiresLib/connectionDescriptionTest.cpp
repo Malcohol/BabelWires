@@ -20,22 +20,22 @@ TEST(ConnectionDescriptionTest, equalityAndHash) {
 
     babelwires::ConnectionModifierData data0;
     data0.m_targetPath = path0;
-    data0.m_pathToSourceFeature = path1;
+    data0.m_sourcePath = path1;
     data0.m_sourceId = sourceId0;
 
     babelwires::ConnectionModifierData data1;
     data1.m_targetPath = path1;
-    data1.m_pathToSourceFeature = path0;
+    data1.m_sourcePath = path0;
     data1.m_sourceId = sourceId0;
 
     babelwires::ConnectionModifierData data2;
     data2.m_targetPath = path0;
-    data2.m_pathToSourceFeature = path1;
+    data2.m_sourcePath = path1;
     data2.m_sourceId = sourceId1;
 
     babelwires::ConnectionModifierData data3;
     data3.m_targetPath = path1;
-    data3.m_pathToSourceFeature = path0;
+    data3.m_sourcePath = path0;
     data3.m_sourceId = sourceId1;
 
     babelwires::ConnectionDescription descriptions[] = {
@@ -67,7 +67,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
 
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    connectionData.m_pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
+    connectionData.m_sourcePath = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
     connectionData.m_sourceId = sourceId;
 
     babelwires::ConnectionDescription connection(14, connectionData);
@@ -99,7 +99,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
             const babelwires::ConnectionModifier* connection = modifier->as<babelwires::ConnectionModifier>();
             ASSERT_NE(connection, nullptr);
             EXPECT_EQ(connection->getModifierData().m_targetPath, connectionData.m_targetPath);
-            EXPECT_EQ(connection->getModifierData().m_pathToSourceFeature, connectionData.m_pathToSourceFeature);
+            EXPECT_EQ(connection->getModifierData().m_sourcePath, connectionData.m_sourcePath);
             EXPECT_EQ(connection->getModifierData().m_sourceId, connectionData.m_sourceId);
         } else {
             EXPECT_EQ(modifier, nullptr);

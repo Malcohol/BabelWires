@@ -46,19 +46,19 @@ bool babelwires::RemoveElementCommand::addConnection(const babelwires::Connectio
     const EditTree& targetEdits = targetElement->getEdits();
     const EditTree& sourceEdits = sourceElement->getEdits();
 
-    if (!targetEdits.isExpanded(desc.m_pathToTargetFeature)) {
+    if (!targetEdits.isExpanded(desc.m_targetPath)) {
         // The target is in a collapsed compound.
 
         // Is the source is in a collapsed compound? Actual model connections will have paths which
         // have the desc's source path as a prefix.
-        const bool testSourceUsingPrefix = !sourceEdits.isExpanded(desc.m_pathToSourceFeature);
+        const bool testSourceUsingPrefix = !sourceEdits.isExpanded(desc.m_sourcePath);
 
-        const auto subtree = targetEdits.modifierRange<ConnectionModifier>(desc.m_pathToTargetFeature);
+        const auto subtree = targetEdits.modifierRange<ConnectionModifier>(desc.m_targetPath);
         for (const auto* m : subtree) {
             const ConnectionModifierData& data = m->getModifierData();
             if (data.m_sourceId == desc.m_sourceId) {
-                if ((testSourceUsingPrefix && (desc.m_pathToSourceFeature.isPrefixOf(data.m_pathToSourceFeature))) ||
-                    (!testSourceUsingPrefix && (desc.m_pathToSourceFeature == data.m_pathToSourceFeature))) {
+                if ((testSourceUsingPrefix && (desc.m_sourcePath.isPrefixOf(data.m_sourcePath))) ||
+                    (!testSourceUsingPrefix && (desc.m_sourcePath == data.m_sourcePath))) {
                     ConnectionDescription subtreeConnection(desc.m_targetId, m->getModifierData());
                     if (connectionSet.insert(subtreeConnection).second) {
                         m_connections.emplace_back(std::move(subtreeConnection));
@@ -70,7 +70,7 @@ bool babelwires::RemoveElementCommand::addConnection(const babelwires::Connectio
         // In this case, there is a single connection, but the desc may not accurately
         // describe it if the source is collapsed. This is important when it is restored
         // on undo. Hence, we look up the actual connection and store it.
-        const Modifier* const modifierAtTarget = targetEdits.findModifier(desc.m_pathToTargetFeature);
+        const Modifier* const modifierAtTarget = targetEdits.findModifier(desc.m_targetPath);
         const ConnectionModifier* actualConnection = modifierAtTarget->asConnectionModifier();
         if (!actualConnection) {
             return false;
@@ -78,7 +78,7 @@ bool babelwires::RemoveElementCommand::addConnection(const babelwires::Connectio
 
         const ConnectionModifierData& data = actualConnection->getModifierData();
         if ((data.m_sourceId != desc.m_sourceId) ||
-            !desc.m_pathToSourceFeature.isPrefixOf(data.m_pathToSourceFeature)) {
+            !desc.m_sourcePath.isPrefixOf(data.m_sourcePath)) {
             return false;
         }
 
@@ -158,7 +158,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
 
 void babelwires::RemoveElementCommand::execute(Project& project) const {
     for (const auto& connection : m_connections) {
-        project.removeModifier(connection.m_targetId, connection.m_pathToTargetFeature);
+        project.removeModifier(connection.m_targetId, connection.m_targetPath);
     }
     for (auto elementId : m_elementIds) {
         project.removeElement(elementId);
@@ -171,9 +171,9 @@ void babelwires::RemoveElementCommand::undo(Project& project) const {
     }
     for (const auto& connection : m_connections) {
         ConnectionModifierData newModifier;
-        newModifier.m_targetPath = connection.m_pathToTargetFeature;
+        newModifier.m_targetPath = connection.m_targetPath;
         newModifier.m_sourceId = connection.m_sourceId;
-        newModifier.m_pathToSourceFeature = connection.m_pathToSourceFeature;
+        newModifier.m_sourcePath = connection.m_sourcePath;
         project.addModifier(connection.m_targetId, newModifier);
     }
 }

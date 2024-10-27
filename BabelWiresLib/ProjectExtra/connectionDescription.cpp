@@ -19,8 +19,8 @@ std::unique_ptr<babelwires::Command<babelwires::Project>>
 babelwires::ConnectionDescription::getConnectionCommand() const {
     auto modifier = std::make_unique<babelwires::ConnectionModifierData>();
     modifier->m_sourceId = m_sourceId;
-    modifier->m_targetPath = m_pathToTargetFeature;
-    modifier->m_pathToSourceFeature = m_pathToSourceFeature;
+    modifier->m_targetPath = m_targetPath;
+    modifier->m_sourcePath = m_sourcePath;
     return std::make_unique<babelwires::AddModifierCommand>("Add connection", m_targetId, std::move(modifier));
 }
 
@@ -36,29 +36,29 @@ babelwires::ConnectionDescription::ConnectionDescription(ConnectionDescription&&
 babelwires::ConnectionDescription& babelwires::ConnectionDescription::operator=(const ConnectionDescription& other) {
     m_sourceId = other.m_sourceId;
     m_targetId = other.m_targetId;
-    m_pathToSourceFeature = other.m_pathToSourceFeature;
-    m_pathToTargetFeature = other.m_pathToTargetFeature;
+    m_sourcePath = other.m_sourcePath;
+    m_targetPath = other.m_targetPath;
     return *this;
 }
 
 babelwires::ConnectionDescription& babelwires::ConnectionDescription::operator=(ConnectionDescription&& other) {
     m_sourceId = other.m_sourceId;
     m_targetId = other.m_targetId;
-    m_pathToSourceFeature = std::move(other.m_pathToSourceFeature);
-    m_pathToTargetFeature = std::move(other.m_pathToTargetFeature);
+    m_sourcePath = std::move(other.m_sourcePath);
+    m_targetPath = std::move(other.m_targetPath);
     return *this;
 }
 
 babelwires::ConnectionDescription::ConnectionDescription(ElementId targetId, const ConnectionModifierData& data)
     : m_sourceId(data.m_sourceId)
     , m_targetId(targetId)
-    , m_pathToSourceFeature(data.m_pathToSourceFeature)
-    , m_pathToTargetFeature(data.m_targetPath) {}
+    , m_sourcePath(data.m_sourcePath)
+    , m_targetPath(data.m_targetPath) {}
 
 bool babelwires::ConnectionDescription::operator==(const ConnectionDescription& other) const {
     return (m_sourceId == other.m_sourceId) && (m_targetId == other.m_targetId) &&
-           (m_pathToSourceFeature == other.m_pathToSourceFeature) &&
-           (m_pathToTargetFeature == other.m_pathToTargetFeature);
+           (m_sourcePath == other.m_sourcePath) &&
+           (m_targetPath == other.m_targetPath);
 }
 
 bool babelwires::ConnectionDescription::operator!=(const ConnectionDescription& other) const {
@@ -67,6 +67,6 @@ bool babelwires::ConnectionDescription::operator!=(const ConnectionDescription& 
 
 std::size_t babelwires::ConnectionDescription::getHash() const {
     std::size_t seed = 0xb238ea78;
-    hash::mixInto(seed, m_sourceId, m_targetId, m_pathToSourceFeature, m_pathToTargetFeature);
+    hash::mixInto(seed, m_sourceId, m_targetId, m_sourcePath, m_targetPath);
     return seed;
 }
