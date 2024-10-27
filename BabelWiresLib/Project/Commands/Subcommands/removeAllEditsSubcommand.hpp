@@ -26,7 +26,7 @@ namespace babelwires {
 
       private:
         ElementId m_elementId;
-        Path m_pathToFeature;
+        Path m_path;
 
         std::vector<Path> m_expandedPathsRemoved;
 

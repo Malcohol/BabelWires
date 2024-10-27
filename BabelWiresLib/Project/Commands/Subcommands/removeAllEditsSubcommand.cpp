@@ -20,7 +20,7 @@ babelwires::RemoveAllEditsSubcommand::RemoveAllEditsSubcommand(ElementId element
                                                                      Path pathToFeatureToRemove)
     : CompoundCommand("RemoveAllEditsSubcommand")
     , m_elementId(elementId)
-    , m_pathToFeature(std::move(pathToFeatureToRemove)) {
+    , m_path(std::move(pathToFeatureToRemove)) {
 }
 
 bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project) {
@@ -32,7 +32,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
 
     std::vector<std::unique_ptr<Command>> subcommands;
 
-    for (const auto& modifier : elementToModify->getEdits().modifierRange(m_pathToFeature)) {
+    for (const auto& modifier : elementToModify->getEdits().modifierRange(m_path)) {
         const auto& modifierData = modifier->getModifierData();
         subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_elementId, modifierData.m_targetPath));
     }
@@ -45,7 +45,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
                 const ConnectionModifier* const cmod = std::get<0>(connection);
                 const ConnectionModifierData& modifierData = cmod->getModifierData();
                 const Path& modifierPath = modifierData.m_sourcePath;
-                if (m_pathToFeature.isPrefixOf(modifierPath)) {
+                if (m_path.isPrefixOf(modifierPath)) {
                     const FeatureElement* const target = std::get<1>(connection);
                     subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", target->getElementId(), modifierData.m_targetPath));
                 }
@@ -57,7 +57,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
         addSubCommand(std::move(*it));
     }
 
-    const auto pathsInThisEntry = elementToModify->getEdits().getAllExplicitlyExpandedPaths(m_pathToFeature);
+    const auto pathsInThisEntry = elementToModify->getEdits().getAllExplicitlyExpandedPaths(m_path);
     m_expandedPathsRemoved.insert(m_expandedPathsRemoved.end(), pathsInThisEntry.begin(),
                                                pathsInThisEntry.end());
 
