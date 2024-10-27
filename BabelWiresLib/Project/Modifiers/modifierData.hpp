@@ -36,7 +36,7 @@ namespace babelwires {
         virtual std::unique_ptr<Modifier> createModifier() const = 0;
 
         /// Call the visitor on all fields in the modifier.
-        /// This base implementation visits the fields in m_pathToFeature;
+        /// This base implementation visits the fields in m_targetPath;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
         /// This does nothing.
