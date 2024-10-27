@@ -20,12 +20,12 @@ namespace babelwires {
             : InstanceCommonBase<VALUE_FEATURE, RATIONAL_TYPE>(valueFeature) {}
 
         Rational get() const {
-            const RationalValue& value = this->m_valueFeature.getValue()->template is<RationalValue>();
+            const RationalValue& value = this->m_valueTreeNode.getValue()->template is<RationalValue>();
             return value.get();
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> set(Rational newValue) {
-            this->m_valueFeature.setValue(RationalValue(newValue));
+            this->m_valueTreeNode.setValue(RationalValue(newValue));
         }
     };
 

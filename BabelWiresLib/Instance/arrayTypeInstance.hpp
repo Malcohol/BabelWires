@@ -22,17 +22,17 @@ namespace babelwires {
         ArrayInstanceImpl(VALUE_FEATURE& valueFeature)
             : InstanceCommonBase<VALUE_FEATURE, ArrayType>(valueFeature) {}
 
-        unsigned int getSize() const { return InstanceUtils::getArraySize(this->m_valueFeature); }
+        unsigned int getSize() const { return InstanceUtils::getArraySize(this->m_valueTreeNode); }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> setSize(unsigned int newSize) {
-            InstanceUtils::setArraySize(this->m_valueFeature, newSize);
+            InstanceUtils::setArraySize(this->m_valueTreeNode, newSize);
         }
         ConstInstance<ENTRY_TYPE> getEntry(unsigned int index) const {
-            return InstanceUtils::getChild(this->m_valueFeature, index);
+            return InstanceUtils::getChild(this->m_valueTreeNode, index);
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, Instance<ENTRY_TYPE>> getEntry(unsigned int index) {
-            return InstanceUtils::getChild(this->m_valueFeature, index);
+            return InstanceUtils::getChild(this->m_valueTreeNode, index);
         }
     };
 } // namespace babelwires

@@ -30,18 +30,18 @@ namespace babelwires {
     template <typename VALUE_FEATURE> class InstanceUntypedBase {
       public:
         InstanceUntypedBase(VALUE_FEATURE& valueFeature)
-            : m_valueFeature(valueFeature) {}
+            : m_valueTreeNode(valueFeature) {}
         /// Access the functionality of the Feature.
-        const VALUE_FEATURE* operator->() const { return &m_valueFeature; }
-        VALUE_FEATURE& operator*() const { return m_valueFeature; }
+        const VALUE_FEATURE* operator->() const { return &m_valueTreeNode; }
+        VALUE_FEATURE& operator*() const { return m_valueTreeNode; }
         /// Access the functionality of the Feature.
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, VALUE_FEATURE*> operator->() {
-            return &m_valueFeature;
+            return &m_valueTreeNode;
         }
 
       protected:
-        VALUE_FEATURE& m_valueFeature;
+        VALUE_FEATURE& m_valueTreeNode;
     };
 
     /// Methods that should be available for every instance.
@@ -51,10 +51,10 @@ namespace babelwires {
       public:
         InstanceCommonBase(VALUE_FEATURE& valueFeature)
             : InstanceUntypedBase<VALUE_FEATURE>(valueFeature) {
-            assert(this->m_valueFeature.getType().template as<VALUE_TYPE>());
+            assert(this->m_valueTreeNode.getType().template as<VALUE_TYPE>());
         }
         /// More specific than this->getType().
-        const VALUE_TYPE& getInstanceType() const { return this->m_valueFeature.getType().template is<VALUE_TYPE>(); }
+        const VALUE_TYPE& getInstanceType() const { return this->m_valueTreeNode.getType().template is<VALUE_TYPE>(); }
     };
 
     /// Can be specialized to make additional methods available for inner-class defined instances of particular types.

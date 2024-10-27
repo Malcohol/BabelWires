@@ -20,11 +20,11 @@ namespace babelwires {
       public:
         InstanceParent(VALUE_FEATURE& valueFeature)
             : InstanceCommonBase<VALUE_FEATURE, T>(valueFeature) {}
-        ShortId getSelectedTag() const { return InstanceUtils::getSelectedTag(this->m_valueFeature); }
+        ShortId getSelectedTag() const { return InstanceUtils::getSelectedTag(this->m_valueTreeNode); }
 
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> selectTag(ShortId tag) {
-            InstanceUtils::selectTag(this->m_valueFeature, tag);
+            InstanceUtils::selectTag(this->m_valueTreeNode, tag);
         }
     };
 

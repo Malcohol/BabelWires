@@ -20,12 +20,12 @@ namespace babelwires {
             : InstanceCommonBase<VALUE_FEATURE, STRING_TYPE>(valueFeature) {}
 
         std::string get() const {
-            const StringValue& stringValue = this->m_valueFeature.getValue()->template is<StringValue>();
+            const StringValue& stringValue = this->m_valueTreeNode.getValue()->template is<StringValue>();
             return stringValue.get();
         }
         template <typename VALUE_FEATURE_M = VALUE_FEATURE>
         std::enable_if_t<!std::is_const_v<VALUE_FEATURE_M>, void> set(std::string newValue) {
-            this->m_valueFeature.setValue(StringValue(std::move(newValue)));
+            this->m_valueTreeNode.setValue(StringValue(std::move(newValue)));
         }
     };
 
