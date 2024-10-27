@@ -61,14 +61,14 @@ namespace babelwires {
     };
 
     struct BackupScope {
-        BackupScope(ValueTreeRoot& feature)
-            : m_backedUpValueFeature(feature) {
-            feature.backUpValue();
+        BackupScope(ValueTreeRoot& valueTree)
+            : m_backedUpValueTree(valueTree) {
+            valueTree.backUpValue();
         }
 
-        ~BackupScope() { m_backedUpValueFeature.reconcileChangesFromBackup(); }
+        ~BackupScope() { m_backedUpValueTree.reconcileChangesFromBackup(); }
 
-        ValueTreeRoot& m_backedUpValueFeature;
+        ValueTreeRoot& m_backedUpValueTree;
     };
 
 } // namespace babelwires
