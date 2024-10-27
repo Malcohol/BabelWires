@@ -85,9 +85,9 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
         }
     };
 
-    ASSERT_NE(element->getInputFeature(), nullptr);
+    ASSERT_NE(element->getInput(), nullptr);
 
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), initialArraySize);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), initialArraySize);
 
     babelwires::RemoveModifierCommand command("Test command", elementId,
                                               testUtils::TestArrayElementData::getPathToArray());
@@ -99,19 +99,19 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), initialArraySize);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), initialArraySize);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(true);
 }
 
@@ -166,7 +166,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
 
-    const babelwires::ValueTreeNode* const valueFeature = element->getInputFeature();
+    const babelwires::ValueTreeNode* const valueFeature = element->getInput();
     ASSERT_NE(valueFeature, nullptr);
     const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
 

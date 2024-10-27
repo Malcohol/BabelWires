@@ -28,8 +28,8 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
     try {
         const ProcessorFactory& factory = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
         auto newProcessor = factory.createNewProcessor(context);
-        newProcessor->getInputFeature().setToDefault();
-        newProcessor->getOutputFeature().setToDefault();
+        newProcessor->getInput().setToDefault();
+        newProcessor->getOutput().setToDefault();
         setProcessor(std::move(newProcessor));
         setFactoryName(factory.getName());
     } catch (const BaseException& e) {
@@ -47,33 +47,33 @@ const babelwires::ProcessorElementData& babelwires::ProcessorElement::getElement
     return static_cast<const ProcessorElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetOutputFeatureNonConst() {
+babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetOutputNonConst() {
     if (m_processor) {
-        return &m_processor->getOutputFeature();
+        return &m_processor->getOutput();
     } else {
         return m_failedFeature.get();
     }
 }
 
-babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetInputFeatureNonConst() {
+babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetInputNonConst() {
     if (m_processor) {
-        return &m_processor->getInputFeature();
+        return &m_processor->getInput();
     } else {
         return m_failedFeature.get();
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::ProcessorElement::getOutputFeature() const {
+const babelwires::ValueTreeNode* babelwires::ProcessorElement::getOutput() const {
     if (m_processor) {
-        return &m_processor->getOutputFeature();
+        return &m_processor->getOutput();
     } else {
         return m_failedFeature.get();
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::ProcessorElement::getInputFeature() const {
+const babelwires::ValueTreeNode* babelwires::ProcessorElement::getInput() const {
     if (m_processor) {
-        return &m_processor->getInputFeature();
+        return &m_processor->getInput();
     } else {
         return m_failedFeature.get();
     }
@@ -81,7 +81,7 @@ const babelwires::ValueTreeNode* babelwires::ProcessorElement::getInputFeature()
 
 void babelwires::ProcessorElement::setProcessor(std::unique_ptr<Processor> processor) {
     m_processor = std::move(processor);
-    m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInputFeature(), &m_processor->getOutputFeature());
+    m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInput(), &m_processor->getOutput());
 }
 
 std::string babelwires::ProcessorElement::getRootLabel() const {
@@ -94,7 +94,7 @@ std::string babelwires::ProcessorElement::getRootLabel() const {
 
 void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
     if (m_processor) {
-        if (getInputFeature()->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
+        if (getInput()->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
             try {
                 m_processor->process(userLogger);
                 if (isFailed()) {
@@ -105,12 +105,12 @@ void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
                                       << " failed to process correctly: " << e.what();
                 setInternalFailure(e.what());
                 // TODO: Is this definitely the desired outcome?
-                m_processor->getOutputFeature().setToDefault();
+                m_processor->getOutput().setToDefault();
             }
         }
         if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-            m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInputFeature(),
-                                        &m_processor->getOutputFeature());
+            m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInput(),
+                                        &m_processor->getOutput());
         } else if (isChanged(Changes::ModifierChangesMask)) {
             m_contentsCache.updateModifierCache();
         }

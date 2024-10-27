@@ -61,7 +61,7 @@ namespace {
                         }
                     }
                     if (!foundOverridingModifier) {
-                        assert(pathToPossibleValueInTarget.tryFollow(*targetElement->getInputFeature()) &&
+                        assert(pathToPossibleValueInTarget.tryFollow(*targetElement->getInput()) &&
                                "Expected to find a matching feature in the target, since ancestors are connected and "
                                "there "
                                "are no overriding modifiers");

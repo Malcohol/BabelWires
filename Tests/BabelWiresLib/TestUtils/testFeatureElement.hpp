@@ -34,10 +34,10 @@ namespace testUtils {
         TestFeatureElement(const babelwires::ProjectContext& context, const TestFeatureElementData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;
 
-        babelwires::ValueTreeNode* doGetInputFeatureNonConst() override;
-        babelwires::ValueTreeNode* doGetOutputFeatureNonConst() override;
-        const babelwires::ValueTreeNode* getInputFeature() const override;
-        const babelwires::ValueTreeNode* getOutputFeature() const override;
+        babelwires::ValueTreeNode* doGetInputNonConst() override;
+        babelwires::ValueTreeNode* doGetOutputNonConst() override;
+        const babelwires::ValueTreeNode* getInput() const override;
+        const babelwires::ValueTreeNode* getOutput() const override;
 
         void simulateFailure(const babelwires::ProjectContext& context);
         void simulateRecovery(const babelwires::ProjectContext& context);

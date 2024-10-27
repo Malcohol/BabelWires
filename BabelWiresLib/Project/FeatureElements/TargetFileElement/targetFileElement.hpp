@@ -28,7 +28,7 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const TargetFileElementData& getElementData() const;
 
-        virtual const ValueTreeNode* getInputFeature() const override;
+        virtual const ValueTreeNode* getInput() const override;
 
         virtual std::filesystem::path getFilePath() const override;
         virtual void setFilePath(std::filesystem::path newFilePath) override;
@@ -41,7 +41,7 @@ namespace babelwires {
         virtual std::string getLabel() const override;
 
       protected:
-        ValueTreeNode* doGetInputFeatureNonConst() override;
+        ValueTreeNode* doGetInputNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
       protected:

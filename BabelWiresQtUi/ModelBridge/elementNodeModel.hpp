@@ -58,8 +58,8 @@ namespace babelwires {
 
         static QtNodes::NodeDataType getDataTypeFromFeature(const ValueTreeNode* f);
 
-        const ValueTreeNode* getInputFeature(AccessModelScope& scope, int portIndex) const;
-        const ValueTreeNode* getOutputFeature(AccessModelScope& scope, int portIndex) const;
+        const ValueTreeNode* getInput(AccessModelScope& scope, int portIndex) const;
+        const ValueTreeNode* getOutput(AccessModelScope& scope, int portIndex) const;
 
       protected:
         ElementId m_elementId;

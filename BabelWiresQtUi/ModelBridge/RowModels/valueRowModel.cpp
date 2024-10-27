@@ -23,7 +23,7 @@
 void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {
     const babelwires::ValueTreeNode& valueFeature = getValueFeature();
     m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueFeature.getType(), valueFeature.getValue(),
-                                (getInputFeature() == nullptr),
+                                (getInput() == nullptr),
                                 m_contentsCacheEntry->isStructureEditable());
 }
 
@@ -57,7 +57,7 @@ babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
 }
 
 bool babelwires::ValueRowModel::isItemEditable() const {
-    if (getInputFeature()) {
+    if (getInput()) {
         return m_valueModelDispatcher->isItemEditable();
     }
     return false;

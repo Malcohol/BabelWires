@@ -87,8 +87,8 @@ namespace babelwires {
 
       protected:
         bool hasInputFeature() const;
-        const ValueTreeNode* getInputFeature() const;
-        const ValueTreeNode* getOutputFeature() const;
+        const ValueTreeNode* getInput() const;
+        const ValueTreeNode* getOutput() const;
         const ValueTreeNode* getInputThenOutputFeature() const;
         const ValueTreeNode* getOutputThenInputFeature() const;
 

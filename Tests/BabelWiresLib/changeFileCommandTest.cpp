@@ -39,13 +39,13 @@ namespace {
             testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::SourceFileElement>();
         ASSERT_NE(element, nullptr);
 
-        const auto getOutputFeature = [element]() {
-            return testUtils::TestSimpleRecordType::ConstInstance(*element->getOutputFeature()->getFeature(0));
+        const auto getOutput = [element]() {
+            return testUtils::TestSimpleRecordType::ConstInstance(*element->getOutput()->getFeature(0));
         };
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
         if (source1Present) {
-            EXPECT_EQ(getOutputFeature().getintR0().get(), 'x');
+            EXPECT_EQ(getOutput().getintR0().get(), 'x');
         }
 
         babelwires::ChangeFileCommand command("Test command", elementId, filePath2.m_filePath);
@@ -59,7 +59,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
-            EXPECT_EQ(getOutputFeature().getintR0().get(), 'q');
+            EXPECT_EQ(getOutput().getintR0().get(), 'q');
         }
 
         command.undo(testEnvironment.m_project);
@@ -67,7 +67,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
         if (source1Present) {
-            EXPECT_EQ(getOutputFeature().getintR0().get(), 'x');
+            EXPECT_EQ(getOutput().getintR0().get(), 'x');
         }
 
         command.execute(testEnvironment.m_project);
@@ -75,7 +75,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
-            EXPECT_EQ(getOutputFeature().getintR0().get(), 'q');
+            EXPECT_EQ(getOutput().getintR0().get(), 'q');
         }
     }
 } // namespace

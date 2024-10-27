@@ -85,14 +85,14 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     testEnvironment.m_typeSystem.addEntry<TestParallelProcessorOutput>();
 
     TestParallelProcessor processor(testEnvironment.m_projectContext);
-    processor.getInputFeature().setToDefault();
-    processor.getOutputFeature().setToDefault();
+    processor.getInput().setToDefault();
+    processor.getOutput().setToDefault();
 
-    babelwires::ValueTreeNode& inputValueFeature = processor.getInputFeature();
-    const babelwires::ValueTreeNode& outputValueFeature = processor.getOutputFeature();
+    babelwires::ValueTreeNode& inputValueFeature = processor.getInput();
+    const babelwires::ValueTreeNode& outputValueFeature = processor.getOutput();
 
     babelwires::ValueTreeNode& intValueFeature =
-        processor.getInputFeature().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
+        processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayFeature =
         inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
@@ -109,25 +109,25 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     EXPECT_EQ(inputArray.getEntry(0).get(), 0);
     EXPECT_EQ(outputArray.getEntry(0).get(), 0);
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
+        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
         intValueFeature.setValue(babelwires::IntValue(1));
     }
     processor.process(testEnvironment.m_log);
     EXPECT_EQ(outputArray.getEntry(0).get(), 1);
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
+        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
         inputArray.getEntry(0).set(2);
     }
     processor.process(testEnvironment.m_log);
     EXPECT_EQ(outputArray.getEntry(0).get(), 3);
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
+        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
         inputArray.setSize(2);
     }
     processor.process(testEnvironment.m_log);
@@ -136,9 +136,9 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     EXPECT_EQ(outputArray.getEntry(0).get(), 3);
     EXPECT_EQ(outputArray.getEntry(1).get(), 1);
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
+        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
         inputArray.setSize(1);
     }
     processor.process(testEnvironment.m_log);
@@ -153,14 +153,14 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     testEnvironment.m_typeSystem.addEntry<TestParallelProcessorOutput>();
 
     TestParallelProcessor processor(testEnvironment.m_projectContext);
-    processor.getInputFeature().setToDefault();
-    processor.getOutputFeature().setToDefault();
+    processor.getInput().setToDefault();
+    processor.getOutput().setToDefault();
 
-    babelwires::ValueTreeNode& inputValueFeature = processor.getInputFeature();
-    const babelwires::ValueTreeNode& outputValueFeature = processor.getOutputFeature();
+    babelwires::ValueTreeNode& inputValueFeature = processor.getInput();
+    const babelwires::ValueTreeNode& outputValueFeature = processor.getOutput();
 
     babelwires::ValueTreeNode& intValueFeature =
-        processor.getInputFeature().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
+        processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayFeature =
         inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
@@ -171,9 +171,9 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
         outputArrayFeature);
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
+        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
         intValueFeature.setValue(babelwires::IntValue(4));
         inputArray.setSize(2);
         inputArray.getEntry(0).set(5);
@@ -181,19 +181,19 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     }
     processor.process(testEnvironment.m_log);
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     testEnvironment.m_log.clear();
     EXPECT_EQ(testEnvironment.m_log.getLogContents(), "");
 
     processor.process(testEnvironment.m_log);
     EXPECT_EQ(testEnvironment.m_log.getLogContents(), "");
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     testEnvironment.m_log.clear();
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
+        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
         inputArray.getEntry(0).set(7);
     }
     processor.process(testEnvironment.m_log);
@@ -205,10 +205,10 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     EXPECT_TRUE(findPath(testEnvironment.m_log.getLogContents(), *inputArray.getEntry(0)));
     EXPECT_FALSE(findPath(testEnvironment.m_log.getLogContents(), *inputArray.getEntry(1)));
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     testEnvironment.m_log.clear();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
+        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
         inputArray.getEntry(0).set(0);
     }
     processor.process(testEnvironment.m_log);
@@ -230,14 +230,14 @@ TEST(ParallelProcessorTest, testFailure) {
     testEnvironment.m_typeSystem.addEntry<TestParallelProcessorOutput>();
 
     TestParallelProcessor processor(testEnvironment.m_projectContext);
-    processor.getInputFeature().setToDefault();
-    processor.getOutputFeature().setToDefault();
+    processor.getInput().setToDefault();
+    processor.getOutput().setToDefault();
 
-    babelwires::ValueTreeNode& inputValueFeature = processor.getInputFeature();
-    const babelwires::ValueTreeNode& outputValueFeature = processor.getOutputFeature();
+    babelwires::ValueTreeNode& inputValueFeature = processor.getInput();
+    const babelwires::ValueTreeNode& outputValueFeature = processor.getOutput();
 
     babelwires::ValueTreeNode& intValueFeature =
-        processor.getInputFeature().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
+        processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayFeature =
         inputValueFeature.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
@@ -254,9 +254,9 @@ TEST(ParallelProcessorTest, testFailure) {
     EXPECT_EQ(inputArray.getEntry(0).get(), 0);
     EXPECT_EQ(outputArray.getEntry(0).get(), 0);
 
-    processor.getInputFeature().clearChanges();
+    processor.getInput().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInputFeature().is<babelwires::ValueTreeRoot>());
+        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
         intValueFeature.setValue(babelwires::IntValue(4));
         inputArray.setSize(2);
         inputArray.getEntry(0).set(17);

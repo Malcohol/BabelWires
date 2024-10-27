@@ -39,7 +39,7 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
         return type.getSelectedTag(valueFeature->getValue());
     };
 
-    ASSERT_NE(element->getInputFeature(), nullptr);
+    ASSERT_NE(element->getInput(), nullptr);
 
     {
         babelwires::SelectRecordVariantModifierData selectRecordVariantData;
@@ -101,25 +101,25 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
                                                    testUtils::TestRecordWithVariantsType::getTagBId());
 
     EXPECT_EQ(command.getName(), "Test command");
-    EXPECT_EQ(getSelectedTag(element->getInputFeature()), testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_EQ(getSelectedTag(element->getInput()), testUtils::TestRecordWithVariantsType::getTagAId());
     checkModifiers(false);
 
     testEnvironment.m_project.process();
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_EQ(getSelectedTag(element->getInputFeature()), testUtils::TestRecordWithVariantsType::getTagBId());
+    EXPECT_EQ(getSelectedTag(element->getInput()), testUtils::TestRecordWithVariantsType::getTagBId());
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getSelectedTag(element->getInputFeature()), testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_EQ(getSelectedTag(element->getInput()), testUtils::TestRecordWithVariantsType::getTagAId());
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getSelectedTag(element->getInputFeature()), testUtils::TestRecordWithVariantsType::getTagBId());
+    EXPECT_EQ(getSelectedTag(element->getInput()), testUtils::TestRecordWithVariantsType::getTagBId());
     checkModifiers(true);
 }
 

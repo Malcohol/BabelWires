@@ -64,24 +64,24 @@ QtNodes::NodeDataType babelwires::ElementNodeModel::dataType(QtNodes::PortType p
                                                              QtNodes::PortIndex portIndex) const {
     AccessModelScope scope(m_projectBridge);
     if (portType == QtNodes::PortType::In) {
-        return getDataTypeFromFeature(getInputFeature(scope, portIndex));
+        return getDataTypeFromFeature(getInput(scope, portIndex));
     } else {
-        return getDataTypeFromFeature(getOutputFeature(scope, portIndex));
+        return getDataTypeFromFeature(getOutput(scope, portIndex));
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getInputFeature(AccessModelScope& scope, int portIndex) const {
+const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getInput(AccessModelScope& scope, int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
-        return entry->getInputFeature();
+        return entry->getInput();
     } else {
         return nullptr;
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getOutputFeature(AccessModelScope& scope,
+const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getOutput(AccessModelScope& scope,
                                                                           int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
-        return entry->getOutputFeature();
+        return entry->getOutput();
     } else {
         return nullptr;
     }

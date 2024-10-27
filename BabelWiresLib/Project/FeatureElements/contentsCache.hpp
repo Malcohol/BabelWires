@@ -31,8 +31,8 @@ namespace babelwires {
                            const Path& path, std::uint8_t depth, std::uint8_t indent);
 
         const std::string& getLabel() const { return m_label; }
-        const ValueTreeNode* getInputFeature() const { return m_inputFeature; }
-        const ValueTreeNode* getOutputFeature() const { return m_outputFeature; }
+        const ValueTreeNode* getInput() const { return m_inputFeature; }
+        const ValueTreeNode* getOutput() const { return m_outputFeature; }
         const Path& getPath() const { return m_path; }
 
         /// Get the indent of this row.

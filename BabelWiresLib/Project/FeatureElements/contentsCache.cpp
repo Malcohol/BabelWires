@@ -183,7 +183,7 @@ void babelwires::ContentsCache::updateModifierCache() {
 }
 
 void babelwires::ContentsCache::updateModifierFlags() {
-    if (!m_rows[0].getInputFeature()) {
+    if (!m_rows[0].getInput()) {
         /// Only input features can be modified.
         return;
     }

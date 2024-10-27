@@ -79,9 +79,9 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
         }
     };
 
-    ASSERT_NE(element->getInputFeature(), nullptr);
+    ASSERT_NE(element->getInput(), nullptr);
 
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 5);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), 5);
 
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
                                                     testUtils::TestArrayElementData::getPathToArray(), 1, 1);
@@ -93,19 +93,19 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 4);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), 4);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 5);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), 5);
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), 4);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), 4);
     checkModifiers(true);
 }
 
@@ -139,12 +139,12 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
     const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
-    ASSERT_NE(element->getInputFeature(), nullptr);
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    ASSERT_NE(element->getInput(), nullptr);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
                                                     testUtils::TestArrayElementData::getPathToArray(), 12, 1);
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
-    EXPECT_EQ(element->getInputFeature()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumFeatures(), testUtils::TestSimpleArrayType::s_defaultSize);
 }

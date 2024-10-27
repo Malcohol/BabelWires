@@ -29,15 +29,15 @@
 void babelwires::RowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {}
 
 bool babelwires::RowModel::hasInputFeature() const {
-    return m_contentsCacheEntry->getInputFeature();
+    return m_contentsCacheEntry->getInput();
 }
 
-const babelwires::ValueTreeNode* babelwires::RowModel::getInputFeature() const {
-    return m_contentsCacheEntry->getInputFeature();
+const babelwires::ValueTreeNode* babelwires::RowModel::getInput() const {
+    return m_contentsCacheEntry->getInput();
 }
 
-const babelwires::ValueTreeNode* babelwires::RowModel::getOutputFeature() const {
-    return m_contentsCacheEntry->getOutputFeature();
+const babelwires::ValueTreeNode* babelwires::RowModel::getOutput() const {
+    return m_contentsCacheEntry->getOutput();
 }
 
 const babelwires::ValueTreeNode* babelwires::RowModel::getInputThenOutputFeature() const {
@@ -137,7 +137,7 @@ void babelwires::RowModel::getContextMenuActions(
     if (m_contentsCacheEntry->hasFailedModifier() || m_contentsCacheEntry->hasFailedHiddenModifiers()) {
         actionsOut.emplace_back(std::make_unique<RemoveFailedModifiersAction>());
     }
-    if (const babelwires::ValueTreeNode* inputFeature = getInputFeature()) {
+    if (const babelwires::ValueTreeNode* inputFeature = getInput()) {
         auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(inputFeature->getOwner());
         if (compoundFeature) {
             const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();

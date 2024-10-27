@@ -150,7 +150,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const Path& pathT
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
 
     if (FeatureElement* const element = getFeatureElement(elementId)) {
-        if (ValueTreeNode* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
+        if (ValueTreeNode* const inputFeature = element->getInputNonConst(pathToArray)) {
             ValueTreeNode* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
             assert(featureAtPath->getType().as<ArrayType>());
@@ -194,7 +194,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const Path& pa
     assert((indexOfElementToRemove >= 0) && "indexOfEntriesToRemove must be positive");
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     if (FeatureElement* const element = getFeatureElement(elementId)) {
-        if (ValueTreeNode* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
+        if (ValueTreeNode* const inputFeature = element->getInputNonConst(pathToArray)) {
             ValueTreeNode* featureAtPath = pathToArray.tryFollow(*inputFeature);
             assert(featureAtPath && "Path should resolve");
             assert(featureAtPath->getType().as<ArrayType>());
@@ -474,7 +474,7 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         for (auto&& pair : connections) {
             ConnectionModifier* connection = std::get<0>(pair);
             FeatureElement* targetElement = std::get<1>(pair);
-            if (ValueTreeNode* inputFeature = targetElement->getInputFeatureNonConst(connection->getPathToFeature())) {
+            if (ValueTreeNode* inputFeature = targetElement->getInputNonConst(connection->getPathToFeature())) {
                 connection->applyConnection(*this, m_userLogger, inputFeature);
             }
         }
@@ -485,7 +485,7 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         ConnectionModifier* connection = std::get<0>(pair);
         FeatureElement* owner = std::get<1>(pair);
         if (!connection->isFailed()) {
-            if (ValueTreeNode* inputFeature = owner->getInputFeatureNonConst(connection->getPathToFeature())) {
+            if (ValueTreeNode* inputFeature = owner->getInputNonConst(connection->getPathToFeature())) {
                 connection->applyConnection(*this, m_userLogger, inputFeature);
             }
         }
@@ -592,7 +592,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const Path& path
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert(elementToModify);
 
-    ValueTreeNode* const inputFeature = elementToModify->getInputFeatureNonConst(pathToRecord);
+    ValueTreeNode* const inputFeature = elementToModify->getInputNonConst(pathToRecord);
     if (!inputFeature) {
         return; // Path cannot be followed.
     }
@@ -631,7 +631,7 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const Path& pa
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert(elementToModify);
 
-    ValueTreeNode* const inputFeature = elementToModify->getInputFeatureNonConst(pathToRecord);
+    ValueTreeNode* const inputFeature = elementToModify->getInputNonConst(pathToRecord);
     if (!inputFeature) {
         return; // Path cannot be followed.
     }

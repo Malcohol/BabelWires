@@ -150,14 +150,14 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::SourceFileElement>());
-    EXPECT_TRUE(featureElement->getOutputFeature());
+    EXPECT_TRUE(featureElement->getOutput());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(featureElement->getElementData().as<babelwires::SourceFileElementData>());
     EXPECT_EQ(static_cast<const babelwires::SourceFileElementData&>(featureElement->getElementData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getOutputFeature()->getFeature(0));
+    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getOutput()->getFeature(0));
     EXPECT_EQ(instance.getintR0().get(), 14);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));
@@ -240,14 +240,14 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::TargetFileElement>());
-    EXPECT_TRUE(featureElement->getInputFeature());
+    EXPECT_TRUE(featureElement->getInput());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(featureElement->getElementData().as<babelwires::TargetFileElementData>());
     EXPECT_EQ(static_cast<const babelwires::TargetFileElementData&>(featureElement->getElementData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getInputFeature()->getFeature(0));
+    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getInput()->getFeature(0));
     EXPECT_EQ(instance.getintR0().get(), 12);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));
@@ -323,12 +323,12 @@ TEST(ElementDataTest, processorDataCreateElement) {
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::ProcessorElement>());
-    EXPECT_TRUE(featureElement->getInputFeature());
+    EXPECT_TRUE(featureElement->getInput());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(featureElement->getElementData().as<babelwires::ProcessorElementData>());
 
-    const auto& inputFeature = *featureElement->getInputFeature();
+    const auto& inputFeature = *featureElement->getInput();
 
     testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};
 

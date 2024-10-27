@@ -25,8 +25,8 @@ TEST(FeatureElementTest, basicAccessors) {
 
     ASSERT_TRUE(featureElement);
     EXPECT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(featureElement->getInputFeature());
-    EXPECT_TRUE(featureElement->getOutputFeature());
+    EXPECT_TRUE(featureElement->getInput());
+    EXPECT_TRUE(featureElement->getOutput());
     EXPECT_EQ(featureElement->getElementId(), 54);
 }
 
@@ -124,7 +124,7 @@ TEST(FeatureElementTest, modifiers) {
     }
 
     const auto* const testRecordFeature =
-        featureElement->getInputFeature();
+        featureElement->getInput();
     ASSERT_TRUE(testRecordFeature);
 
     testUtils::TestComplexRecordType::ConstInstance testRecord(*testRecordFeature);

@@ -33,7 +33,7 @@ const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceFe
     }
     */
 
-    const ValueTreeNode* const outputFeature = sourceElement->getOutputFeature();
+    const ValueTreeNode* const outputFeature = sourceElement->getOutput();
     if (!outputFeature) {
         throw babelwires::ModelException()
             << "The connection source (element with id=" << m_sourceId << ") has no outputs";

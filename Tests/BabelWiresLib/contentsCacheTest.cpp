@@ -42,16 +42,16 @@ namespace {
                         testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         // TODO EXPECT_EQ(entry->getLabel(), ...);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_record);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_record);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToRecord);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_record);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_record);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToRecord);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_TRUE(entry->isExpandable());
         EXPECT_TRUE(entry->isExpanded());
@@ -62,16 +62,16 @@ namespace {
                             testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestComplexRecordType::s_intFieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_intFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_intFeature);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToInt);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_intFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_intFeature);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToInt);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
@@ -82,16 +82,16 @@ namespace {
                              testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestComplexRecordType::s_subRecordFieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_subRecordFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_subRecordFeature);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToSubRecord);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_subRecordFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_subRecordFeature);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToSubRecord);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_TRUE(entry->isExpandable());
     }
@@ -101,16 +101,16 @@ namespace {
                                 testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestSimpleRecordType::s_int0FieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_subRecordIntFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_subRecordIntFeature);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToSubRecordInt);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_subRecordIntFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_subRecordIntFeature);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToSubRecordInt);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
@@ -121,16 +121,16 @@ namespace {
                          testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestComplexRecordType::s_arrayFieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_arrayFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_arrayFeature);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToArray);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_arrayFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_arrayFeature);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToArray);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_TRUE(entry->isExpandable());
     }
@@ -140,16 +140,16 @@ namespace {
                               testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), "[0]");
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_elem0);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_elem0);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToElem0);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_elem0);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_elem0);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToElem0);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
@@ -160,16 +160,16 @@ namespace {
                                testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), "[1]");
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_elem1);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_elem1);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToElem1);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_elem1);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_elem1);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToElem1);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
@@ -505,8 +505,8 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     {
         const babelwires::ContentsCacheEntry* const entry =
             cache.getEntry(8 + testUtils::TestSimpleArrayType::s_nonDefaultSize - 1);
-        EXPECT_FALSE(entry->getInputFeature());
-        EXPECT_EQ(entry->getOutputFeature(),
+        EXPECT_FALSE(entry->getInput());
+        EXPECT_EQ(entry->getOutput(),
                   outputInfo.m_arrayFeature.getFeature(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1));
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
@@ -552,8 +552,8 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
         EXPECT_EQ(entry->getLabel(), "Test");
-        EXPECT_EQ(entry->getInputFeature(), &inputFeature);
-        EXPECT_EQ(entry->getOutputFeature(), &outputFeature);
+        EXPECT_EQ(entry->getInput(), &inputFeature);
+        EXPECT_EQ(entry->getOutput(), &outputFeature);
         EXPECT_EQ(entry->getPath(), babelwires::Path());
         EXPECT_TRUE(entry->isExpandable());
         EXPECT_TRUE(entry->isExpanded());
@@ -607,14 +607,14 @@ namespace {
                             babelwires::ValueTreeRoot* outputFeature) {
         EXPECT_EQ(entry->getLabel(), "Test");
         if (inputFeature) {
-            EXPECT_EQ(entry->getInputFeature(), inputFeature);
+            EXPECT_EQ(entry->getInput(), inputFeature);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutputFeature(), outputFeature);
+            EXPECT_EQ(entry->getOutput(), outputFeature);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_EQ(entry->getPath(), babelwires::Path());
         EXPECT_TRUE(entry->isExpandable());
@@ -625,14 +625,14 @@ namespace {
                            babelwires::ValueTreeRoot* outputFeature, bool isExpanded) {
         EXPECT_EQ(entry->getLabel(), "Contents");
         if (inputFeature) {
-            EXPECT_EQ(entry->getInputFeature(), inputFeature->getFeature(0));
+            EXPECT_EQ(entry->getInput(), inputFeature->getFeature(0));
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutputFeature(), outputFeature->getFeature(0));
+            EXPECT_EQ(entry->getOutput(), outputFeature->getFeature(0));
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_EQ(entry->getPath().getNumSteps(), 1);
         EXPECT_EQ(*entry->getPath().getStep(0).asField(), babelwires::FileType::getStepToContents());
@@ -644,14 +644,14 @@ namespace {
                            babelwires::ValueTreeRoot* outputFeature) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestSimpleRecordType::s_int0FieldName);
         if (inputFeature) {
-            EXPECT_EQ(entry->getInputFeature(), inputFeature->getFeature(0)->is<babelwires::ValueTreeNode>().getFeature(0));
+            EXPECT_EQ(entry->getInput(), inputFeature->getFeature(0)->is<babelwires::ValueTreeNode>().getFeature(0));
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutputFeature(), outputFeature->getFeature(0)->is<babelwires::ValueTreeNode>().getFeature(0));
+            EXPECT_EQ(entry->getOutput(), outputFeature->getFeature(0)->is<babelwires::ValueTreeNode>().getFeature(0));
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_EQ(entry->getPath(), testUtils::getTestFileElementPathToInt0());
         EXPECT_FALSE(entry->isExpandable());

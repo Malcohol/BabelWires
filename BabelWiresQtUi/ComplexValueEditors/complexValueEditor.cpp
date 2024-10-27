@@ -54,7 +54,7 @@ babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, 
         throw ModelException() << "The element does not exist.";
     }
 
-    const ValueTreeNode* const inputFeature = element->getInputFeature();
+    const ValueTreeNode* const inputFeature = element->getInput();
     if (!inputFeature) {
         throw ModelException() << "The element does not have editable features.";
     }
@@ -76,7 +76,7 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueFeat
         return nullptr;
     }
 
-    const ValueTreeNode* const inputFeature = element->getInputFeature();
+    const ValueTreeNode* const inputFeature = element->getInput();
     if (!inputFeature) {
         return nullptr;
     }

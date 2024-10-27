@@ -65,7 +65,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
 
-    const babelwires::ValueTreeNode* const valueFeature = element->getInputFeature();
+    const babelwires::ValueTreeNode* const valueFeature = element->getInput();
     ASSERT_NE(valueFeature, nullptr);
     const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
 

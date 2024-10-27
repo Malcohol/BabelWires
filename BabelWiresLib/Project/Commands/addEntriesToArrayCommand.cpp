@@ -35,7 +35,7 @@ bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project
         return false;
     }
 
-    const ValueTreeNode* const inputFeature = elementToModify->getInputFeature();
+    const ValueTreeNode* const inputFeature = elementToModify->getInput();
     if (!inputFeature) {
         return false;
     }

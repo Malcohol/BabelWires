@@ -51,10 +51,10 @@ namespace babelwires {
         /// Returns nullptr if the modifier will be applied later anyway, so there's no
         /// work for the caller to do.
         /// This does not attempt to deal with errors, so it returns the feature if the path cannot be followed.
-        ValueTreeNode* getInputFeatureNonConst(const Path& pathToModify);
+        ValueTreeNode* getInputNonConst(const Path& pathToModify);
 
-        virtual const ValueTreeNode* getInputFeature() const;
-        virtual const ValueTreeNode* getOutputFeature() const;
+        virtual const ValueTreeNode* getInput() const;
+        virtual const ValueTreeNode* getOutput() const;
 
         /// Get a description of the type of element (e.g. format name).
         virtual std::string getLabel() const;
@@ -157,9 +157,9 @@ namespace babelwires {
 
       protected:
         /// Get a non-const pointer to the input feature. The default implementation returns null.
-        virtual ValueTreeNode* doGetInputFeatureNonConst();
+        virtual ValueTreeNode* doGetInputNonConst();
         /// Get a non-const pointer to the output feature. The default implementation returns null.
-        virtual ValueTreeNode* doGetOutputFeatureNonConst();
+        virtual ValueTreeNode* doGetOutputNonConst();
         virtual void doProcess(UserLogger& userLogger) = 0;
 
       protected:
