@@ -31,7 +31,7 @@ bool babelwires::RemoveFailedModifiersCommand::initializeAndExecute(Project& pro
     for (const Modifier* modifier : elementToModify->getEdits().modifierRange(m_featurePath)) {
         if (modifier->isFailed()) {
             addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_targetId,
-                                                                        modifier->getPathToFeature()));
+                                                                        modifier->getPathToModify()));
             ++numFailedModifiers;
         }
     }

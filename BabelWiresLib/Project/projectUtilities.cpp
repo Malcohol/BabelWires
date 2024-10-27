@@ -54,8 +54,8 @@ namespace {
                     // TODO The edit tree could provide an O(log N) algorithm for this.
                     for (auto modifier : targetElement->getConnectionModifiers()) {
                         // Using strict here means that connectionModifier itself is exempt from consideration.
-                        if (connectionData.m_pathToFeature.isStrictPrefixOf(modifier->getPathToFeature()) &&
-                            modifier->getPathToFeature().isPrefixOf(pathToPossibleValueInTarget)) {
+                        if (connectionData.m_pathToFeature.isStrictPrefixOf(modifier->getPathToModify()) &&
+                            modifier->getPathToModify().isPrefixOf(pathToPossibleValueInTarget)) {
                             foundOverridingModifier = true;
                             break;
                         }

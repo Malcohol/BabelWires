@@ -51,7 +51,7 @@ const babelwires::ModifierData& babelwires::Modifier::getModifierData() const {
     return *m_data;
 }
 
-const babelwires::Path& babelwires::Modifier::getPathToFeature() const {
+const babelwires::Path& babelwires::Modifier::getPathToModify() const {
     return m_data->m_pathToFeature;
 }
 

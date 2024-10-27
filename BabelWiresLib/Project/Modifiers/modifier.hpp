@@ -29,7 +29,7 @@ namespace babelwires {
     class FeatureElement;
     class ConnectionModifier;
 
-    /// A Modifier changes the value of a feature in a FeatureElement, and corresponds to a user edit.
+    /// A Modifier changes a value somewhere in the input of a FeatureElement, and corresponds to a user edit.
     class Modifier : public Cloneable {
       public:
         CLONEABLE_ABSTRACT(Modifier);
@@ -64,8 +64,8 @@ namespace babelwires {
         ModifierData& getModifierData();
         const ModifierData& getModifierData() const;
 
-        /// Convenience function for finding the feature affected by this modifier.
-        const Path& getPathToFeature() const;
+        /// Convenience function for finding the node in the valueTree affected by this modifier.
+        const Path& getPathToModify() const;
 
         /// If the modifier is a local modifier, apply it. Otherwise, do nothing.
         virtual void applyIfLocal(UserLogger& userLogger, ValueTreeNode* container);

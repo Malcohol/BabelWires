@@ -56,7 +56,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     // so the user is informed.
     bool hasAncestorConnection = false;
     for (auto connectionModifier : elementToModify->getConnectionModifiers()) {
-        if (connectionModifier->getPathToFeature().isStrictPrefixOf(m_featurePath)) {
+        if (connectionModifier->getPathToModify().isStrictPrefixOf(m_featurePath)) {
             hasAncestorConnection = true;
             break;
         }

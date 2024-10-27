@@ -124,7 +124,7 @@ babelwires::Modifier* babelwires::FeatureElement::addModifierWithoutApplyingIt(c
 babelwires::Modifier* babelwires::FeatureElement::addModifier(UserLogger& userLogger,
                                                               const ModifierData& modifierData) {
     Modifier* newModifier = addModifierWithoutApplyingIt(modifierData);
-    newModifier->applyIfLocal(userLogger, getInputNonConst(newModifier->getPathToFeature()));
+    newModifier->applyIfLocal(userLogger, getInputNonConst(newModifier->getPathToModify()));
     return newModifier;
 }
 
@@ -133,7 +133,7 @@ void babelwires::FeatureElement::removeModifier(Modifier* modifier) {
            "This FeatureElement is not the owner of the modifier");
 
     m_removedModifiers.emplace_back(std::move(m_edits.removeModifier(modifier)));
-    ValueTreeNode* inputFeature = getInputNonConst(modifier->getPathToFeature());
+    ValueTreeNode* inputFeature = getInputNonConst(modifier->getPathToModify());
     assert(inputFeature && "Modifiable elements always have input features");
     if (!modifier->isFailed()) {
         modifier->unapply(inputFeature);
