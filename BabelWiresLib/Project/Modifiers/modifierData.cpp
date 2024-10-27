@@ -16,7 +16,7 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-babelwires::ValueTreeNode* babelwires::ModifierData::getTargetFeature(ValueTreeNode* container) const {
+babelwires::ValueTreeNode* babelwires::ModifierData::getTarget(ValueTreeNode* container) const {
     return &m_targetPath.follow(*container);
 }
 

@@ -41,7 +41,7 @@ TEST(ModifierTest, basicStuff) {
 
     EXPECT_EQ(intMod.asConnectionModifier(), nullptr);
     EXPECT_EQ(intMod.getModifierData().m_targetPath, path);
-    EXPECT_EQ(intMod.getPathToModify(), path);
+    EXPECT_EQ(intMod.getTargetPath(), path);
     EXPECT_NE(intMod.getModifierData().as<babelwires::ValueAssignmentData>(), nullptr);
     EXPECT_NE(static_cast<const babelwires::ValueAssignmentData&>(intMod.getModifierData())
                   .getValue()

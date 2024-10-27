@@ -35,7 +35,7 @@ bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, Valu
     State state = State::TargetMissing;
     try {
         ArraySizeModifierData& data = getModifierData();
-        ValueTreeNode* targetFeature = data.getTargetFeature(container);
+        ValueTreeNode* targetFeature = data.getTarget(container);
         state = State::ApplicationFailed;
         data.addEntries(targetFeature, indexOfNewElement, numEntriesToAdd);
         setSucceeded();
@@ -53,7 +53,7 @@ bool babelwires::ArraySizeModifier::removeArrayEntries(UserLogger& userLogger, V
     State state = State::TargetMissing;
     try {
         ArraySizeModifierData& data = getModifierData();
-        ValueTreeNode* targetFeature = data.getTargetFeature(container);
+        ValueTreeNode* targetFeature = data.getTarget(container);
         state = State::ApplicationFailed;
         data.removeEntries(targetFeature, indexOfElementToRemove, numEntriesToRemove);
         setSucceeded();

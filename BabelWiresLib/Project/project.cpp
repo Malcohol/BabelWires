@@ -474,7 +474,7 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         for (auto&& pair : connections) {
             ConnectionModifier* connection = std::get<0>(pair);
             FeatureElement* targetElement = std::get<1>(pair);
-            if (ValueTreeNode* inputFeature = targetElement->getInputNonConst(connection->getPathToModify())) {
+            if (ValueTreeNode* inputFeature = targetElement->getInputNonConst(connection->getTargetPath())) {
                 connection->applyConnection(*this, m_userLogger, inputFeature);
             }
         }
@@ -485,7 +485,7 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         ConnectionModifier* connection = std::get<0>(pair);
         FeatureElement* owner = std::get<1>(pair);
         if (!connection->isFailed()) {
-            if (ValueTreeNode* inputFeature = owner->getInputNonConst(connection->getPathToModify())) {
+            if (ValueTreeNode* inputFeature = owner->getInputNonConst(connection->getTargetPath())) {
                 connection->applyConnection(*this, m_userLogger, inputFeature);
             }
         }

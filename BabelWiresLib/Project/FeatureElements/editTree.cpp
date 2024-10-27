@@ -174,7 +174,7 @@ void babelwires::EditTree::removeEdit(const Path& path, const EditNodeFunc& appl
 }
 
 void babelwires::EditTree::addModifier(std::unique_ptr<Modifier> modifier) {
-    const Path& featurePath = modifier->getPathToModify();
+    const Path& featurePath = modifier->getTargetPath();
 
     addEdit(featurePath, [&modifier](TreeNode& nodeToEdit) {
         assert(!nodeToEdit.m_modifier.get() && "There's already a modifier at that path in the tree");
@@ -183,7 +183,7 @@ void babelwires::EditTree::addModifier(std::unique_ptr<Modifier> modifier) {
 }
 
 std::unique_ptr<babelwires::Modifier> babelwires::EditTree::removeModifier(const Modifier* modifier) {
-    const Path& featurePath = modifier->getPathToModify();
+    const Path& featurePath = modifier->getTargetPath();
     std::unique_ptr<babelwires::Modifier> result;
 
     removeEdit(featurePath, [modifier, &result](TreeNode& nodeToEdit) {
@@ -363,7 +363,7 @@ bool babelwires::EditTree::validateTree() const {
         previousPath = path;
 
         if (node.m_modifier) {
-            assert((node.m_modifier->getPathToModify() == path) && "Node with wrong path");
+            assert((node.m_modifier->getTargetPath() == path) && "Node with wrong path");
         }
     }
     for (auto endOfChildren : endOfChildrenStack) {

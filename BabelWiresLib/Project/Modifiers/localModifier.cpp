@@ -39,7 +39,7 @@ void babelwires::LocalModifier::applyIfLocal(UserLogger& userLogger, ValueTreeNo
     ValueTreeNode* targetFeature = nullptr;
     try {
         const LocalModifierData& data = getModifierData();
-        targetFeature = data.getTargetFeature(container);
+        targetFeature = data.getTarget(container);
         state = State::ApplicationFailed;
         data.apply(targetFeature);
         setSucceeded();

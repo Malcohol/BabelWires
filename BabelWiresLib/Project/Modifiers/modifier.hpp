@@ -65,7 +65,7 @@ namespace babelwires {
         const ModifierData& getModifierData() const;
 
         /// Convenience function for finding the node in the valueTree affected by this modifier.
-        const Path& getPathToModify() const;
+        const Path& getTargetPath() const;
 
         /// If the modifier is a local modifier, apply it. Otherwise, do nothing.
         virtual void applyIfLocal(UserLogger& userLogger, ValueTreeNode* container);
