@@ -38,7 +38,7 @@ namespace babelwires {
         void applyMapToProject();
 
         /// Get the MapFeature or assert.
-        const ValueTreeNode& getMapFeature(AccessModelScope& scope) const;
+        const ValueTreeNode& getMapTreeNode(AccessModelScope& scope) const;
 
         /// Get the mapValue from the project or assert.
         const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
