@@ -1,5 +1,5 @@
 /**
- * Describes the steps to follow within a tree of features to reach a particular feature.
+ * Describes the steps to follow within a ValueTree to reach a particular ValueTreeNode.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -22,8 +22,8 @@
 
 babelwires::Path::Path() {}
 
-babelwires::Path::Path(const ValueTreeNode* feature) {
-    const ValueTreeNode* current = feature;
+babelwires::Path::Path(const ValueTreeNode* valueTreeNode) {
+    const ValueTreeNode* current = valueTreeNode;
     const ValueTreeNode* parent = current->getOwner();
     while (parent) {
         m_steps.push_back(parent->getStepToChild(current));
@@ -42,10 +42,10 @@ babelwires::Path::Path(std::vector<PathStep> steps)
 }
 
 babelwires::Path::RootAndPath<const babelwires::ValueTreeRoot>
-babelwires::Path::getRootAndPath(const ValueTreeNode& feature) {
+babelwires::Path::getRootAndPath(const ValueTreeNode& valueTreeNode) {
     std::vector<PathStep> steps;
-    const ValueTreeNode* current = &feature;
-    const ValueTreeNode* parent = feature.getOwner();
+    const ValueTreeNode* current = &valueTreeNode;
+    const ValueTreeNode* parent = valueTreeNode.getOwner();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
         assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
@@ -56,10 +56,10 @@ babelwires::Path::getRootAndPath(const ValueTreeNode& feature) {
     return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
 }
 
-babelwires::Path::RootAndPath<babelwires::ValueTreeRoot> babelwires::Path::getRootAndPath(ValueTreeNode& feature) {
+babelwires::Path::RootAndPath<babelwires::ValueTreeRoot> babelwires::Path::getRootAndPath(ValueTreeNode& valueTreeNode) {
     std::vector<PathStep> steps;
-    ValueTreeNode* current = &feature;
-    ValueTreeNode* parent = feature.getOwnerNonConst();
+    ValueTreeNode* current = &valueTreeNode;
+    ValueTreeNode* parent = valueTreeNode.getOwnerNonConst();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
         assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");

@@ -21,9 +21,9 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const ValueModelRegistry& val
                                                    const babelwires::ContentsCacheEntry* entry,
                                                    const babelwires::FeatureElement* element) {
     m_rowModel = &m_rowModelStorage;
-    const babelwires::ValueTreeNode* feature = &entry->getInputThenOutput()->is<babelwires::ValueTreeNode>();
+    const babelwires::ValueTreeNode* valueTreeNode = &entry->getInputThenOutput()->is<babelwires::ValueTreeNode>();
     if (element->as<FileElement>() && (entry->getDepth() == 0)) {
-        assert((feature->is<ValueTreeNode>().getType().as<FileType>()) || (feature->is<ValueTreeNode>().getType().as<FailureType>()));
+        assert((valueTreeNode->is<ValueTreeNode>().getType().as<FileType>()) || (valueTreeNode->is<ValueTreeNode>().getType().as<FailureType>()));
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::FileRowModel));
         new (m_rowModel) babelwires::FileRowModel();
     } else {

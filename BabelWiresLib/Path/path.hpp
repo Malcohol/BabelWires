@@ -1,5 +1,5 @@
 /**
- * Describes the steps to follow within a tree of features to reach a particular feature.
+ * Describes the steps to follow within a ValueTree to reach a particular ValueTreeNode.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -19,14 +19,14 @@ namespace babelwires {
     class ValueTreeNode;
     class ValueTreeRoot;
 
-    /// Describes the steps to follow within a tree of features to reach a particular feature.
+    /// Describes the steps to follow within a ValueTree to reach a particular ValueTreeNode.
     class Path {
       public:
         /// Construct an empty path.
         Path();
 
         /// Construct a feature path which leads to the given feature.
-        explicit Path(const ValueTreeNode* feature);
+        explicit Path(const ValueTreeNode* valueTreeNode);
 
         Path(Path&& other) = default;
 
@@ -39,13 +39,13 @@ namespace babelwires {
 
         Path& operator=(Path&& other) = default;
 
-        template <typename ROOT_VALUE_FEATURE> struct RootAndPath;
+        template <typename VALUE_TREE_ROOT> struct RootAndPath;
 
-        /// All value features must be below a single ValueTreeRoot.
-        static RootAndPath<const ValueTreeRoot> getRootAndPath(const ValueTreeNode& feature);
+        /// Get a path and the root.
+        static RootAndPath<const ValueTreeRoot> getRootAndPath(const ValueTreeNode& valueTreeNode);
 
-        /// All value features must be below a single ValueTreeRoot.
-        static RootAndPath<ValueTreeRoot> getRootAndPath(ValueTreeNode& feature);
+        /// Get a path and the root.
+        static RootAndPath<ValueTreeRoot> getRootAndPath(ValueTreeNode& valueTreeNode);
 
         /// Add a step to the path.
         void pushStep(PathStep step);
@@ -72,10 +72,10 @@ namespace babelwires {
         bool operator<(const Path& other) const;
         bool operator<=(const Path& other) const;
 
-        /// Does the path lead to the feature described by other, or one of its ancestors.
+        /// Does the path lead to the ValueTreeNode described by other, or one of its ancestors.
         bool isPrefixOf(const Path& other) const;
 
-        /// Does the path lead to one of its ancestors of the feature described by other.
+        /// Does the path lead to one of its ancestors of the ValueTreeNode described by other.
         bool isStrictPrefixOf(const Path& other) const;
 
         unsigned int getNumSteps() const;
@@ -120,8 +120,8 @@ namespace babelwires {
     /// Write a path to an ostream.
     std::ostream& operator<<(std::ostream& os, const Path& p);
 
-    template <typename ROOT_VALUE_FEATURE> struct Path::RootAndPath {
-        ROOT_VALUE_FEATURE& m_root;
+    template <typename VALUE_TREE_ROOT> struct Path::RootAndPath {
+        VALUE_TREE_ROOT& m_root;
         Path m_pathFromRoot;
     };
 

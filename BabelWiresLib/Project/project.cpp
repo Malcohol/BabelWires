@@ -151,9 +151,9 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const Path& pathT
 
     if (FeatureElement* const element = getFeatureElement(elementId)) {
         if (ValueTreeNode* const inputFeature = element->getInputNonConst(pathToArray)) {
-            ValueTreeNode* featureAtPath = pathToArray.tryFollow(*inputFeature);
-            assert(featureAtPath && "Path should resolve");
-            assert(featureAtPath->getType().as<ArrayType>());
+            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputFeature);
+            assert(valueTreeNode && "Path should resolve");
+            assert(valueTreeNode->getType().as<ArrayType>());
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -170,7 +170,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const Path& pathT
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
                     arrayInitDataPtr.m_targetPath = pathToArray;
-                    arrayInitDataPtr.m_size = featureAtPath->getNumChildren();
+                    arrayInitDataPtr.m_size = valueTreeNode->getNumChildren();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
                 }
@@ -195,9 +195,9 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const Path& pa
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     if (FeatureElement* const element = getFeatureElement(elementId)) {
         if (ValueTreeNode* const inputFeature = element->getInputNonConst(pathToArray)) {
-            ValueTreeNode* featureAtPath = pathToArray.tryFollow(*inputFeature);
-            assert(featureAtPath && "Path should resolve");
-            assert(featureAtPath->getType().as<ArrayType>());
+            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputFeature);
+            assert(valueTreeNode && "Path should resolve");
+            assert(valueTreeNode->getType().as<ArrayType>());
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -214,7 +214,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const Path& pa
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
                     arrayInitDataPtr.m_targetPath = pathToArray;
-                    arrayInitDataPtr.m_size = featureAtPath->getNumChildren();
+                    arrayInitDataPtr.m_size = valueTreeNode->getNumChildren();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
                 }

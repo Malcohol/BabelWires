@@ -123,8 +123,8 @@ QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) cons
 
     const int column = index.column();
 
-    const ValueTreeNode* feature = entry->getInputThenOutput();
-    assert(feature && "No feature for row model");
+    const ValueTreeNode* valueTreeNode = entry->getInputThenOutput();
+    assert(valueTreeNode && "No valueTreeNode for row model");
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
     RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
 

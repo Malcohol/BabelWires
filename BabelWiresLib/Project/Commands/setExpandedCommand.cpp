@@ -31,12 +31,12 @@ bool babelwires::SetExpandedCommand::initialize(const Project& project) {
     }
 
     const ValueTreeNode* compoundFeature = nullptr;
-    if (const ValueTreeNode* feature = element->getInput()) {
-        compoundFeature = m_pathToCompound.tryFollow(*feature);
+    if (const ValueTreeNode* valueTreeNode = element->getInput()) {
+        compoundFeature = m_pathToCompound.tryFollow(*valueTreeNode);
     }
     if (!compoundFeature) {
-        if (const ValueTreeNode* feature = element->getOutput()) {
-            compoundFeature = m_pathToCompound.tryFollow(*feature);
+        if (const ValueTreeNode* valueTreeNode = element->getOutput()) {
+            compoundFeature = m_pathToCompound.tryFollow(*valueTreeNode);
         }
     }
     if (!compoundFeature) {
