@@ -18,7 +18,7 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceFeature(const Project& project) const {
+const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceTreeNode(const Project& project) const {
     const FeatureElement* sourceElement = project.getFeatureElement(m_sourceId);
     if (!sourceElement) {
         throw babelwires::ModelException()

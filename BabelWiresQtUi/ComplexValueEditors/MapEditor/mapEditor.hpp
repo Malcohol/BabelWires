@@ -44,7 +44,7 @@ namespace babelwires {
         const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
 
         /// Get the MapFeature or return nullptr.
-        const ValueTreeNode* tryGetMapFeature(AccessModelScope& scope) const;
+        const ValueTreeNode* tryGetMapTreeNode(AccessModelScope& scope) const;
 
         /// See if there is a map assignment.
         /// If there is, return its data.

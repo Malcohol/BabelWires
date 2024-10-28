@@ -51,7 +51,7 @@ void babelwires::ConnectionModifier::applyConnection(const Project& project, Use
         const babelwires::ConnectionModifierData& data = getModifierData();
         target = data.getTarget(container);
         state = State::SourceMissing;
-        const ValueTreeNode* source = data.getSourceFeature(project);
+        const ValueTreeNode* source = data.getSourceTreeNode(project);
         state = State::ApplicationFailed;
         data.apply(source, target, shouldForce);
         setSucceeded();
