@@ -29,12 +29,12 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    const ValueTreeNode* const inputFeature = element->getInput();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = element->getInput();
+    if (!input) {
         return false;
     }
 
-    if (!m_modifierToAdd->m_targetPath.tryFollow(*inputFeature)) {
+    if (!m_modifierToAdd->m_targetPath.tryFollow(*input)) {
         return false;
     }
 

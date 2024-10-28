@@ -32,12 +32,12 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    const ValueTreeNode* const inputFeature = elementToModify->getInput();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = elementToModify->getInput();
+    if (!input) {
         return false;
     }
 
-    auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*inputFeature));
+    auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*input));
 
     if (!compoundFeature) {
         return false;

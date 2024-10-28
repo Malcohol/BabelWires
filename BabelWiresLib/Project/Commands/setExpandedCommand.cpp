@@ -30,20 +30,20 @@ bool babelwires::SetExpandedCommand::initialize(const Project& project) {
         return false;
     }
 
-    const ValueTreeNode* compoundFeature = nullptr;
+    const ValueTreeNode* compound = nullptr;
     if (const ValueTreeNode* valueTreeNode = element->getInput()) {
-        compoundFeature = m_pathToCompound.tryFollow(*valueTreeNode);
+        compound = m_pathToCompound.tryFollow(*valueTreeNode);
     }
-    if (!compoundFeature) {
+    if (!compound) {
         if (const ValueTreeNode* valueTreeNode = element->getOutput()) {
-            compoundFeature = m_pathToCompound.tryFollow(*valueTreeNode);
+            compound = m_pathToCompound.tryFollow(*valueTreeNode);
         }
     }
-    if (!compoundFeature) {
+    if (!compound) {
         return false;
     }
 
-    return compoundFeature->getNumChildren() > 0;
+    return compound->getNumChildren() > 0;
 }
 
 void babelwires::SetExpandedCommand::execute(Project& project) const {

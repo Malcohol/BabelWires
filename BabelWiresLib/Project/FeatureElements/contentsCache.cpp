@@ -164,7 +164,6 @@ namespace babelwires {
 void babelwires::ContentsCache::setValueTrees(std::string rootLabel, const ValueTreeNode* input, const ValueTreeNode* output) {
     m_rows.clear();
     Detail::ContentsCacheBuilder builder(m_rows, m_edits);
-    const babelwires::ValueTreeNode* const rootFeature = input ? input : output;
     if (input && output) {
         builder.addFeatureToCache(std::move(rootLabel), input, output, Path(), 0, 0);
     } else if (input) {

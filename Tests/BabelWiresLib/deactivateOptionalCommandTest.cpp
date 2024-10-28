@@ -65,9 +65,9 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
         testEnvironment.m_project.addModifier(targetId, outputConnection);
     }
 
-    const babelwires::ValueTreeNode* const valueFeature = element->getInput();
-    ASSERT_NE(valueFeature, nullptr);
-    const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
+    const babelwires::ValueTreeNode* const input = element->getInput();
+    ASSERT_NE(input, nullptr);
+    const testUtils::TestComplexRecordType* const type = input->getType().as<testUtils::TestComplexRecordType>();
 
     babelwires::DeactivateOptionalCommand command("Test command", elementId, pathToValue,
                                                   testUtils::TestComplexRecordType::getOpRecId());
@@ -103,19 +103,19 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
 
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_FALSE(type->isActivated(valueFeature->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_FALSE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_TRUE(type->isActivated(valueFeature->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_TRUE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_FALSE(type->isActivated(valueFeature->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_FALSE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
     checkModifiers(true);
 }
 

@@ -137,13 +137,13 @@ void babelwires::RowModel::getContextMenuActions(
     if (m_contentsCacheEntry->hasFailedModifier() || m_contentsCacheEntry->hasFailedHiddenModifiers()) {
         actionsOut.emplace_back(std::make_unique<RemoveFailedModifiersAction>());
     }
-    if (const babelwires::ValueTreeNode* inputFeature = getInput()) {
-        auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(inputFeature->getOwner());
+    if (const babelwires::ValueTreeNode* input = getInput()) {
+        auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(input->getOwner());
         if (compoundFeature) {
             const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
             //QString tooltip = "Array actions are not permitted when an array is a connection target";
             Path pathToArray(compoundFeature);
-            const PathStep step = compoundFeature->getStepToChild(inputFeature);
+            const PathStep step = compoundFeature->getStepToChild(input);
             const ArrayIndex index = step.getIndex();
             {
                 auto insertElement =

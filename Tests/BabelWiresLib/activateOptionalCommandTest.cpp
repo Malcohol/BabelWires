@@ -22,9 +22,9 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
         testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::ValueTreeNode* const valueFeature = element->getInput();
-    ASSERT_NE(valueFeature, nullptr);
-    const testUtils::TestComplexRecordType* const type = valueFeature->getType().as<testUtils::TestComplexRecordType>();
+    const babelwires::ValueTreeNode* const input = element->getInput();
+    ASSERT_NE(input, nullptr);
+    const testUtils::TestComplexRecordType* const type = input->getType().as<testUtils::TestComplexRecordType>();
 
     const babelwires::Path pathToValue;
 
@@ -39,7 +39,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_TRUE(type->isActivated(valueFeature->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_TRUE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
 
     {
         const babelwires::Modifier* modifier =
@@ -51,13 +51,13 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_FALSE(type->isActivated(valueFeature->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_FALSE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
     EXPECT_EQ(element->getEdits().findModifier(pathToValue), nullptr);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_TRUE(type->isActivated(valueFeature->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_TRUE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
 
     {
         const babelwires::Modifier* modifier =

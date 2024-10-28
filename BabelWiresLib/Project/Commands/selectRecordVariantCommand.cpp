@@ -30,13 +30,13 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
         return false;
     }
 
-    const ValueTreeNode* const inputFeature = elementToModify->getInput();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = elementToModify->getInput();
+    if (!input) {
         return false;
     }
 
     const auto [compoundFeature, isCurrentTag, fieldsToRemove] =
-        ValueTreeHelper::getInfoFromRecordWithVariantsFeature(m_pathToRecord.tryFollow(*inputFeature), m_tagToSelect);
+        ValueTreeHelper::getInfoFromRecordWithVariantsFeature(m_pathToRecord.tryFollow(*input), m_tagToSelect);
 
     if (!compoundFeature) {
         return false;   

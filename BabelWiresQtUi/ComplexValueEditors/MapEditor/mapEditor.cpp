@@ -187,9 +187,9 @@ void babelwires::MapEditor::applyMapToProject() {
 }
 
 const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(AccessModelScope& scope) const {
-    const ValueTreeNode& valueFeature = ComplexValueEditor::getValueTreeNode(scope, getData());
-    assert(valueFeature.getType().as<MapType>() || valueFeature.getType().as<SumOfMapsType>());
-    return valueFeature;
+    const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getData());
+    assert(mapTreeNode.getType().as<MapType>() || mapTreeNode.getType().as<SumOfMapsType>());
+    return mapTreeNode;
 }
 
 const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(AccessModelScope& scope) const {
@@ -202,9 +202,9 @@ const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(Access
 }
 
 const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {
-    const ValueTreeNode* valueFeature = ComplexValueEditor::tryGetValueTreeNode(scope, getData());
-    if (valueFeature->getType().as<MapType>() || valueFeature->getType().as<SumOfMapsType>()) {
-        return valueFeature;
+    const ValueTreeNode* mapTreeNode = ComplexValueEditor::tryGetValueTreeNode(scope, getData());
+    if (mapTreeNode->getType().as<MapType>() || mapTreeNode->getType().as<SumOfMapsType>()) {
+        return mapTreeNode;
     }
     return nullptr;
 }

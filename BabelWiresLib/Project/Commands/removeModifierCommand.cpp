@@ -39,8 +39,8 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    const ValueTreeNode* const inputFeature = elementToModify->getInput();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = elementToModify->getInput();
+    if (!input) {
         return false;
     }
 
@@ -67,7 +67,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         // remove themselves cleanly.
         if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             auto [compoundFeature, currentSize, range, initialSize] =
-                ValueTreeHelper::getInfoFromArrayFeature(m_path.tryFollow(*inputFeature));
+                ValueTreeHelper::getInfoFromArrayFeature(m_path.tryFollow(*input));
             if (compoundFeature) {
                 if (currentSize != initialSize) {
                     addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(
@@ -76,7 +76,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             }
         } else if (const auto* optModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             auto [compoundFeature, optionals] =
-                ValueTreeHelper::getInfoFromRecordWithOptionalsFeature(m_path.tryFollow(*inputFeature));
+                ValueTreeHelper::getInfoFromRecordWithOptionalsFeature(m_path.tryFollow(*input));
             if (compoundFeature) {
                 for (auto optionalField : optionals) {
                     if (optionalField.second) {
@@ -87,7 +87,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             }
         } else if (const auto* varModifierData = modifier->getModifierData().as<SelectRecordVariantModifierData>()) {
             auto [compoundFeature, isDefault, fieldsToRemove] =
-                ValueTreeHelper::getInfoFromRecordWithVariantsFeature(m_path.tryFollow(*inputFeature));
+                ValueTreeHelper::getInfoFromRecordWithVariantsFeature(m_path.tryFollow(*input));
             if (!isDefault) {
                 for (auto fieldToRemove : fieldsToRemove) {
                     Path pathToFieldToRemove = m_path;
