@@ -38,7 +38,7 @@ void babelwires::ActivateOptionalsModifierData::apply(ValueTreeNode* target) con
         target->setValue(newValue);
         return;
     }
-    throw ModelException() << "Cannot activate optionals from a feature which does not have optionals";
+    throw ModelException() << "Cannot activate optionals from a value which does not have optionals";
 }
 
 void babelwires::ActivateOptionalsModifierData::visitIdentifiers(IdentifierVisitor& visitor) {

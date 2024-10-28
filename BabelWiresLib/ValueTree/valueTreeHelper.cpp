@@ -1,5 +1,5 @@
 /**
- * A ValueTreeNode is a feature which provides access to a value.
+ * Convenience functions.
  *
  * (C) 2021 Malcolm Tyrrell
  *

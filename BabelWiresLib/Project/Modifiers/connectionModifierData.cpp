@@ -1,5 +1,5 @@
 /**
- * ConnectionModifierData used to assign a Feature within a container to a value from another element.
+ * ConnectionModifierData used to assign a value within a container to a value from another element.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -43,7 +43,7 @@ const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceTr
         return &m_sourcePath.follow(*output);
     } catch (const std::exception& e) {
         throw babelwires::ModelException()
-            << e.what() << "; when looking for source feature in element with id=" << m_sourceId;
+            << e.what() << "; when looking for source in element with id=" << m_sourceId;
     }
 }
 

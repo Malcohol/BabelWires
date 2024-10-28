@@ -27,7 +27,7 @@ babelwires::Path::Path(const ValueTreeNode* valueTreeNode) {
     const ValueTreeNode* parent = current->getOwner();
     while (parent) {
         m_steps.push_back(parent->getStepToChild(current));
-        assert(!m_steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
+        assert(!m_steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
@@ -48,7 +48,7 @@ babelwires::Path::getRootAndPath(const ValueTreeNode& valueTreeNode) {
     const ValueTreeNode* parent = valueTreeNode.getOwner();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
@@ -62,7 +62,7 @@ babelwires::Path::RootAndPath<babelwires::ValueTreeRoot> babelwires::Path::getRo
     ValueTreeNode* parent = valueTreeNode.getOwnerNonConst();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "Feature with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwnerNonConst();
     }

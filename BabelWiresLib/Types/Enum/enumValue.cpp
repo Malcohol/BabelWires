@@ -18,7 +18,6 @@ babelwires::EnumValue::EnumValue() = default;
 babelwires::EnumValue::EnumValue(ShortId value)
     : m_value(value) {}
 
-/// Get the current value of the feature.
 babelwires::ShortId babelwires::EnumValue::get() const {
     return m_value;
 }

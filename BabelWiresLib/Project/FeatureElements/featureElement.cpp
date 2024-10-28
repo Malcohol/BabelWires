@@ -30,7 +30,7 @@ babelwires::FeatureElement::FeatureElement(const ElementData& data, ElementId ne
     m_data->m_id = newId;
 
     for (const auto& m : data.m_modifiers) {
-        // Don't apply now, since the input feature has not been constructed by the subclass.
+        // Don't apply now, since the input has not been constructed by the subclass.
         addModifierWithoutApplyingIt(*m);
     }
 

@@ -14,7 +14,7 @@
 namespace babelwires {
     class Project;
 
-    /// Remove an element from an array feature.
+    /// Remove an element from an array.
     class RemoveEntryFromArrayCommand : public CompoundCommand<Project> {
       public:
         RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId, Path featurePath,

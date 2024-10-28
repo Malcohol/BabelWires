@@ -1,5 +1,5 @@
 /**
- * A Modifier changes the value of a feature in a FeatureElement, and corresponds to a user edit.
+ * A Modifier changes the value in a FeatureElement, and corresponds to a user edit.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -108,7 +108,7 @@ namespace babelwires {
         void clearChanges();
 
         /// Adjust the pathToFeature of this modifier by the adjustment.
-        /// Asserts that this feature leads into the array and that its
+        /// Asserts that the path leads into the array and that its
         /// index is greater than startIndex.
         void adjustArrayIndex(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                               int adjustment);

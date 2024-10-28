@@ -23,10 +23,10 @@ namespace babelwires {
         /// Obtain details about an array.
         static std::tuple<const ValueTreeNode*, unsigned int, Range<unsigned int>, unsigned int> getInfoFromArrayFeature(const ValueTreeNode* f);
 
-        /// Confirm that the feature is a record and return the state of the optionals.
+        /// Confirm that the ValueTreeNode is a record and return the state of the optionals.
         static std::tuple<const ValueTreeNode*, std::map<ShortId, bool>> getInfoFromRecordWithOptionalsFeature(const ValueTreeNode* f);
 
-        /// Confirm that the feature is a record with variants.
+        /// Confirm that the ValueTreeNode is a record with variants.
         /// Return whether the tag is currently the selected tag and the set of fields to remove.
         /// If no tag is provided, the default tag is assumed.
         static std::tuple<const ValueTreeNode*, bool, std::vector<ShortId>> getInfoFromRecordWithVariantsFeature(const ValueTreeNode* f, std::optional<ShortId> tagId = {});

@@ -32,7 +32,7 @@ void babelwires::SelectRecordVariantModifierData::apply(ValueTreeNode* target) c
         target->setValue(newValue);
         return;
     }
-    throw ModelException() << "Select variant modifier applied to feature which does not have variants";
+    throw ModelException() << "Select variant modifier applied to ValueTreeNode which does not have variants";
 }
 
 void babelwires::SelectRecordVariantModifierData::visitIdentifiers(IdentifierVisitor& visitor) {

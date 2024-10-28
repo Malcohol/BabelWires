@@ -45,19 +45,19 @@ namespace babelwires {
         void doProcess(UserLogger& userLogger) override;
 
       protected:
-        void setFeature(std::unique_ptr<ValueTreeRoot> feature);
+        void setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root);
         TargetFileElementData& getElementData();
 
-        /// Should be called when either the feature or the file path change.
+        /// Should be called when either the contents or the file path change.
         void updateSaveHash();
 
       private:
         std::unique_ptr<ValueTreeRoot> m_valueTreeRoot;
 
-        /// The current hash of the feature and filePath.
+        /// The current hash of the contents and filePath.
         std::size_t m_saveHash = 1;
 
-        /// The hash of the feature and filePath when the file was last saved.
+        /// The hash of the contents and filePath when the file was last saved.
         std::size_t m_saveHashWhenSaved = 0;
     };
 

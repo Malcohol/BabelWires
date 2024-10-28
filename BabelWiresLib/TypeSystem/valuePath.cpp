@@ -25,7 +25,7 @@ namespace {
                     throw babelwires::ModelException() << "No such child";
                 }
             } else {
-                throw babelwires::ModelException() << "Tried to step into a non-compound feature";
+                throw babelwires::ModelException() << "Tried to step into a non-compound Value";
             }
         } else {
             return {type, valueHolder};

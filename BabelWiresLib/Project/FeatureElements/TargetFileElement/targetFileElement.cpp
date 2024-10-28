@@ -33,15 +33,15 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
         setFactoryName(factory.getName());
         auto newFeature = factory.createNewFeature(context);
         newFeature->setToDefault();
-        setFeature(std::move(newFeature));
+        setValueTreeRoot(std::move(newFeature));
     } catch (const RegistryException& e) {
         setInternalFailure(e.what());
-        setFeature(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
-        userLogger.logError() << "Failed to create target feature id=" << elementData.m_id << ": " << e.what();
+        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
+        userLogger.logError() << "Failed to create target id=" << elementData.m_id << ": " << e.what();
     } catch (const BaseException& e) {
         setInternalFailure(e.what());
-        setFeature(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
-        userLogger.logError() << "Failed to create target feature \"" << elementData.m_factoryIdentifier
+        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
+        userLogger.logError() << "Failed to create target \"" << elementData.m_factoryIdentifier
                               << "\": " << e.what();
     }
 }
@@ -64,9 +64,9 @@ const babelwires::ValueTreeNode* babelwires::TargetFileElement::getInput() const
     return m_valueTreeRoot.get();
 }
 
-void babelwires::TargetFileElement::setFeature(std::unique_ptr<ValueTreeRoot> feature) {
-    m_contentsCache.setValueTrees("File", feature.get(), nullptr);
-    m_valueTreeRoot = std::move(feature);
+void babelwires::TargetFileElement::setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root) {
+    m_contentsCache.setValueTrees("File", root.get(), nullptr);
+    m_valueTreeRoot = std::move(root);
 }
 
 std::filesystem::path babelwires::TargetFileElement::getFilePath() const {

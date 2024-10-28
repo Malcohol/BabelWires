@@ -15,7 +15,7 @@
 namespace babelwires {
     class Project;
 
-    /// Add an element to an array feature.
+    /// Add an element to an array.
     class AddEntriesToArrayCommand : public CompoundCommand<Project> {
       public:
         AddEntriesToArrayCommand(std::string commandName, ElementId elementId, Path featurePath,

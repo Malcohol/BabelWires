@@ -172,7 +172,7 @@ namespace babelwires {
         /// Mark the connection cache as invalid, so the next time it is queried, it gets recomputed.
         void setConnectionCacheInvalid();
 
-        /// If the output feature of e has any changes, propagate them to the input features of connected
+        /// If the output of e has any changes, propagate them to the input features of connected
         /// elements, as described by the requiredForMap.
         void propagateChanges(const FeatureElement* e);
 

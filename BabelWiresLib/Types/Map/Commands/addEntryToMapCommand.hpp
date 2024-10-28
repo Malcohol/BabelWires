@@ -14,7 +14,7 @@ namespace babelwires {
     class MapProject;
     class MapEntryData;
 
-    /// Add an element to an array feature.
+    /// Add an element to an array.
     class AddEntryToMapCommand : public SimpleCommand<MapProject> {
       public:
         AddEntryToMapCommand(std::string commandName, std::unique_ptr<MapEntryData> newEntry, unsigned int indexOfNewEntry);

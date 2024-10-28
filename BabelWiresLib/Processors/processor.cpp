@@ -1,5 +1,5 @@
 /**
- * A Processor defines a processing operation from an input feature to an output feature.
+ * A Processor defines an operation from an input ValueTree to an output ValueTree.
  *
  * (C) 2021 Malcolm Tyrrell
  *

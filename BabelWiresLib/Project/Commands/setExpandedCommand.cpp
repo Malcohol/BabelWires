@@ -1,5 +1,5 @@
 /**
- * The command which expands or collapses a Feature of a FeatureElement.
+ * The command which expands or collapses a ValueTreeNode.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

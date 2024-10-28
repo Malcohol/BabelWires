@@ -1,5 +1,5 @@
 /**
- * The command which sets the size of an array feature.
+ * The command which sets the size of an array.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -14,7 +14,7 @@
 namespace babelwires {
     class Project;
 
-    /// Set the size of an array feature.
+    /// Set the size of an array.
     class SetArraySizeCommand : public CompoundCommand<Project> {
       public:
         SetArraySizeCommand(std::string commandName, ElementId elementId, Path featurePath,

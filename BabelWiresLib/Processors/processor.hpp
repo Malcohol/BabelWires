@@ -1,5 +1,5 @@
 /**
- * A Processor defines a processing operation from an input feature to an output feature.
+ * A Processor defines an operation from an input ValueTree to an output ValueTree
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -16,17 +16,16 @@ namespace babelwires {
     class TypeRef;
     class ValueTreeRoot;
 
-    /// Defines a processing operation from an input feature to an output feature.
+    /// A Processor defines an operation from an input ValueTree to an output ValueTree.
     /// This should not store any state.
-    // TODO: Perhaps the design could be re-done in terms of const functions.
     class Processor {
       public:
         Processor(const ProjectContext& projectContext, const TypeRef& inputTypeRef, const TypeRef& outputTypeRef);
         virtual ~Processor();
 
-        /// Set values in the output feature based on values in the input feature.
+        /// Set values in the output based on values in the input.
         /// Implementation of process are allowed to throw. If they do, the ProcessorElement will be marked as failed,
-        /// the exception will be logged, and the output feature will be set to default.
+        /// the exception will be logged and the output will be set to default.
         void process(UserLogger& userLogger);
         ValueTreeNode& getInput();
         ValueTreeNode& getOutput();
@@ -34,7 +33,7 @@ namespace babelwires {
         const ValueTreeNode& getOutput() const;
 
       protected:
-        /// Note: Implementations do not need to worry about backing-up or resolving changes in the output feature.
+        /// Note: Implementations do not need to worry about backing-up or resolving changes in the output.
         virtual void processValue(UserLogger& userLogger, const ValueTreeNode& input,
                                   ValueTreeNode& output) const = 0;
 

@@ -14,7 +14,7 @@ namespace babelwires {
     class MapProject;
     class MapEntryData;
 
-    /// Add an element to an array feature.
+    /// Add an element to an array.
     class RemoveEntryFromMapCommand : public SimpleCommand<MapProject> {
       public:
         RemoveEntryFromMapCommand(std::string commandName, unsigned int indexOfEntryToRemove);

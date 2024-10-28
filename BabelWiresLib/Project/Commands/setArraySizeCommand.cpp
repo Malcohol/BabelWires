@@ -1,5 +1,5 @@
 /**
- * The command which removes an entry from an array.
+ * The command which sets the size of an array.
  *
  * (C) 2021 Malcolm Tyrrell
  *

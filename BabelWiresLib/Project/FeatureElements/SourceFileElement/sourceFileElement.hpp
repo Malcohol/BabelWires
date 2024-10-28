@@ -42,7 +42,7 @@ namespace babelwires {
         void doProcess(UserLogger& userLogger) override;
 
       protected:
-        void setFeature(std::unique_ptr<ValueTreeRoot> feature);
+        void setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root);
         SourceFileElementData& getElementData();
 
       private:

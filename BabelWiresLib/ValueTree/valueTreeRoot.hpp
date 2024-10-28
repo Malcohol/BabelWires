@@ -1,5 +1,5 @@
 /**
- * A ValueTreeRoot is a ValueTreeNode which owns its value.
+ * A ValueTreeRoot is a ValueTreeNode that owns its value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -16,7 +16,7 @@ namespace babelwires {
     class Value;
     class Path;
 
-    /// A ValueTreeRoot is a feature which owns its value.
+    /// A ValueTreeRoot is a ValueTreeNode that owns its value.
     class ValueTreeRoot : public ValueTreeNode {
       public:
         /// Construct a rooted ValueTreeNode which carries values of the given type.
@@ -26,7 +26,7 @@ namespace babelwires {
         void backUpValue();
 
         /// Clone the value, and return a modifiable value to the value at the given path.
-        /// If the type is compound, this asserts that the feature has been backed up already.
+        /// If the type is compound, this asserts that the ValueTreeNode has been backed up already.
         // TODO Find better name.
         ValueHolder& setModifiable(const Path& pathFromHere);
 
@@ -34,7 +34,7 @@ namespace babelwires {
         /// This clears the backup.
         void reconcileChangesFromBackup();
 
-        /// Get the TypeSystem carried by this feature (or the one carried by the root of the hierarchy).
+        /// Get the TypeSystem carried by this root.
         const TypeSystem& getTypeSystem() const;
 
       protected:
@@ -50,7 +50,7 @@ namespace babelwires {
         // called by code which knows how to manage a back-up.
         ValueHolder m_valueBackUp;
 
-        /// If the simpleValueFeature is a root feature, then it needs to carry its own TypeSystem.
+        /// Roots carry a reference to the typesystem.
         const TypeSystem* m_typeSystem = nullptr;
 
         // TODO: Temporary hack (hopefully): This allows values to be modified without requiring a backup.

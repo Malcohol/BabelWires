@@ -26,10 +26,10 @@ namespace babelwires {
         SERIALIZABLE_ABSTRACT(ModifierData, void);
         DOWNCASTABLE_TYPE_HIERARCHY(ModifierData);
 
-        /// Identifies the feature being modified.
+        /// Identifies the ValueTreeNode being modified.
         Path m_targetPath;
 
-        /// Find the target feature within the container, or throw.
+        /// Find the target ValueTreeNode within the container, or throw.
         ValueTreeNode* getTarget(ValueTreeNode* container) const;
 
         /// A factory method constructing the appropriate modifier.
@@ -50,7 +50,7 @@ namespace babelwires {
         CLONEABLE_ABSTRACT(LocalModifierData);
         SERIALIZABLE_ABSTRACT(LocalModifierData, ModifierData);
 
-        /// Perform the modification on the target feature, or throw.
+        /// Perform the modification on the target ValueTreeNode, or throw.
         virtual void apply(ValueTreeNode* target) const = 0;
 
         virtual std::unique_ptr<Modifier> createModifier() const;

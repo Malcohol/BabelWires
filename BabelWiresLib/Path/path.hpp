@@ -25,7 +25,7 @@ namespace babelwires {
         /// Construct an empty path.
         Path();
 
-        /// Construct a feature path which leads to the given feature.
+        /// Construct a path which leads to the given ValueTreeNode.
         explicit Path(const ValueTreeNode* valueTreeNode);
 
         Path(Path&& other) = default;

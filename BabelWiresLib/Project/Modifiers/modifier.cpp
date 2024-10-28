@@ -1,5 +1,5 @@
 /**
- * A Modifier changes the value of a feature in a FeatureElement, and corresponds to a user edit.
+ * A Modifier changes the value in a FeatureElement, and corresponds to a user edit.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

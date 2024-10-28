@@ -41,9 +41,9 @@ const babelwires::ValueTreeNode* babelwires::SourceFileElement::getOutput() cons
     return m_valueTreeRoot.get();
 }
 
-void babelwires::SourceFileElement::setFeature(std::unique_ptr<ValueTreeRoot> feature) {
-    m_contentsCache.setValueTrees("File", nullptr, feature.get());
-    m_valueTreeRoot = std::move(feature);
+void babelwires::SourceFileElement::setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root) {
+    m_contentsCache.setValueTrees("File", nullptr, root.get());
+    m_valueTreeRoot = std::move(root);
 }
 
 void babelwires::SourceFileElement::doProcess(UserLogger& userLogger) {
@@ -90,24 +90,24 @@ bool babelwires::SourceFileElement::reload(const ProjectContext& context, UserLo
         }
 
         FileDataSource file(data.m_filePath);
-        setFeature(format.loadFromFile(file, context, userLogger));
+        setValueTreeRoot(format.loadFromFile(file, context, userLogger));
         clearInternalFailure();
         return true;
     } catch (const RegistryException& e) {
         userLogger.logError() << "Could not create Source File Feature id=" << data.m_id << ": " << e.what();
         setFactoryName(data.m_factoryIdentifier);
         setInternalFailure(e.what());
-        // A dummy feature
+        // A dummy root
         auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
         failure->setToDefault();
-        setFeature(std::move(failure));
+        setValueTreeRoot(std::move(failure));
     } catch (const BaseException& e) {
         userLogger.logError() << "Source File Feature id=" << data.m_id << " could not be loaded: " << e.what();
         setInternalFailure(e.what());
-        // A dummy file feature which allows the user to change the file via the context menu.
+        // A dummy file root which allows the user to change the file via the context menu.
         auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
         failure->setToDefault();
-        setFeature(std::move(failure));
+        setValueTreeRoot(std::move(failure));
     }
     return false;
 }
