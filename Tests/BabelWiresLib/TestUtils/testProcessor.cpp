@@ -53,22 +53,22 @@ testUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& contex
                                  testUtils::TestProcessorInputOutputType::getThisIdentifier()) {}
 
 void testUtils::TestProcessor::processValue(babelwires::UserLogger& userLogger,
-                                             const babelwires::ValueTreeNode& inputFeature,
-                                             babelwires::ValueTreeNode& outputFeature) const {
-    TestProcessorInputOutputType::ConstInstance input{inputFeature};
-    TestProcessorInputOutputType::Instance output{outputFeature};
+                                             const babelwires::ValueTreeNode& input,
+                                             babelwires::ValueTreeNode& output) const {
+    TestProcessorInputOutputType::ConstInstance in{input};
+    TestProcessorInputOutputType::Instance out{output};
 
-    const unsigned int inputValue = input.getInt().get();
+    const unsigned int inputValue = in.getInt().get();
 
-    output.getInt().set(inputValue);
-    output.getRecord()->setValue(input.getRecord()->getValue());
-    if (input.tryGetOpInt()) {
-        output.activateAndGetOpInt().set(input.tryGetOpInt()->get());
+    out.getInt().set(inputValue);
+    out.getRecord()->setValue(in.getRecord()->getValue());
+    if (in.tryGetOpInt()) {
+        out.activateAndGetOpInt().set(in.tryGetOpInt()->get());
     } else {
-        output.deactivateOpInt();
+        out.deactivateOpInt();
     }
-    output.getArray().setSize(2 + inputValue);
-    for (int i = 0; i < output.getArray().getSize(); ++i) {
-        output.getArray().getEntry(i).set(input.getInt().get() + i);
+    out.getArray().setSize(2 + inputValue);
+    for (int i = 0; i < out.getArray().getSize(); ++i) {
+        out.getArray().getEntry(i).set(in.getInt().get() + i);
     }
 }
