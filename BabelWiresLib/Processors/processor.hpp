@@ -35,8 +35,8 @@ namespace babelwires {
 
       protected:
         /// Note: Implementations do not need to worry about backing-up or resolving changes in the output feature.
-        virtual void processValue(UserLogger& userLogger, const ValueTreeNode& inputFeature,
-                                  ValueTreeNode& outputFeature) const = 0;
+        virtual void processValue(UserLogger& userLogger, const ValueTreeNode& input,
+                                  ValueTreeNode& output) const = 0;
 
       protected:
         std::unique_ptr<ValueTreeRoot> m_inputValueTreeRoot;

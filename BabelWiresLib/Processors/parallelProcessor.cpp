@@ -62,25 +62,25 @@ babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectCo
 #endif
 }
 
-void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueTreeNode& inputFeature,
-                                                 ValueTreeNode& outputFeature) const {
+void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueTreeNode& input,
+                                                 ValueTreeNode& output) const {
     bool shouldProcessAll = false;
     // Iterate through all features _except_ for the array, look for changes to the common input.
-    for (unsigned int i = 0; i < inputFeature.getNumChildren() - 1; ++i) {
-        if (inputFeature.getChild(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
+    for (unsigned int i = 0; i < input.getNumChildren() - 1; ++i) {
+        if (input.getChild(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
             shouldProcessAll = true;
         }
     }
 
-    const auto& arrayInputFeature = inputFeature.getChild(inputFeature.getNumChildren() - 1)->is<ValueTreeNode>();
-    auto& arrayOutputFeature = outputFeature.getChild(outputFeature.getNumChildren() - 1)->is<ValueTreeNode>();
+    const auto& arrayInput = input.getChild(input.getNumChildren() - 1)->is<ValueTreeNode>();
+    auto& arrayOutput = output.getChild(output.getNumChildren() - 1)->is<ValueTreeNode>();
 
-    if (arrayInputFeature.isChanged(ValueTreeNode::Changes::StructureChanged)) {
+    if (arrayInput.isChanged(ValueTreeNode::Changes::StructureChanged)) {
         // TODO: This is very inefficient in cases where a single entry has been added or removed.
         // In the old feature system I was able to maintain a mapping between input and output entries
         // to avoid this inefficiency. Perhaps that can be done with values too.
         shouldProcessAll = true;
-        InstanceUtils::setArraySize(arrayOutputFeature, arrayInputFeature.getNumChildren());
+        InstanceUtils::setArraySize(arrayOutput, arrayInput.getNumChildren());
     }
 
     struct EntryData {
@@ -100,12 +100,12 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
     std::vector<EntryData> entriesToProcess;
     entriesToProcess.reserve(s_maxParallelFeatures);
 
-    const TypeSystem& typeSystem = inputFeature.getTypeSystem();
+    const TypeSystem& typeSystem = input.getTypeSystem();
 
-    for (unsigned int i = 0; i < arrayInputFeature.getNumChildren(); ++i) {
-        const ValueTreeNode& inputEntry = arrayInputFeature.getChild(i)->is<ValueTreeNode>();
-        if (shouldProcessAll || arrayInputFeature.getChild(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
-            ValueTreeNode& outputEntry = arrayOutputFeature.getChild(i)->is<ValueTreeNode>();
+    for (unsigned int i = 0; i < arrayInput.getNumChildren(); ++i) {
+        const ValueTreeNode& inputEntry = arrayInput.getChild(i)->is<ValueTreeNode>();
+        if (shouldProcessAll || arrayInput.getChild(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
+            ValueTreeNode& outputEntry = arrayOutput.getChild(i)->is<ValueTreeNode>();
             entriesToProcess.emplace_back(EntryData{typeSystem, i, inputEntry, outputEntry});
         }
     }
@@ -116,9 +116,9 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         std::execution::par,
 #endif
         entriesToProcess.begin(), entriesToProcess.end(),
-        [this, &inputFeature, &userLogger, &isFailed](EntryData& data) {
+        [this, &input, &userLogger, &isFailed](EntryData& data) {
             try {
-                processEntry(userLogger, inputFeature, data.m_inputEntry, *(data.m_outputEntry));
+                processEntry(userLogger, input, data.m_inputEntry, *(data.m_outputEntry));
             } catch (const BaseException& e) {
                 data.m_failureString = e.what();
                 isFailed = true;
@@ -139,9 +139,9 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         throw compositeException;
     }
 
-    ArrayValue newOutput = arrayOutputFeature.getValue()->is<ArrayValue>();
+    ArrayValue newOutput = arrayOutput.getValue()->is<ArrayValue>();
     for (EntryData& data : entriesToProcess) {
         newOutput.setValue(data.m_index, data.m_outputEntry->getValue());
     }
-    arrayOutputFeature.setValue(newOutput);
+    arrayOutput.setValue(newOutput);
 }
