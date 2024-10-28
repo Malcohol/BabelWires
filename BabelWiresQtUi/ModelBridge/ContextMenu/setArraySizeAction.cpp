@@ -14,8 +14,8 @@
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setArraySizeCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
@@ -24,7 +24,7 @@
 
 #include <QInputDialog>
 
-babelwires::SetArraySizeAction::SetArraySizeAction(babelwires::FeaturePath pathToArray)
+babelwires::SetArraySizeAction::SetArraySizeAction(babelwires::Path pathToArray)
     : FeatureContextMenuAction(tr("Set array size"))
     , m_pathToArray(std::move(pathToArray)) {}
 
@@ -39,8 +39,8 @@ void babelwires::SetArraySizeAction::actionTriggered(babelwires::FeatureModel& m
         AccessModelScope scope(projectBridge);
         const FeatureElement* const featureElement = scope.getProject().getFeatureElement(elementId);
 
-        const babelwires::Feature* const inputFeature = m_pathToArray.tryFollow(*featureElement->getInputFeature());
-        auto [compoundFeature, s, r, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(inputFeature);
+        const babelwires::ValueTreeNode* const input = m_pathToArray.tryFollow(*featureElement->getInput());
+        auto [compoundFeature, s, r, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(input);
         if (!compoundFeature) {
             return;
         }

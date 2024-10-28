@@ -7,18 +7,18 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 
 namespace babelwires {
 
     struct SetArraySizeAction : babelwires::FeatureContextMenuAction {
-        SetArraySizeAction(babelwires::FeaturePath pathToArray);
+        SetArraySizeAction(babelwires::Path pathToArray);
 
         virtual void actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const override;
 
       private:
-        babelwires::FeaturePath m_pathToArray;
+        babelwires::Path m_pathToArray;
     };
 
 } // namespace babelwires

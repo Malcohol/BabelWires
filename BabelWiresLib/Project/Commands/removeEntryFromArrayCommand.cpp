@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 
-#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
@@ -21,7 +21,7 @@
 #include <cassert>
 
 babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId,
-                                                                     FeaturePath featurePath,
+                                                                     Path featurePath,
                                                                      unsigned int indexOfEntryToRemove,
                                                                      unsigned int numEntriesToRemove)
     : CompoundCommand(commandName)
@@ -40,13 +40,13 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         return false;
     }
 
-    const Feature* const inputFeature = elementToModify->getInputFeature();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = elementToModify->getInput();
+    if (!input) {
         return false;
     }
 
     auto [compoundFeature, currentSize, range, initialSize] =
-        ValueFeatureHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*inputFeature));
+        ValueTreeHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*input));
 
     if (!compoundFeature) {
         return false;

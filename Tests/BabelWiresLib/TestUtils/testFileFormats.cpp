@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Common/IO/fileDataSource.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -25,8 +25,8 @@ babelwires::TypeRef testUtils::getTestFileType() {
     return babelwires::FileTypeConstructor::makeTypeRef(TestSimpleRecordType::getThisIdentifier());
 }
 
-babelwires::FeaturePath testUtils::getTestFileElementPathToInt0() {
-    babelwires::FeaturePath path;
+babelwires::Path testUtils::getTestFileElementPathToInt0() {
+    babelwires::Path path;
     path.pushStep(babelwires::PathStep(babelwires::FileType::getStepToContents()));
     path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt0Id()));
     return path;
@@ -79,14 +79,14 @@ char testUtils::TestSourceFileFormat::getFileData(const std::filesystem::path& p
     return getFileDataInternal(dataSource);
 }
 
-std::unique_ptr<babelwires::SimpleValueFeature>
+std::unique_ptr<babelwires::ValueTreeRoot>
 testUtils::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource,
                                               const babelwires::ProjectContext& projectContext,
                                               babelwires::UserLogger& userLogger) const {
     const int value = getFileDataInternal(dataSource);
-    auto newFeature = std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, getTestFileType());
+    auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
     newFeature->setToDefault();
-    TestSimpleRecordType::Instance instance{newFeature->getFeature(0)->is<babelwires::ValueFeature>()};
+    TestSimpleRecordType::Instance instance{newFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
     instance.getintR0().set(value);
     return newFeature;
 }
@@ -114,15 +114,15 @@ std::string testUtils::TestTargetFileFormat::getProductName() const {
     return s_product;
 }
 
-std::unique_ptr<babelwires::SimpleValueFeature>
+std::unique_ptr<babelwires::ValueTreeRoot>
 testUtils::TestTargetFileFormat::createNewFeature(const babelwires::ProjectContext& projectContext) const {
-    return std::make_unique<babelwires::SimpleValueFeature>(projectContext.m_typeSystem, getTestFileType());
+    return std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
 }
 
 void testUtils::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
                                                   babelwires::UserLogger& userLogger,
-                                                  const babelwires::SimpleValueFeature& contents,
+                                                  const babelwires::ValueTreeRoot& contents,
                                                   std::ostream& os) const {
-    TestSimpleRecordType::ConstInstance instance{contents.getFeature(0)->is<babelwires::ValueFeature>()};
+    TestSimpleRecordType::ConstInstance instance{contents.getChild(0)->is<babelwires::ValueTreeNode>()};
     os << s_fileFormatId << char(instance.getintR0().get());
 }

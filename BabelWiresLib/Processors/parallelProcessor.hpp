@@ -8,7 +8,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
@@ -45,11 +45,11 @@ namespace babelwires {
                           const TypeRef& parallelOutput);
 
       protected:
-        void processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
-                          ValueFeature& outputFeature) const override final;
+        void processValue(UserLogger& userLogger, const ValueTreeNode& input,
+                          ValueTreeNode& output) const override final;
 
-        virtual void processEntry(UserLogger& userLogger, const ValueFeature& inputFeature,
-                                  const ValueFeature& inputEntry, ValueFeature& outputEntry) const = 0;
+        virtual void processEntry(UserLogger& userLogger, const ValueTreeNode& input,
+                                  const ValueTreeNode& inputEntry, ValueTreeNode& outputEntry) const = 0;
     };
 
 } // namespace babelwires

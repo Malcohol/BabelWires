@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
@@ -29,15 +29,15 @@ babelwires::ArraySizeModifierData& babelwires::ArraySizeModifier::getModifierDat
     return *Modifier::getModifierData().as<babelwires::ArraySizeModifierData>();
 }
 
-bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, Feature* container, int indexOfNewElement,
+bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, ValueTreeNode* container, int indexOfNewElement,
                                                     int numEntriesToAdd) {
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     State state = State::TargetMissing;
     try {
         ArraySizeModifierData& data = getModifierData();
-        Feature* targetFeature = data.getTargetFeature(container);
+        ValueTreeNode* target = data.getTarget(container);
         state = State::ApplicationFailed;
-        data.addEntries(targetFeature, indexOfNewElement, numEntriesToAdd);
+        data.addEntries(target, indexOfNewElement, numEntriesToAdd);
         setSucceeded();
         return true;
     } catch (const BaseException& e) {
@@ -47,15 +47,15 @@ bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, Feat
     }
 }
 
-bool babelwires::ArraySizeModifier::removeArrayEntries(UserLogger& userLogger, Feature* container,
+bool babelwires::ArraySizeModifier::removeArrayEntries(UserLogger& userLogger, ValueTreeNode* container,
                                                        int indexOfElementToRemove, int numEntriesToRemove) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     State state = State::TargetMissing;
     try {
         ArraySizeModifierData& data = getModifierData();
-        Feature* targetFeature = data.getTargetFeature(container);
+        ValueTreeNode* target = data.getTarget(container);
         state = State::ApplicationFailed;
-        data.removeEntries(targetFeature, indexOfElementToRemove, numEntriesToRemove);
+        data.removeEntries(target, indexOfElementToRemove, numEntriesToRemove);
         setSucceeded();
         return true;
     } catch (const BaseException& e) {

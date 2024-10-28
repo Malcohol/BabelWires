@@ -9,8 +9,8 @@
 
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 
 #include <QCloseEvent>
@@ -44,8 +44,8 @@ void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
     }
 }
 
-const babelwires::ValueFeature&
-babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data) {
+const babelwires::ValueTreeNode&
+babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope, const DataLocation& data) {
     const Project& project = scope.getProject();
 
     const FeatureElement* element = project.getFeatureElement(data.getElementId());
@@ -54,19 +54,19 @@ babelwires::ComplexValueEditor::getValueFeatureOrThrow(AccessModelScope& scope, 
         throw ModelException() << "The element does not exist.";
     }
 
-    const Feature* const inputFeature = element->getInputFeature();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = element->getInput();
+    if (!input) {
         throw ModelException() << "The element does not have editable features.";
     }
 
-    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<ValueFeature>();
-    if (!valueFeature) {
+    const auto* const inputTreeNode = data.getPathToValue().tryFollow(*input);
+    if (!inputTreeNode) {
         throw ModelException() << "There is no value at that location.";
     }
-    return *valueFeature;
+    return *inputTreeNode;
 }
 
-const babelwires::ValueFeature* babelwires::ComplexValueEditor::tryGetValueFeature(AccessModelScope& scope,
+const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTreeNode(AccessModelScope& scope,
                                                                                    const DataLocation& data) {
     const Project& project = scope.getProject();
 
@@ -76,22 +76,22 @@ const babelwires::ValueFeature* babelwires::ComplexValueEditor::tryGetValueFeatu
         return nullptr;
     }
 
-    const Feature* const inputFeature = element->getInputFeature();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = element->getInput();
+    if (!input) {
         return nullptr;
     }
 
-    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature)->as<ValueFeature>();
-    if (!valueFeature) {
+    const auto* const inputTreeNode = data.getPathToValue().tryFollow(*input);
+    if (!inputTreeNode) {
         return nullptr;
     }
-    return valueFeature;
+    return inputTreeNode;
 }
 
-const babelwires::ValueFeature& babelwires::ComplexValueEditor::getValueFeature(AccessModelScope& scope,
+const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueTreeNode(AccessModelScope& scope,
                                                                                 const DataLocation& data) {
-    const ValueFeature* const valueFeature = tryGetValueFeature(scope, data);
-    assert(valueFeature && "There was not value feature");
-    return *valueFeature;
+    const ValueTreeNode* const valueTreeNode = tryGetValueTreeNode(scope, data);
+    assert(valueTreeNode && "There was not value feature");
+    return *valueTreeNode;
 }
 

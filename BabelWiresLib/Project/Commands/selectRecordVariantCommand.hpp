@@ -9,7 +9,7 @@
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 namespace babelwires {
@@ -19,7 +19,7 @@ namespace babelwires {
     /// Activate an optional in a RecordWithVariantType
     class SelectRecordVariantCommand : public CompoundCommand<Project> {
       public:
-        SelectRecordVariantCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+        SelectRecordVariantCommand(std::string commandName, ElementId elementId, Path featurePath,
                                ShortId tagToSelect);
         virtual ~SelectRecordVariantCommand();
 
@@ -29,7 +29,7 @@ namespace babelwires {
 
       private:
         ElementId m_elementId;
-        FeaturePath m_pathToRecord;
+        Path m_pathToRecord;
         ShortId m_tagToSelect;
 
         std::unique_ptr<ModifierData> m_recordModifierToAdd;

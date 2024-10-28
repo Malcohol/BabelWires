@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 
 // TODO Remove

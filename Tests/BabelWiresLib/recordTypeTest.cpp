@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
@@ -405,34 +405,34 @@ TEST(RecordTypeTest, featureChanges)
 {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_typeSystem, testUtils::TestComplexRecordType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_typeSystem, testUtils::TestComplexRecordType::getThisIdentifier());
     valueFeature.setToDefault();
 
     const testUtils::TestComplexRecordType* recordType = valueFeature.getType().as<testUtils::TestComplexRecordType>();
     ASSERT_NE(recordType, nullptr);
 
     valueFeature.clearChanges();
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     {
         babelwires::BackupScope scope(valueFeature);
         babelwires::ValueHolder value = valueFeature.getValue();
         recordType->activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpRecId());
         valueFeature.setValue(value);
     }
-    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 
     valueFeature.clearChanges();
     {
         babelwires::BackupScope scope(valueFeature);
-        babelwires::FeaturePath pathToInt;
+        babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
         babelwires::ValueHolder& value = valueFeature.setModifiable(pathToInt);
         value = babelwires::IntValue(15);
     }
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 
     valueFeature.clearChanges();
     {
@@ -441,8 +441,8 @@ TEST(RecordTypeTest, featureChanges)
         recordType->deactivateField(value, testUtils::TestComplexRecordType::getOpRecId());
         valueFeature.setValue(value);
     }
-    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 }
 
 TEST(RecordTypeTest, valueEquality)

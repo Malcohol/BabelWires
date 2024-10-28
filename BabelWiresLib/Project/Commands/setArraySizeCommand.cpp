@@ -1,5 +1,5 @@
 /**
- * The command which removes an entry from an array.
+ * The command which sets the size of an array.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/Commands/setArraySizeCommand.hpp>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
@@ -19,7 +19,7 @@
 #include <cassert>
 
 babelwires::SetArraySizeCommand::SetArraySizeCommand(std::string commandName, ElementId elementId,
-                                                     FeaturePath featurePath, int newSize)
+                                                     Path featurePath, int newSize)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToArray(std::move(featurePath))
@@ -32,12 +32,12 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    const Feature* const inputFeature = elementToModify->getInputFeature();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = elementToModify->getInput();
+    if (!input) {
         return false;
     }
 
-    auto [compoundFeature, currentSize, range, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*inputFeature));
+    auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(m_pathToArray.tryFollow(*input));
 
     if (!compoundFeature) {
         return false;
@@ -54,10 +54,10 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         }
     }
 
-    m_oldSize = compoundFeature->getNumFeatures();
+    m_oldSize = compoundFeature->getNumChildren();
 
     for (int i = m_newSize; i < m_oldSize; ++i) {
-        FeaturePath p = m_pathToArray;
+        Path p = m_pathToArray;
         p.pushStep(PathStep(i));
         addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, p));
     }
@@ -75,7 +75,7 @@ void babelwires::SetArraySizeCommand::executeBody(Project& project) const {
         project.addArrayEntries(m_elementId, m_pathToArray, m_oldSize, m_newSize - m_oldSize, true);
     } else {
         ArraySizeModifierData arraySizeModifierData;
-        arraySizeModifierData.m_pathToFeature = m_pathToArray;
+        arraySizeModifierData.m_targetPath = m_pathToArray;
         arraySizeModifierData.m_size = m_newSize;
         project.addModifier(m_elementId, arraySizeModifierData);
     }

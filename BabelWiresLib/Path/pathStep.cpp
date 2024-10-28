@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Features/Path/pathStep.hpp>
+#include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/exceptions.hpp>

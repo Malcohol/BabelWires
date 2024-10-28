@@ -22,7 +22,7 @@ namespace babelwires {
     class ContentsCacheEntry;
     class ProjectBridge;
     class AccessModelScope;
-    class FeaturePath;
+    class Path;
 
     class FeatureView : public QTableView {
         Q_OBJECT

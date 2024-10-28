@@ -11,10 +11,10 @@
 #include <BabelWiresQtUi/ModelBridge/baseNodeModel.hpp>
 
 namespace babelwires {
-    class Feature;
+    class ValueTreeNode;
     class FeatureElement;
     class ContentsCache;
-    class FeaturePath;
+    class Path;
 
     class FeatureView;
     class FeatureModel;
@@ -37,10 +37,10 @@ namespace babelwires {
         babelwires::ElementId getElementId() const;
         virtual QString caption() const override;
 
-        const FeaturePath& getPathAtPort(AccessModelScope& scope, QtNodes::PortType portType,
+        const Path& getPathAtPort(AccessModelScope& scope, QtNodes::PortType portType,
                                          QtNodes::PortIndex portIndex) const;
         QtNodes::PortIndex getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
-                                         const FeaturePath& path) const;
+                                         const Path& path) const;
 
         ResizableAxes resizable() const override { return HorizontallyResizable; }
 
@@ -56,10 +56,10 @@ namespace babelwires {
         /// Set up the contents to match the state of element.
         void setContents(std::string label, ElementId elementId);
 
-        static QtNodes::NodeDataType getDataTypeFromFeature(const Feature* f);
+        static QtNodes::NodeDataType getDataTypeFromFeature(const ValueTreeNode* f);
 
-        const Feature* getInputFeature(AccessModelScope& scope, int portIndex) const;
-        const Feature* getOutputFeature(AccessModelScope& scope, int portIndex) const;
+        const ValueTreeNode* getInput(AccessModelScope& scope, int portIndex) const;
+        const ValueTreeNode* getOutput(AccessModelScope& scope, int portIndex) const;
 
       protected:
         ElementId m_elementId;

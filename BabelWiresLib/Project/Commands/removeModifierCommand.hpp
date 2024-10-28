@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 namespace babelwires {
@@ -18,13 +18,13 @@ namespace babelwires {
     /// Remove the modifier, and restore any other modifiers removed when an array's size changes.
     class RemoveModifierCommand : public CompoundCommand<Project> {
       public:
-        RemoveModifierCommand(std::string commandName, ElementId targetId, FeaturePath featurePath);
+        RemoveModifierCommand(std::string commandName, ElementId targetId, Path featurePath);
 
         virtual bool initializeAndExecute(Project& project) override;
 
       private:
         ElementId m_elementId;
-        FeaturePath m_featurePath;
+        Path m_path;
     };
 
 } // namespace babelwires

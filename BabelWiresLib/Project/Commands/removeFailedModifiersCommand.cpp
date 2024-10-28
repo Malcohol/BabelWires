@@ -15,10 +15,10 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::RemoveFailedModifiersCommand::RemoveFailedModifiersCommand(std::string commandName, ElementId targetId,
-                                                                       FeaturePath featurePath)
+                                                                       Path featurePath)
     : CompoundCommand(commandName)
     , m_targetId(targetId)
-    , m_featurePath(featurePath) {}
+    , m_targetPath(featurePath) {}
 
 bool babelwires::RemoveFailedModifiersCommand::initializeAndExecute(Project& project) {
     const FeatureElement* elementToModify = project.getFeatureElement(m_targetId);
@@ -28,10 +28,10 @@ bool babelwires::RemoveFailedModifiersCommand::initializeAndExecute(Project& pro
     }
 
     int numFailedModifiers = 0;
-    for (const Modifier* modifier : elementToModify->getEdits().modifierRange(m_featurePath)) {
+    for (const Modifier* modifier : elementToModify->getEdits().modifierRange(m_targetPath)) {
         if (modifier->isFailed()) {
             addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_targetId,
-                                                                        modifier->getPathToFeature()));
+                                                                        modifier->getTargetPath()));
             ++numFailedModifiers;
         }
     }

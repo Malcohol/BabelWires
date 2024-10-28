@@ -16,11 +16,11 @@ namespace babelwires {
     /// For example, if they are defined using a type constructor.
     /// The DSL provides a DECLARE_INSTANCE_MAP_FIELD macro which directly uses the following instance template.
     /// Note: The second type parameter is the entry type, not map type.
-    template <typename VALUE_FEATURE, typename SOURCE_TYPE, typename TARGET_TYPE>
-    class MapInstanceImpl : public InstanceCommonBase<VALUE_FEATURE, MapType> {
+    template <typename VALUE_TREE_NODE, typename SOURCE_TYPE, typename TARGET_TYPE>
+    class MapInstanceImpl : public InstanceCommonBase<VALUE_TREE_NODE, MapType> {
       public:
-        MapInstanceImpl(VALUE_FEATURE& valueFeature)
-            : InstanceCommonBase<VALUE_FEATURE, MapType>(valueFeature) {}
+        MapInstanceImpl(VALUE_TREE_NODE& valueFeature)
+            : InstanceCommonBase<VALUE_TREE_NODE, MapType>(valueFeature) {}
 
         // TODO Add access and update methods.
     };

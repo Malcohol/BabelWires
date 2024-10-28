@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
@@ -19,19 +19,19 @@
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
 namespace {
-    std::unique_ptr<testUtils::LocalTestModifier> createIntModifier(babelwires::FeaturePath path,
+    std::unique_ptr<testUtils::LocalTestModifier> createIntModifier(babelwires::Path path,
                                                                     babelwires::FeatureElement* owner = nullptr) {
         auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(8));
-        data->m_pathToFeature = std::move(path);
+        data->m_targetPath = std::move(path);
         auto modPtr = std::make_unique<testUtils::LocalTestModifier>(std::move(data));
         modPtr->setOwner(owner);
         return modPtr;
     }
 
-    std::unique_ptr<testUtils::LocalTestModifier> createStringModifier(babelwires::FeaturePath path,
+    std::unique_ptr<testUtils::LocalTestModifier> createStringModifier(babelwires::Path path,
                                                                        babelwires::FeatureElement* owner = nullptr) {
         auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::StringValue("Hello"));
-        data->m_pathToFeature = std::move(path);
+        data->m_targetPath = std::move(path);
         auto modPtr = std::make_unique<testUtils::LocalTestModifier>(std::move(data));
         modPtr->setOwner(owner);
         return modPtr;
@@ -42,16 +42,16 @@ namespace {
                         testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         // TODO EXPECT_EQ(entry->getLabel(), ...);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_record);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_record);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToRecord);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_record);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_record);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToRecord);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_TRUE(entry->isExpandable());
         EXPECT_TRUE(entry->isExpanded());
@@ -62,16 +62,16 @@ namespace {
                             testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestComplexRecordType::s_intFieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_intFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_int);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToInt);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_intFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_int);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToInt);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
@@ -82,16 +82,16 @@ namespace {
                              testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestComplexRecordType::s_subRecordFieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_subRecordFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_subRecord);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToSubRecord);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_subRecordFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_subRecord);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToSubRecord);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_TRUE(entry->isExpandable());
     }
@@ -101,16 +101,16 @@ namespace {
                                 testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestSimpleRecordType::s_int0FieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_subRecordIntFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_subRecordInt);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToSubRecordInt);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_subRecordIntFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_subRecordInt);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToSubRecordInt);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
@@ -121,16 +121,16 @@ namespace {
                          testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestComplexRecordType::s_arrayFieldName);
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_arrayFeature);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_array);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToArray);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_arrayFeature);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_array);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToArray);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_TRUE(entry->isExpandable());
     }
@@ -140,16 +140,16 @@ namespace {
                               testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), "[0]");
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_elem0);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_elem0);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToElem0);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_elem0);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_elem0);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToElem0);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
@@ -160,16 +160,16 @@ namespace {
                                testUtils::TestComplexRecordTypeFeatureInfo* outputInfo) {
         EXPECT_EQ(entry->getLabel(), "[1]");
         if (inputInfo) {
-            EXPECT_EQ(entry->getInputFeature(), &inputInfo->m_elem1);
+            EXPECT_EQ(entry->getInput(), &inputInfo->m_elem1);
             EXPECT_EQ(entry->getPath(), inputInfo->m_pathToElem1);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputInfo) {
-            EXPECT_EQ(entry->getOutputFeature(), &outputInfo->m_elem1);
+            EXPECT_EQ(entry->getOutput(), &outputInfo->m_elem1);
             EXPECT_EQ(entry->getPath(), outputInfo->m_pathToElem1);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
@@ -184,13 +184,13 @@ namespace {
     }
 
     void testCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                             babelwires::ValueFeature* inputFeature, babelwires::ValueFeature* outputFeature) {
-        cache.setFeatures("Test", inputFeature, outputFeature);
+                             babelwires::ValueTreeNode* input, babelwires::ValueTreeNode* output) {
+        cache.setValueTrees("Test", input, output);
         ASSERT_EQ(cache.getNumRows(), 6);
         auto inputInfo =
-            inputFeature ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*inputFeature) : nullptr;
+            input ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*input) : nullptr;
         auto outputInfo =
-            outputFeature ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*outputFeature) : nullptr;
+            output ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*output) : nullptr;
         auto info = inputInfo ? inputInfo.get() : outputInfo.get();
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -214,7 +214,7 @@ namespace {
         }
         // Expand the record
         editTree.setExpanded(info->m_pathToSubRecord, true);
-        cache.setFeatures("Test", inputFeature, outputFeature);
+        cache.setValueTrees("Test", input, output);
         ASSERT_EQ(cache.getNumRows(), 8);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -243,7 +243,7 @@ namespace {
         }
         // Expand the array
         editTree.setExpanded(info->m_pathToArray, true);
-        cache.setFeatures("Test", inputFeature, outputFeature);
+        cache.setValueTrees("Test", input, output);
         ASSERT_EQ(cache.getNumRows(), 8 + testUtils::TestSimpleArrayType::s_defaultSize);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -283,14 +283,14 @@ namespace {
     }
 
     void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache,
-                               babelwires::EditTree& editTree, babelwires::ValueFeature* inputFeature,
-                               babelwires::ValueFeature* outputFeature) {
-        ASSERT_TRUE(inputFeature);
+                               babelwires::EditTree& editTree, babelwires::ValueTreeNode* input,
+                               babelwires::ValueTreeNode* output) {
+        ASSERT_TRUE(input);
 
         auto inputInfo =
-            inputFeature ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*inputFeature) : nullptr;
+            input ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*input) : nullptr;
         auto outputInfo =
-            outputFeature ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*outputFeature) : nullptr;
+            output ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*output) : nullptr;
         auto info = inputInfo ? inputInfo.get() : outputInfo.get();
 
         // Add a modifier to the first int
@@ -364,7 +364,7 @@ namespace {
 
         // Collapse the array
         editTree.setExpanded(info->m_pathToArray, false);
-        cache.setFeatures("Test", inputFeature, outputFeature);
+        cache.setValueTrees("Test", input, output);
         ASSERT_EQ(cache.getNumRows(), 8);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
@@ -409,10 +409,10 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
     inputFeature.setToDefault();
-    editTree.setExpanded(babelwires::FeaturePath(), true);
+    editTree.setExpanded(babelwires::Path(), true);
 
     testCommonBehaviour(cache, editTree, &inputFeature, nullptr);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, nullptr);
@@ -424,10 +424,10 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
     outputFeature.setToDefault();
-    editTree.setExpanded(babelwires::FeaturePath(), true);
+    editTree.setExpanded(babelwires::Path(), true);
 
     testCommonBehaviour(cache, editTree, nullptr, &outputFeature);
 }
@@ -438,13 +438,13 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
-    editTree.setExpanded(babelwires::FeaturePath(), true);
+    editTree.setExpanded(babelwires::Path(), true);
 
     testCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
@@ -456,14 +456,14 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
-    editTree.setExpanded(babelwires::FeaturePath(), true);
+    editTree.setExpanded(babelwires::Path(), true);
 
     testUtils::TestComplexRecordTypeFeatureInfo inputInfo(inputFeature);
     testUtils::TestComplexRecordTypeFeatureInfo outputInfo(outputFeature);
@@ -471,15 +471,15 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     testUtils::TestComplexRecordType::Instance output(outputFeature);
     output.getarray().setSize(testUtils::TestSimpleArrayType::s_nonDefaultSize);
 
-    cache.setFeatures("Test", &inputFeature, &outputFeature);
+    cache.setValueTrees("Test", &inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 6);
 
     editTree.setExpanded(inputInfo.m_pathToSubRecord, true);
-    cache.setFeatures("Test", &inputFeature, &outputFeature);
+    cache.setValueTrees("Test", &inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 8);
 
     editTree.setExpanded(inputInfo.m_pathToArray, true);
-    cache.setFeatures("Test", &inputFeature, &outputFeature);
+    cache.setValueTrees("Test", &inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 8 + testUtils::TestSimpleArrayType::s_nonDefaultSize);
 
     {
@@ -505,9 +505,9 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     {
         const babelwires::ContentsCacheEntry* const entry =
             cache.getEntry(8 + testUtils::TestSimpleArrayType::s_nonDefaultSize - 1);
-        EXPECT_FALSE(entry->getInputFeature());
-        EXPECT_EQ(entry->getOutputFeature(),
-                  outputInfo.m_arrayFeature.getFeature(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1));
+        EXPECT_FALSE(entry->getInput());
+        EXPECT_EQ(entry->getOutput(),
+                  outputInfo.m_array.getChild(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1));
         EXPECT_FALSE(entry->isExpandable());
         EXPECT_FALSE(entry->isExpanded());
         checkUnmodified(entry);
@@ -520,22 +520,22 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_typeSystem,
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
                                                  testUtils::TestComplexRecordType::getThisIdentifier());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
-    editTree.setExpanded(babelwires::FeaturePath(), true);
+    editTree.setExpanded(babelwires::Path(), true);
 
-    cache.setFeatures("Test", &inputFeature, &outputFeature);
+    cache.setValueTrees("Test", &inputFeature, &outputFeature);
     ASSERT_EQ(cache.getNumRows(), 6);
 
     // Adding a hidden failed modifier whose parent is logically the root requires us to present
     // a root entry to the user, so the UI functionality for failed modifiers has somewhere to live.
     testUtils::TestFeatureElement owner(testEnvironment.m_projectContext);
-    auto modifierPtr = createIntModifier(babelwires::FeaturePath::deserializeFromString("flarg"), &owner);
+    auto modifierPtr = createIntModifier(babelwires::Path::deserializeFromString("flarg"), &owner);
     modifierPtr->simulateFailure();
     auto modifier = modifierPtr.get();
     editTree.addModifier(std::move(modifierPtr));
@@ -552,9 +552,9 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
         EXPECT_EQ(entry->getLabel(), "Test");
-        EXPECT_EQ(entry->getInputFeature(), &inputFeature);
-        EXPECT_EQ(entry->getOutputFeature(), &outputFeature);
-        EXPECT_EQ(entry->getPath(), babelwires::FeaturePath());
+        EXPECT_EQ(entry->getInput(), &inputFeature);
+        EXPECT_EQ(entry->getOutput(), &outputFeature);
+        EXPECT_EQ(entry->getPath(), babelwires::Path());
         EXPECT_TRUE(entry->isExpandable());
         EXPECT_TRUE(entry->isExpanded());
         EXPECT_FALSE(entry->hasModifier());
@@ -603,36 +603,36 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
 }
 
 namespace {
-    void checkFileRootEntry(const babelwires::ContentsCacheEntry* entry, babelwires::SimpleValueFeature* inputFeature,
-                            babelwires::SimpleValueFeature* outputFeature) {
+    void checkFileRootEntry(const babelwires::ContentsCacheEntry* entry, babelwires::ValueTreeRoot* inputFeature,
+                            babelwires::ValueTreeRoot* outputFeature) {
         EXPECT_EQ(entry->getLabel(), "Test");
         if (inputFeature) {
-            EXPECT_EQ(entry->getInputFeature(), inputFeature);
+            EXPECT_EQ(entry->getInput(), inputFeature);
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutputFeature(), outputFeature);
+            EXPECT_EQ(entry->getOutput(), outputFeature);
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
-        EXPECT_EQ(entry->getPath(), babelwires::FeaturePath());
+        EXPECT_EQ(entry->getPath(), babelwires::Path());
         EXPECT_TRUE(entry->isExpandable());
         EXPECT_TRUE(entry->isExpanded());
     }
 
-    void checkFileContentsEntry(const babelwires::ContentsCacheEntry* entry, babelwires::SimpleValueFeature* inputFeature,
-                           babelwires::SimpleValueFeature* outputFeature, bool isExpanded) {
+    void checkFileContentsEntry(const babelwires::ContentsCacheEntry* entry, babelwires::ValueTreeRoot* inputFeature,
+                           babelwires::ValueTreeRoot* outputFeature, bool isExpanded) {
         EXPECT_EQ(entry->getLabel(), "Contents");
         if (inputFeature) {
-            EXPECT_EQ(entry->getInputFeature(), inputFeature->getFeature(0));
+            EXPECT_EQ(entry->getInput(), inputFeature->getChild(0));
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutputFeature(), outputFeature->getFeature(0));
+            EXPECT_EQ(entry->getOutput(), outputFeature->getChild(0));
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_EQ(entry->getPath().getNumSteps(), 1);
         EXPECT_EQ(*entry->getPath().getStep(0).asField(), babelwires::FileType::getStepToContents());
@@ -640,18 +640,18 @@ namespace {
         EXPECT_EQ(entry->isExpanded(), isExpanded);
     }
 
-    void checkFileIntEntry(const babelwires::ContentsCacheEntry* entry, babelwires::SimpleValueFeature* inputFeature,
-                           babelwires::SimpleValueFeature* outputFeature) {
+    void checkFileIntEntry(const babelwires::ContentsCacheEntry* entry, babelwires::ValueTreeRoot* inputFeature,
+                           babelwires::ValueTreeRoot* outputFeature) {
         EXPECT_EQ(entry->getLabel(), testUtils::TestSimpleRecordType::s_int0FieldName);
         if (inputFeature) {
-            EXPECT_EQ(entry->getInputFeature(), inputFeature->getFeature(0)->is<babelwires::ValueFeature>().getFeature(0));
+            EXPECT_EQ(entry->getInput(), inputFeature->getChild(0)->is<babelwires::ValueTreeNode>().getChild(0));
         } else {
-            EXPECT_FALSE(entry->getInputFeature());
+            EXPECT_FALSE(entry->getInput());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutputFeature(), outputFeature->getFeature(0)->is<babelwires::ValueFeature>().getFeature(0));
+            EXPECT_EQ(entry->getOutput(), outputFeature->getChild(0)->is<babelwires::ValueTreeNode>().getChild(0));
         } else {
-            EXPECT_FALSE(entry->getOutputFeature());
+            EXPECT_FALSE(entry->getOutput());
         }
         EXPECT_EQ(entry->getPath(), testUtils::getTestFileElementPathToInt0());
         EXPECT_FALSE(entry->isExpandable());
@@ -659,8 +659,8 @@ namespace {
     }
 
     void testFileCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                                 babelwires::SimpleValueFeature* inputFeature,
-                                 babelwires::SimpleValueFeature* outputFeature) {
+                                 babelwires::ValueTreeRoot* inputFeature,
+                                 babelwires::ValueTreeRoot* outputFeature) {
                                     
         ASSERT_EQ(cache.getNumRows(), 2);
         {
@@ -673,8 +673,8 @@ namespace {
             checkFileContentsEntry(entry, inputFeature, outputFeature, false);
             checkUnmodified(entry);
         }
-        editTree.setExpanded(babelwires::FeaturePath({babelwires::PathStep(babelwires::FileType::getStepToContents())}), true);
-        cache.setFeatures("Test", inputFeature, outputFeature);
+        editTree.setExpanded(babelwires::Path({babelwires::PathStep(babelwires::FileType::getStepToContents())}), true);
+        cache.setValueTrees("Test", inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 4);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -694,15 +694,15 @@ namespace {
     }
 
     void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache,
-                               babelwires::EditTree& editTree, babelwires::SimpleValueFeature* inputFeature,
-                               babelwires::SimpleValueFeature* outputFeature) {
+                               babelwires::EditTree& editTree, babelwires::ValueTreeRoot* inputFeature,
+                               babelwires::ValueTreeRoot* outputFeature) {
         ASSERT_TRUE(inputFeature);
 
         // Adding a hidden failed modifier whose parent is logically the root.
         // In this case, there's already an entry for the root, so no new
         // artificial entry need be added.
         testUtils::TestFeatureElement owner(context);
-        auto modifierPtr = createIntModifier(babelwires::FeaturePath::deserializeFromString("flarg"), &owner);
+        auto modifierPtr = createIntModifier(babelwires::Path::deserializeFromString("flarg"), &owner);
         modifierPtr->simulateFailure();
         auto modifier = modifierPtr.get();
         editTree.addModifier(std::move(modifierPtr));
@@ -736,11 +736,11 @@ TEST(ContentsCacheTest, inputFileFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
     inputFeature.setToDefault();
-    editTree.setExpanded(babelwires::FeaturePath(), true);
+    editTree.setExpanded(babelwires::Path(), true);
     
-    cache.setFeatures("Test", &inputFeature, nullptr);
+    cache.setValueTrees("Test", &inputFeature, nullptr);
     testFileCommonBehaviour(cache, editTree, &inputFeature, nullptr);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, nullptr);
 }
@@ -751,11 +751,11 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
     outputFeature.setToDefault();
-    editTree.setExpanded(babelwires::FeaturePath(), true);
+    editTree.setExpanded(babelwires::Path(), true);
 
-    cache.setFeatures("Test", nullptr, &outputFeature);
+    cache.setValueTrees("Test", nullptr, &outputFeature);
     testFileCommonBehaviour(cache, editTree, nullptr, &outputFeature);
 }
 
@@ -765,13 +765,13 @@ TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::SimpleValueFeature inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
-    babelwires::SimpleValueFeature outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
-    editTree.setExpanded(babelwires::FeaturePath(), true);
+    editTree.setExpanded(babelwires::Path(), true);
 
-    cache.setFeatures("Test", &inputFeature, &outputFeature);
+    cache.setValueTrees("Test", &inputFeature, &outputFeature);
     testFileCommonBehaviour(cache, editTree, &inputFeature, &outputFeature);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, &outputFeature);
 }

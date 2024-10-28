@@ -7,13 +7,13 @@
  **/
 #include <BabelWiresLib/TypeSystem/valuePath.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 namespace {
 
-    std::tuple<const babelwires::Type&, babelwires::ValueHolder&> followPathNonConst(const babelwires::TypeSystem& typeSystem, const babelwires::Type& type, babelwires::ValueHolder& valueHolder, const babelwires::FeaturePath& p, int& index) {
+    std::tuple<const babelwires::Type&, babelwires::ValueHolder&> followPathNonConst(const babelwires::TypeSystem& typeSystem, const babelwires::Type& type, babelwires::ValueHolder& valueHolder, const babelwires::Path& p, int& index) {
         if (index < p.getNumSteps()) {
             if (auto* compoundType = type.as<babelwires::CompoundType>()) {
                 const int childIndex = compoundType->getChildIndexFromStep(*valueHolder, p.getStep(index));
@@ -25,7 +25,7 @@ namespace {
                     throw babelwires::ModelException() << "No such child";
                 }
             } else {
-                throw babelwires::ModelException() << "Tried to step into a non-compound feature";
+                throw babelwires::ModelException() << "Tried to step into a non-compound Value";
             }
         } else {
             return {type, valueHolder};
@@ -34,7 +34,7 @@ namespace {
 
 } // namespace
 
-std::tuple<const babelwires::Type&, babelwires::ValueHolder&> babelwires::followNonConst(const TypeSystem& typeSystem, const Type& type, const FeaturePath& path, ValueHolder& start) {
+std::tuple<const babelwires::Type&, babelwires::ValueHolder&> babelwires::followNonConst(const TypeSystem& typeSystem, const Type& type, const Path& path, ValueHolder& start) {
     int index = 0;
     try {
         return followPathNonConst(typeSystem, type, start, path, index);

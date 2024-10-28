@@ -14,7 +14,7 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/Types/Map/Commands/setMapCommand.hpp>
 #include <BabelWiresLib/Types/Map/Commands/setMapSourceTypeCommand.hpp>
@@ -25,7 +25,7 @@
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -86,14 +86,14 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             AccessModelScope scope(getProjectBridge());
             const UiProjectContext& context = projectBridge.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
-            const ValueFeature& mapFeature = getMapFeature(scope);
-            m_typeRef = mapFeature.getTypeRef();
+            const ValueTreeNode& mapTreeNode = getMapTreeNode(scope);
+            m_typeRef = mapTreeNode.getTypeRef();
             const MapValue& mapValue = getMapValueFromProject(scope);
-            if (mapFeature.getType().as<MapType>()) {
-                m_map.setAllowedSourceTypeRefs(MapProject::AllowedTypes{{mapFeature.getType().is<MapType>().getSourceTypeRef()}});
-                m_map.setAllowedTargetTypeRefs(MapProject::AllowedTypes{{mapFeature.getType().is<MapType>().getSourceTypeRef()}});
+            if (mapTreeNode.getType().as<MapType>()) {
+                m_map.setAllowedSourceTypeRefs(MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getSourceTypeRef()}});
+                m_map.setAllowedTargetTypeRefs(MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getSourceTypeRef()}});
             } else {
-                const SumOfMapsType *const sumOfMaps = mapFeature.getType().as<SumOfMapsType>();
+                const SumOfMapsType *const sumOfMaps = mapTreeNode.getType().as<SumOfMapsType>();
                 assert(sumOfMaps && "MapEditor expecting a MapType of SumOfMapsType");
                 m_map.setAllowedSourceTypeRefs(MapProject::AllowedTypes{sumOfMaps->getSourceTypes(), sumOfMaps->getIndexOfDefaultSourceType()});
                 m_map.setAllowedTargetTypeRefs(MapProject::AllowedTypes{sumOfMaps->getTargetTypes(), sumOfMaps->getIndexOfDefaultTargetType()});
@@ -172,7 +172,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 
 void babelwires::MapEditor::applyMapToProject() {
     auto modifierData = std::make_unique<ValueAssignmentData>(m_map.extractMapValue());
-    modifierData->m_pathToFeature = getData().getPathToValue();
+    modifierData->m_targetPath = getData().getPathToValue();
 
     auto setValueCommand =
         std::make_unique<AddModifierCommand>("Set map value", getData().getElementId(), std::move(modifierData));
@@ -186,10 +186,10 @@ void babelwires::MapEditor::applyMapToProject() {
     }
 }
 
-const babelwires::ValueFeature& babelwires::MapEditor::getMapFeature(AccessModelScope& scope) const {
-    const ValueFeature& valueFeature = ComplexValueEditor::getValueFeature(scope, getData());
-    assert(valueFeature.getType().as<MapType>() || valueFeature.getType().as<SumOfMapsType>());
-    return valueFeature;
+const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(AccessModelScope& scope) const {
+    const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getData());
+    assert(mapTreeNode.getType().as<MapType>() || mapTreeNode.getType().as<SumOfMapsType>());
+    return mapTreeNode;
 }
 
 const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(AccessModelScope& scope) const {
@@ -198,13 +198,13 @@ const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(Access
             return *mapValue;
         }
     }
-    return getMapFeature(scope).getValue()->is<MapValue>();
+    return getMapTreeNode(scope).getValue()->is<MapValue>();
 }
 
-const babelwires::ValueFeature* babelwires::MapEditor::tryGetMapFeature(AccessModelScope& scope) const {
-    const ValueFeature* valueFeature = ComplexValueEditor::tryGetValueFeature(scope, getData());
-    if (valueFeature->getType().as<MapType>() || valueFeature->getType().as<SumOfMapsType>()) {
-        return valueFeature;
+const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(AccessModelScope& scope) const {
+    const ValueTreeNode* mapTreeNode = ComplexValueEditor::tryGetValueTreeNode(scope, getData());
+    if (mapTreeNode->getType().as<MapType>() || mapTreeNode->getType().as<SumOfMapsType>()) {
+        return mapTreeNode;
     }
     return nullptr;
 }
@@ -233,12 +233,12 @@ babelwires::ValueHolderTemplate<babelwires::MapValue> babelwires::MapEditor::try
         }
     }
 
-    const babelwires::ValueFeature* const mapFeature = tryGetMapFeature(scope);
-    if (!mapFeature) {
+    const babelwires::ValueTreeNode* const mapTreeNode = tryGetMapTreeNode(scope);
+    if (!mapTreeNode) {
         return {};
     }
 
-    return babelwires::ValueHolderTemplate<babelwires::MapValue>(mapFeature->getValue());
+    return babelwires::ValueHolderTemplate<babelwires::MapValue>(mapTreeNode->getValue());
 }
 
 void babelwires::MapEditor::updateMapFromProject() {

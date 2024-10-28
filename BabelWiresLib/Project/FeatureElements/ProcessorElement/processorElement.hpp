@@ -14,7 +14,7 @@ namespace babelwires {
     struct ProjectContext;
     struct ProcessorElementData;
     class Processor;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
     class ProcessorElement : public FeatureElement {
       public:
@@ -25,12 +25,12 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const ProcessorElementData& getElementData() const;
 
-        virtual const Feature* getInputFeature() const override;
-        virtual const Feature* getOutputFeature() const override;
+        virtual const ValueTreeNode* getInput() const override;
+        virtual const ValueTreeNode* getOutput() const override;
 
       protected:
-        Feature* doGetInputFeatureNonConst() override;
-        Feature* doGetOutputFeatureNonConst() override;
+        ValueTreeNode* doGetInputNonConst() override;
+        ValueTreeNode* doGetOutputNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
       protected:
@@ -41,7 +41,7 @@ namespace babelwires {
         std::unique_ptr<Processor> m_processor;
 
         /// Non-null when the defined processor could not be constructed.
-        std::unique_ptr<babelwires::SimpleValueFeature> m_failedFeature;
+        std::unique_ptr<babelwires::ValueTreeRoot> m_failedValueTree;
     };
 
 } // namespace babelwires

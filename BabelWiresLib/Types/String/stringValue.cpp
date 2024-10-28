@@ -15,7 +15,6 @@
 babelwires::StringValue::StringValue() = default;
 babelwires::StringValue::StringValue(std::string value) : m_value(std::move(value)) {}
 
-/// Get the current value of the feature.
 std::string babelwires::StringValue::get() const {
     return m_value;
 }

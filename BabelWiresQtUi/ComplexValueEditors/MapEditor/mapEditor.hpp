@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -38,13 +38,13 @@ namespace babelwires {
         void applyMapToProject();
 
         /// Get the MapFeature or assert.
-        const ValueFeature& getMapFeature(AccessModelScope& scope) const;
+        const ValueTreeNode& getMapTreeNode(AccessModelScope& scope) const;
 
         /// Get the mapValue from the project or assert.
         const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
 
         /// Get the MapFeature or return nullptr.
-        const ValueFeature* tryGetMapFeature(AccessModelScope& scope) const;
+        const ValueTreeNode* tryGetMapTreeNode(AccessModelScope& scope) const;
 
         /// See if there is a map assignment.
         /// If there is, return its data.

@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
@@ -16,12 +16,12 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-babelwires::Feature* babelwires::ModifierData::getTargetFeature(Feature* container) const {
-    return &m_pathToFeature.follow(*container);
+babelwires::ValueTreeNode* babelwires::ModifierData::getTarget(ValueTreeNode* container) const {
+    return &m_targetPath.follow(*container);
 }
 
 void babelwires::ModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
-    for (auto& s : m_pathToFeature) {
+    for (auto& s : m_targetPath) {
         if (s.isField()) {
             visitor(s.getField());
         }

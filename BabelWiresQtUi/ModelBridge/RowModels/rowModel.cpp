@@ -14,9 +14,9 @@
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp>
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/Path/path.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -28,29 +28,29 @@
 
 void babelwires::RowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {}
 
-bool babelwires::RowModel::hasInputFeature() const {
-    return m_contentsCacheEntry->getInputFeature();
+bool babelwires::RowModel::hasInput() const {
+    return m_contentsCacheEntry->getInput();
 }
 
-const babelwires::Feature* babelwires::RowModel::getInputFeature() const {
-    return m_contentsCacheEntry->getInputFeature();
+const babelwires::ValueTreeNode* babelwires::RowModel::getInput() const {
+    return m_contentsCacheEntry->getInput();
 }
 
-const babelwires::Feature* babelwires::RowModel::getOutputFeature() const {
-    return m_contentsCacheEntry->getOutputFeature();
+const babelwires::ValueTreeNode* babelwires::RowModel::getOutput() const {
+    return m_contentsCacheEntry->getOutput();
 }
 
-const babelwires::Feature* babelwires::RowModel::getInputThenOutputFeature() const {
-    return m_contentsCacheEntry->getInputThenOutputFeature();
+const babelwires::ValueTreeNode* babelwires::RowModel::getInputThenOutput() const {
+    return m_contentsCacheEntry->getInputThenOutput();
 }
 
-const babelwires::Feature* babelwires::RowModel::getOutputThenInputFeature() const {
-    return m_contentsCacheEntry->getOutputThenInputFeature();
+const babelwires::ValueTreeNode* babelwires::RowModel::getOutputThenInput() const {
+    return m_contentsCacheEntry->getOutputThenInput();
 }
 
 bool babelwires::RowModel::isFeatureModified() const {
     assert(!m_contentsCacheEntry->hasModifier() ||
-           hasInputFeature() && "It does not make sense for a modifier to be present when there is no input feature");
+           hasInput() && "It does not make sense for a modifier to be present when there is no input feature");
     return m_contentsCacheEntry->hasModifier();
 }
 
@@ -93,7 +93,7 @@ babelwires::RowModel::BackgroundStyle babelwires::RowModel::getBackgroundStyle(C
         return BackgroundStyle::failed;
     } else if (m_contentsCacheEntry->hasFailedHiddenModifiers()) {
         return BackgroundStyle::failedHidden;
-    } else if ((c == ColumnType::Value) && hasInputFeature()) {
+    } else if ((c == ColumnType::Value) && hasInput()) {
         if (isItemEditable()) {
             return BackgroundStyle::editable;
         }
@@ -137,13 +137,13 @@ void babelwires::RowModel::getContextMenuActions(
     if (m_contentsCacheEntry->hasFailedModifier() || m_contentsCacheEntry->hasFailedHiddenModifiers()) {
         actionsOut.emplace_back(std::make_unique<RemoveFailedModifiersAction>());
     }
-    if (const babelwires::Feature* inputFeature = getInputFeature()) {
-        auto [compoundFeature, currentSize, range, initialSize] = ValueFeatureHelper::getInfoFromArrayFeature(inputFeature->getOwner());
+    if (const babelwires::ValueTreeNode* input = getInput()) {
+        auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(input->getOwner());
         if (compoundFeature) {
             const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
             //QString tooltip = "Array actions are not permitted when an array is a connection target";
-            FeaturePath pathToArray(compoundFeature);
-            const PathStep step = compoundFeature->getStepToChild(inputFeature);
+            Path pathToArray(compoundFeature);
+            const PathStep step = compoundFeature->getStepToChild(input);
             const ArrayIndex index = step.getIndex();
             {
                 auto insertElement =

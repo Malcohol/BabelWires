@@ -7,11 +7,11 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <Common/Log/userLogger.hpp>
 
@@ -40,25 +40,25 @@ const babelwires::ConnectionModifier* babelwires::ConnectionModifier::doAsConnec
 }
 
 void babelwires::ConnectionModifier::applyConnection(const Project& project, UserLogger& userLogger,
-                                                     Feature* container, bool shouldForce) {
+                                                     ValueTreeNode* container, bool shouldForce) {
     // Force the application if the modifier is new OR is currently failed, in case it now succeeds.
     shouldForce = shouldForce || isChanged(Changes::ModifierIsNew) || isFailed();
 
     State state = State::TargetMissing;
-    Feature* targetFeature = nullptr;
+    ValueTreeNode* target = nullptr;
 
     try {
         const babelwires::ConnectionModifierData& data = getModifierData();
-        targetFeature = data.getTargetFeature(container);
+        target = data.getTarget(container);
         state = State::SourceMissing;
-        const Feature* sourceFeature = data.getSourceFeature(project);
+        const ValueTreeNode* source = data.getSourceTreeNode(project);
         state = State::ApplicationFailed;
-        data.apply(sourceFeature, targetFeature, shouldForce);
+        data.apply(source, target, shouldForce);
         setSucceeded();
     } catch (const BaseException& e) {
         userLogger.logError() << "Failed to apply operation: " << e.what();
-        if (targetFeature) {
-            targetFeature->setToDefault();
+        if (target) {
+            target->setToDefault();
         }
         setFailed(state, e.what());
     }
@@ -69,10 +69,10 @@ bool babelwires::ConnectionModifier::isConnected() const {
     return ((state == State::Success) || (state == State::ApplicationFailed));
 }
 
-void babelwires::ConnectionModifier::adjustSourceArrayIndices(const babelwires::FeaturePath& pathToArray,
+void babelwires::ConnectionModifier::adjustSourceArrayIndices(const babelwires::Path& pathToArray,
                                                               babelwires::ArrayIndex startIndex, int adjustment) {
     babelwires::ConnectionModifierData& modifierData = getModifierData();
-    babelwires::FeaturePath& modifierPath = modifierData.m_pathToSourceFeature;
+    babelwires::Path& modifierPath = modifierData.m_sourcePath;
     if (pathToArray.isStrictPrefixOf(modifierPath)) {
         // Is the modifier affected?
         const unsigned int pathIndexOfStepIntoArray = pathToArray.getNumSteps();

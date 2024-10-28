@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 
 namespace babelwires {
@@ -16,12 +16,12 @@ namespace babelwires {
     /// QAction for activating or deactivating an optional.
     class SelectVariantAction : public babelwires::FeatureContextMenuAction {
       public:
-        SelectVariantAction(babelwires::FeaturePath pathToRecord, ShortId optional);
+        SelectVariantAction(babelwires::Path pathToRecord, ShortId optional);
 
         virtual void actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const override;
 
       private:
-        babelwires::FeaturePath m_pathToRecord;
+        babelwires::Path m_pathToRecord;
         ShortId m_tag;
     };
 }

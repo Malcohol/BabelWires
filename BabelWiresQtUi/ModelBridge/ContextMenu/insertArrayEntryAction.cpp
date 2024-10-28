@@ -12,7 +12,7 @@
 
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 
-babelwires::InsertArrayEntryAction::InsertArrayEntryAction(const QString& text, babelwires::FeaturePath pathToArray, int indexOfNewEntry)
+babelwires::InsertArrayEntryAction::InsertArrayEntryAction(const QString& text, babelwires::Path pathToArray, int indexOfNewEntry)
     : FeatureContextMenuAction(text)
     , m_pathToArray(std::move(pathToArray))
     , m_indexOfNewEntry(indexOfNewEntry) {}

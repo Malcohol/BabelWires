@@ -73,7 +73,7 @@ TEST(SetExpandedCommandTest, executeAndUndoFalse) {
 TEST(SetExpandedCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::SetExpandedCommand command("Test command", 51,
-                                           babelwires::FeaturePath::deserializeFromString("qqq/zzz"), true);
+                                           babelwires::Path::deserializeFromString("qqq/zzz"), true);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initialize(testEnvironment.m_project));
@@ -86,7 +86,7 @@ TEST(SetExpandedCommandTest, failSafelyNoFeature) {
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
 
     babelwires::SetExpandedCommand command("Test command", elementId,
-                                           babelwires::FeaturePath::deserializeFromString("qqq/zzz"), true);
+                                           babelwires::Path::deserializeFromString("qqq/zzz"), true);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initialize(testEnvironment.m_project));

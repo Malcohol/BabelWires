@@ -13,7 +13,7 @@
 namespace babelwires {
     struct UserLogger;
     class ValueElementData;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
     class ValueElement : public FeatureElement {
       public:
@@ -24,19 +24,19 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const ValueElementData& getElementData() const;
 
-        virtual const Feature* getInputFeature() const override;
-        virtual const Feature* getOutputFeature() const override;
+        virtual const ValueTreeNode* getInput() const override;
+        virtual const ValueTreeNode* getOutput() const override;
 
       protected:
-        Feature* doGetInputFeatureNonConst() override;
-        Feature* doGetOutputFeatureNonConst() override;
+        ValueTreeNode* doGetInputNonConst() override;
+        ValueTreeNode* doGetOutputNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
       protected:
         std::string getRootLabel() const;
 
       private:
-        std::unique_ptr<babelwires::SimpleValueFeature> m_rootFeature;
+        std::unique_ptr<babelwires::ValueTreeRoot> m_valueTreeRoot;
     };
 
 } // namespace babelwires

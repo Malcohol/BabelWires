@@ -1,5 +1,5 @@
 /**
- * A Processor defines a processing operation from an input feature to an output feature.
+ * A Processor defines an operation from an input ValueTree to an output ValueTree
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,36 +11,35 @@
 
 namespace babelwires {
     struct UserLogger;
-    class ValueFeature;
+    class ValueTreeNode;
     struct ProjectContext;
     class TypeRef;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
-    /// Defines a processing operation from an input feature to an output feature.
+    /// A Processor defines an operation from an input ValueTree to an output ValueTree.
     /// This should not store any state.
-    // TODO: Perhaps the design could be re-done in terms of const functions.
     class Processor {
       public:
         Processor(const ProjectContext& projectContext, const TypeRef& inputTypeRef, const TypeRef& outputTypeRef);
         virtual ~Processor();
 
-        /// Set values in the output feature based on values in the input feature.
+        /// Set values in the output based on values in the input.
         /// Implementation of process are allowed to throw. If they do, the ProcessorElement will be marked as failed,
-        /// the exception will be logged, and the output feature will be set to default.
+        /// the exception will be logged and the output will be set to default.
         void process(UserLogger& userLogger);
-        ValueFeature& getInputFeature();
-        ValueFeature& getOutputFeature();
-        const ValueFeature& getInputFeature() const;
-        const ValueFeature& getOutputFeature() const;
+        ValueTreeNode& getInput();
+        ValueTreeNode& getOutput();
+        const ValueTreeNode& getInput() const;
+        const ValueTreeNode& getOutput() const;
 
       protected:
-        /// Note: Implementations do not need to worry about backing-up or resolving changes in the output feature.
-        virtual void processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
-                                  ValueFeature& outputFeature) const = 0;
+        /// Note: Implementations do not need to worry about backing-up or resolving changes in the output.
+        virtual void processValue(UserLogger& userLogger, const ValueTreeNode& input,
+                                  ValueTreeNode& output) const = 0;
 
       protected:
-        std::unique_ptr<SimpleValueFeature> m_inputFeature;
-        std::unique_ptr<SimpleValueFeature> m_outputFeature;
+        std::unique_ptr<ValueTreeRoot> m_inputValueTreeRoot;
+        std::unique_ptr<ValueTreeRoot> m_outputValueTreeRoot;
     };
 
 } // namespace babelwires

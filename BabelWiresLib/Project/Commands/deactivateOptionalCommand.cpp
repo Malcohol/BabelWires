@@ -8,15 +8,15 @@
 
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, ElementId elementId, Path featurePath,
                                ShortId optional)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
@@ -31,13 +31,13 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         return false;
     }
 
-    const Feature* const inputFeature = elementToModify->getInputFeature();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = elementToModify->getInput();
+    if (!input) {
         return false;
     }
 
     const auto [compoundFeature, optionals] =
-        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature));
+        ValueTreeHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*input));
 
     if (!compoundFeature) {
         return false;   
@@ -59,7 +59,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         }
     }
 
-    FeaturePath pathToOptional = m_pathToRecord;
+    Path pathToOptional = m_pathToRecord;
     pathToOptional.pushStep(PathStep(m_optional));
     addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToOptional));
 

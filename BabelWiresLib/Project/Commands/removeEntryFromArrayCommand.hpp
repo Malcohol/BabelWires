@@ -8,16 +8,16 @@
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 namespace babelwires {
     class Project;
 
-    /// Remove an element from an array feature.
+    /// Remove an element from an array.
     class RemoveEntryFromArrayCommand : public CompoundCommand<Project> {
       public:
-        RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+        RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId, Path featurePath,
                                     unsigned int indexOfEntryToRemove, unsigned int numEntriesToRemove);
 
         virtual bool initializeAndExecute(Project& project) override;
@@ -26,7 +26,7 @@ namespace babelwires {
 
       private:
         ElementId m_elementId;
-        FeaturePath m_pathToArray;
+        Path m_pathToArray;
         unsigned int m_indexOfEntryToRemove;
         unsigned int m_numEntriesToRemove;
 

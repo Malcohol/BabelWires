@@ -13,7 +13,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/FeatureElements/ProcessorElement/processorElementData.cpp
 	Project/FeatureElements/ValueElement/valueElement.cpp
 	Project/FeatureElements/ValueElement/valueElementData.cpp
-	Project/FeatureElements/modifyFeatureScope.cpp
+	Project/FeatureElements/modifyValueScope.cpp
 	Project/Modifiers/modifier.cpp
 	Project/Modifiers/modifierData.cpp
 	Project/Modifiers/localModifier.cpp
@@ -63,14 +63,12 @@ SET( BABELWIRESLIB_SRCS
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
 	Processors/processorFactory.cpp
-	Features/feature.cpp
-	Features/childValueFeature.cpp
-	Features/compoundFeature.cpp
-	Features/simpleValueFeature.cpp
-	Features/Path/featurePath.cpp
-	Features/Path/pathStep.cpp
-	Features/valueFeature.cpp
-	Features/valueFeatureHelper.cpp
+	ValueTree/valueTreeNode.cpp
+	ValueTree/valueTreeChild.cpp
+	ValueTree/valueTreeRoot.cpp
+	ValueTree/valueTreeHelper.cpp
+	Path/path.cpp
+	Path/pathStep.cpp
 	Serialization/projectBundle.cpp
 	Project/Commands/activateOptionalCommand.cpp
 	Project/Commands/addElementCommand.cpp

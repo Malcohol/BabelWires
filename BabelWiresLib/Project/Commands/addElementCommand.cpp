@@ -19,8 +19,8 @@
 babelwires::AddElementCommand::AddElementCommand(std::string commandName, std::unique_ptr<ElementData> elementToAdd)
     : SimpleCommand(std::move(commandName))
     , m_elementToAdd(std::move(elementToAdd)) {
-    assert((std::find(m_elementToAdd->m_expandedPaths.begin(), m_elementToAdd->m_expandedPaths.end(), FeaturePath()) == m_elementToAdd->m_expandedPaths.end()) && "The root is always expanded by default.");
-    m_elementToAdd->m_expandedPaths.emplace_back(FeaturePath());
+    assert((std::find(m_elementToAdd->m_expandedPaths.begin(), m_elementToAdd->m_expandedPaths.end(), Path()) == m_elementToAdd->m_expandedPaths.end()) && "The root is always expanded by default.");
+    m_elementToAdd->m_expandedPaths.emplace_back(Path());
 }
 
 void babelwires::AddElementCommand::execute(Project& project) const {

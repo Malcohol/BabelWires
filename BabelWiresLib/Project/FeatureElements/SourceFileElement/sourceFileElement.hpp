@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 namespace babelwires {
     struct UserLogger;
@@ -18,7 +18,7 @@ namespace babelwires {
 
     struct SourceFileElementData;
     struct ProjectContext;
-    class SimpleValueFeature;
+    class ValueTreeRoot;
 
     /// SourceFileElements are FeatureElements which correspond to a source file.
     class SourceFileElement : public FileElement {
@@ -29,7 +29,7 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const SourceFileElementData& getElementData() const;
 
-        virtual const Feature* getOutputFeature() const override;
+        virtual const ValueTreeNode* getOutput() const override;
         
         virtual std::filesystem::path getFilePath() const override;
         virtual void setFilePath(std::filesystem::path newFilePath) override;
@@ -38,15 +38,15 @@ namespace babelwires {
         virtual bool reload(const ProjectContext& context, UserLogger& userLogger) override;
 
       protected:
-        Feature* doGetOutputFeatureNonConst() override;
+        ValueTreeNode* doGetOutputNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
       protected:
-        void setFeature(std::unique_ptr<SimpleValueFeature> feature);
+        void setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root);
         SourceFileElementData& getElementData();
 
       private:
-        std::unique_ptr<SimpleValueFeature> m_feature;
+        std::unique_ptr<ValueTreeRoot> m_valueTreeRoot;
     };
 
 } // namespace babelwires

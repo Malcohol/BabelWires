@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
@@ -20,7 +20,7 @@
 #include <cassert>
 
 babelwires::AdjustModifiersInArraySubcommand::AdjustModifiersInArraySubcommand(
-    ElementId elementId, const babelwires::FeaturePath& pathToArray,
+    ElementId elementId, const babelwires::Path& pathToArray,
     babelwires::ArrayIndex startIndex, int adjustment)
     : CompoundCommand("AdjustModifiersInArraySubcommand")
     , m_elementId(elementId)
@@ -39,7 +39,7 @@ bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project&
 
     if (m_adjustment < 0) {
         for (int i = 0; i < -m_adjustment; ++i) {
-            FeaturePath p = m_pathToArray;
+            Path p = m_pathToArray;
             p.pushStep(PathStep(m_startIndex + i));
             addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, p));
         }
@@ -49,7 +49,7 @@ bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project&
 
     for (auto a : derivedArrays) {
         const ElementId elementId = std::get<0>(a);
-        const FeaturePath& pathToArray = std::get<1>(a);
+        const Path& pathToArray = std::get<1>(a);
         addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(elementId, pathToArray, m_startIndex, m_adjustment));
     }
 

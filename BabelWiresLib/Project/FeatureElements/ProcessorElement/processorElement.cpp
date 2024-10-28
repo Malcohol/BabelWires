@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElement.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
@@ -28,15 +28,15 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
     try {
         const ProcessorFactory& factory = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
         auto newProcessor = factory.createNewProcessor(context);
-        newProcessor->getInputFeature().setToDefault();
-        newProcessor->getOutputFeature().setToDefault();
+        newProcessor->getInput().setToDefault();
+        newProcessor->getOutput().setToDefault();
         setProcessor(std::move(newProcessor));
         setFactoryName(factory.getName());
     } catch (const BaseException& e) {
         setFactoryName(elementData.m_factoryIdentifier);
         setInternalFailure(e.what());
-        m_failedFeature =
-            std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem, FailureType::getThisIdentifier());
+        m_failedValueTree =
+            std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
         userLogger.logError() << "Failed to create processor id=" << elementData.m_id << ": " << e.what();
     }
 }
@@ -47,41 +47,41 @@ const babelwires::ProcessorElementData& babelwires::ProcessorElement::getElement
     return static_cast<const ProcessorElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::Feature* babelwires::ProcessorElement::doGetOutputFeatureNonConst() {
+babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetOutputNonConst() {
     if (m_processor) {
-        return &m_processor->getOutputFeature();
+        return &m_processor->getOutput();
     } else {
-        return m_failedFeature.get();
+        return m_failedValueTree.get();
     }
 }
 
-babelwires::Feature* babelwires::ProcessorElement::doGetInputFeatureNonConst() {
+babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetInputNonConst() {
     if (m_processor) {
-        return &m_processor->getInputFeature();
+        return &m_processor->getInput();
     } else {
-        return m_failedFeature.get();
+        return m_failedValueTree.get();
     }
 }
 
-const babelwires::Feature* babelwires::ProcessorElement::getOutputFeature() const {
+const babelwires::ValueTreeNode* babelwires::ProcessorElement::getOutput() const {
     if (m_processor) {
-        return &m_processor->getOutputFeature();
+        return &m_processor->getOutput();
     } else {
-        return m_failedFeature.get();
+        return m_failedValueTree.get();
     }
 }
 
-const babelwires::Feature* babelwires::ProcessorElement::getInputFeature() const {
+const babelwires::ValueTreeNode* babelwires::ProcessorElement::getInput() const {
     if (m_processor) {
-        return &m_processor->getInputFeature();
+        return &m_processor->getInput();
     } else {
-        return m_failedFeature.get();
+        return m_failedValueTree.get();
     }
 }
 
 void babelwires::ProcessorElement::setProcessor(std::unique_ptr<Processor> processor) {
     m_processor = std::move(processor);
-    m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInputFeature(), &m_processor->getOutputFeature());
+    m_contentsCache.setValueTrees(getRootLabel(), &m_processor->getInput(), &m_processor->getOutput());
 }
 
 std::string babelwires::ProcessorElement::getRootLabel() const {
@@ -94,7 +94,7 @@ std::string babelwires::ProcessorElement::getRootLabel() const {
 
 void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
     if (m_processor) {
-        if (getInputFeature()->isChanged(Feature::Changes::SomethingChanged)) {
+        if (getInput()->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
             try {
                 m_processor->process(userLogger);
                 if (isFailed()) {
@@ -105,16 +105,16 @@ void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
                                       << " failed to process correctly: " << e.what();
                 setInternalFailure(e.what());
                 // TODO: Is this definitely the desired outcome?
-                m_processor->getOutputFeature().setToDefault();
+                m_processor->getOutput().setToDefault();
             }
         }
         if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-            m_contentsCache.setFeatures(getRootLabel(), &m_processor->getInputFeature(),
-                                        &m_processor->getOutputFeature());
+            m_contentsCache.setValueTrees(getRootLabel(), &m_processor->getInput(),
+                                        &m_processor->getOutput());
         } else if (isChanged(Changes::ModifierChangesMask)) {
             m_contentsCache.updateModifierCache();
         }
     } else {
-        m_contentsCache.setFeatures(getRootLabel(), m_failedFeature.get(), m_failedFeature.get());
+        m_contentsCache.setValueTrees(getRootLabel(), m_failedValueTree.get(), m_failedValueTree.get());
     }
 }

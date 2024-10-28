@@ -12,7 +12,7 @@
 namespace babelwires {
     /// SelectRecordVariantModifierData is used to select the variant of a RecordWithVariantsType.
     struct SelectRecordVariantModifierData : LocalModifierData {
-        virtual void apply(Feature* targetFeature) const override;
+        virtual void apply(ValueTreeNode* target) const override;
         CLONEABLE(SelectRecordVariantModifierData);
         SERIALIZABLE(SelectRecordVariantModifierData, "selectVariant", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;

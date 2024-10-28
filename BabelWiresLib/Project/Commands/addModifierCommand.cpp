@@ -29,12 +29,12 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    const Feature* const inputFeature = element->getInputFeature();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = element->getInput();
+    if (!input) {
         return false;
     }
 
-    if (!m_modifierToAdd->m_pathToFeature.tryFollow(*inputFeature)) {
+    if (!m_modifierToAdd->m_targetPath.tryFollow(*input)) {
         return false;
     }
 
@@ -44,10 +44,10 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         // to be removed, to avoid array merges.
         // TODO It would probably be better for these modifiers to fail rather than be removed, but at the
         // moment, I don't think modifiers can currently fail/recover based on the presence of other modifiers.
-        for (const auto& modifier : element->getEdits().modifierRange(m_modifierToAdd->m_pathToFeature)) {
-            if (m_modifierToAdd->m_pathToFeature.isStrictPrefixOf(modifier->getPathToFeature()) && modifier->as<ArraySizeModifier>()) {
+        for (const auto& modifier : element->getEdits().modifierRange(m_modifierToAdd->m_targetPath)) {
+            if (m_modifierToAdd->m_targetPath.isStrictPrefixOf(modifier->getTargetPath()) && modifier->as<ArraySizeModifier>()) {
                 subcommands.emplace_back(std::make_unique<RemoveModifierCommand>(
-                    "Remove modifier subcommand", m_targetElementId, modifier->getPathToFeature()));
+                    "Remove modifier subcommand", m_targetElementId, modifier->getTargetPath()));
             }
         }
         for (auto it = subcommands.rbegin(); it != subcommands.rend(); ++it) {
@@ -55,9 +55,9 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         }
     }
 
-    if (const Modifier* const modifier = element->findModifier(m_modifierToAdd->m_pathToFeature)) {
+    if (const Modifier* const modifier = element->findModifier(m_modifierToAdd->m_targetPath)) {
         addSubCommand(
-            std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_targetElementId, m_modifierToAdd->m_pathToFeature));
+            std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_targetElementId, m_modifierToAdd->m_targetPath));
     }
 
     if (!CompoundCommand::initializeAndExecute(project)) {
@@ -75,6 +75,6 @@ void babelwires::AddModifierCommand::execute(Project& project) const {
 }
 
 void babelwires::AddModifierCommand::undo(Project& project) const {
-    project.removeModifier(m_targetElementId, m_modifierToAdd->m_pathToFeature);
+    project.removeModifier(m_targetElementId, m_modifierToAdd->m_targetPath);
     CompoundCommand::undo(project);
 }

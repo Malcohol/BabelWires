@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
@@ -26,17 +26,17 @@ namespace babelwires {
         SERIALIZABLE_ABSTRACT(ModifierData, void);
         DOWNCASTABLE_TYPE_HIERARCHY(ModifierData);
 
-        /// Identifies the feature being modified.
-        FeaturePath m_pathToFeature;
+        /// Identifies the ValueTreeNode being modified.
+        Path m_targetPath;
 
-        /// Find the target feature within the container, or throw.
-        Feature* getTargetFeature(Feature* container) const;
+        /// Find the target ValueTreeNode within the container, or throw.
+        ValueTreeNode* getTarget(ValueTreeNode* container) const;
 
         /// A factory method constructing the appropriate modifier.
         virtual std::unique_ptr<Modifier> createModifier() const = 0;
 
         /// Call the visitor on all fields in the modifier.
-        /// This base implementation visits the fields in m_pathToFeature;
+        /// This base implementation visits the fields in m_targetPath;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
         /// This does nothing.
@@ -50,8 +50,8 @@ namespace babelwires {
         CLONEABLE_ABSTRACT(LocalModifierData);
         SERIALIZABLE_ABSTRACT(LocalModifierData, ModifierData);
 
-        /// Perform the modification on the target feature, or throw.
-        virtual void apply(Feature* targetFeature) const = 0;
+        /// Perform the modification on the target ValueTreeNode, or throw.
+        virtual void apply(ValueTreeNode* target) const = 0;
 
         virtual std::unique_ptr<Modifier> createModifier() const;
     };

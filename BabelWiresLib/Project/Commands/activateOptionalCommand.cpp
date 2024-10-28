@@ -8,14 +8,14 @@
 
 #include <BabelWiresLib/Project/Commands/activateOptionalCommand.hpp>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
-#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, ElementId elementId, Path featurePath,
                                ShortId optional)
     : SimpleCommand(commandName)
     , m_elementId(elementId)
@@ -30,13 +30,13 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
         return false;
     }
 
-    const Feature* const inputFeature = elementToModify->getInputFeature();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = elementToModify->getInput();
+    if (!input) {
         return false;
     }
 
     const auto [compoundFeature, optionals] =
-        ValueFeatureHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*inputFeature));
+        ValueTreeHelper::getInfoFromRecordWithOptionalsFeature(m_pathToRecord.tryFollow(*input));
 
     if (!compoundFeature) {
         return false;   

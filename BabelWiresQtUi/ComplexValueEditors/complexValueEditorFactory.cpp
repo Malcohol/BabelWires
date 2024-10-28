@@ -13,13 +13,13 @@
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data) {
     AccessModelScope scope(projectBridge);
-    const ValueFeature& valueFeature = ComplexValueEditor::getValueFeatureOrThrow(scope, data);
-    const Type& type = valueFeature.getType();
+    const ValueTreeNode& valueTreeNode = ComplexValueEditor::getValueTreeNodeOrThrow(scope, data);
+    const Type& type = valueTreeNode.getType();
 
     // TODO: For now, assume ComplexValueEditors are all built-in, so we don't need a registry.
     if (type.as<MapType>() || type.as<SumOfMapsType>()) {

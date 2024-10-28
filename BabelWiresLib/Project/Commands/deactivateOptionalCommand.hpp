@@ -9,7 +9,7 @@
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 namespace babelwires {
@@ -18,7 +18,7 @@ namespace babelwires {
     /// Deactivate an optional in a RecordType
     class DeactivateOptionalCommand : public CompoundCommand<Project> {
       public:
-        DeactivateOptionalCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+        DeactivateOptionalCommand(std::string commandName, ElementId elementId, Path featurePath,
                                ShortId optional);
 
         virtual bool initializeAndExecute(Project& project) override;
@@ -27,7 +27,7 @@ namespace babelwires {
 
       private:
         ElementId m_elementId;
-        FeaturePath m_pathToRecord;
+        Path m_pathToRecord;
         ShortId m_optional;
 
         /// Did an old modifier get replaced (otherwise this is the first modification).

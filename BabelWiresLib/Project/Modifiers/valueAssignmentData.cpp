@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
@@ -27,21 +27,17 @@ babelwires::ValueAssignmentData::ValueAssignmentData(EditableValueHolder value)
     assert(m_value->asEditableValue());
 }
 
-void babelwires::ValueAssignmentData::apply(Feature* targetFeature) const {
-    if (ValueFeature* valueFeature = targetFeature->as<ValueFeature>()) {
-        valueFeature->setValue(m_value);
-    } else {
-        throw babelwires::ModelException() << "Could not assign a value to a non-SimpleValueFeature";
-    }
+void babelwires::ValueAssignmentData::apply(ValueTreeNode* target) const {
+    target->setValue(m_value);
 }
 
 void babelwires::ValueAssignmentData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    serializer.serializeValue("path", m_targetPath);
     serializer.serializeObject(m_value->is<EditableValue>(), "value");
 }
 
 void babelwires::ValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+    deserializer.deserializeValue("path", m_targetPath);
     m_value = deserializer.deserializeObject<EditableValue>("value");
 }
 

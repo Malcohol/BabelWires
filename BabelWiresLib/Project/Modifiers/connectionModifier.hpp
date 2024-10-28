@@ -30,13 +30,13 @@ namespace babelwires {
 
         /// Usually this modifier only does work if the source is changed.
         /// However, if the modifier IS_NEW, then it is applied anyway.
-        void applyConnection(const Project& project, UserLogger& userLogger, Feature* container, bool shouldForce = false);
+        void applyConnection(const Project& project, UserLogger& userLogger, ValueTreeNode* container, bool shouldForce = false);
 
         /// Convenience method: Did source and target resolve?
         bool isConnected() const;
 
         /// If the modifier targets an element in the array below the startIndex, apply the adjustment.
-        void adjustSourceArrayIndices(const babelwires::FeaturePath& pathToArray, babelwires::ArrayIndex startIndex,
+        void adjustSourceArrayIndices(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                                       int adjustment);
 
       protected:

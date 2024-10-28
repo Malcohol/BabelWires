@@ -17,7 +17,7 @@
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 #include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
 #include <BabelWiresLib/Project/Commands/resizeElementCommand.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
@@ -403,9 +403,9 @@ void babelwires::ProjectBridge::addConnectionToFlowScene(const ConnectionDescrip
 
     AccessModelScope scope(*this);
     QtNodes::PortIndex portIndexIn =
-        nodeDataIn.getPortAtPath(scope, QtNodes::PortType::In, connection.m_pathToTargetFeature);
+        nodeDataIn.getPortAtPath(scope, QtNodes::PortType::In, connection.m_targetPath);
     QtNodes::PortIndex portIndexOut =
-        nodeDataOut.getPortAtPath(scope, QtNodes::PortType::Out, connection.m_pathToSourceFeature);
+        nodeDataOut.getPortAtPath(scope, QtNodes::PortType::Out, connection.m_sourcePath);
 
     std::shared_ptr<QtNodes::Connection> c =
         m_flowScene->createConnection(*nodeIn, portIndexIn, *nodeOut, portIndexOut);
@@ -495,7 +495,7 @@ babelwires::ConnectionDescription babelwires::ProjectBridge::describeConnection(
         auto elementNode = dynamic_cast<const babelwires::ElementNodeModel*>(node->nodeDataModel());
         assert(elementNode && "Unexpected node in graph");
         connectionDescription.m_targetId = elementNode->getElementId();
-        connectionDescription.m_pathToTargetFeature =
+        connectionDescription.m_targetPath =
             elementNode->getPathAtPort(scope, QtNodes::PortType::In, portIndex);
     }
     {
@@ -504,7 +504,7 @@ babelwires::ConnectionDescription babelwires::ProjectBridge::describeConnection(
         auto elementNode = dynamic_cast<const babelwires::ElementNodeModel*>(node->nodeDataModel());
         assert(elementNode && "Unexpected node in graph");
         connectionDescription.m_sourceId = elementNode->getElementId();
-        connectionDescription.m_pathToSourceFeature =
+        connectionDescription.m_sourcePath =
             elementNode->getPathAtPort(scope, QtNodes::PortType::Out, portIndex);
     }
     return connectionDescription;

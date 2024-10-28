@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 
@@ -36,9 +36,9 @@ namespace babelwires {
         std::size_t getHash() const;
 
         ElementId m_sourceId = INVALID_ELEMENT_ID;
-        FeaturePath m_pathToSourceFeature;
+        Path m_sourcePath;
         ElementId m_targetId = INVALID_ELEMENT_ID;
-        FeaturePath m_pathToTargetFeature;
+        Path m_targetPath;
     };
 
 } // namespace babelwires

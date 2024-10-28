@@ -7,10 +7,10 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <Common/Log/userLogger.hpp>
 
@@ -34,19 +34,19 @@ const babelwires::ConnectionModifier* babelwires::LocalModifier::doAsConnectionM
     return nullptr;
 }
 
-void babelwires::LocalModifier::applyIfLocal(UserLogger& userLogger, Feature* container) {
+void babelwires::LocalModifier::applyIfLocal(UserLogger& userLogger, ValueTreeNode* container) {
     State state = State::TargetMissing;
-    Feature* targetFeature = nullptr;
+    ValueTreeNode* target = nullptr;
     try {
         const LocalModifierData& data = getModifierData();
-        targetFeature = data.getTargetFeature(container);
+        target = data.getTarget(container);
         state = State::ApplicationFailed;
-        data.apply(targetFeature);
+        data.apply(target);
         setSucceeded();
     } catch (const BaseException& e) {
         userLogger.logError() << "Failed to apply operation: " << e.what();
-        if (targetFeature) {
-            targetFeature->setToDefault();
+        if (target) {
+            target->setToDefault();
         }
         setFailed(state, e.what());
     }

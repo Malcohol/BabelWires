@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -17,7 +17,7 @@
 
 TEST(ActivateOptionalsModifierDataTest, apply) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
     valueFeature.setToDefault();
     const auto* type = valueFeature.getType().as<testUtils::TestComplexRecordType>();
@@ -44,7 +44,7 @@ TEST(ActivateOptionalsModifierDataTest, apply) {
 
 TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testUtils::TestComplexRecordType::getThisIdentifier());
     valueFeature.setToDefault();
     const auto* type = valueFeature.getType().as<testUtils::TestComplexRecordType>();
@@ -62,7 +62,7 @@ TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
 
 TEST(ActivateOptionalsModifierDataTest, failureNotARecordWithOptionals) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_projectContext.m_typeSystem,
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testUtils::TestSimpleRecordType::getThisIdentifier());
     valueFeature.setToDefault();
 
@@ -74,13 +74,13 @@ TEST(ActivateOptionalsModifierDataTest, failureNotARecordWithOptionals) {
 
 TEST(ActivateOptionalsModifierDataTest, clone) {
     babelwires::ActivateOptionalsModifierData data;
-    data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("foo/bar/boo");
+    data.m_targetPath = babelwires::Path::deserializeFromString("foo/bar/boo");
     data.m_selectedOptionals.emplace_back("op0");
     data.m_selectedOptionals.emplace_back("op1");
 
     auto clonePtr = data.clone();
     ASSERT_NE(clonePtr, nullptr);
-    EXPECT_EQ(clonePtr->m_pathToFeature, data.m_pathToFeature);
+    EXPECT_EQ(clonePtr->m_targetPath, data.m_targetPath);
     EXPECT_TRUE(testUtils::areEqualSets(clonePtr->m_selectedOptionals, data.m_selectedOptionals));
 }
 
@@ -88,7 +88,7 @@ TEST(ActivateOptionalsModifierDataTest, serialization) {
     std::string serializedContents;
     {
         babelwires::ActivateOptionalsModifierData data;
-        data.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("foo/bar/boo");
+        data.m_targetPath = babelwires::Path::deserializeFromString("foo/bar/boo");
         data.m_selectedOptionals.emplace_back("op0");
         data.m_selectedOptionals.emplace_back("op1");
 
@@ -105,6 +105,6 @@ TEST(ActivateOptionalsModifierDataTest, serialization) {
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_pathToFeature, babelwires::FeaturePath::deserializeFromString("foo/bar/boo"));
+    EXPECT_EQ(dataPtr->m_targetPath, babelwires::Path::deserializeFromString("foo/bar/boo"));
     EXPECT_TRUE(testUtils::areEqualSets(dataPtr->m_selectedOptionals, {"op0", "op1"}));
 }

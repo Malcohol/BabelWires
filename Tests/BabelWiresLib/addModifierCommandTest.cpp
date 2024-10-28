@@ -4,10 +4,10 @@
 
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -21,15 +21,14 @@ TEST(AddModifierCommandTest, executeAndUndo) {
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(
-        element->getInputFeature()->is<const babelwires::ValueFeature>());
+    testUtils::TestComplexRecordType::ConstInstance instance(*element->getInput());
 
     static_assert(8 != testUtils::TestComplexRecordType::c_int1default);
     EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
     EXPECT_EQ(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(8));
-    modData.m_pathToFeature = elementData.getPathToRecordInt1();
+    modData.m_targetPath = elementData.getPathToRecordInt1();
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
 
@@ -56,15 +55,14 @@ TEST(AddModifierCommandTest, executeAndUndoFail) {
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(
-        element->getInputFeature()->is<const babelwires::ValueFeature>());
+    testUtils::TestComplexRecordType::ConstInstance instance(*element->getInput());
 
     static_assert(12 > testUtils::TestComplexRecordType::c_int1max);
     EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
     EXPECT_EQ(element->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(12));
-    modData.m_pathToFeature = elementData.getPathToRecordInt1();
+    modData.m_targetPath = elementData.getPathToRecordInt1();
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
     EXPECT_EQ(command.getName(), "Test command");
@@ -92,19 +90,18 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
     {
         static_assert(5 != testUtils::TestComplexRecordType::c_int1default);
         babelwires::ValueAssignmentData modData(babelwires::IntValue(5));
-        modData.m_pathToFeature = elementData.getPathToRecordInt1();
+        modData.m_targetPath = elementData.getPathToRecordInt1();
         elementData.m_modifiers.emplace_back(modData.clone());
     }
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
     const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(
-        element->getInputFeature()->is<const babelwires::ValueFeature>());
+    testUtils::TestComplexRecordType::ConstInstance instance(*element->getInput());
     EXPECT_EQ(instance.getintR1().get(), 5);
 
     static_assert(8 != testUtils::TestComplexRecordType::c_int1default);
     babelwires::ValueAssignmentData modData(babelwires::IntValue(8));
-    modData.m_pathToFeature = elementData.getPathToRecordInt1();
+    modData.m_targetPath = elementData.getPathToRecordInt1();
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
     EXPECT_EQ(command.getName(), "Test command");
@@ -127,7 +124,7 @@ TEST(AddModifierCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
+    modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::AddModifierCommand command("Test command", 51, modData.clone());
 
@@ -143,7 +140,7 @@ TEST(AddModifierCommandTest, failSafelyNoTarget) {
     testEnvironment.m_project.getFeatureElement(elementId);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_pathToFeature = babelwires::FeaturePath::deserializeFromString("qqq/zzz");
+    modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
 

@@ -17,7 +17,7 @@ namespace babelwires {
     class MapProject;
     class MapValue;
 
-    /// Add an element to an array feature.
+    /// Add an element to an array.
     class SetMapSourceTypeCommand : public SimpleCommand<MapProject> {
       public:
         SetMapSourceTypeCommand(std::string commandName, TypeRef newSourceTypeRef);

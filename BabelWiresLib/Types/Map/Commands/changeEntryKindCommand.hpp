@@ -15,7 +15,7 @@
 namespace babelwires {
     class MapProject;
 
-    /// Add an element to an array feature.
+    /// Add an element to an array.
     class ChangeEntryKindCommand : public SimpleCommand<MapProject> {
       public:
 

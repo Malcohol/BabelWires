@@ -36,9 +36,9 @@ void babelwires::RemoveModifierAction::actionTriggered(babelwires::FeatureModel&
     if (!entry) {
         return;
     }
-    const Feature* const feature = entry->getInputThenOutputFeature();
-    assert(feature && "No feature for row model");
-    const bool isModified = (feature == entry->getInputFeature()) && element->findModifier(FeaturePath(feature));
+    const ValueTreeNode* const valueTreeNode = entry->getInputThenOutput();
+    assert(valueTreeNode && "No valueTreeNode for row model");
+    const bool isModified = (valueTreeNode == entry->getInput()) && element->findModifier(Path(valueTreeNode));
     if (isModified) {
         projectBridge.scheduleCommand(
             std::make_unique<RemoveModifierCommand>("Remove modifier", elementId, entry->getPath()));

@@ -88,7 +88,7 @@ void babelwires::ElementData::deserializeUiData(Deserializer& deserializer) {
             deserializer.deserializeObject<UiData>(UiData::serializationType, Deserializer::IsOptional::Optional)) {
         m_uiData = *uiData;
     }
-    for (auto it = deserializer.deserializeValueArray<FeaturePath>("expandedPaths", Deserializer::IsOptional::Optional,
+    for (auto it = deserializer.deserializeValueArray<Path>("expandedPaths", Deserializer::IsOptional::Optional,
                                                                    "path");
          it.isValid(); ++it) {
         m_expandedPaths.emplace_back(std::move(it.deserializeValue()));

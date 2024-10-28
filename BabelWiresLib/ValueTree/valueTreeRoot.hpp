@@ -1,5 +1,5 @@
 /**
- * A SimpleValueFeature is a ValueFeature which owns its value.
+ * A ValueTreeRoot is a ValueTreeNode that owns its value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,33 +7,34 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
     class Type;
     class Value;
+    class Path;
 
-    /// A SimpleValueFeature is a feature which owns its value.
-    class SimpleValueFeature : public ValueFeature {
+    /// A ValueTreeRoot is a ValueTreeNode that owns its value.
+    class ValueTreeRoot : public ValueTreeNode {
       public:
-        /// Construct a rooted ValueFeature which carries values of the given type.
-        SimpleValueFeature(const TypeSystem& typeSystem, TypeRef typeRef);
+        /// Construct a rooted ValueTreeNode which carries values of the given type.
+        ValueTreeRoot(const TypeSystem& typeSystem, TypeRef typeRef);
 
         /// Back up the current value using a shallow clone.
         void backUpValue();
 
         /// Clone the value, and return a modifiable value to the value at the given path.
-        /// If the type is compound, this asserts that the feature has been backed up already.
+        /// If the type is compound, this asserts that the ValueTreeNode has been backed up already.
         // TODO Find better name.
-        ValueHolder& setModifiable(const FeaturePath& pathFromHere);
+        ValueHolder& setModifiable(const Path& pathFromHere);
 
         /// After changes are complete, compare the current value to the backup and set change flags.
         /// This clears the backup.
         void reconcileChangesFromBackup();
 
-        /// Get the TypeSystem carried by this feature (or the one carried by the root of the hierarchy).
+        /// Get the TypeSystem carried by this root.
         const TypeSystem& getTypeSystem() const;
 
       protected:
@@ -49,8 +50,8 @@ namespace babelwires {
         // called by code which knows how to manage a back-up.
         ValueHolder m_valueBackUp;
 
-        /// If the simpleValueFeature is a root feature, then it needs to carry its own TypeSystem.
-        const TypeSystem* m_typeSystem = nullptr;
+        /// Roots carry a reference to the typesystem.
+        const TypeSystem& m_typeSystem;
 
         // TODO: Temporary hack (hopefully): This allows values to be modified without requiring a backup.
         // _Project_ code which modifies features should be aware of the need to back-up the value,
@@ -60,14 +61,14 @@ namespace babelwires {
     };
 
     struct BackupScope {
-        BackupScope(SimpleValueFeature& feature)
-            : m_backedUpValueFeature(feature) {
-            feature.backUpValue();
+        BackupScope(ValueTreeRoot& valueTree)
+            : m_backedUpValueTree(valueTree) {
+            valueTree.backUpValue();
         }
 
-        ~BackupScope() { m_backedUpValueFeature.reconcileChangesFromBackup(); }
+        ~BackupScope() { m_backedUpValueTree.reconcileChangesFromBackup(); }
 
-        SimpleValueFeature& m_backedUpValueFeature;
+        ValueTreeRoot& m_backedUpValueTree;
     };
 
 } // namespace babelwires

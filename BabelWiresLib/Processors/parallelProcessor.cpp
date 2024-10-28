@@ -8,10 +8,10 @@
  **/
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/Path/path.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
@@ -62,50 +62,50 @@ babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectCo
 #endif
 }
 
-void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueFeature& inputFeature,
-                                                 ValueFeature& outputFeature) const {
+void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueTreeNode& input,
+                                                 ValueTreeNode& output) const {
     bool shouldProcessAll = false;
     // Iterate through all features _except_ for the array, look for changes to the common input.
-    for (unsigned int i = 0; i < inputFeature.getNumFeatures() - 1; ++i) {
-        if (inputFeature.getFeature(i)->isChanged(Feature::Changes::SomethingChanged)) {
+    for (unsigned int i = 0; i < input.getNumChildren() - 1; ++i) {
+        if (input.getChild(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
             shouldProcessAll = true;
         }
     }
 
-    const auto& arrayInputFeature = inputFeature.getFeature(inputFeature.getNumFeatures() - 1)->is<ValueFeature>();
-    auto& arrayOutputFeature = outputFeature.getFeature(outputFeature.getNumFeatures() - 1)->is<ValueFeature>();
+    const auto& arrayInput = input.getChild(input.getNumChildren() - 1)->is<ValueTreeNode>();
+    auto& arrayOutput = output.getChild(output.getNumChildren() - 1)->is<ValueTreeNode>();
 
-    if (arrayInputFeature.isChanged(Feature::Changes::StructureChanged)) {
+    if (arrayInput.isChanged(ValueTreeNode::Changes::StructureChanged)) {
         // TODO: This is very inefficient in cases where a single entry has been added or removed.
         // In the old feature system I was able to maintain a mapping between input and output entries
         // to avoid this inefficiency. Perhaps that can be done with values too.
         shouldProcessAll = true;
-        InstanceUtils::setArraySize(arrayOutputFeature, arrayInputFeature.getNumFeatures());
+        InstanceUtils::setArraySize(arrayOutput, arrayInput.getNumChildren());
     }
 
     struct EntryData {
-        EntryData(const TypeSystem& typeSystem, unsigned int index, const ValueFeature& inputEntry,
-                  const ValueFeature& outputEntry)
+        EntryData(const TypeSystem& typeSystem, unsigned int index, const ValueTreeNode& inputEntry,
+                  const ValueTreeNode& outputEntry)
             : m_index(index)
             , m_inputEntry(inputEntry)
-            , m_outputEntry(std::make_unique<SimpleValueFeature>(typeSystem, outputEntry.getTypeRef())) {
+            , m_outputEntry(std::make_unique<ValueTreeRoot>(typeSystem, outputEntry.getTypeRef())) {
             m_outputEntry->setValue(outputEntry.getValue());
         }
 
         const unsigned int m_index;
-        const ValueFeature& m_inputEntry;
-        std::unique_ptr<SimpleValueFeature> m_outputEntry;
+        const ValueTreeNode& m_inputEntry;
+        std::unique_ptr<ValueTreeRoot> m_outputEntry;
         std::string m_failureString;
     };
     std::vector<EntryData> entriesToProcess;
     entriesToProcess.reserve(s_maxParallelFeatures);
 
-    const TypeSystem& typeSystem = inputFeature.getTypeSystem();
+    const TypeSystem& typeSystem = input.getTypeSystem();
 
-    for (unsigned int i = 0; i < arrayInputFeature.getNumFeatures(); ++i) {
-        const ValueFeature& inputEntry = arrayInputFeature.getFeature(i)->is<ValueFeature>();
-        if (shouldProcessAll || arrayInputFeature.getFeature(i)->isChanged(Feature::Changes::SomethingChanged)) {
-            ValueFeature& outputEntry = arrayOutputFeature.getFeature(i)->is<ValueFeature>();
+    for (unsigned int i = 0; i < arrayInput.getNumChildren(); ++i) {
+        const ValueTreeNode& inputEntry = arrayInput.getChild(i)->is<ValueTreeNode>();
+        if (shouldProcessAll || arrayInput.getChild(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
+            ValueTreeNode& outputEntry = arrayOutput.getChild(i)->is<ValueTreeNode>();
             entriesToProcess.emplace_back(EntryData{typeSystem, i, inputEntry, outputEntry});
         }
     }
@@ -116,9 +116,9 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         std::execution::par,
 #endif
         entriesToProcess.begin(), entriesToProcess.end(),
-        [this, &inputFeature, &userLogger, &isFailed](EntryData& data) {
+        [this, &input, &userLogger, &isFailed](EntryData& data) {
             try {
-                processEntry(userLogger, inputFeature, data.m_inputEntry, *(data.m_outputEntry));
+                processEntry(userLogger, input, data.m_inputEntry, *(data.m_outputEntry));
             } catch (const BaseException& e) {
                 data.m_failureString = e.what();
                 isFailed = true;
@@ -131,7 +131,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         const char* newline = "";
         for (const auto& entry : entriesToProcess) {
             if (!entry.m_failureString.empty()) {
-                compositeException << newline << "Failure processing entry " << FeaturePath(&entry.m_inputEntry) << ": "
+                compositeException << newline << "Failure processing entry " << Path(&entry.m_inputEntry) << ": "
                                    << entry.m_failureString;
                 newline = "\n";
             }
@@ -139,9 +139,9 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         throw compositeException;
     }
 
-    ArrayValue newOutput = arrayOutputFeature.getValue()->is<ArrayValue>();
+    ArrayValue newOutput = arrayOutput.getValue()->is<ArrayValue>();
     for (EntryData& data : entriesToProcess) {
         newOutput.setValue(data.m_index, data.m_outputEntry->getValue());
     }
-    arrayOutputFeature.setValue(newOutput);
+    arrayOutput.setValue(newOutput);
 }

@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
@@ -24,7 +24,7 @@ babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger
         message << "Type Reference " << data.getTypeRef().toString() << " could not be resolved";
         setInternalFailure(message.str());
     }
-    m_rootFeature = std::make_unique<SimpleValueFeature>(context.m_typeSystem, typeRefForConstruction);
+    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.m_typeSystem, typeRefForConstruction);
 }
 
 babelwires::ValueElement::~ValueElement() = default;
@@ -33,24 +33,24 @@ const babelwires::ValueElementData& babelwires::ValueElement::getElementData() c
     return static_cast<const ValueElementData&>(FeatureElement::getElementData());
 }
 
-babelwires::Feature* babelwires::ValueElement::doGetInputFeatureNonConst() {
-    return m_rootFeature.get();
+babelwires::ValueTreeNode* babelwires::ValueElement::doGetInputNonConst() {
+    return m_valueTreeRoot.get();
 }
 
-babelwires::Feature* babelwires::ValueElement::doGetOutputFeatureNonConst() {
-    return m_rootFeature.get();
+babelwires::ValueTreeNode* babelwires::ValueElement::doGetOutputNonConst() {
+    return m_valueTreeRoot.get();
 }
 
-const babelwires::Feature* babelwires::ValueElement::getInputFeature() const {
-    return m_rootFeature.get();
+const babelwires::ValueTreeNode* babelwires::ValueElement::getInput() const {
+    return m_valueTreeRoot.get();
 }
 
-const babelwires::Feature* babelwires::ValueElement::getOutputFeature() const {
-    return m_rootFeature.get();
+const babelwires::ValueTreeNode* babelwires::ValueElement::getOutput() const {
+    return m_valueTreeRoot.get();
 }
 
 std::string babelwires::ValueElement::getRootLabel() const {
-    if (m_rootFeature->getTypeRef() == FailureType::getThisIdentifier()) {
+    if (m_valueTreeRoot->getTypeRef() == FailureType::getThisIdentifier()) {
         return "Failed";
     } else {
         return "Value";
@@ -59,7 +59,7 @@ std::string babelwires::ValueElement::getRootLabel() const {
 
 void babelwires::ValueElement::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setFeatures(getRootLabel(), m_rootFeature.get(), m_rootFeature.get());
+        m_contentsCache.setValueTrees(getRootLabel(), m_valueTreeRoot.get(), m_valueTreeRoot.get());
     } else if (isChanged(Changes::ModifierChangesMask)) {
         m_contentsCache.updateModifierCache();
     }

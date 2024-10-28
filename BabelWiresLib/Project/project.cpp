@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
@@ -107,7 +107,7 @@ void babelwires::Project::addModifier(ElementId elementId, const ModifierData& m
     }
 }
 
-void babelwires::Project::removeModifier(ElementId elementId, const FeaturePath& featurePath) {
+void babelwires::Project::removeModifier(ElementId elementId, const Path& featurePath) {
     FeatureElement* const element = getFeatureElement(elementId);
     assert(element && "Cannot remove a modifier from an element that does not exist");
     Modifier* const modifier = element->findModifier(featurePath);
@@ -118,7 +118,7 @@ void babelwires::Project::removeModifier(ElementId elementId, const FeaturePath&
     element->removeModifier(modifier);
 }
 
-void babelwires::Project::adjustModifiersInArrayElements(ElementId elementId, const babelwires::FeaturePath& pathToArray,
+void babelwires::Project::adjustModifiersInArrayElements(ElementId elementId, const babelwires::Path& pathToArray,
                                     babelwires::ArrayIndex startIndex, int adjustment) {
     if (adjustment < 0) {
         startIndex -= adjustment;
@@ -144,18 +144,16 @@ void babelwires::Project::adjustModifiersInArrayElements(ElementId elementId, co
 // If this assumption is not valid, we may need to make the stated assumptions about how input/output paths match
 // tighter.
 
-void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath& pathToArray, int indexOfNewElement,
+void babelwires::Project::addArrayEntries(ElementId elementId, const Path& pathToArray, int indexOfNewElement,
                                           int numEntriesToAdd, bool ensureModifier) {
     assert((indexOfNewElement >= 0) && "indexOfNewElement must be positive");
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
 
     if (FeatureElement* const element = getFeatureElement(elementId)) {
-        if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
-            Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
-            assert(featureAtPath && "Path should resolve");
-            auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
-            assert(arrayFeature && "Path should lead to a compound");
-            assert(arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>());
+        if (ValueTreeNode* const inputArray = element->getInputNonConst(pathToArray)) {
+            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputArray);
+            assert(valueTreeNode && "Path should resolve");
+            assert(valueTreeNode->getType().as<ArrayType>());
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -171,8 +169,8 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
             if (!arrayModifier) {
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
-                    arrayInitDataPtr.m_pathToFeature = pathToArray;
-                    arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
+                    arrayInitDataPtr.m_targetPath = pathToArray;
+                    arrayInitDataPtr.m_size = valueTreeNode->getNumChildren();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
                 }
@@ -181,7 +179,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
             // Next, set the array size.
             if (arrayModifier)
             { 
-                arrayModifier->addArrayEntries(m_userLogger, inputFeature, indexOfNewElement, numEntriesToAdd); 
+                arrayModifier->addArrayEntries(m_userLogger, inputArray, indexOfNewElement, numEntriesToAdd); 
             }
 
             if (arrayModifier && !ensureModifier) {
@@ -191,17 +189,15 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const FeaturePath
     }
 }
 
-void babelwires::Project::removeArrayEntries(ElementId elementId, const FeaturePath& pathToArray,
+void babelwires::Project::removeArrayEntries(ElementId elementId, const Path& pathToArray,
                                              int indexOfElementToRemove, int numEntriesToRemove, bool ensureModifier) {
     assert((indexOfElementToRemove >= 0) && "indexOfEntriesToRemove must be positive");
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     if (FeatureElement* const element = getFeatureElement(elementId)) {
-        if (Feature* const inputFeature = element->getInputFeatureNonConst(pathToArray)) {
-            Feature* featureAtPath = pathToArray.tryFollow(*inputFeature);
-            assert(featureAtPath && "Path should resolve");
-            auto* const arrayFeature = featureAtPath->as<CompoundFeature>();
-            assert(arrayFeature && "Path should lead to a compound");
-            assert(arrayFeature->as<ValueFeature>() && arrayFeature->as<ValueFeature>()->getType().as<ArrayType>());
+        if (ValueTreeNode* const inputArray = element->getInputNonConst(pathToArray)) {
+            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputArray);
+            assert(valueTreeNode && "Path should resolve");
+            assert(valueTreeNode->getType().as<ArrayType>());
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -217,8 +213,8 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
             if (!arrayModifier) {
                 if (ensureModifier) {
                     ArraySizeModifierData arrayInitDataPtr;
-                    arrayInitDataPtr.m_pathToFeature = pathToArray;
-                    arrayInitDataPtr.m_size = arrayFeature->getNumFeatures();
+                    arrayInitDataPtr.m_targetPath = pathToArray;
+                    arrayInitDataPtr.m_size = valueTreeNode->getNumChildren();
                     arrayModifier =
                         static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
                 }
@@ -226,7 +222,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const FeatureP
 
             // Next, set the array size.
             if (arrayModifier) {
-                arrayModifier->removeArrayEntries(m_userLogger, inputFeature, indexOfElementToRemove,
+                arrayModifier->removeArrayEntries(m_userLogger, inputArray, indexOfElementToRemove,
                                                   numEntriesToRemove);
             }
 
@@ -478,8 +474,8 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         for (auto&& pair : connections) {
             ConnectionModifier* connection = std::get<0>(pair);
             FeatureElement* targetElement = std::get<1>(pair);
-            if (Feature* inputFeature = targetElement->getInputFeatureNonConst(connection->getPathToFeature())) {
-                connection->applyConnection(*this, m_userLogger, inputFeature);
+            if (ValueTreeNode* input = targetElement->getInputNonConst(connection->getTargetPath())) {
+                connection->applyConnection(*this, m_userLogger, input);
             }
         }
     }
@@ -489,8 +485,8 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         ConnectionModifier* connection = std::get<0>(pair);
         FeatureElement* owner = std::get<1>(pair);
         if (!connection->isFailed()) {
-            if (Feature* inputFeature = owner->getInputFeatureNonConst(connection->getPathToFeature())) {
-                connection->applyConnection(*this, m_userLogger, inputFeature);
+            if (ValueTreeNode* input = owner->getInputNonConst(connection->getTargetPath())) {
+                connection->applyConnection(*this, m_userLogger, input);
             }
         }
     }
@@ -591,13 +587,13 @@ babelwires::ProjectId babelwires::Project::getProjectId() const {
     return m_projectId;
 }
 
-void babelwires::Project::activateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+void babelwires::Project::activateOptional(ElementId elementId, const Path& pathToRecord, ShortId optional,
                                            bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert(elementToModify);
 
-    Feature* const inputFeature = elementToModify->getInputFeatureNonConst(pathToRecord);
-    if (!inputFeature) {
+    ValueTreeNode* const input = elementToModify->getInputNonConst(pathToRecord);
+    if (!input) {
         return; // Path cannot be followed.
     }
 
@@ -610,7 +606,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
             assert(localModifier && "Non-local modifier carrying local data");
             modifierData = activateOptionalsModifierData;
             activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
-            localModifier->applyIfLocal(m_userLogger, inputFeature);
+            localModifier->applyIfLocal(m_userLogger, input);
         } else {
             // Discard the existing modifier, since it should be broken anyway.
             assert(existingModifier->isFailed() &&
@@ -621,7 +617,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
 
     if (!modifierData) {
         ActivateOptionalsModifierData newData;
-        newData.m_pathToFeature = pathToRecord;
+        newData.m_targetPath = pathToRecord;
         newData.m_selectedOptionals.emplace_back(optional);
         addModifier(elementId, newData);
     }
@@ -630,13 +626,13 @@ void babelwires::Project::activateOptional(ElementId elementId, const FeaturePat
     }
 }
 
-void babelwires::Project::deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+void babelwires::Project::deactivateOptional(ElementId elementId, const Path& pathToRecord, ShortId optional,
                                              bool ensureModifier) {
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert(elementToModify);
 
-    Feature* const inputFeature = elementToModify->getInputFeatureNonConst(pathToRecord);
-    if (!inputFeature) {
+    ValueTreeNode* const input = elementToModify->getInputNonConst(pathToRecord);
+    if (!input) {
         return; // Path cannot be followed.
     }
 
@@ -651,7 +647,7 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const FeatureP
     auto it = std::find(activateOptionalsModifierData->m_selectedOptionals.begin(),
                         activateOptionalsModifierData->m_selectedOptionals.end(), optional);
     activateOptionalsModifierData->m_selectedOptionals.erase(it);
-    localModifier->applyIfLocal(m_userLogger, inputFeature);
+    localModifier->applyIfLocal(m_userLogger, input);
 
     if (!ensureModifier) {
         removeModifier(elementId, pathToRecord);

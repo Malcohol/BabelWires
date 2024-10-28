@@ -28,7 +28,7 @@
 #include <BabelWiresLib/Project/projectData.hpp>
 #include <BabelWiresLib/Project/projectUtilities.hpp>
 #include <BabelWiresLib/Serialization/projectSerialization.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Log/unifiedLog.hpp>

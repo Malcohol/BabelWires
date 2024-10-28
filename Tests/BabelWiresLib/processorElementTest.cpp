@@ -25,10 +25,10 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     ASSERT_TRUE(featureElement->as<babelwires::ProcessorElement>());
     babelwires::ProcessorElement* processorElement = static_cast<babelwires::ProcessorElement*>(featureElement.get());
 
-    auto& inputFeature = processorElement->getInputFeature()->is<babelwires::ValueFeature>();
+    auto& inputFeature = *processorElement->getInput();
     ASSERT_TRUE(inputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());
 
-    const auto& outputFeature = processorElement->getOutputFeature()->is<babelwires::ValueFeature>();
+    const auto& outputFeature = *processorElement->getOutput();
     ASSERT_TRUE(outputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());
 
     testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};
@@ -37,7 +37,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     EXPECT_EQ(output.getArray().getSize(), 2);
 
     babelwires::ValueAssignmentData valueSettingData(babelwires::IntValue(4));
-    valueSettingData.m_pathToFeature = babelwires::FeaturePath{ &*input.getRecord().getintR0() };
+    valueSettingData.m_targetPath = babelwires::Path{ &*input.getRecord().getintR0() };
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, valueSettingData);
@@ -52,10 +52,10 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
     // The processor sets the output array size based on this input.
-    const babelwires::FeaturePath arraySettingIntPath{ &*input.getInt() };
+    const babelwires::Path arraySettingIntPath{ &*input.getInt() };
 
     babelwires::ValueAssignmentData arraySettingData(babelwires::IntValue(4));
-    arraySettingData.m_pathToFeature = arraySettingIntPath;
+    arraySettingData.m_targetPath = arraySettingIntPath;
 
     processorElement->clearChanges();
     processorElement->addModifier(testEnvironment.m_log, arraySettingData);
@@ -69,7 +69,7 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
 
     babelwires::ValueAssignmentData badArraySettingData(babelwires::IntValue(-1));
-    badArraySettingData.m_pathToFeature = arraySettingIntPath;
+    badArraySettingData.m_targetPath = arraySettingIntPath;
 
     processorElement->clearChanges();
     processorElement->removeModifier(processorElement->findModifier(arraySettingIntPath));

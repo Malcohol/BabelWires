@@ -14,7 +14,7 @@ namespace babelwires {
 }
 
 namespace babelwires {
-    class SimpleValueFeature;
+    class ValueTreeRoot;
     struct TargetFileElementData;
     struct ProjectContext;
 
@@ -28,7 +28,7 @@ namespace babelwires {
         /// Down-cast version of the parent's method.
         const TargetFileElementData& getElementData() const;
 
-        virtual const Feature* getInputFeature() const override;
+        virtual const ValueTreeNode* getInput() const override;
 
         virtual std::filesystem::path getFilePath() const override;
         virtual void setFilePath(std::filesystem::path newFilePath) override;
@@ -41,23 +41,23 @@ namespace babelwires {
         virtual std::string getLabel() const override;
 
       protected:
-        Feature* doGetInputFeatureNonConst() override;
+        ValueTreeNode* doGetInputNonConst() override;
         void doProcess(UserLogger& userLogger) override;
 
       protected:
-        void setFeature(std::unique_ptr<SimpleValueFeature> feature);
+        void setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root);
         TargetFileElementData& getElementData();
 
-        /// Should be called when either the feature or the file path change.
+        /// Should be called when either the contents or the file path change.
         void updateSaveHash();
 
       private:
-        std::unique_ptr<SimpleValueFeature> m_feature;
+        std::unique_ptr<ValueTreeRoot> m_valueTreeRoot;
 
-        /// The current hash of the feature and filePath.
+        /// The current hash of the contents and filePath.
         std::size_t m_saveHash = 1;
 
-        /// The hash of the feature and filePath when the file was last saved.
+        /// The hash of the contents and filePath when the file was last saved.
         std::size_t m_saveHashWhenSaved = 0;
     };
 

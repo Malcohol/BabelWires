@@ -1,5 +1,5 @@
 /**
- * The command which sets the size of an array feature.
+ * The command which sets the size of an array.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -8,16 +8,16 @@
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 namespace babelwires {
     class Project;
 
-    /// Set the size of an array feature.
+    /// Set the size of an array.
     class SetArraySizeCommand : public CompoundCommand<Project> {
       public:
-        SetArraySizeCommand(std::string commandName, ElementId elementId, FeaturePath featurePath,
+        SetArraySizeCommand(std::string commandName, ElementId elementId, Path featurePath,
                                     int newSize);
 
         virtual bool initializeAndExecute(Project& project) override;
@@ -29,7 +29,7 @@ namespace babelwires {
         
       private:
         ElementId m_elementId;
-        FeaturePath m_pathToArray;
+        Path m_pathToArray;
         unsigned int m_newSize;
         unsigned int m_oldSize;
 

@@ -25,11 +25,11 @@ namespace babelwires {
     struct ModifierData;
     class ConnectionModifier;
     struct ElementData;
-    class FeaturePath;
+    class Path;
     struct UiPosition;
     struct UiSize;
     struct ProjectContext;
-    class ModifyFeatureScope;
+    class ModifyValueScope;
 
     /// The fundimental constituent of the project.
     /// FeatureElements expose input and output Features, and carry edits.
@@ -51,10 +51,10 @@ namespace babelwires {
         /// Returns nullptr if the modifier will be applied later anyway, so there's no
         /// work for the caller to do.
         /// This does not attempt to deal with errors, so it returns the feature if the path cannot be followed.
-        Feature* getInputFeatureNonConst(const FeaturePath& pathToModify);
+        ValueTreeNode* getInputNonConst(const Path& pathToModify);
 
-        virtual const Feature* getInputFeature() const;
-        virtual const Feature* getOutputFeature() const;
+        virtual const ValueTreeNode* getInput() const;
+        virtual const ValueTreeNode* getOutput() const;
 
         /// Get a description of the type of element (e.g. format name).
         virtual std::string getLabel() const;
@@ -63,8 +63,8 @@ namespace babelwires {
         const ElementData& getElementData() const;
 
         /// Find the modifier at the path, if there is one.
-        Modifier* findModifier(const FeaturePath& featurePath);
-        const Modifier* findModifier(const FeaturePath& featurePath) const;
+        Modifier* findModifier(const Path& featurePath);
+        const Modifier* findModifier(const Path& featurePath) const;
 
         /// Client code should not call this directly, but via the project.
         Modifier* addModifier(UserLogger& userLogger, const ModifierData& modifier);
@@ -74,10 +74,10 @@ namespace babelwires {
         void removeModifier(Modifier* modifier);
 
         /// Is the feature at the path expanded?
-        bool isExpanded(const FeaturePath& featurePath) const;
+        bool isExpanded(const Path& featurePath) const;
 
         /// Set the feature at the path to be expanded or not.
-        void setExpanded(const FeaturePath& featurePath, bool expanded);
+        void setExpanded(const Path& featurePath, bool expanded);
 
         /// Get a clone of the element data with the modifiers, if there are any, re-attached.
         /// Expanded paths which do not currently lead to a feature are not included.
@@ -152,14 +152,14 @@ namespace babelwires {
         void setInDependencyLoop(bool isInLoop);
 
         /// Adjust modifiers which refer to an array at the path, starting at the startIndex.
-        void adjustArrayIndices(const babelwires::FeaturePath& pathToArray, babelwires::ArrayIndex startIndex,
+        void adjustArrayIndices(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                                 int adjustment);
 
       protected:
         /// Get a non-const pointer to the input feature. The default implementation returns null.
-        virtual Feature* doGetInputFeatureNonConst();
+        virtual ValueTreeNode* doGetInputNonConst();
         /// Get a non-const pointer to the output feature. The default implementation returns null.
-        virtual Feature* doGetOutputFeatureNonConst();
+        virtual ValueTreeNode* doGetOutputNonConst();
         virtual void doProcess(UserLogger& userLogger) = 0;
 
       protected:
@@ -195,7 +195,7 @@ namespace babelwires {
 
         /// Obtain the right to modify the feature at the given path.
         /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
-        void modifyFeatureAt(Feature* inputFeature, const FeaturePath& p);
+        void modifyValueAt(ValueTreeNode* input, const Path& p);
 
         /// This is called by process, to signal that all modifications are finished.
         void finishModifications(const Project& project, UserLogger& userLogger);
@@ -221,7 +221,7 @@ namespace babelwires {
         Changes m_changes = Changes::FeatureElementIsNew;
 
         /// If a modifier wants to modify a value feature, one of these will be created.
-        std::unique_ptr<ModifyFeatureScope> m_modifyFeatureScope;
+        std::unique_ptr<ModifyValueScope> m_modifyValueScope;
 
       protected:
         ContentsCache m_contentsCache;

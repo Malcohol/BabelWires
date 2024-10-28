@@ -31,7 +31,7 @@ namespace babelwires {
     class FeatureElement;
     struct ElementData;
     class ConnectionModifier;
-    class FeaturePath;
+    class Path;
     struct UiPosition;
     struct UiSize;
 
@@ -62,7 +62,7 @@ namespace babelwires {
         void addModifier(ElementId elementId, const ModifierData& modifierData);
 
         /// Remove the modifier at the path from the given element.
-        void removeModifier(ElementId elementId, const FeaturePath& featurePath);
+        void removeModifier(ElementId elementId, const Path& featurePath);
 
         /// Add an element to the array at the given path.
         /// Modifiers below the index are adjusted.
@@ -71,7 +71,7 @@ namespace babelwires {
         /// This is special-cased to avoid treating all affected modifiers as add/removed,
         /// and possibly triggering arbitrary amount of work.
         // TODO: Much of the work here could be pulled out into the commands. Same with other operations below.
-        void addArrayEntries(ElementId elementId, const FeaturePath& featurePath, int indexOfNewElement,
+        void addArrayEntries(ElementId elementId, const Path& featurePath, int indexOfNewElement,
                              int numEntriesToAdd, bool ensureModifier);
 
         /// Remove an element from the array at the given path.
@@ -79,22 +79,22 @@ namespace babelwires {
         /// However, note that this will not remove modifiers.
         /// If ensureModifier is true, then a modifier will be added if not present.
         /// Otherwise, a modifier will be removed if present.
-        void removeArrayEntries(ElementId elementId, const FeaturePath& featurePath, int indexOfElementToRemove,
+        void removeArrayEntries(ElementId elementId, const Path& featurePath, int indexOfElementToRemove,
                                 int numEntriesToRemove, bool ensureModifier);
 
         /// Adjust modifiers and connections which point into an array to adapt to shifted array elements.
         /// If adjustment is positive, then modifiers at and above startIndex are modified.
         /// If adjustment is negative, then modifiers at (startIndex - adjustment) and above are modified.
-        void adjustModifiersInArrayElements(ElementId elementId, const FeaturePath& pathToArray, ArrayIndex startIndex,
+        void adjustModifiersInArrayElements(ElementId elementId, const Path& pathToArray, ArrayIndex startIndex,
                                             int adjustment);
 
         /// Activate an optional in a RecordType.
-        void activateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+        void activateOptional(ElementId elementId, const Path& pathToRecord, ShortId optional,
                               bool ensureModifier);
 
         /// Deactivate an optional in a RecordType.
         /// Note that this method is not responsible for removing modifiers.
-        void deactivateOptional(ElementId elementId, const FeaturePath& pathToRecord, ShortId optional,
+        void deactivateOptional(ElementId elementId, const Path& pathToRecord, ShortId optional,
                                 bool ensureModifier);
 
         /// Set the Ui position of the element.
@@ -172,7 +172,7 @@ namespace babelwires {
         /// Mark the connection cache as invalid, so the next time it is queried, it gets recomputed.
         void setConnectionCacheInvalid();
 
-        /// If the output feature of e has any changes, propagate them to the input features of connected
+        /// If the output of e has any changes, propagate them to the input features of connected
         /// elements, as described by the requiredForMap.
         void propagateChanges(const FeatureElement* e);
 

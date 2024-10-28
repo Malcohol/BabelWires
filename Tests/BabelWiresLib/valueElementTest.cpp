@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
@@ -33,18 +33,15 @@ TEST(ValueElementTest, simpleType) {
     EXPECT_EQ(valueElement->getElementData().m_id, 10);
     EXPECT_EQ(valueElementData->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
 
-    const babelwires::Feature* const inputFeature = valueElement->getInputFeature();
-    const babelwires::Feature* const outputFeature = valueElement->getOutputFeature();
+    const babelwires::ValueTreeNode* const input = valueElement->getInput();
+    const babelwires::ValueTreeNode* const output = valueElement->getOutput();
 
-    ASSERT_NE(inputFeature, nullptr);
-    ASSERT_NE(outputFeature, nullptr);
-    EXPECT_EQ(inputFeature, outputFeature);
+    ASSERT_NE(input, nullptr);
+    ASSERT_NE(output, nullptr);
+    EXPECT_EQ(input, output);
 
-    const babelwires::ValueFeature* const valueFeature = inputFeature->as<babelwires::ValueFeature>();
-    ASSERT_TRUE(valueFeature);
-
-    EXPECT_EQ(valueFeature->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
-    const babelwires::ValueHolder value = valueFeature->getValue();
+    EXPECT_EQ(input->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
+    const babelwires::ValueHolder value = input->getValue();
     const babelwires::IntValue* intValue = value->as<babelwires::IntValue>();
     ASSERT_NE(intValue, nullptr);
     EXPECT_EQ(intValue->get(), -4);

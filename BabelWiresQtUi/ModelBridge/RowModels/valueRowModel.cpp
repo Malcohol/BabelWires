@@ -9,7 +9,7 @@
 
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
@@ -21,15 +21,14 @@
 #include <cassert>
 
 void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {
-    const babelwires::ValueFeature& valueFeature = getValueFeature();
-    m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueFeature.getType(), valueFeature.getValue(),
-                                (getInputFeature() == nullptr),
+    const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
+    m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueTreeNode.getType(), valueTreeNode.getValue(),
+                                (getInput() == nullptr),
                                 m_contentsCacheEntry->isStructureEditable());
 }
 
-const babelwires::ValueFeature& babelwires::ValueRowModel::getValueFeature() const {
-    assert(getInputThenOutputFeature()->as<const babelwires::ValueFeature>() && "Wrong type of feature stored");
-    return *static_cast<const babelwires::ValueFeature*>(getInputThenOutputFeature());
+const babelwires::ValueTreeNode& babelwires::ValueRowModel::getValueTreeNode() const {
+    return *getInputThenOutput();
 }
 
 QVariant babelwires::ValueRowModel::getValueDisplayData() const {
@@ -49,16 +48,16 @@ void babelwires::ValueRowModel::setEditorData(QWidget* editor) const {
 std::unique_ptr<babelwires::Command<babelwires::Project>>
 babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
     if (EditableValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
-        const babelwires::ValueFeature& valueFeature = getValueFeature();
+        const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
         auto modifier = std::make_unique<babelwires::ValueAssignmentData>(std::move(newValue));
-        modifier->m_pathToFeature = babelwires::FeaturePath(&valueFeature);
+        modifier->m_targetPath = babelwires::Path(&valueTreeNode);
         return std::make_unique<AddModifierCommand>("Set value", m_featureElement->getElementId(), std::move(modifier));
     }
     return nullptr;
 }
 
 bool babelwires::ValueRowModel::isItemEditable() const {
-    if (getInputFeature()) {
+    if (getInput()) {
         return m_valueModelDispatcher->isItemEditable();
     }
     return false;
@@ -89,7 +88,7 @@ QString babelwires::ValueRowModel::getTooltip() const {
 void babelwires::ValueRowModel::getContextMenuActions(
     std::vector<FeatureContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
-    const babelwires::ValueFeature& valueFeature = getValueFeature();
+    const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
     m_valueModelDispatcher->getContextMenuActions(
-        DataLocation{m_featureElement->getElementId(), babelwires::FeaturePath(&valueFeature)}, actionsOut);
+        DataLocation{m_featureElement->getElementId(), babelwires::Path(&valueTreeNode)}, actionsOut);
 }

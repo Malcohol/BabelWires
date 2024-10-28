@@ -8,7 +8,7 @@
 
 #include <BabelWiresLib/Project/Commands/selectRecordVariantCommand.hpp>
 
-#include <BabelWiresLib/Features/valueFeatureHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
@@ -16,7 +16,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, ElementId elementId,
-                                                               FeaturePath featurePath, ShortId tagToSelect)
+                                                               Path featurePath, ShortId tagToSelect)
     : CompoundCommand(commandName)
     , m_elementId(elementId)
     , m_pathToRecord(std::move(featurePath))
@@ -30,13 +30,13 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
         return false;
     }
 
-    const Feature* const inputFeature = elementToModify->getInputFeature();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = elementToModify->getInput();
+    if (!input) {
         return false;
     }
 
     const auto [compoundFeature, isCurrentTag, fieldsToRemove] =
-        ValueFeatureHelper::getInfoFromRecordWithVariantsFeature(m_pathToRecord.tryFollow(*inputFeature), m_tagToSelect);
+        ValueTreeHelper::getInfoFromRecordWithVariantsFeature(m_pathToRecord.tryFollow(*input), m_tagToSelect);
 
     if (!compoundFeature) {
         return false;   
@@ -51,7 +51,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
     }
 
     for (const auto& field : fieldsToRemove) {
-        FeaturePath pathToField = m_pathToRecord;
+        Path pathToField = m_pathToRecord;
         pathToField.pushStep(PathStep(field));
         addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToField));
     }
@@ -65,7 +65,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
     }
 
     SelectRecordVariantModifierData modifierToAdd;
-    modifierToAdd.m_pathToFeature = m_pathToRecord;
+    modifierToAdd.m_targetPath = m_pathToRecord;
     modifierToAdd.m_tagToSelect = m_tagToSelect;
     m_recordModifierToAdd = std::make_unique<SelectRecordVariantModifierData>(std::move(modifierToAdd));
 

@@ -20,15 +20,15 @@ namespace babelwires {
 } // namespace babelwires
 
 namespace babelwires {
-    class SimpleValueFeature;
+    class ValueTreeRoot;
     struct ProjectContext;
 
     /// Factories which can create FileFeatures in a default state, and write those features as files.
     class TargetFileFormat : public FileTypeEntry, ProductInfo {
       public:
         TargetFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
-        virtual std::unique_ptr<SimpleValueFeature> createNewFeature(const ProjectContext& projectContext) const = 0;
-        virtual void writeToFile(const ProjectContext& projectContext, UserLogger& userLogger, const SimpleValueFeature& contents, std::ostream& os) const = 0;
+        virtual std::unique_ptr<ValueTreeRoot> createNewFeature(const ProjectContext& projectContext) const = 0;
+        virtual void writeToFile(const ProjectContext& projectContext, UserLogger& userLogger, const ValueTreeRoot& contents, std::ostream& os) const = 0;
     };
 
     /// Registry of TargetFileFactories.

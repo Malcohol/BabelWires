@@ -1,5 +1,5 @@
 /**
- * A Modifier changes the value of a feature in a FeatureElement, and corresponds to a user edit.
+ * A Modifier changes the value in a FeatureElement, and corresponds to a user edit.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
  
-#include <BabelWiresLib/Features/feature.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
@@ -51,22 +51,22 @@ const babelwires::ModifierData& babelwires::Modifier::getModifierData() const {
     return *m_data;
 }
 
-const babelwires::FeaturePath& babelwires::Modifier::getPathToFeature() const {
-    return m_data->m_pathToFeature;
+const babelwires::Path& babelwires::Modifier::getTargetPath() const {
+    return m_data->m_targetPath;
 }
 
-void babelwires::Modifier::unapply(Feature* container) const {
+void babelwires::Modifier::unapply(ValueTreeNode* container) const {
     assert(!isFailed() && "Don't try to unapply a failed modifier.");
     try {
-        Feature& f = m_data->m_pathToFeature.follow(*container);
+        ValueTreeNode& f = m_data->m_targetPath.follow(*container);
         // When undone, array size modifiers should not reset the remaining children.
-        f.setToDefaultNonRecursive();
+        f.setToDefault();
     } catch (const BaseException& e) {
         assert(!"It should always be possible to unapply a modifier.");
     }
 }
 
-void babelwires::Modifier::applyIfLocal(UserLogger& userLogger, Feature* container) {}
+void babelwires::Modifier::applyIfLocal(UserLogger& userLogger, ValueTreeNode* container) {}
 
 bool babelwires::Modifier::isChanged(Changes changes) const {
     return (m_changes & changes) != Changes::NothingChanged;
@@ -121,10 +121,10 @@ void babelwires::Modifier::setFailed(State failureState, std::string reasonForFa
     m_reasonForFailure = std::move(reasonForFailure);
 }
 
-void babelwires::Modifier::adjustArrayIndex(const babelwires::FeaturePath& pathToArray,
+void babelwires::Modifier::adjustArrayIndex(const babelwires::Path& pathToArray,
                                             babelwires::ArrayIndex startIndex, int adjustment) {
     babelwires::ModifierData& modifierData = getModifierData();
-    FeaturePath& modifierPath = modifierData.m_pathToFeature;
+    Path& modifierPath = modifierData.m_targetPath;
 
     assert(pathToArray.isStrictPrefixOf(modifierPath) && "This code only applies when the path is correct.");
     const unsigned int pathIndexOfStepIntoArray = pathToArray.getNumSteps();

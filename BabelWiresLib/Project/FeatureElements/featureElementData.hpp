@@ -97,7 +97,7 @@ namespace babelwires {
 
         /// Those paths within the feature which are expanded.
         /// Note: Only those which are present in the features are maintained on serialization.
-        std::vector<FeaturePath> m_expandedPaths;
+        std::vector<Path> m_expandedPaths;
 
       protected:
         virtual std::unique_ptr<FeatureElement>

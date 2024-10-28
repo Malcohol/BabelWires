@@ -273,17 +273,17 @@ namespace {
 
         // The connection we add.
         babelwires::ConnectionModifierData connectionData;
-        connectionData.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-        connectionData.m_pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
+        connectionData.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+        connectionData.m_sourcePath = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
         connectionData.m_sourceId = sourceElementId;
 
         // The connection we expect to observe.
         babelwires::ConnectionDescription connectionDescription(targetElementId, connectionData);
         if (!sourceRecordIsExpanded) {
-            connectionDescription.m_pathToSourceFeature.truncate(1);
+            connectionDescription.m_sourcePath.truncate(1);
         }
         if (!targetArrayIsExpanded) {
-            connectionDescription.m_pathToTargetFeature.truncate(1);
+            connectionDescription.m_targetPath.truncate(1);
         }
 
         testEnvironment.m_project.addModifier(targetElementId, connectionData);
@@ -360,8 +360,8 @@ namespace {
 
         // The connection we will remove.
         babelwires::ConnectionModifierData connectionData;
-        connectionData.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-        connectionData.m_pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
+        connectionData.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+        connectionData.m_sourcePath = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
         connectionData.m_sourceId = sourceElementId;
 
         testUtils::TestComplexRecordElementData targetElementData;
@@ -381,13 +381,13 @@ namespace {
         // The connection we expect to observe.
         babelwires::ConnectionDescription connectionDescription(targetElementId, connectionData);
         if (!sourceRecordIsExpanded) {
-            connectionDescription.m_pathToSourceFeature.truncate(1);
+            connectionDescription.m_sourcePath.truncate(1);
         }
         if (!targetArrayIsExpanded) {
-            connectionDescription.m_pathToTargetFeature.truncate(1);
+            connectionDescription.m_targetPath.truncate(1);
         }
 
-        testEnvironment.m_project.removeModifier(targetElementId, connectionData.m_pathToFeature);
+        testEnvironment.m_project.removeModifier(targetElementId, connectionData.m_targetPath);
 
         testEnvironment.m_project.process();
 
@@ -454,8 +454,8 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
     const babelwires::ElementId sourceElementId = testEnvironment.m_project.addFeatureElement(sourceElementData);
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    connectionData.m_pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
+    connectionData.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    connectionData.m_sourcePath = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
     connectionData.m_sourceId = sourceElementId;
 
     testUtils::TestComplexRecordElementData targetElementData;
@@ -470,7 +470,7 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
     ObservedChanges observedChanges(projectObserver);
 
     babelwires::ValueAssignmentData intData(babelwires::IntValue(14));
-    intData.m_pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
+    intData.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
     testEnvironment.m_project.addModifier(sourceElementId, intData);
 
     testEnvironment.m_project.process();

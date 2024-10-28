@@ -1,5 +1,5 @@
 /**
- * The command which expands or collapses a CompoundFeature of a FeatureElement.
+ * The command which expands or collapses a ValueTreeNode.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -7,15 +7,14 @@
  **/
 #include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
 
-#include <BabelWiresLib/Features/feature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Features/compoundFeature.hpp>
 
 #include <cassert>
 
 babelwires::SetExpandedCommand::SetExpandedCommand(std::string commandName, ElementId elementId,
-                                                   FeaturePath pathToCompound, bool expanded)
+                                                   Path pathToCompound, bool expanded)
     : SimpleCommand(std::move(commandName))
     , m_elementId(elementId)
     , m_pathToCompound(std::move(pathToCompound))
@@ -31,20 +30,20 @@ bool babelwires::SetExpandedCommand::initialize(const Project& project) {
         return false;
     }
 
-    const CompoundFeature* compoundFeature = nullptr;
-    if (const Feature* feature = element->getInputFeature()) {
-        compoundFeature = m_pathToCompound.tryFollow(*feature)->as<const CompoundFeature>();
+    const ValueTreeNode* compound = nullptr;
+    if (const ValueTreeNode* valueTreeNode = element->getInput()) {
+        compound = m_pathToCompound.tryFollow(*valueTreeNode);
     }
-    if (!compoundFeature) {
-        if (const Feature* feature = element->getOutputFeature()) {
-            compoundFeature = m_pathToCompound.tryFollow(*feature)->as<const CompoundFeature>();
+    if (!compound) {
+        if (const ValueTreeNode* valueTreeNode = element->getOutput()) {
+            compound = m_pathToCompound.tryFollow(*valueTreeNode);
         }
     }
-    if (!compoundFeature) {
+    if (!compound) {
         return false;
     }
 
-    return compoundFeature->getNumFeatures() > 0;
+    return compound->getNumChildren() > 0;
 }
 
 void babelwires::SetExpandedCommand::execute(Project& project) const {

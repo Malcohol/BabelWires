@@ -48,7 +48,7 @@ inline babelwires::PathStep babelwires::EditTree::RootedPathIterator::operator*(
     }
 }
 
-inline babelwires::EditTree::RootedPath::RootedPath(const FeaturePath& path)
+inline babelwires::EditTree::RootedPath::RootedPath(const Path& path)
     : m_path(path) {}
 
 inline babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::begin() const {
@@ -108,7 +108,7 @@ bool babelwires::EditTree::TreeNode::isNeeded() const {
            m_isExpandedChanged || (m_numDescendents > 0);
 }
 
-void babelwires::EditTree::addEdit(const FeaturePath& path, const EditNodeFunc& applyFunc) {
+void babelwires::EditTree::addEdit(const Path& path, const EditNodeFunc& applyFunc) {
     RootedPath featurePath(path);
     auto it = featurePath.begin();
     const auto end = featurePath.end();
@@ -137,7 +137,7 @@ void babelwires::EditTree::addEdit(const FeaturePath& path, const EditNodeFunc& 
     assert(validateTree());
 }
 
-void babelwires::EditTree::removeEdit(const FeaturePath& path, const EditNodeFunc& applyFunc) {
+void babelwires::EditTree::removeEdit(const Path& path, const EditNodeFunc& applyFunc) {
     RootedPath featurePath(path);
     auto it = featurePath.begin();
     const auto end = featurePath.end();
@@ -174,7 +174,7 @@ void babelwires::EditTree::removeEdit(const FeaturePath& path, const EditNodeFun
 }
 
 void babelwires::EditTree::addModifier(std::unique_ptr<Modifier> modifier) {
-    const FeaturePath& featurePath = modifier->getPathToFeature();
+    const Path& featurePath = modifier->getTargetPath();
 
     addEdit(featurePath, [&modifier](TreeNode& nodeToEdit) {
         assert(!nodeToEdit.m_modifier.get() && "There's already a modifier at that path in the tree");
@@ -183,7 +183,7 @@ void babelwires::EditTree::addModifier(std::unique_ptr<Modifier> modifier) {
 }
 
 std::unique_ptr<babelwires::Modifier> babelwires::EditTree::removeModifier(const Modifier* modifier) {
-    const FeaturePath& featurePath = modifier->getPathToFeature();
+    const Path& featurePath = modifier->getTargetPath();
     std::unique_ptr<babelwires::Modifier> result;
 
     removeEdit(featurePath, [modifier, &result](TreeNode& nodeToEdit) {
@@ -196,7 +196,7 @@ std::unique_ptr<babelwires::Modifier> babelwires::EditTree::removeModifier(const
     return result;
 }
 
-babelwires::Modifier* babelwires::EditTree::findModifier(const FeaturePath& path) {
+babelwires::Modifier* babelwires::EditTree::findModifier(const Path& path) {
     const RootedPath featurePath(path);
     auto it = featurePath.begin();
     const auto end = featurePath.end();
@@ -208,7 +208,7 @@ babelwires::Modifier* babelwires::EditTree::findModifier(const FeaturePath& path
     }
 }
 
-const babelwires::Modifier* babelwires::EditTree::findModifier(const FeaturePath& path) const {
+const babelwires::Modifier* babelwires::EditTree::findModifier(const Path& path) const {
     const RootedPath featurePath(path);
     auto it = featurePath.begin();
     const auto end = featurePath.end();
@@ -220,7 +220,7 @@ const babelwires::Modifier* babelwires::EditTree::findModifier(const FeaturePath
     }
 }
 
-void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& path, babelwires::ArrayIndex startIndex,
+void babelwires::EditTree::adjustArrayIndices(const babelwires::Path& path, babelwires::ArrayIndex startIndex,
                                               int adjustment) {
     const RootedPath pathToArray{path};
     auto it = pathToArray.begin();
@@ -238,7 +238,7 @@ void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& pat
     /// Thus we use the conventional API to add/remove modifiers and setExpanded, rather than adjust them in-place.
     /// This does not cause the modifiers to appear add/removed outside the edit tree.
     std::vector<Modifier*> modifiersToAdjust;
-    std::vector<FeaturePath> pathsToToggleExpansion;
+    std::vector<Path> pathsToToggleExpansion;
 
     int childIndex = nodeIndex + 1;
     while (childIndex < endOfChildren) {
@@ -290,7 +290,7 @@ void babelwires::EditTree::adjustArrayIndices(const babelwires::FeaturePath& pat
     }
 }
 
-bool babelwires::EditTree::isExpanded(const FeaturePath& path) const {
+bool babelwires::EditTree::isExpanded(const Path& path) const {
     const RootedPath pathToArray(path);
     auto it = pathToArray.begin();
     const auto end = pathToArray.end();
@@ -303,7 +303,7 @@ bool babelwires::EditTree::isExpanded(const FeaturePath& path) const {
     }
 }
 
-void babelwires::EditTree::setExpanded(const FeaturePath& featurePath, bool expanded) {
+void babelwires::EditTree::setExpanded(const Path& featurePath, bool expanded) {
     const auto toggleIsExpanded = [expanded](TreeNode& nodeToEdit) {
         assert((nodeToEdit.m_isExpanded != expanded) &&
                "The tree node was already in the expanded state we're trying to set");
@@ -320,7 +320,7 @@ void babelwires::EditTree::setExpanded(const FeaturePath& featurePath, bool expa
     }
 }
 
-void babelwires::EditTree::setImplicitlyExpanded(const FeaturePath& featurePath, bool expanded) {
+void babelwires::EditTree::setImplicitlyExpanded(const Path& featurePath, bool expanded) {
     const auto toggleIsImplicitlyExpanded = [expanded](TreeNode& nodeToEdit) {
         nodeToEdit.m_isImplicitlyExpanded = expanded;
     };
@@ -341,8 +341,8 @@ bool babelwires::EditTree::validateTree() const {
     std::vector<int> endOfChildrenStack;
     endOfChildrenStack.emplace_back(m_nodes.size());
 
-    FeaturePath path;
-    FeaturePath previousPath;
+    Path path;
+    Path previousPath;
 
     for (int i = 1; i < m_nodes.size(); ++i) {
         assert(i <= endOfChildrenStack.back() && "Structural error in tree");
@@ -363,7 +363,7 @@ bool babelwires::EditTree::validateTree() const {
         previousPath = path;
 
         if (node.m_modifier) {
-            assert((node.m_modifier->getPathToFeature() == path) && "Node with wrong path");
+            assert((node.m_modifier->getTargetPath() == path) && "Node with wrong path");
         }
     }
     for (auto endOfChildren : endOfChildrenStack) {
@@ -374,9 +374,9 @@ bool babelwires::EditTree::validateTree() const {
     return true;
 }
 
-babelwires::FeaturePath babelwires::EditTree::getPathToNode(TreeNodeIndex soughtIndex) const {
+babelwires::Path babelwires::EditTree::getPathToNode(TreeNodeIndex soughtIndex) const {
     assert((soughtIndex < m_nodes.size()) && "soughtIndex is out of range");
-    FeaturePath path;
+    Path path;
     if (soughtIndex != 0) {
         int currentIndex = 1;
 
@@ -396,7 +396,7 @@ babelwires::FeaturePath babelwires::EditTree::getPathToNode(TreeNodeIndex sought
 void babelwires::EditTree::clearChanges() {
     // Since clearing a change can make nodes unnecessary, we use removeEdit to perform the change.
     // This approach is not optimal.
-    std::vector<FeaturePath> pathsWithExpansionChanges;
+    std::vector<Path> pathsWithExpansionChanges;
 
     for (int i = 0; i < m_nodes.size(); ++i) {
         TreeNode& node = m_nodes[i];
@@ -410,7 +410,7 @@ void babelwires::EditTree::clearChanges() {
         }
     }
 
-    for (const FeaturePath& path : pathsWithExpansionChanges) {
+    for (const Path& path : pathsWithExpansionChanges) {
         removeEdit(path, [](TreeNode& nodeToEdit) {
             assert(nodeToEdit.m_isExpandedChanged && "Should not be considering this node.");
             nodeToEdit.m_isExpandedChanged = false;
@@ -419,7 +419,7 @@ void babelwires::EditTree::clearChanges() {
     assert(validateTree());
 }
 
-void babelwires::EditTree::truncatePathAtFirstCollapsedNode(babelwires::FeaturePath& path, State state) const {
+void babelwires::EditTree::truncatePathAtFirstCollapsedNode(babelwires::Path& path, State state) const {
     if (m_nodes.empty()) {
         // Path is not collapsed.
         if constexpr (!c_expandedByDefault) {
@@ -472,9 +472,9 @@ void babelwires::EditTree::truncatePathAtFirstCollapsedNode(babelwires::FeatureP
     }
 }
 
-std::vector<babelwires::FeaturePath>
-babelwires::EditTree::getAllExplicitlyExpandedPaths(const FeaturePath& path) const {
-    std::vector<FeaturePath> expandedPaths;
+std::vector<babelwires::Path>
+babelwires::EditTree::getAllExplicitlyExpandedPaths(const Path& path) const {
+    std::vector<Path> expandedPaths;
 
     const RootedPath featurePath(path);
     auto it = featurePath.begin();

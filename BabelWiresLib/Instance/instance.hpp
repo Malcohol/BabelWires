@@ -7,10 +7,10 @@
  **/
 #pragma once
 
-// The project manages entirely using the generic operations of the type/value and feature systems.
-// However, this is inconvenient for code in processors or import/export code which knows the structure
-// of the data involved. The instance system allows such code to explore hierarchies of ValueFeatures
-// using explicitly typed wrapper classes.
+// The project operates using the operations of the type/value and valueTree systems, which are entirely generic.
+// This is inconvenient for "client code" (i.e. code in processors or import/export code) since that code usually
+// knows the specific structure of the data involved. The instance system allows such code to explore ValueTrees
+// in a typed way, by allowing types to provide type-aware wrapper classes for ValueTreeNodes.
 
 // TODO Describe usage here
 

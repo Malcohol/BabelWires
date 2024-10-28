@@ -27,7 +27,7 @@ namespace babelwires {
         LocalModifierData& getModifierData();
         const LocalModifierData& getModifierData() const;
 
-        void applyIfLocal(UserLogger& userLogger, Feature* container) override;
+        void applyIfLocal(UserLogger& userLogger, ValueTreeNode* container) override;
 
       protected:
         const ConnectionModifier* doAsConnectionModifier() const override;

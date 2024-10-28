@@ -1,5 +1,5 @@
 /**
- * A Modifier changes the value of a feature in a FeatureElement, and corresponds to a user edit.
+ * A Modifier changes the value in a FeatureElement, and corresponds to a user edit.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/Path/pathStep.hpp>
+#include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <Common/Cloning/cloneable.hpp>
 #include <Common/Utilities/enumFlags.hpp>
@@ -24,12 +24,12 @@ namespace babelwires {
 
     struct ModifierData;
     class Project;
-    class Feature;
-    class FeaturePath;
+    class ValueTreeNode;
+    class Path;
     class FeatureElement;
     class ConnectionModifier;
 
-    /// A Modifier changes the value of a feature in a FeatureElement, and corresponds to a user edit.
+    /// A Modifier changes a value somewhere in the input of a FeatureElement, and corresponds to a user edit.
     class Modifier : public Cloneable {
       public:
         CLONEABLE_ABSTRACT(Modifier);
@@ -64,18 +64,18 @@ namespace babelwires {
         ModifierData& getModifierData();
         const ModifierData& getModifierData() const;
 
-        /// Convenience function for finding the feature affected by this modifier.
-        const FeaturePath& getPathToFeature() const;
+        /// Convenience function for finding the node in the valueTree affected by this modifier.
+        const Path& getTargetPath() const;
 
         /// If the modifier is a local modifier, apply it. Otherwise, do nothing.
-        virtual void applyIfLocal(UserLogger& userLogger, Feature* container);
+        virtual void applyIfLocal(UserLogger& userLogger, ValueTreeNode* container);
 
         /// Returns this if this modifier is a connection modifier, otherwise returns nullptr;
         const ConnectionModifier* asConnectionModifier() const;
         ConnectionModifier* asConnectionModifier();
 
         /// If the modifier modified some data, set it back to the default.
-        void unapply(Feature* container) const;
+        void unapply(ValueTreeNode* container) const;
 
         // clang-format off
         /// Describes the way a modifier may have changed.
@@ -108,9 +108,9 @@ namespace babelwires {
         void clearChanges();
 
         /// Adjust the pathToFeature of this modifier by the adjustment.
-        /// Asserts that this feature leads into the array and that its
+        /// Asserts that the path leads into the array and that its
         /// index is greater than startIndex.
-        void adjustArrayIndex(const babelwires::FeaturePath& pathToArray, babelwires::ArrayIndex startIndex,
+        void adjustArrayIndex(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                               int adjustment);
 
       public:

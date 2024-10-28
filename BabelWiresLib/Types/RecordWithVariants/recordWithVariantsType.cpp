@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 /*
 // TODO Remove

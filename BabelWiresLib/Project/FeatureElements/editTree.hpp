@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <Common/types.hpp>
 
 #include <memory>
@@ -26,17 +26,17 @@ namespace babelwires {
 
         void addModifier(std::unique_ptr<Modifier> modifier);
         std::unique_ptr<Modifier> removeModifier(const Modifier* modifier);
-        Modifier* findModifier(const FeaturePath& featurePath);
-        const Modifier* findModifier(const FeaturePath& featurePath) const;
-        bool isExpanded(const FeaturePath& featurePath) const;
+        Modifier* findModifier(const Path& featurePath);
+        const Modifier* findModifier(const Path& featurePath) const;
+        bool isExpanded(const Path& featurePath) const;
 
-        void setExpanded(const FeaturePath& featurePath, bool expanded);
+        void setExpanded(const Path& featurePath, bool expanded);
 
         /// The feature at the path is not collapsible, so it should be treated as expanded without an edit.
-        void setImplicitlyExpanded(const FeaturePath& featurePath, bool expanded);
+        void setImplicitlyExpanded(const Path& featurePath, bool expanded);
 
         /// Adjust edits which refer to an array at the path, starting at the startIndex.
-        void adjustArrayIndices(const FeaturePath& pathToArray, ArrayIndex startIndex, int adjustment);
+        void adjustArrayIndices(const Path& pathToArray, ArrayIndex startIndex, int adjustment);
 
         /// Clear changes to the modifiers and the expansion state.
         void clearChanges();
@@ -51,10 +51,10 @@ namespace babelwires {
         };
 
         /// Remove the tail of the path hidden within a collapsed compound feature.
-        void truncatePathAtFirstCollapsedNode(FeaturePath& path, State state) const;
+        void truncatePathAtFirstCollapsedNode(Path& path, State state) const;
 
         /// Return all the explicitly expanded paths in the tree.
-        std::vector<FeaturePath> getAllExplicitlyExpandedPaths(const FeaturePath& path = FeaturePath()) const;
+        std::vector<Path> getAllExplicitlyExpandedPaths(const Path& path = Path()) const;
 
       public:
         // Iteration through the tree of nodes.
@@ -85,10 +85,10 @@ namespace babelwires {
 
         /// Allows iteration over the subtree at the path (which must be in the tree).
         template <typename MODIFIER_TYPE = Modifier>
-        IteratorRange<ModifierIterator<EditTree, MODIFIER_TYPE>> modifierRange(const FeaturePath& featurePath);
+        IteratorRange<ModifierIterator<EditTree, MODIFIER_TYPE>> modifierRange(const Path& featurePath);
         template <typename MODIFIER_TYPE = Modifier>
         IteratorRange<ModifierIterator<const EditTree, MODIFIER_TYPE>>
-        modifierRange(const FeaturePath& featurePath) const;
+        modifierRange(const Path& featurePath) const;
 
       private:
         struct RootedPath;
@@ -119,15 +119,15 @@ namespace babelwires {
         using EditNodeFunc = std::function<void(TreeNode& node)>;
 
         /// Apply the edit to the node at the path, allowing nodes to be added.
-        void addEdit(const FeaturePath& featurePath, const EditNodeFunc& applyFunc);
+        void addEdit(const Path& featurePath, const EditNodeFunc& applyFunc);
 
         /// Remove the edit from the node at the path, allowing nodes to be removed.
-        void removeEdit(const FeaturePath& featurePath, const EditNodeFunc& applyFunc);
+        void removeEdit(const Path& featurePath, const EditNodeFunc& applyFunc);
 
         using TreeNodeIndex = std::uint16_t;
 
         /// Get the path of steps which leads to the node at the given index.
-        FeaturePath getPathToNode(TreeNodeIndex nodeIndex) const;
+        Path getPathToNode(TreeNodeIndex nodeIndex) const;
 
       public:
         /// This determines if the second or deeper levels are expanded by default.

@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
-babelwires::RemoveArrayEntryAction::RemoveArrayEntryAction(babelwires::FeaturePath pathToArray,
+babelwires::RemoveArrayEntryAction::RemoveArrayEntryAction(babelwires::Path pathToArray,
                                                            int indexOfEntryToRemove)
     : FeatureContextMenuAction(tr("Remove this array element"))
     , m_pathToArray(std::move(pathToArray))

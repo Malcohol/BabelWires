@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
@@ -27,9 +27,9 @@ testUtils::TestProjectData::TestProjectData()
         data.m_filePath = m_targetFilePath;
         {
             babelwires::ConnectionModifierData modData;
-            modData.m_pathToFeature = testUtils::getTestFileElementPathToInt0();
+            modData.m_targetPath = testUtils::getTestFileElementPathToInt0();
             modData.m_sourceId = c_processorId;
-            modData.m_pathToSourceFeature = testUtils::TestProcessorInputOutputType::s_pathToArray_3;
+            modData.m_sourcePath = testUtils::TestProcessorInputOutputType::s_pathToArray_3;
             data.m_modifiers.emplace_back(modData.clone());
         }
         m_elements.emplace_back(data.clone());
@@ -40,14 +40,14 @@ testUtils::TestProjectData::TestProjectData()
         data.m_id = c_processorId;
         {
             babelwires::ConnectionModifierData modData;
-            modData.m_pathToFeature = testUtils::TestProcessorInputOutputType::s_pathToInt;
+            modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt;
             modData.m_sourceId = c_sourceElementId;
-            modData.m_pathToSourceFeature = testUtils::getTestFileElementPathToInt0();
+            modData.m_sourcePath = testUtils::getTestFileElementPathToInt0();
             data.m_modifiers.emplace_back(modData.clone());
         }
         {
             babelwires::ValueAssignmentData modData(babelwires::IntValue(44));
-            modData.m_pathToFeature = testUtils::TestProcessorInputOutputType::s_pathToInt2;
+            modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt2;
             data.m_modifiers.emplace_back(modData.clone());
         }
         data.m_expandedPaths.emplace_back(testUtils::TestProcessorInputOutputType::s_pathToArray);
@@ -87,29 +87,29 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
                                                               sortedElements[0]->m_modifiers[1].get()};
         std::sort(&sortedModifiers[0], &sortedModifiers[2],
                   [](const babelwires::ModifierData* a, const babelwires::ModifierData* b) {
-                      return a->m_pathToFeature < b->m_pathToFeature;
+                      return a->m_targetPath < b->m_targetPath;
                   });
 
         auto modData1 = sortedModifiers[0]->as<babelwires::ConnectionModifierData>();
         ASSERT_TRUE(modData1);
-        EXPECT_EQ(*modData1->m_pathToFeature.getStep(0).asField(), testUtils::TestProcessorInputOutputType::s_intIdInitializer);
-        EXPECT_EQ(modData1->m_pathToFeature.getStep(0).asField()->getDiscriminator(), recordIntDiscriminator);
-        ASSERT_EQ(modData1->m_pathToSourceFeature.getNumSteps(), 2);
-        EXPECT_EQ(*modData1->m_pathToSourceFeature.getStep(0).asField(),
+        EXPECT_EQ(*modData1->m_targetPath.getStep(0).asField(), testUtils::TestProcessorInputOutputType::s_intIdInitializer);
+        EXPECT_EQ(modData1->m_targetPath.getStep(0).asField()->getDiscriminator(), recordIntDiscriminator);
+        ASSERT_EQ(modData1->m_sourcePath.getNumSteps(), 2);
+        EXPECT_EQ(*modData1->m_sourcePath.getStep(0).asField(),
                   babelwires::FileType::getStepToContents());
-        EXPECT_EQ(*modData1->m_pathToSourceFeature.getStep(1).asField(),
+        EXPECT_EQ(*modData1->m_sourcePath.getStep(1).asField(),
                   TestSimpleRecordType::s_int0IdInitializer);
-        EXPECT_EQ(modData1->m_pathToSourceFeature.getStep(1).asField()->getDiscriminator(), fileIntChildDiscriminator);
+        EXPECT_EQ(modData1->m_sourcePath.getStep(1).asField()->getDiscriminator(), fileIntChildDiscriminator);
 
         auto modData2 = sortedModifiers[1]->as<babelwires::ValueAssignmentData>();
         ASSERT_TRUE(modData2);
-        ASSERT_GE(modData2->m_pathToFeature.getNumSteps(), 2);
-        EXPECT_EQ(*modData2->m_pathToFeature.getStep(0).asField(),
+        ASSERT_GE(modData2->m_targetPath.getNumSteps(), 2);
+        EXPECT_EQ(*modData2->m_targetPath.getStep(0).asField(),
                   testUtils::TestProcessorInputOutputType::s_recordIdInitializer);
-        EXPECT_EQ(modData2->m_pathToFeature.getStep(0).asField()->getDiscriminator(), recordRecordDiscriminator);
-        EXPECT_EQ(*modData2->m_pathToFeature.getStep(1).asField(),
+        EXPECT_EQ(modData2->m_targetPath.getStep(0).asField()->getDiscriminator(), recordRecordDiscriminator);
+        EXPECT_EQ(*modData2->m_targetPath.getStep(1).asField(),
                   testUtils::TestSimpleRecordType::s_int0IdInitializer);
-        EXPECT_EQ(modData2->m_pathToFeature.getStep(1).asField()->getDiscriminator(), recordInt2Disciminator);
+        EXPECT_EQ(modData2->m_targetPath.getStep(1).asField()->getDiscriminator(), recordInt2Disciminator);
     }
 
     ASSERT_EQ(sortedElements[0]->m_expandedPaths.size(), 1);
@@ -124,15 +124,15 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
     ASSERT_EQ(sortedElements[2]->m_modifiers.size(), 1);
     auto modData0 = sortedElements[2]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
     ASSERT_TRUE(modData0);
-    ASSERT_EQ(modData0->m_pathToFeature.getNumSteps(), 2);
-    EXPECT_EQ(*modData0->m_pathToFeature.getStep(0).asField(),
+    ASSERT_EQ(modData0->m_targetPath.getNumSteps(), 2);
+    EXPECT_EQ(*modData0->m_targetPath.getStep(0).asField(),
                 babelwires::FileType::getStepToContents());
-    EXPECT_EQ(*modData0->m_pathToFeature.getStep(1).asField(),
+    EXPECT_EQ(*modData0->m_targetPath.getStep(1).asField(),
                 TestSimpleRecordType::s_int0IdInitializer);
-    EXPECT_EQ(modData0->m_pathToFeature.getStep(1).asField()->getDiscriminator(), fileIntChildDiscriminator);
-    EXPECT_EQ(*modData0->m_pathToSourceFeature.getStep(0).asField(),
+    EXPECT_EQ(modData0->m_targetPath.getStep(1).asField()->getDiscriminator(), fileIntChildDiscriminator);
+    EXPECT_EQ(*modData0->m_sourcePath.getStep(0).asField(),
               testUtils::TestProcessorInputOutputType::s_arrayIdInitializer);
-    EXPECT_EQ(modData0->m_pathToSourceFeature.getStep(0).asField()->getDiscriminator(), recordArrayDiscriminator);
+    EXPECT_EQ(modData0->m_sourcePath.getStep(0).asField()->getDiscriminator(), recordArrayDiscriminator);
     EXPECT_EQ(sortedElements[2]->m_expandedPaths.size(), 0);
 }
 
@@ -144,18 +144,18 @@ void testUtils::TestProjectData::testProjectData(const babelwires::ProjectContex
 }
 
 void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::ProjectContext& context) {
-    babelwires::SimpleValueFeature testRecord(context.m_typeSystem, testUtils::TestProcessorInputOutputType::getThisIdentifier());
+    babelwires::ValueTreeRoot testRecord(context.m_typeSystem, testUtils::TestProcessorInputOutputType::getThisIdentifier());
     testRecord.setToDefault();
-    babelwires::SimpleValueFeature testFileFeature(context.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot testFileFeature(context.m_typeSystem, testUtils::getTestFileType());
 
     // These have side-effects on the mutable field discriminators in the paths.
     auto modData0 = m_elements[0]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
-    modData0->m_pathToFeature.tryFollow(testFileFeature);
-    modData0->m_pathToSourceFeature.tryFollow(testRecord);
+    modData0->m_targetPath.tryFollow(testFileFeature);
+    modData0->m_sourcePath.tryFollow(testRecord);
     auto modData1 = m_elements[1]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
-    modData1->m_pathToFeature.tryFollow(testRecord);
-    modData1->m_pathToSourceFeature.tryFollow(testFileFeature);
+    modData1->m_targetPath.tryFollow(testRecord);
+    modData1->m_sourcePath.tryFollow(testFileFeature);
     auto modData2 = m_elements[1]->m_modifiers[1].get()->as<babelwires::ValueAssignmentData>();
-    modData2->m_pathToFeature.tryFollow(testRecord);
+    modData2->m_targetPath.tryFollow(testRecord);
     m_elements[1]->m_expandedPaths[0].tryFollow(testRecord);
 }

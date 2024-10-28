@@ -19,7 +19,7 @@
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
-#include <BabelWiresLib/Features/Path/featurePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
@@ -123,8 +123,8 @@ QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) cons
 
     const int column = index.column();
 
-    const Feature* feature = entry->getInputThenOutputFeature();
-    assert(feature && "No feature for row model");
+    const ValueTreeNode* valueTreeNode = entry->getInputThenOutput();
+    assert(valueTreeNode && "No valueTreeNode for row model");
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
     RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
 

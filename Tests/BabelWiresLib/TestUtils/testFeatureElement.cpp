@@ -1,6 +1,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 
@@ -36,34 +36,34 @@ testUtils::TestFeatureElement::TestFeatureElement(const babelwires::ProjectConte
                                                   const TestFeatureElementData& data, babelwires::ElementId newId)
     : FeatureElement(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
-    m_feature = std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem, TestComplexRecordType::getThisIdentifier());
+    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, TestComplexRecordType::getThisIdentifier());
 }
 
 void testUtils::TestFeatureElement::doProcess(babelwires::UserLogger&) {}
 
-const babelwires::Feature* testUtils::TestFeatureElement::getInputFeature() const {
-    return m_feature.get();
+const babelwires::ValueTreeNode* testUtils::TestFeatureElement::getInput() const {
+    return m_valueTreeRoot.get();
 }
 
-const babelwires::Feature* testUtils::TestFeatureElement::getOutputFeature() const {
-    return m_feature.get();
+const babelwires::ValueTreeNode* testUtils::TestFeatureElement::getOutput() const {
+    return m_valueTreeRoot.get();
 }
 
-babelwires::Feature* testUtils::TestFeatureElement::doGetInputFeatureNonConst() {
-    return m_feature.get();
+babelwires::ValueTreeNode* testUtils::TestFeatureElement::doGetInputNonConst() {
+    return m_valueTreeRoot.get();
 }
 
-babelwires::Feature* testUtils::TestFeatureElement::doGetOutputFeatureNonConst() {
-    return m_feature.get();
+babelwires::ValueTreeNode* testUtils::TestFeatureElement::doGetOutputNonConst() {
+    return m_valueTreeRoot.get();
 }
 
 void testUtils::TestFeatureElement::simulateFailure(const babelwires::ProjectContext& context) {
     setInternalFailure("Simulated failure");
-    m_feature = std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem,
+    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem,
                                                                  babelwires::FailureType::getThisIdentifier());
 }
 
 void testUtils::TestFeatureElement::simulateRecovery(const babelwires::ProjectContext& context) {
-    m_feature = std::make_unique<babelwires::SimpleValueFeature>(context.m_typeSystem, TestComplexRecordType::getThisIdentifier());
+    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, TestComplexRecordType::getThisIdentifier());
     clearInternalFailure();
 }

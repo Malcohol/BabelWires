@@ -1,5 +1,5 @@
 /**
- * ConnectionModifierData used to assign a ValueFeature within a container to a value from another element.
+ * ConnectionModifierData used to assign a value within a container to a value from another element.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include <BabelWiresLib/Features/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/Features/modelExceptions.hpp>
-#include <BabelWiresLib/Features/valueFeature.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
@@ -18,7 +18,7 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-const babelwires::Feature* babelwires::ConnectionModifierData::getSourceFeature(const Project& project) const {
+const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceTreeNode(const Project& project) const {
     const FeatureElement* sourceElement = project.getFeatureElement(m_sourceId);
     if (!sourceElement) {
         throw babelwires::ModelException()
@@ -33,50 +33,39 @@ const babelwires::Feature* babelwires::ConnectionModifierData::getSourceFeature(
     }
     */
 
-    const Feature* const outputFeature = sourceElement->getOutputFeature();
-    if (!outputFeature) {
+    const ValueTreeNode* const output = sourceElement->getOutput();
+    if (!output) {
         throw babelwires::ModelException()
             << "The connection source (element with id=" << m_sourceId << ") has no outputs";
     }
 
     try {
-        return &m_pathToSourceFeature.follow(*outputFeature);
+        return &m_sourcePath.follow(*output);
     } catch (const std::exception& e) {
         throw babelwires::ModelException()
-            << e.what() << "; when looking for source feature in element with id=" << m_sourceId;
+            << e.what() << "; when looking for source in element with id=" << m_sourceId;
     }
 }
 
-void babelwires::ConnectionModifierData::apply(const Feature* sourceFeature, Feature* targetFeature,
+void babelwires::ConnectionModifierData::apply(const ValueTreeNode* source, ValueTreeNode* target,
                                                bool applyEvenIfSourceUnchanged) const {
-    if (!(applyEvenIfSourceUnchanged || sourceFeature->isChanged(Feature::Changes::SomethingChanged))) {
+    if (!(applyEvenIfSourceUnchanged || source->isChanged(ValueTreeNode::Changes::SomethingChanged))) {
         return;
     }
 
-    auto targetValueFeature = targetFeature->as<babelwires::ValueFeature>();
-    if (!targetValueFeature) {
-        throw babelwires::ModelException() << "Cannot modify a non-value field";
-    }
-
-    auto sourceValueFeature = sourceFeature->as<const babelwires::ValueFeature>();
-    if (!sourceValueFeature) {
-        throw babelwires::ModelException()
-            << "Cannot apply from the non-value field at " << m_pathToSourceFeature << " in element id=" << m_sourceId;
-    }
-
-    targetValueFeature->assign(*sourceValueFeature);
+    target->assign(*source);
 }
 
 void babelwires::ConnectionModifierData::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("path", m_pathToFeature);
+    serializer.serializeValue("path", m_targetPath);
     serializer.serializeValue("sourceId", m_sourceId);
-    serializer.serializeValue("sourcePath", m_pathToSourceFeature);
+    serializer.serializeValue("sourcePath", m_sourcePath);
 }
 
 void babelwires::ConnectionModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToFeature);
+    deserializer.deserializeValue("path", m_targetPath);
     deserializer.deserializeValue("sourceId", m_sourceId);
-    deserializer.deserializeValue("sourcePath", m_pathToSourceFeature);
+    deserializer.deserializeValue("sourcePath", m_sourcePath);
 }
 
 std::unique_ptr<babelwires::Modifier> babelwires::ConnectionModifierData::createModifier() const {
@@ -85,7 +74,7 @@ std::unique_ptr<babelwires::Modifier> babelwires::ConnectionModifierData::create
 
 void babelwires::ConnectionModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
     ModifierData::visitIdentifiers(visitor);
-    for (auto& s : m_pathToSourceFeature) {
+    for (auto& s : m_sourcePath) {
         if (s.isField()) {
             visitor(s.getField());
         }

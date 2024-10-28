@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
@@ -427,33 +427,33 @@ TEST(ArrayTypeTest, subtyping) {
 
 TEST(ArrayTypeTest, featureChanges) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SimpleValueFeature arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisIdentifier());
+    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisIdentifier());
     arrayFeature.setToDefault();
 
     const testUtils::TestSimpleArrayType* arrayType = arrayFeature.getType().as<testUtils::TestSimpleArrayType>();
     ASSERT_NE(arrayType, nullptr);
 
     arrayFeature.clearChanges();
-    EXPECT_FALSE(arrayFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
+    EXPECT_FALSE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     {
         babelwires::BackupScope scope(arrayFeature);
         babelwires::ValueHolder value = arrayFeature.getValue();
         arrayType->setSize(testEnvironment.m_typeSystem, value, testUtils::TestSimpleArrayType::s_nonDefaultSize);
         arrayFeature.setValue(value);
     }
-    EXPECT_TRUE(arrayFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_FALSE(arrayFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_TRUE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_FALSE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 
     arrayFeature.clearChanges();
     {
         babelwires::BackupScope scope(arrayFeature);
-        babelwires::FeaturePath pathToInt;
+        babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(1));
         babelwires::ValueHolder& value = arrayFeature.setModifiable(pathToInt);
         value = babelwires::IntValue(15);
     }
-    EXPECT_FALSE(arrayFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_TRUE(arrayFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_FALSE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_TRUE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 }
 
 TEST(ArrayTypeTest, valueEquality) {

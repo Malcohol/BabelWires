@@ -14,7 +14,7 @@ struct babelwires::EditTree::RootedPathIterator {
     int distanceFrom(const RootedPathIterator& other) const;
     PathStep operator*() const;
 
-    FeaturePath::const_iterator m_it;
+    Path::const_iterator m_it;
     bool m_isAtRoot;
 };
 
@@ -23,12 +23,12 @@ struct babelwires::EditTree::RootedPathIterator {
 /// a lot of the EditTree code, since RootedPaths correspond in a nicer way to
 /// nodes of the EditTree.
 struct babelwires::EditTree::RootedPath {
-    RootedPath(const FeaturePath& path);
+    RootedPath(const Path& path);
     RootedPathIterator begin() const;
     RootedPathIterator end() const;
     unsigned int getNumSteps() const;
 
-    const FeaturePath& m_path;
+    const Path& m_path;
 };
 
 template <typename EDIT_TREE> struct babelwires::EditTree::Iterator {
@@ -149,7 +149,7 @@ babelwires::EditTree::modifierRange() const {
 
 template <typename MODIFIER_TYPE>
 babelwires::EditTree::IteratorRange<babelwires::EditTree::ModifierIterator<babelwires::EditTree, MODIFIER_TYPE>>
-babelwires::EditTree::modifierRange(const FeaturePath& path) {
+babelwires::EditTree::modifierRange(const Path& path) {
     RootedPath featurePath(path);
     auto it = featurePath.begin();
     const auto end = featurePath.end();
@@ -165,7 +165,7 @@ babelwires::EditTree::modifierRange(const FeaturePath& path) {
 
 template <typename MODIFIER_TYPE>
 babelwires::EditTree::IteratorRange<babelwires::EditTree::ModifierIterator<const babelwires::EditTree, MODIFIER_TYPE>>
-babelwires::EditTree::modifierRange(const FeaturePath& path) const {
+babelwires::EditTree::modifierRange(const Path& path) const {
     RootedPath featurePath(path);
     auto it = featurePath.begin();
     const auto end = featurePath.end();

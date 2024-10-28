@@ -14,7 +14,7 @@
 namespace babelwires {
     class ProjectBridge;
     struct UserLogger;
-    class ValueFeature;
+    class ValueTreeNode;
     class AccessModelScope;
 
     /// Base class of widgets which provide type-specific UIs for editing values.
@@ -28,17 +28,17 @@ namespace babelwires {
 
             // TODO Why are these static?
 
-            /// Convenience Function: Get the ValueFeature referred to by the data, or assert.
+            /// Convenience Function: Get the Feature referred to by the data, or assert.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueFeature& getValueFeature(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode& getValueTreeNode(AccessModelScope& scope, const DataLocation& data);
 
-            /// Convenience Function: Get the ValueFeature referred to by the data, or return nullptr.
+            /// Convenience Function: Get the Feature referred to by the data, or return nullptr.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueFeature* tryGetValueFeature(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode* tryGetValueTreeNode(AccessModelScope& scope, const DataLocation& data);
 
-            /// Convenience Function: Get the ValueFeature referred to by the data, or throw a ModelException.
+            /// Convenience Function: Get the Feature referred to by the data, or throw a ModelException.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueFeature& getValueFeatureOrThrow(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode& getValueTreeNodeOrThrow(AccessModelScope& scope, const DataLocation& data);
 
         signals:
             void editorClosing();

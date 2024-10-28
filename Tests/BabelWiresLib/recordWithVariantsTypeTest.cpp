@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Features/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
-#include <BabelWiresLib/Features/simpleValueFeature.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
@@ -425,22 +425,22 @@ TEST(RecordWithVariantsTypeTest, featureChanges)
 {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::SimpleValueFeature valueFeature(testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisIdentifier());
     valueFeature.setToDefault();
 
     const testUtils::TestRecordWithVariantsType* recordWithVariantsType = valueFeature.getType().as<testUtils::TestRecordWithVariantsType>();
     ASSERT_NE(recordWithVariantsType, nullptr);
 
     valueFeature.clearChanges();
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::SomethingChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     {
         babelwires::BackupScope scope(valueFeature);
         babelwires::ValueHolder value = valueFeature.getValue();
         recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagAId());
         valueFeature.setValue(value);
     }
-    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 
     valueFeature.clearChanges();
     {
@@ -449,20 +449,20 @@ TEST(RecordWithVariantsTypeTest, featureChanges)
         recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagDId());
         valueFeature.setValue(value);
     }
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 
     valueFeature.clearChanges();
     {
         babelwires::BackupScope scope(valueFeature);
-        babelwires::FeaturePath pathToInt;
+        babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFf1Id()));
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
         babelwires::ValueHolder& value = valueFeature.setModifiable(pathToInt);
         value = babelwires::IntValue(15);
     }
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::Feature::Changes::StructureChanged));
-    EXPECT_TRUE(valueFeature.isChanged(babelwires::Feature::Changes::ValueChanged));
+    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 }
 
 TEST(RecordWithVariantsTypeTest, valueEquality)

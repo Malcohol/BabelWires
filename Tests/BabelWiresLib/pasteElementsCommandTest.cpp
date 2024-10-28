@@ -213,8 +213,8 @@ namespace {
         testUtils::TestComplexRecordElementData targetElementData;
         {
             babelwires::ConnectionModifierData modifierData;
-            modifierData.m_pathToFeature = targetElementData.getPathToRecordInt0();
-            modifierData.m_pathToSourceFeature = sourceElementData.getPathToRecordInt0();
+            modifierData.m_targetPath = targetElementData.getPathToRecordInt0();
+            modifierData.m_sourcePath = sourceElementData.getPathToRecordInt0();
             modifierData.m_sourceId = sourceElementId;
             
             targetElementData.m_modifiers.emplace_back(modifierData.clone());

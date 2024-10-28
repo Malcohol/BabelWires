@@ -26,7 +26,7 @@ namespace {
         data.m_uiData.m_uiPosition.m_x = 12;
         data.m_uiData.m_uiPosition.m_y = -44;
         data.m_uiData.m_uiSize.m_width = 300;
-        data.m_expandedPaths.emplace_back(babelwires::FeaturePath::deserializeFromString("aa/bb"));
+        data.m_expandedPaths.emplace_back(babelwires::Path::deserializeFromString("aa/bb"));
     }
 
     void checkCommonFields(const babelwires::ElementData& data, bool testExpandedPaths = true) {
@@ -36,32 +36,32 @@ namespace {
         EXPECT_EQ(data.m_uiData.m_uiSize.m_width, 300);
         if (testExpandedPaths) {
             ASSERT_EQ(data.m_expandedPaths.size(), 1);
-            EXPECT_EQ(data.m_expandedPaths[0], babelwires::FeaturePath::deserializeFromString("aa/bb"));
+            EXPECT_EQ(data.m_expandedPaths[0], babelwires::Path::deserializeFromString("aa/bb"));
         } else {
             EXPECT_EQ(data.m_expandedPaths.size(), 0);
         }
     }
 
-    void setModifiers(babelwires::ElementData& data, const babelwires::FeaturePath& path) {
+    void setModifiers(babelwires::ElementData& data, const babelwires::Path& path) {
         auto newMod = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(12));
-        newMod->m_pathToFeature = path;
+        newMod->m_targetPath = path;
         data.m_modifiers.emplace_back(std::move(newMod));
     }
 
-    void checkModifiers(const babelwires::ElementData& data, const babelwires::FeaturePath& path) {
+    void checkModifiers(const babelwires::ElementData& data, const babelwires::Path& path) {
         EXPECT_EQ(data.m_modifiers.size(), 1);
         EXPECT_NE(data.m_modifiers[0]->as<babelwires::ValueAssignmentData>(), nullptr);
         const auto& mod = static_cast<const babelwires::ValueAssignmentData&>(*data.m_modifiers[0]);
-        EXPECT_EQ(mod.m_pathToFeature, path);
+        EXPECT_EQ(mod.m_targetPath, path);
         EXPECT_EQ(mod.getValue()->as<babelwires::IntValue>()->get(), 12);
     }
 
     void setModifiers(babelwires::ElementData& data, babelwires::ShortId fieldId) {
-        setModifiers(data, babelwires::FeaturePath({babelwires::PathStep(fieldId)}));
+        setModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
     }
 
     void checkModifiers(const babelwires::ElementData& data, babelwires::ShortId fieldId) {
-        checkModifiers(data, babelwires::FeaturePath({babelwires::PathStep(fieldId)}));
+        checkModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
     }
 } // namespace
 
@@ -128,9 +128,9 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
         std::ofstream tempFile = tempFilePath.openForWriting();
 
         auto targetFileFormat = std::make_unique<testUtils::TestTargetFileFormat>();
-        auto fileFeature = std::make_unique<babelwires::SimpleValueFeature>(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+        auto fileFeature = std::make_unique<babelwires::ValueTreeRoot>(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
         fileFeature->setToDefault();
-        testUtils::TestSimpleRecordType::Instance instance{fileFeature->getFeature(0)->is<babelwires::ValueFeature>()};
+        testUtils::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
         instance.getintR0().set(14);
         targetFileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFile);
     }
@@ -141,7 +141,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
-    const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
@@ -150,14 +150,14 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::SourceFileElement>());
-    EXPECT_TRUE(featureElement->getOutputFeature());
+    EXPECT_TRUE(featureElement->getOutput());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(featureElement->getElementData().as<babelwires::SourceFileElementData>());
     EXPECT_EQ(static_cast<const babelwires::SourceFileElementData&>(featureElement->getElementData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(featureElement->getOutputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
+    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getOutput()->getChild(0));
     EXPECT_EQ(instance.getintR0().get(), 14);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));
@@ -231,7 +231,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     setCommonFields(data);
     setModifiers(data, testUtils::getTestFileElementPathToInt0());
 
-    const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
@@ -240,14 +240,14 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::TargetFileElement>());
-    EXPECT_TRUE(featureElement->getInputFeature());
+    EXPECT_TRUE(featureElement->getInput());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(featureElement->getElementData().as<babelwires::TargetFileElementData>());
     EXPECT_EQ(static_cast<const babelwires::TargetFileElementData&>(featureElement->getElementData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(featureElement->getInputFeature()->is<babelwires::ValueFeature>().getFeature(0)->is<babelwires::ValueFeature>());
+    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getInput()->getChild(0));
     EXPECT_EQ(instance.getintR0().get(), 12);
 
     EXPECT_TRUE(featureElement->isExpanded(expandedPath));
@@ -314,7 +314,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     setCommonFields(data);
     setModifiers(data, testUtils::TestProcessorInputOutputType::s_intIdInitializer);
 
-    const babelwires::FeaturePath expandedPath = babelwires::FeaturePath::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::FeatureElement> featureElement =
@@ -323,13 +323,12 @@ TEST(ElementDataTest, processorDataCreateElement) {
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::ProcessorElement>());
-    EXPECT_TRUE(featureElement->getInputFeature());
-    EXPECT_TRUE(featureElement->getInputFeature()->as<const babelwires::ValueFeature>());
+    EXPECT_TRUE(featureElement->getInput());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
     EXPECT_TRUE(featureElement->getElementData().as<babelwires::ProcessorElementData>());
 
-    const auto& inputFeature = featureElement->getInputFeature()->is<babelwires::ValueFeature>();
+    const auto& inputFeature = *featureElement->getInput();
 
     testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};
 
