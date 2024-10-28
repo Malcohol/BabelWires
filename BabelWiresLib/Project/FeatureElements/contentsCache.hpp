@@ -27,7 +27,7 @@ namespace babelwires {
     /// The information cached about a single row in the contents of a feature element.
     class ContentsCacheEntry {
       public:
-        ContentsCacheEntry(std::string label, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature,
+        ContentsCacheEntry(std::string label, const ValueTreeNode* input, const ValueTreeNode* output,
                            const Path& path, std::uint8_t depth, std::uint8_t indent);
 
         const std::string& getLabel() const { return m_label; }
@@ -111,7 +111,7 @@ namespace babelwires {
         ContentsCache(EditTree& edits);
 
         /// Build the cache with the given input and output features.
-        void setValueTrees(std::string rootName, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature);
+        void setValueTrees(std::string rootName, const ValueTreeNode* input, const ValueTreeNode* output);
 
         /// Update the part of the cache concerning modifiers.
         void updateModifierCache();

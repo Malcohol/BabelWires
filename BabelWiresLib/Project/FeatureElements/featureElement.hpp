@@ -195,7 +195,7 @@ namespace babelwires {
 
         /// Obtain the right to modify the feature at the given path.
         /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
-        void modifyValueAt(ValueTreeNode* inputFeature, const Path& p);
+        void modifyValueAt(ValueTreeNode* input, const Path& p);
 
         /// This is called by process, to signal that all modifications are finished.
         void finishModifications(const Project& project, UserLogger& userLogger);

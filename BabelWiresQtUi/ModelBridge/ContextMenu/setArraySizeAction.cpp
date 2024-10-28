@@ -39,8 +39,8 @@ void babelwires::SetArraySizeAction::actionTriggered(babelwires::FeatureModel& m
         AccessModelScope scope(projectBridge);
         const FeatureElement* const featureElement = scope.getProject().getFeatureElement(elementId);
 
-        const babelwires::ValueTreeNode* const inputFeature = m_pathToArray.tryFollow(*featureElement->getInput());
-        auto [compoundFeature, s, r, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(inputFeature);
+        const babelwires::ValueTreeNode* const input = m_pathToArray.tryFollow(*featureElement->getInput());
+        auto [compoundFeature, s, r, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(input);
         if (!compoundFeature) {
             return;
         }

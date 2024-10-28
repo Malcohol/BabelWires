@@ -34,9 +34,9 @@
 #define DECLARE_INSTANCE_FIELD_OPTIONAL(FIELD_NAME, VALUE_TYPE)                                                        \
     DECLARE_INSTANCE_FIELD(FIELD_NAME, VALUE_TYPE)                                                                     \
     std::optional<babelwires::ConstInstance<VALUE_TYPE>> tryGet##FIELD_NAME() const {                                  \
-        if (const babelwires::ValueTreeNode* valueFeature =                                                             \
+        if (const babelwires::ValueTreeNode* valueTreeNode =                                                             \
                 babelwires::InstanceUtils::tryGetChild(this->m_valueTreeNode, #FIELD_NAME)) {                           \
-            return {*valueFeature};                                                                                    \
+            return {*valueTreeNode};                                                                                    \
         } else {                                                                                                       \
             return {};                                                                                                 \
         }                                                                                                              \

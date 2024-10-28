@@ -45,20 +45,20 @@ void babelwires::ConnectionModifier::applyConnection(const Project& project, Use
     shouldForce = shouldForce || isChanged(Changes::ModifierIsNew) || isFailed();
 
     State state = State::TargetMissing;
-    ValueTreeNode* targetFeature = nullptr;
+    ValueTreeNode* target = nullptr;
 
     try {
         const babelwires::ConnectionModifierData& data = getModifierData();
-        targetFeature = data.getTarget(container);
+        target = data.getTarget(container);
         state = State::SourceMissing;
-        const ValueTreeNode* sourceFeature = data.getSourceFeature(project);
+        const ValueTreeNode* source = data.getSourceFeature(project);
         state = State::ApplicationFailed;
-        data.apply(sourceFeature, targetFeature, shouldForce);
+        data.apply(source, target, shouldForce);
         setSucceeded();
     } catch (const BaseException& e) {
         userLogger.logError() << "Failed to apply operation: " << e.what();
-        if (targetFeature) {
-            targetFeature->setToDefault();
+        if (target) {
+            target->setToDefault();
         }
         setFailed(state, e.what());
     }

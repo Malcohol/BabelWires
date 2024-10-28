@@ -17,12 +17,12 @@
 
 #include <unordered_set>
 
-babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const ValueTreeNode* inputFeature,
-                                                   const ValueTreeNode* outputFeature, const Path& path,
+babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const ValueTreeNode* input,
+                                                   const ValueTreeNode* output, const Path& path,
                                                    std::uint8_t depth, std::uint8_t indent)
     : m_label(std::move(label))
-    , m_input(inputFeature)
-    , m_output(outputFeature)
+    , m_input(input)
+    , m_output(output)
     , m_path(path)
     , m_depth(depth)
     , m_indent(indent)
@@ -110,39 +110,39 @@ namespace babelwires {
                 }
             }
 
-            void addFeatureToCache(std::string label, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature,
+            void addFeatureToCache(std::string label, const ValueTreeNode* input, const ValueTreeNode* output,
                                    const Path& path, std::uint8_t depth, std::uint8_t indent) {
                 m_rows.emplace_back(
-                    ContentsCacheEntry(std::move(label), inputFeature, outputFeature, path, depth, indent));
+                    ContentsCacheEntry(std::move(label), input, output, path, depth, indent));
                 // Assume expandability is common to input and output feature.
                 if (setAndGetCompoundIsExpanded(
-                        inputFeature, path, inputFeature->getNumChildren() + outputFeature->getNumChildren(), indent)) {
+                        input, path, input->getNumChildren() + output->getNumChildren(), indent)) {
                     ++depth;
                     std::unordered_set<int> outputIndicesHandled;
-                    for (int i = 0; i < inputFeature->getNumChildren(); ++i) {
-                        const ValueTreeNode* child = inputFeature->getChild(i);
+                    for (int i = 0; i < input->getNumChildren(); ++i) {
+                        const ValueTreeNode* child = input->getChild(i);
                         // TODO Needless cost doing this.
-                        PathStep step = inputFeature->getStepToChild(child);
+                        PathStep step = input->getStepToChild(child);
                         Path pathToChild = path;
-                        const int outputChildIndex = outputFeature->getChildIndexFromStep(step);
+                        const int outputChildIndex = output->getChildIndexFromStep(step);
                         pathToChild.pushStep(PathStep(step));
                         std::ostringstream os;
                         step.writeToStreamReadable(os, *m_identifierRegistry);
                         if (outputChildIndex >= 0) {
-                            addFeatureToCache(os.str(), inputFeature->getChild(i),
-                                              outputFeature->getChild(outputChildIndex), std::move(pathToChild),
+                            addFeatureToCache(os.str(), input->getChild(i),
+                                              output->getChild(outputChildIndex), std::move(pathToChild),
                                               depth, indent);
                             outputIndicesHandled.insert(outputChildIndex);
                         } else {
-                            addInputFeatureToCache(os.str(), inputFeature->getChild(i), std::move(pathToChild), depth,
+                            addInputFeatureToCache(os.str(), input->getChild(i), std::move(pathToChild), depth,
                                                    indent);
                         }
                     }
-                    for (int i = 0; i < outputFeature->getNumChildren(); ++i) {
+                    for (int i = 0; i < output->getNumChildren(); ++i) {
                         if (outputIndicesHandled.find(i) == outputIndicesHandled.end()) {
-                            const ValueTreeNode* child = outputFeature->getChild(i);
+                            const ValueTreeNode* child = output->getChild(i);
                             // TODO Needless cost doing this.
-                            PathStep step = outputFeature->getStepToChild(child);
+                            PathStep step = output->getStepToChild(child);
                             Path pathToChild = path;
                             pathToChild.pushStep(step);
                             std::ostringstream os;
@@ -161,16 +161,16 @@ namespace babelwires {
     } // namespace Detail
 } // namespace babelwires
 
-void babelwires::ContentsCache::setValueTrees(std::string rootLabel, const ValueTreeNode* inputFeature, const ValueTreeNode* outputFeature) {
+void babelwires::ContentsCache::setValueTrees(std::string rootLabel, const ValueTreeNode* input, const ValueTreeNode* output) {
     m_rows.clear();
     Detail::ContentsCacheBuilder builder(m_rows, m_edits);
-    const babelwires::ValueTreeNode* const rootFeature = inputFeature ? inputFeature : outputFeature;
-    if (inputFeature && outputFeature) {
-        builder.addFeatureToCache(std::move(rootLabel), inputFeature, outputFeature, Path(), 0, 0);
-    } else if (inputFeature) {
-        builder.addInputFeatureToCache(std::move(rootLabel), inputFeature, Path(), 0, 0);
-    } else if (outputFeature) {
-        builder.addOutputFeatureToCache(std::move(rootLabel), outputFeature, Path(), 0, 0);
+    const babelwires::ValueTreeNode* const rootFeature = input ? input : output;
+    if (input && output) {
+        builder.addFeatureToCache(std::move(rootLabel), input, output, Path(), 0, 0);
+    } else if (input) {
+        builder.addInputFeatureToCache(std::move(rootLabel), input, Path(), 0, 0);
+    } else if (output) {
+        builder.addOutputFeatureToCache(std::move(rootLabel), output, Path(), 0, 0);
     } else {
         assert(!"Unimplemented");
     }

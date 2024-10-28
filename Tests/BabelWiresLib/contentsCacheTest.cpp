@@ -184,13 +184,13 @@ namespace {
     }
 
     void testCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                             babelwires::ValueTreeNode* inputFeature, babelwires::ValueTreeNode* outputFeature) {
-        cache.setValueTrees("Test", inputFeature, outputFeature);
+                             babelwires::ValueTreeNode* input, babelwires::ValueTreeNode* output) {
+        cache.setValueTrees("Test", input, output);
         ASSERT_EQ(cache.getNumRows(), 6);
         auto inputInfo =
-            inputFeature ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*inputFeature) : nullptr;
+            input ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*input) : nullptr;
         auto outputInfo =
-            outputFeature ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*outputFeature) : nullptr;
+            output ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*output) : nullptr;
         auto info = inputInfo ? inputInfo.get() : outputInfo.get();
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -214,7 +214,7 @@ namespace {
         }
         // Expand the record
         editTree.setExpanded(info->m_pathToSubRecord, true);
-        cache.setValueTrees("Test", inputFeature, outputFeature);
+        cache.setValueTrees("Test", input, output);
         ASSERT_EQ(cache.getNumRows(), 8);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -243,7 +243,7 @@ namespace {
         }
         // Expand the array
         editTree.setExpanded(info->m_pathToArray, true);
-        cache.setValueTrees("Test", inputFeature, outputFeature);
+        cache.setValueTrees("Test", input, output);
         ASSERT_EQ(cache.getNumRows(), 8 + testUtils::TestSimpleArrayType::s_defaultSize);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -283,14 +283,14 @@ namespace {
     }
 
     void testModifierBehaviour(babelwires::ProjectContext& context, babelwires::ContentsCache& cache,
-                               babelwires::EditTree& editTree, babelwires::ValueTreeNode* inputFeature,
-                               babelwires::ValueTreeNode* outputFeature) {
-        ASSERT_TRUE(inputFeature);
+                               babelwires::EditTree& editTree, babelwires::ValueTreeNode* input,
+                               babelwires::ValueTreeNode* output) {
+        ASSERT_TRUE(input);
 
         auto inputInfo =
-            inputFeature ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*inputFeature) : nullptr;
+            input ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*input) : nullptr;
         auto outputInfo =
-            outputFeature ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*outputFeature) : nullptr;
+            output ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*output) : nullptr;
         auto info = inputInfo ? inputInfo.get() : outputInfo.get();
 
         // Add a modifier to the first int
@@ -364,7 +364,7 @@ namespace {
 
         // Collapse the array
         editTree.setExpanded(info->m_pathToArray, false);
-        cache.setValueTrees("Test", inputFeature, outputFeature);
+        cache.setValueTrees("Test", input, output);
         ASSERT_EQ(cache.getNumRows(), 8);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);

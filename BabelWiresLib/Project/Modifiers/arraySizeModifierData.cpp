@@ -17,12 +17,12 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-void babelwires::ArraySizeModifierData::apply(ValueTreeNode* targetFeature) const {
-    if (const ArrayType* arrayType = targetFeature->getType().as<ArrayType>()) {
-        const TypeSystem& typeSystem = targetFeature->getTypeSystem();
-        ValueHolder newValue = targetFeature->getValue();
+void babelwires::ArraySizeModifierData::apply(ValueTreeNode* target) const {
+    if (const ArrayType* arrayType = target->getType().as<ArrayType>()) {
+        const TypeSystem& typeSystem = target->getTypeSystem();
+        ValueHolder newValue = target->getValue();
         arrayType->setSize(typeSystem, newValue, m_size);
-        targetFeature->setValue(newValue);
+        target->setValue(newValue);
         return;
     }
 
@@ -43,32 +43,32 @@ void babelwires::ArraySizeModifierData::deserializeContents(Deserializer& deseri
     deserializer.deserializeValue("size", m_size);
 }
 
-void babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* targetFeature, int indexOfNewElement,
+void babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* target, int indexOfNewElement,
                                                      int numEntriesToAdd) {
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     m_size += numEntriesToAdd;
 
-    if (const ArrayType* arrayType = targetFeature->getType().as<ArrayType>()) {
-        const TypeSystem& typeSystem = targetFeature->getTypeSystem();
-        ValueHolder newValue = targetFeature->getValue();
+    if (const ArrayType* arrayType = target->getType().as<ArrayType>()) {
+        const TypeSystem& typeSystem = target->getTypeSystem();
+        ValueHolder newValue = target->getValue();
         arrayType->insertEntries(typeSystem, newValue, indexOfNewElement, numEntriesToAdd);
-        targetFeature->setValue(newValue);
+        target->setValue(newValue);
         return;
     }
 
     throw babelwires::ModelException() << "Cannot resize non-array";
 }
 
-void babelwires::ArraySizeModifierData::removeEntries(ValueTreeNode* targetFeature, int indexOfElementToRemove,
+void babelwires::ArraySizeModifierData::removeEntries(ValueTreeNode* target, int indexOfElementToRemove,
                                                         int numEntriesToRemove) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     assert((m_size >= numEntriesToRemove) && "You can't have ArraySizeModifierData with negative size");
     m_size -= numEntriesToRemove;
     
-    if (const ArrayType* arrayType = targetFeature->getType().as<ArrayType>()) {
-        ValueHolder newValue = targetFeature->getValue();
+    if (const ArrayType* arrayType = target->getType().as<ArrayType>()) {
+        ValueHolder newValue = target->getValue();
         arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove);
-        targetFeature->setValue(newValue);
+        target->setValue(newValue);
         return;
     }
 

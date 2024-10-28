@@ -33,15 +33,15 @@ TEST(ValueElementTest, simpleType) {
     EXPECT_EQ(valueElement->getElementData().m_id, 10);
     EXPECT_EQ(valueElementData->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
 
-    const babelwires::ValueTreeNode* const inputFeature = valueElement->getInput();
-    const babelwires::ValueTreeNode* const outputFeature = valueElement->getOutput();
+    const babelwires::ValueTreeNode* const input = valueElement->getInput();
+    const babelwires::ValueTreeNode* const output = valueElement->getOutput();
 
-    ASSERT_NE(inputFeature, nullptr);
-    ASSERT_NE(outputFeature, nullptr);
-    EXPECT_EQ(inputFeature, outputFeature);
+    ASSERT_NE(input, nullptr);
+    ASSERT_NE(output, nullptr);
+    EXPECT_EQ(input, output);
 
-    EXPECT_EQ(inputFeature->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
-    const babelwires::ValueHolder value = inputFeature->getValue();
+    EXPECT_EQ(input->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
+    const babelwires::ValueHolder value = input->getValue();
     const babelwires::IntValue* intValue = value->as<babelwires::IntValue>();
     ASSERT_NE(intValue, nullptr);
     EXPECT_EQ(intValue->get(), -4);

@@ -36,17 +36,17 @@ const babelwires::ConnectionModifier* babelwires::LocalModifier::doAsConnectionM
 
 void babelwires::LocalModifier::applyIfLocal(UserLogger& userLogger, ValueTreeNode* container) {
     State state = State::TargetMissing;
-    ValueTreeNode* targetFeature = nullptr;
+    ValueTreeNode* target = nullptr;
     try {
         const LocalModifierData& data = getModifierData();
-        targetFeature = data.getTarget(container);
+        target = data.getTarget(container);
         state = State::ApplicationFailed;
-        data.apply(targetFeature);
+        data.apply(target);
         setSucceeded();
     } catch (const BaseException& e) {
         userLogger.logError() << "Failed to apply operation: " << e.what();
-        if (targetFeature) {
-            targetFeature->setToDefault();
+        if (target) {
+            target->setToDefault();
         }
         setFailed(state, e.what());
     }

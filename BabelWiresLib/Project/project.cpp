@@ -150,8 +150,8 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const Path& pathT
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
 
     if (FeatureElement* const element = getFeatureElement(elementId)) {
-        if (ValueTreeNode* const inputFeature = element->getInputNonConst(pathToArray)) {
-            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputFeature);
+        if (ValueTreeNode* const inputArray = element->getInputNonConst(pathToArray)) {
+            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputArray);
             assert(valueTreeNode && "Path should resolve");
             assert(valueTreeNode->getType().as<ArrayType>());
 
@@ -179,7 +179,7 @@ void babelwires::Project::addArrayEntries(ElementId elementId, const Path& pathT
             // Next, set the array size.
             if (arrayModifier)
             { 
-                arrayModifier->addArrayEntries(m_userLogger, inputFeature, indexOfNewElement, numEntriesToAdd); 
+                arrayModifier->addArrayEntries(m_userLogger, inputArray, indexOfNewElement, numEntriesToAdd); 
             }
 
             if (arrayModifier && !ensureModifier) {
@@ -194,8 +194,8 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const Path& pa
     assert((indexOfElementToRemove >= 0) && "indexOfEntriesToRemove must be positive");
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     if (FeatureElement* const element = getFeatureElement(elementId)) {
-        if (ValueTreeNode* const inputFeature = element->getInputNonConst(pathToArray)) {
-            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputFeature);
+        if (ValueTreeNode* const inputArray = element->getInputNonConst(pathToArray)) {
+            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputArray);
             assert(valueTreeNode && "Path should resolve");
             assert(valueTreeNode->getType().as<ArrayType>());
 
@@ -222,7 +222,7 @@ void babelwires::Project::removeArrayEntries(ElementId elementId, const Path& pa
 
             // Next, set the array size.
             if (arrayModifier) {
-                arrayModifier->removeArrayEntries(m_userLogger, inputFeature, indexOfElementToRemove,
+                arrayModifier->removeArrayEntries(m_userLogger, inputArray, indexOfElementToRemove,
                                                   numEntriesToRemove);
             }
 
@@ -474,8 +474,8 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         for (auto&& pair : connections) {
             ConnectionModifier* connection = std::get<0>(pair);
             FeatureElement* targetElement = std::get<1>(pair);
-            if (ValueTreeNode* inputFeature = targetElement->getInputNonConst(connection->getTargetPath())) {
-                connection->applyConnection(*this, m_userLogger, inputFeature);
+            if (ValueTreeNode* input = targetElement->getInputNonConst(connection->getTargetPath())) {
+                connection->applyConnection(*this, m_userLogger, input);
             }
         }
     }
@@ -485,8 +485,8 @@ void babelwires::Project::propagateChanges(const FeatureElement* e) {
         ConnectionModifier* connection = std::get<0>(pair);
         FeatureElement* owner = std::get<1>(pair);
         if (!connection->isFailed()) {
-            if (ValueTreeNode* inputFeature = owner->getInputNonConst(connection->getTargetPath())) {
-                connection->applyConnection(*this, m_userLogger, inputFeature);
+            if (ValueTreeNode* input = owner->getInputNonConst(connection->getTargetPath())) {
+                connection->applyConnection(*this, m_userLogger, input);
             }
         }
     }
@@ -592,8 +592,8 @@ void babelwires::Project::activateOptional(ElementId elementId, const Path& path
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert(elementToModify);
 
-    ValueTreeNode* const inputFeature = elementToModify->getInputNonConst(pathToRecord);
-    if (!inputFeature) {
+    ValueTreeNode* const input = elementToModify->getInputNonConst(pathToRecord);
+    if (!input) {
         return; // Path cannot be followed.
     }
 
@@ -606,7 +606,7 @@ void babelwires::Project::activateOptional(ElementId elementId, const Path& path
             assert(localModifier && "Non-local modifier carrying local data");
             modifierData = activateOptionalsModifierData;
             activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
-            localModifier->applyIfLocal(m_userLogger, inputFeature);
+            localModifier->applyIfLocal(m_userLogger, input);
         } else {
             // Discard the existing modifier, since it should be broken anyway.
             assert(existingModifier->isFailed() &&
@@ -631,8 +631,8 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const Path& pa
     FeatureElement* elementToModify = getFeatureElement(elementId);
     assert(elementToModify);
 
-    ValueTreeNode* const inputFeature = elementToModify->getInputNonConst(pathToRecord);
-    if (!inputFeature) {
+    ValueTreeNode* const input = elementToModify->getInputNonConst(pathToRecord);
+    if (!input) {
         return; // Path cannot be followed.
     }
 
@@ -647,7 +647,7 @@ void babelwires::Project::deactivateOptional(ElementId elementId, const Path& pa
     auto it = std::find(activateOptionalsModifierData->m_selectedOptionals.begin(),
                         activateOptionalsModifierData->m_selectedOptionals.end(), optional);
     activateOptionalsModifierData->m_selectedOptionals.erase(it);
-    localModifier->applyIfLocal(m_userLogger, inputFeature);
+    localModifier->applyIfLocal(m_userLogger, input);
 
     if (!ensureModifier) {
         removeModifier(elementId, pathToRecord);

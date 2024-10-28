@@ -54,16 +54,16 @@ babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope,
         throw ModelException() << "The element does not exist.";
     }
 
-    const ValueTreeNode* const inputFeature = element->getInput();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = element->getInput();
+    if (!input) {
         throw ModelException() << "The element does not have editable features.";
     }
 
-    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature);
-    if (!valueFeature) {
+    const auto* const inputTreeNode = data.getPathToValue().tryFollow(*input);
+    if (!inputTreeNode) {
         throw ModelException() << "There is no value at that location.";
     }
-    return *valueFeature;
+    return *inputTreeNode;
 }
 
 const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTreeNode(AccessModelScope& scope,
@@ -76,22 +76,22 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTree
         return nullptr;
     }
 
-    const ValueTreeNode* const inputFeature = element->getInput();
-    if (!inputFeature) {
+    const ValueTreeNode* const input = element->getInput();
+    if (!input) {
         return nullptr;
     }
 
-    const auto* const valueFeature = data.getPathToValue().tryFollow(*inputFeature);
-    if (!valueFeature) {
+    const auto* const inputTreeNode = data.getPathToValue().tryFollow(*input);
+    if (!inputTreeNode) {
         return nullptr;
     }
-    return valueFeature;
+    return inputTreeNode;
 }
 
 const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueTreeNode(AccessModelScope& scope,
                                                                                 const DataLocation& data) {
-    const ValueTreeNode* const valueFeature = tryGetValueTreeNode(scope, data);
-    assert(valueFeature && "There was not value feature");
-    return *valueFeature;
+    const ValueTreeNode* const valueTreeNode = tryGetValueTreeNode(scope, data);
+    assert(valueTreeNode && "There was not value feature");
+    return *valueTreeNode;
 }
 

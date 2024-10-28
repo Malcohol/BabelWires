@@ -33,27 +33,27 @@ const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceFe
     }
     */
 
-    const ValueTreeNode* const outputFeature = sourceElement->getOutput();
-    if (!outputFeature) {
+    const ValueTreeNode* const output = sourceElement->getOutput();
+    if (!output) {
         throw babelwires::ModelException()
             << "The connection source (element with id=" << m_sourceId << ") has no outputs";
     }
 
     try {
-        return &m_sourcePath.follow(*outputFeature);
+        return &m_sourcePath.follow(*output);
     } catch (const std::exception& e) {
         throw babelwires::ModelException()
             << e.what() << "; when looking for source feature in element with id=" << m_sourceId;
     }
 }
 
-void babelwires::ConnectionModifierData::apply(const ValueTreeNode* sourceFeature, ValueTreeNode* targetFeature,
+void babelwires::ConnectionModifierData::apply(const ValueTreeNode* source, ValueTreeNode* target,
                                                bool applyEvenIfSourceUnchanged) const {
-    if (!(applyEvenIfSourceUnchanged || sourceFeature->isChanged(ValueTreeNode::Changes::SomethingChanged))) {
+    if (!(applyEvenIfSourceUnchanged || source->isChanged(ValueTreeNode::Changes::SomethingChanged))) {
         return;
     }
 
-    targetFeature->assign(*sourceFeature);
+    target->assign(*source);
 }
 
 void babelwires::ConnectionModifierData::serializeContents(Serializer& serializer) const {

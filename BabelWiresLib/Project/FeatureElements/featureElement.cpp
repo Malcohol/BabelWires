@@ -40,16 +40,16 @@ babelwires::FeatureElement::FeatureElement(const ElementData& data, ElementId ne
 }
 
 void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
-    ValueTreeNode* inputFeature = doGetInputNonConst();
-    if (inputFeature) {
-        inputFeature->setToDefault();
-        modifyValueAt(inputFeature, Path());
+    ValueTreeNode* input = doGetInputNonConst();
+    if (input) {
+        input->setToDefault();
+        modifyValueAt(input, Path());
     }
     for (auto* m : m_edits.modifierRange<Modifier>()) {
         // The modifiers are stored in path order, so parents will come before
         // children. Thus, there is no concern that a modifier will be applied
         // before a structural modifier (e.g. array size) it depends on.
-        m->applyIfLocal(userLogger, inputFeature);
+        m->applyIfLocal(userLogger, input);
     }
 }
 
@@ -64,9 +64,9 @@ const babelwires::ValueTreeNode* babelwires::FeatureElement::getOutput() const {
 }
 
 babelwires::ValueTreeNode* babelwires::FeatureElement::getInputNonConst(const Path& pathToModify) {
-    if (ValueTreeNode* inputFeature = doGetInputNonConst()) {
-        modifyValueAt(inputFeature, pathToModify);
-        return inputFeature;
+    if (ValueTreeNode* input = doGetInputNonConst()) {
+        modifyValueAt(input, pathToModify);
+        return input;
     }
     return nullptr;
 }
@@ -133,10 +133,10 @@ void babelwires::FeatureElement::removeModifier(Modifier* modifier) {
            "This FeatureElement is not the owner of the modifier");
 
     m_removedModifiers.emplace_back(std::move(m_edits.removeModifier(modifier)));
-    ValueTreeNode* inputFeature = getInputNonConst(modifier->getTargetPath());
-    assert(inputFeature && "Modifiable elements always have input features");
+    ValueTreeNode* input = getInputNonConst(modifier->getTargetPath());
+    assert(input && "Modifiable elements always have input features");
     if (!modifier->isFailed()) {
-        modifier->unapply(inputFeature);
+        modifier->unapply(input);
     }
     modifier->setOwner(nullptr);
     setChanged(Changes::ModifierRemoved);
@@ -150,13 +150,13 @@ std::unique_ptr<babelwires::ElementData> babelwires::FeatureElement::extractElem
     data->m_expandedPaths = m_edits.getAllExplicitlyExpandedPaths();
     // Strip out the currently unused paths.
     auto it = std::remove_if(data->m_expandedPaths.begin(), data->m_expandedPaths.end(), [this](const Path& p) {
-        if (const ValueTreeNode* inputFeature = getInput()) {
-            if (p.tryFollow(*inputFeature)) {
+        if (const ValueTreeNode* input = getInput()) {
+            if (p.tryFollow(*input)) {
                 return false;
             }
         }
-        if (const ValueTreeNode* outputFeature = getOutput()) {
-            if (p.tryFollow(*outputFeature)) {
+        if (const ValueTreeNode* output = getOutput()) {
+            if (p.tryFollow(*output)) {
                 return false;
             }
         }
@@ -347,8 +347,8 @@ namespace {
 
 } // namespace
 
-void babelwires::FeatureElement::modifyValueAt(ValueTreeNode* inputFeature, const Path& p) {
-    assert((inputFeature != nullptr) && "Trying to modify a feature element with no input feature");
+void babelwires::FeatureElement::modifyValueAt(ValueTreeNode* input, const Path& p) {
+    assert((input != nullptr) && "Trying to modify a feature element with no input feature");
 
     // This code assumes there's only ever one compound value type in a feature tree.
     // TODO This algorithm is out of date: The root is now always a compound value.
@@ -358,7 +358,7 @@ void babelwires::FeatureElement::modifyValueAt(ValueTreeNode* inputFeature, cons
     }
 
     // Look for a root value feature in the ancestor chain.
-    ValueTreeNode* target = tryFollowPathToValueSafe(inputFeature, p);
+    ValueTreeNode* target = tryFollowPathToValueSafe(input, p);
     if (!target) {
         // For now, it's not the job of this method to handle failures.
         // The modifier will reattempt the traversal and capture the failure properly.
@@ -388,14 +388,14 @@ void babelwires::FeatureElement::modifyValueAt(ValueTreeNode* inputFeature, cons
 void babelwires::FeatureElement::finishModifications(const Project& project, UserLogger& userLogger) {
     if (m_modifyValueScope) {
         // Get the input feature directly.
-        ValueTreeNode* inputFeature = doGetInputNonConst();
+        ValueTreeNode* input = doGetInputNonConst();
         // First, apply any other modifiers which apply beneath the path
         for (auto it : m_edits.modifierRange(m_modifyValueScope->m_pathToRootValue)) {
             if (const auto& connection = it->as<ConnectionModifier>()) {
                 // We force connections in this case.
-                connection->applyConnection(project, userLogger, inputFeature, true);
+                connection->applyConnection(project, userLogger, input, true);
             } else {
-                it->applyIfLocal(userLogger, inputFeature);
+                it->applyIfLocal(userLogger, input);
             }
         }
 

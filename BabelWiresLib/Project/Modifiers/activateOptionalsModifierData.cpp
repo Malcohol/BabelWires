@@ -30,12 +30,12 @@ void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer
     }
 }
 
-void babelwires::ActivateOptionalsModifierData::apply(ValueTreeNode* targetFeature) const {
-    if (auto recordType = targetFeature->getType().as<RecordType>()) {
-        const TypeSystem& typeSystem = targetFeature->getTypeSystem();
-        ValueHolder newValue = targetFeature->getValue();
+void babelwires::ActivateOptionalsModifierData::apply(ValueTreeNode* target) const {
+    if (auto recordType = target->getType().as<RecordType>()) {
+        const TypeSystem& typeSystem = target->getTypeSystem();
+        ValueHolder newValue = target->getValue();
         recordType->ensureActivated(typeSystem, newValue, m_selectedOptionals);
-        targetFeature->setValue(newValue);
+        target->setValue(newValue);
         return;
     }
     throw ModelException() << "Cannot activate optionals from a feature which does not have optionals";

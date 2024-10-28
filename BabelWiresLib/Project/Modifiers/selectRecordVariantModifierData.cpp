@@ -24,12 +24,12 @@ void babelwires::SelectRecordVariantModifierData::deserializeContents(Deserializ
     deserializer.deserializeValue("select", m_tagToSelect);
 }
 
-void babelwires::SelectRecordVariantModifierData::apply(ValueTreeNode* targetFeature) const {
-    if (auto recordType = targetFeature->getType().as<RecordWithVariantsType>()) {
-        const TypeSystem& typeSystem = targetFeature->getTypeSystem();
-        ValueHolder newValue = targetFeature->getValue();
+void babelwires::SelectRecordVariantModifierData::apply(ValueTreeNode* target) const {
+    if (auto recordType = target->getType().as<RecordWithVariantsType>()) {
+        const TypeSystem& typeSystem = target->getTypeSystem();
+        ValueHolder newValue = target->getValue();
         recordType->selectTag(typeSystem, newValue, m_tagToSelect);
-        targetFeature->setValue(newValue);
+        target->setValue(newValue);
         return;
     }
     throw ModelException() << "Select variant modifier applied to feature which does not have variants";

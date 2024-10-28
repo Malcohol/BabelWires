@@ -51,7 +51,7 @@ namespace babelwires {
         SERIALIZABLE_ABSTRACT(LocalModifierData, ModifierData);
 
         /// Perform the modification on the target feature, or throw.
-        virtual void apply(ValueTreeNode* targetFeature) const = 0;
+        virtual void apply(ValueTreeNode* target) const = 0;
 
         virtual std::unique_ptr<Modifier> createModifier() const;
     };

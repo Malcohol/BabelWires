@@ -23,7 +23,7 @@ namespace babelwires {
         ValueAssignmentData(std::unique_ptr<EditableValue> value);
         ValueAssignmentData(EditableValueHolder value);
 
-        virtual void apply(ValueTreeNode* targetFeature) const override;
+        virtual void apply(ValueTreeNode* target) const override;
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
