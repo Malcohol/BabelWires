@@ -15,7 +15,7 @@
 
 babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypeRef typeRef)
     : ValueTreeNode(std::move(typeRef))
-    , m_typeSystem(&typeSystem) {
+    , m_typeSystem(typeSystem) {
     // TODO assert the type resolves?
 }
 
@@ -88,5 +88,5 @@ void babelwires::ValueTreeRoot::reconcileChangesFromBackup() {
 }
 
 const babelwires::TypeSystem& babelwires::ValueTreeRoot::getTypeSystem() const {
-    return *m_typeSystem;
+    return m_typeSystem;
 }
