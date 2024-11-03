@@ -428,8 +428,7 @@ TEST(RecordTypeTest, featureChanges)
         babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
-        babelwires::ValueHolder& value = valueFeature.setModifiable(pathToInt);
-        value = babelwires::IntValue(15);
+        valueFeature.setDescendentValue(pathToInt, babelwires::IntValue(15));
     }
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));

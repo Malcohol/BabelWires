@@ -449,8 +449,7 @@ TEST(ArrayTypeTest, featureChanges) {
         babelwires::BackupScope scope(arrayFeature);
         babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(1));
-        babelwires::ValueHolder& value = arrayFeature.setModifiable(pathToInt);
-        value = babelwires::IntValue(15);
+        arrayFeature.setDescendentValue(pathToInt, babelwires::IntValue(15));
     }
     EXPECT_FALSE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_TRUE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));

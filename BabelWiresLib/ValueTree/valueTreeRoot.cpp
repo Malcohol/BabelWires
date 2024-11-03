@@ -8,36 +8,40 @@
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/valuePath.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+
+struct babelwires::ValueTreeRoot::ComplexConstructorArguments {
+    ComplexConstructorArguments(const TypeSystem& typeSystem, TypeRef typeRef)
+        : m_typeSystem(typeSystem)
+        , m_typeRef(std::move(typeRef)) {
+        // TODO Do we need to handle failure here? Use tryResolve and possibly fall back to FailureType?
+        const Type& type = m_typeRef.resolve(typeSystem);
+        auto [newValue, _] = type.createValue(typeSystem);
+        m_value = newValue;
+    }
+    const TypeSystem& m_typeSystem;
+    TypeRef m_typeRef;
+    ValueHolder m_value;
+};
+
+babelwires::ValueTreeRoot::ValueTreeRoot(ComplexConstructorArguments&& arguments)
+    : ValueTreeNode(std::move(arguments.m_typeRef), std::move(arguments.m_value))
+    , m_typeSystem(arguments.m_typeSystem) {
+        initializeChildren();
+    }
 
 babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypeRef typeRef)
-    : ValueTreeNode(std::move(typeRef))
-    , m_typeSystem(typeSystem) {
-    // TODO assert the type resolves?
-}
-
-const babelwires::ValueHolder& babelwires::ValueTreeRoot::doGetValue() const {
-    // Not sure if this assert is necessary.
-    assert(m_value && "The ValueTreeRoot has not been initialized");
-    return m_value;
-}
+    : ValueTreeRoot(ComplexConstructorArguments(typeSystem, std::move(typeRef))) {}
 
 void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
-    if (m_value != newValue) {
+    if (getValue() != newValue) {
         const TypeSystem& typeSystem = getTypeSystem();
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
-            ValueHolder backup = m_value;
-            m_value = newValue;
-            synchronizeChildren();
-            if (backup) {
-                reconcileChanges(backup);
-            } else {
-                setChanged(type.as<CompoundType>() ? Changes::StructureChanged : Changes::ValueChanged);
-            }
+            reconcileChangesAndSynchronizeChildren(newValue);
         } else {
             throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
         }
@@ -49,42 +53,17 @@ void babelwires::ValueTreeRoot::doSetToDefault() {
     const TypeSystem& typeSystem = getTypeSystem();
     const Type& type = getType();
     auto [newValue, _] = type.createValue(typeSystem);
-    if (m_value != newValue) {
-        m_value.swap(newValue);
-        synchronizeChildren();
-        if (newValue) {
-            reconcileChanges(newValue);
-        } else {
-            setChanged(type.as<CompoundType>() ? Changes::StructureChanged : Changes::ValueChanged);
-        }
+    if (getValue() != newValue) {
+        reconcileChangesAndSynchronizeChildren(newValue);
     }
 }
 
-void babelwires::ValueTreeRoot::backUpValue() {
-    assert(!m_valueBackUp && "The value is already backed-up");
-    m_valueBackUp = m_value;
-}
-
-babelwires::ValueHolder& babelwires::ValueTreeRoot::setModifiable(const Path& pathFromHere) {
-    if (pathFromHere.getNumSteps() > 0) {
-        assert(getType().as<CompoundType>() && "Path leading into a non-compound type");
-        assert(m_isNew ||
-               m_valueBackUp && "You cannot make a feature modifiable if its RootValueFeature has not been backed up");
-        const TypeSystem& typeSystem = getTypeSystem();
-        auto [_, valueInCopy] = followNonConst(typeSystem, getType(), pathFromHere, m_value);
-        synchronizeChildren();
-        return valueInCopy;
-    } else {
-        return m_value;
-    }
-}
-
-void babelwires::ValueTreeRoot::reconcileChangesFromBackup() {
-    if (m_valueBackUp) {
-        reconcileChanges(m_valueBackUp);
-        m_valueBackUp.clear();
-    }
-    m_isNew = false;
+void babelwires::ValueTreeRoot::setDescendentValue(const Path& path, const ValueHolder& newValue) {
+    assert((path.getNumSteps() > 0) && "SetDescendentValue is only intended for strict descendents");
+    ValueHolder newRootValue = getValue();
+    auto [_, valueInCopy] = followNonConst(m_typeSystem, getType(), path, newRootValue);
+    valueInCopy = newValue;
+    reconcileChangesAndSynchronizeChildren(newRootValue, path);
 }
 
 const babelwires::TypeSystem& babelwires::ValueTreeRoot::getTypeSystem() const {

@@ -15,11 +15,13 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/valuePath.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 
 #include <map>
 
-babelwires::ValueTreeNode::ValueTreeNode(TypeRef typeRef)
-    : m_typeRef(std::move(typeRef)) {}
+babelwires::ValueTreeNode::ValueTreeNode(TypeRef typeRef, ValueHolder value)
+    : m_typeRef(std::move(typeRef))
+    , m_value(std::move(value)) {}
 
 babelwires::ValueTreeNode::~ValueTreeNode() = default;
 
@@ -62,7 +64,7 @@ void babelwires::ValueTreeNode::setToDefault() {
 }
 
 std::size_t babelwires::ValueTreeNode::getHash() const {
-    return hash::mixtureOf(m_typeRef, *doGetValue());
+    return hash::mixtureOf(m_typeRef, m_value);
 }
 
 namespace {
@@ -136,7 +138,8 @@ const babelwires::TypeRef& babelwires::ValueTreeNode::getTypeRef() const {
 }
 
 const babelwires::ValueHolder& babelwires::ValueTreeNode::getValue() const {
-    return doGetValue();
+    assert(m_value && "The ValueTreeRoot has not been initialized");
+    return m_value;
 }
 
 void babelwires::ValueTreeNode::setValue(const ValueHolder& newValue) {
@@ -194,74 +197,122 @@ int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const
     return -1;
 }
 
-void babelwires::ValueTreeNode::synchronizeChildren() {
+void babelwires::ValueTreeNode::initializeChildren() {
+    // TODO: Do in constructor?
     const ValueHolder& value = getValue();
     auto* compound = getType().as<CompoundType>();
     if (!compound) {
         return;
     }
 
-    ChildMap newChildMap;
     const unsigned int numChildrenNow = compound->getNumChildren(value);
     for (unsigned int i = 0; i < numChildrenNow; ++i) {
         auto [childValue, step, type] = compound->getChild(value, i);
-        std::unique_ptr<ValueTreeChild> child;
-        auto it = m_children.find0(step);
-        if (it != m_children.end()) {
-            child = std::move(it.getValue());
-            child->ensureSynchronized(childValue);
-        } else {
-            child = std::make_unique<ValueTreeChild>(type, childValue);
-            child->setOwner(this);
-            child->synchronizeChildren();
-        }
-        newChildMap.insert_or_assign(step, i, std::move(child));
+        auto child = std::make_unique<ValueTreeChild>(type, *childValue);
+        child->initializeChildren();
+        m_children.insert_or_assign(step, i, std::move(child));
     }
-    m_children.swap(newChildMap);
 }
 
-void babelwires::ValueTreeNode::reconcileChanges(const ValueHolder& other) {
+void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const ValueHolder& other) {
     const ValueHolder& value = getValue();
+
+    Changes changes = Changes::NothingChanged;
+
     if (auto* compound = getType().as<CompoundType>()) {
         // Should only be here if the type hasn't changed, so we can use compound with other.
 
-        std::map<PathStep, ValueTreeNode*> currentChildren;
+        std::map<PathStep, std::unique_ptr<ValueTreeChild>*> currentChildren;
         for (const auto& it : m_children) {
-            currentChildren.emplace(std::pair{it.getKey0(), it.getValue().get()});
+            currentChildren.emplace(std::pair{it.getKey0(), &it.getValue()});
         }
 
-        std::map<PathStep, const ValueHolder*> backupChildValues;
-        for (int i = 0; i < compound->getNumChildren(other); ++i) {
-            auto [child, step, _] = compound->getChild(other, i);
-            backupChildValues.emplace(std::pair{step, child});
+        struct NewChildInfo
+        {
+            const ValueHolder* m_value;
+            const TypeRef& m_typeRef;
+            unsigned int m_index;
+        };
+
+        std::map<PathStep, NewChildInfo> otherValues;
+        unsigned int newNumChildren = compound->getNumChildren(other);
+        for (unsigned int i = 0; i < newNumChildren; ++i) {
+            auto [child, step, typeRef] = compound->getChild(other, i);
+            otherValues.emplace(std::pair{step, NewChildInfo{child, TypeRef(typeRef), i}});
         }
 
         auto currentIt = currentChildren.begin();
-        auto backupIt = backupChildValues.begin();
+        auto otherIt = otherValues.begin();
 
-        while ((currentIt != currentChildren.end()) && (backupIt != backupChildValues.end())) {
-            if (currentIt->first < backupIt->first) {
-                setChanged(Changes::StructureChanged);
+        ChildMap newChildMap;
+        // TODO newChildMap.reserve(newNumChildren);
+        
+        auto addNewChild = [this, &newChildMap] (const auto& otherIt) {
+            auto child = std::make_unique<ValueTreeChild>(otherIt->second.m_typeRef, *otherIt->second.m_value);
+            child->setOwner(this);
+            child->initializeChildren();
+            newChildMap.insert_or_assign(otherIt->first, otherIt->second.m_index, std::move(child));
+        };
+        auto preserveExistingChild = [&newChildMap] (const auto& currentIt, const auto& otherIt) {
+            std::unique_ptr<ValueTreeChild> temp;
+            temp.swap(*currentIt->second);
+            temp->reconcileChangesAndSynchronizeChildren(*otherIt->second.m_value);
+            newChildMap.insert_or_assign(otherIt->first, otherIt->second.m_index, std::move(temp));
+        };
+
+        while ((currentIt != currentChildren.end()) && (otherIt != otherValues.end())) {
+            if (currentIt->first < otherIt->first) {
+                changes = changes | Changes::StructureChanged;
                 ++currentIt;
-            } else if (backupIt->first < currentIt->first) {
-                setChanged(Changes::StructureChanged);
-                ++backupIt;
+            } else if (otherIt->first < currentIt->first) {
+                changes = changes | Changes::StructureChanged;
+                addNewChild(otherIt);
+                ++otherIt;
             } else {
                 // TODO Assert types are the same.
-                currentIt->second->reconcileChanges(*backupIt->second);
+                preserveExistingChild(currentIt, otherIt);
                 ++currentIt;
-                ++backupIt;
+                ++otherIt;
             }
         }
-        if ((currentIt != currentChildren.end()) || (backupIt != backupChildValues.end())) {
-            setChanged(Changes::StructureChanged);
+        if ((currentIt != currentChildren.end()) || (otherIt != otherValues.end())) {
+            changes = changes | Changes::StructureChanged;
         }
-        if (!isChanged(Changes::SomethingChanged)) {
-            if (compound->areDifferentNonRecursively(value, other)) {
-                setChanged(Changes::ValueChanged);
-            }
+        while (otherIt != otherValues.end()) {
+            addNewChild(otherIt);
+            ++otherIt;
         }
-    } else if (getValue() != other) {
-        setChanged(Changes::ValueChanged);
+        m_children.swap(newChildMap);
+
+        if (compound->areDifferentNonRecursively(value, other)) {
+            changes = changes | Changes::ValueChanged;
+        }
+    } else if (m_value != other) {
+        changes = changes | Changes::ValueChanged;
     }
+    m_value = other;
+    setChanged(changes);
+}
+
+void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& path, unsigned int pathIndex) {
+    if (pathIndex == path.getNumSteps()) {
+        reconcileChangesAndSynchronizeChildren(other);
+        return;
+    }
+    const PathStep step = path.getStep(pathIndex);
+    auto childWithChangesIt = m_children.find0(step);
+    
+    auto compoundType = getType().as<CompoundType>();
+    auto [childValue, step2, childTypeRef] = compoundType->getChild(other, compoundType->getChildIndexFromStep(other, step));
+    assert(step == step2);
+
+    // TODO: Assert that all values off the path are unchanged.
+
+    m_value = other;
+    childWithChangesIt.getValue()->reconcileChangesAndSynchronizeChildren(*childValue, path, pathIndex + 1);
+}
+
+void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& path) {
+    assert(path.getNumSteps() > 0);
+    reconcileChangesAndSynchronizeChildren(other, path, 0);
 }

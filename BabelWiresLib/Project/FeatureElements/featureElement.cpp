@@ -12,7 +12,6 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/modifyValueScope.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
@@ -347,50 +346,37 @@ namespace {
 
 } // namespace
 
-void babelwires::FeatureElement::modifyValueAt(ValueTreeNode* input, const Path& p) {
+void babelwires::FeatureElement::modifyValueAt(ValueTreeNode* input, const Path& path) {
     assert((input != nullptr) && "Trying to modify a feature element with no input feature");
 
-    // This code assumes there's only ever one compound value type in a feature tree.
-    // TODO This algorithm is out of date: The root is now always a compound value.
-
-    if (m_modifyValueScope != nullptr) {
-        return;
-    }
-
-    // Look for a root value feature in the ancestor chain.
-    ValueTreeNode* target = tryFollowPathToValueSafe(input, p);
-    if (!target) {
-        // For now, it's not the job of this method to handle failures.
-        // The modifier will reattempt the traversal and capture the failure properly.
-        return;
-    }
-
-    ValueTreeRoot* rootValueFeature = nullptr;
-
-    if (ValueTreeRoot *const valueFeature = target->as<ValueTreeRoot>()) {
-        // Modification below a compound root value feature.
-        if (valueFeature->getType().as<CompoundType>()) {
-            rootValueFeature = valueFeature;
+    unsigned int j = 0;
+    for (unsigned int i = 0; i < m_modifiedPaths.size(); ++i) {
+        const auto& p = m_modifiedPaths[i];
+        if (p.isPrefixOf(path)) {
+            assert(i == j);
+            return;
         }
-    } else {
-        // If a modification is being made _above_ a compound root value feature, we also need to back it up.
-        // This is necessary when deserializing nodes with modifications to sub-values, or when the deletion of
-        // a node is undone.
-        rootValueFeature = exploreForCompoundRootValueFeature(target);
+        if (path.isPrefixOf(p)) {
+            // Remove the path at i by not incrementing j in this iteration.
+        } else {
+            // Keep this path.
+            if (j < i) {
+                m_modifiedPaths[j] = m_modifiedPaths[i];
+            }
+            ++j;
+        }
     }
-
-    if (rootValueFeature) {
-        rootValueFeature->backUpValue();
-        m_modifyValueScope = std::make_unique<ModifyValueScope>(Path(rootValueFeature), rootValueFeature);
-    }
+    m_modifiedPaths.resize(j);
+    m_modifiedPaths.emplace_back(path);
 }
 
 void babelwires::FeatureElement::finishModifications(const Project& project, UserLogger& userLogger) {
-    if (m_modifyValueScope) {
+    // Reapply modifiers beneath the modified paths.
+    for (const auto& p : m_modifiedPaths) {
         // Get the input feature directly.
         ValueTreeNode* input = doGetInputNonConst();
         // First, apply any other modifiers which apply beneath the path
-        for (auto it : m_edits.modifierRange(m_modifyValueScope->m_pathToRootValue)) {
+        for (auto it : m_edits.modifierRange(p)) {
             if (const auto& connection = it->as<ConnectionModifier>()) {
                 // We force connections in this case.
                 connection->applyConnection(project, userLogger, input, true);
@@ -398,9 +384,6 @@ void babelwires::FeatureElement::finishModifications(const Project& project, Use
                 it->applyIfLocal(userLogger, input);
             }
         }
-
-        // The SimpleValueFeature can now determine its change flags.
-        m_modifyValueScope->m_valueTreeRoot->reconcileChangesFromBackup();
-        m_modifyValueScope = nullptr;
     }
+    m_modifiedPaths.clear();
 }

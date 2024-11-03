@@ -29,7 +29,6 @@ namespace babelwires {
     struct UiPosition;
     struct UiSize;
     struct ProjectContext;
-    class ModifyValueScope;
 
     /// The fundimental constituent of the project.
     /// FeatureElements expose input and output Features, and carry edits.
@@ -195,7 +194,7 @@ namespace babelwires {
 
         /// Obtain the right to modify the feature at the given path.
         /// This does not attempt to deal with errors, so it just returns true if the path cannot be followed.
-        void modifyValueAt(ValueTreeNode* input, const Path& p);
+        void modifyValueAt(ValueTreeNode* input, const Path& path);
 
         /// This is called by process, to signal that all modifications are finished.
         void finishModifications(const Project& project, UserLogger& userLogger);
@@ -220,8 +219,9 @@ namespace babelwires {
         /// The accumulated change since the last time they were cleared.
         Changes m_changes = Changes::FeatureElementIsNew;
 
-        /// If a modifier wants to modify a value feature, one of these will be created.
-        std::unique_ptr<ModifyValueScope> m_modifyValueScope;
+        /// After modifications to compounds, modifiers need to be reapplied.
+        /// This records the paths at which that should happen.
+        std::vector<Path> m_modifiedPaths;
 
       protected:
         ContentsCache m_contentsCache;
