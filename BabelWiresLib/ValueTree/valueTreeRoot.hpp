@@ -40,14 +40,9 @@ namespace babelwires {
 
         /// Roots carry a reference to the typesystem.
         const TypeSystem& m_typeSystem;
-
-        // TODO: Temporary hack (hopefully): This allows values to be modified without requiring a backup.
-        // _Project_ code which modifies features should be aware of the need to back-up the value,
-        // but client code (e.g. in a source format) should need to bother with this.
-        // I'm uncertain yet about client code in processors.
-        bool m_isNew = true;
     };
 
+    // TODO Remove
     struct BackupScope {
         BackupScope(ValueTreeRoot& valueTree){ }
     };

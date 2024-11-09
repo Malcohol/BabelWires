@@ -125,10 +125,10 @@ namespace babelwires {
 
         /// Update change flags and ensure the children match the value in other.
         /// In this special case, the changes are known to lie at the end of path p.
-        void reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& p);
+        void reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& path);
  
       private:
-        void reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& p, unsigned int pathIndex);
+        void reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& path, unsigned int pathIndex);
 
       protected:
         /// Set the isChanged flag and that of all parents.
