@@ -436,7 +436,6 @@ TEST(ArrayTypeTest, featureChanges) {
     arrayFeature.clearChanges();
     EXPECT_FALSE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     {
-        babelwires::BackupScope scope(arrayFeature);
         babelwires::ValueHolder value = arrayFeature.getValue();
         arrayType->setSize(testEnvironment.m_typeSystem, value, testUtils::TestSimpleArrayType::s_nonDefaultSize);
         arrayFeature.setValue(value);
@@ -446,11 +445,9 @@ TEST(ArrayTypeTest, featureChanges) {
 
     arrayFeature.clearChanges();
     {
-        babelwires::BackupScope scope(arrayFeature);
         babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(1));
-        babelwires::ValueHolder& value = arrayFeature.setModifiable(pathToInt);
-        value = babelwires::IntValue(15);
+        arrayFeature.setDescendentValue(pathToInt, babelwires::IntValue(15));
     }
     EXPECT_FALSE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_TRUE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));

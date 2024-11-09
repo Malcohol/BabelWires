@@ -27,6 +27,7 @@ namespace babelwires {
     class Type;
     class ValueTreeRoot;
     class ValueTreeChild;
+    class Path;
 
     /// A ValueTreeNode is the base class of nodes in the ValueTree.
     /// A ValueTree holds a Value and adds:
@@ -37,10 +38,9 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(ValueTreeNode);
 
-        ValueTreeNode(TypeRef typeRef);
+        ValueTreeNode(TypeRef typeRef, ValueHolder value);
         virtual ~ValueTreeNode();
 
-        void setOwner(ValueTreeNode* owner);
         const ValueTreeNode* getOwner() const;
         ValueTreeNode* getOwnerNonConst();
 
@@ -115,12 +115,21 @@ namespace babelwires {
         /// Sets the descriminator of identifier on a match.
         int getChildIndexFromStep(const PathStep& step) const;
 
-      public:
-        /// If the value is compound, synchronize the m_children data structure with the current children of the value.
-        void synchronizeChildren();
+      protected:
+        void setOwner(ValueTreeNode* owner);
 
-        /// Set change flags in this subtree by comparing the current value with that of other.
-        void reconcileChanges(const ValueHolder& other);
+        /// Initialize the tree of nodes beneath this node.
+        void initializeChildren(const TypeSystem& typeSystem);
+
+        /// Update change flags and ensure the children match the value in other.
+        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other);
+
+        /// Update change flags and ensure the children match the value in other.
+        /// In this special case, the changes are known to lie at the end of path p.
+        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path);
+
+      private:
+        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path, unsigned int pathIndex);
 
       protected:
         /// Set the isChanged flag and that of all parents.
@@ -128,7 +137,6 @@ namespace babelwires {
 
       protected:
         virtual void doSetToDefault() = 0;
-        virtual const ValueHolder& doGetValue() const = 0;
         virtual void doSetValue(const ValueHolder& newValue) = 0;
 
       private:
@@ -137,10 +145,16 @@ namespace babelwires {
         ValueTreeNode& operator=(const ValueTreeNode&) = delete;
 
       private:
+        /// The type of the value at this ValueTreeNode.
+        TypeRef m_typeRef;
+
+        /// The value at this ValueTreeNode. 
+        /// Note: This should not be modified directly: all modifications should be managed via the ValueTreeRoot.
+        ValueHolder m_value;
+
         ValueTreeNode* m_owner = nullptr;
         Changes m_changes = Changes::SomethingChanged;
 
-        TypeRef m_typeRef;
         using ChildMap = MultiKeyMap<PathStep, unsigned int, std::unique_ptr<ValueTreeChild>>;
         ChildMap m_children;
     };

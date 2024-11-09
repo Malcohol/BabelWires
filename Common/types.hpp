@@ -62,7 +62,7 @@ namespace babelwires {
         ITERATOR end() const { return m_end; }
     };
 
-    template <typename T> auto&& reverseIterate(T&& iterable) {
+    template <typename T> auto reverseIterate(T&& iterable) {
         return Span{std::rbegin(iterable), std::rend(iterable)};
     }
 

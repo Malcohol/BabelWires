@@ -356,7 +356,7 @@ std::string babelwires::RecordWithVariantsType::valueToString(const TypeSystem& 
     std::ostringstream os;
     const RecordWithVariantsValue* const recordValue = v->as<RecordWithVariantsValue>();
     auto identifierRegistry = IdentifierRegistry::read();
-    os << "{" << getNumChildren(v) << " (" << identifierRegistry->getName(recordValue->getTag()) << ")}";
+    os << "Variant: " << identifierRegistry->getName(recordValue->getTag());
     return os.str();
 }
 

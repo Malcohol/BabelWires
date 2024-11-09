@@ -19,18 +19,10 @@ namespace babelwires {
     class ValueTreeChild : public ValueTreeNode {
       public:
         /// Construct a ValueTreeNode which carries values of the given type.
-        ValueTreeChild(TypeRef typeRef, const ValueHolder* valueHolder);
-
-        /// If the new valueHolder pointer is different, update m_value and synchronizeChildren.
-        void ensureSynchronized(const ValueHolder* valueHolder);
+        ValueTreeChild(TypeRef typeRef, const ValueHolder& valueHolder, ValueTreeNode* owner);
 
       protected:
-        const ValueHolder& doGetValue() const override;
         void doSetValue(const ValueHolder& newValue) override;
         void doSetToDefault() override;
-
-      private:
-        // TODO: This looks unsafe (could be confused by new value reusing old memory?): Redo!!!
-        const ValueHolder* m_value;
     };
 } // namespace babelwires

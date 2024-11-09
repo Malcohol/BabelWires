@@ -30,23 +30,22 @@ babelwires::Processor::Processor(const ProjectContext& projectContext, const Typ
 
 babelwires::Processor::~Processor() = default;
 
-babelwires::ValueTreeNode& babelwires::Processor::getInput() {
+babelwires::ValueTreeRoot& babelwires::Processor::getInput() {
     return *m_inputValueTreeRoot;
 }
 
-babelwires::ValueTreeNode& babelwires::Processor::getOutput() {
+babelwires::ValueTreeRoot& babelwires::Processor::getOutput() {
     return *m_outputValueTreeRoot;
 }
 
-const babelwires::ValueTreeNode& babelwires::Processor::getInput() const {
+const babelwires::ValueTreeRoot& babelwires::Processor::getInput() const {
     return *m_inputValueTreeRoot;
 }
 
-const babelwires::ValueTreeNode& babelwires::Processor::getOutput() const {
+const babelwires::ValueTreeRoot& babelwires::Processor::getOutput() const {
     return *m_outputValueTreeRoot;
 }
 
 void babelwires::Processor::process(UserLogger& userLogger) {
-    BackupScope scope(*m_outputValueTreeRoot);
     processValue(userLogger, *m_inputValueTreeRoot, *m_outputValueTreeRoot);
 }
