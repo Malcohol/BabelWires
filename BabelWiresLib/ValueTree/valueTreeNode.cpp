@@ -238,7 +238,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
         unsigned int newNumChildren = compound->getNumChildren(other);
         for (unsigned int i = 0; i < newNumChildren; ++i) {
             auto [child, step, typeRef] = compound->getChild(other, i);
-            otherValues.emplace(std::pair{step, NewChildInfo{child, TypeRef(typeRef), i}});
+            otherValues.emplace(std::pair{step, NewChildInfo{child, typeRef, i}});
         }
 
         auto currentIt = currentChildren.begin();
