@@ -12,9 +12,11 @@
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 
-babelwires::ValueTreeChild::ValueTreeChild(TypeRef typeRef, const ValueHolder& valueHolder)
+babelwires::ValueTreeChild::ValueTreeChild(TypeRef typeRef, const ValueHolder& valueHolder, ValueTreeNode* owner)
     : ValueTreeNode(std::move(typeRef), valueHolder)
 {
+    assert(owner != nullptr);
+    setOwner(owner);
 }
 
 void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {

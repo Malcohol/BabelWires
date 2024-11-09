@@ -197,7 +197,7 @@ int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const
     return -1;
 }
 
-void babelwires::ValueTreeNode::initializeChildren() {
+void babelwires::ValueTreeNode::initializeChildren(const TypeSystem& typeSystem) {
     // TODO: Do in constructor?
     const ValueHolder& value = getValue();
     auto* compound = getType().as<CompoundType>();
@@ -208,13 +208,13 @@ void babelwires::ValueTreeNode::initializeChildren() {
     const unsigned int numChildrenNow = compound->getNumChildren(value);
     for (unsigned int i = 0; i < numChildrenNow; ++i) {
         auto [childValue, step, type] = compound->getChild(value, i);
-        auto child = std::make_unique<ValueTreeChild>(type, *childValue);
-        child->initializeChildren();
+        auto child = std::make_unique<ValueTreeChild>(type, *childValue, this);
+        child->initializeChildren(typeSystem);
         m_children.insert_or_assign(step, i, std::move(child));
     }
 }
 
-void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const ValueHolder& other) {
+void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other) {
     const ValueHolder& value = getValue();
 
     Changes changes = Changes::NothingChanged;
@@ -247,16 +247,15 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Val
         ChildMap newChildMap;
         // TODO newChildMap.reserve(newNumChildren);
         
-        auto addNewChild = [this, &newChildMap] (const auto& otherIt) {
-            auto child = std::make_unique<ValueTreeChild>(otherIt->second.m_typeRef, *otherIt->second.m_value);
-            child->setOwner(this);
-            child->initializeChildren();
+        auto addNewChild = [this, &typeSystem, &newChildMap] (const auto& otherIt) {
+            auto child = std::make_unique<ValueTreeChild>(otherIt->second.m_typeRef, *otherIt->second.m_value, this);
+            child->initializeChildren(typeSystem);
             newChildMap.insert_or_assign(otherIt->first, otherIt->second.m_index, std::move(child));
         };
-        auto preserveExistingChild = [&newChildMap] (const auto& currentIt, const auto& otherIt) {
+        auto preserveExistingChild = [&typeSystem, &newChildMap] (const auto& currentIt, const auto& otherIt) {
             std::unique_ptr<ValueTreeChild> temp;
             temp.swap(*currentIt->second);
-            temp->reconcileChangesAndSynchronizeChildren(*otherIt->second.m_value);
+            temp->reconcileChangesAndSynchronizeChildren(typeSystem, *otherIt->second.m_value);
             newChildMap.insert_or_assign(otherIt->first, otherIt->second.m_index, std::move(temp));
         };
 
@@ -291,12 +290,14 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Val
         changes = changes | Changes::ValueChanged;
     }
     m_value = other;
-    setChanged(changes);
+    if (changes != Changes::NothingChanged) {
+        setChanged(changes);
+    }
 }
 
-void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& path, unsigned int pathIndex) {
+void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path, unsigned int pathIndex) {
     if (pathIndex == path.getNumSteps()) {
-        reconcileChangesAndSynchronizeChildren(other);
+        reconcileChangesAndSynchronizeChildren(typeSystem, other);
         return;
     }
     const PathStep step = path.getStep(pathIndex);
@@ -309,10 +310,10 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Val
     // TODO: Assert that all values off the path are unchanged.
 
     m_value = other;
-    childWithChangesIt.getValue()->reconcileChangesAndSynchronizeChildren(*childValue, path, pathIndex + 1);
+    childWithChangesIt.getValue()->reconcileChangesAndSynchronizeChildren(typeSystem, *childValue, path, pathIndex + 1);
 }
 
-void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& path) {
+void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path) {
     assert(path.getNumSteps() > 0);
-    reconcileChangesAndSynchronizeChildren(other, path, 0);
+    reconcileChangesAndSynchronizeChildren(typeSystem, other, path, 0);
 }

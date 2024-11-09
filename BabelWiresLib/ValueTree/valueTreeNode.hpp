@@ -41,7 +41,6 @@ namespace babelwires {
         ValueTreeNode(TypeRef typeRef, ValueHolder value);
         virtual ~ValueTreeNode();
 
-        void setOwner(ValueTreeNode* owner);
         const ValueTreeNode* getOwner() const;
         ValueTreeNode* getOwnerNonConst();
 
@@ -117,18 +116,20 @@ namespace babelwires {
         int getChildIndexFromStep(const PathStep& step) const;
 
       protected:
+        void setOwner(ValueTreeNode* owner);
+
         /// Initialize the tree of nodes beneath this node.
-        void initializeChildren();
+        void initializeChildren(const TypeSystem& typeSystem);
 
         /// Update change flags and ensure the children match the value in other.
-        void reconcileChangesAndSynchronizeChildren(const ValueHolder& other);
+        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other);
 
         /// Update change flags and ensure the children match the value in other.
         /// In this special case, the changes are known to lie at the end of path p.
-        void reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& path);
- 
+        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path);
+
       private:
-        void reconcileChangesAndSynchronizeChildren(const ValueHolder& other, const Path& path, unsigned int pathIndex);
+        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path, unsigned int pathIndex);
 
       protected:
         /// Set the isChanged flag and that of all parents.

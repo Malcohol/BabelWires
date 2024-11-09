@@ -30,7 +30,7 @@ struct babelwires::ValueTreeRoot::ComplexConstructorArguments {
 babelwires::ValueTreeRoot::ValueTreeRoot(ComplexConstructorArguments&& arguments)
     : ValueTreeNode(std::move(arguments.m_typeRef), std::move(arguments.m_value))
     , m_typeSystem(arguments.m_typeSystem) {
-        initializeChildren();
+        initializeChildren(arguments.m_typeSystem);
     }
 
 babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypeRef typeRef)
@@ -41,7 +41,7 @@ void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
         const TypeSystem& typeSystem = getTypeSystem();
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
-            reconcileChangesAndSynchronizeChildren(newValue);
+            reconcileChangesAndSynchronizeChildren(m_typeSystem, newValue);
         } else {
             throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
         }
@@ -54,7 +54,7 @@ void babelwires::ValueTreeRoot::doSetToDefault() {
     const Type& type = getType();
     auto [newValue, _] = type.createValue(typeSystem);
     if (getValue() != newValue) {
-        reconcileChangesAndSynchronizeChildren(newValue);
+        reconcileChangesAndSynchronizeChildren(m_typeSystem, newValue);
     }
 }
 
@@ -63,7 +63,7 @@ void babelwires::ValueTreeRoot::setDescendentValue(const Path& path, const Value
     ValueHolder newRootValue = getValue();
     auto [_, valueInCopy] = followNonConst(m_typeSystem, getType(), path, newRootValue);
     valueInCopy = newValue;
-    reconcileChangesAndSynchronizeChildren(newRootValue, path);
+    reconcileChangesAndSynchronizeChildren(m_typeSystem, newRootValue, path);
 }
 
 const babelwires::TypeSystem& babelwires::ValueTreeRoot::getTypeSystem() const {

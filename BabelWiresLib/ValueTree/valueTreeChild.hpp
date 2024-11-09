@@ -19,7 +19,7 @@ namespace babelwires {
     class ValueTreeChild : public ValueTreeNode {
       public:
         /// Construct a ValueTreeNode which carries values of the given type.
-        ValueTreeChild(TypeRef typeRef, const ValueHolder& valueHolder);
+        ValueTreeChild(TypeRef typeRef, const ValueHolder& valueHolder, ValueTreeNode* owner);
 
       protected:
         void doSetValue(const ValueHolder& newValue) override;
