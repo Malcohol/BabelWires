@@ -387,3 +387,13 @@ void babelwires::FeatureElement::finishModifications(const Project& project, Use
     }
     m_modifiedPaths.clear();
 }
+
+
+void babelwires::FeatureElement::setValueTrees(std::string rootLabel, ValueTreeRoot* input,
+                                               const ValueTreeRoot* output) {
+    m_contentsCache.setValueTrees(std::move(rootLabel), input, output);
+}
+
+void babelwires::FeatureElement::updateModifierCache() {
+    m_contentsCache.updateModifierCache();
+}

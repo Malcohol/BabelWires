@@ -162,6 +162,12 @@ namespace babelwires {
         virtual void doProcess(UserLogger& userLogger) = 0;
 
       protected:
+        /// Update the cache and subscribe to the input for modifications.
+        void setValueTrees(std::string rootLabel, ValueTreeRoot* input, const ValueTreeRoot* output);
+
+        /// Inform the cache that modifiers may have changed.
+        void updateModifierCache();
+
         void clearInternalFailure();
         void setInternalFailure(std::string reasonForFailure);
 
@@ -223,7 +229,6 @@ namespace babelwires {
         /// This records the paths at which that should happen.
         std::vector<Path> m_modifiedPaths;
 
-      protected:
         ContentsCache m_contentsCache;
     };
 

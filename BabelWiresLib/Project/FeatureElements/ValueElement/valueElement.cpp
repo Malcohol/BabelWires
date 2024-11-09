@@ -59,8 +59,8 @@ std::string babelwires::ValueElement::getRootLabel() const {
 
 void babelwires::ValueElement::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
-        m_contentsCache.setValueTrees(getRootLabel(), m_valueTreeRoot.get(), m_valueTreeRoot.get());
+        setValueTrees(getRootLabel(), m_valueTreeRoot.get(), m_valueTreeRoot.get());
     } else if (isChanged(Changes::ModifierChangesMask)) {
-        m_contentsCache.updateModifierCache();
+        updateModifierCache();
     }
 }

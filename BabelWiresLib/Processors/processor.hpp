@@ -27,10 +27,10 @@ namespace babelwires {
         /// Implementation of process are allowed to throw. If they do, the ProcessorElement will be marked as failed,
         /// the exception will be logged and the output will be set to default.
         void process(UserLogger& userLogger);
-        ValueTreeNode& getInput();
-        ValueTreeNode& getOutput();
-        const ValueTreeNode& getInput() const;
-        const ValueTreeNode& getOutput() const;
+        ValueTreeRoot& getInput();
+        ValueTreeRoot& getOutput();
+        const ValueTreeRoot& getInput() const;
+        const ValueTreeRoot& getOutput() const;
 
       protected:
         /// Note: Implementations do not need to worry about backing-up or resolving changes in the output.
