@@ -47,6 +47,5 @@ const babelwires::ValueTreeRoot& babelwires::Processor::getOutput() const {
 }
 
 void babelwires::Processor::process(UserLogger& userLogger) {
-    BackupScope scope(*m_outputValueTreeRoot);
     processValue(userLogger, *m_inputValueTreeRoot, *m_outputValueTreeRoot);
 }

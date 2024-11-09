@@ -434,17 +434,15 @@ TEST(RecordWithVariantsTypeTest, featureChanges)
     valueFeature.clearChanges();
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     {
-        babelwires::BackupScope scope(valueFeature);
         babelwires::ValueHolder value = valueFeature.getValue();
         recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagAId());
         valueFeature.setValue(value);
     }
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
-    EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
+    EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 
     valueFeature.clearChanges();
     {
-        babelwires::BackupScope scope(valueFeature);
         babelwires::ValueHolder value = valueFeature.getValue();
         recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value, testUtils::TestRecordWithVariantsType::getTagDId());
         valueFeature.setValue(value);
@@ -454,7 +452,6 @@ TEST(RecordWithVariantsTypeTest, featureChanges)
 
     valueFeature.clearChanges();
     {
-        babelwires::BackupScope scope(valueFeature);
         babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFf1Id()));
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));

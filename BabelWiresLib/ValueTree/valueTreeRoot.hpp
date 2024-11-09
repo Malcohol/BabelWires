@@ -42,9 +42,4 @@ namespace babelwires {
         const TypeSystem& m_typeSystem;
     };
 
-    // TODO Remove
-    struct BackupScope {
-        BackupScope(ValueTreeRoot& valueTree){ }
-    };
-
 } // namespace babelwires

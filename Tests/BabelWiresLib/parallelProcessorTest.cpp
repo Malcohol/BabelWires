@@ -110,26 +110,17 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     EXPECT_EQ(outputArray.getEntry(0).get(), 0);
 
     processor.getInput().clearChanges();
-    {
-        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
-        intValueTreeNode.setValue(babelwires::IntValue(1));
-    }
+    intValueTreeNode.setValue(babelwires::IntValue(1));
     processor.process(testEnvironment.m_log);
     EXPECT_EQ(outputArray.getEntry(0).get(), 1);
 
     processor.getInput().clearChanges();
-    {
-        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
-        inputArray.getEntry(0).set(2);
-    }
+    inputArray.getEntry(0).set(2);
     processor.process(testEnvironment.m_log);
     EXPECT_EQ(outputArray.getEntry(0).get(), 3);
 
     processor.getInput().clearChanges();
-    {
-        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
-        inputArray.setSize(2);
-    }
+    inputArray.setSize(2);
     processor.process(testEnvironment.m_log);
 
     EXPECT_EQ(outputArray.getSize(), 2);
@@ -137,10 +128,7 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     EXPECT_EQ(outputArray.getEntry(1).get(), 1);
 
     processor.getInput().clearChanges();
-    {
-        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
-        inputArray.setSize(1);
-    }
+    inputArray.setSize(1);
     processor.process(testEnvironment.m_log);
 
     EXPECT_EQ(outputArray.getSize(), 1);
@@ -173,7 +161,6 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
 
     processor.getInput().clearChanges();
     {
-        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
         intValueTreeNode.setValue(babelwires::IntValue(4));
         inputArray.setSize(2);
         inputArray.getEntry(0).set(5);
@@ -192,10 +179,7 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     testEnvironment.m_log.clear();
 
     processor.getInput().clearChanges();
-    {
-        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
-        inputArray.getEntry(0).set(7);
-    }
+    inputArray.getEntry(0).set(7);
     processor.process(testEnvironment.m_log);
 
     EXPECT_EQ(outputArray.getSize(), 2);
@@ -207,10 +191,7 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
 
     processor.getInput().clearChanges();
     testEnvironment.m_log.clear();
-    {
-        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
-        inputArray.getEntry(0).set(0);
-    }
+    inputArray.getEntry(0).set(0);
     processor.process(testEnvironment.m_log);
 
     EXPECT_EQ(outputArray.getSize(), 2);
@@ -255,13 +236,10 @@ TEST(ParallelProcessorTest, testFailure) {
     EXPECT_EQ(outputArray.getEntry(0).get(), 0);
 
     processor.getInput().clearChanges();
-    {
-        babelwires::BackupScope scope(processor.getInput().is<babelwires::ValueTreeRoot>());
-        intValueTreeNode.setValue(babelwires::IntValue(4));
-        inputArray.setSize(2);
-        inputArray.getEntry(0).set(17);
-        inputArray.getEntry(1).set(6);
-    }
+    intValueTreeNode.setValue(babelwires::IntValue(4));
+    inputArray.setSize(2);
+    inputArray.getEntry(0).set(17);
+    inputArray.getEntry(1).set(6);
 
     try {
         processor.process(testEnvironment.m_log);

@@ -414,7 +414,6 @@ TEST(RecordTypeTest, featureChanges)
     valueFeature.clearChanges();
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     {
-        babelwires::BackupScope scope(valueFeature);
         babelwires::ValueHolder value = valueFeature.getValue();
         recordType->activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpRecId());
         valueFeature.setValue(value);
@@ -424,7 +423,6 @@ TEST(RecordTypeTest, featureChanges)
 
     valueFeature.clearChanges();
     {
-        babelwires::BackupScope scope(valueFeature);
         babelwires::Path pathToInt;
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
         pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
@@ -435,7 +433,6 @@ TEST(RecordTypeTest, featureChanges)
 
     valueFeature.clearChanges();
     {
-        babelwires::BackupScope scope(valueFeature);
         babelwires::ValueHolder value = valueFeature.getValue();
         recordType->deactivateField(value, testUtils::TestComplexRecordType::getOpRecId());
         valueFeature.setValue(value);
