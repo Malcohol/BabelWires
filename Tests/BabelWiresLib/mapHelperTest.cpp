@@ -70,8 +70,8 @@ namespace {
         testUtils::TestValue targetValue3;
         targetValue3.m_value = "zzz";
 
-        return setUpTestMapValue(typeSystem, testUtils::TestType::getThisIdentifier(),
-                                testUtils::TestType::getThisIdentifier(), sourceValue1, sourceValue2, targetValue1,
+        return setUpTestMapValue(typeSystem, testUtils::TestType::getThisType(),
+                                testUtils::TestType::getThisType(), sourceValue1, sourceValue2, targetValue1,
                                 targetValue2, targetValue3, allToOneFallback);
     }
 
@@ -92,8 +92,8 @@ namespace {
         babelwires::EnumValue targetValue3;
         targetValue3.set("Erm");
 
-        return setUpTestMapValue(typeSystem, testUtils::TestEnum::getThisIdentifier(),
-                                testUtils::TestEnum::getThisIdentifier(), sourceValue1, sourceValue2, targetValue1,
+        return setUpTestMapValue(typeSystem, testUtils::TestEnum::getThisType(),
+                                testUtils::TestEnum::getThisType(), sourceValue1, sourceValue2, targetValue1,
                                 targetValue2, targetValue3, allToOneFallback);
     }
 
@@ -114,8 +114,8 @@ namespace {
         babelwires::EnumValue targetValue3;
         targetValue3.set("Erm");
 
-        return setUpTestMapValue(typeSystem, testUtils::TestType::getThisIdentifier(),
-                                testUtils::TestEnum::getThisIdentifier(), sourceValue1, sourceValue2, targetValue1,
+        return setUpTestMapValue(typeSystem, testUtils::TestType::getThisType(),
+                                testUtils::TestEnum::getThisType(), sourceValue1, sourceValue2, targetValue1,
                                 targetValue2, targetValue3, true);
     }
 
@@ -136,8 +136,8 @@ namespace {
         testUtils::TestValue targetValue3;
         targetValue3.m_value = "zzz";
 
-        return setUpTestMapValue(typeSystem, testUtils::TestEnum::getThisIdentifier(),
-                                testUtils::TestEnum::getThisIdentifier(), sourceValue1, sourceValue2, targetValue1,
+        return setUpTestMapValue(typeSystem, testUtils::TestEnum::getThisType(),
+                                testUtils::TestEnum::getThisType(), sourceValue1, sourceValue2, targetValue1,
                                 targetValue2, targetValue3, true);
     }
 } // namespace

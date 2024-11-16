@@ -18,7 +18,7 @@ TEST(ValueElementTest, simpleType) {
 
     babelwires::ValueAssignmentData assignmentData(babelwires::EditableValueHolder::makeValue<babelwires::IntValue>(-4));
 
-    babelwires::ValueElementData data(babelwires::DefaultIntType::getThisIdentifier());
+    babelwires::ValueElementData data(babelwires::DefaultIntType::getThisType());
     data.m_modifiers.emplace_back(assignmentData.clone());
 
     auto newElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
@@ -31,7 +31,7 @@ TEST(ValueElementTest, simpleType) {
         valueElement->getElementData().as<babelwires::ValueElementData>();
     ASSERT_NE(valueElementData, nullptr);
     EXPECT_EQ(valueElement->getElementData().m_id, 10);
-    EXPECT_EQ(valueElementData->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(valueElementData->getTypeRef(), babelwires::DefaultIntType::getThisType());
 
     const babelwires::ValueTreeNode* const input = valueElement->getInput();
     const babelwires::ValueTreeNode* const output = valueElement->getOutput();
@@ -40,7 +40,7 @@ TEST(ValueElementTest, simpleType) {
     ASSERT_NE(output, nullptr);
     EXPECT_EQ(input, output);
 
-    EXPECT_EQ(input->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(input->getTypeRef(), babelwires::DefaultIntType::getThisType());
     const babelwires::ValueHolder value = input->getValue();
     const babelwires::IntValue* intValue = value->as<babelwires::IntValue>();
     ASSERT_NE(intValue, nullptr);
@@ -52,7 +52,7 @@ TEST(ValueElementTest, valueElementDataSerialization) {
 
     std::string serializedContents;
     {
-        babelwires::ValueElementData data(babelwires::DefaultIntType::getThisIdentifier());
+        babelwires::ValueElementData data(babelwires::DefaultIntType::getThisType());
         data.m_id = 2;
         data.m_uiData.m_uiSize.m_width = 300;
         data.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(
@@ -74,7 +74,7 @@ TEST(ValueElementTest, valueElementDataSerialization) {
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr->m_id, 2);
     EXPECT_EQ(dataPtr->m_uiData.m_uiSize.m_width, 300);
-    EXPECT_EQ(dataPtr->getTypeRef(), babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(dataPtr->getTypeRef(), babelwires::DefaultIntType::getThisType());
     ASSERT_EQ(dataPtr->m_modifiers.size(), 1);
     const babelwires::ValueAssignmentData* const assignmentData =
         dataPtr->m_modifiers[0]->as<babelwires::ValueAssignmentData>();

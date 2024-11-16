@@ -254,13 +254,13 @@ TEST(ProjectBundleTest, factoryIdentifiers) {
 
     // Prepopulate the identifierRegistry with clashing factory identifier.
     // I don't expect duplicate factory identifiers, but this will make it easier to test
-    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testUtils::TestProcessorFactory::getThisIdentifier(),
+    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testUtils::TestProcessorFactory::getThisType(),
                                                              "Other test processor",
 "41000000-1111-2222-3333-888888888888", babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testUtils::TestSourceFileFormat::getThisIdentifier(),
+    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testUtils::TestSourceFileFormat::getThisType(),
                                                              "Other test source factory",
 "41000000-1111-2222-3333-999999999999", babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testUtils::TestTargetFileFormat::getThisIdentifier(),
+    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testUtils::TestTargetFileFormat::getThisType(),
                                                              "Other test target factory",
 "41000000-1111-2222-3333-aaaaaaaaaaaa", babelwires::IdentifierRegistry::Authority::isAuthoritative);
 

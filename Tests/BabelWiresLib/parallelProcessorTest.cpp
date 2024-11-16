@@ -47,8 +47,8 @@ namespace {
 
     struct TestParallelProcessor : babelwires::ParallelProcessor {
         TestParallelProcessor(const babelwires::ProjectContext& context)
-            : babelwires::ParallelProcessor(context, TestParallelProcessorInput::getThisIdentifier(),
-                                            TestParallelProcessorOutput::getThisIdentifier()) {}
+            : babelwires::ParallelProcessor(context, TestParallelProcessorInput::getThisType(),
+                                            TestParallelProcessorOutput::getThisType()) {}
 
         void processEntry(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
                           const babelwires::ValueTreeNode& inputEntry,

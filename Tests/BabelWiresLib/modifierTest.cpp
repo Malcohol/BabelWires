@@ -86,7 +86,7 @@ TEST(ModifierTest, localApplySuccess) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot recordFeature{testEnvironment.m_projectContext.m_typeSystem,
-                                                 testUtils::TestSimpleRecordType::getThisIdentifier()};
+                                                 testUtils::TestSimpleRecordType::getThisType()};
     recordFeature.setToDefault();
 
     babelwires::Path path;
@@ -113,7 +113,7 @@ TEST(ModifierTest, localApplyFailureWrongType) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot recordFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestSimpleRecordType::getThisIdentifier());
+                                                 testUtils::TestSimpleRecordType::getThisType());
     recordFeature.setToDefault();
 
     babelwires::Path path;
@@ -139,7 +139,7 @@ TEST(ModifierTest, localApplyFailureNoTarget) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot recordFeature{testEnvironment.m_projectContext.m_typeSystem,
-                                                 testUtils::TestSimpleRecordType::getThisIdentifier()};
+                                                 testUtils::TestSimpleRecordType::getThisType()};
     recordFeature.setToDefault();
 
     babelwires::Path path;
@@ -168,7 +168,7 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot recordFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisIdentifier());
+                                                 testUtils::TestComplexRecordType::getThisType());
     recordFeature.setToDefault();
 
     auto arrayModData = std::make_unique<babelwires::ArraySizeModifierData>();
@@ -200,7 +200,7 @@ TEST(ModifierTest, arraySizeModifierFailure) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot recordFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisIdentifier());
+                                                 testUtils::TestComplexRecordType::getThisType());
     recordFeature.setToDefault();
 
     testUtils::TestComplexRecordType::ConstInstance record(recordFeature);
@@ -238,7 +238,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
     babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                       testUtils::TestSimpleRecordType::getThisIdentifier());
+                                                       testUtils::TestSimpleRecordType::getThisType());
     targetRecordFeature.setToDefault();
 
     babelwires::Path targetPath;
@@ -264,7 +264,7 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                       testUtils::TestSimpleRecordType::getThisIdentifier());
+                                                       testUtils::TestSimpleRecordType::getThisType());
     targetRecordFeature.setToDefault();
 
     const babelwires::Path sourcePath = babelwires::Path::deserializeFromString("aa");
@@ -294,7 +294,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                       testUtils::TestSimpleRecordType::getThisIdentifier());
+                                                       testUtils::TestSimpleRecordType::getThisType());
     targetRecordFeature.setToDefault();
 
     const babelwires::Path sourcePath = babelwires::Path::deserializeFromString("aa");
@@ -334,7 +334,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
     babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                       testUtils::TestSimpleRecordType::getThisIdentifier());
+                                                       testUtils::TestSimpleRecordType::getThisType());
     targetRecordFeature.setToDefault();
 
     babelwires::Path targetPath;
@@ -364,7 +364,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 TEST(ModifierTest, connectionModifierApplicationFailure) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueElementData elementData{testUtils::TestComplexRecordType::getThisIdentifier()};
+    babelwires::ValueElementData elementData{testUtils::TestComplexRecordType::getThisType()};
 
     const babelwires::Path sourcePath{
         std::vector<babelwires::PathStep>{babelwires::PathStep(testUtils::TestComplexRecordType::getSubrecordId()),
@@ -377,7 +377,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(elementData);
 
     babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_typeSystem,
-                                                       testUtils::TestComplexRecordType::getThisIdentifier());
+                                                       testUtils::TestComplexRecordType::getThisType());
     targetRecordFeature.setToDefault();
     testUtils::TestComplexRecordType::Instance targetInstance{targetRecordFeature};
     targetInstance.getstring().set("Hello");

@@ -16,10 +16,10 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
 babelwires::TestArrayType::TestArrayType()
-    : ArrayType(DefaultIntType::getThisIdentifier(), 1, 10, 3) {}
+    : ArrayType(DefaultIntType::getThisType(), 1, 10, 3) {}
 
 babelwires::TestArrayType2::TestArrayType2()
-    : ArrayType(TestArrayType::getThisIdentifier(), 1, 4, 2) {}
+    : ArrayType(TestArrayType::getThisType(), 1, 4, 2) {}
 */
 
 babelwires::ArrayType::ArrayType(TypeRef entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)

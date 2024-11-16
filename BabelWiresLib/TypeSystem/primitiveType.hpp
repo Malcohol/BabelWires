@@ -13,9 +13,18 @@
 
 /// Intended mainly for testing.
 #define PRIMITIVE_TYPE_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                         \
-    static babelwires::PrimitiveTypeId getThisIdentifier() { return IDENTIFIER; }                                       \
-    static babelwires::VersionNumber getVersion() { return VERSION; }                                                  \
-    babelwires::TypeRef getTypeRef() const override { return getThisIdentifier(); }
+    static babelwires::PrimitiveTypeId getThisIdentifier() {                                                           \
+        return IDENTIFIER;                                                                                             \
+    }                                                                                                                  \
+    static babelwires::TypeRef getThisType() {                                                                         \
+        return getThisIdentifier();                                                                                    \
+    }                                                                                                                  \
+    static babelwires::VersionNumber getVersion() {                                                                    \
+        return VERSION;                                                                                                \
+    }                                                                                                                  \
+    babelwires::TypeRef getTypeRef() const override {                                                                  \
+        return getThisIdentifier();                                                                                    \
+    }
 
 /// Primitive types (i.e. types which are not constructed from other types) need to be directly
 /// registered in the TypeSystem.

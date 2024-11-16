@@ -8,13 +8,13 @@
 testUtils::TestRecordWithVariantsType::TestRecordWithVariantsType()
     : RecordWithVariantsType(
           {getTagAId(), getTagBId(), getTagCId(), getTagDId()},
-          {{getFieldA0Id(), babelwires::DefaultIntType::getThisIdentifier(), {getTagAId(), getTagDId()}},
-           {getFf0Id(), babelwires::DefaultIntType::getThisIdentifier()},
-           {getFieldB0Id(), TestSimpleRecordType::getThisIdentifier(), {getTagBId()}},
-           {getFieldABId(), babelwires::DefaultIntType::getThisIdentifier(), {getTagAId(), getTagBId(), getTagDId()}},
-           {getFieldA1Id(), TestSimpleRecordType::getThisIdentifier(), {getTagAId(), getTagDId()}},
-           {getFf1Id(), TestSimpleRecordType::getThisIdentifier()},
-           {getFieldBCId(), babelwires::DefaultIntType::getThisIdentifier(), {getTagBId(), getTagCId()}}},
+          {{getFieldA0Id(), babelwires::DefaultIntType::getThisType(), {getTagAId(), getTagDId()}},
+           {getFf0Id(), babelwires::DefaultIntType::getThisType()},
+           {getFieldB0Id(), TestSimpleRecordType::getThisType(), {getTagBId()}},
+           {getFieldABId(), babelwires::DefaultIntType::getThisType(), {getTagAId(), getTagBId(), getTagDId()}},
+           {getFieldA1Id(), TestSimpleRecordType::getThisType(), {getTagAId(), getTagDId()}},
+           {getFf1Id(), TestSimpleRecordType::getThisType()},
+           {getFieldBCId(), babelwires::DefaultIntType::getThisType(), {getTagBId(), getTagCId()}}},
           1) {}
 
 babelwires::ShortId testUtils::TestRecordWithVariantsType::getTagAId() {
@@ -62,7 +62,7 @@ babelwires::ShortId testUtils::TestRecordWithVariantsType::getFieldBCId() {
 }
 
 testUtils::TestRecordWithVariantsElementData::TestRecordWithVariantsElementData()
-    : ValueElementData(testUtils::TestRecordWithVariantsType::getThisIdentifier()) {}
+    : ValueElementData(testUtils::TestRecordWithVariantsType::getThisType()) {}
 
 babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants() {
     return babelwires::Path();

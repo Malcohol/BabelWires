@@ -29,11 +29,11 @@ babelwires::TestRecordWithVariants::TestRecordWithVariants()
     : RecordWithVariantsType(
           {getTag0(), getTag1()},
           {{BW_SHORT_ID("foo", "Foo", "b36ab40f-c570-46f7-9dab-3af1b8f3216e"),
-            DefaultIntType::getThisIdentifier(),
+            DefaultIntType::getThisType(),
             {getTag0()}},
-           {BW_SHORT_ID("erm", "Erm", "bcb21539-6d10-41b2-886b-4b46f158f6bd"), DefaultIntType::getThisIdentifier()},
+           {BW_SHORT_ID("erm", "Erm", "bcb21539-6d10-41b2-886b-4b46f158f6bd"), DefaultIntType::getThisType()},
            {BW_SHORT_ID("oom", "Oom", "2cb79b61-c3b3-4df4-b8a0-11ec286bf659"),
-            DefaultIntType::getThisIdentifier(),
+            DefaultIntType::getThisType(),
             {getTag1()}}}) {}
 */
 

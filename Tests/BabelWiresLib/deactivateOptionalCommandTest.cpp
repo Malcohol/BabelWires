@@ -18,12 +18,12 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisIdentifier()));
+        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisType()));
 
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisIdentifier()));
+        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisType()));
     const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisIdentifier()));
+        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisType()));
 
     const babelwires::ValueElement* const element =
         testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
@@ -136,7 +136,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::DeactivateOptionalCommand command("Test command", 51,
                                                   babelwires::Path::deserializeFromString("qqq/zzz"), opId);
 
-    babelwires::ValueElementData elementData(testUtils::TestComplexRecordType::getThisIdentifier());
+    babelwires::ValueElementData elementData(testUtils::TestComplexRecordType::getThisType());
     elementData.m_id = 51;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
@@ -150,7 +150,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisIdentifier()));
+        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisType()));
 
     const babelwires::Path pathToValue;
 
@@ -165,7 +165,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisIdentifier()));
+        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisType()));
 
     // Not an optional field
     babelwires::ShortId opId("flerm");
@@ -184,7 +184,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisIdentifier()));
+        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisType()));
 
     const babelwires::Path pathToValue;
 

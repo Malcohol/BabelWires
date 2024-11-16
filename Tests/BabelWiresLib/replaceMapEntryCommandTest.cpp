@@ -17,18 +17,18 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisType()}});
+    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisType());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
-                                              testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisType(),
+                                              testUtils::TestType::getThisType());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testUtils::TestType::getThisIdentifier());
+                                                       testUtils::TestType::getThisType());
 
     mapValue.emplaceBack(oneToOne.clone());
 
@@ -43,8 +43,8 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
     mapValue.emplaceBack(allToOne.clone());
     mapProject.setMapValue(mapValue);
 
-    babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
-                                              testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestType::getThisType(),
+                                              testUtils::TestType::getThisType());
     newSourceValue.m_value = "Source2";
     newTargetValue.m_value = "Target2";
     oneToOne2.setSourceValue(newSourceValue);
@@ -72,18 +72,18 @@ TEST(ReplaceMapEntryCommandTest, failBeyondEnd) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisType()}});
+    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisType());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
-                                              testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisType(),
+                                              testUtils::TestType::getThisType());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testUtils::TestType::getThisIdentifier());
+                                                       testUtils::TestType::getThisType());
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
@@ -97,18 +97,18 @@ TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisType()}});
+    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisType());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
-                                              testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisType(),
+                                              testUtils::TestType::getThisType());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testUtils::TestType::getThisIdentifier());
+                                                       testUtils::TestType::getThisType());
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
@@ -119,8 +119,8 @@ TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
     EXPECT_FALSE(mapProject.getMapEntry(1).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());
 
-    babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
-                                              testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, testUtils::TestType::getThisType(),
+                                              testUtils::TestType::getThisType());
     testUtils::TestValue newSourceValue;
     testUtils::TestValue newTargetValue;
     newSourceValue.m_value = "Source2";
@@ -155,18 +155,18 @@ TEST(ReplaceMapEntryCommandTest, failInvalid) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisType()}});
+    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testUtils::TestType::getThisIdentifier());
-    mapValue.setTargetTypeRef(testUtils::TestType::getThisIdentifier());
+    mapValue.setSourceTypeRef(testUtils::TestType::getThisType());
+    mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisIdentifier(),
-                                              testUtils::TestType::getThisIdentifier());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisType(),
+                                              testUtils::TestType::getThisType());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testUtils::TestType::getThisIdentifier());
+                                                       testUtils::TestType::getThisType());
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
