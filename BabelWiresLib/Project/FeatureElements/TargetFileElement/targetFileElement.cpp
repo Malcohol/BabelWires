@@ -36,11 +36,11 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
         setValueTreeRoot(std::move(newFeature));
     } catch (const RegistryException& e) {
         setInternalFailure(e.what());
-        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
+        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisType()));
         userLogger.logError() << "Failed to create target id=" << elementData.m_id << ": " << e.what();
     } catch (const BaseException& e) {
         setInternalFailure(e.what());
-        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
+        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisType()));
         userLogger.logError() << "Failed to create target \"" << elementData.m_factoryIdentifier
                               << "\": " << e.what();
     }

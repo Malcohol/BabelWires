@@ -315,7 +315,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorSucceed) {
 
     babelwires::TypeRef arrayTypeRef(babelwires::ArrayTypeConstructor::getThisIdentifier(),
                                      babelwires::TypeConstructorArguments{
-                                         {babelwires::StringType::getThisIdentifier()},
+                                         {babelwires::StringType::getThisType()},
                                          {babelwires::IntValue(1), babelwires::IntValue(5), babelwires::IntValue(3)}});
 
     EXPECT_STREQ(arrayTypeRef.toString().c_str(), "Array<String>[1..5]");
@@ -326,7 +326,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorSucceed) {
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();
     ASSERT_NE(arrayType, nullptr);
 
-    EXPECT_EQ(arrayType->getEntryType(), babelwires::StringType::getThisIdentifier());
+    EXPECT_EQ(arrayType->getEntryType(), babelwires::StringType::getThisType());
     EXPECT_EQ(arrayType->getSizeRange().m_min, 1);
     EXPECT_EQ(arrayType->getSizeRange().m_max, 5);
     EXPECT_EQ(arrayType->getInitialSize(), 3);
@@ -348,7 +348,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
     {
         babelwires::TypeRef arrayTypeRef(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
-            babelwires::TypeConstructorArguments{{babelwires::StringType::getThisIdentifier()}, {}});
+            babelwires::TypeConstructorArguments{{babelwires::StringType::getThisType()}, {}});
 
         EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
         EXPECT_THROW(arrayTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
@@ -357,7 +357,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
         babelwires::TypeRef arrayTypeRef(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                {babelwires::StringType::getThisIdentifier()},
+                {babelwires::StringType::getThisType()},
                 {babelwires::IntValue(-1), babelwires::IntValue(5), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
@@ -367,7 +367,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
         babelwires::TypeRef arrayTypeRef(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                {babelwires::StringType::getThisIdentifier()},
+                {babelwires::StringType::getThisType()},
                 {babelwires::IntValue(6), babelwires::IntValue(2), babelwires::IntValue(7)}});
 
         EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
@@ -377,7 +377,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
         babelwires::TypeRef arrayTypeRef(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                {babelwires::StringType::getThisIdentifier()},
+                {babelwires::StringType::getThisType()},
                 {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
@@ -387,7 +387,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
         babelwires::TypeRef arrayTypeRef(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                {babelwires::StringType::getThisIdentifier()},
+                {babelwires::StringType::getThisType()},
                 {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(12)}});
 
         EXPECT_EQ(arrayTypeRef.tryResolve(testEnvironment.m_typeSystem), nullptr);
@@ -401,19 +401,19 @@ TEST(ArrayTypeTest, subtyping) {
     babelwires::TypeRef arrayTypeRef(
         babelwires::ArrayTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            {testUtils::TestSubEnum::getThisIdentifier()},
+            {testUtils::TestSubEnum::getThisType()},
             {babelwires::IntValue(2), babelwires::IntValue(6), babelwires::IntValue(3)}});
 
     babelwires::TypeRef biggerArrayTypeRef(
         babelwires::ArrayTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            {testUtils::TestSubEnum::getThisIdentifier()},
+            {testUtils::TestSubEnum::getThisType()},
             {babelwires::IntValue(1), babelwires::IntValue(7), babelwires::IntValue(3)}});
 
     babelwires::TypeRef arrayOfSupertypeTypeRef(
         babelwires::ArrayTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            {testUtils::TestEnum::getThisIdentifier()},
+            {testUtils::TestEnum::getThisType()},
             {babelwires::IntValue(2), babelwires::IntValue(6), babelwires::IntValue(3)}});
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeRef, arrayTypeRef), babelwires::SubtypeOrder::IsEquivalent);
@@ -427,7 +427,7 @@ TEST(ArrayTypeTest, subtyping) {
 
 TEST(ArrayTypeTest, featureChanges) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisIdentifier());
+    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisType());
     arrayFeature.setToDefault();
 
     const testUtils::TestSimpleArrayType* arrayType = arrayFeature.getType().as<testUtils::TestSimpleArrayType>();

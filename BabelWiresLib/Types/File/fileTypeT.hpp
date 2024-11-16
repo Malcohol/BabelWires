@@ -20,10 +20,10 @@ namespace babelwires {
     template <typename T> class FileTypeT : public FileType {
       public:
         FileTypeT()
-            : FileType(T::getThisIdentifier()) {}
+            : FileType(T::getThisType()) {}
 
         static babelwires::TypeRef getThisType() {
-            return babelwires::FileTypeConstructor::makeTypeRef(T::getThisIdentifier());
+            return babelwires::FileTypeConstructor::makeTypeRef(T::getThisType());
         }
 
         TypeRef getTypeRef() const override { return getThisType(); }

@@ -410,7 +410,7 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisIdentifier());
+                                                testUtils::TestComplexRecordType::getThisType());
     inputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -425,7 +425,7 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisIdentifier());
+                                                 testUtils::TestComplexRecordType::getThisType());
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -439,9 +439,9 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisIdentifier());
+                                                testUtils::TestComplexRecordType::getThisType());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisIdentifier());
+                                                 testUtils::TestComplexRecordType::getThisType());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
@@ -457,9 +457,9 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisIdentifier());
+                                                testUtils::TestComplexRecordType::getThisType());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisIdentifier());
+                                                 testUtils::TestComplexRecordType::getThisType());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
@@ -521,9 +521,9 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisIdentifier());
+                                                testUtils::TestComplexRecordType::getThisType());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisIdentifier());
+                                                 testUtils::TestComplexRecordType::getThisType());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();

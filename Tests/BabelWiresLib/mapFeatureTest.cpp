@@ -26,7 +26,7 @@ namespace {
     template <typename SOURCE_TYPE, typename TARGET_TYPE> babelwires::TypeRef getTestMapTypeRef() {
         return babelwires::TypeRef(babelwires::MapTypeConstructor::getThisIdentifier(),
                                    babelwires::TypeConstructorArguments{
-                                       {SOURCE_TYPE::getThisIdentifier(), TARGET_TYPE::getThisIdentifier()},
+                                       {SOURCE_TYPE::getThisType(), TARGET_TYPE::getThisType()},
                                        {babelwires::EnumValue(babelwires::MapEntryFallbackKind::getIdentifierFromValue(
                                            babelwires::MapEntryFallbackKind::Value::All21))}});
     }
@@ -62,7 +62,7 @@ TEST(MapFeatureTest, isCompatible) {
     babelwires::ValueTreeRoot mapFeature2(testEnvironment.m_typeSystem,
                                                getTestMapTypeRef<testUtils::TestType, babelwires::DefaultIntType>());
     babelwires::ValueTreeRoot intFeature(testEnvironment.m_typeSystem,
-                                              babelwires::DefaultIntType::getThisIdentifier());
+                                              babelwires::DefaultIntType::getThisType());
 
     EXPECT_EQ(mapFeature1.getKind(), mapFeature2.getKind());
     EXPECT_NE(mapFeature1.getKind(), intFeature.getKind());

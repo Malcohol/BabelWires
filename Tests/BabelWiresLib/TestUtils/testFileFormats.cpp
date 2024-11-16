@@ -22,7 +22,7 @@ namespace {
 } // namespace
 
 babelwires::TypeRef testUtils::getTestFileType() {
-    return babelwires::FileTypeConstructor::makeTypeRef(TestSimpleRecordType::getThisIdentifier());
+    return babelwires::FileTypeConstructor::makeTypeRef(TestSimpleRecordType::getThisType());
 }
 
 babelwires::Path testUtils::getTestFileElementPathToInt0() {

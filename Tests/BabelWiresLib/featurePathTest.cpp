@@ -120,7 +120,7 @@ TEST(FeaturePathTest, pathFollow) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
-                                                     testUtils::TestComplexRecordType::getThisIdentifier());
+                                                     testUtils::TestComplexRecordType::getThisType());
     testRecordFeature.setToDefault();
 
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
@@ -186,7 +186,7 @@ TEST(FeaturePathTest, pathResolve) {
     EXPECT_EQ(pathToInt2.getStep(1).getField().getDiscriminator(), 0);
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
-                                                     testUtils::TestComplexRecordType::getThisIdentifier());
+                                                     testUtils::TestComplexRecordType::getThisType());
     testRecordFeature.setToDefault();
 
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
@@ -223,7 +223,7 @@ TEST(FeaturePathTest, pathTryFollow) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
-                                                     testUtils::TestComplexRecordType::getThisIdentifier());
+                                                     testUtils::TestComplexRecordType::getThisType());
     testRecordFeature.setToDefault();
 
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
@@ -256,7 +256,7 @@ TEST(FeaturePathTest, pathFollowFail) {
     pathValueAsArray.pushStep(babelwires::PathStep(12));
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
-                                                     testUtils::TestComplexRecordType::getThisIdentifier());
+                                                     testUtils::TestComplexRecordType::getThisType());
     testRecordFeature.setToDefault();
 
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);

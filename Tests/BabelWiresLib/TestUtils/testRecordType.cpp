@@ -8,8 +8,8 @@
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 testUtils::TestSimpleRecordType::TestSimpleRecordType()
-    : RecordType({{getInt0Id(), babelwires::DefaultIntType::getThisIdentifier()},
-                  {getInt1Id(), babelwires::DefaultIntType::getThisIdentifier()}}) {}
+    : RecordType({{getInt0Id(), babelwires::DefaultIntType::getThisType()},
+                  {getInt1Id(), babelwires::DefaultIntType::getThisType()}}) {}
 
 babelwires::ShortId testUtils::TestSimpleRecordType::getInt0Id() {
     return BW_SHORT_ID(s_int0IdInitializer, s_int0FieldName, s_int0Uuid);
@@ -20,13 +20,13 @@ babelwires::ShortId testUtils::TestSimpleRecordType::getInt1Id() {
 }
 
 testUtils::TestComplexRecordType::TestComplexRecordType()
-    : RecordType({{getInt0Id(), babelwires::DefaultIntType::getThisIdentifier()},
-                  {getOpIntId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive},
-                  {getSubrecordId(), TestSimpleRecordType::getThisIdentifier()},
+    : RecordType({{getInt0Id(), babelwires::DefaultIntType::getThisType()},
+                  {getOpIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
+                  {getSubrecordId(), TestSimpleRecordType::getThisType()},
                   {getInt1Id(), babelwires::IntTypeConstructor::makeTypeRef(c_int1min, c_int1max, c_int1default)},
-                  {getOpRecId(), TestSimpleRecordType::getThisIdentifier(), Optionality::optionalDefaultInactive},
-                  {getStringId(), babelwires::StringType::getThisIdentifier()},
-                  {getArrayId(), testUtils::TestSimpleArrayType::getThisIdentifier()}}) {}
+                  {getOpRecId(), TestSimpleRecordType::getThisType(), Optionality::optionalDefaultInactive},
+                  {getStringId(), babelwires::StringType::getThisType()},
+                  {getArrayId(), testUtils::TestSimpleArrayType::getThisType()}}) {}
 
 babelwires::ShortId testUtils::TestComplexRecordType::getInt0Id() {
     return BW_SHORT_ID(s_intIdInitializer, s_intFieldName, "1aafde9a-fb39-4a2d-8a29-55fc9d6d093b");
@@ -57,7 +57,7 @@ babelwires::ShortId testUtils::TestComplexRecordType::getArrayId() {
 }
 
 testUtils::TestSimpleRecordElementData::TestSimpleRecordElementData()
-    : babelwires::ValueElementData(TestSimpleRecordType::getThisIdentifier()) {}
+    : babelwires::ValueElementData(TestSimpleRecordType::getThisType()) {}
 
 babelwires::Path testUtils::TestSimpleRecordElementData::getPathToRecord() {
     return babelwires::Path();
@@ -70,7 +70,7 @@ babelwires::Path testUtils::TestSimpleRecordElementData::getPathToRecordInt0() {
 }
 
 testUtils::TestComplexRecordElementData::TestComplexRecordElementData()
-    : babelwires::ValueElementData(TestComplexRecordType::getThisIdentifier()) {}
+    : babelwires::ValueElementData(TestComplexRecordType::getThisType()) {}
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecord() {
     return babelwires::Path();

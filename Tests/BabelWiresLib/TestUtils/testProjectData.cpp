@@ -144,7 +144,7 @@ void testUtils::TestProjectData::testProjectData(const babelwires::ProjectContex
 }
 
 void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::ProjectContext& context) {
-    babelwires::ValueTreeRoot testRecord(context.m_typeSystem, testUtils::TestProcessorInputOutputType::getThisIdentifier());
+    babelwires::ValueTreeRoot testRecord(context.m_typeSystem, testUtils::TestProcessorInputOutputType::getThisType());
     testRecord.setToDefault();
     babelwires::ValueTreeRoot testFileFeature(context.m_typeSystem, testUtils::getTestFileType());
 

@@ -21,13 +21,13 @@ babelwires::ShortId testUtils::TestProcessorInputOutputType::getRecordId() {
 
 testUtils::TestProcessorInputOutputType::TestProcessorInputOutputType()
     : RecordType(
-          {{getIntId(), babelwires::DefaultIntType::getThisIdentifier()},
-           {getOptIntId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive},
+          {{getIntId(), babelwires::DefaultIntType::getThisType()},
+           {getOptIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
            {getArrayId(),
             babelwires::TypeRef{babelwires::ArrayTypeConstructor::getThisIdentifier(),
-                                {{babelwires::DefaultIntType::getThisIdentifier()},
+                                {{babelwires::DefaultIntType::getThisType()},
                                  {babelwires::IntValue(2), babelwires::IntValue(8), babelwires::IntValue(2)}}}},
-           {getRecordId(), TestSimpleRecordType::getThisIdentifier()}}) {}
+           {getRecordId(), TestSimpleRecordType::getThisType()}}) {}
 
 const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToInt =
     babelwires::Path::deserializeFromString("Int");
@@ -49,8 +49,8 @@ const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToInt2 =
     babelwires::Path::deserializeFromString("Record/intR0");
 
 testUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& context)
-    : babelwires::Processor(context, testUtils::TestProcessorInputOutputType::getThisIdentifier(),
-                                 testUtils::TestProcessorInputOutputType::getThisIdentifier()) {}
+    : babelwires::Processor(context, testUtils::TestProcessorInputOutputType::getThisType(),
+                                 testUtils::TestProcessorInputOutputType::getThisType()) {}
 
 void testUtils::TestProcessor::processValue(babelwires::UserLogger& userLogger,
                                              const babelwires::ValueTreeNode& input,

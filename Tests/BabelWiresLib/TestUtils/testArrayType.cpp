@@ -7,18 +7,18 @@ testUtils::TestSimpleArrayType::TestSimpleArrayType()
     : babelwires::ArrayType(getEntryTypeStatic(), s_minimumSize, s_maximumSize, s_defaultSize) {}
 
 babelwires::TypeRef testUtils::TestSimpleArrayType::getEntryTypeStatic() {
-    return babelwires::DefaultIntType::getThisIdentifier();
+    return babelwires::DefaultIntType::getThisType();
 }
 
 testUtils::TestCompoundArrayType::TestCompoundArrayType()
     : babelwires::ArrayType(getEntryTypeStatic(), s_minimumSize, s_maximumSize, s_defaultSize) {}
 
 babelwires::TypeRef testUtils::TestCompoundArrayType::getEntryTypeStatic() {
-    return testUtils::TestSimpleArrayType::getThisIdentifier();
+    return testUtils::TestSimpleArrayType::getThisType();
 }
 
 testUtils::TestArrayElementData::TestArrayElementData()
-    : babelwires::ValueElementData(TestSimpleArrayType::getThisIdentifier()) {}
+    : babelwires::ValueElementData(TestSimpleArrayType::getThisType()) {}
 
 babelwires::Path testUtils::TestArrayElementData::getPathToArray() {
     return babelwires::Path();

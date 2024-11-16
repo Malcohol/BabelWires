@@ -16,14 +16,14 @@
 /*
 babelwires::TestRecordType::TestRecordType()
     : RecordType(
-          {{BW_SHORT_ID("foo", "Foo", "b36ab40f-c570-46f7-9dab-3af1b8f3216e"), DefaultIntType::getThisIdentifier()},
-           {BW_SHORT_ID("erm", "Erm", "bcb21539-6d10-41b2-886b-4b46f158f6bd"), DefaultIntType::getThisIdentifier()}}) {}
+          {{BW_SHORT_ID("foo", "Foo", "b36ab40f-c570-46f7-9dab-3af1b8f3216e"), DefaultIntType::getThisType()},
+           {BW_SHORT_ID("erm", "Erm", "bcb21539-6d10-41b2-886b-4b46f158f6bd"), DefaultIntType::getThisType()}}) {}
 
 babelwires::TestRecordType2::TestRecordType2()
     : RecordType(
-          {{BW_SHORT_ID("bar", "Bar", "8e746efa-1db8-4c43-b80c-451b6ee5db55"), DefaultIntType::getThisIdentifier()},
-           {BW_SHORT_ID("obj", "Obj", "e4629b27-0286-4712-8cf4-6cce69bb3636"), TestRecordType::getThisIdentifier()},
-           {BW_SHORT_ID("merm", "Merm", "b69f16a6-fcfb-49e8-be4b-c7910bff15c7"), DefaultIntType::getThisIdentifier(),
+          {{BW_SHORT_ID("bar", "Bar", "8e746efa-1db8-4c43-b80c-451b6ee5db55"), DefaultIntType::getThisType()},
+           {BW_SHORT_ID("obj", "Obj", "e4629b27-0286-4712-8cf4-6cce69bb3636"), TestRecordType::getThisType()},
+           {BW_SHORT_ID("merm", "Merm", "b69f16a6-fcfb-49e8-be4b-c7910bff15c7"), DefaultIntType::getThisType(),
             Optionality::optionalDefaultInactive}}) {}
 */
 
