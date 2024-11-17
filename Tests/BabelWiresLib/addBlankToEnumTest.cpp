@@ -57,6 +57,26 @@ TEST(AddBlankToEnum, constructType) {
     EXPECT_EQ(newEnum->getIndexOfDefaultValue(), testEnum.getIndexOfDefaultValue());
 }
 
+TEST(AddBlankToEnum, makeTypeRef) {
+    testUtils::TestEnvironment testEnvironment;
+    const testUtils::TestEnum& testEnum = testEnvironment.m_typeSystem.getEntryByType<testUtils::TestEnum>();
+
+    const babelwires::TypeRef enumWithBlankTypeRef = babelwires::AddBlankToEnum::makeTypeRef(testUtils::TestEnum::getThisType());
+
+    const babelwires::Type *const newType = enumWithBlankTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    ASSERT_NE(newType, nullptr);
+
+    const babelwires::EnumType* const newEnum = newType->as<babelwires::EnumType>();
+    ASSERT_NE(newEnum, nullptr);
+    
+    EXPECT_EQ(newEnum->getValueSet().size(), testEnum.getValueSet().size() + 1);
+    for (int i = 0; i < testEnum.getValueSet().size(); ++i) {
+        EXPECT_EQ(newEnum->getValueSet()[i], testEnum.getValueSet()[i]);
+    }
+    EXPECT_EQ(newEnum->getValueSet()[newEnum->getValueSet().size() - 1], babelwires::AddBlankToEnum::getBlankValue());
+    EXPECT_EQ(newEnum->getIndexOfDefaultValue(), testEnum.getIndexOfDefaultValue());
+}
+
 TEST(AddBlankToEnum, idempotency) {
     testUtils::TestEnvironment testEnvironment;
     const testUtils::TestEnum& testEnum = testEnvironment.m_typeSystem.getEntryByType<testUtils::TestEnum>();

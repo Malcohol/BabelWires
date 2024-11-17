@@ -16,7 +16,8 @@ babelwires::ShortId babelwires::AddBlankToEnum::getBlankValue() {
 }
 
 std::unique_ptr<babelwires::Type>
-babelwires::AddBlankToEnum::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+babelwires::AddBlankToEnum::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+                                          const std::vector<const Type*>& typeArguments,
                                           const std::vector<EditableValueHolder>& valueArguments) const {
     if (typeArguments.size() != 1) {
         throw TypeSystemException() << "AddBlankToEnum expects one type argument but got " << typeArguments.size();
@@ -30,7 +31,7 @@ babelwires::AddBlankToEnum::constructType(const TypeSystem& typeSystem, TypeRef 
                                     << " provided to AddBlankToEnum";
     }
     return std::make_unique<ConstructedType<EnumType>>(std::move(newTypeRef), ensureBlankValue(srcEnum->getValueSet()),
-                                                   srcEnum->getIndexOfDefaultValue());
+                                                       srcEnum->getIndexOfDefaultValue());
 }
 
 babelwires::EnumType::ValueSet babelwires::AddBlankToEnum::ensureBlankValue(const EnumType::ValueSet& srcValues) {
@@ -44,4 +45,8 @@ babelwires::EnumType::ValueSet babelwires::AddBlankToEnum::ensureBlankValue(cons
     babelwires::EnumType::ValueSet newValues = srcValues;
     newValues.emplace_back(AddBlankToEnum::getBlankValue());
     return newValues;
+}
+
+babelwires::TypeRef babelwires::AddBlankToEnum::makeTypeRef(TypeRef enumTypeRef) {
+    return TypeRef{getThisIdentifier(), std::move(enumTypeRef)};
 }
