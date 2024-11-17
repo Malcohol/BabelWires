@@ -111,6 +111,28 @@ TEST(IntTypeTest, constructedIntTypeIsValidValue) {
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(3)));
 }
 
+TEST(IntTypeTest, makeTypeRef) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef intTypeRef = babelwires::IntTypeConstructor::makeTypeRef(-120, 140, -30);
+
+    const babelwires::Type* const type = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
+
+    const babelwires::IntType* const intType = type->as<babelwires::IntType>();
+    ASSERT_NE(intType, nullptr);
+
+    auto range = intType->getRange();
+    EXPECT_EQ(range.m_min, -120);
+    EXPECT_EQ(range.m_max, 140);
+
+    babelwires::ValueHolder newValue = intType->createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(newValue);
+
+    const auto* const newIntValue = newValue->as<babelwires::IntValue>();
+    EXPECT_NE(newIntValue, nullptr);
+    EXPECT_EQ(newIntValue->get(), -30);
+}
+
 TEST(IntTypeTest, sameKind) {
     testUtils::TestEnvironment testEnvironment;
 
