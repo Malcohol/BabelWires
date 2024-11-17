@@ -41,3 +41,11 @@ babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, Type
                                                       typeArguments[1]->getTypeRef(), kind);
 }
 
+babelwires::TypeRef babelwires::MapTypeConstructor::makeTypeRef(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind fallbackKind) {
+    return babelwires::TypeRef{
+                babelwires::MapTypeConstructor::getThisIdentifier(),
+                babelwires::TypeConstructorArguments{
+                    {std::move(sourceTypeRef), std::move(targetTypeRef)},
+                    {babelwires::EnumValue(babelwires::MapEntryFallbackKind::getIdentifierFromValue(
+                        fallbackKind))}}};
+}

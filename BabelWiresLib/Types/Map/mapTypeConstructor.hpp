@@ -20,6 +20,9 @@ namespace babelwires {
         std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
 
+        /// Convenience method.
+        static TypeRef makeTypeRef(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind fallbackKind = MapEntryData::Kind::All21);
+
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
         static MapEntryData::Kind extractValueArguments(const TypeSystem& typeSystem, const std::vector<EditableValueHolder>& valueArguments);
