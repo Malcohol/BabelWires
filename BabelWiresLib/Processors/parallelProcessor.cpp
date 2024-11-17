@@ -11,13 +11,13 @@
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <algorithm>
 #include <array>
@@ -26,9 +26,7 @@
 
 namespace {
     babelwires::TypeRef getParallelArray(babelwires::TypeRef&& entryType) {
-        return babelwires::TypeRef{
-            babelwires::ArrayTypeConstructor::getThisIdentifier(),
-            {{std::move(entryType)}, {babelwires::IntValue(1), babelwires::IntValue(16), babelwires::IntValue(1)}}};
+        return babelwires::ArrayTypeConstructor::makeTypeRef(std::move(entryType), 1, 16);
     }
 
     std::vector<babelwires::RecordType::Field>&& addArray(std::vector<babelwires::RecordType::Field>&& commonData,
@@ -115,8 +113,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
 #ifndef __APPLE__
         std::execution::par,
 #endif
-        entriesToProcess.begin(), entriesToProcess.end(),
-        [this, &input, &userLogger, &isFailed](EntryData& data) {
+        entriesToProcess.begin(), entriesToProcess.end(), [this, &input, &userLogger, &isFailed](EntryData& data) {
             try {
                 processEntry(userLogger, input, data.m_inputEntry, *(data.m_outputEntry));
             } catch (const BaseException& e) {

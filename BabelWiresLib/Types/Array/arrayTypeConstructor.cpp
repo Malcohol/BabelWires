@@ -59,3 +59,14 @@ babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, Ty
 
     return std::make_unique<ConstructedType<ArrayType>>(std::move(newTypeRef), typeArguments[0]->getTypeRef(), minimumSize, maximumSize, defaultSize);
 }
+
+babelwires::TypeRef babelwires::ArrayTypeConstructor::makeTypeRef(TypeRef entryType, unsigned int minSize, unsigned int maxSize, unsigned int defaultSize) {
+    assert(minSize <= maxSize);
+    assert(defaultSize <= maxSize);
+    if (defaultSize < minSize) {
+        defaultSize = minSize;
+    }
+    return babelwires::TypeRef{getThisIdentifier(),
+                                {{std::move(entryType)},
+                                 {babelwires::IntValue(minSize), babelwires::IntValue(maxSize), babelwires::IntValue(defaultSize)}}};
+}
