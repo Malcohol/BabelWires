@@ -1,7 +1,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 
-#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 
 babelwires::ShortId testUtils::TestProcessorInputOutputType::getIntId() {
     return BW_SHORT_ID(s_intIdInitializer, s_intFieldName, s_intUuid);
@@ -20,14 +20,11 @@ babelwires::ShortId testUtils::TestProcessorInputOutputType::getRecordId() {
 }
 
 testUtils::TestProcessorInputOutputType::TestProcessorInputOutputType()
-    : RecordType(
-          {{getIntId(), babelwires::DefaultIntType::getThisType()},
-           {getOptIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
-           {getArrayId(),
-            babelwires::TypeRef{babelwires::ArrayTypeConstructor::getThisIdentifier(),
-                                {{babelwires::DefaultIntType::getThisType()},
-                                 {babelwires::IntValue(2), babelwires::IntValue(8), babelwires::IntValue(2)}}}},
-           {getRecordId(), TestSimpleRecordType::getThisType()}}) {}
+    : RecordType({{getIntId(), babelwires::DefaultIntType::getThisType()},
+                  {getOptIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
+                  {getArrayId(),
+                   babelwires::ArrayTypeConstructor::makeTypeRef(babelwires::DefaultIntType::getThisType(), 2, 8)},
+                  {getRecordId(), TestSimpleRecordType::getThisType()}}) {}
 
 const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToInt =
     babelwires::Path::deserializeFromString("Int");
@@ -50,11 +47,10 @@ const babelwires::Path testUtils::TestProcessorInputOutputType::s_pathToInt2 =
 
 testUtils::TestProcessor::TestProcessor(const babelwires::ProjectContext& context)
     : babelwires::Processor(context, testUtils::TestProcessorInputOutputType::getThisType(),
-                                 testUtils::TestProcessorInputOutputType::getThisType()) {}
+                            testUtils::TestProcessorInputOutputType::getThisType()) {}
 
-void testUtils::TestProcessor::processValue(babelwires::UserLogger& userLogger,
-                                             const babelwires::ValueTreeNode& input,
-                                             babelwires::ValueTreeNode& output) const {
+void testUtils::TestProcessor::processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
+                                            babelwires::ValueTreeNode& output) const {
     TestProcessorInputOutputType::ConstInstance in{input};
     TestProcessorInputOutputType::Instance out{output};
 

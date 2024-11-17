@@ -24,11 +24,7 @@
 namespace {
     // Describes an IntType -> IntType map.
     template <typename SOURCE_TYPE, typename TARGET_TYPE> babelwires::TypeRef getTestMapTypeRef() {
-        return babelwires::TypeRef(babelwires::MapTypeConstructor::getThisIdentifier(),
-                                   babelwires::TypeConstructorArguments{
-                                       {SOURCE_TYPE::getThisType(), TARGET_TYPE::getThisType()},
-                                       {babelwires::EnumValue(babelwires::MapEntryFallbackKind::getIdentifierFromValue(
-                                           babelwires::MapEntryFallbackKind::Value::All21))}});
+        return babelwires::MapTypeConstructor::makeTypeRef(SOURCE_TYPE::getThisType(), TARGET_TYPE::getThisType());
     }
 } // namespace
 

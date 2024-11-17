@@ -39,3 +39,9 @@ babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem,
     auto [range, defaultValue] = extractValueArguments(valueArguments);
     return std::make_unique<ConstructedType<RationalType>>(std::move(newTypeRef), range, defaultValue);
 }
+
+babelwires::TypeRef babelwires::RationalTypeConstructor::makeTypeRef(Rational min, Rational max, Rational defaultValue) {
+    assert(min <= defaultValue);
+    assert(defaultValue <= max);
+    return TypeRef(getThisIdentifier(), RationalValue(min), RationalValue(max), RationalValue(defaultValue));
+}

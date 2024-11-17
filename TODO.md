@@ -1,16 +1,18 @@
-Structured Data Flow WIP:
-1. Records, Unions and Optionals Types
-1. Unit tests: Array values, New feature types, ValuePath, commands
+Structured Data Flow:
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
+1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
+1. New UI Workflows
 
 Bugs:
-* Crash when wiring the tracks array of excerpt to the tracks array of repeat in the sample.
-* Three test record values. 
+* Moving compound connections targets between nodes does not work properly.
+  e.g. Three test record values. 
   1. Wire two together. 
   1. Expand and collapse the target node.
   1. Move the target connection to the third
   1. Expand the third record
   1. Observe that the connection gets removed.
+* Connecting to a array which already has a size modifier will remove any modifiers above its default size.
+  * When the array size modifier removed, it removes those modifiers even though the new connection might set the array to a sufficiently large size.
 * Moving a target connection from a valid record target to a record target of a different type does not cause the modifier to fail.
 * The "*" suffix of a target feature label is not always removed directly after saving.
 * Array element modifications can be wrongly removed when an array value of non-default size is set from another array of equivalent size.
