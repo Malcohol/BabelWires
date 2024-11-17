@@ -17,10 +17,7 @@
 namespace {
 
     babelwires::TypeRef getLimitedIntType() {
-        return babelwires::TypeRef(
-            babelwires::IntTypeConstructor::getThisIdentifier(),
-            babelwires::TypeConstructorArguments{
-                {}, {babelwires::IntValue(-20), babelwires::IntValue(20), babelwires::IntValue(0)}});
+        return babelwires::IntTypeConstructor::makeTypeRef(-20, 20, 0);
     }
 
     babelwires::ShortId getCommonArrayId() {
