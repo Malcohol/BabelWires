@@ -114,6 +114,29 @@ TEST(RationalTypeTest, constructedRationalTypeIsValidValue) {
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(3)));
 }
 
+TEST(RationalTypeTest, makeTypeRef) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef rationalTypeRef = babelwires::RationalTypeConstructor::makeTypeRef(babelwires::Rational(2, 3),
+        babelwires::Rational(4, 3), 1);
+
+    const babelwires::Type* const type = rationalTypeRef.tryResolve(testEnvironment.m_typeSystem);
+
+    const babelwires::RationalType* const rationalType = type->as<babelwires::RationalType>();
+    ASSERT_NE(rationalType, nullptr);
+
+    auto range = rationalType->getRange();
+    EXPECT_EQ(range.m_min, babelwires::Rational(2, 3));
+    EXPECT_EQ(range.m_max, babelwires::Rational(4, 3));
+
+    babelwires::ValueHolder newValue = type->createValue(testEnvironment.m_typeSystem);
+    EXPECT_TRUE(newValue);
+
+    const auto* const newRationalValue = newValue->as<babelwires::RationalValue>();
+    EXPECT_NE(newRationalValue, nullptr);
+    EXPECT_EQ(newRationalValue->get(), 1);
+}
+
 TEST(RationalTypeTest, sameKind) {
     testUtils::TestEnvironment testEnvironment;
 
