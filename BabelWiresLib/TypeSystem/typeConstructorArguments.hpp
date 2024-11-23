@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #include <vector>
