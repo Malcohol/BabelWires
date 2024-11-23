@@ -17,12 +17,12 @@ jobs:
         config: 
         - {
             name: "Ubuntu_Latest_GCC",
-            os: ubuntu-latest,
+            os: ubuntu-24.04,
             build_type: "Debug",
             targetFolder: "",
             exeExtension: "",
-            cc: "gcc-11",
-            cxx: "g++-11"
+            cc: "gcc-14",
+            cxx: "g++-14"
           }
         - {
             name: "Windows Latest MSVC",
