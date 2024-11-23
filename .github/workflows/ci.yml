@@ -16,7 +16,7 @@ jobs:
       matrix:
         config: 
         - {
-            name: "Ubuntu_Latest_GCC",
+            name: "Ubuntu_GCC",
             os: ubuntu-24.04,
             build_type: "Debug",
             targetFolder: "",
@@ -41,7 +41,7 @@ jobs:
         submodules: recursive
 
     - name: Install dependencies on ubuntu
-      if: startsWith(matrix.config.name, 'Ubuntu_Latest_GCC')
+      if: startsWith(matrix.config.name, 'Ubuntu_GCC')
       run: |
         sudo apt-get update
         sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} libtbb-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
