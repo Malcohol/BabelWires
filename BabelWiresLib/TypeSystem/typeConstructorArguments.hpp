@@ -7,7 +7,6 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #include <vector>
@@ -28,14 +27,18 @@ namespace babelwires {
         std::vector<EditableValueHolder> m_valueArguments;
 
         friend bool operator==(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
-            return (a.m_typeArguments == b.m_typeArguments) && (a.m_valueArguments == b.m_valueArguments);
+            return equals(a, b);
         }
         friend bool operator!=(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
-            return !(a == b);
+            return !equals(a, b);
         }
 
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;
+
+      private:
+        /// The friend operators need to call an out-of-line implementation to avoid an include cycle.
+        static bool equals(const TypeConstructorArguments& a, const TypeConstructorArguments& b);
     };
 } // namespace babelwires
 

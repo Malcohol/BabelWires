@@ -24,3 +24,7 @@ std::size_t babelwires::TypeConstructorArguments::getHash() const {
     }
     return hash;
 }
+
+bool babelwires::TypeConstructorArguments::equals(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
+    return (a.m_typeArguments == b.m_typeArguments) && (a.m_valueArguments == b.m_valueArguments);
+}
