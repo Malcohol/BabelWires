@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>

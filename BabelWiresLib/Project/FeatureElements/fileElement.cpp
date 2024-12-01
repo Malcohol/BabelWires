@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
 
 #include <cassert>
 

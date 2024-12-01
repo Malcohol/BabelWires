@@ -1,7 +1,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/FeatureElements/node.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
 
 // TODO: Need to preserve SimulateFailure and SimulateRecovery if this gets replaced !!!
 // See Commented code in FeatureElementTest.

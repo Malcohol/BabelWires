@@ -10,7 +10,7 @@
 
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/node.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 

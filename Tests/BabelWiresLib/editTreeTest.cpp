@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>

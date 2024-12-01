@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
 
 namespace babelwires {
     /// Describes the construction of a processor.

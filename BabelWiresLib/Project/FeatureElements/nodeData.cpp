@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
 
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>

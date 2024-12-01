@@ -6,7 +6,7 @@
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 
