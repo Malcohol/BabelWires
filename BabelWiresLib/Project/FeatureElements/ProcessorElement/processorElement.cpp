@@ -24,7 +24,7 @@
 babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, UserLogger& userLogger,
                                                const ProcessorElementData& data, ElementId newId)
     : Node(data, newId) {
-    const ElementData& elementData = getElementData();
+    const NodeData& elementData = getElementData();
     try {
         const ProcessorFactory& factory = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
         auto newProcessor = factory.createNewProcessor(context);

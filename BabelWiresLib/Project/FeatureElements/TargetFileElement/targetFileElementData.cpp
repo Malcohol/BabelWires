@@ -17,7 +17,7 @@
 #include <Common/exceptions.hpp>
 
 babelwires::TargetFileElementData::TargetFileElementData(const TargetFileElementData& other, ShallowCloneContext c)
-    : ElementData(other, c)
+    : NodeData(other, c)
     , m_filePath(other.m_filePath) {}
 
 bool babelwires::TargetFileElementData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
@@ -45,6 +45,6 @@ void babelwires::TargetFileElementData::deserializeContents(Deserializer& deseri
 }
 
 void babelwires::TargetFileElementData::visitFilePaths(FilePathVisitor& visitor) {
-    ElementData::visitFilePaths(visitor);
+    NodeData::visitFilePaths(visitor);
     visitor(m_filePath);
 }

@@ -41,7 +41,7 @@ namespace babelwires {
         /// A randomly assigned ID which uniquely identifies this project.
         ProjectId m_projectId = INVALID_PROJECT_ID;
 
-        std::vector<std::unique_ptr<ElementData>> m_elements;
+        std::vector<std::unique_ptr<NodeData>> m_elements;
     };
 
 } // namespace babelwires

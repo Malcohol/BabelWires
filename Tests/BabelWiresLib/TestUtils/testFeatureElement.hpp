@@ -8,10 +8,10 @@
 
 namespace testUtils {
     ///
-    struct TestFeatureElementData : babelwires::ElementData {
+    struct TestFeatureElementData : babelwires::NodeData {
         CLONEABLE(TestFeatureElementData);
         CUSTOM_CLONEABLE(TestFeatureElementData);
-        SERIALIZABLE(TestFeatureElementData, "TestFeatureElementData", babelwires::ElementData, 1);
+        SERIALIZABLE(TestFeatureElementData, "TestFeatureElementData", babelwires::NodeData, 1);
 
         TestFeatureElementData();
         TestFeatureElementData(const TestFeatureElementData& other) = default;

@@ -28,7 +28,7 @@ babelwires::RemoveElementCommand::RemoveElementCommand(std::string commandName, 
     : SimpleCommand(commandName)
     , m_connections{std::move(connection)} {}
 
-// Needed because ElementData is not declared in the header.
+// Needed because NodeData is not declared in the header.
 babelwires::RemoveElementCommand::~RemoveElementCommand() = default;
 
 bool babelwires::RemoveElementCommand::addConnection(const babelwires::ConnectionDescription& desc,
@@ -116,7 +116,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
             return false;
         }
 
-        std::unique_ptr<ElementData> newElementData = element->extractElementData();
+        std::unique_ptr<NodeData> newElementData = element->extractElementData();
 
         // Move any connections described in the connections into the m_connections vector.
         auto newEnd = std::remove_if(

@@ -98,7 +98,7 @@ void babelwires::PasteElementsCommand::execute(Project& project) const {
 
     for (const auto& elementData : m_dataToPaste.m_elements) {
         // TODO
-        std::unique_ptr<ElementData> clone = elementData->clone();
+        std::unique_ptr<NodeData> clone = elementData->clone();
         clone->m_uiData.m_uiPosition += offset;
         project.addFeatureElement(*clone);
     }

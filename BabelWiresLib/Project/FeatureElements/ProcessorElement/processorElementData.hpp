@@ -11,10 +11,10 @@
 
 namespace babelwires {
     /// Describes the construction of a processor.
-    struct ProcessorElementData : ElementData {
+    struct ProcessorElementData : NodeData {
         CLONEABLE(ProcessorElementData);
         CUSTOM_CLONEABLE(ProcessorElementData);
-        SERIALIZABLE(ProcessorElementData, "processor", ElementData, 1);
+        SERIALIZABLE(ProcessorElementData, "processor", NodeData, 1);
         ProcessorElementData() = default;
         ProcessorElementData(const ProcessorElementData& other) = default;
         ProcessorElementData(const ProcessorElementData& other, ShallowCloneContext);

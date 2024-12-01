@@ -13,11 +13,11 @@
 
 namespace babelwires {
     /// Describes the construction of a ValueElement.
-    class ValueElementData : public ElementData {
+    class ValueElementData : public NodeData {
       public:
         CLONEABLE(ValueElementData);
         CUSTOM_CLONEABLE(ValueElementData);
-        SERIALIZABLE(ValueElementData, "value", ElementData, 1);
+        SERIALIZABLE(ValueElementData, "value", NodeData, 1);
         ValueElementData() = default;
         ValueElementData(TypeRef typeRef);
         ValueElementData(const ValueElementData& other) = default;

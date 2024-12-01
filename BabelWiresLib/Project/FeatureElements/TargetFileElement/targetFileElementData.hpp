@@ -18,10 +18,10 @@
 
 namespace babelwires {
     /// Describes the construction of a TargetFileFeature.
-    struct TargetFileElementData : ElementData {
+    struct TargetFileElementData : NodeData {
         CLONEABLE(TargetFileElementData);
         CUSTOM_CLONEABLE(TargetFileElementData);
-        SERIALIZABLE(TargetFileElementData, "targetFile", ElementData, 1);
+        SERIALIZABLE(TargetFileElementData, "targetFile", NodeData, 1);
         TargetFileElementData() = default;
         TargetFileElementData(const TargetFileElementData& other) = default;
         TargetFileElementData(const TargetFileElementData& other, ShallowCloneContext);

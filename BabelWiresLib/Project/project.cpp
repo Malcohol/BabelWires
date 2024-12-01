@@ -65,7 +65,7 @@ babelwires::ElementId babelwires::Project::reserveElementId(ElementId hint) {
     }
 }
 
-babelwires::Node* babelwires::Project::addFeatureElementWithoutCachingConnection(const ElementData& data) {
+babelwires::Node* babelwires::Project::addFeatureElementWithoutCachingConnection(const NodeData& data) {
     const ElementId availableId = reserveElementId(data.m_id);
     std::unique_ptr<Node> elementPtr = data.createFeatureElement(m_context, m_userLogger, availableId);
     Node* element = elementPtr.get();
@@ -79,7 +79,7 @@ void babelwires::Project::addFeatureElementConnectionsToCache(Node* element) {
     }
 }
 
-babelwires::ElementId babelwires::Project::addFeatureElement(const ElementData& data) {
+babelwires::ElementId babelwires::Project::addFeatureElement(const NodeData& data) {
     Node* element = addFeatureElementWithoutCachingConnection(data);
     addFeatureElementConnectionsToCache(element);
     return element->getElementId();

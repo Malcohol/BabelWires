@@ -1,5 +1,5 @@
 template<typename REGISTRY>
-bool babelwires::ElementData::checkFactoryVersionCommon(const REGISTRY& reg,
+bool babelwires::NodeData::checkFactoryVersionCommon(const REGISTRY& reg,
                                                         UserLogger& userLogger,
                                                         LongId factoryIdentifier,
                                                         VersionNumber& thisVersion) {

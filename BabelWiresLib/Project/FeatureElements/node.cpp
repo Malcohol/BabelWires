@@ -23,7 +23,7 @@
 
 #include <algorithm>
 
-babelwires::Node::Node(const ElementData& data, ElementId newId)
+babelwires::Node::Node(const NodeData& data, ElementId newId)
     : m_data(data.customClone())
     , m_contentsCache(m_edits) {
     m_data->m_id = newId;
@@ -82,11 +82,11 @@ babelwires::ElementId babelwires::Node::getElementId() const {
     return m_data->m_id;
 }
 
-const babelwires::ElementData& babelwires::Node::getElementData() const {
+const babelwires::NodeData& babelwires::Node::getElementData() const {
     return *m_data;
 }
 
-babelwires::ElementData& babelwires::Node::getElementData() {
+babelwires::NodeData& babelwires::Node::getElementData() {
     return *m_data;
 }
 
@@ -141,7 +141,7 @@ void babelwires::Node::removeModifier(Modifier* modifier) {
     setChanged(Changes::ModifierRemoved);
 }
 
-std::unique_ptr<babelwires::ElementData> babelwires::Node::extractElementData() const {
+std::unique_ptr<babelwires::NodeData> babelwires::Node::extractElementData() const {
     auto data = getElementData().clone();
     for (const auto& m : m_edits.modifierRange()) {
         data->m_modifiers.emplace_back(m->getModifierData().clone());

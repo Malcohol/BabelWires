@@ -21,7 +21,7 @@
 #include <fstream>
 
 namespace {
-    void setCommonFields(babelwires::ElementData& data) {
+    void setCommonFields(babelwires::NodeData& data) {
         data.m_id = 100;
         data.m_uiData.m_uiPosition.m_x = 12;
         data.m_uiData.m_uiPosition.m_y = -44;
@@ -29,7 +29,7 @@ namespace {
         data.m_expandedPaths.emplace_back(babelwires::Path::deserializeFromString("aa/bb"));
     }
 
-    void checkCommonFields(const babelwires::ElementData& data, bool testExpandedPaths = true) {
+    void checkCommonFields(const babelwires::NodeData& data, bool testExpandedPaths = true) {
         EXPECT_EQ(data.m_id, 100);
         EXPECT_EQ(data.m_uiData.m_uiPosition.m_x, 12);
         EXPECT_EQ(data.m_uiData.m_uiPosition.m_y, -44);
@@ -42,13 +42,13 @@ namespace {
         }
     }
 
-    void setModifiers(babelwires::ElementData& data, const babelwires::Path& path) {
+    void setModifiers(babelwires::NodeData& data, const babelwires::Path& path) {
         auto newMod = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(12));
         newMod->m_targetPath = path;
         data.m_modifiers.emplace_back(std::move(newMod));
     }
 
-    void checkModifiers(const babelwires::ElementData& data, const babelwires::Path& path) {
+    void checkModifiers(const babelwires::NodeData& data, const babelwires::Path& path) {
         EXPECT_EQ(data.m_modifiers.size(), 1);
         EXPECT_NE(data.m_modifiers[0]->as<babelwires::ValueAssignmentData>(), nullptr);
         const auto& mod = static_cast<const babelwires::ValueAssignmentData&>(*data.m_modifiers[0]);
@@ -56,11 +56,11 @@ namespace {
         EXPECT_EQ(mod.getValue()->as<babelwires::IntValue>()->get(), 12);
     }
 
-    void setModifiers(babelwires::ElementData& data, babelwires::ShortId fieldId) {
+    void setModifiers(babelwires::NodeData& data, babelwires::ShortId fieldId) {
         setModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
     }
 
-    void checkModifiers(const babelwires::ElementData& data, babelwires::ShortId fieldId) {
+    void checkModifiers(const babelwires::NodeData& data, babelwires::ShortId fieldId) {
         checkModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
     }
 } // namespace

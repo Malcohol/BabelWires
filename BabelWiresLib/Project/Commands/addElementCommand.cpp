@@ -16,7 +16,7 @@
 
 #include <cassert>
 
-babelwires::AddElementCommand::AddElementCommand(std::string commandName, std::unique_ptr<ElementData> elementToAdd)
+babelwires::AddElementCommand::AddElementCommand(std::string commandName, std::unique_ptr<NodeData> elementToAdd)
     : SimpleCommand(std::move(commandName))
     , m_elementToAdd(std::move(elementToAdd)) {
     assert((std::find(m_elementToAdd->m_expandedPaths.begin(), m_elementToAdd->m_expandedPaths.end(), Path()) == m_elementToAdd->m_expandedPaths.end()) && "The root is always expanded by default.");

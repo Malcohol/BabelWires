@@ -24,7 +24,7 @@ namespace babelwires {
     class Modifier;
     struct ModifierData;
     class ConnectionModifier;
-    struct ElementData;
+    struct NodeData;
     class Path;
     struct UiPosition;
     struct UiSize;
@@ -36,7 +36,7 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Node);
 
-        Node(const ElementData& data, ElementId newId);
+        Node(const NodeData& data, ElementId newId);
         virtual ~Node();
 
         /// Did the feature element fail, either because of an internal failure
@@ -59,7 +59,7 @@ namespace babelwires {
         virtual std::string getLabel() const;
 
         ElementId getElementId() const;
-        const ElementData& getElementData() const;
+        const NodeData& getElementData() const;
 
         /// Find the modifier at the path, if there is one.
         Modifier* findModifier(const Path& featurePath);
@@ -80,7 +80,7 @@ namespace babelwires {
 
         /// Get a clone of the element data with the modifiers, if there are any, re-attached.
         /// Expanded paths which do not currently lead to a feature are not included.
-        std::unique_ptr<babelwires::ElementData> extractElementData() const;
+        std::unique_ptr<babelwires::NodeData> extractElementData() const;
 
         const UiPosition& getUiPosition() const;
         void setUiPosition(const UiPosition& newPosition);
@@ -188,14 +188,14 @@ namespace babelwires {
         /// in m_removedModifiers.
         void setModifierMoving(const Modifier& modifierAboutToMove);
 
-        ElementData& getElementData();
+        NodeData& getElementData();
 
         /// Add the modifier, but don't apply it yet.
         /// Returns the new modifier.
         Modifier* addModifierWithoutApplyingIt(const ModifierData& modifier);
 
         /// Apply the element's local modifiers.
-        friend babelwires::ElementData;
+        friend babelwires::NodeData;
         void applyLocalModifiers(UserLogger& userLogger);
 
         /// Obtain the right to modify the feature at the given path.
@@ -209,11 +209,11 @@ namespace babelwires {
         std::string m_internalFailure;
         bool m_isInDependencyLoop = false;
 
-        std::unique_ptr<ElementData> m_data;
+        std::unique_ptr<NodeData> m_data;
 
         /// The factory name is kept as a member, because we have to query it from the project context,
         /// which is not available when the label is queried.
-        // TODO Move into ElementData.
+        // TODO Move into NodeData.
         std::string m_factoryName;
 
         /// Container for the edits applied to this feature element.

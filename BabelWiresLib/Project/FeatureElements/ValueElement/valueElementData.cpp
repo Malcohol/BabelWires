@@ -17,7 +17,7 @@ babelwires::ValueElementData::ValueElementData(TypeRef typeRef)
     : m_typeRef(std::move(typeRef)) {}
 
 babelwires::ValueElementData::ValueElementData(const ValueElementData& other, ShallowCloneContext shallowCloneContext)
-    : ElementData(other, shallowCloneContext)
+    : NodeData(other, shallowCloneContext)
     , m_typeRef(other.m_typeRef) {}
 
 bool babelwires::ValueElementData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {

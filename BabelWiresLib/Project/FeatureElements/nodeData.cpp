@@ -32,22 +32,22 @@ void babelwires::UiData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("width", m_uiSize.m_width);
 }
 
-babelwires::ElementData::ElementData(const ElementData& other, ShallowCloneContext)
+babelwires::NodeData::NodeData(const NodeData& other, ShallowCloneContext)
     : Cloneable(other)
     , m_factoryIdentifier(other.m_factoryIdentifier)
     , m_factoryVersion(other.m_factoryVersion)
     , m_id(other.m_id)
     , m_uiData(other.m_uiData) {}
 
-babelwires::ElementData::ElementData(const ElementData& other)
-    : ElementData(other, ShallowCloneContext()) {
+babelwires::NodeData::NodeData(const NodeData& other)
+    : NodeData(other, ShallowCloneContext()) {
     for (auto&& m : other.m_modifiers) {
         m_modifiers.push_back(m->clone());
     }
     m_expandedPaths = other.m_expandedPaths;
 }
 
-std::unique_ptr<babelwires::Node> babelwires::ElementData::createFeatureElement(const ProjectContext& context,
+std::unique_ptr<babelwires::Node> babelwires::NodeData::createFeatureElement(const ProjectContext& context,
                                                                                           UserLogger& userLogger,
                                                                                           ElementId newId) const {
     std::unique_ptr<babelwires::Node> newElement = doCreateFeatureElement(context, userLogger, newId);
@@ -55,35 +55,35 @@ std::unique_ptr<babelwires::Node> babelwires::ElementData::createFeatureElement(
     return newElement;
 }
 
-void babelwires::ElementData::addCommonKeyValuePairs(Serializer& serializer) const {
+void babelwires::NodeData::addCommonKeyValuePairs(Serializer& serializer) const {
     serializer.serializeValue("id", m_id);
     serializer.serializeValue("factory", m_factoryIdentifier);
     // Factory versions are handled by the projectBundle.
 }
 
-void babelwires::ElementData::getCommonKeyValuePairs(Deserializer& deserializer) {
+void babelwires::NodeData::getCommonKeyValuePairs(Deserializer& deserializer) {
     deserializer.deserializeValue("id", m_id);
     deserializer.deserializeValue("factory", m_factoryIdentifier);
     // Factory versions are handled by the projectBundle.
 }
 
-void babelwires::ElementData::serializeModifiers(Serializer& serializer) const {
+void babelwires::NodeData::serializeModifiers(Serializer& serializer) const {
     serializer.serializeArray("modifiers", m_modifiers);
 }
 
-void babelwires::ElementData::deserializeModifiers(Deserializer& deserializer) {
+void babelwires::NodeData::deserializeModifiers(Deserializer& deserializer) {
     for (auto it = deserializer.deserializeArray<ModifierData>("modifiers", Deserializer::IsOptional::Optional);
          it.isValid(); ++it) {
         m_modifiers.emplace_back(it.getObject());
     }
 }
 
-void babelwires::ElementData::serializeUiData(Serializer& serializer) const {
+void babelwires::NodeData::serializeUiData(Serializer& serializer) const {
     serializer.serializeObject(m_uiData);
     serializer.serializeValueArray("expandedPaths", m_expandedPaths, "path");
 }
 
-void babelwires::ElementData::deserializeUiData(Deserializer& deserializer) {
+void babelwires::NodeData::deserializeUiData(Deserializer& deserializer) {
     if (auto uiData =
             deserializer.deserializeObject<UiData>(UiData::serializationType, Deserializer::IsOptional::Optional)) {
         m_uiData = *uiData;
@@ -95,7 +95,7 @@ void babelwires::ElementData::deserializeUiData(Deserializer& deserializer) {
     }
 }
 
-void babelwires::ElementData::visitIdentifiers(IdentifierVisitor& visitor) {
+void babelwires::NodeData::visitIdentifiers(IdentifierVisitor& visitor) {
     visitor(m_factoryIdentifier);
     for (auto& m : m_modifiers) {
         m->visitIdentifiers(visitor);
@@ -109,7 +109,7 @@ void babelwires::ElementData::visitIdentifiers(IdentifierVisitor& visitor) {
     }
 }
 
-void babelwires::ElementData::visitFilePaths(FilePathVisitor& visitor) {
+void babelwires::NodeData::visitFilePaths(FilePathVisitor& visitor) {
     for (auto& m : m_modifiers) {
         m->visitFilePaths(visitor);
     }

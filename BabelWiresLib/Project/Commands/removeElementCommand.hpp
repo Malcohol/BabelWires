@@ -16,7 +16,7 @@
 
 namespace babelwires {
     class Project;
-    struct ElementData;
+    struct NodeData;
 
     /// Remove a feature element or a connection or a mixture of both from the project.
     /// All the connections of a feature element are always removed when it is.
@@ -59,7 +59,7 @@ namespace babelwires {
       private:
         std::vector<ElementId> m_elementIds;
 
-        std::vector<std::unique_ptr<ElementData>> m_elementsToRestore;
+        std::vector<std::unique_ptr<NodeData>> m_elementsToRestore;
 
         std::vector<ConnectionDescription> m_connections;
     };

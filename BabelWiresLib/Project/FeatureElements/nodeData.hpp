@@ -49,19 +49,19 @@ namespace babelwires {
     /// FeatureElementDatas carry the data sufficient to reconstruct a Node.
     /// The class supports clone(), which returns a deep clone of the object,
     /// and customClone() which returns a clone with the array members unset.
-    struct ElementData : Cloneable, CustomCloneable<ShallowCloneContext>, Serializable, ProjectVisitable {
-        CLONEABLE_ABSTRACT(ElementData);
-        CUSTOM_CLONEABLE_ABSTRACT(ElementData);
-        SERIALIZABLE_ABSTRACT(ElementData, void);
-        DOWNCASTABLE_TYPE_HIERARCHY(ElementData);
+    struct NodeData : Cloneable, CustomCloneable<ShallowCloneContext>, Serializable, ProjectVisitable {
+        CLONEABLE_ABSTRACT(NodeData);
+        CUSTOM_CLONEABLE_ABSTRACT(NodeData);
+        SERIALIZABLE_ABSTRACT(NodeData, void);
+        DOWNCASTABLE_TYPE_HIERARCHY(NodeData);
 
-        ElementData() = default;
+        NodeData() = default;
 
         /// The copy constructor constructs an array of _clones_ of the modifiers.
-        ElementData(const ElementData& other);
+        NodeData(const NodeData& other);
 
         /// Like the copy constructor, but don't copy the modifiers and expanded paths.
-        ElementData(const ElementData& other, ShallowCloneContext);
+        NodeData(const NodeData& other, ShallowCloneContext);
 
         /// Unless m_factoryVersion is 0 (which means "ignore versions"), this should return false
         /// if the m_factoryVersion is different than the factory version registered in the context.

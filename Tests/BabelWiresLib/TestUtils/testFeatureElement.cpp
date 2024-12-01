@@ -13,7 +13,7 @@ testUtils::TestFeatureElementData::TestFeatureElementData() {
 
 testUtils::TestFeatureElementData::TestFeatureElementData(const TestFeatureElementData& other,
                                                           babelwires::ShallowCloneContext context)
-    : ElementData(other, context) {}
+    : NodeData(other, context) {}
 
 bool testUtils::TestFeatureElementData::checkFactoryVersion(const babelwires::ProjectContext& context,
                                                             babelwires::UserLogger& userLogger) {

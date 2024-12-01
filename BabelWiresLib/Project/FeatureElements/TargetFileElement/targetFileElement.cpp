@@ -25,7 +25,7 @@
 babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, UserLogger& userLogger,
                                                  const TargetFileElementData& data, ElementId newId)
     : FileElement(data, newId) {
-    const ElementData& elementData = getElementData();
+    const NodeData& elementData = getElementData();
     try {
         setFactoryName(elementData.m_factoryIdentifier);
         const TargetFileFormat& factory =

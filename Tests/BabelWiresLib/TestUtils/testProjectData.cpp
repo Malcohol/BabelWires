@@ -75,10 +75,10 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
     int recordRecordDiscriminator, int recordInt2Disciminator, int fileIntChildDiscriminator) {
     ASSERT_EQ(projectData.m_elements.size(), 3);
 
-    const babelwires::ElementData* sortedElements[3] = {
+    const babelwires::NodeData* sortedElements[3] = {
         projectData.m_elements[0].get(), projectData.m_elements[1].get(), projectData.m_elements[2].get()};
     std::sort(&sortedElements[0], &sortedElements[3],
-              [](const babelwires::ElementData* a, const babelwires::ElementData* b) { return a->m_id < b->m_id; });
+              [](const babelwires::NodeData* a, const babelwires::NodeData* b) { return a->m_id < b->m_id; });
 
     EXPECT_EQ(sortedElements[0]->m_id, 6);
     ASSERT_EQ(sortedElements[0]->m_modifiers.size(), 2);

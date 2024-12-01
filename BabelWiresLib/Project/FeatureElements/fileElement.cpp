@@ -11,7 +11,7 @@
 
 #include <cassert>
 
-babelwires::FileElement::FileElement(const ElementData& data, ElementId newId)
+babelwires::FileElement::FileElement(const NodeData& data, ElementId newId)
     : Node(data, newId) {}
 
 bool babelwires::FileElement::reload(const ProjectContext& context, UserLogger& userLogger) {

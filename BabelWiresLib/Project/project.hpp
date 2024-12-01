@@ -29,7 +29,7 @@ namespace babelwires {
     class Modifier;
     struct ModifierData;
     class Node;
-    struct ElementData;
+    struct NodeData;
     class ConnectionModifier;
     class Path;
     struct UiPosition;
@@ -53,7 +53,7 @@ namespace babelwires {
 
         /// Add a feature element. Will use the ID of the data, if that ID is available.
         /// Returns the ID of the data after it was added.
-        ElementId addFeatureElement(const ElementData& data);
+        ElementId addFeatureElement(const NodeData& data);
 
         /// Remove the element with the given id.
         void removeElement(ElementId id);
@@ -185,7 +185,7 @@ namespace babelwires {
 
         void validateConnectionCache() const;
 
-        Node* addFeatureElementWithoutCachingConnection(const ElementData& data);
+        Node* addFeatureElementWithoutCachingConnection(const NodeData& data);
         void addFeatureElementConnectionsToCache(Node* element);
 
       private:

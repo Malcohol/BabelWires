@@ -19,7 +19,7 @@
 #include <Common/exceptions.hpp>
 
 babelwires::ProcessorElementData::ProcessorElementData(const ProcessorElementData& other, ShallowCloneContext c)
-    : ElementData(other, c) {}
+    : NodeData(other, c) {}
 
 bool babelwires::ProcessorElementData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
     return checkFactoryVersionCommon(context.m_processorReg, userLogger, m_factoryIdentifier, m_factoryVersion);

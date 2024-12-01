@@ -14,14 +14,14 @@
 
 namespace babelwires {
     class Project;
-    struct ElementData;
+    struct NodeData;
 
     /// Add a feature element to the project.
     class AddElementCommand : public SimpleCommand<Project> {
       public:
         /// Create a command which adds the given element.
         /// NOTE: An expanded path entry is always added for the root path, so the constructor asserts it is not already present.
-        AddElementCommand(std::string commandName, std::unique_ptr<ElementData> elementToAdd);
+        AddElementCommand(std::string commandName, std::unique_ptr<NodeData> elementToAdd);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
@@ -36,7 +36,7 @@ namespace babelwires {
         ElementId getElementId() const;
 
       private:
-        std::unique_ptr<ElementData> m_elementToAdd;
+        std::unique_ptr<NodeData> m_elementToAdd;
     };
 
 } // namespace babelwires

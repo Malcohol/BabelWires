@@ -17,7 +17,7 @@ namespace babelwires {
     /// A feature element which represents the contents of a file.
     class FileElement : public Node {
       public:
-        FileElement(const ElementData& data, ElementId newId);
+        FileElement(const NodeData& data, ElementId newId);
 
         /// Return the file path to the file.
         virtual std::filesystem::path getFilePath() const = 0;

@@ -17,10 +17,10 @@
 
 namespace babelwires {
     /// Describes the construction of a SourceFileFeature.
-    struct SourceFileElementData : ElementData {
+    struct SourceFileElementData : NodeData {
         CLONEABLE(SourceFileElementData);
         CUSTOM_CLONEABLE(SourceFileElementData);
-        SERIALIZABLE(SourceFileElementData, "sourceFile", ElementData, 1);
+        SERIALIZABLE(SourceFileElementData, "sourceFile", NodeData, 1);
         SourceFileElementData() = default;
         SourceFileElementData(const SourceFileElementData&) = default;
         SourceFileElementData(const SourceFileElementData& other, ShallowCloneContext);
