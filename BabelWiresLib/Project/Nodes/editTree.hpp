@@ -165,4 +165,4 @@ namespace babelwires {
 
 } // namespace babelwires
 
-#include <BabelWiresLib/Project/FeatureElements/editTree_inl.hpp>
+#include <BabelWiresLib/Project/Nodes/editTree_inl.hpp>

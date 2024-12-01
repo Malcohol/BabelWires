@@ -1,5 +1,5 @@
 /**
- * TargetFileElementData describes the construction of a TargetFileFeature.
+ * SourceFileElementData describes the construction of a SourceFileFeature.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -7,8 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
-
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <Common/DataContext/filePath.hpp>
 
 #include <memory>
@@ -17,14 +16,14 @@
 #include <filesystem>
 
 namespace babelwires {
-    /// Describes the construction of a TargetFileFeature.
-    struct TargetFileElementData : NodeData {
-        CLONEABLE(TargetFileElementData);
-        CUSTOM_CLONEABLE(TargetFileElementData);
-        SERIALIZABLE(TargetFileElementData, "targetFile", NodeData, 1);
-        TargetFileElementData() = default;
-        TargetFileElementData(const TargetFileElementData& other) = default;
-        TargetFileElementData(const TargetFileElementData& other, ShallowCloneContext);
+    /// Describes the construction of a SourceFileFeature.
+    struct SourceFileElementData : NodeData {
+        CLONEABLE(SourceFileElementData);
+        CUSTOM_CLONEABLE(SourceFileElementData);
+        SERIALIZABLE(SourceFileElementData, "sourceFile", NodeData, 1);
+        SourceFileElementData() = default;
+        SourceFileElementData(const SourceFileElementData&) = default;
+        SourceFileElementData(const SourceFileElementData& other, ShallowCloneContext);
 
         bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) override;
 

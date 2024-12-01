@@ -22,7 +22,7 @@
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/fileElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>

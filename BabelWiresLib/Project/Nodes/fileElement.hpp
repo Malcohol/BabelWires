@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 
 #include <filesystem>
 

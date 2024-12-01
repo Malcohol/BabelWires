@@ -21,7 +21,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 
 #include <QApplication>
 #include <QBrush>

@@ -9,7 +9,7 @@
  
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 

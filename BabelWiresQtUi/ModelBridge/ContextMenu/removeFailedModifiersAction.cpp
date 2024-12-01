@@ -12,7 +12,7 @@
 
 #include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
+#include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>

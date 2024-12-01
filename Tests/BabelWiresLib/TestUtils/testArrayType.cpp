@@ -1,7 +1,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
 
 testUtils::TestSimpleArrayType::TestSimpleArrayType()
     : babelwires::ArrayType(getEntryTypeStatic(), s_minimumSize, s_maximumSize, s_defaultSize) {}

@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 

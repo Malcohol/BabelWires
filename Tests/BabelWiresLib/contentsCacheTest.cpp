@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
-#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
-#include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
+#include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
+#include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 

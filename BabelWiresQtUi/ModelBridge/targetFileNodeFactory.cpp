@@ -12,7 +12,7 @@
 
 #include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
 
 #include <QtWidgets/QFileDialog>
 #include <nodes/FlowScene>

@@ -8,8 +8,8 @@
 #include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
 
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
-#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>

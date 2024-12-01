@@ -2,11 +2,11 @@
 
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 

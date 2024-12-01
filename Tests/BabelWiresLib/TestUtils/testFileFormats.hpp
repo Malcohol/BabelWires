@@ -1,6 +1,6 @@
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
-#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <filesystem>

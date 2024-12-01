@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Commands/pasteElementsCommand.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>

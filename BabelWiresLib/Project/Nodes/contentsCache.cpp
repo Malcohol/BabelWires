@@ -5,11 +5,11 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
+#include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
+#include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/ValueNames/valueNames.hpp>
 

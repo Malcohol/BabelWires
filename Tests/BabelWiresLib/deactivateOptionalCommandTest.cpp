@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>

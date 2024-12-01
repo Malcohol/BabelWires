@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/projectUtilities.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
-#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>

@@ -15,7 +15,7 @@
 
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/fileElement.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::SaveFileAsAction::SaveFileAsAction()

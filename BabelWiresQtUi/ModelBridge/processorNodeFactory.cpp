@@ -12,7 +12,7 @@
 
 #include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElementData.hpp>
 
 #include <QtWidgets/QFileDialog>
 #include <nodes/FlowScene>

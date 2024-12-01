@@ -8,8 +8,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
-#include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
+#include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
+#include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <Common/Utilities/enumFlags.hpp>

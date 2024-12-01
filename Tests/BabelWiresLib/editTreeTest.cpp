@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
-#include <BabelWiresLib/Project/FeatureElements/nodeData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/editTree.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>

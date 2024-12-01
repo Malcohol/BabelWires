@@ -5,12 +5,12 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElementData.hpp>
 
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElement.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <Common/Log/userLogger.hpp>

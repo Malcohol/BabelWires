@@ -122,4 +122,4 @@ namespace babelwires {
     };
 } // namespace babelwires
 
-#include <BabelWiresLib/Project/FeatureElements/nodeData_inl.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData_inl.hpp>

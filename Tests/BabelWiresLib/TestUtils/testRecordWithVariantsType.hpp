@@ -1,6 +1,6 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
 
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 

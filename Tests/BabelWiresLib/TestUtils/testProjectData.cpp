@@ -4,9 +4,9 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>

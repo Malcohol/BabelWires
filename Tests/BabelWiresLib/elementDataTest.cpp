@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>

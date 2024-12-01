@@ -1,5 +1,5 @@
 /**
- * ProcessorElement are FeatureElements which carry a processor.
+ * ValueElements are FeatureElements which carry a value.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -7,23 +7,22 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 namespace babelwires {
     struct UserLogger;
-    struct ProjectContext;
-    struct ProcessorElementData;
-    class Processor;
+    class ValueElementData;
     class ValueTreeRoot;
 
-    class ProcessorElement : public Node {
+    class ValueElement : public Node {
       public:
-        ProcessorElement(const ProjectContext& context, UserLogger& userLogger, const ProcessorElementData& data,
+        ValueElement(const ProjectContext& context, UserLogger& userLogger, const ValueElementData& data,
                          ElementId newId);
-        ~ProcessorElement();
+        ~ValueElement();
 
         /// Down-cast version of the parent's method.
-        const ProcessorElementData& getElementData() const;
+        const ValueElementData& getElementData() const;
 
         virtual const ValueTreeNode* getInput() const override;
         virtual const ValueTreeNode* getOutput() const override;
@@ -35,13 +34,9 @@ namespace babelwires {
 
       protected:
         std::string getRootLabel() const;
-        void setProcessor(std::unique_ptr<Processor> processor);
 
       private:
-        std::unique_ptr<Processor> m_processor;
-
-        /// Non-null when the defined processor could not be constructed.
-        std::unique_ptr<babelwires::ValueTreeRoot> m_failedValueTree;
+        std::unique_ptr<babelwires::ValueTreeRoot> m_valueTreeRoot;
     };
 
 } // namespace babelwires

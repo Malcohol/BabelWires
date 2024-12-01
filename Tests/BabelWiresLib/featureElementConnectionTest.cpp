@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>

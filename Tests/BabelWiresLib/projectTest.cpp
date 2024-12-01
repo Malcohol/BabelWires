@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>

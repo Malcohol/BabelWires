@@ -1,18 +1,18 @@
 SET( BABELWIRESLIB_SRCS
 	Project/project.cpp
-	Project/FeatureElements/node.cpp
-	Project/FeatureElements/nodeData.cpp
-	Project/FeatureElements/ProcessorElement/processorElement.cpp
-	Project/FeatureElements/SourceFileElement/sourceFileElement.cpp
-	Project/FeatureElements/TargetFileElement/targetFileElement.cpp
-	Project/FeatureElements/fileElement.cpp
-	Project/FeatureElements/editTree.cpp
-	Project/FeatureElements/contentsCache.cpp
-	Project/FeatureElements/SourceFileElement/sourceFileElementData.cpp
-	Project/FeatureElements/TargetFileElement/targetFileElementData.cpp
-	Project/FeatureElements/ProcessorElement/processorElementData.cpp
-	Project/FeatureElements/ValueElement/valueElement.cpp
-	Project/FeatureElements/ValueElement/valueElementData.cpp
+	Project/Nodes/node.cpp
+	Project/Nodes/nodeData.cpp
+	Project/Nodes/ProcessorElement/processorElement.cpp
+	Project/Nodes/SourceFileElement/sourceFileElement.cpp
+	Project/Nodes/TargetFileElement/targetFileElement.cpp
+	Project/Nodes/fileElement.cpp
+	Project/Nodes/editTree.cpp
+	Project/Nodes/contentsCache.cpp
+	Project/Nodes/SourceFileElement/sourceFileElementData.cpp
+	Project/Nodes/TargetFileElement/targetFileElementData.cpp
+	Project/Nodes/ProcessorElement/processorElementData.cpp
+	Project/Nodes/ValueElement/valueElement.cpp
+	Project/Nodes/ValueElement/valueElementData.cpp
 	Project/Modifiers/modifier.cpp
 	Project/Modifiers/modifierData.cpp
 	Project/Modifiers/localModifier.cpp

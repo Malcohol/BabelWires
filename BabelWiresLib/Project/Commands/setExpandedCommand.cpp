@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <cassert>

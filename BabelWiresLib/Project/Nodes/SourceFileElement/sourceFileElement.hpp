@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/fileElement.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 namespace babelwires {

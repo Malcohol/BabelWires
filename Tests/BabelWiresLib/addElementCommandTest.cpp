@@ -4,7 +4,7 @@
 
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

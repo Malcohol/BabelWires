@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <cassert>

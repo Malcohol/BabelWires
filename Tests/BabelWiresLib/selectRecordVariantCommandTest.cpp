@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Project/Commands/selectRecordVariantCommand.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>

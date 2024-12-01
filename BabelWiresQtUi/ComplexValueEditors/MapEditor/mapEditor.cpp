@@ -21,7 +21,7 @@
 #include <BabelWiresLib/Types/Map/Commands/setMapTargetTypeCommand.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapSerialization.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/node.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
