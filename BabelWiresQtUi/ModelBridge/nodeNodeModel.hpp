@@ -23,6 +23,7 @@ namespace babelwires {
 
     struct UiSize;
 
+    /// The NodeDataModel which presents a BabelWires Node as a QtNode.
     class NodeNodeModel : public BaseNodeModel {
         Q_OBJECT
 
