@@ -5,7 +5,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Nodes/ProcessorElement/processorElement.cpp
 	Project/Nodes/SourceFileElement/sourceFileElement.cpp
 	Project/Nodes/TargetFileElement/targetFileElement.cpp
-	Project/Nodes/fileElement.cpp
+	Project/Nodes/FileNode/fileNode.cpp
 	Project/Nodes/editTree.cpp
 	Project/Nodes/contentsCache.cpp
 	Project/Nodes/SourceFileElement/sourceFileElementData.cpp

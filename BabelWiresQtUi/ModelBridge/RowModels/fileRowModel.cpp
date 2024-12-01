@@ -13,7 +13,7 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
-#include <BabelWiresLib/Project/Nodes/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 
 #include <QString>
 

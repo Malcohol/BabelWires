@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/valueRowModel.hpp>
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/Project/Nodes/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>

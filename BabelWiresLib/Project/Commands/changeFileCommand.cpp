@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 
-#include <BabelWiresLib/Project/Nodes/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <cassert>

@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include <BabelWiresLib/Project/Nodes/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::ReloadFileAction::ReloadFileAction()

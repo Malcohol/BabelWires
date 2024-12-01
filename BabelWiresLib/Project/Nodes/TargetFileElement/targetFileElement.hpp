@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/Nodes/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 
 namespace babelwires {
     struct UserLogger;
