@@ -1,5 +1,5 @@
 /**
- * ElementNodeModel is the NodeDataModels corresponding to FeatureElements.
+ * ElementNodeModel is the NodeDataModels corresponding to Nodes.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

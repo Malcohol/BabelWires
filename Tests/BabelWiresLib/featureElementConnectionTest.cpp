@@ -15,13 +15,13 @@
 #include <Tests/TestUtils/testLog.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
-struct FeatureElementConnectionTest : ::testing::Test {
+struct NodeConnectionTest : ::testing::Test {
   protected:
     void SetUp() override {
         testUtils::TestComplexRecordElementData featureElementData;
 
-        m_elementId = m_context.m_project.addFeatureElement(featureElementData);
-        m_featureElement = m_context.m_project.getFeatureElement(m_elementId);
+        m_elementId = m_context.m_project.addNode(featureElementData);
+        m_featureElement = m_context.m_project.getNode(m_elementId);
 
         static_assert(testUtils::TestSimpleArrayType::s_nonDefaultSize > testUtils::TestSimpleArrayType::s_defaultSize);
         static_assert(testUtils::TestSimpleArrayType::s_defaultSize > 0);
@@ -33,8 +33,8 @@ struct FeatureElementConnectionTest : ::testing::Test {
         // Add a feature element to the project to which connections can be made.
         testUtils::TestComplexRecordElementData sourceElementData;
 
-        m_sourceId = m_context.m_project.addFeatureElement(sourceElementData);
-        m_sourceElement = m_context.m_project.getFeatureElement(m_sourceId);
+        m_sourceId = m_context.m_project.addNode(sourceElementData);
+        m_sourceElement = m_context.m_project.getNode(m_sourceId);
         ASSERT_TRUE(m_sourceElement);
 
         m_arrayInitData.m_targetPath = m_arrayPath;
@@ -87,7 +87,7 @@ struct FeatureElementConnectionTest : ::testing::Test {
     babelwires::ValueAssignmentData m_arrayElemDataHigh;
 };
 
-TEST_F(FeatureElementConnectionTest, addAConnection) {
+TEST_F(NodeConnectionTest, addAConnection) {
     m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
     m_context.m_project.addModifier(m_sourceId, m_arrayElemData);
     m_context.m_project.process();
@@ -106,7 +106,7 @@ TEST_F(FeatureElementConnectionTest, addAConnection) {
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
-TEST_F(FeatureElementConnectionTest, changeSourceValueFromDefault) {
+TEST_F(NodeConnectionTest, changeSourceValueFromDefault) {
     m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
     m_context.m_project.addModifier(m_elementId, m_assignData);
     m_context.m_project.process();
@@ -127,7 +127,7 @@ TEST_F(FeatureElementConnectionTest, changeSourceValueFromDefault) {
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
-TEST_F(FeatureElementConnectionTest, changeSourceValueToDefault) {
+TEST_F(NodeConnectionTest, changeSourceValueToDefault) {
     m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
     m_context.m_project.addModifier(m_sourceId, m_arrayElemData);
     m_context.m_project.addModifier(m_elementId, m_assignData);
@@ -149,7 +149,7 @@ TEST_F(FeatureElementConnectionTest, changeSourceValueToDefault) {
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
-TEST_F(FeatureElementConnectionTest, removedAndRestoreSourceFeature) {
+TEST_F(NodeConnectionTest, removedAndRestoreSourceFeature) {
     m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
     m_context.m_project.addModifier(m_sourceId, m_arrayElemData);
     m_context.m_project.addModifier(m_elementId, m_assignData);
@@ -185,7 +185,7 @@ TEST_F(FeatureElementConnectionTest, removedAndRestoreSourceFeature) {
     EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
-TEST_F(FeatureElementConnectionTest, failedButStillConnected) {
+TEST_F(NodeConnectionTest, failedButStillConnected) {
     m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
     m_context.m_project.addModifier(m_sourceId, m_arrayElemDataHigh);
     m_context.m_project.process();

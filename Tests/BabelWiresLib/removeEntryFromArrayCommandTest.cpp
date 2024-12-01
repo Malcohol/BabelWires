@@ -20,11 +20,11 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestArrayElementData());
+        testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
     const babelwires::ElementId sourceId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
+        testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
     const babelwires::ElementId targetId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
+        testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     {
         babelwires::ArraySizeModifierData arrayInitialization;
@@ -48,9 +48,9 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     }
     testEnvironment.m_project.process();
 
-    const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const auto* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
-    const auto* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
+    const auto* targetElement = testEnvironment.m_project.getNode(targetId);
     ASSERT_NE(targetElement, nullptr);
 
     const auto checkModifiers = [&testEnvironment, element, targetElement](bool isCommandExecuted) {
@@ -121,7 +121,7 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoElement) {
 TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
     testUtils::TestEnvironment testEnvironment;
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
+        testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
                                                     babelwires::Path::deserializeFromString("qqq/zzz"), 1, 1);
@@ -134,9 +134,9 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestArrayElementData());
+        testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
 
-    const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const auto* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
 
     ASSERT_NE(element->getInput(), nullptr);

@@ -18,7 +18,7 @@ babelwires::ResizeNodeCommand::ResizeNodeCommand(std::string commandName, Elemen
     , m_newSize(newSize) {}
 
 bool babelwires::ResizeNodeCommand::initialize(const Project& project) {
-    const Node* element = project.getFeatureElement(m_elementId);
+    const Node* element = project.getNode(m_elementId);
     if (!element) {
         return false;
     }

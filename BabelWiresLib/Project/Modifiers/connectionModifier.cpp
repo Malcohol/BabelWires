@@ -1,5 +1,5 @@
 /**
- * A ConnectionModifier connects features from two FeatureElements together.
+ * A ConnectionModifier connects features from two Nodes together.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

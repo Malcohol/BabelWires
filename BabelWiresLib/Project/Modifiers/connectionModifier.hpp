@@ -1,5 +1,5 @@
 /**
- * A ConnectionModifier connects features from two FeatureElements together.
+ * A ConnectionModifier connects features from two Nodes together.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -17,7 +17,7 @@ namespace babelwires {
 
     struct ConnectionModifierData;
 
-    /// A ConnectionModifier connects features from two FeatureElements together.
+    /// A ConnectionModifier connects features from two Nodes together.
     /// By contrast with LocalModifiers, it application depends on context.
     class ConnectionModifier : public Modifier {
       public:

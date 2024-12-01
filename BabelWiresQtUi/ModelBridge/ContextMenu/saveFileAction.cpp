@@ -22,7 +22,7 @@ void babelwires::SaveFileAction::actionTriggered(babelwires::FeatureModel& model
     const ElementId elementId = model.getElementId();
 
     ModifyModelScope scope(projectBridge);
-    Node* const featureElement = scope.getProject().getFeatureElement(elementId);
+    Node* const featureElement = scope.getProject().getNode(elementId);
     if (!featureElement) {
         return;
     }

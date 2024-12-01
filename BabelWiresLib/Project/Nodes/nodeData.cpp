@@ -1,5 +1,5 @@
 /**
- * FeatureElementDatas carry the data sufficient to reconstruct a Node.
+ * NodeDatas carry the data sufficient to reconstruct a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -47,10 +47,10 @@ babelwires::NodeData::NodeData(const NodeData& other)
     m_expandedPaths = other.m_expandedPaths;
 }
 
-std::unique_ptr<babelwires::Node> babelwires::NodeData::createFeatureElement(const ProjectContext& context,
+std::unique_ptr<babelwires::Node> babelwires::NodeData::createNode(const ProjectContext& context,
                                                                                           UserLogger& userLogger,
                                                                                           ElementId newId) const {
-    std::unique_ptr<babelwires::Node> newElement = doCreateFeatureElement(context, userLogger, newId);
+    std::unique_ptr<babelwires::Node> newElement = doCreateNode(context, userLogger, newId);
     newElement->applyLocalModifiers(userLogger);
     return newElement;
 }

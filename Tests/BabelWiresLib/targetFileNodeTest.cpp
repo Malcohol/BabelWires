@@ -31,7 +31,7 @@ TEST(TargetFileNodeTest, targetFileDataCreateElement) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
-    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    auto featureElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::TargetFileNode>());
@@ -89,7 +89,7 @@ TEST(TargetFileNodeTest, changeFile) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
 
-    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    auto featureElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::TargetFileNode>());
@@ -104,7 +104,7 @@ TEST(TargetFileNodeTest, changeFile) {
     targetFileNode->process(testEnvironment.m_project, testEnvironment.m_log);
 
     EXPECT_TRUE(targetFileNode->isChanged(babelwires::Node::Changes::FileChanged));
-    EXPECT_TRUE(targetFileNode->isChanged(babelwires::Node::Changes::FeatureElementLabelChanged));
+    EXPECT_TRUE(targetFileNode->isChanged(babelwires::Node::Changes::NodeLabelChanged));
     EXPECT_TRUE(targetFileNode->isChanged(babelwires::Node::Changes::SomethingChanged));
     EXPECT_TRUE(endsWithStar(targetFileNode->getLabel()));
 
@@ -115,7 +115,7 @@ TEST(TargetFileNodeTest, changeFile) {
     // setFilePath is not expected to trigger a reload.
     EXPECT_TRUE(targetFileNode->isChanged(babelwires::Node::Changes::FileChanged));
     // The label already ends with a star.
-    EXPECT_FALSE(targetFileNode->isChanged(babelwires::Node::Changes::FeatureElementLabelChanged));
+    EXPECT_FALSE(targetFileNode->isChanged(babelwires::Node::Changes::NodeLabelChanged));
     EXPECT_TRUE(targetFileNode->isChanged(babelwires::Node::Changes::SomethingChanged));
     EXPECT_TRUE(endsWithStar(targetFileNode->getLabel()));
 }

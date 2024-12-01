@@ -10,18 +10,18 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
-TEST(FeatureElementTest, basicAccessors) {
+TEST(NodeTest, basicAccessors) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestFeatureElementData featureElementData;
+    testUtils::TestNodeData featureElementData;
 
     auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 54);
+        featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 54);
 
     ASSERT_TRUE(featureElement);
     EXPECT_FALSE(featureElement->isFailed());
@@ -30,26 +30,26 @@ TEST(FeatureElementTest, basicAccessors) {
     EXPECT_EQ(featureElement->getElementId(), 54);
 }
 
-TEST(FeatureElementTest, labels) {
+TEST(NodeTest, labels) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestFeatureElementData featureElementData;
+    testUtils::TestNodeData featureElementData;
 
     auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+        featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
 
     EXPECT_NE(featureElement->getLabel().find("66"), std::string::npos);
     // The test element uses the data's identifier as a factory name.
     EXPECT_NE(featureElement->getLabel().find(featureElementData.m_factoryIdentifier.toString()), std::string::npos);
 }
 
-TEST(FeatureElementTest, uiData) {
+TEST(NodeTest, uiData) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestFeatureElementData featureElementData;
+    testUtils::TestNodeData featureElementData;
     featureElementData.m_uiData.m_uiPosition = babelwires::UiPosition{23, -29};
     featureElementData.m_uiData.m_uiSize = babelwires::UiSize{120};
 
     auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+        featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
 
     EXPECT_EQ(featureElement->getUiPosition(), (babelwires::UiPosition{23, -29}));
     EXPECT_EQ(featureElement->getUiSize(), babelwires::UiSize{120});
@@ -61,7 +61,7 @@ TEST(FeatureElementTest, uiData) {
     EXPECT_EQ(featureElement->getUiSize(), babelwires::UiSize{199});
 }
 
-TEST(FeatureElementTest, modifiers) {
+TEST(NodeTest, modifiers) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData elementData;
 
@@ -89,7 +89,7 @@ TEST(FeatureElementTest, modifiers) {
         elementData.m_modifiers.emplace_back(std::move(failedModifier));
     }
 
-    auto featureElement = elementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    auto featureElement = elementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
 
@@ -161,7 +161,7 @@ TEST(FeatureElementTest, modifiers) {
     }
 }
 
-TEST(FeatureElementTest, expandedPaths) {
+TEST(NodeTest, expandedPaths) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData featureElementData;
 
@@ -176,7 +176,7 @@ TEST(FeatureElementTest, expandedPaths) {
     featureElementData.m_expandedPaths.emplace_back(fooBar);
 
     auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+        featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
 
@@ -216,7 +216,7 @@ TEST(FeatureElementTest, expandedPaths) {
     EXPECT_FALSE(featureElement->isExpanded(arrayElemPath2));
 }
 
-TEST(FeatureElementTest, extractElementData) {
+TEST(NodeTest, extractElementData) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData featureElementData;
 
@@ -250,7 +250,7 @@ TEST(FeatureElementTest, extractElementData) {
     featureElementData.m_uiData.m_uiSize = babelwires::UiSize{120};
 
     auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+        featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
 
@@ -298,7 +298,7 @@ TEST(FeatureElementTest, extractElementData) {
     EXPECT_EQ(extractedData->m_uiData.m_uiSize, babelwires::UiSize{120});
 }
 
-TEST(FeatureElementTest, removedModifiers) {
+TEST(NodeTest, removedModifiers) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData featureElementData;
 
@@ -325,7 +325,7 @@ TEST(FeatureElementTest, removedModifiers) {
     }
 
     auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+        featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
 
@@ -360,35 +360,35 @@ TEST(FeatureElementTest, removedModifiers) {
     EXPECT_EQ(numCorrectMods, 2);
 }
 
-TEST(FeatureElementTest, failure) {
+TEST(NodeTest, failure) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestFeatureElementData featureElementData;
+    testUtils::TestNodeData featureElementData;
 
     auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+        featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
-    testUtils::TestFeatureElement* testFeatureElement =
-        static_cast<testUtils::TestFeatureElement*>(featureElement.get());
+    ASSERT_TRUE(featureElement->as<testUtils::TestNode>());
+    testUtils::TestNode* testNode =
+        static_cast<testUtils::TestNode*>(featureElement.get());
 
-    testFeatureElement->simulateFailure(testEnvironment.m_projectContext);
+    testNode->simulateFailure(testEnvironment.m_projectContext);
     EXPECT_TRUE(featureElement->isFailed());
     EXPECT_FALSE(featureElement->getReasonForFailure().empty());
 
-    testFeatureElement->simulateRecovery(testEnvironment.m_projectContext);
+    testNode->simulateRecovery(testEnvironment.m_projectContext);
     EXPECT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->getReasonForFailure().empty());
 }
 
-TEST(FeatureElementTest, simpleChanges) {
+TEST(NodeTest, simpleChanges) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData featureElementData;
 
     auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
-    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementIsNew));
-    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementChangesMask));
+        featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::NodeIsNew));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::NodeChangesMask));
     featureElement->clearChanges();
     EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
@@ -482,56 +482,56 @@ TEST(FeatureElementTest, simpleChanges) {
     {
         featureElement->clearChanges();
 
-        ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
-        static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+        ASSERT_TRUE(featureElement->as<testUtils::TestNode>());
+        static_cast<testUtils::TestNode*>(featureElement.get())
             ->simulateFailure(testEnvironment.m_projectContext);
-        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::NodeFailed));
         EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
         EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     }
     {
         featureElement->clearChanges();
-        ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
-        static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+        ASSERT_TRUE(featureElement->as<testUtils::TestNode>());
+        static_cast<testUtils::TestNode*>(featureElement.get())
             ->simulateRecovery(testEnvironment.m_projectContext);
-        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::NodeRecovered));
         EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
         EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     }
     */
 }
 
-TEST(FeatureElementTest, isInDependencyLoop) {
+TEST(NodeTest, isInDependencyLoop) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestFeatureElementData featureElementData;
+    testUtils::TestNodeData featureElementData;
 
     auto featureElement =
-        featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
+        featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
+    ASSERT_TRUE(featureElement->as<testUtils::TestNode>());
 
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(true);
 
-    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::NodeFailed));
     EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(false);
 
-    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::NodeRecovered));
     EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
-    static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+    static_cast<testUtils::TestNode*>(featureElement.get())
         ->simulateFailure(testEnvironment.m_projectContext);
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(true);
 
-    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::NodeFailed));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::NodeRecovered));
     EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     // Don't think we need to note any change.
     // EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
@@ -539,30 +539,30 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(false);
 
-    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::NodeFailed));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::NodeRecovered));
     EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     // Don't think we need to note any change.
     // EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
-    static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+    static_cast<testUtils::TestNode*>(featureElement.get())
         ->simulateRecovery(testEnvironment.m_projectContext);
     featureElement->setInDependencyLoop(true);
     featureElement->clearChanges();
-    static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+    static_cast<testUtils::TestNode*>(featureElement.get())
         ->simulateFailure(testEnvironment.m_projectContext);
 
-    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::NodeFailed));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::NodeRecovered));
     EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     featureElement->clearChanges();
-    static_cast<testUtils::TestFeatureElement*>(featureElement.get())
+    static_cast<testUtils::TestNode*>(featureElement.get())
         ->simulateRecovery(testEnvironment.m_projectContext);
 
-    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::NodeFailed));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::NodeRecovered));
     EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }

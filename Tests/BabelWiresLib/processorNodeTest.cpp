@@ -19,7 +19,7 @@ TEST(ProcessorNodeTest, sourceFileDataCreateElement) {
     data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
     data.m_factoryVersion = 1;
 
-    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    auto featureElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::ProcessorNode>());
@@ -78,7 +78,7 @@ TEST(ProcessorNodeTest, sourceFileDataCreateElement) {
 
     EXPECT_TRUE(processorNode->isFailed());
     EXPECT_EQ(output.getArray().getSize(), 2);
-    EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::NodeFailed));
     EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::FeatureValueChanged));
     EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
     EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::FeatureChangesMask));
@@ -91,7 +91,7 @@ TEST(ProcessorNodeTest, sourceFileDataCreateElement) {
 
     EXPECT_FALSE(processorNode->isFailed());
     EXPECT_EQ(output.getArray().getSize(), 6);
-    EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::NodeRecovered));
     EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::FeatureValueChanged));
     EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
     EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::FeatureChangesMask));

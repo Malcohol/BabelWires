@@ -1,5 +1,5 @@
 /**
- * FileNode are FeatureElements which corresponds to a file (e.g. a source or target file).
+ * FileNode are Nodes which corresponds to a file (e.g. a source or target file).
  *
  * (C) 2021 Malcolm Tyrrell
  * 

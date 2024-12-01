@@ -21,7 +21,7 @@ babelwires::RemoveFailedModifiersCommand::RemoveFailedModifiersCommand(std::stri
     , m_targetPath(featurePath) {}
 
 bool babelwires::RemoveFailedModifiersCommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getFeatureElement(m_targetId);
+    const Node* elementToModify = project.getNode(m_targetId);
 
     if (!elementToModify) {
         return false;

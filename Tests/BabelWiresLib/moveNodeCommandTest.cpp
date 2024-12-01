@@ -8,18 +8,18 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(MoveNodeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData elementData;
+    testUtils::TestNodeData elementData;
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const testUtils::TestNode* element =
+        testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
@@ -59,12 +59,12 @@ TEST(MoveNodeCommandTest, failSafelyNoElement) {
 TEST(MoveNodeCommandTest, subsumeMoves) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData elementData;
+    testUtils::TestNodeData elementData;
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const testUtils::TestNode* element =
+        testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
@@ -96,12 +96,12 @@ TEST(MoveNodeCommandTest, subsumeMoves) {
 TEST(MoveNodeCommandTest, subsumeMovesDelay) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData elementData;
+    testUtils::TestNodeData elementData;
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const testUtils::TestNode* element =
+        testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);

@@ -43,10 +43,10 @@ namespace {
             elementData.m_modifiers.emplace_back(inputConnection.clone());
         }
 
-        const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+        const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
         testEnvironment.m_project.process();
 
-        const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
+        const auto* element = testEnvironment.m_project.getNode(elementId);
         ASSERT_NE(element, nullptr);
 
         const auto checkModifiers = [&testEnvironment, element, isWholeRecord](bool isCommandExecuted) {
@@ -129,7 +129,7 @@ TEST(RemoveFailedModifiersCommandTest, failSafelyNoSubFeature) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
     babelwires::RemoveFailedModifiersCommand command("Test command", elementId,
                                                      babelwires::Path::deserializeFromString("qqq/zzz"));

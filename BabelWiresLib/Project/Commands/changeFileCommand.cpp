@@ -18,7 +18,7 @@ babelwires::ChangeFileCommand::ChangeFileCommand(std::string commandName, Elemen
     , m_newFilePath(std::move(newFilePath)) {}
 
 bool babelwires::ChangeFileCommand::initialize(const Project& project) {
-    const Node* const element = project.getFeatureElement(m_elementId);
+    const Node* const element = project.getNode(m_elementId);
 
     if (!element) {
         return false;
@@ -35,7 +35,7 @@ bool babelwires::ChangeFileCommand::initialize(const Project& project) {
 }
 
 void babelwires::ChangeFileCommand::execute(Project& project) const {
-    Node* const element = project.getFeatureElement(m_elementId);
+    Node* const element = project.getNode(m_elementId);
     assert(element && "The element should already be in the project");
     FileNode* const fileElement = element->as<FileNode>();
     assert(fileElement && "The element should be a file element");
@@ -46,7 +46,7 @@ void babelwires::ChangeFileCommand::execute(Project& project) const {
 }
 
 void babelwires::ChangeFileCommand::undo(Project& project) const {
-    Node* const element = project.getFeatureElement(m_elementId);
+    Node* const element = project.getNode(m_elementId);
     assert(element && "The element should already be in the project");
     FileNode* const fileElement = element->as<FileNode>();
     assert(fileElement && "The element should be a file element");

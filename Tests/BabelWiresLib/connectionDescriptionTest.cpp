@@ -75,15 +75,15 @@ TEST(ConnectionDescriptionTest, getCommands) {
     {
         testUtils::TestComplexRecordElementData sourceElementData;
         sourceElementData.m_id = sourceId;
-        testEnvironment.m_project.addFeatureElement(sourceElementData);
+        testEnvironment.m_project.addNode(sourceElementData);
     }
     {
         testUtils::TestComplexRecordElementData targetElementData;
         targetElementData.m_id = targetId;
-        testEnvironment.m_project.addFeatureElement(targetElementData);
+        testEnvironment.m_project.addNode(targetElementData);
     }
 
-    const babelwires::Node* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
+    const babelwires::Node* targetElement = testEnvironment.m_project.getNode(targetId);
     ASSERT_NE(targetElement, nullptr);
 
     testEnvironment.m_project.process();

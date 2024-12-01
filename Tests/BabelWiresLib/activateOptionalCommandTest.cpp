@@ -16,10 +16,10 @@
 TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(
         babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
     const babelwires::ValueNode* const element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::ValueTreeNode* const input = element->getInput();
@@ -88,7 +88,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::ValueNodeData elementData(testUtils::TestComplexRecordType::getThisType());
     elementData.m_id = 51;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
     EXPECT_EQ(elementId, 51);
 
     testEnvironment.m_project.process();
@@ -98,7 +98,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
 TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(
         babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
 
     const babelwires::Path pathToValue;
@@ -115,7 +115,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
 TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(
         babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
 
     // Not an optional field
@@ -134,10 +134,10 @@ TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
 TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(
         babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
     babelwires::ValueNode* const element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::Path pathToValue;

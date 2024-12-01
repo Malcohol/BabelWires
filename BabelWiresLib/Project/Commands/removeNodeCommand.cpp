@@ -33,12 +33,12 @@ babelwires::RemoveNodeCommand::~RemoveNodeCommand() = default;
 
 bool babelwires::RemoveNodeCommand::addConnection(const babelwires::ConnectionDescription& desc,
                                                      ConnectionSet& connectionSet, const babelwires::Project& project) {
-    const Node* targetElement = project.getFeatureElement(desc.m_targetId);
+    const Node* targetElement = project.getNode(desc.m_targetId);
     if (!targetElement) {
         return false;
     }
 
-    const Node* sourceElement = project.getFeatureElement(desc.m_sourceId);
+    const Node* sourceElement = project.getNode(desc.m_sourceId);
     if (!sourceElement) {
         return false;
     }
@@ -110,7 +110,7 @@ bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
     }
 
     for (auto elementId : m_elementIds) {
-        const Node* element = project.getFeatureElement(elementId);
+        const Node* element = project.getNode(elementId);
 
         if (!element) {
             return false;
@@ -138,7 +138,7 @@ bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
 
     const Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
     for (auto elementId : m_elementIds) {
-        const Node* element = project.getFeatureElement(elementId);
+        const Node* element = project.getNode(elementId);
         auto it = connectionInfo.m_requiredFor.find(element);
         if (it != connectionInfo.m_requiredFor.end()) {
             for (const auto& connection : it->second) {
@@ -167,7 +167,7 @@ void babelwires::RemoveNodeCommand::execute(Project& project) const {
 
 void babelwires::RemoveNodeCommand::undo(Project& project) const {
     for (const auto& elementData : m_elementsToRestore) {
-        project.addFeatureElement(*elementData);
+        project.addNode(*elementData);
     }
     for (const auto& connection : m_connections) {
         ConnectionModifierData newModifier;

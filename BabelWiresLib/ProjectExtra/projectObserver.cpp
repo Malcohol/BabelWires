@@ -92,7 +92,7 @@ namespace {
     void addToConnections(std::unordered_set<babelwires::ConnectionDescription>& connections, State state,
                           babelwires::ConnectionDescription&& connectionDesc, const babelwires::Project& project,
                           const babelwires::Node* targetElement) {
-        const babelwires::Node* sourceElement = project.getFeatureElement(connectionDesc.m_sourceId);
+        const babelwires::Node* sourceElement = project.getNode(connectionDesc.m_sourceId);
         if (!sourceElement) {
             const auto it = project.getRemovedElements().find(connectionDesc.m_sourceId);
             assert((it != project.getRemovedElements().end()) && "Expecting to find the source of a live connection.");
@@ -200,7 +200,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     };
 
     for (const auto& [_, featureElement] : m_project.getRemovedElements()) {
-        assert(!featureElement->isChanged(Node::Changes::FeatureElementIsNew) &&
+        assert(!featureElement->isChanged(Node::Changes::NodeIsNew) &&
                "Changes should have been processed between new elements being removed.");
         const ElementId elementId = featureElement->getElementId();
         nodesToRemove.emplace_back(featureElement.get());
@@ -211,7 +211,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     for (const auto* featureElement : featureElementsWithChanges) {
         const ElementId elementId = featureElement->getElementId();
 
-        if (featureElement->isChanged(Node::Changes::FeatureElementIsNew)) {
+        if (featureElement->isChanged(Node::Changes::NodeIsNew)) {
             nodesToCreate.emplace_back(featureElement);
             addAllLiveInConnections(connectionInfo, featureElement, connectionsToAdd, State::CurrentState);
         } else {
@@ -294,12 +294,12 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     // Update the nodes that didn't have structural changes.
     for (const auto* featureElement : featureElementsWithChanges) {
         if (featureElement->isChanged(
-                Node::Changes::FeatureChangesMask | Node::Changes::FeatureElementLabelChanged |
+                Node::Changes::FeatureChangesMask | Node::Changes::NodeLabelChanged |
                 Node::Changes::ModifierAdded | Node::Changes::ModifierRemoved |
-                Node::Changes::FileChanged | Node::Changes::FeatureElementFailed |
-                Node::Changes::FeatureElementRecovered) &&
+                Node::Changes::FileChanged | Node::Changes::NodeFailed |
+                Node::Changes::NodeRecovered) &&
             !featureElement->getContentsCache().isChanged(ContentsCache::Changes::StructureChanged) &&
-            !featureElement->isChanged(babelwires::Node::Changes::FeatureElementIsNew)) {
+            !featureElement->isChanged(babelwires::Node::Changes::NodeIsNew)) {
             contentWasChanged(featureElement->getElementId());
         }
     }

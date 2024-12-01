@@ -31,7 +31,7 @@ babelwires::RemoveSimpleModifierSubcommand::RemoveSimpleModifierSubcommand(Eleme
     , m_targetPath(std::move(featurePath)) {}
 
 bool babelwires::RemoveSimpleModifierSubcommand::initialize(const Project& project) {
-    const Node* element = project.getFeatureElement(m_targetElementId);
+    const Node* element = project.getNode(m_targetElementId);
     if (!element) {
         return false;
     }

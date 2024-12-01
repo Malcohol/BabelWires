@@ -145,7 +145,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::Node> featureElement =
-        data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+        data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
@@ -235,7 +235,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::Node> featureElement =
-        data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+        data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
@@ -318,7 +318,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::Node> featureElement =
-        data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+        data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());

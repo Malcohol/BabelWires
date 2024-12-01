@@ -21,7 +21,7 @@ TEST(ValueNodeTest, simpleType) {
     babelwires::ValueNodeData data(babelwires::DefaultIntType::getThisType());
     data.m_modifiers.emplace_back(assignmentData.clone());
 
-    auto newElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    auto newElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     ASSERT_NE(newElement, nullptr);
     babelwires::ValueNode* const valueNode = newElement->as<babelwires::ValueNode>();

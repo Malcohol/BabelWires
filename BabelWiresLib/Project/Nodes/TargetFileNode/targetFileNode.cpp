@@ -1,5 +1,5 @@
 /**
- * TargetFileNodes are FeatureElements which correspond to a target file.
+ * TargetFileNodes are Nodes which correspond to a target file.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -115,7 +115,7 @@ bool babelwires::TargetFileNode::save(const ProjectContext& context, UserLogger&
         format->writeToFile(context, userLogger, *m_valueTreeRoot, outStream);
         outStream.close();
         if (m_saveHashWhenSaved != m_saveHash) {
-            setChanged(Changes::FeatureElementLabelChanged);
+            setChanged(Changes::NodeLabelChanged);
             m_saveHashWhenSaved = m_saveHash;
         }
         return true;
@@ -151,7 +151,7 @@ void babelwires::TargetFileNode::updateSaveHash() {
 
     if (m_saveHash != newHash) {
         if (m_saveHash == m_saveHashWhenSaved) {
-            setChanged(Changes::FeatureElementLabelChanged);
+            setChanged(Changes::NodeLabelChanged);
         }
         m_saveHash = newHash;
     }

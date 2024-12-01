@@ -1,5 +1,5 @@
 /**
- * FeatureElementDatas carry the data sufficient to reconstruct a Node.
+ * NodeDatas carry the data sufficient to reconstruct a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -46,7 +46,7 @@ namespace babelwires {
         UiSize m_uiSize;
     };
 
-    /// FeatureElementDatas carry the data sufficient to reconstruct a Node.
+    /// NodeDatas carry the data sufficient to reconstruct a Node.
     /// The class supports clone(), which returns a deep clone of the object,
     /// and customClone() which returns a clone with the array members unset.
     struct NodeData : Cloneable, CustomCloneable<ShallowCloneContext>, Serializable, ProjectVisitable {
@@ -68,7 +68,7 @@ namespace babelwires {
         /// Warn if it is less and error if it is more.
         virtual bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) = 0;
 
-        std::unique_ptr<Node> createFeatureElement(const ProjectContext& context, UserLogger& userLogger,
+        std::unique_ptr<Node> createNode(const ProjectContext& context, UserLogger& userLogger,
                                                              ElementId newId) const;
 
         /// Call the visitor on all the FieldIdentifiers in the element.
@@ -78,7 +78,7 @@ namespace babelwires {
         /// This base implementation does nothing.
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        /// The factory which creates FeatureElements corresponding to this data.
+        /// The factory which creates Nodes corresponding to this data.
         LongId m_factoryIdentifier = "nofact";
 
         /// The version of the factory to which these contents relate.
@@ -101,7 +101,7 @@ namespace babelwires {
 
       protected:
         virtual std::unique_ptr<Node>
-        doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger, ElementId newId) const = 0;
+        doCreateNode(const ProjectContext& context, UserLogger& userLogger, ElementId newId) const = 0;
 
         /// For use when serializing subclasses.
         void addCommonKeyValuePairs(Serializer& serializer) const;

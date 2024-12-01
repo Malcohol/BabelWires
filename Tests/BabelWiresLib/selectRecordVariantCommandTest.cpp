@@ -21,17 +21,17 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordWithVariantsElementData());
+        testEnvironment.m_project.addNode(testUtils::TestRecordWithVariantsElementData());
     const babelwires::ElementId sourceId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
+        testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
     const babelwires::ElementId targetId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
+        testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     const babelwires::ValueNode* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(targetId)->as<babelwires::ValueNode>();
     ASSERT_NE(targetElement, nullptr);
 
     const auto getSelectedTag = [](const babelwires::ValueTreeNode* valueTreeNode) {
@@ -139,7 +139,7 @@ TEST(SelectRecordVariantCommandTest, failSafelyNoRecord) {
     testUtils::TestRecordWithVariantsElementData elementData;
     elementData.m_id = 51;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
     EXPECT_EQ(elementId, 51);
 
     testEnvironment.m_project.process();
@@ -150,9 +150,9 @@ TEST(SelectRecordVariantCommandTest, failSafelyNotATag) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordWithVariantsElementData());
+        testEnvironment.m_project.addNode(testUtils::TestRecordWithVariantsElementData());
 
-    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueNode>();
+    const auto* element = testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     babelwires::ShortId notATag("notTag");
@@ -166,7 +166,7 @@ TEST(SelectRecordVariantCommandTest, failSafelyAlreadySelected) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestRecordWithVariantsElementData());
+        testEnvironment.m_project.addNode(testUtils::TestRecordWithVariantsElementData());
 
     babelwires::SelectRecordVariantCommand command("Test command", elementId, testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants(),
                                                    testUtils::TestRecordWithVariantsType::getTagBId());

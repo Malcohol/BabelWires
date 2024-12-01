@@ -1,5 +1,5 @@
 /**
- * FeatureElements are the fundimental constituent of the project.
+ * Nodes are the fundimental constituent of the project.
  * They expose input and output Features, and carry edits.
  *
  * (C) 2021 Malcolm Tyrrell
@@ -31,7 +31,7 @@ namespace babelwires {
     struct ProjectContext;
 
     /// The fundimental constituent of the project.
-    /// FeatureElements expose input and output Features, and carry edits.
+    /// Nodes expose input and output Features, and carry edits.
     class Node {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Node);
@@ -101,11 +101,11 @@ namespace babelwires {
           FeatureStructureChanged        = 0b000000000000000010,
           FeatureChangesMask             = 0b000000000000000011,
 
-          FeatureElementIsNew            = 0b000000000000000100,
-          FeatureElementFailed           = 0b000000000000001000,
-          FeatureElementRecovered        = 0b000000000000010000,
-          FeatureElementLabelChanged     = 0b000000000000100000,
-          FeatureElementChangesMask      = 0b000000000000111100,
+          NodeIsNew            = 0b000000000000000100,
+          NodeFailed           = 0b000000000000001000,
+          NodeRecovered        = 0b000000000000010000,
+          NodeLabelChanged     = 0b000000000000100000,
+          NodeChangesMask      = 0b000000000000111100,
 
           ModifierAdded                  = 0b000000000001000000,
           ModifierRemoved                = 0b000000000010000000,
@@ -223,7 +223,7 @@ namespace babelwires {
         std::vector<std::unique_ptr<Modifier>> m_removedModifiers;
 
         /// The accumulated change since the last time they were cleared.
-        Changes m_changes = Changes::FeatureElementIsNew;
+        Changes m_changes = Changes::NodeIsNew;
 
         /// After modifications to compounds, modifiers need to be reapplied.
         /// This records the paths at which that should happen.

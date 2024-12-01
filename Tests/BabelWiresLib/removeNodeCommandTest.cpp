@@ -34,11 +34,11 @@ TEST(RemoveNodeCommandTest, executeAndUndo) {
     testEnvironment.m_project.setProjectData(projectData);
     testEnvironment.m_project.process();
 
-    EXPECT_NE(testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId), nullptr);
+    EXPECT_NE(testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId), nullptr);
 
     const auto checkElements = [&testEnvironment](bool isCommandExecuted) {
         const babelwires::Node* processor =
-            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
+            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId);
         if (isCommandExecuted) {
             ASSERT_EQ(processor, nullptr);
         } else {
@@ -46,7 +46,7 @@ TEST(RemoveNodeCommandTest, executeAndUndo) {
         }
 
         const babelwires::Node* targetElement =
-            testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
+            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
         const babelwires::Modifier* targetModifier =
             targetElement->getEdits().findModifier(testUtils::getTestFileElementPathToInt0());
@@ -100,9 +100,9 @@ TEST(RemoveNodeCommandTest, subsumption) {
     testUtils::TestComplexRecordElementData elementData;
 
     const babelwires::ElementId element1Id =
-        testEnvironment.m_project.addFeatureElement(elementData);
+        testEnvironment.m_project.addNode(elementData);
     const babelwires::ElementId element2Id =
-        testEnvironment.m_project.addFeatureElement(elementData);
+        testEnvironment.m_project.addNode(elementData);
 
     {
         babelwires::ConnectionModifierData modData;
@@ -124,17 +124,17 @@ TEST(RemoveNodeCommandTest, subsumption) {
 
     EXPECT_TRUE(firstCommand.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(element1Id), nullptr);
-    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(element2Id), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getNode(element1Id), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getNode(element2Id), nullptr);
 
     // Confirm that the move was subsumed
     firstCommand.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_NE(testEnvironment.m_project.getFeatureElement(element1Id), nullptr);
-    EXPECT_NE(testEnvironment.m_project.getFeatureElement(element2Id), nullptr);
+    EXPECT_NE(testEnvironment.m_project.getNode(element1Id), nullptr);
+    EXPECT_NE(testEnvironment.m_project.getNode(element2Id), nullptr);
     {
-        const babelwires::Modifier* modifier = testEnvironment.m_project.getFeatureElement(element2Id)
+        const babelwires::Modifier* modifier = testEnvironment.m_project.getNode(element2Id)
                                                    ->getEdits()
                                                    .findModifier(elementData.getPathToRecordInt0());
         EXPECT_NE(modifier, nullptr);
@@ -144,6 +144,6 @@ TEST(RemoveNodeCommandTest, subsumption) {
     firstCommand.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(element1Id), nullptr);
-    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(element2Id), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getNode(element1Id), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getNode(element2Id), nullptr);
 }

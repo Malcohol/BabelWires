@@ -1,5 +1,5 @@
 /**
- * FeatureElements are the fundimental constituent of the project.
+ * Nodes are the fundimental constituent of the project.
  * They expose input and output Features, and carry edits.
  *
  * (C) 2021 Malcolm Tyrrell
@@ -212,7 +212,7 @@ void babelwires::Node::clearChanges() {
     if (ValueTreeNode* f = doGetOutputNonConst()) {
         f->clearChanges();
     }
-    if (isChanged(Changes::ModifierChangesMask | Changes::CompoundExpandedOrCollapsed | Changes::FeatureElementIsNew)) {
+    if (isChanged(Changes::ModifierChangesMask | Changes::CompoundExpandedOrCollapsed | Changes::NodeIsNew)) {
         m_edits.clearChanges();
         m_removedModifiers.clear();
     }
@@ -245,7 +245,7 @@ std::string babelwires::Node::getReasonForFailure() const {
 void babelwires::Node::clearInternalFailure() {
     if (!m_internalFailure.empty()) {
         if (!m_isInDependencyLoop) {
-            setChanged(Changes::FeatureElementRecovered);
+            setChanged(Changes::NodeRecovered);
         }
         m_internalFailure.clear();
     }
@@ -254,7 +254,7 @@ void babelwires::Node::clearInternalFailure() {
 void babelwires::Node::setInternalFailure(std::string reasonForFailure) {
     assert(!reasonForFailure.empty() && "A reason must be provided");
     if (!isFailed()) {
-        setChanged(Changes::FeatureElementFailed);
+        setChanged(Changes::NodeFailed);
     }
     m_internalFailure = std::move(reasonForFailure);
 }
@@ -266,11 +266,11 @@ bool babelwires::Node::isInDependencyLoop() const {
 void babelwires::Node::setInDependencyLoop(bool isInLoop) {
     if (isInLoop) {
         if (!isFailed()) {
-            setChanged(Changes::FeatureElementFailed);
+            setChanged(Changes::NodeFailed);
         }
     } else {
         if (m_isInDependencyLoop && m_internalFailure.empty()) {
-            setChanged(Changes::FeatureElementRecovered);
+            setChanged(Changes::NodeRecovered);
         }
     }
     m_isInDependencyLoop = isInLoop;

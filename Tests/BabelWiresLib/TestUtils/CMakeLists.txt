@@ -1,7 +1,7 @@
 SET( LIB_TEST_UTILS_SRCS
     testArrayType.cpp
     testEnum.cpp
-    testFeatureElement.cpp
+    testNode.cpp
     testFileFormats.cpp
     testProcessor.cpp
     testEnvironment.cpp

@@ -1,5 +1,5 @@
 /**
- * The command which adds FeatureElements to the project.
+ * The command which adds Nodes to the project.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -24,7 +24,7 @@ babelwires::AddNodeCommand::AddNodeCommand(std::string commandName, std::unique_
 }
 
 void babelwires::AddNodeCommand::execute(Project& project) const {
-    ElementId newId = project.addFeatureElement(*m_elementToAdd);
+    ElementId newId = project.addNode(*m_elementToAdd);
     m_elementToAdd->m_id = newId;
 }
 

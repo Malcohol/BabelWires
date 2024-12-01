@@ -81,7 +81,7 @@ babelwires::projectUtilities::getDerivedValues(const Project& project, ElementId
                                                         std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
     unsigned int valueIndex = 0;
-    const Node* element = project.getFeatureElement(elementId);
+    const Node* element = project.getNode(elementId);
     values.emplace_back(std::tuple<const Node*, Path>{element, pathToValue});
     //do {
         addDerivedValues(project, valueIndex, values);
@@ -103,7 +103,7 @@ babelwires::projectUtilities::getAllDerivedValues(const Project& project, Elemen
     std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
     unsigned int valueIndex = 0;
-    const Node* element = project.getFeatureElement(elementId);
+    const Node* element = project.getNode(elementId);
     values.emplace_back(std::tuple<const Node*, Path>{element, pathToValue});
     do {
         addDerivedValues(project, valueIndex, values);

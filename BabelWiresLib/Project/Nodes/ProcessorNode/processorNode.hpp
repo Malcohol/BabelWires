@@ -1,5 +1,5 @@
 /**
- * ProcessorNode are FeatureElements which carry a processor.
+ * ProcessorNode are Nodes which carry a processor.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

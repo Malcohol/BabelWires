@@ -25,7 +25,7 @@ babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string c
 babelwires::SelectRecordVariantCommand::~SelectRecordVariantCommand() = default;
 
 bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getFeatureElement(m_elementId);
+    const Node* elementToModify = project.getNode(m_elementId);
     if (!elementToModify) {
         return false;
     }

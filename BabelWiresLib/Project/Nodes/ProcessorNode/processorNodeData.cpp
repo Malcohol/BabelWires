@@ -26,7 +26,7 @@ bool babelwires::ProcessorNodeData::checkFactoryVersion(const ProjectContext& co
 }
 
 std::unique_ptr<babelwires::Node>
-babelwires::ProcessorNodeData::doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
+babelwires::ProcessorNodeData::doCreateNode(const ProjectContext& context, UserLogger& userLogger,
                                                   ElementId newId) const {
     return std::make_unique<ProcessorNode>(context, userLogger, *this, newId);
 }

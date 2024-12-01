@@ -4,18 +4,18 @@
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 
 // TODO: Need to preserve SimulateFailure and SimulateRecovery if this gets replaced !!!
-// See Commented code in FeatureElementTest.
+// See Commented code in NodeTest.
 
 namespace testUtils {
     ///
-    struct TestFeatureElementData : babelwires::NodeData {
-        CLONEABLE(TestFeatureElementData);
-        CUSTOM_CLONEABLE(TestFeatureElementData);
-        SERIALIZABLE(TestFeatureElementData, "TestFeatureElementData", babelwires::NodeData, 1);
+    struct TestNodeData : babelwires::NodeData {
+        CLONEABLE(TestNodeData);
+        CUSTOM_CLONEABLE(TestNodeData);
+        SERIALIZABLE(TestNodeData, "TestNodeData", babelwires::NodeData, 1);
 
-        TestFeatureElementData();
-        TestFeatureElementData(const TestFeatureElementData& other) = default;
-        TestFeatureElementData(const TestFeatureElementData& other, babelwires::ShallowCloneContext);
+        TestNodeData();
+        TestNodeData(const TestNodeData& other) = default;
+        TestNodeData(const TestNodeData& other, babelwires::ShallowCloneContext);
 
         // Dummy implementations.
         void serializeContents(babelwires::Serializer& serializer) const override;
@@ -23,15 +23,15 @@ namespace testUtils {
         bool checkFactoryVersion(const babelwires::ProjectContext& context,
                                  babelwires::UserLogger& userLogger) override;
 
-        // Creates a TestFeatureElement.
-        std::unique_ptr<babelwires::Node> doCreateFeatureElement(const babelwires::ProjectContext& context,
+        // Creates a TestNode.
+        std::unique_ptr<babelwires::Node> doCreateNode(const babelwires::ProjectContext& context,
                                                                            babelwires::UserLogger& userLogger,
                                                                            babelwires::ElementId newId) const override;
     };
 
-    struct TestFeatureElement : babelwires::Node {
-        TestFeatureElement(const babelwires::ProjectContext& context);
-        TestFeatureElement(const babelwires::ProjectContext& context, const TestFeatureElementData& data, babelwires::ElementId newId);
+    struct TestNode : babelwires::Node {
+        TestNode(const babelwires::ProjectContext& context);
+        TestNode(const babelwires::ProjectContext& context, const TestNodeData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;
 
         babelwires::ValueTreeNode* doGetInputNonConst() override;

@@ -1,5 +1,5 @@
 /**
- * SourceFileNodes are FeatureElements which correspond to a source file.
+ * SourceFileNodes are Nodes which correspond to a source file.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -20,7 +20,7 @@ namespace babelwires {
     struct ProjectContext;
     class ValueTreeRoot;
 
-    /// SourceFileNodes are FeatureElements which correspond to a source file.
+    /// SourceFileNodes are Nodes which correspond to a source file.
     class SourceFileNode : public FileNode {
       public:
         SourceFileNode(const ProjectContext& context, UserLogger& userLogger, const SourceFileNodeData& data,

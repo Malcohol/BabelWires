@@ -1,5 +1,5 @@
 /**
- * ValueNodes are FeatureElements which carry a value.
+ * ValueNodes are Nodes which carry a value.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

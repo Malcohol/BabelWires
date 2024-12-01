@@ -22,17 +22,17 @@ TEST(AddNodeCommandTest, executeAndUndo) {
 
     command.execute(testEnvironment.m_project);
 
-    const babelwires::Node* newElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
+    const babelwires::Node* newElement = testEnvironment.m_project.getNode(command.getElementId());
     ASSERT_NE(newElement, nullptr);
     EXPECT_NE(newElement->as<babelwires::ValueNode>(), nullptr);
 
     command.undo(testEnvironment.m_project);
 
-    EXPECT_EQ(testEnvironment.m_project.getFeatureElement(command.getElementId()), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getNode(command.getElementId()), nullptr);
 
     command.execute(testEnvironment.m_project);
 
-    const babelwires::Node* restoredElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
+    const babelwires::Node* restoredElement = testEnvironment.m_project.getNode(command.getElementId());
     ASSERT_NE(restoredElement, nullptr);
     EXPECT_NE(restoredElement->as<babelwires::ValueNode>(), nullptr);
 }
@@ -55,7 +55,7 @@ TEST(AddNodeCommandTest, subsumeMoves) {
     addCommand.undo(testEnvironment.m_project);
     addCommand.execute(testEnvironment.m_project);
     const auto* element =
-        testEnvironment.m_project.getFeatureElement(addCommand.getElementId())->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(addCommand.getElementId())->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
     EXPECT_EQ(element->getUiPosition().m_y, 88);

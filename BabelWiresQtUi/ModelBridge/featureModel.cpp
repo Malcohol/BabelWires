@@ -60,7 +60,7 @@ babelwires::FeatureView::FeatureView(ElementId elementId, ProjectBridge& project
 
 QSize babelwires::FeatureView::sizeHint() const {
     AccessModelScope scope(m_projectBridge);
-    if (const Node* element = scope.getProject().getFeatureElement(m_elementId)) {
+    if (const Node* element = scope.getProject().getNode(m_elementId)) {
         // The width is stored, and the height will stretched to fit the node by the UI.
         return QSize(element->getUiSize().m_width, 1);
     }
@@ -77,7 +77,7 @@ babelwires::FeatureModel::FeatureModel(QObject* parent, ElementId elementId, Pro
     , m_elementId(elementId) {}
 
 int babelwires::FeatureModel::getNumRows(AccessModelScope& scope) const {
-    if (const Node* element = getFeatureElement(scope)) {
+    if (const Node* element = getNode(scope)) {
         return element->getContentsCache().getNumRows();
     } else {
         return 0;
@@ -90,7 +90,7 @@ int babelwires::FeatureModel::rowCount(const QModelIndex& /*parent*/) const {
 }
 
 const babelwires::ContentsCacheEntry* babelwires::FeatureModel::getEntry(AccessModelScope& scope, int row) const {
-    if (const Node* element = getFeatureElement(scope)) {
+    if (const Node* element = getNode(scope)) {
         return element->getContentsCache().getEntry(row);
     }
     return nullptr;
@@ -101,8 +101,8 @@ const babelwires::ContentsCacheEntry* babelwires::FeatureModel::getEntry(AccessM
     return getEntry(scope, index.row());
 }
 
-const babelwires::Node* babelwires::FeatureModel::getFeatureElement(AccessModelScope& scope) const {
-    return scope.getProject().getFeatureElement(m_elementId);
+const babelwires::Node* babelwires::FeatureModel::getNode(AccessModelScope& scope) const {
+    return scope.getProject().getNode(m_elementId);
 }
 
 int babelwires::FeatureModel::columnCount(const QModelIndex& /*parent*/) const {
@@ -111,7 +111,7 @@ int babelwires::FeatureModel::columnCount(const QModelIndex& /*parent*/) const {
 
 QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) const {
     AccessModelScope scope(m_projectBridge);
-    const Node* element = getFeatureElement(scope);
+    const Node* element = getNode(scope);
     if (!element) {
         return QVariant();
     }
@@ -180,7 +180,7 @@ Qt::ItemFlags babelwires::FeatureModel::flags(const QModelIndex& index) const {
     Qt::ItemFlags flags = Qt::ItemIsEnabled;
 
     AccessModelScope scope(m_projectBridge);
-    if (const Node* element = getFeatureElement(scope)) {
+    if (const Node* element = getNode(scope)) {
         if (const babelwires::ContentsCacheEntry* entry = getEntry(scope, index)) {
             const babelwires::UiProjectContext& context = m_projectBridge.getContext();
             RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
@@ -195,7 +195,7 @@ Qt::ItemFlags babelwires::FeatureModel::flags(const QModelIndex& index) const {
 
 QMenu* babelwires::FeatureModel::getContextMenu(const QModelIndex& index) {
     AccessModelScope scope(m_projectBridge);
-    const Node* element = getFeatureElement(scope);
+    const Node* element = getNode(scope);
     if (!element) {
         return nullptr;
     }

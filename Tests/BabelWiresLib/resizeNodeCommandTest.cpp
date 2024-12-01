@@ -8,18 +8,18 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(ResizeNodeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData elementData;
+    testUtils::TestNodeData elementData;
     elementData.m_uiData.m_uiSize = babelwires::UiSize{77};
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const testUtils::TestNode* element =
+        testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiSize().m_width, 77);
 
@@ -55,12 +55,12 @@ TEST(ResizeNodeCommandTest, failSafelyNoElement) {
 TEST(ResizeNodeCommandTest, subsumeMoves) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData elementData;
+    testUtils::TestNodeData elementData;
     elementData.m_uiData.m_uiSize = babelwires::UiSize{77};
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const testUtils::TestNode* element =
+        testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiSize().m_width, 77);
 
@@ -88,12 +88,12 @@ TEST(ResizeNodeCommandTest, subsumeMoves) {
 TEST(ResizeNodeCommandTest, subsumeMovesDelay) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestFeatureElementData elementData;
+    testUtils::TestNodeData elementData;
     elementData.m_uiData.m_uiSize = babelwires::UiSize{77};
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const testUtils::TestFeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<testUtils::TestFeatureElement>();
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const testUtils::TestNode* element =
+        testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiSize().m_width, 77);
 

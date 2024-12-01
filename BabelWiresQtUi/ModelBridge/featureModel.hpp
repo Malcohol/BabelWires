@@ -52,7 +52,7 @@ namespace babelwires {
         Qt::ItemFlags flags(const QModelIndex& index) const override;
 
         /// Access the associated Node.
-        const Node* getFeatureElement(AccessModelScope& scope) const;
+        const Node* getNode(AccessModelScope& scope) const;
         /// Access an entry in the ContentsCache.
         const ContentsCacheEntry* getEntry(AccessModelScope& scope, const QModelIndex& index) const;
         const ContentsCacheEntry* getEntry(AccessModelScope& scope, int row) const;

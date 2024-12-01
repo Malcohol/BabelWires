@@ -18,7 +18,7 @@ babelwires::MoveNodeCommand::MoveNodeCommand(std::string commandName, ElementId 
 
 bool babelwires::MoveNodeCommand::initialize(const Project& project) {
     for (const auto& [elementId, _] : m_newPositions) {
-        const Node* element = project.getFeatureElement(elementId);
+        const Node* element = project.getNode(elementId);
         if (!element) {
             return false;
         }

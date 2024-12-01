@@ -1,5 +1,5 @@
 /**
- * The command which adds FeatureElements to the project.
+ * The command which adds Nodes to the project.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

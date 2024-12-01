@@ -11,7 +11,7 @@
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/TestUtils/tempFilePath.hpp>
@@ -34,9 +34,9 @@ namespace {
         elementData.m_filePath = filePath1;
         elementData.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
 
-        const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+        const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
         const auto* element =
-            testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::SourceFileNode>();
+            testEnvironment.m_project.getNode(elementId)->as<babelwires::SourceFileNode>();
         ASSERT_NE(element, nullptr);
 
         const auto getOutput = [element]() {
@@ -106,8 +106,8 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     elementData.m_filePath = filePath1;
     elementData.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::TargetFileNode>();
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const auto* element = testEnvironment.m_project.getNode(elementId)->as<babelwires::TargetFileNode>();
     ASSERT_NE(element, nullptr);
 
     EXPECT_EQ(element->getFilePath(), filePath1);
@@ -149,7 +149,7 @@ TEST(ChangeFileCommandTest, failSafelyNotAFileElement) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestFeatureElementData());
+        testEnvironment.m_project.addNode(testUtils::TestNodeData());
 
     std::string filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
     babelwires::ChangeFileCommand command("Test command", elementId, filePath2);

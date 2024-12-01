@@ -22,10 +22,10 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
         elementData.m_modifiers.emplace_back(intAssignment.clone());
     }
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
     testEnvironment.m_project.process();
 
-    const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const auto* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
 
     const auto checkModifiers = [&testEnvironment, element](bool isCommandExecuted) {
@@ -71,7 +71,7 @@ TEST(RemoveSimpleModifierCommandTest, failSafelyNoElement) {
 TEST(RemoveSimpleModifierCommandTest, failSafelyNoModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
     babelwires::RemoveSimpleModifierSubcommand command(elementId, babelwires::Path::deserializeFromString("qqq/zzz"));
 

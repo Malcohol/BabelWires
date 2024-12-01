@@ -150,7 +150,7 @@ void babelwires::ProjectBridge::onNodeMoved(QtNodes::Node& n, const QPointF& new
             const ElementId elementId = elementNodeModel.getElementId();
 
             AccessModelScope scope(*this);
-            const Node* element = scope.getProject().getFeatureElement(elementId);
+            const Node* element = scope.getProject().getNode(elementId);
             assert(element && "The element should already be in the project");
             const UiPosition& uiPosition = element->getElementData().m_uiData.m_uiPosition;
             UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
@@ -179,7 +179,7 @@ void babelwires::ProjectBridge::onNodeResized(QtNodes::Node& n, const QSize& new
             const ElementId elementId = elementNodeModel.getElementId();
 
             AccessModelScope scope(*this);
-            const Node* element = scope.getProject().getFeatureElement(elementId);
+            const Node* element = scope.getProject().getNode(elementId);
             assert(element && "The element should already be in the project");
             const int currentWidth = element->getUiSize().m_width;
             const int newWidth = elementNodeModel.embeddedWidget()->size().width();
@@ -521,7 +521,7 @@ babelwires::ProjectData babelwires::ProjectBridge::getDataFromSelectedNodes() {
         auto& elementNodeModel = dynamic_cast<ElementNodeModel&>(dataModel);
         const ElementId elementId = elementNodeModel.getElementId();
 
-        const Node* const element = project.getFeatureElement(elementId);
+        const Node* const element = project.getNode(elementId);
         assert(element && "The node is not in the project");
         projectData.m_elements.emplace_back(element->extractElementData());
     }

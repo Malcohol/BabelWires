@@ -43,7 +43,7 @@ TEST(SourceFileNodeTest, sourceFileDataCreateElement) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
-    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    auto featureElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::SourceFileNode>());
@@ -68,7 +68,7 @@ TEST(SourceFileNodeTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("could not be loaded"));
     EXPECT_TRUE(sourceFileNode->getReasonForFailure().find(pathInError.str()) != std::string::npos);
 
-    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::NodeFailed));
     EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
     EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::SomethingChanged));
 
@@ -81,7 +81,7 @@ TEST(SourceFileNodeTest, sourceFileDataCreateElement) {
     EXPECT_FALSE(sourceFileNode->isFailed());
     EXPECT_TRUE(sourceFileNode->getReasonForFailure().empty());
 
-    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::NodeRecovered));
     EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
     EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
@@ -107,7 +107,7 @@ TEST(SourceFileNodeTest, changeFile) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
 
-    auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    auto featureElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
     ASSERT_TRUE(featureElement->as<babelwires::SourceFileNode>());

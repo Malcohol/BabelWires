@@ -1,5 +1,5 @@
 /**
- * The Project manages the graph of FeatureElements, and propagates data from sources to targets.
+ * The Project manages the graph of Nodes, and propagates data from sources to targets.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -35,7 +35,7 @@ namespace babelwires {
     struct UiPosition;
     struct UiSize;
 
-    /// The Project manages the graph of FeatureElements, and propagates data from sources to targets.
+    /// The Project manages the graph of Nodes, and propagates data from sources to targets.
     class Project {
       public:
         /// Construct a new project.
@@ -53,7 +53,7 @@ namespace babelwires {
 
         /// Add a feature element. Will use the ID of the data, if that ID is available.
         /// Returns the ID of the data after it was added.
-        ElementId addFeatureElement(const NodeData& data);
+        ElementId addNode(const NodeData& data);
 
         /// Remove the element with the given id.
         void removeElement(ElementId id);
@@ -106,8 +106,8 @@ namespace babelwires {
         const TargetFileFormatRegistry& getFactoryFormatRegistry() const;
         const SourceFileFormatRegistry& getFileFormatRegistry() const;
 
-        Node* getFeatureElement(ElementId id);
-        const Node* getFeatureElement(ElementId id) const;
+        Node* getNode(ElementId id);
+        const Node* getNode(ElementId id) const;
 
         /// Reload the source file.
         /// File exceptions are caught and written to the userLogger.
@@ -185,8 +185,8 @@ namespace babelwires {
 
         void validateConnectionCache() const;
 
-        Node* addFeatureElementWithoutCachingConnection(const NodeData& data);
-        void addFeatureElementConnectionsToCache(Node* element);
+        Node* addNodeWithoutCachingConnection(const NodeData& data);
+        void addNodeConnectionsToCache(Node* element);
 
       private:
         ProjectContext& m_context;
@@ -209,7 +209,7 @@ namespace babelwires {
 
         /// Feature elements which have been removed since the last time changes were cleared.
         /// Use a map because we iterate.
-        std::map<ElementId, std::unique_ptr<Node>> m_removedFeatureElements;
+        std::map<ElementId, std::unique_ptr<Node>> m_removedNodes;
     };
 
 } // namespace babelwires

@@ -48,7 +48,7 @@ const babelwires::ValueTreeNode&
 babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope, const DataLocation& data) {
     const Project& project = scope.getProject();
 
-    const Node* element = project.getFeatureElement(data.getElementId());
+    const Node* element = project.getNode(data.getElementId());
 
     if (!element) {
         throw ModelException() << "The element does not exist.";
@@ -70,7 +70,7 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTree
                                                                                    const DataLocation& data) {
     const Project& project = scope.getProject();
 
-    const Node* element = project.getFeatureElement(data.getElementId());
+    const Node* element = project.getNode(data.getElementId());
 
     if (!element) {
         return nullptr;

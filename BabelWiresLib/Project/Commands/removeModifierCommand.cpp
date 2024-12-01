@@ -33,7 +33,7 @@ babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName
     , m_path(featurePath) {}
 
 bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getFeatureElement(m_elementId);
+    const Node* elementToModify = project.getNode(m_elementId);
 
     if (!elementToModify) {
         return false;

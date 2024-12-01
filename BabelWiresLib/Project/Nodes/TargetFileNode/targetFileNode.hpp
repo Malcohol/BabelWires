@@ -1,5 +1,5 @@
 /**
- * TargetFileNodes are FeatureElements which correspond to a target file.
+ * TargetFileNodes are Nodes which correspond to a target file.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -18,7 +18,7 @@ namespace babelwires {
     struct TargetFileNodeData;
     struct ProjectContext;
 
-    /// TargetFileNodes are FeatureElements which correspond to a target file.
+    /// TargetFileNodes are Nodes which correspond to a target file.
     class TargetFileNode : public FileNode {
       public:
         TargetFileNode(const ProjectContext& context, UserLogger& userLogger, const TargetFileNodeData& data,

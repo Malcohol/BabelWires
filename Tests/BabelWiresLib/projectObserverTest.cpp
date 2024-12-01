@@ -64,14 +64,14 @@ namespace {
 } // namespace
 
 namespace {
-    void testFeatureElementAdded(bool shouldIgnore) {
+    void testNodeAdded(bool shouldIgnore) {
         testUtils::TestEnvironment testEnvironment;
 
         babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
         ObservedChanges observedChanges(projectObserver);
 
         const babelwires::ElementId elementId =
-            testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+            testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
         if (shouldIgnore) {
             projectObserver.ignoreAddedElement(elementId);
@@ -97,19 +97,19 @@ namespace {
 } // namespace
 
 TEST(ProjectObserverTest, featureElementAdded) {
-    testFeatureElementAdded(false);
+    testNodeAdded(false);
 }
 
 TEST(ProjectObserverTest, featureElementAddedIgnore) {
-    testFeatureElementAdded(false);
+    testNodeAdded(false);
 }
 
 namespace {
-    void testFeatureElementRemoved(bool shouldIgnore) {
+    void testNodeRemoved(bool shouldIgnore) {
             testUtils::TestEnvironment testEnvironment;
 
         const babelwires::ElementId elementId =
-            testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+            testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
         testEnvironment.m_project.process();
         testEnvironment.m_project.clearChanges();
@@ -144,19 +144,19 @@ namespace {
 } // namespace
 
 TEST(ProjectObserverTest, featureElementRemoved) {
-    testFeatureElementRemoved(false);
+    testNodeRemoved(false);
 }
 
 TEST(ProjectObserverTest, featureElementRemovedIgnore) {
-    testFeatureElementRemoved(true);
+    testNodeRemoved(true);
 }
 
 namespace {
-    void testFeatureElementMoved(bool shouldIgnore) {
+    void testNodeMoved(bool shouldIgnore) {
             testUtils::TestEnvironment testEnvironment;
 
         const babelwires::ElementId elementId =
-            testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+            testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
         testEnvironment.m_project.clearChanges();
 
@@ -192,19 +192,19 @@ namespace {
 } // namespace
 
 TEST(ProjectObserverTest, featureElementMoved) {
-    testFeatureElementMoved(false);
+    testNodeMoved(false);
 }
 
 TEST(ProjectObserverTest, featureElementMovedIgnore) {
-    testFeatureElementMoved(true);
+    testNodeMoved(true);
 }
 
 namespace {
-    void testFeatureElementsResized(bool shouldIgnore) {
+    void testNodesResized(bool shouldIgnore) {
             testUtils::TestEnvironment testEnvironment;
 
         const babelwires::ElementId elementId =
-            testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+            testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
         testEnvironment.m_project.clearChanges();
 
@@ -240,11 +240,11 @@ namespace {
 } // namespace
 
 TEST(ProjectObserverTest, featureElementResized) {
-    testFeatureElementsResized(false);
+    testNodesResized(false);
 }
 
 TEST(ProjectObserverTest, featureElementResizedIgnore) {
-    testFeatureElementsResized(true);
+    testNodesResized(true);
 }
 
 namespace {
@@ -256,14 +256,14 @@ namespace {
         if (sourceRecordIsExpanded) {
             sourceElementData.m_expandedPaths.emplace_back(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord());
         }
-        const babelwires::ElementId sourceElementId = testEnvironment.m_project.addFeatureElement(sourceElementData);
+        const babelwires::ElementId sourceElementId = testEnvironment.m_project.addNode(sourceElementData);
 
         testUtils::TestComplexRecordElementData targetElementData;
         targetElementData.m_expandedPaths.emplace_back(testUtils::TestComplexRecordElementData::getPathToRecord());
         if (targetArrayIsExpanded) {
             targetElementData.m_expandedPaths.emplace_back(testUtils::TestComplexRecordElementData::getPathToRecordArray());
         }
-        const babelwires::ElementId targetElementId = testEnvironment.m_project.addFeatureElement(targetElementData);
+        const babelwires::ElementId targetElementId = testEnvironment.m_project.addNode(targetElementData);
 
         testEnvironment.m_project.process();
         testEnvironment.m_project.clearChanges();
@@ -356,7 +356,7 @@ namespace {
         if (sourceRecordIsExpanded) {
             sourceElementData.m_expandedPaths.emplace_back(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord());
         }
-        const babelwires::ElementId sourceElementId = testEnvironment.m_project.addFeatureElement(sourceElementData);
+        const babelwires::ElementId sourceElementId = testEnvironment.m_project.addNode(sourceElementData);
 
         // The connection we will remove.
         babelwires::ConnectionModifierData connectionData;
@@ -370,7 +370,7 @@ namespace {
         if (targetArrayIsExpanded) {
             targetElementData.m_expandedPaths.emplace_back(testUtils::TestComplexRecordElementData::getPathToRecordArray());
         }
-        const babelwires::ElementId targetElementId = testEnvironment.m_project.addFeatureElement(targetElementData);
+        const babelwires::ElementId targetElementId = testEnvironment.m_project.addNode(targetElementData);
 
         testEnvironment.m_project.process();
         testEnvironment.m_project.clearChanges();
@@ -451,7 +451,7 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
 
     testUtils::TestComplexRecordElementData sourceElementData;
     sourceElementData.m_expandedPaths.emplace_back(testUtils::TestComplexRecordElementData::getPathToRecord());
-    const babelwires::ElementId sourceElementId = testEnvironment.m_project.addFeatureElement(sourceElementData);
+    const babelwires::ElementId sourceElementId = testEnvironment.m_project.addNode(sourceElementData);
 
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
@@ -461,7 +461,7 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
     testUtils::TestComplexRecordElementData targetElementData;
     targetElementData.m_expandedPaths.emplace_back(testUtils::TestComplexRecordElementData::getPathToRecord());
     targetElementData.m_modifiers.emplace_back(connectionData.clone());
-    const babelwires::ElementId targetElementId = testEnvironment.m_project.addFeatureElement(targetElementData);
+    const babelwires::ElementId targetElementId = testEnvironment.m_project.addNode(targetElementData);
 
     testEnvironment.m_project.process();
     testEnvironment.m_project.clearChanges();

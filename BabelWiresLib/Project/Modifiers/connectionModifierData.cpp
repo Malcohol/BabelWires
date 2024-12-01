@@ -19,7 +19,7 @@
 #include <Common/Serialization/serializer.hpp>
 
 const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceTreeNode(const Project& project) const {
-    const Node* sourceElement = project.getFeatureElement(m_sourceId);
+    const Node* sourceElement = project.getNode(m_sourceId);
     if (!sourceElement) {
         throw babelwires::ModelException()
             << "Could not find the connection source (element with id=" << m_sourceId << ")";

@@ -53,7 +53,7 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
                     ElementId& sourceId = assignFromData->m_sourceId;
                     auto it = remappingTable.find(sourceId);
                     if (it == remappingTable.end()) {
-                        if (!preserveInConnections || !project.getFeatureElement(sourceId)) {
+                        if (!preserveInConnections || !project.getNode(sourceId)) {
                             // Discard it if we're not preserving in-connections OR the source doesn't exist.
                             return true;
                         }
@@ -100,7 +100,7 @@ void babelwires::PasteNodesCommand::execute(Project& project) const {
         // TODO
         std::unique_ptr<NodeData> clone = elementData->clone();
         clone->m_uiData.m_uiPosition += offset;
-        project.addFeatureElement(*clone);
+        project.addNode(*clone);
     }
     for (const auto& connection : m_connectionsToPaste) {
         auto newModifier = std::make_unique<ConnectionModifierData>();
