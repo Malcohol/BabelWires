@@ -1,11 +1,11 @@
 /**
- * ElementNodeModel is the NodeDataModels corresponding to Nodes.
+ * NodeNodeModel is the NodeDataModels corresponding to Nodes.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeNodeModel.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
@@ -23,7 +23,7 @@
 
 #include <QMenu>
 
-babelwires::ElementNodeModel::ElementNodeModel(ProjectBridge& projectBridge, NodeId elementId)
+babelwires::NodeNodeModel::NodeNodeModel(ProjectBridge& projectBridge, NodeId elementId)
     : BaseNodeModel(projectBridge)
     , m_nodeId(elementId)
     , m_view(new FeatureView(elementId, projectBridge)) {
@@ -37,9 +37,9 @@ babelwires::ElementNodeModel::ElementNodeModel(ProjectBridge& projectBridge, Nod
     connect(m_view, SIGNAL(clicked(const QModelIndex&)), m_model, SLOT(onClicked(const QModelIndex&)));
 }
 
-babelwires::ElementNodeModel::~ElementNodeModel() {}
+babelwires::NodeNodeModel::~NodeNodeModel() {}
 
-void babelwires::ElementNodeModel::setContents(std::string label, NodeId elementId) {
+void babelwires::NodeNodeModel::setContents(std::string label, NodeId elementId) {
     AccessModelScope scope(m_projectBridge);
     const Node* node = scope.getProject().getNode(elementId);
     assert(node && "The ID must correspond to an node in the project");
@@ -47,20 +47,20 @@ void babelwires::ElementNodeModel::setContents(std::string label, NodeId element
     m_view->setModel(m_model);
 }
 
-babelwires::NodeId babelwires::ElementNodeModel::getNodeId() const {
+babelwires::NodeId babelwires::NodeNodeModel::getNodeId() const {
     return m_nodeId;
 }
 
-QWidget* babelwires::ElementNodeModel::embeddedWidget() {
+QWidget* babelwires::NodeNodeModel::embeddedWidget() {
     return m_view;
 }
 
-unsigned int babelwires::ElementNodeModel::nPorts(QtNodes::PortType portType) const {
+unsigned int babelwires::NodeNodeModel::nPorts(QtNodes::PortType portType) const {
     AccessModelScope scope(m_projectBridge);
     return m_model->getNumRows(scope);
 }
 
-QtNodes::NodeDataType babelwires::ElementNodeModel::dataType(QtNodes::PortType portType,
+QtNodes::NodeDataType babelwires::NodeNodeModel::dataType(QtNodes::PortType portType,
                                                              QtNodes::PortIndex portIndex) const {
     AccessModelScope scope(m_projectBridge);
     if (portType == QtNodes::PortType::In) {
@@ -70,7 +70,7 @@ QtNodes::NodeDataType babelwires::ElementNodeModel::dataType(QtNodes::PortType p
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getInput(AccessModelScope& scope, int portIndex) const {
+const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getInput(AccessModelScope& scope, int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
         return entry->getInput();
     } else {
@@ -78,7 +78,7 @@ const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getInput(AccessMo
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getOutput(AccessModelScope& scope,
+const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getOutput(AccessModelScope& scope,
                                                                           int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
         return entry->getOutput();
@@ -87,14 +87,14 @@ const babelwires::ValueTreeNode* babelwires::ElementNodeModel::getOutput(AccessM
     }
 }
 
-QtNodes::NodeDataType babelwires::ElementNodeModel::getDataTypeFromFeature(const babelwires::ValueTreeNode* f) {
+QtNodes::NodeDataType babelwires::NodeNodeModel::getDataTypeFromFeature(const babelwires::ValueTreeNode* f) {
     if (f && f->getKind() != "") {
         return QtNodes::NodeDataType{f->getKind().c_str(), ""};
     }
     return QtNodes::NodeDataType();
 }
 
-const babelwires::Path& babelwires::ElementNodeModel::getPathAtPort(AccessModelScope& scope,
+const babelwires::Path& babelwires::NodeNodeModel::getPathAtPort(AccessModelScope& scope,
                                                                            QtNodes::PortType portType,
                                                                            QtNodes::PortIndex portIndex) const {
     const ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex);
@@ -103,7 +103,7 @@ const babelwires::Path& babelwires::ElementNodeModel::getPathAtPort(AccessModelS
     return entry->getPath();
 }
 
-QtNodes::PortIndex babelwires::ElementNodeModel::getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
+QtNodes::PortIndex babelwires::NodeNodeModel::getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
                                                                const Path& path) const {
     const Node* node = m_model->getNode(scope);
     assert(node && "Check before calling this.");
@@ -113,7 +113,7 @@ QtNodes::PortIndex babelwires::ElementNodeModel::getPortAtPath(AccessModelScope&
     return row;
 }
 
-QString babelwires::ElementNodeModel::caption() const {
+QString babelwires::NodeNodeModel::caption() const {
     AccessModelScope scope(m_projectBridge);
     if (const Node* node = scope.getProject().getNode(m_nodeId)) {
         return QString(node->getLabel().c_str());
@@ -122,7 +122,7 @@ QString babelwires::ElementNodeModel::caption() const {
     }
 }
 
-void babelwires::ElementNodeModel::customContextMenuRequested(const QPoint& pos) {
+void babelwires::NodeNodeModel::customContextMenuRequested(const QPoint& pos) {
     QModelIndex index = m_view->indexAt(pos);
     QMenu* const menu = m_model->getContextMenu(index);
     if (menu) {
@@ -130,13 +130,13 @@ void babelwires::ElementNodeModel::customContextMenuRequested(const QPoint& pos)
     }
 }
 
-void babelwires::ElementNodeModel::setSize(const UiSize& newSize) {
+void babelwires::NodeNodeModel::setSize(const UiSize& newSize) {
     QWidget* widget = embeddedWidget();
     widget->setMinimumWidth(newSize.m_width);
     widget->setMaximumWidth(newSize.m_width);
 }
 
-babelwires::FeatureModel& babelwires::ElementNodeModel::getModel() {
+babelwires::FeatureModel& babelwires::NodeNodeModel::getModel() {
     assert(m_model && "Model should always exist");
     return *m_model;
 }

@@ -1,5 +1,5 @@
 /**
- * ElementNodeModel is the NodeDataModels corresponding to Nodes.
+ * NodeNodeModel is the NodeDataModels corresponding to Nodes.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -23,12 +23,12 @@ namespace babelwires {
 
     struct UiSize;
 
-    class ElementNodeModel : public BaseNodeModel {
+    class NodeNodeModel : public BaseNodeModel {
         Q_OBJECT
 
       public:
-        ElementNodeModel(ProjectBridge& project, NodeId elementId);
-        ~ElementNodeModel();
+        NodeNodeModel(ProjectBridge& project, NodeId elementId);
+        ~NodeNodeModel();
 
         virtual unsigned int nPorts(QtNodes::PortType portType) const override;
         virtual QtNodes::NodeDataType dataType(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const override;

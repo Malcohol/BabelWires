@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeNodeModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
@@ -34,7 +34,7 @@ std::unique_ptr<QtNodes::NodeDataModel> babelwires::ProcessorNodeFactory::create
     auto commandPtr = std::make_unique<AddNodeCommand>("Add processor", std::move(newDataPtr));
     AddNodeCommand& addNodeCommand = *commandPtr;
     if (m_projectBridge->executeAddNodeCommand(std::move(commandPtr))) {
-        return std::make_unique<ElementNodeModel>(*m_projectBridge, addNodeCommand.getNodeId());
+        return std::make_unique<NodeNodeModel>(*m_projectBridge, addNodeCommand.getNodeId());
     }
     return nullptr;
 }
