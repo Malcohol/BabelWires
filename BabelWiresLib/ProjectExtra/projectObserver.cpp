@@ -94,8 +94,8 @@ namespace {
                           const babelwires::Node* targetElement) {
         const babelwires::Node* sourceElement = project.getNode(connectionDesc.m_sourceId);
         if (!sourceElement) {
-            const auto it = project.getRemovedElements().find(connectionDesc.m_sourceId);
-            assert((it != project.getRemovedElements().end()) && "Expecting to find the source of a live connection.");
+            const auto it = project.getRemovedNodes().find(connectionDesc.m_sourceId);
+            assert((it != project.getRemovedNodes().end()) && "Expecting to find the source of a live connection.");
             sourceElement = it->second.get();
         }
         assert(sourceElement && "Expecting to find the source of a live connection.");
@@ -199,7 +199,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
         }
     };
 
-    for (const auto& [_, featureElement] : m_project.getRemovedElements()) {
+    for (const auto& [_, featureElement] : m_project.getRemovedNodes()) {
         assert(!featureElement->isChanged(Node::Changes::NodeIsNew) &&
                "Changes should have been processed between new elements being removed.");
         const NodeId elementId = featureElement->getNodeId();

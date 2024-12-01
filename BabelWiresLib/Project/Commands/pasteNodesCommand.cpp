@@ -23,7 +23,7 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
     std::unordered_map<NodeId, NodeId> remappingTable;
     {
         std::vector<NodeId> originalIds;
-        for (const auto& element : m_dataToPaste.m_elements) {
+        for (const auto& element : m_dataToPaste.m_nodes) {
             originalIds.emplace_back(element->m_id);
         }
         std::vector<NodeId> availableIds = originalIds;
@@ -39,7 +39,7 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
     // pasting into the "same" project.
     const bool preserveInConnections = (project.getProjectId() == m_dataToPaste.m_projectId);
 
-    for (auto& element : m_dataToPaste.m_elements) {
+    for (auto& element : m_dataToPaste.m_nodes) {
         auto it = remappingTable.find(element->m_id);
         assert((it != remappingTable.end()) && "All element ids should be in the map");
         NodeId newNodeId = it->second;
@@ -84,7 +84,7 @@ void babelwires::PasteNodesCommand::execute(Project& project) const {
     // After 50 attempts, allow duplication locations.
     for (int i = 0; i < 50; ++i) {
         babelwires::UiCoord attemptedOffset = offset;
-        for (const auto& elementData : m_dataToPaste.m_elements) {
+        for (const auto& elementData : m_dataToPaste.m_nodes) {
             UiPosition pos = elementData->m_uiData.m_uiPosition + offset;
             if (occupiedPositions.find(pos) != occupiedPositions.end()) {
                 offset += 30;
@@ -96,7 +96,7 @@ void babelwires::PasteNodesCommand::execute(Project& project) const {
         }
     }
 
-    for (const auto& elementData : m_dataToPaste.m_elements) {
+    for (const auto& elementData : m_dataToPaste.m_nodes) {
         // TODO
         std::unique_ptr<NodeData> clone = elementData->clone();
         clone->m_uiData.m_uiPosition += offset;
@@ -115,7 +115,7 @@ void babelwires::PasteNodesCommand::undo(Project& project) const {
     for (const auto& connection : m_connectionsToPaste) {
         project.removeModifier(connection.m_targetId, connection.m_targetPath);
     }
-    for (const auto& elementData : m_dataToPaste.m_elements) {
+    for (const auto& elementData : m_dataToPaste.m_nodes) {
         project.removeNode(elementData->m_id);
     }
 }

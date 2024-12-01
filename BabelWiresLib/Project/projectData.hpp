@@ -20,7 +20,7 @@ namespace babelwires {
         ProjectData(ProjectData&&) = default;
 
         /// Deleted, to stop ProjectData being unnecessarily copied.
-        /// If required, the m_elements will need to be cloned.
+        /// If required, the m_nodes will need to be cloned.
         ProjectData(const ProjectData& other) = delete;
 
         ProjectData& operator=(const ProjectData&) = delete;
@@ -31,17 +31,17 @@ namespace babelwires {
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
 
-        /// Call the visitor on all the FieldIdentifiers in the element.
+        /// Call the visitor on all the FieldIdentifiers in the ProjectData.
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
-        /// Call the visitor on all the FilePaths in the element.
+        /// Call the visitor on all the FilePaths in the ProjectData.
         /// This base implementation does nothing.
         void visitFilePaths(FilePathVisitor& visitor) override;
 
         /// A randomly assigned ID which uniquely identifies this project.
         ProjectId m_projectId = INVALID_PROJECT_ID;
 
-        std::vector<std::unique_ptr<NodeData>> m_elements;
+        std::vector<std::unique_ptr<NodeData>> m_nodes;
     };
 
 } // namespace babelwires

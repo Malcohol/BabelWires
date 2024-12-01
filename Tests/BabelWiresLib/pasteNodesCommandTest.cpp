@@ -219,7 +219,7 @@ namespace {
             
             targetElementData.m_modifiers.emplace_back(modifierData.clone());
             targetElementData.m_id = newNodeId;
-            projectData.m_elements.emplace_back(targetElementData.clone());
+            projectData.m_nodes.emplace_back(targetElementData.clone());
         }
 
         babelwires::PasteNodesCommand command("Test command", std::move(projectData));

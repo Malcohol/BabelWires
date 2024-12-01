@@ -33,9 +33,9 @@ TEST(ProjectDataTest, serialization) {
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_projectId, 1243);
-    ASSERT_EQ(dataPtr->m_elements.size(), 3);
+    ASSERT_EQ(dataPtr->m_nodes.size(), 3);
     {
-        const babelwires::NodeData* data = dataPtr->m_elements[0].get();
+        const babelwires::NodeData* data = dataPtr->m_nodes[0].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 45);
         EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestTargetFileFormat::getThisIdentifier());
@@ -44,7 +44,7 @@ TEST(ProjectDataTest, serialization) {
         ASSERT_EQ(targetData->m_filePath, testUtils::TestProjectData().m_targetFilePath);
     }
     {
-        const babelwires::NodeData* data = dataPtr->m_elements[1].get();
+        const babelwires::NodeData* data = dataPtr->m_nodes[1].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 6);
         EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestProcessor::getFactoryIdentifier());
@@ -52,7 +52,7 @@ TEST(ProjectDataTest, serialization) {
         ASSERT_TRUE(processorData);
     }
     {
-        const babelwires::NodeData* data = dataPtr->m_elements[2].get();
+        const babelwires::NodeData* data = dataPtr->m_nodes[2].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 12);
         EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestSourceFileFormat::getThisIdentifier());

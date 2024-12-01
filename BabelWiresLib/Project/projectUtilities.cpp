@@ -15,7 +15,7 @@
 #include <BabelWiresLib/Project/projectData.hpp>
 
 void babelwires::projectUtilities::translate(const UiPosition& offset, ProjectData& dataInOut) {
-    for (auto& elementData : dataInOut.m_elements) {
+    for (auto& elementData : dataInOut.m_nodes) {
         elementData->m_uiData.m_uiPosition += offset;
     }
 }

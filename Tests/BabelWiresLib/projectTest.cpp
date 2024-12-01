@@ -81,7 +81,7 @@ TEST(ProjectTest, addGetAndRemoveElement) {
     const babelwires::Node* element2 = testEnvironment.m_project.getNode(elementId);
     EXPECT_EQ(element2, nullptr);
 
-    const auto& removedElements = testEnvironment.m_project.getRemovedElements();
+    const auto& removedElements = testEnvironment.m_project.getRemovedNodes();
 
     EXPECT_EQ(removedElements.size(), 1);
     const auto it = removedElements.find(elementId);
@@ -91,7 +91,7 @@ TEST(ProjectTest, addGetAndRemoveElement) {
 
     testEnvironment.m_project.clearChanges();
 
-    EXPECT_EQ(testEnvironment.m_project.getRemovedElements().size(), 0);
+    EXPECT_EQ(testEnvironment.m_project.getRemovedNodes().size(), 0);
 }
 
 TEST(ProjectTest, addAndRemoveLocalModifier) {
@@ -740,7 +740,7 @@ TEST(ProjectTest, processWithFailure) {
 
     testUtils::TestProjectData projectData;
     // Ensure this element fails completely.
-    projectData.m_elements[1]->m_factoryIdentifier = "flerg";
+    projectData.m_nodes[1]->m_factoryIdentifier = "flerg";
 
     // Make real data for project.
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);

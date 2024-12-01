@@ -523,7 +523,7 @@ babelwires::ProjectData babelwires::ProjectBridge::getDataFromSelectedNodes() {
 
         const Node* const element = project.getNode(elementId);
         assert(element && "The node is not in the project");
-        projectData.m_elements.emplace_back(element->extractElementData());
+        projectData.m_nodes.emplace_back(element->extractElementData());
     }
     return projectData;
 }

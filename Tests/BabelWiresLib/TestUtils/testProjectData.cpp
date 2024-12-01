@@ -32,7 +32,7 @@ testUtils::TestProjectData::TestProjectData()
             modData.m_sourcePath = testUtils::TestProcessorInputOutputType::s_pathToArray_3;
             data.m_modifiers.emplace_back(modData.clone());
         }
-        m_elements.emplace_back(data.clone());
+        m_nodes.emplace_back(data.clone());
     }
     {
         babelwires::ProcessorNodeData data;
@@ -51,21 +51,21 @@ testUtils::TestProjectData::TestProjectData()
             data.m_modifiers.emplace_back(modData.clone());
         }
         data.m_expandedPaths.emplace_back(testUtils::TestProcessorInputOutputType::s_pathToArray);
-        m_elements.emplace_back(data.clone());
+        m_nodes.emplace_back(data.clone());
     }
     {
         babelwires::SourceFileNodeData data;
         data.m_id = c_sourceNodeId;
         data.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
         data.m_filePath = m_sourceFilePath;
-        m_elements.emplace_back(data.clone());
+        m_nodes.emplace_back(data.clone());
     }
 }
 
 void testUtils::TestProjectData::setFilePaths(std::string_view sourceFilePath, std::string_view targetFilePath) {
-    assert(m_elements.size() == 3);
-    m_elements[2]->as<babelwires::SourceFileNodeData>()->m_filePath = sourceFilePath;
-    m_elements[0]->as<babelwires::TargetFileNodeData>()->m_filePath = targetFilePath;
+    assert(m_nodes.size() == 3);
+    m_nodes[2]->as<babelwires::SourceFileNodeData>()->m_filePath = sourceFilePath;
+    m_nodes[0]->as<babelwires::TargetFileNodeData>()->m_filePath = targetFilePath;
     m_sourceFilePath = sourceFilePath;
     m_targetFilePath = targetFilePath;
 }
@@ -73,10 +73,10 @@ void testUtils::TestProjectData::setFilePaths(std::string_view sourceFilePath, s
 void testUtils::TestProjectData::testProjectDataAndDisciminators(
     const babelwires::ProjectData& projectData, int recordIntDiscriminator, int recordArrayDiscriminator,
     int recordRecordDiscriminator, int recordInt2Disciminator, int fileIntChildDiscriminator) {
-    ASSERT_EQ(projectData.m_elements.size(), 3);
+    ASSERT_EQ(projectData.m_nodes.size(), 3);
 
     const babelwires::NodeData* sortedElements[3] = {
-        projectData.m_elements[0].get(), projectData.m_elements[1].get(), projectData.m_elements[2].get()};
+        projectData.m_nodes[0].get(), projectData.m_nodes[1].get(), projectData.m_nodes[2].get()};
     std::sort(&sortedElements[0], &sortedElements[3],
               [](const babelwires::NodeData* a, const babelwires::NodeData* b) { return a->m_id < b->m_id; });
 
@@ -149,13 +149,13 @@ void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::
     babelwires::ValueTreeRoot testFileFeature(context.m_typeSystem, testUtils::getTestFileType());
 
     // These have side-effects on the mutable field discriminators in the paths.
-    auto modData0 = m_elements[0]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
+    auto modData0 = m_nodes[0]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
     modData0->m_targetPath.tryFollow(testFileFeature);
     modData0->m_sourcePath.tryFollow(testRecord);
-    auto modData1 = m_elements[1]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
+    auto modData1 = m_nodes[1]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
     modData1->m_targetPath.tryFollow(testRecord);
     modData1->m_sourcePath.tryFollow(testFileFeature);
-    auto modData2 = m_elements[1]->m_modifiers[1].get()->as<babelwires::ValueAssignmentData>();
+    auto modData2 = m_nodes[1]->m_modifiers[1].get()->as<babelwires::ValueAssignmentData>();
     modData2->m_targetPath.tryFollow(testRecord);
-    m_elements[1]->m_expandedPaths[0].tryFollow(testRecord);
+    m_nodes[1]->m_expandedPaths[0].tryFollow(testRecord);
 }

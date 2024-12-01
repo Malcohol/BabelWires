@@ -239,11 +239,11 @@ void babelwires::Project::setProjectData(const ProjectData& projectData) {
     if (projectData.m_projectId != INVALID_PROJECT_ID) {
         m_projectId = projectData.m_projectId;
     }
-    std::vector<Node*> elementsAdded;
-    for (const auto& elementData : projectData.m_elements) {
-        elementsAdded.emplace_back(addNodeWithoutCachingConnection(*elementData));
+    std::vector<Node*> nodesAdded;
+    for (const auto& nodeData : projectData.m_nodes) {
+        nodesAdded.emplace_back(addNodeWithoutCachingConnection(*nodeData));
     }
-    for (auto* node : elementsAdded) {
+    for (auto* node : nodesAdded) {
         addNodeConnectionsToCache(node);
     }
 }
@@ -252,7 +252,7 @@ babelwires::ProjectData babelwires::Project::extractProjectData() const {
     ProjectData projectData;
     projectData.m_projectId = m_projectId;
     for (const auto& pair : m_nodes) {
-        projectData.m_elements.emplace_back(pair.second->extractElementData());
+        projectData.m_nodes.emplace_back(pair.second->extractElementData());
     }
     return projectData;
 }
@@ -298,10 +298,10 @@ void babelwires::Project::tryToReloadAllSources() {
     int attemptedReloads = 0;
     int successfulReloads = 0;
     for (const auto& [_, f] : m_nodes) {
-        if (FileNode* const fileElement = f->as<FileNode>()) {
-            if (isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
+        if (FileNode* const fileNode = f->as<FileNode>()) {
+            if (isNonzero(fileNode->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
                 ++attemptedReloads;
-                if (fileElement->reload(m_context, m_userLogger)) {
+                if (fileNode->reload(m_context, m_userLogger)) {
                     ++successfulReloads;
                 }
             }
@@ -314,10 +314,10 @@ void babelwires::Project::tryToSaveAllTargets() {
     int attemptedSaves = 0;
     int successfulSaves = 0;
     for (const auto& [_, f] : m_nodes) {
-        if (FileNode* const fileElement = f->as<FileNode>()) {
-            if (isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::save)) {
+        if (FileNode* const fileNode = f->as<FileNode>()) {
+            if (isNonzero(fileNode->getSupportedFileOperations() & FileNode::FileOperations::save)) {
                 ++attemptedSaves;
-                if (fileElement->save(m_context, m_userLogger)) {
+                if (fileNode->save(m_context, m_userLogger)) {
                     ++successfulSaves;
                 }
             }
@@ -330,22 +330,22 @@ void babelwires::Project::tryToReloadSource(NodeId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     Node* f = getNode(id);
     assert(f && "There was no such feature node");
-    FileNode* const fileElement = f->as<FileNode>();
-    assert(fileElement && "There was no such file node");
-    assert(isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload) &&
+    FileNode* const fileNode = f->as<FileNode>();
+    assert(fileNode && "There was no such file node");
+    assert(isNonzero(fileNode->getSupportedFileOperations() & FileNode::FileOperations::reload) &&
            "There was no such reloadable file node");
-    fileElement->reload(m_context, m_userLogger);
+    fileNode->reload(m_context, m_userLogger);
 }
 
 void babelwires::Project::tryToSaveTarget(NodeId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     Node* f = getNode(id);
     assert(f && "There was no such feature node");
-    FileNode* const fileElement = f->as<FileNode>();
-    assert(fileElement && "There was no such file node");
-    assert(isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::save) &&
+    FileNode* const fileNode = f->as<FileNode>();
+    assert(fileNode && "There was no such file node");
+    assert(isNonzero(fileNode->getSupportedFileOperations() & FileNode::FileOperations::save) &&
            "There was no such saveable file node");
-    fileElement->save(m_context, m_userLogger);
+    fileNode->save(m_context, m_userLogger);
 }
 
 void babelwires::Project::setConnectionCacheInvalid() {
@@ -564,7 +564,7 @@ void babelwires::Project::clearChanges() {
 }
 
 const std::map<babelwires::NodeId, std::unique_ptr<babelwires::Node>>&
-babelwires::Project::getRemovedElements() const {
+babelwires::Project::getRemovedNodes() const {
     return m_removedNodes;
 }
 
