@@ -20,7 +20,7 @@
 #include <Common/Log/userLogger.hpp>
 
 babelwires::SourceFileNode::SourceFileNode(const ProjectContext& context, UserLogger& userLogger,
-                                                 const SourceFileNodeData& data, ElementId newId)
+                                                 const SourceFileNodeData& data, NodeId newId)
     : FileNode(data, newId) {
     reload(context, userLogger);
 }

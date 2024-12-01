@@ -24,14 +24,14 @@
 
 #include <cassert>
 
-babelwires::RemoveSimpleModifierSubcommand::RemoveSimpleModifierSubcommand(ElementId targetId,
+babelwires::RemoveSimpleModifierSubcommand::RemoveSimpleModifierSubcommand(NodeId targetId,
                                                                      Path featurePath)
     : SimpleCommand("RemoveSimpleModifierSubcommand")
-    , m_targetElementId(targetId)
+    , m_targetNodeId(targetId)
     , m_targetPath(std::move(featurePath)) {}
 
 bool babelwires::RemoveSimpleModifierSubcommand::initialize(const Project& project) {
-    const Node* element = project.getNode(m_targetElementId);
+    const Node* element = project.getNode(m_targetNodeId);
     if (!element) {
         return false;
     }
@@ -46,15 +46,15 @@ bool babelwires::RemoveSimpleModifierSubcommand::initialize(const Project& proje
 }
 
 void babelwires::RemoveSimpleModifierSubcommand::execute(Project& project) const {
-    project.removeModifier(m_targetElementId, m_targetPath);
+    project.removeModifier(m_targetNodeId, m_targetPath);
 }
 
 void babelwires::RemoveSimpleModifierSubcommand::undo(Project& project) const {
-    project.addModifier(m_targetElementId, *m_modifierToRestore);
+    project.addModifier(m_targetNodeId, *m_modifierToRestore);
 }
 
-babelwires::ElementId babelwires::RemoveSimpleModifierSubcommand::getTargetElementId() const {
-    return m_targetElementId;
+babelwires::NodeId babelwires::RemoveSimpleModifierSubcommand::getTargetNodeId() const {
+    return m_targetNodeId;
 }
 
 const babelwires::Path& babelwires::RemoveSimpleModifierSubcommand::getTargetPath() const {

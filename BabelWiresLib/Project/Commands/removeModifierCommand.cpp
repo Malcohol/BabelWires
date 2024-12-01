@@ -26,7 +26,7 @@
 
 #include <cassert>
 
-babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName, ElementId targetId,
+babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName, NodeId targetId,
                                                          Path featurePath)
     : CompoundCommand(std::move(commandName))
     , m_elementId(targetId)

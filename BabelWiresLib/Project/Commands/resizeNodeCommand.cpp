@@ -12,7 +12,7 @@
 
 #include <cassert>
 
-babelwires::ResizeNodeCommand::ResizeNodeCommand(std::string commandName, ElementId elementId, UiSize newSize)
+babelwires::ResizeNodeCommand::ResizeNodeCommand(std::string commandName, NodeId elementId, UiSize newSize)
     : SimpleCommand(std::move(commandName))
     , m_elementId(elementId)
     , m_newSize(newSize) {}
@@ -27,11 +27,11 @@ bool babelwires::ResizeNodeCommand::initialize(const Project& project) {
 }
 
 void babelwires::ResizeNodeCommand::execute(Project& project) const {
-    project.setElementContentsSize(m_elementId, m_newSize);
+    project.setNodeContentsSize(m_elementId, m_newSize);
 }
 
 void babelwires::ResizeNodeCommand::undo(Project& project) const {
-    project.setElementContentsSize(m_elementId, m_oldSize);
+    project.setNodeContentsSize(m_elementId, m_oldSize);
 }
 
 bool babelwires::ResizeNodeCommand::shouldSubsume(const Command& subsequentCommand,

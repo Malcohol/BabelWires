@@ -20,11 +20,11 @@
 TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
-    const babelwires::ElementId sourceId =
+    const babelwires::NodeId sourceId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
-    const babelwires::ElementId targetId =
+    const babelwires::NodeId targetId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     {
@@ -107,11 +107,11 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
 TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
-    const babelwires::ElementId sourceId =
+    const babelwires::NodeId sourceId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
-    const babelwires::ElementId targetId =
+    const babelwires::NodeId targetId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     {
@@ -201,7 +201,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayShrink) {
 TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
     testEnvironment.m_project.process();
 
@@ -262,7 +262,7 @@ TEST(SetArraySizeCommandTest, failSafelyNoElement) {
 TEST(SetArraySizeCommandTest, failSafelyNoArray) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
@@ -275,7 +275,7 @@ TEST(SetArraySizeCommandTest, failSafelyNoArray) {
 TEST(SetArraySizeCommandTest, failSafelyOutOfRange) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
     const auto* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);

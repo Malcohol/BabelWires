@@ -12,7 +12,7 @@
 
 #include <cassert>
 
-babelwires::MoveNodeCommand::MoveNodeCommand(std::string commandName, ElementId elementId, UiPosition newPosition)
+babelwires::MoveNodeCommand::MoveNodeCommand(std::string commandName, NodeId elementId, UiPosition newPosition)
     : SimpleCommand(std::move(commandName))
     , m_newPositions{std::pair{elementId, newPosition}} {}
 
@@ -29,13 +29,13 @@ bool babelwires::MoveNodeCommand::initialize(const Project& project) {
 
 void babelwires::MoveNodeCommand::execute(Project& project) const {
     for (const auto& [elementId, newPosition] : m_newPositions) {
-        project.setElementPosition(elementId, newPosition);
+        project.setNodePosition(elementId, newPosition);
     }
 }
 
 void babelwires::MoveNodeCommand::undo(Project& project) const {
     for (const auto& [elementId, oldPosition] : m_oldPositions) {
-        project.setElementPosition(elementId, oldPosition);
+        project.setNodePosition(elementId, oldPosition);
     }
 }
 
@@ -70,7 +70,7 @@ void babelwires::MoveNodeCommand::subsume(std::unique_ptr<Command> subsequentCom
 }
 
 std::optional<babelwires::UiPosition>
-babelwires::MoveNodeCommand::getPositionForOnlyNode(ElementId elementId) const {
+babelwires::MoveNodeCommand::getPositionForOnlyNode(NodeId elementId) const {
     if (m_newPositions.size() == 1) {
         return {m_newPositions.begin()->second};
     } else {

@@ -11,13 +11,13 @@
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
-babelwires::DataLocation::DataLocation(ElementId elementId, Path pathToValue)
+babelwires::DataLocation::DataLocation(NodeId elementId, Path pathToValue)
     : m_elementId(elementId)
     , m_pathToValue(std::move(pathToValue)) {
 
 }
 
-babelwires::ElementId babelwires::DataLocation::getElementId() const {
+babelwires::NodeId babelwires::DataLocation::getNodeId() const {
     return m_elementId;
 }
 

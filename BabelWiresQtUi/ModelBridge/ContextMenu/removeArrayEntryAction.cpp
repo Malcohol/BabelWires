@@ -22,7 +22,7 @@ babelwires::RemoveArrayEntryAction::RemoveArrayEntryAction(babelwires::Path path
 void babelwires::RemoveArrayEntryAction::actionTriggered(babelwires::FeatureModel& model,
                                                          const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
     projectBridge.scheduleCommand(std::make_unique<RemoveEntryFromArrayCommand>(
         "Remove element from array", elementId, m_pathToArray, m_indexOfEntryToRemove, 1));
 }

@@ -18,7 +18,7 @@ namespace babelwires {
     /// Deactivate an optional in a RecordType
     class DeactivateOptionalCommand : public CompoundCommand<Project> {
       public:
-        DeactivateOptionalCommand(std::string commandName, ElementId elementId, Path featurePath,
+        DeactivateOptionalCommand(std::string commandName, NodeId elementId, Path featurePath,
                                ShortId optional);
 
         virtual bool initializeAndExecute(Project& project) override;
@@ -26,7 +26,7 @@ namespace babelwires {
         virtual void undo(Project& project) const override;
 
       private:
-        ElementId m_elementId;
+        NodeId m_elementId;
         Path m_pathToRecord;
         ShortId m_optional;
 

@@ -30,7 +30,7 @@ babelwires::SetArraySizeAction::SetArraySizeAction(babelwires::Path pathToArray)
 
 void babelwires::SetArraySizeAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
 
     unsigned int currentSize;
     Range<unsigned int> range;

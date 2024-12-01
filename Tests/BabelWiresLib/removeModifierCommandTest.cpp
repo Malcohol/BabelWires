@@ -21,11 +21,11 @@
 TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
-    const babelwires::ElementId sourceId =
+    const babelwires::NodeId sourceId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
-    const babelwires::ElementId targetId =
+    const babelwires::NodeId targetId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     const unsigned int initialArraySize = testUtils::TestSimpleArrayType::s_defaultSize + 2;
@@ -118,12 +118,12 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
         babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
 
-    const babelwires::ElementId sourceId = testEnvironment.m_project.addNode(
+    const babelwires::NodeId sourceId = testEnvironment.m_project.addNode(
         babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
-    const babelwires::ElementId targetId = testEnvironment.m_project.addNode(
+    const babelwires::NodeId targetId = testEnvironment.m_project.addNode(
         babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
 
     const babelwires::ValueNode* const element =
@@ -232,7 +232,7 @@ TEST(RemoveModifierCommandTest, failSafelyNoElement) {
 TEST(RemoveModifierCommandTest, failSafelyNoModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     babelwires::RemoveModifierCommand command("Test command", elementId,

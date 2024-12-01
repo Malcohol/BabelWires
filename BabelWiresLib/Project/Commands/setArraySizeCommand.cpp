@@ -18,7 +18,7 @@
 
 #include <cassert>
 
-babelwires::SetArraySizeCommand::SetArraySizeCommand(std::string commandName, ElementId elementId,
+babelwires::SetArraySizeCommand::SetArraySizeCommand(std::string commandName, NodeId elementId,
                                                      Path featurePath, int newSize)
     : CompoundCommand(commandName)
     , m_elementId(elementId)

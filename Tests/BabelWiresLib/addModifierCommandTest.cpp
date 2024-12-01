@@ -18,7 +18,7 @@ TEST(AddModifierCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestComplexRecordElementData elementData;
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const babelwires::Node* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
     testUtils::TestComplexRecordType::ConstInstance instance(*element->getInput());
@@ -52,7 +52,7 @@ TEST(AddModifierCommandTest, executeAndUndoFail) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestComplexRecordElementData elementData;
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const babelwires::Node* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
     testUtils::TestComplexRecordType::ConstInstance instance(*element->getInput());
@@ -93,7 +93,7 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
         modData.m_targetPath = elementData.getPathToRecordInt1();
         elementData.m_modifiers.emplace_back(modData.clone());
     }
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const babelwires::Node* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
     testUtils::TestComplexRecordType::ConstInstance instance(*element->getInput());
@@ -136,7 +136,7 @@ TEST(AddModifierCommandTest, failSafelyNoTarget) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestComplexRecordElementData elementData;
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     testEnvironment.m_project.getNode(elementId);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));

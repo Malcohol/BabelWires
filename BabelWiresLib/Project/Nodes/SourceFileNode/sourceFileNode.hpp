@@ -24,7 +24,7 @@ namespace babelwires {
     class SourceFileNode : public FileNode {
       public:
         SourceFileNode(const ProjectContext& context, UserLogger& userLogger, const SourceFileNodeData& data,
-                          ElementId newId);
+                          NodeId newId);
 
         /// Down-cast version of the parent's method.
         const SourceFileNodeData& getElementData() const;

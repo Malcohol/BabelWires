@@ -21,7 +21,7 @@ bool testUtils::TestNodeData::checkFactoryVersion(const babelwires::ProjectConte
 }
 
 std::unique_ptr<babelwires::Node> testUtils::TestNodeData::doCreateNode(
-    const babelwires::ProjectContext& context, babelwires::UserLogger& userLogger, babelwires::ElementId newId) const {
+    const babelwires::ProjectContext& context, babelwires::UserLogger& userLogger, babelwires::NodeId newId) const {
     return std::make_unique<TestNode>(context, *this, newId);
 }
 
@@ -33,7 +33,7 @@ testUtils::TestNode::TestNode(const babelwires::ProjectContext& context)
     : TestNode(context, TestNodeData(), 10) {}
 
 testUtils::TestNode::TestNode(const babelwires::ProjectContext& context,
-                                                  const TestNodeData& data, babelwires::ElementId newId)
+                                                  const TestNodeData& data, babelwires::NodeId newId)
     : Node(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
     m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, TestComplexRecordType::getThisType());

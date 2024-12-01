@@ -76,9 +76,9 @@ struct NodeConnectionTest : ::testing::Test {
     babelwires::Path m_arrayElemPath;
     babelwires::Path m_targetPath;
 
-    babelwires::ElementId m_elementId;
+    babelwires::NodeId m_elementId;
     babelwires::Node* m_featureElement;
-    babelwires::ElementId m_sourceId;
+    babelwires::NodeId m_sourceId;
     babelwires::Node* m_sourceElement;
 
     babelwires::ConnectionModifierData m_assignData;

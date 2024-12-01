@@ -23,7 +23,7 @@
 
 #include <algorithm>
 
-babelwires::Node::Node(const NodeData& data, ElementId newId)
+babelwires::Node::Node(const NodeData& data, NodeId newId)
     : m_data(data.customClone())
     , m_contentsCache(m_edits) {
     m_data->m_id = newId;
@@ -78,7 +78,7 @@ const babelwires::ValueTreeNode* babelwires::Node::getInput() const {
     return nullptr;
 }
 
-babelwires::ElementId babelwires::Node::getElementId() const {
+babelwires::NodeId babelwires::Node::getNodeId() const {
     return m_data->m_id;
 }
 
@@ -91,7 +91,7 @@ babelwires::NodeData& babelwires::Node::getElementData() {
 }
 
 std::string babelwires::Node::getLabel() const {
-    return std::to_string(getElementId()) + " - " + m_factoryName;
+    return std::to_string(getNodeId()) + " - " + m_factoryName;
 }
 
 void babelwires::Node::setFactoryName(std::string factoryName) {

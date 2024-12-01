@@ -14,7 +14,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::RemoveFailedModifiersCommand::RemoveFailedModifiersCommand(std::string commandName, ElementId targetId,
+babelwires::RemoveFailedModifiersCommand::RemoveFailedModifiersCommand(std::string commandName, NodeId targetId,
                                                                        Path featurePath)
     : CompoundCommand(commandName)
     , m_targetId(targetId)

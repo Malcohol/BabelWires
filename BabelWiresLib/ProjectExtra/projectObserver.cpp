@@ -19,7 +19,7 @@ babelwires::ProjectObserver::ProjectObserver(const Project& project)
     : m_project(project) {}
 
 void babelwires::ProjectObserver::featureElementWasAdded(const Node* featureElement) {
-    const ElementId elementId = featureElement->getElementId();
+    const NodeId elementId = featureElement->getNodeId();
     auto ignoreIt = m_addedElementsToIgnore.find(elementId);
     if (ignoreIt == m_addedElementsToIgnore.end()) {
         m_featureElementWasAdded.fire(featureElement);
@@ -28,7 +28,7 @@ void babelwires::ProjectObserver::featureElementWasAdded(const Node* featureElem
     }
 }
 
-void babelwires::ProjectObserver::featureElementWasRemoved(ElementId elementId) {
+void babelwires::ProjectObserver::featureElementWasRemoved(NodeId elementId) {
     auto ignoreIt = m_removedElementsToIgnore.find(elementId);
     if (ignoreIt == m_removedElementsToIgnore.end()) {
         m_featureElementWasRemoved.fire(elementId);
@@ -37,7 +37,7 @@ void babelwires::ProjectObserver::featureElementWasRemoved(ElementId elementId) 
     }
 }
 
-void babelwires::ProjectObserver::featureElementWasMoved(ElementId elementId, const UiPosition& uiPosition) {
+void babelwires::ProjectObserver::featureElementWasMoved(NodeId elementId, const UiPosition& uiPosition) {
     auto ignoreIt = m_movedElementsToIgnore.find(elementId);
     if (ignoreIt == m_movedElementsToIgnore.end()) {
         m_featureElementWasMoved.fire(elementId, uiPosition);
@@ -46,7 +46,7 @@ void babelwires::ProjectObserver::featureElementWasMoved(ElementId elementId, co
     }
 }
 
-void babelwires::ProjectObserver::featureElementWasResized(ElementId elementId, const UiSize& newSize) {
+void babelwires::ProjectObserver::featureElementWasResized(NodeId elementId, const UiSize& newSize) {
     auto ignoreIt = m_resizedElementsToIgnore.find(elementId);
     if (ignoreIt == m_resizedElementsToIgnore.end()) {
         m_featureElementWasResized.fire(elementId, newSize);
@@ -73,7 +73,7 @@ void babelwires::ProjectObserver::connectionWasRemoved(const ConnectionDescripti
     }
 }
 
-void babelwires::ProjectObserver::contentWasChanged(ElementId elementId) {
+void babelwires::ProjectObserver::contentWasChanged(NodeId elementId) {
     m_contentWasChanged.fire(elementId);
 }
 
@@ -105,7 +105,7 @@ namespace {
     void addAllLiveInConnections(const babelwires::Project::ConnectionInfo& connectionInfo,
                                  const babelwires::Node* targetElement,
                                  std::unordered_set<babelwires::ConnectionDescription>& connections, State state) {
-        const babelwires::ElementId elementId = targetElement->getElementId();
+        const babelwires::NodeId elementId = targetElement->getNodeId();
         const auto& inConnections = connectionInfo.m_dependsOn.find(targetElement);
         if (inConnections != connectionInfo.m_dependsOn.end()) {
             for (const auto& connection : inConnections->second) {
@@ -138,7 +138,7 @@ namespace {
                                                    babelwires::Modifier::Changes::ModifierMoved |
                                                    babelwires::Modifier::Changes::ModifierConnected))) {
                     addToConnections(connections, state,
-                                     babelwires::ConnectionDescription(targetElement->getElementId(),
+                                     babelwires::ConnectionDescription(targetElement->getNodeId(),
                                                                        connectionModifier.getModifierData()),
                                      sourceElement, targetElement);
                 }
@@ -157,14 +157,14 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
 
     // Just those elements with changes.
     std::vector<const Node*> featureElementsWithChanges;
-    featureElementsWithChanges.reserve(m_project.getElements().size());
+    featureElementsWithChanges.reserve(m_project.getNodes().size());
 
     // const Node::Changes someStructureChange = Node::Changes::FeatureStructureChanged |
     // Node::Changes::CompoundExpandedOrCollapsed;
 
-    for (const auto& pair : m_project.getElements()) {
+    for (const auto& pair : m_project.getNodes()) {
         const Node* const featureElement = pair.second.get();
-        const ElementId elementId = featureElement->getElementId();
+        const NodeId elementId = featureElement->getNodeId();
 
         if (featureElement->isChanged(Node::Changes::SomethingChanged)) {
             featureElementsWithChanges.emplace_back(featureElement);
@@ -183,7 +183,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     std::unordered_set<ConnectionDescription> connectionsToRemove;
     std::vector<const Node*> nodesToRemove;
 
-    auto allModifiersWereRemoved = [&connectionsToRemove, this](const Node* targetElement, ElementId targetId,
+    auto allModifiersWereRemoved = [&connectionsToRemove, this](const Node* targetElement, NodeId targetId,
                                                                 const auto& modifiers) {
         for (const auto* modifier : modifiers) {
             if (const auto* connectionModifier = modifier->asConnectionModifier()) {
@@ -202,14 +202,14 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     for (const auto& [_, featureElement] : m_project.getRemovedElements()) {
         assert(!featureElement->isChanged(Node::Changes::NodeIsNew) &&
                "Changes should have been processed between new elements being removed.");
-        const ElementId elementId = featureElement->getElementId();
+        const NodeId elementId = featureElement->getNodeId();
         nodesToRemove.emplace_back(featureElement.get());
         allModifiersWereRemoved(featureElement.get(), elementId, featureElement->getEdits().modifierRange());
         allModifiersWereRemoved(featureElement.get(), elementId, featureElement->getRemovedModifiers());
     }
 
     for (const auto* featureElement : featureElementsWithChanges) {
-        const ElementId elementId = featureElement->getElementId();
+        const NodeId elementId = featureElement->getNodeId();
 
         if (featureElement->isChanged(Node::Changes::NodeIsNew)) {
             nodesToCreate.emplace_back(featureElement);
@@ -280,7 +280,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     }
 
     for (const auto& featureElement : nodesToRemove) {
-        featureElementWasRemoved(featureElement->getElementId());
+        featureElementWasRemoved(featureElement->getNodeId());
     }
 
     for (auto&& featureElement : nodesToCreate) {
@@ -300,7 +300,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
                 Node::Changes::NodeRecovered) &&
             !featureElement->getContentsCache().isChanged(ContentsCache::Changes::StructureChanged) &&
             !featureElement->isChanged(babelwires::Node::Changes::NodeIsNew)) {
-            contentWasChanged(featureElement->getElementId());
+            contentWasChanged(featureElement->getNodeId());
         }
     }
 
@@ -312,11 +312,11 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     assert((m_resizedElementsToIgnore.empty()) && "Did not observe the newly resized nodes.");
 }
 
-void babelwires::ProjectObserver::ignoreAddedElement(ElementId elementId) {
+void babelwires::ProjectObserver::ignoreAddedElement(NodeId elementId) {
     m_addedElementsToIgnore.insert(elementId);
 }
 
-void babelwires::ProjectObserver::ignoreRemovedElement(ElementId elementId) {
+void babelwires::ProjectObserver::ignoreRemovedElement(NodeId elementId) {
     m_removedElementsToIgnore.insert(elementId);
 }
 
@@ -328,10 +328,10 @@ void babelwires::ProjectObserver::ignoreRemovedConnection(ConnectionDescription 
     m_removedConnectionsToIgnore.insert(std::move(connection));
 }
 
-void babelwires::ProjectObserver::ignoreMovedElement(ElementId elementId) {
+void babelwires::ProjectObserver::ignoreMovedElement(NodeId elementId) {
     m_movedElementsToIgnore.insert(elementId);
 }
 
-void babelwires::ProjectObserver::ignoreResizedElement(ElementId elementId) {
+void babelwires::ProjectObserver::ignoreResizedElement(NodeId elementId) {
     m_resizedElementsToIgnore.insert(elementId);
 }

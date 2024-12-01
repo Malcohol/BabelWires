@@ -19,7 +19,7 @@ babelwires::ReloadFileAction::ReloadFileAction()
 
 void babelwires::ReloadFileAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
 
     ModifyModelScope scope(projectBridge);
     Node* const featureElement = scope.getProject().getNode(elementId);

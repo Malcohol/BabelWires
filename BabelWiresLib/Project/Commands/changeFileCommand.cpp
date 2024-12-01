@@ -12,7 +12,7 @@
 
 #include <cassert>
 
-babelwires::ChangeFileCommand::ChangeFileCommand(std::string commandName, ElementId elementId, std::filesystem::path newFilePath)
+babelwires::ChangeFileCommand::ChangeFileCommand(std::string commandName, NodeId elementId, std::filesystem::path newFilePath)
     : SimpleCommand(commandName)
     , m_elementId(elementId)
     , m_newFilePath(std::move(newFilePath)) {}

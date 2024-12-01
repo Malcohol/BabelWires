@@ -21,7 +21,7 @@ namespace babelwires {
     /// The command which changes the UiPosition of a Node.
     class MoveNodeCommand : public SimpleCommand<Project> {
       public:
-        MoveNodeCommand(std::string commandName, ElementId elementId, UiPosition newPosition);
+        MoveNodeCommand(std::string commandName, NodeId elementId, UiPosition newPosition);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
@@ -31,11 +31,11 @@ namespace babelwires {
 
         /// If this command only carries a new position for the given element, return its position.
         /// This method exists allow the AddNodeCommand to subsume this one.
-        std::optional<UiPosition> getPositionForOnlyNode(ElementId elementId) const;
+        std::optional<UiPosition> getPositionForOnlyNode(NodeId elementId) const;
 
       private:
-        std::map<ElementId, UiPosition> m_newPositions;
-        std::map<ElementId, UiPosition> m_oldPositions;
+        std::map<NodeId, UiPosition> m_newPositions;
+        std::map<NodeId, UiPosition> m_oldPositions;
     };
 
 } // namespace babelwires

@@ -26,12 +26,12 @@ namespace testUtils {
         // Creates a TestNode.
         std::unique_ptr<babelwires::Node> doCreateNode(const babelwires::ProjectContext& context,
                                                                            babelwires::UserLogger& userLogger,
-                                                                           babelwires::ElementId newId) const override;
+                                                                           babelwires::NodeId newId) const override;
     };
 
     struct TestNode : babelwires::Node {
         TestNode(const babelwires::ProjectContext& context);
-        TestNode(const babelwires::ProjectContext& context, const TestNodeData& data, babelwires::ElementId newId);
+        TestNode(const babelwires::ProjectContext& context, const TestNodeData& data, babelwires::NodeId newId);
         void doProcess(babelwires::UserLogger&) override;
 
         babelwires::ValueTreeNode* doGetInputNonConst() override;

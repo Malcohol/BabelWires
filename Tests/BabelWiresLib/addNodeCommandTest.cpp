@@ -22,17 +22,17 @@ TEST(AddNodeCommandTest, executeAndUndo) {
 
     command.execute(testEnvironment.m_project);
 
-    const babelwires::Node* newElement = testEnvironment.m_project.getNode(command.getElementId());
+    const babelwires::Node* newElement = testEnvironment.m_project.getNode(command.getNodeId());
     ASSERT_NE(newElement, nullptr);
     EXPECT_NE(newElement->as<babelwires::ValueNode>(), nullptr);
 
     command.undo(testEnvironment.m_project);
 
-    EXPECT_EQ(testEnvironment.m_project.getNode(command.getElementId()), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getNode(command.getNodeId()), nullptr);
 
     command.execute(testEnvironment.m_project);
 
-    const babelwires::Node* restoredElement = testEnvironment.m_project.getNode(command.getElementId());
+    const babelwires::Node* restoredElement = testEnvironment.m_project.getNode(command.getNodeId());
     ASSERT_NE(restoredElement, nullptr);
     EXPECT_NE(restoredElement->as<babelwires::ValueNode>(), nullptr);
 }
@@ -44,7 +44,7 @@ TEST(AddNodeCommandTest, subsumeMoves) {
 
     EXPECT_TRUE(addCommand.initializeAndExecute(testEnvironment.m_project));
 
-    auto moveCommand = std::make_unique<babelwires::MoveNodeCommand>("Test Move", addCommand.getElementId(),
+    auto moveCommand = std::make_unique<babelwires::MoveNodeCommand>("Test Move", addCommand.getNodeId(),
                                                                         babelwires::UiPosition{14, 88});
 
     EXPECT_TRUE(addCommand.shouldSubsume(*moveCommand, true));
@@ -55,7 +55,7 @@ TEST(AddNodeCommandTest, subsumeMoves) {
     addCommand.undo(testEnvironment.m_project);
     addCommand.execute(testEnvironment.m_project);
     const auto* element =
-        testEnvironment.m_project.getNode(addCommand.getElementId())->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(addCommand.getNodeId())->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
     EXPECT_EQ(element->getUiPosition().m_y, 88);

@@ -22,7 +22,7 @@ namespace babelwires {
     class TargetFileNode : public FileNode {
       public:
         TargetFileNode(const ProjectContext& context, UserLogger& userLogger, const TargetFileNodeData& data,
-                          ElementId newId);
+                          NodeId newId);
         ~TargetFileNode();
 
         /// Down-cast version of the parent's method.

@@ -36,6 +36,6 @@ namespace babelwires {
 
       protected:
         std::unique_ptr<Node> doCreateNode(const ProjectContext& context, UserLogger& userLogger,
-                                                               ElementId newId) const override;
+                                                               NodeId newId) const override;
     };
 }

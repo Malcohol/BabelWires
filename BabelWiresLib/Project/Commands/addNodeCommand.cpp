@@ -24,7 +24,7 @@ babelwires::AddNodeCommand::AddNodeCommand(std::string commandName, std::unique_
 }
 
 void babelwires::AddNodeCommand::execute(Project& project) const {
-    ElementId newId = project.addNode(*m_elementToAdd);
+    NodeId newId = project.addNode(*m_elementToAdd);
     m_elementToAdd->m_id = newId;
 }
 
@@ -32,12 +32,12 @@ bool babelwires::AddNodeCommand::initialize(const Project& project) {
     return true;
 }
 
-babelwires::ElementId babelwires::AddNodeCommand::getElementId() const {
+babelwires::NodeId babelwires::AddNodeCommand::getNodeId() const {
     return m_elementToAdd->m_id;
 }
 
 void babelwires::AddNodeCommand::undo(Project& project) const {
-    project.removeElement(getElementId());
+    project.removeElement(getNodeId());
 }
 
 bool babelwires::AddNodeCommand::shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const {

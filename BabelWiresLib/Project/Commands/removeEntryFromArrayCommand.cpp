@@ -20,7 +20,7 @@
 
 #include <cassert>
 
-babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId,
+babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, NodeId elementId,
                                                                      Path featurePath,
                                                                      unsigned int indexOfEntryToRemove,
                                                                      unsigned int numEntriesToRemove)

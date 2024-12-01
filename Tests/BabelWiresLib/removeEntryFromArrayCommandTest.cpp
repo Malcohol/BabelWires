@@ -19,11 +19,11 @@
 TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
-    const babelwires::ElementId sourceId =
+    const babelwires::NodeId sourceId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
-    const babelwires::ElementId targetId =
+    const babelwires::NodeId targetId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     {
@@ -120,7 +120,7 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoElement) {
 
 TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
     testUtils::TestEnvironment testEnvironment;
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
@@ -133,7 +133,7 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
 TEST(RemoveEntryFromArrayCommandTest, failSafelyOutOfRange) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
 
     const auto* element = testEnvironment.m_project.getNode(elementId);

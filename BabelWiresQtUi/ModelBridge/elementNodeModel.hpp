@@ -27,14 +27,14 @@ namespace babelwires {
         Q_OBJECT
 
       public:
-        ElementNodeModel(ProjectBridge& project, ElementId elementId);
+        ElementNodeModel(ProjectBridge& project, NodeId elementId);
         ~ElementNodeModel();
 
         virtual unsigned int nPorts(QtNodes::PortType portType) const override;
         virtual QtNodes::NodeDataType dataType(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const override;
         virtual QWidget* embeddedWidget() override;
 
-        babelwires::ElementId getElementId() const;
+        babelwires::NodeId getNodeId() const;
         virtual QString caption() const override;
 
         const Path& getPathAtPort(AccessModelScope& scope, QtNodes::PortType portType,
@@ -54,7 +54,7 @@ namespace babelwires {
 
       protected:
         /// Set up the contents to match the state of element.
-        void setContents(std::string label, ElementId elementId);
+        void setContents(std::string label, NodeId elementId);
 
         static QtNodes::NodeDataType getDataTypeFromFeature(const ValueTreeNode* f);
 
@@ -62,7 +62,7 @@ namespace babelwires {
         const ValueTreeNode* getOutput(AccessModelScope& scope, int portIndex) const;
 
       protected:
-        ElementId m_elementId;
+        NodeId m_elementId;
 
         FeatureView* m_view;
         FeatureModel* m_model;

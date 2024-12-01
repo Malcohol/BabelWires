@@ -23,7 +23,7 @@ babelwires::SelectVariantAction::SelectVariantAction(babelwires::Path pathToReco
 
 void babelwires::SelectVariantAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
     std::unique_ptr<Command<Project>> command;
     std::string fieldName = IdentifierRegistry::read()->getName(m_tag).c_str();
     command =

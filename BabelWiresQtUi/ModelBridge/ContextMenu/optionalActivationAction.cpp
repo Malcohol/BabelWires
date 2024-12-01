@@ -28,7 +28,7 @@ babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::Path 
 void babelwires::OptionalActivationAction::actionTriggered(babelwires::FeatureModel& model,
                                                            const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
     std::unique_ptr<Command<Project>> command;
     std::string fieldName = IdentifierRegistry::read()->getName(m_optional).c_str();
     if (!m_isActivated) {

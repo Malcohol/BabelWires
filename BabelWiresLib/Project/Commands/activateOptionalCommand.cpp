@@ -15,7 +15,7 @@
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, ElementId elementId, Path featurePath,
+babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, NodeId elementId, Path featurePath,
                                ShortId optional)
     : SimpleCommand(commandName)
     , m_elementId(elementId)

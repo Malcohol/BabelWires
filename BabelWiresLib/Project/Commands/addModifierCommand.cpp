@@ -16,14 +16,14 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, ElementId targetId,
+babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, NodeId targetId,
                                                    std::unique_ptr<ModifierData> modifierToAdd)
     : CompoundCommand(commandName)
-    , m_targetElementId(targetId)
+    , m_targetNodeId(targetId)
     , m_modifierToAdd(std::move(modifierToAdd)) {}
 
 bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
-    const Node* element = project.getNode(m_targetElementId);
+    const Node* element = project.getNode(m_targetNodeId);
 
     if (!element) {
         return false;
@@ -47,7 +47,7 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         for (const auto& modifier : element->getEdits().modifierRange(m_modifierToAdd->m_targetPath)) {
             if (m_modifierToAdd->m_targetPath.isStrictPrefixOf(modifier->getTargetPath()) && modifier->as<ArraySizeModifier>()) {
                 subcommands.emplace_back(std::make_unique<RemoveModifierCommand>(
-                    "Remove modifier subcommand", m_targetElementId, modifier->getTargetPath()));
+                    "Remove modifier subcommand", m_targetNodeId, modifier->getTargetPath()));
             }
         }
         for (auto it = subcommands.rbegin(); it != subcommands.rend(); ++it) {
@@ -57,24 +57,24 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
 
     if (const Modifier* const modifier = element->findModifier(m_modifierToAdd->m_targetPath)) {
         addSubCommand(
-            std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_targetElementId, m_modifierToAdd->m_targetPath));
+            std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_targetNodeId, m_modifierToAdd->m_targetPath));
     }
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
 
-    project.addModifier(m_targetElementId, *m_modifierToAdd);
+    project.addModifier(m_targetNodeId, *m_modifierToAdd);
 
     return true;
 }
 
 void babelwires::AddModifierCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.addModifier(m_targetElementId, *m_modifierToAdd);
+    project.addModifier(m_targetNodeId, *m_modifierToAdd);
 }
 
 void babelwires::AddModifierCommand::undo(Project& project) const {
-    project.removeModifier(m_targetElementId, m_modifierToAdd->m_targetPath);
+    project.removeModifier(m_targetNodeId, m_modifierToAdd->m_targetPath);
     CompoundCommand::undo(project);
 }

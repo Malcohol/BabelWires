@@ -22,7 +22,7 @@
 #include <Common/Log/userLogger.hpp>
 
 babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogger& userLogger,
-                                               const ProcessorNodeData& data, ElementId newId)
+                                               const ProcessorNodeData& data, NodeId newId)
     : Node(data, newId) {
     const NodeData& elementData = getElementData();
     try {
@@ -101,7 +101,7 @@ void babelwires::ProcessorNode::doProcess(UserLogger& userLogger) {
                     clearInternalFailure();
                 }
             } catch (const BaseException& e) {
-                userLogger.logError() << "Processor id=" << getElementId()
+                userLogger.logError() << "Processor id=" << getNodeId()
                                       << " failed to process correctly: " << e.what();
                 setInternalFailure(e.what());
                 // TODO: Is this definitely the desired outcome?

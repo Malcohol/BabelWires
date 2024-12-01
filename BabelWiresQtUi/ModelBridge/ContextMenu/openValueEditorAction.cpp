@@ -19,7 +19,7 @@ babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, Da
 
 void babelwires::OpenValueEditorAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
 
     model.getProjectBridge().getMainWindow()->openEditorForValue(m_location);
 }

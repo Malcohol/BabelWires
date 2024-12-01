@@ -44,13 +44,13 @@ TEST(PasteNodesCommandTest, executeAndUndoEmptyProject) {
     const auto checkForProjectData = [&testEnvironment]() {
         // If there are no clashes, expect the IDs in the data to be respected.
         const babelwires::Node* sourceElement =
-            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceElementId);
+            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceNodeId);
         EXPECT_NE(sourceElement, nullptr);
         const babelwires::Node* processor =
             testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId);
         ASSERT_NE(processor, nullptr);
         const babelwires::Node* targetElement =
-            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetElementId);
+            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetNodeId);
         ASSERT_NE(targetElement, nullptr);
 
         // Confirm that some modifiers were pasted too.
@@ -65,9 +65,9 @@ TEST(PasteNodesCommandTest, executeAndUndoEmptyProject) {
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceElementId), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceNodeId), nullptr);
     EXPECT_EQ(testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId), nullptr);
-    EXPECT_EQ(testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetElementId), nullptr);
+    EXPECT_EQ(testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetNodeId), nullptr);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
@@ -95,13 +95,13 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
     {
         // Confirm the original data applied as expected.
         const babelwires::Node* sourceElement =
-            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceElementId);
+            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceNodeId);
         EXPECT_NE(sourceElement, nullptr);
         const babelwires::Node* processor =
             testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId);
         ASSERT_NE(processor, nullptr);
         const babelwires::Node* targetElement =
-            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetElementId);
+            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetNodeId);
         ASSERT_NE(targetElement, nullptr);
         ASSERT_NE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt), nullptr);
         EXPECT_FALSE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt)->isFailed());
@@ -124,9 +124,9 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
         const babelwires::Node* newProcessor = nullptr;
         const babelwires::Node* newTargetElement = nullptr;
 
-        for (const auto& pair : testEnvironment.m_project.getElements()) {
+        for (const auto& pair : testEnvironment.m_project.getNodes()) {
             if (pair.second->as<babelwires::SourceFileNode>()) {
-                if (pair.first == testUtils::TestProjectData::c_sourceElementId) {
+                if (pair.first == testUtils::TestProjectData::c_sourceNodeId) {
                     EXPECT_EQ(originalSourceElement, nullptr);
                     originalSourceElement = pair.second.get();
                 } else {
@@ -142,7 +142,7 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
                     newProcessor = pair.second.get();
                 }
             } else if (pair.second->as<babelwires::TargetFileNode>()) {
-                if (pair.first == testUtils::TestProjectData::c_targetElementId) {
+                if (pair.first == testUtils::TestProjectData::c_targetNodeId) {
                     EXPECT_EQ(originalTargetElement, nullptr);
                     originalTargetElement = pair.second.get();
                 } else {
@@ -168,7 +168,7 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
             const babelwires::ConnectionModifierData* modData =
                 modifier->getModifierData().as<babelwires::ConnectionModifierData>();
             ASSERT_NE(modData, nullptr);
-            EXPECT_EQ(modData->m_sourceId, newSourceElement->getElementId());
+            EXPECT_EQ(modData->m_sourceId, newSourceElement->getNodeId());
         } else {
             EXPECT_EQ(newSourceElement, nullptr);
             EXPECT_EQ(newProcessor, nullptr);
@@ -197,11 +197,11 @@ namespace {
         testUtils::TestEnvironment testEnvironment;
 
         testUtils::TestComplexRecordElementData sourceElementData;
-        babelwires::ElementId sourceElementId =
+        babelwires::NodeId sourceNodeId =
             testEnvironment.m_project.addNode(sourceElementData);
 
-        const babelwires::ElementId newElementId = sourceElementId + 1;
-        EXPECT_EQ(testEnvironment.m_project.getNode(newElementId), nullptr);
+        const babelwires::NodeId newNodeId = sourceNodeId + 1;
+        EXPECT_EQ(testEnvironment.m_project.getNode(newNodeId), nullptr);
 
         // Create project data with an input elementId matching the element in the project.
         babelwires::ProjectData projectData;
@@ -215,10 +215,10 @@ namespace {
             babelwires::ConnectionModifierData modifierData;
             modifierData.m_targetPath = targetElementData.getPathToRecordInt0();
             modifierData.m_sourcePath = sourceElementData.getPathToRecordInt0();
-            modifierData.m_sourceId = sourceElementId;
+            modifierData.m_sourceId = sourceNodeId;
             
             targetElementData.m_modifiers.emplace_back(modifierData.clone());
-            targetElementData.m_id = newElementId;
+            targetElementData.m_id = newNodeId;
             projectData.m_elements.emplace_back(targetElementData.clone());
         }
 
@@ -229,9 +229,9 @@ namespace {
         command.execute(testEnvironment.m_project);
         testEnvironment.m_project.process();
 
-        const auto checkForProjectData = [&testEnvironment, newElementId, targetElementData, isPastingIntoSameProject]() {
-            // The newElementId, should be available.
-            const babelwires::Node* newElement = testEnvironment.m_project.getNode(newElementId);
+        const auto checkForProjectData = [&testEnvironment, newNodeId, targetElementData, isPastingIntoSameProject]() {
+            // The newNodeId, should be available.
+            const babelwires::Node* newElement = testEnvironment.m_project.getNode(newNodeId);
             ASSERT_NE(newElement, nullptr);
 
             const babelwires::Modifier* modifier =
@@ -249,7 +249,7 @@ namespace {
         command.undo(testEnvironment.m_project);
         testEnvironment.m_project.process();
 
-        EXPECT_EQ(testEnvironment.m_project.getNode(newElementId), nullptr);
+        EXPECT_EQ(testEnvironment.m_project.getNode(newNodeId), nullptr);
 
         command.execute(testEnvironment.m_project);
         testEnvironment.m_project.process();

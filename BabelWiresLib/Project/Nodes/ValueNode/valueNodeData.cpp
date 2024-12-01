@@ -43,7 +43,7 @@ void babelwires::ValueNodeData::deserializeContents(Deserializer& deserializer) 
 
 std::unique_ptr<babelwires::Node>
 babelwires::ValueNodeData::doCreateNode(const ProjectContext& context, UserLogger& userLogger,
-                                                     ElementId newId) const {
+                                                     NodeId newId) const {
     return std::make_unique<ValueNode>(context, userLogger, *this, newId);
 }
 

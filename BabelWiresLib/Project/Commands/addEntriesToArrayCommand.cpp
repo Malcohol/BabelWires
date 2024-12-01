@@ -20,7 +20,7 @@
 
 #include <cassert>
 
-babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string commandName, ElementId elementId,
+babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string commandName, NodeId elementId,
                                                                Path featurePath, unsigned int indexOfNewEntries,
                                                                unsigned int numEntriesToAdd)
     : CompoundCommand(commandName)

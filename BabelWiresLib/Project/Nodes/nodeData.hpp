@@ -69,7 +69,7 @@ namespace babelwires {
         virtual bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) = 0;
 
         std::unique_ptr<Node> createNode(const ProjectContext& context, UserLogger& userLogger,
-                                                             ElementId newId) const;
+                                                             NodeId newId) const;
 
         /// Call the visitor on all the FieldIdentifiers in the element.
         void visitIdentifiers(IdentifierVisitor& visitor) override;
@@ -87,7 +87,7 @@ namespace babelwires {
         VersionNumber m_factoryVersion = 0;
 
         /// Uniquely identifies the Element within the project.
-        ElementId m_id = INVALID_ELEMENT_ID;
+        NodeId m_id = INVALID_ELEMENT_ID;
 
         /// Data solely relevant to the UI.
         UiData m_uiData;
@@ -101,7 +101,7 @@ namespace babelwires {
 
       protected:
         virtual std::unique_ptr<Node>
-        doCreateNode(const ProjectContext& context, UserLogger& userLogger, ElementId newId) const = 0;
+        doCreateNode(const ProjectContext& context, UserLogger& userLogger, NodeId newId) const = 0;
 
         /// For use when serializing subclasses.
         void addCommonKeyValuePairs(Serializer& serializer) const;

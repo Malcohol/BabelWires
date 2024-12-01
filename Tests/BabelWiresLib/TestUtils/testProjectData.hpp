@@ -33,9 +33,9 @@ namespace testUtils {
         // Note: The first argument is not required to be an instance of this class.
         static void testProjectData(const babelwires::ProjectContext& context, const babelwires::ProjectData& projectData);
 
-        static constexpr babelwires::ElementId c_sourceElementId = 12;
-        static constexpr babelwires::ElementId c_processorId = 6;
-        static constexpr babelwires::ElementId c_targetElementId = 45;
+        static constexpr babelwires::NodeId c_sourceNodeId = 12;
+        static constexpr babelwires::NodeId c_processorId = 6;
+        static constexpr babelwires::NodeId c_targetNodeId = 45;
 
         std::string m_sourceFilePath;
         std::string m_targetFilePath;

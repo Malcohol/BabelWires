@@ -26,7 +26,7 @@ bool babelwires::SourceFileNodeData::checkFactoryVersion(const ProjectContext& c
 
 std::unique_ptr<babelwires::Node>
 babelwires::SourceFileNodeData::doCreateNode(const ProjectContext& context, UserLogger& userLogger,
-                                                   ElementId newId) const {
+                                                   NodeId newId) const {
     return std::make_unique<SourceFileNode>(context, userLogger, *this, newId);
 }
 

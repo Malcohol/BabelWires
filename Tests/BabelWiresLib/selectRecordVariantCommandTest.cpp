@@ -20,11 +20,11 @@
 TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestRecordWithVariantsElementData());
-    const babelwires::ElementId sourceId =
+    const babelwires::NodeId sourceId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
-    const babelwires::ElementId targetId =
+    const babelwires::NodeId targetId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     const babelwires::ValueNode* element =
@@ -139,7 +139,7 @@ TEST(SelectRecordVariantCommandTest, failSafelyNoRecord) {
     testUtils::TestRecordWithVariantsElementData elementData;
     elementData.m_id = 51;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     EXPECT_EQ(elementId, 51);
 
     testEnvironment.m_project.process();
@@ -149,7 +149,7 @@ TEST(SelectRecordVariantCommandTest, failSafelyNoRecord) {
 TEST(SelectRecordVariantCommandTest, failSafelyNotATag) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestRecordWithVariantsElementData());
 
     const auto* element = testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
@@ -165,7 +165,7 @@ TEST(SelectRecordVariantCommandTest, failSafelyNotATag) {
 TEST(SelectRecordVariantCommandTest, failSafelyAlreadySelected) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestRecordWithVariantsElementData());
 
     babelwires::SelectRecordVariantCommand command("Test command", elementId, testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants(),

@@ -98,7 +98,7 @@ namespace babelwires {
       private:
         /// Find the node in the scene that corresponds to the given element id,
         /// if it exists.
-        QtNodes::Node* getNodeFromId(ElementId id);
+        QtNodes::Node* getNodeFromId(NodeId id);
 
         /// Respond to changes in the model.
         void processAndHandleModelChanges();
@@ -113,16 +113,16 @@ namespace babelwires {
         void addNodeToFlowScene(const Node* feature);
 
         /// Remove the node from the flow scene.
-        void removeNodeFromFlowScene(ElementId elementId);
+        void removeNodeFromFlowScene(NodeId elementId);
 
         /// Move the node in the flow scene.
-        void moveNodeInFlowScene(ElementId elementId, const UiPosition& newPosition);
+        void moveNodeInFlowScene(NodeId elementId, const UiPosition& newPosition);
 
         /// Resize the node in the flow scene.
-        void resizeNodeInFlowScene(ElementId elementId, const UiSize& newSize);
+        void resizeNodeInFlowScene(NodeId elementId, const UiSize& newSize);
 
         /// Update the contents of the node.
-        void onNodeContentChanged(ElementId elementId);
+        void onNodeContentChanged(NodeId elementId);
 
         /// Make a connection description from a flow scene connection.
         ConnectionDescription describeConnection(babelwires::AccessModelScope& scope, const FlowSceneConnectionInfo& c);
@@ -190,7 +190,7 @@ namespace babelwires {
         MultiKeyMap<const QtNodes::Connection*, ConnectionDescription, FlowSceneConnectionInfo> m_connectedConnections;
 
         /// Find the node in the scene that corresponds to an element id.
-        std::unordered_map<ElementId, QtNodes::Node*> m_nodeFromElementId;
+        std::unordered_map<NodeId, QtNodes::Node*> m_nodeFromNodeId;
 
         /// Most commands are scheduled to run when the UI is idle, rather than performed synchronously.
         /// One reason is that the processing of some commands modify the UI, causing inconsistencies

@@ -235,7 +235,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
     sourceData.m_targetPath = sourcePath;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));
 
-    const babelwires::ElementId sourceId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId sourceId = testEnvironment.m_project.addNode(elementData);
 
     babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                        testUtils::TestSimpleRecordType::getThisType());
@@ -331,7 +331,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
     sourceData.m_targetPath = sourcePath;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));
 
-    const babelwires::ElementId sourceId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId sourceId = testEnvironment.m_project.addNode(elementData);
 
     babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                        testUtils::TestSimpleRecordType::getThisType());
@@ -374,7 +374,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     sourceData.m_targetPath = sourcePath;
     elementData.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(sourceData));
 
-    const babelwires::ElementId sourceId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId sourceId = testEnvironment.m_project.addNode(elementData);
 
     babelwires::ValueTreeRoot targetRecordFeature(testEnvironment.m_typeSystem,
                                                        testUtils::TestComplexRecordType::getThisType());

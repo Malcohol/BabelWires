@@ -15,7 +15,7 @@
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, ElementId elementId,
+babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, NodeId elementId,
                                                                Path featurePath, ShortId tagToSelect)
     : CompoundCommand(commandName)
     , m_elementId(elementId)

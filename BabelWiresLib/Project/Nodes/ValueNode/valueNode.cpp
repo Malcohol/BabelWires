@@ -14,7 +14,7 @@
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 
 babelwires::ValueNode::ValueNode(const ProjectContext& context, UserLogger& userLogger,
-                                       const ValueNodeData& data, ElementId newId)
+                                       const ValueNodeData& data, NodeId newId)
     : Node(data, newId) {
     setFactoryName(data.getTypeRef().toString());
     TypeRef typeRefForConstruction = data.getTypeRef();

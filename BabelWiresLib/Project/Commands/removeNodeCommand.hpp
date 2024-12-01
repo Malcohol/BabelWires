@@ -32,7 +32,7 @@ namespace babelwires {
         RemoveNodeCommand(std::string commandName);
 
         /// Remove the given element.
-        RemoveNodeCommand(std::string commandName, ElementId elementId);
+        RemoveNodeCommand(std::string commandName, NodeId elementId);
 
         /// Remove the described connection.
         RemoveNodeCommand(std::string commandName, ConnectionDescription connection);
@@ -45,7 +45,7 @@ namespace babelwires {
         virtual bool shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const override;
         virtual void subsume(std::unique_ptr<Command> subsequentCommand) override;
 
-        void addElementToRemove(ElementId elementId);
+        void addElementToRemove(NodeId elementId);
 
       private:
         using ConnectionSet = std::unordered_set<ConnectionDescription>;
@@ -57,7 +57,7 @@ namespace babelwires {
                            const babelwires::Project& project);
 
       private:
-        std::vector<ElementId> m_elementIds;
+        std::vector<NodeId> m_elementIds;
 
         std::vector<std::unique_ptr<NodeData>> m_elementsToRestore;
 

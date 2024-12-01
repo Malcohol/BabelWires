@@ -52,16 +52,16 @@ namespace babelwires {
         void interpretChangesAndFireSignals();
 
         /// Don't fire a signal if this element is observed being added.
-        void ignoreAddedElement(ElementId elementId);
+        void ignoreAddedElement(NodeId elementId);
 
         /// Don't fire a signal if this element is observed being removed.
-        void ignoreRemovedElement(ElementId elementId);
+        void ignoreRemovedElement(NodeId elementId);
 
         /// Don't fire a signal if this element is observed being moved.
-        void ignoreMovedElement(ElementId elementId);
+        void ignoreMovedElement(NodeId elementId);
 
         /// Don't fire a signal if this element is observed being resized.
-        void ignoreResizedElement(ElementId elementId);
+        void ignoreResizedElement(NodeId elementId);
 
         /// Don't fire a signal if this connection is observed being added.
         void ignoreAddedConnection(ConnectionDescription connection);
@@ -74,13 +74,13 @@ namespace babelwires {
         Signal<const Node*> m_featureElementWasAdded;
 
         /// A feature element was observed being removed.
-        Signal<ElementId> m_featureElementWasRemoved;
+        Signal<NodeId> m_featureElementWasRemoved;
 
         /// A feature element was observed being moved.
-        Signal<ElementId, const UiPosition&> m_featureElementWasMoved;
+        Signal<NodeId, const UiPosition&> m_featureElementWasMoved;
 
         /// A feature element was observed being moved.
-        Signal<ElementId, const UiSize&> m_featureElementWasResized;
+        Signal<NodeId, const UiSize&> m_featureElementWasResized;
 
         /// A connection was observed being added.
         Signal<const ConnectionDescription&> m_connectionWasAdded;
@@ -89,20 +89,20 @@ namespace babelwires {
         Signal<const ConnectionDescription&> m_connectionWasRemoved;
 
         /// The content of a feature element was observed changing.
-        Signal<ElementId> m_contentWasChanged;
+        Signal<NodeId> m_contentWasChanged;
 
       private:
         /// Fire the m_featureElementWasAdded signal, unless the element is to be ignored.
         void featureElementWasAdded(const Node* featureElement);
 
         /// Fire the m_featureElementWasRemoved signal, unless the element is to be ignored.
-        void featureElementWasRemoved(ElementId elementId);
+        void featureElementWasRemoved(NodeId elementId);
 
         /// Fire the m_featureElementWasMoved signal, unless the element is to be ignored.
-        void featureElementWasMoved(ElementId elementId, const UiPosition& uiPosition);
+        void featureElementWasMoved(NodeId elementId, const UiPosition& uiPosition);
 
         /// Fire the m_featureElementWasResized signal, unless the element is to be ignored.
-        void featureElementWasResized(ElementId elementId, const UiSize& newSize);
+        void featureElementWasResized(NodeId elementId, const UiSize& newSize);
 
         /// Fire the m_connectionWasAdded signal, unless the connection is to be ignored.
         void connectionWasAdded(const ConnectionDescription& connection);
@@ -111,7 +111,7 @@ namespace babelwires {
         void connectionWasRemoved(const ConnectionDescription& connection);
 
         /// Fire the content was changed signal.
-        void contentWasChanged(ElementId elementId);
+        void contentWasChanged(NodeId elementId);
 
       private:
         /// The project whose changes this object is observing.
@@ -119,19 +119,19 @@ namespace babelwires {
 
         /// When the flowscene adds a node, we want to ignore it when we observe
         /// changes in the model.
-        std::unordered_set<ElementId> m_addedElementsToIgnore;
+        std::unordered_set<NodeId> m_addedElementsToIgnore;
 
         /// When the flowscene removes a node, we want to ignore it when we observe
         /// changes in the model.
-        std::unordered_set<ElementId> m_removedElementsToIgnore;
+        std::unordered_set<NodeId> m_removedElementsToIgnore;
 
         /// When the flowscene moves a node, we want to ignore it when we observe changes
         /// in the model.
-        std::unordered_set<ElementId> m_movedElementsToIgnore;
+        std::unordered_set<NodeId> m_movedElementsToIgnore;
 
         /// When the flowscene resizes a node, we want to ignore it when we observe changes
         /// in the model.
-        std::unordered_set<ElementId> m_resizedElementsToIgnore;
+        std::unordered_set<NodeId> m_resizedElementsToIgnore;
 
         /// When the flowscene adds a connection, we want to ignore it when we observe
         /// changes in the model.

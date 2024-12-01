@@ -75,8 +75,8 @@ namespace {
 
 } // namespace
 
-std::vector<std::tuple<babelwires::ElementId, babelwires::Path>>
-babelwires::projectUtilities::getDerivedValues(const Project& project, ElementId elementId,
+std::vector<std::tuple<babelwires::NodeId, babelwires::Path>>
+babelwires::projectUtilities::getDerivedValues(const Project& project, NodeId elementId,
                                                   const Path& pathToValue) {
                                                         std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
@@ -87,18 +87,18 @@ babelwires::projectUtilities::getDerivedValues(const Project& project, ElementId
         addDerivedValues(project, valueIndex, values);
     //    ++valueIndex;
     //} while (valueIndex < values.size());
-    std::vector<std::tuple<ElementId, Path>> convertedValues;
+    std::vector<std::tuple<NodeId, Path>> convertedValues;
     convertedValues.reserve(values.size());
     // Don't add the first element.
     for (unsigned int i = values.size() - 1; i > 0; --i) {
-        convertedValues.emplace_back(std::tuple<ElementId, Path>{std::get<0>(values[i])->getElementId(),
+        convertedValues.emplace_back(std::tuple<NodeId, Path>{std::get<0>(values[i])->getNodeId(),
                                                                         std::move(std::get<1>(values[i]))});
     }
     return convertedValues;
 }
 
-std::vector<std::tuple<babelwires::ElementId, babelwires::Path>>
-babelwires::projectUtilities::getAllDerivedValues(const Project& project, ElementId elementId,
+std::vector<std::tuple<babelwires::NodeId, babelwires::Path>>
+babelwires::projectUtilities::getAllDerivedValues(const Project& project, NodeId elementId,
                                                   const Path& pathToValue) {
     std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
@@ -110,11 +110,11 @@ babelwires::projectUtilities::getAllDerivedValues(const Project& project, Elemen
         ++valueIndex;
     } while (valueIndex < values.size());
 
-    std::vector<std::tuple<ElementId, Path>> convertedValues;
+    std::vector<std::tuple<NodeId, Path>> convertedValues;
     convertedValues.reserve(values.size());
     // Don't add the first element.
     for (unsigned int i = values.size() - 1; i > 0; --i) {
-        convertedValues.emplace_back(std::tuple<ElementId, Path>{std::get<0>(values[i])->getElementId(),
+        convertedValues.emplace_back(std::tuple<NodeId, Path>{std::get<0>(values[i])->getNodeId(),
                                                                         std::move(std::get<1>(values[i]))});
     }
     return convertedValues;

@@ -23,7 +23,7 @@
 #include <fstream>
 
 babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLogger& userLogger,
-                                                 const TargetFileNodeData& data, ElementId newId)
+                                                 const TargetFileNodeData& data, NodeId newId)
     : FileNode(data, newId) {
     const NodeData& elementData = getElementData();
     try {

@@ -43,7 +43,7 @@ namespace {
             elementData.m_modifiers.emplace_back(inputConnection.clone());
         }
 
-        const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+        const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
         testEnvironment.m_project.process();
 
         const auto* element = testEnvironment.m_project.getNode(elementId);
@@ -128,7 +128,7 @@ TEST(RemoveFailedModifiersCommandTest, failSafelyNoElement) {
 TEST(RemoveFailedModifiersCommandTest, failSafelyNoSubFeature) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
     babelwires::RemoveFailedModifiersCommand command("Test command", elementId,

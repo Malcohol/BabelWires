@@ -34,7 +34,7 @@ namespace {
         elementData.m_filePath = filePath1;
         elementData.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
 
-        const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+        const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
         const auto* element =
             testEnvironment.m_project.getNode(elementId)->as<babelwires::SourceFileNode>();
         ASSERT_NE(element, nullptr);
@@ -106,7 +106,7 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     elementData.m_filePath = filePath1;
     elementData.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const auto* element = testEnvironment.m_project.getNode(elementId)->as<babelwires::TargetFileNode>();
     ASSERT_NE(element, nullptr);
 
@@ -148,7 +148,7 @@ TEST(ChangeFileCommandTest, failSafelyNoElement) {
 TEST(ChangeFileCommandTest, failSafelyNotAFileElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestNodeData());
 
     std::string filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());

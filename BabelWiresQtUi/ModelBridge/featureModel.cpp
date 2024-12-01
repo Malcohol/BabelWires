@@ -42,7 +42,7 @@
 
 #include <cassert>
 
-babelwires::FeatureView::FeatureView(ElementId elementId, ProjectBridge& projectBridge)
+babelwires::FeatureView::FeatureView(NodeId elementId, ProjectBridge& projectBridge)
     : m_projectBridge(projectBridge)
     , m_elementId(elementId) {
     setEditTriggers(QAbstractItemView::AllEditTriggers);
@@ -71,7 +71,7 @@ QSize babelwires::FeatureView::minimumSizeHint() const {
     return sizeHint();
 }
 
-babelwires::FeatureModel::FeatureModel(QObject* parent, ElementId elementId, ProjectBridge& projectBridge)
+babelwires::FeatureModel::FeatureModel(QObject* parent, NodeId elementId, ProjectBridge& projectBridge)
     : QAbstractTableModel(parent)
     , m_projectBridge(projectBridge)
     , m_elementId(elementId) {}
@@ -224,7 +224,7 @@ babelwires::ProjectBridge& babelwires::FeatureModel::getProjectBridge() {
     return m_projectBridge;
 }
 
-babelwires::ElementId babelwires::FeatureModel::getElementId() const {
+babelwires::NodeId babelwires::FeatureModel::getNodeId() const {
     return m_elementId;
 }
 
@@ -234,7 +234,7 @@ void babelwires::FeatureModel::onClicked(const QModelIndex& index) const {
         AccessModelScope scope(m_projectBridge);
         const ContentsCacheEntry* entry = getEntry(scope, index);
         if (entry->isExpandable()) {
-            const ElementId elementId = getElementId();
+            const NodeId elementId = getNodeId();
             const char* const actionName = entry->isExpanded() ? "Collapse compound" : "Expand compound";
             m_projectBridge.scheduleCommand(
                 std::make_unique<SetExpandedCommand>(actionName, elementId, entry->getPath(), !entry->isExpanded()));

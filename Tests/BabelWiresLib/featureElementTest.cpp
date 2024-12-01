@@ -27,7 +27,7 @@ TEST(NodeTest, basicAccessors) {
     EXPECT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->getInput());
     EXPECT_TRUE(featureElement->getOutput());
-    EXPECT_EQ(featureElement->getElementId(), 54);
+    EXPECT_EQ(featureElement->getNodeId(), 54);
 }
 
 TEST(NodeTest, labels) {

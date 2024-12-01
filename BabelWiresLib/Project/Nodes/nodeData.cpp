@@ -49,7 +49,7 @@ babelwires::NodeData::NodeData(const NodeData& other)
 
 std::unique_ptr<babelwires::Node> babelwires::NodeData::createNode(const ProjectContext& context,
                                                                                           UserLogger& userLogger,
-                                                                                          ElementId newId) const {
+                                                                                          NodeId newId) const {
     std::unique_ptr<babelwires::Node> newElement = doCreateNode(context, userLogger, newId);
     newElement->applyLocalModifiers(userLogger);
     return newElement;

@@ -33,7 +33,7 @@ namespace babelwires {
         virtual void subsume(std::unique_ptr<Command> subsequentCommand) override;
 
         /// For use after addition.
-        ElementId getElementId() const;
+        NodeId getNodeId() const;
 
       private:
         std::unique_ptr<NodeData> m_elementToAdd;

@@ -23,10 +23,10 @@ namespace babelwires {
         SERIALIZABLE(DataLocation, "location", void, 1);
 
         DataLocation() = default;
-        DataLocation(ElementId elementId, Path pathToValue);
+        DataLocation(NodeId elementId, Path pathToValue);
         DataLocation(const DataLocation& other) = default;
 
-        ElementId getElementId() const;
+        NodeId getNodeId() const;
         const Path& getPathToValue() const;
 
       public:
@@ -49,7 +49,7 @@ namespace babelwires {
         void visitFilePaths(FilePathVisitor& visitor) override;
 
       private:
-        ElementId m_elementId;
+        NodeId m_elementId;
         Path m_pathToValue;
     };
 }

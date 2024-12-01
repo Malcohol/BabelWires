@@ -175,7 +175,7 @@ void babelwires::MapEditor::applyMapToProject() {
     modifierData->m_targetPath = getData().getPathToValue();
 
     auto setValueCommand =
-        std::make_unique<AddModifierCommand>("Set map value", getData().getElementId(), std::move(modifierData));
+        std::make_unique<AddModifierCommand>("Set map value", getData().getNodeId(), std::move(modifierData));
     if (!getProjectBridge().executeCommandSynchronously(std::move(setValueCommand))) {
         warnThatMapNoLongerInProject("Cannot apply the map.");
     } else {
@@ -211,7 +211,7 @@ const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(Access
 
 const babelwires::ValueAssignmentData*
 babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
-    const Node* const element = scope.getProject().getNode(getData().getElementId());
+    const Node* const element = scope.getProject().getNode(getData().getNodeId());
 
     if (!element) {
         return nullptr;

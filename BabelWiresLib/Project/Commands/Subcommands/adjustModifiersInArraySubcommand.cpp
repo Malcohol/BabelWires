@@ -20,7 +20,7 @@
 #include <cassert>
 
 babelwires::AdjustModifiersInArraySubcommand::AdjustModifiersInArraySubcommand(
-    ElementId elementId, const babelwires::Path& pathToArray,
+    NodeId elementId, const babelwires::Path& pathToArray,
     babelwires::ArrayIndex startIndex, int adjustment)
     : CompoundCommand("AdjustModifiersInArraySubcommand")
     , m_elementId(elementId)
@@ -48,7 +48,7 @@ bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project&
     auto derivedArrays = projectUtilities::getDerivedValues(project, m_elementId, m_pathToArray);
 
     for (auto a : derivedArrays) {
-        const ElementId elementId = std::get<0>(a);
+        const NodeId elementId = std::get<0>(a);
         const Path& pathToArray = std::get<1>(a);
         addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(elementId, pathToArray, m_startIndex, m_adjustment));
     }

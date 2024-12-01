@@ -17,7 +17,7 @@ TEST(MoveNodeCommandTest, executeAndUndo) {
     testUtils::TestNodeData elementData;
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const testUtils::TestNode* element =
         testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
     ASSERT_NE(element, nullptr);
@@ -62,7 +62,7 @@ TEST(MoveNodeCommandTest, subsumeMoves) {
     testUtils::TestNodeData elementData;
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const testUtils::TestNode* element =
         testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
     ASSERT_NE(element, nullptr);
@@ -99,7 +99,7 @@ TEST(MoveNodeCommandTest, subsumeMovesDelay) {
     testUtils::TestNodeData elementData;
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const testUtils::TestNode* element =
         testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
     ASSERT_NE(element, nullptr);

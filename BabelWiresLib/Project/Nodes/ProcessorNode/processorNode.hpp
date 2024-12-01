@@ -19,7 +19,7 @@ namespace babelwires {
     class ProcessorNode : public Node {
       public:
         ProcessorNode(const ProjectContext& context, UserLogger& userLogger, const ProcessorNodeData& data,
-                         ElementId newId);
+                         NodeId newId);
         ~ProcessorNode();
 
         /// Down-cast version of the parent's method.

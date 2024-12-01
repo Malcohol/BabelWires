@@ -26,7 +26,7 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
-        ElementId m_sourceId;
+        NodeId m_sourceId;
         Path m_sourcePath;
     };
 }

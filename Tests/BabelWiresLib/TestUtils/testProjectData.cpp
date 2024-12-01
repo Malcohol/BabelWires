@@ -23,7 +23,7 @@ testUtils::TestProjectData::TestProjectData()
     {
         babelwires::TargetFileNodeData data;
         data.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
-        data.m_id = c_targetElementId;
+        data.m_id = c_targetNodeId;
         data.m_filePath = m_targetFilePath;
         {
             babelwires::ConnectionModifierData modData;
@@ -41,7 +41,7 @@ testUtils::TestProjectData::TestProjectData()
         {
             babelwires::ConnectionModifierData modData;
             modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt;
-            modData.m_sourceId = c_sourceElementId;
+            modData.m_sourceId = c_sourceNodeId;
             modData.m_sourcePath = testUtils::getTestFileElementPathToInt0();
             data.m_modifiers.emplace_back(modData.clone());
         }
@@ -55,7 +55,7 @@ testUtils::TestProjectData::TestProjectData()
     }
     {
         babelwires::SourceFileNodeData data;
-        data.m_id = c_sourceElementId;
+        data.m_id = c_sourceNodeId;
         data.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
         data.m_filePath = m_sourceFilePath;
         m_elements.emplace_back(data.clone());

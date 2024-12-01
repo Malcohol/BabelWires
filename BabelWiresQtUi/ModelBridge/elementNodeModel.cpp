@@ -23,7 +23,7 @@
 
 #include <QMenu>
 
-babelwires::ElementNodeModel::ElementNodeModel(ProjectBridge& projectBridge, ElementId elementId)
+babelwires::ElementNodeModel::ElementNodeModel(ProjectBridge& projectBridge, NodeId elementId)
     : BaseNodeModel(projectBridge)
     , m_elementId(elementId)
     , m_view(new FeatureView(elementId, projectBridge)) {
@@ -39,7 +39,7 @@ babelwires::ElementNodeModel::ElementNodeModel(ProjectBridge& projectBridge, Ele
 
 babelwires::ElementNodeModel::~ElementNodeModel() {}
 
-void babelwires::ElementNodeModel::setContents(std::string label, ElementId elementId) {
+void babelwires::ElementNodeModel::setContents(std::string label, NodeId elementId) {
     AccessModelScope scope(m_projectBridge);
     const Node* element = scope.getProject().getNode(elementId);
     assert(element && "The ID must correspond to an element in the project");
@@ -47,7 +47,7 @@ void babelwires::ElementNodeModel::setContents(std::string label, ElementId elem
     m_view->setModel(m_model);
 }
 
-babelwires::ElementId babelwires::ElementNodeModel::getElementId() const {
+babelwires::NodeId babelwires::ElementNodeModel::getNodeId() const {
     return m_elementId;
 }
 

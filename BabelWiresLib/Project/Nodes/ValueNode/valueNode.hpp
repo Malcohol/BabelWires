@@ -18,7 +18,7 @@ namespace babelwires {
     class ValueNode : public Node {
       public:
         ValueNode(const ProjectContext& context, UserLogger& userLogger, const ValueNodeData& data,
-                         ElementId newId);
+                         NodeId newId);
         ~ValueNode();
 
         /// Down-cast version of the parent's method.

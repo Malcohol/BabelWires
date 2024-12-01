@@ -20,13 +20,13 @@ babelwires::PasteNodesCommand::PasteNodesCommand(std::string commandName, Projec
     , m_dataToPaste(std::move(dataToPaste)) {}
 
 bool babelwires::PasteNodesCommand::initialize(const Project& project) {
-    std::unordered_map<ElementId, ElementId> remappingTable;
+    std::unordered_map<NodeId, NodeId> remappingTable;
     {
-        std::vector<ElementId> originalIds;
+        std::vector<NodeId> originalIds;
         for (const auto& element : m_dataToPaste.m_elements) {
             originalIds.emplace_back(element->m_id);
         }
-        std::vector<ElementId> availableIds = originalIds;
+        std::vector<NodeId> availableIds = originalIds;
         project.updateWithAvailableIds(availableIds);
         assert((availableIds.size() == originalIds.size()) && "The array should not change size");
         auto oit = originalIds.begin();
@@ -42,15 +42,15 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
     for (auto& element : m_dataToPaste.m_elements) {
         auto it = remappingTable.find(element->m_id);
         assert((it != remappingTable.end()) && "All element ids should be in the map");
-        ElementId newElementId = it->second;
-        element->m_id = newElementId;
+        NodeId newNodeId = it->second;
+        element->m_id = newNodeId;
 
         auto newEnd = std::remove_if(
             element->m_modifiers.begin(), element->m_modifiers.end(),
-            [this, &remappingTable, preserveInConnections, newElementId,
+            [this, &remappingTable, preserveInConnections, newNodeId,
              &project](std::unique_ptr<ModifierData>& modData) {
                 if (auto* assignFromData = modData.get()->as<ConnectionModifierData>()) {
-                    ElementId& sourceId = assignFromData->m_sourceId;
+                    NodeId& sourceId = assignFromData->m_sourceId;
                     auto it = remappingTable.find(sourceId);
                     if (it == remappingTable.end()) {
                         if (!preserveInConnections || !project.getNode(sourceId)) {
@@ -61,7 +61,7 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
                         // Update the id.
                         sourceId = it->second;
                     }
-                    m_connectionsToPaste.emplace_back(ConnectionDescription(newElementId, *assignFromData));
+                    m_connectionsToPaste.emplace_back(ConnectionDescription(newNodeId, *assignFromData));
                     return true;
                 }
                 return false;
@@ -75,7 +75,7 @@ void babelwires::PasteNodesCommand::execute(Project& project) const {
     std::unordered_set<UiPosition> occupiedPositions;
 
     // Find unoccupied UI positions.
-    for (const auto& [_, e] : project.getElements()) {
+    for (const auto& [_, e] : project.getNodes()) {
         occupiedPositions.insert(e->getUiPosition());
     }
 

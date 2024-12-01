@@ -16,5 +16,5 @@ namespace babelwires {
     using ProjectId = std::uint16_t;
 
     /// Each element in a project is assigned a consecutive ID.
-    using ElementId = std::uint16_t;
+    using NodeId = std::uint16_t;
 } // namespace babelwires

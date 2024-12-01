@@ -23,7 +23,7 @@ babelwires::RemoveFailedModifiersAction::RemoveFailedModifiersAction()
 void babelwires::RemoveFailedModifiersAction::actionTriggered(babelwires::FeatureModel& model,
                                                               const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
 
     AccessModelScope scope(projectBridge);
     const Project& project = scope.getProject();

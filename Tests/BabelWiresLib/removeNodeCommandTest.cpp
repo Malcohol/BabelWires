@@ -46,7 +46,7 @@ TEST(RemoveNodeCommandTest, executeAndUndo) {
         }
 
         const babelwires::Node* targetElement =
-            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetElementId);
+            testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetNodeId);
         ASSERT_NE(targetElement, nullptr);
         const babelwires::Modifier* targetModifier =
             targetElement->getEdits().findModifier(testUtils::getTestFileElementPathToInt0());
@@ -99,9 +99,9 @@ TEST(RemoveNodeCommandTest, subsumption) {
 
     testUtils::TestComplexRecordElementData elementData;
 
-    const babelwires::ElementId element1Id =
+    const babelwires::NodeId element1Id =
         testEnvironment.m_project.addNode(elementData);
-    const babelwires::ElementId element2Id =
+    const babelwires::NodeId element2Id =
         testEnvironment.m_project.addNode(elementData);
 
     {

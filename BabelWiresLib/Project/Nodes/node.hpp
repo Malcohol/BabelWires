@@ -36,7 +36,7 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Node);
 
-        Node(const NodeData& data, ElementId newId);
+        Node(const NodeData& data, NodeId newId);
         virtual ~Node();
 
         /// Did the feature element fail, either because of an internal failure
@@ -58,7 +58,7 @@ namespace babelwires {
         /// Get a description of the type of element (e.g. format name).
         virtual std::string getLabel() const;
 
-        ElementId getElementId() const;
+        NodeId getNodeId() const;
         const NodeData& getElementData() const;
 
         /// Find the modifier at the path, if there is one.

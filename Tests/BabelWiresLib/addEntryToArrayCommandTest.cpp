@@ -17,7 +17,7 @@
 TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
     const auto* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
@@ -64,7 +64,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
 TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
     const auto* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
@@ -113,7 +113,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtEnd) {
 TEST(AddEntryToArrayCommandTest, executeAndUndoPriorModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
     const auto* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
@@ -173,7 +173,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyNoElement) {
 TEST(AddEntryToArrayCommandTest, failSafelyNoArray) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
     babelwires::AddEntriesToArrayCommand command("Test command", elementId,
@@ -186,7 +186,7 @@ TEST(AddEntryToArrayCommandTest, failSafelyNoArray) {
 TEST(AddEntryToArrayCommandTest, failSafelyOutOfRange) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
+    const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
     const auto* element = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(element, nullptr);
@@ -225,7 +225,7 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
             elementData.m_modifiers.emplace_back(intAssignment.clone());
         }
 
-        const babelwires::ElementId elementId = testEnvironment.m_project.addNode(elementData);
+        const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
         auto* element = testEnvironment.m_project.getNode(elementId);
         ASSERT_NE(element, nullptr);
 

@@ -20,7 +20,7 @@
 babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName)
     : SimpleCommand(commandName) {}
 
-babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName, ElementId elementId)
+babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName, NodeId elementId)
     : SimpleCommand(commandName)
     , m_elementIds{elementId} {}
 
@@ -145,7 +145,7 @@ bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
                 const Node* const target = std::get<1>(connection);
                 const ConnectionModifier* const cmod = std::get<0>(connection);
                 const ConnectionModifierData& data = cmod->getModifierData();
-                ConnectionDescription connectionDesc(target->getElementId(), data);
+                ConnectionDescription connectionDesc(target->getNodeId(), data);
                 if (connectionsBeingRemoved.insert(connectionDesc).second) {
                     m_connections.emplace_back(connectionDesc);
                 }
@@ -190,6 +190,6 @@ void babelwires::RemoveNodeCommand::subsume(std::unique_ptr<Command> subsequentC
                         removeNodeCommand->m_elementIds.end());
 }
 
-void babelwires::RemoveNodeCommand::addElementToRemove(ElementId elementId) {
+void babelwires::RemoveNodeCommand::addElementToRemove(NodeId elementId) {
     m_elementIds.emplace_back(elementId);
 }

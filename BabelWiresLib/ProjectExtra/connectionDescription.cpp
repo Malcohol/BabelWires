@@ -49,7 +49,7 @@ babelwires::ConnectionDescription& babelwires::ConnectionDescription::operator=(
     return *this;
 }
 
-babelwires::ConnectionDescription::ConnectionDescription(ElementId targetId, const ConnectionModifierData& data)
+babelwires::ConnectionDescription::ConnectionDescription(NodeId targetId, const ConnectionModifierData& data)
     : m_sourceId(data.m_sourceId)
     , m_targetId(targetId)
     , m_sourcePath(data.m_sourcePath)
