@@ -22,8 +22,8 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<babelwires::ProcessorElement>());
-    babelwires::ProcessorElement* processorElement = static_cast<babelwires::ProcessorElement*>(featureElement.get());
+    ASSERT_TRUE(featureElement->as<babelwires::ProcessorNode>());
+    babelwires::ProcessorNode* processorElement = static_cast<babelwires::ProcessorNode*>(featureElement.get());
 
     auto& inputFeature = *processorElement->getInput();
     ASSERT_TRUE(inputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());

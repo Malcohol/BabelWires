@@ -37,11 +37,11 @@ void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::FeatureMode
         if (!f) {
             return;
         }
-        const FileElement* const fileElement = f->as<FileElement>();
+        const FileNode* const fileElement = f->as<FileNode>();
         if (!fileElement) {
             return;
         }
-        if (isZero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {
+        if (isZero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
             return;
         }
         fileFormatInformation = fileElement->getFileFormatInformation(projectBridge.getContext());

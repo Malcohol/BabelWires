@@ -26,11 +26,11 @@ void babelwires::SaveFileAction::actionTriggered(babelwires::FeatureModel& model
     if (!featureElement) {
         return;
     }
-    FileElement* const fileElement = featureElement->as<FileElement>();
+    FileNode* const fileElement = featureElement->as<FileNode>();
     if (!fileElement) {
         return;
     }
-    if (isZero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::save)) {
+    if (isZero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::save)) {
         return;
     }
     scope.getProject().tryToSaveTarget(elementId);

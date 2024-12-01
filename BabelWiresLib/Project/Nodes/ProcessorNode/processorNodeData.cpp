@@ -28,7 +28,7 @@ bool babelwires::ProcessorElementData::checkFactoryVersion(const ProjectContext&
 std::unique_ptr<babelwires::Node>
 babelwires::ProcessorElementData::doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
                                                   ElementId newId) const {
-    return std::make_unique<ProcessorElement>(context, userLogger, *this, newId);
+    return std::make_unique<ProcessorNode>(context, userLogger, *this, newId);
 }
 
 void babelwires::ProcessorElementData::serializeContents(Serializer& serializer) const {

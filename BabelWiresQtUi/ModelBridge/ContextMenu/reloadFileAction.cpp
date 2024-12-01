@@ -26,11 +26,11 @@ void babelwires::ReloadFileAction::actionTriggered(babelwires::FeatureModel& mod
     if (!featureElement) {
         return;
     }
-    FileElement* const fileElement = featureElement->as<FileElement>();
+    FileNode* const fileElement = featureElement->as<FileNode>();
     if (!fileElement) {
         return;
     }
-    if (isZero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {
+    if (isZero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
         return;
     }
     scope.getProject().tryToReloadSource(elementId);

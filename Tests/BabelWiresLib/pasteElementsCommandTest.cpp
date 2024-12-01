@@ -133,7 +133,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
                     EXPECT_EQ(newSourceElement, nullptr);
                     newSourceElement = pair.second.get();
                 }
-            } else if (pair.second->as<babelwires::ProcessorElement>()) {
+            } else if (pair.second->as<babelwires::ProcessorNode>()) {
                 if (pair.first == testUtils::TestProjectData::c_processorId) {
                     EXPECT_EQ(originalProcessor, nullptr);
                     originalProcessor = pair.second.get();

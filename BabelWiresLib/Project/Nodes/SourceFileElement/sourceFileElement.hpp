@@ -21,7 +21,7 @@ namespace babelwires {
     class ValueTreeRoot;
 
     /// SourceFileElements are FeatureElements which correspond to a source file.
-    class SourceFileElement : public FileElement {
+    class SourceFileElement : public FileNode {
       public:
         SourceFileElement(const ProjectContext& context, UserLogger& userLogger, const SourceFileElementData& data,
                           ElementId newId);

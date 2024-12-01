@@ -24,7 +24,7 @@
 
 babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, UserLogger& userLogger,
                                                  const TargetFileElementData& data, ElementId newId)
-    : FileElement(data, newId) {
+    : FileNode(data, newId) {
     const NodeData& elementData = getElementData();
     try {
         setFactoryName(elementData.m_factoryIdentifier);
@@ -93,7 +93,7 @@ babelwires::TargetFileElement::getFileFormatInformation(const ProjectContext& co
     return nullptr;
 }
 
-babelwires::FileElement::FileOperations babelwires::TargetFileElement::getSupportedFileOperations() const {
+babelwires::FileNode::FileOperations babelwires::TargetFileElement::getSupportedFileOperations() const {
     return FileOperations::save;
 }
 

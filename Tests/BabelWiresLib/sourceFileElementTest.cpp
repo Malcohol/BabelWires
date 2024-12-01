@@ -51,7 +51,7 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
         static_cast<babelwires::SourceFileElement*>(featureElement.get());
 
     EXPECT_EQ(sourceFileElement->getFilePath(), tempFilePath.m_filePath);
-    EXPECT_EQ(sourceFileElement->getSupportedFileOperations(), babelwires::FileElement::FileOperations::reload);
+    EXPECT_EQ(sourceFileElement->getSupportedFileOperations(), babelwires::FileNode::FileOperations::reload);
     EXPECT_NE(sourceFileElement->getFileFormatInformation(testEnvironment.m_projectContext), nullptr);
     EXPECT_EQ(sourceFileElement->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), testUtils::TestSourceFileFormat::getThisIdentifier());
 

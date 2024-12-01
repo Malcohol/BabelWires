@@ -1,5 +1,5 @@
 /**
- * FileElement are FeatureElements which corresponds to a file (e.g. a source or target file).
+ * FileNode are FeatureElements which corresponds to a file (e.g. a source or target file).
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -15,9 +15,9 @@ namespace babelwires {
     class FileTypeEntry;
 
     /// A feature element which represents the contents of a file.
-    class FileElement : public Node {
+    class FileNode : public Node {
       public:
-        FileElement(const NodeData& data, ElementId newId);
+        FileNode(const NodeData& data, ElementId newId);
 
         /// Return the file path to the file.
         virtual std::filesystem::path getFilePath() const = 0;
@@ -41,6 +41,6 @@ namespace babelwires {
         virtual bool save(const ProjectContext& context, UserLogger& userLogger);
     };
 
-    DEFINE_ENUM_FLAG_OPERATORS(FileElement::FileOperations);
+    DEFINE_ENUM_FLAG_OPERATORS(FileNode::FileOperations);
 
 } // namespace babelwires

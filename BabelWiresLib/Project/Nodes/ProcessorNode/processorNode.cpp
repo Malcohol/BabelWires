@@ -1,5 +1,5 @@
 /**
- * ProcessorElement are FeatureElements which carry a processor.
+ * ProcessorNode are FeatureElements which carry a processor.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -21,7 +21,7 @@
 
 #include <Common/Log/userLogger.hpp>
 
-babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, UserLogger& userLogger,
+babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogger& userLogger,
                                                const ProcessorElementData& data, ElementId newId)
     : Node(data, newId) {
     const NodeData& elementData = getElementData();
@@ -41,13 +41,13 @@ babelwires::ProcessorElement::ProcessorElement(const ProjectContext& context, Us
     }
 }
 
-babelwires::ProcessorElement::~ProcessorElement() = default;
+babelwires::ProcessorNode::~ProcessorNode() = default;
 
-const babelwires::ProcessorElementData& babelwires::ProcessorElement::getElementData() const {
+const babelwires::ProcessorElementData& babelwires::ProcessorNode::getElementData() const {
     return static_cast<const ProcessorElementData&>(Node::getElementData());
 }
 
-babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetOutputNonConst() {
+babelwires::ValueTreeNode* babelwires::ProcessorNode::doGetOutputNonConst() {
     if (m_processor) {
         return &m_processor->getOutput();
     } else {
@@ -55,7 +55,7 @@ babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetOutputNonConst() {
     }
 }
 
-babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetInputNonConst() {
+babelwires::ValueTreeNode* babelwires::ProcessorNode::doGetInputNonConst() {
     if (m_processor) {
         return &m_processor->getInput();
     } else {
@@ -63,7 +63,7 @@ babelwires::ValueTreeNode* babelwires::ProcessorElement::doGetInputNonConst() {
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::ProcessorElement::getOutput() const {
+const babelwires::ValueTreeNode* babelwires::ProcessorNode::getOutput() const {
     if (m_processor) {
         return &m_processor->getOutput();
     } else {
@@ -71,7 +71,7 @@ const babelwires::ValueTreeNode* babelwires::ProcessorElement::getOutput() const
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::ProcessorElement::getInput() const {
+const babelwires::ValueTreeNode* babelwires::ProcessorNode::getInput() const {
     if (m_processor) {
         return &m_processor->getInput();
     } else {
@@ -79,12 +79,12 @@ const babelwires::ValueTreeNode* babelwires::ProcessorElement::getInput() const 
     }
 }
 
-void babelwires::ProcessorElement::setProcessor(std::unique_ptr<Processor> processor) {
+void babelwires::ProcessorNode::setProcessor(std::unique_ptr<Processor> processor) {
     m_processor = std::move(processor);
     setValueTrees(getRootLabel(), &m_processor->getInput(), &m_processor->getOutput());
 }
 
-std::string babelwires::ProcessorElement::getRootLabel() const {
+std::string babelwires::ProcessorNode::getRootLabel() const {
     if (m_processor) {
         return "Input/Output";
     } else {
@@ -92,7 +92,7 @@ std::string babelwires::ProcessorElement::getRootLabel() const {
     }
 }
 
-void babelwires::ProcessorElement::doProcess(UserLogger& userLogger) {
+void babelwires::ProcessorNode::doProcess(UserLogger& userLogger) {
     if (m_processor) {
         if (getInput()->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
             try {

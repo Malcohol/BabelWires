@@ -34,11 +34,11 @@ void babelwires::SaveFileAsAction::actionTriggered(babelwires::FeatureModel& mod
         if (!featureElement) {
             return;
         }
-        const FileElement* const fileElement = featureElement->as<FileElement>();
+        const FileNode* const fileElement = featureElement->as<FileNode>();
         if (!fileElement) {
             return;
         }
-        if (isZero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::save)) {
+        if (isZero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::save)) {
             return;
         }
         fileFormatInformation = fileElement->getFileFormatInformation(projectBridge.getContext());

@@ -19,9 +19,9 @@
 
 #include <cassert>
 
-const babelwires::FileElement& babelwires::FileRowModel::getFileElement() const {
-    assert(m_featureElement->as<FileElement>() && "A file feature should only appear in a file element");
-    return *static_cast<const FileElement*>(m_featureElement);
+const babelwires::FileNode& babelwires::FileRowModel::getFileElement() const {
+    assert(m_featureElement->as<FileNode>() && "A file feature should only appear in a file element");
+    return *static_cast<const FileNode*>(m_featureElement);
 }
 
 QVariant babelwires::FileRowModel::getValueDisplayData() const {
@@ -40,12 +40,12 @@ QString babelwires::FileRowModel::getTooltip() const {
 void babelwires::FileRowModel::getContextMenuActions(
     std::vector<FeatureContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
-    const FileElement& fileElement = getFileElement();
-    if (isNonzero(fileElement.getSupportedFileOperations() & FileElement::FileOperations::reload)) {
+    const FileNode& fileElement = getFileElement();
+    if (isNonzero(fileElement.getSupportedFileOperations() & FileNode::FileOperations::reload)) {
         actionsOut.emplace_back(std::make_unique<ReloadFileAction>());
         actionsOut.emplace_back(std::make_unique<ChangeSourceFileAction>());
     }
-    if (isNonzero(fileElement.getSupportedFileOperations() & FileElement::FileOperations::save)) {
+    if (isNonzero(fileElement.getSupportedFileOperations() & FileNode::FileOperations::save)) {
         {
             auto saveFileAction = std::make_unique<SaveFileAction>();
             saveFileAction->setEnabled(!getFileElement().getFilePath().empty());

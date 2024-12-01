@@ -19,7 +19,7 @@ namespace babelwires {
     struct ProjectContext;
 
     /// TargetFileElements are FeatureElements which correspond to a target file.
-    class TargetFileElement : public FileElement {
+    class TargetFileElement : public FileNode {
       public:
         TargetFileElement(const ProjectContext& context, UserLogger& userLogger, const TargetFileElementData& data,
                           ElementId newId);

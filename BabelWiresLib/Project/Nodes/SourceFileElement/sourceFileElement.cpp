@@ -21,7 +21,7 @@
 
 babelwires::SourceFileElement::SourceFileElement(const ProjectContext& context, UserLogger& userLogger,
                                                  const SourceFileElementData& data, ElementId newId)
-    : FileElement(data, newId) {
+    : FileNode(data, newId) {
     reload(context, userLogger);
 }
 
@@ -74,7 +74,7 @@ babelwires::SourceFileElement::getFileFormatInformation(const ProjectContext& co
     return nullptr;
 }
 
-babelwires::FileElement::FileOperations babelwires::SourceFileElement::getSupportedFileOperations() const {
+babelwires::FileNode::FileOperations babelwires::SourceFileElement::getSupportedFileOperations() const {
     return FileOperations::reload;
 }
 

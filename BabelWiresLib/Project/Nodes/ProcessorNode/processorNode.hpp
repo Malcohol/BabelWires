@@ -1,5 +1,5 @@
 /**
- * ProcessorElement are FeatureElements which carry a processor.
+ * ProcessorNode are FeatureElements which carry a processor.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -16,11 +16,11 @@ namespace babelwires {
     class Processor;
     class ValueTreeRoot;
 
-    class ProcessorElement : public Node {
+    class ProcessorNode : public Node {
       public:
-        ProcessorElement(const ProjectContext& context, UserLogger& userLogger, const ProcessorElementData& data,
+        ProcessorNode(const ProjectContext& context, UserLogger& userLogger, const ProcessorElementData& data,
                          ElementId newId);
-        ~ProcessorElement();
+        ~ProcessorNode();
 
         /// Down-cast version of the parent's method.
         const ProcessorElementData& getElementData() const;

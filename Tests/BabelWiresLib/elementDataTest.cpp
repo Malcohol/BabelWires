@@ -322,7 +322,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(featureElement->as<babelwires::ProcessorElement>());
+    EXPECT_TRUE(featureElement->as<babelwires::ProcessorNode>());
     EXPECT_TRUE(featureElement->getInput());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);

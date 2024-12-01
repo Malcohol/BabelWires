@@ -298,8 +298,8 @@ void babelwires::Project::tryToReloadAllSources() {
     int attemptedReloads = 0;
     int successfulReloads = 0;
     for (const auto& [_, f] : m_featureElements) {
-        if (FileElement* const fileElement = f->as<FileElement>()) {
-            if (isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {
+        if (FileNode* const fileElement = f->as<FileNode>()) {
+            if (isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
                 ++attemptedReloads;
                 if (fileElement->reload(m_context, m_userLogger)) {
                     ++successfulReloads;
@@ -314,8 +314,8 @@ void babelwires::Project::tryToSaveAllTargets() {
     int attemptedSaves = 0;
     int successfulSaves = 0;
     for (const auto& [_, f] : m_featureElements) {
-        if (FileElement* const fileElement = f->as<FileElement>()) {
-            if (isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::save)) {
+        if (FileNode* const fileElement = f->as<FileNode>()) {
+            if (isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::save)) {
                 ++attemptedSaves;
                 if (fileElement->save(m_context, m_userLogger)) {
                     ++successfulSaves;
@@ -330,9 +330,9 @@ void babelwires::Project::tryToReloadSource(ElementId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     Node* f = getFeatureElement(id);
     assert(f && "There was no such feature element");
-    FileElement* const fileElement = f->as<FileElement>();
+    FileNode* const fileElement = f->as<FileNode>();
     assert(fileElement && "There was no such file element");
-    assert(isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload) &&
+    assert(isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload) &&
            "There was no such reloadable file element");
     fileElement->reload(m_context, m_userLogger);
 }
@@ -341,9 +341,9 @@ void babelwires::Project::tryToSaveTarget(ElementId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     Node* f = getFeatureElement(id);
     assert(f && "There was no such feature element");
-    FileElement* const fileElement = f->as<FileElement>();
+    FileNode* const fileElement = f->as<FileNode>();
     assert(fileElement && "There was no such file element");
-    assert(isNonzero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::save) &&
+    assert(isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::save) &&
            "There was no such saveable file element");
     fileElement->save(m_context, m_userLogger);
 }

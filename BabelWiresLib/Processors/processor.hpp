@@ -24,7 +24,7 @@ namespace babelwires {
         virtual ~Processor();
 
         /// Set values in the output based on values in the input.
-        /// Implementation of process are allowed to throw. If they do, the ProcessorElement will be marked as failed,
+        /// Implementation of process are allowed to throw. If they do, the ProcessorNode will be marked as failed,
         /// the exception will be logged and the output will be set to default.
         void process(UserLogger& userLogger);
         ValueTreeRoot& getInput();
