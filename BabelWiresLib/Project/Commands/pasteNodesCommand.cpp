@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/Commands/pasteElementsCommand.hpp>
+#include <BabelWiresLib/Project/Commands/pasteNodesCommand.hpp>
 
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
@@ -15,11 +15,11 @@
 #include <cassert>
 #include <unordered_set>
 
-babelwires::PasteElementsCommand::PasteElementsCommand(std::string commandName, ProjectData dataToPaste)
+babelwires::PasteNodesCommand::PasteNodesCommand(std::string commandName, ProjectData dataToPaste)
     : SimpleCommand(std::move(commandName))
     , m_dataToPaste(std::move(dataToPaste)) {}
 
-bool babelwires::PasteElementsCommand::initialize(const Project& project) {
+bool babelwires::PasteNodesCommand::initialize(const Project& project) {
     std::unordered_map<ElementId, ElementId> remappingTable;
     {
         std::vector<ElementId> originalIds;
@@ -71,7 +71,7 @@ bool babelwires::PasteElementsCommand::initialize(const Project& project) {
     return true;
 }
 
-void babelwires::PasteElementsCommand::execute(Project& project) const {
+void babelwires::PasteNodesCommand::execute(Project& project) const {
     std::unordered_set<UiPosition> occupiedPositions;
 
     // Find unoccupied UI positions.
@@ -111,7 +111,7 @@ void babelwires::PasteElementsCommand::execute(Project& project) const {
     }
 }
 
-void babelwires::PasteElementsCommand::undo(Project& project) const {
+void babelwires::PasteNodesCommand::undo(Project& project) const {
     for (const auto& connection : m_connectionsToPaste) {
         project.removeModifier(connection.m_targetId, connection.m_targetPath);
     }

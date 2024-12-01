@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 
@@ -28,10 +28,10 @@ QString babelwires::ValueNodeFactory::name() const {
 std::unique_ptr<QtNodes::NodeDataModel> babelwires::ValueNodeFactory::createNode() const {
     auto newDataPtr = std::make_unique<ValueNodeData>(m_typeOfValue);
 
-    auto commandPtr = std::make_unique<AddElementCommand>("Add Value Element", std::move(newDataPtr));
-    AddElementCommand& addElementCommand = *commandPtr;
-    if (m_projectBridge->executeAddElementCommand(std::move(commandPtr))) {
-        return std::make_unique<ElementNodeModel>(*m_projectBridge, addElementCommand.getElementId());
+    auto commandPtr = std::make_unique<AddNodeCommand>("Add Value Element", std::move(newDataPtr));
+    AddNodeCommand& addNodeCommand = *commandPtr;
+    if (m_projectBridge->executeAddNodeCommand(std::move(commandPtr))) {
+        return std::make_unique<ElementNodeModel>(*m_projectBridge, addNodeCommand.getElementId());
     }
     return nullptr;
 }

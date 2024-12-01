@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Commands/pasteElementsCommand.hpp>
+#include <BabelWiresLib/Project/Commands/pasteNodesCommand.hpp>
 
-#include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
@@ -21,7 +21,7 @@
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
-TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
+TEST(PasteNodesCommandTest, executeAndUndoEmptyProject) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;
@@ -32,7 +32,7 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
                              babelwires::pathToString(targetFilePath.m_filePath));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
-    babelwires::PasteElementsCommand command("Test command", std::move(projectData));
+    babelwires::PasteNodesCommand command("Test command", std::move(projectData));
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -75,7 +75,7 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
     checkForProjectData();
 }
 
-TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
+TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData originalProjectData;
@@ -107,7 +107,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
         EXPECT_FALSE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt)->isFailed());
     };
 
-    babelwires::PasteElementsCommand command("Test command", std::move(projectData));
+    babelwires::PasteNodesCommand command("Test command", std::move(projectData));
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -222,7 +222,7 @@ namespace {
             projectData.m_elements.emplace_back(targetElementData.clone());
         }
 
-        babelwires::PasteElementsCommand command("Test command", std::move(projectData));
+        babelwires::PasteNodesCommand command("Test command", std::move(projectData));
 
         EXPECT_TRUE(command.initialize(testEnvironment.m_project));
 
@@ -258,10 +258,10 @@ namespace {
     }
 } // namespace
 
-TEST(PasteElementsCommandTest, sourceElementsOutsideProjectDataSameProject) {
+TEST(PasteNodesCommandTest, sourceElementsOutsideProjectDataSameProject) {
     testSourceElementsOutsideProjectData(true);
 }
 
-TEST(PasteElementsCommandTest, sourceElementsOutsideProjectDataDifferentProject) {
+TEST(PasteNodesCommandTest, sourceElementsOutsideProjectDataDifferentProject) {
     testSourceElementsOutsideProjectData(false);
 }

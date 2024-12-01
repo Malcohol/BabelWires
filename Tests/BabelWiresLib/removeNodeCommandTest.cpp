@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 
-#include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
@@ -21,7 +21,7 @@
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
-TEST(RemoveElementCommandTest, executeAndUndo) {
+TEST(RemoveNodeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;
@@ -60,7 +60,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
 
     checkElements(false);
 
-    babelwires::RemoveElementCommand command("Test command", testUtils::TestProjectData::c_processorId);
+    babelwires::RemoveNodeCommand command("Test command", testUtils::TestProjectData::c_processorId);
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -82,19 +82,19 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
     checkElements(true);
 }
 
-TEST(RemoveElementCommandTest, failSafelyNoElement) {
+TEST(RemoveNodeCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
 
-    babelwires::RemoveElementCommand command("Test command", 57);
+    babelwires::RemoveNodeCommand command("Test command", 57);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
-TEST(RemoveElementCommandTest, subsumption) {
+TEST(RemoveNodeCommandTest, subsumption) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestComplexRecordElementData elementData;
@@ -115,9 +115,9 @@ TEST(RemoveElementCommandTest, subsumption) {
 
     testEnvironment.m_project.process();
 
-    babelwires::RemoveElementCommand firstCommand("Test command", element1Id);
+    babelwires::RemoveNodeCommand firstCommand("Test command", element1Id);
 
-    auto secondCommand = std::make_unique<babelwires::RemoveElementCommand>("Test command", element2Id);
+    auto secondCommand = std::make_unique<babelwires::RemoveNodeCommand>("Test command", element2Id);
 
     EXPECT_TRUE(firstCommand.shouldSubsume(*secondCommand, false));
     firstCommand.subsume(std::move(secondCommand));

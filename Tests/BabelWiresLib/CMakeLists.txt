@@ -3,7 +3,7 @@ SET( LIB_TESTS_SRCS
     activateOptionalsModifierDataTest.cpp
     activateOptionalCommandTest.cpp
     addBlankToEnumTest.cpp
-    addElementCommandTest.cpp
+    addNodeCommandTest.cpp
     addEntryToArrayCommandTest.cpp
     addModifierCommandTest.cpp
     addEntryToMapCommandTest.cpp
@@ -30,9 +30,9 @@ SET( LIB_TESTS_SRCS
     mapProjectTest.cpp
     modifierDataTest.cpp
     modifierTest.cpp
-    moveElementCommandTest.cpp
+    moveNodeCommandTest.cpp
     parallelProcessorTest.cpp
-    pasteElementsCommandTest.cpp
+    pasteNodesCommandTest.cpp
     pathStepTest.cpp
     processorNodeTest.cpp
     projectBundleTest.cpp
@@ -44,14 +44,14 @@ SET( LIB_TESTS_SRCS
     rationalValueTest.cpp
     recordTypeTest.cpp
     recordWithVariantsTypeTest.cpp
-    removeElementCommandTest.cpp
+    removeNodeCommandTest.cpp
     removeEntryFromArrayCommandTest.cpp
     removeEntryFromMapCommandTest.cpp
     removeFailedModifiersCommandTest.cpp
     removeSimpleModifierCommandTest.cpp
     removeModifierCommandTest.cpp
     replaceMapEntryCommandTest.cpp
-    resizeElementCommandTest.cpp
+    resizeNodeCommandTest.cpp
     selectRecordVariantModifierDataTest.cpp
     selectRecordVariantCommandTest.cpp
     setArraySizeCommandTest.cpp

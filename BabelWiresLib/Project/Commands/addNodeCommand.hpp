@@ -17,17 +17,17 @@ namespace babelwires {
     struct NodeData;
 
     /// Add a feature element to the project.
-    class AddElementCommand : public SimpleCommand<Project> {
+    class AddNodeCommand : public SimpleCommand<Project> {
       public:
         /// Create a command which adds the given element.
         /// NOTE: An expanded path entry is always added for the root path, so the constructor asserts it is not already present.
-        AddElementCommand(std::string commandName, std::unique_ptr<NodeData> elementToAdd);
+        AddNodeCommand(std::string commandName, std::unique_ptr<NodeData> elementToAdd);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
-        /// An add can subsume a MoveElementCommand.
+        /// An add can subsume a MoveNodeCommand.
         // TODO This would not be necessary if the UI waited for the engine to add elements before it added nodes.
         virtual bool shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const override;
         virtual void subsume(std::unique_ptr<Command> subsequentCommand) override;

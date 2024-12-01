@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
@@ -11,7 +11,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-TEST(MoveElementCommandTest, executeAndUndo) {
+TEST(MoveNodeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -24,7 +24,7 @@ TEST(MoveElementCommandTest, executeAndUndo) {
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
 
-    babelwires::MoveElementCommand command("Test command", elementId, babelwires::UiPosition{100, 12});
+    babelwires::MoveNodeCommand command("Test command", elementId, babelwires::UiPosition{100, 12});
     EXPECT_EQ(command.getName(), "Test command");
 
     EXPECT_TRUE(command.initialize(testEnvironment.m_project));
@@ -44,19 +44,19 @@ TEST(MoveElementCommandTest, executeAndUndo) {
     EXPECT_EQ(element->getUiPosition().m_y, 12);
 }
 
-TEST(MoveElementCommandTest, failSafelyNoElement) {
+TEST(MoveNodeCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
 
-    babelwires::MoveElementCommand command("Test command", 57, babelwires::UiPosition{100, 12});
+    babelwires::MoveNodeCommand command("Test command", 57, babelwires::UiPosition{100, 12});
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
-TEST(MoveElementCommandTest, subsumeMoves) {
+TEST(MoveNodeCommandTest, subsumeMoves) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -69,12 +69,12 @@ TEST(MoveElementCommandTest, subsumeMoves) {
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
 
-    babelwires::MoveElementCommand firstCommand("Test command", elementId, babelwires::UiPosition{100, 12});
+    babelwires::MoveNodeCommand firstCommand("Test command", elementId, babelwires::UiPosition{100, 12});
 
     EXPECT_TRUE(firstCommand.initializeAndExecute(testEnvironment.m_project));
 
     auto secondCommand =
-        std::make_unique<babelwires::MoveElementCommand>("Test Move", elementId, babelwires::UiPosition{14, 88});
+        std::make_unique<babelwires::MoveNodeCommand>("Test Move", elementId, babelwires::UiPosition{14, 88});
 
     EXPECT_TRUE(firstCommand.shouldSubsume(*secondCommand, true));
 
@@ -93,7 +93,7 @@ TEST(MoveElementCommandTest, subsumeMoves) {
     EXPECT_EQ(element->getUiPosition().m_y, 88);
 }
 
-TEST(MoveElementCommandTest, subsumeMovesDelay) {
+TEST(MoveNodeCommandTest, subsumeMovesDelay) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -106,12 +106,12 @@ TEST(MoveElementCommandTest, subsumeMovesDelay) {
     EXPECT_EQ(element->getUiPosition().m_x, -14);
     EXPECT_EQ(element->getUiPosition().m_y, -15);
 
-    babelwires::MoveElementCommand firstCommand("Test command", elementId, babelwires::UiPosition{100, 12});
+    babelwires::MoveNodeCommand firstCommand("Test command", elementId, babelwires::UiPosition{100, 12});
 
     EXPECT_TRUE(firstCommand.initializeAndExecute(testEnvironment.m_project));
 
     auto secondCommand =
-        std::make_unique<babelwires::MoveElementCommand>("Test Move", elementId, babelwires::UiPosition{14, 88});
+        std::make_unique<babelwires::MoveNodeCommand>("Test Move", elementId, babelwires::UiPosition{14, 88});
     secondCommand->setTimestamp(firstCommand.getTimestamp() +
                                 babelwires::CommandTimestamp::duration(std::chrono::seconds(2)));
 

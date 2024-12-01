@@ -25,19 +25,19 @@ namespace babelwires {
     /// This class is designed to allow that to happen in any order, by having the
     /// first command to subsume all the rest, and then have the combined operation
     /// executed in a consistent way.
-    class RemoveElementCommand : public SimpleCommand<Project> {
+    class RemoveNodeCommand : public SimpleCommand<Project> {
       public:
         /// A default constructed object cannot be initiatialized until addElementToRemove
         /// is called or it subsumes a command with data.
-        RemoveElementCommand(std::string commandName);
+        RemoveNodeCommand(std::string commandName);
 
         /// Remove the given element.
-        RemoveElementCommand(std::string commandName, ElementId elementId);
+        RemoveNodeCommand(std::string commandName, ElementId elementId);
 
         /// Remove the described connection.
-        RemoveElementCommand(std::string commandName, ConnectionDescription connection);
+        RemoveNodeCommand(std::string commandName, ConnectionDescription connection);
 
-        virtual ~RemoveElementCommand();
+        virtual ~RemoveNodeCommand();
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;

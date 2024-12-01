@@ -12,11 +12,11 @@
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
-#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
-#include <BabelWiresLib/Project/Commands/resizeElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
+#include <BabelWiresLib/Project/Commands/resizeNodeCommand.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
@@ -128,7 +128,7 @@ void babelwires::ProjectBridge::onNodeDeleted(QtNodes::Node& n) {
 #endif
                 m_nodeFromElementId.erase(elementId);
             assert((numRemoved == 1) && "Expected the node to be in the scene");
-            scheduleCommand(std::make_unique<RemoveElementCommand>("Remove node", elementId));
+            scheduleCommand(std::make_unique<RemoveNodeCommand>("Remove node", elementId));
             break;
         }
         case State::ProcessingModelChanges: {
@@ -156,7 +156,7 @@ void babelwires::ProjectBridge::onNodeMoved(QtNodes::Node& n, const QPointF& new
             UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
             if (uiPosition != newPosition) {
                 std::string commandName = "Move " + elementNodeModel.caption().toStdString();
-                scheduleCommand(std::make_unique<MoveElementCommand>(commandName, elementId, newPosition));
+                scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, elementId, newPosition));
                 m_projectObserver.ignoreMovedElement(elementId);
             }
             break;
@@ -185,7 +185,7 @@ void babelwires::ProjectBridge::onNodeResized(QtNodes::Node& n, const QSize& new
             const int newWidth = elementNodeModel.embeddedWidget()->size().width();
             if (newWidth != currentWidth) {
                 std::string commandName = "Resize " + elementNodeModel.caption().toStdString();
-                scheduleCommand(std::make_unique<ResizeElementCommand>(commandName, elementId, UiSize{newWidth}));
+                scheduleCommand(std::make_unique<ResizeNodeCommand>(commandName, elementId, UiSize{newWidth}));
                 m_projectObserver.ignoreResizedElement(elementId);
             }
             break;
@@ -472,15 +472,15 @@ bool babelwires::ProjectBridge::executeCommandSynchronously(std::unique_ptr<Comm
     return scope.getCommandManager().executeAndStealCommand(commandPtr);
 }
 
-bool babelwires::ProjectBridge::executeAddElementCommand(std::unique_ptr<AddElementCommand> command) {
+bool babelwires::ProjectBridge::executeAddNodeCommand(std::unique_ptr<AddNodeCommand> command) {
     ModifyModelScope scope(*this);
-    AddElementCommand& addElementCommand = *command;
+    AddNodeCommand& addNodeCommand = *command;
     std::unique_ptr<Command<Project>> commandPtr = std::move(command);
     if (!scope.getCommandManager().executeAndStealCommand(commandPtr)) {
         return false;
     }
 
-    ElementId newElementId = addElementCommand.getElementId();
+    ElementId newElementId = addNodeCommand.getElementId();
     m_projectObserver.ignoreAddedElement(newElementId);
     m_state = State::WaitingForNewNode;
     return true;

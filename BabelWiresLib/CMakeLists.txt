@@ -70,19 +70,19 @@ SET( BABELWIRESLIB_SRCS
 	Path/pathStep.cpp
 	Serialization/projectBundle.cpp
 	Project/Commands/activateOptionalCommand.cpp
-	Project/Commands/addElementCommand.cpp
+	Project/Commands/addNodeCommand.cpp
 	Project/Commands/deactivateOptionalCommand.cpp
-	Project/Commands/removeElementCommand.cpp
-	Project/Commands/moveElementCommand.cpp
+	Project/Commands/removeNodeCommand.cpp
+	Project/Commands/moveNodeCommand.cpp
 	Project/Commands/addModifierCommand.cpp
 	Project/Commands/removeModifierCommand.cpp
 	Project/Commands/addEntriesToArrayCommand.cpp
 	Project/Commands/removeEntryFromArrayCommand.cpp
 	Project/Commands/changeFileCommand.cpp
-	Project/Commands/pasteElementsCommand.cpp
+	Project/Commands/pasteNodesCommand.cpp
 	Project/Commands/setExpandedCommand.cpp
 	Project/Commands/removeFailedModifiersCommand.cpp
-	Project/Commands/resizeElementCommand.cpp
+	Project/Commands/resizeNodeCommand.cpp
 	Project/Commands/selectRecordVariantCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
 	Project/Commands/Subcommands/removeSimpleModifierSubcommand.cpp

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Commands/resizeElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/resizeNodeCommand.hpp>
 
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
@@ -11,7 +11,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-TEST(ResizeElementCommandTest, executeAndUndo) {
+TEST(ResizeNodeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -23,7 +23,7 @@ TEST(ResizeElementCommandTest, executeAndUndo) {
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiSize().m_width, 77);
 
-    babelwires::ResizeElementCommand command("Test command", elementId, babelwires::UiSize{113});
+    babelwires::ResizeNodeCommand command("Test command", elementId, babelwires::UiSize{113});
     EXPECT_EQ(command.getName(), "Test command");
 
     EXPECT_TRUE(command.initialize(testEnvironment.m_project));
@@ -40,19 +40,19 @@ TEST(ResizeElementCommandTest, executeAndUndo) {
     EXPECT_EQ(element->getUiSize().m_width, 113);
 }
 
-TEST(ResizeElementCommandTest, failSafelyNoElement) {
+TEST(ResizeNodeCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
     modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
 
-    babelwires::ResizeElementCommand command("Test command", 57, babelwires::UiSize{113});
+    babelwires::ResizeNodeCommand command("Test command", 57, babelwires::UiSize{113});
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initialize(testEnvironment.m_project));
 }
 
-TEST(ResizeElementCommandTest, subsumeMoves) {
+TEST(ResizeNodeCommandTest, subsumeMoves) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -64,12 +64,12 @@ TEST(ResizeElementCommandTest, subsumeMoves) {
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiSize().m_width, 77);
 
-    babelwires::ResizeElementCommand firstCommand("Test command", elementId, babelwires::UiSize{113});
+    babelwires::ResizeNodeCommand firstCommand("Test command", elementId, babelwires::UiSize{113});
 
     EXPECT_TRUE(firstCommand.initializeAndExecute(testEnvironment.m_project));
 
     auto secondCommand =
-        std::make_unique<babelwires::ResizeElementCommand>("Test Move", elementId, babelwires::UiSize{188});
+        std::make_unique<babelwires::ResizeNodeCommand>("Test Move", elementId, babelwires::UiSize{188});
 
     EXPECT_TRUE(firstCommand.shouldSubsume(*secondCommand, true));
 
@@ -85,7 +85,7 @@ TEST(ResizeElementCommandTest, subsumeMoves) {
     EXPECT_EQ(element->getUiSize().m_width, 188);
 }
 
-TEST(ResizeElementCommandTest, subsumeMovesDelay) {
+TEST(ResizeNodeCommandTest, subsumeMovesDelay) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestFeatureElementData elementData;
@@ -97,12 +97,12 @@ TEST(ResizeElementCommandTest, subsumeMovesDelay) {
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiSize().m_width, 77);
 
-    babelwires::ResizeElementCommand firstCommand("Test command", elementId, babelwires::UiSize{113});
+    babelwires::ResizeNodeCommand firstCommand("Test command", elementId, babelwires::UiSize{113});
 
     EXPECT_TRUE(firstCommand.initializeAndExecute(testEnvironment.m_project));
 
     auto secondCommand =
-        std::make_unique<babelwires::ResizeElementCommand>("Test Move", elementId, babelwires::UiSize{188});
+        std::make_unique<babelwires::ResizeNodeCommand>("Test Move", elementId, babelwires::UiSize{188});
     secondCommand->setTimestamp(firstCommand.getTimestamp() +
                                 babelwires::CommandTimestamp::duration(std::chrono::seconds(2)));
 

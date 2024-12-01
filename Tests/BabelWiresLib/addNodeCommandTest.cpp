@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 
-#include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 
@@ -11,10 +11,10 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-TEST(AddElementCommandTest, executeAndUndo) {
+TEST(AddNodeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::AddElementCommand command("Test command", std::make_unique<testUtils::TestSimpleRecordElementData>());
+    babelwires::AddNodeCommand command("Test command", std::make_unique<testUtils::TestSimpleRecordElementData>());
 
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -37,14 +37,14 @@ TEST(AddElementCommandTest, executeAndUndo) {
     EXPECT_NE(restoredElement->as<babelwires::ValueNode>(), nullptr);
 }
 
-TEST(AddElementCommandTest, subsumeMoves) {
+TEST(AddNodeCommandTest, subsumeMoves) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::AddElementCommand addCommand("Test command", std::make_unique<testUtils::TestSimpleRecordElementData>());
+    babelwires::AddNodeCommand addCommand("Test command", std::make_unique<testUtils::TestSimpleRecordElementData>());
 
     EXPECT_TRUE(addCommand.initializeAndExecute(testEnvironment.m_project));
 
-    auto moveCommand = std::make_unique<babelwires::MoveElementCommand>("Test Move", addCommand.getElementId(),
+    auto moveCommand = std::make_unique<babelwires::MoveNodeCommand>("Test Move", addCommand.getElementId(),
                                                                         babelwires::UiPosition{14, 88});
 
     EXPECT_TRUE(addCommand.shouldSubsume(*moveCommand, true));

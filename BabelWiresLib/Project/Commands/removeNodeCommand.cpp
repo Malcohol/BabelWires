@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
@@ -17,21 +17,21 @@
 #include <algorithm>
 #include <cassert>
 
-babelwires::RemoveElementCommand::RemoveElementCommand(std::string commandName)
+babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName)
     : SimpleCommand(commandName) {}
 
-babelwires::RemoveElementCommand::RemoveElementCommand(std::string commandName, ElementId elementId)
+babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName, ElementId elementId)
     : SimpleCommand(commandName)
     , m_elementIds{elementId} {}
 
-babelwires::RemoveElementCommand::RemoveElementCommand(std::string commandName, ConnectionDescription connection)
+babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName, ConnectionDescription connection)
     : SimpleCommand(commandName)
     , m_connections{std::move(connection)} {}
 
 // Needed because NodeData is not declared in the header.
-babelwires::RemoveElementCommand::~RemoveElementCommand() = default;
+babelwires::RemoveNodeCommand::~RemoveNodeCommand() = default;
 
-bool babelwires::RemoveElementCommand::addConnection(const babelwires::ConnectionDescription& desc,
+bool babelwires::RemoveNodeCommand::addConnection(const babelwires::ConnectionDescription& desc,
                                                      ConnectionSet& connectionSet, const babelwires::Project& project) {
     const Node* targetElement = project.getFeatureElement(desc.m_targetId);
     if (!targetElement) {
@@ -91,7 +91,7 @@ bool babelwires::RemoveElementCommand::addConnection(const babelwires::Connectio
     return true;
 }
 
-bool babelwires::RemoveElementCommand::initialize(const Project& project) {
+bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
     assert(!(m_elementIds.empty() && m_connections.empty()) && "This command has nothing to remove.");
     ConnectionSet connectionsBeingRemoved;
 
@@ -156,7 +156,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
     return true;
 }
 
-void babelwires::RemoveElementCommand::execute(Project& project) const {
+void babelwires::RemoveNodeCommand::execute(Project& project) const {
     for (const auto& connection : reverseIterate(m_connections)) {
         project.removeModifier(connection.m_targetId, connection.m_targetPath);
     }
@@ -165,7 +165,7 @@ void babelwires::RemoveElementCommand::execute(Project& project) const {
     }
 }
 
-void babelwires::RemoveElementCommand::undo(Project& project) const {
+void babelwires::RemoveNodeCommand::undo(Project& project) const {
     for (const auto& elementData : m_elementsToRestore) {
         project.addFeatureElement(*elementData);
     }
@@ -178,18 +178,18 @@ void babelwires::RemoveElementCommand::undo(Project& project) const {
     }
 }
 
-bool babelwires::RemoveElementCommand::shouldSubsume(const Command& subsequentCommand,
+bool babelwires::RemoveNodeCommand::shouldSubsume(const Command& subsequentCommand,
                                                      bool thisIsAlreadyExecuted) const {
-    return !thisIsAlreadyExecuted && subsequentCommand.as<RemoveElementCommand>();
+    return !thisIsAlreadyExecuted && subsequentCommand.as<RemoveNodeCommand>();
 }
 
-void babelwires::RemoveElementCommand::subsume(std::unique_ptr<Command> subsequentCommand) {
-    assert(subsequentCommand->as<RemoveElementCommand>() && "subsume should not have been called");
-    RemoveElementCommand* removeElementCommand = static_cast<RemoveElementCommand*>(subsequentCommand.get());
-    m_elementIds.insert(m_elementIds.end(), removeElementCommand->m_elementIds.begin(),
-                        removeElementCommand->m_elementIds.end());
+void babelwires::RemoveNodeCommand::subsume(std::unique_ptr<Command> subsequentCommand) {
+    assert(subsequentCommand->as<RemoveNodeCommand>() && "subsume should not have been called");
+    RemoveNodeCommand* removeNodeCommand = static_cast<RemoveNodeCommand*>(subsequentCommand.get());
+    m_elementIds.insert(m_elementIds.end(), removeNodeCommand->m_elementIds.begin(),
+                        removeNodeCommand->m_elementIds.end());
 }
 
-void babelwires::RemoveElementCommand::addElementToRemove(ElementId elementId) {
+void babelwires::RemoveNodeCommand::addElementToRemove(ElementId elementId) {
     m_elementIds.emplace_back(elementId);
 }

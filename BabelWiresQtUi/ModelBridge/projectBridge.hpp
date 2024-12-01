@@ -37,7 +37,7 @@ namespace babelwires {
     class ModifyModelScope;
     class AccessModelScope;
     struct UiPosition;
-    class AddElementCommand;
+    class AddNodeCommand;
     struct UiProjectContext;
     struct ProjectData;
     class MainWindow;
@@ -74,10 +74,10 @@ namespace babelwires {
         /// Returns true if the command succeeded.
         bool executeCommandSynchronously(std::unique_ptr<Command<Project>> command);
 
-        /// Execute an AddElementCommand now.
+        /// Execute an AddNodeCommand now.
         /// This special case allows the new node to be constructed knowing its corresponding model element.
         /// Returns true if the command succeeded.
-        bool executeAddElementCommand(std::unique_ptr<AddElementCommand> command);
+        bool executeAddNodeCommand(std::unique_ptr<AddNodeCommand> command);
 
         /// Object the data from the current selection.
         ProjectData getDataFromSelectedNodes();

@@ -18,9 +18,9 @@
 namespace babelwires {
     class Project;
 
-    class ResizeElementCommand : public SimpleCommand<Project> {
+    class ResizeNodeCommand : public SimpleCommand<Project> {
       public:
-        ResizeElementCommand(std::string commandName, ElementId elementId, UiSize newSize);
+        ResizeNodeCommand(std::string commandName, ElementId elementId, UiSize newSize);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;

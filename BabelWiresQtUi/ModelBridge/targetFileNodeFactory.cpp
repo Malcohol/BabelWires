@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 
@@ -31,10 +31,10 @@ std::unique_ptr<QtNodes::NodeDataModel> babelwires::TargetFileNodeFactory::creat
     newDataPtr->m_factoryIdentifier = m_targetFileFormat->getIdentifier();
     newDataPtr->m_factoryVersion = m_targetFileFormat->getVersion();
 
-    auto commandPtr = std::make_unique<AddElementCommand>("Add target file", std::move(newDataPtr));
-    AddElementCommand& addElementCommand = *commandPtr;
-    if (m_projectBridge->executeAddElementCommand(std::move(commandPtr))) {
-        return std::make_unique<ElementNodeModel>(*m_projectBridge, addElementCommand.getElementId());
+    auto commandPtr = std::make_unique<AddNodeCommand>("Add target file", std::move(newDataPtr));
+    AddNodeCommand& addNodeCommand = *commandPtr;
+    if (m_projectBridge->executeAddNodeCommand(std::move(commandPtr))) {
+        return std::make_unique<ElementNodeModel>(*m_projectBridge, addNodeCommand.getElementId());
     }
     return nullptr;
 }

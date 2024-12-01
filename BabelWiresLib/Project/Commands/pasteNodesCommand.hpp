@@ -15,9 +15,9 @@
 namespace babelwires {
 
     /// The command which pastes content into a project.
-    class PasteElementsCommand : public SimpleCommand<Project> {
+    class PasteNodesCommand : public SimpleCommand<Project> {
       public:
-        PasteElementsCommand(std::string commandName, ProjectData dataToPaste);
+        PasteNodesCommand(std::string commandName, ProjectData dataToPaste);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
