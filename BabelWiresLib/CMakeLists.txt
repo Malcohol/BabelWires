@@ -3,12 +3,12 @@ SET( BABELWIRESLIB_SRCS
 	Project/Nodes/node.cpp
 	Project/Nodes/nodeData.cpp
 	Project/Nodes/ProcessorNode/processorNode.cpp
-	Project/Nodes/SourceFileElement/sourceFileElement.cpp
+	Project/Nodes/SourceFileNode/sourceFileNode.cpp
 	Project/Nodes/TargetFileElement/targetFileElement.cpp
 	Project/Nodes/FileNode/fileNode.cpp
 	Project/Nodes/editTree.cpp
 	Project/Nodes/contentsCache.cpp
-	Project/Nodes/SourceFileElement/sourceFileElementData.cpp
+	Project/Nodes/SourceFileNode/sourceFileNodeData.cpp
 	Project/Nodes/TargetFileElement/targetFileElementData.cpp
 	Project/Nodes/ProcessorNode/processorNodeData.cpp
 	Project/Nodes/ValueElement/valueElement.cpp

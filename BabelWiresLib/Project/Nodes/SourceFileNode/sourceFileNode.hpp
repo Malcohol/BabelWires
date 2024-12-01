@@ -1,5 +1,5 @@
 /**
- * SourceFileElements are FeatureElements which correspond to a source file.
+ * SourceFileNodes are FeatureElements which correspond to a source file.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -16,18 +16,18 @@ namespace babelwires {
 
 namespace babelwires {
 
-    struct SourceFileElementData;
+    struct SourceFileNodeData;
     struct ProjectContext;
     class ValueTreeRoot;
 
-    /// SourceFileElements are FeatureElements which correspond to a source file.
-    class SourceFileElement : public FileNode {
+    /// SourceFileNodes are FeatureElements which correspond to a source file.
+    class SourceFileNode : public FileNode {
       public:
-        SourceFileElement(const ProjectContext& context, UserLogger& userLogger, const SourceFileElementData& data,
+        SourceFileNode(const ProjectContext& context, UserLogger& userLogger, const SourceFileNodeData& data,
                           ElementId newId);
 
         /// Down-cast version of the parent's method.
-        const SourceFileElementData& getElementData() const;
+        const SourceFileNodeData& getElementData() const;
 
         virtual const ValueTreeNode* getOutput() const override;
         
@@ -43,7 +43,7 @@ namespace babelwires {
 
       protected:
         void setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root);
-        SourceFileElementData& getElementData();
+        SourceFileNodeData& getElementData();
 
       private:
         std::unique_ptr<ValueTreeRoot> m_valueTreeRoot;

@@ -4,7 +4,7 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
@@ -54,7 +54,7 @@ testUtils::TestProjectData::TestProjectData()
         m_elements.emplace_back(data.clone());
     }
     {
-        babelwires::SourceFileElementData data;
+        babelwires::SourceFileNodeData data;
         data.m_id = c_sourceElementId;
         data.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
         data.m_filePath = m_sourceFilePath;
@@ -64,7 +64,7 @@ testUtils::TestProjectData::TestProjectData()
 
 void testUtils::TestProjectData::setFilePaths(std::string_view sourceFilePath, std::string_view targetFilePath) {
     assert(m_elements.size() == 3);
-    m_elements[2]->as<babelwires::SourceFileElementData>()->m_filePath = sourceFilePath;
+    m_elements[2]->as<babelwires::SourceFileNodeData>()->m_filePath = sourceFilePath;
     m_elements[0]->as<babelwires::TargetFileElementData>()->m_filePath = targetFilePath;
     m_sourceFilePath = sourceFilePath;
     m_targetFilePath = targetFilePath;

@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
@@ -449,7 +449,7 @@ TEST(EditTreeTest, getAllExplicitlyExpandedPaths) {
 namespace {
     struct TestOwner : babelwires::Node {
         TestOwner()
-            : Node(babelwires::SourceFileElementData(), 0) {}
+            : Node(babelwires::SourceFileNodeData(), 0) {}
 
         void doProcess(babelwires::UserLogger& userLogger) override {}
     };

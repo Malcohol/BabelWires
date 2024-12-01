@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
@@ -216,7 +216,7 @@ TEST(ProjectBundleTest, filePathResolution) {
         {
             babelwires::ProjectData projectData;
             {
-                babelwires::SourceFileElementData elementData;
+                babelwires::SourceFileNodeData elementData;
                 elementData.m_filePath = scenario.m_pathInProjectData;
                 elementData.m_factoryIdentifier = "MyFactory";
                 projectData.m_elements.emplace_back(elementData.clone());
@@ -236,7 +236,7 @@ TEST(ProjectBundleTest, filePathResolution) {
 
         ASSERT_EQ(projectData.m_elements.size(), 2);
         {
-            auto elementData = projectData.m_elements[0].get()->as<babelwires::SourceFileElementData>();
+            auto elementData = projectData.m_elements[0].get()->as<babelwires::SourceFileNodeData>();
             ASSERT_NE(elementData, nullptr);
             EXPECT_EQ(elementData->m_filePath, scenario.m_expectedResolvedPath);
         }

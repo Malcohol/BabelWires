@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
@@ -388,7 +388,7 @@ TEST(ProjectTest, reloadSource) {
 
     testUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 14);
 
-    babelwires::SourceFileElementData sourceFileData;
+    babelwires::SourceFileNodeData sourceFileData;
     sourceFileData.m_filePath = tempFilePath;
     sourceFileData.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
 

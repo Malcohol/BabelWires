@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -27,7 +27,7 @@ namespace {
     }
 } // namespace
 
-TEST(SourceFileElementTest, sourceFileDataCreateElement) {
+TEST(SourceFileNodeTest, sourceFileDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
@@ -38,7 +38,7 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     createTestFile(testEnvironment, tempFilePath);
 
     // Create sourceFileData which expect to be able to load the file.
-    babelwires::SourceFileElementData data;
+    babelwires::SourceFileNodeData data;
     data.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
@@ -46,47 +46,47 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<babelwires::SourceFileElement>());
-    babelwires::SourceFileElement* sourceFileElement =
-        static_cast<babelwires::SourceFileElement*>(featureElement.get());
+    ASSERT_TRUE(featureElement->as<babelwires::SourceFileNode>());
+    babelwires::SourceFileNode* sourceFileNode =
+        static_cast<babelwires::SourceFileNode*>(featureElement.get());
 
-    EXPECT_EQ(sourceFileElement->getFilePath(), tempFilePath.m_filePath);
-    EXPECT_EQ(sourceFileElement->getSupportedFileOperations(), babelwires::FileNode::FileOperations::reload);
-    EXPECT_NE(sourceFileElement->getFileFormatInformation(testEnvironment.m_projectContext), nullptr);
-    EXPECT_EQ(sourceFileElement->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), testUtils::TestSourceFileFormat::getThisIdentifier());
+    EXPECT_EQ(sourceFileNode->getFilePath(), tempFilePath.m_filePath);
+    EXPECT_EQ(sourceFileNode->getSupportedFileOperations(), babelwires::FileNode::FileOperations::reload);
+    EXPECT_NE(sourceFileNode->getFileFormatInformation(testEnvironment.m_projectContext), nullptr);
+    EXPECT_EQ(sourceFileNode->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), testUtils::TestSourceFileFormat::getThisIdentifier());
 
     std::filesystem::remove(tempFilePath);
 
-    sourceFileElement->clearChanges();
+    sourceFileNode->clearChanges();
     testEnvironment.m_log.clear();
-    EXPECT_FALSE(sourceFileElement->reload(testEnvironment.m_projectContext, testEnvironment.m_log));
+    EXPECT_FALSE(sourceFileNode->reload(testEnvironment.m_projectContext, testEnvironment.m_log));
 
-    EXPECT_TRUE(sourceFileElement->isFailed());
+    EXPECT_TRUE(sourceFileNode->isFailed());
     std::ostringstream pathInError;
     pathInError << tempFilePath.m_filePath;
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(pathInError.str()));
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("could not be loaded"));
-    EXPECT_TRUE(sourceFileElement->getReasonForFailure().find(pathInError.str()) != std::string::npos);
+    EXPECT_TRUE(sourceFileNode->getReasonForFailure().find(pathInError.str()) != std::string::npos);
 
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     createTestFile(testEnvironment, tempFilePath);
 
-    sourceFileElement->clearChanges();
+    sourceFileNode->clearChanges();
     testEnvironment.m_log.clear();
-    EXPECT_TRUE(sourceFileElement->reload(testEnvironment.m_projectContext, testEnvironment.m_log));
+    EXPECT_TRUE(sourceFileNode->reload(testEnvironment.m_projectContext, testEnvironment.m_log));
 
-    EXPECT_FALSE(sourceFileElement->isFailed());
-    EXPECT_TRUE(sourceFileElement->getReasonForFailure().empty());
+    EXPECT_FALSE(sourceFileNode->isFailed());
+    EXPECT_TRUE(sourceFileNode->getReasonForFailure().empty());
 
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
-TEST(SourceFileElementTest, changeFile) {
+TEST(SourceFileNodeTest, changeFile) {
     testUtils::TestEnvironment testEnvironment;
 
     // Create a test file.
@@ -102,7 +102,7 @@ TEST(SourceFileElementTest, changeFile) {
     createTestFile(testEnvironment, tempFilePath2, 24);
 
     // Create sourceFileData which expect to be able to load the file.
-    babelwires::SourceFileElementData data;
+    babelwires::SourceFileNodeData data;
     data.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
@@ -110,23 +110,23 @@ TEST(SourceFileElementTest, changeFile) {
     auto featureElement = data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<babelwires::SourceFileElement>());
-    babelwires::SourceFileElement* sourceFileElement =
-        static_cast<babelwires::SourceFileElement*>(featureElement.get());
+    ASSERT_TRUE(featureElement->as<babelwires::SourceFileNode>());
+    babelwires::SourceFileNode* sourceFileNode =
+        static_cast<babelwires::SourceFileNode*>(featureElement.get());
 
-    sourceFileElement->clearChanges();
-    sourceFileElement->setFilePath(tempFilePath2.m_filePath);
+    sourceFileNode->clearChanges();
+    sourceFileNode->setFilePath(tempFilePath2.m_filePath);
 
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FileChanged));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FileChanged));
     // setFilePath is not expected to trigger a reload.
-    EXPECT_FALSE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+    EXPECT_FALSE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::SomethingChanged));
 
-    sourceFileElement->clearChanges();
-    sourceFileElement->setFilePath(tempFilePath1.m_filePath);
+    sourceFileNode->clearChanges();
+    sourceFileNode->setFilePath(tempFilePath1.m_filePath);
 
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FileChanged));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::FileChanged));
     // setFilePath is not expected to trigger a reload.
-    EXPECT_FALSE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+    EXPECT_FALSE(sourceFileNode->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(sourceFileNode->isChanged(babelwires::Node::Changes::SomethingChanged));
 }

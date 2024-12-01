@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
@@ -23,7 +23,7 @@
 namespace {
     struct TestOwner : babelwires::Node {
         TestOwner()
-            : Node(babelwires::SourceFileElementData(), 0) {}
+            : Node(babelwires::SourceFileNodeData(), 0) {}
 
         void doProcess(babelwires::UserLogger& userLogger) override {}
     };

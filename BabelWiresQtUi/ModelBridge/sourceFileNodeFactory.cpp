@@ -15,7 +15,7 @@
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 
 #include <nodes/FlowScene>
 
@@ -31,7 +31,7 @@ std::unique_ptr<QtNodes::NodeDataModel> babelwires::SourceFileNodeFactory::creat
     QString filePath = showOpenFileDialog(m_projectBridge->getFlowGraphWidget(), *m_sourceFileFormat);
 
     if (!filePath.isNull()) {
-        auto newDataPtr = std::make_unique<SourceFileElementData>();
+        auto newDataPtr = std::make_unique<SourceFileNodeData>();
         newDataPtr->m_factoryIdentifier = m_sourceFileFormat->getIdentifier();
         newDataPtr->m_filePath = filePath.toStdString();
         newDataPtr->m_factoryVersion = m_sourceFileFormat->getVersion();

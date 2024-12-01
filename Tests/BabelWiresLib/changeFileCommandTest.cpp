@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElement.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
@@ -30,13 +30,13 @@ namespace {
             testUtils::TestSourceFileFormat::writeToTestFile(filePath2, 'q');
         }
 
-        babelwires::SourceFileElementData elementData;
+        babelwires::SourceFileNodeData elementData;
         elementData.m_filePath = filePath1;
         elementData.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
 
         const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
         const auto* element =
-            testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::SourceFileElement>();
+            testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::SourceFileNode>();
         ASSERT_NE(element, nullptr);
 
         const auto getOutput = [element]() {

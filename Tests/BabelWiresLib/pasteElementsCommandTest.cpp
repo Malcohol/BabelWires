@@ -4,7 +4,7 @@
 
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
@@ -125,7 +125,7 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
         const babelwires::Node* newTargetElement = nullptr;
 
         for (const auto& pair : testEnvironment.m_project.getElements()) {
-            if (pair.second->as<babelwires::SourceFileElement>()) {
+            if (pair.second->as<babelwires::SourceFileNode>()) {
                 if (pair.first == testUtils::TestProjectData::c_sourceElementId) {
                     EXPECT_EQ(originalSourceElement, nullptr);
                     originalSourceElement = pair.second.get();
