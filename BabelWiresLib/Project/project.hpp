@@ -56,7 +56,7 @@ namespace babelwires {
         NodeId addNode(const NodeData& data);
 
         /// Remove the element with the given id.
-        void removeElement(NodeId id);
+        void removeNode(NodeId id);
 
         /// Add a modifier as described by the data.
         void addModifier(NodeId elementId, const ModifierData& modifierData);

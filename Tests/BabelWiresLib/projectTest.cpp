@@ -76,7 +76,7 @@ TEST(ProjectTest, addGetAndRemoveElement) {
     EXPECT_NE(element->as<babelwires::ValueNode>(), nullptr);
     EXPECT_TRUE(element->isChanged(babelwires::Node::Changes::NodeIsNew));
 
-    testEnvironment.m_project.removeElement(elementId);
+    testEnvironment.m_project.removeNode(elementId);
 
     const babelwires::Node* element2 = testEnvironment.m_project.getNode(elementId);
     EXPECT_EQ(element2, nullptr);

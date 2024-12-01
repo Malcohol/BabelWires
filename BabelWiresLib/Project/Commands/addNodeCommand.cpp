@@ -37,7 +37,7 @@ babelwires::NodeId babelwires::AddNodeCommand::getNodeId() const {
 }
 
 void babelwires::AddNodeCommand::undo(Project& project) const {
-    project.removeElement(getNodeId());
+    project.removeNode(getNodeId());
 }
 
 bool babelwires::AddNodeCommand::shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const {

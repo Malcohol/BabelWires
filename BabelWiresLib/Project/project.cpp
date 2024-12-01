@@ -67,70 +67,70 @@ babelwires::NodeId babelwires::Project::reserveNodeId(NodeId hint) {
 
 babelwires::Node* babelwires::Project::addNodeWithoutCachingConnection(const NodeData& data) {
     const NodeId availableId = reserveNodeId(data.m_id);
-    std::unique_ptr<Node> elementPtr = data.createNode(m_context, m_userLogger, availableId);
-    Node* element = elementPtr.get();
-    m_nodes.insert(std::make_pair(availableId, std::move(elementPtr)));
-    return element;
+    std::unique_ptr<Node> nodePtr = data.createNode(m_context, m_userLogger, availableId);
+    Node* node = nodePtr.get();
+    m_nodes.insert(std::make_pair(availableId, std::move(nodePtr)));
+    return node;
 }
 
-void babelwires::Project::addNodeConnectionsToCache(Node* element) {
-    for (const auto& connectionModifier : element->getConnectionModifiers()) {
-        addConnectionToCache(element, connectionModifier);
+void babelwires::Project::addNodeConnectionsToCache(Node* node) {
+    for (const auto& connectionModifier : node->getConnectionModifiers()) {
+        addConnectionToCache(node, connectionModifier);
     }
 }
 
 babelwires::NodeId babelwires::Project::addNode(const NodeData& data) {
-    Node* element = addNodeWithoutCachingConnection(data);
-    addNodeConnectionsToCache(element);
-    return element->getNodeId();
+    Node* node = addNodeWithoutCachingConnection(data);
+    addNodeConnectionsToCache(node);
+    return node->getNodeId();
 }
 
-void babelwires::Project::removeElement(NodeId elementId) {
-    auto mapIt = m_nodes.find(elementId);
-    assert((mapIt != m_nodes.end()) && "elementId must refer to an element in the project");
-    Node* element = mapIt->second.get();
+void babelwires::Project::removeNode(NodeId nodeId) {
+    auto mapIt = m_nodes.find(nodeId);
+    assert((mapIt != m_nodes.end()) && "nodeId must refer to an node in the project");
+    Node* node = mapIt->second.get();
 
-    for (const auto& connectionModifier : element->getConnectionModifiers()) {
-        removeConnectionFromCache(element, connectionModifier);
+    for (const auto& connectionModifier : node->getConnectionModifiers()) {
+        removeConnectionFromCache(node, connectionModifier);
     }
 
     m_removedNodes.insert(std::move(*mapIt));
     m_nodes.erase(mapIt);
 }
 
-void babelwires::Project::addModifier(NodeId elementId, const ModifierData& modifierData) {
-    Node* element = getNode(elementId);
-    assert(element && "Modifier added to unregistered feature element");
-    Modifier* modifier = element->addModifier(m_userLogger, modifierData);
+void babelwires::Project::addModifier(NodeId nodeId, const ModifierData& modifierData) {
+    Node* node = getNode(nodeId);
+    assert(node && "Modifier added to unregistered feature node");
+    Modifier* modifier = node->addModifier(m_userLogger, modifierData);
     if (ConnectionModifier* connectionModifier = modifier->asConnectionModifier()) {
-        addConnectionToCache(element, connectionModifier);
+        addConnectionToCache(node, connectionModifier);
     }
 }
 
-void babelwires::Project::removeModifier(NodeId elementId, const Path& featurePath) {
-    Node* const element = getNode(elementId);
-    assert(element && "Cannot remove a modifier from an element that does not exist");
-    Modifier* const modifier = element->findModifier(featurePath);
+void babelwires::Project::removeModifier(NodeId nodeId, const Path& featurePath) {
+    Node* const node = getNode(nodeId);
+    assert(node && "Cannot remove a modifier from an node that does not exist");
+    Modifier* const modifier = node->findModifier(featurePath);
     assert(modifier && "Cannot remove a modifier that does not exist");
     if (ConnectionModifier* connectionModifier = modifier->asConnectionModifier()) {
-        removeConnectionFromCache(element, connectionModifier);
+        removeConnectionFromCache(node, connectionModifier);
     }
-    element->removeModifier(modifier);
+    node->removeModifier(modifier);
 }
 
-void babelwires::Project::adjustModifiersInArrayElements(NodeId elementId, const babelwires::Path& pathToArray,
+void babelwires::Project::adjustModifiersInArrayElements(NodeId nodeId, const babelwires::Path& pathToArray,
                                     babelwires::ArrayIndex startIndex, int adjustment) {
     if (adjustment < 0) {
         startIndex -= adjustment;
     }
-    Node* element = getNode(elementId);
-    element->adjustArrayIndices(pathToArray, startIndex, adjustment);
+    Node* node = getNode(nodeId);
+    node->adjustArrayIndices(pathToArray, startIndex, adjustment);
 
     // Adjust modifiers of other elements affected by the addition.
     // The addition would seem to affect only input features, so this may seem unneccessary.
     // However, we allow input and output features of processors to share paths,
     // in which case, we want any matching output connections to update too.
-    const auto r = m_connectionCache.m_requiredFor.find(element);
+    const auto r = m_connectionCache.m_requiredFor.find(node);
     if (r != m_connectionCache.m_requiredFor.end()) {
         const babelwires::Project::ConnectionInfo::Connections& connections = r->second;
         for (auto&& pair : connections) {
@@ -144,26 +144,26 @@ void babelwires::Project::adjustModifiersInArrayElements(NodeId elementId, const
 // If this assumption is not valid, we may need to make the stated assumptions about how input/output paths match
 // tighter.
 
-void babelwires::Project::addArrayEntries(NodeId elementId, const Path& pathToArray, int indexOfNewElement,
+void babelwires::Project::addArrayEntries(NodeId nodeId, const Path& pathToArray, int indexOfNewElement,
                                           int numEntriesToAdd, bool ensureModifier) {
     assert((indexOfNewElement >= 0) && "indexOfNewElement must be positive");
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
 
-    if (Node* const element = getNode(elementId)) {
-        if (ValueTreeNode* const inputArray = element->getInputNonConst(pathToArray)) {
+    if (Node* const node = getNode(nodeId)) {
+        if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
             ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputArray);
             assert(valueTreeNode && "Path should resolve");
             assert(valueTreeNode->getType().as<ArrayType>());
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
-            if (Modifier* const modifier = element->findModifier(pathToArray)) {
+            if (Modifier* const modifier = node->findModifier(pathToArray)) {
                 arrayModifier = modifier->as<ArraySizeModifier>();
                 if (!arrayModifier && ensureModifier) {
                     // Defensive: Wasn't an array modifier at the path, so let it be replaced.
                     // This won't be restored by an undo, but that shouldn't matter since it isn't
                     // useful.
-                    element->removeModifier(modifier);
+                    node->removeModifier(modifier);
                 }
             }
             if (!arrayModifier) {
@@ -172,7 +172,7 @@ void babelwires::Project::addArrayEntries(NodeId elementId, const Path& pathToAr
                     arrayInitDataPtr.m_targetPath = pathToArray;
                     arrayInitDataPtr.m_size = valueTreeNode->getNumChildren();
                     arrayModifier =
-                        static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
+                        static_cast<ArraySizeModifier*>(node->addModifier(m_userLogger, arrayInitDataPtr));
                 }
             }
 
@@ -183,31 +183,31 @@ void babelwires::Project::addArrayEntries(NodeId elementId, const Path& pathToAr
             }
 
             if (arrayModifier && !ensureModifier) {
-                element->removeModifier(arrayModifier);
+                node->removeModifier(arrayModifier);
             }
         }
     }
 }
 
-void babelwires::Project::removeArrayEntries(NodeId elementId, const Path& pathToArray,
+void babelwires::Project::removeArrayEntries(NodeId nodeId, const Path& pathToArray,
                                              int indexOfElementToRemove, int numEntriesToRemove, bool ensureModifier) {
     assert((indexOfElementToRemove >= 0) && "indexOfEntriesToRemove must be positive");
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
-    if (Node* const element = getNode(elementId)) {
-        if (ValueTreeNode* const inputArray = element->getInputNonConst(pathToArray)) {
+    if (Node* const node = getNode(nodeId)) {
+        if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
             ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputArray);
             assert(valueTreeNode && "Path should resolve");
             assert(valueTreeNode->getType().as<ArrayType>());
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
-            if (Modifier* const modifier = element->findModifier(pathToArray)) {
+            if (Modifier* const modifier = node->findModifier(pathToArray)) {
                 arrayModifier = modifier->as<ArraySizeModifier>();
                 if (!arrayModifier && ensureModifier) {
                     // Defensive: Wasn't an array modifier at the path, so let it be replaced.
                     // This won't be restored by an undo, but that shouldn't matter since it isn't
                     // useful.
-                    element->removeModifier(modifier);
+                    node->removeModifier(modifier);
                 }
             }
             if (!arrayModifier) {
@@ -216,7 +216,7 @@ void babelwires::Project::removeArrayEntries(NodeId elementId, const Path& pathT
                     arrayInitDataPtr.m_targetPath = pathToArray;
                     arrayInitDataPtr.m_size = valueTreeNode->getNumChildren();
                     arrayModifier =
-                        static_cast<ArraySizeModifier*>(element->addModifier(m_userLogger, arrayInitDataPtr));
+                        static_cast<ArraySizeModifier*>(node->addModifier(m_userLogger, arrayInitDataPtr));
                 }
             }
 
@@ -227,7 +227,7 @@ void babelwires::Project::removeArrayEntries(NodeId elementId, const Path& pathT
             }
 
             if (arrayModifier && !ensureModifier) {
-                element->removeModifier(arrayModifier);
+                node->removeModifier(arrayModifier);
             }
         }
     }
@@ -243,8 +243,8 @@ void babelwires::Project::setProjectData(const ProjectData& projectData) {
     for (const auto& elementData : projectData.m_elements) {
         elementsAdded.emplace_back(addNodeWithoutCachingConnection(*elementData));
     }
-    for (auto* element : elementsAdded) {
-        addNodeConnectionsToCache(element);
+    for (auto* node : elementsAdded) {
+        addNodeConnectionsToCache(node);
     }
 }
 
@@ -329,22 +329,22 @@ void babelwires::Project::tryToSaveAllTargets() {
 void babelwires::Project::tryToReloadSource(NodeId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     Node* f = getNode(id);
-    assert(f && "There was no such feature element");
+    assert(f && "There was no such feature node");
     FileNode* const fileElement = f->as<FileNode>();
-    assert(fileElement && "There was no such file element");
+    assert(fileElement && "There was no such file node");
     assert(isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload) &&
-           "There was no such reloadable file element");
+           "There was no such reloadable file node");
     fileElement->reload(m_context, m_userLogger);
 }
 
 void babelwires::Project::tryToSaveTarget(NodeId id) {
     assert((id != INVALID_ELEMENT_ID) && "Invalid id");
     Node* f = getNode(id);
-    assert(f && "There was no such feature element");
+    assert(f && "There was no such feature node");
     FileNode* const fileElement = f->as<FileNode>();
-    assert(fileElement && "There was no such file element");
+    assert(fileElement && "There was no such file node");
     assert(isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::save) &&
-           "There was no such saveable file element");
+           "There was no such saveable file node");
     fileElement->save(m_context, m_userLogger);
 }
 
@@ -354,11 +354,11 @@ void babelwires::Project::setConnectionCacheInvalid() {
     m_connectionCache.m_brokenConnections.clear();
 }
 
-void babelwires::Project::addConnectionToCache(Node* element, ConnectionModifier* connectionModifier) {
+void babelwires::Project::addConnectionToCache(Node* node, ConnectionModifier* connectionModifier) {
     if (auto source = getNode(connectionModifier->getModifierData().m_sourceId)) {
         {
             auto itAndBool = m_connectionCache.m_dependsOn.insert(
-                std::make_pair(element, babelwires::Project::ConnectionInfo::Connections()));
+                std::make_pair(node, babelwires::Project::ConnectionInfo::Connections()));
             babelwires::Project::ConnectionInfo::Connections& connections = itAndBool.first->second;
             connections.emplace_back(std::make_tuple(connectionModifier, source));
         }
@@ -366,17 +366,17 @@ void babelwires::Project::addConnectionToCache(Node* element, ConnectionModifier
             auto itAndBool = m_connectionCache.m_requiredFor.insert(
                 std::make_pair(source, babelwires::Project::ConnectionInfo::Connections()));
             babelwires::Project::ConnectionInfo::Connections& connections = itAndBool.first->second;
-            connections.emplace_back(std::make_tuple(connectionModifier, element));
+            connections.emplace_back(std::make_tuple(connectionModifier, node));
         }
     } else {
-        m_connectionCache.m_brokenConnections.emplace_back(std::make_tuple(connectionModifier, element));
+        m_connectionCache.m_brokenConnections.emplace_back(std::make_tuple(connectionModifier, node));
     }
 }
 
-void babelwires::Project::removeConnectionFromCache(Node* element, ConnectionModifier* connectionModifier) {
+void babelwires::Project::removeConnectionFromCache(Node* node, ConnectionModifier* connectionModifier) {
     if (auto source = getNode(connectionModifier->getModifierData().m_sourceId)) {
         {
-            auto dit = m_connectionCache.m_dependsOn.find(element);
+            auto dit = m_connectionCache.m_dependsOn.find(node);
             assert((dit != m_connectionCache.m_dependsOn.end()) && "Cannot find dependency with connection to remove");
             babelwires::Project::ConnectionInfo::Connections& connections = dit->second;
             auto cit = std::find(connections.begin(), connections.end(), std::make_tuple(connectionModifier, source));
@@ -391,7 +391,7 @@ void babelwires::Project::removeConnectionFromCache(Node* element, ConnectionMod
             assert((rit != m_connectionCache.m_requiredFor.end()) &&
                    "Cannot find dependency with connection to remove");
             auto& connections = rit->second;
-            auto cit = std::find(connections.begin(), connections.end(), std::make_tuple(connectionModifier, element));
+            auto cit = std::find(connections.begin(), connections.end(), std::make_tuple(connectionModifier, node));
             assert((cit != connections.end()) && "Cannot find connection to remove");
             connections.erase(cit);
             if (connections.empty()) {
@@ -400,7 +400,7 @@ void babelwires::Project::removeConnectionFromCache(Node* element, ConnectionMod
         }
     } else {
         auto it = std::find(m_connectionCache.m_brokenConnections.begin(), m_connectionCache.m_brokenConnections.end(),
-                            std::make_tuple(connectionModifier, element));
+                            std::make_tuple(connectionModifier, node));
         m_connectionCache.m_brokenConnections.erase(it);
     }
 }
@@ -411,7 +411,7 @@ void babelwires::Project::validateConnectionCache() const {
         const auto it =
             std::find_if(m_nodes.begin(), m_nodes.end(),
                          [pointerToCheck](const auto& uPtr) { return std::get<1>(uPtr).get() == pointerToCheck; });
-        assert((it != m_nodes.end()) && "The cache refers to an element that is not owned by the project");
+        assert((it != m_nodes.end()) && "The cache refers to an node that is not owned by the project");
     };
 
     for (auto mapPair : m_connectionCache.m_dependsOn) {
@@ -513,14 +513,14 @@ void babelwires::Project::process() {
     for (int firstUnsortedIndex = 0; firstUnsortedIndex < m_nodes.size();) {
         const int firstUnsortedIndexBefore = firstUnsortedIndex;
         for (int j = firstUnsortedIndex; j < m_nodes.size(); ++j) {
-            Node* element = sortedElements[j];
+            Node* node = sortedElements[j];
 
-            const auto it = numDependencies.find(element);
+            const auto it = numDependencies.find(node);
             if (it == numDependencies.end() || it->second == 0) {
                 std::swap(sortedElements[firstUnsortedIndex], sortedElements[j]);
-                element->setInDependencyLoop(false);
+                node->setInDependencyLoop(false);
                 ++firstUnsortedIndex;
-                const auto r = m_connectionCache.m_requiredFor.find(element);
+                const auto r = m_connectionCache.m_requiredFor.find(node);
                 if (r != m_connectionCache.m_requiredFor.end()) {
                     const ConnectionInfo::Connections& connections = r->second;
                     for (auto&& pair : connections) {
@@ -542,12 +542,12 @@ void babelwires::Project::process() {
     }
 
     // Now iterate in dependency order.
-    for (auto&& element : sortedElements) {
-        element->process(*this, m_userLogger);
+    for (auto&& node : sortedElements) {
+        node->process(*this, m_userLogger);
         // Existing connections only apply their contents if their source has changed,
         // so this doesn't unnecessarily change dependent data.
         // We do need to visit all out-going connections in case some are new.
-        propagateChanges(element);
+        propagateChanges(node);
     }
 }
 
@@ -568,13 +568,13 @@ babelwires::Project::getRemovedElements() const {
     return m_removedNodes;
 }
 
-void babelwires::Project::setNodePosition(NodeId elementId, const UiPosition& newPosition) {
-    Node* featureElement = getNode(elementId);
+void babelwires::Project::setNodePosition(NodeId nodeId, const UiPosition& newPosition) {
+    Node* featureElement = getNode(nodeId);
     featureElement->setUiPosition(newPosition);
 }
 
-void babelwires::Project::setNodeContentsSize(NodeId elementId, const UiSize& newSize) {
-    Node* featureElement = getNode(elementId);
+void babelwires::Project::setNodeContentsSize(NodeId nodeId, const UiSize& newSize) {
+    Node* featureElement = getNode(nodeId);
     featureElement->setUiSize(newSize);
 }
 
@@ -587,9 +587,9 @@ babelwires::ProjectId babelwires::Project::getProjectId() const {
     return m_projectId;
 }
 
-void babelwires::Project::activateOptional(NodeId elementId, const Path& pathToRecord, ShortId optional,
+void babelwires::Project::activateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
                                            bool ensureModifier) {
-    Node* elementToModify = getNode(elementId);
+    Node* elementToModify = getNode(nodeId);
     assert(elementToModify);
 
     ValueTreeNode* const input = elementToModify->getInputNonConst(pathToRecord);
@@ -611,7 +611,7 @@ void babelwires::Project::activateOptional(NodeId elementId, const Path& pathToR
             // Discard the existing modifier, since it should be broken anyway.
             assert(existingModifier->isFailed() &&
                    "A non-failed inapplicable modifier was found at an instance of a RecordType");
-            removeModifier(elementId, pathToRecord);
+            removeModifier(nodeId, pathToRecord);
         }
     }
 
@@ -619,16 +619,16 @@ void babelwires::Project::activateOptional(NodeId elementId, const Path& pathToR
         ActivateOptionalsModifierData newData;
         newData.m_targetPath = pathToRecord;
         newData.m_selectedOptionals.emplace_back(optional);
-        addModifier(elementId, newData);
+        addModifier(nodeId, newData);
     }
     if (!ensureModifier) {
-        removeModifier(elementId, pathToRecord);
+        removeModifier(nodeId, pathToRecord);
     }
 }
 
-void babelwires::Project::deactivateOptional(NodeId elementId, const Path& pathToRecord, ShortId optional,
+void babelwires::Project::deactivateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
                                              bool ensureModifier) {
-    Node* elementToModify = getNode(elementId);
+    Node* elementToModify = getNode(nodeId);
     assert(elementToModify);
 
     ValueTreeNode* const input = elementToModify->getInputNonConst(pathToRecord);
@@ -650,6 +650,6 @@ void babelwires::Project::deactivateOptional(NodeId elementId, const Path& pathT
     localModifier->applyIfLocal(m_userLogger, input);
 
     if (!ensureModifier) {
-        removeModifier(elementId, pathToRecord);
+        removeModifier(nodeId, pathToRecord);
     }
 }

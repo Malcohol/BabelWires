@@ -117,7 +117,7 @@ namespace {
         babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
         ObservedChanges observedChanges(projectObserver);
 
-        testEnvironment.m_project.removeElement(elementId);
+        testEnvironment.m_project.removeNode(elementId);
         testEnvironment.m_project.process();
 
         if (shouldIgnore) {

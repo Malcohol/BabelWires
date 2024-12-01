@@ -161,7 +161,7 @@ void babelwires::RemoveNodeCommand::execute(Project& project) const {
         project.removeModifier(connection.m_targetId, connection.m_targetPath);
     }
     for (auto elementId : m_elementIds) {
-        project.removeElement(elementId);
+        project.removeNode(elementId);
     }
 }
 

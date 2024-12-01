@@ -54,8 +54,8 @@ struct NodeConnectionTest : ::testing::Test {
     }
 
     void TearDown() override { 
-        m_context.m_project.removeElement(m_elementId);
-        m_context.m_project.removeElement(m_sourceId);
+        m_context.m_project.removeNode(m_elementId);
+        m_context.m_project.removeNode(m_sourceId);
     }
 
     /// If a non-zero sourceValue is provided, a modifier is added at the source feature.

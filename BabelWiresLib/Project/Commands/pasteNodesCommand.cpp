@@ -116,6 +116,6 @@ void babelwires::PasteNodesCommand::undo(Project& project) const {
         project.removeModifier(connection.m_targetId, connection.m_targetPath);
     }
     for (const auto& elementData : m_dataToPaste.m_elements) {
-        project.removeElement(elementData->m_id);
+        project.removeNode(elementData->m_id);
     }
 }
