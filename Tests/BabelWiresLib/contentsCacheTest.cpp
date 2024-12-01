@@ -20,7 +20,7 @@
 
 namespace {
     std::unique_ptr<testUtils::LocalTestModifier> createIntModifier(babelwires::Path path,
-                                                                    babelwires::FeatureElement* owner = nullptr) {
+                                                                    babelwires::Node* owner = nullptr) {
         auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(8));
         data->m_targetPath = std::move(path);
         auto modPtr = std::make_unique<testUtils::LocalTestModifier>(std::move(data));
@@ -29,7 +29,7 @@ namespace {
     }
 
     std::unique_ptr<testUtils::LocalTestModifier> createStringModifier(babelwires::Path path,
-                                                                       babelwires::FeatureElement* owner = nullptr) {
+                                                                       babelwires::Node* owner = nullptr) {
         auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::StringValue("Hello"));
         data->m_targetPath = std::move(path);
         auto modPtr = std::make_unique<testUtils::LocalTestModifier>(std::move(data));

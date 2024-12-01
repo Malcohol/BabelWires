@@ -27,7 +27,7 @@ void babelwires::RemoveModifierAction::actionTriggered(babelwires::FeatureModel&
 
     AccessModelScope scope(projectBridge);
     const Project& project = scope.getProject();
-    const FeatureElement* const element = project.getFeatureElement(elementId);
+    const Node* const element = project.getFeatureElement(elementId);
     if (!element) {
         return;
     }

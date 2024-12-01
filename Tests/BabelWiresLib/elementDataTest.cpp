@@ -144,7 +144,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    std::unique_ptr<const babelwires::FeatureElement> featureElement =
+    std::unique_ptr<const babelwires::Node> featureElement =
         data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     EXPECT_TRUE(featureElement);
@@ -234,7 +234,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    std::unique_ptr<const babelwires::FeatureElement> featureElement =
+    std::unique_ptr<const babelwires::Node> featureElement =
         data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     EXPECT_TRUE(featureElement);
@@ -317,7 +317,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    std::unique_ptr<const babelwires::FeatureElement> featureElement =
+    std::unique_ptr<const babelwires::Node> featureElement =
         data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     EXPECT_TRUE(featureElement);

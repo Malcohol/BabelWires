@@ -33,7 +33,7 @@ namespace babelwires {
     class Project;
     struct ProjectContext;
     class ConnectionModifier;
-    class FeatureElement;
+    class Node;
     class ModifyModelScope;
     class AccessModelScope;
     struct UiPosition;
@@ -110,7 +110,7 @@ namespace babelwires {
         void removeConnectionFromFlowScene(const ConnectionDescription& connection);
 
         /// Add the node but not the connection to the flow scene.
-        void addNodeToFlowScene(const FeatureElement* feature);
+        void addNodeToFlowScene(const Node* feature);
 
         /// Remove the node from the flow scene.
         void removeNodeFromFlowScene(ElementId elementId);

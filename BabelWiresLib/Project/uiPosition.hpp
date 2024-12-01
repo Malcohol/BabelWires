@@ -14,7 +14,7 @@ namespace babelwires {
 
     typedef std::int32_t UiCoord;
 
-    /// Defines the graphical position of a FeatureElement.
+    /// Defines the graphical position of a Node.
     /// We put this in the BabelWires library, because it simplifies serialization.
     struct UiPosition {
         UiCoord m_x = 0;

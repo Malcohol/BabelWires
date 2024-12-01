@@ -1,5 +1,5 @@
 /**
- * The command which changes the UiSize of a FeatureElement.
+ * The command which changes the UiSize of a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -18,7 +18,7 @@ babelwires::ResizeElementCommand::ResizeElementCommand(std::string commandName, 
     , m_newSize(newSize) {}
 
 bool babelwires::ResizeElementCommand::initialize(const Project& project) {
-    const FeatureElement* element = project.getFeatureElement(m_elementId);
+    const Node* element = project.getFeatureElement(m_elementId);
     if (!element) {
         return false;
     }

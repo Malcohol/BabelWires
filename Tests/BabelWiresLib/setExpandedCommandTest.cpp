@@ -16,7 +16,7 @@ TEST(SetExpandedCommandTest, executeAndUndoTrue) {
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
     babelwires::SetExpandedCommand command("Test command", elementId, testUtils::TestComplexRecordElementData::getPathToRecordSubrecord(), true);
@@ -47,7 +47,7 @@ TEST(SetExpandedCommandTest, executeAndUndoFalse) {
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
     babelwires::SetExpandedCommand command("Test command", elementId, testUtils::TestComplexRecordElementData::getPathToRecordSubrecord(), false);

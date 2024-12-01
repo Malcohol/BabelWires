@@ -1,5 +1,5 @@
 /**
- * A Modifier changes the value in a FeatureElement, and corresponds to a user edit.
+ * A Modifier changes the value in a Node, and corresponds to a user edit.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -30,15 +30,15 @@ babelwires::Modifier::Modifier(const Modifier& other)
 
 babelwires::Modifier::~Modifier() = default;
 
-const babelwires::FeatureElement* babelwires::Modifier::getOwner() const {
+const babelwires::Node* babelwires::Modifier::getOwner() const {
     return m_owner;
 }
 
-babelwires::FeatureElement* babelwires::Modifier::getOwner() {
+babelwires::Node* babelwires::Modifier::getOwner() {
     return m_owner;
 }
 
-void babelwires::Modifier::setOwner(FeatureElement* newOwner) {
+void babelwires::Modifier::setOwner(Node* newOwner) {
     assert((!m_owner || !newOwner) && "A modifier cannot be given an owner when it already has an owner");
     m_owner = newOwner;
 }
@@ -93,10 +93,10 @@ std::string babelwires::Modifier::getReasonForFailure() const {
 void babelwires::Modifier::setSucceeded() {
     if (m_state != State::Success) {
         Changes changes = Changes::ModifierRecovered;
-        FeatureElement::Changes elementChanges = FeatureElement::Changes::ModifierRecovered;
+        Node::Changes elementChanges = Node::Changes::ModifierRecovered;
         if (m_state != State::ApplicationFailed) {
             changes = changes | Changes::ModifierConnected;
-            elementChanges = elementChanges | FeatureElement::Changes::ModifierConnected;
+            elementChanges = elementChanges | Node::Changes::ModifierConnected;
         }
         setChanged(changes);
         m_owner->setChanged(elementChanges);
@@ -109,10 +109,10 @@ void babelwires::Modifier::setFailed(State failureState, std::string reasonForFa
     assert((failureState != State::Success) && "You can't set failed with success");
     if (m_state == State::Success) {
         Changes changes = Changes::ModifierFailed;
-        FeatureElement::Changes elementChanges = FeatureElement::Changes::ModifierFailed;
+        Node::Changes elementChanges = Node::Changes::ModifierFailed;
         if (failureState != State::ApplicationFailed) {
             changes = changes | Changes::ModifierDisconnected;
-            elementChanges = elementChanges | FeatureElement::Changes::ModifierDisconnected;
+            elementChanges = elementChanges | Node::Changes::ModifierDisconnected;
         }
         setChanged(changes);
         m_owner->setChanged(elementChanges);

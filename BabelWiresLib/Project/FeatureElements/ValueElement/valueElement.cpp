@@ -15,7 +15,7 @@
 
 babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger& userLogger,
                                        const ValueElementData& data, ElementId newId)
-    : FeatureElement(data, newId) {
+    : Node(data, newId) {
     setFactoryName(data.getTypeRef().toString());
     TypeRef typeRefForConstruction = data.getTypeRef();
     if (!typeRefForConstruction.tryResolve(context.m_typeSystem)) {
@@ -30,7 +30,7 @@ babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger
 babelwires::ValueElement::~ValueElement() = default;
 
 const babelwires::ValueElementData& babelwires::ValueElement::getElementData() const {
-    return static_cast<const ValueElementData&>(FeatureElement::getElementData());
+    return static_cast<const ValueElementData&>(Node::getElementData());
 }
 
 babelwires::ValueTreeNode* babelwires::ValueElement::doGetInputNonConst() {

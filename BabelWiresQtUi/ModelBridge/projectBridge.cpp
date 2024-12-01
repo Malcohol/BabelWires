@@ -41,7 +41,7 @@ babelwires::ProjectBridge::ProjectBridge(Project& project, CommandManager<Projec
     , m_state(State::ListeningToFlowScene)
     , m_projectObserver(project) {
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasAdded.subscribe(
-        [this](const FeatureElement* element) { addNodeToFlowScene(element); }));
+        [this](const Node* element) { addNodeToFlowScene(element); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasRemoved.subscribe(
         [this](ElementId elementId) { removeNodeFromFlowScene(elementId); }));
@@ -150,7 +150,7 @@ void babelwires::ProjectBridge::onNodeMoved(QtNodes::Node& n, const QPointF& new
             const ElementId elementId = elementNodeModel.getElementId();
 
             AccessModelScope scope(*this);
-            const FeatureElement* element = scope.getProject().getFeatureElement(elementId);
+            const Node* element = scope.getProject().getFeatureElement(elementId);
             assert(element && "The element should already be in the project");
             const UiPosition& uiPosition = element->getElementData().m_uiData.m_uiPosition;
             UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
@@ -179,7 +179,7 @@ void babelwires::ProjectBridge::onNodeResized(QtNodes::Node& n, const QSize& new
             const ElementId elementId = elementNodeModel.getElementId();
 
             AccessModelScope scope(*this);
-            const FeatureElement* element = scope.getProject().getFeatureElement(elementId);
+            const Node* element = scope.getProject().getFeatureElement(elementId);
             assert(element && "The element should already be in the project");
             const int currentWidth = element->getUiSize().m_width;
             const int newWidth = elementNodeModel.embeddedWidget()->size().width();
@@ -284,7 +284,7 @@ void babelwires::ProjectBridge::onConnectionUpdated(const QtNodes::Connection& c
     }
 }
 
-void babelwires::ProjectBridge::addNodeToFlowScene(const FeatureElement* featureElement) {
+void babelwires::ProjectBridge::addNodeToFlowScene(const Node* featureElement) {
     const ElementId elementId = featureElement->getElementId();
     auto newNodeData = std::make_unique<ElementNodeModel>(*this, elementId);
     QtNodes::Node& newNode = m_flowScene->createNode(std::move(newNodeData));
@@ -521,7 +521,7 @@ babelwires::ProjectData babelwires::ProjectBridge::getDataFromSelectedNodes() {
         auto& elementNodeModel = dynamic_cast<ElementNodeModel&>(dataModel);
         const ElementId elementId = elementNodeModel.getElementId();
 
-        const FeatureElement* const element = project.getFeatureElement(elementId);
+        const Node* const element = project.getFeatureElement(elementId);
         assert(element && "The node is not in the project");
         projectData.m_elements.emplace_back(element->extractElementData());
     }

@@ -18,7 +18,7 @@
 namespace babelwires {
 
     class Project;
-    class FeatureElement;
+    class Node;
     struct UiPosition;
     struct UiSize;
     class Modifier;
@@ -71,7 +71,7 @@ namespace babelwires {
 
       public:
         /// A feature element was observed being added.
-        Signal<const FeatureElement*> m_featureElementWasAdded;
+        Signal<const Node*> m_featureElementWasAdded;
 
         /// A feature element was observed being removed.
         Signal<ElementId> m_featureElementWasRemoved;
@@ -93,7 +93,7 @@ namespace babelwires {
 
       private:
         /// Fire the m_featureElementWasAdded signal, unless the element is to be ignored.
-        void featureElementWasAdded(const FeatureElement* featureElement);
+        void featureElementWasAdded(const Node* featureElement);
 
         /// Fire the m_featureElementWasRemoved signal, unless the element is to be ignored.
         void featureElementWasRemoved(ElementId elementId);

@@ -71,14 +71,14 @@ TEST(ProjectTest, addGetAndRemoveElement) {
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     EXPECT_NE(element, nullptr);
     EXPECT_NE(element->as<babelwires::ValueElement>(), nullptr);
-    EXPECT_TRUE(element->isChanged(babelwires::FeatureElement::Changes::FeatureElementIsNew));
+    EXPECT_TRUE(element->isChanged(babelwires::Node::Changes::FeatureElementIsNew));
 
     testEnvironment.m_project.removeElement(elementId);
 
-    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element2 = testEnvironment.m_project.getFeatureElement(elementId);
     EXPECT_EQ(element2, nullptr);
 
     const auto& removedElements = testEnvironment.m_project.getRemovedElements();
@@ -100,7 +100,7 @@ TEST(ProjectTest, addAndRemoveLocalModifier) {
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
     const babelwires::Path pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
@@ -124,12 +124,12 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
 
     const babelwires::ElementId sourceElementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* sourceElement = testEnvironment.m_project.getFeatureElement(sourceElementId);
+    const babelwires::Node* sourceElement = testEnvironment.m_project.getFeatureElement(sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
 
     const babelwires::ElementId targetElementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
+    const babelwires::Node* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
     const babelwires::Path pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
@@ -157,7 +157,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
     const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
@@ -221,7 +221,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
     const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
@@ -268,12 +268,12 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 
     const babelwires::ElementId sourceElementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* sourceElement = testEnvironment.m_project.getFeatureElement(sourceElementId);
+    const babelwires::Node* sourceElement = testEnvironment.m_project.getFeatureElement(sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
 
     const babelwires::ElementId targetElementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
+    const babelwires::Node* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
     const babelwires::Path pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt0();
@@ -331,7 +331,7 @@ TEST(ProjectTest, uiProperties) {
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testFeatureData);
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
     EXPECT_EQ(element->getUiPosition().m_x, 8);
@@ -358,7 +358,7 @@ TEST(ProjectTest, elementIds) {
     EXPECT_NE(elementId, babelwires::INVALID_ELEMENT_ID);
     ASSERT_NE(elementId, 3);
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
 
     testUtils::TestComplexRecordElementData elementData;
@@ -367,7 +367,7 @@ TEST(ProjectTest, elementIds) {
     const babelwires::ElementId elementId1 = testEnvironment.m_project.addFeatureElement(elementData);
     EXPECT_EQ(elementId1, 3);
 
-    const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
+    const babelwires::Node* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
     ASSERT_NE(element1, nullptr);
     EXPECT_EQ(element1->getElementData().m_id, elementId1);
     EXPECT_NE(element, element1);
@@ -376,7 +376,7 @@ TEST(ProjectTest, elementIds) {
     EXPECT_NE(elementId2, babelwires::INVALID_ELEMENT_ID);
     EXPECT_NE(elementId2, elementId1);
 
-    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
+    const babelwires::Node* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
     EXPECT_NE(element2, nullptr);
     EXPECT_NE(element1, element2);
 }
@@ -393,8 +393,8 @@ TEST(ProjectTest, reloadSource) {
     sourceFileData.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(sourceFileData);
-    const babelwires::FeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
+    const babelwires::Node* element =
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::Node>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getOutput(), nullptr);
 
@@ -436,8 +436,8 @@ TEST(ProjectTest, saveTarget) {
     targetFileData.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(targetFileData);
-    babelwires::FeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
+    babelwires::Node* element =
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::Node>();
     ASSERT_NE(element, nullptr);
     ASSERT_NE(element->getInput(), nullptr);
 
@@ -482,11 +482,11 @@ TEST(ProjectTest, process) {
     testEnvironment.m_project.setProjectData(projectData);
     testEnvironment.m_project.process();
 
-    const babelwires::FeatureElement* sourceElement =
+    const babelwires::Node* sourceElement =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
 
-    const babelwires::FeatureElement* processor =
+    const babelwires::Node* processor =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
     const babelwires::ValueTreeNode* processorInput = processor->getInput();
@@ -494,7 +494,7 @@ TEST(ProjectTest, process) {
     const babelwires::ValueTreeNode* processorOutput = processor->getOutput();
     ASSERT_NE(processorOutput, nullptr);
 
-    const babelwires::FeatureElement* targetElement =
+    const babelwires::Node* targetElement =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
 
@@ -546,9 +546,9 @@ TEST(ProjectTest, dependencyLoop) {
     const babelwires::ElementId elementId2 = testEnvironment.m_project.addFeatureElement(elementData);
     const babelwires::ElementId elementId3 = testEnvironment.m_project.addFeatureElement(elementData);
 
-    const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
-    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
-    const babelwires::FeatureElement* element3 = testEnvironment.m_project.getFeatureElement(elementId3);
+    const babelwires::Node* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
+    const babelwires::Node* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
+    const babelwires::Node* element3 = testEnvironment.m_project.getFeatureElement(elementId3);
 
     testEnvironment.m_project.process();
 
@@ -615,10 +615,10 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     const babelwires::ElementId elementId3 = testEnvironment.m_project.addFeatureElement(elementData);
     const babelwires::ElementId elementId4 = testEnvironment.m_project.addFeatureElement(elementData);
 
-    const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
-    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
-    const babelwires::FeatureElement* element3 = testEnvironment.m_project.getFeatureElement(elementId3);
-    const babelwires::FeatureElement* element4 = testEnvironment.m_project.getFeatureElement(elementId4);
+    const babelwires::Node* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
+    const babelwires::Node* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
+    const babelwires::Node* element3 = testEnvironment.m_project.getFeatureElement(elementId3);
+    const babelwires::Node* element4 = testEnvironment.m_project.getFeatureElement(elementId4);
 
     testEnvironment.m_project.process();
 
@@ -752,16 +752,16 @@ TEST(ProjectTest, processWithFailure) {
     testEnvironment.m_project.setProjectData(projectData);
     testEnvironment.m_project.process();
 
-    const babelwires::FeatureElement* sourceElement =
+    const babelwires::Node* sourceElement =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
     ASSERT_NE(sourceElement, nullptr);
 
-    const babelwires::FeatureElement* processor =
+    const babelwires::Node* processor =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
     ASSERT_TRUE(processor->isFailed());
 
-    const babelwires::FeatureElement* targetElement =
+    const babelwires::Node* targetElement =
         testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
     ASSERT_NE(targetElement, nullptr);
 }

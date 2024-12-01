@@ -49,11 +49,11 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
 babelwires::TargetFileElement::~TargetFileElement() = default;
 
 const babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData() const {
-    return static_cast<const TargetFileElementData&>(FeatureElement::getElementData());
+    return static_cast<const TargetFileElementData&>(Node::getElementData());
 }
 
 babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData() {
-    return static_cast<TargetFileElementData&>(FeatureElement::getElementData());
+    return static_cast<TargetFileElementData&>(Node::getElementData());
 }
 
 babelwires::ValueTreeNode* babelwires::TargetFileElement::doGetInputNonConst() {
@@ -139,9 +139,9 @@ void babelwires::TargetFileElement::doProcess(UserLogger& userLogger) {
 
 std::string babelwires::TargetFileElement::getLabel() const {
     if (m_saveHash == m_saveHashWhenSaved) {
-        return FeatureElement::getLabel();
+        return Node::getLabel();
     } else {
-        return FeatureElement::getLabel() + "*";
+        return Node::getLabel() + "*";
     }
 }
 

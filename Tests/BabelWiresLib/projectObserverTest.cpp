@@ -20,7 +20,7 @@ namespace {
     struct ObservedChanges {
         ObservedChanges(babelwires::ProjectObserver& observer) {
             m_featureElementsAddedSubscription = observer.m_featureElementWasAdded.subscribe(
-                [this](const babelwires::FeatureElement* element) { m_featureElementsAdded.emplace_back(element); });
+                [this](const babelwires::Node* element) { m_featureElementsAdded.emplace_back(element); });
             m_featureElementWasRemovedSubscription = observer.m_featureElementWasRemoved.subscribe(
                 [this](const babelwires::ElementId elementId) { m_featureElementsRemoved.emplace_back(elementId); });
             m_featureElementWasMovedSubscription = observer.m_featureElementWasMoved.subscribe(
@@ -53,7 +53,7 @@ namespace {
         babelwires::SignalSubscription m_connectionWasRemovedSubscription;
         babelwires::SignalSubscription m_contentWasChangedSubscription;
 
-        std::vector<const babelwires::FeatureElement*> m_featureElementsAdded;
+        std::vector<const babelwires::Node*> m_featureElementsAdded;
         std::vector<babelwires::ElementId> m_featureElementsRemoved;
         std::vector<std::tuple<babelwires::ElementId, babelwires::UiPosition>> m_featureElementsMoved;
         std::vector<std::tuple<babelwires::ElementId, babelwires::UiSize>> m_featureElementsResized;

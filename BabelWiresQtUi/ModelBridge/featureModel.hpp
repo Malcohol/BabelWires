@@ -1,5 +1,5 @@
 /**
- * FeatureModel is the QAbstractTableModel which represents the data in a FeatureElement.
+ * FeatureModel is the QAbstractTableModel which represents the data in a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -18,7 +18,7 @@
 namespace babelwires {
 
     class ContentsCache;
-    class FeatureElement;
+    class Node;
     class ContentsCacheEntry;
     class ProjectBridge;
     class AccessModelScope;
@@ -51,8 +51,8 @@ namespace babelwires {
         QVariant data(const QModelIndex& index, int role) const override;
         Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-        /// Access the associated FeatureElement.
-        const FeatureElement* getFeatureElement(AccessModelScope& scope) const;
+        /// Access the associated Node.
+        const Node* getFeatureElement(AccessModelScope& scope) const;
         /// Access an entry in the ContentsCache.
         const ContentsCacheEntry* getEntry(AccessModelScope& scope, const QModelIndex& index) const;
         const ContentsCacheEntry* getEntry(AccessModelScope& scope, int row) const;

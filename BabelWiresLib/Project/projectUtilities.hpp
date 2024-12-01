@@ -13,7 +13,7 @@
 namespace babelwires {
     struct UiPosition;
     struct ProjectData;
-    class FeatureElement;
+    class Node;
     class Project;
 
     namespace projectUtilities {

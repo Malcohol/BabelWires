@@ -1,5 +1,5 @@
 /**
- * The ContentsCache summarizes the contents of a FeatureElement visible to the user.
+ * The ContentsCache summarizes the contents of a Node visible to the user.
  *
  * (C) 2021 Malcolm Tyrrell
  *

@@ -32,12 +32,12 @@ namespace babelwires {
 
     /// The fundimental constituent of the project.
     /// FeatureElements expose input and output Features, and carry edits.
-    class FeatureElement {
+    class Node {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(FeatureElement);
+        DOWNCASTABLE_TYPE_HIERARCHY(Node);
 
-        FeatureElement(const ElementData& data, ElementId newId);
-        virtual ~FeatureElement();
+        Node(const ElementData& data, ElementId newId);
+        virtual ~Node();
 
         /// Did the feature element fail, either because of an internal failure
         /// or because it is in a dependency loop?
@@ -232,6 +232,6 @@ namespace babelwires {
         ContentsCache m_contentsCache;
     };
 
-    DEFINE_ENUM_FLAG_OPERATORS(FeatureElement::Changes);
+    DEFINE_ENUM_FLAG_OPERATORS(Node::Changes);
 
 } // namespace babelwires

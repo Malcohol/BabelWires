@@ -15,7 +15,7 @@ namespace babelwires {
     class ValueElementData;
     class ValueTreeRoot;
 
-    class ValueElement : public FeatureElement {
+    class ValueElement : public Node {
       public:
         ValueElement(const ProjectContext& context, UserLogger& userLogger, const ValueElementData& data,
                          ElementId newId);

@@ -1,5 +1,5 @@
 /**
- * FeatureElementDatas carry the data sufficient to reconstruct a FeatureElement.
+ * FeatureElementDatas carry the data sufficient to reconstruct a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -25,7 +25,7 @@ namespace babelwires {
 
     struct UserLogger;
     struct ProjectContext;
-    class FeatureElement;
+    class Node;
     class UntypedRegistry;
 
     /// Use the custom clone framework to do a shallow clone.
@@ -46,7 +46,7 @@ namespace babelwires {
         UiSize m_uiSize;
     };
 
-    /// FeatureElementDatas carry the data sufficient to reconstruct a FeatureElement.
+    /// FeatureElementDatas carry the data sufficient to reconstruct a Node.
     /// The class supports clone(), which returns a deep clone of the object,
     /// and customClone() which returns a clone with the array members unset.
     struct ElementData : Cloneable, CustomCloneable<ShallowCloneContext>, Serializable, ProjectVisitable {
@@ -68,7 +68,7 @@ namespace babelwires {
         /// Warn if it is less and error if it is more.
         virtual bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) = 0;
 
-        std::unique_ptr<FeatureElement> createFeatureElement(const ProjectContext& context, UserLogger& userLogger,
+        std::unique_ptr<Node> createFeatureElement(const ProjectContext& context, UserLogger& userLogger,
                                                              ElementId newId) const;
 
         /// Call the visitor on all the FieldIdentifiers in the element.
@@ -100,7 +100,7 @@ namespace babelwires {
         std::vector<Path> m_expandedPaths;
 
       protected:
-        virtual std::unique_ptr<FeatureElement>
+        virtual std::unique_ptr<Node>
         doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger, ElementId newId) const = 0;
 
         /// For use when serializing subclasses.

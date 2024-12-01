@@ -20,7 +20,7 @@ bool testUtils::TestFeatureElementData::checkFactoryVersion(const babelwires::Pr
     return true;
 }
 
-std::unique_ptr<babelwires::FeatureElement> testUtils::TestFeatureElementData::doCreateFeatureElement(
+std::unique_ptr<babelwires::Node> testUtils::TestFeatureElementData::doCreateFeatureElement(
     const babelwires::ProjectContext& context, babelwires::UserLogger& userLogger, babelwires::ElementId newId) const {
     return std::make_unique<TestFeatureElement>(context, *this, newId);
 }
@@ -34,7 +34,7 @@ testUtils::TestFeatureElement::TestFeatureElement(const babelwires::ProjectConte
 
 testUtils::TestFeatureElement::TestFeatureElement(const babelwires::ProjectContext& context,
                                                   const TestFeatureElementData& data, babelwires::ElementId newId)
-    : FeatureElement(data, newId) {
+    : Node(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
     m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, TestComplexRecordType::getThisType());
 }

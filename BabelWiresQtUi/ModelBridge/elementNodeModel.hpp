@@ -12,7 +12,7 @@
 
 namespace babelwires {
     class ValueTreeNode;
-    class FeatureElement;
+    class Node;
     class ContentsCache;
     class Path;
 

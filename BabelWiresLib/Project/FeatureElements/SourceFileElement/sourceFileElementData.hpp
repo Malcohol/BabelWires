@@ -35,7 +35,7 @@ namespace babelwires {
         FilePath m_filePath;
 
       protected:
-        std::unique_ptr<FeatureElement> doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
+        std::unique_ptr<Node> doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
                                                                ElementId newId) const override;
     };
 }

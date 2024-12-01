@@ -41,7 +41,7 @@ void babelwires::ValueElementData::deserializeContents(Deserializer& deserialize
     deserializeUiData(deserializer);
 }
 
-std::unique_ptr<babelwires::FeatureElement>
+std::unique_ptr<babelwires::Node>
 babelwires::ValueElementData::doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
                                                      ElementId newId) const {
     return std::make_unique<ValueElement>(context, userLogger, *this, newId);

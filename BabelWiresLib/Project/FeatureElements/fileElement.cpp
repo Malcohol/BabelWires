@@ -12,7 +12,7 @@
 #include <cassert>
 
 babelwires::FileElement::FileElement(const ElementData& data, ElementId newId)
-    : FeatureElement(data, newId) {}
+    : Node(data, newId) {}
 
 bool babelwires::FileElement::reload(const ProjectContext& context, UserLogger& userLogger) {
     assert(!"Reload is not supported on this type of FileElement");

@@ -12,7 +12,7 @@
 namespace babelwires {
 
     class ContentsCacheEntry;
-    class FeatureElement;
+    class Node;
     class ValueModelRegistry;
 
     /// Dispatches to an appropriate RowModel.
@@ -23,7 +23,7 @@ namespace babelwires {
     class RowModelDispatcher {
       public:
         RowModelDispatcher(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem,
-                           const ContentsCacheEntry* entry, const FeatureElement* element);
+                           const ContentsCacheEntry* entry, const Node* element);
 
         const RowModel* operator->() const { return m_rowModel; }
 

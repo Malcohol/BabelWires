@@ -23,7 +23,7 @@ babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, Elem
     , m_modifierToAdd(std::move(modifierToAdd)) {}
 
 bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
-    const FeatureElement* element = project.getFeatureElement(m_targetElementId);
+    const Node* element = project.getFeatureElement(m_targetElementId);
 
     if (!element) {
         return false;

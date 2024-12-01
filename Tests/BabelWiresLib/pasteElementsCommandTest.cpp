@@ -43,13 +43,13 @@ TEST(PasteElementsCommandTest, executeAndUndoEmptyProject) {
  
     const auto checkForProjectData = [&testEnvironment]() {
         // If there are no clashes, expect the IDs in the data to be respected.
-        const babelwires::FeatureElement* sourceElement =
+        const babelwires::Node* sourceElement =
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
         EXPECT_NE(sourceElement, nullptr);
-        const babelwires::FeatureElement* processor =
+        const babelwires::Node* processor =
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
         ASSERT_NE(processor, nullptr);
-        const babelwires::FeatureElement* targetElement =
+        const babelwires::Node* targetElement =
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
 
@@ -94,13 +94,13 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
 
     {
         // Confirm the original data applied as expected.
-        const babelwires::FeatureElement* sourceElement =
+        const babelwires::Node* sourceElement =
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
         EXPECT_NE(sourceElement, nullptr);
-        const babelwires::FeatureElement* processor =
+        const babelwires::Node* processor =
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
         ASSERT_NE(processor, nullptr);
-        const babelwires::FeatureElement* targetElement =
+        const babelwires::Node* targetElement =
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
         ASSERT_NE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt), nullptr);
@@ -117,12 +117,12 @@ TEST(PasteElementsCommandTest, executeAndUndoDuplicateData) {
     testEnvironment.m_project.process();
 
     const auto checkForProjectData = [&testEnvironment](bool isAfterCommandExecuted) {
-        const babelwires::FeatureElement* originalSourceElement = nullptr;
-        const babelwires::FeatureElement* originalProcessor = nullptr;
-        const babelwires::FeatureElement* originalTargetElement = nullptr;
-        const babelwires::FeatureElement* newSourceElement = nullptr;
-        const babelwires::FeatureElement* newProcessor = nullptr;
-        const babelwires::FeatureElement* newTargetElement = nullptr;
+        const babelwires::Node* originalSourceElement = nullptr;
+        const babelwires::Node* originalProcessor = nullptr;
+        const babelwires::Node* originalTargetElement = nullptr;
+        const babelwires::Node* newSourceElement = nullptr;
+        const babelwires::Node* newProcessor = nullptr;
+        const babelwires::Node* newTargetElement = nullptr;
 
         for (const auto& pair : testEnvironment.m_project.getElements()) {
             if (pair.second->as<babelwires::SourceFileElement>()) {
@@ -231,7 +231,7 @@ namespace {
 
         const auto checkForProjectData = [&testEnvironment, newElementId, targetElementData, isPastingIntoSameProject]() {
             // The newElementId, should be available.
-            const babelwires::FeatureElement* newElement = testEnvironment.m_project.getFeatureElement(newElementId);
+            const babelwires::Node* newElement = testEnvironment.m_project.getFeatureElement(newElementId);
             ASSERT_NE(newElement, nullptr);
 
             const babelwires::Modifier* modifier =

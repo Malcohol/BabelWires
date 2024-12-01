@@ -77,9 +77,9 @@ struct FeatureElementConnectionTest : ::testing::Test {
     babelwires::Path m_targetPath;
 
     babelwires::ElementId m_elementId;
-    babelwires::FeatureElement* m_featureElement;
+    babelwires::Node* m_featureElement;
     babelwires::ElementId m_sourceId;
-    babelwires::FeatureElement* m_sourceElement;
+    babelwires::Node* m_sourceElement;
 
     babelwires::ConnectionModifierData m_assignData;
     babelwires::ArraySizeModifierData m_arrayInitData;
@@ -98,12 +98,12 @@ TEST_F(FeatureElementConnectionTest, addAConnection) {
 
     babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_FALSE(modifier->isFailed());
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierAdded));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierAdded));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
 TEST_F(FeatureElementConnectionTest, changeSourceValueFromDefault) {
@@ -117,14 +117,14 @@ TEST_F(FeatureElementConnectionTest, changeSourceValueFromDefault) {
 
     babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_FALSE(modifier->isFailed());
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierDisconnected));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierFailed));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierConnected));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierDisconnected));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
 TEST_F(FeatureElementConnectionTest, changeSourceValueToDefault) {
@@ -139,14 +139,14 @@ TEST_F(FeatureElementConnectionTest, changeSourceValueToDefault) {
     
     babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_FALSE(modifier->isFailed());
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierDisconnected));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierFailed));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierConnected));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierDisconnected));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
 TEST_F(FeatureElementConnectionTest, removedAndRestoreSourceFeature) {
@@ -162,13 +162,13 @@ TEST_F(FeatureElementConnectionTest, removedAndRestoreSourceFeature) {
 
     babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_TRUE(modifier->isFailed());
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierDisconnected));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierFailed));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierConnected));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierDisconnected));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     m_context.m_project.clearChanges();
     m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
@@ -176,13 +176,13 @@ TEST_F(FeatureElementConnectionTest, removedAndRestoreSourceFeature) {
     m_context.m_project.process();
 
     EXPECT_FALSE(modifier->isFailed());
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierRecovered));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierDisconnected));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierRecovered));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierConnected));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierDisconnected));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
 TEST_F(FeatureElementConnectionTest, failedButStillConnected) {
@@ -196,13 +196,13 @@ TEST_F(FeatureElementConnectionTest, failedButStillConnected) {
 
     babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
     EXPECT_TRUE(modifier->isFailed());
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierFailed));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierDisconnected));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierFailed));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierConnected));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierDisconnected));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     m_context.m_project.clearChanges();
     m_context.m_project.removeModifier(m_sourceId, m_arrayElemPath);
@@ -210,11 +210,11 @@ TEST_F(FeatureElementConnectionTest, failedButStillConnected) {
     m_context.m_project.process();
 
     EXPECT_FALSE(modifier->isFailed());
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierRecovered));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierConnected));
-    EXPECT_FALSE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierDisconnected));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(m_featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierRecovered));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierConnected));
+    EXPECT_FALSE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierDisconnected));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(m_featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }

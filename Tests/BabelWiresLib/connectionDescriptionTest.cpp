@@ -83,7 +83,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
         testEnvironment.m_project.addFeatureElement(targetElementData);
     }
 
-    const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
+    const babelwires::Node* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
     ASSERT_NE(targetElement, nullptr);
 
     testEnvironment.m_project.process();

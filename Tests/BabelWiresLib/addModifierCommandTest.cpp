@@ -19,7 +19,7 @@ TEST(AddModifierCommandTest, executeAndUndo) {
 
     testUtils::TestComplexRecordElementData elementData;
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
     testUtils::TestComplexRecordType::ConstInstance instance(*element->getInput());
 
@@ -53,7 +53,7 @@ TEST(AddModifierCommandTest, executeAndUndoFail) {
 
     testUtils::TestComplexRecordElementData elementData;
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
     testUtils::TestComplexRecordType::ConstInstance instance(*element->getInput());
 
@@ -94,7 +94,7 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
         elementData.m_modifiers.emplace_back(modData.clone());
     }
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
+    const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     ASSERT_NE(element, nullptr);
     testUtils::TestComplexRecordType::ConstInstance instance(*element->getInput());
     EXPECT_EQ(instance.getintR1().get(), 5);

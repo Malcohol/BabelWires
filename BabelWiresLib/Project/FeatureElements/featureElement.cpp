@@ -23,7 +23,7 @@
 
 #include <algorithm>
 
-babelwires::FeatureElement::FeatureElement(const ElementData& data, ElementId newId)
+babelwires::Node::Node(const ElementData& data, ElementId newId)
     : m_data(data.customClone())
     , m_contentsCache(m_edits) {
     m_data->m_id = newId;
@@ -38,7 +38,7 @@ babelwires::FeatureElement::FeatureElement(const ElementData& data, ElementId ne
     }
 }
 
-void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
+void babelwires::Node::applyLocalModifiers(UserLogger& userLogger) {
     ValueTreeNode* input = doGetInputNonConst();
     if (input) {
         input->setToDefault();
@@ -52,17 +52,17 @@ void babelwires::FeatureElement::applyLocalModifiers(UserLogger& userLogger) {
     }
 }
 
-babelwires::FeatureElement::~FeatureElement() = default;
+babelwires::Node::~Node() = default;
 
-babelwires::ValueTreeNode* babelwires::FeatureElement::doGetOutputNonConst() {
+babelwires::ValueTreeNode* babelwires::Node::doGetOutputNonConst() {
     return nullptr;
 }
 
-const babelwires::ValueTreeNode* babelwires::FeatureElement::getOutput() const {
+const babelwires::ValueTreeNode* babelwires::Node::getOutput() const {
     return nullptr;
 }
 
-babelwires::ValueTreeNode* babelwires::FeatureElement::getInputNonConst(const Path& pathToModify) {
+babelwires::ValueTreeNode* babelwires::Node::getInputNonConst(const Path& pathToModify) {
     if (ValueTreeNode* input = doGetInputNonConst()) {
         modifyValueAt(input, pathToModify);
         return input;
@@ -70,47 +70,47 @@ babelwires::ValueTreeNode* babelwires::FeatureElement::getInputNonConst(const Pa
     return nullptr;
 }
 
-babelwires::ValueTreeNode* babelwires::FeatureElement::doGetInputNonConst() {
+babelwires::ValueTreeNode* babelwires::Node::doGetInputNonConst() {
     return nullptr;
 }
 
-const babelwires::ValueTreeNode* babelwires::FeatureElement::getInput() const {
+const babelwires::ValueTreeNode* babelwires::Node::getInput() const {
     return nullptr;
 }
 
-babelwires::ElementId babelwires::FeatureElement::getElementId() const {
+babelwires::ElementId babelwires::Node::getElementId() const {
     return m_data->m_id;
 }
 
-const babelwires::ElementData& babelwires::FeatureElement::getElementData() const {
+const babelwires::ElementData& babelwires::Node::getElementData() const {
     return *m_data;
 }
 
-babelwires::ElementData& babelwires::FeatureElement::getElementData() {
+babelwires::ElementData& babelwires::Node::getElementData() {
     return *m_data;
 }
 
-std::string babelwires::FeatureElement::getLabel() const {
+std::string babelwires::Node::getLabel() const {
     return std::to_string(getElementId()) + " - " + m_factoryName;
 }
 
-void babelwires::FeatureElement::setFactoryName(std::string factoryName) {
+void babelwires::Node::setFactoryName(std::string factoryName) {
     m_factoryName = std::move(factoryName);
 }
 
-void babelwires::FeatureElement::setFactoryName(LongId identifier) {
+void babelwires::Node::setFactoryName(LongId identifier) {
     m_factoryName = IdentifierRegistry::read()->getName(identifier);
 }
 
-babelwires::Modifier* babelwires::FeatureElement::findModifier(const Path& featurePath) {
+babelwires::Modifier* babelwires::Node::findModifier(const Path& featurePath) {
     return m_edits.findModifier(featurePath);
 }
 
-const babelwires::Modifier* babelwires::FeatureElement::findModifier(const Path& featurePath) const {
+const babelwires::Modifier* babelwires::Node::findModifier(const Path& featurePath) const {
     return m_edits.findModifier(featurePath);
 }
 
-babelwires::Modifier* babelwires::FeatureElement::addModifierWithoutApplyingIt(const ModifierData& modifierData) {
+babelwires::Modifier* babelwires::Node::addModifierWithoutApplyingIt(const ModifierData& modifierData) {
     assert(!findModifier(modifierData.m_targetPath) && "There's already a modifier at that path");
     auto modifier = modifierData.createModifier();
     Modifier* rawModifierPtr = modifier.get();
@@ -120,16 +120,16 @@ babelwires::Modifier* babelwires::FeatureElement::addModifierWithoutApplyingIt(c
     return rawModifierPtr;
 }
 
-babelwires::Modifier* babelwires::FeatureElement::addModifier(UserLogger& userLogger,
+babelwires::Modifier* babelwires::Node::addModifier(UserLogger& userLogger,
                                                               const ModifierData& modifierData) {
     Modifier* newModifier = addModifierWithoutApplyingIt(modifierData);
     newModifier->applyIfLocal(userLogger, getInputNonConst(newModifier->getTargetPath()));
     return newModifier;
 }
 
-void babelwires::FeatureElement::removeModifier(Modifier* modifier) {
+void babelwires::Node::removeModifier(Modifier* modifier) {
     assert((const_cast<const Modifier*>(modifier)->getOwner() == this) &&
-           "This FeatureElement is not the owner of the modifier");
+           "This Node is not the owner of the modifier");
 
     m_removedModifiers.emplace_back(std::move(m_edits.removeModifier(modifier)));
     ValueTreeNode* input = getInputNonConst(modifier->getTargetPath());
@@ -141,7 +141,7 @@ void babelwires::FeatureElement::removeModifier(Modifier* modifier) {
     setChanged(Changes::ModifierRemoved);
 }
 
-std::unique_ptr<babelwires::ElementData> babelwires::FeatureElement::extractElementData() const {
+std::unique_ptr<babelwires::ElementData> babelwires::Node::extractElementData() const {
     auto data = getElementData().clone();
     for (const auto& m : m_edits.modifierRange()) {
         data->m_modifiers.emplace_back(m->getModifierData().clone());
@@ -165,25 +165,25 @@ std::unique_ptr<babelwires::ElementData> babelwires::FeatureElement::extractElem
     return data;
 }
 
-const babelwires::UiPosition& babelwires::FeatureElement::getUiPosition() const {
+const babelwires::UiPosition& babelwires::Node::getUiPosition() const {
     return m_data->m_uiData.m_uiPosition;
 }
 
-void babelwires::FeatureElement::setUiPosition(const UiPosition& newPosition) {
+void babelwires::Node::setUiPosition(const UiPosition& newPosition) {
     m_data->m_uiData.m_uiPosition = newPosition;
     setChanged(Changes::UiPositionChanged);
 }
 
-const babelwires::UiSize& babelwires::FeatureElement::getUiSize() const {
+const babelwires::UiSize& babelwires::Node::getUiSize() const {
     return m_data->m_uiData.m_uiSize;
 }
 
-void babelwires::FeatureElement::setUiSize(const UiSize& newSize) {
+void babelwires::Node::setUiSize(const UiSize& newSize) {
     m_data->m_uiData.m_uiSize = newSize;
     setChanged(Changes::UiSizeChanged);
 }
 
-bool babelwires::FeatureElement::isChanged(Changes changes) const {
+bool babelwires::Node::isChanged(Changes changes) const {
     if ((m_changes & changes) != Changes::NothingChanged) {
         return true;
     }
@@ -205,7 +205,7 @@ bool babelwires::FeatureElement::isChanged(Changes changes) const {
     return false;
 }
 
-void babelwires::FeatureElement::clearChanges() {
+void babelwires::Node::clearChanges() {
     if (ValueTreeNode* f = doGetInputNonConst()) {
         f->clearChanges();
     }
@@ -220,15 +220,15 @@ void babelwires::FeatureElement::clearChanges() {
     m_contentsCache.clearChanges();
 }
 
-void babelwires::FeatureElement::setChanged(Changes changes) {
+void babelwires::Node::setChanged(Changes changes) {
     m_changes = m_changes | changes;
 }
 
-bool babelwires::FeatureElement::isFailed() const {
+bool babelwires::Node::isFailed() const {
     return !m_internalFailure.empty() || m_isInDependencyLoop;
 }
 
-std::string babelwires::FeatureElement::getReasonForFailure() const {
+std::string babelwires::Node::getReasonForFailure() const {
     std::string reason;
     if (!m_internalFailure.empty()) {
         if (m_isInDependencyLoop) {
@@ -242,7 +242,7 @@ std::string babelwires::FeatureElement::getReasonForFailure() const {
     return reason;
 }
 
-void babelwires::FeatureElement::clearInternalFailure() {
+void babelwires::Node::clearInternalFailure() {
     if (!m_internalFailure.empty()) {
         if (!m_isInDependencyLoop) {
             setChanged(Changes::FeatureElementRecovered);
@@ -251,7 +251,7 @@ void babelwires::FeatureElement::clearInternalFailure() {
     }
 }
 
-void babelwires::FeatureElement::setInternalFailure(std::string reasonForFailure) {
+void babelwires::Node::setInternalFailure(std::string reasonForFailure) {
     assert(!reasonForFailure.empty() && "A reason must be provided");
     if (!isFailed()) {
         setChanged(Changes::FeatureElementFailed);
@@ -259,11 +259,11 @@ void babelwires::FeatureElement::setInternalFailure(std::string reasonForFailure
     m_internalFailure = std::move(reasonForFailure);
 }
 
-bool babelwires::FeatureElement::isInDependencyLoop() const {
+bool babelwires::Node::isInDependencyLoop() const {
     return m_isInDependencyLoop;
 }
 
-void babelwires::FeatureElement::setInDependencyLoop(bool isInLoop) {
+void babelwires::Node::setInDependencyLoop(bool isInLoop) {
     if (isInLoop) {
         if (!isFailed()) {
             setChanged(Changes::FeatureElementFailed);
@@ -276,30 +276,30 @@ void babelwires::FeatureElement::setInDependencyLoop(bool isInLoop) {
     m_isInDependencyLoop = isInLoop;
 }
 
-const babelwires::ContentsCache& babelwires::FeatureElement::getContentsCache() const {
+const babelwires::ContentsCache& babelwires::Node::getContentsCache() const {
     return m_contentsCache;
 }
 
-void babelwires::FeatureElement::process(Project& project, UserLogger& userLogger) {
+void babelwires::Node::process(Project& project, UserLogger& userLogger) {
     finishModifications(project, userLogger);
     doProcess(userLogger);
 }
 
-void babelwires::FeatureElement::adjustArrayIndices(const babelwires::Path& pathToArray,
+void babelwires::Node::adjustArrayIndices(const babelwires::Path& pathToArray,
                                                     babelwires::ArrayIndex startIndex, int adjustment) {
     m_edits.adjustArrayIndices(pathToArray, startIndex, adjustment);
 }
 
-bool babelwires::FeatureElement::isExpanded(const babelwires::Path& featurePath) const {
+bool babelwires::Node::isExpanded(const babelwires::Path& featurePath) const {
     return m_edits.isExpanded(featurePath);
 }
 
-void babelwires::FeatureElement::setExpanded(const babelwires::Path& featurePath, bool expanded) {
+void babelwires::Node::setExpanded(const babelwires::Path& featurePath, bool expanded) {
     m_edits.setExpanded(featurePath, expanded);
     setChanged(Changes::CompoundExpandedOrCollapsed);
 }
 
-void babelwires::FeatureElement::setModifierMoving(const babelwires::Modifier& modifierAboutToMove) {
+void babelwires::Node::setModifierMoving(const babelwires::Modifier& modifierAboutToMove) {
     setChanged(Changes::ModifierMoved);
     m_removedModifiers.emplace_back(modifierAboutToMove.clone());
 }
@@ -346,7 +346,7 @@ namespace {
 
 } // namespace
 
-void babelwires::FeatureElement::modifyValueAt(ValueTreeNode* input, const Path& path) {
+void babelwires::Node::modifyValueAt(ValueTreeNode* input, const Path& path) {
     assert((input != nullptr) && "Trying to modify a feature element with no input feature");
 
     unsigned int j = 0;
@@ -370,7 +370,7 @@ void babelwires::FeatureElement::modifyValueAt(ValueTreeNode* input, const Path&
     m_modifiedPaths.emplace_back(path);
 }
 
-void babelwires::FeatureElement::finishModifications(const Project& project, UserLogger& userLogger) {
+void babelwires::Node::finishModifications(const Project& project, UserLogger& userLogger) {
     // Reapply modifiers beneath the modified paths.
     for (const auto& p : m_modifiedPaths) {
         // Get the input feature directly.
@@ -389,11 +389,11 @@ void babelwires::FeatureElement::finishModifications(const Project& project, Use
 }
 
 
-void babelwires::FeatureElement::setValueTrees(std::string rootLabel, ValueTreeRoot* input,
+void babelwires::Node::setValueTrees(std::string rootLabel, ValueTreeRoot* input,
                                                const ValueTreeRoot* output) {
     m_contentsCache.setValueTrees(std::move(rootLabel), input, output);
 }
 
-void babelwires::FeatureElement::updateModifierCache() {
+void babelwires::Node::updateModifierCache() {
     m_contentsCache.updateModifierCache();
 }

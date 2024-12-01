@@ -26,11 +26,11 @@ babelwires::SourceFileElement::SourceFileElement(const ProjectContext& context, 
 }
 
 const babelwires::SourceFileElementData& babelwires::SourceFileElement::getElementData() const {
-    return static_cast<const SourceFileElementData&>(FeatureElement::getElementData());
+    return static_cast<const SourceFileElementData&>(Node::getElementData());
 }
 
 babelwires::SourceFileElementData& babelwires::SourceFileElement::getElementData() {
-    return static_cast<SourceFileElementData&>(FeatureElement::getElementData());
+    return static_cast<SourceFileElementData&>(Node::getElementData());
 }
 
 babelwires::ValueTreeNode* babelwires::SourceFileElement::doGetOutputNonConst() {

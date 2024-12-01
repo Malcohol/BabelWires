@@ -18,7 +18,7 @@
 babelwires::ProjectObserver::ProjectObserver(const Project& project)
     : m_project(project) {}
 
-void babelwires::ProjectObserver::featureElementWasAdded(const FeatureElement* featureElement) {
+void babelwires::ProjectObserver::featureElementWasAdded(const Node* featureElement) {
     const ElementId elementId = featureElement->getElementId();
     auto ignoreIt = m_addedElementsToIgnore.find(elementId);
     if (ignoreIt == m_addedElementsToIgnore.end()) {
@@ -82,8 +82,8 @@ namespace {
 
     void addToConnections(std::unordered_set<babelwires::ConnectionDescription>& connections, State state,
                           babelwires::ConnectionDescription&& connectionDesc,
-                          const babelwires::FeatureElement* sourceElement,
-                          const babelwires::FeatureElement* targetElement) {
+                          const babelwires::Node* sourceElement,
+                          const babelwires::Node* targetElement) {
         sourceElement->getEdits().truncatePathAtFirstCollapsedNode(connectionDesc.m_sourcePath, state);
         targetElement->getEdits().truncatePathAtFirstCollapsedNode(connectionDesc.m_targetPath, state);
         connections.emplace(std::move(connectionDesc));
@@ -91,8 +91,8 @@ namespace {
 
     void addToConnections(std::unordered_set<babelwires::ConnectionDescription>& connections, State state,
                           babelwires::ConnectionDescription&& connectionDesc, const babelwires::Project& project,
-                          const babelwires::FeatureElement* targetElement) {
-        const babelwires::FeatureElement* sourceElement = project.getFeatureElement(connectionDesc.m_sourceId);
+                          const babelwires::Node* targetElement) {
+        const babelwires::Node* sourceElement = project.getFeatureElement(connectionDesc.m_sourceId);
         if (!sourceElement) {
             const auto it = project.getRemovedElements().find(connectionDesc.m_sourceId);
             assert((it != project.getRemovedElements().end()) && "Expecting to find the source of a live connection.");
@@ -103,7 +103,7 @@ namespace {
     }
 
     void addAllLiveInConnections(const babelwires::Project::ConnectionInfo& connectionInfo,
-                                 const babelwires::FeatureElement* targetElement,
+                                 const babelwires::Node* targetElement,
                                  std::unordered_set<babelwires::ConnectionDescription>& connections, State state) {
         const babelwires::ElementId elementId = targetElement->getElementId();
         const auto& inConnections = connectionInfo.m_dependsOn.find(targetElement);
@@ -115,7 +115,7 @@ namespace {
                      !connectionModifier.isChanged(babelwires::Modifier::Changes::ModifierIsNew |
                                                    babelwires::Modifier::Changes::ModifierMoved |
                                                    babelwires::Modifier::Changes::ModifierConnected))) {
-                    const babelwires::FeatureElement* sourceElement = std::get<1>(connection);
+                    const babelwires::Node* sourceElement = std::get<1>(connection);
                     addToConnections(connections, state,
                                      babelwires::ConnectionDescription(elementId, connectionModifier.getModifierData()),
                                      sourceElement, targetElement);
@@ -125,12 +125,12 @@ namespace {
     }
 
     void addAllLiveOutConnections(const babelwires::Project::ConnectionInfo& connectionInfo,
-                                  const babelwires::FeatureElement* sourceElement,
+                                  const babelwires::Node* sourceElement,
                                   std::unordered_set<babelwires::ConnectionDescription>& connections, State state) {
         const auto& outConnections = connectionInfo.m_requiredFor.find(sourceElement);
         if (outConnections != connectionInfo.m_requiredFor.end()) {
             for (auto&& connection : outConnections->second) {
-                const babelwires::FeatureElement* const targetElement = std::get<1>(connection);
+                const babelwires::Node* const targetElement = std::get<1>(connection);
                 const babelwires::ConnectionModifier& connectionModifier = *std::get<0>(connection);
                 if (connectionModifier.isConnected() &&
                     ((state == State::CurrentState) ||
@@ -156,17 +156,17 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     // or recover individually, as appropriate.
 
     // Just those elements with changes.
-    std::vector<const FeatureElement*> featureElementsWithChanges;
+    std::vector<const Node*> featureElementsWithChanges;
     featureElementsWithChanges.reserve(m_project.getElements().size());
 
-    // const FeatureElement::Changes someStructureChange = FeatureElement::Changes::FeatureStructureChanged |
-    // FeatureElement::Changes::CompoundExpandedOrCollapsed;
+    // const Node::Changes someStructureChange = Node::Changes::FeatureStructureChanged |
+    // Node::Changes::CompoundExpandedOrCollapsed;
 
     for (const auto& pair : m_project.getElements()) {
-        const FeatureElement* const featureElement = pair.second.get();
+        const Node* const featureElement = pair.second.get();
         const ElementId elementId = featureElement->getElementId();
 
-        if (featureElement->isChanged(FeatureElement::Changes::SomethingChanged)) {
+        if (featureElement->isChanged(Node::Changes::SomethingChanged)) {
             featureElementsWithChanges.emplace_back(featureElement);
         }
     }
@@ -178,12 +178,12 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     // their number of ports, so we have to remove and re-add such nodes.
     // TODO: Consider using a set rather than an unordered_set, since the iteratation below
     // will introduce non-determinacy.
-    std::vector<const FeatureElement*> nodesToCreate;
+    std::vector<const Node*> nodesToCreate;
     std::unordered_set<ConnectionDescription> connectionsToAdd;
     std::unordered_set<ConnectionDescription> connectionsToRemove;
-    std::vector<const FeatureElement*> nodesToRemove;
+    std::vector<const Node*> nodesToRemove;
 
-    auto allModifiersWereRemoved = [&connectionsToRemove, this](const FeatureElement* targetElement, ElementId targetId,
+    auto allModifiersWereRemoved = [&connectionsToRemove, this](const Node* targetElement, ElementId targetId,
                                                                 const auto& modifiers) {
         for (const auto* modifier : modifiers) {
             if (const auto* connectionModifier = modifier->asConnectionModifier()) {
@@ -200,7 +200,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     };
 
     for (const auto& [_, featureElement] : m_project.getRemovedElements()) {
-        assert(!featureElement->isChanged(FeatureElement::Changes::FeatureElementIsNew) &&
+        assert(!featureElement->isChanged(Node::Changes::FeatureElementIsNew) &&
                "Changes should have been processed between new elements being removed.");
         const ElementId elementId = featureElement->getElementId();
         nodesToRemove.emplace_back(featureElement.get());
@@ -211,12 +211,12 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     for (const auto* featureElement : featureElementsWithChanges) {
         const ElementId elementId = featureElement->getElementId();
 
-        if (featureElement->isChanged(FeatureElement::Changes::FeatureElementIsNew)) {
+        if (featureElement->isChanged(Node::Changes::FeatureElementIsNew)) {
             nodesToCreate.emplace_back(featureElement);
             addAllLiveInConnections(connectionInfo, featureElement, connectionsToAdd, State::CurrentState);
         } else {
             allModifiersWereRemoved(featureElement, elementId, featureElement->getRemovedModifiers());
-            if (featureElement->isChanged(FeatureElement::Changes::ModifierDisconnected)) {
+            if (featureElement->isChanged(Node::Changes::ModifierDisconnected)) {
                 for (const auto& connectionModifier :
                      featureElement->getEdits().modifierRange<babelwires::ConnectionModifier>()) {
                     if (connectionModifier->isChanged(Modifier::Changes::ModifierDisconnected) &&
@@ -228,11 +228,11 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
                 }
             }
 
-            if (featureElement->isChanged(FeatureElement::Changes::UiPositionChanged)) {
+            if (featureElement->isChanged(Node::Changes::UiPositionChanged)) {
                 featureElementWasMoved(elementId, featureElement->getUiPosition());
             }
 
-            if (featureElement->isChanged(FeatureElement::Changes::UiSizeChanged)) {
+            if (featureElement->isChanged(Node::Changes::UiSizeChanged)) {
                 featureElementWasResized(elementId, featureElement->getUiSize());
             }
 
@@ -248,8 +248,8 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
                 addAllLiveOutConnections(connectionInfo, featureElement, connectionsToAdd, State::CurrentState);
             }
 
-            if (featureElement->isChanged(FeatureElement::Changes::ModifierAdded |
-                                          FeatureElement::Changes::ModifierConnected)) {
+            if (featureElement->isChanged(Node::Changes::ModifierAdded |
+                                          Node::Changes::ModifierConnected)) {
                 for (const auto& connectionModifier :
                      featureElement->getEdits().modifierRange<babelwires::ConnectionModifier>()) {
                     if (connectionModifier->isChanged(Modifier::Changes::ModifierIsNew |
@@ -294,12 +294,12 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     // Update the nodes that didn't have structural changes.
     for (const auto* featureElement : featureElementsWithChanges) {
         if (featureElement->isChanged(
-                FeatureElement::Changes::FeatureChangesMask | FeatureElement::Changes::FeatureElementLabelChanged |
-                FeatureElement::Changes::ModifierAdded | FeatureElement::Changes::ModifierRemoved |
-                FeatureElement::Changes::FileChanged | FeatureElement::Changes::FeatureElementFailed |
-                FeatureElement::Changes::FeatureElementRecovered) &&
+                Node::Changes::FeatureChangesMask | Node::Changes::FeatureElementLabelChanged |
+                Node::Changes::ModifierAdded | Node::Changes::ModifierRemoved |
+                Node::Changes::FileChanged | Node::Changes::FeatureElementFailed |
+                Node::Changes::FeatureElementRecovered) &&
             !featureElement->getContentsCache().isChanged(ContentsCache::Changes::StructureChanged) &&
-            !featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementIsNew)) {
+            !featureElement->isChanged(babelwires::Node::Changes::FeatureElementIsNew)) {
             contentWasChanged(featureElement->getElementId());
         }
     }

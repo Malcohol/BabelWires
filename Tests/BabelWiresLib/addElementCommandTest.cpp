@@ -22,7 +22,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     command.execute(testEnvironment.m_project);
 
-    const babelwires::FeatureElement* newElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
+    const babelwires::Node* newElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(newElement, nullptr);
     EXPECT_NE(newElement->as<babelwires::ValueElement>(), nullptr);
 
@@ -32,7 +32,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     command.execute(testEnvironment.m_project);
 
-    const babelwires::FeatureElement* restoredElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
+    const babelwires::Node* restoredElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(restoredElement, nullptr);
     EXPECT_NE(restoredElement->as<babelwires::ValueElement>(), nullptr);
 }

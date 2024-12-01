@@ -30,7 +30,7 @@ babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string comma
     , m_numEntriesToAdd(numEntriesToAdd) {}
 
 bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project) {
-    const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+    const Node* elementToModify = project.getFeatureElement(m_elementId);
     if (!elementToModify) {
         return false;
     }

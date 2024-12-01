@@ -33,7 +33,7 @@ void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::FeatureMode
     {
         AccessModelScope scope(projectBridge);
         const Project& project = scope.getProject();
-        const FeatureElement* const f = project.getFeatureElement(elementId);
+        const Node* const f = project.getFeatureElement(elementId);
         if (!f) {
             return;
         }

@@ -25,7 +25,7 @@ babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string command
 }
 
 bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
-    const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+    const Node* elementToModify = project.getFeatureElement(m_elementId);
     if (!elementToModify) {
         return false;
     }

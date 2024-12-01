@@ -46,10 +46,10 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
     // The default.
     EXPECT_EQ(output.getArray().getSize(), 2);
     EXPECT_FALSE(processorElement->isFailed());
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_FALSE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_FALSE(processorElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     // The processor sets the output array size based on this input.
     const babelwires::Path arraySettingIntPath{ &*input.getInt() };
@@ -63,10 +63,10 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
 
     EXPECT_EQ(output.getArray().getSize(), 6);
     EXPECT_FALSE(processorElement->isFailed());
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     babelwires::ValueAssignmentData badArraySettingData(babelwires::IntValue(-1));
     badArraySettingData.m_targetPath = arraySettingIntPath;
@@ -78,11 +78,11 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
 
     EXPECT_TRUE(processorElement->isFailed());
     EXPECT_EQ(output.getArray().getSize(), 2);
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     processorElement->clearChanges();
     processorElement->removeModifier(processorElement->findModifier(arraySettingIntPath));
@@ -91,9 +91,9 @@ TEST(ProcessorElementTest, sourceFileDataCreateElement) {
 
     EXPECT_FALSE(processorElement->isFailed());
     EXPECT_EQ(output.getArray().getSize(), 6);
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(processorElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(processorElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }

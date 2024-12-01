@@ -103,9 +103,9 @@ TEST(TargetFileElementTest, changeFile) {
     targetFileElement->setFilePath(tempFilePath2.m_filePath);
     targetFileElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
-    EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FileChanged));
-    EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementLabelChanged));
-    EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(targetFileElement->isChanged(babelwires::Node::Changes::FileChanged));
+    EXPECT_TRUE(targetFileElement->isChanged(babelwires::Node::Changes::FeatureElementLabelChanged));
+    EXPECT_TRUE(targetFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     EXPECT_TRUE(endsWithStar(targetFileElement->getLabel()));
 
     targetFileElement->clearChanges();
@@ -113,9 +113,9 @@ TEST(TargetFileElementTest, changeFile) {
     targetFileElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
     // setFilePath is not expected to trigger a reload.
-    EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FileChanged));
+    EXPECT_TRUE(targetFileElement->isChanged(babelwires::Node::Changes::FileChanged));
     // The label already ends with a star.
-    EXPECT_FALSE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementLabelChanged));
-    EXPECT_TRUE(targetFileElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_FALSE(targetFileElement->isChanged(babelwires::Node::Changes::FeatureElementLabelChanged));
+    EXPECT_TRUE(targetFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     EXPECT_TRUE(endsWithStar(targetFileElement->getLabel()));
 }

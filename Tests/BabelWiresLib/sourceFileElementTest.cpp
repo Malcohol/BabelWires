@@ -68,9 +68,9 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("could not be loaded"));
     EXPECT_TRUE(sourceFileElement->getReasonForFailure().find(pathInError.str()) != std::string::npos);
 
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     createTestFile(testEnvironment, tempFilePath);
 
@@ -81,9 +81,9 @@ TEST(SourceFileElementTest, sourceFileDataCreateElement) {
     EXPECT_FALSE(sourceFileElement->isFailed());
     EXPECT_TRUE(sourceFileElement->getReasonForFailure().empty());
 
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
 
 TEST(SourceFileElementTest, changeFile) {
@@ -117,16 +117,16 @@ TEST(SourceFileElementTest, changeFile) {
     sourceFileElement->clearChanges();
     sourceFileElement->setFilePath(tempFilePath2.m_filePath);
 
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FileChanged));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FileChanged));
     // setFilePath is not expected to trigger a reload.
-    EXPECT_FALSE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_FALSE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     sourceFileElement->clearChanges();
     sourceFileElement->setFilePath(tempFilePath1.m_filePath);
 
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FileChanged));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::FileChanged));
     // setFilePath is not expected to trigger a reload.
-    EXPECT_FALSE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_FALSE(sourceFileElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(sourceFileElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }

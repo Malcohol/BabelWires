@@ -16,7 +16,7 @@ namespace babelwires {
     class Processor;
     class ValueTreeRoot;
 
-    class ProcessorElement : public FeatureElement {
+    class ProcessorElement : public Node {
       public:
         ProcessorElement(const ProjectContext& context, UserLogger& userLogger, const ProcessorElementData& data,
                          ElementId newId);

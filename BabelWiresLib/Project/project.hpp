@@ -28,7 +28,7 @@ namespace babelwires {
     struct ProjectContext;
     class Modifier;
     struct ModifierData;
-    class FeatureElement;
+    class Node;
     struct ElementData;
     class ConnectionModifier;
     class Path;
@@ -106,8 +106,8 @@ namespace babelwires {
         const TargetFileFormatRegistry& getFactoryFormatRegistry() const;
         const SourceFileFormatRegistry& getFileFormatRegistry() const;
 
-        FeatureElement* getFeatureElement(ElementId id);
-        const FeatureElement* getFeatureElement(ElementId id) const;
+        Node* getFeatureElement(ElementId id);
+        const Node* getFeatureElement(ElementId id) const;
 
         /// Reload the source file.
         /// File exceptions are caught and written to the userLogger.
@@ -126,7 +126,7 @@ namespace babelwires {
         void tryToSaveAllTargets();
 
         ///
-        const std::map<ElementId, std::unique_ptr<FeatureElement>>& getElements() const;
+        const std::map<ElementId, std::unique_ptr<Node>>& getElements() const;
 
         /// Process any changes in the whole project.
         void process();
@@ -137,8 +137,8 @@ namespace babelwires {
         /// Information about the connections between elements.
         /// The connectionInfo includes elements and modifiers which failed.
         struct ConnectionInfo {
-            using Connections = std::vector<std::tuple<ConnectionModifier*, FeatureElement*>>;
-            using ConnectionMap = std::unordered_map<const FeatureElement*, Connections>;
+            using Connections = std::vector<std::tuple<ConnectionModifier*, Node*>>;
+            using ConnectionMap = std::unordered_map<const Node*, Connections>;
 
             /// Information about the elements a given element depends on.
             /// There is an entry for an element only if it has an incoming connection.
@@ -157,7 +157,7 @@ namespace babelwires {
 
         /// Get the feature elements which have been removed since the last time
         /// changes were cleared.
-        const std::map<ElementId, std::unique_ptr<FeatureElement>>& getRemovedElements() const;
+        const std::map<ElementId, std::unique_ptr<Node>>& getRemovedElements() const;
 
         /// Get the ProjectId of the current project.
         ProjectId getProjectId() const;
@@ -174,19 +174,19 @@ namespace babelwires {
 
         /// If the output of e has any changes, propagate them to the input features of connected
         /// elements, as described by the requiredForMap.
-        void propagateChanges(const FeatureElement* e);
+        void propagateChanges(const Node* e);
 
         /// Set the ProjectId to a random value.
         void randomizeProjectId();
 
-        void addConnectionToCache(FeatureElement* element, ConnectionModifier* data);
+        void addConnectionToCache(Node* element, ConnectionModifier* data);
 
-        void removeConnectionFromCache(FeatureElement* element, ConnectionModifier* data);
+        void removeConnectionFromCache(Node* element, ConnectionModifier* data);
 
         void validateConnectionCache() const;
 
-        FeatureElement* addFeatureElementWithoutCachingConnection(const ElementData& data);
-        void addFeatureElementConnectionsToCache(FeatureElement* element);
+        Node* addFeatureElementWithoutCachingConnection(const ElementData& data);
+        void addFeatureElementConnectionsToCache(Node* element);
 
       private:
         ProjectContext& m_context;
@@ -202,14 +202,14 @@ namespace babelwires {
         ElementId m_maxAssignedElementId = 0;
 
         /// A map of elements, keyed by ElementID.
-        std::map<ElementId, std::unique_ptr<FeatureElement>> m_featureElements;
+        std::map<ElementId, std::unique_ptr<Node>> m_featureElements;
 
         /// Cache of connection information.
         ConnectionInfo m_connectionCache;
 
         /// Feature elements which have been removed since the last time changes were cleared.
         /// Use a map because we iterate.
-        std::map<ElementId, std::unique_ptr<FeatureElement>> m_removedFeatureElements;
+        std::map<ElementId, std::unique_ptr<Node>> m_removedFeatureElements;
     };
 
 } // namespace babelwires

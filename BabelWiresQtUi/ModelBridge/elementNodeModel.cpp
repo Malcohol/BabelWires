@@ -41,7 +41,7 @@ babelwires::ElementNodeModel::~ElementNodeModel() {}
 
 void babelwires::ElementNodeModel::setContents(std::string label, ElementId elementId) {
     AccessModelScope scope(m_projectBridge);
-    const FeatureElement* element = scope.getProject().getFeatureElement(elementId);
+    const Node* element = scope.getProject().getFeatureElement(elementId);
     assert(element && "The ID must correspond to an element in the project");
     m_model = new FeatureModel(m_view, elementId, m_projectBridge);
     m_view->setModel(m_model);
@@ -105,7 +105,7 @@ const babelwires::Path& babelwires::ElementNodeModel::getPathAtPort(AccessModelS
 
 QtNodes::PortIndex babelwires::ElementNodeModel::getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
                                                                const Path& path) const {
-    const FeatureElement* element = m_model->getFeatureElement(scope);
+    const Node* element = m_model->getFeatureElement(scope);
     assert(element && "Check before calling this.");
     const int row = element->getContentsCache().getIndexOfPath((portType == QtNodes::PortType::In), path);
     assert((row != -1) && "Path did not lead to a known feature");
@@ -115,7 +115,7 @@ QtNodes::PortIndex babelwires::ElementNodeModel::getPortAtPath(AccessModelScope&
 
 QString babelwires::ElementNodeModel::caption() const {
     AccessModelScope scope(m_projectBridge);
-    if (const FeatureElement* element = scope.getProject().getFeatureElement(m_elementId)) {
+    if (const Node* element = scope.getProject().getFeatureElement(m_elementId)) {
         return QString(element->getLabel().c_str());
     } else {
         return "Dying node";

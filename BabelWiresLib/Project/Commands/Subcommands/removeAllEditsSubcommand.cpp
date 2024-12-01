@@ -24,7 +24,7 @@ babelwires::RemoveAllEditsSubcommand::RemoveAllEditsSubcommand(ElementId element
 }
 
 bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project) {
-    FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+    Node* elementToModify = project.getFeatureElement(m_elementId);
 
     if (!elementToModify) {
         return false;
@@ -46,7 +46,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
                 const ConnectionModifierData& modifierData = cmod->getModifierData();
                 const Path& modifierPath = modifierData.m_sourcePath;
                 if (m_path.isPrefixOf(modifierPath)) {
-                    const FeatureElement* const target = std::get<1>(connection);
+                    const Node* const target = std::get<1>(connection);
                     subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", target->getElementId(), modifierData.m_targetPath));
                 }
             }
@@ -75,7 +75,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
 
 void babelwires::RemoveAllEditsSubcommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+    Node* elementToModify = project.getFeatureElement(m_elementId);
     assert(elementToModify && "The element must exist");
     // This may not seem necessary, but it means we won't assert when expanding the
     // moved down entries.
@@ -85,7 +85,7 @@ void babelwires::RemoveAllEditsSubcommand::execute(Project& project) const {
 }
 
 void babelwires::RemoveAllEditsSubcommand::undo(Project& project) const {
-    FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+    Node* elementToModify = project.getFeatureElement(m_elementId);
     assert(elementToModify && "The element must exist");
     for (const auto& p : m_expandedPathsRemoved) {
         elementToModify->getEdits().setExpanded(p, true);

@@ -24,7 +24,7 @@ bool babelwires::SourceFileElementData::checkFactoryVersion(const ProjectContext
     return checkFactoryVersionCommon(context.m_sourceFileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
 }
 
-std::unique_ptr<babelwires::FeatureElement>
+std::unique_ptr<babelwires::Node>
 babelwires::SourceFileElementData::doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
                                                    ElementId newId) const {
     return std::make_unique<SourceFileElement>(context, userLogger, *this, newId);

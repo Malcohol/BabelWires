@@ -14,7 +14,7 @@
 
 namespace {
     std::unique_ptr<babelwires::Modifier> createModifier(babelwires::Path path, int x,
-                                                         babelwires::FeatureElement* owner = nullptr) {
+                                                         babelwires::Node* owner = nullptr) {
         auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(x));
         data->m_targetPath = std::move(path);
         auto modPtr = std::make_unique<babelwires::LocalModifier>(std::move(data));
@@ -23,7 +23,7 @@ namespace {
     }
 
     std::unique_ptr<babelwires::ConnectionModifier>
-    createConnectionModifier(babelwires::Path path, babelwires::FeatureElement* owner = nullptr) {
+    createConnectionModifier(babelwires::Path path, babelwires::Node* owner = nullptr) {
         auto data = std::make_unique<babelwires::ConnectionModifierData>();
         data->m_targetPath = std::move(path);
         data->m_sourcePath = babelwires::Path();
@@ -447,9 +447,9 @@ TEST(EditTreeTest, getAllExplicitlyExpandedPaths) {
 }
 
 namespace {
-    struct TestOwner : babelwires::FeatureElement {
+    struct TestOwner : babelwires::Node {
         TestOwner()
-            : FeatureElement(babelwires::SourceFileElementData(), 0) {}
+            : Node(babelwires::SourceFileElementData(), 0) {}
 
         void doProcess(babelwires::UserLogger& userLogger) override {}
     };

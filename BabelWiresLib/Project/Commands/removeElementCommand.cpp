@@ -33,12 +33,12 @@ babelwires::RemoveElementCommand::~RemoveElementCommand() = default;
 
 bool babelwires::RemoveElementCommand::addConnection(const babelwires::ConnectionDescription& desc,
                                                      ConnectionSet& connectionSet, const babelwires::Project& project) {
-    const FeatureElement* targetElement = project.getFeatureElement(desc.m_targetId);
+    const Node* targetElement = project.getFeatureElement(desc.m_targetId);
     if (!targetElement) {
         return false;
     }
 
-    const FeatureElement* sourceElement = project.getFeatureElement(desc.m_sourceId);
+    const Node* sourceElement = project.getFeatureElement(desc.m_sourceId);
     if (!sourceElement) {
         return false;
     }
@@ -110,7 +110,7 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
     }
 
     for (auto elementId : m_elementIds) {
-        const FeatureElement* element = project.getFeatureElement(elementId);
+        const Node* element = project.getFeatureElement(elementId);
 
         if (!element) {
             return false;
@@ -138,11 +138,11 @@ bool babelwires::RemoveElementCommand::initialize(const Project& project) {
 
     const Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
     for (auto elementId : m_elementIds) {
-        const FeatureElement* element = project.getFeatureElement(elementId);
+        const Node* element = project.getFeatureElement(elementId);
         auto it = connectionInfo.m_requiredFor.find(element);
         if (it != connectionInfo.m_requiredFor.end()) {
             for (const auto& connection : it->second) {
-                const FeatureElement* const target = std::get<1>(connection);
+                const Node* const target = std::get<1>(connection);
                 const ConnectionModifier* const cmod = std::get<0>(connection);
                 const ConnectionModifierData& data = cmod->getModifierData();
                 ConnectionDescription connectionDesc(target->getElementId(), data);

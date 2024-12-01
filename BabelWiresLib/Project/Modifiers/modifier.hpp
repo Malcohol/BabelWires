@@ -1,5 +1,5 @@
 /**
- * A Modifier changes the value in a FeatureElement, and corresponds to a user edit.
+ * A Modifier changes the value in a Node, and corresponds to a user edit.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -26,10 +26,10 @@ namespace babelwires {
     class Project;
     class ValueTreeNode;
     class Path;
-    class FeatureElement;
+    class Node;
     class ConnectionModifier;
 
-    /// A Modifier changes a value somewhere in the input of a FeatureElement, and corresponds to a user edit.
+    /// A Modifier changes a value somewhere in the input of a Node, and corresponds to a user edit.
     class Modifier : public Cloneable {
       public:
         CLONEABLE_ABSTRACT(Modifier);
@@ -56,10 +56,10 @@ namespace babelwires {
         std::string getReasonForFailure() const;
 
         /// Get the owner or nullptr, if this modifier is not currently owned.
-        const FeatureElement* getOwner() const;
+        const Node* getOwner() const;
 
         /// Set or clear the owner of this modifier.
-        void setOwner(FeatureElement* newOwner);
+        void setOwner(Node* newOwner);
 
         ModifierData& getModifierData();
         const ModifierData& getModifierData() const;
@@ -89,7 +89,7 @@ namespace babelwires {
     
             /// This is not used during processing, but may be used by an UI.
             /// If a modifier is moved, a clone of its old state added to a
-            /// FeatureElement's removedModifiers, also flagged with ModifierMoved.
+            /// Node's removedModifiers, also flagged with ModifierMoved.
             ModifierMoved             = 0b0100000,
     
             // Only apply to ConnectionModifiers:
@@ -127,7 +127,7 @@ namespace babelwires {
         void setChanged(Changes changes);
 
         /// Get the owner or nullptr, if this modifier is not currently owned.
-        FeatureElement* getOwner();
+        Node* getOwner();
 
         virtual const ConnectionModifier* doAsConnectionModifier() const = 0;
 
@@ -138,7 +138,7 @@ namespace babelwires {
         std::unique_ptr<ModifierData> m_data;
 
         /// The featureElement which owns this modifier.
-        FeatureElement* m_owner = nullptr;
+        Node* m_owner = nullptr;
 
         /// The type of failure, or success.
         State m_state = State::Success;

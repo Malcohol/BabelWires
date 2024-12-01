@@ -37,7 +37,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
     EXPECT_NE(testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId), nullptr);
 
     const auto checkElements = [&testEnvironment](bool isCommandExecuted) {
-        const babelwires::FeatureElement* processor =
+        const babelwires::Node* processor =
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
         if (isCommandExecuted) {
             ASSERT_EQ(processor, nullptr);
@@ -45,7 +45,7 @@ TEST(RemoveElementCommandTest, executeAndUndo) {
             ASSERT_NE(processor, nullptr);
         }
 
-        const babelwires::FeatureElement* targetElement =
+        const babelwires::Node* targetElement =
             testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
         ASSERT_NE(targetElement, nullptr);
         const babelwires::Modifier* targetModifier =

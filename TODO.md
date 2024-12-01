@@ -27,7 +27,7 @@ Bugs:
 
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.
-* Do non-const FeatureElement::getInputFeature and getOutputFeature really need to be public?
+* Do non-const Node::getInputFeature and getOutputFeature really need to be public?
 
 New features:
 * "Run project" - Load all, process, save all.
@@ -53,7 +53,7 @@ Refactor:
 * Consider replacing virtual deserialize() method by deserializing constructor
   - Tried this in PR #14. Breaks symmetry.
 * The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.
-* Move some of the logic in doProcess up into FeatureElement.
+* Move some of the logic in doProcess up into Node.
 * Split featureElementData into separate files - replace any dynamic casts.
 * Split Features & Import/Export out from the project lib. 
   - In _theory_ the import/export logic could be useful on its own.

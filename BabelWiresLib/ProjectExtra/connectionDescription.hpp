@@ -16,7 +16,7 @@ namespace babelwires {
     struct ConnectionModifierData;
 
     /// ConnectionDescription is a self-contained description of a connection.
-    /// The project does not use this (instead it uses a ConnectionModifier stored at the target FeatureElement).
+    /// The project does not use this (instead it uses a ConnectionModifier stored at the target Node).
     struct ConnectionDescription {
         ConnectionDescription();
         ConnectionDescription(const ConnectionDescription& other);

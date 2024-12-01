@@ -211,7 +211,7 @@ const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(Access
 
 const babelwires::ValueAssignmentData*
 babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
-    const FeatureElement* const element = scope.getProject().getFeatureElement(getData().getElementId());
+    const Node* const element = scope.getProject().getFeatureElement(getData().getElementId());
 
     if (!element) {
         return nullptr;

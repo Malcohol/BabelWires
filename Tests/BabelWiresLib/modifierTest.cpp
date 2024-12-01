@@ -21,9 +21,9 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 namespace {
-    struct TestOwner : babelwires::FeatureElement {
+    struct TestOwner : babelwires::Node {
         TestOwner()
-            : FeatureElement(babelwires::SourceFileElementData(), 0) {}
+            : Node(babelwires::SourceFileElementData(), 0) {}
 
         void doProcess(babelwires::UserLogger& userLogger) override {}
     };

@@ -24,12 +24,12 @@ namespace testUtils {
                                  babelwires::UserLogger& userLogger) override;
 
         // Creates a TestFeatureElement.
-        std::unique_ptr<babelwires::FeatureElement> doCreateFeatureElement(const babelwires::ProjectContext& context,
+        std::unique_ptr<babelwires::Node> doCreateFeatureElement(const babelwires::ProjectContext& context,
                                                                            babelwires::UserLogger& userLogger,
                                                                            babelwires::ElementId newId) const override;
     };
 
-    struct TestFeatureElement : babelwires::FeatureElement {
+    struct TestFeatureElement : babelwires::Node {
         TestFeatureElement(const babelwires::ProjectContext& context);
         TestFeatureElement(const babelwires::ProjectContext& context, const TestFeatureElementData& data, babelwires::ElementId newId);
         void doProcess(babelwires::UserLogger&) override;

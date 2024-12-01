@@ -45,7 +45,7 @@ QWidget* babelwires::FeatureModelDelegate::createEditor(QWidget* parent, const Q
     assert(model && "Unexpected model");
 
     AccessModelScope scope(m_projectBridge);
-    const FeatureElement* const element = model->getFeatureElement(scope);
+    const Node* const element = model->getFeatureElement(scope);
     if (!element) {
         return nullptr;
     }
@@ -89,7 +89,7 @@ void babelwires::FeatureModelDelegate::setEditorData(QWidget* editor, const QMod
     assert(model && "Unexpected model");
 
     AccessModelScope scope(m_projectBridge);
-    const FeatureElement* element = model->getFeatureElement(scope);
+    const Node* element = model->getFeatureElement(scope);
     if (!element) {
         return;
     }
@@ -119,7 +119,7 @@ void babelwires::FeatureModelDelegate::setModelData(QWidget* editor, QAbstractIt
     FeatureModel* featureModel = dynamic_cast<FeatureModel*>(model);
     assert(model && "Unexpected model");
 
-    const FeatureElement* element = featureModel->getFeatureElement(scope);
+    const Node* element = featureModel->getFeatureElement(scope);
     if (!element) {
         return;
     }
@@ -146,7 +146,7 @@ void babelwires::FeatureModelDelegate::paint(QPainter* painter, const QStyleOpti
         assert(featureModel && "Unexpected model");
 
         AccessModelScope scope(m_projectBridge);
-        if (const FeatureElement* element = featureModel->getFeatureElement(scope)) {
+        if (const Node* element = featureModel->getFeatureElement(scope)) {
             if (const babelwires::ContentsCacheEntry* entry = featureModel->getEntry(scope, index)) {
                 const babelwires::UiProjectContext& context = m_projectBridge.getContext();
                 RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
@@ -172,7 +172,7 @@ QSize babelwires::FeatureModelDelegate::sizeHint(const QStyleOptionViewItem& opt
         assert(featureModel && "Unexpected model");
 
         AccessModelScope scope(m_projectBridge);
-        if (const FeatureElement* element = featureModel->getFeatureElement(scope)) {
+        if (const Node* element = featureModel->getFeatureElement(scope)) {
             if (const babelwires::ContentsCacheEntry* entry = featureModel->getEntry(scope, index)) {
                 const babelwires::UiProjectContext& context = m_projectBridge.getContext();
                 RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);

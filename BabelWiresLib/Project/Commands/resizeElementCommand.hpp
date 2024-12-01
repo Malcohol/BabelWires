@@ -1,5 +1,5 @@
 /**
- * The command which changes the UiSize of a FeatureElement.
+ * The command which changes the UiSize of a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

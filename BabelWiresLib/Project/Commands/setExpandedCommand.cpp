@@ -21,7 +21,7 @@ babelwires::SetExpandedCommand::SetExpandedCommand(std::string commandName, Elem
     , m_expanded(expanded) {}
 
 bool babelwires::SetExpandedCommand::initialize(const Project& project) {
-    const FeatureElement* element = project.getFeatureElement(m_elementId);
+    const Node* element = project.getFeatureElement(m_elementId);
     if (!element) {
         return false;
     }
@@ -47,13 +47,13 @@ bool babelwires::SetExpandedCommand::initialize(const Project& project) {
 }
 
 void babelwires::SetExpandedCommand::execute(Project& project) const {
-    FeatureElement* element = project.getFeatureElement(m_elementId);
+    Node* element = project.getFeatureElement(m_elementId);
     assert(element);
     element->setExpanded(m_pathToCompound, m_expanded);
 }
 
 void babelwires::SetExpandedCommand::undo(Project& project) const {
-    FeatureElement* element = project.getFeatureElement(m_elementId);
+    Node* element = project.getFeatureElement(m_elementId);
     assert(element);
     element->setExpanded(m_pathToCompound, !m_expanded);
 }

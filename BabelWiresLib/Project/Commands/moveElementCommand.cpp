@@ -1,5 +1,5 @@
 /**
- * The command which changes the UiPosition of a FeatureElement.
+ * The command which changes the UiPosition of a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -18,7 +18,7 @@ babelwires::MoveElementCommand::MoveElementCommand(std::string commandName, Elem
 
 bool babelwires::MoveElementCommand::initialize(const Project& project) {
     for (const auto& [elementId, _] : m_newPositions) {
-        const FeatureElement* element = project.getFeatureElement(elementId);
+        const Node* element = project.getFeatureElement(elementId);
         if (!element) {
             return false;
         }

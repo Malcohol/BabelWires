@@ -19,7 +19,7 @@
 babelwires::RowModelDispatcher::RowModelDispatcher(const ValueModelRegistry& valueModelRegistry,
                                                    const TypeSystem& typeSystem,
                                                    const babelwires::ContentsCacheEntry* entry,
-                                                   const babelwires::FeatureElement* element) {
+                                                   const babelwires::Node* element) {
     m_rowModel = &m_rowModelStorage;
     const babelwires::ValueTreeNode* valueTreeNode = &entry->getInputThenOutput()->is<babelwires::ValueTreeNode>();
     if (element->as<FileElement>() && (entry->getDepth() == 0)) {

@@ -30,7 +30,7 @@ void babelwires::SaveFileAsAction::actionTriggered(babelwires::FeatureModel& mod
     {
         AccessModelScope scope(projectBridge);
         const Project& project = scope.getProject();
-        const FeatureElement* const featureElement = project.getFeatureElement(elementId);
+        const Node* const featureElement = project.getFeatureElement(elementId);
         if (!featureElement) {
             return;
         }

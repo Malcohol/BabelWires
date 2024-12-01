@@ -387,10 +387,10 @@ TEST(FeatureElementTest, simpleChanges) {
 
     auto featureElement =
         featureElementData.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementIsNew));
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementChangesMask));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementIsNew));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementChangesMask));
     featureElement->clearChanges();
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
     const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
@@ -398,16 +398,16 @@ TEST(FeatureElementTest, simpleChanges) {
     {
         featureElement->clearChanges();
         featureElement->setUiPosition(babelwires::UiPosition{18, 100});
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::UiPositionChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
-        EXPECT_FALSE(featureElement->isChanged(~babelwires::FeatureElement::Changes::UiPositionChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::UiPositionChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+        EXPECT_FALSE(featureElement->isChanged(~babelwires::Node::Changes::UiPositionChanged));
     }
     {
         featureElement->clearChanges();
         featureElement->setUiSize(babelwires::UiSize{199});
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::UiSizeChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
-        EXPECT_FALSE(featureElement->isChanged(~babelwires::FeatureElement::Changes::UiSizeChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::UiSizeChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+        EXPECT_FALSE(featureElement->isChanged(~babelwires::Node::Changes::UiSizeChanged));
     }
     {
         featureElement->clearChanges();
@@ -417,12 +417,12 @@ TEST(FeatureElementTest, simpleChanges) {
         featureElement->addModifier(testEnvironment.m_log, arrayInitData);
         featureElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierAdded));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-        EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::ModifierAdded));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+        EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     }
     {
         featureElement->clearChanges();
@@ -431,52 +431,52 @@ TEST(FeatureElementTest, simpleChanges) {
         featureElement->addModifier(testEnvironment.m_log, arrayElemData);
         featureElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierAdded));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-        EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::ModifierAdded));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+        EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     }
     {
         featureElement->clearChanges();
         featureElement->removeModifier(featureElement->findModifier(arrayElemPath));
         featureElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierRemoved));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-        EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::ModifierRemoved));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+        EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     }
     {
         featureElement->clearChanges();
         featureElement->removeModifier(featureElement->findModifier(arrayPath));
         featureElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierRemoved));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::ModifierChangesMask));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-        EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureValueChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::ModifierRemoved));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::ModifierChangesMask));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+        EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureValueChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     }
     {
         featureElement->clearChanges();
         featureElement->setExpanded(arrayPath, true);
         featureElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::CompoundExpandedOrCollapsed));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::CompoundExpandedOrCollapsed));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     }
     {
         featureElement->clearChanges();
         featureElement->setExpanded(arrayPath, false);
         featureElement->process(testEnvironment.m_project, testEnvironment.m_log);
 
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::CompoundExpandedOrCollapsed));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::CompoundExpandedOrCollapsed));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     }
     /*
     {
@@ -485,18 +485,18 @@ TEST(FeatureElementTest, simpleChanges) {
         ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
         static_cast<testUtils::TestFeatureElement*>(featureElement.get())
             ->simulateFailure(testEnvironment.m_projectContext);
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     }
     {
         featureElement->clearChanges();
         ASSERT_TRUE(featureElement->as<testUtils::TestFeatureElement>());
         static_cast<testUtils::TestFeatureElement*>(featureElement.get())
             ->simulateRecovery(testEnvironment.m_projectContext);
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureStructureChanged));
-        EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureStructureChanged));
+        EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
     }
     */
 }
@@ -514,36 +514,36 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(true);
 
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(false);
 
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     static_cast<testUtils::TestFeatureElement*>(featureElement.get())
         ->simulateFailure(testEnvironment.m_projectContext);
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(true);
 
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     // Don't think we need to note any change.
-    // EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    // EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     featureElement->clearChanges();
     featureElement->setInDependencyLoop(false);
 
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
     // Don't think we need to note any change.
-    // EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    // EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     static_cast<testUtils::TestFeatureElement*>(featureElement.get())
         ->simulateRecovery(testEnvironment.m_projectContext);
@@ -552,17 +552,17 @@ TEST(FeatureElementTest, isInDependencyLoop) {
     static_cast<testUtils::TestFeatureElement*>(featureElement.get())
         ->simulateFailure(testEnvironment.m_projectContext);
 
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     featureElement->clearChanges();
     static_cast<testUtils::TestFeatureElement*>(featureElement.get())
         ->simulateRecovery(testEnvironment.m_projectContext);
 
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementFailed));
-    EXPECT_FALSE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureElementRecovered));
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::FeatureChangesMask));
-    EXPECT_TRUE(featureElement->isChanged(babelwires::FeatureElement::Changes::SomethingChanged));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementFailed));
+    EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::FeatureElementRecovered));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::FeatureChangesMask));
+    EXPECT_TRUE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 }
