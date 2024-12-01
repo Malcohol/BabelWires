@@ -27,7 +27,7 @@ namespace babelwires {
                           NodeId newId);
 
         /// Down-cast version of the parent's method.
-        const SourceFileNodeData& getElementData() const;
+        const SourceFileNodeData& getNodeData() const;
 
         virtual const ValueTreeNode* getOutput() const override;
         
@@ -43,7 +43,7 @@ namespace babelwires {
 
       protected:
         void setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root);
-        SourceFileNodeData& getElementData();
+        SourceFileNodeData& getNodeData();
 
       private:
         std::unique_ptr<ValueTreeRoot> m_valueTreeRoot;

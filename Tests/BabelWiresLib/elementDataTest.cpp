@@ -151,10 +151,10 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::SourceFileNode>());
     EXPECT_TRUE(featureElement->getOutput());
-    EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
-    EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getElementData().as<babelwires::SourceFileNodeData>());
-    EXPECT_EQ(static_cast<const babelwires::SourceFileNodeData&>(featureElement->getElementData()).m_filePath,
+    EXPECT_EQ(featureElement->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
+    EXPECT_EQ(featureElement->getNodeData().m_factoryVersion, data.m_factoryVersion);
+    EXPECT_TRUE(featureElement->getNodeData().as<babelwires::SourceFileNodeData>());
+    EXPECT_EQ(static_cast<const babelwires::SourceFileNodeData&>(featureElement->getNodeData()).m_filePath,
               data.m_filePath);
 
     testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getOutput()->getChild(0));
@@ -241,10 +241,10 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::TargetFileNode>());
     EXPECT_TRUE(featureElement->getInput());
-    EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
-    EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getElementData().as<babelwires::TargetFileNodeData>());
-    EXPECT_EQ(static_cast<const babelwires::TargetFileNodeData&>(featureElement->getElementData()).m_filePath,
+    EXPECT_EQ(featureElement->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
+    EXPECT_EQ(featureElement->getNodeData().m_factoryVersion, data.m_factoryVersion);
+    EXPECT_TRUE(featureElement->getNodeData().as<babelwires::TargetFileNodeData>());
+    EXPECT_EQ(static_cast<const babelwires::TargetFileNodeData&>(featureElement->getNodeData()).m_filePath,
               data.m_filePath);
 
     testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getInput()->getChild(0));
@@ -324,9 +324,9 @@ TEST(ElementDataTest, processorDataCreateElement) {
     ASSERT_FALSE(featureElement->isFailed());
     EXPECT_TRUE(featureElement->as<babelwires::ProcessorNode>());
     EXPECT_TRUE(featureElement->getInput());
-    EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
-    EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getElementData().as<babelwires::ProcessorNodeData>());
+    EXPECT_EQ(featureElement->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
+    EXPECT_EQ(featureElement->getNodeData().m_factoryVersion, data.m_factoryVersion);
+    EXPECT_TRUE(featureElement->getNodeData().as<babelwires::ProcessorNodeData>());
 
     const auto& inputFeature = *featureElement->getInput();
 

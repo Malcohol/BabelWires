@@ -22,7 +22,7 @@ namespace babelwires {
         ~ValueNode();
 
         /// Down-cast version of the parent's method.
-        const ValueNodeData& getElementData() const;
+        const ValueNodeData& getNodeData() const;
 
         virtual const ValueTreeNode* getInput() const override;
         virtual const ValueTreeNode* getOutput() const override;

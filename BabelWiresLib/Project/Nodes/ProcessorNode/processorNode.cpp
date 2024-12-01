@@ -24,7 +24,7 @@
 babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogger& userLogger,
                                                const ProcessorNodeData& data, NodeId newId)
     : Node(data, newId) {
-    const NodeData& elementData = getElementData();
+    const NodeData& elementData = getNodeData();
     try {
         const ProcessorFactory& factory = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
         auto newProcessor = factory.createNewProcessor(context);
@@ -43,8 +43,8 @@ babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogg
 
 babelwires::ProcessorNode::~ProcessorNode() = default;
 
-const babelwires::ProcessorNodeData& babelwires::ProcessorNode::getElementData() const {
-    return static_cast<const ProcessorNodeData&>(Node::getElementData());
+const babelwires::ProcessorNodeData& babelwires::ProcessorNode::getNodeData() const {
+    return static_cast<const ProcessorNodeData&>(Node::getNodeData());
 }
 
 babelwires::ValueTreeNode* babelwires::ProcessorNode::doGetOutputNonConst() {

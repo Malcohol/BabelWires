@@ -82,11 +82,11 @@ babelwires::NodeId babelwires::Node::getNodeId() const {
     return m_data->m_id;
 }
 
-const babelwires::NodeData& babelwires::Node::getElementData() const {
+const babelwires::NodeData& babelwires::Node::getNodeData() const {
     return *m_data;
 }
 
-babelwires::NodeData& babelwires::Node::getElementData() {
+babelwires::NodeData& babelwires::Node::getNodeData() {
     return *m_data;
 }
 
@@ -133,7 +133,7 @@ void babelwires::Node::removeModifier(Modifier* modifier) {
 
     m_removedModifiers.emplace_back(std::move(m_edits.removeModifier(modifier)));
     ValueTreeNode* input = getInputNonConst(modifier->getTargetPath());
-    assert(input && "Modifiable elements always have input features");
+    assert(input && "Modifiable nodes always have input features");
     if (!modifier->isFailed()) {
         modifier->unapply(input);
     }
@@ -141,8 +141,8 @@ void babelwires::Node::removeModifier(Modifier* modifier) {
     setChanged(Changes::ModifierRemoved);
 }
 
-std::unique_ptr<babelwires::NodeData> babelwires::Node::extractElementData() const {
-    auto data = getElementData().clone();
+std::unique_ptr<babelwires::NodeData> babelwires::Node::extractNodeData() const {
+    auto data = getNodeData().clone();
     for (const auto& m : m_edits.modifierRange()) {
         data->m_modifiers.emplace_back(m->getModifierData().clone());
     }
@@ -232,12 +232,12 @@ std::string babelwires::Node::getReasonForFailure() const {
     std::string reason;
     if (!m_internalFailure.empty()) {
         if (m_isInDependencyLoop) {
-            reason = m_internalFailure + " and the element is part of a dependency loop";
+            reason = m_internalFailure + " and the node is part of a dependency loop";
         } else {
             reason = m_internalFailure;
         }
     } else if (m_isInDependencyLoop) {
-        reason = "The element is part of a dependency loop";
+        reason = "The node is part of a dependency loop";
     }
     return reason;
 }
@@ -347,7 +347,7 @@ namespace {
 } // namespace
 
 void babelwires::Node::modifyValueAt(ValueTreeNode* input, const Path& path) {
-    assert((input != nullptr) && "Trying to modify a feature element with no input feature");
+    assert((input != nullptr) && "Trying to modify a node with no input feature");
 
     unsigned int j = 0;
     for (unsigned int i = 0; i < m_modifiedPaths.size(); ++i) {

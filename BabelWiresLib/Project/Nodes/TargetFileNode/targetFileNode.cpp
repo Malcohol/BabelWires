@@ -25,11 +25,11 @@
 babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLogger& userLogger,
                                                  const TargetFileNodeData& data, NodeId newId)
     : FileNode(data, newId) {
-    const NodeData& elementData = getElementData();
+    const NodeData& nodeData = getNodeData();
     try {
-        setFactoryName(elementData.m_factoryIdentifier);
+        setFactoryName(nodeData.m_factoryIdentifier);
         const TargetFileFormat& factory =
-            context.m_targetFileFormatReg.getRegisteredEntry(elementData.m_factoryIdentifier);
+            context.m_targetFileFormatReg.getRegisteredEntry(nodeData.m_factoryIdentifier);
         setFactoryName(factory.getName());
         auto newFeature = factory.createNewFeature(context);
         newFeature->setToDefault();
@@ -37,23 +37,23 @@ babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLo
     } catch (const RegistryException& e) {
         setInternalFailure(e.what());
         setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisType()));
-        userLogger.logError() << "Failed to create target id=" << elementData.m_id << ": " << e.what();
+        userLogger.logError() << "Failed to create target id=" << nodeData.m_id << ": " << e.what();
     } catch (const BaseException& e) {
         setInternalFailure(e.what());
         setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisType()));
-        userLogger.logError() << "Failed to create target \"" << elementData.m_factoryIdentifier
+        userLogger.logError() << "Failed to create target \"" << nodeData.m_factoryIdentifier
                               << "\": " << e.what();
     }
 }
 
 babelwires::TargetFileNode::~TargetFileNode() = default;
 
-const babelwires::TargetFileNodeData& babelwires::TargetFileNode::getElementData() const {
-    return static_cast<const TargetFileNodeData&>(Node::getElementData());
+const babelwires::TargetFileNodeData& babelwires::TargetFileNode::getNodeData() const {
+    return static_cast<const TargetFileNodeData&>(Node::getNodeData());
 }
 
-babelwires::TargetFileNodeData& babelwires::TargetFileNode::getElementData() {
-    return static_cast<TargetFileNodeData&>(Node::getElementData());
+babelwires::TargetFileNodeData& babelwires::TargetFileNode::getNodeData() {
+    return static_cast<TargetFileNodeData&>(Node::getNodeData());
 }
 
 babelwires::ValueTreeNode* babelwires::TargetFileNode::doGetInputNonConst() {
@@ -70,12 +70,12 @@ void babelwires::TargetFileNode::setValueTreeRoot(std::unique_ptr<ValueTreeRoot>
 }
 
 std::filesystem::path babelwires::TargetFileNode::getFilePath() const {
-    return getElementData().m_filePath;
+    return getNodeData().m_filePath;
 }
 
 void babelwires::TargetFileNode::setFilePath(std::filesystem::path newFilePath) {
-    if (newFilePath != getElementData().m_filePath) {
-        getElementData().m_filePath = std::move(newFilePath);
+    if (newFilePath != getNodeData().m_filePath) {
+        getNodeData().m_filePath = std::move(newFilePath);
         setChanged(Changes::FileChanged);
         updateSaveHash();
     }
@@ -86,7 +86,7 @@ babelwires::TargetFileNode::getFileFormatInformation(const ProjectContext& conte
     // TODO: tryGetRegisteredEntry
     try {
         const TargetFileFormat& format =
-            context.m_targetFileFormatReg.getRegisteredEntry(getElementData().m_factoryIdentifier);
+            context.m_targetFileFormatReg.getRegisteredEntry(getNodeData().m_factoryIdentifier);
         return &format;
     } catch (const RegistryException&) {
     }
@@ -98,7 +98,7 @@ babelwires::FileNode::FileOperations babelwires::TargetFileNode::getSupportedFil
 }
 
 bool babelwires::TargetFileNode::save(const ProjectContext& context, UserLogger& userLogger) {
-    const auto& data = getElementData();
+    const auto& data = getNodeData();
     if (isFailed()) {
         userLogger.logError() << "Cannot write output for failed TargetFileNode (id=" << data.m_id << ")";
         return false;

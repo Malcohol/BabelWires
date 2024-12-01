@@ -39,7 +39,7 @@ namespace babelwires {
         Node(const NodeData& data, NodeId newId);
         virtual ~Node();
 
-        /// Did the feature element fail, either because of an internal failure
+        /// Did the Node fail, either because of an internal failure
         /// or because it is in a dependency loop?
         bool isFailed() const;
 
@@ -55,11 +55,11 @@ namespace babelwires {
         virtual const ValueTreeNode* getInput() const;
         virtual const ValueTreeNode* getOutput() const;
 
-        /// Get a description of the type of element (e.g. format name).
+        /// Get a description of the type of Node (e.g. format name).
         virtual std::string getLabel() const;
 
         NodeId getNodeId() const;
-        const NodeData& getElementData() const;
+        const NodeData& getNodeData() const;
 
         /// Find the modifier at the path, if there is one.
         Modifier* findModifier(const Path& featurePath);
@@ -78,9 +78,9 @@ namespace babelwires {
         /// Set the feature at the path to be expanded or not.
         void setExpanded(const Path& featurePath, bool expanded);
 
-        /// Get a clone of the element data with the modifiers, if there are any, re-attached.
-        /// Expanded paths which do not currently lead to a feature are not included.
-        std::unique_ptr<babelwires::NodeData> extractElementData() const;
+        /// Get a clone of the NodeData with the modifiers, if there are any, re-attached.
+        /// Expanded paths which do not currently lead to a value are not included.
+        std::unique_ptr<babelwires::NodeData> extractNodeData() const;
 
         const UiPosition& getUiPosition() const;
         void setUiPosition(const UiPosition& newPosition);
@@ -92,7 +92,7 @@ namespace babelwires {
         void process(Project& project, UserLogger& userLogger);
 
         // clang-format off
-        /// Describes the way an element may have changed.
+        /// Describes the way a Node may have changed.
         enum class Changes : unsigned int
         {
           NothingChanged                 = 0b000000000000000000,
@@ -127,10 +127,10 @@ namespace babelwires {
         };
         // clang-format on
 
-        /// Query the feature element for any of the given changes.
+        /// Query the Node for any of the given changes.
         bool isChanged(Changes changes) const;
 
-        /// Clear any changes the element is carrying.
+        /// Clear any changes the Node is carrying.
         void clearChanges();
 
         /// Access the contained feature cache.
@@ -144,10 +144,10 @@ namespace babelwires {
 
         auto getRemovedModifiers() const { return PointerRange(m_removedModifiers); }
 
-        /// Is this feature element currently in a dependency loop.
+        /// Is this Node currently in a dependency loop.
         bool isInDependencyLoop() const;
 
-        /// Set or unset the fact that this feature element is in a dependency loop.
+        /// Set or unset the fact that this Node is in a dependency loop.
         void setInDependencyLoop(bool isInLoop);
 
         /// Adjust modifiers which refer to an array at the path, starting at the startIndex.
@@ -184,17 +184,17 @@ namespace babelwires {
         /// has been adjusted.
         /// Array addition/removal could be handled by adding and removing elements. However, that
         /// could triggering lots of unnecessary processing.
-        /// Flags this element as having a moved modifier AND makes a copy of the old state of the modifier
+        /// Flags this Node as having a moved modifier AND makes a copy of the old state of the modifier
         /// in m_removedModifiers.
         void setModifierMoving(const Modifier& modifierAboutToMove);
 
-        NodeData& getElementData();
+        NodeData& getNodeData();
 
         /// Add the modifier, but don't apply it yet.
         /// Returns the new modifier.
         Modifier* addModifierWithoutApplyingIt(const ModifierData& modifier);
 
-        /// Apply the element's local modifiers.
+        /// Apply the Node's local modifiers.
         friend babelwires::NodeData;
         void applyLocalModifiers(UserLogger& userLogger);
 
@@ -216,7 +216,7 @@ namespace babelwires {
         // TODO Move into NodeData.
         std::string m_factoryName;
 
-        /// Container for the edits applied to this feature element.
+        /// Container for the edits applied to this Node.
         EditTree m_edits;
 
         /// This is cleared when changes are cleared.

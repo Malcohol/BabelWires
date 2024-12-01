@@ -152,7 +152,7 @@ void babelwires::ProjectBridge::onNodeMoved(QtNodes::Node& n, const QPointF& new
             AccessModelScope scope(*this);
             const Node* element = scope.getProject().getNode(elementId);
             assert(element && "The element should already be in the project");
-            const UiPosition& uiPosition = element->getElementData().m_uiData.m_uiPosition;
+            const UiPosition& uiPosition = element->getNodeData().m_uiData.m_uiPosition;
             UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
             if (uiPosition != newPosition) {
                 std::string commandName = "Move " + elementNodeModel.caption().toStdString();
@@ -523,7 +523,7 @@ babelwires::ProjectData babelwires::ProjectBridge::getDataFromSelectedNodes() {
 
         const Node* const element = project.getNode(elementId);
         assert(element && "The node is not in the project");
-        projectData.m_nodes.emplace_back(element->extractElementData());
+        projectData.m_nodes.emplace_back(element->extractNodeData());
     }
     return projectData;
 }

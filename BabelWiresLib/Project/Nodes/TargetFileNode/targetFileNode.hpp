@@ -26,7 +26,7 @@ namespace babelwires {
         ~TargetFileNode();
 
         /// Down-cast version of the parent's method.
-        const TargetFileNodeData& getElementData() const;
+        const TargetFileNodeData& getNodeData() const;
 
         virtual const ValueTreeNode* getInput() const override;
 
@@ -36,7 +36,7 @@ namespace babelwires {
         virtual FileOperations getSupportedFileOperations() const override;
         virtual bool save(const ProjectContext& context, UserLogger& userLogger) override;
 
-        /// Adjusts the label to mark that the element has not been saved since
+        /// Adjusts the label to mark that the Node has not been saved since
         /// changes were made.
         virtual std::string getLabel() const override;
 
@@ -46,7 +46,7 @@ namespace babelwires {
 
       protected:
         void setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root);
-        TargetFileNodeData& getElementData();
+        TargetFileNodeData& getNodeData();
 
         /// Should be called when either the contents or the file path change.
         void updateSaveHash();

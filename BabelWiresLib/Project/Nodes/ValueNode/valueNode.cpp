@@ -29,8 +29,8 @@ babelwires::ValueNode::ValueNode(const ProjectContext& context, UserLogger& user
 
 babelwires::ValueNode::~ValueNode() = default;
 
-const babelwires::ValueNodeData& babelwires::ValueNode::getElementData() const {
-    return static_cast<const ValueNodeData&>(Node::getElementData());
+const babelwires::ValueNodeData& babelwires::ValueNode::getNodeData() const {
+    return static_cast<const ValueNodeData&>(Node::getNodeData());
 }
 
 babelwires::ValueTreeNode* babelwires::ValueNode::doGetInputNonConst() {

@@ -14,7 +14,7 @@
 namespace babelwires {
     class FileTypeEntry;
 
-    /// A feature element which represents the contents of a file.
+    /// A base class for Nodes which represents the contents of a file.
     class FileNode : public Node {
       public:
         FileNode(const NodeData& data, NodeId newId);

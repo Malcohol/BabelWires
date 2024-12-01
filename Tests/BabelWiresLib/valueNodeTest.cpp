@@ -28,9 +28,9 @@ TEST(ValueNodeTest, simpleType) {
     ASSERT_NE(valueNode, nullptr);
 
     const babelwires::ValueNodeData* const valueNodeData =
-        valueNode->getElementData().as<babelwires::ValueNodeData>();
+        valueNode->getNodeData().as<babelwires::ValueNodeData>();
     ASSERT_NE(valueNodeData, nullptr);
-    EXPECT_EQ(valueNode->getElementData().m_id, 10);
+    EXPECT_EQ(valueNode->getNodeData().m_id, 10);
     EXPECT_EQ(valueNodeData->getTypeRef(), babelwires::DefaultIntType::getThisType());
 
     const babelwires::ValueTreeNode* const input = valueNode->getInput();

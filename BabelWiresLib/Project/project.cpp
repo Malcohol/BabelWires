@@ -252,7 +252,7 @@ babelwires::ProjectData babelwires::Project::extractProjectData() const {
     ProjectData projectData;
     projectData.m_projectId = m_projectId;
     for (const auto& pair : m_nodes) {
-        projectData.m_nodes.emplace_back(pair.second->extractElementData());
+        projectData.m_nodes.emplace_back(pair.second->extractNodeData());
     }
     return projectData;
 }

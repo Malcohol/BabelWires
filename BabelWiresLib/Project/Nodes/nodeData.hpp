@@ -39,10 +39,10 @@ namespace babelwires {
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
 
-        /// The position this element is at in the UI.
+        /// The position this Node is at in the UI.
         UiPosition m_uiPosition;
 
-        /// The size of the element in the UI.
+        /// The size of the Node in the UI.
         UiSize m_uiSize;
     };
 
@@ -71,10 +71,10 @@ namespace babelwires {
         std::unique_ptr<Node> createNode(const ProjectContext& context, UserLogger& userLogger,
                                                              NodeId newId) const;
 
-        /// Call the visitor on all the FieldIdentifiers in the element.
+        /// Call the visitor on all the FieldIdentifiers in the Node.
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
-        /// Call the visitor on all the FilePaths in the element.
+        /// Call the visitor on all the FilePaths in the Node.
         /// This base implementation does nothing.
         void visitFilePaths(FilePathVisitor& visitor) override;
 
@@ -86,7 +86,7 @@ namespace babelwires {
         /// be considered implicitly up-to-date.
         VersionNumber m_factoryVersion = 0;
 
-        /// Uniquely identifies the Element within the project.
+        /// Uniquely identifies the Node within the project.
         NodeId m_id = INVALID_NODE_ID;
 
         /// Data solely relevant to the UI.

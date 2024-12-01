@@ -23,7 +23,7 @@ namespace babelwires {
         ~ProcessorNode();
 
         /// Down-cast version of the parent's method.
-        const ProcessorNodeData& getElementData() const;
+        const ProcessorNodeData& getNodeData() const;
 
         virtual const ValueTreeNode* getInput() const override;
         virtual const ValueTreeNode* getOutput() const override;

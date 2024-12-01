@@ -25,12 +25,12 @@ babelwires::SourceFileNode::SourceFileNode(const ProjectContext& context, UserLo
     reload(context, userLogger);
 }
 
-const babelwires::SourceFileNodeData& babelwires::SourceFileNode::getElementData() const {
-    return static_cast<const SourceFileNodeData&>(Node::getElementData());
+const babelwires::SourceFileNodeData& babelwires::SourceFileNode::getNodeData() const {
+    return static_cast<const SourceFileNodeData&>(Node::getNodeData());
 }
 
-babelwires::SourceFileNodeData& babelwires::SourceFileNode::getElementData() {
-    return static_cast<SourceFileNodeData&>(Node::getElementData());
+babelwires::SourceFileNodeData& babelwires::SourceFileNode::getNodeData() {
+    return static_cast<SourceFileNodeData&>(Node::getNodeData());
 }
 
 babelwires::ValueTreeNode* babelwires::SourceFileNode::doGetOutputNonConst() {
@@ -53,12 +53,12 @@ void babelwires::SourceFileNode::doProcess(UserLogger& userLogger) {
 }
 
 std::filesystem::path babelwires::SourceFileNode::getFilePath() const {
-    return getElementData().m_filePath;
+    return getNodeData().m_filePath;
 }
 
 void babelwires::SourceFileNode::setFilePath(std::filesystem::path newFilePath) {
-    if (newFilePath != getElementData().m_filePath) {
-        getElementData().m_filePath = std::move(newFilePath);
+    if (newFilePath != getNodeData().m_filePath) {
+        getNodeData().m_filePath = std::move(newFilePath);
         setChanged(Changes::FileChanged);
     }
 }
@@ -67,7 +67,7 @@ const babelwires::FileTypeEntry*
 babelwires::SourceFileNode::getFileFormatInformation(const ProjectContext& context) const {
     // TODO: tryGetRegisteredEntry
    try {
-        const FileTypeEntry& format = context.m_sourceFileFormatReg.getRegisteredEntry(getElementData().m_factoryIdentifier);
+        const FileTypeEntry& format = context.m_sourceFileFormatReg.getRegisteredEntry(getNodeData().m_factoryIdentifier);
         return &format;
     } catch (const RegistryException& e) {
     }
@@ -79,7 +79,7 @@ babelwires::FileNode::FileOperations babelwires::SourceFileNode::getSupportedFil
 }
 
 bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogger& userLogger) {
-    const SourceFileNodeData& data = getElementData();
+    const SourceFileNodeData& data = getNodeData();
 
     try {
         const SourceFileFormat& format = context.m_sourceFileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);

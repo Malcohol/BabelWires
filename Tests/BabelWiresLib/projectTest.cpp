@@ -369,7 +369,7 @@ TEST(ProjectTest, elementIds) {
 
     const babelwires::Node* element1 = testEnvironment.m_project.getNode(elementId1);
     ASSERT_NE(element1, nullptr);
-    EXPECT_EQ(element1->getElementData().m_id, elementId1);
+    EXPECT_EQ(element1->getNodeData().m_id, elementId1);
     EXPECT_NE(element, element1);
 
     const babelwires::NodeId elementId2 = testEnvironment.m_project.addNode(elementData);

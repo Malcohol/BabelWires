@@ -216,7 +216,7 @@ TEST(NodeTest, expandedPaths) {
     EXPECT_FALSE(featureElement->isExpanded(arrayElemPath2));
 }
 
-TEST(NodeTest, extractElementData) {
+TEST(NodeTest, extractNodeData) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordElementData featureElementData;
 
@@ -263,7 +263,7 @@ TEST(NodeTest, extractElementData) {
     featureElement->setExpanded(arrayElemPath, true);
     featureElement->setExpanded(arrayElemPath2, false);
 
-    const auto extractedData = featureElement->extractElementData();
+    const auto extractedData = featureElement->extractNodeData();
 
     ASSERT_TRUE(extractedData);
     EXPECT_EQ(extractedData->m_id, 66);
