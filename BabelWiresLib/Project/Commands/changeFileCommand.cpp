@@ -18,13 +18,13 @@ babelwires::ChangeFileCommand::ChangeFileCommand(std::string commandName, NodeId
     , m_newFilePath(std::move(newFilePath)) {}
 
 bool babelwires::ChangeFileCommand::initialize(const Project& project) {
-    const Node* const element = project.getNode(m_nodeId);
+    const Node* const node = project.getNode(m_nodeId);
 
-    if (!element) {
+    if (!node) {
         return false;
     }
 
-    const FileNode* const fileElement = element->as<FileNode>();
+    const FileNode* const fileElement = node->as<FileNode>();
 
     if (!fileElement) {
         return false;
@@ -35,10 +35,10 @@ bool babelwires::ChangeFileCommand::initialize(const Project& project) {
 }
 
 void babelwires::ChangeFileCommand::execute(Project& project) const {
-    Node* const element = project.getNode(m_nodeId);
-    assert(element && "The element should already be in the project");
-    FileNode* const fileElement = element->as<FileNode>();
-    assert(fileElement && "The element should be a file element");
+    Node* const node = project.getNode(m_nodeId);
+    assert(node && "The node should already be in the project");
+    FileNode* const fileElement = node->as<FileNode>();
+    assert(fileElement && "The node should be a file node");
     fileElement->setFilePath(m_newFilePath);
     if (isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
         project.tryToReloadSource(m_nodeId);
@@ -46,10 +46,10 @@ void babelwires::ChangeFileCommand::execute(Project& project) const {
 }
 
 void babelwires::ChangeFileCommand::undo(Project& project) const {
-    Node* const element = project.getNode(m_nodeId);
-    assert(element && "The element should already be in the project");
-    FileNode* const fileElement = element->as<FileNode>();
-    assert(fileElement && "The element should be a file element");
+    Node* const node = project.getNode(m_nodeId);
+    assert(node && "The node should already be in the project");
+    FileNode* const fileElement = node->as<FileNode>();
+    assert(fileElement && "The node should be a file node");
     fileElement->setFilePath(m_oldFilePath);
     if (isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
         project.tryToReloadSource(m_nodeId);

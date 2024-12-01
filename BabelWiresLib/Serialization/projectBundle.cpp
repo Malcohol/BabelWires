@@ -20,23 +20,23 @@ babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile
 
 void babelwires::ProjectBundle::interpretAdditionalMetadataInCurrentContext() {
     // Capture current factory metadata
-    for (const auto& element : getData().m_nodes) {
-        VersionNumber& storedVersion = m_factoryMetadata[element->m_factoryIdentifier];
-        assert(((storedVersion == 0) || (storedVersion == element->m_factoryVersion)) &&
+    for (const auto& node : getData().m_nodes) {
+        VersionNumber& storedVersion = m_factoryMetadata[node->m_factoryIdentifier];
+        assert(((storedVersion == 0) || (storedVersion == node->m_factoryVersion)) &&
                "Inconsistent factory versions in ProjectData");
-        storedVersion = element->m_factoryVersion;
+        storedVersion = node->m_factoryVersion;
     }
 }
 
 void babelwires::ProjectBundle::adaptDataToAdditionalMetadata(const DataContext& context, UserLogger& userLogger) {
     const ProjectContext& projectContext = static_cast<const ProjectContext&>(context);
-    for (auto& element : getData().m_nodes) {
-        element->m_factoryVersion = m_factoryMetadata[element->m_factoryIdentifier];
+    for (auto& node : getData().m_nodes) {
+        node->m_factoryVersion = m_factoryMetadata[node->m_factoryIdentifier];
     }
 
-    for (auto& element : getData().m_nodes) {
+    for (auto& node : getData().m_nodes) {
         // Can log the same message multiple times.
-        element->checkFactoryVersion(projectContext, userLogger);
+        node->checkFactoryVersion(projectContext, userLogger);
     }
 }
 

@@ -27,8 +27,8 @@ void babelwires::RemoveFailedModifiersAction::actionTriggered(babelwires::Featur
 
     AccessModelScope scope(projectBridge);
     const Project& project = scope.getProject();
-    const Node* const element = project.getNode(elementId);
-    if (!element) {
+    const Node* const node = project.getNode(elementId);
+    if (!node) {
         return;
     }
 

@@ -23,8 +23,8 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
     std::unordered_map<NodeId, NodeId> remappingTable;
     {
         std::vector<NodeId> originalIds;
-        for (const auto& element : m_dataToPaste.m_nodes) {
-            originalIds.emplace_back(element->m_id);
+        for (const auto& node : m_dataToPaste.m_nodes) {
+            originalIds.emplace_back(node->m_id);
         }
         std::vector<NodeId> availableIds = originalIds;
         project.updateWithAvailableIds(availableIds);
@@ -39,14 +39,14 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
     // pasting into the "same" project.
     const bool preserveInConnections = (project.getProjectId() == m_dataToPaste.m_projectId);
 
-    for (auto& element : m_dataToPaste.m_nodes) {
-        auto it = remappingTable.find(element->m_id);
-        assert((it != remappingTable.end()) && "All element ids should be in the map");
+    for (auto& node : m_dataToPaste.m_nodes) {
+        auto it = remappingTable.find(node->m_id);
+        assert((it != remappingTable.end()) && "All node ids should be in the map");
         NodeId newNodeId = it->second;
-        element->m_id = newNodeId;
+        node->m_id = newNodeId;
 
         auto newEnd = std::remove_if(
-            element->m_modifiers.begin(), element->m_modifiers.end(),
+            node->m_modifiers.begin(), node->m_modifiers.end(),
             [this, &remappingTable, preserveInConnections, newNodeId,
              &project](std::unique_ptr<ModifierData>& modData) {
                 if (auto* assignFromData = modData.get()->as<ConnectionModifierData>()) {
@@ -66,7 +66,7 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
                 }
                 return false;
             });
-        element->m_modifiers.erase(newEnd, element->m_modifiers.end());
+        node->m_modifiers.erase(newEnd, node->m_modifiers.end());
     }
     return true;
 }

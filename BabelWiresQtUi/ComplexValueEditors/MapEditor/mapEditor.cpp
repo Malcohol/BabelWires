@@ -211,13 +211,13 @@ const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(Access
 
 const babelwires::ValueAssignmentData*
 babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
-    const Node* const element = scope.getProject().getNode(getData().getNodeId());
+    const Node* const node = scope.getProject().getNode(getData().getNodeId());
 
-    if (!element) {
+    if (!node) {
         return nullptr;
     }
 
-    const Modifier* const modifier = element->findModifier(getData().getPathToValue());
+    const Modifier* const modifier = node->findModifier(getData().getPathToValue());
 
     if (!modifier) {
         return nullptr;
