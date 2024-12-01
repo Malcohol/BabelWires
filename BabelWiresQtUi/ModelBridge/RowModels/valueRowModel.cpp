@@ -11,7 +11,7 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>

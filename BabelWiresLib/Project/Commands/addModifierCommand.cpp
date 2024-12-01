@@ -9,7 +9,7 @@
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>

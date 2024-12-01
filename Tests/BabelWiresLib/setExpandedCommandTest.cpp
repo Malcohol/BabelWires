@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
 
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/node.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 

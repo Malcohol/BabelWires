@@ -12,7 +12,7 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/node.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 

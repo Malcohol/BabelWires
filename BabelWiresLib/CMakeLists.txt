@@ -1,6 +1,6 @@
 SET( BABELWIRESLIB_SRCS
 	Project/project.cpp
-	Project/FeatureElements/featureElement.cpp
+	Project/FeatureElements/node.cpp
 	Project/FeatureElements/featureElementData.cpp
 	Project/FeatureElements/ProcessorElement/processorElement.cpp
 	Project/FeatureElements/SourceFileElement/sourceFileElement.cpp

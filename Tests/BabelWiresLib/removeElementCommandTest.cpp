@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
 
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/node.hpp>
 #include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElement.hpp>
 #include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>

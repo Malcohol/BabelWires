@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
 #include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>

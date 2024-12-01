@@ -13,7 +13,7 @@
 
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 #include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 

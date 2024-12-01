@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Project/Commands/resizeElementCommand.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/FeatureElements/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <cassert>
