@@ -1,5 +1,5 @@
 /**
- * ValueElementData describes the construction of a ValueElement.
+ * ValueNodeData describes the construction of a ValueNode.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -12,16 +12,16 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 namespace babelwires {
-    /// Describes the construction of a ValueElement.
-    class ValueElementData : public NodeData {
+    /// Describes the construction of a ValueNode.
+    class ValueNodeData : public NodeData {
       public:
-        CLONEABLE(ValueElementData);
-        CUSTOM_CLONEABLE(ValueElementData);
-        SERIALIZABLE(ValueElementData, "value", NodeData, 1);
-        ValueElementData() = default;
-        ValueElementData(TypeRef typeRef);
-        ValueElementData(const ValueElementData& other) = default;
-        ValueElementData(const ValueElementData& other, ShallowCloneContext);
+        CLONEABLE(ValueNodeData);
+        CUSTOM_CLONEABLE(ValueNodeData);
+        SERIALIZABLE(ValueNodeData, "value", NodeData, 1);
+        ValueNodeData() = default;
+        ValueNodeData(TypeRef typeRef);
+        ValueNodeData(const ValueNodeData& other) = default;
+        ValueNodeData(const ValueNodeData& other, ShallowCloneContext);
 
         bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) override;
 

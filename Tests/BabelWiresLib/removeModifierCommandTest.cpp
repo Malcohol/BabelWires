@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
@@ -119,19 +119,19 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
 
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
     const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
 
-    const babelwires::ValueElement* const element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
+    const babelwires::ValueNode* const element =
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::ValueElement* const targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
+    const babelwires::ValueNode* const targetElement =
+        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::Path pathToValue;

@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 #include <BabelWiresLib/Instance/instance.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
 namespace testUtils {
@@ -82,8 +82,8 @@ namespace testUtils {
         DECLARE_INSTANCE_END()
     };
 
-    /// ValueElementData which creates an element carrying a simple record type.
-    class TestSimpleRecordElementData : public babelwires::ValueElementData {
+    /// ValueNodeData which creates an element carrying a simple record type.
+    class TestSimpleRecordElementData : public babelwires::ValueNodeData {
       public:
         TestSimpleRecordElementData();
 
@@ -91,7 +91,7 @@ namespace testUtils {
         static babelwires::Path getPathToRecordInt0();
     };
 
-    class TestComplexRecordElementData : public babelwires::ValueElementData {
+    class TestComplexRecordElementData : public babelwires::ValueNodeData {
       public:
         TestComplexRecordElementData();
 

@@ -11,8 +11,8 @@ SET( BABELWIRESLIB_SRCS
 	Project/Nodes/SourceFileNode/sourceFileNodeData.cpp
 	Project/Nodes/TargetFileNode/targetFileNodeData.cpp
 	Project/Nodes/ProcessorNode/processorNodeData.cpp
-	Project/Nodes/ValueElement/valueElement.cpp
-	Project/Nodes/ValueElement/valueElementData.cpp
+	Project/Nodes/ValueNode/valueNode.cpp
+	Project/Nodes/ValueNode/valueNodeData.cpp
 	Project/Modifiers/modifier.cpp
 	Project/Modifiers/modifierData.cpp
 	Project/Modifiers/localModifier.cpp

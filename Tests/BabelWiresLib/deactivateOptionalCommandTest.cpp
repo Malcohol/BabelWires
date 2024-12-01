@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -18,19 +18,19 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
 
     const babelwires::ElementId sourceId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
     const babelwires::ElementId targetId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
 
-    const babelwires::ValueElement* const element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
+    const babelwires::ValueNode* const element =
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
-    const babelwires::ValueElement* const targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
+    const babelwires::ValueNode* const targetElement =
+        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::Path pathToValue;
@@ -136,7 +136,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::DeactivateOptionalCommand command("Test command", 51,
                                                   babelwires::Path::deserializeFromString("qqq/zzz"), opId);
 
-    babelwires::ValueElementData elementData(testUtils::TestComplexRecordType::getThisType());
+    babelwires::ValueNodeData elementData(testUtils::TestComplexRecordType::getThisType());
     elementData.m_id = 51;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
@@ -150,7 +150,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
 
     const babelwires::Path pathToValue;
 
@@ -165,7 +165,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
 
     // Not an optional field
     babelwires::ShortId opId("flerm");
@@ -184,7 +184,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(
-        babelwires::ValueElementData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
 
     const babelwires::Path pathToValue;
 

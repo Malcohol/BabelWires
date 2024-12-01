@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Project/Commands/selectRecordVariantCommand.hpp>
 
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
@@ -27,11 +27,11 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     const babelwires::ElementId targetId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestSimpleRecordElementData());
 
-    const babelwires::ValueElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
+    const babelwires::ValueNode* element =
+        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
     const auto* targetElement =
-        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueElement>();
+        testEnvironment.m_project.getFeatureElement(targetId)->as<babelwires::ValueNode>();
     ASSERT_NE(targetElement, nullptr);
 
     const auto getSelectedTag = [](const babelwires::ValueTreeNode* valueTreeNode) {
@@ -152,7 +152,7 @@ TEST(SelectRecordVariantCommandTest, failSafelyNotATag) {
     const babelwires::ElementId elementId =
         testEnvironment.m_project.addFeatureElement(testUtils::TestRecordWithVariantsElementData());
 
-    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueElement>();
+    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     babelwires::ShortId notATag("notTag");

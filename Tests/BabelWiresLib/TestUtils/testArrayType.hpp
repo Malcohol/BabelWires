@@ -1,4 +1,4 @@
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
@@ -30,8 +30,8 @@ namespace testUtils {
         PRIMITIVE_TYPE("carray", "Test Compound Array", "e2125eb9-b8a5-470a-a287-7142ff5a6b9c", 1);
     };
 
-    /// ValueElementData which creates an element carrying a simple array.
-    class TestArrayElementData : public babelwires::ValueElementData {
+    /// ValueNodeData which creates an element carrying a simple array.
+    class TestArrayElementData : public babelwires::ValueNodeData {
       public:
         TestArrayElementData();
 

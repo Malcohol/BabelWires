@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -73,7 +73,7 @@ TEST(ProjectTest, addGetAndRemoveElement) {
 
     const babelwires::Node* element = testEnvironment.m_project.getFeatureElement(elementId);
     EXPECT_NE(element, nullptr);
-    EXPECT_NE(element->as<babelwires::ValueElement>(), nullptr);
+    EXPECT_NE(element->as<babelwires::ValueNode>(), nullptr);
     EXPECT_TRUE(element->isChanged(babelwires::Node::Changes::FeatureElementIsNew));
 
     testEnvironment.m_project.removeElement(elementId);

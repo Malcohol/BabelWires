@@ -1,20 +1,20 @@
 /**
- * ValueElements are FeatureElements which carry a value.
+ * ValueNodes are FeatureElements which carry a value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 
-babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger& userLogger,
-                                       const ValueElementData& data, ElementId newId)
+babelwires::ValueNode::ValueNode(const ProjectContext& context, UserLogger& userLogger,
+                                       const ValueNodeData& data, ElementId newId)
     : Node(data, newId) {
     setFactoryName(data.getTypeRef().toString());
     TypeRef typeRefForConstruction = data.getTypeRef();
@@ -27,29 +27,29 @@ babelwires::ValueElement::ValueElement(const ProjectContext& context, UserLogger
     m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.m_typeSystem, typeRefForConstruction);
 }
 
-babelwires::ValueElement::~ValueElement() = default;
+babelwires::ValueNode::~ValueNode() = default;
 
-const babelwires::ValueElementData& babelwires::ValueElement::getElementData() const {
-    return static_cast<const ValueElementData&>(Node::getElementData());
+const babelwires::ValueNodeData& babelwires::ValueNode::getElementData() const {
+    return static_cast<const ValueNodeData&>(Node::getElementData());
 }
 
-babelwires::ValueTreeNode* babelwires::ValueElement::doGetInputNonConst() {
+babelwires::ValueTreeNode* babelwires::ValueNode::doGetInputNonConst() {
     return m_valueTreeRoot.get();
 }
 
-babelwires::ValueTreeNode* babelwires::ValueElement::doGetOutputNonConst() {
+babelwires::ValueTreeNode* babelwires::ValueNode::doGetOutputNonConst() {
     return m_valueTreeRoot.get();
 }
 
-const babelwires::ValueTreeNode* babelwires::ValueElement::getInput() const {
+const babelwires::ValueTreeNode* babelwires::ValueNode::getInput() const {
     return m_valueTreeRoot.get();
 }
 
-const babelwires::ValueTreeNode* babelwires::ValueElement::getOutput() const {
+const babelwires::ValueTreeNode* babelwires::ValueNode::getOutput() const {
     return m_valueTreeRoot.get();
 }
 
-std::string babelwires::ValueElement::getRootLabel() const {
+std::string babelwires::ValueNode::getRootLabel() const {
     if (m_valueTreeRoot->getTypeRef() == FailureType::getThisType()) {
         return "Failed";
     } else {
@@ -57,7 +57,7 @@ std::string babelwires::ValueElement::getRootLabel() const {
     }
 }
 
-void babelwires::ValueElement::doProcess(UserLogger& userLogger) {
+void babelwires::ValueNode::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
         setValueTrees(getRootLabel(), m_valueTreeRoot.get(), m_valueTreeRoot.get());
     } else if (isChanged(Changes::ModifierChangesMask)) {

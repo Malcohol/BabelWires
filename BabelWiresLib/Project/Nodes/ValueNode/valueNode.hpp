@@ -1,5 +1,5 @@
 /**
- * ValueElements are FeatureElements which carry a value.
+ * ValueNodes are FeatureElements which carry a value.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -12,17 +12,17 @@
 
 namespace babelwires {
     struct UserLogger;
-    class ValueElementData;
+    class ValueNodeData;
     class ValueTreeRoot;
 
-    class ValueElement : public Node {
+    class ValueNode : public Node {
       public:
-        ValueElement(const ProjectContext& context, UserLogger& userLogger, const ValueElementData& data,
+        ValueNode(const ProjectContext& context, UserLogger& userLogger, const ValueNodeData& data,
                          ElementId newId);
-        ~ValueElement();
+        ~ValueNode();
 
         /// Down-cast version of the parent's method.
-        const ValueElementData& getElementData() const;
+        const ValueNodeData& getElementData() const;
 
         virtual const ValueTreeNode* getInput() const override;
         virtual const ValueTreeNode* getOutput() const override;

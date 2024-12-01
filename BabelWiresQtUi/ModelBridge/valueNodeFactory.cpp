@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 
 #include <QtWidgets/QFileDialog>
@@ -26,7 +26,7 @@ QString babelwires::ValueNodeFactory::name() const {
 }
 
 std::unique_ptr<QtNodes::NodeDataModel> babelwires::ValueNodeFactory::createNode() const {
-    auto newDataPtr = std::make_unique<ValueElementData>(m_typeOfValue);
+    auto newDataPtr = std::make_unique<ValueNodeData>(m_typeOfValue);
 
     auto commandPtr = std::make_unique<AddElementCommand>("Add Value Element", std::move(newDataPtr));
     AddElementCommand& addElementCommand = *commandPtr;

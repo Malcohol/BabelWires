@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
@@ -364,7 +364,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 TEST(ModifierTest, connectionModifierApplicationFailure) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueElementData elementData{testUtils::TestComplexRecordType::getThisType()};
+    babelwires::ValueNodeData elementData{testUtils::TestComplexRecordType::getThisType()};
 
     const babelwires::Path sourcePath{
         std::vector<babelwires::PathStep>{babelwires::PathStep(testUtils::TestComplexRecordType::getSubrecordId()),

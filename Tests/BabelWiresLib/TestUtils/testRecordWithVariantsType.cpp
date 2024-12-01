@@ -1,7 +1,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
@@ -62,7 +62,7 @@ babelwires::ShortId testUtils::TestRecordWithVariantsType::getFieldBCId() {
 }
 
 testUtils::TestRecordWithVariantsElementData::TestRecordWithVariantsElementData()
-    : ValueElementData(testUtils::TestRecordWithVariantsType::getThisType()) {}
+    : ValueNodeData(testUtils::TestRecordWithVariantsType::getThisType()) {}
 
 babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants() {
     return babelwires::Path();

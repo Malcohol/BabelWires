@@ -1,7 +1,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 
 testUtils::TestSimpleArrayType::TestSimpleArrayType()
     : babelwires::ArrayType(getEntryTypeStatic(), s_minimumSize, s_maximumSize, s_defaultSize) {}
@@ -18,7 +18,7 @@ babelwires::TypeRef testUtils::TestCompoundArrayType::getEntryTypeStatic() {
 }
 
 testUtils::TestArrayElementData::TestArrayElementData()
-    : babelwires::ValueElementData(TestSimpleArrayType::getThisType()) {}
+    : babelwires::ValueNodeData(TestSimpleArrayType::getThisType()) {}
 
 babelwires::Path testUtils::TestArrayElementData::getPathToArray() {
     return babelwires::Path();

@@ -4,7 +4,7 @@
 
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -24,7 +24,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     const babelwires::Node* newElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(newElement, nullptr);
-    EXPECT_NE(newElement->as<babelwires::ValueElement>(), nullptr);
+    EXPECT_NE(newElement->as<babelwires::ValueNode>(), nullptr);
 
     command.undo(testEnvironment.m_project);
 
@@ -34,7 +34,7 @@ TEST(AddElementCommandTest, executeAndUndo) {
 
     const babelwires::Node* restoredElement = testEnvironment.m_project.getFeatureElement(command.getElementId());
     ASSERT_NE(restoredElement, nullptr);
-    EXPECT_NE(restoredElement->as<babelwires::ValueElement>(), nullptr);
+    EXPECT_NE(restoredElement->as<babelwires::ValueNode>(), nullptr);
 }
 
 TEST(AddElementCommandTest, subsumeMoves) {
@@ -55,7 +55,7 @@ TEST(AddElementCommandTest, subsumeMoves) {
     addCommand.undo(testEnvironment.m_project);
     addCommand.execute(testEnvironment.m_project);
     const auto* element =
-        testEnvironment.m_project.getFeatureElement(addCommand.getElementId())->as<babelwires::ValueElement>();
+        testEnvironment.m_project.getFeatureElement(addCommand.getElementId())->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
     EXPECT_EQ(element->getUiPosition().m_y, 88);

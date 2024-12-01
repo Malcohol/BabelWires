@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
-#include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
