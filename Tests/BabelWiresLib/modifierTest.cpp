@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueElement/valueElementData.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>

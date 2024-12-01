@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>

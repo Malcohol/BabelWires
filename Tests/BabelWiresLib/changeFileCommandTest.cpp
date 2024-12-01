@@ -4,8 +4,8 @@
 
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -102,12 +102,12 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     std::string filePath1("foo" + testUtils::TestSourceFileFormat::getFileExtension());
     std::string filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
 
-    babelwires::TargetFileElementData elementData;
+    babelwires::TargetFileNodeData elementData;
     elementData.m_filePath = filePath1;
     elementData.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
-    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::TargetFileElement>();
+    const auto* element = testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::TargetFileNode>();
     ASSERT_NE(element, nullptr);
 
     EXPECT_EQ(element->getFilePath(), filePath1);

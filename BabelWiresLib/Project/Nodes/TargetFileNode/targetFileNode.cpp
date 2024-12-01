@@ -1,16 +1,16 @@
 /**
- * TargetFileElements are FeatureElements which correspond to a target file.
+ * TargetFileNodes are FeatureElements which correspond to a target file.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
 
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
@@ -22,8 +22,8 @@
 
 #include <fstream>
 
-babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, UserLogger& userLogger,
-                                                 const TargetFileElementData& data, ElementId newId)
+babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLogger& userLogger,
+                                                 const TargetFileNodeData& data, ElementId newId)
     : FileNode(data, newId) {
     const NodeData& elementData = getElementData();
     try {
@@ -46,34 +46,34 @@ babelwires::TargetFileElement::TargetFileElement(const ProjectContext& context, 
     }
 }
 
-babelwires::TargetFileElement::~TargetFileElement() = default;
+babelwires::TargetFileNode::~TargetFileNode() = default;
 
-const babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData() const {
-    return static_cast<const TargetFileElementData&>(Node::getElementData());
+const babelwires::TargetFileNodeData& babelwires::TargetFileNode::getElementData() const {
+    return static_cast<const TargetFileNodeData&>(Node::getElementData());
 }
 
-babelwires::TargetFileElementData& babelwires::TargetFileElement::getElementData() {
-    return static_cast<TargetFileElementData&>(Node::getElementData());
+babelwires::TargetFileNodeData& babelwires::TargetFileNode::getElementData() {
+    return static_cast<TargetFileNodeData&>(Node::getElementData());
 }
 
-babelwires::ValueTreeNode* babelwires::TargetFileElement::doGetInputNonConst() {
+babelwires::ValueTreeNode* babelwires::TargetFileNode::doGetInputNonConst() {
     return m_valueTreeRoot.get();
 }
 
-const babelwires::ValueTreeNode* babelwires::TargetFileElement::getInput() const {
+const babelwires::ValueTreeNode* babelwires::TargetFileNode::getInput() const {
     return m_valueTreeRoot.get();
 }
 
-void babelwires::TargetFileElement::setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root) {
+void babelwires::TargetFileNode::setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root) {
     setValueTrees("File", root.get(), nullptr);
     m_valueTreeRoot = std::move(root);
 }
 
-std::filesystem::path babelwires::TargetFileElement::getFilePath() const {
+std::filesystem::path babelwires::TargetFileNode::getFilePath() const {
     return getElementData().m_filePath;
 }
 
-void babelwires::TargetFileElement::setFilePath(std::filesystem::path newFilePath) {
+void babelwires::TargetFileNode::setFilePath(std::filesystem::path newFilePath) {
     if (newFilePath != getElementData().m_filePath) {
         getElementData().m_filePath = std::move(newFilePath);
         setChanged(Changes::FileChanged);
@@ -82,7 +82,7 @@ void babelwires::TargetFileElement::setFilePath(std::filesystem::path newFilePat
 }
 
 const babelwires::FileTypeEntry*
-babelwires::TargetFileElement::getFileFormatInformation(const ProjectContext& context) const {
+babelwires::TargetFileNode::getFileFormatInformation(const ProjectContext& context) const {
     // TODO: tryGetRegisteredEntry
     try {
         const TargetFileFormat& format =
@@ -93,18 +93,18 @@ babelwires::TargetFileElement::getFileFormatInformation(const ProjectContext& co
     return nullptr;
 }
 
-babelwires::FileNode::FileOperations babelwires::TargetFileElement::getSupportedFileOperations() const {
+babelwires::FileNode::FileOperations babelwires::TargetFileNode::getSupportedFileOperations() const {
     return FileOperations::save;
 }
 
-bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogger& userLogger) {
+bool babelwires::TargetFileNode::save(const ProjectContext& context, UserLogger& userLogger) {
     const auto& data = getElementData();
     if (isFailed()) {
-        userLogger.logError() << "Cannot write output for failed TargetFileElement (id=" << data.m_id << ")";
+        userLogger.logError() << "Cannot write output for failed TargetFileNode (id=" << data.m_id << ")";
         return false;
     }
     if (data.m_filePath.empty()) {
-        userLogger.logError() << "Cannot write output for TargetFileElement when there is no file path (id="
+        userLogger.logError() << "Cannot write output for TargetFileNode when there is no file path (id="
                               << data.m_id << ")";
         return false;
     }
@@ -120,12 +120,12 @@ bool babelwires::TargetFileElement::save(const ProjectContext& context, UserLogg
         }
         return true;
     } catch (const std::exception& e) {
-        userLogger.logError() << "Failed to write output for TargetFileElement (id=" << data.m_id << "): " << e.what();
+        userLogger.logError() << "Failed to write output for TargetFileNode (id=" << data.m_id << "): " << e.what();
     }
     return false;
 }
 
-void babelwires::TargetFileElement::doProcess(UserLogger& userLogger) {
+void babelwires::TargetFileNode::doProcess(UserLogger& userLogger) {
     if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
         setValueTrees("File", m_valueTreeRoot.get(), nullptr);
     } else if (isChanged(Changes::ModifierChangesMask)) {
@@ -137,7 +137,7 @@ void babelwires::TargetFileElement::doProcess(UserLogger& userLogger) {
     }
 }
 
-std::string babelwires::TargetFileElement::getLabel() const {
+std::string babelwires::TargetFileNode::getLabel() const {
     if (m_saveHash == m_saveHashWhenSaved) {
         return Node::getLabel();
     } else {
@@ -145,7 +145,7 @@ std::string babelwires::TargetFileElement::getLabel() const {
     }
 }
 
-void babelwires::TargetFileElement::updateSaveHash() {
+void babelwires::TargetFileNode::updateSaveHash() {
     std::size_t newHash = m_valueTreeRoot->getHash();
     hash::mixInto(newHash, getFilePath().u8string());
 

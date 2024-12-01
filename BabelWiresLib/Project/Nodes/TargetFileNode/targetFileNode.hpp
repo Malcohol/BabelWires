@@ -1,5 +1,5 @@
 /**
- * TargetFileElements are FeatureElements which correspond to a target file.
+ * TargetFileNodes are FeatureElements which correspond to a target file.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -15,18 +15,18 @@ namespace babelwires {
 
 namespace babelwires {
     class ValueTreeRoot;
-    struct TargetFileElementData;
+    struct TargetFileNodeData;
     struct ProjectContext;
 
-    /// TargetFileElements are FeatureElements which correspond to a target file.
-    class TargetFileElement : public FileNode {
+    /// TargetFileNodes are FeatureElements which correspond to a target file.
+    class TargetFileNode : public FileNode {
       public:
-        TargetFileElement(const ProjectContext& context, UserLogger& userLogger, const TargetFileElementData& data,
+        TargetFileNode(const ProjectContext& context, UserLogger& userLogger, const TargetFileNodeData& data,
                           ElementId newId);
-        ~TargetFileElement();
+        ~TargetFileNode();
 
         /// Down-cast version of the parent's method.
-        const TargetFileElementData& getElementData() const;
+        const TargetFileNodeData& getElementData() const;
 
         virtual const ValueTreeNode* getInput() const override;
 
@@ -46,7 +46,7 @@ namespace babelwires {
 
       protected:
         void setValueTreeRoot(std::unique_ptr<ValueTreeRoot> root);
-        TargetFileElementData& getElementData();
+        TargetFileNodeData& getElementData();
 
         /// Should be called when either the contents or the file path change.
         void updateSaveHash();

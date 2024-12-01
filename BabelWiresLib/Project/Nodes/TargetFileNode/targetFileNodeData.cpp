@@ -1,50 +1,50 @@
 /**
- * TargetFileElementData describes the construction of a TargetFileFeature.
+ * TargetFileNodeData describes the construction of a TargetFileFeature.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
 
 #include <Common/Log/userLogger.hpp>
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 #include <Common/exceptions.hpp>
 
-babelwires::TargetFileElementData::TargetFileElementData(const TargetFileElementData& other, ShallowCloneContext c)
+babelwires::TargetFileNodeData::TargetFileNodeData(const TargetFileNodeData& other, ShallowCloneContext c)
     : NodeData(other, c)
     , m_filePath(other.m_filePath) {}
 
-bool babelwires::TargetFileElementData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
+bool babelwires::TargetFileNodeData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
     return checkFactoryVersionCommon(context.m_targetFileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
 }
 
 std::unique_ptr<babelwires::Node>
-babelwires::TargetFileElementData::doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
+babelwires::TargetFileNodeData::doCreateFeatureElement(const ProjectContext& context, UserLogger& userLogger,
                                                    ElementId newId) const {
-    return std::make_unique<TargetFileElement>(context, userLogger, *this, newId);
+    return std::make_unique<TargetFileNode>(context, userLogger, *this, newId);
 }
 
-void babelwires::TargetFileElementData::serializeContents(Serializer& serializer) const {
+void babelwires::TargetFileNodeData::serializeContents(Serializer& serializer) const {
     addCommonKeyValuePairs(serializer);
     serializer.serializeValue("filePath", m_filePath);
     serializeModifiers(serializer);
     serializeUiData(serializer);
 }
 
-void babelwires::TargetFileElementData::deserializeContents(Deserializer& deserializer) {
+void babelwires::TargetFileNodeData::deserializeContents(Deserializer& deserializer) {
     getCommonKeyValuePairs(deserializer);
     deserializer.deserializeValue("filePath", m_filePath);
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }
 
-void babelwires::TargetFileElementData::visitFilePaths(FilePathVisitor& visitor) {
+void babelwires::TargetFileNodeData::visitFilePaths(FilePathVisitor& visitor) {
     NodeData::visitFilePaths(visitor);
     visitor(m_filePath);
 }

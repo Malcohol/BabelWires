@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
@@ -431,7 +431,7 @@ TEST(ProjectTest, saveTarget) {
 
     testUtils::TempFilePath tempFilePath("testTarget." + testUtils::TestSourceFileFormat::getFileExtension());
 
-    babelwires::TargetFileElementData targetFileData;
+    babelwires::TargetFileNodeData targetFileData;
     targetFileData.m_filePath = tempFilePath;
     targetFileData.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
 

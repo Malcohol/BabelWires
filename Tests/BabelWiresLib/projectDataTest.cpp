@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 
@@ -39,7 +39,7 @@ TEST(ProjectDataTest, serialization) {
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 45);
         EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestTargetFileFormat::getThisIdentifier());
-        const babelwires::TargetFileElementData* targetData = data->as<babelwires::TargetFileElementData>();
+        const babelwires::TargetFileNodeData* targetData = data->as<babelwires::TargetFileNodeData>();
         ASSERT_TRUE(targetData);
         ASSERT_EQ(targetData->m_filePath, testUtils::TestProjectData().m_targetFilePath);
     }

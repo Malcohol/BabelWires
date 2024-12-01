@@ -5,8 +5,8 @@
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -164,7 +164,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
 }
 
 TEST(ElementDataTest, targetFileDataClone) {
-    babelwires::TargetFileElementData data;
+    babelwires::TargetFileNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -179,7 +179,7 @@ TEST(ElementDataTest, targetFileDataClone) {
 }
 
 TEST(ElementDataTest, targetFileDataCustomClone) {
-    babelwires::TargetFileElementData data;
+    babelwires::TargetFileNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -196,7 +196,7 @@ TEST(ElementDataTest, targetFileDataCustomClone) {
 TEST(ElementDataTest, targetFileDataSerialize) {
     std::string serializedContents;
     {
-        babelwires::TargetFileElementData data;
+        babelwires::TargetFileNodeData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
         setModifiers(data, testUtils::getTestFileElementPathToInt0());
@@ -212,7 +212,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::TargetFileElementData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::TargetFileNodeData>();
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -224,7 +224,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
 TEST(ElementDataTest, targetFileDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TargetFileElementData data;
+    babelwires::TargetFileNodeData data;
     data.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = "foo";
@@ -239,12 +239,12 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
 
     EXPECT_TRUE(featureElement);
     ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(featureElement->as<babelwires::TargetFileElement>());
+    EXPECT_TRUE(featureElement->as<babelwires::TargetFileNode>());
     EXPECT_TRUE(featureElement->getInput());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getElementData().as<babelwires::TargetFileElementData>());
-    EXPECT_EQ(static_cast<const babelwires::TargetFileElementData&>(featureElement->getElementData()).m_filePath,
+    EXPECT_TRUE(featureElement->getElementData().as<babelwires::TargetFileNodeData>());
+    EXPECT_EQ(static_cast<const babelwires::TargetFileNodeData&>(featureElement->getElementData()).m_filePath,
               data.m_filePath);
 
     testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getInput()->getChild(0));

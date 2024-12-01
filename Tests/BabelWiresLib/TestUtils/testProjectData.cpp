@@ -5,7 +5,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
@@ -21,7 +21,7 @@ testUtils::TestProjectData::TestProjectData()
     , m_targetFilePath(std::string("testTargetFile") + testUtils::TestSourceFileFormat::getFileExtension()) {
     m_projectId = 1243;
     {
-        babelwires::TargetFileElementData data;
+        babelwires::TargetFileNodeData data;
         data.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
         data.m_id = c_targetElementId;
         data.m_filePath = m_targetFilePath;
@@ -65,7 +65,7 @@ testUtils::TestProjectData::TestProjectData()
 void testUtils::TestProjectData::setFilePaths(std::string_view sourceFilePath, std::string_view targetFilePath) {
     assert(m_elements.size() == 3);
     m_elements[2]->as<babelwires::SourceFileNodeData>()->m_filePath = sourceFilePath;
-    m_elements[0]->as<babelwires::TargetFileElementData>()->m_filePath = targetFilePath;
+    m_elements[0]->as<babelwires::TargetFileNodeData>()->m_filePath = targetFilePath;
     m_sourceFilePath = sourceFilePath;
     m_targetFilePath = targetFilePath;
 }

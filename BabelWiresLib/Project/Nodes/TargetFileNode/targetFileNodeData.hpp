@@ -1,5 +1,5 @@
 /**
- * TargetFileElementData describes the construction of a TargetFileFeature.
+ * TargetFileNodeData describes the construction of a TargetFileFeature.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -18,13 +18,13 @@
 
 namespace babelwires {
     /// Describes the construction of a TargetFileFeature.
-    struct TargetFileElementData : NodeData {
-        CLONEABLE(TargetFileElementData);
-        CUSTOM_CLONEABLE(TargetFileElementData);
-        SERIALIZABLE(TargetFileElementData, "targetFile", NodeData, 1);
-        TargetFileElementData() = default;
-        TargetFileElementData(const TargetFileElementData& other) = default;
-        TargetFileElementData(const TargetFileElementData& other, ShallowCloneContext);
+    struct TargetFileNodeData : NodeData {
+        CLONEABLE(TargetFileNodeData);
+        CUSTOM_CLONEABLE(TargetFileNodeData);
+        SERIALIZABLE(TargetFileNodeData, "targetFile", NodeData, 1);
+        TargetFileNodeData() = default;
+        TargetFileNodeData(const TargetFileNodeData& other) = default;
+        TargetFileNodeData(const TargetFileNodeData& other, ShallowCloneContext);
 
         bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) override;
 

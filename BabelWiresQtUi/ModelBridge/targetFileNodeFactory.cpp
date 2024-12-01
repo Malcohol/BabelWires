@@ -12,7 +12,7 @@
 
 #include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 
 #include <QtWidgets/QFileDialog>
 #include <nodes/FlowScene>
@@ -27,7 +27,7 @@ QString babelwires::TargetFileNodeFactory::name() const {
 }
 
 std::unique_ptr<QtNodes::NodeDataModel> babelwires::TargetFileNodeFactory::createNode() const {
-    auto newDataPtr = std::make_unique<TargetFileElementData>();
+    auto newDataPtr = std::make_unique<TargetFileNodeData>();
     newDataPtr->m_factoryIdentifier = m_targetFileFormat->getIdentifier();
     newDataPtr->m_factoryVersion = m_targetFileFormat->getVersion();
 
