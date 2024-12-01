@@ -137,7 +137,7 @@ namespace babelwires {
         /// The data of the operation.
         std::unique_ptr<ModifierData> m_data;
 
-        /// The featureElement which owns this modifier.
+        /// The Node which owns this modifier.
         Node* m_owner = nullptr;
 
         /// The type of failure, or success.

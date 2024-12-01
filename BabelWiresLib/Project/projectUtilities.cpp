@@ -24,10 +24,10 @@ namespace {
     void addDerivedValues(const babelwires::Project& project, unsigned int valueIndex,
                           std::vector<std::tuple<const babelwires::Node*, babelwires::Path>>& values) {
         assert(valueIndex < values.size());
-        const babelwires::Node* element = std::get<0>(values[valueIndex]);
+        const babelwires::Node* node = std::get<0>(values[valueIndex]);
         const babelwires::Path& pathToValue = std::get<1>(values[valueIndex]);
         const babelwires::Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
-        const auto& rit = connectionInfo.m_requiredFor.find(element);
+        const auto& rit = connectionInfo.m_requiredFor.find(node);
         if (rit != connectionInfo.m_requiredFor.end()) {
             for (auto cit : rit->second) {
                 const babelwires::Node* const targetElement = std::get<1>(cit);
@@ -38,7 +38,7 @@ namespace {
                 const babelwires::ConnectionModifier* connectionModifier = std::get<0>(cit);
                 const babelwires::ConnectionModifierData& connectionData = connectionModifier->getModifierData();
                 if (connectionData.m_sourcePath.isPrefixOf(pathToValue)) {
-                    // There is a connection between an ancestor and some node in the element.
+                    // There is a connection between an ancestor and some node in the node.
                     babelwires::Path pathToPossibleValueInTarget;
                     {
                         babelwires::Path pathFromAncestor = pathToValue;
@@ -81,8 +81,8 @@ babelwires::projectUtilities::getDerivedValues(const Project& project, NodeId el
                                                         std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
     unsigned int valueIndex = 0;
-    const Node* element = project.getNode(elementId);
-    values.emplace_back(std::tuple<const Node*, Path>{element, pathToValue});
+    const Node* node = project.getNode(elementId);
+    values.emplace_back(std::tuple<const Node*, Path>{node, pathToValue});
     //do {
         addDerivedValues(project, valueIndex, values);
     //    ++valueIndex;
@@ -103,8 +103,8 @@ babelwires::projectUtilities::getAllDerivedValues(const Project& project, NodeId
     std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
     unsigned int valueIndex = 0;
-    const Node* element = project.getNode(elementId);
-    values.emplace_back(std::tuple<const Node*, Path>{element, pathToValue});
+    const Node* node = project.getNode(elementId);
+    values.emplace_back(std::tuple<const Node*, Path>{node, pathToValue});
     do {
         addDerivedValues(project, valueIndex, values);
         ++valueIndex;

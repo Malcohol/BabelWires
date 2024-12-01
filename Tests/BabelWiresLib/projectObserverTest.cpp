@@ -19,15 +19,15 @@ namespace {
     /// Very roughly, this class is the inverse of the ProjectObserver.
     struct ObservedChanges {
         ObservedChanges(babelwires::ProjectObserver& observer) {
-            m_featureElementsAddedSubscription = observer.m_featureElementWasAdded.subscribe(
+            m_featureElementsAddedSubscription = observer.m_nodeWasAdded.subscribe(
                 [this](const babelwires::Node* element) { m_featureElementsAdded.emplace_back(element); });
-            m_featureElementWasRemovedSubscription = observer.m_featureElementWasRemoved.subscribe(
+            m_featureElementWasRemovedSubscription = observer.m_nodeWasRemoved.subscribe(
                 [this](const babelwires::NodeId elementId) { m_featureElementsRemoved.emplace_back(elementId); });
-            m_featureElementWasMovedSubscription = observer.m_featureElementWasMoved.subscribe(
+            m_featureElementWasMovedSubscription = observer.m_nodeWasMoved.subscribe(
                 [this](babelwires::NodeId elementId, const babelwires::UiPosition& position) {
                     m_featureElementsMoved.emplace_back(std::tuple(elementId, position));
                 });
-            m_featureElementWasResizedSubscription = observer.m_featureElementWasResized.subscribe(
+            m_featureElementWasResizedSubscription = observer.m_nodeWasResized.subscribe(
                 [this](babelwires::NodeId elementId, const babelwires::UiSize& size) {
                     m_featureElementsResized.emplace_back(std::tuple(elementId, size));
                 });
@@ -74,7 +74,7 @@ namespace {
             testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
         if (shouldIgnore) {
-            projectObserver.ignoreAddedElement(elementId);
+            projectObserver.ignoreAddedNode(elementId);
         }
 
         testEnvironment.m_project.process();
@@ -121,7 +121,7 @@ namespace {
         testEnvironment.m_project.process();
 
         if (shouldIgnore) {
-            projectObserver.ignoreRemovedElement(elementId);
+            projectObserver.ignoreRemovedNode(elementId);
         }
 
         projectObserver.interpretChangesAndFireSignals();
@@ -169,7 +169,7 @@ namespace {
         testEnvironment.m_project.process();
 
         if (shouldIgnore) {
-            projectObserver.ignoreMovedElement(elementId);
+            projectObserver.ignoreMovedNode(elementId);
         }
 
         projectObserver.interpretChangesAndFireSignals();
@@ -217,7 +217,7 @@ namespace {
         testEnvironment.m_project.process();
 
         if (shouldIgnore) {
-            projectObserver.ignoreResizedElement(elementId);
+            projectObserver.ignoreResizedNode(elementId);
         }
 
         projectObserver.interpretChangesAndFireSignals();

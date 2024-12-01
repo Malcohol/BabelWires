@@ -473,8 +473,8 @@ void babelwires::Project::propagateChanges(const Node* e) {
         const ConnectionInfo::Connections& connections = r->second;
         for (auto&& pair : connections) {
             ConnectionModifier* connection = std::get<0>(pair);
-            Node* targetElement = std::get<1>(pair);
-            if (ValueTreeNode* input = targetElement->getInputNonConst(connection->getTargetPath())) {
+            Node* targetNode = std::get<1>(pair);
+            if (ValueTreeNode* input = targetNode->getInputNonConst(connection->getTargetPath())) {
                 connection->applyConnection(*this, m_userLogger, input);
             }
         }
@@ -495,12 +495,12 @@ void babelwires::Project::propagateChanges(const Node* e) {
 void babelwires::Project::process() {
     validateConnectionCache();
 
-    // Topologically sort the featureElements in a later-depends-on-earlier order.
-    std::vector<Node*> sortedElements;
+    // Topologically sort the nodes in a later-depends-on-earlier order.
+    std::vector<Node*> sortedNodes;
 
-    sortedElements.reserve(m_nodes.size());
+    sortedNodes.reserve(m_nodes.size());
     for (auto&& pair : m_nodes) {
-        sortedElements.emplace_back(pair.second.get());
+        sortedNodes.emplace_back(pair.second.get());
     }
 
     std::unordered_map<const Node*, int> numDependencies;
@@ -509,15 +509,15 @@ void babelwires::Project::process() {
         numDependencies.insert(std::make_pair(pair.first, pair.second.size()));
     }
 
-    // Because we're marking the elements as they are sorted, we have to iterate to the end.
+    // Because we're marking the Nodes as they are sorted, we have to iterate to the end.
     for (int firstUnsortedIndex = 0; firstUnsortedIndex < m_nodes.size();) {
         const int firstUnsortedIndexBefore = firstUnsortedIndex;
         for (int j = firstUnsortedIndex; j < m_nodes.size(); ++j) {
-            Node* node = sortedElements[j];
+            Node* node = sortedNodes[j];
 
             const auto it = numDependencies.find(node);
             if (it == numDependencies.end() || it->second == 0) {
-                std::swap(sortedElements[firstUnsortedIndex], sortedElements[j]);
+                std::swap(sortedNodes[firstUnsortedIndex], sortedNodes[j]);
                 node->setInDependencyLoop(false);
                 ++firstUnsortedIndex;
                 const auto r = m_connectionCache.m_requiredFor.find(node);
@@ -535,14 +535,14 @@ void babelwires::Project::process() {
         // Check for a dependency loop.
         if (firstUnsortedIndex == firstUnsortedIndexBefore) {
             for (int i = firstUnsortedIndex; i < m_nodes.size(); ++i) {
-                sortedElements[i]->setInDependencyLoop(true);
+                sortedNodes[i]->setInDependencyLoop(true);
             }
             break;
         }
     }
 
     // Now iterate in dependency order.
-    for (auto&& node : sortedElements) {
+    for (auto&& node : sortedNodes) {
         node->process(*this, m_userLogger);
         // Existing connections only apply their contents if their source has changed,
         // so this doesn't unnecessarily change dependent data.
@@ -569,13 +569,13 @@ babelwires::Project::getRemovedNodes() const {
 }
 
 void babelwires::Project::setNodePosition(NodeId nodeId, const UiPosition& newPosition) {
-    Node* featureElement = getNode(nodeId);
-    featureElement->setUiPosition(newPosition);
+    Node* node = getNode(nodeId);
+    node->setUiPosition(newPosition);
 }
 
 void babelwires::Project::setNodeContentsSize(NodeId nodeId, const UiSize& newSize) {
-    Node* featureElement = getNode(nodeId);
-    featureElement->setUiSize(newSize);
+    Node* node = getNode(nodeId);
+    node->setUiSize(newSize);
 }
 
 void babelwires::Project::randomizeProjectId() {
@@ -589,17 +589,17 @@ babelwires::ProjectId babelwires::Project::getProjectId() const {
 
 void babelwires::Project::activateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
                                            bool ensureModifier) {
-    Node* elementToModify = getNode(nodeId);
-    assert(elementToModify);
+    Node* nodeToModify = getNode(nodeId);
+    assert(nodeToModify);
 
-    ValueTreeNode* const input = elementToModify->getInputNonConst(pathToRecord);
+    ValueTreeNode* const input = nodeToModify->getInputNonConst(pathToRecord);
     if (!input) {
         return; // Path cannot be followed.
     }
 
     ActivateOptionalsModifierData* modifierData = nullptr;
 
-    if (Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord)) {
+    if (Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord)) {
         if (auto activateOptionalsModifierData =
                 existingModifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             auto localModifier = existingModifier->as<LocalModifier>();
@@ -628,15 +628,15 @@ void babelwires::Project::activateOptional(NodeId nodeId, const Path& pathToReco
 
 void babelwires::Project::deactivateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
                                              bool ensureModifier) {
-    Node* elementToModify = getNode(nodeId);
-    assert(elementToModify);
+    Node* nodeToModify = getNode(nodeId);
+    assert(nodeToModify);
 
-    ValueTreeNode* const input = elementToModify->getInputNonConst(pathToRecord);
+    ValueTreeNode* const input = nodeToModify->getInputNonConst(pathToRecord);
     if (!input) {
         return; // Path cannot be followed.
     }
 
-    Modifier* existingModifier = elementToModify->getEdits().findModifier(pathToRecord);
+    Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord);
     assert(existingModifier);
 
     auto activateOptionalsModifierData = existingModifier->getModifierData().as<ActivateOptionalsModifierData>();

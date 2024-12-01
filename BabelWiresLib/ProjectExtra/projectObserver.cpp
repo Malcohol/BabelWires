@@ -18,40 +18,40 @@
 babelwires::ProjectObserver::ProjectObserver(const Project& project)
     : m_project(project) {}
 
-void babelwires::ProjectObserver::featureElementWasAdded(const Node* featureElement) {
-    const NodeId elementId = featureElement->getNodeId();
-    auto ignoreIt = m_addedElementsToIgnore.find(elementId);
-    if (ignoreIt == m_addedElementsToIgnore.end()) {
-        m_featureElementWasAdded.fire(featureElement);
+void babelwires::ProjectObserver::nodeWasAdded(const Node* node) {
+    const NodeId nodeId = node->getNodeId();
+    auto ignoreIt = m_addedNodesToIgnore.find(nodeId);
+    if (ignoreIt == m_addedNodesToIgnore.end()) {
+        m_nodeWasAdded.fire(node);
     } else {
-        m_addedElementsToIgnore.erase(elementId);
+        m_addedNodesToIgnore.erase(nodeId);
     }
 }
 
-void babelwires::ProjectObserver::featureElementWasRemoved(NodeId elementId) {
-    auto ignoreIt = m_removedElementsToIgnore.find(elementId);
-    if (ignoreIt == m_removedElementsToIgnore.end()) {
-        m_featureElementWasRemoved.fire(elementId);
+void babelwires::ProjectObserver::nodeWasRemoved(NodeId nodeId) {
+    auto ignoreIt = m_removedNodesToIgnore.find(nodeId);
+    if (ignoreIt == m_removedNodesToIgnore.end()) {
+        m_nodeWasRemoved.fire(nodeId);
     } else {
-        m_removedElementsToIgnore.erase(ignoreIt);
+        m_removedNodesToIgnore.erase(ignoreIt);
     }
 }
 
-void babelwires::ProjectObserver::featureElementWasMoved(NodeId elementId, const UiPosition& uiPosition) {
-    auto ignoreIt = m_movedElementsToIgnore.find(elementId);
-    if (ignoreIt == m_movedElementsToIgnore.end()) {
-        m_featureElementWasMoved.fire(elementId, uiPosition);
+void babelwires::ProjectObserver::nodeWasMoved(NodeId nodeId, const UiPosition& uiPosition) {
+    auto ignoreIt = m_movedNodesToIgnore.find(nodeId);
+    if (ignoreIt == m_movedNodesToIgnore.end()) {
+        m_nodeWasMoved.fire(nodeId, uiPosition);
     } else {
-        m_movedElementsToIgnore.erase(ignoreIt);
+        m_movedNodesToIgnore.erase(ignoreIt);
     }
 }
 
-void babelwires::ProjectObserver::featureElementWasResized(NodeId elementId, const UiSize& newSize) {
-    auto ignoreIt = m_resizedElementsToIgnore.find(elementId);
-    if (ignoreIt == m_resizedElementsToIgnore.end()) {
-        m_featureElementWasResized.fire(elementId, newSize);
+void babelwires::ProjectObserver::nodeWasResized(NodeId nodeId, const UiSize& newSize) {
+    auto ignoreIt = m_resizedNodesToIgnore.find(nodeId);
+    if (ignoreIt == m_resizedNodesToIgnore.end()) {
+        m_nodeWasResized.fire(nodeId, newSize);
     } else {
-        m_resizedElementsToIgnore.erase(ignoreIt);
+        m_resizedNodesToIgnore.erase(ignoreIt);
     }
 }
 
@@ -73,8 +73,8 @@ void babelwires::ProjectObserver::connectionWasRemoved(const ConnectionDescripti
     }
 }
 
-void babelwires::ProjectObserver::contentWasChanged(NodeId elementId) {
-    m_contentWasChanged.fire(elementId);
+void babelwires::ProjectObserver::contentWasChanged(NodeId nodeId) {
+    m_contentWasChanged.fire(nodeId);
 }
 
 namespace {
@@ -105,7 +105,7 @@ namespace {
     void addAllLiveInConnections(const babelwires::Project::ConnectionInfo& connectionInfo,
                                  const babelwires::Node* targetElement,
                                  std::unordered_set<babelwires::ConnectionDescription>& connections, State state) {
-        const babelwires::NodeId elementId = targetElement->getNodeId();
+        const babelwires::NodeId nodeId = targetElement->getNodeId();
         const auto& inConnections = connectionInfo.m_dependsOn.find(targetElement);
         if (inConnections != connectionInfo.m_dependsOn.end()) {
             for (const auto& connection : inConnections->second) {
@@ -117,7 +117,7 @@ namespace {
                                                    babelwires::Modifier::Changes::ModifierConnected))) {
                     const babelwires::Node* sourceElement = std::get<1>(connection);
                     addToConnections(connections, state,
-                                     babelwires::ConnectionDescription(elementId, connectionModifier.getModifierData()),
+                                     babelwires::ConnectionDescription(nodeId, connectionModifier.getModifierData()),
                                      sourceElement, targetElement);
                 }
             }
@@ -163,11 +163,11 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     // Node::Changes::CompoundExpandedOrCollapsed;
 
     for (const auto& pair : m_project.getNodes()) {
-        const Node* const featureElement = pair.second.get();
-        const NodeId elementId = featureElement->getNodeId();
+        const Node* const node = pair.second.get();
+        const NodeId nodeId = node->getNodeId();
 
-        if (featureElement->isChanged(Node::Changes::SomethingChanged)) {
-            featureElementsWithChanges.emplace_back(featureElement);
+        if (node->isChanged(Node::Changes::SomethingChanged)) {
+            featureElementsWithChanges.emplace_back(node);
         }
     }
 
@@ -199,73 +199,73 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
         }
     };
 
-    for (const auto& [_, featureElement] : m_project.getRemovedNodes()) {
-        assert(!featureElement->isChanged(Node::Changes::NodeIsNew) &&
+    for (const auto& [_, node] : m_project.getRemovedNodes()) {
+        assert(!node->isChanged(Node::Changes::NodeIsNew) &&
                "Changes should have been processed between new elements being removed.");
-        const NodeId elementId = featureElement->getNodeId();
-        nodesToRemove.emplace_back(featureElement.get());
-        allModifiersWereRemoved(featureElement.get(), elementId, featureElement->getEdits().modifierRange());
-        allModifiersWereRemoved(featureElement.get(), elementId, featureElement->getRemovedModifiers());
+        const NodeId nodeId = node->getNodeId();
+        nodesToRemove.emplace_back(node.get());
+        allModifiersWereRemoved(node.get(), nodeId, node->getEdits().modifierRange());
+        allModifiersWereRemoved(node.get(), nodeId, node->getRemovedModifiers());
     }
 
-    for (const auto* featureElement : featureElementsWithChanges) {
-        const NodeId elementId = featureElement->getNodeId();
+    for (const auto* node : featureElementsWithChanges) {
+        const NodeId nodeId = node->getNodeId();
 
-        if (featureElement->isChanged(Node::Changes::NodeIsNew)) {
-            nodesToCreate.emplace_back(featureElement);
-            addAllLiveInConnections(connectionInfo, featureElement, connectionsToAdd, State::CurrentState);
+        if (node->isChanged(Node::Changes::NodeIsNew)) {
+            nodesToCreate.emplace_back(node);
+            addAllLiveInConnections(connectionInfo, node, connectionsToAdd, State::CurrentState);
         } else {
-            allModifiersWereRemoved(featureElement, elementId, featureElement->getRemovedModifiers());
-            if (featureElement->isChanged(Node::Changes::ModifierDisconnected)) {
+            allModifiersWereRemoved(node, nodeId, node->getRemovedModifiers());
+            if (node->isChanged(Node::Changes::ModifierDisconnected)) {
                 for (const auto& connectionModifier :
-                     featureElement->getEdits().modifierRange<babelwires::ConnectionModifier>()) {
+                     node->getEdits().modifierRange<babelwires::ConnectionModifier>()) {
                     if (connectionModifier->isChanged(Modifier::Changes::ModifierDisconnected) &&
                         !connectionModifier->isChanged(Modifier::Changes::ModifierIsNew)) {
                         addToConnections(connectionsToRemove, State::PreviousState,
-                                         ConnectionDescription(elementId, connectionModifier->getModifierData()),
-                                         m_project, featureElement);
+                                         ConnectionDescription(nodeId, connectionModifier->getModifierData()),
+                                         m_project, node);
                     }
                 }
             }
 
-            if (featureElement->isChanged(Node::Changes::UiPositionChanged)) {
-                featureElementWasMoved(elementId, featureElement->getUiPosition());
+            if (node->isChanged(Node::Changes::UiPositionChanged)) {
+                nodeWasMoved(nodeId, node->getUiPosition());
             }
 
-            if (featureElement->isChanged(Node::Changes::UiSizeChanged)) {
-                featureElementWasResized(elementId, featureElement->getUiSize());
+            if (node->isChanged(Node::Changes::UiSizeChanged)) {
+                nodeWasResized(nodeId, node->getUiSize());
             }
 
-            // const bool hasStructureChange = featureElement->isChanged(someStructureChange);
+            // const bool hasStructureChange = node->isChanged(someStructureChange);
             const bool hasStructureChange =
-                featureElement->getContentsCache().isChanged(ContentsCache::Changes::StructureChanged);
+                node->getContentsCache().isChanged(ContentsCache::Changes::StructureChanged);
             if (hasStructureChange) {
-                addAllLiveInConnections(connectionInfo, featureElement, connectionsToRemove, State::PreviousState);
-                addAllLiveOutConnections(connectionInfo, featureElement, connectionsToRemove, State::PreviousState);
-                nodesToRemove.emplace_back(featureElement);
-                nodesToCreate.emplace_back(featureElement);
-                addAllLiveInConnections(connectionInfo, featureElement, connectionsToAdd, State::CurrentState);
-                addAllLiveOutConnections(connectionInfo, featureElement, connectionsToAdd, State::CurrentState);
+                addAllLiveInConnections(connectionInfo, node, connectionsToRemove, State::PreviousState);
+                addAllLiveOutConnections(connectionInfo, node, connectionsToRemove, State::PreviousState);
+                nodesToRemove.emplace_back(node);
+                nodesToCreate.emplace_back(node);
+                addAllLiveInConnections(connectionInfo, node, connectionsToAdd, State::CurrentState);
+                addAllLiveOutConnections(connectionInfo, node, connectionsToAdd, State::CurrentState);
             }
 
-            if (featureElement->isChanged(Node::Changes::ModifierAdded |
+            if (node->isChanged(Node::Changes::ModifierAdded |
                                           Node::Changes::ModifierConnected)) {
                 for (const auto& connectionModifier :
-                     featureElement->getEdits().modifierRange<babelwires::ConnectionModifier>()) {
+                     node->getEdits().modifierRange<babelwires::ConnectionModifier>()) {
                     if (connectionModifier->isChanged(Modifier::Changes::ModifierIsNew |
                                                       Modifier::Changes::ModifierConnected) &&
                         !connectionModifier->isChanged(Modifier::Changes::ModifierDisconnected)) {
-                        ConnectionDescription connection(elementId, connectionModifier->getModifierData());
+                        ConnectionDescription connection(nodeId, connectionModifier->getModifierData());
                         if (!hasStructureChange) {
                             // Normal case: Just remember to add the connection.
                             addToConnections(connectionsToAdd, State::CurrentState, std::move(connection), m_project,
-                                             featureElement);
+                                             node);
 
                         } else if (m_addedConnectionsToIgnore.erase(connection)) {
                             // Stop the connection from being skipped when the nodesToCreate are processed.
                             // This might do nothing if the element was not going to be ignored.
                             addToConnections(connectionsToRemove, State::PreviousState, std::move(connection),
-                                             m_project, featureElement);
+                                             m_project, node);
                         }
                     }
                 }
@@ -279,12 +279,12 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
         connectionWasRemoved(connection);
     }
 
-    for (const auto& featureElement : nodesToRemove) {
-        featureElementWasRemoved(featureElement->getNodeId());
+    for (const auto& node : nodesToRemove) {
+        nodeWasRemoved(node->getNodeId());
     }
 
-    for (auto&& featureElement : nodesToCreate) {
-        featureElementWasAdded(featureElement);
+    for (auto&& node : nodesToCreate) {
+        nodeWasAdded(node);
     }
 
     for (auto&& connection : connectionsToAdd) {
@@ -292,32 +292,32 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     }
 
     // Update the nodes that didn't have structural changes.
-    for (const auto* featureElement : featureElementsWithChanges) {
-        if (featureElement->isChanged(
+    for (const auto* node : featureElementsWithChanges) {
+        if (node->isChanged(
                 Node::Changes::FeatureChangesMask | Node::Changes::NodeLabelChanged |
                 Node::Changes::ModifierAdded | Node::Changes::ModifierRemoved |
                 Node::Changes::FileChanged | Node::Changes::NodeFailed |
                 Node::Changes::NodeRecovered) &&
-            !featureElement->getContentsCache().isChanged(ContentsCache::Changes::StructureChanged) &&
-            !featureElement->isChanged(babelwires::Node::Changes::NodeIsNew)) {
-            contentWasChanged(featureElement->getNodeId());
+            !node->getContentsCache().isChanged(ContentsCache::Changes::StructureChanged) &&
+            !node->isChanged(babelwires::Node::Changes::NodeIsNew)) {
+            contentWasChanged(node->getNodeId());
         }
     }
 
-    assert((m_addedElementsToIgnore.empty()) && "Did not observe the newly created nodes.");
-    assert(m_removedElementsToIgnore.empty() && "Did not observe the newly deleted nodes.");
+    assert((m_addedNodesToIgnore.empty()) && "Did not observe the newly created nodes.");
+    assert(m_removedNodesToIgnore.empty() && "Did not observe the newly deleted nodes.");
     assert((m_addedConnectionsToIgnore.empty()) && "Did not observe the newly added connections");
     assert(m_removedConnectionsToIgnore.empty() && "Did not observe all newly deleted connections");
-    assert((m_movedElementsToIgnore.empty()) && "Did not observe the newly moved nodes.");
-    assert((m_resizedElementsToIgnore.empty()) && "Did not observe the newly resized nodes.");
+    assert((m_movedNodesToIgnore.empty()) && "Did not observe the newly moved nodes.");
+    assert((m_resizedNodesToIgnore.empty()) && "Did not observe the newly resized nodes.");
 }
 
-void babelwires::ProjectObserver::ignoreAddedElement(NodeId elementId) {
-    m_addedElementsToIgnore.insert(elementId);
+void babelwires::ProjectObserver::ignoreAddedNode(NodeId nodeId) {
+    m_addedNodesToIgnore.insert(nodeId);
 }
 
-void babelwires::ProjectObserver::ignoreRemovedElement(NodeId elementId) {
-    m_removedElementsToIgnore.insert(elementId);
+void babelwires::ProjectObserver::ignoreRemovedNode(NodeId nodeId) {
+    m_removedNodesToIgnore.insert(nodeId);
 }
 
 void babelwires::ProjectObserver::ignoreAddedConnection(ConnectionDescription connection) {
@@ -328,10 +328,10 @@ void babelwires::ProjectObserver::ignoreRemovedConnection(ConnectionDescription 
     m_removedConnectionsToIgnore.insert(std::move(connection));
 }
 
-void babelwires::ProjectObserver::ignoreMovedElement(NodeId elementId) {
-    m_movedElementsToIgnore.insert(elementId);
+void babelwires::ProjectObserver::ignoreMovedNode(NodeId nodeId) {
+    m_movedNodesToIgnore.insert(nodeId);
 }
 
-void babelwires::ProjectObserver::ignoreResizedElement(NodeId elementId) {
-    m_resizedElementsToIgnore.insert(elementId);
+void babelwires::ProjectObserver::ignoreResizedNode(NodeId nodeId) {
+    m_resizedNodesToIgnore.insert(nodeId);
 }

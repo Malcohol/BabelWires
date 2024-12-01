@@ -40,16 +40,16 @@ babelwires::ProjectBridge::ProjectBridge(Project& project, CommandManager<Projec
     , m_projectContext(projectContext)
     , m_state(State::ListeningToFlowScene)
     , m_projectObserver(project) {
-    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasAdded.subscribe(
+    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasAdded.subscribe(
         [this](const Node* element) { addNodeToFlowScene(element); }));
 
-    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasRemoved.subscribe(
+    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasRemoved.subscribe(
         [this](NodeId elementId) { removeNodeFromFlowScene(elementId); }));
 
-    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasMoved.subscribe(
+    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasMoved.subscribe(
         [this](NodeId elementId, const UiPosition& uiPosition) { moveNodeInFlowScene(elementId, uiPosition); }));
 
-    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasResized.subscribe(
+    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasResized.subscribe(
         [this](NodeId elementId, const UiSize& newSize) { resizeNodeInFlowScene(elementId, newSize); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_connectionWasAdded.subscribe(
@@ -122,7 +122,7 @@ void babelwires::ProjectBridge::onNodeDeleted(QtNodes::Node& n) {
             QtNodes::NodeDataModel& dataModel = *n.nodeDataModel();
             auto& elementNodeModel = dynamic_cast<ElementNodeModel&>(dataModel);
             NodeId elementId = elementNodeModel.getNodeId();
-            m_projectObserver.ignoreRemovedElement(elementId);
+            m_projectObserver.ignoreRemovedNode(elementId);
 #ifndef NDEBUG
             auto numRemoved =
 #endif
@@ -157,7 +157,7 @@ void babelwires::ProjectBridge::onNodeMoved(QtNodes::Node& n, const QPointF& new
             if (uiPosition != newPosition) {
                 std::string commandName = "Move " + elementNodeModel.caption().toStdString();
                 scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, elementId, newPosition));
-                m_projectObserver.ignoreMovedElement(elementId);
+                m_projectObserver.ignoreMovedNode(elementId);
             }
             break;
         }
@@ -186,7 +186,7 @@ void babelwires::ProjectBridge::onNodeResized(QtNodes::Node& n, const QSize& new
             if (newWidth != currentWidth) {
                 std::string commandName = "Resize " + elementNodeModel.caption().toStdString();
                 scheduleCommand(std::make_unique<ResizeNodeCommand>(commandName, elementId, UiSize{newWidth}));
-                m_projectObserver.ignoreResizedElement(elementId);
+                m_projectObserver.ignoreResizedNode(elementId);
             }
             break;
         }
@@ -481,7 +481,7 @@ bool babelwires::ProjectBridge::executeAddNodeCommand(std::unique_ptr<AddNodeCom
     }
 
     NodeId newNodeId = addNodeCommand.getNodeId();
-    m_projectObserver.ignoreAddedElement(newNodeId);
+    m_projectObserver.ignoreAddedNode(newNodeId);
     m_state = State::WaitingForNewNode;
     return true;
 }
