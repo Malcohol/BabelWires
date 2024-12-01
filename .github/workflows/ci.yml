@@ -16,13 +16,13 @@ jobs:
       matrix:
         config: 
         - {
-            name: "Ubuntu_Latest_GCC",
-            os: ubuntu-latest,
+            name: "Ubuntu_GCC",
+            os: ubuntu-24.04,
             build_type: "Debug",
             targetFolder: "",
             exeExtension: "",
-            cc: "gcc-11",
-            cxx: "g++-11"
+            cc: "gcc-14",
+            cxx: "g++-14"
           }
         - {
             name: "Windows Latest MSVC",
@@ -36,15 +36,15 @@ jobs:
           }
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
     - name: Install dependencies on ubuntu
-      if: startsWith(matrix.config.name, 'Ubuntu_Latest_GCC')
+      if: startsWith(matrix.config.name, 'Ubuntu_GCC')
       run: |
         sudo apt-get update
-        sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} libtbb-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+        sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
         cmake --version
         gcc --version
         g++ --version
@@ -57,7 +57,7 @@ jobs:
 
     - name: Install Qt on Windows
       if: startsWith(matrix.config.os, 'windows')
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v4
       with:
         version: '5.15.2'
         host: 'windows'
