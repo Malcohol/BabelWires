@@ -254,7 +254,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
 }
 
 TEST(ElementDataTest, processorDataClone) {
-    babelwires::ProcessorElementData data;
+    babelwires::ProcessorNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -267,7 +267,7 @@ TEST(ElementDataTest, processorDataClone) {
 }
 
 TEST(ElementDataTest, processorDataCustomClone) {
-    babelwires::ProcessorElementData data;
+    babelwires::ProcessorNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -282,7 +282,7 @@ TEST(ElementDataTest, processorDataCustomClone) {
 TEST(ElementDataTest, processorDataSerialize) {
     std::string serializedContents;
     {
-        babelwires::ProcessorElementData data;
+        babelwires::ProcessorNodeData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
         setModifiers(data, testUtils::TestSimpleRecordType::s_int0IdInitializer);
@@ -297,7 +297,7 @@ TEST(ElementDataTest, processorDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::ProcessorElementData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::ProcessorNodeData>();
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -308,7 +308,7 @@ TEST(ElementDataTest, processorDataSerialize) {
 TEST(ElementDataTest, processorDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ProcessorElementData data;
+    babelwires::ProcessorNodeData data;
     data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
     data.m_factoryVersion = 1;
     setCommonFields(data);
@@ -326,7 +326,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     EXPECT_TRUE(featureElement->getInput());
     EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
     EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getElementData().as<babelwires::ProcessorElementData>());
+    EXPECT_TRUE(featureElement->getElementData().as<babelwires::ProcessorNodeData>());
 
     const auto& inputFeature = *featureElement->getInput();
 

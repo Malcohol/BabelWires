@@ -516,7 +516,7 @@ TEST(ProjectTest, process) {
 
     babelwires::ElementId newProcId;
     {
-        babelwires::ProcessorElementData procData;
+        babelwires::ProcessorNodeData procData;
         procData.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
 
         babelwires::ValueAssignmentData modData(babelwires::IntValue(5));

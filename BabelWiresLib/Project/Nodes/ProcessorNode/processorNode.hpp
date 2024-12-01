@@ -12,18 +12,18 @@
 namespace babelwires {
     struct UserLogger;
     struct ProjectContext;
-    struct ProcessorElementData;
+    struct ProcessorNodeData;
     class Processor;
     class ValueTreeRoot;
 
     class ProcessorNode : public Node {
       public:
-        ProcessorNode(const ProjectContext& context, UserLogger& userLogger, const ProcessorElementData& data,
+        ProcessorNode(const ProjectContext& context, UserLogger& userLogger, const ProcessorNodeData& data,
                          ElementId newId);
         ~ProcessorNode();
 
         /// Down-cast version of the parent's method.
-        const ProcessorElementData& getElementData() const;
+        const ProcessorNodeData& getElementData() const;
 
         virtual const ValueTreeNode* getInput() const override;
         virtual const ValueTreeNode* getOutput() const override;

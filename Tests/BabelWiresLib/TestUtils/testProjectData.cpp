@@ -35,7 +35,7 @@ testUtils::TestProjectData::TestProjectData()
         m_elements.emplace_back(data.clone());
     }
     {
-        babelwires::ProcessorElementData data;
+        babelwires::ProcessorNodeData data;
         data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
         data.m_id = c_processorId;
         {

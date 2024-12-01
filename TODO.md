@@ -90,7 +90,7 @@ Ideas:
   - Consider switching from XML to yaml for project files
 * Require commands to be serializable. Log their serialized form (possibly as JSON).
 * Don't format strings in debug logs: Use JSON so they are easy to parse.
-* Processors could maybe be pure, and let the processorElement own the features.
+* Processors could maybe be pure, and let the processorNode own the features.
   - Maybe they would have three pure methods: process(input, output), createDefaultInputFeature(), createDefaultOutputFeature().
   - Consider informing processors about array operations at a semantic level.
     OR giving them an old view of arrays (using the array index system already in place).

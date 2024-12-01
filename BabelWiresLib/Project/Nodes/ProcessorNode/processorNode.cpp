@@ -22,7 +22,7 @@
 #include <Common/Log/userLogger.hpp>
 
 babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogger& userLogger,
-                                               const ProcessorElementData& data, ElementId newId)
+                                               const ProcessorNodeData& data, ElementId newId)
     : Node(data, newId) {
     const NodeData& elementData = getElementData();
     try {
@@ -43,8 +43,8 @@ babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogg
 
 babelwires::ProcessorNode::~ProcessorNode() = default;
 
-const babelwires::ProcessorElementData& babelwires::ProcessorNode::getElementData() const {
-    return static_cast<const ProcessorElementData&>(Node::getElementData());
+const babelwires::ProcessorNodeData& babelwires::ProcessorNode::getElementData() const {
+    return static_cast<const ProcessorNodeData&>(Node::getElementData());
 }
 
 babelwires::ValueTreeNode* babelwires::ProcessorNode::doGetOutputNonConst() {

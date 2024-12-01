@@ -27,7 +27,7 @@ QString babelwires::ProcessorNodeFactory::name() const {
 }
 
 std::unique_ptr<QtNodes::NodeDataModel> babelwires::ProcessorNodeFactory::createNode() const {
-    auto newDataPtr = std::make_unique<ProcessorElementData>();
+    auto newDataPtr = std::make_unique<ProcessorNodeData>();
     newDataPtr->m_factoryIdentifier = m_processorFactory->getIdentifier();
     newDataPtr->m_factoryVersion = m_processorFactory->getVersion();
 
