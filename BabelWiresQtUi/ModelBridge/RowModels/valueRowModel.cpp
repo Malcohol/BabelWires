@@ -51,7 +51,7 @@ babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
         const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
         auto modifier = std::make_unique<babelwires::ValueAssignmentData>(std::move(newValue));
         modifier->m_targetPath = babelwires::Path(&valueTreeNode);
-        return std::make_unique<AddModifierCommand>("Set value", m_featureElement->getNodeId(), std::move(modifier));
+        return std::make_unique<AddModifierCommand>("Set value", m_node->getNodeId(), std::move(modifier));
     }
     return nullptr;
 }
@@ -90,5 +90,5 @@ void babelwires::ValueRowModel::getContextMenuActions(
     RowModel::getContextMenuActions(actionsOut);
     const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
     m_valueModelDispatcher->getContextMenuActions(
-        DataLocation{m_featureElement->getNodeId(), babelwires::Path(&valueTreeNode)}, actionsOut);
+        DataLocation{m_node->getNodeId(), babelwires::Path(&valueTreeNode)}, actionsOut);
 }

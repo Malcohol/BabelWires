@@ -21,14 +21,14 @@ babelwires::RemoveFailedModifiersCommand::RemoveFailedModifiersCommand(std::stri
     , m_targetPath(featurePath) {}
 
 bool babelwires::RemoveFailedModifiersCommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getNode(m_targetId);
+    const Node* nodeToModify = project.getNode(m_targetId);
 
-    if (!elementToModify) {
+    if (!nodeToModify) {
         return false;
     }
 
     int numFailedModifiers = 0;
-    for (const Modifier* modifier : elementToModify->getEdits().modifierRange(m_targetPath)) {
+    for (const Modifier* modifier : nodeToModify->getEdits().modifierRange(m_targetPath)) {
         if (modifier->isFailed()) {
             addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_targetId,
                                                                         modifier->getTargetPath()));

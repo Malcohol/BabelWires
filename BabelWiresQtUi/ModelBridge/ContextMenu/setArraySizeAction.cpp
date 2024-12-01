@@ -37,9 +37,9 @@ void babelwires::SetArraySizeAction::actionTriggered(babelwires::FeatureModel& m
     // Don't keep the project locked.
     {
         AccessModelScope scope(projectBridge);
-        const Node* const featureElement = scope.getProject().getNode(elementId);
+        const Node* const node = scope.getProject().getNode(elementId);
 
-        const babelwires::ValueTreeNode* const input = m_pathToArray.tryFollow(*featureElement->getInput());
+        const babelwires::ValueTreeNode* const input = m_pathToArray.tryFollow(*node->getInput());
         auto [compoundFeature, s, r, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(input);
         if (!compoundFeature) {
             return;

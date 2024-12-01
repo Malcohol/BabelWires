@@ -19,17 +19,17 @@ namespace {
     /// Very roughly, this class is the inverse of the ProjectObserver.
     struct ObservedChanges {
         ObservedChanges(babelwires::ProjectObserver& observer) {
-            m_featureElementsAddedSubscription = observer.m_nodeWasAdded.subscribe(
-                [this](const babelwires::Node* element) { m_featureElementsAdded.emplace_back(element); });
-            m_featureElementWasRemovedSubscription = observer.m_nodeWasRemoved.subscribe(
-                [this](const babelwires::NodeId elementId) { m_featureElementsRemoved.emplace_back(elementId); });
-            m_featureElementWasMovedSubscription = observer.m_nodeWasMoved.subscribe(
+            m_nodesAddedSubscription = observer.m_nodeWasAdded.subscribe(
+                [this](const babelwires::Node* element) { m_nodesAdded.emplace_back(element); });
+            m_nodeWasRemovedSubscription = observer.m_nodeWasRemoved.subscribe(
+                [this](const babelwires::NodeId elementId) { m_nodesRemoved.emplace_back(elementId); });
+            m_nodeWasMovedSubscription = observer.m_nodeWasMoved.subscribe(
                 [this](babelwires::NodeId elementId, const babelwires::UiPosition& position) {
-                    m_featureElementsMoved.emplace_back(std::tuple(elementId, position));
+                    m_nodesMoved.emplace_back(std::tuple(elementId, position));
                 });
-            m_featureElementWasResizedSubscription = observer.m_nodeWasResized.subscribe(
+            m_nodeWasResizedSubscription = observer.m_nodeWasResized.subscribe(
                 [this](babelwires::NodeId elementId, const babelwires::UiSize& size) {
-                    m_featureElementsResized.emplace_back(std::tuple(elementId, size));
+                    m_nodesResized.emplace_back(std::tuple(elementId, size));
                 });
             m_connectionWasAddedSubscription =
                 observer.m_connectionWasAdded.subscribe([this](const babelwires::ConnectionDescription& connection) {
@@ -43,20 +43,20 @@ namespace {
                 [this](const babelwires::NodeId elementId) { m_contentsChanged.emplace_back(elementId); });
         }
 
-        void clear() { m_featureElementsAdded.clear(); }
+        void clear() { m_nodesAdded.clear(); }
 
-        babelwires::SignalSubscription m_featureElementsAddedSubscription;
-        babelwires::SignalSubscription m_featureElementWasRemovedSubscription;
-        babelwires::SignalSubscription m_featureElementWasMovedSubscription;
-        babelwires::SignalSubscription m_featureElementWasResizedSubscription;
+        babelwires::SignalSubscription m_nodesAddedSubscription;
+        babelwires::SignalSubscription m_nodeWasRemovedSubscription;
+        babelwires::SignalSubscription m_nodeWasMovedSubscription;
+        babelwires::SignalSubscription m_nodeWasResizedSubscription;
         babelwires::SignalSubscription m_connectionWasAddedSubscription;
         babelwires::SignalSubscription m_connectionWasRemovedSubscription;
         babelwires::SignalSubscription m_contentWasChangedSubscription;
 
-        std::vector<const babelwires::Node*> m_featureElementsAdded;
-        std::vector<babelwires::NodeId> m_featureElementsRemoved;
-        std::vector<std::tuple<babelwires::NodeId, babelwires::UiPosition>> m_featureElementsMoved;
-        std::vector<std::tuple<babelwires::NodeId, babelwires::UiSize>> m_featureElementsResized;
+        std::vector<const babelwires::Node*> m_nodesAdded;
+        std::vector<babelwires::NodeId> m_nodesRemoved;
+        std::vector<std::tuple<babelwires::NodeId, babelwires::UiPosition>> m_nodesMoved;
+        std::vector<std::tuple<babelwires::NodeId, babelwires::UiSize>> m_nodesResized;
         std::vector<babelwires::ConnectionDescription> m_connectionsAdded;
         std::vector<babelwires::ConnectionDescription> m_connectionsRemoved;
         std::vector<babelwires::NodeId> m_contentsChanged;
@@ -81,26 +81,26 @@ namespace {
         projectObserver.interpretChangesAndFireSignals();
 
         if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_featureElementsAdded.empty());
+            EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
         } else {
-            ASSERT_EQ(observedChanges.m_featureElementsAdded.size(), 1);
-            EXPECT_EQ(observedChanges.m_featureElementsAdded[0]->getNodeId(), elementId);
+            ASSERT_EQ(observedChanges.m_nodesAdded.size(), 1);
+            EXPECT_EQ(observedChanges.m_nodesAdded[0]->getNodeId(), elementId);
         }
 
-        EXPECT_TRUE(observedChanges.m_featureElementsRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsMoved.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsResized.empty());
+        EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesResized.empty());
         EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
         EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
         EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
     }
 } // namespace
 
-TEST(ProjectObserverTest, featureElementAdded) {
+TEST(ProjectObserverTest, nodeAdded) {
     testNodeAdded(false);
 }
 
-TEST(ProjectObserverTest, featureElementAddedIgnore) {
+TEST(ProjectObserverTest, nodeAddedIgnore) {
     testNodeAdded(false);
 }
 
@@ -126,28 +126,28 @@ namespace {
 
         projectObserver.interpretChangesAndFireSignals();
 
-        EXPECT_TRUE(observedChanges.m_featureElementsAdded.empty());
+        EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
 
         if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_featureElementsRemoved.empty());
+            EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
         } else {
-            ASSERT_EQ(observedChanges.m_featureElementsRemoved.size(), 1);
-            EXPECT_EQ(observedChanges.m_featureElementsRemoved[0], elementId);
+            ASSERT_EQ(observedChanges.m_nodesRemoved.size(), 1);
+            EXPECT_EQ(observedChanges.m_nodesRemoved[0], elementId);
         }
 
-        EXPECT_TRUE(observedChanges.m_featureElementsMoved.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsResized.empty());
+        EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesResized.empty());
         EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
         EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
         EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
     }
 } // namespace
 
-TEST(ProjectObserverTest, featureElementRemoved) {
+TEST(ProjectObserverTest, nodeRemoved) {
     testNodeRemoved(false);
 }
 
-TEST(ProjectObserverTest, featureElementRemovedIgnore) {
+TEST(ProjectObserverTest, nodeRemovedIgnore) {
     testNodeRemoved(true);
 }
 
@@ -174,28 +174,28 @@ namespace {
 
         projectObserver.interpretChangesAndFireSignals();
 
-        EXPECT_TRUE(observedChanges.m_featureElementsAdded.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsRemoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
+        EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
 
         if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_featureElementsMoved.empty());
+            EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
         } else {
-            ASSERT_EQ(observedChanges.m_featureElementsMoved.size(), 1);
-            EXPECT_EQ(observedChanges.m_featureElementsMoved[0], std::tuple(elementId, newPosition));
+            ASSERT_EQ(observedChanges.m_nodesMoved.size(), 1);
+            EXPECT_EQ(observedChanges.m_nodesMoved[0], std::tuple(elementId, newPosition));
         }
 
-        EXPECT_TRUE(observedChanges.m_featureElementsResized.empty());
+        EXPECT_TRUE(observedChanges.m_nodesResized.empty());
         EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
         EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
         EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
     }
 } // namespace
 
-TEST(ProjectObserverTest, featureElementMoved) {
+TEST(ProjectObserverTest, nodeMoved) {
     testNodeMoved(false);
 }
 
-TEST(ProjectObserverTest, featureElementMovedIgnore) {
+TEST(ProjectObserverTest, nodeMovedIgnore) {
     testNodeMoved(true);
 }
 
@@ -222,15 +222,15 @@ namespace {
 
         projectObserver.interpretChangesAndFireSignals();
 
-        EXPECT_TRUE(observedChanges.m_featureElementsAdded.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsMoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
+        EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
 
         if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_featureElementsResized.empty());
+            EXPECT_TRUE(observedChanges.m_nodesResized.empty());
         } else {
-            ASSERT_EQ(observedChanges.m_featureElementsResized.size(), 1);
-            EXPECT_EQ(observedChanges.m_featureElementsResized[0], std::tuple(elementId, newSize));
+            ASSERT_EQ(observedChanges.m_nodesResized.size(), 1);
+            EXPECT_EQ(observedChanges.m_nodesResized[0], std::tuple(elementId, newSize));
         }
 
         EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
@@ -239,11 +239,11 @@ namespace {
     }
 } // namespace
 
-TEST(ProjectObserverTest, featureElementResized) {
+TEST(ProjectObserverTest, nodeResized) {
     testNodesResized(false);
 }
 
-TEST(ProjectObserverTest, featureElementResizedIgnore) {
+TEST(ProjectObserverTest, nodeResizedIgnore) {
     testNodesResized(true);
 }
 
@@ -296,10 +296,10 @@ namespace {
 
         projectObserver.interpretChangesAndFireSignals();
 
-        EXPECT_TRUE(observedChanges.m_featureElementsAdded.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsMoved.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsResized.empty());
+        EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
+        EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesResized.empty());
 
         if (shouldIgnore) {
             EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
@@ -396,10 +396,10 @@ namespace {
         }
         projectObserver.interpretChangesAndFireSignals();
 
-        EXPECT_TRUE(observedChanges.m_featureElementsAdded.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsMoved.empty());
-        EXPECT_TRUE(observedChanges.m_featureElementsResized.empty());
+        EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
+        EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
+        EXPECT_TRUE(observedChanges.m_nodesResized.empty());
         EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
 
         if (shouldIgnore) {
@@ -446,7 +446,7 @@ TEST(ProjectObserverTest, connectionRemovedBothTruncatedIgnore) {
     testConnectionRemoved(true, false, false);
 }
 
-TEST(ProjectObserverTest, featureElementContentsChanged) {
+TEST(ProjectObserverTest, nodeContentsChanged) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestComplexRecordElementData sourceElementData;
@@ -477,10 +477,10 @@ TEST(ProjectObserverTest, featureElementContentsChanged) {
 
     projectObserver.interpretChangesAndFireSignals();
 
-    EXPECT_TRUE(observedChanges.m_featureElementsAdded.empty());
-    EXPECT_TRUE(observedChanges.m_featureElementsRemoved.empty());
-    EXPECT_TRUE(observedChanges.m_featureElementsMoved.empty());
-    EXPECT_TRUE(observedChanges.m_featureElementsResized.empty());
+    EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
+    EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
+    EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
+    EXPECT_TRUE(observedChanges.m_nodesResized.empty());
     EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
     EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
 

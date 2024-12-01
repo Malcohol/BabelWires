@@ -93,7 +93,7 @@ namespace babelwires {
 
       private:
         /// Fire the m_nodeWasAdded signal, unless the element is to be ignored.
-        void nodeWasAdded(const Node* featureElement);
+        void nodeWasAdded(const Node* node);
 
         /// Fire the m_nodeWasRemoved signal, unless the element is to be ignored.
         void nodeWasRemoved(NodeId nodeId);

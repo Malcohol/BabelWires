@@ -20,8 +20,8 @@
 #include <cassert>
 
 const babelwires::FileNode& babelwires::FileRowModel::getFileElement() const {
-    assert(m_featureElement->as<FileNode>() && "A file feature should only appear in a file element");
-    return *static_cast<const FileNode*>(m_featureElement);
+    assert(m_node->as<FileNode>() && "A file feature should only appear in a file element");
+    return *static_cast<const FileNode*>(m_node);
 }
 
 QVariant babelwires::FileRowModel::getValueDisplayData() const {
@@ -29,7 +29,7 @@ QVariant babelwires::FileRowModel::getValueDisplayData() const {
 }
 
 QString babelwires::FileRowModel::getTooltip() const {
-    if (m_featureElement->isFailed()) {
+    if (m_node->isFailed()) {
         return RowModel::getTooltip();
     } else {
         // Full path.

@@ -43,12 +43,12 @@ TEST(SourceFileNodeTest, sourceFileDataCreateElement) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
-    auto featureElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
-    ASSERT_TRUE(featureElement);
-    ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<babelwires::SourceFileNode>());
+    auto node = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    ASSERT_TRUE(node);
+    ASSERT_FALSE(node->isFailed());
+    ASSERT_TRUE(node->as<babelwires::SourceFileNode>());
     babelwires::SourceFileNode* sourceFileNode =
-        static_cast<babelwires::SourceFileNode*>(featureElement.get());
+        static_cast<babelwires::SourceFileNode*>(node.get());
 
     EXPECT_EQ(sourceFileNode->getFilePath(), tempFilePath.m_filePath);
     EXPECT_EQ(sourceFileNode->getSupportedFileOperations(), babelwires::FileNode::FileOperations::reload);
@@ -107,12 +107,12 @@ TEST(SourceFileNodeTest, changeFile) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
 
-    auto featureElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
-    ASSERT_TRUE(featureElement);
-    ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<babelwires::SourceFileNode>());
+    auto node = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    ASSERT_TRUE(node);
+    ASSERT_FALSE(node->isFailed());
+    ASSERT_TRUE(node->as<babelwires::SourceFileNode>());
     babelwires::SourceFileNode* sourceFileNode =
-        static_cast<babelwires::SourceFileNode*>(featureElement.get());
+        static_cast<babelwires::SourceFileNode*>(node.get());
 
     sourceFileNode->clearChanges();
     sourceFileNode->setFilePath(tempFilePath2.m_filePath);

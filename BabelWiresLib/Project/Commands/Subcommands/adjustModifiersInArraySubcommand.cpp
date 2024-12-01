@@ -31,9 +31,9 @@ babelwires::AdjustModifiersInArraySubcommand::AdjustModifiersInArraySubcommand(
 }
 
 bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getNode(m_elementId);
+    const Node* nodeToModify = project.getNode(m_elementId);
 
-    if (!elementToModify) {
+    if (!nodeToModify) {
         return false;
     }
 

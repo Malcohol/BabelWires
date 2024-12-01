@@ -24,22 +24,22 @@ babelwires::RemoveAllEditsSubcommand::RemoveAllEditsSubcommand(NodeId elementId,
 }
 
 bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project) {
-    Node* elementToModify = project.getNode(m_elementId);
+    Node* nodeToModify = project.getNode(m_elementId);
 
-    if (!elementToModify) {
+    if (!nodeToModify) {
         return false;
     }
 
     std::vector<std::unique_ptr<Command>> subcommands;
 
-    for (const auto& modifier : elementToModify->getEdits().modifierRange(m_path)) {
+    for (const auto& modifier : nodeToModify->getEdits().modifierRange(m_path)) {
         const auto& modifierData = modifier->getModifierData();
         subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_elementId, modifierData.m_targetPath));
     }
 
     {
         const Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
-        auto it = connectionInfo.m_requiredFor.find(elementToModify);
+        auto it = connectionInfo.m_requiredFor.find(nodeToModify);
         if (it != connectionInfo.m_requiredFor.end()) {
             for (auto&& connection : it->second) {
                 const ConnectionModifier* const cmod = std::get<0>(connection);
@@ -57,7 +57,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
         addSubCommand(std::move(*it));
     }
 
-    const auto pathsInThisEntry = elementToModify->getEdits().getAllExplicitlyExpandedPaths(m_path);
+    const auto pathsInThisEntry = nodeToModify->getEdits().getAllExplicitlyExpandedPaths(m_path);
     m_expandedPathsRemoved.insert(m_expandedPathsRemoved.end(), pathsInThisEntry.begin(),
                                                pathsInThisEntry.end());
 
@@ -67,7 +67,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
     // This may not seem necessary, but it means we won't assert when expanding the
     // moved down entries.
     for (const auto& p : m_expandedPathsRemoved) {
-        elementToModify->getEdits().setExpanded(p, false);
+        nodeToModify->getEdits().setExpanded(p, false);
     }
 
     return true;
@@ -75,20 +75,20 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
 
 void babelwires::RemoveAllEditsSubcommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    Node* elementToModify = project.getNode(m_elementId);
-    assert(elementToModify && "The element must exist");
+    Node* nodeToModify = project.getNode(m_elementId);
+    assert(nodeToModify && "The element must exist");
     // This may not seem necessary, but it means we won't assert when expanding the
     // moved down entries.
     for (const auto& p : m_expandedPathsRemoved) {
-        elementToModify->getEdits().setExpanded(p, false);
+        nodeToModify->getEdits().setExpanded(p, false);
     }
 }
 
 void babelwires::RemoveAllEditsSubcommand::undo(Project& project) const {
-    Node* elementToModify = project.getNode(m_elementId);
-    assert(elementToModify && "The element must exist");
+    Node* nodeToModify = project.getNode(m_elementId);
+    assert(nodeToModify && "The element must exist");
     for (const auto& p : m_expandedPathsRemoved) {
-        elementToModify->getEdits().setExpanded(p, true);
+        nodeToModify->getEdits().setExpanded(p, true);
     }
     CompoundCommand::undo(project);
 }

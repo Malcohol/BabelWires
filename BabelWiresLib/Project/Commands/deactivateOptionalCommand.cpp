@@ -26,12 +26,12 @@ babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string com
 }
 
 bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getNode(m_elementId);
-    if (!elementToModify) {
+    const Node* nodeToModify = project.getNode(m_elementId);
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
@@ -52,7 +52,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         return false;
     }
 
-    if (const Modifier* modifier = elementToModify->getEdits().findModifier(m_pathToRecord)) {
+    if (const Modifier* modifier = nodeToModify->getEdits().findModifier(m_pathToRecord)) {
         const auto& modifierData = modifier->getModifierData();
         if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             m_wasModifier = true;

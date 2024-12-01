@@ -33,18 +33,18 @@ babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName
     , m_path(featurePath) {}
 
 bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getNode(m_elementId);
+    const Node* nodeToModify = project.getNode(m_elementId);
 
-    if (!elementToModify) {
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
 
-    auto* modifier = elementToModify->getEdits().findModifier(m_path);
+    auto* modifier = nodeToModify->getEdits().findModifier(m_path);
     if (!modifier) {
         return false;
     }
@@ -55,7 +55,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     // the newly discovered structure from the ancestor connection. In that case, we'll just let them fail
     // so the user is informed.
     bool hasAncestorConnection = false;
-    for (auto connectionModifier : elementToModify->getConnectionModifiers()) {
+    for (auto connectionModifier : nodeToModify->getConnectionModifiers()) {
         if (connectionModifier->getTargetPath().isStrictPrefixOf(m_path)) {
             hasAncestorConnection = true;
             break;

@@ -17,8 +17,8 @@ SET( LIB_TESTS_SRCS
     elementDataTest.cpp
     enumTest.cpp
     enumFeatureTest.cpp
-    featureElementConnectionTest.cpp
-    featureElementTest.cpp
+    nodeConnectionTest.cpp
+    nodeTest.cpp
     featurePathTest.cpp
     editTreeTest.cpp
     intValueTest.cpp

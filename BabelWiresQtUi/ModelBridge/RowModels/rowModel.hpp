@@ -94,7 +94,7 @@ namespace babelwires {
 
       public:
         const ContentsCacheEntry* m_contentsCacheEntry = nullptr;
-        const Node* m_featureElement = nullptr;
+        const Node* m_node = nullptr;
         ValueModelDispatcher m_valueModelDispatcher;
     };
 

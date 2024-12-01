@@ -59,17 +59,17 @@ QVariant babelwires::RowModel::getValueDisplayData() const {
 }
 
 QString babelwires::RowModel::getTooltip() const {
-    if (m_featureElement->isFailed()) {
-        return m_featureElement->getReasonForFailure().c_str();
+    if (m_node->isFailed()) {
+        return m_node->getReasonForFailure().c_str();
     } else if (m_contentsCacheEntry->hasFailedModifier()) {
-        const Modifier* modifier = m_featureElement->findModifier(m_contentsCacheEntry->getPath());
+        const Modifier* modifier = m_node->findModifier(m_contentsCacheEntry->getPath());
         assert(modifier && "The cache is inconsistent with the data");
         assert(modifier->isFailed() && "The cache is inconsistent with the data");
         return modifier->getReasonForFailure().c_str();
     } else if (m_contentsCacheEntry->hasFailedHiddenModifiers()) {
         QString message = "This feature contains failed modifiers:";
         int numFailedModifiers = 0;
-        for (const Modifier* modifier : m_featureElement->getEdits().modifierRange(m_contentsCacheEntry->getPath())) {
+        for (const Modifier* modifier : m_node->getEdits().modifierRange(m_contentsCacheEntry->getPath())) {
             if (modifier->isFailed()) {
                 message += QString("\n\u2022 ") + modifier->getReasonForFailure().c_str();
                 ++numFailedModifiers;
@@ -87,7 +87,7 @@ QString babelwires::RowModel::getTooltip() const {
 }
 
 babelwires::RowModel::BackgroundStyle babelwires::RowModel::getBackgroundStyle(ColumnType c) const {
-    if (m_featureElement->isFailed()) {
+    if (m_node->isFailed()) {
         return BackgroundStyle::failed;
     } else if (m_contentsCacheEntry->hasFailedModifier()) {
         return BackgroundStyle::failed;

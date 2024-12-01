@@ -25,12 +25,12 @@ babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string c
 babelwires::SelectRecordVariantCommand::~SelectRecordVariantCommand() = default;
 
 bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getNode(m_elementId);
-    if (!elementToModify) {
+    const Node* nodeToModify = project.getNode(m_elementId);
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
@@ -46,7 +46,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
         return false;
     }
 
-    if (const Modifier* const modifier = elementToModify->findModifier(m_pathToRecord)) {
+    if (const Modifier* const modifier = nodeToModify->findModifier(m_pathToRecord)) {
         m_recordModifierToRemove = modifier->getModifierData().clone();
     }
 

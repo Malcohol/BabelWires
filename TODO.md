@@ -54,7 +54,7 @@ Refactor:
   - Tried this in PR #14. Breaks symmetry.
 * The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.
 * Move some of the logic in doProcess up into Node.
-* Split featureElementData into separate files - replace any dynamic casts.
+* Split NodeData into separate files - replace any dynamic casts.
 * Split Features & Import/Export out from the project lib. 
   - In _theory_ the import/export logic could be useful on its own.
 * Think about modules and dlls.

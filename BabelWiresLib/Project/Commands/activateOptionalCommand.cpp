@@ -25,12 +25,12 @@ babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string command
 }
 
 bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
-    const Node* elementToModify = project.getNode(m_elementId);
-    if (!elementToModify) {
+    const Node* nodeToModify = project.getNode(m_elementId);
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
@@ -52,7 +52,7 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
         return false;
     }
 
-    if (const Modifier* modifier = elementToModify->findModifier(m_pathToRecord)) {
+    if (const Modifier* modifier = nodeToModify->findModifier(m_pathToRecord)) {
         if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             m_wasModifier = true;
         }

@@ -284,8 +284,8 @@ void babelwires::ProjectBridge::onConnectionUpdated(const QtNodes::Connection& c
     }
 }
 
-void babelwires::ProjectBridge::addNodeToFlowScene(const Node* featureElement) {
-    const NodeId elementId = featureElement->getNodeId();
+void babelwires::ProjectBridge::addNodeToFlowScene(const Node* node) {
+    const NodeId elementId = node->getNodeId();
     auto newNodeData = std::make_unique<ElementNodeModel>(*this, elementId);
     QtNodes::Node& newNode = m_flowScene->createNode(std::move(newNodeData));
     // Place new nodes at the very top.
@@ -294,7 +294,7 @@ void babelwires::ProjectBridge::addNodeToFlowScene(const Node* featureElement) {
         newNode.nodeGraphicsObject().setSelected(true);
     }
 
-    const UiPosition& uiPos = featureElement->getUiPosition();
+    const UiPosition& uiPos = node->getUiPosition();
     const QPointF newPos(uiPos.m_x, uiPos.m_y);
     m_flowScene->setNodePosition(newNode, newPos);
 

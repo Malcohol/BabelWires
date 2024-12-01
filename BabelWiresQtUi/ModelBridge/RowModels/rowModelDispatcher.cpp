@@ -31,6 +31,6 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const ValueModelRegistry& val
         new (m_rowModel) babelwires::ValueRowModel();
     }
     m_rowModel->m_contentsCacheEntry = entry;
-    m_rowModel->m_featureElement = element;
+    m_rowModel->m_node = element;
     m_rowModel->init(valueModelRegistry, typeSystem);
 }

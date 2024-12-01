@@ -34,13 +34,13 @@ babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string
 }
 
 bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getNode(m_elementId);
+    const Node* nodeToModify = project.getNode(m_elementId);
 
-    if (!elementToModify) {
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
@@ -66,7 +66,7 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         return false;
     }
 
-    if (const Modifier* modifier = elementToModify->getEdits().findModifier(m_pathToArray)) {
+    if (const Modifier* modifier = nodeToModify->getEdits().findModifier(m_pathToArray)) {
         const auto& modifierData = modifier->getModifierData();
         if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             m_wasModifier = true;

@@ -30,12 +30,12 @@ babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string comma
     , m_numEntriesToAdd(numEntriesToAdd) {}
 
 bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project) {
-    const Node* elementToModify = project.getNode(m_elementId);
-    if (!elementToModify) {
+    const Node* nodeToModify = project.getNode(m_elementId);
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
@@ -54,7 +54,7 @@ bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project
         return false;
     }
 
-    if (const Modifier* modifier = elementToModify->findModifier(m_pathToArray)) {
+    if (const Modifier* modifier = nodeToModify->findModifier(m_pathToArray)) {
         if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             m_wasModifier = true;
         }

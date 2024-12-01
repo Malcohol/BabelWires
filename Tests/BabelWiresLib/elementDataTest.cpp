@@ -144,23 +144,23 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    std::unique_ptr<const babelwires::Node> featureElement =
+    std::unique_ptr<const babelwires::Node> node =
         data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
-    EXPECT_TRUE(featureElement);
-    ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(featureElement->as<babelwires::SourceFileNode>());
-    EXPECT_TRUE(featureElement->getOutput());
-    EXPECT_EQ(featureElement->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
-    EXPECT_EQ(featureElement->getNodeData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getNodeData().as<babelwires::SourceFileNodeData>());
-    EXPECT_EQ(static_cast<const babelwires::SourceFileNodeData&>(featureElement->getNodeData()).m_filePath,
+    EXPECT_TRUE(node);
+    ASSERT_FALSE(node->isFailed());
+    EXPECT_TRUE(node->as<babelwires::SourceFileNode>());
+    EXPECT_TRUE(node->getOutput());
+    EXPECT_EQ(node->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
+    EXPECT_EQ(node->getNodeData().m_factoryVersion, data.m_factoryVersion);
+    EXPECT_TRUE(node->getNodeData().as<babelwires::SourceFileNodeData>());
+    EXPECT_EQ(static_cast<const babelwires::SourceFileNodeData&>(node->getNodeData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getOutput()->getChild(0));
+    testUtils::TestSimpleRecordType::ConstInstance instance(*node->getOutput()->getChild(0));
     EXPECT_EQ(instance.getintR0().get(), 14);
 
-    EXPECT_TRUE(featureElement->isExpanded(expandedPath));
+    EXPECT_TRUE(node->isExpanded(expandedPath));
 }
 
 TEST(ElementDataTest, targetFileDataClone) {
@@ -234,23 +234,23 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    std::unique_ptr<const babelwires::Node> featureElement =
+    std::unique_ptr<const babelwires::Node> node =
         data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
-    EXPECT_TRUE(featureElement);
-    ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(featureElement->as<babelwires::TargetFileNode>());
-    EXPECT_TRUE(featureElement->getInput());
-    EXPECT_EQ(featureElement->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
-    EXPECT_EQ(featureElement->getNodeData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getNodeData().as<babelwires::TargetFileNodeData>());
-    EXPECT_EQ(static_cast<const babelwires::TargetFileNodeData&>(featureElement->getNodeData()).m_filePath,
+    EXPECT_TRUE(node);
+    ASSERT_FALSE(node->isFailed());
+    EXPECT_TRUE(node->as<babelwires::TargetFileNode>());
+    EXPECT_TRUE(node->getInput());
+    EXPECT_EQ(node->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
+    EXPECT_EQ(node->getNodeData().m_factoryVersion, data.m_factoryVersion);
+    EXPECT_TRUE(node->getNodeData().as<babelwires::TargetFileNodeData>());
+    EXPECT_EQ(static_cast<const babelwires::TargetFileNodeData&>(node->getNodeData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getInput()->getChild(0));
+    testUtils::TestSimpleRecordType::ConstInstance instance(*node->getInput()->getChild(0));
     EXPECT_EQ(instance.getintR0().get(), 12);
 
-    EXPECT_TRUE(featureElement->isExpanded(expandedPath));
+    EXPECT_TRUE(node->isExpanded(expandedPath));
 }
 
 TEST(ElementDataTest, processorDataClone) {
@@ -317,22 +317,22 @@ TEST(ElementDataTest, processorDataCreateElement) {
     const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    std::unique_ptr<const babelwires::Node> featureElement =
+    std::unique_ptr<const babelwires::Node> node =
         data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
-    EXPECT_TRUE(featureElement);
-    ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(featureElement->as<babelwires::ProcessorNode>());
-    EXPECT_TRUE(featureElement->getInput());
-    EXPECT_EQ(featureElement->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
-    EXPECT_EQ(featureElement->getNodeData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getNodeData().as<babelwires::ProcessorNodeData>());
+    EXPECT_TRUE(node);
+    ASSERT_FALSE(node->isFailed());
+    EXPECT_TRUE(node->as<babelwires::ProcessorNode>());
+    EXPECT_TRUE(node->getInput());
+    EXPECT_EQ(node->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
+    EXPECT_EQ(node->getNodeData().m_factoryVersion, data.m_factoryVersion);
+    EXPECT_TRUE(node->getNodeData().as<babelwires::ProcessorNodeData>());
 
-    const auto& inputFeature = *featureElement->getInput();
+    const auto& inputFeature = *node->getInput();
 
     testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};
 
     EXPECT_EQ(input.getInt().get(), 12);
 
-    EXPECT_TRUE(featureElement->isExpanded(expandedPath));
+    EXPECT_TRUE(node->isExpanded(expandedPath));
 }

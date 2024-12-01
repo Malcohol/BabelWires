@@ -156,8 +156,8 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     // or recover individually, as appropriate.
 
     // Just those elements with changes.
-    std::vector<const Node*> featureElementsWithChanges;
-    featureElementsWithChanges.reserve(m_project.getNodes().size());
+    std::vector<const Node*> nodesWithChanges;
+    nodesWithChanges.reserve(m_project.getNodes().size());
 
     // const Node::Changes someStructureChange = Node::Changes::FeatureStructureChanged |
     // Node::Changes::CompoundExpandedOrCollapsed;
@@ -167,7 +167,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
         const NodeId nodeId = node->getNodeId();
 
         if (node->isChanged(Node::Changes::SomethingChanged)) {
-            featureElementsWithChanges.emplace_back(node);
+            nodesWithChanges.emplace_back(node);
         }
     }
 
@@ -208,7 +208,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
         allModifiersWereRemoved(node.get(), nodeId, node->getRemovedModifiers());
     }
 
-    for (const auto* node : featureElementsWithChanges) {
+    for (const auto* node : nodesWithChanges) {
         const NodeId nodeId = node->getNodeId();
 
         if (node->isChanged(Node::Changes::NodeIsNew)) {
@@ -292,7 +292,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     }
 
     // Update the nodes that didn't have structural changes.
-    for (const auto* node : featureElementsWithChanges) {
+    for (const auto* node : nodesWithChanges) {
         if (node->isChanged(
                 Node::Changes::FeatureChangesMask | Node::Changes::NodeLabelChanged |
                 Node::Changes::ModifierAdded | Node::Changes::ModifierRemoved |

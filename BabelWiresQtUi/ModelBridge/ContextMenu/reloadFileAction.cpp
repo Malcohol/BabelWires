@@ -22,11 +22,11 @@ void babelwires::ReloadFileAction::actionTriggered(babelwires::FeatureModel& mod
     const NodeId elementId = model.getNodeId();
 
     ModifyModelScope scope(projectBridge);
-    Node* const featureElement = scope.getProject().getNode(elementId);
-    if (!featureElement) {
+    Node* const node = scope.getProject().getNode(elementId);
+    if (!node) {
         return;
     }
-    FileNode* const fileElement = featureElement->as<FileNode>();
+    FileNode* const fileElement = node->as<FileNode>();
     if (!fileElement) {
         return;
     }

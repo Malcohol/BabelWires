@@ -19,11 +19,11 @@ TEST(ProcessorNodeTest, sourceFileDataCreateElement) {
     data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
     data.m_factoryVersion = 1;
 
-    auto featureElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
-    ASSERT_TRUE(featureElement);
-    ASSERT_FALSE(featureElement->isFailed());
-    ASSERT_TRUE(featureElement->as<babelwires::ProcessorNode>());
-    babelwires::ProcessorNode* processorNode = static_cast<babelwires::ProcessorNode*>(featureElement.get());
+    auto node = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    ASSERT_TRUE(node);
+    ASSERT_FALSE(node->isFailed());
+    ASSERT_TRUE(node->as<babelwires::ProcessorNode>());
+    babelwires::ProcessorNode* processorNode = static_cast<babelwires::ProcessorNode*>(node.get());
 
     auto& inputFeature = *processorNode->getInput();
     ASSERT_TRUE(inputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());

@@ -30,11 +30,11 @@ void babelwires::SaveFileAsAction::actionTriggered(babelwires::FeatureModel& mod
     {
         AccessModelScope scope(projectBridge);
         const Project& project = scope.getProject();
-        const Node* const featureElement = project.getNode(elementId);
-        if (!featureElement) {
+        const Node* const node = project.getNode(elementId);
+        if (!node) {
             return;
         }
-        const FileNode* const fileElement = featureElement->as<FileNode>();
+        const FileNode* const fileElement = node->as<FileNode>();
         if (!fileElement) {
             return;
         }
