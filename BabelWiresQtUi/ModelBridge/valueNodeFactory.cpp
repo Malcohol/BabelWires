@@ -28,7 +28,7 @@ QString babelwires::ValueNodeFactory::name() const {
 std::unique_ptr<QtNodes::NodeDataModel> babelwires::ValueNodeFactory::createNode() const {
     auto newDataPtr = std::make_unique<ValueNodeData>(m_typeOfValue);
 
-    auto commandPtr = std::make_unique<AddNodeCommand>("Add Value Element", std::move(newDataPtr));
+    auto commandPtr = std::make_unique<AddNodeCommand>("Add Value Node", std::move(newDataPtr));
     AddNodeCommand& addNodeCommand = *commandPtr;
     if (m_projectBridge->executeAddNodeCommand(std::move(commandPtr))) {
         return std::make_unique<NodeNodeModel>(*m_projectBridge, addNodeCommand.getNodeId());

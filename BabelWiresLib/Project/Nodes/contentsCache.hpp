@@ -24,7 +24,7 @@ namespace babelwires {
         struct ContentsCacheBuilder;
     }
 
-    /// The information cached about a single row in the contents of a feature element.
+    /// The information cached about a single row in the contents of a Node.
     class ContentsCacheEntry {
       public:
         ContentsCacheEntry(std::string label, const ValueTreeNode* input, const ValueTreeNode* output,
@@ -99,7 +99,7 @@ namespace babelwires {
         bool m_hasSubModifiers : 1;
     };
 
-    /// A cache of the contents of a feature element visible to the user.
+    /// A cache of the contents of a Node visible to the user.
     /// This is relevant only to the UI, but is included in the base library
     /// because the logic is independent of the particular UI framework.
     class ContentsCache {
@@ -126,7 +126,7 @@ namespace babelwires {
         /// Otherwise return -1.
         int getIndexOfPath(bool seekInputFeature, const Path& path) const;
 
-        /// Describes the way an element may have changed.
+        /// Describes the way a node may have changed.
         enum class Changes : unsigned int {
             NothingChanged = 0b0,
 
@@ -135,10 +135,10 @@ namespace babelwires {
             SomethingChanged = 0b1
         };
 
-        /// Query the feature element for changes.
+        /// Query the Node for changes.
         bool isChanged(Changes changes) const;
 
-        /// Clear any changes the element is carrying.
+        /// Clear any changes the node is carrying.
         void clearChanges();
 
       private:

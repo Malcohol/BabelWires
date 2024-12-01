@@ -29,7 +29,7 @@ namespace babelwires {
         virtual bool shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const override;
         virtual void subsume(std::unique_ptr<Command> subsequentCommand) override;
 
-        /// If this command only carries a new position for the given element, return its position.
+        /// If this command only carries a new position for the given node, return its position.
         /// This method exists allow the AddNodeCommand to subsume this one.
         std::optional<UiPosition> getPositionForOnlyNode(NodeId elementId) const;
 

@@ -1,5 +1,5 @@
 /**
- * The command which adds a modifier to a feature element.
+ * The command which adds a modifier to a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  *

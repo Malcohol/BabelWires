@@ -16,10 +16,10 @@ namespace babelwires {
     class Project;
     struct NodeData;
 
-    /// Add a feature element to the project.
+    /// Add a Node to the project.
     class AddNodeCommand : public SimpleCommand<Project> {
       public:
-        /// Create a command which adds the given element.
+        /// Create a command which adds the given node.
         /// NOTE: An expanded path entry is always added for the root path, so the constructor asserts it is not already present.
         AddNodeCommand(std::string commandName, std::unique_ptr<NodeData> elementToAdd);
 

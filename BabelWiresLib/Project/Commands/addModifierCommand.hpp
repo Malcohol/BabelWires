@@ -1,5 +1,5 @@
 /**
- * The command which adds a modifier to a feature element.
+ * The command which adds a modifier to a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -16,7 +16,7 @@ namespace babelwires {
     class Project;
     struct ModifierData;
 
-    /// Add a modifier to a feature element.
+    /// Add a modifier to a Node.
     class AddModifierCommand : public CompoundCommand<Project> {
       public:
         AddModifierCommand(std::string commandName, NodeId targetId, std::unique_ptr<ModifierData> modifierToAdd);

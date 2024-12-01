@@ -20,7 +20,7 @@
 #include <cassert>
 
 const babelwires::FileNode& babelwires::FileRowModel::getFileElement() const {
-    assert(m_node->as<FileNode>() && "A file feature should only appear in a file element");
+    assert(m_node->as<FileNode>() && "A FileType should only appear in a FileNode");
     return *static_cast<const FileNode*>(m_node);
 }
 

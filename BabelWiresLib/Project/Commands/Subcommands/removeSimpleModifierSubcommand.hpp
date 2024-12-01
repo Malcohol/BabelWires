@@ -1,5 +1,5 @@
 /**
- * Commands which removes modifiers from an element.
+ * Commands which removes modifiers from a node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -15,7 +15,7 @@ namespace babelwires {
     class Project;
     struct ModifierData;
 
-    /// Remove a modifier from a feature element.
+    /// Remove a modifier from a Node.
     /// This will not remove modifiers on array elements affected by removing
     /// an array size modifier. See RemoveModifierCommand.
     class RemoveSimpleModifierSubcommand : public SimpleCommand<Project> {

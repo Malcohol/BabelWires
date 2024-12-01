@@ -1,5 +1,5 @@
 /**
- * ConnectionModifierData used to assign a value within a container to a value from another element.
+ * ConnectionModifierData used to assign a value within a container to a value from another node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 namespace babelwires {
-    /// Data used to assign a value within a container to a value from another element.
+    /// Data used to assign a value within a container to a value from another node.
     struct ConnectionModifierData : ModifierData {
         /// Find the source ValueTreeNode in the project, or throw.
         const ValueTreeNode* getSourceTreeNode(const Project& project) const;

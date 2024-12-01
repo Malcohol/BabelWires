@@ -51,16 +51,16 @@ namespace babelwires {
         /// Does not clear the project's changes.
         void interpretChangesAndFireSignals();
 
-        /// Don't fire a signal if this element is observed being added.
+        /// Don't fire a signal if this node is observed being added.
         void ignoreAddedNode(NodeId nodeId);
 
-        /// Don't fire a signal if this element is observed being removed.
+        /// Don't fire a signal if this node is observed being removed.
         void ignoreRemovedNode(NodeId nodeId);
 
-        /// Don't fire a signal if this element is observed being moved.
+        /// Don't fire a signal if this node is observed being moved.
         void ignoreMovedNode(NodeId nodeId);
 
-        /// Don't fire a signal if this element is observed being resized.
+        /// Don't fire a signal if this node is observed being resized.
         void ignoreResizedNode(NodeId nodeId);
 
         /// Don't fire a signal if this connection is observed being added.
@@ -92,16 +92,16 @@ namespace babelwires {
         Signal<NodeId> m_contentWasChanged;
 
       private:
-        /// Fire the m_nodeWasAdded signal, unless the element is to be ignored.
+        /// Fire the m_nodeWasAdded signal, unless the node is to be ignored.
         void nodeWasAdded(const Node* node);
 
-        /// Fire the m_nodeWasRemoved signal, unless the element is to be ignored.
+        /// Fire the m_nodeWasRemoved signal, unless the node is to be ignored.
         void nodeWasRemoved(NodeId nodeId);
 
-        /// Fire the m_nodeWasMoved signal, unless the element is to be ignored.
+        /// Fire the m_nodeWasMoved signal, unless the node is to be ignored.
         void nodeWasMoved(NodeId nodeId, const UiPosition& uiPosition);
 
-        /// Fire the m_nodeWasResized signal, unless the element is to be ignored.
+        /// Fire the m_nodeWasResized signal, unless the node is to be ignored.
         void nodeWasResized(NodeId nodeId, const UiSize& newSize);
 
         /// Fire the m_connectionWasAdded signal, unless the connection is to be ignored.

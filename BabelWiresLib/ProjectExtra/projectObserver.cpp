@@ -148,11 +148,11 @@ namespace {
 } // namespace
 
 void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
-    // NOTE: We assume that we don't see the same element or connection
+    // NOTE: We assume that we don't see the same node or connection
     // added and removed with changes being processed in between.
 
-    // We don't give special handling here to the modifiers when a feature element
-    // fails or recovers as a whole. The modifiers of such an element should fail
+    // We don't give special handling here to the modifiers when a Node
+    // fails or recovers as a whole. The modifiers of such a node should fail
     // or recover individually, as appropriate.
 
     // Just those elements with changes.
@@ -263,7 +263,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
 
                         } else if (m_addedConnectionsToIgnore.erase(connection)) {
                             // Stop the connection from being skipped when the nodesToCreate are processed.
-                            // This might do nothing if the element was not going to be ignored.
+                            // This might do nothing if the node was not going to be ignored.
                             addToConnections(connectionsToRemove, State::PreviousState, std::move(connection),
                                              m_project, node);
                         }

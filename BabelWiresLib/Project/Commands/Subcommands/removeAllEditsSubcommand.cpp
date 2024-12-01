@@ -76,7 +76,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
 void babelwires::RemoveAllEditsSubcommand::execute(Project& project) const {
     CompoundCommand::execute(project);
     Node* nodeToModify = project.getNode(m_nodeId);
-    assert(nodeToModify && "The element must exist");
+    assert(nodeToModify && "The node must exist");
     // This may not seem necessary, but it means we won't assert when expanding the
     // moved down entries.
     for (const auto& p : m_expandedPathsRemoved) {
@@ -86,7 +86,7 @@ void babelwires::RemoveAllEditsSubcommand::execute(Project& project) const {
 
 void babelwires::RemoveAllEditsSubcommand::undo(Project& project) const {
     Node* nodeToModify = project.getNode(m_nodeId);
-    assert(nodeToModify && "The element must exist");
+    assert(nodeToModify && "The node must exist");
     for (const auto& p : m_expandedPathsRemoved) {
         nodeToModify->getEdits().setExpanded(p, true);
     }

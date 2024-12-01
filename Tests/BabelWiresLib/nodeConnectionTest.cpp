@@ -30,7 +30,7 @@ struct NodeConnectionTest : ::testing::Test {
         m_arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1);
         m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
 
-        // Add a feature element to the project to which connections can be made.
+        // Add a Node to the project to which connections can be made.
         testUtils::TestComplexRecordElementData sourceElementData;
 
         m_sourceId = m_context.m_project.addNode(sourceElementData);

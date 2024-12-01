@@ -27,8 +27,8 @@ void babelwires::RemoveModifierAction::actionTriggered(babelwires::FeatureModel&
 
     AccessModelScope scope(projectBridge);
     const Project& project = scope.getProject();
-    const Node* const element = project.getNode(elementId);
-    if (!element) {
+    const Node* const node = project.getNode(elementId);
+    if (!node) {
         return;
     }
 
@@ -38,7 +38,7 @@ void babelwires::RemoveModifierAction::actionTriggered(babelwires::FeatureModel&
     }
     const ValueTreeNode* const valueTreeNode = entry->getInputThenOutput();
     assert(valueTreeNode && "No valueTreeNode for row model");
-    const bool isModified = (valueTreeNode == entry->getInput()) && element->findModifier(Path(valueTreeNode));
+    const bool isModified = (valueTreeNode == entry->getInput()) && node->findModifier(Path(valueTreeNode));
     if (isModified) {
         projectBridge.scheduleCommand(
             std::make_unique<RemoveModifierCommand>("Remove modifier", elementId, entry->getPath()));

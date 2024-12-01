@@ -75,7 +75,7 @@ namespace babelwires {
         bool executeCommandSynchronously(std::unique_ptr<Command<Project>> command);
 
         /// Execute an AddNodeCommand now.
-        /// This special case allows the new node to be constructed knowing its corresponding model element.
+        /// This special case allows the new node to be constructed knowing its corresponding model node.
         /// Returns true if the command succeeded.
         bool executeAddNodeCommand(std::unique_ptr<AddNodeCommand> command);
 
@@ -96,7 +96,7 @@ namespace babelwires {
         void nodeSelectionChanged(int numNodesSelected);
 
       private:
-        /// Find the node in the scene that corresponds to the given element id,
+        /// Find the node in the scene that corresponds to the given NodeId,
         /// if it exists.
         QtNodes::Node* getNodeFromId(NodeId id);
 
@@ -189,7 +189,7 @@ namespace babelwires {
         // Information about the currently connected connections.
         MultiKeyMap<const QtNodes::Connection*, ConnectionDescription, FlowSceneConnectionInfo> m_connectedConnections;
 
-        /// Find the node in the scene that corresponds to an element id.
+        /// Find the node in the scene that corresponds to a NodeId.
         std::unordered_map<NodeId, QtNodes::Node*> m_nodeFromNodeId;
 
         /// Most commands are scheduled to run when the UI is idle, rather than performed synchronously.

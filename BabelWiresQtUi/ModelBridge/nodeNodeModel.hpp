@@ -54,8 +54,8 @@ namespace babelwires {
         void customContextMenuRequested(const QPoint& pos);
 
       protected:
-        /// Set up the contents to match the state of element.
-        void setContents(std::string label, NodeId elementId);
+        /// Set up the contents to match the state of the node.
+        void setContents(std::string label, NodeId nodeId);
 
         static QtNodes::NodeDataType getDataTypeFromFeature(const ValueTreeNode* f);
 

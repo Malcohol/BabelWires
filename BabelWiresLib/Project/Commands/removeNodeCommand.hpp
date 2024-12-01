@@ -18,8 +18,8 @@ namespace babelwires {
     class Project;
     struct NodeData;
 
-    /// Remove a feature element or a connection or a mixture of both from the project.
-    /// All the connections of a feature element are always removed when it is.
+    /// Remove a Node or a connection or a mixture of both from the project.
+    /// All the connections of a Node are always removed when it is.
     /// When the UI issues nofications about a removed connection, it might notify about
     /// connections before or after the elements themselves.
     /// This class is designed to allow that to happen in any order, by having the

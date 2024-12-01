@@ -14,7 +14,7 @@ namespace babelwires {
 
     class ProjectBridge;
 
-    /// This is a common base for both the factories and the element node model.
+    /// This is a common base for both the factories and the NodeNodeModel.
     class BaseNodeModel : public QtNodes::NodeDataModel {
         Q_OBJECT
 

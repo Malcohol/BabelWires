@@ -35,7 +35,7 @@ namespace babelwires {
         /// Convenience method: Did source and target resolve?
         bool isConnected() const;
 
-        /// If the modifier targets an element in the array below the startIndex, apply the adjustment.
+        /// If the modifier targets a node in the array below the startIndex, apply the adjustment.
         void adjustSourceArrayIndices(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                                       int adjustment);
 

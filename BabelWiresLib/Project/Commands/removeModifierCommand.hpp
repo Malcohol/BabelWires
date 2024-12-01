@@ -1,5 +1,5 @@
 /**
- * Commands which removes modifiers from an element.
+ * Commands which removes modifiers from an node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
