@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElementData.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueElement/valueElement.hpp>

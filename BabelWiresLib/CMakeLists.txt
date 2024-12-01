@@ -2,7 +2,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/project.cpp
 	Project/Nodes/node.cpp
 	Project/Nodes/nodeData.cpp
-	Project/Nodes/ProcessorElement/processorElement.cpp
+	Project/Nodes/ProcessorNode/processorNode.cpp
 	Project/Nodes/SourceFileElement/sourceFileElement.cpp
 	Project/Nodes/TargetFileElement/targetFileElement.cpp
 	Project/Nodes/FileNode/fileNode.cpp
@@ -10,7 +10,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Nodes/contentsCache.cpp
 	Project/Nodes/SourceFileElement/sourceFileElementData.cpp
 	Project/Nodes/TargetFileElement/targetFileElementData.cpp
-	Project/Nodes/ProcessorElement/processorElementData.cpp
+	Project/Nodes/ProcessorNode/processorNodeData.cpp
 	Project/Nodes/ValueElement/valueElement.cpp
 	Project/Nodes/ValueElement/valueElementData.cpp
 	Project/Modifiers/modifier.cpp

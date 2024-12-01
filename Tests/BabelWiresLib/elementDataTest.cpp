@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElement.hpp>
-#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElement.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElementData.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>

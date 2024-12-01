@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
-#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 

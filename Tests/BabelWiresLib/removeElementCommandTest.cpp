@@ -4,7 +4,7 @@
 
 #include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Nodes/ProcessorElement/processorElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileElement/sourceFileElement.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileElement/targetFileElement.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
