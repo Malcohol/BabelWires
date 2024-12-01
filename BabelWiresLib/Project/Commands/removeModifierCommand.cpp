@@ -1,5 +1,5 @@
 /**
- * Commands which removes modifiers from an element.
+ * Commands which removes modifiers from a node.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,8 +13,8 @@
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
@@ -26,25 +26,25 @@
 
 #include <cassert>
 
-babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName, ElementId targetId,
+babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName, NodeId targetId,
                                                          Path featurePath)
     : CompoundCommand(std::move(commandName))
-    , m_elementId(targetId)
+    , m_nodeId(targetId)
     , m_path(featurePath) {}
 
 bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
-    const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+    const Node* nodeToModify = project.getNode(m_nodeId);
 
-    if (!elementToModify) {
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
 
-    auto* modifier = elementToModify->getEdits().findModifier(m_path);
+    auto* modifier = nodeToModify->getEdits().findModifier(m_path);
     if (!modifier) {
         return false;
     }
@@ -55,7 +55,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     // the newly discovered structure from the ancestor connection. In that case, we'll just let them fail
     // so the user is informed.
     bool hasAncestorConnection = false;
-    for (auto connectionModifier : elementToModify->getConnectionModifiers()) {
+    for (auto connectionModifier : nodeToModify->getConnectionModifiers()) {
         if (connectionModifier->getTargetPath().isStrictPrefixOf(m_path)) {
             hasAncestorConnection = true;
             break;
@@ -71,7 +71,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             if (compoundFeature) {
                 if (currentSize != initialSize) {
                     addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(
-                        m_elementId, m_path, initialSize, initialSize - currentSize));
+                        m_nodeId, m_path, initialSize, initialSize - currentSize));
                 }
             }
         } else if (const auto* optModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
@@ -81,7 +81,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                 for (auto optionalField : optionals) {
                     if (optionalField.second) {
                         addSubCommand(std::make_unique<DeactivateOptionalCommand>(
-                            "DeactivateOptionalCommand subcommand", m_elementId, m_path, optionalField.first));
+                            "DeactivateOptionalCommand subcommand", m_nodeId, m_path, optionalField.first));
                     }
                 }
             }
@@ -92,13 +92,13 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                 for (auto fieldToRemove : fieldsToRemove) {
                     Path pathToFieldToRemove = m_path;
                     pathToFieldToRemove.pushStep(babelwires::PathStep(fieldToRemove));
-                    addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToFieldToRemove));
+                    addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToFieldToRemove));
                 }
             }
         }
     }
 
-    addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_elementId, m_path));
+    addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_nodeId, m_path));
 
     return CompoundCommand::initializeAndExecute(project);
 }

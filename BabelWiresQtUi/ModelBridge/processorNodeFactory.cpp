@@ -7,12 +7,12 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeNodeModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 
 #include <QtWidgets/QFileDialog>
 #include <nodes/FlowScene>
@@ -27,14 +27,14 @@ QString babelwires::ProcessorNodeFactory::name() const {
 }
 
 std::unique_ptr<QtNodes::NodeDataModel> babelwires::ProcessorNodeFactory::createNode() const {
-    auto newDataPtr = std::make_unique<ProcessorElementData>();
+    auto newDataPtr = std::make_unique<ProcessorNodeData>();
     newDataPtr->m_factoryIdentifier = m_processorFactory->getIdentifier();
     newDataPtr->m_factoryVersion = m_processorFactory->getVersion();
 
-    auto commandPtr = std::make_unique<AddElementCommand>("Add processor", std::move(newDataPtr));
-    AddElementCommand& addElementCommand = *commandPtr;
-    if (m_projectBridge->executeAddElementCommand(std::move(commandPtr))) {
-        return std::make_unique<ElementNodeModel>(*m_projectBridge, addElementCommand.getElementId());
+    auto commandPtr = std::make_unique<AddNodeCommand>("Add processor", std::move(newDataPtr));
+    AddNodeCommand& addNodeCommand = *commandPtr;
+    if (m_projectBridge->executeAddNodeCommand(std::move(commandPtr))) {
+        return std::make_unique<NodeNodeModel>(*m_projectBridge, addNodeCommand.getNodeId());
     }
     return nullptr;
 }

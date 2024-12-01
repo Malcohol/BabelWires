@@ -1,5 +1,5 @@
 /**
- * A LocalModifier is a modifier which operates on the contents of a single FeatureElement, and is unaffected by context.
+ * A LocalModifier is a modifier which operates on the contents of a single Node, and is unaffected by context.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

@@ -21,7 +21,7 @@
 #include <BabelWiresLib/Types/Map/Commands/setMapTargetTypeCommand.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapSerialization.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
@@ -175,7 +175,7 @@ void babelwires::MapEditor::applyMapToProject() {
     modifierData->m_targetPath = getData().getPathToValue();
 
     auto setValueCommand =
-        std::make_unique<AddModifierCommand>("Set map value", getData().getElementId(), std::move(modifierData));
+        std::make_unique<AddModifierCommand>("Set map value", getData().getNodeId(), std::move(modifierData));
     if (!getProjectBridge().executeCommandSynchronously(std::move(setValueCommand))) {
         warnThatMapNoLongerInProject("Cannot apply the map.");
     } else {
@@ -211,13 +211,13 @@ const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(Access
 
 const babelwires::ValueAssignmentData*
 babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
-    const FeatureElement* const element = scope.getProject().getFeatureElement(getData().getElementId());
+    const Node* const node = scope.getProject().getNode(getData().getNodeId());
 
-    if (!element) {
+    if (!node) {
         return nullptr;
     }
 
-    const Modifier* const modifier = element->findModifier(getData().getPathToValue());
+    const Modifier* const modifier = node->findModifier(getData().getPathToValue());
 
     if (!modifier) {
         return nullptr;

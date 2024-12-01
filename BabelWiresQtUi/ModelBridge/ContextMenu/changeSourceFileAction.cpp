@@ -15,7 +15,7 @@
 
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
-#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Registry/fileTypeRegistry.hpp>
@@ -26,22 +26,22 @@ babelwires::ChangeSourceFileAction::ChangeSourceFileAction()
 void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::FeatureModel& model,
                                                          const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
 
     // Since formats are immuatable and live in the registry, they can be accessed outside a scope.
     const FileTypeEntry* fileFormatInformation = nullptr;
     {
         AccessModelScope scope(projectBridge);
         const Project& project = scope.getProject();
-        const FeatureElement* const f = project.getFeatureElement(elementId);
+        const Node* const f = project.getNode(elementId);
         if (!f) {
             return;
         }
-        const FileElement* const fileElement = f->as<FileElement>();
+        const FileNode* const fileElement = f->as<FileNode>();
         if (!fileElement) {
             return;
         }
-        if (isZero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {
+        if (isZero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
             return;
         }
         fileFormatInformation = fileElement->getFileFormatInformation(projectBridge.getContext());

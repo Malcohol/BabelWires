@@ -7,18 +7,18 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeNodeModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Project/Commands/moveElementCommand.hpp>
-#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
-#include <BabelWiresLib/Project/Commands/resizeElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
+#include <BabelWiresLib/Project/Commands/resizeNodeCommand.hpp>
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
@@ -40,17 +40,17 @@ babelwires::ProjectBridge::ProjectBridge(Project& project, CommandManager<Projec
     , m_projectContext(projectContext)
     , m_state(State::ListeningToFlowScene)
     , m_projectObserver(project) {
-    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasAdded.subscribe(
-        [this](const FeatureElement* element) { addNodeToFlowScene(element); }));
+    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasAdded.subscribe(
+        [this](const Node* node) { addNodeToFlowScene(node); }));
 
-    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasRemoved.subscribe(
-        [this](ElementId elementId) { removeNodeFromFlowScene(elementId); }));
+    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasRemoved.subscribe(
+        [this](NodeId elementId) { removeNodeFromFlowScene(elementId); }));
 
-    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasMoved.subscribe(
-        [this](ElementId elementId, const UiPosition& uiPosition) { moveNodeInFlowScene(elementId, uiPosition); }));
+    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasMoved.subscribe(
+        [this](NodeId elementId, const UiPosition& uiPosition) { moveNodeInFlowScene(elementId, uiPosition); }));
 
-    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_featureElementWasResized.subscribe(
-        [this](ElementId elementId, const UiSize& newSize) { resizeNodeInFlowScene(elementId, newSize); }));
+    m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasResized.subscribe(
+        [this](NodeId elementId, const UiSize& newSize) { resizeNodeInFlowScene(elementId, newSize); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_connectionWasAdded.subscribe(
         [this](const ConnectionDescription& connection) { addConnectionToFlowScene(connection); }));
@@ -59,7 +59,7 @@ babelwires::ProjectBridge::ProjectBridge(Project& project, CommandManager<Projec
         [this](const ConnectionDescription& connection) { removeConnectionFromFlowScene(connection); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_contentWasChanged.subscribe(
-        [this](ElementId elementId) { onNodeContentChanged(elementId); }));
+        [this](NodeId elementId) { onNodeContentChanged(elementId); }));
 }
 
 babelwires::ProjectBridge::~ProjectBridge() {
@@ -100,9 +100,9 @@ void babelwires::ProjectBridge::onNodeCreated(QtNodes::Node& n) {
     switch (m_state) {
         case State::WaitingForNewNode: {
             QtNodes::NodeDataModel& dataModel = *n.nodeDataModel();
-            auto& elementNodeModel = dynamic_cast<ElementNodeModel&>(dataModel);
-            const ElementId elementId = elementNodeModel.getElementId();
-            m_nodeFromElementId.insert(std::make_pair(elementId, &n));
+            auto& nodeNodeModel = dynamic_cast<NodeNodeModel&>(dataModel);
+            const NodeId elementId = nodeNodeModel.getNodeId();
+            m_nodeFromNodeId.insert(std::make_pair(elementId, &n));
             m_state = State::ListeningToFlowScene;
             break;
         }
@@ -120,15 +120,15 @@ void babelwires::ProjectBridge::onNodeDeleted(QtNodes::Node& n) {
     switch (m_state) {
         case State::ListeningToFlowScene: {
             QtNodes::NodeDataModel& dataModel = *n.nodeDataModel();
-            auto& elementNodeModel = dynamic_cast<ElementNodeModel&>(dataModel);
-            ElementId elementId = elementNodeModel.getElementId();
-            m_projectObserver.ignoreRemovedElement(elementId);
+            auto& nodeNodeModel = dynamic_cast<NodeNodeModel&>(dataModel);
+            NodeId elementId = nodeNodeModel.getNodeId();
+            m_projectObserver.ignoreRemovedNode(elementId);
 #ifndef NDEBUG
             auto numRemoved =
 #endif
-                m_nodeFromElementId.erase(elementId);
+                m_nodeFromNodeId.erase(elementId);
             assert((numRemoved == 1) && "Expected the node to be in the scene");
-            scheduleCommand(std::make_unique<RemoveElementCommand>("Remove node", elementId));
+            scheduleCommand(std::make_unique<RemoveNodeCommand>("Remove node", elementId));
             break;
         }
         case State::ProcessingModelChanges: {
@@ -146,18 +146,18 @@ void babelwires::ProjectBridge::onNodeMoved(QtNodes::Node& n, const QPointF& new
         case State::ListeningToFlowScene: {
             // Work out if this actually moves the node to a different position.
             QtNodes::NodeDataModel& dataModel = *n.nodeDataModel();
-            auto& elementNodeModel = dynamic_cast<ElementNodeModel&>(dataModel);
-            const ElementId elementId = elementNodeModel.getElementId();
+            auto& nodeNodeModel = dynamic_cast<NodeNodeModel&>(dataModel);
+            const NodeId elementId = nodeNodeModel.getNodeId();
 
             AccessModelScope scope(*this);
-            const FeatureElement* element = scope.getProject().getFeatureElement(elementId);
-            assert(element && "The element should already be in the project");
-            const UiPosition& uiPosition = element->getElementData().m_uiData.m_uiPosition;
+            const Node* node = scope.getProject().getNode(elementId);
+            assert(node && "The node should already be in the project");
+            const UiPosition& uiPosition = node->getNodeData().m_uiData.m_uiPosition;
             UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
             if (uiPosition != newPosition) {
-                std::string commandName = "Move " + elementNodeModel.caption().toStdString();
-                scheduleCommand(std::make_unique<MoveElementCommand>(commandName, elementId, newPosition));
-                m_projectObserver.ignoreMovedElement(elementId);
+                std::string commandName = "Move " + nodeNodeModel.caption().toStdString();
+                scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, elementId, newPosition));
+                m_projectObserver.ignoreMovedNode(elementId);
             }
             break;
         }
@@ -175,18 +175,18 @@ void babelwires::ProjectBridge::onNodeResized(QtNodes::Node& n, const QSize& new
     switch (m_state) {
         case State::ListeningToFlowScene: {
             // Work out if this actually moves the node to a different position.
-            auto& elementNodeModel = dynamic_cast<ElementNodeModel&>(*n.nodeDataModel());
-            const ElementId elementId = elementNodeModel.getElementId();
+            auto& nodeNodeModel = dynamic_cast<NodeNodeModel&>(*n.nodeDataModel());
+            const NodeId elementId = nodeNodeModel.getNodeId();
 
             AccessModelScope scope(*this);
-            const FeatureElement* element = scope.getProject().getFeatureElement(elementId);
-            assert(element && "The element should already be in the project");
-            const int currentWidth = element->getUiSize().m_width;
-            const int newWidth = elementNodeModel.embeddedWidget()->size().width();
+            const Node* node = scope.getProject().getNode(elementId);
+            assert(node && "The node should already be in the project");
+            const int currentWidth = node->getUiSize().m_width;
+            const int newWidth = nodeNodeModel.embeddedWidget()->size().width();
             if (newWidth != currentWidth) {
-                std::string commandName = "Resize " + elementNodeModel.caption().toStdString();
-                scheduleCommand(std::make_unique<ResizeElementCommand>(commandName, elementId, UiSize{newWidth}));
-                m_projectObserver.ignoreResizedElement(elementId);
+                std::string commandName = "Resize " + nodeNodeModel.caption().toStdString();
+                scheduleCommand(std::make_unique<ResizeNodeCommand>(commandName, elementId, UiSize{newWidth}));
+                m_projectObserver.ignoreResizedNode(elementId);
             }
             break;
         }
@@ -201,16 +201,16 @@ void babelwires::ProjectBridge::onNodeResized(QtNodes::Node& n, const QSize& new
 }
 
 namespace {
-    babelwires::ElementNodeModel& getNodeData(QtNodes::Node* n) {
-        return dynamic_cast<babelwires::ElementNodeModel&>(*n->nodeDataModel());
+    babelwires::NodeNodeModel& getNodeData(QtNodes::Node* n) {
+        return dynamic_cast<babelwires::NodeNodeModel&>(*n->nodeDataModel());
     }
 
-    babelwires::ElementId getIdFromNode(QtNodes::Node* n) { return getNodeData(n).getElementId(); }
+    babelwires::NodeId getIdFromNode(QtNodes::Node* n) { return getNodeData(n).getNodeId(); }
 } // namespace
 
-QtNodes::Node* babelwires::ProjectBridge::getNodeFromId(ElementId id) {
-    auto it = m_nodeFromElementId.find(id);
-    return (it != m_nodeFromElementId.end()) ? it->second : nullptr;
+QtNodes::Node* babelwires::ProjectBridge::getNodeFromId(NodeId id) {
+    auto it = m_nodeFromNodeId.find(id);
+    return (it != m_nodeFromNodeId.end()) ? it->second : nullptr;
 }
 
 void babelwires::ProjectBridge::onConnectionCreated(const QtNodes::Connection& c) {
@@ -284,9 +284,9 @@ void babelwires::ProjectBridge::onConnectionUpdated(const QtNodes::Connection& c
     }
 }
 
-void babelwires::ProjectBridge::addNodeToFlowScene(const FeatureElement* featureElement) {
-    const ElementId elementId = featureElement->getElementId();
-    auto newNodeData = std::make_unique<ElementNodeModel>(*this, elementId);
+void babelwires::ProjectBridge::addNodeToFlowScene(const Node* node) {
+    const NodeId elementId = node->getNodeId();
+    auto newNodeData = std::make_unique<NodeNodeModel>(*this, elementId);
     QtNodes::Node& newNode = m_flowScene->createNode(std::move(newNodeData));
     // Place new nodes at the very top.
     newNode.nodeGraphicsObject().setZValue(std::numeric_limits<qreal>::max());
@@ -294,46 +294,46 @@ void babelwires::ProjectBridge::addNodeToFlowScene(const FeatureElement* feature
         newNode.nodeGraphicsObject().setSelected(true);
     }
 
-    const UiPosition& uiPos = featureElement->getUiPosition();
+    const UiPosition& uiPos = node->getUiPosition();
     const QPointF newPos(uiPos.m_x, uiPos.m_y);
     m_flowScene->setNodePosition(newNode, newPos);
 
 #ifndef NDEBUG
     auto resultPair =
 #endif
-        m_nodeFromElementId.insert(std::make_pair(elementId, &newNode));
+        m_nodeFromNodeId.insert(std::make_pair(elementId, &newNode));
     assert(resultPair.second && "There's already a node for that elementId");
 }
 
-void babelwires::ProjectBridge::removeNodeFromFlowScene(ElementId elementId) {
-    auto it = m_nodeFromElementId.find(elementId);
-    assert((it != m_nodeFromElementId.end()) && "Trying to remove unrecognized node");
-    QtNodes::Node* node = it->second;
+void babelwires::ProjectBridge::removeNodeFromFlowScene(NodeId elementId) {
+    auto it = m_nodeFromNodeId.find(elementId);
+    assert((it != m_nodeFromNodeId.end()) && "Trying to remove unrecognized node");
+    QtNodes::Node* qtNode = it->second;
 #ifndef NDEBUG
     {
-        auto elementNode = dynamic_cast<const babelwires::ElementNodeModel*>(node->nodeDataModel());
+        auto elementNode = dynamic_cast<const babelwires::NodeNodeModel*>(qtNode->nodeDataModel());
         assert(elementNode && "Unexpected node in graph");
-        assert((elementNode->getElementId() == elementId) && "Node to remove had unexpected id");
+        assert((elementNode->getNodeId() == elementId) && "Node to remove had unexpected id");
     }
 #endif
-    m_nodeFromElementId.erase(it);
-    m_flowScene->removeNode(*node);
+    m_nodeFromNodeId.erase(it);
+    m_flowScene->removeNode(*qtNode);
 }
 
-void babelwires::ProjectBridge::moveNodeInFlowScene(ElementId elementId, const UiPosition& newPosition) {
-    QtNodes::Node* node = getNodeFromId(elementId);
+void babelwires::ProjectBridge::moveNodeInFlowScene(NodeId elementId, const UiPosition& newPosition) {
+    QtNodes::Node* qtNode = getNodeFromId(elementId);
     const QPointF newPos(newPosition.m_x, newPosition.m_y);
-    m_flowScene->setNodePosition(*node, newPos);
+    m_flowScene->setNodePosition(*qtNode, newPos);
 }
 
-void babelwires::ProjectBridge::resizeNodeInFlowScene(ElementId elementId, const UiSize& newSize) {
-    QtNodes::Node* node = getNodeFromId(elementId);
-    babelwires::ElementNodeModel& elementNodeModel = getNodeData(node);
-    elementNodeModel.setSize(newSize);
-    node->nodeGraphicsObject().setGeometryChanged();
-    node->nodeGeometry().recalculateSize();
-    node->nodeGraphicsObject().update();
-    node->nodeGraphicsObject().moveConnections();
+void babelwires::ProjectBridge::resizeNodeInFlowScene(NodeId elementId, const UiSize& newSize) {
+    QtNodes::Node* qtNode = getNodeFromId(elementId);
+    babelwires::NodeNodeModel& nodeNodeModel = getNodeData(qtNode);
+    nodeNodeModel.setSize(newSize);
+    qtNode->nodeGraphicsObject().setGeometryChanged();
+    qtNode->nodeGeometry().recalculateSize();
+    qtNode->nodeGraphicsObject().update();
+    qtNode->nodeGraphicsObject().moveConnections();
 }
 
 void babelwires::ProjectBridge::onConnectionConnected(const QtNodes::Connection& c) {
@@ -391,15 +391,15 @@ QWidget* babelwires::ProjectBridge::getFlowGraphWidget() {
 }
 
 void babelwires::ProjectBridge::addConnectionToFlowScene(const ConnectionDescription& connection) {
-    QtNodes::Node* nodeIn = getNodeFromId(connection.m_targetId);
-    assert(nodeIn &&
-           "Ensure nodeIn is in the scene before calling this (or nodeIn is missing from m_nodeFromElementId map)");
-    QtNodes::Node* nodeOut = getNodeFromId(connection.m_sourceId);
-    assert(nodeIn &&
-           "Ensure nodeOut is in the scene before calling this (or nodeOut is missing from m_nodeFromElementId map).");
+    QtNodes::Node* qtNodeIn = getNodeFromId(connection.m_targetId);
+    assert(qtNodeIn &&
+           "Ensure nodeIn is in the scene before calling this (or nodeIn is missing from m_nodeFromNodeId map)");
+    QtNodes::Node* qtNodeOut = getNodeFromId(connection.m_sourceId);
+    assert(qtNodeIn &&
+           "Ensure nodeOut is in the scene before calling this (or nodeOut is missing from m_nodeFromNodeId map).");
 
-    ElementNodeModel& nodeDataIn = getNodeData(nodeIn);
-    ElementNodeModel& nodeDataOut = getNodeData(nodeOut);
+    NodeNodeModel& nodeDataIn = getNodeData(qtNodeIn);
+    NodeNodeModel& nodeDataOut = getNodeData(qtNodeOut);
 
     AccessModelScope scope(*this);
     QtNodes::PortIndex portIndexIn =
@@ -408,7 +408,7 @@ void babelwires::ProjectBridge::addConnectionToFlowScene(const ConnectionDescrip
         nodeDataOut.getPortAtPath(scope, QtNodes::PortType::Out, connection.m_sourcePath);
 
     std::shared_ptr<QtNodes::Connection> c =
-        m_flowScene->createConnection(*nodeIn, portIndexIn, *nodeOut, portIndexOut);
+        m_flowScene->createConnection(*qtNodeIn, portIndexIn, *qtNodeOut, portIndexOut);
 
     m_connectedConnections.insert_or_assign(c.get(), connection, FlowSceneConnectionInfo(*c));
 }
@@ -420,7 +420,7 @@ void babelwires::ProjectBridge::removeConnectionFromFlowScene(const ConnectionDe
     m_connectedConnections.erase(it);
 }
 
-void babelwires::ProjectBridge::onNodeContentChanged(ElementId elementId) {
+void babelwires::ProjectBridge::onNodeContentChanged(NodeId elementId) {
     QtNodes::Node* n = getNodeFromId(elementId);
     // Update node the visuals
     // TODO Inefficient.
@@ -472,16 +472,16 @@ bool babelwires::ProjectBridge::executeCommandSynchronously(std::unique_ptr<Comm
     return scope.getCommandManager().executeAndStealCommand(commandPtr);
 }
 
-bool babelwires::ProjectBridge::executeAddElementCommand(std::unique_ptr<AddElementCommand> command) {
+bool babelwires::ProjectBridge::executeAddNodeCommand(std::unique_ptr<AddNodeCommand> command) {
     ModifyModelScope scope(*this);
-    AddElementCommand& addElementCommand = *command;
+    AddNodeCommand& addNodeCommand = *command;
     std::unique_ptr<Command<Project>> commandPtr = std::move(command);
     if (!scope.getCommandManager().executeAndStealCommand(commandPtr)) {
         return false;
     }
 
-    ElementId newElementId = addElementCommand.getElementId();
-    m_projectObserver.ignoreAddedElement(newElementId);
+    NodeId newNodeId = addNodeCommand.getNodeId();
+    m_projectObserver.ignoreAddedNode(newNodeId);
     m_state = State::WaitingForNewNode;
     return true;
 }
@@ -492,18 +492,18 @@ babelwires::ConnectionDescription babelwires::ProjectBridge::describeConnection(
     {
         const QtNodes::Node* const node = c.m_inNode;
         QtNodes::PortIndex portIndex = c.m_inPort;
-        auto elementNode = dynamic_cast<const babelwires::ElementNodeModel*>(node->nodeDataModel());
+        auto elementNode = dynamic_cast<const babelwires::NodeNodeModel*>(node->nodeDataModel());
         assert(elementNode && "Unexpected node in graph");
-        connectionDescription.m_targetId = elementNode->getElementId();
+        connectionDescription.m_targetId = elementNode->getNodeId();
         connectionDescription.m_targetPath =
             elementNode->getPathAtPort(scope, QtNodes::PortType::In, portIndex);
     }
     {
         const QtNodes::Node* const node = c.m_outNode;
         QtNodes::PortIndex portIndex = c.m_outPort;
-        auto elementNode = dynamic_cast<const babelwires::ElementNodeModel*>(node->nodeDataModel());
+        auto elementNode = dynamic_cast<const babelwires::NodeNodeModel*>(node->nodeDataModel());
         assert(elementNode && "Unexpected node in graph");
-        connectionDescription.m_sourceId = elementNode->getElementId();
+        connectionDescription.m_sourceId = elementNode->getNodeId();
         connectionDescription.m_sourcePath =
             elementNode->getPathAtPort(scope, QtNodes::PortType::Out, portIndex);
     }
@@ -516,14 +516,14 @@ babelwires::ProjectData babelwires::ProjectBridge::getDataFromSelectedNodes() {
     AccessModelScope scope(*this);
     const Project& project = scope.getProject();
     projectData.m_projectId = project.getProjectId();
-    for (const auto& node : selectedNodes) {
-        QtNodes::NodeDataModel& dataModel = *node->nodeDataModel();
-        auto& elementNodeModel = dynamic_cast<ElementNodeModel&>(dataModel);
-        const ElementId elementId = elementNodeModel.getElementId();
+    for (const auto& qtNode : selectedNodes) {
+        QtNodes::NodeDataModel& dataModel = *qtNode->nodeDataModel();
+        auto& nodeNodeModel = dynamic_cast<NodeNodeModel&>(dataModel);
+        const NodeId elementId = nodeNodeModel.getNodeId();
 
-        const FeatureElement* const element = project.getFeatureElement(elementId);
-        assert(element && "The node is not in the project");
-        projectData.m_elements.emplace_back(element->extractElementData());
+        const Node* const node = project.getNode(elementId);
+        assert(node && "The node is not in the project");
+        projectData.m_nodes.emplace_back(node->extractNodeData());
     }
     return projectData;
 }

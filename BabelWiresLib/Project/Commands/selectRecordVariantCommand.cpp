@@ -10,27 +10,27 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, ElementId elementId,
+babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, NodeId elementId,
                                                                Path featurePath, ShortId tagToSelect)
     : CompoundCommand(commandName)
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_pathToRecord(std::move(featurePath))
     , m_tagToSelect(tagToSelect) {}
 
 babelwires::SelectRecordVariantCommand::~SelectRecordVariantCommand() = default;
 
 bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& project) {
-    const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
-    if (!elementToModify) {
+    const Node* nodeToModify = project.getNode(m_nodeId);
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
@@ -46,14 +46,14 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
         return false;
     }
 
-    if (const Modifier* const modifier = elementToModify->findModifier(m_pathToRecord)) {
+    if (const Modifier* const modifier = nodeToModify->findModifier(m_pathToRecord)) {
         m_recordModifierToRemove = modifier->getModifierData().clone();
     }
 
     for (const auto& field : fieldsToRemove) {
         Path pathToField = m_pathToRecord;
         pathToField.pushStep(PathStep(field));
-        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToField));
+        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToField));
     }
 
     if (!CompoundCommand::initializeAndExecute(project)) {
@@ -61,7 +61,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
     }
 
     if (m_recordModifierToRemove) {
-        project.removeModifier(m_elementId, m_pathToRecord);
+        project.removeModifier(m_nodeId, m_pathToRecord);
     }
 
     SelectRecordVariantModifierData modifierToAdd;
@@ -69,7 +69,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
     modifierToAdd.m_tagToSelect = m_tagToSelect;
     m_recordModifierToAdd = std::make_unique<SelectRecordVariantModifierData>(std::move(modifierToAdd));
 
-    project.addModifier(m_elementId, *m_recordModifierToAdd);
+    project.addModifier(m_nodeId, *m_recordModifierToAdd);
 
     return true;
 }
@@ -77,15 +77,15 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
 void babelwires::SelectRecordVariantCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
     if (m_recordModifierToRemove) {
-        project.removeModifier(m_elementId, m_pathToRecord);
+        project.removeModifier(m_nodeId, m_pathToRecord);
     }
-    project.addModifier(m_elementId, *m_recordModifierToAdd);
+    project.addModifier(m_nodeId, *m_recordModifierToAdd);
 }
 
 void babelwires::SelectRecordVariantCommand::undo(Project& project) const {
-    project.removeModifier(m_elementId, m_pathToRecord);
+    project.removeModifier(m_nodeId, m_pathToRecord);
     if (m_recordModifierToRemove) {
-        project.addModifier(m_elementId, *m_recordModifierToRemove);
+        project.addModifier(m_nodeId, *m_recordModifierToRemove);
     }
     CompoundCommand::undo(project);
 }

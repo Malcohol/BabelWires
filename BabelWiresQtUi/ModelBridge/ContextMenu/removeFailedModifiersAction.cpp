@@ -12,7 +12,7 @@
 
 #include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
+#include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
@@ -23,12 +23,12 @@ babelwires::RemoveFailedModifiersAction::RemoveFailedModifiersAction()
 void babelwires::RemoveFailedModifiersAction::actionTriggered(babelwires::FeatureModel& model,
                                                               const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
 
     AccessModelScope scope(projectBridge);
     const Project& project = scope.getProject();
-    const FeatureElement* const element = project.getFeatureElement(elementId);
-    if (!element) {
+    const Node* const node = project.getNode(elementId);
+    if (!node) {
         return;
     }
 

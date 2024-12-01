@@ -1,6 +1,6 @@
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <filesystem>
@@ -9,7 +9,7 @@ namespace testUtils {
     /// A file type which wraps a TestSimpleRecordType.
     babelwires::TypeRef getTestFileType();
 
-    /// Get the path in a FileElement to Int0 in TestSimpleRecordType.
+    /// Get the path in a FileNode to Int0 in TestSimpleRecordType.
     babelwires::Path getTestFileElementPathToInt0();
 
     /// A file format that can save and load some test data.

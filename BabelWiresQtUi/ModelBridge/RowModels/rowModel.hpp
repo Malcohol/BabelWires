@@ -26,7 +26,7 @@ class QPainter;
 namespace babelwires {
 
     class ValueTreeNode;
-    class FeatureElement;
+    class Node;
     class ContentsCacheEntry;
     class Modifier;
     class FeatureModelDelegate;
@@ -94,7 +94,7 @@ namespace babelwires {
 
       public:
         const ContentsCacheEntry* m_contentsCacheEntry = nullptr;
-        const FeatureElement* m_featureElement = nullptr;
+        const Node* m_node = nullptr;
         ValueModelDispatcher m_valueModelDispatcher;
     };
 

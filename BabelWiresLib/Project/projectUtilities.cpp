@@ -7,30 +7,30 @@
  **/
 #include <BabelWiresLib/Project/projectUtilities.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 
 void babelwires::projectUtilities::translate(const UiPosition& offset, ProjectData& dataInOut) {
-    for (auto& elementData : dataInOut.m_elements) {
+    for (auto& elementData : dataInOut.m_nodes) {
         elementData->m_uiData.m_uiPosition += offset;
     }
 }
 
 namespace {
     void addDerivedValues(const babelwires::Project& project, unsigned int valueIndex,
-                          std::vector<std::tuple<const babelwires::FeatureElement*, babelwires::Path>>& values) {
+                          std::vector<std::tuple<const babelwires::Node*, babelwires::Path>>& values) {
         assert(valueIndex < values.size());
-        const babelwires::FeatureElement* element = std::get<0>(values[valueIndex]);
+        const babelwires::Node* node = std::get<0>(values[valueIndex]);
         const babelwires::Path& pathToValue = std::get<1>(values[valueIndex]);
         const babelwires::Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
-        const auto& rit = connectionInfo.m_requiredFor.find(element);
+        const auto& rit = connectionInfo.m_requiredFor.find(node);
         if (rit != connectionInfo.m_requiredFor.end()) {
             for (auto cit : rit->second) {
-                const babelwires::FeatureElement* const targetElement = std::get<1>(cit);
+                const babelwires::Node* const targetElement = std::get<1>(cit);
                 // TODO: Build an interface in the project that avoids the need to query this.
                 if (targetElement->isInDependencyLoop()) {
                     continue;
@@ -38,7 +38,7 @@ namespace {
                 const babelwires::ConnectionModifier* connectionModifier = std::get<0>(cit);
                 const babelwires::ConnectionModifierData& connectionData = connectionModifier->getModifierData();
                 if (connectionData.m_sourcePath.isPrefixOf(pathToValue)) {
-                    // There is a connection between an ancestor and some node in the element.
+                    // There is a connection between an ancestor and some node in the node.
                     babelwires::Path pathToPossibleValueInTarget;
                     {
                         babelwires::Path pathFromAncestor = pathToValue;
@@ -65,7 +65,7 @@ namespace {
                                "Expected to find a matching feature in the target, since ancestors are connected and "
                                "there "
                                "are no overriding modifiers");
-                        values.emplace_back(std::tuple<const babelwires::FeatureElement*, babelwires::Path>{
+                        values.emplace_back(std::tuple<const babelwires::Node*, babelwires::Path>{
                             targetElement, std::move(pathToPossibleValueInTarget)});
                     }
                 }
@@ -75,46 +75,46 @@ namespace {
 
 } // namespace
 
-std::vector<std::tuple<babelwires::ElementId, babelwires::Path>>
-babelwires::projectUtilities::getDerivedValues(const Project& project, ElementId elementId,
+std::vector<std::tuple<babelwires::NodeId, babelwires::Path>>
+babelwires::projectUtilities::getDerivedValues(const Project& project, NodeId nodeId,
                                                   const Path& pathToValue) {
-                                                        std::vector<std::tuple<const FeatureElement*, Path>> values;
+                                                        std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
     unsigned int valueIndex = 0;
-    const FeatureElement* element = project.getFeatureElement(elementId);
-    values.emplace_back(std::tuple<const FeatureElement*, Path>{element, pathToValue});
+    const Node* node = project.getNode(nodeId);
+    values.emplace_back(std::tuple<const Node*, Path>{node, pathToValue});
     //do {
         addDerivedValues(project, valueIndex, values);
     //    ++valueIndex;
     //} while (valueIndex < values.size());
-    std::vector<std::tuple<ElementId, Path>> convertedValues;
+    std::vector<std::tuple<NodeId, Path>> convertedValues;
     convertedValues.reserve(values.size());
     // Don't add the first element.
     for (unsigned int i = values.size() - 1; i > 0; --i) {
-        convertedValues.emplace_back(std::tuple<ElementId, Path>{std::get<0>(values[i])->getElementId(),
+        convertedValues.emplace_back(std::tuple<NodeId, Path>{std::get<0>(values[i])->getNodeId(),
                                                                         std::move(std::get<1>(values[i]))});
     }
     return convertedValues;
 }
 
-std::vector<std::tuple<babelwires::ElementId, babelwires::Path>>
-babelwires::projectUtilities::getAllDerivedValues(const Project& project, ElementId elementId,
+std::vector<std::tuple<babelwires::NodeId, babelwires::Path>>
+babelwires::projectUtilities::getAllDerivedValues(const Project& project, NodeId nodeId,
                                                   const Path& pathToValue) {
-    std::vector<std::tuple<const FeatureElement*, Path>> values;
+    std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
     unsigned int valueIndex = 0;
-    const FeatureElement* element = project.getFeatureElement(elementId);
-    values.emplace_back(std::tuple<const FeatureElement*, Path>{element, pathToValue});
+    const Node* node = project.getNode(nodeId);
+    values.emplace_back(std::tuple<const Node*, Path>{node, pathToValue});
     do {
         addDerivedValues(project, valueIndex, values);
         ++valueIndex;
     } while (valueIndex < values.size());
 
-    std::vector<std::tuple<ElementId, Path>> convertedValues;
+    std::vector<std::tuple<NodeId, Path>> convertedValues;
     convertedValues.reserve(values.size());
     // Don't add the first element.
     for (unsigned int i = values.size() - 1; i > 0; --i) {
-        convertedValues.emplace_back(std::tuple<ElementId, Path>{std::get<0>(values[i])->getElementId(),
+        convertedValues.emplace_back(std::tuple<NodeId, Path>{std::get<0>(values[i])->getNodeId(),
                                                                         std::move(std::get<1>(values[i]))});
     }
     return convertedValues;

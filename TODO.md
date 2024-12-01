@@ -27,7 +27,7 @@ Bugs:
 
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.
-* Do non-const FeatureElement::getInputFeature and getOutputFeature really need to be public?
+* Do non-const Node::getInputFeature and getOutputFeature really need to be public?
 
 New features:
 * "Run project" - Load all, process, save all.
@@ -53,8 +53,8 @@ Refactor:
 * Consider replacing virtual deserialize() method by deserializing constructor
   - Tried this in PR #14. Breaks symmetry.
 * The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.
-* Move some of the logic in doProcess up into FeatureElement.
-* Split featureElementData into separate files - replace any dynamic casts.
+* Move some of the logic in doProcess up into Node.
+* Split NodeData into separate files - replace any dynamic casts.
 * Split Features & Import/Export out from the project lib. 
   - In _theory_ the import/export logic could be useful on its own.
 * Think about modules and dlls.
@@ -90,7 +90,7 @@ Ideas:
   - Consider switching from XML to yaml for project files
 * Require commands to be serializable. Log their serialized form (possibly as JSON).
 * Don't format strings in debug logs: Use JSON so they are easy to parse.
-* Processors could maybe be pure, and let the processorElement own the features.
+* Processors could maybe be pure, and let the processorNode own the features.
   - Maybe they would have three pure methods: process(input, output), createDefaultInputFeature(), createDefaultOutputFeature().
   - Consider informing processors about array operations at a semantic level.
     OR giving them an old view of arrays (using the array index system already in place).

@@ -33,11 +33,11 @@ namespace babelwires {
     class Project;
     struct ProjectContext;
     class ConnectionModifier;
-    class FeatureElement;
+    class Node;
     class ModifyModelScope;
     class AccessModelScope;
     struct UiPosition;
-    class AddElementCommand;
+    class AddNodeCommand;
     struct UiProjectContext;
     struct ProjectData;
     class MainWindow;
@@ -74,10 +74,10 @@ namespace babelwires {
         /// Returns true if the command succeeded.
         bool executeCommandSynchronously(std::unique_ptr<Command<Project>> command);
 
-        /// Execute an AddElementCommand now.
-        /// This special case allows the new node to be constructed knowing its corresponding model element.
+        /// Execute an AddNodeCommand now.
+        /// This special case allows the new node to be constructed knowing its corresponding model node.
         /// Returns true if the command succeeded.
-        bool executeAddElementCommand(std::unique_ptr<AddElementCommand> command);
+        bool executeAddNodeCommand(std::unique_ptr<AddNodeCommand> command);
 
         /// Object the data from the current selection.
         ProjectData getDataFromSelectedNodes();
@@ -96,9 +96,9 @@ namespace babelwires {
         void nodeSelectionChanged(int numNodesSelected);
 
       private:
-        /// Find the node in the scene that corresponds to the given element id,
+        /// Find the node in the scene that corresponds to the given NodeId,
         /// if it exists.
-        QtNodes::Node* getNodeFromId(ElementId id);
+        QtNodes::Node* getNodeFromId(NodeId id);
 
         /// Respond to changes in the model.
         void processAndHandleModelChanges();
@@ -110,19 +110,19 @@ namespace babelwires {
         void removeConnectionFromFlowScene(const ConnectionDescription& connection);
 
         /// Add the node but not the connection to the flow scene.
-        void addNodeToFlowScene(const FeatureElement* feature);
+        void addNodeToFlowScene(const Node* feature);
 
         /// Remove the node from the flow scene.
-        void removeNodeFromFlowScene(ElementId elementId);
+        void removeNodeFromFlowScene(NodeId elementId);
 
         /// Move the node in the flow scene.
-        void moveNodeInFlowScene(ElementId elementId, const UiPosition& newPosition);
+        void moveNodeInFlowScene(NodeId elementId, const UiPosition& newPosition);
 
         /// Resize the node in the flow scene.
-        void resizeNodeInFlowScene(ElementId elementId, const UiSize& newSize);
+        void resizeNodeInFlowScene(NodeId elementId, const UiSize& newSize);
 
         /// Update the contents of the node.
-        void onNodeContentChanged(ElementId elementId);
+        void onNodeContentChanged(NodeId elementId);
 
         /// Make a connection description from a flow scene connection.
         ConnectionDescription describeConnection(babelwires::AccessModelScope& scope, const FlowSceneConnectionInfo& c);
@@ -189,8 +189,8 @@ namespace babelwires {
         // Information about the currently connected connections.
         MultiKeyMap<const QtNodes::Connection*, ConnectionDescription, FlowSceneConnectionInfo> m_connectedConnections;
 
-        /// Find the node in the scene that corresponds to an element id.
-        std::unordered_map<ElementId, QtNodes::Node*> m_nodeFromElementId;
+        /// Find the node in the scene that corresponds to a NodeId.
+        std::unordered_map<NodeId, QtNodes::Node*> m_nodeFromNodeId;
 
         /// Most commands are scheduled to run when the UI is idle, rather than performed synchronously.
         /// One reason is that the processing of some commands modify the UI, causing inconsistencies

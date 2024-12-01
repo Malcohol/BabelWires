@@ -13,15 +13,15 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 
 #include <QString>
 
 #include <cassert>
 
-const babelwires::FileElement& babelwires::FileRowModel::getFileElement() const {
-    assert(m_featureElement->as<FileElement>() && "A file feature should only appear in a file element");
-    return *static_cast<const FileElement*>(m_featureElement);
+const babelwires::FileNode& babelwires::FileRowModel::getFileElement() const {
+    assert(m_node->as<FileNode>() && "A FileType should only appear in a FileNode");
+    return *static_cast<const FileNode*>(m_node);
 }
 
 QVariant babelwires::FileRowModel::getValueDisplayData() const {
@@ -29,7 +29,7 @@ QVariant babelwires::FileRowModel::getValueDisplayData() const {
 }
 
 QString babelwires::FileRowModel::getTooltip() const {
-    if (m_featureElement->isFailed()) {
+    if (m_node->isFailed()) {
         return RowModel::getTooltip();
     } else {
         // Full path.
@@ -40,12 +40,12 @@ QString babelwires::FileRowModel::getTooltip() const {
 void babelwires::FileRowModel::getContextMenuActions(
     std::vector<FeatureContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
-    const FileElement& fileElement = getFileElement();
-    if (isNonzero(fileElement.getSupportedFileOperations() & FileElement::FileOperations::reload)) {
+    const FileNode& fileElement = getFileElement();
+    if (isNonzero(fileElement.getSupportedFileOperations() & FileNode::FileOperations::reload)) {
         actionsOut.emplace_back(std::make_unique<ReloadFileAction>());
         actionsOut.emplace_back(std::make_unique<ChangeSourceFileAction>());
     }
-    if (isNonzero(fileElement.getSupportedFileOperations() & FileElement::FileOperations::save)) {
+    if (isNonzero(fileElement.getSupportedFileOperations() & FileNode::FileOperations::save)) {
         {
             auto saveFileAction = std::make_unique<SaveFileAction>();
             saveFileAction->setEnabled(!getFileElement().getFilePath().empty());

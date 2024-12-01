@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
-#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
-#include <BabelWiresLib/Project/FeatureElements/editTree.hpp>
+#include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
+#include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
@@ -11,7 +11,7 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFeatureElement.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testModifier.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
@@ -20,7 +20,7 @@
 
 namespace {
     std::unique_ptr<testUtils::LocalTestModifier> createIntModifier(babelwires::Path path,
-                                                                    babelwires::FeatureElement* owner = nullptr) {
+                                                                    babelwires::Node* owner = nullptr) {
         auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(8));
         data->m_targetPath = std::move(path);
         auto modPtr = std::make_unique<testUtils::LocalTestModifier>(std::move(data));
@@ -29,7 +29,7 @@ namespace {
     }
 
     std::unique_ptr<testUtils::LocalTestModifier> createStringModifier(babelwires::Path path,
-                                                                       babelwires::FeatureElement* owner = nullptr) {
+                                                                       babelwires::Node* owner = nullptr) {
         auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::StringValue("Hello"));
         data->m_targetPath = std::move(path);
         auto modPtr = std::make_unique<testUtils::LocalTestModifier>(std::move(data));
@@ -336,7 +336,7 @@ namespace {
         checkUnmodified(cache.getEntry(10));
         // Add a failing modifier to the array
         {
-            testUtils::TestFeatureElement owner(context);
+            testUtils::TestNode owner(context);
             auto modifier = createStringModifier(info->m_pathToElem0, &owner);
             modifier->simulateFailure();
             editTree.addModifier(std::move(modifier));
@@ -534,7 +534,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
 
     // Adding a hidden failed modifier whose parent is logically the root requires us to present
     // a root entry to the user, so the UI functionality for failed modifiers has somewhere to live.
-    testUtils::TestFeatureElement owner(testEnvironment.m_projectContext);
+    testUtils::TestNode owner(testEnvironment.m_projectContext);
     auto modifierPtr = createIntModifier(babelwires::Path::deserializeFromString("flarg"), &owner);
     modifierPtr->simulateFailure();
     auto modifier = modifierPtr.get();
@@ -701,7 +701,7 @@ namespace {
         // Adding a hidden failed modifier whose parent is logically the root.
         // In this case, there's already an entry for the root, so no new
         // artificial entry need be added.
-        testUtils::TestFeatureElement owner(context);
+        testUtils::TestNode owner(context);
         auto modifierPtr = createIntModifier(babelwires::Path::deserializeFromString("flarg"), &owner);
         modifierPtr->simulateFailure();
         auto modifier = modifierPtr.get();

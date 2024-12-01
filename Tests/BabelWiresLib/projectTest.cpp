@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -68,68 +68,68 @@ TEST(ProjectTest, projectId) {
 TEST(ProjectTest, addGetAndRemoveElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
-    EXPECT_NE(element, nullptr);
-    EXPECT_NE(element->as<babelwires::ValueElement>(), nullptr);
-    EXPECT_TRUE(element->isChanged(babelwires::FeatureElement::Changes::FeatureElementIsNew));
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
+    EXPECT_NE(node, nullptr);
+    EXPECT_NE(node->as<babelwires::ValueNode>(), nullptr);
+    EXPECT_TRUE(node->isChanged(babelwires::Node::Changes::NodeIsNew));
 
-    testEnvironment.m_project.removeElement(elementId);
+    testEnvironment.m_project.removeNode(elementId);
 
-    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId);
-    EXPECT_EQ(element2, nullptr);
+    const babelwires::Node* node2 = testEnvironment.m_project.getNode(elementId);
+    EXPECT_EQ(node2, nullptr);
 
-    const auto& removedElements = testEnvironment.m_project.getRemovedElements();
+    const auto& removedElements = testEnvironment.m_project.getRemovedNodes();
 
     EXPECT_EQ(removedElements.size(), 1);
     const auto it = removedElements.find(elementId);
     ASSERT_NE(it, removedElements.end());
     EXPECT_EQ(it->first, elementId);
-    EXPECT_EQ(it->second.get(), element);
+    EXPECT_EQ(it->second.get(), node);
 
     testEnvironment.m_project.clearChanges();
 
-    EXPECT_EQ(testEnvironment.m_project.getRemovedElements().size(), 0);
+    EXPECT_EQ(testEnvironment.m_project.getRemovedNodes().size(), 0);
 }
 
 TEST(ProjectTest, addAndRemoveLocalModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
-    ASSERT_NE(element, nullptr);
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
+    ASSERT_NE(node, nullptr);
 
     const babelwires::Path pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    EXPECT_EQ(element->findModifier(pathToFeature), nullptr);
+    EXPECT_EQ(node->findModifier(pathToFeature), nullptr);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(199));
     modData.m_targetPath = pathToFeature;
 
     testEnvironment.m_project.addModifier(elementId, modData);
 
-    const babelwires::Modifier* const modifier = element->findModifier(pathToFeature);
+    const babelwires::Modifier* const modifier = node->findModifier(pathToFeature);
     EXPECT_NE(modifier, nullptr);
     EXPECT_TRUE(modifier->isChanged(babelwires::Modifier::Changes::ModifierIsNew));
 
     testEnvironment.m_project.removeModifier(elementId, pathToFeature);
-    EXPECT_EQ(element->findModifier(pathToFeature), nullptr);
+    EXPECT_EQ(node->findModifier(pathToFeature), nullptr);
 }
 
 TEST(ProjectTest, addAndRemoveConnectionModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId sourceElementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* sourceElement = testEnvironment.m_project.getFeatureElement(sourceElementId);
+    const babelwires::NodeId sourceNodeId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::Node* sourceElement = testEnvironment.m_project.getNode(sourceNodeId);
     ASSERT_NE(sourceElement, nullptr);
 
-    const babelwires::ElementId targetElementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
+    const babelwires::NodeId targetNodeId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::Node* targetElement = testEnvironment.m_project.getNode(targetNodeId);
     ASSERT_NE(targetElement, nullptr);
 
     const babelwires::Path pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
@@ -138,36 +138,36 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
     babelwires::ConnectionModifierData modData;
     modData.m_targetPath = pathToTargetFeature;
-    modData.m_sourceId = sourceElementId;
+    modData.m_sourceId = sourceNodeId;
     modData.m_sourcePath = pathToSourceFeature;
 
-    testEnvironment.m_project.addModifier(targetElementId, modData);
+    testEnvironment.m_project.addModifier(targetNodeId, modData);
 
     const babelwires::Modifier* const modifier = targetElement->findModifier(pathToTargetFeature);
     EXPECT_NE(modifier, nullptr);
     EXPECT_TRUE(modifier->isChanged(babelwires::Modifier::Changes::ModifierIsNew));
 
-    testEnvironment.m_project.removeModifier(targetElementId, pathToTargetFeature);
+    testEnvironment.m_project.removeModifier(targetNodeId, pathToTargetFeature);
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
 }
 
 TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
-    ASSERT_NE(element, nullptr);
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
+    ASSERT_NE(node, nullptr);
 
     const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    EXPECT_EQ(element->findModifier(pathToArray), nullptr);
+    EXPECT_EQ(node->findModifier(pathToArray), nullptr);
 
     testEnvironment.m_project.process();
     // You can add at the end.
     testEnvironment.m_project.addArrayEntries(elementId, pathToArray, 2, 2, true);
     {
-        const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
+        const babelwires::Modifier* const modifier = node->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
         ASSERT_TRUE(modifier->getModifierData().as<babelwires::ArraySizeModifierData>());
         EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size,
@@ -177,7 +177,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     testEnvironment.m_project.process();
     testEnvironment.m_project.addArrayEntries(elementId, pathToArray, 1, 2, true);
     {
-        const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
+        const babelwires::Modifier* const modifier = node->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
         EXPECT_EQ(modifier->getModifierData().as<babelwires::ArraySizeModifierData>()->m_size,
                   testUtils::TestSimpleArrayType::s_defaultSize + 4);
@@ -186,7 +186,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     testEnvironment.m_project.process();
     testEnvironment.m_project.removeArrayEntries(elementId, pathToArray, 2, 2, true);
     {
-        const babelwires::Modifier* const modifier = element->findModifier(pathToArray);
+        const babelwires::Modifier* const modifier = node->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
         EXPECT_EQ(modifier->getModifierData().as<babelwires::ArraySizeModifierData>()->m_size,
                   testUtils::TestSimpleArrayType::s_defaultSize + 2);
@@ -195,19 +195,19 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     testEnvironment.m_project.process();
     // The false means the modifier will be removed.
     testEnvironment.m_project.removeArrayEntries(elementId, pathToArray, 2, 2, false);
-    EXPECT_EQ(element->findModifier(pathToArray), nullptr);
+    EXPECT_EQ(node->findModifier(pathToArray), nullptr);
 }
 
 namespace {
     // Adapt tests to slightly changed API.
-    void addArrayEntries(babelwires::Project& project, babelwires::ElementId elementId,
+    void addArrayEntries(babelwires::Project& project, babelwires::NodeId elementId,
                          const babelwires::Path& pathToArray, int indexOfNewElement, int numEntriesToAdd,
                          bool ensureModifier) {
         project.addArrayEntries(elementId, pathToArray, indexOfNewElement, numEntriesToAdd, ensureModifier);
         project.adjustModifiersInArrayElements(elementId, pathToArray, indexOfNewElement, numEntriesToAdd);
     };
 
-    void removeArrayEntries(babelwires::Project& project, babelwires::ElementId elementId,
+    void removeArrayEntries(babelwires::Project& project, babelwires::NodeId elementId,
                             const babelwires::Path& pathToArray, int indexOfElementToRemove, int numEntriesToRemove,
                             bool ensureModifier) {
         project.removeArrayEntries(elementId, pathToArray, indexOfElementToRemove, numEntriesToRemove, ensureModifier);
@@ -218,11 +218,11 @@ namespace {
 TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
-    ASSERT_NE(element, nullptr);
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
+    ASSERT_NE(node, nullptr);
 
     const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
     const babelwires::Path pathToArray1 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
@@ -233,31 +233,31 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     modData.m_targetPath = pathToArray1;
     testEnvironment.m_project.addModifier(elementId, modData);
 
-    EXPECT_EQ(element->findModifier(pathToArray), nullptr);
+    EXPECT_EQ(node->findModifier(pathToArray), nullptr);
 
     testEnvironment.m_project.process();
 
     // Add after.
     addArrayEntries(testEnvironment.m_project, elementId, pathToArray, 2, 2, true);
-    EXPECT_NE(element->findModifier(pathToArray1), nullptr);
+    EXPECT_NE(node->findModifier(pathToArray1), nullptr);
 
     testEnvironment.m_project.process();
 
     // Add before.
     addArrayEntries(testEnvironment.m_project, elementId, pathToArray, 1, 3, true);
-    EXPECT_EQ(element->findModifier(pathToArray1), nullptr);
-    EXPECT_NE(element->findModifier(pathToArray4), nullptr);
+    EXPECT_EQ(node->findModifier(pathToArray1), nullptr);
+    EXPECT_NE(node->findModifier(pathToArray4), nullptr);
 
     testEnvironment.m_project.process();
 
     // Remove after
     removeArrayEntries(testEnvironment.m_project, elementId, pathToArray, 5, 1, true);
-    EXPECT_NE(element->findModifier(pathToArray4), nullptr);
+    EXPECT_NE(node->findModifier(pathToArray4), nullptr);
 
     // Remove before.
     testEnvironment.m_project.process();
     removeArrayEntries(testEnvironment.m_project, elementId, pathToArray, 0, 2, true);
-    EXPECT_NE(element->findModifier(pathToArray2), nullptr);
+    EXPECT_NE(node->findModifier(pathToArray2), nullptr);
 
     // We don't test removal of modifiers, because responsibility for doing this is left to the
     // commands. (In fact, add/removeArrayEntries already does more than it should.)
@@ -266,14 +266,14 @@ TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
 TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId sourceElementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* sourceElement = testEnvironment.m_project.getFeatureElement(sourceElementId);
+    const babelwires::NodeId sourceNodeId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::Node* sourceElement = testEnvironment.m_project.getNode(sourceNodeId);
     ASSERT_NE(sourceElement, nullptr);
 
-    const babelwires::ElementId targetElementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetElementId);
+    const babelwires::NodeId targetNodeId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::Node* targetElement = testEnvironment.m_project.getNode(targetNodeId);
     ASSERT_NE(targetElement, nullptr);
 
     const babelwires::Path pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt0();
@@ -287,9 +287,9 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = pathToTargetFeature;
-        modData.m_sourceId = sourceElementId;
+        modData.m_sourceId = sourceNodeId;
         modData.m_sourcePath = pathToArray1;
-        testEnvironment.m_project.addModifier(targetElementId, modData);
+        testEnvironment.m_project.addModifier(targetNodeId, modData);
     }
     const babelwires::ConnectionModifierData& connectionData =
         *targetElement->findModifier(pathToTargetFeature)->getModifierData().as<babelwires::ConnectionModifierData>();
@@ -297,24 +297,24 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
     testEnvironment.m_project.process();
 
     // The new elements are after the modifier, so it should be in the same place.
-    addArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 2, 2, true);
+    addArrayEntries(testEnvironment.m_project, sourceNodeId, pathToArray, 2, 2, true);
     EXPECT_EQ(connectionData.m_sourcePath, pathToArray1);
 
     testEnvironment.m_project.process();
 
     // The new elements should mean the modifier moved.
-    addArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 1, 3, true);
+    addArrayEntries(testEnvironment.m_project, sourceNodeId, pathToArray, 1, 3, true);
     EXPECT_EQ(connectionData.m_sourcePath, pathToArray4);
 
     testEnvironment.m_project.process();
 
     // Remove after
-    removeArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 5, 1, true);
+    removeArrayEntries(testEnvironment.m_project, sourceNodeId, pathToArray, 5, 1, true);
     EXPECT_EQ(connectionData.m_sourcePath, pathToArray4);
 
     // Remove before.
     testEnvironment.m_project.process();
-    removeArrayEntries(testEnvironment.m_project, sourceElementId, pathToArray, 0, 2, true);
+    removeArrayEntries(testEnvironment.m_project, sourceNodeId, pathToArray, 0, 2, true);
     EXPECT_EQ(connectionData.m_sourcePath, pathToArray2);
 
     // We don't test removal of modifiers, because responsibility for doing this is left to the
@@ -329,56 +329,56 @@ TEST(ProjectTest, uiProperties) {
     testFeatureData.m_uiData.m_uiPosition.m_y = 2;
     testFeatureData.m_uiData.m_uiSize.m_width = 77;
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(testFeatureData);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(testFeatureData);
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
-    ASSERT_NE(element, nullptr);
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
+    ASSERT_NE(node, nullptr);
 
-    EXPECT_EQ(element->getUiPosition().m_x, 8);
-    EXPECT_EQ(element->getUiPosition().m_y, 2);
-    EXPECT_EQ(element->getUiSize().m_width, 77);
-    testEnvironment.m_project.setElementPosition(elementId, babelwires::UiPosition{10, 12});
+    EXPECT_EQ(node->getUiPosition().m_x, 8);
+    EXPECT_EQ(node->getUiPosition().m_y, 2);
+    EXPECT_EQ(node->getUiSize().m_width, 77);
+    testEnvironment.m_project.setNodePosition(elementId, babelwires::UiPosition{10, 12});
 
-    EXPECT_EQ(element->getUiPosition().m_x, 10);
-    EXPECT_EQ(element->getUiPosition().m_y, 12);
-    EXPECT_EQ(element->getUiSize().m_width, 77);
+    EXPECT_EQ(node->getUiPosition().m_x, 10);
+    EXPECT_EQ(node->getUiPosition().m_y, 12);
+    EXPECT_EQ(node->getUiSize().m_width, 77);
 
-    testEnvironment.m_project.setElementContentsSize(elementId, babelwires::UiSize{66});
+    testEnvironment.m_project.setNodeContentsSize(elementId, babelwires::UiSize{66});
 
-    EXPECT_EQ(element->getUiPosition().m_x, 10);
-    EXPECT_EQ(element->getUiPosition().m_y, 12);
-    EXPECT_EQ(element->getUiSize().m_width, 66);
+    EXPECT_EQ(node->getUiPosition().m_x, 10);
+    EXPECT_EQ(node->getUiPosition().m_y, 12);
+    EXPECT_EQ(node->getUiSize().m_width, 66);
 }
 
 TEST(ProjectTest, elementIds) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
-    EXPECT_NE(elementId, babelwires::INVALID_ELEMENT_ID);
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    EXPECT_NE(elementId, babelwires::INVALID_NODE_ID);
     ASSERT_NE(elementId, 3);
 
-    const babelwires::FeatureElement* element = testEnvironment.m_project.getFeatureElement(elementId);
-    ASSERT_NE(element, nullptr);
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
+    ASSERT_NE(node, nullptr);
 
     testUtils::TestComplexRecordElementData elementData;
     elementData.m_id = 3;
 
-    const babelwires::ElementId elementId1 = testEnvironment.m_project.addFeatureElement(elementData);
-    EXPECT_EQ(elementId1, 3);
+    const babelwires::NodeId nodeId1 = testEnvironment.m_project.addNode(elementData);
+    EXPECT_EQ(nodeId1, 3);
 
-    const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
-    ASSERT_NE(element1, nullptr);
-    EXPECT_EQ(element1->getElementData().m_id, elementId1);
-    EXPECT_NE(element, element1);
+    const babelwires::Node* node1 = testEnvironment.m_project.getNode(nodeId1);
+    ASSERT_NE(node1, nullptr);
+    EXPECT_EQ(node1->getNodeData().m_id, nodeId1);
+    EXPECT_NE(node, node1);
 
-    const babelwires::ElementId elementId2 = testEnvironment.m_project.addFeatureElement(elementData);
-    EXPECT_NE(elementId2, babelwires::INVALID_ELEMENT_ID);
-    EXPECT_NE(elementId2, elementId1);
+    const babelwires::NodeId nodeId2 = testEnvironment.m_project.addNode(elementData);
+    EXPECT_NE(nodeId2, babelwires::INVALID_NODE_ID);
+    EXPECT_NE(nodeId2, nodeId1);
 
-    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
-    EXPECT_NE(element2, nullptr);
-    EXPECT_NE(element1, element2);
+    const babelwires::Node* node2 = testEnvironment.m_project.getNode(nodeId2);
+    EXPECT_NE(node2, nullptr);
+    EXPECT_NE(node1, node2);
 }
 
 TEST(ProjectTest, reloadSource) {
@@ -388,18 +388,18 @@ TEST(ProjectTest, reloadSource) {
 
     testUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 14);
 
-    babelwires::SourceFileElementData sourceFileData;
+    babelwires::SourceFileNodeData sourceFileData;
     sourceFileData.m_filePath = tempFilePath;
     sourceFileData.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(sourceFileData);
-    const babelwires::FeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
-    ASSERT_NE(element, nullptr);
-    ASSERT_NE(element->getOutput(), nullptr);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(sourceFileData);
+    const babelwires::Node* node =
+        testEnvironment.m_project.getNode(elementId)->as<babelwires::Node>();
+    ASSERT_NE(node, nullptr);
+    ASSERT_NE(node->getOutput(), nullptr);
 
-    auto getIntInElement = [element]() {
-        testUtils::TestSimpleRecordType::ConstInstance instance(element->getOutput()
+    auto getIntInElement = [node]() {
+        testUtils::TestSimpleRecordType::ConstInstance instance(node->getOutput()
                                                                     ->is<babelwires::ValueTreeNode>()
                                                                     .getChild(0)
                                                                     ->is<babelwires::ValueTreeNode>());
@@ -422,7 +422,7 @@ TEST(ProjectTest, reloadSource) {
 
     testEnvironment.m_log.clear();
     testEnvironment.m_project.tryToReloadSource(elementId);
-    EXPECT_TRUE(element->isFailed());
+    EXPECT_TRUE(node->isFailed());
     testEnvironment.m_log.hasSubstringIgnoreCase("could not be loaded");
 }
 
@@ -431,17 +431,17 @@ TEST(ProjectTest, saveTarget) {
 
     testUtils::TempFilePath tempFilePath("testTarget." + testUtils::TestSourceFileFormat::getFileExtension());
 
-    babelwires::TargetFileElementData targetFileData;
+    babelwires::TargetFileNodeData targetFileData;
     targetFileData.m_filePath = tempFilePath;
     targetFileData.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
 
-    const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(targetFileData);
-    babelwires::FeatureElement* element =
-        testEnvironment.m_project.getFeatureElement(elementId)->as<babelwires::FeatureElement>();
-    ASSERT_NE(element, nullptr);
-    ASSERT_NE(element->getInput(), nullptr);
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(targetFileData);
+    babelwires::Node* node =
+        testEnvironment.m_project.getNode(elementId)->as<babelwires::Node>();
+    ASSERT_NE(node, nullptr);
+    ASSERT_NE(node->getInput(), nullptr);
 
-    testUtils::TestSimpleRecordType::Instance instance(element->getInputNonConst(babelwires::Path())
+    testUtils::TestSimpleRecordType::Instance instance(node->getInputNonConst(babelwires::Path())
                                                            ->is<babelwires::ValueTreeNode>()
                                                            .getChild(0)
                                                            ->is<babelwires::ValueTreeNode>());
@@ -482,20 +482,20 @@ TEST(ProjectTest, process) {
     testEnvironment.m_project.setProjectData(projectData);
     testEnvironment.m_project.process();
 
-    const babelwires::FeatureElement* sourceElement =
-        testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
+    const babelwires::Node* sourceElement =
+        testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceNodeId);
     ASSERT_NE(sourceElement, nullptr);
 
-    const babelwires::FeatureElement* processor =
-        testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
+    const babelwires::Node* processor =
+        testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
     const babelwires::ValueTreeNode* processorInput = processor->getInput();
     ASSERT_NE(processorInput, nullptr);
     const babelwires::ValueTreeNode* processorOutput = processor->getOutput();
     ASSERT_NE(processorOutput, nullptr);
 
-    const babelwires::FeatureElement* targetElement =
-        testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
+    const babelwires::Node* targetElement =
+        testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetNodeId);
     ASSERT_NE(targetElement, nullptr);
 
     testUtils::TestSimpleRecordType::ConstInstance targetInput(*targetElement->getInput()->getChild(0));
@@ -503,7 +503,7 @@ TEST(ProjectTest, process) {
     EXPECT_EQ(targetInput.getintR0().get(), 6);
 
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 4);
-    testEnvironment.m_project.tryToReloadSource(testUtils::TestProjectData::c_sourceElementId);
+    testEnvironment.m_project.tryToReloadSource(testUtils::TestProjectData::c_sourceNodeId);
     testEnvironment.m_project.process();
     EXPECT_EQ(targetInput.getintR0().get(), 7);
 
@@ -514,16 +514,16 @@ TEST(ProjectTest, process) {
     EXPECT_TRUE(targetElement->findModifier(testUtils::getTestFileElementPathToInt0())->isFailed());
     EXPECT_EQ(targetInput.getintR0().get(), 0);
 
-    babelwires::ElementId newProcId;
+    babelwires::NodeId newProcId;
     {
-        babelwires::ProcessorElementData procData;
+        babelwires::ProcessorNodeData procData;
         procData.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
 
         babelwires::ValueAssignmentData modData(babelwires::IntValue(5));
         modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt2;
         procData.m_modifiers.emplace_back(modData.clone());
 
-        newProcId = testEnvironment.m_project.addFeatureElement(procData);
+        newProcId = testEnvironment.m_project.addNode(procData);
     }
 
     {
@@ -542,66 +542,66 @@ TEST(ProjectTest, dependencyLoop) {
 
     testUtils::TestComplexRecordElementData elementData;
 
-    const babelwires::ElementId elementId1 = testEnvironment.m_project.addFeatureElement(elementData);
-    const babelwires::ElementId elementId2 = testEnvironment.m_project.addFeatureElement(elementData);
-    const babelwires::ElementId elementId3 = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::NodeId nodeId1 = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId nodeId2 = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId nodeId3 = testEnvironment.m_project.addNode(elementData);
 
-    const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
-    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
-    const babelwires::FeatureElement* element3 = testEnvironment.m_project.getFeatureElement(elementId3);
+    const babelwires::Node* node1 = testEnvironment.m_project.getNode(nodeId1);
+    const babelwires::Node* node2 = testEnvironment.m_project.getNode(nodeId2);
+    const babelwires::Node* node3 = testEnvironment.m_project.getNode(nodeId3);
 
     testEnvironment.m_project.process();
 
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
-        modData.m_sourceId = elementId2;
+        modData.m_sourceId = nodeId2;
         modData.m_sourcePath = elementData.getPathToRecordInt0();
-        testEnvironment.m_project.addModifier(elementId1, modData);
+        testEnvironment.m_project.addModifier(nodeId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
-        modData.m_sourceId = elementId3;
+        modData.m_sourceId = nodeId3;
         modData.m_sourcePath = elementData.getPathToRecordInt0();
-        testEnvironment.m_project.addModifier(elementId2, modData);
+        testEnvironment.m_project.addModifier(nodeId2, modData);
     }
 
     testEnvironment.m_project.process();
 
-    EXPECT_FALSE(element1->isFailed());
-    EXPECT_FALSE(element2->isFailed());
-    EXPECT_FALSE(element3->isFailed());
-    EXPECT_FALSE(element1->isInDependencyLoop());
-    EXPECT_FALSE(element2->isInDependencyLoop());
-    EXPECT_FALSE(element3->isInDependencyLoop());
+    EXPECT_FALSE(node1->isFailed());
+    EXPECT_FALSE(node2->isFailed());
+    EXPECT_FALSE(node3->isFailed());
+    EXPECT_FALSE(node1->isInDependencyLoop());
+    EXPECT_FALSE(node2->isInDependencyLoop());
+    EXPECT_FALSE(node3->isInDependencyLoop());
 
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
-        modData.m_sourceId = elementId1;
+        modData.m_sourceId = nodeId1;
         modData.m_sourcePath = elementData.getPathToRecordInt0();
-        testEnvironment.m_project.addModifier(elementId3, modData);
+        testEnvironment.m_project.addModifier(nodeId3, modData);
     }
 
     testEnvironment.m_project.process();
 
-    EXPECT_TRUE(element1->isFailed());
-    EXPECT_TRUE(element2->isFailed());
-    EXPECT_TRUE(element3->isFailed());
-    EXPECT_TRUE(element1->isInDependencyLoop());
-    EXPECT_TRUE(element2->isInDependencyLoop());
-    EXPECT_TRUE(element3->isInDependencyLoop());
+    EXPECT_TRUE(node1->isFailed());
+    EXPECT_TRUE(node2->isFailed());
+    EXPECT_TRUE(node3->isFailed());
+    EXPECT_TRUE(node1->isInDependencyLoop());
+    EXPECT_TRUE(node2->isInDependencyLoop());
+    EXPECT_TRUE(node3->isInDependencyLoop());
 
-    testEnvironment.m_project.removeModifier(elementId2, elementData.getPathToRecordInt0());
+    testEnvironment.m_project.removeModifier(nodeId2, elementData.getPathToRecordInt0());
     testEnvironment.m_project.process();
 
-    EXPECT_FALSE(element1->isFailed());
-    EXPECT_FALSE(element2->isFailed());
-    EXPECT_FALSE(element3->isFailed());
-    EXPECT_FALSE(element1->isInDependencyLoop());
-    EXPECT_FALSE(element2->isInDependencyLoop());
-    EXPECT_FALSE(element3->isInDependencyLoop());
+    EXPECT_FALSE(node1->isFailed());
+    EXPECT_FALSE(node2->isFailed());
+    EXPECT_FALSE(node3->isFailed());
+    EXPECT_FALSE(node1->isInDependencyLoop());
+    EXPECT_FALSE(node2->isInDependencyLoop());
+    EXPECT_FALSE(node3->isInDependencyLoop());
 }
 
 // Check that one dependency loop does not prevent other elements from processing correctly.
@@ -610,50 +610,50 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 
     testUtils::TestComplexRecordElementData elementData;
 
-    const babelwires::ElementId elementId1 = testEnvironment.m_project.addFeatureElement(elementData);
-    const babelwires::ElementId elementId2 = testEnvironment.m_project.addFeatureElement(elementData);
-    const babelwires::ElementId elementId3 = testEnvironment.m_project.addFeatureElement(elementData);
-    const babelwires::ElementId elementId4 = testEnvironment.m_project.addFeatureElement(elementData);
+    const babelwires::NodeId nodeId1 = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId nodeId2 = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId nodeId3 = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId elementId4 = testEnvironment.m_project.addNode(elementData);
 
-    const babelwires::FeatureElement* element1 = testEnvironment.m_project.getFeatureElement(elementId1);
-    const babelwires::FeatureElement* element2 = testEnvironment.m_project.getFeatureElement(elementId2);
-    const babelwires::FeatureElement* element3 = testEnvironment.m_project.getFeatureElement(elementId3);
-    const babelwires::FeatureElement* element4 = testEnvironment.m_project.getFeatureElement(elementId4);
+    const babelwires::Node* node1 = testEnvironment.m_project.getNode(nodeId1);
+    const babelwires::Node* node2 = testEnvironment.m_project.getNode(nodeId2);
+    const babelwires::Node* node3 = testEnvironment.m_project.getNode(nodeId3);
+    const babelwires::Node* node4 = testEnvironment.m_project.getNode(elementId4);
 
     testEnvironment.m_project.process();
 
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
-        modData.m_sourceId = elementId2;
+        modData.m_sourceId = nodeId2;
         modData.m_sourcePath = elementData.getPathToRecordInt0();
-        testEnvironment.m_project.addModifier(elementId1, modData);
+        testEnvironment.m_project.addModifier(nodeId1, modData);
     }
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
         modData.m_sourceId = elementId4;
         modData.m_sourcePath = elementData.getPathToRecordInt0();
-        testEnvironment.m_project.addModifier(elementId3, modData);
+        testEnvironment.m_project.addModifier(nodeId3, modData);
     }
 
     testEnvironment.m_project.process();
 
-    EXPECT_FALSE(element1->isFailed());
-    EXPECT_FALSE(element2->isFailed());
-    EXPECT_FALSE(element3->isFailed());
-    EXPECT_FALSE(element4->isFailed());
-    EXPECT_FALSE(element1->isInDependencyLoop());
-    EXPECT_FALSE(element2->isInDependencyLoop());
-    EXPECT_FALSE(element3->isInDependencyLoop());
-    EXPECT_FALSE(element4->isInDependencyLoop());
+    EXPECT_FALSE(node1->isFailed());
+    EXPECT_FALSE(node2->isFailed());
+    EXPECT_FALSE(node3->isFailed());
+    EXPECT_FALSE(node4->isFailed());
+    EXPECT_FALSE(node1->isInDependencyLoop());
+    EXPECT_FALSE(node2->isInDependencyLoop());
+    EXPECT_FALSE(node3->isInDependencyLoop());
+    EXPECT_FALSE(node4->isInDependencyLoop());
 
     {
         babelwires::ConnectionModifierData modData;
         modData.m_targetPath = elementData.getPathToRecordInt0();
-        modData.m_sourceId = elementId1;
+        modData.m_sourceId = nodeId1;
         modData.m_sourcePath = elementData.getPathToRecordInt0();
-        testEnvironment.m_project.addModifier(elementId2, modData);
+        testEnvironment.m_project.addModifier(nodeId2, modData);
     }
     {
         babelwires::ValueAssignmentData modData(babelwires::IntValue(16));
@@ -663,53 +663,53 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_TRUE(element1->isFailed());
-    EXPECT_TRUE(element2->isFailed());
-    EXPECT_FALSE(element3->isFailed());
-    EXPECT_FALSE(element4->isFailed());
-    EXPECT_TRUE(element1->isInDependencyLoop());
-    EXPECT_TRUE(element2->isInDependencyLoop());
-    EXPECT_FALSE(element3->isInDependencyLoop());
-    EXPECT_FALSE(element4->isInDependencyLoop());
+    EXPECT_TRUE(node1->isFailed());
+    EXPECT_TRUE(node2->isFailed());
+    EXPECT_FALSE(node3->isFailed());
+    EXPECT_FALSE(node4->isFailed());
+    EXPECT_TRUE(node1->isInDependencyLoop());
+    EXPECT_TRUE(node2->isInDependencyLoop());
+    EXPECT_FALSE(node3->isInDependencyLoop());
+    EXPECT_FALSE(node4->isInDependencyLoop());
 
-    ASSERT_NE(element3->getOutput(), nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(*element3->getOutput());
+    ASSERT_NE(node3->getOutput(), nullptr);
+    testUtils::TestComplexRecordType::ConstInstance instance(*node3->getOutput());
     EXPECT_EQ(instance.getintR0().get(), 16);
 
-    testEnvironment.m_project.removeModifier(elementId2, elementData.getPathToRecordInt0());
+    testEnvironment.m_project.removeModifier(nodeId2, elementData.getPathToRecordInt0());
     testEnvironment.m_project.process();
 
-    EXPECT_FALSE(element1->isFailed());
-    EXPECT_FALSE(element2->isFailed());
-    EXPECT_FALSE(element3->isFailed());
-    EXPECT_FALSE(element4->isFailed());
-    EXPECT_FALSE(element1->isInDependencyLoop());
-    EXPECT_FALSE(element2->isInDependencyLoop());
-    EXPECT_FALSE(element3->isInDependencyLoop());
-    EXPECT_FALSE(element4->isInDependencyLoop());
+    EXPECT_FALSE(node1->isFailed());
+    EXPECT_FALSE(node2->isFailed());
+    EXPECT_FALSE(node3->isFailed());
+    EXPECT_FALSE(node4->isFailed());
+    EXPECT_FALSE(node1->isInDependencyLoop());
+    EXPECT_FALSE(node2->isInDependencyLoop());
+    EXPECT_FALSE(node3->isInDependencyLoop());
+    EXPECT_FALSE(node4->isInDependencyLoop());
 }
 
 TEST(ProjectTest, updateWithAvailableIds) {
     testUtils::TestEnvironment testEnvironment;
 
-    std::vector<babelwires::ElementId> idsToCheck0 = {testUtils::TestProjectData::c_sourceElementId,
+    std::vector<babelwires::NodeId> idsToCheck0 = {testUtils::TestProjectData::c_sourceNodeId,
                                                       testUtils::TestProjectData::c_processorId,
-                                                      testUtils::TestProjectData::c_targetElementId};
+                                                      testUtils::TestProjectData::c_targetNodeId};
     testEnvironment.m_project.updateWithAvailableIds(idsToCheck0);
-    EXPECT_EQ(idsToCheck0[0], testUtils::TestProjectData::c_sourceElementId);
+    EXPECT_EQ(idsToCheck0[0], testUtils::TestProjectData::c_sourceNodeId);
     EXPECT_EQ(idsToCheck0[1], testUtils::TestProjectData::c_processorId);
-    EXPECT_EQ(idsToCheck0[2], testUtils::TestProjectData::c_targetElementId);
+    EXPECT_EQ(idsToCheck0[2], testUtils::TestProjectData::c_targetNodeId);
 
     testUtils::TestProjectData projectData;
     testEnvironment.m_project.setProjectData(projectData);
 
-    std::vector<babelwires::ElementId> idsToCheck1 = {testUtils::TestProjectData::c_sourceElementId,
+    std::vector<babelwires::NodeId> idsToCheck1 = {testUtils::TestProjectData::c_sourceNodeId,
                                                       testUtils::TestProjectData::c_processorId,
-                                                      testUtils::TestProjectData::c_targetElementId};
+                                                      testUtils::TestProjectData::c_targetNodeId};
     testEnvironment.m_project.updateWithAvailableIds(idsToCheck1);
-    EXPECT_NE(idsToCheck1[0], testUtils::TestProjectData::c_sourceElementId);
+    EXPECT_NE(idsToCheck1[0], testUtils::TestProjectData::c_sourceNodeId);
     EXPECT_NE(idsToCheck1[1], testUtils::TestProjectData::c_processorId);
-    EXPECT_NE(idsToCheck1[2], testUtils::TestProjectData::c_targetElementId);
+    EXPECT_NE(idsToCheck1[2], testUtils::TestProjectData::c_targetNodeId);
     EXPECT_NE(idsToCheck1[0], idsToCheck1[1]);
     EXPECT_NE(idsToCheck1[1], idsToCheck1[2]);
     EXPECT_NE(idsToCheck1[2], idsToCheck1[0]);
@@ -717,16 +717,16 @@ TEST(ProjectTest, updateWithAvailableIds) {
     for (int i = 0; i < 3; ++i) {
         testUtils::TestComplexRecordElementData data;
         data.m_id = idsToCheck1[i];
-        EXPECT_EQ(testEnvironment.m_project.addFeatureElement(data), idsToCheck1[i]);
+        EXPECT_EQ(testEnvironment.m_project.addNode(data), idsToCheck1[i]);
     }
 
-    std::vector<babelwires::ElementId> idsToCheck2 = {testUtils::TestProjectData::c_sourceElementId,
+    std::vector<babelwires::NodeId> idsToCheck2 = {testUtils::TestProjectData::c_sourceNodeId,
                                                       testUtils::TestProjectData::c_processorId,
-                                                      testUtils::TestProjectData::c_targetElementId};
+                                                      testUtils::TestProjectData::c_targetNodeId};
     testEnvironment.m_project.updateWithAvailableIds(idsToCheck2);
-    EXPECT_NE(idsToCheck2[0], testUtils::TestProjectData::c_sourceElementId);
+    EXPECT_NE(idsToCheck2[0], testUtils::TestProjectData::c_sourceNodeId);
     EXPECT_NE(idsToCheck2[1], testUtils::TestProjectData::c_processorId);
-    EXPECT_NE(idsToCheck2[2], testUtils::TestProjectData::c_targetElementId);
+    EXPECT_NE(idsToCheck2[2], testUtils::TestProjectData::c_targetNodeId);
     EXPECT_NE(idsToCheck2[0], idsToCheck1[0]);
     EXPECT_NE(idsToCheck2[1], idsToCheck1[1]);
     EXPECT_NE(idsToCheck2[2], idsToCheck1[2]);
@@ -739,8 +739,8 @@ TEST(ProjectTest, processWithFailure) {
     testUtils::TestEnvironment testEnvironment;
 
     testUtils::TestProjectData projectData;
-    // Ensure this element fails completely.
-    projectData.m_elements[1]->m_factoryIdentifier = "flerg";
+    // Ensure this node fails completely.
+    projectData.m_nodes[1]->m_factoryIdentifier = "flerg";
 
     // Make real data for project.
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
@@ -752,16 +752,16 @@ TEST(ProjectTest, processWithFailure) {
     testEnvironment.m_project.setProjectData(projectData);
     testEnvironment.m_project.process();
 
-    const babelwires::FeatureElement* sourceElement =
-        testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_sourceElementId);
+    const babelwires::Node* sourceElement =
+        testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceNodeId);
     ASSERT_NE(sourceElement, nullptr);
 
-    const babelwires::FeatureElement* processor =
-        testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_processorId);
+    const babelwires::Node* processor =
+        testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
     ASSERT_TRUE(processor->isFailed());
 
-    const babelwires::FeatureElement* targetElement =
-        testEnvironment.m_project.getFeatureElement(testUtils::TestProjectData::c_targetElementId);
+    const babelwires::Node* targetElement =
+        testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetNodeId);
     ASSERT_NE(targetElement, nullptr);
 }

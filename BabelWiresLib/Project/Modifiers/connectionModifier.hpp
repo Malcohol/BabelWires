@@ -1,5 +1,5 @@
 /**
- * A ConnectionModifier connects features from two FeatureElements together.
+ * A ConnectionModifier connects features from two Nodes together.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -17,7 +17,7 @@ namespace babelwires {
 
     struct ConnectionModifierData;
 
-    /// A ConnectionModifier connects features from two FeatureElements together.
+    /// A ConnectionModifier connects features from two Nodes together.
     /// By contrast with LocalModifiers, it application depends on context.
     class ConnectionModifier : public Modifier {
       public:
@@ -35,7 +35,7 @@ namespace babelwires {
         /// Convenience method: Did source and target resolve?
         bool isConnected() const;
 
-        /// If the modifier targets an element in the array below the startIndex, apply the adjustment.
+        /// If the modifier targets a node in the array below the startIndex, apply the adjustment.
         void adjustSourceArrayIndices(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                                       int adjustment);
 

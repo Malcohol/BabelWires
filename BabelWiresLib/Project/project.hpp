@@ -1,5 +1,5 @@
 /**
- * The Project manages the graph of FeatureElements, and propagates data from sources to targets.
+ * The Project manages the graph of Nodes, and propagates data from sources to targets.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -28,14 +28,14 @@ namespace babelwires {
     struct ProjectContext;
     class Modifier;
     struct ModifierData;
-    class FeatureElement;
-    struct ElementData;
+    class Node;
+    struct NodeData;
     class ConnectionModifier;
     class Path;
     struct UiPosition;
     struct UiSize;
 
-    /// The Project manages the graph of FeatureElements, and propagates data from sources to targets.
+    /// The Project manages the graph of Nodes, and propagates data from sources to targets.
     class Project {
       public:
         /// Construct a new project.
@@ -51,18 +51,18 @@ namespace babelwires {
         /// Clear contents and generate a new projectId.
         void clear();
 
-        /// Add a feature element. Will use the ID of the data, if that ID is available.
+        /// Add a Node. Will use the ID of the data, if that ID is available.
         /// Returns the ID of the data after it was added.
-        ElementId addFeatureElement(const ElementData& data);
+        NodeId addNode(const NodeData& data);
 
-        /// Remove the element with the given id.
-        void removeElement(ElementId id);
+        /// Remove the Node with the given id.
+        void removeNode(NodeId id);
 
         /// Add a modifier as described by the data.
-        void addModifier(ElementId elementId, const ModifierData& modifierData);
+        void addModifier(NodeId nodeId, const ModifierData& modifierData);
 
-        /// Remove the modifier at the path from the given element.
-        void removeModifier(ElementId elementId, const Path& featurePath);
+        /// Remove the modifier at the path from the given Node.
+        void removeModifier(NodeId nodeId, const Path& featurePath);
 
         /// Add an element to the array at the given path.
         /// Modifiers below the index are adjusted.
@@ -71,7 +71,7 @@ namespace babelwires {
         /// This is special-cased to avoid treating all affected modifiers as add/removed,
         /// and possibly triggering arbitrary amount of work.
         // TODO: Much of the work here could be pulled out into the commands. Same with other operations below.
-        void addArrayEntries(ElementId elementId, const Path& featurePath, int indexOfNewElement,
+        void addArrayEntries(NodeId nodeId, const Path& featurePath, int indexOfNewElement,
                              int numEntriesToAdd, bool ensureModifier);
 
         /// Remove an element from the array at the given path.
@@ -79,43 +79,43 @@ namespace babelwires {
         /// However, note that this will not remove modifiers.
         /// If ensureModifier is true, then a modifier will be added if not present.
         /// Otherwise, a modifier will be removed if present.
-        void removeArrayEntries(ElementId elementId, const Path& featurePath, int indexOfElementToRemove,
+        void removeArrayEntries(NodeId nodeId, const Path& featurePath, int indexOfElementToRemove,
                                 int numEntriesToRemove, bool ensureModifier);
 
         /// Adjust modifiers and connections which point into an array to adapt to shifted array elements.
         /// If adjustment is positive, then modifiers at and above startIndex are modified.
         /// If adjustment is negative, then modifiers at (startIndex - adjustment) and above are modified.
-        void adjustModifiersInArrayElements(ElementId elementId, const Path& pathToArray, ArrayIndex startIndex,
+        void adjustModifiersInArrayElements(NodeId nodeId, const Path& pathToArray, ArrayIndex startIndex,
                                             int adjustment);
 
         /// Activate an optional in a RecordType.
-        void activateOptional(ElementId elementId, const Path& pathToRecord, ShortId optional,
+        void activateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
                               bool ensureModifier);
 
         /// Deactivate an optional in a RecordType.
         /// Note that this method is not responsible for removing modifiers.
-        void deactivateOptional(ElementId elementId, const Path& pathToRecord, ShortId optional,
+        void deactivateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
                                 bool ensureModifier);
 
-        /// Set the Ui position of the element.
-        void setElementPosition(ElementId elementId, const UiPosition& newPosition);
+        /// Set the Ui position of the Node.
+        void setNodePosition(NodeId nodeId, const UiPosition& newPosition);
 
-        /// Sets the Ui size of the element's contents.
-        void setElementContentsSize(ElementId elementId, const UiSize& newSize);
+        /// Sets the Ui size of the Node's contents.
+        void setNodeContentsSize(NodeId nodeId, const UiSize& newSize);
 
         const TargetFileFormatRegistry& getFactoryFormatRegistry() const;
         const SourceFileFormatRegistry& getFileFormatRegistry() const;
 
-        FeatureElement* getFeatureElement(ElementId id);
-        const FeatureElement* getFeatureElement(ElementId id) const;
+        Node* getNode(NodeId id);
+        const Node* getNode(NodeId id) const;
 
         /// Reload the source file.
         /// File exceptions are caught and written to the userLogger.
-        void tryToReloadSource(ElementId id);
+        void tryToReloadSource(NodeId id);
 
         /// Save the target file non-interactively.
         /// File exceptions are caught and written to the userLogger.
-        void tryToSaveTarget(ElementId id);
+        void tryToSaveTarget(NodeId id);
 
         /// Reload all the source file.
         /// File exceptions are caught and written to the userLogger.
@@ -126,7 +126,7 @@ namespace babelwires {
         void tryToSaveAllTargets();
 
         ///
-        const std::map<ElementId, std::unique_ptr<FeatureElement>>& getElements() const;
+        const std::map<NodeId, std::unique_ptr<Node>>& getNodes() const;
 
         /// Process any changes in the whole project.
         void process();
@@ -134,59 +134,59 @@ namespace babelwires {
         /// Mark all features in the project as unchanged.
         void clearChanges();
 
-        /// Information about the connections between elements.
-        /// The connectionInfo includes elements and modifiers which failed.
+        /// Information about the connections between Nodes.
+        /// The connectionInfo includes Nodes and modifiers which failed.
         struct ConnectionInfo {
-            using Connections = std::vector<std::tuple<ConnectionModifier*, FeatureElement*>>;
-            using ConnectionMap = std::unordered_map<const FeatureElement*, Connections>;
+            using Connections = std::vector<std::tuple<ConnectionModifier*, Node*>>;
+            using ConnectionMap = std::unordered_map<const Node*, Connections>;
 
-            /// Information about the elements a given element depends on.
-            /// There is an entry for an element only if it has an incoming connection.
+            /// Information about the Nodes a given Node depends on.
+            /// There is an entry for a Node only if it has an incoming connection.
             ConnectionMap m_dependsOn;
 
-            /// Information about the elements which depend on a given element.
-            /// There is an entry for an element only if it has an outgoing connection.
+            /// Information about the Nodes which depend on a given Node.
+            /// There is an entry for a Node only if it has an outgoing connection.
             ConnectionMap m_requiredFor;
 
             /// Connections that are missing their source, paired with their owner.
             Connections m_brokenConnections;
         };
 
-        /// Get information about the connections between elements.
+        /// Get information about the connections between Nodes.
         const ConnectionInfo& getConnectionInfo() const;
 
-        /// Get the feature elements which have been removed since the last time
+        /// Get the Nodes which have been removed since the last time
         /// changes were cleared.
-        const std::map<ElementId, std::unique_ptr<FeatureElement>>& getRemovedElements() const;
+        const std::map<NodeId, std::unique_ptr<Node>>& getRemovedNodes() const;
 
         /// Get the ProjectId of the current project.
         ProjectId getProjectId() const;
 
         /// If any of the ids are unavailable, replace them by currently available ones.
-        void updateWithAvailableIds(std::vector<ElementId>& idsInOut) const;
+        void updateWithAvailableIds(std::vector<NodeId>& idsInOut) const;
 
       private:
         /// Return an available id, using the provided hint if it is valid and available.
-        ElementId reserveElementId(ElementId hint);
+        NodeId reserveNodeId(NodeId hint);
 
         /// Mark the connection cache as invalid, so the next time it is queried, it gets recomputed.
         void setConnectionCacheInvalid();
 
         /// If the output of e has any changes, propagate them to the input features of connected
-        /// elements, as described by the requiredForMap.
-        void propagateChanges(const FeatureElement* e);
+        /// Nodes, as described by the requiredForMap.
+        void propagateChanges(const Node* e);
 
         /// Set the ProjectId to a random value.
         void randomizeProjectId();
 
-        void addConnectionToCache(FeatureElement* element, ConnectionModifier* data);
+        void addConnectionToCache(Node* node, ConnectionModifier* data);
 
-        void removeConnectionFromCache(FeatureElement* element, ConnectionModifier* data);
+        void removeConnectionFromCache(Node* node, ConnectionModifier* data);
 
         void validateConnectionCache() const;
 
-        FeatureElement* addFeatureElementWithoutCachingConnection(const ElementData& data);
-        void addFeatureElementConnectionsToCache(FeatureElement* element);
+        Node* addNodeWithoutCachingConnection(const NodeData& data);
+        void addNodeConnectionsToCache(Node* node);
 
       private:
         ProjectContext& m_context;
@@ -198,18 +198,18 @@ namespace babelwires {
         /// The ID of the current project. Randomly assigned on construction and clear.
         ProjectId m_projectId;
 
-        /// 0 == INVALID_ELEMENT_ID and is never used for an actual element.
-        ElementId m_maxAssignedElementId = 0;
+        /// 0 == INVALID_NODE_ID and is never used for an actual Node.
+        NodeId m_maxAssignedNodeId = 0;
 
-        /// A map of elements, keyed by ElementID.
-        std::map<ElementId, std::unique_ptr<FeatureElement>> m_featureElements;
+        /// A map of Nodes, keyed by NodeId.
+        std::map<NodeId, std::unique_ptr<Node>> m_nodes;
 
         /// Cache of connection information.
         ConnectionInfo m_connectionCache;
 
-        /// Feature elements which have been removed since the last time changes were cleared.
+        /// Nodes which have been removed since the last time changes were cleared.
         /// Use a map because we iterate.
-        std::map<ElementId, std::unique_ptr<FeatureElement>> m_removedFeatureElements;
+        std::map<NodeId, std::unique_ptr<Node>> m_removedNodes;
     };
 
 } // namespace babelwires

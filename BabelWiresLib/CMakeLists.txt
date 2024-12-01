@@ -1,18 +1,18 @@
 SET( BABELWIRESLIB_SRCS
 	Project/project.cpp
-	Project/FeatureElements/featureElement.cpp
-	Project/FeatureElements/featureElementData.cpp
-	Project/FeatureElements/ProcessorElement/processorElement.cpp
-	Project/FeatureElements/SourceFileElement/sourceFileElement.cpp
-	Project/FeatureElements/TargetFileElement/targetFileElement.cpp
-	Project/FeatureElements/fileElement.cpp
-	Project/FeatureElements/editTree.cpp
-	Project/FeatureElements/contentsCache.cpp
-	Project/FeatureElements/SourceFileElement/sourceFileElementData.cpp
-	Project/FeatureElements/TargetFileElement/targetFileElementData.cpp
-	Project/FeatureElements/ProcessorElement/processorElementData.cpp
-	Project/FeatureElements/ValueElement/valueElement.cpp
-	Project/FeatureElements/ValueElement/valueElementData.cpp
+	Project/Nodes/node.cpp
+	Project/Nodes/nodeData.cpp
+	Project/Nodes/ProcessorNode/processorNode.cpp
+	Project/Nodes/SourceFileNode/sourceFileNode.cpp
+	Project/Nodes/TargetFileNode/targetFileNode.cpp
+	Project/Nodes/FileNode/fileNode.cpp
+	Project/Nodes/editTree.cpp
+	Project/Nodes/contentsCache.cpp
+	Project/Nodes/SourceFileNode/sourceFileNodeData.cpp
+	Project/Nodes/TargetFileNode/targetFileNodeData.cpp
+	Project/Nodes/ProcessorNode/processorNodeData.cpp
+	Project/Nodes/ValueNode/valueNode.cpp
+	Project/Nodes/ValueNode/valueNodeData.cpp
 	Project/Modifiers/modifier.cpp
 	Project/Modifiers/modifierData.cpp
 	Project/Modifiers/localModifier.cpp
@@ -70,19 +70,19 @@ SET( BABELWIRESLIB_SRCS
 	Path/pathStep.cpp
 	Serialization/projectBundle.cpp
 	Project/Commands/activateOptionalCommand.cpp
-	Project/Commands/addElementCommand.cpp
+	Project/Commands/addNodeCommand.cpp
 	Project/Commands/deactivateOptionalCommand.cpp
-	Project/Commands/removeElementCommand.cpp
-	Project/Commands/moveElementCommand.cpp
+	Project/Commands/removeNodeCommand.cpp
+	Project/Commands/moveNodeCommand.cpp
 	Project/Commands/addModifierCommand.cpp
 	Project/Commands/removeModifierCommand.cpp
 	Project/Commands/addEntriesToArrayCommand.cpp
 	Project/Commands/removeEntryFromArrayCommand.cpp
 	Project/Commands/changeFileCommand.cpp
-	Project/Commands/pasteElementsCommand.cpp
+	Project/Commands/pasteNodesCommand.cpp
 	Project/Commands/setExpandedCommand.cpp
 	Project/Commands/removeFailedModifiersCommand.cpp
-	Project/Commands/resizeElementCommand.cpp
+	Project/Commands/resizeNodeCommand.cpp
 	Project/Commands/selectRecordVariantCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
 	Project/Commands/Subcommands/removeSimpleModifierSubcommand.cpp

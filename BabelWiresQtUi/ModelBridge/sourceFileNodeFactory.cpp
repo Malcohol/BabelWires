@@ -7,15 +7,15 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/elementNodeModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeNodeModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 
-#include <BabelWiresLib/Project/Commands/addElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 
 #include <nodes/FlowScene>
 
@@ -31,15 +31,15 @@ std::unique_ptr<QtNodes::NodeDataModel> babelwires::SourceFileNodeFactory::creat
     QString filePath = showOpenFileDialog(m_projectBridge->getFlowGraphWidget(), *m_sourceFileFormat);
 
     if (!filePath.isNull()) {
-        auto newDataPtr = std::make_unique<SourceFileElementData>();
+        auto newDataPtr = std::make_unique<SourceFileNodeData>();
         newDataPtr->m_factoryIdentifier = m_sourceFileFormat->getIdentifier();
         newDataPtr->m_filePath = filePath.toStdString();
         newDataPtr->m_factoryVersion = m_sourceFileFormat->getVersion();
 
-        auto commandPtr = std::make_unique<AddElementCommand>("Add source file", std::move(newDataPtr));
-        AddElementCommand& addElementCommand = *commandPtr;
-        if (m_projectBridge->executeAddElementCommand(std::move(commandPtr))) {
-            return std::make_unique<ElementNodeModel>(*m_projectBridge, addElementCommand.getElementId());
+        auto commandPtr = std::make_unique<AddNodeCommand>("Add source file", std::move(newDataPtr));
+        AddNodeCommand& addNodeCommand = *commandPtr;
+        if (m_projectBridge->executeAddNodeCommand(std::move(commandPtr))) {
+            return std::make_unique<NodeNodeModel>(*m_projectBridge, addNodeCommand.getNodeId());
         }
     }
     return nullptr;

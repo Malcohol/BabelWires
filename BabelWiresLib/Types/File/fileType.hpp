@@ -14,7 +14,7 @@ namespace babelwires {
 
     /// A type which wraps the contents of a file.
     /// The FileType has no real functionality of its own and mainly just reserves a row in the feature hierarchy.
-    /// The actual file information is stored in the ElementData of the containing FileFeature.
+    /// The actual file information is stored in the NodeData of the containing FileFeature.
     class FileType : public RecordType {
       public:
         FileType(TypeRef typeOfContents);

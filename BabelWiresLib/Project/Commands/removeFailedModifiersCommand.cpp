@@ -8,27 +8,27 @@
 #include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
 
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::RemoveFailedModifiersCommand::RemoveFailedModifiersCommand(std::string commandName, ElementId targetId,
+babelwires::RemoveFailedModifiersCommand::RemoveFailedModifiersCommand(std::string commandName, NodeId targetId,
                                                                        Path featurePath)
     : CompoundCommand(commandName)
     , m_targetId(targetId)
     , m_targetPath(featurePath) {}
 
 bool babelwires::RemoveFailedModifiersCommand::initializeAndExecute(Project& project) {
-    const FeatureElement* elementToModify = project.getFeatureElement(m_targetId);
+    const Node* nodeToModify = project.getNode(m_targetId);
 
-    if (!elementToModify) {
+    if (!nodeToModify) {
         return false;
     }
 
     int numFailedModifiers = 0;
-    for (const Modifier* modifier : elementToModify->getEdits().modifierRange(m_targetPath)) {
+    for (const Modifier* modifier : nodeToModify->getEdits().modifierRange(m_targetPath)) {
         if (modifier->isFailed()) {
             addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_targetId,
                                                                         modifier->getTargetPath()));

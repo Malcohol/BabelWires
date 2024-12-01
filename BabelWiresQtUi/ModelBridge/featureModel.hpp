@@ -1,5 +1,5 @@
 /**
- * FeatureModel is the QAbstractTableModel which represents the data in a FeatureElement.
+ * FeatureModel is the QAbstractTableModel which represents the data in a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -18,7 +18,7 @@
 namespace babelwires {
 
     class ContentsCache;
-    class FeatureElement;
+    class Node;
     class ContentsCacheEntry;
     class ProjectBridge;
     class AccessModelScope;
@@ -27,7 +27,7 @@ namespace babelwires {
     class FeatureView : public QTableView {
         Q_OBJECT
       public:
-        FeatureView(ElementId elementId, ProjectBridge& projectBridge);
+        FeatureView(NodeId elementId, ProjectBridge& projectBridge);
 
         /// The default size is too big when there are three or fewer rows.
         QSize sizeHint() const override;
@@ -37,22 +37,22 @@ namespace babelwires {
 
       private:
         ProjectBridge& m_projectBridge;
-        ElementId m_elementId;
+        NodeId m_nodeId;
     };
 
     /// Presents the contents of the contentsCache as a table model.
     class FeatureModel : public QAbstractTableModel {
         Q_OBJECT
       public:
-        FeatureModel(QObject* parent, ElementId elementId, ProjectBridge& projectBridge);
+        FeatureModel(QObject* parent, NodeId elementId, ProjectBridge& projectBridge);
 
         int rowCount(const QModelIndex& /*parent*/) const override;
         int columnCount(const QModelIndex& /*parent*/) const override;
         QVariant data(const QModelIndex& index, int role) const override;
         Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-        /// Access the associated FeatureElement.
-        const FeatureElement* getFeatureElement(AccessModelScope& scope) const;
+        /// Access the associated Node.
+        const Node* getNode(AccessModelScope& scope) const;
         /// Access an entry in the ContentsCache.
         const ContentsCacheEntry* getEntry(AccessModelScope& scope, const QModelIndex& index) const;
         const ContentsCacheEntry* getEntry(AccessModelScope& scope, int row) const;
@@ -64,7 +64,7 @@ namespace babelwires {
 
         ProjectBridge& getProjectBridge();
 
-        ElementId getElementId() const;
+        NodeId getNodeId() const;
 
       public slots:
         void onClicked(const QModelIndex& index) const;
@@ -74,7 +74,7 @@ namespace babelwires {
 
       private:
         ProjectBridge& m_projectBridge;
-        ElementId m_elementId;
+        NodeId m_nodeId;
     };
 
 } // namespace babelwires

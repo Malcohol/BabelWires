@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElement.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
@@ -57,7 +57,7 @@ babelwires::ShortId testUtils::TestComplexRecordType::getArrayId() {
 }
 
 testUtils::TestSimpleRecordElementData::TestSimpleRecordElementData()
-    : babelwires::ValueElementData(TestSimpleRecordType::getThisType()) {}
+    : babelwires::ValueNodeData(TestSimpleRecordType::getThisType()) {}
 
 babelwires::Path testUtils::TestSimpleRecordElementData::getPathToRecord() {
     return babelwires::Path();
@@ -70,7 +70,7 @@ babelwires::Path testUtils::TestSimpleRecordElementData::getPathToRecordInt0() {
 }
 
 testUtils::TestComplexRecordElementData::TestComplexRecordElementData()
-    : babelwires::ValueElementData(TestComplexRecordType::getThisType()) {}
+    : babelwires::ValueNodeData(TestComplexRecordType::getThisType()) {}
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecord() {
     return babelwires::Path();

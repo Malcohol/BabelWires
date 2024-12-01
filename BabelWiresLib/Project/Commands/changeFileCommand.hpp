@@ -1,5 +1,5 @@
 /**
- * The command which changes the file of a FileElement.
+ * The command which changes the file of a FileNode.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -16,17 +16,17 @@
 namespace babelwires {
     class Project;
 
-    /// Change the source file of a FileElement.
+    /// Change the source file of a FileNode.
     class ChangeFileCommand : public SimpleCommand<Project> {
       public:
-        ChangeFileCommand(std::string commandName, ElementId elementId, std::filesystem::path newFilePath);
+        ChangeFileCommand(std::string commandName, NodeId elementId, std::filesystem::path newFilePath);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
       private:
-        ElementId m_elementId;
+        NodeId m_nodeId;
         std::filesystem::path m_newFilePath;
         std::filesystem::path m_oldFilePath;
     };

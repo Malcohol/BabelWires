@@ -1,6 +1,6 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/ValueElement/valueElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
@@ -28,7 +28,7 @@ namespace testUtils {
         static babelwires::ShortId getFieldBCId();
     };
 
-    struct TestRecordWithVariantsElementData : babelwires::ValueElementData {
+    struct TestRecordWithVariantsElementData : babelwires::ValueNodeData {
         TestRecordWithVariantsElementData();
 
         static babelwires::Path getPathToRecordWithVariants();

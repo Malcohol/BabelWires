@@ -19,7 +19,7 @@ namespace babelwires {
       public:
         /// If adjustments is negative, then the range startIndex to (startIndex - adjustment) is considered as being
         /// removed.
-        AdjustModifiersInArraySubcommand(ElementId elementId,
+        AdjustModifiersInArraySubcommand(NodeId elementId,
                                           const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                                           int adjustment);
 
@@ -28,7 +28,7 @@ namespace babelwires {
         virtual void undo(Project& project) const override;
 
       private:
-        ElementId m_elementId;
+        NodeId m_nodeId;
         Path m_pathToArray;
         unsigned int m_startIndex;
         int m_adjustment;

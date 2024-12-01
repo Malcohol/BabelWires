@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
 
@@ -143,11 +143,11 @@ TEST(ProjectBundleTest, factoryMetadata) {
     testUtils::TestProjectData projectData;
 
     // Older than registered.
-    projectData.m_elements[0]->m_factoryVersion = 1;
+    projectData.m_nodes[0]->m_factoryVersion = 1;
     // Same
-    projectData.m_elements[1]->m_factoryVersion = 2;
+    projectData.m_nodes[1]->m_factoryVersion = 2;
     // Newer than registered.
-    projectData.m_elements[2]->m_factoryVersion = 3;
+    projectData.m_nodes[2]->m_factoryVersion = 3;
 
     babelwires::ProjectBundle bundle(std::filesystem::current_path(), std::move(projectData));
     bundle.interpretInCurrentContext();
@@ -216,16 +216,16 @@ TEST(ProjectBundleTest, filePathResolution) {
         {
             babelwires::ProjectData projectData;
             {
-                babelwires::SourceFileElementData elementData;
+                babelwires::SourceFileNodeData elementData;
                 elementData.m_filePath = scenario.m_pathInProjectData;
                 elementData.m_factoryIdentifier = "MyFactory";
-                projectData.m_elements.emplace_back(elementData.clone());
+                projectData.m_nodes.emplace_back(elementData.clone());
             }
             {
-                babelwires::TargetFileElementData elementData;
+                babelwires::TargetFileNodeData elementData;
                 elementData.m_filePath = scenario.m_pathInProjectData;
                 elementData.m_factoryIdentifier = "MyOtherFactory";
-                projectData.m_elements.emplace_back(elementData.clone());
+                projectData.m_nodes.emplace_back(elementData.clone());
             }
             bundle = babelwires::ProjectBundle(scenario.m_oldBase, std::move(projectData));
         }
@@ -234,14 +234,14 @@ TEST(ProjectBundleTest, filePathResolution) {
         projectData =
             std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, scenario.m_newBase, log);
 
-        ASSERT_EQ(projectData.m_elements.size(), 2);
+        ASSERT_EQ(projectData.m_nodes.size(), 2);
         {
-            auto elementData = projectData.m_elements[0].get()->as<babelwires::SourceFileElementData>();
+            auto elementData = projectData.m_nodes[0].get()->as<babelwires::SourceFileNodeData>();
             ASSERT_NE(elementData, nullptr);
             EXPECT_EQ(elementData->m_filePath, scenario.m_expectedResolvedPath);
         }
         {
-            auto elementData = projectData.m_elements[1].get()->as<babelwires::TargetFileElementData>();
+            auto elementData = projectData.m_nodes[1].get()->as<babelwires::TargetFileNodeData>();
             ASSERT_NE(elementData, nullptr);
             EXPECT_EQ(elementData->m_filePath, scenario.m_expectedResolvedPath);
         }

@@ -10,27 +10,27 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, ElementId elementId, Path featurePath,
+babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                ShortId optional)
     : SimpleCommand(commandName)
-    , m_elementId(elementId)
+    , m_nodeId(nodeId)
     , m_pathToRecord(std::move(featurePath))
     , m_optional(optional)
 {
 }
 
 bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
-    const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
-    if (!elementToModify) {
+    const Node* nodeToModify = project.getNode(m_nodeId);
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
@@ -52,7 +52,7 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
         return false;
     }
 
-    if (const Modifier* modifier = elementToModify->findModifier(m_pathToRecord)) {
+    if (const Modifier* modifier = nodeToModify->findModifier(m_pathToRecord)) {
         if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             m_wasModifier = true;
         }
@@ -62,9 +62,9 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
 }
 
 void babelwires::ActivateOptionalCommand::execute(Project& project) const {
-    project.activateOptional(m_elementId, m_pathToRecord, m_optional, true);
+    project.activateOptional(m_nodeId, m_pathToRecord, m_optional, true);
 }
 
 void babelwires::ActivateOptionalCommand::undo(Project& project) const {
-    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional, m_wasModifier);
+    project.deactivateOptional(m_nodeId, m_pathToRecord, m_optional, m_wasModifier);
 }

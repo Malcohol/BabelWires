@@ -16,14 +16,14 @@ namespace babelwires {
 
     class SetExpandedCommand : public SimpleCommand<Project> {
       public:
-        SetExpandedCommand(std::string commandName, ElementId elementId, Path pathToCompound, bool expanded);
+        SetExpandedCommand(std::string commandName, NodeId elementId, Path pathToCompound, bool expanded);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
       private:
-        ElementId m_elementId;
+        NodeId m_nodeId;
         Path m_pathToCompound;
         bool m_expanded;
     };

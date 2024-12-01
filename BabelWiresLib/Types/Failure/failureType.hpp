@@ -1,5 +1,5 @@
 /**
- * A type which can stand in when a type or element fails to resolve.
+ * A type which can stand in when a type or node fails to resolve.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,7 +13,7 @@
 
 namespace babelwires {
 
-    /// A type which can stand in when a type or element fails to resolve.
+    /// A type which can stand in when a type or node fails to resolve.
     /// For now, just implement as an empty record.
     class FailureType : public RecordType {
       public:

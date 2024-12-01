@@ -13,17 +13,17 @@
 namespace babelwires {
     struct UiPosition;
     struct ProjectData;
-    class FeatureElement;
+    class Node;
     class Project;
 
     namespace projectUtilities {
         void translate(const UiPosition& offset, ProjectData& dataInOut);
 
-        /// Get all values in the project whose structure derives via a connection from the value at the given element and path.
-        std::vector<std::tuple<ElementId, Path>> getDerivedValues(const Project& project, ElementId elementId, const Path& pathToValue);
+        /// Get all values in the project whose structure derives via a connection from the value at the given node and path.
+        std::vector<std::tuple<NodeId, Path>> getDerivedValues(const Project& project, NodeId nodeId, const Path& pathToValue);
 
-        /// Get all values in the project whose structure directly or indirectly derives from the value at the given element and path.
+        /// Get all values in the project whose structure directly or indirectly derives from the value at the given node and path.
         /// The original values are not included in the array.
-        std::vector<std::tuple<ElementId, Path>> getAllDerivedValues(const Project& project, ElementId elementId, const Path& pathToValue);
+        std::vector<std::tuple<NodeId, Path>> getAllDerivedValues(const Project& project, NodeId nodeId, const Path& pathToValue);
     }
 } // namespace babelwires

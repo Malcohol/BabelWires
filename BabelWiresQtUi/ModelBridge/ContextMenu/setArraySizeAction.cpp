@@ -18,7 +18,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setArraySizeCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
@@ -30,16 +30,16 @@ babelwires::SetArraySizeAction::SetArraySizeAction(babelwires::Path pathToArray)
 
 void babelwires::SetArraySizeAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
 
     unsigned int currentSize;
     Range<unsigned int> range;
     // Don't keep the project locked.
     {
         AccessModelScope scope(projectBridge);
-        const FeatureElement* const featureElement = scope.getProject().getFeatureElement(elementId);
+        const Node* const node = scope.getProject().getNode(elementId);
 
-        const babelwires::ValueTreeNode* const input = m_pathToArray.tryFollow(*featureElement->getInput());
+        const babelwires::ValueTreeNode* const input = m_pathToArray.tryFollow(*node->getInput());
         auto [compoundFeature, s, r, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(input);
         if (!compoundFeature) {
             return;

@@ -20,7 +20,7 @@ babelwires::InsertArrayEntryAction::InsertArrayEntryAction(const QString& text, 
 void babelwires::InsertArrayEntryAction::actionTriggered(babelwires::FeatureModel& model,
                                                          const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
     projectBridge.scheduleCommand(
         std::make_unique<AddEntriesToArrayCommand>("Add element to array", elementId, m_pathToArray, m_indexOfNewEntry));
 }

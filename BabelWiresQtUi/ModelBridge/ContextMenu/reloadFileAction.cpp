@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
-#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::ReloadFileAction::ReloadFileAction()
@@ -19,18 +19,18 @@ babelwires::ReloadFileAction::ReloadFileAction()
 
 void babelwires::ReloadFileAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
 
     ModifyModelScope scope(projectBridge);
-    FeatureElement* const featureElement = scope.getProject().getFeatureElement(elementId);
-    if (!featureElement) {
+    Node* const node = scope.getProject().getNode(elementId);
+    if (!node) {
         return;
     }
-    FileElement* const fileElement = featureElement->as<FileElement>();
+    FileNode* const fileElement = node->as<FileNode>();
     if (!fileElement) {
         return;
     }
-    if (isZero(fileElement->getSupportedFileOperations() & FileElement::FileOperations::reload)) {
+    if (isZero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
         return;
     }
     scope.getProject().tryToReloadSource(elementId);

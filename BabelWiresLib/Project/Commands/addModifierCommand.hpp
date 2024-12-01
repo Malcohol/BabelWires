@@ -1,5 +1,5 @@
 /**
- * The command which adds a modifier to a feature element.
+ * The command which adds a modifier to a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -16,17 +16,17 @@ namespace babelwires {
     class Project;
     struct ModifierData;
 
-    /// Add a modifier to a feature element.
+    /// Add a modifier to a Node.
     class AddModifierCommand : public CompoundCommand<Project> {
       public:
-        AddModifierCommand(std::string commandName, ElementId targetId, std::unique_ptr<ModifierData> modifierToAdd);
+        AddModifierCommand(std::string commandName, NodeId targetId, std::unique_ptr<ModifierData> modifierToAdd);
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
       private:
-        ElementId m_targetElementId;
+        NodeId m_targetNodeId;
 
         /// Describes the modifier which will be added.
         std::unique_ptr<ModifierData> m_modifierToAdd;

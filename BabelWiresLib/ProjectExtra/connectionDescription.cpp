@@ -8,7 +8,7 @@
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
-#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
 #include <Common/Hash/hash.hpp>
@@ -26,7 +26,7 @@ babelwires::ConnectionDescription::getConnectionCommand() const {
 
 std::unique_ptr<babelwires::Command<babelwires::Project>>
 babelwires::ConnectionDescription::getDisconnectionCommand() const {
-    return std::make_unique<RemoveElementCommand>("Remove connection", *this);
+    return std::make_unique<RemoveNodeCommand>("Remove connection", *this);
 }
 
 babelwires::ConnectionDescription::ConnectionDescription() = default;
@@ -49,7 +49,7 @@ babelwires::ConnectionDescription& babelwires::ConnectionDescription::operator=(
     return *this;
 }
 
-babelwires::ConnectionDescription::ConnectionDescription(ElementId targetId, const ConnectionModifierData& data)
+babelwires::ConnectionDescription::ConnectionDescription(NodeId targetId, const ConnectionModifierData& data)
     : m_sourceId(data.m_sourceId)
     , m_targetId(targetId)
     , m_sourcePath(data.m_sourcePath)

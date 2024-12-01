@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElement.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -21,7 +21,7 @@
 #include <fstream>
 
 namespace {
-    void setCommonFields(babelwires::ElementData& data) {
+    void setCommonFields(babelwires::NodeData& data) {
         data.m_id = 100;
         data.m_uiData.m_uiPosition.m_x = 12;
         data.m_uiData.m_uiPosition.m_y = -44;
@@ -29,7 +29,7 @@ namespace {
         data.m_expandedPaths.emplace_back(babelwires::Path::deserializeFromString("aa/bb"));
     }
 
-    void checkCommonFields(const babelwires::ElementData& data, bool testExpandedPaths = true) {
+    void checkCommonFields(const babelwires::NodeData& data, bool testExpandedPaths = true) {
         EXPECT_EQ(data.m_id, 100);
         EXPECT_EQ(data.m_uiData.m_uiPosition.m_x, 12);
         EXPECT_EQ(data.m_uiData.m_uiPosition.m_y, -44);
@@ -42,13 +42,13 @@ namespace {
         }
     }
 
-    void setModifiers(babelwires::ElementData& data, const babelwires::Path& path) {
+    void setModifiers(babelwires::NodeData& data, const babelwires::Path& path) {
         auto newMod = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(12));
         newMod->m_targetPath = path;
         data.m_modifiers.emplace_back(std::move(newMod));
     }
 
-    void checkModifiers(const babelwires::ElementData& data, const babelwires::Path& path) {
+    void checkModifiers(const babelwires::NodeData& data, const babelwires::Path& path) {
         EXPECT_EQ(data.m_modifiers.size(), 1);
         EXPECT_NE(data.m_modifiers[0]->as<babelwires::ValueAssignmentData>(), nullptr);
         const auto& mod = static_cast<const babelwires::ValueAssignmentData&>(*data.m_modifiers[0]);
@@ -56,17 +56,17 @@ namespace {
         EXPECT_EQ(mod.getValue()->as<babelwires::IntValue>()->get(), 12);
     }
 
-    void setModifiers(babelwires::ElementData& data, babelwires::ShortId fieldId) {
+    void setModifiers(babelwires::NodeData& data, babelwires::ShortId fieldId) {
         setModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
     }
 
-    void checkModifiers(const babelwires::ElementData& data, babelwires::ShortId fieldId) {
+    void checkModifiers(const babelwires::NodeData& data, babelwires::ShortId fieldId) {
         checkModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
     }
 } // namespace
 
 TEST(ElementDataTest, sourceFileDataClone) {
-    babelwires::SourceFileElementData data;
+    babelwires::SourceFileNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -79,7 +79,7 @@ TEST(ElementDataTest, sourceFileDataClone) {
 }
 
 TEST(ElementDataTest, sourceFileDataCustomClone) {
-    babelwires::SourceFileElementData data;
+    babelwires::SourceFileNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -94,7 +94,7 @@ TEST(ElementDataTest, sourceFileDataCustomClone) {
 TEST(ElementDataTest, sourceFileDataSerialize) {
     std::string serializedContents;
     {
-        babelwires::SourceFileElementData data;
+        babelwires::SourceFileNodeData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
         data.m_filePath = "/a/b/c/foo.bar";
@@ -109,7 +109,7 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::SourceFileElementData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::SourceFileNodeData>();
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -136,7 +136,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     }
 
     // Create sourceFileData which expect to be able to load the file.
-    babelwires::SourceFileElementData data;
+    babelwires::SourceFileNodeData data;
     data.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
@@ -144,27 +144,27 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    std::unique_ptr<const babelwires::FeatureElement> featureElement =
-        data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    std::unique_ptr<const babelwires::Node> node =
+        data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
-    EXPECT_TRUE(featureElement);
-    ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(featureElement->as<babelwires::SourceFileElement>());
-    EXPECT_TRUE(featureElement->getOutput());
-    EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
-    EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getElementData().as<babelwires::SourceFileElementData>());
-    EXPECT_EQ(static_cast<const babelwires::SourceFileElementData&>(featureElement->getElementData()).m_filePath,
+    EXPECT_TRUE(node);
+    ASSERT_FALSE(node->isFailed());
+    EXPECT_TRUE(node->as<babelwires::SourceFileNode>());
+    EXPECT_TRUE(node->getOutput());
+    EXPECT_EQ(node->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
+    EXPECT_EQ(node->getNodeData().m_factoryVersion, data.m_factoryVersion);
+    EXPECT_TRUE(node->getNodeData().as<babelwires::SourceFileNodeData>());
+    EXPECT_EQ(static_cast<const babelwires::SourceFileNodeData&>(node->getNodeData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getOutput()->getChild(0));
+    testUtils::TestSimpleRecordType::ConstInstance instance(*node->getOutput()->getChild(0));
     EXPECT_EQ(instance.getintR0().get(), 14);
 
-    EXPECT_TRUE(featureElement->isExpanded(expandedPath));
+    EXPECT_TRUE(node->isExpanded(expandedPath));
 }
 
 TEST(ElementDataTest, targetFileDataClone) {
-    babelwires::TargetFileElementData data;
+    babelwires::TargetFileNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -179,7 +179,7 @@ TEST(ElementDataTest, targetFileDataClone) {
 }
 
 TEST(ElementDataTest, targetFileDataCustomClone) {
-    babelwires::TargetFileElementData data;
+    babelwires::TargetFileNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -196,7 +196,7 @@ TEST(ElementDataTest, targetFileDataCustomClone) {
 TEST(ElementDataTest, targetFileDataSerialize) {
     std::string serializedContents;
     {
-        babelwires::TargetFileElementData data;
+        babelwires::TargetFileNodeData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
         setModifiers(data, testUtils::getTestFileElementPathToInt0());
@@ -212,7 +212,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::TargetFileElementData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::TargetFileNodeData>();
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -224,7 +224,7 @@ TEST(ElementDataTest, targetFileDataSerialize) {
 TEST(ElementDataTest, targetFileDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TargetFileElementData data;
+    babelwires::TargetFileNodeData data;
     data.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = "foo";
@@ -234,27 +234,27 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    std::unique_ptr<const babelwires::FeatureElement> featureElement =
-        data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    std::unique_ptr<const babelwires::Node> node =
+        data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
-    EXPECT_TRUE(featureElement);
-    ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(featureElement->as<babelwires::TargetFileElement>());
-    EXPECT_TRUE(featureElement->getInput());
-    EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
-    EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getElementData().as<babelwires::TargetFileElementData>());
-    EXPECT_EQ(static_cast<const babelwires::TargetFileElementData&>(featureElement->getElementData()).m_filePath,
+    EXPECT_TRUE(node);
+    ASSERT_FALSE(node->isFailed());
+    EXPECT_TRUE(node->as<babelwires::TargetFileNode>());
+    EXPECT_TRUE(node->getInput());
+    EXPECT_EQ(node->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
+    EXPECT_EQ(node->getNodeData().m_factoryVersion, data.m_factoryVersion);
+    EXPECT_TRUE(node->getNodeData().as<babelwires::TargetFileNodeData>());
+    EXPECT_EQ(static_cast<const babelwires::TargetFileNodeData&>(node->getNodeData()).m_filePath,
               data.m_filePath);
 
-    testUtils::TestSimpleRecordType::ConstInstance instance(*featureElement->getInput()->getChild(0));
+    testUtils::TestSimpleRecordType::ConstInstance instance(*node->getInput()->getChild(0));
     EXPECT_EQ(instance.getintR0().get(), 12);
 
-    EXPECT_TRUE(featureElement->isExpanded(expandedPath));
+    EXPECT_TRUE(node->isExpanded(expandedPath));
 }
 
 TEST(ElementDataTest, processorDataClone) {
-    babelwires::ProcessorElementData data;
+    babelwires::ProcessorNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -267,7 +267,7 @@ TEST(ElementDataTest, processorDataClone) {
 }
 
 TEST(ElementDataTest, processorDataCustomClone) {
-    babelwires::ProcessorElementData data;
+    babelwires::ProcessorNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
     setCommonFields(data);
@@ -282,7 +282,7 @@ TEST(ElementDataTest, processorDataCustomClone) {
 TEST(ElementDataTest, processorDataSerialize) {
     std::string serializedContents;
     {
-        babelwires::ProcessorElementData data;
+        babelwires::ProcessorNodeData data;
         data.m_factoryIdentifier = "foo";
         setCommonFields(data);
         setModifiers(data, testUtils::TestSimpleRecordType::s_int0IdInitializer);
@@ -297,7 +297,7 @@ TEST(ElementDataTest, processorDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::ProcessorElementData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::ProcessorNodeData>();
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -308,7 +308,7 @@ TEST(ElementDataTest, processorDataSerialize) {
 TEST(ElementDataTest, processorDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ProcessorElementData data;
+    babelwires::ProcessorNodeData data;
     data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
     data.m_factoryVersion = 1;
     setCommonFields(data);
@@ -317,22 +317,22 @@ TEST(ElementDataTest, processorDataCreateElement) {
     const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
-    std::unique_ptr<const babelwires::FeatureElement> featureElement =
-        data.createFeatureElement(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
+    std::unique_ptr<const babelwires::Node> node =
+        data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
-    EXPECT_TRUE(featureElement);
-    ASSERT_FALSE(featureElement->isFailed());
-    EXPECT_TRUE(featureElement->as<babelwires::ProcessorElement>());
-    EXPECT_TRUE(featureElement->getInput());
-    EXPECT_EQ(featureElement->getElementData().m_factoryIdentifier, data.m_factoryIdentifier);
-    EXPECT_EQ(featureElement->getElementData().m_factoryVersion, data.m_factoryVersion);
-    EXPECT_TRUE(featureElement->getElementData().as<babelwires::ProcessorElementData>());
+    EXPECT_TRUE(node);
+    ASSERT_FALSE(node->isFailed());
+    EXPECT_TRUE(node->as<babelwires::ProcessorNode>());
+    EXPECT_TRUE(node->getInput());
+    EXPECT_EQ(node->getNodeData().m_factoryIdentifier, data.m_factoryIdentifier);
+    EXPECT_EQ(node->getNodeData().m_factoryVersion, data.m_factoryVersion);
+    EXPECT_TRUE(node->getNodeData().as<babelwires::ProcessorNodeData>());
 
-    const auto& inputFeature = *featureElement->getInput();
+    const auto& inputFeature = *node->getInput();
 
     testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};
 
     EXPECT_EQ(input.getInt().get(), 12);
 
-    EXPECT_TRUE(featureElement->isExpanded(expandedPath));
+    EXPECT_TRUE(node->isExpanded(expandedPath));
 }

@@ -5,7 +5,7 @@
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
@@ -13,10 +13,10 @@
 TEST(ConnectionDescriptionTest, equalityAndHash) {
     const babelwires::Path path0 = babelwires::Path::deserializeFromString("a/b");
     const babelwires::Path path1 = babelwires::Path::deserializeFromString("c/d");
-    const babelwires::ElementId sourceId0 = 14;
-    const babelwires::ElementId sourceId1 = 15;
-    const babelwires::ElementId targetId0 = 4;
-    const babelwires::ElementId targetId1 = 6;
+    const babelwires::NodeId sourceId0 = 14;
+    const babelwires::NodeId sourceId1 = 15;
+    const babelwires::NodeId targetId0 = 4;
+    const babelwires::NodeId targetId1 = 6;
 
     babelwires::ConnectionModifierData data0;
     data0.m_targetPath = path0;
@@ -62,8 +62,8 @@ TEST(ConnectionDescriptionTest, equalityAndHash) {
 TEST(ConnectionDescriptionTest, getCommands) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId sourceId = 12;
-    const babelwires::ElementId targetId = 14;
+    const babelwires::NodeId sourceId = 12;
+    const babelwires::NodeId targetId = 14;
 
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
@@ -75,15 +75,15 @@ TEST(ConnectionDescriptionTest, getCommands) {
     {
         testUtils::TestComplexRecordElementData sourceElementData;
         sourceElementData.m_id = sourceId;
-        testEnvironment.m_project.addFeatureElement(sourceElementData);
+        testEnvironment.m_project.addNode(sourceElementData);
     }
     {
         testUtils::TestComplexRecordElementData targetElementData;
         targetElementData.m_id = targetId;
-        testEnvironment.m_project.addFeatureElement(targetElementData);
+        testEnvironment.m_project.addNode(targetElementData);
     }
 
-    const babelwires::FeatureElement* targetElement = testEnvironment.m_project.getFeatureElement(targetId);
+    const babelwires::Node* targetElement = testEnvironment.m_project.getNode(targetId);
     ASSERT_NE(targetElement, nullptr);
 
     testEnvironment.m_project.process();

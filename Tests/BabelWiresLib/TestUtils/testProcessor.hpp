@@ -1,7 +1,7 @@
 #include <BabelWiresLib/Instance/instance.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 

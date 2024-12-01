@@ -38,7 +38,7 @@ namespace babelwires {
 
     /// A base class for a common shape of processor which performs the same operation on several input features,
     /// producing several output features. Organizing suitable processors this way should reduce the number of
-    /// elements in the project.
+    /// Nodes in the project.
     class ParallelProcessor : public Processor {
       public:
         ParallelProcessor(const ProjectContext& projectContext, const TypeRef& parallelInput,

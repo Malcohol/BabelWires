@@ -1,5 +1,5 @@
 /**
- * Commands which removes modifiers from an element.
+ * Commands which removes modifiers from an node.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -18,12 +18,12 @@ namespace babelwires {
     /// Remove the modifier, and restore any other modifiers removed when an array's size changes.
     class RemoveModifierCommand : public CompoundCommand<Project> {
       public:
-        RemoveModifierCommand(std::string commandName, ElementId targetId, Path featurePath);
+        RemoveModifierCommand(std::string commandName, NodeId targetId, Path featurePath);
 
         virtual bool initializeAndExecute(Project& project) override;
 
       private:
-        ElementId m_elementId;
+        NodeId m_nodeId;
         Path m_path;
     };
 

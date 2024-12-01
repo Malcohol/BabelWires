@@ -12,26 +12,26 @@
 
 void babelwires::ProjectData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("id", m_projectId);
-    serializer.serializeArray("elements", m_elements);
+    serializer.serializeArray("elements", m_nodes);
 }
 
 void babelwires::ProjectData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("id", m_projectId, Deserializer::IsOptional::Optional);
-    auto it = deserializer.deserializeArray<ElementData>("elements");
+    auto it = deserializer.deserializeArray<NodeData>("elements");
     while (it.isValid()) {
-        m_elements.emplace_back(std::move(it.getObject()));
+        m_nodes.emplace_back(std::move(it.getObject()));
         ++it;
     }
 }
 
 void babelwires::ProjectData::visitIdentifiers(IdentifierVisitor& visitor) {
-    for (auto& m : m_elements) {
+    for (auto& m : m_nodes) {
         m->visitIdentifiers(visitor);
     }
 }
 
 void babelwires::ProjectData::visitFilePaths(FilePathVisitor& visitor) {
-    for (auto& m : m_elements) {
+    for (auto& m : m_nodes) {
         m->visitFilePaths(visitor);
     }
 }

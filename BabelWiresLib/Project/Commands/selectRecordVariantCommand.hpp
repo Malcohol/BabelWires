@@ -19,7 +19,7 @@ namespace babelwires {
     /// Activate an optional in a RecordWithVariantType
     class SelectRecordVariantCommand : public CompoundCommand<Project> {
       public:
-        SelectRecordVariantCommand(std::string commandName, ElementId elementId, Path featurePath,
+        SelectRecordVariantCommand(std::string commandName, NodeId elementId, Path featurePath,
                                ShortId tagToSelect);
         virtual ~SelectRecordVariantCommand();
 
@@ -28,7 +28,7 @@ namespace babelwires {
         virtual void undo(Project& project) const override;
 
       private:
-        ElementId m_elementId;
+        NodeId m_nodeId;
         Path m_pathToRecord;
         ShortId m_tagToSelect;
 

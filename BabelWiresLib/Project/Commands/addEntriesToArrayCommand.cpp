@@ -11,7 +11,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
@@ -20,22 +20,22 @@
 
 #include <cassert>
 
-babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string commandName, ElementId elementId,
+babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string commandName, NodeId elementId,
                                                                Path featurePath, unsigned int indexOfNewEntries,
                                                                unsigned int numEntriesToAdd)
     : CompoundCommand(commandName)
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_pathToArray(std::move(featurePath))
     , m_indexOfNewEntries(indexOfNewEntries)
     , m_numEntriesToAdd(numEntriesToAdd) {}
 
 bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project) {
-    const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
-    if (!elementToModify) {
+    const Node* nodeToModify = project.getNode(m_nodeId);
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
@@ -54,30 +54,30 @@ bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project
         return false;
     }
 
-    if (const Modifier* modifier = elementToModify->findModifier(m_pathToArray)) {
+    if (const Modifier* modifier = nodeToModify->findModifier(m_pathToArray)) {
         if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             m_wasModifier = true;
         }
     }
 
-    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_elementId, m_pathToArray, m_indexOfNewEntries,
+    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_nodeId, m_pathToArray, m_indexOfNewEntries,
                                                                      m_numEntriesToAdd));
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
 
-    project.addArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
+    project.addArrayEntries(m_nodeId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
 
     return true;
 }
 
 void babelwires::AddEntriesToArrayCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.addArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
+    project.addArrayEntries(m_nodeId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
 }
 
 void babelwires::AddEntriesToArrayCommand::undo(Project& project) const {
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, m_wasModifier);
+    project.removeArrayEntries(m_nodeId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, m_wasModifier);
     CompoundCommand::undo(project);
 }

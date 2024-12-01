@@ -1,5 +1,5 @@
 /**
- * FeatureModel is the QAbstractTableModel which represents the data in a FeatureElement.
+ * FeatureModel is the QAbstractTableModel which represents the data in a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -22,7 +22,7 @@
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/fileElement.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
@@ -42,9 +42,9 @@
 
 #include <cassert>
 
-babelwires::FeatureView::FeatureView(ElementId elementId, ProjectBridge& projectBridge)
+babelwires::FeatureView::FeatureView(NodeId elementId, ProjectBridge& projectBridge)
     : m_projectBridge(projectBridge)
-    , m_elementId(elementId) {
+    , m_nodeId(elementId) {
     setEditTriggers(QAbstractItemView::AllEditTriggers);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     verticalHeader()->setVisible(false);
@@ -60,9 +60,9 @@ babelwires::FeatureView::FeatureView(ElementId elementId, ProjectBridge& project
 
 QSize babelwires::FeatureView::sizeHint() const {
     AccessModelScope scope(m_projectBridge);
-    if (const FeatureElement* element = scope.getProject().getFeatureElement(m_elementId)) {
+    if (const Node* node = scope.getProject().getNode(m_nodeId)) {
         // The width is stored, and the height will stretched to fit the node by the UI.
-        return QSize(element->getUiSize().m_width, 1);
+        return QSize(node->getUiSize().m_width, 1);
     }
     return QTableView::sizeHint();
 }
@@ -71,14 +71,14 @@ QSize babelwires::FeatureView::minimumSizeHint() const {
     return sizeHint();
 }
 
-babelwires::FeatureModel::FeatureModel(QObject* parent, ElementId elementId, ProjectBridge& projectBridge)
+babelwires::FeatureModel::FeatureModel(QObject* parent, NodeId elementId, ProjectBridge& projectBridge)
     : QAbstractTableModel(parent)
     , m_projectBridge(projectBridge)
-    , m_elementId(elementId) {}
+    , m_nodeId(elementId) {}
 
 int babelwires::FeatureModel::getNumRows(AccessModelScope& scope) const {
-    if (const FeatureElement* element = getFeatureElement(scope)) {
-        return element->getContentsCache().getNumRows();
+    if (const Node* node = getNode(scope)) {
+        return node->getContentsCache().getNumRows();
     } else {
         return 0;
     }
@@ -90,8 +90,8 @@ int babelwires::FeatureModel::rowCount(const QModelIndex& /*parent*/) const {
 }
 
 const babelwires::ContentsCacheEntry* babelwires::FeatureModel::getEntry(AccessModelScope& scope, int row) const {
-    if (const FeatureElement* element = getFeatureElement(scope)) {
-        return element->getContentsCache().getEntry(row);
+    if (const Node* node = getNode(scope)) {
+        return node->getContentsCache().getEntry(row);
     }
     return nullptr;
 }
@@ -101,8 +101,8 @@ const babelwires::ContentsCacheEntry* babelwires::FeatureModel::getEntry(AccessM
     return getEntry(scope, index.row());
 }
 
-const babelwires::FeatureElement* babelwires::FeatureModel::getFeatureElement(AccessModelScope& scope) const {
-    return scope.getProject().getFeatureElement(m_elementId);
+const babelwires::Node* babelwires::FeatureModel::getNode(AccessModelScope& scope) const {
+    return scope.getProject().getNode(m_nodeId);
 }
 
 int babelwires::FeatureModel::columnCount(const QModelIndex& /*parent*/) const {
@@ -111,8 +111,8 @@ int babelwires::FeatureModel::columnCount(const QModelIndex& /*parent*/) const {
 
 QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) const {
     AccessModelScope scope(m_projectBridge);
-    const FeatureElement* element = getFeatureElement(scope);
-    if (!element) {
+    const Node* node = getNode(scope);
+    if (!node) {
         return QVariant();
     }
 
@@ -126,7 +126,7 @@ QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) cons
     const ValueTreeNode* valueTreeNode = entry->getInputThenOutput();
     assert(valueTreeNode && "No valueTreeNode for row model");
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
+    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -180,10 +180,10 @@ Qt::ItemFlags babelwires::FeatureModel::flags(const QModelIndex& index) const {
     Qt::ItemFlags flags = Qt::ItemIsEnabled;
 
     AccessModelScope scope(m_projectBridge);
-    if (const FeatureElement* element = getFeatureElement(scope)) {
+    if (const Node* node = getNode(scope)) {
         if (const babelwires::ContentsCacheEntry* entry = getEntry(scope, index)) {
             const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-            RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
+            RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
             if (rowModel->isItemEditable()) {
                 flags = flags | Qt::ItemIsEditable;
@@ -195,8 +195,8 @@ Qt::ItemFlags babelwires::FeatureModel::flags(const QModelIndex& index) const {
 
 QMenu* babelwires::FeatureModel::getContextMenu(const QModelIndex& index) {
     AccessModelScope scope(m_projectBridge);
-    const FeatureElement* element = getFeatureElement(scope);
-    if (!element) {
+    const Node* node = getNode(scope);
+    if (!node) {
         return nullptr;
     }
 
@@ -206,7 +206,7 @@ QMenu* babelwires::FeatureModel::getContextMenu(const QModelIndex& index) {
     }
 
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
+    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
     std::vector<FeatureContextMenuEntry> entries;
     rowModel->getContextMenuActions(entries);
@@ -224,8 +224,8 @@ babelwires::ProjectBridge& babelwires::FeatureModel::getProjectBridge() {
     return m_projectBridge;
 }
 
-babelwires::ElementId babelwires::FeatureModel::getElementId() const {
-    return m_elementId;
+babelwires::NodeId babelwires::FeatureModel::getNodeId() const {
+    return m_nodeId;
 }
 
 void babelwires::FeatureModel::onClicked(const QModelIndex& index) const {
@@ -234,7 +234,7 @@ void babelwires::FeatureModel::onClicked(const QModelIndex& index) const {
         AccessModelScope scope(m_projectBridge);
         const ContentsCacheEntry* entry = getEntry(scope, index);
         if (entry->isExpandable()) {
-            const ElementId elementId = getElementId();
+            const NodeId elementId = getNodeId();
             const char* const actionName = entry->isExpanded() ? "Collapse compound" : "Expand compound";
             m_projectBridge.scheduleCommand(
                 std::make_unique<SetExpandedCommand>(actionName, elementId, entry->getPath(), !entry->isExpanded()));

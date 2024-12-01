@@ -17,7 +17,7 @@ namespace babelwires {
     /// Remove an element from an array.
     class RemoveEntryFromArrayCommand : public CompoundCommand<Project> {
       public:
-        RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId, Path featurePath,
+        RemoveEntryFromArrayCommand(std::string commandName, NodeId elementId, Path featurePath,
                                     unsigned int indexOfEntryToRemove, unsigned int numEntriesToRemove);
 
         virtual bool initializeAndExecute(Project& project) override;
@@ -25,7 +25,7 @@ namespace babelwires {
         virtual void undo(Project& project) const override;
 
       private:
-        ElementId m_elementId;
+        NodeId m_nodeId;
         Path m_pathToArray;
         unsigned int m_indexOfEntryToRemove;
         unsigned int m_numEntriesToRemove;

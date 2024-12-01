@@ -1,5 +1,5 @@
 /**
- * A ConnectionModifier connects features from two FeatureElements together.
+ * A ConnectionModifier connects features from two Nodes together.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>

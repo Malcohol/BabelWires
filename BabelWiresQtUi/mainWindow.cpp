@@ -18,8 +18,8 @@
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Project/Commands/pasteElementsCommand.hpp>
-#include <BabelWiresLib/Project/Commands/removeElementCommand.hpp>
+#include <BabelWiresLib/Project/Commands/pasteNodesCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
@@ -411,9 +411,9 @@ void babelwires::MainWindow::writeToClipboard(ProjectData projectData) {
 void babelwires::MainWindow::cut() {
     auto projectData = getProjectDataFromSelection();
 
-    auto command = std::make_unique<RemoveElementCommand>("Cut elements");
-    for (const auto& element : projectData.m_elements) {
-        command->addElementToRemove(element->m_id);
+    auto command = std::make_unique<RemoveNodeCommand>("Cut elements");
+    for (const auto& node : projectData.m_nodes) {
+        command->addElementToRemove(node->m_id);
     }
 
     writeToClipboard(std::move(projectData));
@@ -443,7 +443,7 @@ void babelwires::MainWindow::paste() {
             projectUtilities::translate(offset, projectData);
         }
 
-        auto command = std::make_unique<PasteElementsCommand>("Paste elements", std::move(projectData));
+        auto command = std::make_unique<PasteNodesCommand>("Paste elements", std::move(projectData));
         m_projectBridge.scheduleCommand(std::move(command));
     } catch (std::exception&) {
         // When using a specific mime-type, log a debug message?

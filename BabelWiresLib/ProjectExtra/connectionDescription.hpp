@@ -16,12 +16,12 @@ namespace babelwires {
     struct ConnectionModifierData;
 
     /// ConnectionDescription is a self-contained description of a connection.
-    /// The project does not use this (instead it uses a ConnectionModifier stored at the target FeatureElement).
+    /// The project does not use this (instead it uses a ConnectionModifier stored at the target Node).
     struct ConnectionDescription {
         ConnectionDescription();
         ConnectionDescription(const ConnectionDescription& other);
         ConnectionDescription(ConnectionDescription&& other);
-        ConnectionDescription(ElementId targetId, const ConnectionModifierData& data);
+        ConnectionDescription(NodeId targetId, const ConnectionModifierData& data);
         ConnectionDescription& operator=(const ConnectionDescription& other);
         ConnectionDescription& operator=(ConnectionDescription&& other);
 
@@ -35,9 +35,9 @@ namespace babelwires {
         bool operator!=(const ConnectionDescription& other) const;
         std::size_t getHash() const;
 
-        ElementId m_sourceId = INVALID_ELEMENT_ID;
+        NodeId m_sourceId = INVALID_NODE_ID;
         Path m_sourcePath;
-        ElementId m_targetId = INVALID_ELEMENT_ID;
+        NodeId m_targetId = INVALID_NODE_ID;
         Path m_targetPath;
     };
 

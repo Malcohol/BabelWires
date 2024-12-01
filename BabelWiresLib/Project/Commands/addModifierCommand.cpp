@@ -1,5 +1,5 @@
 /**
- * The command which adds a modifier to a feature element.
+ * The command which adds a modifier to a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -9,27 +9,27 @@
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, ElementId targetId,
+babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, NodeId targetId,
                                                    std::unique_ptr<ModifierData> modifierToAdd)
     : CompoundCommand(commandName)
-    , m_targetElementId(targetId)
+    , m_targetNodeId(targetId)
     , m_modifierToAdd(std::move(modifierToAdd)) {}
 
 bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
-    const FeatureElement* element = project.getFeatureElement(m_targetElementId);
+    const Node* node = project.getNode(m_targetNodeId);
 
-    if (!element) {
+    if (!node) {
         return false;
     }
 
-    const ValueTreeNode* const input = element->getInput();
+    const ValueTreeNode* const input = node->getInput();
     if (!input) {
         return false;
     }
@@ -44,10 +44,10 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         // to be removed, to avoid array merges.
         // TODO It would probably be better for these modifiers to fail rather than be removed, but at the
         // moment, I don't think modifiers can currently fail/recover based on the presence of other modifiers.
-        for (const auto& modifier : element->getEdits().modifierRange(m_modifierToAdd->m_targetPath)) {
+        for (const auto& modifier : node->getEdits().modifierRange(m_modifierToAdd->m_targetPath)) {
             if (m_modifierToAdd->m_targetPath.isStrictPrefixOf(modifier->getTargetPath()) && modifier->as<ArraySizeModifier>()) {
                 subcommands.emplace_back(std::make_unique<RemoveModifierCommand>(
-                    "Remove modifier subcommand", m_targetElementId, modifier->getTargetPath()));
+                    "Remove modifier subcommand", m_targetNodeId, modifier->getTargetPath()));
             }
         }
         for (auto it = subcommands.rbegin(); it != subcommands.rend(); ++it) {
@@ -55,26 +55,26 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         }
     }
 
-    if (const Modifier* const modifier = element->findModifier(m_modifierToAdd->m_targetPath)) {
+    if (const Modifier* const modifier = node->findModifier(m_modifierToAdd->m_targetPath)) {
         addSubCommand(
-            std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_targetElementId, m_modifierToAdd->m_targetPath));
+            std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_targetNodeId, m_modifierToAdd->m_targetPath));
     }
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
 
-    project.addModifier(m_targetElementId, *m_modifierToAdd);
+    project.addModifier(m_targetNodeId, *m_modifierToAdd);
 
     return true;
 }
 
 void babelwires::AddModifierCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.addModifier(m_targetElementId, *m_modifierToAdd);
+    project.addModifier(m_targetNodeId, *m_modifierToAdd);
 }
 
 void babelwires::AddModifierCommand::undo(Project& project) const {
-    project.removeModifier(m_targetElementId, m_modifierToAdd->m_targetPath);
+    project.removeModifier(m_targetNodeId, m_modifierToAdd->m_targetPath);
     CompoundCommand::undo(project);
 }

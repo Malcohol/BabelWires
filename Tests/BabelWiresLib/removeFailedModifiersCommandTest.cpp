@@ -7,7 +7,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -43,10 +43,10 @@ namespace {
             elementData.m_modifiers.emplace_back(inputConnection.clone());
         }
 
-        const babelwires::ElementId elementId = testEnvironment.m_project.addFeatureElement(elementData);
+        const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
         testEnvironment.m_project.process();
 
-        const auto* element = testEnvironment.m_project.getFeatureElement(elementId);
+        const auto* element = testEnvironment.m_project.getNode(elementId);
         ASSERT_NE(element, nullptr);
 
         const auto checkModifiers = [&testEnvironment, element, isWholeRecord](bool isCommandExecuted) {
@@ -128,8 +128,8 @@ TEST(RemoveFailedModifiersCommandTest, failSafelyNoElement) {
 TEST(RemoveFailedModifiersCommandTest, failSafelyNoSubFeature) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::ElementId elementId =
-        testEnvironment.m_project.addFeatureElement(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
     babelwires::RemoveFailedModifiersCommand command("Test command", elementId,
                                                      babelwires::Path::deserializeFromString("qqq/zzz"));

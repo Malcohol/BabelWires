@@ -11,9 +11,9 @@
 
 namespace babelwires {
 
-    class FileElement;
+    class FileNode;
 
-    /// The file-model is special-cased to query the feature element for the fileName.
+    /// The file-model is special-cased to query the Node for the fileName.
     class FileRowModel : public RowModel {
       public:
         virtual QVariant getValueDisplayData() const override;
@@ -24,7 +24,7 @@ namespace babelwires {
         getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const override;
 
       public:
-        const FileElement& getFileElement() const;
+        const FileNode& getFileElement() const;
     };
 
 } // namespace babelwires

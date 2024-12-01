@@ -12,8 +12,8 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/contentsCache.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
@@ -23,12 +23,12 @@ babelwires::RemoveModifierAction::RemoveModifierAction()
 void babelwires::RemoveModifierAction::actionTriggered(babelwires::FeatureModel& model,
                                                        const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
-    const ElementId elementId = model.getElementId();
+    const NodeId elementId = model.getNodeId();
 
     AccessModelScope scope(projectBridge);
     const Project& project = scope.getProject();
-    const FeatureElement* const element = project.getFeatureElement(elementId);
-    if (!element) {
+    const Node* const node = project.getNode(elementId);
+    if (!node) {
         return;
     }
 
@@ -38,7 +38,7 @@ void babelwires::RemoveModifierAction::actionTriggered(babelwires::FeatureModel&
     }
     const ValueTreeNode* const valueTreeNode = entry->getInputThenOutput();
     assert(valueTreeNode && "No valueTreeNode for row model");
-    const bool isModified = (valueTreeNode == entry->getInput()) && element->findModifier(Path(valueTreeNode));
+    const bool isModified = (valueTreeNode == entry->getInput()) && node->findModifier(Path(valueTreeNode));
     if (isModified) {
         projectBridge.scheduleCommand(
             std::make_unique<RemoveModifierCommand>("Remove modifier", elementId, entry->getPath()));

@@ -10,7 +10,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
-#include <BabelWiresLib/Project/FeatureElements/featureElement.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
@@ -20,12 +20,12 @@
 
 #include <cassert>
 
-babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, ElementId elementId,
+babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, NodeId elementId,
                                                                      Path featurePath,
                                                                      unsigned int indexOfEntryToRemove,
                                                                      unsigned int numEntriesToRemove)
     : CompoundCommand(commandName)
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_pathToArray(std::move(featurePath))
     , m_indexOfEntryToRemove(indexOfEntryToRemove)
     , m_numEntriesToRemove(numEntriesToRemove)
@@ -34,13 +34,13 @@ babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string
 }
 
 bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& project) {
-    const FeatureElement* elementToModify = project.getFeatureElement(m_elementId);
+    const Node* nodeToModify = project.getNode(m_nodeId);
 
-    if (!elementToModify) {
+    if (!nodeToModify) {
         return false;
     }
 
-    const ValueTreeNode* const input = elementToModify->getInput();
+    const ValueTreeNode* const input = nodeToModify->getInput();
     if (!input) {
         return false;
     }
@@ -66,28 +66,28 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         return false;
     }
 
-    if (const Modifier* modifier = elementToModify->getEdits().findModifier(m_pathToArray)) {
+    if (const Modifier* modifier = nodeToModify->getEdits().findModifier(m_pathToArray)) {
         const auto& modifierData = modifier->getModifierData();
         if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             m_wasModifier = true;
         }
     }
 
-    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_elementId, m_pathToArray, m_indexOfEntryToRemove, -m_numEntriesToRemove));
+    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_nodeId, m_pathToArray, m_indexOfEntryToRemove, -m_numEntriesToRemove));
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, !m_isSubcommand);
+    project.removeArrayEntries(m_nodeId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, !m_isSubcommand);
     return true;
 }
 
 void babelwires::RemoveEntryFromArrayCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, !m_isSubcommand);
+    project.removeArrayEntries(m_nodeId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, !m_isSubcommand);
 }
 
 void babelwires::RemoveEntryFromArrayCommand::undo(Project& project) const {
-    project.addArrayEntries(m_elementId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, m_wasModifier);
+    project.addArrayEntries(m_nodeId, m_pathToArray, m_indexOfEntryToRemove, m_numEntriesToRemove, m_wasModifier);
     CompoundCommand::undo(project);
 }

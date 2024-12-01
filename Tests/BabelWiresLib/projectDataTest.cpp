@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/FeatureElements/SourceFileElement/sourceFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/TargetFileElement/targetFileElementData.hpp>
-#include <BabelWiresLib/Project/FeatureElements/ProcessorElement/processorElementData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
@@ -33,30 +33,30 @@ TEST(ProjectDataTest, serialization) {
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_projectId, 1243);
-    ASSERT_EQ(dataPtr->m_elements.size(), 3);
+    ASSERT_EQ(dataPtr->m_nodes.size(), 3);
     {
-        const babelwires::ElementData* data = dataPtr->m_elements[0].get();
+        const babelwires::NodeData* data = dataPtr->m_nodes[0].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 45);
         EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestTargetFileFormat::getThisIdentifier());
-        const babelwires::TargetFileElementData* targetData = data->as<babelwires::TargetFileElementData>();
+        const babelwires::TargetFileNodeData* targetData = data->as<babelwires::TargetFileNodeData>();
         ASSERT_TRUE(targetData);
         ASSERT_EQ(targetData->m_filePath, testUtils::TestProjectData().m_targetFilePath);
     }
     {
-        const babelwires::ElementData* data = dataPtr->m_elements[1].get();
+        const babelwires::NodeData* data = dataPtr->m_nodes[1].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 6);
         EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestProcessor::getFactoryIdentifier());
-        const babelwires::ProcessorElementData* processorData = data->as<babelwires::ProcessorElementData>();
+        const babelwires::ProcessorNodeData* processorData = data->as<babelwires::ProcessorNodeData>();
         ASSERT_TRUE(processorData);
     }
     {
-        const babelwires::ElementData* data = dataPtr->m_elements[2].get();
+        const babelwires::NodeData* data = dataPtr->m_nodes[2].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 12);
         EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestSourceFileFormat::getThisIdentifier());
-        const babelwires::SourceFileElementData* sourceData = data->as<babelwires::SourceFileElementData>();
+        const babelwires::SourceFileNodeData* sourceData = data->as<babelwires::SourceFileNodeData>();
         ASSERT_TRUE(sourceData);
         ASSERT_EQ(sourceData->m_filePath, babelwires::FilePath(testUtils::TestProjectData().m_sourceFilePath));
     }
