@@ -355,7 +355,7 @@ TEST(ProjectTest, elementIds) {
 
     const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
-    EXPECT_NE(elementId, babelwires::INVALID_ELEMENT_ID);
+    EXPECT_NE(elementId, babelwires::INVALID_NODE_ID);
     ASSERT_NE(elementId, 3);
 
     const babelwires::Node* element = testEnvironment.m_project.getNode(elementId);
@@ -373,7 +373,7 @@ TEST(ProjectTest, elementIds) {
     EXPECT_NE(element, element1);
 
     const babelwires::NodeId elementId2 = testEnvironment.m_project.addNode(elementData);
-    EXPECT_NE(elementId2, babelwires::INVALID_ELEMENT_ID);
+    EXPECT_NE(elementId2, babelwires::INVALID_NODE_ID);
     EXPECT_NE(elementId2, elementId1);
 
     const babelwires::Node* element2 = testEnvironment.m_project.getNode(elementId2);

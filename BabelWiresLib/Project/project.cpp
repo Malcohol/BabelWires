@@ -44,7 +44,7 @@ void babelwires::Project::updateWithAvailableIds(std::vector<NodeId>& idsInOut) 
     NodeId maxAssignedNodeId = m_maxAssignedNodeId;
     std::unordered_set<NodeId> nowAssigned;
     for (auto& id : idsInOut) {
-        if ((id == INVALID_ELEMENT_ID) || (m_nodes.find(id) != m_nodes.end()) ||
+        if ((id == INVALID_NODE_ID) || (m_nodes.find(id) != m_nodes.end()) ||
             (nowAssigned.find(id) != nowAssigned.end())) {
             ++maxAssignedNodeId;
             id = maxAssignedNodeId;
@@ -56,7 +56,7 @@ void babelwires::Project::updateWithAvailableIds(std::vector<NodeId>& idsInOut) 
 }
 
 babelwires::NodeId babelwires::Project::reserveNodeId(NodeId hint) {
-    if ((hint == INVALID_ELEMENT_ID) || (m_nodes.find(hint) != m_nodes.end())) {
+    if ((hint == INVALID_NODE_ID) || (m_nodes.find(hint) != m_nodes.end())) {
         ++m_maxAssignedNodeId;
         return m_maxAssignedNodeId;
     } else {
@@ -327,7 +327,7 @@ void babelwires::Project::tryToSaveAllTargets() {
 }
 
 void babelwires::Project::tryToReloadSource(NodeId id) {
-    assert((id != INVALID_ELEMENT_ID) && "Invalid id");
+    assert((id != INVALID_NODE_ID) && "Invalid id");
     Node* f = getNode(id);
     assert(f && "There was no such feature node");
     FileNode* const fileNode = f->as<FileNode>();
@@ -338,7 +338,7 @@ void babelwires::Project::tryToReloadSource(NodeId id) {
 }
 
 void babelwires::Project::tryToSaveTarget(NodeId id) {
-    assert((id != INVALID_ELEMENT_ID) && "Invalid id");
+    assert((id != INVALID_NODE_ID) && "Invalid id");
     Node* f = getNode(id);
     assert(f && "There was no such feature node");
     FileNode* const fileNode = f->as<FileNode>();

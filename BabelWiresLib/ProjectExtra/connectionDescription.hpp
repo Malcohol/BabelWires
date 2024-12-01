@@ -35,9 +35,9 @@ namespace babelwires {
         bool operator!=(const ConnectionDescription& other) const;
         std::size_t getHash() const;
 
-        NodeId m_sourceId = INVALID_ELEMENT_ID;
+        NodeId m_sourceId = INVALID_NODE_ID;
         Path m_sourcePath;
-        NodeId m_targetId = INVALID_ELEMENT_ID;
+        NodeId m_targetId = INVALID_NODE_ID;
         Path m_targetPath;
     };
 

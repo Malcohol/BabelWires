@@ -198,7 +198,7 @@ namespace babelwires {
         /// The ID of the current project. Randomly assigned on construction and clear.
         ProjectId m_projectId;
 
-        /// 0 == INVALID_ELEMENT_ID and is never used for an actual Node.
+        /// 0 == INVALID_NODE_ID and is never used for an actual Node.
         NodeId m_maxAssignedNodeId = 0;
 
         /// A map of Nodes, keyed by NodeId.

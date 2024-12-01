@@ -87,7 +87,7 @@ namespace babelwires {
         VersionNumber m_factoryVersion = 0;
 
         /// Uniquely identifies the Element within the project.
-        NodeId m_id = INVALID_ELEMENT_ID;
+        NodeId m_id = INVALID_NODE_ID;
 
         /// Data solely relevant to the UI.
         UiData m_uiData;
