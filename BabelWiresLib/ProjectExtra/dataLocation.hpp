@@ -34,11 +34,11 @@ namespace babelwires {
         std::size_t getHash() const;
 
         inline friend bool operator==(const DataLocation& a, const DataLocation& b) { 
-            return (a.m_elementId == b.m_elementId) && (a.m_pathToValue == b.m_pathToValue);
+            return (a.m_nodeId == b.m_nodeId) && (a.m_pathToValue == b.m_pathToValue);
         }
 
         friend std::ostream& operator<<(std::ostream& os, const DataLocation& data) {
-            return os << "\"" << data.m_pathToValue << " @ node " << data.m_elementId << "\"";
+            return os << "\"" << data.m_pathToValue << " @ node " << data.m_nodeId << "\"";
         }
 
       public:
@@ -49,7 +49,7 @@ namespace babelwires {
         void visitFilePaths(FilePathVisitor& visitor) override;
 
       private:
-        NodeId m_elementId;
+        NodeId m_nodeId;
         Path m_pathToValue;
     };
 }

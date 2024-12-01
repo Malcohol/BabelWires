@@ -26,7 +26,7 @@ namespace babelwires {
         virtual void undo(Project& project) const override;
 
       private:
-        NodeId m_elementId;
+        NodeId m_nodeId;
         Path m_pathToRecord;
         ShortId m_optional;
 

@@ -20,7 +20,7 @@ namespace {
     struct ObservedChanges {
         ObservedChanges(babelwires::ProjectObserver& observer) {
             m_nodesAddedSubscription = observer.m_nodeWasAdded.subscribe(
-                [this](const babelwires::Node* element) { m_nodesAdded.emplace_back(element); });
+                [this](const babelwires::Node* node) { m_nodesAdded.emplace_back(node); });
             m_nodeWasRemovedSubscription = observer.m_nodeWasRemoved.subscribe(
                 [this](const babelwires::NodeId elementId) { m_nodesRemoved.emplace_back(elementId); });
             m_nodeWasMovedSubscription = observer.m_nodeWasMoved.subscribe(

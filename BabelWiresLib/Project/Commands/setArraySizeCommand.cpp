@@ -21,12 +21,12 @@
 babelwires::SetArraySizeCommand::SetArraySizeCommand(std::string commandName, NodeId elementId,
                                                      Path featurePath, int newSize)
     : CompoundCommand(commandName)
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_pathToArray(std::move(featurePath))
     , m_newSize(newSize) {}
 
 bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
-    const Node* nodeToModify = project.getNode(m_elementId);
+    const Node* nodeToModify = project.getNode(m_nodeId);
 
     if (!nodeToModify) {
         return false;
@@ -59,7 +59,7 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
     for (int i = m_newSize; i < m_oldSize; ++i) {
         Path p = m_pathToArray;
         p.pushStep(PathStep(i));
-        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, p));
+        addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, p));
     }
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
@@ -70,14 +70,14 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
 
 void babelwires::SetArraySizeCommand::executeBody(Project& project) const {
     if (m_newSize < m_oldSize) {
-        project.removeArrayEntries(m_elementId, m_pathToArray, m_newSize, m_oldSize - m_newSize, true);
+        project.removeArrayEntries(m_nodeId, m_pathToArray, m_newSize, m_oldSize - m_newSize, true);
     } else if (m_oldSize < m_newSize) {
-        project.addArrayEntries(m_elementId, m_pathToArray, m_oldSize, m_newSize - m_oldSize, true);
+        project.addArrayEntries(m_nodeId, m_pathToArray, m_oldSize, m_newSize - m_oldSize, true);
     } else {
         ArraySizeModifierData arraySizeModifierData;
         arraySizeModifierData.m_targetPath = m_pathToArray;
         arraySizeModifierData.m_size = m_newSize;
-        project.addModifier(m_elementId, arraySizeModifierData);
+        project.addModifier(m_nodeId, arraySizeModifierData);
     }
 }
 
@@ -88,11 +88,11 @@ void babelwires::SetArraySizeCommand::execute(Project& project) const {
 
 void babelwires::SetArraySizeCommand::undo(Project& project) const {
     if (m_newSize < m_oldSize) {
-        project.addArrayEntries(m_elementId, m_pathToArray, m_newSize, m_oldSize - m_newSize, m_wasModifier);
+        project.addArrayEntries(m_nodeId, m_pathToArray, m_newSize, m_oldSize - m_newSize, m_wasModifier);
     } else if (m_oldSize < m_newSize) {
-        project.removeArrayEntries(m_elementId, m_pathToArray, m_oldSize, m_newSize - m_oldSize, m_wasModifier);
+        project.removeArrayEntries(m_nodeId, m_pathToArray, m_oldSize, m_newSize - m_oldSize, m_wasModifier);
     } else {
-        project.removeModifier(m_elementId, m_pathToArray);
+        project.removeModifier(m_nodeId, m_pathToArray);
     }
     CompoundCommand::undo(project);
 }

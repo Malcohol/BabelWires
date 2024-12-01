@@ -29,7 +29,7 @@ namespace babelwires {
         virtual void subsume(std::unique_ptr<Command> subsequentCommand) override;
 
       private:
-        NodeId m_elementId;
+        NodeId m_nodeId;
         UiSize m_newSize;
         UiSize m_oldSize;
     };

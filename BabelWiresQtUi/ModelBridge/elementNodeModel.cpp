@@ -25,7 +25,7 @@
 
 babelwires::ElementNodeModel::ElementNodeModel(ProjectBridge& projectBridge, NodeId elementId)
     : BaseNodeModel(projectBridge)
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_view(new FeatureView(elementId, projectBridge)) {
     auto delegate = new FeatureModelDelegate(this, projectBridge);
     m_view->setItemDelegate(delegate);
@@ -41,14 +41,14 @@ babelwires::ElementNodeModel::~ElementNodeModel() {}
 
 void babelwires::ElementNodeModel::setContents(std::string label, NodeId elementId) {
     AccessModelScope scope(m_projectBridge);
-    const Node* element = scope.getProject().getNode(elementId);
-    assert(element && "The ID must correspond to an element in the project");
+    const Node* node = scope.getProject().getNode(elementId);
+    assert(node && "The ID must correspond to an node in the project");
     m_model = new FeatureModel(m_view, elementId, m_projectBridge);
     m_view->setModel(m_model);
 }
 
 babelwires::NodeId babelwires::ElementNodeModel::getNodeId() const {
-    return m_elementId;
+    return m_nodeId;
 }
 
 QWidget* babelwires::ElementNodeModel::embeddedWidget() {
@@ -105,9 +105,9 @@ const babelwires::Path& babelwires::ElementNodeModel::getPathAtPort(AccessModelS
 
 QtNodes::PortIndex babelwires::ElementNodeModel::getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
                                                                const Path& path) const {
-    const Node* element = m_model->getNode(scope);
-    assert(element && "Check before calling this.");
-    const int row = element->getContentsCache().getIndexOfPath((portType == QtNodes::PortType::In), path);
+    const Node* node = m_model->getNode(scope);
+    assert(node && "Check before calling this.");
+    const int row = node->getContentsCache().getIndexOfPath((portType == QtNodes::PortType::In), path);
     assert((row != -1) && "Path did not lead to a known feature");
     // TODO Assert that the entry corresponds to the correct portType.
     return row;
@@ -115,8 +115,8 @@ QtNodes::PortIndex babelwires::ElementNodeModel::getPortAtPath(AccessModelScope&
 
 QString babelwires::ElementNodeModel::caption() const {
     AccessModelScope scope(m_projectBridge);
-    if (const Node* element = scope.getProject().getNode(m_elementId)) {
-        return QString(element->getLabel().c_str());
+    if (const Node* node = scope.getProject().getNode(m_nodeId)) {
+        return QString(node->getLabel().c_str());
     } else {
         return "Dying node";
     }

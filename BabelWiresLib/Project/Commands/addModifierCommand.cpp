@@ -23,13 +23,13 @@ babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, Node
     , m_modifierToAdd(std::move(modifierToAdd)) {}
 
 bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
-    const Node* element = project.getNode(m_targetNodeId);
+    const Node* node = project.getNode(m_targetNodeId);
 
-    if (!element) {
+    if (!node) {
         return false;
     }
 
-    const ValueTreeNode* const input = element->getInput();
+    const ValueTreeNode* const input = node->getInput();
     if (!input) {
         return false;
     }
@@ -44,7 +44,7 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         // to be removed, to avoid array merges.
         // TODO It would probably be better for these modifiers to fail rather than be removed, but at the
         // moment, I don't think modifiers can currently fail/recover based on the presence of other modifiers.
-        for (const auto& modifier : element->getEdits().modifierRange(m_modifierToAdd->m_targetPath)) {
+        for (const auto& modifier : node->getEdits().modifierRange(m_modifierToAdd->m_targetPath)) {
             if (m_modifierToAdd->m_targetPath.isStrictPrefixOf(modifier->getTargetPath()) && modifier->as<ArraySizeModifier>()) {
                 subcommands.emplace_back(std::make_unique<RemoveModifierCommand>(
                     "Remove modifier subcommand", m_targetNodeId, modifier->getTargetPath()));
@@ -55,7 +55,7 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         }
     }
 
-    if (const Modifier* const modifier = element->findModifier(m_modifierToAdd->m_targetPath)) {
+    if (const Modifier* const modifier = node->findModifier(m_modifierToAdd->m_targetPath)) {
         addSubCommand(
             std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_targetNodeId, m_modifierToAdd->m_targetPath));
     }

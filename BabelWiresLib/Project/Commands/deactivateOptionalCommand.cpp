@@ -19,14 +19,14 @@
 babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, NodeId elementId, Path featurePath,
                                ShortId optional)
     : CompoundCommand(commandName)
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_pathToRecord(std::move(featurePath))
     , m_optional(optional)
 {
 }
 
 bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& project) {
-    const Node* nodeToModify = project.getNode(m_elementId);
+    const Node* nodeToModify = project.getNode(m_nodeId);
     if (!nodeToModify) {
         return false;
     }
@@ -61,23 +61,23 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
 
     Path pathToOptional = m_pathToRecord;
     pathToOptional.pushStep(PathStep(m_optional));
-    addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToOptional));
+    addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToOptional));
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
 
-    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional, true);
+    project.deactivateOptional(m_nodeId, m_pathToRecord, m_optional, true);
 
     return true;
 }
 
 void babelwires::DeactivateOptionalCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional, true);
+    project.deactivateOptional(m_nodeId, m_pathToRecord, m_optional, true);
 }
 
 void babelwires::DeactivateOptionalCommand::undo(Project& project) const {
-    project.activateOptional(m_elementId, m_pathToRecord, m_optional, m_wasModifier);
+    project.activateOptional(m_nodeId, m_pathToRecord, m_optional, m_wasModifier);
     CompoundCommand::undo(project);
 }

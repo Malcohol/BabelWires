@@ -28,7 +28,7 @@ namespace babelwires {
         void executeBody(Project& project) const;
         
       private:
-        NodeId m_elementId;
+        NodeId m_nodeId;
         Path m_pathToArray;
         unsigned int m_newSize;
         unsigned int m_oldSize;

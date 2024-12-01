@@ -62,7 +62,7 @@ namespace babelwires {
         const ValueTreeNode* getOutput(AccessModelScope& scope, int portIndex) const;
 
       protected:
-        NodeId m_elementId;
+        NodeId m_nodeId;
 
         FeatureView* m_view;
         FeatureModel* m_model;

@@ -18,11 +18,11 @@ TEST(MoveNodeCommandTest, executeAndUndo) {
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
-    const testUtils::TestNode* element =
+    const testUtils::TestNode* node =
         testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
-    ASSERT_NE(element, nullptr);
-    EXPECT_EQ(element->getUiPosition().m_x, -14);
-    EXPECT_EQ(element->getUiPosition().m_y, -15);
+    ASSERT_NE(node, nullptr);
+    EXPECT_EQ(node->getUiPosition().m_x, -14);
+    EXPECT_EQ(node->getUiPosition().m_y, -15);
 
     babelwires::MoveNodeCommand command("Test command", elementId, babelwires::UiPosition{100, 12});
     EXPECT_EQ(command.getName(), "Test command");
@@ -30,18 +30,18 @@ TEST(MoveNodeCommandTest, executeAndUndo) {
     EXPECT_TRUE(command.initialize(testEnvironment.m_project));
     command.execute(testEnvironment.m_project);
 
-    EXPECT_EQ(element->getUiPosition().m_x, 100);
-    EXPECT_EQ(element->getUiPosition().m_y, 12);
+    EXPECT_EQ(node->getUiPosition().m_x, 100);
+    EXPECT_EQ(node->getUiPosition().m_y, 12);
 
     command.undo(testEnvironment.m_project);
 
-    EXPECT_EQ(element->getUiPosition().m_x, -14);
-    EXPECT_EQ(element->getUiPosition().m_y, -15);
+    EXPECT_EQ(node->getUiPosition().m_x, -14);
+    EXPECT_EQ(node->getUiPosition().m_y, -15);
 
     command.execute(testEnvironment.m_project);
 
-    EXPECT_EQ(element->getUiPosition().m_x, 100);
-    EXPECT_EQ(element->getUiPosition().m_y, 12);
+    EXPECT_EQ(node->getUiPosition().m_x, 100);
+    EXPECT_EQ(node->getUiPosition().m_y, 12);
 }
 
 TEST(MoveNodeCommandTest, failSafelyNoElement) {
@@ -63,11 +63,11 @@ TEST(MoveNodeCommandTest, subsumeMoves) {
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
-    const testUtils::TestNode* element =
+    const testUtils::TestNode* node =
         testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
-    ASSERT_NE(element, nullptr);
-    EXPECT_EQ(element->getUiPosition().m_x, -14);
-    EXPECT_EQ(element->getUiPosition().m_y, -15);
+    ASSERT_NE(node, nullptr);
+    EXPECT_EQ(node->getUiPosition().m_x, -14);
+    EXPECT_EQ(node->getUiPosition().m_y, -15);
 
     babelwires::MoveNodeCommand firstCommand("Test command", elementId, babelwires::UiPosition{100, 12});
 
@@ -83,14 +83,14 @@ TEST(MoveNodeCommandTest, subsumeMoves) {
     // Confirm that the move was subsumed
     firstCommand.undo(testEnvironment.m_project);
 
-    EXPECT_EQ(element->getUiPosition().m_x, -14);
-    EXPECT_EQ(element->getUiPosition().m_y, -15);
+    EXPECT_EQ(node->getUiPosition().m_x, -14);
+    EXPECT_EQ(node->getUiPosition().m_y, -15);
 
     firstCommand.execute(testEnvironment.m_project);
 
-    ASSERT_NE(element, nullptr);
-    EXPECT_EQ(element->getUiPosition().m_x, 14);
-    EXPECT_EQ(element->getUiPosition().m_y, 88);
+    ASSERT_NE(node, nullptr);
+    EXPECT_EQ(node->getUiPosition().m_x, 14);
+    EXPECT_EQ(node->getUiPosition().m_y, 88);
 }
 
 TEST(MoveNodeCommandTest, subsumeMovesDelay) {
@@ -100,11 +100,11 @@ TEST(MoveNodeCommandTest, subsumeMovesDelay) {
     elementData.m_uiData.m_uiPosition = babelwires::UiPosition{-14, -15};
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
-    const testUtils::TestNode* element =
+    const testUtils::TestNode* node =
         testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
-    ASSERT_NE(element, nullptr);
-    EXPECT_EQ(element->getUiPosition().m_x, -14);
-    EXPECT_EQ(element->getUiPosition().m_y, -15);
+    ASSERT_NE(node, nullptr);
+    EXPECT_EQ(node->getUiPosition().m_x, -14);
+    EXPECT_EQ(node->getUiPosition().m_y, -15);
 
     babelwires::MoveNodeCommand firstCommand("Test command", elementId, babelwires::UiPosition{100, 12});
 

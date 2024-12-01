@@ -23,7 +23,7 @@ namespace babelwires {
         virtual bool initializeAndExecute(Project& project) override;
 
       private:
-        NodeId m_elementId;
+        NodeId m_nodeId;
         Path m_path;
     };
 

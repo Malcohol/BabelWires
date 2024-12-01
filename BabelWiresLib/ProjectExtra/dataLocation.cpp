@@ -12,13 +12,13 @@
 #include <Common/Serialization/deserializer.hpp>
 
 babelwires::DataLocation::DataLocation(NodeId elementId, Path pathToValue)
-    : m_elementId(elementId)
+    : m_nodeId(elementId)
     , m_pathToValue(std::move(pathToValue)) {
 
 }
 
 babelwires::NodeId babelwires::DataLocation::getNodeId() const {
-    return m_elementId;
+    return m_nodeId;
 }
 
 const babelwires::Path& babelwires::DataLocation::getPathToValue() const {
@@ -26,16 +26,16 @@ const babelwires::Path& babelwires::DataLocation::getPathToValue() const {
 }
 
 std::size_t babelwires::DataLocation::getHash() const {
-    return hash::mixtureOf(m_elementId, m_pathToValue);
+    return hash::mixtureOf(m_nodeId, m_pathToValue);
 }
 
 void babelwires::DataLocation::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("id", m_elementId);
+    serializer.serializeValue("id", m_nodeId);
     serializer.serializeValue("path", m_pathToValue);
 }
 
 void babelwires::DataLocation::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("id", m_elementId);
+    deserializer.deserializeValue("id", m_nodeId);
     deserializer.deserializeValue("path", m_pathToValue);
 }
 

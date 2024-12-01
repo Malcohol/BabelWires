@@ -16,26 +16,26 @@
 babelwires::SetExpandedCommand::SetExpandedCommand(std::string commandName, NodeId elementId,
                                                    Path pathToCompound, bool expanded)
     : SimpleCommand(std::move(commandName))
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_pathToCompound(std::move(pathToCompound))
     , m_expanded(expanded) {}
 
 bool babelwires::SetExpandedCommand::initialize(const Project& project) {
-    const Node* element = project.getNode(m_elementId);
-    if (!element) {
+    const Node* node = project.getNode(m_nodeId);
+    if (!node) {
         return false;
     }
 
-    if (element->isExpanded(m_pathToCompound) == m_expanded) {
+    if (node->isExpanded(m_pathToCompound) == m_expanded) {
         return false;
     }
 
     const ValueTreeNode* compound = nullptr;
-    if (const ValueTreeNode* valueTreeNode = element->getInput()) {
+    if (const ValueTreeNode* valueTreeNode = node->getInput()) {
         compound = m_pathToCompound.tryFollow(*valueTreeNode);
     }
     if (!compound) {
-        if (const ValueTreeNode* valueTreeNode = element->getOutput()) {
+        if (const ValueTreeNode* valueTreeNode = node->getOutput()) {
             compound = m_pathToCompound.tryFollow(*valueTreeNode);
         }
     }
@@ -47,13 +47,13 @@ bool babelwires::SetExpandedCommand::initialize(const Project& project) {
 }
 
 void babelwires::SetExpandedCommand::execute(Project& project) const {
-    Node* element = project.getNode(m_elementId);
-    assert(element);
-    element->setExpanded(m_pathToCompound, m_expanded);
+    Node* node = project.getNode(m_nodeId);
+    assert(node);
+    node->setExpanded(m_pathToCompound, m_expanded);
 }
 
 void babelwires::SetExpandedCommand::undo(Project& project) const {
-    Node* element = project.getNode(m_elementId);
-    assert(element);
-    element->setExpanded(m_pathToCompound, !m_expanded);
+    Node* node = project.getNode(m_nodeId);
+    assert(node);
+    node->setExpanded(m_pathToCompound, !m_expanded);
 }

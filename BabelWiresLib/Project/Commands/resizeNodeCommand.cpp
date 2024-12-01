@@ -14,24 +14,24 @@
 
 babelwires::ResizeNodeCommand::ResizeNodeCommand(std::string commandName, NodeId elementId, UiSize newSize)
     : SimpleCommand(std::move(commandName))
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_newSize(newSize) {}
 
 bool babelwires::ResizeNodeCommand::initialize(const Project& project) {
-    const Node* element = project.getNode(m_elementId);
-    if (!element) {
+    const Node* node = project.getNode(m_nodeId);
+    if (!node) {
         return false;
     }
-    m_oldSize = element->getUiSize();
+    m_oldSize = node->getUiSize();
     return true;
 }
 
 void babelwires::ResizeNodeCommand::execute(Project& project) const {
-    project.setNodeContentsSize(m_elementId, m_newSize);
+    project.setNodeContentsSize(m_nodeId, m_newSize);
 }
 
 void babelwires::ResizeNodeCommand::undo(Project& project) const {
-    project.setNodeContentsSize(m_elementId, m_oldSize);
+    project.setNodeContentsSize(m_nodeId, m_oldSize);
 }
 
 bool babelwires::ResizeNodeCommand::shouldSubsume(const Command& subsequentCommand,
@@ -40,7 +40,7 @@ bool babelwires::ResizeNodeCommand::shouldSubsume(const Command& subsequentComma
     if (!resizeNodeCommand) {
         return false;
     }
-    if (m_elementId != resizeNodeCommand->m_elementId) {
+    if (m_nodeId != resizeNodeCommand->m_nodeId) {
         return false;
     }
     if (!thisIsAlreadyExecuted) {

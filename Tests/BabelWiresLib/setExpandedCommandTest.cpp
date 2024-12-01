@@ -16,27 +16,27 @@ TEST(SetExpandedCommandTest, executeAndUndoTrue) {
     const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
 
-    const babelwires::Node* element = testEnvironment.m_project.getNode(elementId);
-    ASSERT_NE(element, nullptr);
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
+    ASSERT_NE(node, nullptr);
 
     babelwires::SetExpandedCommand command("Test command", elementId, testUtils::TestComplexRecordElementData::getPathToRecordSubrecord(), true);
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    EXPECT_FALSE(element->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
+    EXPECT_FALSE(node->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
 
     EXPECT_TRUE(command.initialize(testEnvironment.m_project));
     command.execute(testEnvironment.m_project);
 
-    EXPECT_TRUE(element->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
+    EXPECT_TRUE(node->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
 
     command.undo(testEnvironment.m_project);
 
-    EXPECT_FALSE(element->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
+    EXPECT_FALSE(node->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
 
     command.execute(testEnvironment.m_project);
 
-    EXPECT_TRUE(element->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
+    EXPECT_TRUE(node->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
 }
 
 TEST(SetExpandedCommandTest, executeAndUndoFalse) {
@@ -47,27 +47,27 @@ TEST(SetExpandedCommandTest, executeAndUndoFalse) {
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
 
-    const babelwires::Node* element = testEnvironment.m_project.getNode(elementId);
-    ASSERT_NE(element, nullptr);
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
+    ASSERT_NE(node, nullptr);
 
     babelwires::SetExpandedCommand command("Test command", elementId, testUtils::TestComplexRecordElementData::getPathToRecordSubrecord(), false);
 
     EXPECT_EQ(command.getName(), "Test command");
 
-    EXPECT_TRUE(element->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
+    EXPECT_TRUE(node->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
 
     EXPECT_TRUE(command.initialize(testEnvironment.m_project));
     command.execute(testEnvironment.m_project);
 
-    EXPECT_FALSE(element->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
+    EXPECT_FALSE(node->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
 
     command.undo(testEnvironment.m_project);
 
-    EXPECT_TRUE(element->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
+    EXPECT_TRUE(node->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
 
     command.execute(testEnvironment.m_project);
 
-    EXPECT_FALSE(element->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
+    EXPECT_FALSE(node->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecordSubrecord()));
 }
 
 TEST(SetExpandedCommandTest, failSafelyNoElement) {

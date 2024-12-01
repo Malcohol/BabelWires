@@ -20,8 +20,8 @@ struct NodeConnectionTest : ::testing::Test {
     void SetUp() override {
         testUtils::TestComplexRecordElementData featureElementData;
 
-        m_elementId = m_context.m_project.addNode(featureElementData);
-        m_featureElement = m_context.m_project.getNode(m_elementId);
+        m_nodeId = m_context.m_project.addNode(featureElementData);
+        m_featureElement = m_context.m_project.getNode(m_nodeId);
 
         static_assert(testUtils::TestSimpleArrayType::s_nonDefaultSize > testUtils::TestSimpleArrayType::s_defaultSize);
         static_assert(testUtils::TestSimpleArrayType::s_defaultSize > 0);
@@ -54,7 +54,7 @@ struct NodeConnectionTest : ::testing::Test {
     }
 
     void TearDown() override { 
-        m_context.m_project.removeNode(m_elementId);
+        m_context.m_project.removeNode(m_nodeId);
         m_context.m_project.removeNode(m_sourceId);
     }
 
@@ -67,7 +67,7 @@ struct NodeConnectionTest : ::testing::Test {
             m_context.m_project.addModifier(m_sourceId, sourceData);
         }
 
-        m_context.m_project.addModifier(m_elementId, m_assignData);
+        m_context.m_project.addModifier(m_nodeId, m_assignData);
         return m_featureElement->findModifier(m_assignData.m_targetPath)->asConnectionModifier(); 
     }
 
@@ -76,7 +76,7 @@ struct NodeConnectionTest : ::testing::Test {
     babelwires::Path m_arrayElemPath;
     babelwires::Path m_targetPath;
 
-    babelwires::NodeId m_elementId;
+    babelwires::NodeId m_nodeId;
     babelwires::Node* m_featureElement;
     babelwires::NodeId m_sourceId;
     babelwires::Node* m_sourceElement;
@@ -93,7 +93,7 @@ TEST_F(NodeConnectionTest, addAConnection) {
     m_context.m_project.process();
 
     m_context.m_project.clearChanges();
-    m_context.m_project.addModifier(m_elementId, m_assignData);
+    m_context.m_project.addModifier(m_nodeId, m_assignData);
     m_context.m_project.process();
 
     babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);
@@ -108,7 +108,7 @@ TEST_F(NodeConnectionTest, addAConnection) {
 
 TEST_F(NodeConnectionTest, changeSourceValueFromDefault) {
     m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
-    m_context.m_project.addModifier(m_elementId, m_assignData);
+    m_context.m_project.addModifier(m_nodeId, m_assignData);
     m_context.m_project.process();
 
     m_context.m_project.clearChanges();
@@ -130,7 +130,7 @@ TEST_F(NodeConnectionTest, changeSourceValueFromDefault) {
 TEST_F(NodeConnectionTest, changeSourceValueToDefault) {
     m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
     m_context.m_project.addModifier(m_sourceId, m_arrayElemData);
-    m_context.m_project.addModifier(m_elementId, m_assignData);
+    m_context.m_project.addModifier(m_nodeId, m_assignData);
     m_context.m_project.process();
 
     m_context.m_project.clearChanges();
@@ -152,7 +152,7 @@ TEST_F(NodeConnectionTest, changeSourceValueToDefault) {
 TEST_F(NodeConnectionTest, removedAndRestoreSourceFeature) {
     m_context.m_project.addModifier(m_sourceId, m_arrayInitData);
     m_context.m_project.addModifier(m_sourceId, m_arrayElemData);
-    m_context.m_project.addModifier(m_elementId, m_assignData);
+    m_context.m_project.addModifier(m_nodeId, m_assignData);
     m_context.m_project.process();
 
     m_context.m_project.clearChanges();
@@ -191,7 +191,7 @@ TEST_F(NodeConnectionTest, failedButStillConnected) {
     m_context.m_project.process();
 
     m_context.m_project.clearChanges();
-    m_context.m_project.addModifier(m_elementId, m_assignData);
+    m_context.m_project.addModifier(m_nodeId, m_assignData);
     m_context.m_project.process();
 
     babelwires::Modifier* modifier = m_featureElement->findModifier(m_assignData.m_targetPath);

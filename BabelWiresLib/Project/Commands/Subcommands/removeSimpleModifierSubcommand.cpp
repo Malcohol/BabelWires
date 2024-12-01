@@ -1,5 +1,5 @@
 /**
- * Commands which removes modifiers from an element.
+ * Commands which removes modifiers from a node.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -31,12 +31,12 @@ babelwires::RemoveSimpleModifierSubcommand::RemoveSimpleModifierSubcommand(NodeI
     , m_targetPath(std::move(featurePath)) {}
 
 bool babelwires::RemoveSimpleModifierSubcommand::initialize(const Project& project) {
-    const Node* element = project.getNode(m_targetNodeId);
-    if (!element) {
+    const Node* node = project.getNode(m_targetNodeId);
+    if (!node) {
         return false;
     }
 
-    const Modifier* modifier = element->findModifier(m_targetPath);
+    const Modifier* modifier = node->findModifier(m_targetPath);
     if (!modifier) {
         return false;
     }

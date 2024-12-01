@@ -25,7 +25,7 @@ namespace babelwires {
         virtual void undo(Project& project) const override;
 
       private:
-        NodeId m_elementId;
+        NodeId m_nodeId;
         Path m_path;
 
         std::vector<Path> m_expandedPathsRemoved;

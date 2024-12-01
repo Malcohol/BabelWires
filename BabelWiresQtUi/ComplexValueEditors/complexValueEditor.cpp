@@ -48,15 +48,15 @@ const babelwires::ValueTreeNode&
 babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope, const DataLocation& data) {
     const Project& project = scope.getProject();
 
-    const Node* element = project.getNode(data.getNodeId());
+    const Node* node = project.getNode(data.getNodeId());
 
-    if (!element) {
-        throw ModelException() << "The element does not exist.";
+    if (!node) {
+        throw ModelException() << "The node does not exist.";
     }
 
-    const ValueTreeNode* const input = element->getInput();
+    const ValueTreeNode* const input = node->getInput();
     if (!input) {
-        throw ModelException() << "The element does not have editable features.";
+        throw ModelException() << "The node does not have editable features.";
     }
 
     const auto* const inputTreeNode = data.getPathToValue().tryFollow(*input);
@@ -70,13 +70,13 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTree
                                                                                    const DataLocation& data) {
     const Project& project = scope.getProject();
 
-    const Node* element = project.getNode(data.getNodeId());
+    const Node* node = project.getNode(data.getNodeId());
 
-    if (!element) {
+    if (!node) {
         return nullptr;
     }
 
-    const ValueTreeNode* const input = element->getInput();
+    const ValueTreeNode* const input = node->getInput();
     if (!input) {
         return nullptr;
     }

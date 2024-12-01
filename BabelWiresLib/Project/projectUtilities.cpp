@@ -76,12 +76,12 @@ namespace {
 } // namespace
 
 std::vector<std::tuple<babelwires::NodeId, babelwires::Path>>
-babelwires::projectUtilities::getDerivedValues(const Project& project, NodeId elementId,
+babelwires::projectUtilities::getDerivedValues(const Project& project, NodeId nodeId,
                                                   const Path& pathToValue) {
                                                         std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
     unsigned int valueIndex = 0;
-    const Node* node = project.getNode(elementId);
+    const Node* node = project.getNode(nodeId);
     values.emplace_back(std::tuple<const Node*, Path>{node, pathToValue});
     //do {
         addDerivedValues(project, valueIndex, values);
@@ -98,12 +98,12 @@ babelwires::projectUtilities::getDerivedValues(const Project& project, NodeId el
 }
 
 std::vector<std::tuple<babelwires::NodeId, babelwires::Path>>
-babelwires::projectUtilities::getAllDerivedValues(const Project& project, NodeId elementId,
+babelwires::projectUtilities::getAllDerivedValues(const Project& project, NodeId nodeId,
                                                   const Path& pathToValue) {
     std::vector<std::tuple<const Node*, Path>> values;
     values.reserve(16);
     unsigned int valueIndex = 0;
-    const Node* node = project.getNode(elementId);
+    const Node* node = project.getNode(nodeId);
     values.emplace_back(std::tuple<const Node*, Path>{node, pathToValue});
     do {
         addDerivedValues(project, valueIndex, values);

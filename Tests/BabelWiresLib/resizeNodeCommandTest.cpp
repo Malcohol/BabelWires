@@ -18,10 +18,10 @@ TEST(ResizeNodeCommandTest, executeAndUndo) {
     elementData.m_uiData.m_uiSize = babelwires::UiSize{77};
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
-    const testUtils::TestNode* element =
+    const testUtils::TestNode* node =
         testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
-    ASSERT_NE(element, nullptr);
-    EXPECT_EQ(element->getUiSize().m_width, 77);
+    ASSERT_NE(node, nullptr);
+    EXPECT_EQ(node->getUiSize().m_width, 77);
 
     babelwires::ResizeNodeCommand command("Test command", elementId, babelwires::UiSize{113});
     EXPECT_EQ(command.getName(), "Test command");
@@ -29,15 +29,15 @@ TEST(ResizeNodeCommandTest, executeAndUndo) {
     EXPECT_TRUE(command.initialize(testEnvironment.m_project));
     command.execute(testEnvironment.m_project);
 
-    EXPECT_EQ(element->getUiSize().m_width, 113);
+    EXPECT_EQ(node->getUiSize().m_width, 113);
 
     command.undo(testEnvironment.m_project);
 
-    EXPECT_EQ(element->getUiSize().m_width, 77);
+    EXPECT_EQ(node->getUiSize().m_width, 77);
 
     command.execute(testEnvironment.m_project);
 
-    EXPECT_EQ(element->getUiSize().m_width, 113);
+    EXPECT_EQ(node->getUiSize().m_width, 113);
 }
 
 TEST(ResizeNodeCommandTest, failSafelyNoElement) {
@@ -59,10 +59,10 @@ TEST(ResizeNodeCommandTest, subsumeMoves) {
     elementData.m_uiData.m_uiSize = babelwires::UiSize{77};
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
-    const testUtils::TestNode* element =
+    const testUtils::TestNode* node =
         testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
-    ASSERT_NE(element, nullptr);
-    EXPECT_EQ(element->getUiSize().m_width, 77);
+    ASSERT_NE(node, nullptr);
+    EXPECT_EQ(node->getUiSize().m_width, 77);
 
     babelwires::ResizeNodeCommand firstCommand("Test command", elementId, babelwires::UiSize{113});
 
@@ -78,11 +78,11 @@ TEST(ResizeNodeCommandTest, subsumeMoves) {
     // Confirm that the move was subsumed
     firstCommand.undo(testEnvironment.m_project);
 
-    EXPECT_EQ(element->getUiSize().m_width, 77);
+    EXPECT_EQ(node->getUiSize().m_width, 77);
 
     firstCommand.execute(testEnvironment.m_project);
 
-    EXPECT_EQ(element->getUiSize().m_width, 188);
+    EXPECT_EQ(node->getUiSize().m_width, 188);
 }
 
 TEST(ResizeNodeCommandTest, subsumeMovesDelay) {
@@ -92,10 +92,10 @@ TEST(ResizeNodeCommandTest, subsumeMovesDelay) {
     elementData.m_uiData.m_uiSize = babelwires::UiSize{77};
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
-    const testUtils::TestNode* element =
+    const testUtils::TestNode* node =
         testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
-    ASSERT_NE(element, nullptr);
-    EXPECT_EQ(element->getUiSize().m_width, 77);
+    ASSERT_NE(node, nullptr);
+    EXPECT_EQ(node->getUiSize().m_width, 77);
 
     babelwires::ResizeNodeCommand firstCommand("Test command", elementId, babelwires::UiSize{113});
 

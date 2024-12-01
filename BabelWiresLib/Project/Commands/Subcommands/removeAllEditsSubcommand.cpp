@@ -19,12 +19,12 @@
 babelwires::RemoveAllEditsSubcommand::RemoveAllEditsSubcommand(NodeId elementId,
                                                                      Path pathToFeatureToRemove)
     : CompoundCommand("RemoveAllEditsSubcommand")
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_path(std::move(pathToFeatureToRemove)) {
 }
 
 bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project) {
-    Node* nodeToModify = project.getNode(m_elementId);
+    Node* nodeToModify = project.getNode(m_nodeId);
 
     if (!nodeToModify) {
         return false;
@@ -34,7 +34,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
 
     for (const auto& modifier : nodeToModify->getEdits().modifierRange(m_path)) {
         const auto& modifierData = modifier->getModifierData();
-        subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_elementId, modifierData.m_targetPath));
+        subcommands.emplace_back(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_nodeId, modifierData.m_targetPath));
     }
 
     {
@@ -75,7 +75,7 @@ bool babelwires::RemoveAllEditsSubcommand::initializeAndExecute(Project& project
 
 void babelwires::RemoveAllEditsSubcommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    Node* nodeToModify = project.getNode(m_elementId);
+    Node* nodeToModify = project.getNode(m_nodeId);
     assert(nodeToModify && "The element must exist");
     // This may not seem necessary, but it means we won't assert when expanding the
     // moved down entries.
@@ -85,7 +85,7 @@ void babelwires::RemoveAllEditsSubcommand::execute(Project& project) const {
 }
 
 void babelwires::RemoveAllEditsSubcommand::undo(Project& project) const {
-    Node* nodeToModify = project.getNode(m_elementId);
+    Node* nodeToModify = project.getNode(m_nodeId);
     assert(nodeToModify && "The element must exist");
     for (const auto& p : m_expandedPathsRemoved) {
         nodeToModify->getEdits().setExpanded(p, true);

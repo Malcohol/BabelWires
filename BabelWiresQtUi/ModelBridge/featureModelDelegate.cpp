@@ -45,8 +45,8 @@ QWidget* babelwires::FeatureModelDelegate::createEditor(QWidget* parent, const Q
     assert(model && "Unexpected model");
 
     AccessModelScope scope(m_projectBridge);
-    const Node* const element = model->getNode(scope);
-    if (!element) {
+    const Node* const node = model->getNode(scope);
+    if (!node) {
         return nullptr;
     }
 
@@ -55,7 +55,7 @@ QWidget* babelwires::FeatureModelDelegate::createEditor(QWidget* parent, const Q
         return nullptr;
     }
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
+    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable feature");
     QWidget* const editor = rowModel->createEditor(parent, index);
@@ -89,8 +89,8 @@ void babelwires::FeatureModelDelegate::setEditorData(QWidget* editor, const QMod
     assert(model && "Unexpected model");
 
     AccessModelScope scope(m_projectBridge);
-    const Node* element = model->getNode(scope);
-    if (!element) {
+    const Node* node = model->getNode(scope);
+    if (!node) {
         return;
     }
 
@@ -100,7 +100,7 @@ void babelwires::FeatureModelDelegate::setEditorData(QWidget* editor, const QMod
     }
 
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
+    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable feature");
     rowModel->setEditorData(editor);
@@ -119,8 +119,8 @@ void babelwires::FeatureModelDelegate::setModelData(QWidget* editor, QAbstractIt
     FeatureModel* featureModel = dynamic_cast<FeatureModel*>(model);
     assert(model && "Unexpected model");
 
-    const Node* element = featureModel->getNode(scope);
-    if (!element) {
+    const Node* node = featureModel->getNode(scope);
+    if (!node) {
         return;
     }
 
@@ -129,7 +129,7 @@ void babelwires::FeatureModelDelegate::setModelData(QWidget* editor, QAbstractIt
         return;
     }
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
+    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable feature");
     // Allow the function to reject the contents of the editor.
@@ -146,10 +146,10 @@ void babelwires::FeatureModelDelegate::paint(QPainter* painter, const QStyleOpti
         assert(featureModel && "Unexpected model");
 
         AccessModelScope scope(m_projectBridge);
-        if (const Node* element = featureModel->getNode(scope)) {
+        if (const Node* node = featureModel->getNode(scope)) {
             if (const babelwires::ContentsCacheEntry* entry = featureModel->getEntry(scope, index)) {
                 const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-                RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
+                RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
                 if (rowModel->hasCustomPainting()) {
                     QStyleOptionViewItem options = option;
                     initStyleOption(&options, index);
@@ -172,10 +172,10 @@ QSize babelwires::FeatureModelDelegate::sizeHint(const QStyleOptionViewItem& opt
         assert(featureModel && "Unexpected model");
 
         AccessModelScope scope(m_projectBridge);
-        if (const Node* element = featureModel->getNode(scope)) {
+        if (const Node* node = featureModel->getNode(scope)) {
             if (const babelwires::ContentsCacheEntry* entry = featureModel->getEntry(scope, index)) {
                 const babelwires::UiProjectContext& context = m_projectBridge.getContext();
-                RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, element);
+                RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
                 if (rowModel->hasCustomPainting()) {
                     QStyleOptionViewItem options = option;
                     initStyleOption(&options, index);

@@ -29,11 +29,11 @@
 babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName, NodeId targetId,
                                                          Path featurePath)
     : CompoundCommand(std::move(commandName))
-    , m_elementId(targetId)
+    , m_nodeId(targetId)
     , m_path(featurePath) {}
 
 bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
-    const Node* nodeToModify = project.getNode(m_elementId);
+    const Node* nodeToModify = project.getNode(m_nodeId);
 
     if (!nodeToModify) {
         return false;
@@ -71,7 +71,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             if (compoundFeature) {
                 if (currentSize != initialSize) {
                     addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(
-                        m_elementId, m_path, initialSize, initialSize - currentSize));
+                        m_nodeId, m_path, initialSize, initialSize - currentSize));
                 }
             }
         } else if (const auto* optModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
@@ -81,7 +81,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                 for (auto optionalField : optionals) {
                     if (optionalField.second) {
                         addSubCommand(std::make_unique<DeactivateOptionalCommand>(
-                            "DeactivateOptionalCommand subcommand", m_elementId, m_path, optionalField.first));
+                            "DeactivateOptionalCommand subcommand", m_nodeId, m_path, optionalField.first));
                     }
                 }
             }
@@ -92,13 +92,13 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                 for (auto fieldToRemove : fieldsToRemove) {
                     Path pathToFieldToRemove = m_path;
                     pathToFieldToRemove.pushStep(babelwires::PathStep(fieldToRemove));
-                    addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, pathToFieldToRemove));
+                    addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToFieldToRemove));
                 }
             }
         }
     }
 
-    addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_elementId, m_path));
+    addSubCommand(std::make_unique<RemoveSimpleModifierSubcommand>(m_nodeId, m_path));
 
     return CompoundCommand::initializeAndExecute(project);
 }

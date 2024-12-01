@@ -18,11 +18,11 @@ babelwires::MoveNodeCommand::MoveNodeCommand(std::string commandName, NodeId ele
 
 bool babelwires::MoveNodeCommand::initialize(const Project& project) {
     for (const auto& [elementId, _] : m_newPositions) {
-        const Node* element = project.getNode(elementId);
-        if (!element) {
+        const Node* node = project.getNode(elementId);
+        if (!node) {
             return false;
         }
-        m_oldPositions.insert(std::pair{elementId, element->getUiPosition()});
+        m_oldPositions.insert(std::pair{elementId, node->getUiPosition()});
     }
     return true;
 }

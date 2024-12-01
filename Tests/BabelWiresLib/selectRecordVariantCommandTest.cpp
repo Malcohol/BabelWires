@@ -27,9 +27,9 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     const babelwires::NodeId targetId =
         testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
 
-    const babelwires::ValueNode* element =
+    const babelwires::ValueNode* node =
         testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
-    ASSERT_NE(element, nullptr);
+    ASSERT_NE(node, nullptr);
     const auto* targetElement =
         testEnvironment.m_project.getNode(targetId)->as<babelwires::ValueNode>();
     ASSERT_NE(targetElement, nullptr);
@@ -39,7 +39,7 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
         return type.getSelectedTag(valueTreeNode->getValue());
     };
 
-    ASSERT_NE(element->getInput(), nullptr);
+    ASSERT_NE(node->getInput(), nullptr);
 
     {
         babelwires::SelectRecordVariantModifierData selectRecordVariantData;
@@ -72,13 +72,13 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
         testEnvironment.m_project.addModifier(elementId, assignInt);
     }
 
-    const auto checkModifiers = [&testEnvironment, element, targetElement](bool isCommandExecuted) {
-        const babelwires::Modifier* inputConnection = element->findModifier(testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0());
+    const auto checkModifiers = [&testEnvironment, node, targetElement](bool isCommandExecuted) {
+        const babelwires::Modifier* inputConnection = node->findModifier(testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0());
         const babelwires::Modifier* outputConnection =
             targetElement->findModifier(testUtils::TestSimpleRecordElementData::getPathToRecordInt0());
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
-        for (const auto* m : element->getEdits().modifierRange()) {
+        for (const auto* m : node->getEdits().modifierRange()) {
             ++numModifiersAtElement;
         }
         for (const auto* m : targetElement->getEdits().modifierRange()) {
@@ -101,25 +101,25 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
                                                    testUtils::TestRecordWithVariantsType::getTagBId());
 
     EXPECT_EQ(command.getName(), "Test command");
-    EXPECT_EQ(getSelectedTag(element->getInput()), testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_EQ(getSelectedTag(node->getInput()), testUtils::TestRecordWithVariantsType::getTagAId());
     checkModifiers(false);
 
     testEnvironment.m_project.process();
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_EQ(getSelectedTag(element->getInput()), testUtils::TestRecordWithVariantsType::getTagBId());
+    EXPECT_EQ(getSelectedTag(node->getInput()), testUtils::TestRecordWithVariantsType::getTagBId());
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getSelectedTag(element->getInput()), testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_EQ(getSelectedTag(node->getInput()), testUtils::TestRecordWithVariantsType::getTagAId());
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(getSelectedTag(element->getInput()), testUtils::TestRecordWithVariantsType::getTagBId());
+    EXPECT_EQ(getSelectedTag(node->getInput()), testUtils::TestRecordWithVariantsType::getTagBId());
     checkModifiers(true);
 }
 
@@ -152,8 +152,8 @@ TEST(SelectRecordVariantCommandTest, failSafelyNotATag) {
     const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestRecordWithVariantsElementData());
 
-    const auto* element = testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
-    ASSERT_NE(element, nullptr);
+    const auto* node = testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
+    ASSERT_NE(node, nullptr);
 
     babelwires::ShortId notATag("notTag");
     notATag.setDiscriminator(1);

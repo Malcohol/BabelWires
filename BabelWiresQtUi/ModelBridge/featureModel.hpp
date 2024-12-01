@@ -37,7 +37,7 @@ namespace babelwires {
 
       private:
         ProjectBridge& m_projectBridge;
-        NodeId m_elementId;
+        NodeId m_nodeId;
     };
 
     /// Presents the contents of the contentsCache as a table model.
@@ -74,7 +74,7 @@ namespace babelwires {
 
       private:
         ProjectBridge& m_projectBridge;
-        NodeId m_elementId;
+        NodeId m_nodeId;
     };
 
 } // namespace babelwires

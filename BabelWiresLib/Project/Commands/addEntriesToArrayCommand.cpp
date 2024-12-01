@@ -24,13 +24,13 @@ babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string comma
                                                                Path featurePath, unsigned int indexOfNewEntries,
                                                                unsigned int numEntriesToAdd)
     : CompoundCommand(commandName)
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_pathToArray(std::move(featurePath))
     , m_indexOfNewEntries(indexOfNewEntries)
     , m_numEntriesToAdd(numEntriesToAdd) {}
 
 bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project) {
-    const Node* nodeToModify = project.getNode(m_elementId);
+    const Node* nodeToModify = project.getNode(m_nodeId);
     if (!nodeToModify) {
         return false;
     }
@@ -60,24 +60,24 @@ bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project
         }
     }
 
-    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_elementId, m_pathToArray, m_indexOfNewEntries,
+    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_nodeId, m_pathToArray, m_indexOfNewEntries,
                                                                      m_numEntriesToAdd));
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;
     }
 
-    project.addArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
+    project.addArrayEntries(m_nodeId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
 
     return true;
 }
 
 void babelwires::AddEntriesToArrayCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.addArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
+    project.addArrayEntries(m_nodeId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, true);
 }
 
 void babelwires::AddEntriesToArrayCommand::undo(Project& project) const {
-    project.removeArrayEntries(m_elementId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, m_wasModifier);
+    project.removeArrayEntries(m_nodeId, m_pathToArray, m_indexOfNewEntries, m_numEntriesToAdd, m_wasModifier);
     CompoundCommand::undo(project);
 }

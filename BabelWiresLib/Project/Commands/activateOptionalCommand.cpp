@@ -15,17 +15,17 @@
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, NodeId elementId, Path featurePath,
+babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                ShortId optional)
     : SimpleCommand(commandName)
-    , m_elementId(elementId)
+    , m_nodeId(nodeId)
     , m_pathToRecord(std::move(featurePath))
     , m_optional(optional)
 {
 }
 
 bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
-    const Node* nodeToModify = project.getNode(m_elementId);
+    const Node* nodeToModify = project.getNode(m_nodeId);
     if (!nodeToModify) {
         return false;
     }
@@ -62,9 +62,9 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
 }
 
 void babelwires::ActivateOptionalCommand::execute(Project& project) const {
-    project.activateOptional(m_elementId, m_pathToRecord, m_optional, true);
+    project.activateOptional(m_nodeId, m_pathToRecord, m_optional, true);
 }
 
 void babelwires::ActivateOptionalCommand::undo(Project& project) const {
-    project.deactivateOptional(m_elementId, m_pathToRecord, m_optional, m_wasModifier);
+    project.deactivateOptional(m_nodeId, m_pathToRecord, m_optional, m_wasModifier);
 }

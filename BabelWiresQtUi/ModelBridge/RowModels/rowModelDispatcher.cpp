@@ -19,10 +19,10 @@
 babelwires::RowModelDispatcher::RowModelDispatcher(const ValueModelRegistry& valueModelRegistry,
                                                    const TypeSystem& typeSystem,
                                                    const babelwires::ContentsCacheEntry* entry,
-                                                   const babelwires::Node* element) {
+                                                   const babelwires::Node* node) {
     m_rowModel = &m_rowModelStorage;
     const babelwires::ValueTreeNode* valueTreeNode = &entry->getInputThenOutput()->is<babelwires::ValueTreeNode>();
-    if (element->as<FileNode>() && (entry->getDepth() == 0)) {
+    if (node->as<FileNode>() && (entry->getDepth() == 0)) {
         assert((valueTreeNode->is<ValueTreeNode>().getType().as<FileType>()) || (valueTreeNode->is<ValueTreeNode>().getType().as<FailureType>()));
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::FileRowModel));
         new (m_rowModel) babelwires::FileRowModel();
@@ -31,6 +31,6 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const ValueModelRegistry& val
         new (m_rowModel) babelwires::ValueRowModel();
     }
     m_rowModel->m_contentsCacheEntry = entry;
-    m_rowModel->m_node = element;
+    m_rowModel->m_node = node;
     m_rowModel->init(valueModelRegistry, typeSystem);
 }

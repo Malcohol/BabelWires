@@ -110,13 +110,13 @@ bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
     }
 
     for (auto elementId : m_elementIds) {
-        const Node* element = project.getNode(elementId);
+        const Node* node = project.getNode(elementId);
 
-        if (!element) {
+        if (!node) {
             return false;
         }
 
-        std::unique_ptr<NodeData> newElementData = element->extractNodeData();
+        std::unique_ptr<NodeData> newElementData = node->extractNodeData();
 
         // Move any connections described in the connections into the m_connections vector.
         auto newEnd = std::remove_if(
@@ -138,8 +138,8 @@ bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
 
     const Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
     for (auto elementId : m_elementIds) {
-        const Node* element = project.getNode(elementId);
-        auto it = connectionInfo.m_requiredFor.find(element);
+        const Node* node = project.getNode(elementId);
+        auto it = connectionInfo.m_requiredFor.find(node);
         if (it != connectionInfo.m_requiredFor.end()) {
             for (const auto& connection : it->second) {
                 const Node* const target = std::get<1>(connection);

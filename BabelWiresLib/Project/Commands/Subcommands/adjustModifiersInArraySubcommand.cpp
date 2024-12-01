@@ -23,7 +23,7 @@ babelwires::AdjustModifiersInArraySubcommand::AdjustModifiersInArraySubcommand(
     NodeId elementId, const babelwires::Path& pathToArray,
     babelwires::ArrayIndex startIndex, int adjustment)
     : CompoundCommand("AdjustModifiersInArraySubcommand")
-    , m_elementId(elementId)
+    , m_nodeId(elementId)
     , m_pathToArray(std::move(pathToArray))
     , m_startIndex(startIndex)
     , m_adjustment(adjustment) {
@@ -31,7 +31,7 @@ babelwires::AdjustModifiersInArraySubcommand::AdjustModifiersInArraySubcommand(
 }
 
 bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project& project) {
-    const Node* nodeToModify = project.getNode(m_elementId);
+    const Node* nodeToModify = project.getNode(m_nodeId);
 
     if (!nodeToModify) {
         return false;
@@ -41,11 +41,11 @@ bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project&
         for (int i = 0; i < -m_adjustment; ++i) {
             Path p = m_pathToArray;
             p.pushStep(PathStep(m_startIndex + i));
-            addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_elementId, p));
+            addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, p));
         }
     }
 
-    auto derivedArrays = projectUtilities::getDerivedValues(project, m_elementId, m_pathToArray);
+    auto derivedArrays = projectUtilities::getDerivedValues(project, m_nodeId, m_pathToArray);
 
     for (auto a : derivedArrays) {
         const NodeId elementId = std::get<0>(a);
@@ -57,17 +57,17 @@ bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project&
         return false;
     }
 
-    project.adjustModifiersInArrayElements(m_elementId, m_pathToArray, m_startIndex, m_adjustment);
+    project.adjustModifiersInArrayElements(m_nodeId, m_pathToArray, m_startIndex, m_adjustment);
 
     return true;
 }
 
 void babelwires::AdjustModifiersInArraySubcommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.adjustModifiersInArrayElements(m_elementId, m_pathToArray, m_startIndex, m_adjustment);
+    project.adjustModifiersInArrayElements(m_nodeId, m_pathToArray, m_startIndex, m_adjustment);
 }
 
 void babelwires::AdjustModifiersInArraySubcommand::undo(Project& project) const {
-    project.adjustModifiersInArrayElements(m_elementId, m_pathToArray, m_startIndex, -m_adjustment);
+    project.adjustModifiersInArrayElements(m_nodeId, m_pathToArray, m_startIndex, -m_adjustment);
     CompoundCommand::undo(project);
 }
