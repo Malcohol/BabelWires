@@ -42,6 +42,7 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         std::vector<std::unique_ptr<Command>> subcommands;
         // If this is a connection at a compound type, then any local array modification below need
         // to be removed, to avoid array merges.
+        // TODO: This should apply to any modifications of compound types, not just arrays.
         // TODO It would probably be better for these modifiers to fail rather than be removed, but at the
         // moment, I don't think modifiers can currently fail/recover based on the presence of other modifiers.
         for (const auto& modifier : node->getEdits().modifierRange(m_modifierToAdd->m_targetPath)) {
