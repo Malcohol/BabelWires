@@ -18,7 +18,7 @@ namespace babelwires {
       public:
         OptionalActivationAction(babelwires::Path pathToRecord, ShortId optional, bool isActivated);
 
-        virtual void actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const override;
+        virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;
 
       private:
         babelwires::Path m_pathToRecord;

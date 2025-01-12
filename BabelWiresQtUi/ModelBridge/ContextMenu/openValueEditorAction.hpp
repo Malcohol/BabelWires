@@ -16,7 +16,7 @@ namespace babelwires {
     struct OpenValueEditorAction : babelwires::FeatureContextMenuAction {
         OpenValueEditorAction(const QString& text, DataLocation location);
 
-        virtual void actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const override;
+        virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;
 
       private:
         DataLocation m_location;

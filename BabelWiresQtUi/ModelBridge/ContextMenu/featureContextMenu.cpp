@@ -1,5 +1,5 @@
 /**
- * The pop-up context menu used for the rows of the FeatureModel.
+ * The pop-up context menu used for the rows of the NodeContentsModel.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -7,11 +7,11 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
 #include <cassert>
 
-babelwires::FeatureContextMenu::FeatureContextMenu(FeatureModel& model, const QModelIndex& index)
+babelwires::FeatureContextMenu::FeatureContextMenu(NodeContentsModel& model, const QModelIndex& index)
     : m_model(model)
     , m_index(index) {}
 
@@ -49,7 +49,7 @@ void babelwires::FeatureContextMenu::addFeatureContextMenuEntry(FeatureContextMe
     std::visit(visitorMethods, entry);
 }
 
-babelwires::FeatureModel& babelwires::FeatureContextMenu::getModel() {
+babelwires::NodeContentsModel& babelwires::FeatureContextMenu::getModel() {
     return m_model;
 }
 

@@ -1,5 +1,5 @@
 /**
- * FeatureModel is the QAbstractTableModel which represents the data in a Node.
+ * NodeContentsModel is the QAbstractTableModel which represents the data in a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  *

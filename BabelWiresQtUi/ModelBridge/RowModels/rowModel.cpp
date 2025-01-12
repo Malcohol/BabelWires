@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/removeArrayEntryAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/removeFailedModifiersAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp>
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>

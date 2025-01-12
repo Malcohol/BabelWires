@@ -23,10 +23,10 @@ namespace babelwires {
     class Path;
 
     /// Presents the contents of the contentsCache as a table model.
-    class FeatureModel : public QAbstractTableModel {
+    class NodeContentsModel : public QAbstractTableModel {
         Q_OBJECT
       public:
-        FeatureModel(QObject* parent, NodeId elementId, ProjectBridge& projectBridge);
+        NodeContentsModel(QObject* parent, NodeId elementId, ProjectBridge& projectBridge);
 
         int rowCount(const QModelIndex& /*parent*/) const override;
         int columnCount(const QModelIndex& /*parent*/) const override;

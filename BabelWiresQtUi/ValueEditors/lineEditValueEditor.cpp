@@ -8,7 +8,7 @@
 #include <BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
 babelwires::LineEditValueEditor::LineEditValueEditor(QWidget* parent, const QModelIndex& index)
     : ValueEditorCommonBase(parent, index) {}

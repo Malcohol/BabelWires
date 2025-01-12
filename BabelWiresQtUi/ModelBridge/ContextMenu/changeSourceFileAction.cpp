@@ -8,7 +8,7 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/changeSourceFileAction.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
@@ -23,7 +23,7 @@
 babelwires::ChangeSourceFileAction::ChangeSourceFileAction()
     : FeatureContextMenuAction(tr("Open file\u2026")) {}
 
-void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::FeatureModel& model,
+void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                          const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();

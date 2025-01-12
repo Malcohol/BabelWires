@@ -1,5 +1,5 @@
 /**
- * The pop-up context menu used for the rows of the FeatureModel.
+ * The pop-up context menu used for the rows of the NodeContentsModel.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

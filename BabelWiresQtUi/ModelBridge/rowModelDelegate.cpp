@@ -13,7 +13,7 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commands.hpp>
@@ -41,7 +41,7 @@ QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyl
         return 0;
     }
 
-    const FeatureModel* const model = dynamic_cast<const FeatureModel*>(index.model());
+    const NodeContentsModel* const model = dynamic_cast<const NodeContentsModel*>(index.model());
     assert(model && "Unexpected model");
 
     AccessModelScope scope(m_projectBridge);
@@ -67,7 +67,7 @@ QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyl
 
             // Update the editor if the model changes.
             interface->getValuesChangedConnection() = QObject::connect(
-                model, &FeatureModel::valuesMayHaveChanged,
+                model, &NodeContentsModel::valuesMayHaveChanged,
                 [this, editor, parent, index]() { emit setEditorData(editor, index); });
 
             ValueEditorCommonSignals* ValueEditorCommonSignals = interface->getValueEditorSignals();
@@ -85,7 +85,7 @@ QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyl
 }
 
 void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const {
-    const FeatureModel* model = dynamic_cast<const FeatureModel*>(index.model());
+    const NodeContentsModel* model = dynamic_cast<const NodeContentsModel*>(index.model());
     assert(model && "Unexpected model");
 
     AccessModelScope scope(m_projectBridge);
@@ -116,7 +116,7 @@ void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIn
 void babelwires::RowModelDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
                                                     const QModelIndex& index) const {
     AccessModelScope scope(m_projectBridge);
-    FeatureModel* featureModel = dynamic_cast<FeatureModel*>(model);
+    NodeContentsModel* featureModel = dynamic_cast<NodeContentsModel*>(model);
     assert(model && "Unexpected model");
 
     const Node* node = featureModel->getNode(scope);
@@ -142,7 +142,7 @@ void babelwires::RowModelDelegate::paint(QPainter* painter, const QStyleOptionVi
                                              const QModelIndex& index) const {
     const int column = index.column();
     if (column == 1) {
-        const FeatureModel* featureModel = dynamic_cast<const FeatureModel*>(index.model());
+        const NodeContentsModel* featureModel = dynamic_cast<const NodeContentsModel*>(index.model());
         assert(featureModel && "Unexpected model");
 
         AccessModelScope scope(m_projectBridge);
@@ -168,7 +168,7 @@ void babelwires::RowModelDelegate::paint(QPainter* painter, const QStyleOptionVi
 QSize babelwires::RowModelDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const {
     const int column = index.column();
     if (column == 1) {
-        const FeatureModel* featureModel = dynamic_cast<const FeatureModel*>(index.model());
+        const NodeContentsModel* featureModel = dynamic_cast<const NodeContentsModel*>(index.model());
         assert(featureModel && "Unexpected model");
 
         AccessModelScope scope(m_projectBridge);

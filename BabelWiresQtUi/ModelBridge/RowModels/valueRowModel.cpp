@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/RowModels/valueRowModel.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>

@@ -17,7 +17,7 @@ namespace babelwires {
     class Path;
 
     class NodeContentsView;
-    class FeatureModel;
+    class NodeContentsModel;
     class RowModelDelegate;
     class AccessModelScope;
 
@@ -48,7 +48,7 @@ namespace babelwires {
         void setSize(const UiSize& newSize);
 
         /// Return the model for the embedded widget.
-        FeatureModel& getModel();
+        NodeContentsModel& getModel();
 
       public slots:
         void customContextMenuRequested(const QPoint& pos);
@@ -66,7 +66,7 @@ namespace babelwires {
         NodeId m_nodeId;
 
         NodeContentsView* m_view;
-        FeatureModel* m_model;
+        NodeContentsModel* m_model;
         RowModelDelegate* m_delegate;
 
         int m_numRows = 0;
