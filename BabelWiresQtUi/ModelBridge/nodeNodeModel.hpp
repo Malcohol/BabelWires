@@ -16,7 +16,7 @@ namespace babelwires {
     class ContentsCache;
     class Path;
 
-    class FeatureView;
+    class NodeContentsView;
     class FeatureModel;
     class RowModelDelegate;
     class AccessModelScope;
@@ -65,7 +65,7 @@ namespace babelwires {
       protected:
         NodeId m_nodeId;
 
-        FeatureView* m_view;
+        NodeContentsView* m_view;
         FeatureModel* m_model;
         RowModelDelegate* m_delegate;
 

@@ -12,8 +12,6 @@
 #include <QAbstractTableModel>
 #include <QAction>
 #include <QMenu>
-#include <QStyledItemDelegate>
-#include <QTableView>
 
 namespace babelwires {
 
@@ -23,22 +21,6 @@ namespace babelwires {
     class ProjectBridge;
     class AccessModelScope;
     class Path;
-
-    class FeatureView : public QTableView {
-        Q_OBJECT
-      public:
-        FeatureView(NodeId elementId, ProjectBridge& projectBridge);
-
-        /// The default size is too big when there are three or fewer rows.
-        QSize sizeHint() const override;
-
-        /// The default size is too big when there are three or fewer rows.
-        QSize minimumSizeHint() const override;
-
-      private:
-        ProjectBridge& m_projectBridge;
-        NodeId m_nodeId;
-    };
 
     /// Presents the contents of the contentsCache as a table model.
     class FeatureModel : public QAbstractTableModel {

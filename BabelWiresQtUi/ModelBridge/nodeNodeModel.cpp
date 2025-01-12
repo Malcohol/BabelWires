@@ -11,6 +11,7 @@
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/ModelBridge/rowModelDelegate.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsView.hpp>
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
@@ -26,7 +27,7 @@
 babelwires::NodeNodeModel::NodeNodeModel(ProjectBridge& projectBridge, NodeId elementId)
     : BaseNodeModel(projectBridge)
     , m_nodeId(elementId)
-    , m_view(new FeatureView(elementId, projectBridge)) {
+    , m_view(new NodeContentsView(elementId, projectBridge)) {
     auto delegate = new RowModelDelegate(this, projectBridge);
     m_view->setItemDelegate(delegate);
     m_view->setContextMenuPolicy(Qt::CustomContextMenu);

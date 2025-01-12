@@ -38,38 +38,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 
-#include <QtWidgets/QHeaderView>
-
 #include <cassert>
-
-babelwires::FeatureView::FeatureView(NodeId elementId, ProjectBridge& projectBridge)
-    : m_projectBridge(projectBridge)
-    , m_nodeId(elementId) {
-    setEditTriggers(QAbstractItemView::AllEditTriggers);
-    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    verticalHeader()->setVisible(false);
-    verticalHeader()->setStretchLastSection(true);
-    verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    horizontalHeader()->setVisible(false);
-    horizontalHeader()->setStretchLastSection(true);
-    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    resize(sizeHint());
-}
-
-QSize babelwires::FeatureView::sizeHint() const {
-    AccessModelScope scope(m_projectBridge);
-    if (const Node* node = scope.getProject().getNode(m_nodeId)) {
-        // The width is stored, and the height will stretched to fit the node by the UI.
-        return QSize(node->getUiSize().m_width, 1);
-    }
-    return QTableView::sizeHint();
-}
-
-QSize babelwires::FeatureView::minimumSizeHint() const {
-    return sizeHint();
-}
 
 babelwires::FeatureModel::FeatureModel(QObject* parent, NodeId elementId, ProjectBridge& projectBridge)
     : QAbstractTableModel(parent)
