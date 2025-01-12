@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectIds.hpp>
+#include <BabelWiresLib/Project/uiPosition.hpp>
 
 #include <QAbstractTableModel>
 #include <QAction>
@@ -35,6 +36,10 @@ namespace babelwires {
         void mousePressEvent(QMouseEvent* event) override;
         void mouseMoveEvent(QMouseEvent *event) override;
         void mouseReleaseEvent(QMouseEvent *event) override;
+
+      private:
+
+        UiPosition getFlowScenePositionFromLocalPosition(QPoint localPos);
 
       private:
         ProjectBridge& m_projectBridge;

@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
+#include <BabelWiresLib/Project/uiPosition.hpp>
 
 namespace babelwires {
     class Project;
@@ -27,7 +28,7 @@ namespace babelwires {
             Copy
         };
 
-        AddNodeForInputTreeValueCommand(std::string commandName, NodeId originalNodeId, Path pathToValue, RelationshipToOldNode relationship);
+        AddNodeForInputTreeValueCommand(std::string commandName, NodeId originalNodeId, Path pathToValue, UiPosition positionForNewNode, RelationshipToOldNode relationship);
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
@@ -40,7 +41,10 @@ namespace babelwires {
         NodeId m_originalNodeId;
         Path m_pathToValue;
         RelationshipToOldNode m_relationship;
-        NodeId m_newNodeId;
+        UiPosition m_positionForNewNode;
+
+        /// This is only set after the command is executed.
+        NodeId m_newNodeId = INVALID_NODE_ID;
     };
 
 } // namespace babelwires

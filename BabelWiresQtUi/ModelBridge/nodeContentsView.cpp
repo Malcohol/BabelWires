@@ -12,6 +12,7 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/addNodeForInputTreeValueCommand.hpp>
+#include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
 #include <QMouseEvent>
@@ -50,7 +51,7 @@ QSize babelwires::NodeContentsView::minimumSizeHint() const {
     return sizeHint();
 }
 
-void babelwires::NodeContentsView::mousePressEvent(QMouseEvent *event) {
+void babelwires::NodeContentsView::mousePressEvent(QMouseEvent* event) {
     QTableView::mousePressEvent(event);
     if (event->buttons() == Qt::LeftButton) {
         m_dragState = DragState{event->pos()};
@@ -58,7 +59,7 @@ void babelwires::NodeContentsView::mousePressEvent(QMouseEvent *event) {
     }
 }
 
-void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent *event) {
+void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
     QTableView::mouseMoveEvent(event);
     assert(m_dragState);
     if (m_dragState->m_newNodeId == INVALID_NODE_ID) {
@@ -67,11 +68,12 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent *event) {
             return;
         }
         const int row = rowAt(m_dragState->m_startPos.ry());
+        // TODO Shouldn't start at edge of contents, but include node border.
         if (event->pos().rx() < 0) {
             Path path;
             {
                 AccessModelScope scope(m_projectBridge);
-                const Node *const node = scope.getProject().getNode(m_nodeId);
+                const Node* const node = scope.getProject().getNode(m_nodeId);
                 if (!node) {
                     return;
                 }
@@ -83,25 +85,37 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent *event) {
                 }
                 path = cacheEntry->getPath();
             }
-            // TODO Use modifiers.
+            UiPosition positionForNewNode = getFlowScenePositionFromLocalPosition(event->pos());
+            // TODO Use key modifiers to determine relationship.
             auto relationship = AddNodeForInputTreeValueCommand::RelationshipToOldNode::Copy;
-            auto command = std::make_unique<AddNodeForInputTreeValueCommand>("Drag input left to make node", m_nodeId, std::move(path), relationship);
-            const AddNodeForInputTreeValueCommand *const commandRawPtr = command.get();
+            auto command = std::make_unique<AddNodeForInputTreeValueCommand>(
+                "Drag input left to make node", m_nodeId, std::move(path), positionForNewNode, relationship);
+            const AddNodeForInputTreeValueCommand* const commandRawPtr = command.get();
             // Synchronous because the command has the NodeId only after it runs.
-            // TODO: Would it be better to reserve the ID here?
+            // TODO: Would it be better to reserve the ID here, outside the project?
             if (m_projectBridge.executeCommandSynchronously(std::move(command))) {
                 m_dragState->m_newNodeId = commandRawPtr->getNodeId();
             }
         }
     } else {
         // Move node
+        m_projectBridge.scheduleCommand(std::make_unique<MoveNodeCommand>(
+            "Drag new node", m_dragState->m_newNodeId, getFlowScenePositionFromLocalPosition(event->pos())));
     }
 }
 
-
-void babelwires::NodeContentsView::mouseReleaseEvent(QMouseEvent *event) {
+void babelwires::NodeContentsView::mouseReleaseEvent(QMouseEvent* event) {
     QTableView::mouseReleaseEvent(event);
     assert(m_dragState);
     logDebug() << "Released: Start point was " << m_dragState->m_startPos.rx();
     m_dragState.reset();
+}
+
+babelwires::UiPosition babelwires::NodeContentsView::getFlowScenePositionFromLocalPosition(QPoint localPos) {
+    UiPosition flowScenePosition;
+    QPoint globalPos = mapToGlobal(localPos);
+    QPoint posInScene = m_projectBridge.getFlowGraphWidget()->mapFromGlobal(globalPos);
+    flowScenePosition.m_x = posInScene.x();
+    flowScenePosition.m_y = posInScene.y();
+    return flowScenePosition;
 }

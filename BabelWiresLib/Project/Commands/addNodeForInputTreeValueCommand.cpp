@@ -18,10 +18,12 @@
 
 babelwires::AddNodeForInputTreeValueCommand::AddNodeForInputTreeValueCommand(std::string commandName,
                                                                              NodeId originalNodeId, Path pathToValue,
+                                                                             UiPosition positionForNewNode,
                                                                              RelationshipToOldNode relationship)
     : Command(commandName)
     , m_originalNodeId(originalNodeId)
     , m_pathToValue(pathToValue)
+    , m_positionForNewNode(positionForNewNode)
     , m_relationship(relationship) {}
 
 bool babelwires::AddNodeForInputTreeValueCommand::initializeAndExecute(Project& project) {
@@ -56,6 +58,7 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
 
     ValueNodeData newNodeData(originalValue.getTypeRef());
     newNodeData.m_id = m_newNodeId;
+    newNodeData.m_uiData.m_uiPosition = m_positionForNewNode;
 
     for (auto modifier : originalNode->getEdits().modifierRange(m_pathToValue)) {
         std::unique_ptr<ModifierData> modifierData = modifier->getModifierData().clone();
@@ -64,11 +67,12 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
         newModifierPath.removePrefix(m_pathToValue.getNumSteps());
         newNodeData.m_modifiers.emplace_back(std::move(modifierData));
     }
+    // TODO tree expansion.
 
     project.addNode(newNodeData);
 
     if (m_relationship == RelationshipToOldNode::Source) {
-        //TODO
+        //TODO Remove old modifiers. Add a connection.
     }
 }
 
