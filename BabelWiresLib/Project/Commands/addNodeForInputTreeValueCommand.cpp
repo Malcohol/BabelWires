@@ -67,8 +67,12 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
         newModifierPath.removePrefix(m_pathToValue.getNumSteps());
         newNodeData.m_modifiers.emplace_back(std::move(modifierData));
     }
-    // TODO tree expansion.
-
+    for (auto path : originalNode->getEdits().getAllExplicitlyExpandedPaths(m_pathToValue)) {
+        Path newExpandedPath = path;
+        assert(m_pathToValue.isPrefixOf(newExpandedPath));
+        newExpandedPath.removePrefix(m_pathToValue.getNumSteps());
+        newNodeData.m_expandedPaths.emplace_back(std::move(newExpandedPath));
+    }
     project.addNode(newNodeData);
 
     if (m_relationship == RelationshipToOldNode::Source) {

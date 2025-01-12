@@ -38,7 +38,6 @@ namespace babelwires {
         void mouseReleaseEvent(QMouseEvent *event) override;
 
       private:
-
         UiPosition getFlowScenePositionFromLocalPosition(QPoint localPos);
 
       private:
