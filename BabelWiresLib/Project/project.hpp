@@ -165,10 +165,10 @@ namespace babelwires {
         /// If any of the ids are unavailable, replace them by currently available ones.
         void updateWithAvailableIds(std::vector<NodeId>& idsInOut) const;
 
-      private:
         /// Return an available id, using the provided hint if it is valid and available.
-        NodeId reserveNodeId(NodeId hint);
+        NodeId reserveNodeId(NodeId hint = INVALID_NODE_ID);
 
+      private:
         /// Mark the connection cache as invalid, so the next time it is queried, it gets recomputed.
         void setConnectionCacheInvalid();
 
