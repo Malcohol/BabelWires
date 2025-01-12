@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
-#include <BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp>
+#include <BabelWiresQtUi/ModelBridge/rowModelDelegate.hpp>
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
@@ -27,7 +27,7 @@ babelwires::NodeNodeModel::NodeNodeModel(ProjectBridge& projectBridge, NodeId el
     : BaseNodeModel(projectBridge)
     , m_nodeId(elementId)
     , m_view(new FeatureView(elementId, projectBridge)) {
-    auto delegate = new FeatureModelDelegate(this, projectBridge);
+    auto delegate = new RowModelDelegate(this, projectBridge);
     m_view->setItemDelegate(delegate);
     m_view->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_view, SIGNAL(customContextMenuRequested(QPoint)), SLOT(customContextMenuRequested(QPoint)));

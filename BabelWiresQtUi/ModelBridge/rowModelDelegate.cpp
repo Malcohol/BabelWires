@@ -1,11 +1,11 @@
 /**
- * FeatureModelDelegate is the QStyledItemDelegate responsible for the editing of entries.
+ * RowModelDelegate is the QStyledItemDelegate responsible for the editing of entries.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp>
+#include <BabelWiresQtUi/ModelBridge/rowModelDelegate.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
@@ -30,11 +30,11 @@
 
 #include <cassert>
 
-babelwires::FeatureModelDelegate::FeatureModelDelegate(QObject* parent, ProjectBridge& projectBridge)
+babelwires::RowModelDelegate::RowModelDelegate(QObject* parent, ProjectBridge& projectBridge)
     : QStyledItemDelegate(parent)
     , m_projectBridge(projectBridge) {}
 
-QWidget* babelwires::FeatureModelDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option,
+QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option,
                                                         const QModelIndex& index) const {
     const int column = index.column();
     if (column != 1) {
@@ -73,7 +73,7 @@ QWidget* babelwires::FeatureModelDelegate::createEditor(QWidget* parent, const Q
             ValueEditorCommonSignals* ValueEditorCommonSignals = interface->getValueEditorSignals();
             // Update the model if the editor changes.
             QObject::connect(ValueEditorCommonSignals, &ValueEditorCommonSignals::editorHasChanged,
-                     this, &FeatureModelDelegate::commitData);
+                     this, &RowModelDelegate::commitData);
         }
     }
 
@@ -84,7 +84,7 @@ QWidget* babelwires::FeatureModelDelegate::createEditor(QWidget* parent, const Q
     return editor;
 }
 
-void babelwires::FeatureModelDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const {
+void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const {
     const FeatureModel* model = dynamic_cast<const FeatureModel*>(index.model());
     assert(model && "Unexpected model");
 
@@ -113,7 +113,7 @@ void babelwires::FeatureModelDelegate::setEditorData(QWidget* editor, const QMod
     }
 }
 
-void babelwires::FeatureModelDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
+void babelwires::RowModelDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
                                                     const QModelIndex& index) const {
     AccessModelScope scope(m_projectBridge);
     FeatureModel* featureModel = dynamic_cast<FeatureModel*>(model);
@@ -138,7 +138,7 @@ void babelwires::FeatureModelDelegate::setModelData(QWidget* editor, QAbstractIt
     }
 }
 
-void babelwires::FeatureModelDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
+void babelwires::RowModelDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
                                              const QModelIndex& index) const {
     const int column = index.column();
     if (column == 1) {
@@ -165,7 +165,7 @@ void babelwires::FeatureModelDelegate::paint(QPainter* painter, const QStyleOpti
     QStyledItemDelegate::paint(painter, option, index);
 }
 
-QSize babelwires::FeatureModelDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const {
+QSize babelwires::RowModelDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const {
     const int column = index.column();
     if (column == 1) {
         const FeatureModel* featureModel = dynamic_cast<const FeatureModel*>(index.model());
@@ -188,7 +188,7 @@ QSize babelwires::FeatureModelDelegate::sizeHint(const QStyleOptionViewItem& opt
     return QStyledItemDelegate::sizeHint(option, index);
 }
 
-bool babelwires::FeatureModelDelegate::eventFilter(QObject* object, QEvent* event) {
+bool babelwires::RowModelDelegate::eventFilter(QObject* object, QEvent* event) {
     QComboBox* comboBox = dynamic_cast<QComboBox*>(object);
     if (comboBox) {
         if (event->type() == QEvent::MouseButtonRelease) {
@@ -202,7 +202,7 @@ bool babelwires::FeatureModelDelegate::eventFilter(QObject* object, QEvent* even
     return false;
 }
 
-void babelwires::FeatureModelDelegate::commitEditorValue() {
+void babelwires::RowModelDelegate::commitEditorValue() {
     QWidget* editor = qobject_cast<QWidget*>(sender());
     assert(editor && "This signal should not be hit with anything other than a widget");
     commitData(editor);

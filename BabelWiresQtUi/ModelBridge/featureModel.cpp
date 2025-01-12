@@ -15,7 +15,7 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
-#include <BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp>
+#include <BabelWiresQtUi/ModelBridge/rowModelDelegate.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>

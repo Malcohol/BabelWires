@@ -18,7 +18,7 @@ namespace babelwires {
 
     class FeatureView;
     class FeatureModel;
-    class FeatureModelDelegate;
+    class RowModelDelegate;
     class AccessModelScope;
 
     struct UiSize;
@@ -67,7 +67,7 @@ namespace babelwires {
 
         FeatureView* m_view;
         FeatureModel* m_model;
-        FeatureModelDelegate* m_delegate;
+        RowModelDelegate* m_delegate;
 
         int m_numRows = 0;
     };
