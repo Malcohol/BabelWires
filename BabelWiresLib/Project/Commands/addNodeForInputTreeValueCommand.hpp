@@ -33,6 +33,9 @@ namespace babelwires {
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;
 
+        /// For use after addition.
+        NodeId getNodeId() const;
+
       private:
         NodeId m_originalNodeId;
         Path m_pathToValue;

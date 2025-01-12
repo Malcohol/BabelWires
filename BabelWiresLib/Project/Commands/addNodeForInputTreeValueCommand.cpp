@@ -80,3 +80,6 @@ void babelwires::AddNodeForInputTreeValueCommand::undo(Project& project) const {
     project.removeNode(m_newNodeId);
 }
 
+babelwires::NodeId babelwires::AddNodeForInputTreeValueCommand::getNodeId() const {
+    return m_newNodeId;
+}
