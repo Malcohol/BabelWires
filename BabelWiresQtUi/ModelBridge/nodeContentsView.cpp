@@ -61,7 +61,9 @@ void babelwires::NodeContentsView::mousePressEvent(QMouseEvent* event) {
 
 void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
     QTableView::mouseMoveEvent(event);
-    assert(m_dragState);
+    if (!m_dragState) {
+        return;
+    }
     if (m_dragState->m_newNodeId == INVALID_NODE_ID) {
         if (columnAt(m_dragState->m_startPos.rx()) != 0) {
             // Dragging only applies to the first column (to allow for other kind of drag behaviour on values).
@@ -106,7 +108,9 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
 
 void babelwires::NodeContentsView::mouseReleaseEvent(QMouseEvent* event) {
     QTableView::mouseReleaseEvent(event);
-    assert(m_dragState);
+    if (!m_dragState) {
+        return;
+    }
     logDebug() << "Released: Start point was " << m_dragState->m_startPos.rx();
     m_dragState.reset();
 }
