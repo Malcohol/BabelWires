@@ -59,7 +59,8 @@ namespace babelwires {
         void removeNode(NodeId id);
 
         /// Add a modifier as described by the data.
-        void addModifier(NodeId nodeId, const ModifierData& modifierData);
+        /// Adding a modifier applies its effect, unless applyModifier is false.
+        void addModifier(NodeId nodeId, const ModifierData& modifierData, bool applyModifier = true);
 
         /// Remove the modifier at the path from the given Node.
         /// Removing a modifier undoes its effect, unless unapplyModifier is false.

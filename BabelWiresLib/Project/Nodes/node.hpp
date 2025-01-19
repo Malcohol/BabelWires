@@ -66,7 +66,8 @@ namespace babelwires {
         const Modifier* findModifier(const Path& featurePath) const;
 
         /// Client code should not call this directly, but via the project.
-        Modifier* addModifier(UserLogger& userLogger, const ModifierData& modifier);
+        /// Adding a modifier applies its effect, unless applyModifier is false.
+        Modifier* addModifier(UserLogger& userLogger, const ModifierData& modifier, bool applyModifier = true);
 
         /// Remove the modifier at the path.
         /// Client code should not call this directly, but via the project.

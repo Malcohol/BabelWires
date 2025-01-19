@@ -77,15 +77,13 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
     project.addNode(newNodeData);
 
     if (m_relationship == RelationshipToOldNode::Source) {
-        std::vector<Path> modifierPathsToRemove;
         for (auto modifier : originalNode->getEdits().modifierRange(m_pathToValue)) {
-            modifierPathsToRemove.emplace_back(modifier->getTargetPath());
-        }
-        for (auto it = modifierPathsToRemove.rbegin(); it != modifierPathsToRemove.rend(); ++it) {
             // Don't unapply the modifier, since values are unaffected by this operation.
-            // This is more than an optimization: Unapplying can cause a structural change to be logged
+            // This is more than an optimization: Unapplying can cause a structural change to the node,
             // which is a problem when the UI is in the middle of a drag operation.
-            project.removeModifier(m_originalNodeId, *it, false);
+            // Also note: Since we're not unapplying the modifiers, we can remove them in their
+            // tree order. (Normally, you have to remove them in reverse order.)
+            project.removeModifier(m_originalNodeId, modifier->getTargetPath(), false);
         }
         ConnectionModifierData newConnection;
         newConnection.m_sourceId = m_newNodeId;
@@ -96,7 +94,20 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
 
 void babelwires::AddNodeForInputTreeValueCommand::undo(Project& project) const {
     if (m_relationship == RelationshipToOldNode::Source) {
-        // TODO
+        Node* const originalNode = project.getNode(m_originalNodeId);
+        assert(originalNode);
+        // First, remove the connection that got added.
+        project.removeModifier(m_originalNodeId, m_pathToValue, false);
+        // Then, copy the modifiers back to the original node.
+        const Node* const addedNode = project.getNode(m_newNodeId);
+        assert(addedNode);
+        for (auto modifier : addedNode->getEdits().modifierRange()) {
+            std::unique_ptr<ModifierData> modifierData = modifier->getModifierData().clone();
+            Path newModifierPath = m_pathToValue;
+            newModifierPath.append(modifierData->m_targetPath);
+            modifierData->m_targetPath = newModifierPath;
+            project.addModifier(m_originalNodeId, *modifierData, false);
+        }
     }
 
     project.removeNode(m_newNodeId);

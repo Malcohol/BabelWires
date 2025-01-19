@@ -98,10 +98,10 @@ void babelwires::Project::removeNode(NodeId nodeId) {
     m_nodes.erase(mapIt);
 }
 
-void babelwires::Project::addModifier(NodeId nodeId, const ModifierData& modifierData) {
+void babelwires::Project::addModifier(NodeId nodeId, const ModifierData& modifierData, bool applyModifier) {
     Node* node = getNode(nodeId);
     assert(node && "Modifier added to unregistered feature node");
-    Modifier* modifier = node->addModifier(m_userLogger, modifierData);
+    Modifier* modifier = node->addModifier(m_userLogger, modifierData, applyModifier);
     if (ConnectionModifier* connectionModifier = modifier->asConnectionModifier()) {
         addConnectionToCache(node, connectionModifier);
     }

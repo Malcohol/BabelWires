@@ -121,9 +121,11 @@ babelwires::Modifier* babelwires::Node::addModifierWithoutApplyingIt(const Modif
 }
 
 babelwires::Modifier* babelwires::Node::addModifier(UserLogger& userLogger,
-                                                              const ModifierData& modifierData) {
+                                                              const ModifierData& modifierData, bool applyModifier) {
     Modifier* newModifier = addModifierWithoutApplyingIt(modifierData);
-    newModifier->applyIfLocal(userLogger, getInputNonConst(newModifier->getTargetPath()));
+    if (applyModifier) {
+        newModifier->applyIfLocal(userLogger, getInputNonConst(newModifier->getTargetPath()));
+    }
     return newModifier;
 }
 
