@@ -114,7 +114,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
             }
             UiPosition positionForNewNode = getFlowScenePositionFromLocalPosition(event->pos());
             // TODO Use key modifiers to determine relationship.
-            auto relationship = AddNodeForInputTreeValueCommand::RelationshipToOldNode::Copy;
+            auto relationship = AddNodeForInputTreeValueCommand::RelationshipToOldNode::Source;
             auto command = std::make_unique<AddNodeForInputTreeValueCommand>(
                 "Drag input left to make node", m_nodeId, std::move(path), positionForNewNode, relationship);
             const AddNodeForInputTreeValueCommand* const commandRawPtr = command.get();

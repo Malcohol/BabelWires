@@ -107,7 +107,7 @@ void babelwires::Project::addModifier(NodeId nodeId, const ModifierData& modifie
     }
 }
 
-void babelwires::Project::removeModifier(NodeId nodeId, const Path& featurePath) {
+void babelwires::Project::removeModifier(NodeId nodeId, const Path& featurePath, bool unapplyModifier) {
     Node* const node = getNode(nodeId);
     assert(node && "Cannot remove a modifier from an node that does not exist");
     Modifier* const modifier = node->findModifier(featurePath);
@@ -115,7 +115,7 @@ void babelwires::Project::removeModifier(NodeId nodeId, const Path& featurePath)
     if (ConnectionModifier* connectionModifier = modifier->asConnectionModifier()) {
         removeConnectionFromCache(node, connectionModifier);
     }
-    node->removeModifier(modifier);
+    node->removeModifier(modifier, unapplyModifier);
 }
 
 void babelwires::Project::adjustModifiersInArrayElements(NodeId nodeId, const babelwires::Path& pathToArray,

@@ -13,6 +13,7 @@
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
@@ -76,7 +77,20 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
     project.addNode(newNodeData);
 
     if (m_relationship == RelationshipToOldNode::Source) {
-        //TODO Remove old modifiers. Add a connection.
+        std::vector<Path> modifierPathsToRemove;
+        for (auto modifier : originalNode->getEdits().modifierRange(m_pathToValue)) {
+            modifierPathsToRemove.emplace_back(modifier->getTargetPath());
+        }
+        for (auto it = modifierPathsToRemove.rbegin(); it != modifierPathsToRemove.rend(); ++it) {
+            // Don't unapply the modifier, since values are unaffected by this operation.
+            // This is more than an optimization: Unapplying can cause a structural change to be logged
+            // which is a problem when the UI is in the middle of a drag operation.
+            project.removeModifier(m_originalNodeId, *it, false);
+        }
+        ConnectionModifierData newConnection;
+        newConnection.m_sourceId = m_newNodeId;
+        newConnection.m_targetPath = m_pathToValue;
+        project.addModifier(m_originalNodeId, newConnection);
     }
 }
 

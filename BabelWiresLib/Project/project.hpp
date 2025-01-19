@@ -62,7 +62,8 @@ namespace babelwires {
         void addModifier(NodeId nodeId, const ModifierData& modifierData);
 
         /// Remove the modifier at the path from the given Node.
-        void removeModifier(NodeId nodeId, const Path& featurePath);
+        /// Removing a modifier undoes its effect, unless unapplyModifier is false.
+        void removeModifier(NodeId nodeId, const Path& featurePath, bool unapplyModifier = true);
 
         /// Add an element to the array at the given path.
         /// Modifiers below the index are adjusted.

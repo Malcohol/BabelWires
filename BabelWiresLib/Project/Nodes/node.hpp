@@ -70,7 +70,8 @@ namespace babelwires {
 
         /// Remove the modifier at the path.
         /// Client code should not call this directly, but via the project.
-        void removeModifier(Modifier* modifier);
+        /// Removing a modifier undoes its effect, unless unapplyModifier is false.
+        void removeModifier(Modifier* modifier, bool unapplyModifier = true);
 
         /// Is the feature at the path expanded?
         bool isExpanded(const Path& featurePath) const;
