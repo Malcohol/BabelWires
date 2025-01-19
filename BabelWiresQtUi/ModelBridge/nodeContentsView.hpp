@@ -18,6 +18,10 @@
 
 #include <optional>
 
+namespace QtNodes {
+  class NodeGraphicsObject;
+}
+
 namespace babelwires {
 
     class ProjectBridge;
@@ -37,8 +41,21 @@ namespace babelwires {
         void mouseMoveEvent(QMouseEvent *event) override;
         void mouseReleaseEvent(QMouseEvent *event) override;
 
+        /// Get the position in scene coordinates corresponding to a position local to this widget.
+        QPointF mapToScene(QPoint localPos) const;
+
+        /// The regular mapToGlobal of this widget does not give the correct answer.
+        QPoint mapToGlobalCorrect(QPoint localPos) const;
+
       private:
+        /// The position in scene coordinates, converted to a UiPosition.
         UiPosition getFlowScenePositionFromLocalPosition(QPoint localPos);
+
+        /// Get the QtNode::NodeGraphicsObject which contains this widget 
+        const QtNodes::NodeGraphicsObject& getNodeGraphicsObject() const;
+
+        /// Get the horizontal distance from the left edge of the contents to the left edge of the node.
+        int getLeftBorderWidth() const;
 
       private:
         ProjectBridge& m_projectBridge;
@@ -47,6 +64,7 @@ namespace babelwires {
         struct DragState {
             QPoint m_startPos;
             NodeId m_newNodeId = INVALID_NODE_ID;
+            int m_leftBorderWidth;
         };
 
         std::optional<DragState> m_dragState;

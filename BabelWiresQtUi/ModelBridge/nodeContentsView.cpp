@@ -15,9 +15,11 @@
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
-#include <QMouseEvent>
-
 #include <QtWidgets/QHeaderView>
+
+#include <QGraphicsProxyWidget>
+#include <QGraphicsView>
+#include <QMouseEvent>
 
 #include <cassert>
 
@@ -51,11 +53,35 @@ QSize babelwires::NodeContentsView::minimumSizeHint() const {
     return sizeHint();
 }
 
+const QtNodes::NodeGraphicsObject& babelwires::NodeContentsView::getNodeGraphicsObject() const {
+    const QGraphicsProxyWidget* const proxy = graphicsProxyWidget();
+    assert(proxy);
+    const QtNodes::NodeGraphicsObject* graphicsObject = qgraphicsitem_cast<QtNodes::NodeGraphicsObject*>(proxy->parentItem());
+    assert(graphicsObject && "NodeContentsView not associated with a QtNodes::NodeGraphicsObject in the expected way.");
+    return *graphicsObject;    
+}
+
+int babelwires::NodeContentsView::getLeftBorderWidth() const {
+    const QtNodes::NodeGraphicsObject& graphicsObject = getNodeGraphicsObject();
+    const QGraphicsView* const graphicsView = m_projectBridge.getFlowGraphWidget();
+
+    const QPoint widgetTopLeftGlobal = mapToGlobalCorrect(QPoint(0,0));
+
+    const QPointF graphicsObjectTopLeftSceneCoord = graphicsObject.mapToScene(QPointF(0,0));
+    const QPoint graphicsObjectTopLeftScene = graphicsView->mapFromScene(graphicsObjectTopLeftSceneCoord);
+    const QPoint graphicsObjectTopLeftGlobal = graphicsView->mapToGlobal(graphicsObjectTopLeftScene);
+
+    return widgetTopLeftGlobal.x() - graphicsObjectTopLeftGlobal.x();
+}
+
 void babelwires::NodeContentsView::mousePressEvent(QMouseEvent* event) {
     QTableView::mousePressEvent(event);
     if (event->buttons() == Qt::LeftButton) {
         m_dragState = DragState{event->pos()};
-        logDebug() << event->pos().rx();
+        m_dragState->m_leftBorderWidth = getLeftBorderWidth();
+        logDebug() << m_dragState->m_leftBorderWidth;
+    } else {
+        m_dragState.reset();
     }
 }
 
@@ -70,8 +96,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
             return;
         }
         const int row = rowAt(m_dragState->m_startPos.ry());
-        // TODO Shouldn't start at edge of contents, but include node border.
-        if (event->pos().rx() < 0) {
+        if (event->pos().rx() < -m_dragState->m_leftBorderWidth) {
             Path path;
             {
                 AccessModelScope scope(m_projectBridge);
@@ -108,18 +133,27 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
 
 void babelwires::NodeContentsView::mouseReleaseEvent(QMouseEvent* event) {
     QTableView::mouseReleaseEvent(event);
-    if (!m_dragState) {
-        return;
-    }
-    logDebug() << "Released: Start point was " << m_dragState->m_startPos.rx();
     m_dragState.reset();
 }
 
+QPointF babelwires::NodeContentsView::mapToScene(QPoint localPos) const {
+    const QGraphicsProxyWidget* const proxy = graphicsProxyWidget();
+    assert(proxy);
+    return proxy->mapToScene(localPos);
+}
+
+QPoint babelwires::NodeContentsView::mapToGlobalCorrect(QPoint localPos) const {
+    const QPointF posInScene = mapToScene(localPos);
+    const QGraphicsView* const graphicsView = m_projectBridge.getFlowGraphWidget();
+    const QPoint posInView = graphicsView->mapFromScene(posInScene);
+    return graphicsView->mapToGlobal(posInView);
+}
+
+
 babelwires::UiPosition babelwires::NodeContentsView::getFlowScenePositionFromLocalPosition(QPoint localPos) {
+    const QPointF posInScene = mapToScene(localPos);
     UiPosition flowScenePosition;
-    QPoint globalPos = mapToGlobal(localPos);
-    QPoint posInScene = m_projectBridge.getFlowGraphWidget()->mapFromGlobal(globalPos);
-    flowScenePosition.m_x = posInScene.x();
-    flowScenePosition.m_y = posInScene.y();
+    flowScenePosition.m_x = static_cast<UiCoord>(posInScene.x());
+    flowScenePosition.m_y = static_cast<UiCoord>(posInScene.y());
     return flowScenePosition;
 }

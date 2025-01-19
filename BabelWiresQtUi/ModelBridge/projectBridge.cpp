@@ -384,7 +384,7 @@ void babelwires::ProjectBridge::onConnectionAdjusted(const QtNodes::Connection& 
     scheduleCommand(std::move(command));
 }
 
-QWidget* babelwires::ProjectBridge::getFlowGraphWidget() {
+QGraphicsView* babelwires::ProjectBridge::getFlowGraphWidget() {
     auto views = m_flowScene->views();
     assert(!views.isEmpty() && "There should be a flowView viewing the flowScene");
     return views[0];

@@ -125,7 +125,7 @@ void babelwires::NodeNodeModel::customContextMenuRequested(const QPoint& pos) {
     QModelIndex index = m_view->indexAt(pos);
     QMenu* const menu = m_model->getContextMenu(index);
     if (menu) {
-        menu->popup(m_view->mapToGlobal(pos));
+        menu->popup(m_view->mapToGlobalCorrect(pos));
     }
 }
 
