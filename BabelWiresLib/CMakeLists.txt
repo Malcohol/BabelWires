@@ -72,6 +72,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/activateOptionalCommand.cpp
 	Project/Commands/addNodeCommand.cpp
 	Project/Commands/addNodeForInputTreeValueCommand.cpp
+	Project/Commands/addNodeForOutputTreeValueCommand.cpp
 	Project/Commands/deactivateOptionalCommand.cpp
 	Project/Commands/removeNodeCommand.cpp
 	Project/Commands/moveNodeCommand.cpp

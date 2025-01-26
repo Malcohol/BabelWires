@@ -56,7 +56,7 @@ namespace babelwires {
         const QtNodes::NodeGraphicsObject& getNodeGraphicsObject() const;
 
         /// Get the horizontal distance from the left edge of the contents to the left edge of the node.
-        int getLeftBorderWidth() const;
+        std::tuple<int, int> getLeftRightEdgeFromWidgetLeft() const;
 
       private:
         ProjectBridge& m_projectBridge;
@@ -65,7 +65,8 @@ namespace babelwires {
         struct DragState {
             QPoint m_startPos;
             Qt::KeyboardModifiers m_modifiers;
-            int m_leftBorderWidth;
+            int m_leftEdgeWidgetPos;
+            int m_rightEdgeWidgetPos;
             NodeId m_newNodeId = INVALID_NODE_ID;
         };
 

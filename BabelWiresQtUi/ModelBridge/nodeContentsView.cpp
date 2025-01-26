@@ -12,6 +12,7 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/addNodeForInputTreeValueCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addNodeForOutputTreeValueCommand.hpp>
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
@@ -60,24 +61,35 @@ const QtNodes::NodeGraphicsObject& babelwires::NodeContentsView::getNodeGraphics
     return *graphicsObject;    
 }
 
-int babelwires::NodeContentsView::getLeftBorderWidth() const {
+std::tuple<int, int> babelwires::NodeContentsView::getLeftRightEdgeFromWidgetLeft() const {
     const QtNodes::NodeGraphicsObject& graphicsObject = getNodeGraphicsObject();
     const QGraphicsView* const graphicsView = m_projectBridge.getFlowGraphWidget();
 
     const QPoint widgetTopLeftGlobal = mapToGlobalCorrect(QPoint(0,0));
 
-    const QPointF graphicsObjectTopLeftSceneCoord = graphicsObject.mapToScene(QPointF(0,0));
-    const QPoint graphicsObjectTopLeftScene = graphicsView->mapFromScene(graphicsObjectTopLeftSceneCoord);
-    const QPoint graphicsObjectTopLeftGlobal = graphicsView->mapToGlobal(graphicsObjectTopLeftScene);
+    const auto graphicsObjectToGlobal = [&graphicsObject, &graphicsView](QPointF p) {
+        const QPointF inSceneCoord = graphicsObject.mapToScene(p);
+        const QPoint inScene = graphicsView->mapFromScene(inSceneCoord);
+        const QPoint global = graphicsView->mapToGlobal(inScene);
+        return global;
+    };
 
-    return widgetTopLeftGlobal.x() - graphicsObjectTopLeftGlobal.x();
+    const QtNodes::NodeGeometry& nodeGeometry = graphicsObject.node().nodeGeometry();
+
+    const QPointF graphicsObjectTopLeftGlobal = graphicsObjectToGlobal(QPointF(0,0));
+    const QPointF graphicsObjectTopRightGlobal = graphicsObjectToGlobal(QPointF(nodeGeometry.width(), 0));
+
+    const int leftEdgeWidgetPos = graphicsObjectTopLeftGlobal.x() - widgetTopLeftGlobal.x();
+    const int rightEdgeWidgetPos = graphicsObjectTopRightGlobal.x() - widgetTopLeftGlobal.x(); 
+    return { leftEdgeWidgetPos, rightEdgeWidgetPos };
 }
 
 void babelwires::NodeContentsView::mousePressEvent(QMouseEvent* event) {
     QTableView::mousePressEvent(event);
     // Left mouse or Left mouse + shift.
     if ((event->buttons() == Qt::LeftButton) && ((event->modifiers() & ~Qt::KeyboardModifier::ShiftModifier) == 0)) {
-        m_dragState = DragState{event->pos(), event->modifiers(), getLeftBorderWidth()};
+        const auto [left, right] = getLeftRightEdgeFromWidgetLeft();
+        m_dragState = DragState{event->pos(), event->modifiers(), left, right};
     } else {
         m_dragState.reset();
     }
@@ -97,7 +109,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
             return;
         }
         const int row = rowAt(m_dragState->m_startPos.ry());
-        if (event->pos().rx() < -m_dragState->m_leftBorderWidth) {
+        if (event->pos().rx() < m_dragState->m_leftEdgeWidgetPos) {
             Path path;
             {
                 AccessModelScope scope(m_projectBridge);
@@ -119,6 +131,32 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
             auto command = std::make_unique<AddNodeForInputTreeValueCommand>(
                 "Drag input left to make node", m_nodeId, std::move(path), positionForNewNode, relationship);
             const AddNodeForInputTreeValueCommand* const commandRawPtr = command.get();
+            // Synchronous because the command has the NodeId only after it runs.
+            // TODO: Would it be better to reserve the ID here, outside the project?
+            if (m_projectBridge.executeCommandSynchronously(std::move(command))) {
+                m_dragState->m_newNodeId = commandRawPtr->getNodeId();
+            }
+        } else if (event->pos().rx() > m_dragState->m_rightEdgeWidgetPos) {
+            Path path;
+            {
+                AccessModelScope scope(m_projectBridge);
+                const Node* const node = scope.getProject().getNode(m_nodeId);
+                if (!node) {
+                    return;
+                }
+
+                const ContentsCacheEntry* const cacheEntry = node->getContentsCache().getEntry(row);
+                const ValueTreeNode* const output = cacheEntry->getOutput();
+                if (!output) {
+                    // Log a warning.
+                    return;
+                }
+                path = cacheEntry->getPath();
+            }
+            UiPosition positionForNewNode = getFlowScenePositionFromLocalPosition(event->pos());
+            auto command = std::make_unique<AddNodeForOutputTreeValueCommand>(
+                "Drag input right to make node", m_nodeId, std::move(path), positionForNewNode);
+            const AddNodeForOutputTreeValueCommand* const commandRawPtr = command.get();
             // Synchronous because the command has the NodeId only after it runs.
             // TODO: Would it be better to reserve the ID here, outside the project?
             if (m_projectBridge.executeCommandSynchronously(std::move(command))) {
