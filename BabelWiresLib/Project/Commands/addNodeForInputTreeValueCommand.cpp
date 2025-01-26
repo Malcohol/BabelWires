@@ -21,10 +21,7 @@ babelwires::AddNodeForInputTreeValueCommand::AddNodeForInputTreeValueCommand(std
                                                                              NodeId originalNodeId, Path pathToValue,
                                                                              UiPosition positionForNewNode,
                                                                              RelationshipToOldNode relationship)
-    : Command(commandName)
-    , m_originalNodeId(originalNodeId)
-    , m_pathToValue(pathToValue)
-    , m_positionForNewNode(positionForNewNode)
+    : AddNodeForTreeValueCommandBase(commandName, originalNodeId, std::move(pathToValue), positionForNewNode)
     , m_relationship(relationship) {}
 
 bool babelwires::AddNodeForInputTreeValueCommand::initializeAndExecute(Project& project) {
@@ -111,8 +108,4 @@ void babelwires::AddNodeForInputTreeValueCommand::undo(Project& project) const {
     }
 
     project.removeNode(m_newNodeId);
-}
-
-babelwires::NodeId babelwires::AddNodeForInputTreeValueCommand::getNodeId() const {
-    return m_newNodeId;
 }

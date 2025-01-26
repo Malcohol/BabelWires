@@ -20,10 +20,7 @@
 babelwires::AddNodeForOutputTreeValueCommand::AddNodeForOutputTreeValueCommand(std::string commandName,
                                                                                NodeId originalNodeId, Path pathToValue,
                                                                                UiPosition positionForNewNode)
-    : Command(commandName)
-    , m_originalNodeId(originalNodeId)
-    , m_pathToValue(pathToValue)
-    , m_positionForNewNode(positionForNewNode) {}
+    : AddNodeForTreeValueCommandBase(commandName, originalNodeId, std::move(pathToValue), positionForNewNode) {}
 
 bool babelwires::AddNodeForOutputTreeValueCommand::initializeAndExecute(Project& project) {
     const Node* const originalNode = project.getNode(m_originalNodeId);
@@ -78,6 +75,3 @@ void babelwires::AddNodeForOutputTreeValueCommand::undo(Project& project) const 
     project.removeNode(m_newNodeId);
 }
 
-babelwires::NodeId babelwires::AddNodeForOutputTreeValueCommand::getNodeId() const {
-    return m_newNodeId;
-}
