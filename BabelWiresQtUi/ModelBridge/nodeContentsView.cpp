@@ -19,7 +19,6 @@
 
 #include <QGraphicsProxyWidget>
 #include <QGraphicsView>
-#include <QMouseEvent>
 
 #include <cassert>
 
@@ -76,10 +75,9 @@ int babelwires::NodeContentsView::getLeftBorderWidth() const {
 
 void babelwires::NodeContentsView::mousePressEvent(QMouseEvent* event) {
     QTableView::mousePressEvent(event);
-    if (event->buttons() == Qt::LeftButton) {
-        m_dragState = DragState{event->pos()};
-        m_dragState->m_leftBorderWidth = getLeftBorderWidth();
-        logDebug() << m_dragState->m_leftBorderWidth;
+    // Left mouse or Left mouse + shift.
+    if ((event->buttons() == Qt::LeftButton) && ((event->modifiers() & ~Qt::KeyboardModifier::ShiftModifier) == 0)) {
+        m_dragState = DragState{event->pos(), event->modifiers(), getLeftBorderWidth()};
     } else {
         m_dragState.reset();
     }
@@ -89,6 +87,9 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
     QTableView::mouseMoveEvent(event);
     if (!m_dragState) {
         return;
+    }
+    if (m_dragState->m_modifiers != event->modifiers()) {
+        m_dragState.reset();
     }
     if (m_dragState->m_newNodeId == INVALID_NODE_ID) {
         if (columnAt(m_dragState->m_startPos.rx()) != 0) {
@@ -108,13 +109,13 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                 const ContentsCacheEntry* const cacheEntry = node->getContentsCache().getEntry(row);
                 const ValueTreeNode* const input = cacheEntry->getInput();
                 if (!input) {
+                    // Log a warning.
                     return;
                 }
                 path = cacheEntry->getPath();
             }
             UiPosition positionForNewNode = getFlowScenePositionFromLocalPosition(event->pos());
-            // TODO Use key modifiers to determine relationship.
-            auto relationship = AddNodeForInputTreeValueCommand::RelationshipToOldNode::Source;
+            auto relationship = m_dragState->m_modifiers.testFlag(Qt::KeyboardModifier::ShiftModifier) ? AddNodeForInputTreeValueCommand::RelationshipToOldNode::Copy :  AddNodeForInputTreeValueCommand::RelationshipToOldNode::Source;
             auto command = std::make_unique<AddNodeForInputTreeValueCommand>(
                 "Drag input left to make node", m_nodeId, std::move(path), positionForNewNode, relationship);
             const AddNodeForInputTreeValueCommand* const commandRawPtr = command.get();

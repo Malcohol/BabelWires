@@ -15,6 +15,7 @@
 #include <QMenu>
 #include <QStyledItemDelegate>
 #include <QTableView>
+#include <QMouseEvent>
 
 #include <optional>
 
@@ -63,8 +64,9 @@ namespace babelwires {
 
         struct DragState {
             QPoint m_startPos;
-            NodeId m_newNodeId = INVALID_NODE_ID;
+            Qt::KeyboardModifiers m_modifiers;
             int m_leftBorderWidth;
+            NodeId m_newNodeId = INVALID_NODE_ID;
         };
 
         std::optional<DragState> m_dragState;
