@@ -102,6 +102,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
     }
     if (m_dragState->m_modifiers != event->modifiers()) {
         m_dragState.reset();
+        return;
     }
     if (m_dragState->m_newNodeId == INVALID_NODE_ID) {
         if (columnAt(m_dragState->m_startPos.rx()) != 0) {
@@ -137,6 +138,10 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                 m_dragState->m_newNodeId = commandRawPtr->getNodeId();
             }
         } else if (event->pos().rx() > m_dragState->m_rightEdgeWidgetPos) {
+            if (m_dragState->m_modifiers != 0) {
+                m_dragState.reset();
+                return;
+            }
             Path path;
             {
                 AccessModelScope scope(m_projectBridge);
