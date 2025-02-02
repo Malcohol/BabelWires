@@ -122,7 +122,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                 const ContentsCacheEntry* const cacheEntry = node->getContentsCache().getEntry(row);
                 const ValueTreeNode* const input = cacheEntry->getInput();
                 if (!input) {
-                    // Log a warning.
+                    // TODO Log a warning (outside scope)
                     return;
                 }
                 path = cacheEntry->getPath();
@@ -138,10 +138,6 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                 m_dragState->m_newNodeId = commandRawPtr->getNodeId();
             }
         } else if (event->pos().rx() > m_dragState->m_rightEdgeWidgetPos) {
-            if (m_dragState->m_modifiers != 0) {
-                m_dragState.reset();
-                return;
-            }
             Path path;
             {
                 AccessModelScope scope(m_projectBridge);
@@ -153,14 +149,15 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                 const ContentsCacheEntry* const cacheEntry = node->getContentsCache().getEntry(row);
                 const ValueTreeNode* const output = cacheEntry->getOutput();
                 if (!output) {
-                    // Log a warning.
+                    // TODO Log a warning (outside scope)
                     return;
                 }
                 path = cacheEntry->getPath();
             }
             UiPosition positionForNewNode = getFlowScenePositionFromLocalPosition(event->pos());
+            auto relationship = m_dragState->m_modifiers.testFlag(Qt::KeyboardModifier::ShiftModifier) ? AddNodeForOutputTreeValueCommand::RelationshipToDependentNodes::Sibling : AddNodeForOutputTreeValueCommand::RelationshipToDependentNodes::NewParent;
             auto command = std::make_unique<AddNodeForOutputTreeValueCommand>(
-                "Drag input right to make node", m_nodeId, std::move(path), positionForNewNode);
+                "Drag input right to make node", m_nodeId, std::move(path), positionForNewNode, relationship);
             const AddNodeForOutputTreeValueCommand* const commandRawPtr = command.get();
             // Synchronous because the command has the NodeId only after it runs.
             // TODO: Would it be better to reserve the ID here, outside the project?

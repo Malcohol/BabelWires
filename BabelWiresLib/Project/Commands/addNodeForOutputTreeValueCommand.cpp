@@ -16,11 +16,13 @@
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 
 babelwires::AddNodeForOutputTreeValueCommand::AddNodeForOutputTreeValueCommand(std::string commandName,
                                                                                NodeId originalNodeId, Path pathToValue,
-                                                                               UiPosition positionForNewNode)
-    : AddNodeForTreeValueCommandBase(commandName, originalNodeId, std::move(pathToValue), positionForNewNode) {}
+                                                                               UiPosition positionForNewNode, RelationshipToDependentNodes relationship)
+    : AddNodeForTreeValueCommandBase(commandName, originalNodeId, std::move(pathToValue), positionForNewNode)
+    , m_relationship(relationship) {}
 
 bool babelwires::AddNodeForOutputTreeValueCommand::initializeAndExecute(Project& project) {
     const Node* const originalNode = project.getNode(m_originalNodeId);
@@ -62,7 +64,32 @@ void babelwires::AddNodeForOutputTreeValueCommand::execute(Project& project) con
         newExpandedPath.removePrefix(m_pathToValue.getNumSteps());
         newNodeData.m_expandedPaths.emplace_back(std::move(newExpandedPath));
     }
+
     project.addNode(newNodeData);
+
+    if (m_relationship == RelationshipToDependentNodes::NewParent) {
+        using ConnectionTupleCopy = std::tuple<ConnectionModifierData, NodeId>;
+        std::vector<ConnectionTupleCopy> connectionsToAdjust;
+
+        const Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
+        const auto it = connectionInfo.m_requiredFor.find(originalNode);
+        if (it != connectionInfo.m_requiredFor.end()) {
+            const Project::ConnectionInfo::Connections& connections = it->second;
+            for (const auto& connectionTuple : connections) {
+                const ConnectionModifierData& connectionData = std::get<0>(connectionTuple)->getModifierData();
+                const NodeId nodeId = std::get<1>(connectionTuple)->getNodeId();
+                if (m_pathToValue.isPrefixOf(connectionData.m_sourcePath)) {
+                    connectionsToAdjust.emplace_back(ConnectionTupleCopy{connectionData, nodeId});
+                }
+            }
+        }
+        for (auto& [connectionData, nodeId] : connectionsToAdjust) {
+            project.removeModifier(nodeId, connectionData.m_targetPath);
+            connectionData.m_sourceId = m_newNodeId;
+            connectionData.m_sourcePath.removePrefix(m_pathToValue.getNumSteps());
+            project.addModifier(nodeId, connectionData);
+        }
+    }
 
     ConnectionModifierData newConnection;
     newConnection.m_sourceId = m_originalNodeId;
@@ -72,6 +99,8 @@ void babelwires::AddNodeForOutputTreeValueCommand::execute(Project& project) con
 
 void babelwires::AddNodeForOutputTreeValueCommand::undo(Project& project) const {
     project.removeModifier(m_newNodeId, Path(), false);
+    if (m_relationship == RelationshipToDependentNodes::NewParent) {
+        // TODO
+    }
     project.removeNode(m_newNodeId);
 }
-
