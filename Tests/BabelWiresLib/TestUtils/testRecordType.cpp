@@ -69,6 +69,12 @@ babelwires::Path testUtils::TestSimpleRecordElementData::getPathToRecordInt0() {
     return path;
 }
 
+babelwires::Path testUtils::TestSimpleRecordElementData::getPathToRecordInt1() {
+    babelwires::Path path = getPathToRecord();
+    path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt1Id()));
+    return path;
+}
+
 testUtils::TestComplexRecordElementData::TestComplexRecordElementData()
     : babelwires::ValueNodeData(TestComplexRecordType::getThisType()) {}
 
@@ -94,9 +100,14 @@ babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordSubreco
     return path;
 }
 
+babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt0() {
+    babelwires::Path path = getPathToRecordSubrecord();
+    path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt0Id()));
+    return path;
+}
+
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1() {
-    babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestComplexRecordType::getSubrecordId()));
+    babelwires::Path path = getPathToRecordSubrecord();
     path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt1Id()));
     return path;
 }

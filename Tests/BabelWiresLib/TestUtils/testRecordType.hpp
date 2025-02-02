@@ -89,6 +89,7 @@ namespace testUtils {
 
         static babelwires::Path getPathToRecord();
         static babelwires::Path getPathToRecordInt0();
+        static babelwires::Path getPathToRecordInt1();
     };
 
     class TestComplexRecordElementData : public babelwires::ValueNodeData {
@@ -99,6 +100,7 @@ namespace testUtils {
         static babelwires::Path getPathToRecordInt0();
         static babelwires::Path getPathToRecordOpInt();
         static babelwires::Path getPathToRecordSubrecord();
+        static babelwires::Path getPathToRecordSubrecordInt0();
         static babelwires::Path getPathToRecordSubrecordInt1();
         static babelwires::Path getPathToRecordInt1();
         static babelwires::Path getPathToRecordOpRec();
