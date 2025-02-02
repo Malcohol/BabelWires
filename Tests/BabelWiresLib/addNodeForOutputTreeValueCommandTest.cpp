@@ -98,6 +98,58 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, executeAndUndo) {
     testWhenExecuted();
 }
 
+TEST_P(AddNodeForOutputTreeValueCommandTest, subsumeMoves) {
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::TestProjectDataWithCompoundConnection projectData;
+    testEnvironment.m_project.setProjectData(projectData);
+
+    babelwires::AddNodeForOutputTreeValueCommand command(
+        "test command", projectData.m_sourceNodeId, testUtils::TestComplexRecordElementData::getPathToRecord(),
+        {-10, -20}, GetParam());
+
+    EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
+
+    auto moveCommand = std::make_unique<babelwires::MoveNodeCommand>("Test Move", command.getNodeId(),
+                                                                        babelwires::UiPosition{14, 88});
+
+    EXPECT_TRUE(command.shouldSubsume(*moveCommand, true));
+
+    command.subsume(std::move(moveCommand));
+
+    // Confirm that the move was subsumed
+    command.undo(testEnvironment.m_project);
+    command.execute(testEnvironment.m_project);
+    const auto* element =
+        testEnvironment.m_project.getNode(command.getNodeId())->as<babelwires::ValueNode>();
+    ASSERT_NE(element, nullptr);
+    EXPECT_EQ(element->getUiPosition().m_x, 14);
+    EXPECT_EQ(element->getUiPosition().m_y, 88);
+}
+
+TEST_P(AddNodeForOutputTreeValueCommandTest, failSafelyNoSourceNode) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::AddNodeForOutputTreeValueCommand command(
+        "test command", 32, testUtils::TestComplexRecordElementData::getPathToRecord(),
+        {-10, -20}, GetParam());
+
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
+}
+
+TEST_P(AddNodeForOutputTreeValueCommandTest, failSafelyNoSourceValue) {
+    testUtils::TestEnvironment testEnvironment;
+
+    testUtils::TestProjectDataWithCompoundConnection projectData;
+    testEnvironment.m_project.setProjectData(projectData);
+
+    babelwires::AddNodeForOutputTreeValueCommand command(
+        "test command", projectData.m_sourceNodeId, babelwires::Path::deserializeFromString("aaa/bbb"),
+        {-10, -20}, GetParam());
+
+    EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
+}
+
 INSTANTIATE_TEST_SUITE_P(
     AddNodeForOutputTreeValueCommandTest, AddNodeForOutputTreeValueCommandTest,
     testing::Values(babelwires::AddNodeForOutputTreeValueCommand::RelationshipToDependentNodes::NewParent, babelwires::AddNodeForOutputTreeValueCommand::RelationshipToDependentNodes::Sibling)
