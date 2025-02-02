@@ -22,6 +22,14 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, executeAndUndo) {
     testUtils::TestProjectDataWithCompoundConnection projectData;
     testEnvironment.m_project.setProjectData(projectData);
 
+    const babelwires::Node* const sourceNode = testEnvironment.m_project.getNode(projectData.m_sourceNodeId);
+    ASSERT_NE(sourceNode, nullptr);
+    // Expected later.
+    ASSERT_TRUE(sourceNode->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecord()));
+
+    const babelwires::Node* const targetNode = testEnvironment.m_project.getNode(projectData.m_targetNodeId);
+    ASSERT_NE(targetNode, nullptr);
+
     babelwires::AddNodeForOutputTreeValueCommand command(
         "test command", projectData.m_sourceNodeId, testUtils::TestComplexRecordElementData::getPathToRecord(),
         {-10, -20}, GetParam());
@@ -32,31 +40,47 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, executeAndUndo) {
     const babelwires::NodeId newNodeId = command.getNodeId();
     EXPECT_NE(newNodeId, babelwires::INVALID_NODE_ID);
 
-    const babelwires::Node* const newNode = testEnvironment.m_project.getNode(newNodeId);
-    ASSERT_NE(newNode, nullptr);
-    EXPECT_NE(newNode->as<babelwires::ValueNode>(), nullptr);
+    auto testWhenExecuted = [&] () {
+        const babelwires::Node* const newNode = testEnvironment.m_project.getNode(newNodeId);
+        ASSERT_NE(newNode, nullptr);
+        EXPECT_NE(newNode->as<babelwires::ValueNode>(), nullptr);
 
-    const babelwires::Node* const sourceNode = testEnvironment.m_project.getNode(projectData.m_sourceNodeId);
-    ASSERT_NE(sourceNode, nullptr);
+        {
+            const babelwires::Modifier* const modifierAtNewNode = newNode->findModifier(babelwires::Path());
+            ASSERT_NE(modifierAtNewNode, nullptr);
 
-    const babelwires::Node* const targetNode = testEnvironment.m_project.getNode(projectData.m_targetNodeId);
-    ASSERT_NE(targetNode, nullptr);
+            const babelwires::ConnectionModifier* const connectionAtNewNode = modifierAtNewNode->as<babelwires::ConnectionModifier>();
+            ASSERT_NE(connectionAtNewNode, nullptr);
 
-    {
-        const babelwires::Modifier* const modifierAtNewNode = newNode->findModifier(babelwires::Path());
-        ASSERT_NE(modifierAtNewNode, nullptr);
+            const babelwires::ConnectionModifierData& connectionData = connectionAtNewNode->getModifierData();
+            EXPECT_EQ(connectionData.m_sourceId, projectData.m_sourceNodeId);
+            EXPECT_EQ(connectionData.m_sourcePath, testUtils::TestComplexRecordElementData::getPathToRecord());
+        }
 
-        const babelwires::ConnectionModifier* const connectionAtNewNode = modifierAtNewNode->as<babelwires::ConnectionModifier>();
-        ASSERT_NE(connectionAtNewNode, nullptr);
+        EXPECT_TRUE(newNode->isExpanded(babelwires::Path()));
 
-        const babelwires::ConnectionModifierData& connectionData = connectionAtNewNode->getModifierData();
-        EXPECT_EQ(connectionData.m_sourceId, projectData.m_sourceNodeId);
-        EXPECT_EQ(connectionData.m_sourcePath, testUtils::TestComplexRecordElementData::getPathToRecord());
-    }
+        {
+            const babelwires::Modifier* const modifierAtTargetNode = targetNode->findModifier(babelwires::Path());
+            ASSERT_NE(modifierAtTargetNode, nullptr);
 
-    ASSERT_TRUE(sourceNode->isExpanded(testUtils::TestComplexRecordElementData::getPathToRecord()));
-    EXPECT_TRUE(newNode->isExpanded(babelwires::Path()));
+            const babelwires::ConnectionModifier* const connectionAtTargetNode = modifierAtTargetNode->as<babelwires::ConnectionModifier>();
+            ASSERT_NE(connectionAtTargetNode, nullptr);
 
+            const babelwires::ConnectionModifierData& connectionData = connectionAtTargetNode->getModifierData();
+            EXPECT_EQ(connectionData.m_sourcePath, testUtils::TestComplexRecordElementData::getPathToRecord());
+
+            if (GetParam() == babelwires::AddNodeForOutputTreeValueCommand::RelationshipToDependentNodes::NewParent) {
+                EXPECT_EQ(connectionData.m_sourceId, newNodeId);
+            } else {
+                EXPECT_EQ(connectionData.m_sourceId, projectData.m_sourceNodeId);
+            }
+        }
+    };
+    testWhenExecuted();
+
+    command.undo(testEnvironment.m_project);
+
+    ASSERT_EQ(testEnvironment.m_project.getNode(newNodeId), nullptr);
     {
         const babelwires::Modifier* const modifierAtTargetNode = targetNode->findModifier(babelwires::Path());
         ASSERT_NE(modifierAtTargetNode, nullptr);
@@ -66,13 +90,12 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, executeAndUndo) {
 
         const babelwires::ConnectionModifierData& connectionData = connectionAtTargetNode->getModifierData();
         EXPECT_EQ(connectionData.m_sourcePath, testUtils::TestComplexRecordElementData::getPathToRecord());
-
-        if (GetParam() == babelwires::AddNodeForOutputTreeValueCommand::RelationshipToDependentNodes::NewParent) {
-            EXPECT_EQ(connectionData.m_sourceId, newNodeId);
-        } else {
-            EXPECT_EQ(connectionData.m_sourceId, projectData.m_sourceNodeId);
-        }
+        EXPECT_EQ(connectionData.m_sourceId, projectData.m_sourceNodeId);
     }
+
+    command.execute(testEnvironment.m_project);
+
+    testWhenExecuted();
 }
 
 INSTANTIATE_TEST_SUITE_P(
