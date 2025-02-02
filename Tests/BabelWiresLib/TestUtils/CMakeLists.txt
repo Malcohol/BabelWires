@@ -6,6 +6,7 @@ SET( LIB_TEST_UTILS_SRCS
     testProcessor.cpp
     testEnvironment.cpp
     testProjectData.cpp
+    testProjectDataWithCompoundConnection.cpp
     testRecordType.cpp
     testRecordWithVariantsType.cpp
     testValueAndType.cpp
