@@ -121,20 +121,22 @@ babelwires::Modifier* babelwires::Node::addModifierWithoutApplyingIt(const Modif
 }
 
 babelwires::Modifier* babelwires::Node::addModifier(UserLogger& userLogger,
-                                                              const ModifierData& modifierData) {
+                                                              const ModifierData& modifierData, bool applyModifier) {
     Modifier* newModifier = addModifierWithoutApplyingIt(modifierData);
-    newModifier->applyIfLocal(userLogger, getInputNonConst(newModifier->getTargetPath()));
+    if (applyModifier) {
+        newModifier->applyIfLocal(userLogger, getInputNonConst(newModifier->getTargetPath()));
+    }
     return newModifier;
 }
 
-void babelwires::Node::removeModifier(Modifier* modifier) {
+void babelwires::Node::removeModifier(Modifier* modifier, bool unapplyModifier) {
     assert((const_cast<const Modifier*>(modifier)->getOwner() == this) &&
            "This Node is not the owner of the modifier");
 
     m_removedModifiers.emplace_back(std::move(m_edits.removeModifier(modifier)));
     ValueTreeNode* input = getInputNonConst(modifier->getTargetPath());
     assert(input && "Modifiable nodes always have input features");
-    if (!modifier->isFailed()) {
+    if (unapplyModifier && !modifier->isFailed()) {
         modifier->unapply(input);
     }
     modifier->setOwner(nullptr);

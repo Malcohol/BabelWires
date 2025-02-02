@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
@@ -15,7 +15,7 @@
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
-#include <BabelWiresQtUi/ModelBridge/featureModelDelegate.hpp>
+#include <BabelWiresQtUi/ModelBridge/rowModelDelegate.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
@@ -38,45 +38,14 @@
 #include <QMouseEvent>
 #include <QPainter>
 
-#include <QtWidgets/QHeaderView>
-
 #include <cassert>
 
-babelwires::FeatureView::FeatureView(NodeId elementId, ProjectBridge& projectBridge)
-    : m_projectBridge(projectBridge)
-    , m_nodeId(elementId) {
-    setEditTriggers(QAbstractItemView::AllEditTriggers);
-    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    verticalHeader()->setVisible(false);
-    verticalHeader()->setStretchLastSection(true);
-    verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    horizontalHeader()->setVisible(false);
-    horizontalHeader()->setStretchLastSection(true);
-    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    resize(sizeHint());
-}
-
-QSize babelwires::FeatureView::sizeHint() const {
-    AccessModelScope scope(m_projectBridge);
-    if (const Node* node = scope.getProject().getNode(m_nodeId)) {
-        // The width is stored, and the height will stretched to fit the node by the UI.
-        return QSize(node->getUiSize().m_width, 1);
-    }
-    return QTableView::sizeHint();
-}
-
-QSize babelwires::FeatureView::minimumSizeHint() const {
-    return sizeHint();
-}
-
-babelwires::FeatureModel::FeatureModel(QObject* parent, NodeId elementId, ProjectBridge& projectBridge)
+babelwires::NodeContentsModel::NodeContentsModel(QObject* parent, NodeId elementId, ProjectBridge& projectBridge)
     : QAbstractTableModel(parent)
     , m_projectBridge(projectBridge)
     , m_nodeId(elementId) {}
 
-int babelwires::FeatureModel::getNumRows(AccessModelScope& scope) const {
+int babelwires::NodeContentsModel::getNumRows(AccessModelScope& scope) const {
     if (const Node* node = getNode(scope)) {
         return node->getContentsCache().getNumRows();
     } else {
@@ -84,32 +53,32 @@ int babelwires::FeatureModel::getNumRows(AccessModelScope& scope) const {
     }
 }
 
-int babelwires::FeatureModel::rowCount(const QModelIndex& /*parent*/) const {
+int babelwires::NodeContentsModel::rowCount(const QModelIndex& /*parent*/) const {
     AccessModelScope scope(m_projectBridge);
     return getNumRows(scope);
 }
 
-const babelwires::ContentsCacheEntry* babelwires::FeatureModel::getEntry(AccessModelScope& scope, int row) const {
+const babelwires::ContentsCacheEntry* babelwires::NodeContentsModel::getEntry(AccessModelScope& scope, int row) const {
     if (const Node* node = getNode(scope)) {
         return node->getContentsCache().getEntry(row);
     }
     return nullptr;
 }
 
-const babelwires::ContentsCacheEntry* babelwires::FeatureModel::getEntry(AccessModelScope& scope,
+const babelwires::ContentsCacheEntry* babelwires::NodeContentsModel::getEntry(AccessModelScope& scope,
                                                                          const QModelIndex& index) const {
     return getEntry(scope, index.row());
 }
 
-const babelwires::Node* babelwires::FeatureModel::getNode(AccessModelScope& scope) const {
+const babelwires::Node* babelwires::NodeContentsModel::getNode(AccessModelScope& scope) const {
     return scope.getProject().getNode(m_nodeId);
 }
 
-int babelwires::FeatureModel::columnCount(const QModelIndex& /*parent*/) const {
+int babelwires::NodeContentsModel::columnCount(const QModelIndex& /*parent*/) const {
     return 2;
 }
 
-QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) const {
+QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role) const {
     AccessModelScope scope(m_projectBridge);
     const Node* node = getNode(scope);
     if (!node) {
@@ -176,7 +145,7 @@ QVariant babelwires::FeatureModel::data(const QModelIndex& index, int role) cons
     return QVariant();
 }
 
-Qt::ItemFlags babelwires::FeatureModel::flags(const QModelIndex& index) const {
+Qt::ItemFlags babelwires::NodeContentsModel::flags(const QModelIndex& index) const {
     Qt::ItemFlags flags = Qt::ItemIsEnabled;
 
     AccessModelScope scope(m_projectBridge);
@@ -193,7 +162,7 @@ Qt::ItemFlags babelwires::FeatureModel::flags(const QModelIndex& index) const {
     return flags;
 }
 
-QMenu* babelwires::FeatureModel::getContextMenu(const QModelIndex& index) {
+QMenu* babelwires::NodeContentsModel::getContextMenu(const QModelIndex& index) {
     AccessModelScope scope(m_projectBridge);
     const Node* node = getNode(scope);
     if (!node) {
@@ -220,15 +189,15 @@ QMenu* babelwires::FeatureModel::getContextMenu(const QModelIndex& index) {
     return nullptr;
 }
 
-babelwires::ProjectBridge& babelwires::FeatureModel::getProjectBridge() {
+babelwires::ProjectBridge& babelwires::NodeContentsModel::getProjectBridge() {
     return m_projectBridge;
 }
 
-babelwires::NodeId babelwires::FeatureModel::getNodeId() const {
+babelwires::NodeId babelwires::NodeContentsModel::getNodeId() const {
     return m_nodeId;
 }
 
-void babelwires::FeatureModel::onClicked(const QModelIndex& index) const {
+void babelwires::NodeContentsModel::onClicked(const QModelIndex& index) const {
     const int column = index.column();
     if (column == 0) {
         AccessModelScope scope(m_projectBridge);

@@ -4,6 +4,8 @@ SET( LIB_TESTS_SRCS
     activateOptionalCommandTest.cpp
     addBlankToEnumTest.cpp
     addNodeCommandTest.cpp
+    addNodeForInputTreeValueCommandTest.cpp
+    addNodeForOutputTreeValueCommandTest.cpp
     addEntryToArrayCommandTest.cpp
     addModifierCommandTest.cpp
     addEntryToMapCommandTest.cpp

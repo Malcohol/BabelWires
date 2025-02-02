@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
@@ -21,7 +21,7 @@
 babelwires::SaveFileAsAction::SaveFileAsAction()
     : FeatureContextMenuAction(tr("Save file as\u2026")) {}
 
-void babelwires::SaveFileAsAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
+void babelwires::SaveFileAsAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();
 

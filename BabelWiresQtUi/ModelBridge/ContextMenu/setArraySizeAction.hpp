@@ -15,7 +15,7 @@ namespace babelwires {
     struct SetArraySizeAction : babelwires::FeatureContextMenuAction {
         SetArraySizeAction(babelwires::Path pathToArray);
 
-        virtual void actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const override;
+        virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;
 
       private:
         babelwires::Path m_pathToArray;

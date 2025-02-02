@@ -16,11 +16,15 @@
 
 #include <Common/multiKeyMap.hpp>
 
-#include <QObject>
 #include <nodes/Node>
+
+#include <QObject>
+#include <QGraphicsView>
 
 #include <unordered_map>
 #include <unordered_set>
+
+class QGraphicsView;
 
 namespace QtNodes {
     class FlowScene;
@@ -60,7 +64,7 @@ namespace babelwires {
         const UiProjectContext& getContext() const;
 
         /// This can be used as the parent of dialogs and menus.
-        QWidget* getFlowGraphWidget();
+        QGraphicsView* getFlowGraphWidget();
 
         /// The command will be executed when Qt is idle.
         /// Only one command can be scheduled.

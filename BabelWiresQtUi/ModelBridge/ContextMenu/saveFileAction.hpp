@@ -15,7 +15,7 @@ namespace babelwires {
     struct SaveFileAction : babelwires::FeatureContextMenuAction {
         SaveFileAction();
 
-        virtual void actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const override;
+        virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;
     };
 
 } // namespace babelwires

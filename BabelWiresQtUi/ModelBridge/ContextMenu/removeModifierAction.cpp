@@ -8,7 +8,7 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
@@ -20,7 +20,7 @@
 babelwires::RemoveModifierAction::RemoveModifierAction()
     : FeatureContextMenuAction(tr("Remove modifier")) {}
 
-void babelwires::RemoveModifierAction::actionTriggered(babelwires::FeatureModel& model,
+void babelwires::RemoveModifierAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                        const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();

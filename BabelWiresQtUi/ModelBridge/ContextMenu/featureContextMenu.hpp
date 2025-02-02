@@ -1,5 +1,5 @@
 /**
- * The pop-up context menu used for the rows of the FeatureModel.
+ * The pop-up context menu used for the rows of the NodeContentsModel.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -15,7 +15,7 @@
 
 namespace babelwires {
 
-    class FeatureModel;
+    class NodeContentsModel;
 
     /// Base class of context menu items in the feature context menu.
     class FeatureContextMenuAction : public QAction {
@@ -24,7 +24,7 @@ namespace babelwires {
         FeatureContextMenuAction(const QString& text);
 
         /// Should be overridden to do perform the operation on the model.
-        virtual void actionTriggered(FeatureModel& m_model, const QModelIndex& index) const = 0;
+        virtual void actionTriggered(NodeContentsModel& m_model, const QModelIndex& index) const = 0;
 
       public slots:
         /// Dispatches to actionTriggered, obtaining the arguments from the parent menu.
@@ -50,16 +50,16 @@ namespace babelwires {
     using FeatureContextMenuEntry =
         std::variant<std::unique_ptr<FeatureContextMenuAction>, std::unique_ptr<FeatureContextMenuGroup>>;
 
-    /// The pop-up context menu used for the rows of the FeatureModel.
+    /// The pop-up context menu used for the rows of the NodeContentsModel.
     class FeatureContextMenu : public QMenu {
         Q_OBJECT
       public:
-        FeatureContextMenu(FeatureModel& model, const QModelIndex& index);
+        FeatureContextMenu(NodeContentsModel& model, const QModelIndex& index);
         void leaveEvent(QEvent* event);
 
         void addFeatureContextMenuEntry(FeatureContextMenuEntry entry);
 
-        FeatureModel& getModel();
+        NodeContentsModel& getModel();
         const QModelIndex& getModelIndex() const;
 
       private:
@@ -70,7 +70,7 @@ namespace babelwires {
         void addFeatureContextMenuGroup(FeatureContextMenuGroup* group);
 
       private:
-        FeatureModel& m_model;
+        NodeContentsModel& m_model;
         QModelIndex m_index;
     };
 

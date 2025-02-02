@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/reloadFileAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp>
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
 #include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 

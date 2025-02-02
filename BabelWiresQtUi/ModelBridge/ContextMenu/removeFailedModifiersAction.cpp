@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/removeFailedModifiersAction.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
@@ -20,7 +20,7 @@
 babelwires::RemoveFailedModifiersAction::RemoveFailedModifiersAction()
     : FeatureContextMenuAction(tr("Remove all failed modifiers from this feature")) {}
 
-void babelwires::RemoveFailedModifiersAction::actionTriggered(babelwires::FeatureModel& model,
+void babelwires::RemoveFailedModifiersAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                               const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();

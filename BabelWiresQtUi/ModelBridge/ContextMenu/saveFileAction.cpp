@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAction.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
@@ -17,7 +17,7 @@
 babelwires::SaveFileAction::SaveFileAction()
     : FeatureContextMenuAction(tr("Save file")) {}
 
-void babelwires::SaveFileAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
+void babelwires::SaveFileAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();
 

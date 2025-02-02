@@ -29,7 +29,6 @@ namespace babelwires {
     class Node;
     class ContentsCacheEntry;
     class Modifier;
-    class FeatureModelDelegate;
 
     /// Base class of models corresponding to a row in a node of the flow graph.
     /// Such objects are created as temporaries, and should not have state.

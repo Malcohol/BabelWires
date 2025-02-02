@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/insertArrayEntryAction.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
@@ -17,7 +17,7 @@ babelwires::InsertArrayEntryAction::InsertArrayEntryAction(const QString& text, 
     , m_pathToArray(std::move(pathToArray))
     , m_indexOfNewEntry(indexOfNewEntry) {}
 
-void babelwires::InsertArrayEntryAction::actionTriggered(babelwires::FeatureModel& model,
+void babelwires::InsertArrayEntryAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                          const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();

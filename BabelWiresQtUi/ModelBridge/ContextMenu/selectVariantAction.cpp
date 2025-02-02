@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/selectVariantAction.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/selectRecordVariantCommand.hpp>
@@ -21,7 +21,7 @@ babelwires::SelectVariantAction::SelectVariantAction(babelwires::Path pathToReco
     setCheckable(true);
 }
 
-void babelwires::SelectVariantAction::actionTriggered(babelwires::FeatureModel& model, const QModelIndex& index) const {
+void babelwires::SelectVariantAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();
     std::unique_ptr<Command<Project>> command;

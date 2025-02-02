@@ -1,5 +1,5 @@
 /**
- * FeatureModelDelegate is the QStyledItemDelegate responsible for the editing of entries.
+ * RowModelDelegate is the QStyledItemDelegate responsible for the editing of entries.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,11 +13,11 @@ namespace babelwires {
 
     class ProjectBridge;
 
-    class FeatureModelDelegate : public QStyledItemDelegate {
+    class RowModelDelegate : public QStyledItemDelegate {
         Q_OBJECT
       public:
         /// Construct a delegate to handle the editing of features.
-        FeatureModelDelegate(QObject* parent, ProjectBridge& projectBridge);
+        RowModelDelegate(QObject* parent, ProjectBridge& projectBridge);
 
         QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option,
                               const QModelIndex& index) const override;

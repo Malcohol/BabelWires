@@ -59,10 +59,12 @@ namespace babelwires {
         void removeNode(NodeId id);
 
         /// Add a modifier as described by the data.
-        void addModifier(NodeId nodeId, const ModifierData& modifierData);
+        /// Adding a modifier applies its effect, unless applyModifier is false.
+        void addModifier(NodeId nodeId, const ModifierData& modifierData, bool applyModifier = true);
 
         /// Remove the modifier at the path from the given Node.
-        void removeModifier(NodeId nodeId, const Path& featurePath);
+        /// Removing a modifier undoes its effect, unless unapplyModifier is false.
+        void removeModifier(NodeId nodeId, const Path& featurePath, bool unapplyModifier = true);
 
         /// Add an element to the array at the given path.
         /// Modifiers below the index are adjusted.
@@ -165,10 +167,10 @@ namespace babelwires {
         /// If any of the ids are unavailable, replace them by currently available ones.
         void updateWithAvailableIds(std::vector<NodeId>& idsInOut) const;
 
-      private:
         /// Return an available id, using the provided hint if it is valid and available.
-        NodeId reserveNodeId(NodeId hint);
+        NodeId reserveNodeId(NodeId hint = INVALID_NODE_ID);
 
+      private:
         /// Mark the connection cache as invalid, so the next time it is queried, it gets recomputed.
         void setConnectionCacheInvalid();
 

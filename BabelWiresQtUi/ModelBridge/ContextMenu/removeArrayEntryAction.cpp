@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/removeArrayEntryAction.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/featureModel.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
@@ -19,7 +19,7 @@ babelwires::RemoveArrayEntryAction::RemoveArrayEntryAction(babelwires::Path path
     , m_pathToArray(std::move(pathToArray))
     , m_indexOfEntryToRemove(indexOfEntryToRemove) {}
 
-void babelwires::RemoveArrayEntryAction::actionTriggered(babelwires::FeatureModel& model,
+void babelwires::RemoveArrayEntryAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                          const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();

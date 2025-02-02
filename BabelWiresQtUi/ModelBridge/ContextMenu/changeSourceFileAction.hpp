@@ -16,7 +16,7 @@ namespace babelwires {
     struct ChangeSourceFileAction : FeatureContextMenuAction {
         ChangeSourceFileAction();
 
-        virtual void actionTriggered(FeatureModel& model, const QModelIndex& index) const override;
+        virtual void actionTriggered(NodeContentsModel& model, const QModelIndex& index) const override;
     };
 
 } // namespace babelwires
