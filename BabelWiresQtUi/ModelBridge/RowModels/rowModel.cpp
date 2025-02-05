@@ -137,7 +137,7 @@ void babelwires::RowModel::getContextMenuActions(
         actionsOut.emplace_back(std::make_unique<RemoveFailedModifiersAction>());
     }
     if (const babelwires::ValueTreeNode* input = getInput()) {
-        auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArrayFeature(input->getOwner());
+        auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArray(input->getOwner());
         if (compoundFeature) {
             const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
             //QString tooltip = "Array actions are not permitted when an array is a connection target";

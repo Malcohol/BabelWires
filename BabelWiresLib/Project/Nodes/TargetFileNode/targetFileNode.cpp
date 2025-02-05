@@ -31,7 +31,7 @@ babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLo
         const TargetFileFormat& factory =
             context.m_targetFileFormatReg.getRegisteredEntry(nodeData.m_factoryIdentifier);
         setFactoryName(factory.getName());
-        auto newFeature = factory.createNewFeature(context);
+        auto newFeature = factory.createNewValue(context);
         newFeature->setToDefault();
         setValueTreeRoot(std::move(newFeature));
     } catch (const RegistryException& e) {

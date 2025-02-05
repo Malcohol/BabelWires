@@ -65,9 +65,9 @@ QtNodes::NodeDataType babelwires::NodeNodeModel::dataType(QtNodes::PortType port
                                                           QtNodes::PortIndex portIndex) const {
     AccessModelScope scope(m_projectBridge);
     if (portType == QtNodes::PortType::In) {
-        return getDataTypeFromFeature(getInput(scope, portIndex));
+        return getDataTypeFromTreeValueNode(getInput(scope, portIndex));
     } else {
-        return getDataTypeFromFeature(getOutput(scope, portIndex));
+        return getDataTypeFromTreeValueNode(getOutput(scope, portIndex));
     }
 }
 
@@ -87,7 +87,7 @@ const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getOutput(AccessMode
     }
 }
 
-QtNodes::NodeDataType babelwires::NodeNodeModel::getDataTypeFromFeature(const babelwires::ValueTreeNode* f) {
+QtNodes::NodeDataType babelwires::NodeNodeModel::getDataTypeFromTreeValueNode(const babelwires::ValueTreeNode* f) {
     if (f && f->getKind() != "") {
         return QtNodes::NodeDataType{f->getKind().c_str(), ""};
     }

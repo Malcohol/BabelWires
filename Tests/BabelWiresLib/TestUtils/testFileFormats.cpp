@@ -115,7 +115,7 @@ std::string testUtils::TestTargetFileFormat::getProductName() const {
 }
 
 std::unique_ptr<babelwires::ValueTreeRoot>
-testUtils::TestTargetFileFormat::createNewFeature(const babelwires::ProjectContext& projectContext) const {
+testUtils::TestTargetFileFormat::createNewValue(const babelwires::ProjectContext& projectContext) const {
     return std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
 }
 

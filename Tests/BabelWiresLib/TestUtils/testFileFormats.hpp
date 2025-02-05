@@ -39,7 +39,7 @@ namespace testUtils {
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
         std::unique_ptr<babelwires::ValueTreeRoot>
-        createNewFeature(const babelwires::ProjectContext& projectContext) const override;
+        createNewValue(const babelwires::ProjectContext& projectContext) const override;
         void writeToFile(const babelwires::ProjectContext& projectContext, babelwires::UserLogger& userLogger,
                          const babelwires::ValueTreeRoot& contents, std::ostream& os) const override;
     };

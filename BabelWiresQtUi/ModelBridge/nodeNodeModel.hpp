@@ -57,7 +57,7 @@ namespace babelwires {
         /// Set up the contents to match the state of the node.
         void setContents(std::string label, NodeId nodeId);
 
-        static QtNodes::NodeDataType getDataTypeFromFeature(const ValueTreeNode* f);
+        static QtNodes::NodeDataType getDataTypeFromTreeValueNode(const ValueTreeNode* f);
 
         const ValueTreeNode* getInput(AccessModelScope& scope, int portIndex) const;
         const ValueTreeNode* getOutput(AccessModelScope& scope, int portIndex) const;
