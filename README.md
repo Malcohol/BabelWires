@@ -1,6 +1,6 @@
 # BabelWires
 
-BabelWires is a framework for data format conversion applications.
+BabelWires is a framework for data format conversion.
 
 Its user interface is based on the [dataflow paradigm](https://en.wikipedia.org/wiki/Dataflow_programming):
 nodes representing input files, output files and data processors can be wired together to define how data should flow from input to output, being transformed along the way. 
@@ -39,10 +39,6 @@ Here's a screenshot of the MapEditor defining a map between two types:
 ![Screenshot showing the MapEditor](Docs/mapEditor.png "Screenshot of the MapEditor")
 
 ## Status
-
-The current status is "not totally stable".
-There has been a significant refactor where the core representation of data has switched from hierarchies of Features to Values of Types.
-The motivation is to allow compound data to be manipulated directly.
 
 [![Build and test pipeline](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml/badge.svg)](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml)
 
