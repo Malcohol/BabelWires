@@ -74,13 +74,17 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
     project.addNode(newNodeData);
 
     if (m_relationship == RelationshipToOldNode::Source) {
+        std::vector<Path> pathsToRemove;
         for (auto modifier : originalNode->getEdits().modifierRange(m_pathToValue)) {
+            pathsToRemove.emplace_back(modifier->getTargetPath());
+        }
+        for (auto path : pathsToRemove) {
             // Don't unapply the modifier, since values are unaffected by this operation.
             // This is more than an optimization: Unapplying can cause a structural change to the node,
             // which is a problem when the UI is in the middle of a drag operation.
             // Also note: Since we're not unapplying the modifiers, we can remove them in their
             // tree order. (Normally, you have to remove them in reverse order.)
-            project.removeModifier(m_originalNodeId, modifier->getTargetPath(), false);
+            project.removeModifier(m_originalNodeId, path, false);
         }
         ConnectionModifierData newConnection;
         newConnection.m_sourceId = m_newNodeId;

@@ -1,7 +1,6 @@
 Structured Data Flow:
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
 1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
-1. New UI Workflows
 
 Bugs:
 * Moving compound connections targets between nodes does not work properly.
@@ -38,9 +37,6 @@ Unit Tests:
 * ProjectBundle serialize/deserialize - check all data is restored.
 
 Model
-* Arrays should have a getDefaultSize.
-* FileFeature: Remove this and the offset hack in the FeatureCache. 
-  - Instead, allow the UI to add non-model rows at top for visualization, and use that.
 * Consider a coercion system so numeric types can always be assigned.
 * Implement RecordType Optionality::optionalDefaultActive
 
@@ -54,7 +50,6 @@ Refactor:
   - Tried this in PR #14. Breaks symmetry.
 * The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.
 * Move some of the logic in doProcess up into Node.
-* Split NodeData into separate files - replace any dynamic casts.
 * Split Features & Import/Export out from the project lib. 
   - In _theory_ the import/export logic could be useful on its own.
 * Think about modules and dlls.
@@ -65,12 +60,10 @@ Refactor:
 * Arrays and optional modification are special-cased in the project: Could that be handled instead by a virtual "merge" method?
   - Also, they are special cased in the removeModifierCommand. Could that be handled instead by a virtual "removeModifier" method?
   - It's slightly unfortunate to have modifierData know about commands, but overall might be worth it.
-* Try to use Value to store value in a value feature, and use it in set value modifiers.
 * Clean up uses of toString, operator<<, serializeToString, etc. Make clear which resolves identifiers.
 * deserializeToString methods should return a tuple which includes the position after the parsed object.
 * Try to sort out the various toString methods, possibly providing a "readableStream", constructed with an IdentiferRegistry::ReadAccess.
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
-* Model the API of compound features on that of compound types.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.
@@ -81,7 +74,7 @@ Parallel processing:
   - updating their output features,
   - process the changes.
 * File loading would be similar.
-* Needs new UI features, since the parts of the project can be stale which processing is underway.
+* Needs new UI features, since the parts of the project can be stale when processing is underway.
 * Investigate this if use-case with expensive processing ever arises.
 * Ensure processor work can itself be multithreaded.
 
@@ -90,13 +83,18 @@ Ideas:
   - Consider switching from XML to yaml for project files
 * Require commands to be serializable. Log their serialized form (possibly as JSON).
 * Don't format strings in debug logs: Use JSON so they are easy to parse.
-* Processors could maybe be pure, and let the processorNode own the features.
-  - Maybe they would have three pure methods: process(input, output), createDefaultInputFeature(), createDefaultOutputFeature().
-  - Consider informing processors about array operations at a semantic level.
-    OR giving them an old view of arrays (using the array index system already in place).
 * SelectableArrays: For arrays larger than 16 elements:
   - Each element has an input drop down which selects the output array element.
   - This would be useful for complex input formats.
+  - An array access processor might be a more consistent way of achieving this
 
 Optimizations:
 * Edit tree could offer "getModifiersAbove(path)" for use in some commands. (E.g. hasAncestorConnection)
+
+Node editor dependency:
+* NodeEditor has changed significantly since I took a dependency, and the version used by BabelWiresUI is now quite out of date.
+* Options:
+  1. Keep on as is until it starts imposing maintenance burden
+  2. Update to newer version (maintain fork or try to get customizations submitted?)
+  3. Replace by other framework
+  4. Implement own graph UI (possibly based on NodeEditor)

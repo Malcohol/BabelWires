@@ -99,6 +99,8 @@ template <typename EDIT_TREE, typename MODIFIER_TYPE> struct babelwires::EditTre
 
     void operator++() {
         ++m_index;
+        // Catch one possible misuse.
+        assert((m_tree.m_nodes.size() >= m_endIndex) && "Elements removed from EditTree during traversal");
         skipFilteredElements();
     }
     typename CopyConst<EDIT_TREE, MODIFIER_TYPE>::type* operator*() {
