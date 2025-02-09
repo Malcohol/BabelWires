@@ -28,7 +28,7 @@ namespace babelwires {
     /// However, an assignment of MapValue will fail if there are invalid entries.
     class MapValue : public EditableValue {
       public:
-        SERIALIZABLE(MapValue, "mapValue", void, 1);
+        SERIALIZABLE(MapValue, "mapValue", EditableValue, 1);
         CLONEABLE(MapValue);
 
         MapValue();
