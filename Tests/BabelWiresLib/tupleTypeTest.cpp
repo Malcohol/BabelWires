@@ -7,11 +7,12 @@
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
-//#include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 
 namespace {
     class TestTupleType : public babelwires::TupleType {
@@ -62,15 +63,14 @@ TEST(TupleTypeTest, valueToString) {
     EXPECT_EQ(str, "(34, 1/3)");
 }
 
-/*
-TEST(TupleTypeTest, sumTypeConstructorNoDefaultIndex) {
+TEST(TupleTypeTest, tupleTypeConstructor) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef sumTypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
+    babelwires::TypeRef tupleTypeRef(babelwires::TupleTypeConstructor::getThisIdentifier(),
                                    babelwires::DefaultIntType::getThisType(),
                                    babelwires::DefaultRationalType::getThisType());
 
-    const babelwires::Type* const type = sumTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::Type* const type = tupleTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::TupleType>(), nullptr);
@@ -79,18 +79,14 @@ TEST(TupleTypeTest, sumTypeConstructorNoDefaultIndex) {
     EXPECT_EQ(tupleType.getParameterTypes().size(), 2);
     EXPECT_EQ(tupleType.getParameterTypes()[0], babelwires::DefaultIntType::getThisType());
     EXPECT_EQ(tupleType.getParameterTypes()[1], babelwires::DefaultRationalType::getThisType());
-    EXPECT_EQ(tupleType.getIndexOfDefaultSummand(), 0);
 }
 
-TEST(TupleTypeTest, sumTypeConstructorDefault1) {
+TEST(TupleTypeTest, makeTypeRef) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef sumTypeRef(
-        babelwires::SumTypeConstructor::getThisIdentifier(),
-        {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
-         {babelwires::IntValue(1)}});
+    auto tupleTypeRef = babelwires::TupleTypeConstructor::makeTypeRef({babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()});
 
-    const babelwires::Type* const type = sumTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::Type* const type = tupleTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::TupleType>(), nullptr);
@@ -99,40 +95,42 @@ TEST(TupleTypeTest, sumTypeConstructorDefault1) {
     EXPECT_EQ(tupleType.getParameterTypes().size(), 2);
     EXPECT_EQ(tupleType.getParameterTypes()[0], babelwires::DefaultIntType::getThisType());
     EXPECT_EQ(tupleType.getParameterTypes()[1], babelwires::DefaultRationalType::getThisType());
-    EXPECT_EQ(tupleType.getIndexOfDefaultSummand(), 1);
 }
 
-TEST(TupleTypeTest, sumTypeConstructorMalformed) {
+TEST(TupleTypeTest, tupleTypeConstructorMalformed) {
     testUtils::TestEnvironment testEnvironment;
 
-    // Just one summand
-    EXPECT_THROW(babelwires::TypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
-                                     babelwires::DefaultIntType::getThisType())
+    // Unresolved argument
+    EXPECT_THROW(babelwires::TypeRef(babelwires::TupleTypeConstructor::getThisIdentifier(),
+                                     {{babelwires::DefaultIntType::getThisType(),
+                                       babelwires::TypeRef(babelwires::MediumId("abcdef"))}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 
-    // Wrong value argument
-    EXPECT_THROW(babelwires::TypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
+    // Unexpected value argument
+    EXPECT_THROW(babelwires::TypeRef(babelwires::TupleTypeConstructor::getThisIdentifier(),
                                      {{babelwires::DefaultIntType::getThisType(),
                                        babelwires::DefaultRationalType::getThisType()},
                                       {babelwires::RationalValue(1)}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
-
-    // Too many value arguments
-    EXPECT_THROW(babelwires::TypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
-                                     {{babelwires::DefaultIntType::getThisType(),
-                                       babelwires::DefaultRationalType::getThisType()},
-                                      {babelwires::IntValue(1), babelwires::IntValue(1)}})
-                     .resolve(testEnvironment.m_typeSystem),
-                 babelwires::TypeSystemException);
-
-    // value argument out of range
-    EXPECT_THROW(babelwires::TypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
-                                     {{babelwires::DefaultIntType::getThisType(),
-                                       babelwires::DefaultRationalType::getThisType()},
-                                      {babelwires::IntValue(2)}})
-                     .resolve(testEnvironment.m_typeSystem),
-                 babelwires::TypeSystemException);
 }
-*/
+
+TEST(TupleTypeTest, compareSubtype) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef AAA = babelwires::TupleTypeConstructor::makeTypeRef({testUtils::TestEnum::getThisType(), testUtils::TestEnum::getThisType(), testUtils::TestEnum::getThisType()});
+    babelwires::TypeRef AAB = babelwires::TupleTypeConstructor::makeTypeRef({testUtils::TestEnum::getThisType(), testUtils::TestEnum::getThisType(), testUtils::TestSubEnum::getThisType()});
+    babelwires::TypeRef BAC = babelwires::TupleTypeConstructor::makeTypeRef({testUtils::TestSubEnum::getThisType(), testUtils::TestEnum::getThisType(), testUtils::TestSubSubEnum1::getThisType()});
+    babelwires::TypeRef CAB = babelwires::TupleTypeConstructor::makeTypeRef({testUtils::TestSubSubEnum1::getThisType(), testUtils::TestEnum::getThisType(), testUtils::TestSubEnum::getThisType()});
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(AAA, AAA), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(AAA, AAB), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(AAB, AAA), babelwires::SubtypeOrder::IsSubtype);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(AAB, BAC), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(BAC, AAB), babelwires::SubtypeOrder::IsSubtype);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(BAC, CAB), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(CAB, BAC), babelwires::SubtypeOrder::IsUnrelated);
+}

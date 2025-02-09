@@ -18,7 +18,6 @@ namespace babelwires {
 
         TupleType(ParameterTypes parameters);
 
-        /// Always creates a value of the first summand.
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
