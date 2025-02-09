@@ -67,6 +67,7 @@ SET( LIB_TESTS_SRCS
     sumOfMapsTypeTest.cpp
     sumTypeTest.cpp
     targetFileNodeTest.cpp
+    tupleTypeTest.cpp
     typeRefTest.cpp
     typeSystemTest.cpp
     typeTest.cpp

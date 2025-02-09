@@ -7,11 +7,17 @@
  **/
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 
+babelwires::TupleValue::TupleValue(Tuple values)
+    : m_values(std::move(values)) {}
+
+unsigned int babelwires::TupleValue::getSize() const {
+    return m_values.size();
+}
+
 babelwires::ValueHolder& babelwires::TupleValue::getValue(unsigned int index) {
     assert((index < m_values.size()) && "index out of range");
     return m_values[index];
 }
-
 
 const babelwires::ValueHolder& babelwires::TupleValue::getValue(unsigned int index) const {
     assert((index < m_values.size()) && "index out of range");
@@ -32,7 +38,7 @@ std::size_t babelwires::TupleValue::getHash() const {
 }
 
 bool babelwires::TupleValue::operator==(const Value& other) const {
-    const TupleValue *const otherTuple = other.as<TupleValue>();
+    const TupleValue* const otherTuple = other.as<TupleValue>();
     if (otherTuple == nullptr) {
         return false;
     }

@@ -84,7 +84,10 @@ std::string babelwires::TupleType::valueToString(const TypeSystem& typeSystem, c
     assert(isValidValue(typeSystem, *v));
     std::ostringstream os;
     os << "(";
+    std::string sep = "";
     for (int i = 0; i < m_parameterTypes.size(); ++i) {
+        os << sep;
+        sep = ", ";
         const Type& type = m_parameterTypes[i].resolve(typeSystem);
         os << type.valueToString(typeSystem, tuple.getValue(i));
     }
