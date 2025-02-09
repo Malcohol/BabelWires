@@ -11,15 +11,10 @@
 
 namespace babelwires {
 
-    class TupleEditor : QWidget
-    {
-        std::vector<QWidget*> m_editorForComponents;
-    }
-
     class TupleValueModel : ValueModel {
       public:
         bool isItemEditable() const override;
-        QWidget* createEditor(QWidget* parent, const QModelIndex& index) const override;
+        QWidget* createEditor(QWidget* parent) const override;
         void setEditorData(QWidget* editor) const override;
         EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const override;
         bool validateEditor(QWidget* editor) const override;

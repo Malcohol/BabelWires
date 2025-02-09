@@ -7,11 +7,14 @@
  **/
 #include <BabelWiresQtUi/ValueModels/tupleValueModel.hpp>
 
+#include <BabelWiresQtUi/ValueEditors/tupleValueEditor.hpp>
+
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
-QWidget* babelwires::TupleValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
-    auto spinBox = std::make_unique<SpinBoxValueEditor>(parent, index, nullptr);
+/*
+QWidget* babelwires::TupleValueModel::createEditor(QWidget* parent) const {
+    auto spinBox = std::make_unique<TupleValueEditor>(parent);
     const TupleType& tupleType = getType()->is<TupleType>();
     return spinBox.release();
 }
@@ -46,3 +49,4 @@ bool babelwires::TupleValueModel::isItemEditable() const {
 bool babelwires::TupleValueModel::validateEditor(QWidget* editor) const {
     return qobject_cast<SpinBoxValueEditor*>(editor);
 }
+*/

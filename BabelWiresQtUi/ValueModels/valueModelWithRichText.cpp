@@ -30,8 +30,7 @@ bool babelwires::ValueModelWithRichText::hasCustomPainting() const {
     return true;
 }
 
-void babelwires::ValueModelWithRichText::paint(QPainter* painter, QStyleOptionViewItem& option,
-                                             const QModelIndex& index) const {
+void babelwires::ValueModelWithRichText::paint(QPainter* painter, QStyleOptionViewItem& option) const {
     QTextDocument doc;
     doc.setHtml(option.text);
 
@@ -43,7 +42,7 @@ void babelwires::ValueModelWithRichText::paint(QPainter* painter, QStyleOptionVi
     doc.drawContents(painter, clip);
 }
 
-QSize babelwires::ValueModelWithRichText::sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const {
+QSize babelwires::ValueModelWithRichText::sizeHint(QStyleOptionViewItem& option) const {
     QTextDocument doc;
     doc.setHtml(option.text);
     doc.setTextWidth(option.rect.width());

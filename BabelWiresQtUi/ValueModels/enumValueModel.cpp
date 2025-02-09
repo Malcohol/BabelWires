@@ -14,7 +14,7 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-QWidget* babelwires::EnumValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
+QWidget* babelwires::EnumValueModel::createEditor(QWidget* parent) const {
     const EnumType* const e = m_type->as<EnumType>();
     auto dropDownBox = std::make_unique<DropDownValueEditor>(parent);
     {

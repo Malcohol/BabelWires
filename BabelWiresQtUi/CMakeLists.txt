@@ -21,6 +21,7 @@ SET( BABELWIRESQTUI_SRCS
     ValueEditors/dropDownValueEditor.cpp
     ValueEditors/spinBoxValueEditor.cpp
     ValueEditors/lineEditValueEditor.cpp
+    ValueEditors/tupleValueEditor.cpp
     ValueEditors/valueEditorCommonBase.cpp
     ModelBridge/Internal/flowSceneConnectionInfo.cpp
     ModelBridge/ContextMenu/featureContextMenu.cpp
@@ -61,6 +62,7 @@ SET( BABELWIRESQTUI_SRCS
     ValueModels/recordValueModel.cpp
     ValueModels/recordWithVariantsValueModel.cpp
     ValueModels/stringValueModel.cpp
+    ValueModels/tupleValueModel.cpp
     ValueModels/valueModel.cpp
     ValueModels/valueModelDispatcher.cpp
     ValueModels/valueModelRegistry.cpp

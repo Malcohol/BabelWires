@@ -41,7 +41,7 @@ bool babelwires::AllToOneFallbackMapEntryModel::isItemEditable(Column column) co
 QWidget* babelwires::AllToOneFallbackMapEntryModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     const Column column = indexToColumn(index);
     assert(isItemEditable(column) && "That column isn't editable");
-    return m_targetValueModel->createEditor(parent, index);
+    return m_targetValueModel->createEditor(parent);
 }
 
 void babelwires::AllToOneFallbackMapEntryModel::setEditorData(Column column, QWidget* editor) const {

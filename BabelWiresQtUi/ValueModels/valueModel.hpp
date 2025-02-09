@@ -29,14 +29,14 @@ namespace babelwires {
         /// it will be applied to the font.
         enum class StyleHint { Normal, Bold };
         virtual QVariant getDisplayData(StyleHint styleHint = ValueModel::StyleHint::Normal) const;
-        virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
+        virtual QWidget* createEditor(QWidget* parent) const;
         virtual void setEditorData(QWidget* editor) const;
         virtual EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const;
         virtual bool isItemEditable() const;
         virtual bool validateEditor(QWidget* editor) const;
         virtual bool hasCustomPainting() const;
-        virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
-        virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual void paint(QPainter* painter, QStyleOptionViewItem& option) const;
+        virtual QSize sizeHint(QStyleOptionViewItem& option) const;
         virtual QString getTooltip() const;
 
         /// Add any context actions which should appear in the context menu for this value.

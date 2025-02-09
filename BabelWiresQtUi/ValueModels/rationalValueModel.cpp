@@ -42,7 +42,7 @@ QString babelwires::RationalValueModel::getRichText() const {
     return value.toHtmlString().c_str();
 }
 
-QWidget* babelwires::RationalValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
+QWidget* babelwires::RationalValueModel::createEditor(QWidget* parent) const {
     auto editor = new LineEditValueEditor(parent);
     editor->setValidator(new RationalValidator);
     //auto range = getType()->is<RationalType>().getRange();

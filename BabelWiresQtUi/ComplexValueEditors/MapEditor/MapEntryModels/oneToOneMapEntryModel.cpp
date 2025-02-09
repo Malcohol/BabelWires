@@ -50,9 +50,9 @@ QWidget* babelwires::OneToOneMapEntryModel::createEditor(QWidget* parent, const 
     const Column column = indexToColumn(index);
     switch (column) {
         case Column::sourceValue:
-            return m_sourceValueModel->createEditor(parent, index);
+            return m_sourceValueModel->createEditor(parent);
         case Column::targetValue:
-            return m_targetValueModel->createEditor(parent, index);
+            return m_targetValueModel->createEditor(parent);
         default:
             assert(false && "That column isn't editable");
             return nullptr;

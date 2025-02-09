@@ -38,7 +38,7 @@ QVariant babelwires::ValueRowModel::getValueDisplayData() const {
 }
 
 QWidget* babelwires::ValueRowModel::createEditor(QWidget* parent, const QModelIndex& index) const {
-    return m_valueModelDispatcher->createEditor(parent, index);
+    return m_valueModelDispatcher->createEditor(parent);
 }
 
 void babelwires::ValueRowModel::setEditorData(QWidget* editor) const {
@@ -68,11 +68,11 @@ bool babelwires::ValueRowModel::hasCustomPainting() const {
 }
 
 void babelwires::ValueRowModel::paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const {
-    m_valueModelDispatcher->paint(painter, option, index);
+    m_valueModelDispatcher->paint(painter, option);
 }
 
 QSize babelwires::ValueRowModel::sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const {
-    return m_valueModelDispatcher->sizeHint(option, index);
+    return m_valueModelDispatcher->sizeHint(option);
 }
 
 QString babelwires::ValueRowModel::getTooltip() const {
