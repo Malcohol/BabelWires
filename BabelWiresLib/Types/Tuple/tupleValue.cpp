@@ -10,31 +10,31 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-babelwires::TupleValue::TupleValue(Tuple values)
-    : m_values(std::move(values)) {}
+babelwires::TupleValue::TupleValue(Tuple componentValues)
+    : m_componentValues(std::move(componentValues)) {}
 
 unsigned int babelwires::TupleValue::getSize() const {
-    return m_values.size();
+    return m_componentValues.size();
 }
 
 babelwires::EditableValueHolder& babelwires::TupleValue::getValue(unsigned int index) {
-    assert((index < m_values.size()) && "index out of range");
-    return m_values[index];
+    assert((index < m_componentValues.size()) && "index out of range");
+    return m_componentValues[index];
 }
 
 const babelwires::EditableValueHolder& babelwires::TupleValue::getValue(unsigned int index) const {
-    assert((index < m_values.size()) && "index out of range");
-    return m_values[index];
+    assert((index < m_componentValues.size()) && "index out of range");
+    return m_componentValues[index];
 }
 
 void babelwires::TupleValue::setValue(unsigned int index, EditableValueHolder newValue) {
-    assert((index < m_values.size()) && "index out of range");
-    m_values[index] = newValue;
+    assert((index < m_componentValues.size()) && "index out of range");
+    m_componentValues[index] = newValue;
 }
 
 std::size_t babelwires::TupleValue::getHash() const {
-    std::size_t hash = hash::mixtureOf(m_values.size());
-    for (auto v : m_values) {
+    std::size_t hash = hash::mixtureOf(m_componentValues.size());
+    for (auto v : m_componentValues) {
         hash::mixInto(hash, v);
     }
     return hash;
@@ -45,11 +45,11 @@ bool babelwires::TupleValue::operator==(const Value& other) const {
     if (otherTuple == nullptr) {
         return false;
     }
-    if (m_values.size() != otherTuple->m_values.size()) {
+    if (m_componentValues.size() != otherTuple->m_componentValues.size()) {
         return false;
     }
-    for (int i = 0; i < m_values.size(); ++i) {
-        if (m_values[i] != otherTuple->m_values[i]) {
+    for (int i = 0; i < m_componentValues.size(); ++i) {
+        if (m_componentValues[i] != otherTuple->m_componentValues[i]) {
             return false;
         }
     }
@@ -58,34 +58,34 @@ bool babelwires::TupleValue::operator==(const Value& other) const {
 
 void babelwires::TupleValue::serializeContents(Serializer& serializer) const {
     std::vector<const EditableValue*> arrayToSerialize;
-    for (const auto& v : m_values) {
+    for (const auto& v : m_componentValues) {
         arrayToSerialize.emplace_back(&*v);
     }
-    serializer.serializeArray("values", arrayToSerialize);
+    serializer.serializeArray("componentValues", arrayToSerialize);
 }
 
 void babelwires::TupleValue::deserializeContents(Deserializer& deserializer) {
-    auto typeIt = deserializer.deserializeArray<EditableValue>("values", Deserializer::IsOptional::Optional);
+    auto typeIt = deserializer.deserializeArray<EditableValue>("componentValues", Deserializer::IsOptional::Optional);
     while (typeIt.isValid()) {
-        m_values.emplace_back(std::move(*typeIt.getObject()));
+        m_componentValues.emplace_back(std::move(*typeIt.getObject()));
         ++typeIt;
     }
 }
 
 void babelwires::TupleValue::visitIdentifiers(IdentifierVisitor& visitor) {
-    for (auto& v : m_values) {
+    for (auto& v : m_componentValues) {
         v.visitIdentifiers(visitor);
     }
 }
 
 void babelwires::TupleValue::visitFilePaths(FilePathVisitor& visitor) {
-    for (auto& v : m_values) {
+    for (auto& v : m_componentValues) {
         v.visitFilePaths(visitor);
     }
 }
 
 bool babelwires::TupleValue::canContainIdentifiers() const {
-    for (const auto& v : m_values) {
+    for (const auto& v : m_componentValues) {
         if (v->canContainIdentifiers()) {
             return true;
         }
@@ -94,7 +94,7 @@ bool babelwires::TupleValue::canContainIdentifiers() const {
 }
 
 bool babelwires::TupleValue::canContainFilePaths() const {
-    for (const auto& v : m_values) {
+    for (const auto& v : m_componentValues) {
         if (v->canContainFilePaths()) {
             return true;
         }
@@ -106,7 +106,7 @@ std::string babelwires::TupleValue::toString() const {
     std::ostringstream os;
     os << "(";
     std::string sep = "";
-    for (const auto& v : m_values) {
+    for (const auto& v : m_componentValues) {
         os << sep;
         sep = ", ";
         os << v->toString();

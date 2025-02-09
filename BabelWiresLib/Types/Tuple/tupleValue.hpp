@@ -44,7 +44,7 @@ namespace babelwires {
         TupleValue() = default;
 
       private:
-        std::vector<EditableValueHolder> m_values;
+        std::vector<EditableValueHolder> m_componentValues;
     };
 
 } // namespace babelwires

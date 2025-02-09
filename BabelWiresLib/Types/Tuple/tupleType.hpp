@@ -16,9 +16,9 @@ namespace babelwires {
     /// Also: The parameter types are expected to have EditableValues.
     class TupleType : public Type {
       public:
-        using ParameterTypes = std::vector<TypeRef>;
+        using ComponentTypes = std::vector<TypeRef>;
 
-        TupleType(ParameterTypes parameters);
+        TupleType(ComponentTypes components);
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
@@ -26,11 +26,11 @@ namespace babelwires {
 
         std::string getKind() const override;
 
-        const ParameterTypes& getParameterTypes() const;
+        const ComponentTypes& getComponentTypes() const;
 
         SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
       private:
-        ParameterTypes m_parameterTypes;
+        ComponentTypes m_componentTypes;
     };
 } // namespace babelwires
