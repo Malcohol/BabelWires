@@ -19,7 +19,7 @@ babelwires::NewValueHolder babelwires::TupleType::createValue(const TypeSystem& 
     newTuple.reserve(m_parameterTypes.size());
     for (const auto& t : m_parameterTypes) {
         const Type& type = t.resolve(typeSystem);
-        newTuple.emplace_back(type.createValue(typeSystem));
+        newTuple.emplace_back(type.createValue(typeSystem).is<EditableValue>());
     }
     return babelwires::ValueHolder::makeValue<TupleValue>(std::move(newTuple));
 }

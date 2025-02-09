@@ -12,6 +12,8 @@
 namespace babelwires {
 
     /// TupleType (a.k.a. Product Type).
+    /// Tuple types are primarily added to allow for complex maps, so for now do not use CompoundType.
+    /// Also: The parameter types are expected to have EditableValues.
     class TupleType : public Type {
       public:
         using ParameterTypes = std::vector<TypeRef>;
