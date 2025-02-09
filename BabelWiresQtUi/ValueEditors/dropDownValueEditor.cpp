@@ -12,8 +12,8 @@
 
 #include <QLineEdit>
 
-babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent, const QModelIndex& index)
-    : ValueEditorCommonBase(parent, index) {
+babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent)
+    : ValueEditorCommonBase(parent) {
     setSizeAdjustPolicy(QComboBox::SizeAdjustPolicy::AdjustToMinimumContentsLengthWithIcon);
     setContextMenuPolicy(Qt::NoContextMenu);
     QObject::connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged),

@@ -6,7 +6,7 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 template <typename T>
-babelwires::ValueEditorCommonBase<T>::ValueEditorCommonBase(QWidget* parent, const QModelIndex& index)
+babelwires::ValueEditorCommonBase<T>::ValueEditorCommonBase(QWidget* parent)
     : T(parent)
     , m_signals(new ValueEditorCommonSignals(static_cast<T*>(this))) {
     // Store a reference to the interface this class implements via a property in the QObject.

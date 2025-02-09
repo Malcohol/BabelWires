@@ -48,9 +48,9 @@ namespace {
     }
 }
 
-babelwires::SpinBoxValueEditor::SpinBoxValueEditor(QWidget* parent, const QModelIndex& index,
+babelwires::SpinBoxValueEditor::SpinBoxValueEditor(QWidget* parent,
                                                    const ValueNames* valueNames)
-    : ValueEditorCommonBase(parent, index)
+    : ValueEditorCommonBase(parent)
     , m_valueNames(valueNames) {
     setContextMenuPolicy(Qt::NoContextMenu);
     // Commit on select.

@@ -16,7 +16,7 @@ namespace babelwires {
         Q_OBJECT
       public:
         /// The arguments as provided to createEditor.
-        DropDownValueEditor(QWidget* parent, const QModelIndex& index);
+        DropDownValueEditor(QWidget* parent);
 
         /// Set the text to bold.
         void setFeatureIsModified(bool isModified) override;

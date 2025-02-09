@@ -18,7 +18,7 @@ namespace babelwires {
         Q_OBJECT
       public:
         /// The arguments as provided to createEditor.
-        LineEditValueEditor(QWidget* parent, const QModelIndex& index);
+        LineEditValueEditor(QWidget* parent);
 
         /// Set the text to bold.
         void setFeatureIsModified(bool isModified) override;

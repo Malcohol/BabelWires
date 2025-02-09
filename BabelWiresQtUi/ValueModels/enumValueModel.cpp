@@ -16,7 +16,7 @@
 
 QWidget* babelwires::EnumValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
     const EnumType* const e = m_type->as<EnumType>();
-    auto dropDownBox = std::make_unique<DropDownValueEditor>(parent, index);
+    auto dropDownBox = std::make_unique<DropDownValueEditor>(parent);
     {
         IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
         for (auto enumValue : e->getValueSet()) {

@@ -54,7 +54,7 @@ namespace babelwires {
     template <typename T> class ValueEditorCommonBase : public T, public ValueEditorInterface {
       public:
         /// The arguments as provided to createEditor.
-        ValueEditorCommonBase(QWidget* parent, const QModelIndex& index);
+        ValueEditorCommonBase(QWidget* parent);
         ~ValueEditorCommonBase();
 
         QMetaObject::Connection& getValuesChangedConnection() override;

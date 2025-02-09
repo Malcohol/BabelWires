@@ -24,7 +24,7 @@ namespace {
 }
 
 QWidget* babelwires::IntValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
-    auto spinBox = std::make_unique<SpinBoxValueEditor>(parent, index, nullptr);
+    auto spinBox = std::make_unique<SpinBoxValueEditor>(parent, nullptr);
     auto range = getType()->is<IntType>().getRange();
     spinBox->setMinimum(clampToInt(range.m_min));
     spinBox->setMaximum(clampToInt(range.m_max));
