@@ -14,8 +14,7 @@
 babelwires::TupleValueEditor::TupleValueEditor(QWidget* parent, const ValueModelRegistry& valueModelRegistry,
                                                const TypeSystem& typeSystem, const TupleType& type, const TupleValue& value)
     : ValueEditorCommonBase(parent)
-    , m_tupleType(type)
-    , m_tupleValue(value) {
+    , m_tupleType(type) {
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setContentsMargins(2, 2, 2, 2);
 
@@ -27,7 +26,8 @@ babelwires::TupleValueEditor::TupleValueEditor(QWidget* parent, const ValueModel
         const auto& componentType = componentTypes[i].resolve(typeSystem);
         auto& componentValue = value.getValue(i);
         auto& perComponentData = m_perComponentData[i];
-        perComponentData.m_valueModel.init(valueModelRegistry, typeSystem, componentType, componentValue, false, false);
+        perComponentData.m_value = componentValue;
+        perComponentData.m_valueModel.init(valueModelRegistry, typeSystem, componentType, perComponentData.m_value, false, false);
         // TODO Don't like passing in a null parent. createEditor should probably not take a parent parameter.
         perComponentData.m_valueEditor = perComponentData.m_valueModel->createEditor(nullptr);
         perComponentData.m_valueModel->setEditorData(perComponentData.m_valueEditor);
@@ -43,16 +43,22 @@ const babelwires::TupleType& babelwires::TupleValueEditor::getType() const {
     return m_tupleType;
 }
 
-const babelwires::TupleValue& babelwires::TupleValueEditor::getEditorData() const {
-    return m_tupleValue;
+babelwires::TupleValue babelwires::TupleValueEditor::getEditorData() const {
+    TupleValue::Tuple newTuple;
+    newTuple.reserve(m_perComponentData.size());
+    for (const auto& perComponentData : m_perComponentData) {
+        newTuple.emplace_back(perComponentData.m_value);
+    }
+    return { newTuple };
 }
 
 void babelwires::TupleValueEditor::setEditorData(const TupleValue& tupleValue) {
-    if (m_tupleValue != tupleValue) {
-        m_tupleValue = tupleValue;
-        for (auto& data : m_perComponentData) {
-            data.m_valueModel->setEditorData(data.m_valueEditor);
-        }
+    for (int i = 0; i < m_perComponentData.size(); ++i) {
+        PerComponentData& perComponentData = m_perComponentData[i];
+        // if (perComponentData.m_value != tupleValue.getValue(i)) {
+            perComponentData.m_value = tupleValue.getValue(i);
+            perComponentData.m_valueModel->setEditorData(perComponentData.m_valueEditor);
+        //}
     }
 }
 
@@ -66,7 +72,7 @@ void babelwires::TupleValueEditor::updateValueFromComponentEditor(unsigned int i
     assert(i < m_perComponentData.size());
     auto& perComponentData = m_perComponentData[i];
     if (EditableValueHolder newValue = perComponentData.m_valueModel->createValueFromEditorIfDifferent(perComponentData.m_valueEditor)) {
-        m_tupleValue.setValue(i, newValue);
+        perComponentData.m_value = newValue;
         emit m_signals->editorHasChanged(this);
     }
 }

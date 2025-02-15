@@ -16,7 +16,6 @@
 
 namespace babelwires {
     class TupleType;
-    class TupleValue;
 
     ///
     class TupleValueEditor : public ValueEditorCommonBase<QWidget> {
@@ -26,7 +25,7 @@ namespace babelwires {
         TupleValueEditor(QWidget* parent, const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem,
                          const TupleType& type, const TupleValue& value);
 
-        const TupleValue& getEditorData() const;
+        TupleValue getEditorData() const;
 
         void setEditorData(const TupleValue& tupleValue);
 
@@ -40,12 +39,11 @@ namespace babelwires {
 
       public:
         const TupleType& m_tupleType;
-        // The value being edited.
-        TupleValue m_tupleValue;
 
         struct PerComponentData {
             ValueModelDispatcher m_valueModel;
             QWidget* m_valueEditor;
+            ValueHolder m_value;
         };
         std::vector<PerComponentData> m_perComponentData;
     };
