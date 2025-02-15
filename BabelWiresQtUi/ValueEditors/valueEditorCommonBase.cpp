@@ -12,18 +12,18 @@
 babelwires::ValueEditorCommonSignals::ValueEditorCommonSignals(QObject* parent)
     : QObject(parent) {}
 
-babelwires::ValueEditorInterface* babelwires::ValueEditorInterface::getValueEditorInterface(QWidget* valueEditor) {
+babelwires::ValueEditorInterface& babelwires::ValueEditorInterface::getValueEditorInterface(QWidget* valueEditor) {
     QVariant property = valueEditor->property(ValueEditorInterface::s_propertyName);
-    if (property.isValid()) {
-        return qvariant_cast<ValueEditorInterface*>(property);
-    }
-    return nullptr;
+    assert(property.isValid() && "The widget does not have a ValueEditorInterface property");
+    auto interface = qvariant_cast<ValueEditorInterface*>(property);
+    assert(interface && "The ValueEditorInterface property didn't have the correct type");
+    return *interface;
 }
 
-const babelwires::ValueEditorInterface* babelwires::ValueEditorInterface::getValueEditorInterface(const QWidget* valueEditor) {
+const babelwires::ValueEditorInterface& babelwires::ValueEditorInterface::getValueEditorInterface(const QWidget* valueEditor) {
     QVariant property = valueEditor->property(ValueEditorInterface::s_propertyName);
-    if (property.isValid()) {
-        return qvariant_cast<ValueEditorInterface*>(property);
-    }
-    return nullptr;
+    assert(property.isValid() && "The widget does not have a ValueEditorInterface property");
+    auto interface = qvariant_cast<ValueEditorInterface*>(property);
+    assert(interface && "The ValueEditorInterface property didn't have the correct type");
+    return *interface;
 }

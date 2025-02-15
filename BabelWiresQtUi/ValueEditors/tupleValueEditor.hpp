@@ -2,7 +2,7 @@
  * A spinBox QWidget which can be used for editing ValueFeatures.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -18,12 +18,13 @@ namespace babelwires {
     class TupleType;
     class TupleValue;
 
-    /// 
+    ///
     class TupleValueEditor : public ValueEditorCommonBase<QWidget> {
         Q_OBJECT
       public:
-        /// 
-        TupleValueEditor(QWidget* parent, const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const TupleType& type, const TupleValue& value);
+        ///
+        TupleValueEditor(QWidget* parent, const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem,
+                         const TupleType& type, const TupleValue& value);
 
         const TupleValue& getEditorData() const;
 
@@ -32,12 +33,17 @@ namespace babelwires {
         /// Set the text to bold.
         void setFeatureIsModified(bool isModified) override;
 
-    public:
+        const TupleType& getType() const;
+
+      private:
+        void updateValueFromComponentEditor(unsigned int i);
+
+      public:
+        const TupleType& m_tupleType;
         // The value being edited.
         TupleValue m_tupleValue;
 
-        struct PerComponentData
-        {
+        struct PerComponentData {
             ValueModelDispatcher m_valueModel;
             QWidget* m_valueEditor;
         };

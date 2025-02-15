@@ -46,9 +46,11 @@ namespace babelwires {
         /// The interface is found in the QObject properties with this key.
         static constexpr char s_propertyName[] = "ValueEditorInterface";
 
-        // Convenience methods
-        static ValueEditorInterface* getValueEditorInterface(QWidget* valueEditor);
-        static const ValueEditorInterface* getValueEditorInterface(const QWidget* valueEditor);
+        // Convenience method: get the ValueEditorInterface of the widget. Asserts if the property is missing.
+        static ValueEditorInterface& getValueEditorInterface(QWidget* valueEditor);
+
+        // Convenience method: get the ValueEditorInterface of the widget. Asserts if the property is missing.
+        static const ValueEditorInterface& getValueEditorInterface(const QWidget* valueEditor);
     };
 
     /// For an editor T, this adds two features:

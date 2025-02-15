@@ -45,5 +45,8 @@ bool babelwires::TupleValueModel::isItemEditable() const {
 }
 
 bool babelwires::TupleValueModel::validateEditor(QWidget* editor) const {
-    return qobject_cast<const TupleValueEditor*>(editor);
+    if (const auto* tupleEditor = qobject_cast<const TupleValueEditor*>(editor)) {
+        return (&tupleEditor->getType() == getType());
+    }
+    return false;
 }
