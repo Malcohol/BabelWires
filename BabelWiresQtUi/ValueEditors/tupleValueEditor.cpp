@@ -10,19 +10,31 @@
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
 #include <QHBoxLayout>
+#include <QLabel>
 
 babelwires::TupleValueEditor::TupleValueEditor(QWidget* parent, const ValueModelRegistry& valueModelRegistry,
                                                const TypeSystem& typeSystem, const TupleType& type, const TupleValue& value)
     : ValueEditorCommonBase(parent)
     , m_tupleType(type) {
+    setAutoFillBackground(true);
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setContentsMargins(2, 2, 2, 2);
+
+    auto addSeparator = [layout](const char* text) {
+        QLabel* label = new QLabel(text);
+        label->setMaximumWidth(label->minimumSizeHint().width());
+        layout->addWidget(label);
+    };
+    addSeparator("(");
 
     auto componentTypes = type.getComponentTypes();
     const unsigned int numComponentTypes = componentTypes.size();
     assert(value.getSize() == numComponentTypes);
     m_perComponentData.resize(numComponentTypes);
     for (auto i = 0; i < numComponentTypes; ++i) {
+        if (i > 0) {
+            addSeparator(",");
+        }
         const auto& componentType = componentTypes[i].resolve(typeSystem);
         auto& componentValue = value.getValue(i);
         auto& perComponentData = m_perComponentData[i];
@@ -37,6 +49,7 @@ babelwires::TupleValueEditor::TupleValueEditor(QWidget* parent, const ValueModel
         QObject::connect(editorSignals, &ValueEditorCommonSignals::editorHasChanged,
             this, [this, i]() { updateValueFromComponentEditor(i); });
     }
+    addSeparator(")");
 }
 
 const babelwires::TupleType& babelwires::TupleValueEditor::getType() const {
