@@ -55,10 +55,8 @@ babelwires::TupleValue babelwires::TupleValueEditor::getEditorData() const {
 void babelwires::TupleValueEditor::setEditorData(const TupleValue& tupleValue) {
     for (int i = 0; i < m_perComponentData.size(); ++i) {
         PerComponentData& perComponentData = m_perComponentData[i];
-        // if (perComponentData.m_value != tupleValue.getValue(i)) {
-            perComponentData.m_value = tupleValue.getValue(i);
-            perComponentData.m_valueModel->setEditorData(perComponentData.m_valueEditor);
-        //}
+        perComponentData.m_value = tupleValue.getValue(i);
+        perComponentData.m_valueModel->setEditorData(perComponentData.m_valueEditor);
     }
 }
 
