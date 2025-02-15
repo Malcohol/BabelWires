@@ -45,6 +45,10 @@ namespace babelwires {
 
         /// The interface is found in the QObject properties with this key.
         static constexpr char s_propertyName[] = "ValueEditorInterface";
+
+        // Convenience methods
+        static ValueEditorInterface* getValueEditorInterface(QWidget* valueEditor);
+        static const ValueEditorInterface* getValueEditorInterface(const QWidget* valueEditor);
     };
 
     /// For an editor T, this adds two features:
@@ -53,7 +57,6 @@ namespace babelwires {
     /// 2. Access to the ValueEditorInterface via a property.
     template <typename T> class ValueEditorCommonBase : public T, public ValueEditorInterface {
       public:
-        /// The arguments as provided to createEditor.
         ValueEditorCommonBase(QWidget* parent);
         ~ValueEditorCommonBase();
 

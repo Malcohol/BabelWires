@@ -12,32 +12,30 @@
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
-/*
 QWidget* babelwires::TupleValueModel::createEditor(QWidget* parent) const {
-    auto spinBox = std::make_unique<TupleValueEditor>(parent);
-    const TupleType& tupleType = getType()->is<TupleType>();
-    return spinBox.release();
+    const auto& tupleType = getType()->is<TupleType>();
+    const auto& tupleValue = getValue()->is<TupleValue>();
+    auto tupleEditor = std::make_unique<TupleValueEditor>(parent, *m_valueModelRegistry, *m_typeSystem, tupleType, tupleValue);
+    return tupleEditor.release();
 }
 
-void babelwires::TupleValueModel::setEditorData(QWidget* editor) const {
-    const auto& v = getValue()->is<TupleValue>();
-    const int value = v.get();
 
-    auto spinBox = qobject_cast<SpinBoxValueEditor*>(editor);
-    assert(spinBox && "Unexpected editor");
-    spinBox->setValue(value);
+void babelwires::TupleValueModel::setEditorData(QWidget* editor) const {
+    auto tupleEditor = qobject_cast<TupleValueEditor*>(editor);
+    assert(tupleEditor && "Unexpected editor");
+    const auto& tupleValue = getValue()->is<TupleValue>();
+    tupleEditor->setEditorData(tupleValue);
 }
 
 babelwires::EditableValueHolder babelwires::TupleValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
-    const QSpinBox* spinBox = dynamic_cast<const QSpinBox*>(editor);
-    assert(spinBox && "Unexpected editor");
-    const int newValue = spinBox->value();
+    auto tupleEditor = dynamic_cast<const TupleValueEditor*>(editor);
+    assert(tupleEditor && "Unexpected editor");
 
-    const IntValue& v = getValue()->is<IntValue>();
-    const int currentValue = v.get();
+    const auto& currentValue = getValue()->is<TupleValue>();
+    const auto& editorValue = tupleEditor->getEditorData();
 
-    if (newValue != currentValue) {
-        return EditableValueHolder::makeValue<babelwires::IntValue>(newValue);
+    if (editorValue != currentValue) {
+        return editorValue;
     }
     return {};
 }
@@ -47,6 +45,5 @@ bool babelwires::TupleValueModel::isItemEditable() const {
 }
 
 bool babelwires::TupleValueModel::validateEditor(QWidget* editor) const {
-    return qobject_cast<SpinBoxValueEditor*>(editor);
+    return qobject_cast<const TupleValueEditor*>(editor);
 }
-*/

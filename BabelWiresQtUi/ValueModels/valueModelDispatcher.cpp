@@ -16,6 +16,7 @@
 #include <BabelWiresQtUi/ValueModels/arrayValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/recordValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/recordWithVariantsValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/tupleValueModel.hpp>
 
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
@@ -26,6 +27,7 @@
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
+#include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
 void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const Type& type, const ValueHolder& value, bool isReadOnly, bool isStructureEditable) {
     m_valueModel = &m_valueModelStorage;
@@ -56,12 +58,16 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     } else if (type.as<RecordWithVariantsType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RecordWithVariantsValueModel));
         new (m_valueModel) babelwires::RecordWithVariantsValueModel();
+    } else if (type.as<TupleType>()) {
+        static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::TupleValueModel));
+        new (m_valueModel) babelwires::TupleValueModel();
     } else {
         // The base row model is used.
     }
     m_valueModel->m_typeSystem = &typeSystem;
     m_valueModel->m_type = &type;
     m_valueModel->m_value = &value;
+    m_valueModel->m_valueModelRegistry = &valueModelRegistry;
     m_valueModel->m_isReadOnly = isReadOnly;
     m_valueModel->m_isStructureEditable = isStructureEditable;
 }

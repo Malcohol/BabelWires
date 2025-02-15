@@ -7,5 +7,23 @@
  **/
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 
+#include <QWidget>
+
 babelwires::ValueEditorCommonSignals::ValueEditorCommonSignals(QObject* parent)
     : QObject(parent) {}
+
+babelwires::ValueEditorInterface* babelwires::ValueEditorInterface::getValueEditorInterface(QWidget* valueEditor) {
+    QVariant property = valueEditor->property(ValueEditorInterface::s_propertyName);
+    if (property.isValid()) {
+        return qvariant_cast<ValueEditorInterface*>(property);
+    }
+    return nullptr;
+}
+
+const babelwires::ValueEditorInterface* babelwires::ValueEditorInterface::getValueEditorInterface(const QWidget* valueEditor) {
+    QVariant property = valueEditor->property(ValueEditorInterface::s_propertyName);
+    if (property.isValid()) {
+        return qvariant_cast<ValueEditorInterface*>(property);
+    }
+    return nullptr;
+}

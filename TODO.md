@@ -65,6 +65,7 @@ Refactor:
 * deserializeToString methods should return a tuple which includes the position after the parsed object.
 * Try to sort out the various toString methods, possibly providing a "readableStream", constructed with an IdentiferRegistry::ReadAccess.
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
+* ValueModel could be a template, to avoid all the ising and asing in the subclasses.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.

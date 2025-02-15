@@ -8,24 +8,40 @@
 #pragma once
 
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModelDispatcher.hpp>
+
+#include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 
 #include <QWidget>
 
 namespace babelwires {
-    class ValueNames;
+    class TupleType;
+    class TupleValue;
 
     /// 
     class TupleValueEditor : public ValueEditorCommonBase<QWidget> {
         Q_OBJECT
       public:
-        /// The arguments as provided to createEditor.
-        TupleValueEditor(QWidget* parent);
+        /// 
+        TupleValueEditor(QWidget* parent, const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const TupleType& type, const TupleValue& value);
+
+        const TupleValue& getEditorData() const;
+
+        void setEditorData(const TupleValue& tupleValue);
 
         /// Set the text to bold.
         void setFeatureIsModified(bool isModified) override;
 
     public:
-        std::vector<QWidget*> m_componentWidgets;
+        // The value being edited.
+        TupleValue m_tupleValue;
+
+        struct PerComponentData
+        {
+            ValueModelDispatcher m_valueModel;
+            QWidget* m_valueEditor;
+        };
+        std::vector<PerComponentData> m_perComponentData;
     };
 
 } // namespace babelwires

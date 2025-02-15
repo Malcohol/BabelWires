@@ -22,6 +22,7 @@ namespace babelwires {
     class Value;
     class TypeSystem;
     class DataLocation;
+    class ValueModelRegistry;
 
     class ValueModel {
       public:
@@ -39,7 +40,7 @@ namespace babelwires {
         virtual QSize sizeHint(QStyleOptionViewItem& option) const;
         virtual QString getTooltip() const;
 
-        /// Add any context actions which should appear in the context menu for this value.
+        /// Add any context actions that should appear in the context menu for this value.
         /// Subclasses overriding this should use super-calls to collect standard actions.
         virtual void getContextMenuActions(const DataLocation& location, std::vector<FeatureContextMenuEntry>& actionsOut) const;
 
@@ -51,6 +52,8 @@ namespace babelwires {
         const TypeSystem* m_typeSystem;
         const Type* m_type;
         const ValueHolder* m_value;
+        /// Used by value editors that allow the editing of subvalues, such as tuple.
+        const ValueModelRegistry* m_valueModelRegistry;
         /// Does the context make this value readonly.
         bool m_isReadOnly;
         /// Are structural modifications permitted to this value.
