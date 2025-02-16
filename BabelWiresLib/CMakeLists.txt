@@ -53,6 +53,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/MapProject/mapSerialization.cpp
 	Types/Map/mapType.cpp
 	Types/Map/mapTypeConstructor.cpp
+	Types/Map/standardMapIdentifiers.cpp
 	Types/Map/SumOfMaps/sumOfMapsType.cpp
 	Types/Record/recordType.cpp
 	Types/Record/recordValue.cpp
@@ -96,7 +97,9 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp
 	TypeSystem/typeSystem.cpp
 	Types/Enum/addBlankToEnum.cpp
+	Types/Enum/enumAtomTypeConstructor.cpp
 	Types/Enum/enumType.cpp
+	Types/Enum/enumUnionTypeConstructor.cpp
 	Types/Enum/enumValue.cpp
 	Types/Int/intType.cpp
 	Types/Int/intValue.cpp

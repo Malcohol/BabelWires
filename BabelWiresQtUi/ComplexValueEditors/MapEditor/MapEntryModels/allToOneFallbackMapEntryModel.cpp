@@ -10,6 +10,8 @@
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
+#include <BabelWiresLib/Types/Map/standardMapIdentifiers.hpp>
+
 const babelwires::AllToOneFallbackMapEntryData&
 babelwires::AllToOneFallbackMapEntryModel::getAllToOneFallbackMapEntryData() const {
     assert(m_mapProjectEntry);
@@ -25,7 +27,7 @@ void babelwires::AllToOneFallbackMapEntryModel::init(const ValueModelRegistry& v
 QVariant babelwires::AllToOneFallbackMapEntryModel::getDisplayData(Column column) const {
     switch (column) {
         case Column::sourceValue:
-            return "*";
+            return c_wildcard;
         case Column::targetValue:
             return m_targetValueModel->getDisplayData();
         default:

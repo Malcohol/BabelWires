@@ -7,13 +7,15 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/allToSameFallbackMapEntryModel.hpp>
 
+#include <BabelWiresLib/Types/Map/standardMapIdentifiers.hpp>
+
 QVariant babelwires::AllToSameFallbackMapEntryModel::getDisplayData(Column column) const {
     switch (column) {
         case Column::sourceValue:
-            return "*";
+            return c_wildcard;
         case Column::targetValue:
             // TODO Need better.
-            return "= same";
+            return c_wildcardMatch;
         default:
             assert(false);
             return {};
