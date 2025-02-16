@@ -43,14 +43,15 @@ namespace babelwires {
         /// Get the object which carries the common signals.
         virtual ValueEditorCommonSignals* getValueEditorSignals() = 0;
 
-        /// The interface is found in the QObject properties with this key.
-        static constexpr char s_propertyName[] = "ValueEditorInterface";
-
-        // Convenience method: get the ValueEditorInterface of the widget. Asserts if the property is missing.
+        // Get the ValueEditorInterface of the widget. Asserts if the property is missing.
         static ValueEditorInterface& getValueEditorInterface(QWidget* valueEditor);
 
-        // Convenience method: get the ValueEditorInterface of the widget. Asserts if the property is missing.
+        // Get the ValueEditorInterface of the widget. Asserts if the property is missing.
         static const ValueEditorInterface& getValueEditorInterface(const QWidget* valueEditor);
+
+      protected:
+        /// The interface is found in the QObject properties with this key.
+        static constexpr char s_propertyName[] = "ValueEditorInterface";
     };
 
     /// For an editor T, this adds two features:
