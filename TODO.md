@@ -2,6 +2,12 @@ Structured Data Flow:
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
 1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
 
+Important unresolved issue:
+* Identifiers are used for enum values, but discriminators are ignored for ==. Is that OK?
+  - This is more likely to lead to confusion than with fields.
+  - Note that they should always display correctly, so the discriminator needs to work properly.
+  - Perhaps field comparison should not use regular operator== but a special one?
+
 Bugs:
 * Moving compound connections targets between nodes does not work properly.
   e.g. Three test record values. 
