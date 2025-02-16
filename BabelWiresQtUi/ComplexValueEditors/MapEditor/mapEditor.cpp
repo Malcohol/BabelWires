@@ -91,7 +91,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             const MapValue& mapValue = getMapValueFromProject(scope);
             if (mapTreeNode.getType().as<MapType>()) {
                 m_map.setAllowedSourceTypeRefs(MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getSourceTypeRef()}});
-                m_map.setAllowedTargetTypeRefs(MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getSourceTypeRef()}});
+                m_map.setAllowedTargetTypeRefs(MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getTargetTypeRef()}});
             } else {
                 const SumOfMapsType *const sumOfMaps = mapTreeNode.getType().as<SumOfMapsType>();
                 assert(sumOfMaps && "MapEditor expecting a MapType of SumOfMapsType");
