@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
+
 #include <QAction>
 #include <QMenu>
 #include <QModelIndex>
@@ -17,61 +19,16 @@ namespace babelwires {
 
     class NodeContentsModel;
 
-    /// Base class of context menu items in the feature context menu.
-    class NodeContentsContextMenuAction : public QAction {
+    /// Convenience base class that assumes the model is a NodeContentsModel.
+    class NodeContentsContextMenuAction : public ContextMenuAction {
         Q_OBJECT
       public:
         NodeContentsContextMenuAction(const QString& text);
 
+        void actionTriggered(QAbstractItemModel& model, const QModelIndex& index) const override final;
+
         /// Should be overridden to do perform the operation on the model.
-        virtual void actionTriggered(NodeContentsModel& m_model, const QModelIndex& index) const = 0;
-
-      public slots:
-        /// Dispatches to actionTriggered, obtaining the arguments from the parent menu.
-        void onTriggeredFired();
-    };
-
-    /// Holds a group of actions, which will be added to the menu in a QActionGroup.
-    /// By default, the actions will be exclusive.
-    class FeatureContextMenuGroup {
-      public:
-        FeatureContextMenuGroup(QString name,
-                                QActionGroup::ExclusionPolicy policy = QActionGroup::ExclusionPolicy::Exclusive)
-            : m_groupName(name)
-            , m_exclusionPolicy(policy) {}
-
-        void addFeatureContextMenuAction(std::unique_ptr<NodeContentsContextMenuAction> action);
-
-        QActionGroup::ExclusionPolicy m_exclusionPolicy;
-        QString m_groupName;
-        std::vector<std::unique_ptr<NodeContentsContextMenuAction>> m_actions;
-    };
-
-    using FeatureContextMenuEntry =
-        std::variant<std::unique_ptr<NodeContentsContextMenuAction>, std::unique_ptr<FeatureContextMenuGroup>>;
-
-    /// The pop-up context menu used for the rows of the NodeContentsModel.
-    class FeatureContextMenu : public QMenu {
-        Q_OBJECT
-      public:
-        FeatureContextMenu(NodeContentsModel& model, const QModelIndex& index);
-        void leaveEvent(QEvent* event);
-
-        void addFeatureContextMenuEntry(FeatureContextMenuEntry entry);
-
-        NodeContentsModel& getModel();
-        const QModelIndex& getModelIndex() const;
-
-      private:
-        /// Add a context menu item and wire things up correctly.
-        void addFeatureContextMenuAction(NodeContentsContextMenuAction* action);
-
-        /// Add a group and wire things up correctly.
-        void addFeatureContextMenuGroup(FeatureContextMenuGroup* group);
-
-      private:
-        NodeContentsModel& m_model;
-        QModelIndex m_index;
+        virtual void actionTriggered(NodeContentsModel& model, const QModelIndex& index) const = 0;
     };
 
 } // namespace babelwires

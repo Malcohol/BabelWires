@@ -14,6 +14,6 @@ namespace babelwires {
 
     class MapValueModel : ValueModel {
       public:
-        void getContextMenuActions(const DataLocation& location, std::vector<FeatureContextMenuEntry>& actionsOut) const override;
+        void getContextMenuActions(const DataLocation& location, std::vector<ContextMenuEntry>& actionsOut) const override;
     };
 } // namespace babelwires

@@ -109,7 +109,7 @@ QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
     if (!actions.empty()) {
         ContextMenu* menu = new ContextMenu(*this, index);
         for (auto&& action : actions) {
-            menu->addContextMenuAction(action.release());
+            menu->addContextMenuEntry(std::move(action));
         }
         return menu;
     }

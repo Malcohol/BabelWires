@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 #include <BabelWiresQtUi/ValueModels/valueModelDispatcher.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
+#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 
 #include <QVariant>
 
@@ -79,7 +79,7 @@ namespace babelwires {
 
         /// Add any context actions which should appear in the context menu for this row.
         /// Subclasses overriding this should use super-calls to collect standard actions.
-        virtual void getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const;
+        virtual void getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const;
 
       public:
         bool isFeatureModified() const;

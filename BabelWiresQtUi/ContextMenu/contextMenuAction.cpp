@@ -12,7 +12,8 @@
 #include <cassert>
 
 babelwires::ContextMenuAction::ContextMenuAction(const QString& text)
-    : QAction(text) {}
+    : QAction(text) {
+}
 
 void babelwires::ContextMenuAction::onTriggeredFired() {
     QWidget *const parent = parentWidget();

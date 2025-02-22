@@ -15,17 +15,17 @@
 
 void babelwires::RecordValueModel::getContextMenuActions(
     const DataLocation& location,
-    std::vector<FeatureContextMenuEntry>& entriesOut) const {
+    std::vector<ContextMenuEntry>& entriesOut) const {
     ValueModel::getContextMenuActions(location, entriesOut);
     if (!m_isReadOnly) {
         const RecordType& recordType = m_type->is<RecordType>();
         const RecordValue& recordValue = getValue()->is<RecordValue>();
-        auto group = std::make_unique<FeatureContextMenuGroup>("Optional fields", QActionGroup::ExclusionPolicy::None);
+        auto group = std::make_unique<ContextMenuGroup>("Optional fields", QActionGroup::ExclusionPolicy::None);
         for (auto opId : recordType.getOptionalFieldIds()) {
             auto activateOptional = std::make_unique<OptionalActivationAction>(location.getPathToValue(), opId, recordType.isActivated(recordValue, opId));
             // TODO tooltip.
             activateOptional->setEnabled(m_isStructureEditable);
-            group->addFeatureContextMenuAction(std::move(activateOptional));
+            group->addContextMenuAction(std::move(activateOptional));
         }
         entriesOut.emplace_back(std::move(group));
     }

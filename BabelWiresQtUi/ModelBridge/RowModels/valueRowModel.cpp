@@ -86,7 +86,7 @@ QString babelwires::ValueRowModel::getTooltip() const {
 }
 
 void babelwires::ValueRowModel::getContextMenuActions(
-    std::vector<FeatureContextMenuEntry>& actionsOut) const {
+    std::vector<ContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
     const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
     m_valueModelDispatcher->getContextMenuActions(

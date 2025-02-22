@@ -15,7 +15,7 @@
 
 void babelwires::ArrayValueModel::getContextMenuActions(
     const DataLocation& location,
-    std::vector<FeatureContextMenuEntry>& actionsOut) const {
+    std::vector<ContextMenuEntry>& actionsOut) const {
     ValueModel::getContextMenuActions(location, actionsOut);
     if (!m_isReadOnly) {
         const ArrayType* const arrayType = m_type->as<ArrayType>();

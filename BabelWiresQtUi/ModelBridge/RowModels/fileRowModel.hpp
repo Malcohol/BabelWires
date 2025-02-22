@@ -21,7 +21,7 @@ namespace babelwires {
         virtual QString getTooltip() const override;
 
         virtual void
-        getContextMenuActions(std::vector<FeatureContextMenuEntry>& actionsOut) const override;
+        getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const override;
 
       public:
         const FileNode& getFileElement() const;

@@ -15,10 +15,10 @@
 
 void babelwires::RecordWithVariantsValueModel::getContextMenuActions(
     const DataLocation& location,
-    std::vector<FeatureContextMenuEntry>& entriesOut) const {
+    std::vector<ContextMenuEntry>& entriesOut) const {
     ValueModel::getContextMenuActions(location, entriesOut);
     if (!m_isReadOnly) {
-        auto group = std::make_unique<FeatureContextMenuGroup>("Variants");
+        auto group = std::make_unique<ContextMenuGroup>("Variants");
         const RecordWithVariantsType& recordType = m_type->is<RecordWithVariantsType>();
         const RecordWithVariantsValue& recordValue = getValue()->is<RecordWithVariantsValue>();
         const ShortId currentTag = recordValue.getTag();
@@ -29,7 +29,7 @@ void babelwires::RecordWithVariantsValueModel::getContextMenuActions(
             }
             // TODO tooltip.
             selectVariant->setEnabled(m_isStructureEditable);
-            group->addFeatureContextMenuAction(std::move(selectVariant));
+            group->addContextMenuAction(std::move(selectVariant));
         }
         entriesOut.emplace_back(std::move(group));
     }

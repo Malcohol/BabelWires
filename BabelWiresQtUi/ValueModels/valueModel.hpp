@@ -10,7 +10,7 @@
 #include <QVariant>
 
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
+#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 
 class QWidget;
 class QModelIndex;
@@ -42,7 +42,7 @@ namespace babelwires {
 
         /// Add any context actions that should appear in the context menu for this value.
         /// Subclasses overriding this should use super-calls to collect standard actions.
-        virtual void getContextMenuActions(const DataLocation& location, std::vector<FeatureContextMenuEntry>& actionsOut) const;
+        virtual void getContextMenuActions(const DataLocation& location, std::vector<ContextMenuEntry>& actionsOut) const;
 
       protected:
         const ValueHolder& getValue() const;

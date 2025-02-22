@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
+#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
@@ -177,12 +177,12 @@ QMenu* babelwires::NodeContentsModel::getContextMenu(const QModelIndex& index) {
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
     RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
-    std::vector<FeatureContextMenuEntry> entries;
+    std::vector<ContextMenuEntry> entries;
     rowModel->getContextMenuActions(entries);
     if (!entries.empty()) {
-        FeatureContextMenu* menu = new FeatureContextMenu(*this, index);
+        ContextMenu* menu = new ContextMenu(*this, index);
         for (auto&& entry : entries) {
-            menu->addFeatureContextMenuEntry(std::move(entry));
+            menu->addContextMenuEntry(std::move(entry));
         }
         return menu;
     }
