@@ -1,5 +1,5 @@
 /**
- * QAction for activating or deactivating optional fields.
+ * QAction for selecting the variant of a RecordWithVariantsType.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -13,7 +13,7 @@
 
 namespace babelwires {
 
-    /// QAction for activating or deactivating an optional.
+    /// QAction for selecting the variant of a RecordWithVariantsType.
     class SelectVariantAction : public babelwires::FeatureContextMenuAction {
       public:
         SelectVariantAction(babelwires::Path pathToRecord, ShortId optional);

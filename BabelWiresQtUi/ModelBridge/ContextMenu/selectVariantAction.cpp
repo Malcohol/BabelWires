@@ -1,5 +1,5 @@
 /**
- * QAction for activating or deactivating optional fields.
+ * QAction for selecting the variant of a RecordWithVariantsType.
  *
  * (C) 2021 Malcolm Tyrrell
  *
