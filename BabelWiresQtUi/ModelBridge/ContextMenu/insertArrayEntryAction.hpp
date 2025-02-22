@@ -9,12 +9,12 @@
 #pragma once
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
 
 namespace babelwires {
 
     /// QAction for the insert entry into array action in the context menu.
-    class InsertArrayEntryAction : public babelwires::FeatureContextMenuAction {
+    class InsertArrayEntryAction : public babelwires::NodeContentsContextMenuAction {
       public:
         InsertArrayEntryAction(const QString& text, babelwires::Path pathToArray, int indexOfNewEntry);
 

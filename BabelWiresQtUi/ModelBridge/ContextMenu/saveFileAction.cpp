@@ -15,7 +15,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::SaveFileAction::SaveFileAction()
-    : FeatureContextMenuAction(tr("Save file")) {}
+    : NodeContentsContextMenuAction(tr("Save file")) {}
 
 void babelwires::SaveFileAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();

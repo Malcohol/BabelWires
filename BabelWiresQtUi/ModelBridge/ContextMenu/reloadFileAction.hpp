@@ -7,12 +7,12 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
 
 namespace babelwires {
 
     /// QAction for the reload file action in the context menu.
-    struct ReloadFileAction : babelwires::FeatureContextMenuAction {
+    struct ReloadFileAction : babelwires::NodeContentsContextMenuAction {
         ReloadFileAction();
 
         virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;

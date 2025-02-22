@@ -25,7 +25,7 @@
 #include <QInputDialog>
 
 babelwires::SetArraySizeAction::SetArraySizeAction(babelwires::Path pathToArray)
-    : FeatureContextMenuAction(tr("Set array size"))
+    : NodeContentsContextMenuAction(tr("Set array size"))
     , m_pathToArray(std::move(pathToArray)) {}
 
 void babelwires::SetArraySizeAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {

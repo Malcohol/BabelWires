@@ -21,7 +21,7 @@
 #include <Common/Registry/fileTypeRegistry.hpp>
 
 babelwires::ChangeSourceFileAction::ChangeSourceFileAction()
-    : FeatureContextMenuAction(tr("Open file\u2026")) {}
+    : NodeContentsContextMenuAction(tr("Open file\u2026")) {}
 
 void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                          const QModelIndex& index) const {

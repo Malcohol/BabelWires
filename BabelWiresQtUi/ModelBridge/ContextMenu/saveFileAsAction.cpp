@@ -19,7 +19,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::SaveFileAsAction::SaveFileAsAction()
-    : FeatureContextMenuAction(tr("Save file as\u2026")) {}
+    : NodeContentsContextMenuAction(tr("Save file as\u2026")) {}
 
 void babelwires::SaveFileAsAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();

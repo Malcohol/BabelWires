@@ -24,7 +24,7 @@ SET( BABELWIRESQTUI_SRCS
     ValueEditors/tupleValueEditor.cpp
     ValueEditors/valueEditorCommonBase.cpp
     ModelBridge/Internal/flowSceneConnectionInfo.cpp
-    ModelBridge/ContextMenu/featureContextMenu.cpp
+    ModelBridge/ContextMenu/nodeContentsContextMenu.cpp
     ModelBridge/ContextMenu/removeModifierAction.cpp
     ModelBridge/ContextMenu/insertArrayEntryAction.cpp
     ModelBridge/ContextMenu/removeArrayEntryAction.cpp

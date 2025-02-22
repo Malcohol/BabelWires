@@ -9,12 +9,12 @@
 #pragma once
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
 
 namespace babelwires {
 
     /// QAction for activating or deactivating an optional.
-    class OptionalActivationAction : public babelwires::FeatureContextMenuAction {
+    class OptionalActivationAction : public babelwires::NodeContentsContextMenuAction {
       public:
         OptionalActivationAction(babelwires::Path pathToRecord, ShortId optional, bool isActivated);
 

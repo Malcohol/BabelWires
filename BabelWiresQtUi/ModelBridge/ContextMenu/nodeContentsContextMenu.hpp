@@ -18,10 +18,10 @@ namespace babelwires {
     class NodeContentsModel;
 
     /// Base class of context menu items in the feature context menu.
-    class FeatureContextMenuAction : public QAction {
+    class NodeContentsContextMenuAction : public QAction {
         Q_OBJECT
       public:
-        FeatureContextMenuAction(const QString& text);
+        NodeContentsContextMenuAction(const QString& text);
 
         /// Should be overridden to do perform the operation on the model.
         virtual void actionTriggered(NodeContentsModel& m_model, const QModelIndex& index) const = 0;
@@ -40,15 +40,15 @@ namespace babelwires {
             : m_groupName(name)
             , m_exclusionPolicy(policy) {}
 
-        void addFeatureContextMenuAction(std::unique_ptr<FeatureContextMenuAction> action);
+        void addFeatureContextMenuAction(std::unique_ptr<NodeContentsContextMenuAction> action);
 
         QActionGroup::ExclusionPolicy m_exclusionPolicy;
         QString m_groupName;
-        std::vector<std::unique_ptr<FeatureContextMenuAction>> m_actions;
+        std::vector<std::unique_ptr<NodeContentsContextMenuAction>> m_actions;
     };
 
     using FeatureContextMenuEntry =
-        std::variant<std::unique_ptr<FeatureContextMenuAction>, std::unique_ptr<FeatureContextMenuGroup>>;
+        std::variant<std::unique_ptr<NodeContentsContextMenuAction>, std::unique_ptr<FeatureContextMenuGroup>>;
 
     /// The pop-up context menu used for the rows of the NodeContentsModel.
     class FeatureContextMenu : public QMenu {
@@ -64,7 +64,7 @@ namespace babelwires {
 
       private:
         /// Add a context menu item and wire things up correctly.
-        void addFeatureContextMenuAction(FeatureContextMenuAction* action);
+        void addFeatureContextMenuAction(NodeContentsContextMenuAction* action);
 
         /// Add a group and wire things up correctly.
         void addFeatureContextMenuGroup(FeatureContextMenuGroup* group);

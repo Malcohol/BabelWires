@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 #include <BabelWiresQtUi/ValueModels/valueModelDispatcher.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
 
 #include <QVariant>
 

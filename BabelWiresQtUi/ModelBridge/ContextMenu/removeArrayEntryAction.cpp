@@ -15,7 +15,7 @@
 
 babelwires::RemoveArrayEntryAction::RemoveArrayEntryAction(babelwires::Path pathToArray,
                                                            int indexOfEntryToRemove)
-    : FeatureContextMenuAction(tr("Remove this array element"))
+    : NodeContentsContextMenuAction(tr("Remove this array element"))
     , m_pathToArray(std::move(pathToArray))
     , m_indexOfEntryToRemove(indexOfEntryToRemove) {}
 

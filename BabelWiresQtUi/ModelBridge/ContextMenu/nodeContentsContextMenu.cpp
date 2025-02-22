@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
@@ -19,7 +19,7 @@ void babelwires::FeatureContextMenu::leaveEvent(QEvent* event) {
     close();
 }
 
-void babelwires::FeatureContextMenu::addFeatureContextMenuAction(FeatureContextMenuAction* action) {
+void babelwires::FeatureContextMenu::addFeatureContextMenuAction(NodeContentsContextMenuAction* action) {
     action->setParent(this);
     addAction(action);
 }
@@ -38,7 +38,7 @@ void babelwires::FeatureContextMenu::addFeatureContextMenuGroup(FeatureContextMe
 
 void babelwires::FeatureContextMenu::addFeatureContextMenuEntry(FeatureContextMenuEntry entry) {
     struct VisitorMethods {
-        const void operator()(std::unique_ptr<FeatureContextMenuAction>& action) {
+        const void operator()(std::unique_ptr<NodeContentsContextMenuAction>& action) {
             m_menu.addFeatureContextMenuAction(action.release());
         }
         const void operator()(std::unique_ptr<FeatureContextMenuGroup>& group) {
@@ -57,19 +57,19 @@ const QModelIndex& babelwires::FeatureContextMenu::getModelIndex() const {
     return m_index;
 }
 
-babelwires::FeatureContextMenuAction::FeatureContextMenuAction(const QString& text)
+babelwires::NodeContentsContextMenuAction::NodeContentsContextMenuAction(const QString& text)
     : QAction(text) {
     connect(this, SIGNAL(triggered()), SLOT(onTriggeredFired()));
 }
 
-void babelwires::FeatureContextMenuAction::onTriggeredFired() {
+void babelwires::NodeContentsContextMenuAction::onTriggeredFired() {
     QWidget* parent = parentWidget();
     FeatureContextMenu* menu = dynamic_cast<FeatureContextMenu*>(parent);
-    assert(menu && "FeatureContextMenuAction has unexpected parent widget");
+    assert(menu && "NodeContentsContextMenuAction has unexpected parent widget");
     actionTriggered(menu->getModel(), menu->getModelIndex());
     menu->close();
 }
 
-void babelwires::FeatureContextMenuGroup::addFeatureContextMenuAction(std::unique_ptr<FeatureContextMenuAction> action) {
+void babelwires::FeatureContextMenuGroup::addFeatureContextMenuAction(std::unique_ptr<NodeContentsContextMenuAction> action) {
     m_actions.emplace_back(std::move(action));
 }

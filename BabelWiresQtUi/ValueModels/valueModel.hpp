@@ -10,7 +10,7 @@
 #include <QVariant>
 
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
 
 class QWidget;
 class QModelIndex;
