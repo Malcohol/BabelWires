@@ -17,6 +17,7 @@ namespace babelwires {
     /// Remove all failed modifiers at or beneath the given path.
     class RemoveFailedModifiersCommand : public CompoundCommand<Project> {
       public:
+        CLONEABLE(RemoveFailedModifiersCommand);
         RemoveFailedModifiersCommand(std::string commandName, NodeId targetId, Path featurePath);
 
         virtual bool initializeAndExecute(Project& project) override;

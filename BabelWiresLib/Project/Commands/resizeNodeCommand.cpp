@@ -12,9 +12,9 @@
 
 #include <cassert>
 
-babelwires::ResizeNodeCommand::ResizeNodeCommand(std::string commandName, NodeId elementId, UiSize newSize)
+babelwires::ResizeNodeCommand::ResizeNodeCommand(std::string commandName, NodeId nodeId, UiSize newSize)
     : SimpleCommand(std::move(commandName))
-    , m_nodeId(elementId)
+    , m_nodeId(nodeId)
     , m_newSize(newSize) {}
 
 bool babelwires::ResizeNodeCommand::initialize(const Project& project) {

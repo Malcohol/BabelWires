@@ -9,11 +9,11 @@
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, NodeId targetId,
@@ -21,6 +21,11 @@ babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, Node
     : CompoundCommand(commandName)
     , m_targetNodeId(targetId)
     , m_modifierToAdd(std::move(modifierToAdd)) {}
+
+babelwires::AddModifierCommand::AddModifierCommand(const AddModifierCommand& other)
+    : CompoundCommand(other)
+    , m_targetNodeId(other.m_targetNodeId)
+    , m_modifierToAdd(other.m_modifierToAdd->clone()) {}
 
 bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
     const Node* node = project.getNode(m_targetNodeId);
@@ -46,7 +51,8 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         // TODO It would probably be better for these modifiers to fail rather than be removed, but at the
         // moment, I don't think modifiers can currently fail/recover based on the presence of other modifiers.
         for (const auto& modifier : node->getEdits().modifierRange(m_modifierToAdd->m_targetPath)) {
-            if (m_modifierToAdd->m_targetPath.isStrictPrefixOf(modifier->getTargetPath()) && modifier->as<ArraySizeModifier>()) {
+            if (m_modifierToAdd->m_targetPath.isStrictPrefixOf(modifier->getTargetPath()) &&
+                modifier->as<ArraySizeModifier>()) {
                 subcommands.emplace_back(std::make_unique<RemoveModifierCommand>(
                     "Remove modifier subcommand", m_targetNodeId, modifier->getTargetPath()));
             }
@@ -57,8 +63,8 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
     }
 
     if (const Modifier* const modifier = node->findModifier(m_modifierToAdd->m_targetPath)) {
-        addSubCommand(
-            std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_targetNodeId, m_modifierToAdd->m_targetPath));
+        addSubCommand(std::make_unique<RemoveModifierCommand>("Remove modifier subcommand", m_targetNodeId,
+                                                              m_modifierToAdd->m_targetPath));
     }
 
     if (!CompoundCommand::initializeAndExecute(project)) {

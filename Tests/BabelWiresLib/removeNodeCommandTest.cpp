@@ -60,7 +60,8 @@ TEST(RemoveNodeCommandTest, executeAndUndo) {
 
     checkElements(false);
 
-    babelwires::RemoveNodeCommand command("Test command", testUtils::TestProjectData::c_processorId);
+    babelwires::RemoveNodeCommand testCopyConstructor("Test command", testUtils::TestProjectData::c_processorId);
+    babelwires::RemoveNodeCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

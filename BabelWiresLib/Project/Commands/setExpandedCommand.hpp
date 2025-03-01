@@ -16,7 +16,8 @@ namespace babelwires {
 
     class SetExpandedCommand : public SimpleCommand<Project> {
       public:
-        SetExpandedCommand(std::string commandName, NodeId elementId, Path pathToCompound, bool expanded);
+        CLONEABLE(SetExpandedCommand);
+        SetExpandedCommand(std::string commandName, NodeId nodeId, Path pathToCompound, bool expanded);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;

@@ -14,7 +14,8 @@
 TEST(AddNodeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::AddNodeCommand command("Test command", std::make_unique<testUtils::TestSimpleRecordElementData>());
+    babelwires::AddNodeCommand testCopyConstructor("Test command", std::make_unique<testUtils::TestSimpleRecordElementData>());
+    babelwires::AddNodeCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

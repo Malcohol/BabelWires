@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Commands/commandTimestamp.hpp>
 
 #include <Common/types.hpp>
+#include <Common/Cloning/cloneable.hpp>
 
 #include <chrono>
 #include <memory>
@@ -21,9 +22,10 @@
 namespace babelwires {
     /// Commands define undoable ways of mutating the a COMMAND_TARGET.
     template<typename COMMAND_TARGET>
-    class Command {
+    class Command : public Cloneable {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Command);
+        CLONEABLE_ABSTRACT(Command);
 
         /// CommandName should be a displayable name
         /// The timestamp is set to the current time.
@@ -98,7 +100,9 @@ namespace babelwires {
     template<typename COMMAND_TARGET>
     class CompoundCommand : public Command<COMMAND_TARGET> {
       public:
+        CLONEABLE(CompoundCommand);
         CompoundCommand(std::string commandName);
+        CompoundCommand(const CompoundCommand& other);
 
         void addSubCommand(std::unique_ptr<Command<COMMAND_TARGET>> subCommand);
 

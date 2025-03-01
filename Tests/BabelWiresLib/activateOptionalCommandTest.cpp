@@ -28,8 +28,9 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
 
     const babelwires::Path pathToValue;
 
-    babelwires::ActivateOptionalCommand command("Test command", elementId, pathToValue,
+    babelwires::ActivateOptionalCommand testCopyConstructor("Test command", elementId, pathToValue,
                                                 testUtils::TestComplexRecordType::getOpRecId());
+    babelwires::ActivateOptionalCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

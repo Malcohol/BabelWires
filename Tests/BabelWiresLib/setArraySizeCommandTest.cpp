@@ -78,8 +78,9 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayGrow) {
     EXPECT_EQ(element->getInput()->getNumChildren(), 3);
     checkModifiers();
 
-    babelwires::SetArraySizeCommand command("Test command", elementId,
-                                            testUtils::TestArrayElementData::getPathToArray(), 5);
+    babelwires::SetArraySizeCommand testCopyConstructor("Test command", elementId,
+        testUtils::TestArrayElementData::getPathToArray(), 5);
+    babelwires::SetArraySizeCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

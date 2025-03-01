@@ -35,8 +35,9 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoAtIndex) {
     EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
     checkModifiers(false);
 
-    babelwires::AddEntriesToArrayCommand command("Test command", elementId,
+    babelwires::AddEntriesToArrayCommand testCopyConstructor("Test command", elementId,
                                                  testUtils::TestArrayElementData::getPathToArray(), 1);
+    babelwires::AddEntriesToArrayCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

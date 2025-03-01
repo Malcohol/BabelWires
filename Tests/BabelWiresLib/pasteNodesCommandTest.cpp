@@ -32,7 +32,8 @@ TEST(PasteNodesCommandTest, executeAndUndoEmptyProject) {
                              babelwires::pathToString(targetFilePath.m_filePath));
     testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
-    babelwires::PasteNodesCommand command("Test command", std::move(projectData));
+    babelwires::PasteNodesCommand testCopyConstructor("Test command", std::move(projectData));
+    babelwires::PasteNodesCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

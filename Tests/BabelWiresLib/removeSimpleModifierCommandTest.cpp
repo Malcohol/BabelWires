@@ -45,7 +45,8 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
 
     checkModifiers(false);
 
-    babelwires::RemoveSimpleModifierSubcommand command(elementId, testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
+    babelwires::RemoveSimpleModifierSubcommand testCopyConstructor(elementId, testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
+    babelwires::RemoveSimpleModifierSubcommand command = testCopyConstructor;
 
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 

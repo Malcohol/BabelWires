@@ -17,7 +17,8 @@ namespace babelwires {
     /// Set the size of an array.
     class SetArraySizeCommand : public CompoundCommand<Project> {
       public:
-        SetArraySizeCommand(std::string commandName, NodeId elementId, Path featurePath,
+        CLONEABLE(SetArraySizeCommand);
+        SetArraySizeCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                     int newSize);
 
         virtual bool initializeAndExecute(Project& project) override;
@@ -31,6 +32,9 @@ namespace babelwires {
         NodeId m_nodeId;
         Path m_pathToArray;
         unsigned int m_newSize;
+
+        // Post initialization data
+
         unsigned int m_oldSize;
 
         /// Did an old modifier get replaced (otherwise this is the first modification).

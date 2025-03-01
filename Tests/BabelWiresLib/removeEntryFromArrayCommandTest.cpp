@@ -83,8 +83,9 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
 
     EXPECT_EQ(element->getInput()->getNumChildren(), 5);
 
-    babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
-                                                    testUtils::TestArrayElementData::getPathToArray(), 1, 1);
+    babelwires::RemoveEntryFromArrayCommand testCopyConstructor("Test command", elementId,
+        testUtils::TestArrayElementData::getPathToArray(), 1, 1);
+    babelwires::RemoveEntryFromArrayCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

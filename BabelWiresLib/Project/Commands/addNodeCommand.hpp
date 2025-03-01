@@ -19,9 +19,11 @@ namespace babelwires {
     /// Add a Node to the project.
     class AddNodeCommand : public SimpleCommand<Project> {
       public:
+        CLONEABLE(AddNodeCommand);
         /// Create a command which adds the given node.
         /// NOTE: An expanded path entry is always added for the root path, so the constructor asserts it is not already present.
-        AddNodeCommand(std::string commandName, std::unique_ptr<NodeData> elementToAdd);
+        AddNodeCommand(std::string commandName, std::unique_ptr<NodeData> nodeToAdd);
+        AddNodeCommand(const AddNodeCommand& other);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;

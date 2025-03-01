@@ -2,15 +2,15 @@
  * The command which pastes content into a project.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/Commands/pasteNodesCommand.hpp>
 
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
 #include <cassert>
 #include <unordered_set>
@@ -45,27 +45,28 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
         NodeId newNodeId = it->second;
         node->m_id = newNodeId;
 
-        auto newEnd = std::remove_if(
-            node->m_modifiers.begin(), node->m_modifiers.end(),
-            [this, &remappingTable, preserveInConnections, newNodeId,
-             &project](std::unique_ptr<ModifierData>& modData) {
-                if (auto* assignFromData = modData.get()->as<ConnectionModifierData>()) {
-                    NodeId& sourceId = assignFromData->m_sourceId;
-                    auto it = remappingTable.find(sourceId);
-                    if (it == remappingTable.end()) {
-                        if (!preserveInConnections || !project.getNode(sourceId)) {
-                            // Discard it if we're not preserving in-connections OR the source doesn't exist.
-                            return true;
-                        }
-                    } else {
-                        // Update the id.
-                        sourceId = it->second;
-                    }
-                    m_connectionsToPaste.emplace_back(ConnectionDescription(newNodeId, *assignFromData));
-                    return true;
-                }
-                return false;
-            });
+        auto newEnd =
+            std::remove_if(node->m_modifiers.begin(), node->m_modifiers.end(),
+                           [this, &remappingTable, preserveInConnections, newNodeId,
+                            &project](std::unique_ptr<ModifierData>& modData) {
+                               if (auto* assignFromData = modData.get()->as<ConnectionModifierData>()) {
+                                   NodeId& sourceId = assignFromData->m_sourceId;
+                                   auto it = remappingTable.find(sourceId);
+                                   if (it == remappingTable.end()) {
+                                       if (!preserveInConnections || !project.getNode(sourceId)) {
+                                           // Discard it if we're not preserving in-connections OR the source doesn't
+                                           // exist.
+                                           return true;
+                                       }
+                                   } else {
+                                       // Update the id.
+                                       sourceId = it->second;
+                                   }
+                                   m_connectionsToPaste.emplace_back(ConnectionDescription(newNodeId, *assignFromData));
+                                   return true;
+                               }
+                               return false;
+                           });
         node->m_modifiers.erase(newEnd, node->m_modifiers.end());
     }
     return true;

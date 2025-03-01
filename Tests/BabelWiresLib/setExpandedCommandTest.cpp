@@ -19,7 +19,8 @@ TEST(SetExpandedCommandTest, executeAndUndoTrue) {
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(node, nullptr);
 
-    babelwires::SetExpandedCommand command("Test command", elementId, testUtils::TestComplexRecordElementData::getPathToRecordSubrecord(), true);
+    babelwires::SetExpandedCommand testCopyConstructor("Test command", elementId, testUtils::TestComplexRecordElementData::getPathToRecordSubrecord(), true);
+    babelwires::SetExpandedCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

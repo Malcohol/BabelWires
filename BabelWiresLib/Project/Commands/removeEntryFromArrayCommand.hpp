@@ -17,7 +17,8 @@ namespace babelwires {
     /// Remove an element from an array.
     class RemoveEntryFromArrayCommand : public CompoundCommand<Project> {
       public:
-        RemoveEntryFromArrayCommand(std::string commandName, NodeId elementId, Path featurePath,
+        CLONEABLE(RemoveEntryFromArrayCommand);
+        RemoveEntryFromArrayCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                     unsigned int indexOfEntryToRemove, unsigned int numEntriesToRemove);
 
         virtual bool initializeAndExecute(Project& project) override;
@@ -30,9 +31,11 @@ namespace babelwires {
         unsigned int m_indexOfEntryToRemove;
         unsigned int m_numEntriesToRemove;
 
+        // Post initialization data
+
         /// Did an old modifier get replaced (otherwise this is the first modification).
         bool m_wasModifier = false;
-        bool m_isSubcommand;
+        bool m_isSubcommand = false;
     };
 
 } // namespace babelwires

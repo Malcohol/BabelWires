@@ -20,6 +20,7 @@ namespace babelwires {
     /// Create a new node using the data in an existing input row in the project,
     class AddNodeForTreeValueCommandBase : public Command<Project> {
       public:
+        CLONEABLE_ABSTRACT(AddNodeForTreeValueCommandBase);
 
         AddNodeForTreeValueCommandBase(std::string commandName, NodeId originalNodeId, Path pathToValue, UiPosition positionForNewNode);
 
@@ -33,6 +34,8 @@ namespace babelwires {
         NodeId m_originalNodeId;
         Path m_pathToValue;
         UiPosition m_positionForNewNode;
+
+        // Post initialization data
 
         /// This is only set after the command is executed.
         NodeId m_newNodeId = INVALID_NODE_ID;

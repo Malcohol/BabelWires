@@ -19,7 +19,8 @@ namespace babelwires {
     /// Change the source file of a FileNode.
     class ChangeFileCommand : public SimpleCommand<Project> {
       public:
-        ChangeFileCommand(std::string commandName, NodeId elementId, std::filesystem::path newFilePath);
+        CLONEABLE(ChangeFileCommand);
+        ChangeFileCommand(std::string commandName, NodeId nodeId, std::filesystem::path newFilePath);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
@@ -28,6 +29,9 @@ namespace babelwires {
       private:
         NodeId m_nodeId;
         std::filesystem::path m_newFilePath;
+
+        // Post initialization data
+
         std::filesystem::path m_oldFilePath;
     };
 

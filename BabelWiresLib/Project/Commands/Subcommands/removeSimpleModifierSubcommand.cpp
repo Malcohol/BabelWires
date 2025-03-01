@@ -7,28 +7,33 @@
  **/
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <cassert>
 
-babelwires::RemoveSimpleModifierSubcommand::RemoveSimpleModifierSubcommand(NodeId targetId,
-                                                                     Path featurePath)
+babelwires::RemoveSimpleModifierSubcommand::RemoveSimpleModifierSubcommand(NodeId targetId, Path featurePath)
     : SimpleCommand("RemoveSimpleModifierSubcommand")
     , m_targetNodeId(targetId)
     , m_targetPath(std::move(featurePath)) {}
+
+babelwires::RemoveSimpleModifierSubcommand::RemoveSimpleModifierSubcommand(const RemoveSimpleModifierSubcommand& other)
+    : SimpleCommand(other)
+    , m_targetNodeId(other.m_targetNodeId)
+    , m_targetPath(other.m_targetPath)
+    , m_modifierToRestore(other.m_modifierToRestore ? other.m_modifierToRestore->clone() : nullptr) {}
 
 bool babelwires::RemoveSimpleModifierSubcommand::initialize(const Project& project) {
     const Node* node = project.getNode(m_targetNodeId);

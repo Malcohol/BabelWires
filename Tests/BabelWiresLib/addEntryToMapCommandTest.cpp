@@ -41,7 +41,8 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
     oneToOne.setSourceValue(newSourceValue);
     oneToOne.setTargetValue(newTargetValue);
 
-    babelwires::AddEntryToMapCommand command("Add entry", oneToOne.clone(), 1);
+    babelwires::AddEntryToMapCommand testCopyConstructor("Add entry", oneToOne.clone(), 1);
+    babelwires::AddEntryToMapCommand command = testCopyConstructor;
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);

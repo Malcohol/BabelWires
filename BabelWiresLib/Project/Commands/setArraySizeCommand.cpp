@@ -18,10 +18,10 @@
 
 #include <cassert>
 
-babelwires::SetArraySizeCommand::SetArraySizeCommand(std::string commandName, NodeId elementId,
+babelwires::SetArraySizeCommand::SetArraySizeCommand(std::string commandName, NodeId nodeId,
                                                      Path featurePath, int newSize)
     : CompoundCommand(commandName)
-    , m_nodeId(elementId)
+    , m_nodeId(nodeId)
     , m_pathToArray(std::move(featurePath))
     , m_newSize(newSize) {}
 

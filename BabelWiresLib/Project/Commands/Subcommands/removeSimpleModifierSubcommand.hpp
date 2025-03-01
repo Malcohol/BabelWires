@@ -20,7 +20,9 @@ namespace babelwires {
     /// an array size modifier. See RemoveModifierCommand.
     class RemoveSimpleModifierSubcommand : public SimpleCommand<Project> {
       public:
+        CLONEABLE(RemoveSimpleModifierSubcommand);
         RemoveSimpleModifierSubcommand(NodeId targetId, Path featurePath);
+        RemoveSimpleModifierSubcommand(const RemoveSimpleModifierSubcommand& other);
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
         virtual void undo(Project& project) const override;

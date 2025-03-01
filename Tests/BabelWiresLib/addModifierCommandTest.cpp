@@ -30,7 +30,8 @@ TEST(AddModifierCommandTest, executeAndUndo) {
     babelwires::ValueAssignmentData modData(babelwires::IntValue(8));
     modData.m_targetPath = elementData.getPathToRecordInt1();
 
-    babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
+    babelwires::AddModifierCommand testCopyConstructor("Test command", elementId, modData.clone());
+    babelwires::AddModifierCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

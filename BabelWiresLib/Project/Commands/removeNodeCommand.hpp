@@ -27,15 +27,18 @@ namespace babelwires {
     /// executed in a consistent way.
     class RemoveNodeCommand : public SimpleCommand<Project> {
       public:
-        /// A default constructed object cannot be initiatialized until addElementToRemove
+        CLONEABLE(RemoveNodeCommand);
+        /// A default constructed object cannot be initiatialized until addNodeToRemove
         /// is called or it subsumes a command with data.
         RemoveNodeCommand(std::string commandName);
 
-        /// Remove the given element.
-        RemoveNodeCommand(std::string commandName, NodeId elementId);
+        /// Remove the given node.
+        RemoveNodeCommand(std::string commandName, NodeId nodeId);
 
         /// Remove the described connection.
         RemoveNodeCommand(std::string commandName, ConnectionDescription connection);
+
+        RemoveNodeCommand(const RemoveNodeCommand& other);
 
         virtual ~RemoveNodeCommand();
 
@@ -45,7 +48,7 @@ namespace babelwires {
         virtual bool shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const override;
         virtual void subsume(std::unique_ptr<Command> subsequentCommand) override;
 
-        void addElementToRemove(NodeId elementId);
+        void addNodeToRemove(NodeId nodeId);
 
       private:
         using ConnectionSet = std::unordered_set<ConnectionDescription>;
@@ -57,11 +60,14 @@ namespace babelwires {
                            const babelwires::Project& project);
 
       private:
-        std::vector<NodeId> m_elementIds;
+        std::vector<NodeId> m_nodeIds;
 
-        std::vector<std::unique_ptr<NodeData>> m_elementsToRestore;
-
+        // Note: This can be expanded during initialization.
         std::vector<ConnectionDescription> m_connections;
+
+        // Post initialization data
+
+        std::vector<std::unique_ptr<NodeData>> m_nodesToRestore;
     };
 
 } // namespace babelwires

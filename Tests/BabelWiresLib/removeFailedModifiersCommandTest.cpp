@@ -87,7 +87,9 @@ namespace {
 
         const babelwires::Path commandPath =
             isWholeRecord ? babelwires::Path() : testUtils::TestComplexRecordElementData::getPathToRecordArray();
-        babelwires::RemoveFailedModifiersCommand command("Test command", elementId, commandPath);
+
+        babelwires::RemoveFailedModifiersCommand testCopyConstructor("Test command", elementId, commandPath);
+        babelwires::RemoveFailedModifiersCommand command = testCopyConstructor;
 
         EXPECT_EQ(command.getName(), "Test command");
 

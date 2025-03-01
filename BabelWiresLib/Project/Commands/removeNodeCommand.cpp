@@ -22,11 +22,21 @@ babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName)
 
 babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName, NodeId elementId)
     : SimpleCommand(commandName)
-    , m_elementIds{elementId} {}
+    , m_nodeIds{elementId} {}
 
 babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName, ConnectionDescription connection)
     : SimpleCommand(commandName)
     , m_connections{std::move(connection)} {}
+
+babelwires::RemoveNodeCommand::RemoveNodeCommand(const RemoveNodeCommand& other)
+: SimpleCommand(other)
+, m_nodeIds(other.m_nodeIds)
+, m_connections(other.m_connections) {
+    m_nodesToRestore.reserve(other.m_nodesToRestore.size());
+    for (const auto& e : other.m_nodesToRestore) {
+        m_nodesToRestore.emplace_back(e->clone());
+    }
+}
 
 // Needed because NodeData is not declared in the header.
 babelwires::RemoveNodeCommand::~RemoveNodeCommand() = default;
@@ -92,7 +102,7 @@ bool babelwires::RemoveNodeCommand::addConnection(const babelwires::ConnectionDe
 }
 
 bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
-    assert(!(m_elementIds.empty() && m_connections.empty()) && "This command has nothing to remove.");
+    assert(!(m_nodeIds.empty() && m_connections.empty()) && "This command has nothing to remove.");
     ConnectionSet connectionsBeingRemoved;
 
     // We need to reevaluate the connections originally added, in case they refer to truncated
@@ -109,7 +119,7 @@ bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
         }
     }
 
-    for (auto elementId : m_elementIds) {
+    for (auto elementId : m_nodeIds) {
         const Node* node = project.getNode(elementId);
 
         if (!node) {
@@ -133,11 +143,11 @@ bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
             });
         newElementData->m_modifiers.erase(newEnd, newElementData->m_modifiers.end());
 
-        m_elementsToRestore.emplace_back(std::move(newElementData));
+        m_nodesToRestore.emplace_back(std::move(newElementData));
     }
 
     const Project::ConnectionInfo& connectionInfo = project.getConnectionInfo();
-    for (auto elementId : m_elementIds) {
+    for (auto elementId : m_nodeIds) {
         const Node* node = project.getNode(elementId);
         auto it = connectionInfo.m_requiredFor.find(node);
         if (it != connectionInfo.m_requiredFor.end()) {
@@ -160,13 +170,13 @@ void babelwires::RemoveNodeCommand::execute(Project& project) const {
     for (const auto& connection : reverseIterate(m_connections)) {
         project.removeModifier(connection.m_targetId, connection.m_targetPath);
     }
-    for (auto elementId : m_elementIds) {
+    for (auto elementId : m_nodeIds) {
         project.removeNode(elementId);
     }
 }
 
 void babelwires::RemoveNodeCommand::undo(Project& project) const {
-    for (const auto& elementData : m_elementsToRestore) {
+    for (const auto& elementData : m_nodesToRestore) {
         project.addNode(*elementData);
     }
     for (const auto& connection : m_connections) {
@@ -186,10 +196,10 @@ bool babelwires::RemoveNodeCommand::shouldSubsume(const Command& subsequentComma
 void babelwires::RemoveNodeCommand::subsume(std::unique_ptr<Command> subsequentCommand) {
     assert(subsequentCommand->as<RemoveNodeCommand>() && "subsume should not have been called");
     RemoveNodeCommand* removeNodeCommand = static_cast<RemoveNodeCommand*>(subsequentCommand.get());
-    m_elementIds.insert(m_elementIds.end(), removeNodeCommand->m_elementIds.begin(),
-                        removeNodeCommand->m_elementIds.end());
+    m_nodeIds.insert(m_nodeIds.end(), removeNodeCommand->m_nodeIds.begin(),
+                        removeNodeCommand->m_nodeIds.end());
 }
 
-void babelwires::RemoveNodeCommand::addElementToRemove(NodeId elementId) {
-    m_elementIds.emplace_back(elementId);
+void babelwires::RemoveNodeCommand::addNodeToRemove(NodeId elementId) {
+    m_nodeIds.emplace_back(elementId);
 }

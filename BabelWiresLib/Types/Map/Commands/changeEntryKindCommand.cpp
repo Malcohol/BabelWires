@@ -8,10 +8,10 @@
 
 #include <BabelWiresLib/Types/Map/Commands/changeEntryKindCommand.hpp>
 
+#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <cassert>
 
@@ -20,6 +20,12 @@ babelwires::ChangeEntryKindCommand::ChangeEntryKindCommand(std::string commandNa
     : SimpleCommand(commandName)
     , m_kind(kind)
     , m_indexOfEntry(indexOfEntry) {}
+
+babelwires::ChangeEntryKindCommand::ChangeEntryKindCommand(const ChangeEntryKindCommand& other)
+    : SimpleCommand(other)
+    , m_kind(other.m_kind)
+    , m_indexOfEntry(other.m_indexOfEntry)
+    , m_replacedEntry(other.m_replacedEntry ? other.m_replacedEntry->clone() : nullptr) {}
 
 bool babelwires::ChangeEntryKindCommand::initialize(const MapProject& map) {
     const int numEntries = map.getNumMapEntries();
