@@ -7,12 +7,12 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
 
 namespace babelwires {
 
     /// QAction for the remove modifier action in the context menu.
-    struct RemoveModifierAction : NodeContentsContextMenuAction {
+    struct RemoveModifierAction : NodeContentsContextMenuActionBase {
         RemoveModifierAction();
 
         virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;

@@ -9,12 +9,12 @@
 #pragma once
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
 
 namespace babelwires {
 
     /// QAction for selecting the variant of a RecordWithVariantsType.
-    class SelectVariantAction : public babelwires::NodeContentsContextMenuAction {
+    class SelectVariantAction : public babelwires::NodeContentsContextMenuActionBase {
       public:
         SelectVariantAction(babelwires::Path pathToRecord, ShortId optional);
 

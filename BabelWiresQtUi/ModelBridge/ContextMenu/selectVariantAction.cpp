@@ -15,7 +15,7 @@
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 babelwires::SelectVariantAction::SelectVariantAction(babelwires::Path pathToRecord, ShortId optional)
-    : NodeContentsContextMenuAction(IdentifierRegistry::read()->getName(optional).c_str())
+    : NodeContentsContextMenuActionBase(IdentifierRegistry::read()->getName(optional).c_str())
     , m_pathToRecord(std::move(pathToRecord))
     , m_tag(optional) {
     setCheckable(true);

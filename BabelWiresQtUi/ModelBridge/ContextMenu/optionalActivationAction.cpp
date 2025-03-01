@@ -17,7 +17,7 @@
 
 babelwires::OptionalActivationAction::OptionalActivationAction(babelwires::Path pathToRecord,
                                                                ShortId optional, bool isActivated)
-    : NodeContentsContextMenuAction(IdentifierRegistry::read()->getName(optional).c_str())
+    : NodeContentsContextMenuActionBase(IdentifierRegistry::read()->getName(optional).c_str())
     , m_pathToRecord(std::move(pathToRecord))
     , m_optional(optional)
     , m_isActivated(isActivated) {

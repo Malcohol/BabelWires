@@ -15,7 +15,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::ReloadFileAction::ReloadFileAction()
-    : NodeContentsContextMenuAction(tr("Reload file")) {}
+    : NodeContentsContextMenuActionBase(tr("Reload file")) {}
 
 void babelwires::ReloadFileAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();

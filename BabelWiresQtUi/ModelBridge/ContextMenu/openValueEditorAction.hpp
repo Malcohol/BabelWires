@@ -7,13 +7,13 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
 
 #include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 
 namespace babelwires {
 
-    struct OpenValueEditorAction : babelwires::NodeContentsContextMenuAction {
+    struct OpenValueEditorAction : babelwires::NodeContentsContextMenuActionBase {
         OpenValueEditorAction(const QString& text, DataLocation location);
 
         virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;

@@ -14,7 +14,7 @@
 
 
 babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, DataLocation location)
-    : NodeContentsContextMenuAction(text)
+    : NodeContentsContextMenuActionBase(text)
     , m_location(std::move(location)) {}
 
 void babelwires::OpenValueEditorAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {

@@ -8,11 +8,11 @@
 #pragma once
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
 
 namespace babelwires {
 
-    struct SetArraySizeAction : babelwires::NodeContentsContextMenuAction {
+    struct SetArraySizeAction : babelwires::NodeContentsContextMenuActionBase {
         SetArraySizeAction(babelwires::Path pathToArray);
 
         virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;

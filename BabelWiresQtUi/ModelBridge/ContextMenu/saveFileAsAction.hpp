@@ -7,11 +7,11 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
 
 namespace babelwires {
 
-    struct SaveFileAsAction : babelwires::NodeContentsContextMenuAction {
+    struct SaveFileAsAction : babelwires::NodeContentsContextMenuActionBase {
         SaveFileAsAction();
 
         virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;

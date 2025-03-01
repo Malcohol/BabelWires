@@ -18,7 +18,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 babelwires::RemoveModifierAction::RemoveModifierAction()
-    : NodeContentsContextMenuAction(tr("Remove modifier")) {}
+    : NodeContentsContextMenuActionBase(tr("Remove modifier")) {}
 
 void babelwires::RemoveModifierAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                        const QModelIndex& index) const {

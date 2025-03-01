@@ -20,10 +20,10 @@ namespace babelwires {
     class NodeContentsModel;
 
     /// Convenience base class that assumes the model is a NodeContentsModel.
-    class NodeContentsContextMenuAction : public ContextMenuAction {
+    class NodeContentsContextMenuActionBase : public ContextMenuAction {
         Q_OBJECT
       public:
-        NodeContentsContextMenuAction(const QString& text);
+        NodeContentsContextMenuActionBase(const QString& text);
 
         void actionTriggered(QAbstractItemModel& model, const QModelIndex& index) const override final;
 
