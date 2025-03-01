@@ -7,29 +7,28 @@
  **/
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectUtilities.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <cassert>
 
-babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, NodeId elementId,
-                                                                     Path featurePath,
+babelwires::RemoveEntryFromArrayCommand::RemoveEntryFromArrayCommand(std::string commandName, NodeId nodeId,
+                                                                     Path pathToArray,
                                                                      unsigned int indexOfEntryToRemove,
                                                                      unsigned int numEntriesToRemove)
     : CompoundCommand(commandName)
-    , m_nodeId(elementId)
-    , m_pathToArray(std::move(featurePath))
+    , m_nodeId(nodeId)
+    , m_pathToArray(std::move(pathToArray))
     , m_indexOfEntryToRemove(indexOfEntryToRemove)
-    , m_numEntriesToRemove(numEntriesToRemove)
-    , m_isSubcommand(false) {
+    , m_numEntriesToRemove(numEntriesToRemove) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
 }
 
@@ -73,7 +72,8 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
         }
     }
 
-    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_nodeId, m_pathToArray, m_indexOfEntryToRemove, -m_numEntriesToRemove));
+    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_nodeId, m_pathToArray, m_indexOfEntryToRemove,
+                                                                     -m_numEntriesToRemove));
 
     if (!CompoundCommand::initializeAndExecute(project)) {
         return false;

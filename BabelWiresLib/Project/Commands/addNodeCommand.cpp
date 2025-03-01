@@ -9,19 +9,26 @@
 #include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <cassert>
 
-babelwires::AddNodeCommand::AddNodeCommand(std::string commandName, std::unique_ptr<NodeData> elementToAdd)
+babelwires::AddNodeCommand::AddNodeCommand(std::string commandName, std::unique_ptr<NodeData> nodeToAdd)
     : SimpleCommand(std::move(commandName))
-    , m_elementToAdd(std::move(elementToAdd)) {
-    assert((std::find(m_elementToAdd->m_expandedPaths.begin(), m_elementToAdd->m_expandedPaths.end(), Path()) == m_elementToAdd->m_expandedPaths.end()) && "The root is always expanded by default.");
+    , m_elementToAdd(std::move(nodeToAdd)) {
+    assert(m_elementToAdd);
+    assert((std::find(m_elementToAdd->m_expandedPaths.begin(), m_elementToAdd->m_expandedPaths.end(), Path()) ==
+            m_elementToAdd->m_expandedPaths.end()) &&
+           "The root is always expanded by default.");
     m_elementToAdd->m_expandedPaths.emplace_back(Path());
 }
+
+babelwires::AddNodeCommand::AddNodeCommand(const AddNodeCommand& other)
+    : SimpleCommand(other)
+    , m_elementToAdd(other.m_elementToAdd->clone()) {}
 
 void babelwires::AddNodeCommand::execute(Project& project) const {
     NodeId newId = project.addNode(*m_elementToAdd);

@@ -2,13 +2,14 @@
  * ProjectData carries data sufficient to reconstruct the project.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 
+#include <Common/Cloning/cloneable.hpp>
 #include <Common/Serialization/serializable.hpp>
 
 namespace babelwires {
@@ -18,10 +19,7 @@ namespace babelwires {
         SERIALIZABLE(ProjectData, "projectData", void, 1);
         ProjectData() = default;
         ProjectData(ProjectData&&) = default;
-
-        /// Deleted, to stop ProjectData being unnecessarily copied.
-        /// If required, the m_nodes will need to be cloned.
-        ProjectData(const ProjectData& other) = delete;
+        ProjectData(const ProjectData& other);
 
         ProjectData& operator=(const ProjectData&) = delete;
 

@@ -62,7 +62,8 @@ TEST(SetMapCommandTest, executeAndUndo) {
     mapValue2.emplaceBack(oneToOne2.clone());
     mapValue2.emplaceBack(allToOne.clone());
 
-    babelwires::SetMapCommand command("Set map", mapValue2.clone());
+    babelwires::SetMapCommand testCopyConstructor("Set map", mapValue2.clone());
+    babelwires::SetMapCommand command = testCopyConstructor;
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);

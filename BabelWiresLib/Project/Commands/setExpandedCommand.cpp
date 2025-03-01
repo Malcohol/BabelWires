@@ -13,10 +13,10 @@
 
 #include <cassert>
 
-babelwires::SetExpandedCommand::SetExpandedCommand(std::string commandName, NodeId elementId,
+babelwires::SetExpandedCommand::SetExpandedCommand(std::string commandName, NodeId nodeId,
                                                    Path pathToCompound, bool expanded)
     : SimpleCommand(std::move(commandName))
-    , m_nodeId(elementId)
+    , m_nodeId(nodeId)
     , m_pathToCompound(std::move(pathToCompound))
     , m_expanded(expanded) {}
 

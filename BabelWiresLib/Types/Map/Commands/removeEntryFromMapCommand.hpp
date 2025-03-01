@@ -2,7 +2,7 @@
  * The command to remove entries from arrays.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
@@ -17,7 +17,9 @@ namespace babelwires {
     /// Add an element to an array.
     class RemoveEntryFromMapCommand : public SimpleCommand<MapProject> {
       public:
+        CLONEABLE(RemoveEntryFromMapCommand);
         RemoveEntryFromMapCommand(std::string commandName, unsigned int indexOfEntryToRemove);
+        RemoveEntryFromMapCommand(const RemoveEntryFromMapCommand& other);
         ~RemoveEntryFromMapCommand();
 
         virtual bool initialize(const MapProject& map) override;
@@ -26,6 +28,9 @@ namespace babelwires {
 
       private:
         unsigned int m_indexOfEntryToRemove;
+
+        // Post initialization data
+
         std::unique_ptr<MapEntryData> m_removedEntry;
     };
 

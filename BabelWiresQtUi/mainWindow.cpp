@@ -413,7 +413,7 @@ void babelwires::MainWindow::cut() {
 
     auto command = std::make_unique<RemoveNodeCommand>("Cut elements");
     for (const auto& node : projectData.m_nodes) {
-        command->addElementToRemove(node->m_id);
+        command->addNodeToRemove(node->m_id);
     }
 
     writeToClipboard(std::move(projectData));

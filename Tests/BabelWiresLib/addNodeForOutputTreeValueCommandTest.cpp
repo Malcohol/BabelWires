@@ -30,9 +30,10 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, executeAndUndo) {
     const babelwires::Node* const targetNode = testEnvironment.m_project.getNode(projectData.m_targetNodeId);
     ASSERT_NE(targetNode, nullptr);
 
-    babelwires::AddNodeForOutputTreeValueCommand command(
+    babelwires::AddNodeForOutputTreeValueCommand testCopyConstructor(
         "test command", projectData.m_sourceNodeId, testUtils::TestComplexRecordElementData::getPathToRecordSubrecord(),
         {-10, -20}, GetParam());
+    babelwires::AddNodeForOutputTreeValueCommand command = testCopyConstructor;
     
     EXPECT_EQ(command.getName(), "test command");
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));

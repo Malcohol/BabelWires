@@ -20,6 +20,7 @@ namespace babelwires {
     /// Add an element to an array.
     class SetMapSourceTypeCommand : public SimpleCommand<MapProject> {
       public:
+        CLONEABLE(SetMapSourceTypeCommand);
         SetMapSourceTypeCommand(std::string commandName, TypeRef newSourceTypeRef);
 
         virtual bool initialize(const MapProject& map) override;
@@ -28,6 +29,9 @@ namespace babelwires {
 
       private:
         TypeRef m_newSourceTypeRef;
+
+        // Post initialization data
+
         TypeRef m_oldSourceTypeRef;
     };
 

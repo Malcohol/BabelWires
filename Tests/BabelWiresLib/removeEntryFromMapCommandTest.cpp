@@ -45,7 +45,8 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
 
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
 
-    babelwires::RemoveEntryFromMapCommand command("Remove", 1);
+    babelwires::RemoveEntryFromMapCommand testCopyConstructor("Remove", 1);
+    babelwires::RemoveEntryFromMapCommand command = testCopyConstructor;
     
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);

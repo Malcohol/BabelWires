@@ -69,8 +69,9 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     ASSERT_NE(input, nullptr);
     const testUtils::TestComplexRecordType* const type = input->getType().as<testUtils::TestComplexRecordType>();
 
-    babelwires::DeactivateOptionalCommand command("Test command", elementId, pathToValue,
-                                                  testUtils::TestComplexRecordType::getOpRecId());
+    babelwires::DeactivateOptionalCommand testCopyConstructor("Test command", elementId, pathToValue,
+        testUtils::TestComplexRecordType::getOpRecId());
+    babelwires::DeactivateOptionalCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

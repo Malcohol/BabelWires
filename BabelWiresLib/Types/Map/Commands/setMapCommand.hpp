@@ -2,15 +2,15 @@
  * The command which sets a map to its default state.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
 #pragma once
 
-#include <BabelWiresLib/Types/Map/mapValue.hpp>
-#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
 
 namespace babelwires {
     class MapProject;
@@ -18,6 +18,7 @@ namespace babelwires {
     /// Add an element to an array.
     class SetMapCommand : public SimpleCommand<MapProject> {
       public:
+        CLONEABLE(SetMapCommand);
         SetMapCommand(std::string commandName, ValueHolderTemplate<MapValue> newData);
 
         virtual bool initialize(const MapProject& map) override;
@@ -26,6 +27,9 @@ namespace babelwires {
 
       private:
         ValueHolderTemplate<MapValue> m_newContents;
+
+        // Post initialization data
+
         ValueHolderTemplate<MapValue> m_oldContents;
     };
 

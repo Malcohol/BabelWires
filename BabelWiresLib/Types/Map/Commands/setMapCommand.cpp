@@ -13,9 +13,10 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
 babelwires::SetMapCommand::SetMapCommand(std::string commandName, ValueHolderTemplate<MapValue> newData)
-    : SimpleCommand(commandName), m_newContents(std::move(newData)) {
-        assert(m_newContents->as<MapValue>() && "SetMapCommand given non-map value");
-    }
+    : SimpleCommand(commandName)
+    , m_newContents(std::move(newData)) {
+    assert(m_newContents->as<MapValue>() && "SetMapCommand given non-map value");
+}
 
 bool babelwires::SetMapCommand::initialize(const MapProject& map) {
     m_oldContents = map.extractMapValue();

@@ -89,8 +89,9 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 
     EXPECT_EQ(element->getInput()->getNumChildren(), initialArraySize);
 
-    babelwires::RemoveModifierCommand command("Test command", elementId,
-                                              testUtils::TestArrayElementData::getPathToArray());
+    babelwires::RemoveModifierCommand testCopyConstructor("Test command", elementId,
+        testUtils::TestArrayElementData::getPathToArray());
+    babelwires::RemoveModifierCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
 

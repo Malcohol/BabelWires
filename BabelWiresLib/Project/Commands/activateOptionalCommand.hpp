@@ -2,7 +2,7 @@
  * The command which activates optionals in a RecordType.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
@@ -18,8 +18,8 @@ namespace babelwires {
     /// Activate an optional in a RecordType
     class ActivateOptionalCommand : public SimpleCommand<Project> {
       public:
-        ActivateOptionalCommand(std::string commandName, NodeId elementId, Path featurePath,
-                               ShortId optional);
+        CLONEABLE(ActivateOptionalCommand);
+        ActivateOptionalCommand(std::string commandName, NodeId nodeId, Path pathToRecord, ShortId optional);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
@@ -29,6 +29,8 @@ namespace babelwires {
         NodeId m_nodeId;
         Path m_pathToRecord;
         ShortId m_optional;
+
+        // Post initialization data
 
         /// Did an old modifier get replaced (otherwise this is the first modification).
         bool m_wasModifier = false;

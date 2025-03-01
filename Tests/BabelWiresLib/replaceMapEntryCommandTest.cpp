@@ -50,7 +50,8 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
     oneToOne2.setSourceValue(newSourceValue);
     oneToOne2.setTargetValue(newTargetValue);
 
-    babelwires::ReplaceMapEntryCommand command("Replace", oneToOne2.clone(), 1);
+    babelwires::ReplaceMapEntryCommand testCopyConstructor("Replace", oneToOne2.clone(), 1);
+    babelwires::ReplaceMapEntryCommand command = testCopyConstructor;
     
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);

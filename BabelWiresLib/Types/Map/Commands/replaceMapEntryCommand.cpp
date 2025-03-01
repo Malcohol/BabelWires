@@ -2,22 +2,32 @@
  * The command which adds entries to arrays.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
 #include <BabelWiresLib/Types/Map/Commands/replaceMapEntryCommand.hpp>
 
-#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
 #include <cassert>
 
-babelwires::ReplaceMapEntryCommand::ReplaceMapEntryCommand(std::string commandName, std::unique_ptr<MapEntryData> newEntry, unsigned int indexOfReplacement)
+babelwires::ReplaceMapEntryCommand::ReplaceMapEntryCommand(std::string commandName,
+                                                           std::unique_ptr<MapEntryData> newEntry,
+                                                           unsigned int indexOfReplacement)
     : SimpleCommand(commandName)
     , m_newEntry(std::move(newEntry))
-    , m_indexOfReplacement(indexOfReplacement) {}
+    , m_indexOfReplacement(indexOfReplacement) {
+    assert(m_newEntry);
+}
+
+babelwires::ReplaceMapEntryCommand::ReplaceMapEntryCommand(const ReplaceMapEntryCommand& other)
+    : SimpleCommand(other)
+    , m_newEntry(other.m_newEntry->clone())
+    , m_replacedEntry(other.m_replacedEntry ? other.m_replacedEntry->clone() : nullptr)
+    , m_indexOfReplacement(other.m_indexOfReplacement) {}
 
 bool babelwires::ReplaceMapEntryCommand::initialize(const MapProject& map) {
     const int numEntries = map.getNumMapEntries();

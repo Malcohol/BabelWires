@@ -15,10 +15,11 @@ namespace babelwires {
     class Project;
     struct ModifierData;
 
-    /// Remove all modifiers and expanded paths at and beneath a given feature.
+    /// Remove all modifiers and expanded paths at and beneath a given TreeValueNode.
     class RemoveAllEditsSubcommand : public CompoundCommand<Project> {
       public:
-        RemoveAllEditsSubcommand(NodeId elementId, Path pathToFeature);
+        CLONEABLE(RemoveAllEditsSubcommand);
+        RemoveAllEditsSubcommand(NodeId elementId, Path path);
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;
@@ -27,6 +28,8 @@ namespace babelwires {
       private:
         NodeId m_nodeId;
         Path m_path;
+
+        // Post initialization data
 
         std::vector<Path> m_expandedPathsRemoved;
 

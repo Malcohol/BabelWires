@@ -2,27 +2,25 @@
  * The command which activates optionals in a RecordType.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
 #include <BabelWiresLib/Project/Commands/activateOptionalCommand.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, NodeId nodeId, Path featurePath,
-                               ShortId optional)
+babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, NodeId nodeId, Path pathToRecord,
+                                                             ShortId optional)
     : SimpleCommand(commandName)
     , m_nodeId(nodeId)
-    , m_pathToRecord(std::move(featurePath))
-    , m_optional(optional)
-{
-}
+    , m_pathToRecord(std::move(pathToRecord))
+    , m_optional(optional) {}
 
 bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
     const Node* nodeToModify = project.getNode(m_nodeId);
@@ -39,11 +37,11 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
         ValueTreeHelper::getInfoFromRecordWithOptionals(m_pathToRecord.tryFollow(*input));
 
     if (!compoundFeature) {
-        return false;   
+        return false;
     }
 
     auto it = optionals.find(m_optional);
-    
+
     if (it == optionals.end()) {
         return false;
     }

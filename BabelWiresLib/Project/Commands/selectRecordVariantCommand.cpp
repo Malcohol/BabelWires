@@ -8,19 +8,27 @@
 
 #include <BabelWiresLib/Project/Commands/selectRecordVariantCommand.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 
-babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, NodeId elementId,
-                                                               Path featurePath, ShortId tagToSelect)
+babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, NodeId nodeId,
+                                                                   Path pathToRecord, ShortId tagToSelect)
     : CompoundCommand(commandName)
-    , m_nodeId(elementId)
-    , m_pathToRecord(std::move(featurePath))
+    , m_nodeId(nodeId)
+    , m_pathToRecord(std::move(pathToRecord))
     , m_tagToSelect(tagToSelect) {}
+
+babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(const SelectRecordVariantCommand& other)
+    : CompoundCommand(other)
+    , m_nodeId(other.m_nodeId)
+    , m_pathToRecord(other.m_pathToRecord)
+    , m_tagToSelect(other.m_tagToSelect)
+    , m_recordModifierToAdd(other.m_recordModifierToAdd ? other.m_recordModifierToAdd->clone() : nullptr)
+    , m_recordModifierToRemove(other.m_recordModifierToRemove ? other.m_recordModifierToRemove->clone() : nullptr) {}
 
 babelwires::SelectRecordVariantCommand::~SelectRecordVariantCommand() = default;
 
@@ -39,7 +47,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
         ValueTreeHelper::getInfoFromRecordWithVariants(m_pathToRecord.tryFollow(*input), m_tagToSelect);
 
     if (!compoundFeature) {
-        return false;   
+        return false;
     }
 
     if (isCurrentTag) {

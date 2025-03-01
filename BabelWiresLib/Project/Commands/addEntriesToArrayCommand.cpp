@@ -8,23 +8,23 @@
 
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectUtilities.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <cassert>
 
-babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string commandName, NodeId elementId,
+babelwires::AddEntriesToArrayCommand::AddEntriesToArrayCommand(std::string commandName, NodeId nodeId,
                                                                Path featurePath, unsigned int indexOfNewEntries,
                                                                unsigned int numEntriesToAdd)
     : CompoundCommand(commandName)
-    , m_nodeId(elementId)
+    , m_nodeId(nodeId)
     , m_pathToArray(std::move(featurePath))
     , m_indexOfNewEntries(indexOfNewEntries)
     , m_numEntriesToAdd(numEntriesToAdd) {}

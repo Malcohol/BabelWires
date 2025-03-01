@@ -17,7 +17,9 @@ namespace babelwires {
     /// Add an element to an array.
     class ReplaceMapEntryCommand : public SimpleCommand<MapProject> {
       public:
+        CLONEABLE(ReplaceMapEntryCommand);
         ReplaceMapEntryCommand(std::string commandName, std::unique_ptr<MapEntryData> newEntry, unsigned int indexOfReplacement);
+        ReplaceMapEntryCommand(const ReplaceMapEntryCommand& other);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
@@ -25,8 +27,11 @@ namespace babelwires {
 
       private:
         std::unique_ptr<MapEntryData> m_newEntry;
-        std::unique_ptr<MapEntryData> m_replacedEntry;
         unsigned int m_indexOfReplacement;
+
+        // Post initialization data
+
+        std::unique_ptr<MapEntryData> m_replacedEntry;
     };
 
 } // namespace babelwires

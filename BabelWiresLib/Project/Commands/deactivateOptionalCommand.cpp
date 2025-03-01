@@ -16,10 +16,10 @@
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, NodeId elementId, Path featurePath,
+babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                ShortId optional)
     : CompoundCommand(commandName)
-    , m_nodeId(elementId)
+    , m_nodeId(nodeId)
     , m_pathToRecord(std::move(featurePath))
     , m_optional(optional)
 {
