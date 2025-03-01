@@ -57,7 +57,8 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(3).getValidity());
 
-    babelwires::SetMapTargetTypeCommand command("Set type", testUtils::TestSubSubEnum2::getThisType());
+    babelwires::SetMapTargetTypeCommand testCopyConstructor("Set type", testUtils::TestSubSubEnum2::getThisType());
+    babelwires::SetMapTargetTypeCommand command = testCopyConstructor;
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);

@@ -23,7 +23,9 @@ TEST(ResizeNodeCommandTest, executeAndUndo) {
     ASSERT_NE(node, nullptr);
     EXPECT_EQ(node->getUiSize().m_width, 77);
 
-    babelwires::ResizeNodeCommand command("Test command", elementId, babelwires::UiSize{113});
+    babelwires::ResizeNodeCommand testCopyConstructor("Test command", elementId, babelwires::UiSize{113});
+    babelwires::ResizeNodeCommand command = testCopyConstructor;
+    
     EXPECT_EQ(command.getName(), "Test command");
 
     EXPECT_TRUE(command.initialize(testEnvironment.m_project));

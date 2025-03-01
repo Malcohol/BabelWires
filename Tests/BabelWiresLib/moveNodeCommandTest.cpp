@@ -24,7 +24,8 @@ TEST(MoveNodeCommandTest, executeAndUndo) {
     EXPECT_EQ(node->getUiPosition().m_x, -14);
     EXPECT_EQ(node->getUiPosition().m_y, -15);
 
-    babelwires::MoveNodeCommand command("Test command", elementId, babelwires::UiPosition{100, 12});
+    babelwires::MoveNodeCommand testCopyConstructor("Test command", elementId, babelwires::UiPosition{100, 12});
+    babelwires::MoveNodeCommand command = testCopyConstructor;
     EXPECT_EQ(command.getName(), "Test command");
 
     EXPECT_TRUE(command.initialize(testEnvironment.m_project));

@@ -97,8 +97,9 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
         }
     };
 
-    babelwires::SelectRecordVariantCommand command("Test command", elementId, testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants(),
+    babelwires::SelectRecordVariantCommand testCopyConstructor("Test command", elementId, testUtils::TestRecordWithVariantsElementData::getPathToRecordWithVariants(),
                                                    testUtils::TestRecordWithVariantsType::getTagBId());
+    babelwires::SelectRecordVariantCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
     EXPECT_EQ(getSelectedTag(node->getInput()), testUtils::TestRecordWithVariantsType::getTagAId());

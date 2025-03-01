@@ -48,7 +48,8 @@ namespace {
             EXPECT_EQ(getOutput().getintR0().get(), 'x');
         }
 
-        babelwires::ChangeFileCommand command("Test command", elementId, filePath2.m_filePath);
+        babelwires::ChangeFileCommand testCopyConstructor("Test command", elementId, filePath2.m_filePath);
+        babelwires::ChangeFileCommand command = testCopyConstructor;
 
         EXPECT_EQ(command.getName(), "Test command");
 
