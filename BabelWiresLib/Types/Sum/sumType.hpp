@@ -12,7 +12,9 @@
 namespace babelwires {
 
     /// SumType is the type which allows any value of any of a number of other types.
-    /// A value of a sum type is just a bare values of one of the summands.
+    /// A value of a sum type is just a bare values of one of the summands. 
+    /// Be very careful when making a sumtype with overlapping summands, because the
+    /// UI cannot know which type is intended and editing won't work properly.
     class SumType : public Type {
       public:
         using Summands = std::vector<TypeRef>;
