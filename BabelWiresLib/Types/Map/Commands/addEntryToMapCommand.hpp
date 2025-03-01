@@ -2,7 +2,7 @@
  * The command which adds entries to arrays.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
@@ -17,7 +17,10 @@ namespace babelwires {
     /// Add an element to an array.
     class AddEntryToMapCommand : public SimpleCommand<MapProject> {
       public:
-        AddEntryToMapCommand(std::string commandName, std::unique_ptr<MapEntryData> newEntry, unsigned int indexOfNewEntry);
+        CLONEABLE(AddEntryToMapCommand);
+        AddEntryToMapCommand(std::string commandName, std::unique_ptr<MapEntryData> newEntry,
+                             unsigned int indexOfNewEntry);
+        AddEntryToMapCommand(const AddEntryToMapCommand& other);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;

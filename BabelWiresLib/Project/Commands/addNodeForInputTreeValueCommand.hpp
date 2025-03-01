@@ -21,6 +21,8 @@ namespace babelwires {
     /// Create a new node using the data in an existing input row in the project,
     class AddNodeForInputTreeValueCommand : public AddNodeForTreeValueCommandBase {
       public:
+        CLONEABLE(AddNodeForInputTreeValueCommand);
+
         enum class RelationshipToOldNode {
             /// The old value will now be assigned its value from the new node. All modifiers move to the new node.
             Source,

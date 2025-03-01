@@ -18,6 +18,7 @@ namespace babelwires {
     /// Remove the modifier, and restore any other modifiers removed when an array's size changes.
     class RemoveModifierCommand : public CompoundCommand<Project> {
       public:
+        CLONEABLE(RemoveModifierCommand);
         RemoveModifierCommand(std::string commandName, NodeId targetId, Path featurePath);
 
         virtual bool initializeAndExecute(Project& project) override;

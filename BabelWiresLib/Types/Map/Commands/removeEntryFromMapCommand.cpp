@@ -2,21 +2,27 @@
  * The command to remove entries from arrays.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
 #include <BabelWiresLib/Types/Map/Commands/removeEntryFromMapCommand.hpp>
 
+#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
-#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 
 #include <cassert>
 
-babelwires::RemoveEntryFromMapCommand::RemoveEntryFromMapCommand(std::string commandName, unsigned int indexOfEntryToRemove)
+babelwires::RemoveEntryFromMapCommand::RemoveEntryFromMapCommand(std::string commandName,
+                                                                 unsigned int indexOfEntryToRemove)
     : SimpleCommand(commandName)
     , m_indexOfEntryToRemove(indexOfEntryToRemove) {}
+
+babelwires::RemoveEntryFromMapCommand::RemoveEntryFromMapCommand(const RemoveEntryFromMapCommand& other)
+    : SimpleCommand(other)
+    , m_indexOfEntryToRemove(other.m_indexOfEntryToRemove)
+    , m_removedEntry(other.m_removedEntry ? other.m_removedEntry->clone() : nullptr) {}
 
 babelwires::RemoveEntryFromMapCommand::~RemoveEntryFromMapCommand() = default;
 

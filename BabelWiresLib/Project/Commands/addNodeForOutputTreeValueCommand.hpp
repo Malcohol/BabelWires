@@ -21,6 +21,8 @@ namespace babelwires {
     /// Create a new node using the data in an existing input row in the project,
     class AddNodeForOutputTreeValueCommand : public AddNodeForTreeValueCommandBase {
       public:
+        CLONEABLE(AddNodeForOutputTreeValueCommand);
+
         enum class RelationshipToDependentNodes {
             /// Nodes with connections to the old node will now connect to the new node.
             NewParent,

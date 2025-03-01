@@ -10,10 +10,19 @@
 
 namespace {
     struct TestCommand : babelwires::Command<babelwires::Project> {
+        CLONEABLE(TestCommand);
         TestCommand(std::string commandName, bool shouldApply, bool isSubsumable = false)
             : Command<babelwires::Project>(std::move(commandName))
             , m_shouldApply(shouldApply)
             , m_isSubsumable(isSubsumable) {}
+
+        TestCommand(const TestCommand& other)
+            : Command(other)
+            , m_shouldApply(other.m_shouldApply)
+            , m_isSubsumable(other.m_isSubsumable)
+        {
+            // TODO Clone subsumed commands here.
+        }
 
         bool initializeAndExecute(babelwires::Project& project) override {
             if (m_shouldApply) {

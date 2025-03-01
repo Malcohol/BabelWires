@@ -2,7 +2,7 @@
  * Commands define undoable ways of mutating the a COMMAND_TARGET.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
@@ -56,6 +56,15 @@ bool babelwires::SimpleCommand<COMMAND_TARGET>::initializeAndExecute(COMMAND_TAR
 template <typename COMMAND_TARGET>
 babelwires::CompoundCommand<COMMAND_TARGET>::CompoundCommand(std::string commandName)
     : Command<COMMAND_TARGET>(std::move(commandName)) {}
+
+template <typename COMMAND_TARGET>
+babelwires::CompoundCommand<COMMAND_TARGET>::CompoundCommand(const CompoundCommand& other)
+    : Command<COMMAND_TARGET>(other) {
+    m_subCommands.reserve(other.m_subCommands.size());
+    for (const auto& c : other.m_subCommands) {
+        m_subCommands.emplace_back(c->clone());
+    };
+}
 
 template <typename COMMAND_TARGET>
 void babelwires::CompoundCommand<COMMAND_TARGET>::addSubCommand(std::unique_ptr<Command<COMMAND_TARGET>> subCommand) {

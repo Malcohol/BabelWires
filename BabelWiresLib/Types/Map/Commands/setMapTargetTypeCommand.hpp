@@ -20,6 +20,7 @@ namespace babelwires {
     /// Add an element to an array feature.
     class SetMapTargetTypeCommand : public SimpleCommand<MapProject> {
       public:
+        CLONEABLE(SetMapTargetTypeCommand);
         SetMapTargetTypeCommand(std::string commandName, TypeRef newTargetTypeRef);
 
         virtual bool initialize(const MapProject& map) override;
@@ -28,6 +29,9 @@ namespace babelwires {
 
       private:
         TypeRef m_newTargetTypeRef;
+
+        // Post initialization data
+
         TypeRef m_oldTargetTypeRef;
     };
 

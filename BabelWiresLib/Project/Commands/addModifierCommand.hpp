@@ -19,7 +19,9 @@ namespace babelwires {
     /// Add a modifier to a Node.
     class AddModifierCommand : public CompoundCommand<Project> {
       public:
+        CLONEABLE(AddModifierCommand);
         AddModifierCommand(std::string commandName, NodeId targetId, std::unique_ptr<ModifierData> modifierToAdd);
+        AddModifierCommand(const AddModifierCommand& other);
 
         virtual bool initializeAndExecute(Project& project) override;
         virtual void execute(Project& project) const override;

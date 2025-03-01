@@ -2,7 +2,7 @@
  * The command which selects the variant in a RecordWithVariantType.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
@@ -19,8 +19,9 @@ namespace babelwires {
     /// Activate an optional in a RecordWithVariantType
     class SelectRecordVariantCommand : public CompoundCommand<Project> {
       public:
-        SelectRecordVariantCommand(std::string commandName, NodeId elementId, Path featurePath,
-                               ShortId tagToSelect);
+        CLONEABLE(SelectRecordVariantCommand);
+        SelectRecordVariantCommand(std::string commandName, NodeId nodeId, Path pathToRecord, ShortId tagToSelect);
+        SelectRecordVariantCommand(const SelectRecordVariantCommand& other);
         virtual ~SelectRecordVariantCommand();
 
         virtual bool initializeAndExecute(Project& project) override;
@@ -31,6 +32,8 @@ namespace babelwires {
         NodeId m_nodeId;
         Path m_pathToRecord;
         ShortId m_tagToSelect;
+
+        // Post initialization data
 
         std::unique_ptr<ModifierData> m_recordModifierToAdd;
         std::unique_ptr<ModifierData> m_recordModifierToRemove;

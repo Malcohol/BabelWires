@@ -20,7 +20,8 @@ namespace babelwires {
 
     class ResizeNodeCommand : public SimpleCommand<Project> {
       public:
-        ResizeNodeCommand(std::string commandName, NodeId elementId, UiSize newSize);
+        CLONEABLE(ResizeNodeCommand);
+        ResizeNodeCommand(std::string commandName, NodeId nodeId, UiSize newSize);
 
         virtual bool initialize(const Project& project) override;
         virtual void execute(Project& project) const override;
@@ -31,6 +32,9 @@ namespace babelwires {
       private:
         NodeId m_nodeId;
         UiSize m_newSize;
+        
+        // Post initialization data
+        
         UiSize m_oldSize;
     };
 

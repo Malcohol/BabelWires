@@ -2,13 +2,20 @@
  * ProjectData carries data sufficient to reconstruct the project.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/projectData.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
+
+babelwires::ProjectData::ProjectData(const ProjectData& other) {
+    m_nodes.reserve(other.m_nodes.size());
+    for (const auto& n : other.m_nodes) {
+        m_nodes.emplace_back(n->clone());
+    }
+}
 
 void babelwires::ProjectData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("id", m_projectId);

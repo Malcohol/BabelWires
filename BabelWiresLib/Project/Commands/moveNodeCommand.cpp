@@ -2,7 +2,7 @@
  * The command which changes the UiPosition of a Node.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
@@ -12,30 +12,30 @@
 
 #include <cassert>
 
-babelwires::MoveNodeCommand::MoveNodeCommand(std::string commandName, NodeId elementId, UiPosition newPosition)
+babelwires::MoveNodeCommand::MoveNodeCommand(std::string commandName, NodeId nodeId, UiPosition newPosition)
     : SimpleCommand(std::move(commandName))
-    , m_newPositions{std::pair{elementId, newPosition}} {}
+    , m_newPositions{std::pair{nodeId, newPosition}} {}
 
 bool babelwires::MoveNodeCommand::initialize(const Project& project) {
-    for (const auto& [elementId, _] : m_newPositions) {
-        const Node* node = project.getNode(elementId);
+    for (const auto& [nodeId, _] : m_newPositions) {
+        const Node* node = project.getNode(nodeId);
         if (!node) {
             return false;
         }
-        m_oldPositions.insert(std::pair{elementId, node->getUiPosition()});
+        m_oldPositions.insert(std::pair{nodeId, node->getUiPosition()});
     }
     return true;
 }
 
 void babelwires::MoveNodeCommand::execute(Project& project) const {
-    for (const auto& [elementId, newPosition] : m_newPositions) {
-        project.setNodePosition(elementId, newPosition);
+    for (const auto& [nodeId, newPosition] : m_newPositions) {
+        project.setNodePosition(nodeId, newPosition);
     }
 }
 
 void babelwires::MoveNodeCommand::undo(Project& project) const {
-    for (const auto& [elementId, oldPosition] : m_oldPositions) {
-        project.setNodePosition(elementId, oldPosition);
+    for (const auto& [nodeId, oldPosition] : m_oldPositions) {
+        project.setNodePosition(nodeId, oldPosition);
     }
 }
 
@@ -69,8 +69,7 @@ void babelwires::MoveNodeCommand::subsume(std::unique_ptr<Command> subsequentCom
     setTimestamp(moveNodeCommand->getTimestamp());
 }
 
-std::optional<babelwires::UiPosition>
-babelwires::MoveNodeCommand::getPositionForOnlyNode(NodeId elementId) const {
+std::optional<babelwires::UiPosition> babelwires::MoveNodeCommand::getPositionForOnlyNode(NodeId nodeId) const {
     if (m_newPositions.size() == 1) {
         return {m_newPositions.begin()->second};
     } else {
