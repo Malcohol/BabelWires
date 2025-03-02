@@ -22,7 +22,7 @@ void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, 
         }
         catch (ModelException& e) {
             // TODO: Depends on context. A failed user action should report an error.
-            userLogger.logWarning() << "Could not open an editor for " << data.toString() << ": " << e.what();
+            userLogger.logWarning() << "Could not open an editor for " << data << ": " << e.what();
             return;
         }
     }

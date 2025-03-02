@@ -11,17 +11,15 @@
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
-bool babelwires::ProjectDataLocation::operator==(const DataLocation& other) const { 
+bool babelwires::ProjectDataLocation::equals(const DataLocation& other) const { 
     if (const auto* otherProjectDataLocation = other.as<ProjectDataLocation>()) {
         return (m_nodeId == otherProjectDataLocation->m_nodeId) && (m_pathToValue == otherProjectDataLocation->m_pathToValue);
     }
     return false;
 }
 
-std::string babelwires::ProjectDataLocation::toString() const {
-    std::ostringstream os;
+void babelwires::ProjectDataLocation::writeToStream(std::ostream& os) const {
     os << "\"" << m_pathToValue << " @ node " << m_nodeId << "\"";
-    return os.str();
 }
 
 babelwires::ProjectDataLocation::ProjectDataLocation(NodeId elementId, Path pathToValue)

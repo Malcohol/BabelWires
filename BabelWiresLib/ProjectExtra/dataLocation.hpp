@@ -21,12 +21,21 @@ namespace babelwires {
         DOWNCASTABLE_TYPE_HIERARCHY(DataLocation);
         CLONEABLE_ABSTRACT(DataLocation);
 
-        // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
         virtual std::size_t getHash() const = 0;
 
-        virtual bool operator==(const DataLocation& other) const = 0;
+        inline friend bool operator==(const DataLocation& a, const DataLocation& b) { 
+            return a.equals(b);
+        }
+
+        inline friend std::ostream& operator<<(std::ostream& os, const DataLocation& data) {
+            data.writeToStream(os);
+            return os;
+        }
+
+      protected:
+        virtual bool equals(const DataLocation& other) const = 0;
         
-        virtual std::string toString() const = 0;
+        virtual void writeToStream(std::ostream& os) const = 0;
     };
 }
 

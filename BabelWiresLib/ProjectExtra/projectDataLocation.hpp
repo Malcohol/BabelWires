@@ -22,13 +22,13 @@ namespace babelwires {
         NodeId getNodeId() const;
         const Path& getPathToValue() const;
 
-      public:
         // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
         std::size_t getHash() const override;
 
-        bool operator==(const DataLocation& other) const override;
+      protected:
+        bool equals(const DataLocation& other) const override;
 
-        std::string toString() const override;
+        void writeToStream(std::ostream& os) const override;
 
       public:
         // Serialization.
