@@ -37,7 +37,7 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEnt
     const MapEntryData::Kind currentKind = data.getKind();
 
     auto resetEntry =
-        std::make_unique<ChangeEntryKindContextMenuAction>("Reset entry", currentKind, m_row);
+        std::make_unique<ChangeEntryKindContextMenuAction>("Reset entry", currentKind, m_row, false);
     if ((m_sourceType == nullptr) || (m_targetType == nullptr)) {
         addEntryAbove->setDisabled(true);
         addEntryBelow->setDisabled(true);
@@ -55,7 +55,7 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEnt
         const MapEntryData::Kind kind = static_cast<MapEntryData::Kind>(i);
         const auto actionName = QString(MapEntryData::getKindName(kind).c_str());
         auto action =
-            std::make_unique<ChangeEntryKindContextMenuAction>(actionName, kind, m_row);
+            std::make_unique<ChangeEntryKindContextMenuAction>(actionName, kind, m_row, true);
         if (kind == currentKind) {
             action->setChecked(true);
         }

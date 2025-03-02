@@ -20,7 +20,7 @@ namespace babelwires {
     class ChangeEntryKindContextMenuAction : public ContextMenuAction {
         Q_OBJECT
       public:
-        ChangeEntryKindContextMenuAction(const QString& text, MapEntryData::Kind kind, unsigned int indexOfEntry);
+        ChangeEntryKindContextMenuAction(const QString& text, MapEntryData::Kind kind, unsigned int indexOfEntry, bool isCheckable);
 
         void actionTriggered(QAbstractItemModel& model, const QModelIndex& index) const override;
 

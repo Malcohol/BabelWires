@@ -14,8 +14,13 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 babelwires::ChangeEntryKindContextMenuAction::ChangeEntryKindContextMenuAction(const QString& text, MapEntryData::Kind kind,
-                                                                       unsigned int indexOfNewEntry)
-    : ContextMenuAction(text), m_kind(kind), m_indexOfNewEntry(indexOfNewEntry) {}
+                                                                       unsigned int indexOfNewEntry, bool isCheckable)
+    : ContextMenuAction(text), m_kind(kind), m_indexOfNewEntry(indexOfNewEntry) {
+        if (isCheckable) {
+            setCheckable(true);
+            setChecked(false);
+        }
+    }
 
 void babelwires::ChangeEntryKindContextMenuAction::actionTriggered(QAbstractItemModel& model,
                                                                const QModelIndex& index) const {
