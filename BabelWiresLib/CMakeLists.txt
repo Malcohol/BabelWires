@@ -49,6 +49,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/MapEntries/allToSameFallbackMapEntryData.cpp
 	Types/Map/MapEntries/allToOneFallbackMapEntryData.cpp
 	Types/Map/MapProject/mapProject.cpp
+	Types/Map/MapProject/mapProjectDataLocation.cpp
 	Types/Map/MapProject/mapProjectEntry.cpp
 	Types/Map/MapProject/mapSerialization.cpp
 	Types/Map/mapType.cpp
