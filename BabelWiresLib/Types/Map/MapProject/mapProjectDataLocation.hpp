@@ -45,7 +45,7 @@ namespace babelwires {
         void visitFilePaths(FilePathVisitor& visitor) override;
 
       private:
-        MapProjectDataLocation();
+        MapProjectDataLocation() = default;
 
       private:
         unsigned int m_entryIndex;
