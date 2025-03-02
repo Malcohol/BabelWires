@@ -20,7 +20,6 @@ namespace babelwires {
         ProjectDataLocation(const ProjectDataLocation& other) = default;
 
         NodeId getNodeId() const;
-        const Path& getPathToValue() const;
 
         // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
         std::size_t getHash() const override;
@@ -34,14 +33,11 @@ namespace babelwires {
         // Serialization.
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
-        void visitIdentifiers(IdentifierVisitor& visitor) override;
-        void visitFilePaths(FilePathVisitor& visitor) override;
 
       private:
         ProjectDataLocation() = default;
 
       private:
         NodeId m_nodeId;
-        Path m_pathToValue;
     };
 }

@@ -28,6 +28,7 @@ SET( BABELWIRESLIB_SRCS
 	ProjectExtra/projectObserver.cpp
 	ProjectExtra/connectionDescription.cpp
 	Project/projectUtilities.cpp
+	ProjectExtra/dataLocation.cpp
 	ProjectExtra/projectDataLocation.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp

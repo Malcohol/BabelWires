@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Path/path.hpp>
+#include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
 #include <Common/Cloning/cloneable.hpp>
@@ -16,28 +16,45 @@
 
 namespace babelwires {
     /// A DataLocation identifies some data within the system.
+    /// Values are assumed to have subvalues, so a path is always assumed.
     class DataLocation : public Cloneable, Serializable, ProjectVisitable {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(DataLocation);
         CLONEABLE_ABSTRACT(DataLocation);
 
-        virtual std::size_t getHash() const = 0;
+        DataLocation(Path pathToValue);
 
-        inline friend bool operator==(const DataLocation& a, const DataLocation& b) { 
-            return a.equals(b);
-        }
+        const Path& getPathToValue() const;
+        Path& getPathToValue();
+
+        virtual std::size_t getHash() const;
+
+        inline friend bool operator==(const DataLocation& a, const DataLocation& b) { return a.equals(b); }
 
         inline friend std::ostream& operator<<(std::ostream& os, const DataLocation& data) {
+            os << "\"";
             data.writeToStream(os);
-            return os;
+            return os << "\"";
         }
 
+      public:
+        // Serialization.
+        void serializeContents(Serializer& serializer) const override;
+        void deserializeContents(Deserializer& deserializer) override;
+        void visitIdentifiers(IdentifierVisitor& visitor) override;
+        void visitFilePaths(FilePathVisitor& visitor) override;
+
       protected:
-        virtual bool equals(const DataLocation& other) const = 0;
-        
-        virtual void writeToStream(std::ostream& os) const = 0;
+        DataLocation() = default;
+
+        virtual bool equals(const DataLocation& other) const;
+
+        virtual void writeToStream(std::ostream& os) const;
+
+      private:
+        Path m_pathToValue;
     };
-}
+} // namespace babelwires
 
 namespace std {
     template <> struct hash<babelwires::DataLocation> {

@@ -8,54 +8,41 @@
 #include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 
 #include <Common/Hash/hash.hpp>
-#include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
-
-bool babelwires::ProjectDataLocation::equals(const DataLocation& other) const { 
-    if (const auto* otherProjectDataLocation = other.as<ProjectDataLocation>()) {
-        return (m_nodeId == otherProjectDataLocation->m_nodeId) && (m_pathToValue == otherProjectDataLocation->m_pathToValue);
-    }
-    return false;
-}
-
-void babelwires::ProjectDataLocation::writeToStream(std::ostream& os) const {
-    os << "\"" << m_pathToValue << " @ node " << m_nodeId << "\"";
-}
+#include <Common/Serialization/serializer.hpp>
 
 babelwires::ProjectDataLocation::ProjectDataLocation(NodeId elementId, Path pathToValue)
-    : m_nodeId(elementId)
-    , m_pathToValue(std::move(pathToValue)) {
-
-}
+    : DataLocation(std::move(pathToValue))
+    , m_nodeId(elementId) {}
 
 babelwires::NodeId babelwires::ProjectDataLocation::getNodeId() const {
     return m_nodeId;
 }
 
-const babelwires::Path& babelwires::ProjectDataLocation::getPathToValue() const {
-    return m_pathToValue;
+std::size_t babelwires::ProjectDataLocation::getHash() const {
+    return hash::mixtureOf(DataLocation::getHash(), m_nodeId);
 }
 
-std::size_t babelwires::ProjectDataLocation::getHash() const {
-    return hash::mixtureOf(m_nodeId, m_pathToValue);
+bool babelwires::ProjectDataLocation::equals(const DataLocation& other) const {
+    if (DataLocation::equals(other)) {
+        if (const auto* otherProjectDataLocation = other.as<ProjectDataLocation>()) {
+            return m_nodeId == otherProjectDataLocation->m_nodeId;
+        }
+    }
+    return false;
+}
+
+void babelwires::ProjectDataLocation::writeToStream(std::ostream& os) const {
+    DataLocation::writeToStream(os);
+    os << " @ node " << m_nodeId;
 }
 
 void babelwires::ProjectDataLocation::serializeContents(Serializer& serializer) const {
+    DataLocation::serializeContents(serializer);
     serializer.serializeValue("id", m_nodeId);
-    serializer.serializeValue("path", m_pathToValue);
 }
 
 void babelwires::ProjectDataLocation::deserializeContents(Deserializer& deserializer) {
+    DataLocation::deserializeContents(deserializer);
     deserializer.deserializeValue("id", m_nodeId);
-    deserializer.deserializeValue("path", m_pathToValue);
 }
-
-void babelwires::ProjectDataLocation::visitIdentifiers(IdentifierVisitor& visitor) {
-    for (auto& s : m_pathToValue) {
-        if (s.isField()) {
-            visitor(s.getField());
-        }
-    }
-}
-
-void babelwires::ProjectDataLocation::visitFilePaths(FilePathVisitor& visitor) {}
