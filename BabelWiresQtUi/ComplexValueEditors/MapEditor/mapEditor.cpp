@@ -173,10 +173,10 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 
 void babelwires::MapEditor::applyMapToProject() {
     auto modifierData = std::make_unique<ValueAssignmentData>(m_map.extractMapValue());
-    modifierData->m_targetPath = getData().getPathToValue();
+    modifierData->m_targetPath = getDataLocation().getPathToValue();
 
     auto setValueCommand =
-        std::make_unique<AddModifierCommand>("Set map value", getData().getNodeId(), std::move(modifierData));
+        std::make_unique<AddModifierCommand>("Set map value", getDataLocation().getNodeId(), std::move(modifierData));
     if (!getProjectBridge().executeCommandSynchronously(std::move(setValueCommand))) {
         warnThatMapNoLongerInProject("Cannot apply the map.");
     } else {
@@ -188,7 +188,7 @@ void babelwires::MapEditor::applyMapToProject() {
 }
 
 const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(AccessModelScope& scope) const {
-    const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getData());
+    const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getDataLocation());
     assert(mapTreeNode.getType().as<MapType>() || mapTreeNode.getType().as<SumOfMapsType>());
     return mapTreeNode;
 }
@@ -203,7 +203,7 @@ const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(Access
 }
 
 const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(AccessModelScope& scope) const {
-    const ValueTreeNode* mapTreeNode = ComplexValueEditor::tryGetValueTreeNode(scope, getData());
+    const ValueTreeNode* mapTreeNode = ComplexValueEditor::tryGetValueTreeNode(scope, getDataLocation());
     if (mapTreeNode->getType().as<MapType>() || mapTreeNode->getType().as<SumOfMapsType>()) {
         return mapTreeNode;
     }
@@ -212,13 +212,13 @@ const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(Access
 
 const babelwires::ValueAssignmentData*
 babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
-    const Node* const node = scope.getProject().getNode(getData().getNodeId());
+    const Node* const node = scope.getProject().getNode(getDataLocation().getNodeId());
 
     if (!node) {
         return nullptr;
     }
 
-    const Modifier* const modifier = node->findModifier(getData().getPathToValue());
+    const Modifier* const modifier = node->findModifier(getDataLocation().getPathToValue());
 
     if (!modifier) {
         return nullptr;
@@ -337,13 +337,13 @@ void babelwires::MapEditor::loadMapFromFile() {
 
 QString babelwires::MapEditor::getTitle() const {
     std::ostringstream contents;
-    contents << getData().toString() << " - Map Editor";
+    contents << getDataLocation().toString() << " - Map Editor";
     return contents.str().c_str();
 }
 
 void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& operationDescription) {
     std::ostringstream contents;
-    contents << "The map " << getData().toString() << " is no longer in the project.\n" << operationDescription;
+    contents << "The map " << getDataLocation().toString() << " is no longer in the project.\n" << operationDescription;
     QMessageBox::warning(this, "Map no longer in project", QString(contents.str().c_str()));
 }
 

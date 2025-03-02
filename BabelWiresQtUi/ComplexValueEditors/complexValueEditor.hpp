@@ -26,7 +26,7 @@ namespace babelwires {
             // TODO: Generalize this to work for values elsewhere.
             ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ProjectDataLocation& data);
 
-            const ProjectDataLocation& getData() const;
+            const ProjectDataLocation& getDataLocation() const;
 
             // TODO Why are these static?
 

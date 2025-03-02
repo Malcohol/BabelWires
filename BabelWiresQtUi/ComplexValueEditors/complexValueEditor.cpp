@@ -22,7 +22,7 @@ babelwires::ComplexValueEditor::ComplexValueEditor(QWidget* parent, ProjectBridg
     , m_userLogger(userLogger)
     , m_data(data.clone()) {}
 
-const babelwires::ProjectDataLocation& babelwires::ComplexValueEditor::getData() const {
+const babelwires::ProjectDataLocation& babelwires::ComplexValueEditor::getDataLocation() const {
     return *m_data;
 }
 
