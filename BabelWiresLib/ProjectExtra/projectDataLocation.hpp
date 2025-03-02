@@ -16,7 +16,6 @@ namespace babelwires {
         CLONEABLE(ProjectDataLocation);
         SERIALIZABLE(ProjectDataLocation, "projectLocation", void, 1);
 
-        ProjectDataLocation() = default;
         ProjectDataLocation(NodeId elementId, Path pathToValue);
         ProjectDataLocation(const ProjectDataLocation& other) = default;
 
@@ -37,6 +36,9 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
+
+      private:
+        ProjectDataLocation() = default;
 
       private:
         NodeId m_nodeId;
