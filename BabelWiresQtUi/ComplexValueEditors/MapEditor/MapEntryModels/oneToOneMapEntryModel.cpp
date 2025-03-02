@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectDataLocation.hpp>
 
 const babelwires::OneToOneMapEntryData& babelwires::OneToOneMapEntryModel::getOneToOneMapEntryData() const {
     assert(m_mapProjectEntry);
@@ -106,4 +107,12 @@ bool babelwires::OneToOneMapEntryModel::validateEditor(QWidget* editor, Column c
             assert(false && "That column isn't editable");
             return false;
     }
+}
+
+void babelwires::OneToOneMapEntryModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
+    MapEntryModel::getContextMenuActions(actionsOut);
+    MapProjectDataLocation sourceDataLocation(m_row, MapProjectDataLocation::Side::source, Path());
+    m_sourceValueModel->getContextMenuActions(sourceDataLocation, actionsOut);
+    MapProjectDataLocation targetDataLocation(m_row, MapProjectDataLocation::Side::target, Path());
+    m_targetValueModel->getContextMenuActions(targetDataLocation, actionsOut);
 }

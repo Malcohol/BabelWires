@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
 #include <BabelWiresLib/Types/Map/standardMapIdentifiers.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectDataLocation.hpp>
 
 const babelwires::AllToOneFallbackMapEntryData&
 babelwires::AllToOneFallbackMapEntryModel::getAllToOneFallbackMapEntryData() const {
@@ -68,4 +69,10 @@ babelwires::AllToOneFallbackMapEntryModel::createReplacementDataFromEditor(Colum
 bool babelwires::AllToOneFallbackMapEntryModel::validateEditor(QWidget* editor, Column column) const {
     assert(isItemEditable(column) && "That column isn't editable");
     return m_targetValueModel->validateEditor(editor);
+}
+
+void babelwires::AllToOneFallbackMapEntryModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
+    MapEntryModel::getContextMenuActions(actionsOut);
+    MapProjectDataLocation targetDataLocation(m_row, MapProjectDataLocation::Side::target, Path());
+    m_targetValueModel->getContextMenuActions(targetDataLocation, actionsOut);
 }

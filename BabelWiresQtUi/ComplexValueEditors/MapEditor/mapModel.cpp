@@ -104,7 +104,7 @@ QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
         return nullptr;
     }
 
-    std::vector<std::unique_ptr<ContextMenuAction>> actions;
+    std::vector<ContextMenuEntry> actions;
     mapEntryModel->getContextMenuActions(actions);
     if (!actions.empty()) {
         ContextMenu* menu = new ContextMenu(*this, index);

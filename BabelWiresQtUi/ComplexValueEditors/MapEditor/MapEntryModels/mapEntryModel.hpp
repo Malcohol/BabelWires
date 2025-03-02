@@ -36,7 +36,7 @@ namespace babelwires {
 
         /// Add any context actions which should appear in the context menu for this row.
         /// Subclasses overriding this should use super-calls to collect standard actions.
-        virtual void getContextMenuActions(std::vector<std::unique_ptr<ContextMenuAction>>& actionsOut) const;
+        virtual void getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const;
 
         /// The default returns false.
         virtual bool isItemEditable(Column column) const;
