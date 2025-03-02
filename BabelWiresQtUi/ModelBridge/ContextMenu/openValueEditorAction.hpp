@@ -9,17 +9,17 @@
 
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
 
-#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
-
 namespace babelwires {
+    class ProjectDataLocation;
 
     struct OpenValueEditorAction : babelwires::NodeContentsContextMenuActionBase {
-        OpenValueEditorAction(const QString& text, const DataLocation& location);
+        OpenValueEditorAction(const QString& text, const ProjectDataLocation& location);
+        ~OpenValueEditorAction();
 
         virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;
 
       private:
-        std::unique_ptr<DataLocation> m_location;
+        std::unique_ptr<ProjectDataLocation> m_location;
     };
 
 } // namespace babelwires

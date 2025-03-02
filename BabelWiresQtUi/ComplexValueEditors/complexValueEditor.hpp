@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
+#include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 
 #include <QWidget>
 
@@ -22,23 +22,25 @@ namespace babelwires {
         Q_OBJECT
 
         public:
-            ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data);
+            /// For now, ComplexValueEditors are only available for values in the project.
+            // TODO: Generalize this to work for values elsewhere.
+            ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ProjectDataLocation& data);
 
-            const DataLocation& getData() const;
+            const ProjectDataLocation& getData() const;
 
             // TODO Why are these static?
 
             /// Convenience Function: Get the Feature referred to by the data, or assert.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueTreeNode& getValueTreeNode(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode& getValueTreeNode(AccessModelScope& scope, const ProjectDataLocation& data);
 
             /// Convenience Function: Get the Feature referred to by the data, or return nullptr.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueTreeNode* tryGetValueTreeNode(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode* tryGetValueTreeNode(AccessModelScope& scope, const ProjectDataLocation& data);
 
             /// Convenience Function: Get the Feature referred to by the data, or throw a ModelException.
             /// Note: This returns const because editors never modify features directly.
-            static const ValueTreeNode& getValueTreeNodeOrThrow(AccessModelScope& scope, const DataLocation& data);
+            static const ValueTreeNode& getValueTreeNodeOrThrow(AccessModelScope& scope, const ProjectDataLocation& data);
 
         signals:
             void editorClosing();
@@ -61,7 +63,7 @@ namespace babelwires {
             UserLogger& m_userLogger;
 
             /// 
-            std::unique_ptr<DataLocation> m_data;
+            std::unique_ptr<ProjectDataLocation> m_data;
 
     };
 

@@ -16,43 +16,17 @@
 
 namespace babelwires {
     /// A DataLocation identifies some data within the system.
-    /// Right now it is a concrete class and identifies a row within the project.
-    /// In theory, it should be abstracted and be able to identify data in other contexts
-    /// as well. An example would be the source or target values in the MapEditor.
     class DataLocation : public Cloneable, Serializable, ProjectVisitable {
       public:
-        CLONEABLE(DataLocation);
-        SERIALIZABLE(DataLocation, "location", void, 1);
+        DOWNCASTABLE_TYPE_HIERARCHY(DataLocation);
+        CLONEABLE_ABSTRACT(DataLocation);
 
-        DataLocation() = default;
-        DataLocation(NodeId elementId, Path pathToValue);
-        DataLocation(const DataLocation& other) = default;
-
-        NodeId getNodeId() const;
-        const Path& getPathToValue() const;
-
-      public:
         // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
-        std::size_t getHash() const;
+        virtual std::size_t getHash() const = 0;
 
-        inline friend bool operator==(const DataLocation& a, const DataLocation& b) { 
-            return (a.m_nodeId == b.m_nodeId) && (a.m_pathToValue == b.m_pathToValue);
-        }
-
-        friend std::ostream& operator<<(std::ostream& os, const DataLocation& data) {
-            return os << "\"" << data.m_pathToValue << " @ node " << data.m_nodeId << "\"";
-        }
-
-      public:
-        // Serialization.
-        void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
-        void visitIdentifiers(IdentifierVisitor& visitor) override;
-        void visitFilePaths(FilePathVisitor& visitor) override;
-
-      private:
-        NodeId m_nodeId;
-        Path m_pathToValue;
+        virtual bool operator==(const DataLocation& other) const = 0;
+        
+        virtual std::string toString() const = 0;
     };
 }
 

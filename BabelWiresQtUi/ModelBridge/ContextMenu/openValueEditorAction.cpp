@@ -12,10 +12,13 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 #include <BabelWiresQtUi/mainWindow.hpp>
 
+#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 
-babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, const DataLocation& location)
+babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, const ProjectDataLocation& location)
     : NodeContentsContextMenuActionBase(text)
     , m_location(location.clone()) {}
+
+babelwires::OpenValueEditorAction::~OpenValueEditorAction() = default;
 
 void babelwires::OpenValueEditorAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();

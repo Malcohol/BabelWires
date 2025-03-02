@@ -26,6 +26,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -41,7 +42,7 @@
 #define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
 
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
-                                 const DataLocation& data)
+                                 const ProjectDataLocation& data)
     : ComplexValueEditor(parent, projectBridge, userLogger, data)
     , m_map(projectBridge.getContext())
     , m_commandManager(m_map, userLogger) {
@@ -336,13 +337,13 @@ void babelwires::MapEditor::loadMapFromFile() {
 
 QString babelwires::MapEditor::getTitle() const {
     std::ostringstream contents;
-    contents << getData() << " - Map Editor";
+    contents << getData().toString() << " - Map Editor";
     return contents.str().c_str();
 }
 
 void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& operationDescription) {
     std::ostringstream contents;
-    contents << "The map " << getData() << " is no longer in the project.\n" << operationDescription;
+    contents << "The map " << getData().toString() << " is no longer in the project.\n" << operationDescription;
     QMessageBox::warning(this, "Map no longer in project", QString(contents.str().c_str()));
 }
 

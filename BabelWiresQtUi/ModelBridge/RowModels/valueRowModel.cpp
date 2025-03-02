@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
-#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
+#include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
 #include <QString>
@@ -90,5 +90,5 @@ void babelwires::ValueRowModel::getContextMenuActions(
     RowModel::getContextMenuActions(actionsOut);
     const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
     m_valueModelDispatcher->getContextMenuActions(
-        DataLocation{m_node->getNodeId(), babelwires::Path(&valueTreeNode)}, actionsOut);
+        ProjectDataLocation{m_node->getNodeId(), babelwires::Path(&valueTreeNode)}, actionsOut);
 }
