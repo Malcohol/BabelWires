@@ -14,12 +14,12 @@
 namespace babelwires {
 
     struct OpenValueEditorAction : babelwires::NodeContentsContextMenuActionBase {
-        OpenValueEditorAction(const QString& text, DataLocation location);
+        OpenValueEditorAction(const QString& text, const DataLocation& location);
 
         virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;
 
       private:
-        DataLocation m_location;
+        std::unique_ptr<DataLocation> m_location;
     };
 
 } // namespace babelwires

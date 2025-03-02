@@ -61,7 +61,7 @@ namespace babelwires {
             UserLogger& m_userLogger;
 
             /// 
-            DataLocation m_data;
+            std::unique_ptr<DataLocation> m_data;
 
     };
 

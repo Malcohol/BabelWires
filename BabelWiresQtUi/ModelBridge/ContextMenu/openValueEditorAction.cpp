@@ -13,13 +13,13 @@
 #include <BabelWiresQtUi/mainWindow.hpp>
 
 
-babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, DataLocation location)
+babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, const DataLocation& location)
     : NodeContentsContextMenuActionBase(text)
-    , m_location(std::move(location)) {}
+    , m_location(location.clone()) {}
 
 void babelwires::OpenValueEditorAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();
 
-    model.getProjectBridge().getMainWindow()->openEditorForValue(m_location);
+    model.getProjectBridge().getMainWindow()->openEditorForValue(*m_location);
 }

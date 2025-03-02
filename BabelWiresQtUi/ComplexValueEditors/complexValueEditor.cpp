@@ -20,10 +20,10 @@ babelwires::ComplexValueEditor::ComplexValueEditor(QWidget* parent, ProjectBridg
     : QWidget(parent)
     , m_projectBridge(projectBridge)
     , m_userLogger(userLogger)
-    , m_data(data) {}
+    , m_data(data.clone()) {}
 
 const babelwires::DataLocation& babelwires::ComplexValueEditor::getData() const {
-    return m_data;
+    return *m_data;
 }
 
 babelwires::ProjectBridge& babelwires::ComplexValueEditor::getProjectBridge() {

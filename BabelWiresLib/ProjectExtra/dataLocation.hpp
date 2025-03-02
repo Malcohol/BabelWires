@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
+#include <Common/Cloning/cloneable.hpp>
 #include <Common/Serialization/serializable.hpp>
 
 namespace babelwires {
@@ -18,8 +19,9 @@ namespace babelwires {
     /// Right now it is a concrete class and identifies a row within the project.
     /// In theory, it should be abstracted and be able to identify data in other contexts
     /// as well. An example would be the source or target values in the MapEditor.
-    class DataLocation : public Serializable, ProjectVisitable {
+    class DataLocation : public Cloneable, Serializable, ProjectVisitable {
       public:
+        CLONEABLE(DataLocation);
         SERIALIZABLE(DataLocation, "location", void, 1);
 
         DataLocation() = default;
