@@ -29,7 +29,6 @@ Bugs:
 * RecordWithOptionalsFeatureTest::changes test only works if the values are default. Deactivating a non-default optional should not set the value changed flag.
 * Save with changes but no project file should offer "Save As", not "Save".
 
-
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.
 * Do non-const Node::getInputFeature and getOutputFeature really need to be public?
@@ -72,6 +71,9 @@ Refactor:
 * Try to sort out the various toString methods, possibly providing a "readableStream", constructed with an IdentiferRegistry::ReadAccess.
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
 * ValueModel could be a template, to avoid all the ising and asing in the subclasses.
+
+UI:
+* ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.
