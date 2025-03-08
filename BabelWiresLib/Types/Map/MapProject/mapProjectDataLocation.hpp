@@ -26,7 +26,6 @@ namespace babelwires {
 
         unsigned int getEntryIndex() const;
         Side getSide() const;
-        const Path& getPath() const;
 
       public:
         // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
