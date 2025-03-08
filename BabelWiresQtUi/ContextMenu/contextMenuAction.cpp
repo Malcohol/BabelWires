@@ -22,3 +22,7 @@ void babelwires::ContextMenuAction::onTriggeredFired() {
     actionTriggered(menu->getModel(), menu->getModelIndex());
     menu->close();
 }
+
+void babelwires::ContextMenuGroup::addContextMenuAction(std::unique_ptr<ContextMenuAction> action) {
+    m_actions.emplace_back(std::move(action));
+}

@@ -11,10 +11,6 @@
 
 #include <cassert>
 
-void babelwires::ContextMenuGroup::addContextMenuAction(std::unique_ptr<ContextMenuAction> action) {
-    m_actions.emplace_back(std::move(action));
-}
-
 babelwires::ContextMenu::ContextMenu(QAbstractItemModel& model, const QModelIndex& index)
     : m_model(model)
     , m_index(index) {}

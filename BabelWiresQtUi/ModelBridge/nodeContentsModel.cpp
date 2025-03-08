@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
-#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
@@ -162,31 +161,22 @@ Qt::ItemFlags babelwires::NodeContentsModel::flags(const QModelIndex& index) con
     return flags;
 }
 
-QMenu* babelwires::NodeContentsModel::getContextMenu(const QModelIndex& index) {
+void babelwires::NodeContentsModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut, const QModelIndex& index) {
     AccessModelScope scope(m_projectBridge);
     const Node* node = getNode(scope);
     if (!node) {
-        return nullptr;
+        return;
     }
 
     const babelwires::ContentsCacheEntry* entry = getEntry(scope, index);
     if (!entry) {
-        return nullptr;
+        return;
     }
 
     const babelwires::UiProjectContext& context = m_projectBridge.getContext();
     RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
-    std::vector<ContextMenuEntry> entries;
-    rowModel->getContextMenuActions(entries);
-    if (!entries.empty()) {
-        ContextMenu* menu = new ContextMenu(*this, index);
-        for (auto&& entry : entries) {
-            menu->addContextMenuEntry(std::move(entry));
-        }
-        return menu;
-    }
-    return nullptr;
+    rowModel->getContextMenuActions(actionsOut);
 }
 
 babelwires::ProjectBridge& babelwires::NodeContentsModel::getProjectBridge() {

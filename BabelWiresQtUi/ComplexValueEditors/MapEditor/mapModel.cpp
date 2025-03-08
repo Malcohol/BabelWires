@@ -9,7 +9,6 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
-#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
@@ -98,22 +97,13 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     return {};
 }
 
-QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
+void babelwires::MapModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut, const QModelIndex& index) {
     MapEntryModelDispatcher mapEntryModel;
     if (!initMapEntryModelDispatcher(index, mapEntryModel)) {
-        return nullptr;
+        return;
     }
 
-    std::vector<ContextMenuEntry> actions;
-    mapEntryModel->getContextMenuActions(actions);
-    if (!actions.empty()) {
-        ContextMenu* menu = new ContextMenu(*this, index);
-        for (auto&& action : actions) {
-            menu->addContextMenuEntry(std::move(action));
-        }
-        return menu;
-    }
-    return nullptr;
+    mapEntryModel->getContextMenuActions(actionsOut);
 }
 
 babelwires::MapEditor& babelwires::MapModel::getMapEditor() const {
