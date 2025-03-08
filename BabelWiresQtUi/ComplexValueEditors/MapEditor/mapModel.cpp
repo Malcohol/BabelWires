@@ -58,13 +58,12 @@ bool babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index,
     }
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
     const bool isLastRow = (row == numMapEntries - 1);
-    mapEntryModel.init(m_projectContext.m_valueModelReg, m_projectContext.m_typeSystem, *mapProject.getCurrentSourceType(), *mapProject.getCurrentTargetType(), entry, row, isLastRow);
+    mapEntryModel.init(m_projectContext.m_valueModelReg, m_projectContext.m_typeSystem, *mapProject.getCurrentSourceType(), *mapProject.getCurrentTargetType(), entry, row, static_cast<MapEntryModel::Column>(column), isLastRow);
     return true;
 }
 
 QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     const unsigned int row = static_cast<unsigned int>(index.row());
-    const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
     const MapProject& mapProject = m_mapEditor.getMapProject();
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
 
@@ -75,7 +74,7 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
 
     switch (role) {
         case Qt::DisplayRole: {
-            return mapEntryModel->getDisplayData(column);
+            return mapEntryModel->getDisplayData();
         }
         case Qt::ToolTipRole: {
             const Result validity = entry.getValidity();
@@ -118,10 +117,9 @@ Qt::ItemFlags babelwires::MapModel::flags(const QModelIndex& index) const {
         return flags;
     }
 
-    const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
     const unsigned int row = static_cast<unsigned int>(index.row());
     if (m_mapEditor.getMapProject().getMapEntry(row).getValidity()) {
-        if (mapEntryModel->isItemEditable(column)) {
+        if (mapEntryModel->isItemEditable()) {
             flags = flags | Qt::ItemIsEditable;
         }
     }

@@ -9,12 +9,11 @@
 
 #include <BabelWiresLib/Types/Map/standardMapIdentifiers.hpp>
 
-QVariant babelwires::AllToSameFallbackMapEntryModel::getDisplayData(Column column) const {
-    switch (column) {
+QVariant babelwires::AllToSameFallbackMapEntryModel::getDisplayData() const {
+    switch (m_column) {
         case Column::sourceValue:
             return c_wildcard;
         case Column::targetValue:
-            // TODO Need better.
             return c_wildcardMatch;
         default:
             assert(false);

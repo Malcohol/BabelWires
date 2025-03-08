@@ -23,57 +23,56 @@ void babelwires::OneToOneMapEntryModel::init(const ValueModelRegistry& valueMode
     m_targetValueModel.init(valueModelRegistry, typeSystem, *m_targetType, discreteMapEntry.getTargetValue(), false, false);
 }
 
-QVariant babelwires::OneToOneMapEntryModel::getDisplayData(Column column) const {
-    switch (column) {
+QVariant babelwires::OneToOneMapEntryModel::getDisplayData() const {
+    switch (m_column) {
         case Column::sourceValue:
             return m_sourceValueModel->getDisplayData();
         case Column::targetValue:
             return m_targetValueModel->getDisplayData();
         default:
-            assert(false);
+            assert(false && "Not a valid column");
             return {};
     }
 }
 
-bool babelwires::OneToOneMapEntryModel::isItemEditable(Column column) const {
-    switch (column) {
+bool babelwires::OneToOneMapEntryModel::isItemEditable() const {
+    switch (m_column) {
         case Column::sourceValue:
             return m_sourceValueModel->isItemEditable();
         case Column::targetValue:
             return m_targetValueModel->isItemEditable();
         default:
-            assert(false);
+            assert(false && "Not a valid column");
             return false;
     }
 }
 
 QWidget* babelwires::OneToOneMapEntryModel::createEditor(QWidget* parent, const QModelIndex& index) const {
-    const Column column = indexToColumn(index);
-    switch (column) {
+    switch (m_column) {
         case Column::sourceValue:
             return m_sourceValueModel->createEditor(parent);
         case Column::targetValue:
             return m_targetValueModel->createEditor(parent);
         default:
-            assert(false && "That column isn't editable");
+            assert(false && "Not a valid column");
             return nullptr;
     }
 }
 
-void babelwires::OneToOneMapEntryModel::setEditorData(Column column, QWidget* editor) const {
-    switch (column) {
+void babelwires::OneToOneMapEntryModel::setEditorData(QWidget* editor) const {
+    switch (m_column) {
         case Column::sourceValue:
             return m_sourceValueModel->setEditorData(editor);
         case Column::targetValue:
             return m_targetValueModel->setEditorData(editor);
         default:
-            assert(false && "That column isn't editable");
+            assert(false && "Not a valid column");
     }
 }
 
 std::unique_ptr<babelwires::MapEntryData>
-babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(Column column, QWidget* editor) const {
-    switch (column) {
+babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(QWidget* editor) const {
+    switch (m_column) {
         case Column::sourceValue:
             if (EditableValueHolder newValue = m_sourceValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
@@ -91,20 +90,20 @@ babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(Column column
             }
             break;
         default:
-            assert(false && "That column isn't editable");
+            assert(false && "Not a valid column");
     }
     return {};
 }
 
-bool babelwires::OneToOneMapEntryModel::validateEditor(QWidget* editor, Column column) const {
-    assert(isItemEditable(column) && "That column isn't editable");
-    switch (column) {
+bool babelwires::OneToOneMapEntryModel::validateEditor(QWidget* editor) const {
+    assert(isItemEditable() && "This column isn't editable");
+    switch (m_column) {
         case Column::sourceValue:
             return m_sourceValueModel->validateEditor(editor);
         case Column::targetValue:
             return m_targetValueModel->validateEditor(editor);
         default:
-            assert(false && "That column isn't editable");
+            assert(false && "Not a valid column");
             return false;
     }
 }

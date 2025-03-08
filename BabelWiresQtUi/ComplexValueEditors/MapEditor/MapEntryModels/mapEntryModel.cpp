@@ -18,7 +18,7 @@
 
 void babelwires::MapEntryModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {}
 
-QVariant babelwires::MapEntryModel::getDisplayData(Column column) const {
+QVariant babelwires::MapEntryModel::getDisplayData() const {
     return {};
 }
 
@@ -67,7 +67,7 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEnt
     actionsOut.emplace_back(std::move(entryTypeGroup));
 }
 
-bool babelwires::MapEntryModel::isItemEditable(Column column) const {
+bool babelwires::MapEntryModel::isItemEditable() const {
     return false;
 }
 
@@ -76,22 +76,16 @@ QWidget* babelwires::MapEntryModel::createEditor(QWidget* parent, const QModelIn
     return nullptr;
 }
 
-void babelwires::MapEntryModel::setEditorData(Column column, QWidget* editor) const {
+void babelwires::MapEntryModel::setEditorData(QWidget* editor) const {
     assert(false && "This item isn't editable");
 }
 
 std::unique_ptr<babelwires::MapEntryData>
-babelwires::MapEntryModel::createReplacementDataFromEditor(Column column, QWidget* editor) const {
+babelwires::MapEntryModel::createReplacementDataFromEditor(QWidget* editor) const {
     assert(false && "This item isn't editable");
     return {};
 }
 
-bool babelwires::MapEntryModel::validateEditor(QWidget* editor, Column column) const {
+bool babelwires::MapEntryModel::validateEditor(QWidget* editor) const {
     return false;
-}
-
-babelwires::MapEntryModel::Column babelwires::MapEntryModel::indexToColumn(const QModelIndex& index) {
-    assert(index.column() >= 0);
-    assert(index.column() < 2);
-    return static_cast<Column>(index.column());
 }

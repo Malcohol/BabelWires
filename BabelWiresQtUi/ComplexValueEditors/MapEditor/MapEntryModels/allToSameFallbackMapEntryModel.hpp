@@ -15,7 +15,7 @@ namespace babelwires {
     /// The AllToSameFallbackMapEntryModel provides the specific UI for a MapEntry with AllToSameFallbackMapEntryData.
     class AllToSameFallbackMapEntryModel : public MapEntryModel {
       public:
-        QVariant getDisplayData(Column column) const override;
+        QVariant getDisplayData() const override;
         /*
         virtual bool isItemEditable() const;
         virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;

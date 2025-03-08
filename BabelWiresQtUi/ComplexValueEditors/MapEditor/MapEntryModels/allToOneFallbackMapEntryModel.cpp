@@ -25,8 +25,8 @@ void babelwires::AllToOneFallbackMapEntryModel::init(const ValueModelRegistry& v
     m_targetValueModel.init(valueModelRegistry, typeSystem, *m_targetType, allToOneFallbackMapEntry.getTargetValue(), false, false);
 }
 
-QVariant babelwires::AllToOneFallbackMapEntryModel::getDisplayData(Column column) const {
-    switch (column) {
+QVariant babelwires::AllToOneFallbackMapEntryModel::getDisplayData() const {
+    switch (m_column) {
         case Column::sourceValue:
             return c_wildcard;
         case Column::targetValue:
@@ -37,24 +37,23 @@ QVariant babelwires::AllToOneFallbackMapEntryModel::getDisplayData(Column column
     }
 }
 
-bool babelwires::AllToOneFallbackMapEntryModel::isItemEditable(Column column) const {
-    return (column == Column::targetValue) && m_targetValueModel->isItemEditable();
+bool babelwires::AllToOneFallbackMapEntryModel::isItemEditable() const {
+    return (m_column == Column::targetValue) && m_targetValueModel->isItemEditable();
 }
 
 QWidget* babelwires::AllToOneFallbackMapEntryModel::createEditor(QWidget* parent, const QModelIndex& index) const {
-    const Column column = indexToColumn(index);
-    assert(isItemEditable(column) && "That column isn't editable");
+    assert(isItemEditable() && "This column isn't editable");
     return m_targetValueModel->createEditor(parent);
 }
 
-void babelwires::AllToOneFallbackMapEntryModel::setEditorData(Column column, QWidget* editor) const {
-    assert(isItemEditable(column) && "That column isn't editable");
+void babelwires::AllToOneFallbackMapEntryModel::setEditorData(QWidget* editor) const {
+    assert(isItemEditable() && "This column isn't editable");
     m_targetValueModel->setEditorData(editor);
 }
 
 std::unique_ptr<babelwires::MapEntryData>
-babelwires::AllToOneFallbackMapEntryModel::createReplacementDataFromEditor(Column column, QWidget* editor) const {
-    assert(isItemEditable(column) && "That column isn't editable");
+babelwires::AllToOneFallbackMapEntryModel::createReplacementDataFromEditor(QWidget* editor) const {
+    assert(isItemEditable() && "This column isn't editable");
 
     if (EditableValueHolder newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
         std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
@@ -66,8 +65,8 @@ babelwires::AllToOneFallbackMapEntryModel::createReplacementDataFromEditor(Colum
     return {};
 }
 
-bool babelwires::AllToOneFallbackMapEntryModel::validateEditor(QWidget* editor, Column column) const {
-    assert(isItemEditable(column) && "That column isn't editable");
+bool babelwires::AllToOneFallbackMapEntryModel::validateEditor(QWidget* editor) const {
+    assert(isItemEditable() && "That column isn't editable");
     return m_targetValueModel->validateEditor(editor);
 }
 

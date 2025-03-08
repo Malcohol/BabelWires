@@ -69,7 +69,6 @@ void babelwires::SumValueModel::getContextMenuActions(
             std::unique_ptr<ContextMenuAction> action;
             if (const auto* mapLocation = location.as<MapProjectDataLocation>()) {
                 action = std::make_unique<MapCommandContextMenuAction>(
-                    std::ostringstream commandName;
                     std::make_unique<ResetMapValueCommand>(summandRef.toString(), *mapLocation, summandRef)
                 );
             }
