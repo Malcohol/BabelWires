@@ -27,31 +27,36 @@ const QModelIndex& babelwires::ContextMenu::getModelIndex() const {
     return m_index;
 }
 
-void babelwires::ContextMenu::addContextMenuAction(ContextMenuAction* action) {
+void babelwires::ContextMenu::addContextMenuAction(std::unique_ptr<ContextMenuAction> action) {
+    if (m_lastEntryIsGroup) {
+        addSeparator();
+        m_lastEntryIsGroup = false;
+    }
     action->setParent(this);
-    connect(action, SIGNAL(triggered()), action, SLOT(onTriggeredFired()));
-    addAction(action);
+    connect(action.get(), SIGNAL(triggered()), action.get(), SLOT(onTriggeredFired()));
+    addAction(action.release());
 }
 
-void babelwires::ContextMenu::addContextMenuGroup(ContextMenuGroup* group) {
+void babelwires::ContextMenu::addContextMenuGroup(std::unique_ptr<ContextMenuGroup> group) {
     addSeparator()->setText(group->m_groupName);
+    m_lastEntryIsGroup = false;
     QActionGroup *const qgroup = new QActionGroup(this);
     qgroup->setExclusionPolicy(group->m_exclusionPolicy);
     for (auto& action : group->m_actions) {
         qgroup->addAction(action.get());
         // The menu becomes the parent of the action.
-        addContextMenuAction(action.release());
+        addContextMenuAction(std::move(action));
     }
-    addSeparator();
+    m_lastEntryIsGroup = true;
 }
 
 void babelwires::ContextMenu::addContextMenuEntry(ContextMenuEntry entry) {
     struct VisitorMethods {
         const void operator()(std::unique_ptr<ContextMenuAction>& action) {
-            m_menu.addContextMenuAction(action.release());
+            m_menu.addContextMenuAction(std::move(action));
         }
         const void operator()(std::unique_ptr<ContextMenuGroup>& group) {
-            m_menu.addContextMenuGroup(group.release());
+            m_menu.addContextMenuGroup(std::move(group));
         }
         ContextMenu& m_menu;
     } visitorMethods{*this};
