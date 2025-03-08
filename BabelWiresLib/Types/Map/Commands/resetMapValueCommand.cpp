@@ -65,6 +65,9 @@ void babelwires::ResetMapValueCommand::execute(MapProject& map) const {
     assert (m_location.getEntryIndex() < map.getNumMapEntries());
     const MapProjectEntry& mapEntry = map.getMapEntry(m_location.getEntryIndex());
     std::unique_ptr<MapEntryData> entryData = mapEntry.getData().clone();
+    const TypeSystem& typeSystem = map.getProjectContext().m_typeSystem;
+
+    /*
 
     const EditableValueHolder* entryHolder;
     const Type* typeInMap;
@@ -76,9 +79,7 @@ void babelwires::ResetMapValueCommand::execute(MapProject& map) const {
         typeInMap = map.getCurrentTargetType();
     }
 
-    const TypeSystem& typeSystem = map.getProjectContext().m_typeSystem;
 
-    /*
     ValueHolder newEntry = *entryHolder;
     std::tuple<const babelwires::Type&, babelwires::ValueHolder> optional =
         followNonConst(typeSystem, *type, m_location.getPathToValue(), newEntry);
@@ -104,5 +105,40 @@ void babelwires::ResetMapValueCommand::execute(MapProject& map) const {
 }
 
 void babelwires::ResetMapValueCommand::undo(MapProject& map) const {
-    // TODO
+    assert (m_location.getEntryIndex() < map.getNumMapEntries());
+    const MapProjectEntry& mapEntry = map.getMapEntry(m_location.getEntryIndex());
+    std::unique_ptr<MapEntryData> entryData = mapEntry.getData().clone();
+
+    const TypeSystem& typeSystem = map.getProjectContext().m_typeSystem;
+
+    /*
+    const EditableValueHolder* entryHolder;
+    const Type* typeInMap;
+    if (m_location.getSide() == MapProjectDataLocation::Side::source) {
+        entryHolder = &entryData->getSourceValue();
+        typeInMap = map.getCurrentSourceType();
+    } else {
+        entryHolder = &entryData->getTargetValue();
+        typeInMap = map.getCurrentTargetType();
+    }
+
+    ValueHolder newEntry = *entryHolder;
+    std::tuple<const babelwires::Type&, babelwires::ValueHolder> optional =
+        followNonConst(typeSystem, *type, m_location.getPathToValue(), newEntry);
+
+    // restore value
+
+    if (m_location.getSide() == MapProjectDataLocation::Side::source) {
+        entryData.setSourceValue(newEntry);
+    } else {
+        entryData.setTargetValue(newEntry);
+    } 
+    */   
+
+    if (m_location.getSide() == MapProjectDataLocation::Side::source) {
+        entryData->setSourceValue(m_oldValue);
+    } else {
+        entryData->setTargetValue(m_oldValue);
+    }
+    map.replaceMapEntry(std::move(entryData), m_location.getEntryIndex());
 }
