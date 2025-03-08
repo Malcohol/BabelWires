@@ -57,7 +57,9 @@ babelwires::EditableValueHolder babelwires::EnumValueModel::createValueFromEdito
 }
 
 bool babelwires::EnumValueModel::isItemEditable() const {
-    return getValue()->as<EnumValue>();
+    const EnumType& type = m_type->is<EnumType>();
+    // Don't offer an editor if there's only one enum value.
+    return getValue()->as<EnumValue>() && (type.getValueSet().size() > 1);
 }
 
 bool babelwires::EnumValueModel::validateEditor(QWidget* editor) const {
