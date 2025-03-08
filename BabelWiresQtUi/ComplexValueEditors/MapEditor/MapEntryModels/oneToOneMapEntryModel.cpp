@@ -109,9 +109,19 @@ bool babelwires::OneToOneMapEntryModel::validateEditor(QWidget* editor) const {
 }
 
 void babelwires::OneToOneMapEntryModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
-    MapProjectDataLocation sourceDataLocation(m_row, MapProjectDataLocation::Side::source, Path());
-    m_sourceValueModel->getContextMenuActions(sourceDataLocation, actionsOut);
-    MapProjectDataLocation targetDataLocation(m_row, MapProjectDataLocation::Side::target, Path());
-    m_targetValueModel->getContextMenuActions(targetDataLocation, actionsOut);
+    switch(m_column) {
+        case Column::sourceValue:{
+            MapProjectDataLocation sourceDataLocation(m_row, MapProjectDataLocation::Side::source, Path());
+            m_sourceValueModel->getContextMenuActions(sourceDataLocation, actionsOut);
+            break;
+        }
+        case Column::targetValue: {
+            MapProjectDataLocation targetDataLocation(m_row, MapProjectDataLocation::Side::target, Path());
+            m_targetValueModel->getContextMenuActions(targetDataLocation, actionsOut);
+            break;
+        }
+        default:
+            assert(false && "Not a valid column");
+    }
     MapEntryModel::getContextMenuActions(actionsOut);
 }
