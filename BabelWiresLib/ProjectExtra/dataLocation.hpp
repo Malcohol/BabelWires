@@ -16,7 +16,10 @@
 
 namespace babelwires {
     /// A DataLocation identifies some data within the system.
-    /// Values are assumed to have subvalues, so a path is always assumed.
+    /// It's usually the case that values can have have subvalues, so this class carries a path
+    /// to allow it to identify those subvalues.
+    /// Note: In theory, a path on its own could be used to express the current use-cases, but I do not
+    /// want to assume that will always be a possible or convenient option.
     class DataLocation : public Cloneable, Serializable, ProjectVisitable {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(DataLocation);
