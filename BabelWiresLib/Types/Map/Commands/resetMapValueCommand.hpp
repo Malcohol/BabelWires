@@ -34,7 +34,7 @@
 
          // Post initialization data
  
-         ValueHolder m_oldValue;
+         EditableValueHolder m_oldValue;
      };
  
  } // namespace babelwires

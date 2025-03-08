@@ -32,16 +32,8 @@ namespace babelwires {
 
             for (unsigned int i = 0; i < mapValue.getNumMapEntries() - 1; ++i) {
                 const MapEntryData& entryData = mapValue.getMapEntry(i);
-                switch (entryData.getKind()) {
-                    case MapEntryData::Kind::One21: {
-                        const auto& maplet = static_cast<const OneToOneMapEntryData&>(entryData);
-                        m_indexToTarget[sourceAdapter(*maplet.getSourceValue())] =
-                            targetAdapter(*maplet.getTargetValue());
-                        break;
-                    }
-                    default:
-                        assert(false && "Unexpected kind of map entry");
-                }
+                    m_indexToTarget[sourceAdapter(*entryData.getSourceValue())] =
+                        targetAdapter(*entryData.getTargetValue());
             }
         }
 
@@ -70,15 +62,7 @@ namespace babelwires {
 
             for (unsigned int i = 0; i < mapValue.getNumMapEntries() - 1; ++i) {
                 const MapEntryData& entryData = mapValue.getMapEntry(i);
-                switch (entryData.getKind()) {
-                    case MapEntryData::Kind::One21: {
-                        const auto& maplet = static_cast<const OneToOneMapEntryData&>(entryData);
-                        m_array[static_cast<unsigned int>(sourceAdapter(*maplet.getSourceValue()))] = targetAdapter(*maplet.getTargetValue());
-                        break;
-                    }
-                    default:
-                        assert(false && "Unexpected kind of map entry");
-                }
+                m_array[static_cast<unsigned int>(sourceAdapter(*entryData.getSourceValue()))] = targetAdapter(*entryData.getTargetValue());
             }
         }
 

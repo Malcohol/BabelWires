@@ -30,8 +30,8 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(AllToOneF
     m_targetValue = std::move(other.m_targetValue);
 }
 
-const babelwires::EditableValueHolder& babelwires::AllToOneFallbackMapEntryData::getTargetValue() const {
-    return m_targetValue;
+const babelwires::EditableValueHolder* babelwires::AllToOneFallbackMapEntryData::tryGetTargetValue() const {
+    return &m_targetValue;
 }
 
 void babelwires::AllToOneFallbackMapEntryData::setTargetValue(EditableValueHolder value) {
