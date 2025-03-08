@@ -30,6 +30,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/removeArrayEntryAction.cpp
     ModelBridge/ContextMenu/reloadFileAction.cpp
     ModelBridge/ContextMenu/changeSourceFileAction.cpp
+    ModelBridge/ContextMenu/projectCommandContextMenuAction.cpp
     ModelBridge/ContextMenu/saveFileAction.cpp
     ModelBridge/ContextMenu/saveFileAsAction.cpp
     ModelBridge/ContextMenu/removeFailedModifiersAction.cpp
@@ -53,6 +54,7 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/MapContextMenuActions/addEntryMapContextMenuAction.cpp
     ComplexValueEditors/MapEditor/MapContextMenuActions/removeEntryMapContextMenuAction.cpp
     ComplexValueEditors/MapEditor/MapContextMenuActions/changeEntryKindContextMenuAction.cpp
+    ComplexValueEditors/MapEditor/MapContextMenuActions/mapCommandContextMenuAction.cpp
     ContextMenu/contextMenu.cpp
     ContextMenu/contextMenuAction.cpp
     ValueModels/arrayValueModel.cpp
@@ -68,6 +70,7 @@ SET( BABELWIRESQTUI_SRCS
     ValueModels/valueModelRegistry.cpp
     ValueModels/valueModelWithRichText.cpp
     ValueModels/mapValueModel.cpp
+    ValueModels/sumValueModel.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

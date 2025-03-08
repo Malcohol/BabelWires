@@ -72,7 +72,7 @@ bool babelwires::AllToOneFallbackMapEntryModel::validateEditor(QWidget* editor, 
 }
 
 void babelwires::AllToOneFallbackMapEntryModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
-    MapEntryModel::getContextMenuActions(actionsOut);
     MapProjectDataLocation targetDataLocation(m_row, MapProjectDataLocation::Side::target, Path());
     m_targetValueModel->getContextMenuActions(targetDataLocation, actionsOut);
+    MapEntryModel::getContextMenuActions(actionsOut);
 }

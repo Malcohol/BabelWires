@@ -23,8 +23,7 @@ QVariant babelwires::MapEntryModel::getDisplayData(Column column) const {
 }
 
 void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
-    actionsOut.reserve(actionsOut.size() + 8);
-
+    auto entryGroup = std::make_unique<ContextMenuGroup>("Map entries");
     auto addEntryAbove = std::make_unique<AddEntryMapContextMenuAction>("Add entry above", m_row);
     auto addEntryBelow = std::make_unique<AddEntryMapContextMenuAction>("Add entry below", m_row + 1);
     auto removeEntry = std::make_unique<RemoveEntryMapContextMenuAction>("Remove entry", m_row);
@@ -44,12 +43,12 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEnt
         resetEntry->setDisabled(true);
     }
 
-    actionsOut.emplace_back(std::move(addEntryAbove));
-    actionsOut.emplace_back(std::move(addEntryBelow));
-    actionsOut.emplace_back(std::move(removeEntry));
-    actionsOut.emplace_back(std::move(resetEntry));
+    entryGroup->addContextMenuAction(std::move(addEntryAbove));
+    entryGroup->addContextMenuAction(std::move(addEntryBelow));
+    entryGroup->addContextMenuAction(std::move(removeEntry));
+    entryGroup->addContextMenuAction(std::move(resetEntry));
 
-    auto group = std::make_unique<ContextMenuGroup>("Entry type");
+    auto entryTypeGroup = std::make_unique<ContextMenuGroup>("Map entry type");
 
     for (int i = 0; i < static_cast<int>(MapEntryData::Kind::NUM_VALUES); ++i) {
         const MapEntryData::Kind kind = static_cast<MapEntryData::Kind>(i);
@@ -62,9 +61,10 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEnt
         if ((m_isLastRow != MapEntryData::isFallback(kind)) || (m_sourceType == nullptr) || (m_targetType == nullptr)) {
             action->setDisabled(true);
         }
-        group->addContextMenuAction(std::move(action));
+        entryTypeGroup->addContextMenuAction(std::move(action));
     }
-    actionsOut.emplace_back(std::move(group));
+    actionsOut.emplace_back(std::move(entryGroup));
+    actionsOut.emplace_back(std::move(entryTypeGroup));
 }
 
 bool babelwires::MapEntryModel::isItemEditable(Column column) const {
