@@ -36,6 +36,7 @@ Things to check:
 New features:
 * "Run project" - Load all, process, save all.
 * Make undo move the view to the XY and scale position of the undone command.
+* New "Error Map Fallback" - fails a processor if the fallback is every used.
 
 Unit Tests:
 * Array commands with pre-existing ArraySizeModifier

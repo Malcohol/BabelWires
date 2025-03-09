@@ -71,6 +71,7 @@ void babelwires::SumValueModel::getContextMenuActions(
                 action = std::make_unique<MapCommandContextMenuAction>(
                     std::make_unique<ResetMapValueCommand>(summandRef.toString(), *mapLocation, summandRef)
                 );
+                action->setCheckable(true);
             }
             //      
             // } else {
@@ -78,6 +79,7 @@ void babelwires::SumValueModel::getContextMenuActions(
             // }
             if (currentIndex == i) {
                 action->setChecked(true);
+                action->setEnabled(false);
             }
             group->addContextMenuAction(std::move(action));
         }

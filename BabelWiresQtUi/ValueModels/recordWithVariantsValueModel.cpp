@@ -29,9 +29,11 @@ void babelwires::RecordWithVariantsValueModel::getContextMenuActions(
                 auto selectVariant = std::make_unique<SelectVariantAction>(projectDataLocation->getPathToValue(), tagId);
                 if (tagId == currentTag) {
                     selectVariant->setChecked(true);
+                    selectVariant->setEnabled(false);
+                } else {
+                    // TODO tooltip.
+                    selectVariant->setEnabled(m_isStructureEditable);
                 }
-                // TODO tooltip.
-                selectVariant->setEnabled(m_isStructureEditable);
                 group->addContextMenuAction(std::move(selectVariant));
             }
             entriesOut.emplace_back(std::move(group));
