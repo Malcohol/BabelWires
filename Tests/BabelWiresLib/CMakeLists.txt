@@ -55,6 +55,7 @@ SET( LIB_TESTS_SRCS
     removeSimpleModifierCommandTest.cpp
     removeModifierCommandTest.cpp
     replaceMapEntryCommandTest.cpp
+    resetMapValueCommandTest.cpp
     resizeNodeCommandTest.cpp
     selectRecordVariantModifierDataTest.cpp
     selectRecordVariantCommandTest.cpp

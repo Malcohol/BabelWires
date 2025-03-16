@@ -67,6 +67,7 @@ void babelwires::SumValueModel::getContextMenuActions(
         for (int i = 0; i < sumType.getSummands().size(); ++i) {
             const TypeRef& summandRef = sumType.getSummands()[i];
             std::unique_ptr<ContextMenuAction> action;
+            // TODO Need some form of generalization here.
             if (const auto* mapLocation = location.as<MapProjectDataLocation>()) {
                 action = std::make_unique<MapCommandContextMenuAction>(
                     std::make_unique<ResetMapValueCommand>(summandRef.toString(), *mapLocation, summandRef)

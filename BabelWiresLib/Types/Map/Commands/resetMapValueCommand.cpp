@@ -1,5 +1,5 @@
 /**
- * The command which sets the target type of a map.
+ * The command which sets a value within a map back to its default value.
  *
  * (C) 2021 Malcolm Tyrrell
  *

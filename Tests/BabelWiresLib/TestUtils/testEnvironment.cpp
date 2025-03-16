@@ -8,6 +8,8 @@
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testSumType.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testTupleType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
@@ -42,6 +44,8 @@ testUtils::TestEnvironment::TestEnvironment()
     m_typeSystem.addEntry<testUtils::TestSimpleRecordType>();
     m_typeSystem.addEntry<testUtils::TestComplexRecordType>();
     m_typeSystem.addEntry<testUtils::TestRecordWithVariantsType>();
+    m_typeSystem.addEntry<testUtils::TestSumType>();
+    m_typeSystem.addEntry<testUtils::TestTupleType>();
 
     m_typeSystem.addEntry<testUtils::TestProcessorInputOutputType>();
 
