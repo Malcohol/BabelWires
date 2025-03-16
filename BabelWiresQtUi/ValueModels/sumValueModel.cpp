@@ -9,11 +9,15 @@
 
 #include <BabelWiresQtUi/ValueModels/valueModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapContextMenuActions/mapCommandContextMenuAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/projectCommandContextMenuAction.hpp>
 
 #include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
+#include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectDataLocation.hpp>
 #include <BabelWiresLib/Types/Map/Commands/resetMapValueCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 void babelwires::SumValueModel::initializeValueModelDispatcherForSummand(ValueModelDispatcher& valueModel) const {
     const SumType& sumType = getType()->is<SumType>();
@@ -74,9 +78,15 @@ void babelwires::SumValueModel::getContextMenuActions(
                 );
                 action->setCheckable(true);
             } else {
-                // TODO Add support for sum types in the project.
-                assert(false && "Unimplemented");
-                //auto selectSummand = std::make_unique<SelectSummandCommand>(location.getNodeId(), location.getPathToValue(), i);
+                // TODO This seems to work but is very awkward.
+                const auto* projectLocation  = location.as<ProjectDataLocation>();
+                assert(projectLocation);
+                const Type& summandType = summandRef.resolve(*m_typeSystem);
+                auto assignmentData = std::make_unique<ValueAssignmentData>(summandType.createValue(*m_typeSystem).is<EditableValue>());
+                assignmentData->m_targetPath = projectLocation->getPathToValue();
+                action = std::make_unique<ProjectCommandContextMenuAction>(
+                    std::make_unique<AddModifierCommand>(summandRef.toString(), projectLocation->getNodeId(), std::move(assignmentData))
+                );
             }
             if (currentIndex == i) {
                 action->setChecked(true);
