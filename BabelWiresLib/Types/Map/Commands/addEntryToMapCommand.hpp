@@ -18,16 +18,13 @@ namespace babelwires {
     class AddEntryToMapCommand : public SimpleCommand<MapProject> {
       public:
         CLONEABLE(AddEntryToMapCommand);
-        AddEntryToMapCommand(std::string commandName, std::unique_ptr<MapEntryData> newEntry,
-                             unsigned int indexOfNewEntry);
-        AddEntryToMapCommand(const AddEntryToMapCommand& other);
+        AddEntryToMapCommand(std::string commandName, unsigned int indexOfNewEntry);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
         virtual void undo(MapProject& map) const override;
 
       private:
-        std::unique_ptr<MapEntryData> m_newEntry;
         unsigned int m_indexOfNewEntry;
     };
 

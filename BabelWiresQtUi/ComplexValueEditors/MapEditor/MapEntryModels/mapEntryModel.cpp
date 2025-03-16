@@ -7,10 +7,11 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.hpp>
 
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapContextMenuActions/addEntryMapContextMenuAction.hpp>
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapContextMenuActions/changeEntryKindContextMenuAction.hpp>
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapContextMenuActions/removeEntryMapContextMenuAction.hpp>
+#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapContextMenuActions/mapCommandContextMenuAction.hpp>
 
+#include <BabelWiresLib/Types/Map/Commands/changeEntryKindCommand.hpp>
+#include <BabelWiresLib/Types/Map/Commands/removeEntryFromMapCommand.hpp>
+#include <BabelWiresLib/Types/Map/Commands/addEntryToMapCommand.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToSameFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
@@ -24,9 +25,9 @@ QVariant babelwires::MapEntryModel::getDisplayData() const {
 
 void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
     auto entryGroup = std::make_unique<ContextMenuGroup>("Map entries");
-    auto addEntryAbove = std::make_unique<AddEntryMapContextMenuAction>("Add entry above", m_row);
-    auto addEntryBelow = std::make_unique<AddEntryMapContextMenuAction>("Add entry below", m_row + 1);
-    auto removeEntry = std::make_unique<RemoveEntryMapContextMenuAction>("Remove entry", m_row);
+    auto addEntryAbove = std::make_unique<MapCommandContextMenuAction>(std::make_unique<AddEntryToMapCommand>("Add entry above", m_row));
+    auto addEntryBelow = std::make_unique<MapCommandContextMenuAction>(std::make_unique<AddEntryToMapCommand>("Add entry below", m_row + 1));
+    auto removeEntry = std::make_unique<MapCommandContextMenuAction>(std::make_unique<RemoveEntryFromMapCommand>("Remove entry", m_row));
 
     if (m_isLastRow) {
         addEntryBelow->setDisabled(true);
@@ -35,8 +36,8 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEnt
     const MapEntryData& data = m_mapProjectEntry->getData();
     const MapEntryData::Kind currentKind = data.getKind();
 
-    auto resetEntry =
-        std::make_unique<ChangeEntryKindContextMenuAction>("Reset entry", currentKind, m_row, false);
+    auto resetEntry = std::make_unique<MapCommandContextMenuAction>(
+        std::make_unique<ChangeEntryKindCommand>("Reset entry", currentKind, m_row));
     if ((m_sourceType == nullptr) || (m_targetType == nullptr)) {
         addEntryAbove->setDisabled(true);
         addEntryBelow->setDisabled(true);
@@ -52,9 +53,10 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEnt
 
     for (int i = 0; i < static_cast<int>(MapEntryData::Kind::NUM_VALUES); ++i) {
         const MapEntryData::Kind kind = static_cast<MapEntryData::Kind>(i);
-        const auto actionName = QString(MapEntryData::getKindName(kind).c_str());
-        auto action =
-            std::make_unique<ChangeEntryKindContextMenuAction>(actionName, kind, m_row, true);
+        const std::string actionName = MapEntryData::getKindName(kind);
+        auto action = std::make_unique<MapCommandContextMenuAction>(
+            std::make_unique<ChangeEntryKindCommand>(actionName, kind, m_row));
+        action->setCheckable(true);
         if (kind == currentKind) {
             action->setChecked(true);
         }
