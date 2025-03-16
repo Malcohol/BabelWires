@@ -73,11 +73,11 @@ void babelwires::SumValueModel::getContextMenuActions(
                     std::make_unique<ResetMapValueCommand>(summandRef.toString(), *mapLocation, summandRef)
                 );
                 action->setCheckable(true);
-            }
-            //      
-            // } else {
+            } else {
+                // TODO Add support for sum types in the project.
+                assert(false && "Unimplemented");
                 //auto selectSummand = std::make_unique<SelectSummandCommand>(location.getNodeId(), location.getPathToValue(), i);
-            // }
+            }
             if (currentIndex == i) {
                 action->setChecked(true);
                 action->setEnabled(false);
