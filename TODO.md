@@ -45,36 +45,38 @@ Unit Tests:
 Model
 * Consider a coercion system so numeric types can always be assigned.
 * Implement RecordType Optionality::optionalDefaultActive
+* Float type
+
 
 Processors:
-* Provide basic processors for standard types (+, *, etc)
+* Plugin containing standard processors for built-in types (+, *, etc)
 
-Refactor: 
+Refactor:
+* Reorganize Path and ValuePath: Path has support for ValueTreeNode but not Values which seems wrong.
 * Abandon EditableValue and EditableValueHolder (and ValueHolder template).
   - Will have to live with unimplemented asserts.
   - A tuple shouldn't have to be editable, but right now I have to choose.
 * Consider replacing virtual deserialize() method by deserializing constructor
-  - Tried this in PR #14. Breaks symmetry.
-* The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.
+  - Tried this in PR #14. Removes the need for default constructors but breaks symmetry.
 * Move some of the logic in doProcess up into Node.
-* Split Features & Import/Export out from the project lib. 
-  - In _theory_ the import/export logic could be useful on its own.
 * Think about modules and dlls.
+  - Review plugin initialization
+  - add support for removing plugins.
 * Replace assert handler with own macros.
 * Use std::format in logs and exceptions instead of streams - Better, esp. for internationalization
 * Proper CMake usage
-* Review plugin initialization
 * Arrays and optional modification are special-cased in the project: Could that be handled instead by a virtual "merge" method?
   - Also, they are special cased in the removeModifierCommand. Could that be handled instead by a virtual "removeModifier" method?
   - It's slightly unfortunate to have modifierData know about commands, but overall might be worth it.
 * Clean up uses of toString, operator<<, serializeToString, etc. Make clear which resolves identifiers.
-* deserializeToString methods should return a tuple which includes the position after the parsed object.
-* Try to sort out the various toString methods, possibly providing a "readableStream", constructed with an IdentiferRegistry::ReadAccess.
+  - Could have a custom stream (or formatter) which has a lock on the identifier registry. Deadlock a danger here.
+  - deserializeToString methods should return a tuple which includes the position after the parsed object.
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
-* ValueModel could be a template, to avoid all the ising and asing in the subclasses.
 
 UI:
 * ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.
+* ValueModel could be a template, to avoid all the ising and asing in the subclasses.
+* The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.
@@ -84,20 +86,28 @@ Parallel processing:
   - lock the project,
   - updating their output features,
   - process the changes.
+  - UI would need to sync changes.
 * File loading would be similar.
 * Needs new UI features, since the parts of the project can be stale when processing is underway.
 * Investigate this if use-case with expensive processing ever arises.
-* Ensure processor work can itself be multithreaded.
+* Provide a job system so processors have a standard way to efficiently process graphs of work
 
 Ideas:
 * Provide serializer via a registry, and move tinyxml dependency into its own lib.
   - Consider switching from XML to yaml for project files
-* Require commands to be serializable. Log their serialized form (possibly as JSON).
+* Require commands to be serializable, to enable structured logging.
 * Don't format strings in debug logs: Use JSON so they are easy to parse.
 * SelectableArrays: For arrays larger than 16 elements:
   - Each element has an input drop down which selects the output array element.
   - This would be useful for complex input formats.
   - An array access processor might be a more consistent way of achieving this
+* Add support for Type aliases so we don't have to define a type subclass in C++ just to avoid having a complex type name in the UI.
+  - Could this be a variant in TypeRef which carries a string and another typeRef?
+
+Speculative ideas:
+* Programming mechanism
+  - function types with map, fold, etc.
+  - Consider whether existing map types could participate.
 
 Optimizations:
 * Edit tree could offer "getModifiersAbove(path)" for use in some commands. (E.g. hasAncestorConnection)

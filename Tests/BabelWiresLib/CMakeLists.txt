@@ -17,6 +17,7 @@ SET( LIB_TESTS_SRCS
     contentsCacheTest.cpp
     deactivateOptionalCommandTest.cpp
     elementDataTest.cpp
+    enumAtomTypeConstructorTest.cpp
     enumTest.cpp
     enumFeatureTest.cpp
     nodeConnectionTest.cpp
