@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
@@ -9,25 +8,14 @@
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
 
-#include <Tests/TestUtils/testIdentifiers.hpp>
-
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
-
-namespace {
-    class TestTupleType : public babelwires::TupleType {
-      public:
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestTupleType"), 1);
-        TestTupleType()
-            : babelwires::TupleType({babelwires::DefaultIntType::getThisType(),
-                                   babelwires::DefaultRationalType::getThisType()}) {}
-    };
-} // namespace
+#include <Tests/BabelWiresLib/TestUtils/testTupleType.hpp>
 
 TEST(TupleTypeTest, createValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestTupleType tupleType;
+    testUtils::TestTupleType tupleType;
 
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
     EXPECT_EQ(tupleType.getComponentTypes()[0], babelwires::DefaultIntType::getThisType());
@@ -50,7 +38,7 @@ TEST(TupleTypeTest, createValue) {
 TEST(TupleTypeTest, valueToString) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestTupleType tupleType;
+    testUtils::TestTupleType tupleType;
     babelwires::NewValueHolder newValue = tupleType.createValue(testEnvironment.m_typeSystem);
     auto* newTuple = newValue.m_nonConstReference.as<babelwires::TupleValue>();
     ASSERT_NE(newTuple, nullptr);
