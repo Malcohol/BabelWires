@@ -8,14 +8,11 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-#include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
-#include <Tests/TestUtils/testLog.hpp>
 
-TEST(EnumAtomTypeConstructor, construct) {
+TEST(EnumAtomTypeConstructorTest, construct) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ShortId foo = testUtils::getTestRegisteredIdentifier("foo");
@@ -38,7 +35,7 @@ TEST(EnumAtomTypeConstructor, construct) {
     EXPECT_EQ(valueSet[0], foo);
 }
 
-TEST(EnumAtomTypeConstructor, makeTypeRef) {
+TEST(EnumAtomTypeConstructorTest, makeTypeRef) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ShortId foo = testUtils::getTestRegisteredIdentifier("foo");
@@ -60,20 +57,18 @@ TEST(EnumAtomTypeConstructor, makeTypeRef) {
     EXPECT_EQ(valueSet[0], foo);
 }
 
-TEST(EnumAtomTypeConstructor, fail) {
+TEST(EnumAtomTypeConstructorTest, throwsOnFailure) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EnumAtomTypeConstructor constructor;
 
-    EXPECT_THROW(
-        constructor.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{}),
-        babelwires::TypeSystemException);
+    EXPECT_THROW(constructor.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{}),
+                 babelwires::TypeSystemException);
     EXPECT_THROW(constructor.getOrConstructType(testEnvironment.m_typeSystem,
-                                                   babelwires::TypeConstructorArguments{{}, {babelwires::IntValue()}}),
+                                                babelwires::TypeConstructorArguments{{}, {babelwires::IntValue()}}),
                  babelwires::TypeSystemException);
     EXPECT_THROW(constructor.getOrConstructType(
                      testEnvironment.m_typeSystem,
-                     babelwires::TypeConstructorArguments{{babelwires::DefaultIntType::getThisIdentifier()},
-                                                          {babelwires::IntValue()}}),
+                     babelwires::TypeConstructorArguments{{babelwires::DefaultIntType::getThisIdentifier()}, {}}),
                  babelwires::TypeSystemException);
 }

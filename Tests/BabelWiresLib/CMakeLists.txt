@@ -20,6 +20,7 @@ SET( LIB_TESTS_SRCS
     enumAtomTypeConstructorTest.cpp
     enumTest.cpp
     enumFeatureTest.cpp
+    enumUnionTypeConstructorTest.cpp
     nodeConnectionTest.cpp
     nodeTest.cpp
     featurePathTest.cpp
