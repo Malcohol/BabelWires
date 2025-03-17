@@ -75,6 +75,7 @@ const babelwires::Type& babelwires::TypeRef::assertResolve(const TypeSystem& typ
 #ifndef NDEBUG
     } catch (TypeSystemException&) {
         assert(false && "TypeSystemException thrown when resolving TypeRef");
+        return *static_cast<const babelwires::Type*>(0);
     }
 #endif
 }
