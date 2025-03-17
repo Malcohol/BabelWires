@@ -77,20 +77,22 @@ UI:
 * ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.
 * ValueModel could be a template, to avoid all the ising and asing in the subclasses.
 * The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.
+* Many ContextMenuActions could just be ProjectCommandContextMenuActions wrapping a command.
+* No way to access the context menu if a SumType was a component of a tuple type.
+  - Something like: value editors could intercept the context menu and use the widget parent chain to populate the full context menu.
 
 Parallel processing:
 * Not implemented, but code written with this in mind.
   - Access to the project state is already funnelled through AccessModelScope and UpdateModelScope.
   - The UI does not keep pointers to features.
+* Investigate when use-case with expensive processing arises.
 * Processors would run in background threads. When they are finished, they would:
   - lock the project,
   - updating their output features,
   - process the changes.
-  - UI would need to sync changes.
+  - UI would then need to sync changes.
 * File loading would be similar.
 * Needs new UI features, since the parts of the project can be stale when processing is underway.
-* Investigate this if use-case with expensive processing ever arises.
-* Provide a job system so processors have a standard way to efficiently process graphs of work
 
 Ideas:
 * Provide serializer via a registry, and move tinyxml dependency into its own lib.
