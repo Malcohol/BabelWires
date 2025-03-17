@@ -118,12 +118,6 @@ std::string babelwires::typeNameFormatter(std::string_view format, const std::ve
     if (format.size() < 2) {
         return {};
     }
-    if (typeArguments.size() > babelwires::TypeConstructorArguments::s_maxNumArguments) {
-        return {};
-    }
-    if (valueArguments.size() > babelwires::TypeConstructorArguments::s_maxNumArguments) {
-        return {};
-    }
     std::ostringstream oss;
 
     enum {
