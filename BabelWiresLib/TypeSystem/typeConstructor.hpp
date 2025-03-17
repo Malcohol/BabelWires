@@ -91,8 +91,6 @@ namespace babelwires {
 
 /// Type constructors need to be registered.
 /// For now, assume this is always done statically.
-/// The NAME of a type constructor is a format string with positional arguments for all its type arguments.
-/// For example, the NAME of the binary product type constructor might be something like "{0} * {1}".
-/// Regular brackets can be written with "{{" and "}}". Non-positional arguments "{}" are not supported.
+/// The NAME of a TypeConstructor is treated as a format string. See the comments in typeNameFormatter.
 #define TYPE_CONSTRUCTOR(IDENTIFIER, NAME, UUID, VERSION)                                                              \
     TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(BW_MEDIUM_ID(IDENTIFIER, NAME, UUID), VERSION)
