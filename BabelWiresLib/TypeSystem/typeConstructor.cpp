@@ -53,9 +53,13 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
 
     // Phase 2: Resolve the arguments.
     std::vector<const Type*> resolvedArguments;
+    resolvedArguments.reserve(arguments.m_typeArguments.size());
+    std::vector<std::string> unresolvedTypesString;
     for (auto arg : arguments.m_typeArguments) {
         if (const Type* const argAsType = arg.tryResolve(typeSystem)) {
             resolvedArguments.emplace_back(argAsType);
+        } else {
+            unresolvedTypesString.emplace_back(arg.toString());
         }
     }
     TypeRef newTypeRef(getTypeConstructorId(), arguments);
@@ -79,7 +83,14 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
                     it.first->second = e.what();
                 }
             } else {
-                it.first->second = "Failed to construct a type because a type argument failed to resolve";
+                std::ostringstream os;
+                os << "Failed to construct a type because the following type arguments failed to resolve: ";
+                const char* sep = "";
+                for (auto refString : unresolvedTypesString) {
+                    os << sep << refString;
+                    sep = ", ";
+                }
+                it.first->second = os.str();
             }
         }
         return it.first->second;

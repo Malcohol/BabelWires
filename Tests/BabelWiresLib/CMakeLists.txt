@@ -17,8 +17,10 @@ SET( LIB_TESTS_SRCS
     contentsCacheTest.cpp
     deactivateOptionalCommandTest.cpp
     elementDataTest.cpp
+    enumAtomTypeConstructorTest.cpp
     enumTest.cpp
     enumFeatureTest.cpp
+    enumUnionTypeConstructorTest.cpp
     nodeConnectionTest.cpp
     nodeTest.cpp
     featurePathTest.cpp
@@ -53,6 +55,7 @@ SET( LIB_TESTS_SRCS
     removeSimpleModifierCommandTest.cpp
     removeModifierCommandTest.cpp
     replaceMapEntryCommandTest.cpp
+    resetMapValueCommandTest.cpp
     resizeNodeCommandTest.cpp
     selectRecordVariantModifierDataTest.cpp
     selectRecordVariantCommandTest.cpp
@@ -67,6 +70,7 @@ SET( LIB_TESTS_SRCS
     sumOfMapsTypeTest.cpp
     sumTypeTest.cpp
     targetFileNodeTest.cpp
+    tupleTypeTest.cpp
     typeRefTest.cpp
     typeSystemTest.cpp
     typeTest.cpp

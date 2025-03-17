@@ -551,6 +551,6 @@ QString babelwires::MainWindow::getClipboardMimetype() const {
     return QString("BabelWires/elements");
 }
 
-void babelwires::MainWindow::openEditorForValue(const DataLocation& data) {
+void babelwires::MainWindow::openEditorForValue(const ProjectDataLocation& data) {
     m_valueEditorManager.openEditorForValue(this, m_projectBridge, m_userLogger, data);
 }

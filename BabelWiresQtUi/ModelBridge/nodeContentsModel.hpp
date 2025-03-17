@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
+
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <QAbstractTableModel>
@@ -41,8 +43,7 @@ namespace babelwires {
         /// Access the number of rows.
         int getNumRows(AccessModelScope& scope) const;
 
-        /// May return null or a new menu.
-        QMenu* getContextMenu(const QModelIndex& index);
+        void getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut, const QModelIndex& index);
 
         ProjectBridge& getProjectBridge();
 

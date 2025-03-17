@@ -10,8 +10,8 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
-babelwires::LineEditValueEditor::LineEditValueEditor(QWidget* parent, const QModelIndex& index)
-    : ValueEditorCommonBase(parent, index) {}
+babelwires::LineEditValueEditor::LineEditValueEditor(QWidget* parent)
+    : ValueEditorCommonBase(parent) {}
 
 void babelwires::LineEditValueEditor::setFeatureIsModified(bool isModified) {
     QFont f = font();

@@ -43,6 +43,13 @@ namespace babelwires {
         /// Get the object which carries the common signals.
         virtual ValueEditorCommonSignals* getValueEditorSignals() = 0;
 
+        // Get the ValueEditorInterface of the widget. Asserts if the property is missing.
+        static ValueEditorInterface& getValueEditorInterface(QWidget* valueEditor);
+
+        // Get the ValueEditorInterface of the widget. Asserts if the property is missing.
+        static const ValueEditorInterface& getValueEditorInterface(const QWidget* valueEditor);
+
+      protected:
         /// The interface is found in the QObject properties with this key.
         static constexpr char s_propertyName[] = "ValueEditorInterface";
     };
@@ -53,8 +60,7 @@ namespace babelwires {
     /// 2. Access to the ValueEditorInterface via a property.
     template <typename T> class ValueEditorCommonBase : public T, public ValueEditorInterface {
       public:
-        /// The arguments as provided to createEditor.
-        ValueEditorCommonBase(QWidget* parent, const QModelIndex& index);
+        ValueEditorCommonBase(QWidget* parent);
         ~ValueEditorCommonBase();
 
         QMetaObject::Connection& getValuesChangedConnection() override;

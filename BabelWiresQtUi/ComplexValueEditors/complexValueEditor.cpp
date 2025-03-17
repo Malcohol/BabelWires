@@ -16,14 +16,14 @@
 #include <QCloseEvent>
 
 babelwires::ComplexValueEditor::ComplexValueEditor(QWidget* parent, ProjectBridge& projectBridge,
-                                                   UserLogger& userLogger, const DataLocation& data)
+                                                   UserLogger& userLogger, const ProjectDataLocation& data)
     : QWidget(parent)
     , m_projectBridge(projectBridge)
     , m_userLogger(userLogger)
-    , m_data(data) {}
+    , m_data(data.clone()) {}
 
-const babelwires::DataLocation& babelwires::ComplexValueEditor::getData() const {
-    return m_data;
+const babelwires::ProjectDataLocation& babelwires::ComplexValueEditor::getDataLocation() const {
+    return *m_data;
 }
 
 babelwires::ProjectBridge& babelwires::ComplexValueEditor::getProjectBridge() {
@@ -45,7 +45,7 @@ void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
 }
 
 const babelwires::ValueTreeNode&
-babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope, const DataLocation& data) {
+babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope, const ProjectDataLocation& data) {
     const Project& project = scope.getProject();
 
     const Node* node = project.getNode(data.getNodeId());
@@ -67,7 +67,7 @@ babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope,
 }
 
 const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTreeNode(AccessModelScope& scope,
-                                                                                   const DataLocation& data) {
+                                                                                   const ProjectDataLocation& data) {
     const Project& project = scope.getProject();
 
     const Node* node = project.getNode(data.getNodeId());
@@ -89,7 +89,7 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTree
 }
 
 const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueTreeNode(AccessModelScope& scope,
-                                                                                const DataLocation& data) {
+                                                                                const ProjectDataLocation& data) {
     const ValueTreeNode* const valueTreeNode = tryGetValueTreeNode(scope, data);
     assert(valueTreeNode && "There was not value feature");
     return *valueTreeNode;

@@ -9,15 +9,21 @@
 
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/openValueEditorAction.hpp>
 
-#include <BabelWiresLib/Types/Map/mapValue.hpp>
+#include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
+#include <BabelWiresLib/Types/Map/mapValue.hpp>
 
-void babelwires::MapValueModel::getContextMenuActions(
-    const DataLocation& location,
-    std::vector<FeatureContextMenuEntry>& actionsOut) const {
+#include <Common/Log/debugLogger.hpp>
+
+void babelwires::MapValueModel::getContextMenuActions(const DataLocation& location,
+                                                      std::vector<ContextMenuEntry>& actionsOut) const {
     ValueModel::getContextMenuActions(location, actionsOut);
     if (!m_isReadOnly) {
-        auto editAction = std::make_unique<OpenValueEditorAction>("Open map editor", location);
-        actionsOut.emplace_back(std::move(editAction));
+        if (const auto& projectDataLocation = location.as<ProjectDataLocation>()) {
+            auto editAction = std::make_unique<OpenValueEditorAction>("Open map editor", *projectDataLocation);
+            actionsOut.emplace_back(std::move(editAction));
+        } else {
+            logDebug() << "Record with optionals encountered outside the project. No context menu options available.";
+        }
     }
 }

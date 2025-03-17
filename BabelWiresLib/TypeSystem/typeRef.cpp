@@ -75,6 +75,7 @@ const babelwires::Type& babelwires::TypeRef::assertResolve(const TypeSystem& typ
 #ifndef NDEBUG
     } catch (TypeSystemException&) {
         assert(false && "TypeSystemException thrown when resolving TypeRef");
+        return *static_cast<const babelwires::Type*>(0);
     }
 #endif
 }
@@ -82,6 +83,8 @@ const babelwires::Type& babelwires::TypeRef::assertResolve(const TypeSystem& typ
 namespace {
     /// A very simple string formatting algorithm sufficient for this job.
     /// Hopefully could be replaced by std::format when that's properly supported.
+    // TODO Handle variable length arguments.
+    // TODO Distinguish type and value arguments.
     std::string simpleFormat(std::string_view format, const std::vector<std::string>& arguments) {
         if (format.size() < 2) {
             return {};

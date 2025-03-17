@@ -23,13 +23,14 @@ namespace babelwires {
     class MapView;
     struct ValueAssignmentData;
     class TypeWidget;
+    class ProjectDataLocation;
 
     class MapEditor : public ComplexValueEditor {
       Q_OBJECT
       public:
         /// data - Enough information to restore the state of a MapEditor.
         MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
-                  const DataLocation& data);
+                  const ProjectDataLocation& data);
 
         /// Resets the map editor to the state of the given map.
         void setEditorMap(const MapValue& mapValue);

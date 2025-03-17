@@ -20,6 +20,6 @@ namespace babelwires {
     class ComplexValueEditorFactory {
       public:
         /// This will throw a ModelException if it does not make sense to open an editor for the value at data.
-        ComplexValueEditor* createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data);
+        ComplexValueEditor* createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ProjectDataLocation& data);
     };
 }

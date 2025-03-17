@@ -59,6 +59,22 @@ namespace babelwires {
         /// Create a MapEntryData of the given kind.
         static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
                                                     const TypeRef& targetTypeRef, Kind kind);
+        
+        /// Return the sourceValue or nullptr if this entry doesn't have one.
+        virtual const EditableValueHolder* tryGetSourceValue() const;
+        /// Return the sourceValue or assert if this entry doesn't have one.        
+        const EditableValueHolder& getSourceValue() const;
+        /// The default implementation asserts.
+        virtual void setSourceValue(EditableValueHolder value);
+
+        /// Return the targetValue or nullptr if this entry doesn't have one.
+        virtual const EditableValueHolder* tryGetTargetValue() const;
+        /// Return the targetValue or assert if this entry doesn't have one.
+        const EditableValueHolder& getTargetValue() const;
+        /// The default implementation asserts.
+        virtual void setTargetValue(EditableValueHolder value);
+
+
 
       protected:
         virtual Result doValidate(const TypeSystem& typeSystem, const Type& sourceType,

@@ -11,6 +11,8 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 
+#include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
+
 namespace babelwires {
     class MapEditor;
     class AllToOneFallbackMapEntryData;
@@ -37,8 +39,7 @@ namespace babelwires {
         QVariant data(const QModelIndex& index, int role) const override;
         Qt::ItemFlags flags(const QModelIndex& index) const override;
         
-        /// May return null or a new menu.
-        QMenu* getContextMenu(const QModelIndex& index);
+        void getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut, const QModelIndex& index);
 
         MapEditor& getMapEditor() const;
 

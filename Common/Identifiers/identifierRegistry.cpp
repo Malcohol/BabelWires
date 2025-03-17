@@ -98,6 +98,7 @@ babelwires::MediumId babelwires::IdentifierRegistry::addMediumIdWithMetadata(bab
 #ifndef NDEBUG
     } catch (const ParseException&) {
         assert(false && "Another identifier was previously registered with this uuid");
+        return {};
     }
 #endif
 }
@@ -112,6 +113,7 @@ babelwires::ShortId babelwires::IdentifierRegistry::addShortIdWithMetadata(babel
 #ifndef NDEBUG
     } catch (const ParseException&) {
         assert(false && "Another identifier was previously registered with this uuid");
+        return {};
     }
 #endif
 }

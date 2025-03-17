@@ -8,12 +8,12 @@
 #pragma once
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
 
 namespace babelwires {
 
     /// QAction for the remove entry from array action in the context menu.
-    class RemoveArrayEntryAction : public babelwires::FeatureContextMenuAction {
+    class RemoveArrayEntryAction : public babelwires::NodeContentsContextMenuActionBase {
       public:
         RemoveArrayEntryAction(babelwires::Path pathToArray, int indexOfEntryToRemove);
 

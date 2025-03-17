@@ -19,9 +19,9 @@ namespace babelwires {
 
         virtual bool hasCustomPainting() const override;
 
-        virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const override;
+        virtual void paint(QPainter* painter, QStyleOptionViewItem& option) const override;
 
-        virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const override;
+        virtual QSize sizeHint(QStyleOptionViewItem& option) const override;
 
         /// Subclasses must provide rich text for use by getDisplayData.
         virtual QString getRichText() const = 0;

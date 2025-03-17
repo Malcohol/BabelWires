@@ -29,6 +29,7 @@ SET( BABELWIRESLIB_SRCS
 	ProjectExtra/connectionDescription.cpp
 	Project/projectUtilities.cpp
 	ProjectExtra/dataLocation.cpp
+	ProjectExtra/projectDataLocation.cpp
 	FileFormat/sourceFileFormat.cpp
 	FileFormat/targetFileFormat.cpp
 	Types/Array/arrayType.cpp
@@ -39,6 +40,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/Commands/addEntryToMapCommand.cpp
 	Types/Map/Commands/removeEntryFromMapCommand.cpp
 	Types/Map/Commands/replaceMapEntryCommand.cpp
+	Types/Map/Commands/resetMapValueCommand.cpp
 	Types/Map/Commands/setMapSourceTypeCommand.cpp
 	Types/Map/Commands/setMapTargetTypeCommand.cpp
 	Types/Map/Commands/changeEntryKindCommand.cpp
@@ -49,15 +51,20 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/MapEntries/allToSameFallbackMapEntryData.cpp
 	Types/Map/MapEntries/allToOneFallbackMapEntryData.cpp
 	Types/Map/MapProject/mapProject.cpp
+	Types/Map/MapProject/mapProjectDataLocation.cpp
 	Types/Map/MapProject/mapProjectEntry.cpp
 	Types/Map/MapProject/mapSerialization.cpp
 	Types/Map/mapType.cpp
 	Types/Map/mapTypeConstructor.cpp
+	Types/Map/standardMapIdentifiers.cpp
 	Types/Map/SumOfMaps/sumOfMapsType.cpp
 	Types/Record/recordType.cpp
 	Types/Record/recordValue.cpp
 	Types/RecordWithVariants/recordWithVariantsType.cpp
 	Types/RecordWithVariants/recordWithVariantsValue.cpp
+	Types/Tuple/tupleType.cpp
+	Types/Tuple/tupleValue.cpp
+	Types/Tuple/tupleTypeConstructor.cpp
 	Processors/parallelProcessor.cpp
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
@@ -93,7 +100,9 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp
 	TypeSystem/typeSystem.cpp
 	Types/Enum/addBlankToEnum.cpp
+	Types/Enum/enumAtomTypeConstructor.cpp
 	Types/Enum/enumType.cpp
+	Types/Enum/enumUnionTypeConstructor.cpp
 	Types/Enum/enumValue.cpp
 	Types/Int/intType.cpp
 	Types/Int/intValue.cpp

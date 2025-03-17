@@ -1,5 +1,5 @@
 /**
- * This action changes the kind of entry at the current item.
+ * This action adds an entry above the current item.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -9,7 +9,7 @@
 
 #include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
 
-#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Commands/commands.hpp>
 
 #include <QAction>
 #include <QAbstractItemModel>
@@ -17,15 +17,16 @@
 
 namespace babelwires {
 
-    class ChangeEntryKindContextMenuAction : public ContextMenuAction {
+    class MapProject;
+
+    class MapCommandContextMenuAction : public ContextMenuAction {
         Q_OBJECT
       public:
-        ChangeEntryKindContextMenuAction(const QString& text, MapEntryData::Kind kind, unsigned int indexOfEntry);
+        MapCommandContextMenuAction(std::unique_ptr<Command<MapProject>> command);
 
         void actionTriggered(QAbstractItemModel& model, const QModelIndex& index) const override;
 
       private:
-        MapEntryData::Kind m_kind;
-        unsigned int m_indexOfNewEntry;
+        std::unique_ptr<Command<MapProject>> m_command;
     };
 } // namespace babelwires

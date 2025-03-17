@@ -16,7 +16,7 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const DataLocation& data) {
+babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ProjectDataLocation& data) {
     AccessModelScope scope(projectBridge);
     const ValueTreeNode& valueTreeNode = ComplexValueEditor::getValueTreeNodeOrThrow(scope, data);
     const Type& type = valueTreeNode.getType();

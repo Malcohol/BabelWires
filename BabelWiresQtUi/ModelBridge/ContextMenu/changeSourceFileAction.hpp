@@ -7,13 +7,13 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
 
 
 namespace babelwires {
 
     /// QAction for the Change Source File action in the context menu.
-    struct ChangeSourceFileAction : FeatureContextMenuAction {
+    struct ChangeSourceFileAction : NodeContentsContextMenuActionBase {
         ChangeSourceFileAction();
 
         virtual void actionTriggered(NodeContentsModel& model, const QModelIndex& index) const override;

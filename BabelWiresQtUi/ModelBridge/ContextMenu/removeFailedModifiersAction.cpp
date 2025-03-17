@@ -18,7 +18,7 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 
 babelwires::RemoveFailedModifiersAction::RemoveFailedModifiersAction()
-    : FeatureContextMenuAction(tr("Remove all failed modifiers from this feature")) {}
+    : NodeContentsContextMenuActionBase(tr("Remove all failed modifiers from this feature")) {}
 
 void babelwires::RemoveFailedModifiersAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                               const QModelIndex& index) const {

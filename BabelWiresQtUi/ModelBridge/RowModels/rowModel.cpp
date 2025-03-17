@@ -129,7 +129,7 @@ QSize babelwires::RowModel::sizeHint(QStyleOptionViewItem& option, const QModelI
 }
 
 void babelwires::RowModel::getContextMenuActions(
-    std::vector<FeatureContextMenuEntry>& actionsOut) const {
+    std::vector<ContextMenuEntry>& actionsOut) const {
     if (isFeatureModified()) {
         actionsOut.emplace_back(std::make_unique<RemoveModifierAction>());
     }

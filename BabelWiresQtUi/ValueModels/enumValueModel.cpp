@@ -14,9 +14,9 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-QWidget* babelwires::EnumValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
+QWidget* babelwires::EnumValueModel::createEditor(QWidget* parent) const {
     const EnumType* const e = m_type->as<EnumType>();
-    auto dropDownBox = std::make_unique<DropDownValueEditor>(parent, index);
+    auto dropDownBox = std::make_unique<DropDownValueEditor>(parent);
     {
         IdentifierRegistry::ReadAccess identifierRegistry = IdentifierRegistry::read();
         for (auto enumValue : e->getValueSet()) {
@@ -57,7 +57,9 @@ babelwires::EditableValueHolder babelwires::EnumValueModel::createValueFromEdito
 }
 
 bool babelwires::EnumValueModel::isItemEditable() const {
-    return getValue()->as<EnumValue>();
+    const EnumType& type = m_type->is<EnumType>();
+    // Don't offer an editor if there's only one enum value.
+    return getValue()->as<EnumValue>() && (type.getValueSet().size() > 1);
 }
 
 bool babelwires::EnumValueModel::validateEditor(QWidget* editor) const {

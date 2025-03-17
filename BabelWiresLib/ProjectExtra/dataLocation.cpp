@@ -1,5 +1,5 @@
 /**
- * A DataLocation carries enough data to reconstruct a ComplexValueEditor.
+ * A DataLocation identifies some data within the project.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -11,31 +11,35 @@
 #include <Common/Serialization/serializer.hpp>
 #include <Common/Serialization/deserializer.hpp>
 
-babelwires::DataLocation::DataLocation(NodeId elementId, Path pathToValue)
-    : m_nodeId(elementId)
-    , m_pathToValue(std::move(pathToValue)) {
-
+bool babelwires::DataLocation::equals(const DataLocation& other) const { 
+    return m_pathToValue != other.m_pathToValue;
 }
 
-babelwires::NodeId babelwires::DataLocation::getNodeId() const {
-    return m_nodeId;
+babelwires::DataLocation::DataLocation(Path pathToValue)
+    : m_pathToValue(std::move(pathToValue)) {
 }
 
 const babelwires::Path& babelwires::DataLocation::getPathToValue() const {
     return m_pathToValue;
 }
 
+babelwires::Path& babelwires::DataLocation::getPathToValue() {
+    return m_pathToValue;
+}
+
 std::size_t babelwires::DataLocation::getHash() const {
-    return hash::mixtureOf(m_nodeId, m_pathToValue);
+    return hash::mixtureOf(m_pathToValue);
+}
+
+void babelwires::DataLocation::writeToStream(std::ostream& os) const {
+    os << m_pathToValue;
 }
 
 void babelwires::DataLocation::serializeContents(Serializer& serializer) const {
-    serializer.serializeValue("id", m_nodeId);
     serializer.serializeValue("path", m_pathToValue);
 }
 
 void babelwires::DataLocation::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("id", m_nodeId);
     deserializer.deserializeValue("path", m_pathToValue);
 }
 

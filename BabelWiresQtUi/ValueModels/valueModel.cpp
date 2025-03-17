@@ -24,7 +24,7 @@ const babelwires::Type* babelwires::ValueModel::getType() const {
     return m_type;
 }
 
-QWidget* babelwires::ValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
+QWidget* babelwires::ValueModel::createEditor(QWidget* parent) const {
     assert(false && "This method must be overridden in subclasses");
     return nullptr;
 }
@@ -50,11 +50,11 @@ bool babelwires::ValueModel::hasCustomPainting() const {
     return false;
 }
 
-void babelwires::ValueModel::paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const {
+void babelwires::ValueModel::paint(QPainter* painter, QStyleOptionViewItem& option) const {
     assert(false && "hasCustomPainting returned false");
 }
 
-QSize babelwires::ValueModel::sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const {
+QSize babelwires::ValueModel::sizeHint(QStyleOptionViewItem& option) const {
     assert(false && "hasCustomPainting returned false");
     return {};
 }
@@ -64,4 +64,4 @@ QString babelwires::ValueModel::getTooltip() const {
 }
 
 void babelwires::ValueModel::getContextMenuActions(
-    const DataLocation& location, std::vector<FeatureContextMenuEntry>& actionsOut) const {}
+    const DataLocation& location, std::vector<ContextMenuEntry>& actionsOut) const {}

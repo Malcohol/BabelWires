@@ -11,18 +11,24 @@
 
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
-#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
+#include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
+
+#include <Common/Log/debugLogger.hpp>
 
 void babelwires::ArrayValueModel::getContextMenuActions(
     const DataLocation& location,
-    std::vector<FeatureContextMenuEntry>& actionsOut) const {
+    std::vector<ContextMenuEntry>& actionsOut) const {
     ValueModel::getContextMenuActions(location, actionsOut);
     if (!m_isReadOnly) {
-        const ArrayType* const arrayType = m_type->as<ArrayType>();
-        const ArrayValue* arrayValue = getValue()->as<ArrayValue>();
-        auto setArraySize = std::make_unique<SetArraySizeAction>(location.getPathToValue());
-        // TODO tooltip.
-        setArraySize->setEnabled(m_isStructureEditable);
-        actionsOut.emplace_back(std::move(setArraySize));
+        if (const auto& projectDataLocation = location.as<ProjectDataLocation>()) {
+            const ArrayType* const arrayType = m_type->as<ArrayType>();
+            const ArrayValue* arrayValue = getValue()->as<ArrayValue>();
+            auto setArraySize = std::make_unique<SetArraySizeAction>(projectDataLocation->getPathToValue());
+            // TODO tooltip.
+            setArraySize->setEnabled(m_isStructureEditable);
+            actionsOut.emplace_back(std::move(setArraySize));
+        } else {
+            logDebug() << "Array encountered outside the project. No context menu options available.";
+        }
     }
 }

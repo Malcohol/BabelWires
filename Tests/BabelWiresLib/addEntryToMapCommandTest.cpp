@@ -2,11 +2,11 @@
 
 #include <BabelWiresLib/Types/Map/Commands/addEntryToMapCommand.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -15,7 +15,7 @@
 
 TEST(AddEntryToMapCommandTest, executeAndUndo) {
     testUtils::TestEnvironment environment;
-    
+
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisType()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisType()}});
@@ -27,34 +27,35 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisType(),
                                               testUtils::TestType::getThisType());
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testUtils::TestType::getThisType());
+    testUtils::TestValue nonDefaultValue("non-default");
+    oneToOne.setSourceValue(nonDefaultValue);
+    oneToOne.setTargetValue(nonDefaultValue);
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, testUtils::TestType::getThisType());
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
     mapProject.setMapValue(mapValue);
 
-    testUtils::TestValue newSourceValue;
-    newSourceValue.m_value = "Source";
-    testUtils::TestValue newTargetValue;
-    newTargetValue.m_value = "Target";
-    oneToOne.setSourceValue(newSourceValue);
-    oneToOne.setTargetValue(newTargetValue);
-
-    babelwires::AddEntryToMapCommand testCopyConstructor("Add entry", oneToOne.clone(), 1);
+    babelwires::AddEntryToMapCommand testCopyConstructor("Add entry", 1);
     babelwires::AddEntryToMapCommand command = testCopyConstructor;
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
-    EXPECT_EQ(mapProject.getMapEntry(1).getData(), oneToOne);
+    EXPECT_EQ(mapProject.getMapEntry(0).getData().getSourceValue(), nonDefaultValue);
+    EXPECT_EQ(mapProject.getMapEntry(0).getData().getTargetValue(), nonDefaultValue);
+    EXPECT_EQ(mapProject.getMapEntry(1).getData().getSourceValue(), testUtils::TestValue("Default value"));
+    EXPECT_EQ(mapProject.getMapEntry(1).getData().getTargetValue(), testUtils::TestValue("Default value"));
     command.undo(mapProject);
     EXPECT_EQ(mapProject.getNumMapEntries(), 2);
+    EXPECT_EQ(mapProject.getMapEntry(0).getData().getSourceValue(), nonDefaultValue);
+    EXPECT_EQ(mapProject.getMapEntry(0).getData().getTargetValue(), nonDefaultValue);
 }
 
 TEST(AddEntryToMapCommandTest, failAtEnd) {
     testUtils::TestEnvironment environment;
-    
+
     babelwires::MapProject mapProject(environment.m_projectContext);
     mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisType()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisType()}});
@@ -66,14 +67,13 @@ TEST(AddEntryToMapCommandTest, failAtEnd) {
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisType(),
                                               testUtils::TestType::getThisType());
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testUtils::TestType::getThisType());
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, testUtils::TestType::getThisType());
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
     mapProject.setMapValue(mapValue);
 
-    babelwires::AddEntryToMapCommand command("Add entry", oneToOne.clone(), 2);
+    babelwires::AddEntryToMapCommand command("Add entry", 2);
 
     EXPECT_FALSE(command.initialize(mapProject));
 }

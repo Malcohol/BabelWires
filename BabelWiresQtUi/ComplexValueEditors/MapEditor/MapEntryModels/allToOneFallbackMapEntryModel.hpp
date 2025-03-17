@@ -16,13 +16,14 @@ namespace babelwires {
     class AllToOneFallbackMapEntryModel : public MapEntryModel {
       public:
         void init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) override;
-        QVariant getDisplayData(Column column) const override;
+        QVariant getDisplayData() const override;
 
-        bool isItemEditable(Column column) const override;
+        bool isItemEditable() const override;
         QWidget* createEditor(QWidget* parent, const QModelIndex& index) const override;
-        void setEditorData(Column column, QWidget* editor) const override;
-        std::unique_ptr<MapEntryData> createReplacementDataFromEditor(Column column, QWidget* editor) const override;
-        bool validateEditor(QWidget* editor, Column column) const override;
+        void setEditorData(QWidget* editor) const override;
+        std::unique_ptr<MapEntryData> createReplacementDataFromEditor(QWidget* editor) const override;
+        bool validateEditor(QWidget* editor) const override;
+        void getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const override;
 
         /*
         virtual bool hasCustomPainting() const;

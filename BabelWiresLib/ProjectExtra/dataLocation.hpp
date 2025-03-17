@@ -7,38 +7,37 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Path/path.hpp>
+#include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
+#include <Common/Cloning/cloneable.hpp>
 #include <Common/Serialization/serializable.hpp>
 
 namespace babelwires {
     /// A DataLocation identifies some data within the system.
-    /// Right now it is a concrete class and identifies a row within the project.
-    /// In theory, it should be abstracted and be able to identify data in other contexts
-    /// as well. An example would be the source or target values in the MapEditor.
-    class DataLocation : public Serializable, ProjectVisitable {
+    /// It's usually the case that values can have have subvalues, so this class carries a path
+    /// to allow it to identify those subvalues.
+    /// Note: In theory, a path on its own could be used to express the current use-cases, but I do not
+    /// want to assume that will always be a possible or convenient option.
+    class DataLocation : public Cloneable, Serializable, ProjectVisitable {
       public:
-        SERIALIZABLE(DataLocation, "location", void, 1);
+        DOWNCASTABLE_TYPE_HIERARCHY(DataLocation);
+        CLONEABLE_ABSTRACT(DataLocation);
 
-        DataLocation() = default;
-        DataLocation(NodeId elementId, Path pathToValue);
-        DataLocation(const DataLocation& other) = default;
+        DataLocation(Path pathToValue);
 
-        NodeId getNodeId() const;
         const Path& getPathToValue() const;
+        Path& getPathToValue();
 
-      public:
-        // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
-        std::size_t getHash() const;
+        virtual std::size_t getHash() const;
 
-        inline friend bool operator==(const DataLocation& a, const DataLocation& b) { 
-            return (a.m_nodeId == b.m_nodeId) && (a.m_pathToValue == b.m_pathToValue);
-        }
+        inline friend bool operator==(const DataLocation& a, const DataLocation& b) { return a.equals(b); }
 
-        friend std::ostream& operator<<(std::ostream& os, const DataLocation& data) {
-            return os << "\"" << data.m_pathToValue << " @ node " << data.m_nodeId << "\"";
+        inline friend std::ostream& operator<<(std::ostream& os, const DataLocation& data) {
+            os << "\"";
+            data.writeToStream(os);
+            return os << "\"";
         }
 
       public:
@@ -48,11 +47,17 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
+      protected:
+        DataLocation() = default;
+
+        virtual bool equals(const DataLocation& other) const;
+
+        virtual void writeToStream(std::ostream& os) const;
+
       private:
-        NodeId m_nodeId;
         Path m_pathToValue;
     };
-}
+} // namespace babelwires
 
 namespace std {
     template <> struct hash<babelwires::DataLocation> {

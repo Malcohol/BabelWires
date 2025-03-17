@@ -9,7 +9,6 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
-#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
@@ -59,13 +58,12 @@ bool babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index,
     }
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
     const bool isLastRow = (row == numMapEntries - 1);
-    mapEntryModel.init(m_projectContext.m_valueModelReg, m_projectContext.m_typeSystem, *mapProject.getCurrentSourceType(), *mapProject.getCurrentTargetType(), entry, row, isLastRow);
+    mapEntryModel.init(m_projectContext.m_valueModelReg, m_projectContext.m_typeSystem, *mapProject.getCurrentSourceType(), *mapProject.getCurrentTargetType(), entry, row, static_cast<MapEntryModel::Column>(column), isLastRow);
     return true;
 }
 
 QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     const unsigned int row = static_cast<unsigned int>(index.row());
-    const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
     const MapProject& mapProject = m_mapEditor.getMapProject();
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
 
@@ -76,7 +74,7 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
 
     switch (role) {
         case Qt::DisplayRole: {
-            return mapEntryModel->getDisplayData(column);
+            return mapEntryModel->getDisplayData();
         }
         case Qt::ToolTipRole: {
             const Result validity = entry.getValidity();
@@ -98,22 +96,13 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
     return {};
 }
 
-QMenu* babelwires::MapModel::getContextMenu(const QModelIndex& index) {
+void babelwires::MapModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut, const QModelIndex& index) {
     MapEntryModelDispatcher mapEntryModel;
     if (!initMapEntryModelDispatcher(index, mapEntryModel)) {
-        return nullptr;
+        return;
     }
 
-    std::vector<std::unique_ptr<ContextMenuAction>> actions;
-    mapEntryModel->getContextMenuActions(actions);
-    if (!actions.empty()) {
-        ContextMenu* menu = new ContextMenu(*this, index);
-        for (auto&& action : actions) {
-            menu->addContextMenuAction(action.release());
-        }
-        return menu;
-    }
-    return nullptr;
+    mapEntryModel->getContextMenuActions(actionsOut);
 }
 
 babelwires::MapEditor& babelwires::MapModel::getMapEditor() const {
@@ -128,10 +117,9 @@ Qt::ItemFlags babelwires::MapModel::flags(const QModelIndex& index) const {
         return flags;
     }
 
-    const MapEntryModel::Column column = MapEntryModel::indexToColumn(index);
     const unsigned int row = static_cast<unsigned int>(index.row());
     if (m_mapEditor.getMapProject().getMapEntry(row).getValidity()) {
-        if (mapEntryModel->isItemEditable(column)) {
+        if (mapEntryModel->isItemEditable()) {
             flags = flags | Qt::ItemIsEditable;
         }
     }

@@ -12,7 +12,8 @@
 #include <cassert>
 
 babelwires::ContextMenuAction::ContextMenuAction(const QString& text)
-    : QAction(text) {}
+    : QAction(text) {
+}
 
 void babelwires::ContextMenuAction::onTriggeredFired() {
     QWidget *const parent = parentWidget();
@@ -20,4 +21,8 @@ void babelwires::ContextMenuAction::onTriggeredFired() {
     ContextMenu *const menu = static_cast<ContextMenu*>(parent);
     actionTriggered(menu->getModel(), menu->getModelIndex());
     menu->close();
+}
+
+void babelwires::ContextMenuGroup::addContextMenuAction(std::unique_ptr<ContextMenuAction> action) {
+    m_actions.emplace_back(std::move(action));
 }

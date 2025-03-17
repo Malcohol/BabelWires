@@ -12,14 +12,17 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 #include <BabelWiresQtUi/mainWindow.hpp>
 
+#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 
-babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, DataLocation location)
-    : FeatureContextMenuAction(text)
-    , m_location(std::move(location)) {}
+babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, const ProjectDataLocation& location)
+    : NodeContentsContextMenuActionBase(text)
+    , m_location(location.clone()) {}
+
+babelwires::OpenValueEditorAction::~OpenValueEditorAction() = default;
 
 void babelwires::OpenValueEditorAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();
 
-    model.getProjectBridge().getMainWindow()->openEditorForValue(m_location);
+    model.getProjectBridge().getMainWindow()->openEditorForValue(*m_location);
 }

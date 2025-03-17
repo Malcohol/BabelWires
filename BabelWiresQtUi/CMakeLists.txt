@@ -21,14 +21,16 @@ SET( BABELWIRESQTUI_SRCS
     ValueEditors/dropDownValueEditor.cpp
     ValueEditors/spinBoxValueEditor.cpp
     ValueEditors/lineEditValueEditor.cpp
+    ValueEditors/tupleValueEditor.cpp
     ValueEditors/valueEditorCommonBase.cpp
     ModelBridge/Internal/flowSceneConnectionInfo.cpp
-    ModelBridge/ContextMenu/featureContextMenu.cpp
+    ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.cpp
     ModelBridge/ContextMenu/removeModifierAction.cpp
     ModelBridge/ContextMenu/insertArrayEntryAction.cpp
     ModelBridge/ContextMenu/removeArrayEntryAction.cpp
     ModelBridge/ContextMenu/reloadFileAction.cpp
     ModelBridge/ContextMenu/changeSourceFileAction.cpp
+    ModelBridge/ContextMenu/projectCommandContextMenuAction.cpp
     ModelBridge/ContextMenu/saveFileAction.cpp
     ModelBridge/ContextMenu/saveFileAsAction.cpp
     ModelBridge/ContextMenu/removeFailedModifiersAction.cpp
@@ -49,9 +51,7 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/MapEntryModels/oneToOneMapEntryModel.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/allToOneFallbackMapEntryModel.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/allToSameFallbackMapEntryModel.cpp
-    ComplexValueEditors/MapEditor/MapContextMenuActions/addEntryMapContextMenuAction.cpp
-    ComplexValueEditors/MapEditor/MapContextMenuActions/removeEntryMapContextMenuAction.cpp
-    ComplexValueEditors/MapEditor/MapContextMenuActions/changeEntryKindContextMenuAction.cpp
+    ComplexValueEditors/MapEditor/MapContextMenuActions/mapCommandContextMenuAction.cpp
     ContextMenu/contextMenu.cpp
     ContextMenu/contextMenuAction.cpp
     ValueModels/arrayValueModel.cpp
@@ -61,11 +61,13 @@ SET( BABELWIRESQTUI_SRCS
     ValueModels/recordValueModel.cpp
     ValueModels/recordWithVariantsValueModel.cpp
     ValueModels/stringValueModel.cpp
+    ValueModels/tupleValueModel.cpp
     ValueModels/valueModel.cpp
     ValueModels/valueModelDispatcher.cpp
     ValueModels/valueModelRegistry.cpp
     ValueModels/valueModelWithRichText.cpp
     ValueModels/mapValueModel.cpp
+    ValueModels/sumValueModel.cpp
 )
 
 ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )

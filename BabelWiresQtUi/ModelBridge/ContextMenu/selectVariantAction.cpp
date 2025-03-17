@@ -1,5 +1,5 @@
 /**
- * QAction for activating or deactivating optional fields.
+ * QAction for selecting the variant of a RecordWithVariantsType.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -15,7 +15,7 @@
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 babelwires::SelectVariantAction::SelectVariantAction(babelwires::Path pathToRecord, ShortId optional)
-    : FeatureContextMenuAction(IdentifierRegistry::read()->getName(optional).c_str())
+    : NodeContentsContextMenuActionBase(IdentifierRegistry::read()->getName(optional).c_str())
     , m_pathToRecord(std::move(pathToRecord))
     , m_tag(optional) {
     setCheckable(true);

@@ -15,7 +15,7 @@ namespace babelwires {
       public:
         QString getRichText() const override;
         bool isItemEditable() const override;
-        QWidget* createEditor(QWidget* parent, const QModelIndex& index) const override;
+        QWidget* createEditor(QWidget* parent) const override;
         void setEditorData(QWidget* editor) const override;
         EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const override;
         bool validateEditor(QWidget* editor) const override;

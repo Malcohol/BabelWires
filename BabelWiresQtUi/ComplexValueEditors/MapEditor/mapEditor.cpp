@@ -10,21 +10,23 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModelDelegate.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
+#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
-#include <BabelWiresLib/Types/Map/mapType.hpp>
+#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 #include <BabelWiresLib/Types/Map/Commands/setMapCommand.hpp>
 #include <BabelWiresLib/Types/Map/Commands/setMapSourceTypeCommand.hpp>
 #include <BabelWiresLib/Types/Map/Commands/setMapTargetTypeCommand.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapSerialization.hpp>
-#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
+#include <BabelWiresLib/Types/Map/mapType.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <QDialogButtonBox>
@@ -41,7 +43,7 @@
 #define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
 
 babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
-                                 const DataLocation& data)
+                                 const ProjectDataLocation& data)
     : ComplexValueEditor(parent, projectBridge, userLogger, data)
     , m_map(projectBridge.getContext())
     , m_commandManager(m_map, userLogger) {
@@ -90,13 +92,17 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
             m_typeRef = mapTreeNode.getTypeRef();
             const MapValue& mapValue = getMapValueFromProject(scope);
             if (mapTreeNode.getType().as<MapType>()) {
-                m_map.setAllowedSourceTypeRefs(MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getSourceTypeRef()}});
-                m_map.setAllowedTargetTypeRefs(MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getSourceTypeRef()}});
+                m_map.setAllowedSourceTypeRefs(
+                    MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getSourceTypeRef()}});
+                m_map.setAllowedTargetTypeRefs(
+                    MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getTargetTypeRef()}});
             } else {
-                const SumOfMapsType *const sumOfMaps = mapTreeNode.getType().as<SumOfMapsType>();
+                const SumOfMapsType* const sumOfMaps = mapTreeNode.getType().as<SumOfMapsType>();
                 assert(sumOfMaps && "MapEditor expecting a MapType of SumOfMapsType");
-                m_map.setAllowedSourceTypeRefs(MapProject::AllowedTypes{sumOfMaps->getSourceTypes(), sumOfMaps->getIndexOfDefaultSourceType()});
-                m_map.setAllowedTargetTypeRefs(MapProject::AllowedTypes{sumOfMaps->getTargetTypes(), sumOfMaps->getIndexOfDefaultTargetType()});
+                m_map.setAllowedSourceTypeRefs(
+                    MapProject::AllowedTypes{sumOfMaps->getSourceTypes(), sumOfMaps->getIndexOfDefaultSourceType()});
+                m_map.setAllowedTargetTypeRefs(
+                    MapProject::AllowedTypes{sumOfMaps->getTargetTypes(), sumOfMaps->getIndexOfDefaultTargetType()});
             }
             m_map.setMapValue(mapValue);
             {
@@ -172,10 +178,10 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
 
 void babelwires::MapEditor::applyMapToProject() {
     auto modifierData = std::make_unique<ValueAssignmentData>(m_map.extractMapValue());
-    modifierData->m_targetPath = getData().getPathToValue();
+    modifierData->m_targetPath = getDataLocation().getPathToValue();
 
     auto setValueCommand =
-        std::make_unique<AddModifierCommand>("Set map value", getData().getNodeId(), std::move(modifierData));
+        std::make_unique<AddModifierCommand>("Set map value", getDataLocation().getNodeId(), std::move(modifierData));
     if (!getProjectBridge().executeCommandSynchronously(std::move(setValueCommand))) {
         warnThatMapNoLongerInProject("Cannot apply the map.");
     } else {
@@ -187,7 +193,7 @@ void babelwires::MapEditor::applyMapToProject() {
 }
 
 const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(AccessModelScope& scope) const {
-    const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getData());
+    const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getDataLocation());
     assert(mapTreeNode.getType().as<MapType>() || mapTreeNode.getType().as<SumOfMapsType>());
     return mapTreeNode;
 }
@@ -202,7 +208,7 @@ const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(Access
 }
 
 const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(AccessModelScope& scope) const {
-    const ValueTreeNode* mapTreeNode = ComplexValueEditor::tryGetValueTreeNode(scope, getData());
+    const ValueTreeNode* mapTreeNode = ComplexValueEditor::tryGetValueTreeNode(scope, getDataLocation());
     if (mapTreeNode->getType().as<MapType>() || mapTreeNode->getType().as<SumOfMapsType>()) {
         return mapTreeNode;
     }
@@ -211,13 +217,13 @@ const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(Access
 
 const babelwires::ValueAssignmentData*
 babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
-    const Node* const node = scope.getProject().getNode(getData().getNodeId());
+    const Node* const node = scope.getProject().getNode(getDataLocation().getNodeId());
 
     if (!node) {
         return nullptr;
     }
 
-    const Modifier* const modifier = node->findModifier(getData().getPathToValue());
+    const Modifier* const modifier = node->findModifier(getDataLocation().getPathToValue());
 
     if (!modifier) {
         return nullptr;
@@ -226,7 +232,8 @@ babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) con
     return modifier->getModifierData().as<ValueAssignmentData>();
 }
 
-babelwires::ValueHolderTemplate<babelwires::MapValue> babelwires::MapEditor::tryGetMapValueFromProject(AccessModelScope& scope) const {
+babelwires::ValueHolderTemplate<babelwires::MapValue>
+babelwires::MapEditor::tryGetMapValueFromProject(AccessModelScope& scope) const {
     if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
         if (ValueHolderTemplate<MapValue> mapValue = modifier->getValue().asValueHolder<MapValue>()) {
             return mapValue;
@@ -246,8 +253,7 @@ void babelwires::MapEditor::updateMapFromProject() {
     ValueHolderTemplate<MapValue> mapValueFromProject = tryGetMapValueFromProject(scope);
     if (mapValueFromProject) {
         getUserLogger().logInfo() << "Refreshing the map from the project";
-        executeCommand(
-            std::make_unique<SetMapCommand>("Refresh the map from the project", mapValueFromProject));
+        executeCommand(std::make_unique<SetMapCommand>("Refresh the map from the project", mapValueFromProject));
     } else {
         warnThatMapNoLongerInProject("Cannot refresh the map.");
     }
@@ -336,20 +342,25 @@ void babelwires::MapEditor::loadMapFromFile() {
 
 QString babelwires::MapEditor::getTitle() const {
     std::ostringstream contents;
-    contents << getData() << " - Map Editor";
+    contents << getDataLocation() << " - Map Editor";
     return contents.str().c_str();
 }
 
 void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& operationDescription) {
     std::ostringstream contents;
-    contents << "The map " << getData() << " is no longer in the project.\n" << operationDescription;
+    contents << "The map " << getDataLocation() << " is no longer in the project.\n" << operationDescription;
     QMessageBox::warning(this, "Map no longer in project", QString(contents.str().c_str()));
 }
 
 void babelwires::MapEditor::onCustomContextMenuRequested(const QPoint& pos) {
     QModelIndex index = m_mapView->indexAt(pos);
-    QMenu* const menu = m_mapModel->getContextMenu(index);
-    if (menu) {
+    std::vector<ContextMenuEntry> actions;
+    m_mapModel->getContextMenuActions(actions, index);
+    if (!actions.empty()) {
+        ContextMenu* menu = new ContextMenu(*m_mapModel, index);
+        for (auto&& action : actions) {
+            menu->addContextMenuEntry(std::move(action));
+        }
         menu->popup(m_mapView->mapToGlobal(pos));
     }
 }

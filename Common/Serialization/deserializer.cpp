@@ -20,7 +20,7 @@ void babelwires::Deserializer::BaseIterator::operator++() {
     ++(*m_impl);
     if (!m_typeName.empty() && isValid()) {
         if (m_deserializer.getCurrentTypeName() != m_typeName) {
-            throw babelwires::ParseException()
+            throw ParseException()
                 << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName() << "\"";
         }
     }

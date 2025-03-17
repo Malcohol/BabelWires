@@ -8,12 +8,12 @@
 #pragma once
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
 
 namespace babelwires {
 
     /// QAction for the remove failed modifiers action in the context menu.
-    struct RemoveFailedModifiersAction : FeatureContextMenuAction {
+    struct RemoveFailedModifiersAction : NodeContentsContextMenuActionBase {
         RemoveFailedModifiersAction();
 
         virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;

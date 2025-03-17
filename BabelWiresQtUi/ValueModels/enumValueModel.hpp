@@ -13,7 +13,7 @@ namespace babelwires {
 
     class EnumValueModel : ValueModel {
       public:
-        QWidget* createEditor(QWidget* parent, const QModelIndex& index) const override;
+        QWidget* createEditor(QWidget* parent) const override;
         void setEditorData(QWidget* editor) const override;
         EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const override;
         bool isItemEditable() const override;

@@ -41,3 +41,7 @@ babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, Type
                   [&summands](const Type* t) { summands.emplace_back(t->getTypeRef()); });
     return std::make_unique<ConstructedType<SumType>>(std::move(newTypeRef), summands, defaultIndex);
 }
+
+babelwires::TypeRef babelwires::SumTypeConstructor::makeTypeRef(std::vector<TypeRef> types) {
+    return TypeRef(getThisIdentifier(), {std::move(types), {}});
+}

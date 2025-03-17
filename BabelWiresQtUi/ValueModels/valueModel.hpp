@@ -10,7 +10,7 @@
 #include <QVariant>
 
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
+#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 
 class QWidget;
 class QModelIndex;
@@ -22,6 +22,7 @@ namespace babelwires {
     class Value;
     class TypeSystem;
     class DataLocation;
+    class ValueModelRegistry;
 
     class ValueModel {
       public:
@@ -29,19 +30,19 @@ namespace babelwires {
         /// it will be applied to the font.
         enum class StyleHint { Normal, Bold };
         virtual QVariant getDisplayData(StyleHint styleHint = ValueModel::StyleHint::Normal) const;
-        virtual QWidget* createEditor(QWidget* parent, const QModelIndex& index) const;
+        virtual QWidget* createEditor(QWidget* parent) const;
         virtual void setEditorData(QWidget* editor) const;
         virtual EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const;
         virtual bool isItemEditable() const;
         virtual bool validateEditor(QWidget* editor) const;
         virtual bool hasCustomPainting() const;
-        virtual void paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const;
-        virtual QSize sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual void paint(QPainter* painter, QStyleOptionViewItem& option) const;
+        virtual QSize sizeHint(QStyleOptionViewItem& option) const;
         virtual QString getTooltip() const;
 
-        /// Add any context actions which should appear in the context menu for this value.
+        /// Add any context actions that should appear in the context menu for this value.
         /// Subclasses overriding this should use super-calls to collect standard actions.
-        virtual void getContextMenuActions(const DataLocation& location, std::vector<FeatureContextMenuEntry>& actionsOut) const;
+        virtual void getContextMenuActions(const DataLocation& location, std::vector<ContextMenuEntry>& actionsOut) const;
 
       protected:
         const ValueHolder& getValue() const;
@@ -51,6 +52,8 @@ namespace babelwires {
         const TypeSystem* m_typeSystem;
         const Type* m_type;
         const ValueHolder* m_value;
+        /// Used by value editors that allow the editing of subvalues, such as tuple.
+        const ValueModelRegistry* m_valueModelRegistry;
         /// Does the context make this value readonly.
         bool m_isReadOnly;
         /// Are structural modifications permitted to this value.

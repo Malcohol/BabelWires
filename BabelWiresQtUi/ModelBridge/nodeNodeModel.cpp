@@ -7,6 +7,7 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/nodeNodeModel.hpp>
 
+#include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsView.hpp>
@@ -123,8 +124,13 @@ QString babelwires::NodeNodeModel::caption() const {
 
 void babelwires::NodeNodeModel::customContextMenuRequested(const QPoint& pos) {
     QModelIndex index = m_view->indexAt(pos);
-    QMenu* const menu = m_model->getContextMenu(index);
-    if (menu) {
+    std::vector<ContextMenuEntry> entries;
+    m_model->getContextMenuActions(entries, index);
+    if (!entries.empty()) {
+        ContextMenu* menu = new ContextMenu(*m_model, index);
+        for (auto&& entry : entries) {
+            menu->addContextMenuEntry(std::move(entry));
+        }
         menu->popup(m_view->mapToGlobalCorrect(pos));
     }
 }

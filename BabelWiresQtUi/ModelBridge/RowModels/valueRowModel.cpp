@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
-#include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
+#include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
 #include <QString>
@@ -38,7 +38,7 @@ QVariant babelwires::ValueRowModel::getValueDisplayData() const {
 }
 
 QWidget* babelwires::ValueRowModel::createEditor(QWidget* parent, const QModelIndex& index) const {
-    return m_valueModelDispatcher->createEditor(parent, index);
+    return m_valueModelDispatcher->createEditor(parent);
 }
 
 void babelwires::ValueRowModel::setEditorData(QWidget* editor) const {
@@ -68,11 +68,11 @@ bool babelwires::ValueRowModel::hasCustomPainting() const {
 }
 
 void babelwires::ValueRowModel::paint(QPainter* painter, QStyleOptionViewItem& option, const QModelIndex& index) const {
-    m_valueModelDispatcher->paint(painter, option, index);
+    m_valueModelDispatcher->paint(painter, option);
 }
 
 QSize babelwires::ValueRowModel::sizeHint(QStyleOptionViewItem& option, const QModelIndex& index) const {
-    return m_valueModelDispatcher->sizeHint(option, index);
+    return m_valueModelDispatcher->sizeHint(option);
 }
 
 QString babelwires::ValueRowModel::getTooltip() const {
@@ -86,9 +86,9 @@ QString babelwires::ValueRowModel::getTooltip() const {
 }
 
 void babelwires::ValueRowModel::getContextMenuActions(
-    std::vector<FeatureContextMenuEntry>& actionsOut) const {
+    std::vector<ContextMenuEntry>& actionsOut) const {
     RowModel::getContextMenuActions(actionsOut);
     const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
     m_valueModelDispatcher->getContextMenuActions(
-        DataLocation{m_node->getNodeId(), babelwires::Path(&valueTreeNode)}, actionsOut);
+        ProjectDataLocation{m_node->getNodeId(), babelwires::Path(&valueTreeNode)}, actionsOut);
 }

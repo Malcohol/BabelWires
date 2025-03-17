@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/rowModelDelegate.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/featureContextMenu.hpp>
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
@@ -61,20 +60,16 @@ QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyl
     QWidget* const editor = rowModel->createEditor(parent, index);
 
     if (editor) {
-        QVariant property = editor->property(ValueEditorInterface::s_propertyName);
-        if (property.isValid()) {
-            ValueEditorInterface* interface = qvariant_cast<ValueEditorInterface*>(property);
+        ValueEditorInterface& interface = ValueEditorInterface::getValueEditorInterface(editor);
+        // Update the editor if the model changes.
+        interface.getValuesChangedConnection() = QObject::connect(
+            model, &NodeContentsModel::valuesMayHaveChanged,
+            [this, editor, parent, index]() { emit setEditorData(editor, index); });
 
-            // Update the editor if the model changes.
-            interface->getValuesChangedConnection() = QObject::connect(
-                model, &NodeContentsModel::valuesMayHaveChanged,
-                [this, editor, parent, index]() { emit setEditorData(editor, index); });
-
-            ValueEditorCommonSignals* ValueEditorCommonSignals = interface->getValueEditorSignals();
-            // Update the model if the editor changes.
-            QObject::connect(ValueEditorCommonSignals, &ValueEditorCommonSignals::editorHasChanged,
-                     this, &RowModelDelegate::commitData);
-        }
+        ValueEditorCommonSignals* ValueEditorCommonSignals = interface.getValueEditorSignals();
+        // Update the model if the editor changes.
+        QObject::connect(ValueEditorCommonSignals, &ValueEditorCommonSignals::editorHasChanged,
+                    this, &RowModelDelegate::commitData);
     }
 
     if (!editor) {
@@ -105,12 +100,8 @@ void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIn
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable feature");
     rowModel->setEditorData(editor);
 
-    // Set the editor to modified if the editor carries the ValueEditorInterface property.
-    QVariant property = editor->property(ValueEditorInterface::s_propertyName);
-    if (property.isValid()) {
-        ValueEditorInterface* interface = qvariant_cast<ValueEditorInterface*>(property);
-        interface->setFeatureIsModified(entry->hasModifier());
-    }
+    ValueEditorInterface& interface = ValueEditorInterface::getValueEditorInterface(editor);
+    interface.setFeatureIsModified(entry->hasModifier());
 }
 
 void babelwires::RowModelDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,

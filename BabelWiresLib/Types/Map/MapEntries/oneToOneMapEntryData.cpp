@@ -54,16 +54,16 @@ bool babelwires::OneToOneMapEntryData::operator==(const MapEntryData& other) con
     return (*m_sourceValue == *otherData->m_sourceValue) && (*m_targetValue == *otherData->m_targetValue);
 }
 
-const babelwires::EditableValueHolder& babelwires::OneToOneMapEntryData::getSourceValue() const {
-    return m_sourceValue;
+const babelwires::EditableValueHolder* babelwires::OneToOneMapEntryData::tryGetSourceValue() const {
+    return &m_sourceValue;
 }
 
 void babelwires::OneToOneMapEntryData::setSourceValue(EditableValueHolder value) {
     m_sourceValue = std::move(value);
 }
 
-const babelwires::EditableValueHolder& babelwires::OneToOneMapEntryData::getTargetValue() const {
-    return m_targetValue;
+const babelwires::EditableValueHolder* babelwires::OneToOneMapEntryData::tryGetTargetValue() const {
+    return &m_targetValue;
 }
 
 void babelwires::OneToOneMapEntryData::setTargetValue(EditableValueHolder value) {

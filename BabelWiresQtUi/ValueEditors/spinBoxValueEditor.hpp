@@ -19,7 +19,7 @@ namespace babelwires {
         Q_OBJECT
       public:
         /// The arguments as provided to createEditor.
-        SpinBoxValueEditor(QWidget* parent, const QModelIndex& index, const ValueNames* valueNames);
+        SpinBoxValueEditor(QWidget* parent, const ValueNames* valueNames);
 
         /// Set the text to bold.
         void setFeatureIsModified(bool isModified) override;

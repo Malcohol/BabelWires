@@ -13,8 +13,8 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-QWidget* babelwires::StringValueModel::createEditor(QWidget* parent, const QModelIndex& index) const {
-    return new LineEditValueEditor(parent, index);
+QWidget* babelwires::StringValueModel::createEditor(QWidget* parent) const {
+    return new LineEditValueEditor(parent);
 }
 
 void babelwires::StringValueModel::setEditorData(QWidget* editor) const {
