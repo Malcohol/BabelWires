@@ -98,7 +98,6 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/Subcommands/removeSimpleModifierSubcommand.cpp
 	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
 	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp
-	TypeSystem/typeSystem.cpp
 	Types/Enum/addBlankToEnum.cpp
 	Types/Enum/enumAtomTypeConstructor.cpp
 	Types/Enum/enumType.cpp
@@ -116,10 +115,12 @@ SET( BABELWIRESLIB_SRCS
 	Types/String/stringValue.cpp
 	Instance/instanceUtils.cpp
 	TypeSystem/compoundType.cpp
+	TypeSystem/Detail/typeNameFormatter.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
 	TypeSystem/typeConstructorArguments.cpp
 	TypeSystem/typeConstructor.cpp
+	TypeSystem/typeSystem.cpp
 	TypeSystem/value.cpp
 	TypeSystem/valuePath.cpp
 	ValueNames/valueNames.cpp

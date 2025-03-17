@@ -15,8 +15,8 @@ namespace babelwires {
     /// Construct a new TupleType from a vector of types.
     class TupleTypeConstructor : public TypeConstructor {
       public:
-        // TODO: Only showing first two parameter types.
-        TYPE_CONSTRUCTOR("Tuple", "{0}*{1}", "e55f3a4d-9b62-4f54-964f-bca4a42e8f68", 1);
+        // TupleTypes are variadic.
+        TYPE_CONSTRUCTOR("Tuple", "{0|*}", "e55f3a4d-9b62-4f54-964f-bca4a42e8f68", 1);
 
         std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;

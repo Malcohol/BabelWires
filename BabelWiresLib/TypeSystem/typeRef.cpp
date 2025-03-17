@@ -8,6 +8,7 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/Detail/typeNameFormatter.hpp>
 
 #include <Common/Hash/hash.hpp>
 #include <Common/Serialization/deserializer.hpp>
@@ -80,93 +81,25 @@ const babelwires::Type& babelwires::TypeRef::assertResolve(const TypeSystem& typ
 #endif
 }
 
-namespace {
-    /// A very simple string formatting algorithm sufficient for this job.
-    /// Hopefully could be replaced by std::format when that's properly supported.
-    // TODO Handle variable length arguments.
-    // TODO Distinguish type and value arguments.
-    std::string simpleFormat(std::string_view format, const std::vector<std::string>& arguments) {
-        if (format.size() < 2) {
-            return {};
-        }
-        if (arguments.size() > babelwires::TypeConstructorArguments::s_maxNumArguments) {
-            return {};
-        }
-        std::ostringstream oss;
-        constexpr char open = '{';
-        constexpr char close = '}';
-        enum { normal, justReadOpen, justReadIndex, justReadClose } state = normal;
-        for (const char currentChar : format) {
-            switch (state) {
-                case normal: {
-                    if (currentChar == open) {
-                        state = justReadOpen;
-                    } else if (currentChar == close) {
-                        state = justReadClose;
-                    } else {
-                        oss << currentChar;
-                    }
-                    break;
-                }
-                case justReadOpen: {
-                    static_assert(babelwires::TypeConstructorArguments::s_maxNumArguments == 10);
-                    if ((currentChar >= '0') && (currentChar <= '9')) {
-                        const std::size_t indexCharAsIndex = currentChar - '0';
-                        if (indexCharAsIndex >= arguments.size()) {
-                            return {};
-                        }
-                        oss << arguments[indexCharAsIndex];
-                        state = justReadIndex;
-                    } else if (currentChar == open) {
-                        oss << open;
-                        state = normal;
-                    } else {
-                        return {};
-                    }
-                    break;
-                }
-                case justReadIndex: {
-                    if (currentChar == close) {
-                        state = normal;
-                    } else {
-                        return {};
-                    }
-                    break;
-                }
-                case justReadClose: {
-                    if (currentChar == close) {
-                        oss << close;
-                        state = normal;
-                    } else {
-                        return {};
-                    }
-                    break;
-                }
-            }
-        }
-        if (state == normal) {
-            return oss.str();
-        } else {
-            return {};
-        }
-    }
-} // namespace
-
 std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {
     struct VisitorMethods {
         std::string operator()(std::monostate) { return defaultStateString; }
         std::string operator()(PrimitiveTypeId typeId) { return m_identifierRegistry->getName(typeId); }
         std::string operator()(const ConstructedTypeData& constructedTypeData) {
             std::string formatString = m_identifierRegistry->getName(std::get<0>(constructedTypeData));
-            std::vector<std::string> argumentsStr;
+            // TODO The VisitorMethods object should own these.
+            std::vector<std::string> typeArgumentsStr;
             const auto& typeArguments = std::get<1>(constructedTypeData).m_typeArguments;
-            std::for_each(typeArguments.begin(), typeArguments.end(), [this, &argumentsStr](const TypeRef& typeRef) {
-                argumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
+            std::for_each(typeArguments.begin(), typeArguments.end(), [this, &typeArgumentsStr](const TypeRef& typeRef) {
+                // TODO Call visit, not toStringHelper.
+                typeArgumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
             });
+            std::vector<std::string> valueArgumentsStr;
             const auto& valueArguments = std::get<1>(constructedTypeData).m_valueArguments;
             std::for_each(valueArguments.begin(), valueArguments.end(),
-                          [&argumentsStr](const EditableValueHolder& value) { argumentsStr.emplace_back(value->toString()); });
-            return simpleFormat(formatString, argumentsStr);
+                            // TODO: value::toString should take the identifierRegistry as an argument.
+                          [&valueArgumentsStr](const EditableValueHolder& value) { valueArgumentsStr.emplace_back(value->toString()); });
+            return typeNameFormatter(formatString, typeArgumentsStr, valueArgumentsStr);
         }
         babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;
     } visitorMethods{identifierRegistry};
