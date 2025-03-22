@@ -16,6 +16,8 @@ SET(CMAKE_CXX_STANDARD 20)
 set(BUILD_SHARED_LIBS OFF)
 SET(gtest_force_shared_crt ON)
 
+#SET(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreadedDebug)
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 ADD_SUBDIRECTORY( Common )
@@ -62,3 +64,7 @@ add_subdirectory(Tests/TestUtils)
 add_subdirectory(Tests/Common)
 add_subdirectory(Tests/BabelWiresLib)
 add_subdirectory(Tests/BabelWiresLib/TestUtils)
+
+add_subdirectory(Domains/SeqWires )
+
+add_subdirectory(BabelWiresExe)
