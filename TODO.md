@@ -63,6 +63,7 @@ Refactor:
   - Review plugin initialization
   - add support for removing plugins.
 * Replace assert handler with own macros.
+  - Provide an assert false macro that can be used in return values of arbitrary type.
 * Use std::format in logs and exceptions instead of streams - Better, esp. for internationalization
 * Proper CMake usage
 * Arrays and optional modification are special-cased in the project: Could that be handled instead by a virtual "merge" method?

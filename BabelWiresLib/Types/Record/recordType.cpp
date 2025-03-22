@@ -212,7 +212,7 @@ const babelwires::RecordType::Field& babelwires::RecordType::getFieldFromChildIn
         }
     }
     assert(false && "Child index out of range");
-    return {};
+    return *static_cast<babelwires::RecordType::Field*>(0);
 }
 
 std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>
