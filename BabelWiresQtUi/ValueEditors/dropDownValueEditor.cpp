@@ -9,8 +9,10 @@
 
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
+#include <BabelWiresQtUi/Utilities/qtUtils.hpp>
 
 #include <QLineEdit>
+#include <QAbstractItemView>
 
 babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent)
     : ValueEditorCommonBase(parent) {
@@ -23,4 +25,16 @@ babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent)
 
 void babelwires::DropDownValueEditor::setFeatureIsModified(bool isModified) {
     // TODO: when you click on the row value the value is not bold.
+}
+
+void babelwires::DropDownValueEditor::showPopup() {
+    QComboBox::showPopup();
+    QWidget *popup = this->findChild<QFrame*>(); 
+    assert(popup);
+    const int maximumHeight = 300;
+    popup->setMaximumHeight(maximumHeight);
+    // Place the popup downwards until it grows to more than half its maximum allowed height.
+    const int offsetY = -std::max(0, popup->height() - (maximumHeight / 2));
+    QPoint globalPoint = mapToGlobalCorrect(this, QPoint(0, offsetY));
+    popup->move(globalPoint);
 }

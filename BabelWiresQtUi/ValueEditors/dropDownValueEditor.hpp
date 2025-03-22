@@ -20,6 +20,9 @@ namespace babelwires {
 
         /// Set the text to bold.
         void setFeatureIsModified(bool isModified) override;
+
+        // This is overridden to ensure the popup does not have an excessive height.
+        void showPopup() override;
     };
 
 } // namespace babelwires

@@ -2,7 +2,7 @@
  * NodeContentsModel is the QAbstractTableModel which represents the data in a Node.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -13,14 +13,14 @@
 #include <QAbstractTableModel>
 #include <QAction>
 #include <QMenu>
+#include <QMouseEvent>
 #include <QStyledItemDelegate>
 #include <QTableView>
-#include <QMouseEvent>
 
 #include <optional>
 
 namespace QtNodes {
-  class NodeGraphicsObject;
+    class NodeGraphicsObject;
 }
 
 namespace babelwires {
@@ -39,20 +39,21 @@ namespace babelwires {
         QSize minimumSizeHint() const override;
 
         void mousePressEvent(QMouseEvent* event) override;
-        void mouseMoveEvent(QMouseEvent *event) override;
-        void mouseReleaseEvent(QMouseEvent *event) override;
+        void mouseMoveEvent(QMouseEvent* event) override;
+        void mouseReleaseEvent(QMouseEvent* event) override;
 
         /// Get the position in scene coordinates corresponding to a position local to this widget.
         QPointF mapToScene(QPoint localPos) const;
 
         /// The regular mapToGlobal of this widget does not give the correct answer.
+        /// If you have a widget that may or may not be within a NodeContentsView, see mapToGlobalCorrect in QtUtils.
         QPoint mapToGlobalCorrect(QPoint localPos) const;
 
       private:
         /// The position in scene coordinates, converted to a UiPosition.
         UiPosition getFlowScenePositionFromLocalPosition(QPoint localPos);
 
-        /// Get the QtNode::NodeGraphicsObject which contains this widget 
+        /// Get the QtNode::NodeGraphicsObject which contains this widget
         const QtNodes::NodeGraphicsObject& getNodeGraphicsObject() const;
 
         /// Get the horizontal distance from the left edge of the contents to the left edge of the node.
@@ -73,4 +74,4 @@ namespace babelwires {
         std::optional<DragState> m_dragState;
     };
 
-}
+} // namespace babelwires
