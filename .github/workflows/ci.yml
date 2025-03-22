@@ -82,3 +82,24 @@ jobs:
       working-directory: build
       shell: bash
       run: Tests/BabelWiresLib/${{ matrix.config.targetFolder }}babelWiresTests${{ matrix.config.exeExtension }}
+
+    - name: SeqWiresLibTests
+      working-directory: build
+      shell: bash
+      run: Domains/SeqWires/Tests/SeqWiresLib/${{ matrix.config.targetFolder }}seqWiresLibTests${{ matrix.config.exeExtension }}
+
+    - name: Seq2tapeLibTests
+      working-directory: build
+      shell: bash
+      run: Domains/SeqWires/Tests/Seq2tapeLib/${{ matrix.config.targetFolder }}seq2tapeLibTests${{ matrix.config.exeExtension }}
+
+    - name: AlsaTests
+      if: startsWith(matrix.config.name, 'Ubuntu')
+      working-directory: build
+      shell: bash
+      run: Domains/SeqWires/BabelWiresAudio/Alsa/Tests/${{ matrix.config.targetFolder }}alsaTests${{ matrix.config.exeExtension }}
+
+    - name: SmfTests
+      working-directory: build/Domains/SeqWires/Plugins/Smf/Tests
+      shell: bash
+      run: ${{ matrix.config.targetFolder }}SmfTests${{ matrix.config.exeExtension }}
