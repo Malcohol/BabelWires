@@ -2,7 +2,7 @@
  * A combobox QWidget which can be used for editing ValueFeatures.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresQtUi/ValueEditors/dropDownValueEditor.hpp>
@@ -11,16 +11,15 @@
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/Utilities/qtUtils.hpp>
 
-#include <QLineEdit>
 #include <QAbstractItemView>
+#include <QLineEdit>
 
 babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent)
     : ValueEditorCommonBase(parent) {
     setSizeAdjustPolicy(QComboBox::SizeAdjustPolicy::AdjustToMinimumContentsLengthWithIcon);
     setContextMenuPolicy(Qt::NoContextMenu);
-    QObject::connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged),
-                        this, [this]() { emit m_signals->editorHasChanged(this); });
-
+    QObject::connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+                     [this]() { emit m_signals->editorHasChanged(this); });
 }
 
 void babelwires::DropDownValueEditor::setFeatureIsModified(bool isModified) {
@@ -29,19 +28,28 @@ void babelwires::DropDownValueEditor::setFeatureIsModified(bool isModified) {
 
 void babelwires::DropDownValueEditor::showPopup() {
     QComboBox::showPopup();
-    auto *popup = this->findChild<QFrame*>(); 
+    auto* popup = this->findChild<QFrame*>();
     assert(popup && "QComboBox structure not as expected");
 
-    auto* scrollArea = popup->findChild<QAbstractScrollArea*>();
-    assert(scrollArea && "QComboBox structure not as expected");
-    
+    // The default behaviour for dropdowns in the graphicsview does not limit the size of the popup,
+    // which is unusable for large enums.
     const int maximumHeight = 300;
     popup->setMaximumHeight(maximumHeight);
 
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-
-    // Place the popup downwards until it grows to more than half its maximum allowed height.
+    // The popup's default position can be way off, so we have to explicitly set it.
+    // Allow the popup to grow downwards until it grows to reaches half its maximum allowed height.
     const int offsetY = -std::max(0, popup->height() - (maximumHeight / 2));
-    QPoint globalPoint = mapToGlobalCorrect(this, QPoint(0, offsetY));
-    popup->move(globalPoint);
+    const QPoint localPopupPosition = QPoint(0, offsetY);
+    const QPoint globalPopupPosition = mapToGlobalCorrect(this, localPopupPosition);
+    // Note: There seems to be a (Qt?) bug where the move doesn't quite place the popup in the correct
+    // vertical position, despite the horizontal position being correct. This is particularly visible
+    // when zoomed out. Using a fixed point shows that that globalPopupPosition is not to blame.
+    popup->move(globalPopupPosition);
+
+    // Ensure the popup gets a scroll bar when needed.
+    {
+        auto* scrollArea = popup->findChild<QAbstractScrollArea*>();
+        assert(scrollArea && "QComboBox structure not as expected");
+        scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    }
 }
