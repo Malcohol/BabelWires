@@ -29,10 +29,17 @@ void babelwires::DropDownValueEditor::setFeatureIsModified(bool isModified) {
 
 void babelwires::DropDownValueEditor::showPopup() {
     QComboBox::showPopup();
-    QWidget *popup = this->findChild<QFrame*>(); 
-    assert(popup);
+    auto *popup = this->findChild<QFrame*>(); 
+    assert(popup && "QComboBox structure not as expected");
+
+    auto* scrollArea = popup->findChild<QAbstractScrollArea*>();
+    assert(scrollArea && "QComboBox structure not as expected");
+    
     const int maximumHeight = 300;
     popup->setMaximumHeight(maximumHeight);
+
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
     // Place the popup downwards until it grows to more than half its maximum allowed height.
     const int offsetY = -std::max(0, popup->height() - (maximumHeight / 2));
     QPoint globalPoint = mapToGlobalCorrect(this, QPoint(0, offsetY));
