@@ -1,6 +1,6 @@
 SET( SEQWIRES_SRCS
 	main.cpp
-	seqWiresOptions.cpp
+	babelWiresOptions.cpp
    )
 
 ADD_EXECUTABLE( babelWires ${SEQWIRES_SRCS} )

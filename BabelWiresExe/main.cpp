@@ -1,12 +1,12 @@
 /**
- * SeqWires application main function.
+ * BabelWires application main function.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-#include <BabelWiresExe/seqWiresOptions.hpp>
+#include <BabelWiresExe/babelWiresOptions.hpp>
 
 #include <BabelWiresQtUi/ValueModels/valueModelRegistry.hpp>
 #include <BabelWiresQtUi/uiMain.hpp>
@@ -81,8 +81,8 @@ int main(int argc, char* argv[]) {
             deserializationRegistry, sourceFileFormatReg, targetFileFormatReg, processorReg, typeSystem, randomEngine,
             valueModelRegistry};
 
-        context.m_applicationIdentity.m_applicationTitle = "Seqwires";
-        context.m_applicationIdentity.m_projectExtension = ".seqwires";
+        context.m_applicationIdentity.m_applicationTitle = "BabelWires";
+        context.m_applicationIdentity.m_projectExtension = ".babelwires";
 
         // register factories, etc.
         babelwires::registerLib(context);

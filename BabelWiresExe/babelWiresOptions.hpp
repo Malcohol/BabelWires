@@ -1,5 +1,5 @@
 /**
- * Handle the command-line options for the SeqWires application.
+ * Handle the command-line options for the BabelWires application.
  * 
  * (C) 2021 Malcolm Tyrrell
  * 

@@ -1,11 +1,11 @@
 /**
- * Handle the command-line options for the SeqWires application.
+ * Handle the command-line options for the BabelWires application.
  * 
  * (C) 2021 Malcolm Tyrrell
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresExe/seqWiresOptions.hpp>
+#include <BabelWiresExe/babelWiresOptions.hpp>
 
 #include <Common/Audio/fileAudioDest.hpp>
 
