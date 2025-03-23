@@ -102,4 +102,7 @@ jobs:
     - name: SmfTests
       working-directory: build/Domains/Music/Plugins/Smf/Tests
       shell: bash
-      run: ${{ matrix.config.targetFolder }}SmfTests${{ matrix.config.exeExtension }}
+      run: |
+        pwd
+        ls
+        ${{ matrix.config.targetFolder }}SmfTests${{ matrix.config.exeExtension }}
