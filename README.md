@@ -1,7 +1,7 @@
 # BabelWires
 
 BabelWires is an application for data format conversion.
-The defining use-case is converting between music sequence format, via the [SeqWires](https://github.com/Malcohol/SeqWires) plugin.
+The defining use-case is converting between music sequence formats, via the [SeqWires](https://github.com/Malcohol/SeqWires) plugin.
 Here's a screenshot:
 
 ![Screenshot showing several nodes wired together](Docs/screenshot.png "SeqWires screenshot showing several nodes wired together")
