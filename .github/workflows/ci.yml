@@ -44,7 +44,7 @@ jobs:
       if: startsWith(matrix.config.name, 'Ubuntu_GCC')
       run: |
         sudo apt-get update
-        sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+        sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libasound2-dev
         cmake --version
         gcc --version
         g++ --version
@@ -82,3 +82,24 @@ jobs:
       working-directory: build
       shell: bash
       run: Tests/BabelWiresLib/${{ matrix.config.targetFolder }}babelWiresTests${{ matrix.config.exeExtension }}
+
+    - name: SeqWiresLibTests
+      working-directory: build
+      shell: bash
+      run: Domains/Music/Tests/SeqWiresLib/${{ matrix.config.targetFolder }}seqWiresLibTests${{ matrix.config.exeExtension }}
+
+    - name: Seq2tapeLibTests
+      working-directory: build
+      shell: bash
+      run: Domains/Music/Tests/Seq2tapeLib/${{ matrix.config.targetFolder }}seq2tapeLibTests${{ matrix.config.exeExtension }}
+
+    - name: AlsaTests
+      if: startsWith(matrix.config.name, 'Ubuntu')
+      working-directory: build
+      shell: bash
+      run: Domains/Music/BabelWiresAudio/Alsa/Tests/${{ matrix.config.targetFolder }}alsaTests${{ matrix.config.exeExtension }}
+
+    - name: SmfTests
+      working-directory: build/Domains/Music/Plugins/Smf/Tests
+      shell: bash
+      run: ./${{ matrix.config.targetFolder }}SmfTests${{ matrix.config.exeExtension }}

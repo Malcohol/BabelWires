@@ -10,3 +10,6 @@
 [submodule "extern/nodeeditor"]
 	path = extern/nodeeditor
 	url = https://github.com/Malcohol/nodeeditor.git
+[submodule "Domains/SeqWires"]
+	path = Domains/Music
+	url = https://github.com/Malcohol/SeqWires.git

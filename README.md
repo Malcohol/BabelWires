@@ -1,42 +1,25 @@
 # BabelWires
 
-BabelWires is a framework for data format conversion.
-
-Its user interface is based on the [dataflow paradigm](https://en.wikipedia.org/wiki/Dataflow_programming):
-nodes representing input files, output files and data processors can be wired together to define how data should flow from input to output, being transformed along the way. 
-In flexibility and expressive power, it lies somewhere between command-line utilities (which tend to be quite fixed in functionality) and code (which is highly flexible, but unavailable to many people).
-It encourages the development of generic conversion software in contrast to bespoke format-specific applications.
-
-The BabelWires framework has no domain specific code, but provides the bulk of the domain agnostic code needed to construct this kind of application.
-
-The defining use-case is [SeqWires](https://github.com/Malcohol/SeqWires), which supports the conversion of music sequence data between music sequencer formats.
-Here's a screenshot of SeqWires:
+BabelWires is an application for data format conversion.
+The defining use-case is converting between music sequence data, via the [SeqWires](https://github.com/Malcohol/SeqWires) plugin.
+Here's a screenshot:
 
 ![Screenshot showing several nodes wired together](Docs/screenshot.png "SeqWires screenshot showing several nodes wired together")
 
-The framework provides:
-* A type system for representing and manipulating structured data. Includes support for:
-    * Primitive types such as [IntType](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/Int/intType.hpp) and [StringType](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/String/stringType.hpp).
-    * Compound types such as [RecordType](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/Record/recordType.hpp) and [ArrayType](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/Array/arrayType.hpp).
-* Abstractions for source and target formats ([SourceFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/sourceFileFormat.hpp) and [TargetFileFormat](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/FileFormat/targetFileFormat.hpp))
-    * Plugins register factory functions to add support for new formats.
-* An abstraction for processing data ([Processor](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Processors/processor.hpp))
-    * A registry of factory functions is used to provide an expandable set of processing nodes. 
-* A data structure describing a graph of wired nodes ([Project](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Project/project.hpp)).
-    * With the exception of some processors, which are internally multithreaded, BabelWires is essentially a single-threaded application.
-    * With a view to future proofing, the UI accesses the Project strictly through scoped objects ([AccessModelScope](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresQtUi/ModelBridge/accessModelScope.hpp) and [ModifyModelScope](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresQtUi/ModelBridge/modifyModelScope.hpp)). This should make it straightforward to multithread if required.
-* A version-aware [serialization system](https://github.com/Malcohol/BabelWires/blob/main/Common/Serialization/serializable.hpp) for project files.
-    * All serializable classes and factory functions declare a version.
-    * Every representable component of the system is associated with a universally unique identifier ([UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier)). (This ensures there is no ambiguity when data is serialized and deserialized in different contexts).
-* A [Qt](https://en.wikipedia.org/wiki/Qt_(software))-based user interface for manipulating projects
-    * The core data management layer, which includes formats and processors, has no dependency on the UI code or Qt.
-* Generic support for defining maps of key value pairs between values ([MapValue](https://github.com/Malcohol/BabelWires/blob/main/BabelWiresLib/Types/Map/mapValue.hpp))
-    * These kinds of maps are very common in data transformation. 
-* A first-class concept of failure
-    * This allows the project to cope with structural changes to imported data.
-
 Here's a screenshot of the MapEditor defining a map between two types:
 ![Screenshot showing the MapEditor](Docs/mapEditor.png "Screenshot of the MapEditor")
+
+BabelWires is intended to be more flexible and expressive than command-line conversion utilities while having a lower barrier to entry than programming languages.
+
+## Structured Data Flow
+
+BabelWires uses a variant of the [dataflow paradigm](https://en.wikipedia.org/wiki/Dataflow_programming) I'm calling _structured data flow_.
+
+As in conventional data flow systems, there are nodes with ports that can be wired together: In BabelWires, data enters the system at nodes corresponding to input formats, passes through data processing nodes and reaches nodes corresponding to output formats.
+
+Less conventionally, the nodes of BabelWires have a structure defined by the data types of a type system: hence "structured" data flow.
+Complex nodes with multiple ports are values of compound data types
+which the UI presents as expandable, hierarchical property panels.
 
 ## Status
 
@@ -51,7 +34,7 @@ BabelWires is intended to be cross platform but given the limited time I have av
 | Mac OS | Manual | Manual | Needs work |
 
 BabelWires is under active development, but please do not expect development to be rapid.
-My focus is on fundimetals.
+My focus is on fundamentals.
 
 ## Downloading and Building
 
