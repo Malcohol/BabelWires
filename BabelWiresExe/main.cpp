@@ -30,10 +30,11 @@
 #include <Common/Log/ostreamLogListener.hpp>
 #include <Common/Log/unifiedLog.hpp>
 #include <Common/Serialization/deserializationRegistry.hpp>
+
 // "plugins"
-#include <Plugins/Smf/Plugin/libRegistration.hpp>
-#include <SeqWiresLib/libRegistration.hpp>
-#include <SeqWiresLibUi/libRegistration.hpp>
+#include <Domains/Music/Plugins/Smf/Plugin/libRegistration.hpp>
+#include <Domains/Music/SeqWiresLib/libRegistration.hpp>
+#include <Domains/Music/SeqWiresLibUi/libRegistration.hpp>
 
 #include <cassert>
 #include <chrono>
