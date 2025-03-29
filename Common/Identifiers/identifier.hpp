@@ -122,7 +122,7 @@ namespace babelwires {
         /// This throws a ParseException if the identifier is not valid.
         static IdentifierBase deserializeFromString(std::string_view str);
 
-        /// Shorter identifiers can be converted to a code, which does excludes the discriminator.
+        /// Shorter identifiers can be converted to a code, which does exclude the discriminator.
         template <int T = NUM_BLOCKS, typename std::enable_if_t<(T == 1), std::nullptr_t> = nullptr>
         std::uint64_t toCode() const {
             return getDataAsCode<0>();
@@ -163,10 +163,10 @@ namespace babelwires {
         Discriminator getDiscriminator() const;
 
         /// Set the discriminator (which distinguishes between identifiers with the same textual content).
-        void setDiscriminator(Discriminator index) const;
+        void setDiscriminator(Discriminator index);
 
         /// If other doesn't have a discriminator set, set its discriminator to the discrimintor of this.
-        void copyDiscriminatorTo(const IdentifierBase& other) const;
+        void copyDiscriminatorTo(IdentifierBase& other) const;
 
       private:
         /// Called by the constructors to ensure the data is valid.
@@ -211,7 +211,7 @@ namespace babelwires {
 
         // TODO Big-endian.
         struct Data {
-            mutable std::uint16_t m_discriminator;
+            std::uint16_t m_discriminator;
             char m_chars[N];
         } m_data = {0};
 

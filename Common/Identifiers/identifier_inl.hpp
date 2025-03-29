@@ -16,14 +16,13 @@ babelwires::IdentifierBase<NUM_BLOCKS>::getDiscriminator() const {
 }
 
 template <unsigned int NUM_BLOCKS>
-void babelwires::IdentifierBase<NUM_BLOCKS>::setDiscriminator(Discriminator index) const {
+void babelwires::IdentifierBase<NUM_BLOCKS>::setDiscriminator(Discriminator index) {
     m_data.m_discriminator = index;
 }
 
 template <unsigned int NUM_BLOCKS>
-void babelwires::IdentifierBase<NUM_BLOCKS>::copyDiscriminatorTo(const IdentifierBase& other) const {
+void babelwires::IdentifierBase<NUM_BLOCKS>::copyDiscriminatorTo(IdentifierBase& other) const {
     if (other.getDiscriminator() == 0) {
-        assert(other.getDiscriminator() == 0);
         other.setDiscriminator(getDiscriminator());
     }
 }

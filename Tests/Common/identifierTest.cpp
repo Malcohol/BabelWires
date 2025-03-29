@@ -239,7 +239,7 @@ TEST(IdentifierTest, longIdentifierDeserialization) {
 }
 
 TEST(IdentifierTest, shortToLongIdentifiers) {
-    const babelwires::ShortId hello = "Hello";
+    babelwires::ShortId hello = "Hello";
     const babelwires::LongId hello1 = hello;
     EXPECT_EQ(hello, hello1);
 
@@ -250,7 +250,7 @@ TEST(IdentifierTest, shortToLongIdentifiers) {
 }
 
 TEST(IdentifierTest, longToShortIdentifiers) {
-    const babelwires::LongId hello = "Helloo";
+    babelwires::LongId hello = "Helloo";
     const babelwires::ShortId hello1(hello);
     EXPECT_EQ(hello, hello1);
 
