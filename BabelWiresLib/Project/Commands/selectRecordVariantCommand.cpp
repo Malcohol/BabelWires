@@ -60,7 +60,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
 
     for (const auto& field : fieldsToRemove) {
         Path pathToField = m_pathToRecord;
-        pathToField.pushStep(PathStep(field));
+        pathToField.pushStep(field);
         addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToField));
     }
 

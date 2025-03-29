@@ -91,7 +91,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             if (!isDefault) {
                 for (auto fieldToRemove : fieldsToRemove) {
                     Path pathToFieldToRemove = m_path;
-                    pathToFieldToRemove.pushStep(babelwires::PathStep(fieldToRemove));
+                    pathToFieldToRemove.pushStep(fieldToRemove);
                     addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToFieldToRemove));
                 }
             }

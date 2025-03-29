@@ -673,7 +673,7 @@ namespace {
             checkFileContentsEntry(entry, inputFeature, outputFeature, false);
             checkUnmodified(entry);
         }
-        editTree.setExpanded(babelwires::Path({babelwires::PathStep(babelwires::FileType::getStepToContents())}), true);
+        editTree.setExpanded(babelwires::Path({babelwires::FileType::getStepToContents()}), true);
         cache.setValueTrees("Test", inputFeature, outputFeature);
         ASSERT_EQ(cache.getNumRows(), 4);
         {

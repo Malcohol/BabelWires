@@ -58,7 +58,7 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
 
     for (int i = m_newSize; i < m_oldSize; ++i) {
         Path p = m_pathToArray;
-        p.pushStep(PathStep(i));
+        p.pushStep(i);
         addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, p));
     }
     if (!CompoundCommand::initializeAndExecute(project)) {

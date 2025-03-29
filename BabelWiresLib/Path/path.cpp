@@ -242,7 +242,7 @@ unsigned int babelwires::Path::getNumSteps() const {
 void babelwires::Path::truncate(unsigned int newNumSteps) {
     assert((newNumSteps <= m_steps.size()) && "You can only shrink with truncate");
     // Have to provide a fill value even though it is never used.
-    m_steps.resize(newNumSteps, PathStep(0));
+    m_steps.resize(newNumSteps, 0);
 }
 
 void babelwires::Path::removePrefix(unsigned int numSteps) {

@@ -453,8 +453,8 @@ TEST(RecordWithVariantsTypeTest, featureChanges)
     valueFeature.clearChanges();
     {
         babelwires::Path pathToInt;
-        pathToInt.pushStep(babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFf1Id()));
-        pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
+        pathToInt.pushStep(testUtils::TestRecordWithVariantsType::getFf1Id());
+        pathToInt.pushStep(testUtils::TestSimpleRecordType::getInt0Id());
         valueFeature.setDescendentValue(pathToInt, babelwires::IntValue(15));
     }
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));

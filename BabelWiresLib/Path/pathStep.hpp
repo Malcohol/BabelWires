@@ -26,11 +26,7 @@ namespace babelwires {
         /// This is just a convenient way of representing an optional step.
         PathStep() : m_notAStep() {}
 
-        // explicit, because a temporary PathStep contains a copy of f, and any modification to its mutable
-        // discriminator will be lost.
-        // TODO This was a mistake. Allow implicit construction from a field, and approach discriminator resolution
-        // a different way.
-        explicit PathStep(const ShortId& f)
+        PathStep(const ShortId& f)
             : m_fieldIdentifier(f) {}
 
         PathStep(ArrayIndex index)

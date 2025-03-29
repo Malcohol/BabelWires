@@ -13,13 +13,13 @@
 
 const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babelwires::ValueTreeNode& recordTreeNode,
                                                             babelwires::ShortId id) {
-    const int index = recordTreeNode.getChildIndexFromStep(babelwires::PathStep(id));
+    const int index = recordTreeNode.getChildIndexFromStep(id);
     assert(index >= 0);
     return recordTreeNode.getChild(index)->is<babelwires::ValueTreeNode>();
 }
 
 babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(babelwires::ValueTreeNode& recordTreeNode, babelwires::ShortId id) {
-    const int index = recordTreeNode.getChildIndexFromStep(babelwires::PathStep(id));
+    const int index = recordTreeNode.getChildIndexFromStep(id);
     assert(index >= 0);
     return recordTreeNode.getChild(index)->is<babelwires::ValueTreeNode>();
 }
@@ -27,7 +27,7 @@ babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(babelwires::Value
 
 const babelwires::ValueTreeNode* babelwires::InstanceUtils::tryGetChild(const babelwires::ValueTreeNode& recordTreeNode,
                                                                babelwires::ShortId id) {
-    const int index = recordTreeNode.getChildIndexFromStep(babelwires::PathStep(id));
+    const int index = recordTreeNode.getChildIndexFromStep(id);
     if (index >= 0) {
         return &recordTreeNode.getChild(index)->is<babelwires::ValueTreeNode>();
     } else {

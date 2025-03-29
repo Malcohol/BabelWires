@@ -424,8 +424,8 @@ TEST(RecordTypeTest, featureChanges)
     valueFeature.clearChanges();
     {
         babelwires::Path pathToInt;
-        pathToInt.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
-        pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
+        pathToInt.pushStep(testUtils::TestComplexRecordType::getOpRecId());
+        pathToInt.pushStep(testUtils::TestSimpleRecordType::getInt0Id());
         valueFeature.setDescendentValue(pathToInt, babelwires::IntValue(15));
     }
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
@@ -491,7 +491,7 @@ TEST(RecordTypeTest, valueHash)
     EXPECT_EQ(hash0, hash2);
 
     // Prepare to modify a child.
-    auto index = recordType.getChildIndexFromStep(value, babelwires::PathStep(testUtils::TestComplexRecordType::getInt0Id()));
+    auto index = recordType.getChildIndexFromStep(value, testUtils::TestComplexRecordType::getInt0Id());
     auto child = recordType.getChildNonConst(value, index);
 
     // Still unmodified.

@@ -60,7 +60,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
     }
 
     Path pathToOptional = m_pathToRecord;
-    pathToOptional.pushStep(PathStep(m_optional));
+    pathToOptional.pushStep(m_optional);
     addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToOptional));
 
     if (!CompoundCommand::initializeAndExecute(project)) {
