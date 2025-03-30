@@ -75,8 +75,6 @@ namespace babelwires {
         Type* addPrimitiveType(LongId typeId, VersionNumber version, std::unique_ptr<Type> newType);
         TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
 
-        bool isSubTypePrimitives(const PrimitiveTypeId& typeIdA, const PrimitiveTypeId& typeIdB) const;
-
       protected:
         using PrimitiveTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;
         std::unordered_map<PrimitiveTypeId, PrimitiveTypeInfo> m_primitiveTypeRegistry;
