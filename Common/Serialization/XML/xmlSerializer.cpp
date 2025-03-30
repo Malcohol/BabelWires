@@ -102,7 +102,7 @@ void babelwires::XmlSerializer::serializeValue(std::string_view key, std::int8_t
 void babelwires::XmlSerializer::write(std::ostream& os) {
     finalize();
     assert(m_xmlContext.empty() && "Not all objects have been popped");
-    tinyxml2::XMLPrinter printer;
+    tinyxml2::XMLPrinter printer(0, false, 0, tinyxml2::XMLPrinter::DONT_ESCAPE_APOS_CHARS_IN_ATTRIBUTES);
     m_doc.Print(&printer);
     os << printer.CStr();
 }
