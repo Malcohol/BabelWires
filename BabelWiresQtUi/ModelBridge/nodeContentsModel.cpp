@@ -120,21 +120,20 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
         }
         case Qt::BackgroundRole: {
             const babelwires::RowModel::BackgroundStyle backgroundStyle = rowModel->getBackgroundStyle(column ? RowModel::ColumnType::Value : RowModel::ColumnType::Key);
-            QColor baseColor = QApplication::palette().color(QPalette::Button);
+            const QColor baseColor = QApplication::palette().color(QPalette::Button);
             if ((backgroundStyle == RowModel::BackgroundStyle::normal)
                   || (backgroundStyle == RowModel::BackgroundStyle::editable)) {
                     return baseColor;
                   }
-            qreal r, g, b;
-            baseColor.getRgbF(&r, &g, &b);
-            const qreal gSoften = std::min(g, 1-g);
-            const qreal bSoften = std::min(b, 1-b);
-            const qreal rSoften = std::min(gSoften, bSoften);
-            r = 1.0 - rSoften;
-            g = (backgroundStyle == RowModel::BackgroundStyle::failed) ? gSoften : 0.5 - gSoften;
-            b = (backgroundStyle == RowModel::BackgroundStyle::failed) ? bSoften : 0.5 - bSoften; 
-            baseColor.setRgbF(r, g, b);
-            return baseColor;
+            int r, g, b;
+            baseColor.getRgb(&r, &g, &b);
+            const int gSoft = std::min(g, 255-g);
+            const int bSoft = std::min(b, 255-b);
+            const int rSoft = std::min(gSoft, bSoft);
+            r = 255 - rSoft;
+            g = (backgroundStyle == RowModel::BackgroundStyle::failed) ? gSoft : 127;
+            b = (backgroundStyle == RowModel::BackgroundStyle::failed) ? bSoft : 127; 
+            return QColor(r, g, b);
         }
         case Qt::FontRole: {
             if (rowModel->isFeatureModified()) {
