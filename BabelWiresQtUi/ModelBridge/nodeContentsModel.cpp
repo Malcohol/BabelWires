@@ -119,16 +119,22 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
             return rowModel->getTooltip();
         }
         case Qt::BackgroundRole: {
-            switch (rowModel->getBackgroundStyle(column ? RowModel::ColumnType::Value : RowModel::ColumnType::Key)) {
-                case RowModel::BackgroundStyle::normal:
-                    return QBrush(QColor(225, 225, 225));
-                case RowModel::BackgroundStyle::editable:
-                    return QBrush(QColor(255, 255, 255));
-                case RowModel::BackgroundStyle::failed:
-                    return QBrush(QColor(225, 30, 30));
-                case RowModel::BackgroundStyle::failedHidden:
-                    return QBrush(QColor(225, 150, 150));
-            }
+            const babelwires::RowModel::BackgroundStyle backgroundStyle = rowModel->getBackgroundStyle(column ? RowModel::ColumnType::Value : RowModel::ColumnType::Key);
+            QColor baseColor = QApplication::palette().color(QPalette::Button);
+            if ((backgroundStyle == RowModel::BackgroundStyle::normal)
+                  || (backgroundStyle == RowModel::BackgroundStyle::editable)) {
+                    return baseColor;
+                  }
+            qreal r, g, b;
+            baseColor.getRgbF(&r, &g, &b);
+            const qreal gSoften = std::min(g, 1-g);
+            const qreal bSoften = std::min(b, 1-b);
+            const qreal rSoften = std::min(gSoften, bSoften);
+            r = 1.0 - rSoften;
+            g = (backgroundStyle == RowModel::BackgroundStyle::failed) ? gSoften : 0.5 - gSoften;
+            b = (backgroundStyle == RowModel::BackgroundStyle::failed) ? bSoften : 0.5 - bSoften; 
+            baseColor.setRgbF(r, g, b);
+            return baseColor;
         }
         case Qt::FontRole: {
             if (rowModel->isFeatureModified()) {
