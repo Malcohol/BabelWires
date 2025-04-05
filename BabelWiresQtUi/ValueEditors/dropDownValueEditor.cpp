@@ -16,6 +16,7 @@
 
 babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent)
     : ValueEditorCommonBase(parent) {
+    setAutoFillBackground(true);
     setSizeAdjustPolicy(QComboBox::SizeAdjustPolicy::AdjustToMinimumContentsLengthWithIcon);
     setContextMenuPolicy(Qt::NoContextMenu);
     QObject::connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged), this,

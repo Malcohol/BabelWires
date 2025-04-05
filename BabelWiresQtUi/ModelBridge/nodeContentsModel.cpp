@@ -12,6 +12,7 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/Utilities/colours.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 #include <BabelWiresQtUi/ModelBridge/rowModelDelegate.hpp>
@@ -119,16 +120,20 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
             return rowModel->getTooltip();
         }
         case Qt::BackgroundRole: {
-            switch (rowModel->getBackgroundStyle(column ? RowModel::ColumnType::Value : RowModel::ColumnType::Key)) {
-                case RowModel::BackgroundStyle::normal:
-                    return QBrush(QColor(225, 225, 225));
-                case RowModel::BackgroundStyle::editable:
-                    return QBrush(QColor(255, 255, 255));
+            const babelwires::RowModel::BackgroundStyle backgroundStyle = rowModel->getBackgroundStyle(column ? RowModel::ColumnType::Value : RowModel::ColumnType::Key);
+            BackgroundType backgroundType = BackgroundType::normal;
+            switch(backgroundStyle) {
                 case RowModel::BackgroundStyle::failed:
-                    return QBrush(QColor(225, 30, 30));
+                    backgroundType = BackgroundType::failure;
+                    break;
                 case RowModel::BackgroundStyle::failedHidden:
-                    return QBrush(QColor(225, 150, 150));
+                    backgroundType = BackgroundType::partialFailure;
+                    break;
+                case RowModel::BackgroundStyle::normal:
+                case RowModel::BackgroundStyle::editable:
+                    break;
             }
+            return getBackgroundColour(backgroundType);
         }
         case Qt::FontRole: {
             if (rowModel->isFeatureModified()) {

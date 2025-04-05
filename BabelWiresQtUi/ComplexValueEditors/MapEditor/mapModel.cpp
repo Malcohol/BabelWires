@@ -10,6 +10,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
+#include <BabelWiresQtUi/Utilities/colours.hpp>
 
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToSameFallbackMapEntryData.hpp>
@@ -85,12 +86,7 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
             }
         }
         case Qt::BackgroundRole: {
-            const Result validity = entry.getValidity();
-            if (!validity) {
-                return QBrush(QColor(255, 0, 0));
-            } else {
-                return QBrush(QColor(255, 255, 255));
-            }
+            return getBackgroundColour(entry.getValidity() ? BackgroundType::normal : BackgroundType::failure);
         }
     }
     return {};
