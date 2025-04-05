@@ -12,6 +12,7 @@
 #include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/Utilities/colours.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 #include <BabelWiresQtUi/ModelBridge/rowModelDelegate.hpp>
@@ -120,20 +121,19 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
         }
         case Qt::BackgroundRole: {
             const babelwires::RowModel::BackgroundStyle backgroundStyle = rowModel->getBackgroundStyle(column ? RowModel::ColumnType::Value : RowModel::ColumnType::Key);
-            const QColor baseColor = QApplication::palette().color(QPalette::Button);
-            if ((backgroundStyle == RowModel::BackgroundStyle::normal)
-                  || (backgroundStyle == RowModel::BackgroundStyle::editable)) {
-                    return baseColor;
-                  }
-            int r, g, b;
-            baseColor.getRgb(&r, &g, &b);
-            const int gSoft = std::min(g, 255-g);
-            const int bSoft = std::min(b, 255-b);
-            const int rSoft = std::min(gSoft, bSoft);
-            r = 255 - rSoft;
-            g = (backgroundStyle == RowModel::BackgroundStyle::failed) ? gSoft : 127;
-            b = (backgroundStyle == RowModel::BackgroundStyle::failed) ? bSoft : 127; 
-            return QColor(r, g, b);
+            BackgroundType backgroundType = BackgroundType::normal;
+            switch(backgroundStyle) {
+                case RowModel::BackgroundStyle::failed:
+                    backgroundType = BackgroundType::failure;
+                    break;
+                case RowModel::BackgroundStyle::failedHidden:
+                    backgroundType = BackgroundType::partialFailure;
+                    break;
+                case RowModel::BackgroundStyle::normal:
+                case RowModel::BackgroundStyle::editable:
+                    break;
+            }
+            return getBackgroundColour(backgroundType);
         }
         case Qt::FontRole: {
             if (rowModel->isFeatureModified()) {
