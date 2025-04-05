@@ -53,7 +53,7 @@ jobs:
     - name: Install CMake on Windows
       if: startsWith(matrix.config.os, 'windows')
       run: |
-        choco install cmake
+        choco install cmake --version=3.31.0
 
     - name: Install Qt on Windows
       if: startsWith(matrix.config.os, 'windows')
