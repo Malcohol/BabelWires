@@ -717,12 +717,12 @@ TEST(EditTreeTest, treeIteration) {
     
     auto it = rit.childrenBegin();
     EXPECT_NE(it, rit.childrenEnd());
-    EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("aa")));
+    EXPECT_EQ(it.getStep(), babelwires::ShortId("aa"));
     EXPECT_EQ(it.getModifier(), nullptr);
     {
         auto cit = it.childrenBegin();
         EXPECT_NE(cit, it.childrenEnd());
-        EXPECT_EQ(cit.getStep(), babelwires::PathStep(3));
+        EXPECT_EQ(cit.getStep(), 3);
         ASSERT_NE(cit.getModifier(), nullptr);
         EXPECT_EQ(cit.getModifier()->getModifierData().m_targetPath, path5);
         cit.nextSibling();
@@ -730,34 +730,34 @@ TEST(EditTreeTest, treeIteration) {
     }
     it.nextSibling();
     EXPECT_NE(it, rit.childrenEnd());
-    EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("bb")));
+    EXPECT_EQ(it.getStep(), babelwires::ShortId("bb"));
     ASSERT_NE(it.getModifier(), nullptr);
     EXPECT_EQ(it.getModifier()->getModifierData().m_targetPath, path3);
     {
         auto cit = it.childrenBegin();
         EXPECT_NE(cit, it.childrenEnd());
-        EXPECT_EQ(cit.getStep(), babelwires::PathStep(4));
+        EXPECT_EQ(cit.getStep(), 4);
         ASSERT_NE(cit.getModifier(), nullptr);
         EXPECT_EQ(cit.getModifier()->getModifierData().m_targetPath, path2);
         cit.nextSibling();
         EXPECT_NE(cit, it.childrenEnd());
-        EXPECT_EQ(cit.getStep(), babelwires::PathStep(6));
+        EXPECT_EQ(cit.getStep(), 6);
         EXPECT_EQ(cit.getModifier(), nullptr);
         cit.nextSibling();
         EXPECT_EQ(cit, it.childrenEnd());
     }
     it.nextSibling();
     EXPECT_NE(it, rit.childrenEnd());
-    EXPECT_EQ(it.getStep(), babelwires::PathStep(babelwires::ShortId("cc")));
+    EXPECT_EQ(it.getStep(), babelwires::ShortId("cc"));
     ASSERT_EQ(it.getModifier(), nullptr);
     {
         auto cit = it.childrenBegin();
         EXPECT_NE(cit, it.childrenEnd());
-        EXPECT_EQ(cit.getStep(), babelwires::PathStep(1));
+        EXPECT_EQ(cit.getStep(), 1);
         ASSERT_EQ(cit.getModifier(), nullptr);
         cit.nextSibling();
         EXPECT_NE(cit, it.childrenEnd());
-        EXPECT_EQ(cit.getStep(), babelwires::PathStep(6));
+        EXPECT_EQ(cit.getStep(), 6);
         EXPECT_EQ(cit.getModifier(), nullptr);
         cit.nextSibling();
         EXPECT_EQ(cit, it.childrenEnd());

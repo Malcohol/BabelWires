@@ -27,7 +27,7 @@ babelwires::Path testUtils::TestArrayElementData::getPathToArray() {
 
 babelwires::Path testUtils::TestArrayElementData::getPathToArrayEntry(unsigned int i) {
     babelwires::Path pathToArray_1 = getPathToArray();
-    pathToArray_1.pushStep(babelwires::PathStep(i));
+    pathToArray_1.pushStep(i);
     return pathToArray_1;
 }
 

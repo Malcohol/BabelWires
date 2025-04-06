@@ -125,7 +125,7 @@ namespace babelwires {
                         PathStep step = input->getStepToChild(child);
                         Path pathToChild = path;
                         const int outputChildIndex = output->getChildIndexFromStep(step);
-                        pathToChild.pushStep(PathStep(step));
+                        pathToChild.pushStep(step);
                         std::ostringstream os;
                         step.writeToStreamReadable(os, *m_identifierRegistry);
                         if (outputChildIndex >= 0) {

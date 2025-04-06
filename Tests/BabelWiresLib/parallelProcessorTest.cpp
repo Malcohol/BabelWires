@@ -92,9 +92,9 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
         processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayTreeNode =
-        input.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        input.getChildFromStep(getCommonArrayId()).is<babelwires::ValueTreeNode>();
     const babelwires::ValueTreeNode& outputArrayTreeNode =
-        output.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        output.getChildFromStep(getCommonArrayId()).is<babelwires::ValueTreeNode>();
 
     babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayTreeNode);
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
@@ -148,9 +148,9 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
         processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayTreeNode =
-        input.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        input.getChildFromStep(getCommonArrayId()).is<babelwires::ValueTreeNode>();
     const babelwires::ValueTreeNode& outputArrayTreeNode =
-        output.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        output.getChildFromStep(getCommonArrayId()).is<babelwires::ValueTreeNode>();
 
     babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayTreeNode);
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
@@ -218,9 +218,9 @@ TEST(ParallelProcessorTest, testFailure) {
         processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayTreeNode =
-        input.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        input.getChildFromStep(getCommonArrayId()).is<babelwires::ValueTreeNode>();
     const babelwires::ValueTreeNode& outputArrayTreeNode =
-        output.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        output.getChildFromStep(getCommonArrayId()).is<babelwires::ValueTreeNode>();
 
     babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayTreeNode);
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(

@@ -26,11 +26,7 @@ namespace babelwires {
         /// This is just a convenient way of representing an optional step.
         PathStep() : m_notAStep() {}
 
-        // explicit, because a temporary PathStep contains a copy of f, and any modification to its mutable
-        // discriminator will be lost.
-        // TODO This was a mistake. Allow implicit construction from a field, and approach discriminator resolution
-        // a different way.
-        explicit PathStep(const ShortId& f)
+        PathStep(const ShortId& f)
             : m_fieldIdentifier(f) {}
 
         PathStep(ArrayIndex index)
@@ -79,6 +75,9 @@ namespace babelwires {
         /// If the step contains a field identifier, return a pointer to it.
         const ShortId* asField() const { return isField() ? &m_fieldIdentifier : nullptr; }
 
+        /// If the step contains a field identifier, return a pointer to it.
+        ShortId* asField() { return isField() ? &m_fieldIdentifier : nullptr; }
+
         /// If the step contains an array index, return a pointer to it.
         const ArrayIndex* asIndex() const { return isIndex() ? &m_arrayIndex.m_index : nullptr; }
 
@@ -102,9 +101,8 @@ namespace babelwires {
         void writeToStreamReadable(std::ostream& os, const IdentifierRegistry& identifierRegistry) const;
 
         /// Assuming this and other are equal fields, copy the discriminator from other to this.
-        /// TODO: Avoid needing this to be const and relying on discriminators being mutable.
-        void copyDiscriminatorFrom(const PathStep& other) const {
-            if (const ShortId* thisField = asField()) {
+        void copyDiscriminatorFrom(const PathStep& other) {
+            if (ShortId* thisField = asField()) {
                 const ShortId* otherField = other.asField();
                 assert(otherField);
                 assert(*thisField == *otherField);

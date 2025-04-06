@@ -52,7 +52,7 @@ namespace babelwires {
         void clear();
 
         /// Add a Node. Will use the ID of the data, if that ID is available.
-        /// Returns the ID of the data after it was added.
+        /// Returns the ID of the node after it was added.
         NodeId addNode(const NodeData& data);
 
         /// Remove the Node with the given id.

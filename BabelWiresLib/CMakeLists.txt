@@ -69,10 +69,11 @@ SET( BABELWIRESLIB_SRCS
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
 	Processors/processorFactory.cpp
-	ValueTree/valueTreeNode.cpp
 	ValueTree/valueTreeChild.cpp
-	ValueTree/valueTreeRoot.cpp
 	ValueTree/valueTreeHelper.cpp
+	ValueTree/valueTreeNode.cpp
+	ValueTree/valueTreePathUtils.cpp
+	ValueTree/valueTreeRoot.cpp
 	Path/path.cpp
 	Path/pathStep.cpp
 	Serialization/projectBundle.cpp
@@ -122,7 +123,7 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/typeConstructor.cpp
 	TypeSystem/typeSystem.cpp
 	TypeSystem/value.cpp
-	TypeSystem/valuePath.cpp
+	TypeSystem/valuePathUtils.cpp
 	ValueNames/valueNames.cpp
 	ValueNames/sparseValueNamesImpl.cpp
 	ValueNames/contiguousValueNamesImpl.cpp

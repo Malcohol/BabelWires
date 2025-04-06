@@ -9,9 +9,6 @@
 
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
-// TODO Remove
-//#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
-
 namespace babelwires {
 
     /// RecordType carries a sequence of Fields (some of which are optional and can be inactive).
@@ -26,6 +23,13 @@ namespace babelwires {
         };
 
         RecordType(std::vector<Field> fields);
+
+        /// A convenience method for defining a record with all the fields of "parent" plus "additionalFields".
+        /// This ensures a subtype relationship between this and parent, but note that you don't have to use this
+        /// method to establish that relationship, since subtyping is defined by the sets of fields.
+        /// This is similar to duck-typing, but since field identifiers are globally unique, a subtyping relationship
+        /// would never exist unintentionally.
+        RecordType(const RecordType& parent, std::vector<Field> additionalFields);
 
         std::string getKind() const override;
         
@@ -75,23 +79,4 @@ namespace babelwires {
         /// Those fields which are optional.
         std::vector<ShortId> m_optionalFieldIds;
     };
-
-/*
-    // TODO Remove
-    class TestRecordType : public RecordType {
-      public:
-        TestRecordType();
-        
-        PRIMITIVE_TYPE("recordT", "Record", "7ce48078-c2e2-45c8-8c0e-dbad1f9fd771", 1);
-    };
-
-    class TestRecordType2 : public RecordType {
-      public:
-        TestRecordType2();
-        
-        PRIMITIVE_TYPE("recordT2", "Record2", "199e3fa7-5ddc-46c5-8eab-b66a121dac20", 1);
-    };
-
-*/
-
 } // namespace babelwires

@@ -488,7 +488,7 @@ TEST(ArrayTypeTest, featureChanges) {
     arrayFeature.clearChanges();
     {
         babelwires::Path pathToInt;
-        pathToInt.pushStep(babelwires::PathStep(1));
+        pathToInt.pushStep(1);
         arrayFeature.setDescendentValue(pathToInt, babelwires::IntValue(15));
     }
     EXPECT_FALSE(arrayFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));

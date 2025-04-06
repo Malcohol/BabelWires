@@ -40,7 +40,7 @@ bool babelwires::AdjustModifiersInArraySubcommand::initializeAndExecute(Project&
     if (m_adjustment < 0) {
         for (int i = 0; i < -m_adjustment; ++i) {
             Path p = m_pathToArray;
-            p.pushStep(PathStep(m_startIndex + i));
+            p.pushStep(m_startIndex + i);
             addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, p));
         }
     }

@@ -41,35 +41,6 @@ babelwires::Path::Path(std::vector<PathStep> steps)
            "Attempt to construct a path from a vector containing a non-step");
 }
 
-babelwires::Path::RootAndPath<const babelwires::ValueTreeRoot>
-babelwires::Path::getRootAndPath(const ValueTreeNode& valueTreeNode) {
-    std::vector<PathStep> steps;
-    const ValueTreeNode* current = &valueTreeNode;
-    const ValueTreeNode* parent = valueTreeNode.getOwner();
-    while (parent) {
-        steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
-        current = parent;
-        parent = current->getOwner();
-    }
-    std::reverse(steps.begin(), steps.end());
-    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
-}
-
-babelwires::Path::RootAndPath<babelwires::ValueTreeRoot> babelwires::Path::getRootAndPath(ValueTreeNode& valueTreeNode) {
-    std::vector<PathStep> steps;
-    ValueTreeNode* current = &valueTreeNode;
-    ValueTreeNode* parent = valueTreeNode.getOwnerNonConst();
-    while (parent) {
-        steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
-        current = parent;
-        parent = current->getOwnerNonConst();
-    }
-    std::reverse(steps.begin(), steps.end());
-    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
-}
-
 void babelwires::Path::pushStep(PathStep step) {
     assert(!step.isNotAStep() && "Attempt to push a non-step onto a path");
     m_steps.emplace_back(std::move(step));
@@ -242,7 +213,7 @@ unsigned int babelwires::Path::getNumSteps() const {
 void babelwires::Path::truncate(unsigned int newNumSteps) {
     assert((newNumSteps <= m_steps.size()) && "You can only shrink with truncate");
     // Have to provide a fill value even though it is never used.
-    m_steps.resize(newNumSteps, PathStep(0));
+    m_steps.resize(newNumSteps, 0);
 }
 
 void babelwires::Path::removePrefix(unsigned int numSteps) {

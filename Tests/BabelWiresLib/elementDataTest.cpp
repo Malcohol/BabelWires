@@ -57,11 +57,11 @@ namespace {
     }
 
     void setModifiers(babelwires::NodeData& data, babelwires::ShortId fieldId) {
-        setModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
+        setModifiers(data, babelwires::Path({fieldId}));
     }
 
     void checkModifiers(const babelwires::NodeData& data, babelwires::ShortId fieldId) {
-        checkModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
+        checkModifiers(data, babelwires::Path({fieldId}));
     }
 } // namespace
 

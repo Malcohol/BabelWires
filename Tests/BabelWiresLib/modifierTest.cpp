@@ -90,7 +90,7 @@ TEST(ModifierTest, localApplySuccess) {
     recordFeature.setToDefault();
 
     babelwires::Path path;
-    path.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
+    path.pushStep(testUtils::TestSimpleRecordType::getInt0Id());
 
     auto intModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(198));
     intModData->m_targetPath = path;
@@ -172,7 +172,7 @@ TEST(ModifierTest, arraySizeModifierSuccess) {
     recordFeature.setToDefault();
 
     auto arrayModData = std::make_unique<babelwires::ArraySizeModifierData>();
-    arrayModData->m_targetPath.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getArrayId()));
+    arrayModData->m_targetPath.pushStep(testUtils::TestComplexRecordType::getArrayId());
     arrayModData->m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
 
     babelwires::ArraySizeModifier arrayMod(std::move(arrayModData));
@@ -207,7 +207,7 @@ TEST(ModifierTest, arraySizeModifierFailure) {
     EXPECT_EQ(record.getarray().getSize(), testUtils::TestSimpleArrayType::s_defaultSize);
 
     auto arrayModData = std::make_unique<babelwires::ArraySizeModifierData>();
-    arrayModData->m_targetPath.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getArrayId()));
+    arrayModData->m_targetPath.pushStep(testUtils::TestComplexRecordType::getArrayId());
     arrayModData->m_size = testUtils::TestSimpleArrayType::s_maximumSize + 1;
 
     babelwires::ArraySizeModifier arrayMod(std::move(arrayModData));
@@ -242,7 +242,7 @@ TEST(ModifierTest, connectionModifierSuccess) {
     targetRecordFeature.setToDefault();
 
     babelwires::Path targetPath;
-    targetPath.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
+    targetPath.pushStep(testUtils::TestSimpleRecordType::getInt0Id());
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
@@ -299,7 +299,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
 
     const babelwires::Path sourcePath = babelwires::Path::deserializeFromString("aa");
     babelwires::Path targetPath;
-    targetPath.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
+    targetPath.pushStep(testUtils::TestSimpleRecordType::getInt0Id());
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
@@ -338,7 +338,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
     targetRecordFeature.setToDefault();
 
     babelwires::Path targetPath;
-    targetPath.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
+    targetPath.pushStep(testUtils::TestSimpleRecordType::getInt0Id());
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
@@ -367,8 +367,8 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     babelwires::ValueNodeData elementData{testUtils::TestComplexRecordType::getThisType()};
 
     const babelwires::Path sourcePath{
-        std::vector<babelwires::PathStep>{babelwires::PathStep(testUtils::TestComplexRecordType::getSubrecordId()),
-                                          babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id())}};
+        std::vector<babelwires::PathStep>{testUtils::TestComplexRecordType::getSubrecordId(),
+                                          testUtils::TestSimpleRecordType::getInt0Id()}};
 
     babelwires::ValueAssignmentData sourceData(babelwires::IntValue(100));
     sourceData.m_targetPath = sourcePath;
@@ -383,7 +383,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     targetInstance.getstring().set("Hello");
 
     const babelwires::Path targetPath{
-        std::vector<babelwires::PathStep>{babelwires::PathStep(testUtils::TestComplexRecordType::getStringId())}};
+        std::vector<babelwires::PathStep>{testUtils::TestComplexRecordType::getStringId()}};
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;

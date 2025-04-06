@@ -138,13 +138,13 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     const babelwires::Path pathToValue;
 
     babelwires::Path pathToOptional = pathToValue;
-    pathToOptional.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
+    pathToOptional.pushStep(testUtils::TestComplexRecordType::getOpRecId());
 
     babelwires::Path pathToIntInOptional = pathToOptional;
-    pathToIntInOptional.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
+    pathToIntInOptional.pushStep(testUtils::TestSimpleRecordType::getInt1Id());
 
     babelwires::Path pathToIntInSimpleRecord = pathToValue;
-    pathToIntInSimpleRecord.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
+    pathToIntInSimpleRecord.pushStep(testUtils::TestSimpleRecordType::getInt1Id());
 
     {
         babelwires::ActivateOptionalsModifierData activateOptionalsModifierData;

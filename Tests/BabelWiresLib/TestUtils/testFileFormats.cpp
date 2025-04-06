@@ -27,8 +27,8 @@ babelwires::TypeRef testUtils::getTestFileType() {
 
 babelwires::Path testUtils::getTestFileElementPathToInt0() {
     babelwires::Path path;
-    path.pushStep(babelwires::PathStep(babelwires::FileType::getStepToContents()));
-    path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt0Id()));
+    path.pushStep(babelwires::FileType::getStepToContents());
+    path.pushStep(TestSimpleRecordType::getInt0Id());
     return path;
 }
 
