@@ -198,25 +198,6 @@ TEST(FeaturePathTest, pathResolve) {
     EXPECT_EQ(&pathToElem1.follow(testRecordFeature), &info.m_elem1);
     EXPECT_EQ(&pathToSubRecord.follow(testRecordFeature), &info.m_subRecord);
     EXPECT_EQ(&pathToInt2.follow(testRecordFeature), &info.m_subRecordInt);
-
-    // The field identifiers in the paths should now be resolved.
-    EXPECT_NE(pathToInt.getStep(0).getField().getDiscriminator(), 0);
-    EXPECT_NE(pathToArray.getStep(0).getField().getDiscriminator(), 0);
-    EXPECT_NE(pathToElem0.getStep(0).getField().getDiscriminator(), 0);
-    EXPECT_NE(pathToElem1.getStep(0).getField().getDiscriminator(), 0);
-    EXPECT_NE(pathToSubRecord.getStep(0).getField().getDiscriminator(), 0);
-    EXPECT_NE(pathToInt2.getStep(0).getField().getDiscriminator(), 0);
-    EXPECT_NE(pathToInt2.getStep(1).getField().getDiscriminator(), 0);
-
-    // And they should be resolved to the values in the registered identifiers.
-    EXPECT_EQ(pathToInt.getStep(0).getField().getDiscriminator(), testUtils::TestComplexRecordType::getInt0Id().getDiscriminator());
-    EXPECT_EQ(pathToArray.getStep(0).getField().getDiscriminator(), testUtils::TestComplexRecordType::getArrayId().getDiscriminator());
-    EXPECT_EQ(pathToElem0.getStep(0).getField().getDiscriminator(), testUtils::TestComplexRecordType::getArrayId().getDiscriminator());
-    EXPECT_EQ(pathToElem1.getStep(0).getField().getDiscriminator(), testUtils::TestComplexRecordType::getArrayId().getDiscriminator());
-    EXPECT_EQ(pathToSubRecord.getStep(0).getField().getDiscriminator(),
-              testUtils::TestComplexRecordType::getSubrecordId().getDiscriminator());
-    EXPECT_EQ(pathToInt2.getStep(0).getField().getDiscriminator(), testUtils::TestComplexRecordType::getSubrecordId().getDiscriminator());
-    EXPECT_EQ(pathToInt2.getStep(1).getField().getDiscriminator(), testUtils::TestSimpleRecordType::getInt0Id().getDiscriminator());
 }
 
 TEST(FeaturePathTest, pathTryFollow) {

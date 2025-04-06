@@ -57,7 +57,7 @@ babelwires::LongId babelwires::IdentifierRegistry::addLongIdWithMetadata(babelwi
         auto [uit, _] = m_uuidToInstanceDataMap.insert(
             std::pair(uuid, std::make_unique<InstanceData>(name, uuid, identifier, authority)));
 
-        Data& data = m_instanceDatasFromIdentifier[identifier];
+        Data& data = m_instanceDatasFromIdentifier[identifier.withoutDiscriminator()];
 
         const int newDiscriminator = data.m_instanceDatas.size() + 1;
         // I could fail safe here, but it seems very unlikely to happen. If it does, then the system needs a rethink.
@@ -122,8 +122,7 @@ const babelwires::IdentifierRegistry::InstanceData*
 babelwires::IdentifierRegistry::getInstanceData(LongId identifier) const {
     const babelwires::ShortId::Discriminator index = identifier.getDiscriminator();
     if (index > 0) {
-        identifier.setDiscriminator(0);
-        const auto& it = m_instanceDatasFromIdentifier.find(identifier);
+        const auto& it = m_instanceDatasFromIdentifier.find(identifier.withoutDiscriminator());
         if (it != m_instanceDatasFromIdentifier.end()) {
             const Data& data = it->second;
             if (index <= data.m_instanceDatas.size()) {
@@ -258,7 +257,7 @@ void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deseriali
             throw ParseException() << "An identifier with uuid \"" << uit->first << "\" was duplicated";
         }
 
-        Data& data = m_instanceDatasFromIdentifier[instanceData->m_identifier];
+        Data& data = m_instanceDatasFromIdentifier[instanceData->m_identifier.withoutDiscriminator()];
 
         data.m_instanceDatas.resize(discriminator);
         if (data.m_instanceDatas[discriminator - 1]) {

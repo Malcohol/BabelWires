@@ -28,9 +28,22 @@ void babelwires::IdentifierBase<NUM_BLOCKS>::copyDiscriminatorTo(IdentifierBase&
 }
 
 template <unsigned int NUM_BLOCKS>
+babelwires::IdentifierBase<NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::withoutDiscriminator() const { 
+    IdentifierBase thisWithoutDiscriminator = *this;
+    thisWithoutDiscriminator.setDiscriminator(0);
+    return thisWithoutDiscriminator; 
+}
+
+template <unsigned int NUM_BLOCKS>
 template <size_t... INSEQ>
 auto babelwires::IdentifierBase<NUM_BLOCKS>::getTupleOfCodesFromIndexSequence(std::index_sequence<INSEQ...>) const {
     return std::make_tuple(getDataAsCode<INSEQ>()...);
+}
+
+template <unsigned int NUM_BLOCKS>
+template <size_t... INSEQ>
+auto babelwires::IdentifierBase<NUM_BLOCKS>::getTupleOfDataFromIndexSequence(std::index_sequence<INSEQ...>) const {
+    return std::make_tuple(getData<INSEQ>()...);
 }
 
 template <unsigned int NUM_BLOCKS>
