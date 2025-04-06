@@ -1,11 +1,11 @@
 /**
- * Functions for exploring values with FeaturePaths.
+ * Functions for exploring values with Paths.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/TypeSystem/valuePath.hpp>
+#include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Path/path.hpp>

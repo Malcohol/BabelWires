@@ -39,14 +39,6 @@ namespace babelwires {
 
         Path& operator=(Path&& other) = default;
 
-        template <typename VALUE_TREE_ROOT> struct RootAndPath;
-
-        /// Get a path and the root.
-        static RootAndPath<const ValueTreeRoot> getRootAndPath(const ValueTreeNode& valueTreeNode);
-
-        /// Get a path and the root.
-        static RootAndPath<ValueTreeRoot> getRootAndPath(ValueTreeNode& valueTreeNode);
-
         /// Add a step to the path.
         void pushStep(PathStep step);
 
@@ -119,12 +111,6 @@ namespace babelwires {
 
     /// Write a path to an ostream.
     std::ostream& operator<<(std::ostream& os, const Path& p);
-
-    template <typename VALUE_TREE_ROOT> struct Path::RootAndPath {
-        VALUE_TREE_ROOT& m_root;
-        Path m_pathFromRoot;
-    };
-
 } // namespace babelwires
 
 namespace std {

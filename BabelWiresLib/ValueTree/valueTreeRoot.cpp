@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/TypeSystem/valuePath.hpp>
+#include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 struct babelwires::ValueTreeRoot::ComplexConstructorArguments {

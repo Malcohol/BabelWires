@@ -1,5 +1,5 @@
 /**
- * Functions for exploring values with FeaturePaths.
+ * Functions for exploring values with Paths.
  *
  * (C) 2021 Malcolm Tyrrell
  *
