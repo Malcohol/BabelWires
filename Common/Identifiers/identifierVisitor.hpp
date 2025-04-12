@@ -24,8 +24,9 @@ namespace babelwires {
         /// Allow the visitor to be applied to types in templates which may or may have identifier members.
         void operator()(...) {}
 
-        // Catch a potential pitfall at compile time.
-        // Note: These could call visitIdentifiers.
+        // Applying a visitor to an object is _not_ the usual pattern for visiting it, but it's tempting to write
+        // code of that form. The usual pattern is to call a visitIdentifiers method.
+        // This catches misuses, at least for classes that derive from DataVisitable.
         void operator()(DataVisitable&) = delete;
         void operator()(const DataVisitable&) = delete;
     };
