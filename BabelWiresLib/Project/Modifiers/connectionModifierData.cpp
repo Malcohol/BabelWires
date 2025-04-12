@@ -7,13 +7,14 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
-#include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
@@ -40,10 +41,9 @@ const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceTr
     }
 
     try {
-        return &m_sourcePath.follow(*output);
+        return &followPath(m_sourcePath, *output);
     } catch (const std::exception& e) {
-        throw babelwires::ModelException()
-            << e.what() << "; when looking for source in node with id=" << m_sourceId;
+        throw babelwires::ModelException() << e.what() << "; when looking for source in node with id=" << m_sourceId;
     }
 }
 

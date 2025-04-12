@@ -23,7 +23,7 @@ namespace babelwires
     RootAndPath<ValueTreeRoot> getRootAndPathTo(ValueTreeNode& valueTreeNode);
 
     ValueTreeNode& followPath(const Path& path, ValueTreeNode& start);
-    const ValueTreeNode& follow(const Path& path, const ValueTreeNode& start);
+    const ValueTreeNode& followPath(const Path& path, const ValueTreeNode& start);
     ValueTreeNode* tryFollow(const Path& path, ValueTreeNode& start);
     const ValueTreeNode* tryFollow(const Path& path, const ValueTreeNode& start);
 }

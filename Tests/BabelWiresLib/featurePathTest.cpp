@@ -126,13 +126,13 @@ TEST(FeaturePathTest, pathFollow) {
 
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
-    EXPECT_EQ(&info.m_pathToRecord.follow(testRecordFeature), &testRecordFeature);
-    EXPECT_EQ(&info.m_pathToInt.follow(testRecordFeature), &info.m_int);
-    EXPECT_EQ(&info.m_pathToArray.follow(testRecordFeature), &info.m_array);
-    EXPECT_EQ(&info.m_pathToElem0.follow(testRecordFeature), &info.m_elem0);
-    EXPECT_EQ(&info.m_pathToElem1.follow(testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(&info.m_pathToSubRecord.follow(testRecordFeature), &info.m_subRecord);
-    EXPECT_EQ(&info.m_pathToSubRecordInt.follow(testRecordFeature), &info.m_subRecordInt);
+    EXPECT_EQ(&followPath(info.m_pathToRecord, testRecordFeature), &testRecordFeature);
+    EXPECT_EQ(&followPath(info.m_pathToInt, testRecordFeature), &info.m_int);
+    EXPECT_EQ(&followPath(info.m_pathToArray, testRecordFeature), &info.m_array);
+    EXPECT_EQ(&followPath(info.m_pathToElem0, testRecordFeature), &info.m_elem0);
+    EXPECT_EQ(&followPath(info.m_pathToElem1, testRecordFeature), &info.m_elem1);
+    EXPECT_EQ(&followPath(info.m_pathToSubRecord, testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(&followPath(info.m_pathToSubRecordInt, testRecordFeature), &info.m_subRecordInt);
 
     EXPECT_EQ(info.m_pathToRecord.getNumSteps(), 0);
 
@@ -193,12 +193,12 @@ TEST(FeaturePathTest, pathResolve) {
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     // The paths should work even though they didn't use registered field identifiers.
-    EXPECT_EQ(&pathToInt.follow(testRecordFeature), &info.m_int);
-    EXPECT_EQ(&pathToArray.follow(testRecordFeature), &info.m_array);
-    EXPECT_EQ(&pathToElem0.follow(testRecordFeature), &info.m_elem0);
-    EXPECT_EQ(&pathToElem1.follow(testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(&pathToSubRecord.follow(testRecordFeature), &info.m_subRecord);
-    EXPECT_EQ(&pathToInt2.follow(testRecordFeature), &info.m_subRecordInt);
+    EXPECT_EQ(&followPath(pathToInt, testRecordFeature), &info.m_int);
+    EXPECT_EQ(&followPath(pathToArray, testRecordFeature), &info.m_array);
+    EXPECT_EQ(&followPath(pathToElem0, testRecordFeature), &info.m_elem0);
+    EXPECT_EQ(&followPath(pathToElem1, testRecordFeature), &info.m_elem1);
+    EXPECT_EQ(&followPath(pathToSubRecord, testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(&followPath(pathToInt2, testRecordFeature), &info.m_subRecordInt);
 }
 
 TEST(FeaturePathTest, pathTryFollow) {
@@ -243,11 +243,11 @@ TEST(FeaturePathTest, pathFollowFail) {
 
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
-    EXPECT_THROW(pathToNonField.follow(testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(pathToNonIndex.follow(testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(pathOffEndOfArray.follow(testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(pathValueAsRecord.follow(testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(pathValueAsArray.follow(testRecordFeature), babelwires::ModelException);
+    EXPECT_THROW(followPath(pathToNonField, testRecordFeature), babelwires::ModelException);
+    EXPECT_THROW(followPath(pathToNonIndex, testRecordFeature), babelwires::ModelException);
+    EXPECT_THROW(followPath(pathOffEndOfArray, testRecordFeature), babelwires::ModelException);
+    EXPECT_THROW(followPath(pathValueAsRecord, testRecordFeature), babelwires::ModelException);
+    EXPECT_THROW(followPath(pathValueAsArray, testRecordFeature), babelwires::ModelException);
 
     EXPECT_EQ(tryFollow(pathToNonField, testRecordFeature), nullptr);
     EXPECT_EQ(tryFollow(pathToNonIndex, testRecordFeature), nullptr);

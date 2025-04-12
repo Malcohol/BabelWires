@@ -101,38 +101,6 @@ babelwires::Path babelwires::Path::deserializeFromString(const std::string& path
     return path;
 }
 
-namespace {
-
-    template <typename T> T& followPath(T& start, const babelwires::Path& p, int& index) {
-        if (index < p.getNumSteps()) {
-            T& child = start.getChildFromStep(p.getStep(index));
-            ++index;
-            return followPath(child, p, index);
-        } else {
-            return start;
-        }
-    }
-
-    template <typename T> T& followPath(T& start, const babelwires::Path& p) {
-        int index = 0;
-        try {
-            return followPath(start, p, index);
-        } catch (const std::exception& e) {
-            throw babelwires::ModelException()
-                << e.what() << "; when trying to follow step #" << index + 1 << " in path \"" << p << '\"';
-        }
-    }
-
-} // namespace
-
-babelwires::ValueTreeNode& babelwires::Path::follow(ValueTreeNode& start) const {
-    return followPath<ValueTreeNode>(start, *this);
-}
-
-const babelwires::ValueTreeNode& babelwires::Path::follow(const ValueTreeNode& start) const {
-    return followPath<const ValueTreeNode>(start, *this);
-}
-
 int babelwires::Path::compare(const Path& other) const {
     auto it = m_steps.begin();
     auto oit = other.m_steps.begin();

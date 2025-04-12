@@ -82,7 +82,7 @@ babelwires::ValueTreeNode& babelwires::followPath(const Path& path, ValueTreeNod
     return followPathImpl<ValueTreeNode>(start, path);
 }
 
-const babelwires::ValueTreeNode& babelwires::follow(const Path& path, const ValueTreeNode& start) {
+const babelwires::ValueTreeNode& babelwires::followPath(const Path& path, const ValueTreeNode& start) {
     return followPathImpl<const ValueTreeNode>(start, path);
 }
 
