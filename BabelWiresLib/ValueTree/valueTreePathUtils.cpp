@@ -100,10 +100,10 @@ namespace {
 
 } // namespace
 
-babelwires::ValueTreeNode* babelwires::tryFollow(const Path& path, ValueTreeNode& start) {
+babelwires::ValueTreeNode* babelwires::tryFollowPath(const Path& path, ValueTreeNode& start) {
     return tryFollowPathImpl<ValueTreeNode>(&start, path);
 }
 
-const babelwires::ValueTreeNode* babelwires::tryFollow(const Path& path, const ValueTreeNode& start) {
+const babelwires::ValueTreeNode* babelwires::tryFollowPath(const Path& path, const ValueTreeNode& start) {
     return tryFollowPathImpl<const ValueTreeNode>(&start, path);
 }

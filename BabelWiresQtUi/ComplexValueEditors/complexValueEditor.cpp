@@ -60,7 +60,7 @@ babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope,
         throw ModelException() << "The node does not have editable features.";
     }
 
-    const auto* const inputTreeNode = tryFollow(data.getPathToValue(), *input);
+    const auto* const inputTreeNode = tryFollowPath(data.getPathToValue(), *input);
     if (!inputTreeNode) {
         throw ModelException() << "There is no value at that location.";
     }
@@ -82,7 +82,7 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTree
         return nullptr;
     }
 
-    const auto* const inputTreeNode = tryFollow(data.getPathToValue(), *input);
+    const auto* const inputTreeNode = tryFollowPath(data.getPathToValue(), *input);
     if (!inputTreeNode) {
         return nullptr;
     }

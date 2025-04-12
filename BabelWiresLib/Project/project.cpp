@@ -152,7 +152,7 @@ void babelwires::Project::addArrayEntries(NodeId nodeId, const Path& pathToArray
 
     if (Node* const node = getNode(nodeId)) {
         if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
-            ValueTreeNode* valueTreeNode = tryFollow(pathToArray, *inputArray);
+            ValueTreeNode* valueTreeNode = tryFollowPath(pathToArray, *inputArray);
             assert(valueTreeNode && "Path should resolve");
             assert(valueTreeNode->getType().as<ArrayType>());
 
@@ -194,7 +194,7 @@ void babelwires::Project::removeArrayEntries(NodeId nodeId, const Path& pathToAr
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     if (Node* const node = getNode(nodeId)) {
         if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
-            ValueTreeNode* valueTreeNode = tryFollow(pathToArray, *inputArray);
+            ValueTreeNode* valueTreeNode = tryFollowPath(pathToArray, *inputArray);
             assert(valueTreeNode && "Path should resolve");
             assert(valueTreeNode->getType().as<ArrayType>());
 

@@ -40,7 +40,7 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    if (!tryFollow(m_modifierToAdd->m_targetPath, *input)) {
+    if (!tryFollowPath(m_modifierToAdd->m_targetPath, *input)) {
         return false;
     }
 

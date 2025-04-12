@@ -37,7 +37,7 @@ bool babelwires::AddNodeForOutputTreeValueCommand::initializeAndExecute(Project&
         return false;
     }
 
-    if (!tryFollow(m_pathToValue, *nodeOutput)) {
+    if (!tryFollowPath(m_pathToValue, *nodeOutput)) {
         return false;
     }
 

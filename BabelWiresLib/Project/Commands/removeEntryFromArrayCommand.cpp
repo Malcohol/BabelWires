@@ -46,7 +46,7 @@ bool babelwires::RemoveEntryFromArrayCommand::initializeAndExecute(Project& proj
     }
 
     auto [compoundFeature, currentSize, range, initialSize] =
-        ValueTreeHelper::getInfoFromArray(tryFollow(m_pathToArray, *input));
+        ValueTreeHelper::getInfoFromArray(tryFollowPath(m_pathToArray, *input));
 
     if (!compoundFeature) {
         return false;

@@ -42,7 +42,7 @@ bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project
     }
 
     const auto [compoundFeature, currentSize, range, initialSize] =
-        ValueTreeHelper::getInfoFromArray(tryFollow(m_pathToArray, *input));
+        ValueTreeHelper::getInfoFromArray(tryFollowPath(m_pathToArray, *input));
     if (!compoundFeature) {
         return false;
     }

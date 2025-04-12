@@ -149,12 +149,12 @@ void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::
 
     // These have side-effects on the mutable field discriminators in the paths.
     auto modData0 = m_nodes[0]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
-    tryFollow(modData0->m_targetPath, testFileFeature);
-    tryFollow(modData0->m_sourcePath, testRecord);
+    tryFollowPath(modData0->m_targetPath, testFileFeature);
+    tryFollowPath(modData0->m_sourcePath, testRecord);
     auto modData1 = m_nodes[1]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
-    tryFollow(modData1->m_targetPath, testRecord);
-    tryFollow(modData1->m_sourcePath, testFileFeature);
+    tryFollowPath(modData1->m_targetPath, testRecord);
+    tryFollowPath(modData1->m_sourcePath, testFileFeature);
     auto modData2 = m_nodes[1]->m_modifiers[1].get()->as<babelwires::ValueAssignmentData>();
-    tryFollow(modData2->m_targetPath, testRecord);
-    tryFollow(m_nodes[1]->m_expandedPaths[0], testRecord);
+    tryFollowPath(modData2->m_targetPath, testRecord);
+    tryFollowPath(m_nodes[1]->m_expandedPaths[0], testRecord);
 }

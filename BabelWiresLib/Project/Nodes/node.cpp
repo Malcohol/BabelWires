@@ -152,12 +152,12 @@ std::unique_ptr<babelwires::NodeData> babelwires::Node::extractNodeData() const 
     // Strip out the currently unused paths.
     auto it = std::remove_if(data->m_expandedPaths.begin(), data->m_expandedPaths.end(), [this](const Path& p) {
         if (const ValueTreeNode* input = getInput()) {
-            if (tryFollow(p, *input)) {
+            if (tryFollowPath(p, *input)) {
                 return false;
             }
         }
         if (const ValueTreeNode* output = getOutput()) {
-            if (tryFollow(p, *output)) {
+            if (tryFollowPath(p, *output)) {
                 return false;
             }
         }

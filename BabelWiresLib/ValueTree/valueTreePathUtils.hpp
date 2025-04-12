@@ -24,6 +24,6 @@ namespace babelwires
 
     ValueTreeNode& followPath(const Path& path, ValueTreeNode& start);
     const ValueTreeNode& followPath(const Path& path, const ValueTreeNode& start);
-    ValueTreeNode* tryFollow(const Path& path, ValueTreeNode& start);
-    const ValueTreeNode* tryFollow(const Path& path, const ValueTreeNode& start);
+    ValueTreeNode* tryFollowPath(const Path& path, ValueTreeNode& start);
+    const ValueTreeNode* tryFollowPath(const Path& path, const ValueTreeNode& start);
 }
