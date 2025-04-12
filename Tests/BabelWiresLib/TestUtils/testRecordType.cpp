@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
-
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
@@ -157,10 +157,10 @@ testUtils::TestComplexRecordTypeFeatureInfo::TestComplexRecordTypeFeatureInfo(
     , m_subRecordInt(
           m_subRecord.getChildFromStep(testUtils::TestSimpleRecordType::getInt0Id())
               .is<babelwires::ValueTreeNode>())
-    , m_pathToRecord(&testRecord)
-    , m_pathToInt(&m_int)
-    , m_pathToArray(&m_array)
-    , m_pathToElem0(&m_elem0)
-    , m_pathToElem1(&m_elem1)
-    , m_pathToSubRecord(&m_subRecord)
-    , m_pathToSubRecordInt(&m_subRecordInt) {}
+    , m_pathToRecord(babelwires::getPathTo(&testRecord))
+    , m_pathToInt(babelwires::getPathTo(&m_int))
+    , m_pathToArray(babelwires::getPathTo(&m_array))
+    , m_pathToElem0(babelwires::getPathTo(&m_elem0))
+    , m_pathToElem1(babelwires::getPathTo(&m_elem1))
+    , m_pathToSubRecord(babelwires::getPathTo(&m_subRecord))
+    , m_pathToSubRecordInt(babelwires::getPathTo(&m_subRecordInt)) {}

@@ -1,14 +1,15 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
@@ -37,7 +38,7 @@ TEST(ProcessorNodeTest, sourceFileDataCreateElement) {
     EXPECT_EQ(output.getArray().getSize(), 2);
 
     babelwires::ValueAssignmentData valueSettingData(babelwires::IntValue(4));
-    valueSettingData.m_targetPath = babelwires::Path{ &*input.getRecord().getintR0() };
+    valueSettingData.m_targetPath = babelwires::getPathTo(&*input.getRecord().getintR0());
 
     processorNode->clearChanges();
     processorNode->addModifier(testEnvironment.m_log, valueSettingData);
@@ -52,7 +53,7 @@ TEST(ProcessorNodeTest, sourceFileDataCreateElement) {
     EXPECT_TRUE(processorNode->isChanged(babelwires::Node::Changes::SomethingChanged));
 
     // The processor sets the output array size based on this input.
-    const babelwires::Path arraySettingIntPath{ &*input.getInt() };
+    const babelwires::Path arraySettingIntPath = babelwires::getPathTo(&*input.getInt());
 
     babelwires::ValueAssignmentData arraySettingData(babelwires::IntValue(4));
     arraySettingData.m_targetPath = arraySettingIntPath;

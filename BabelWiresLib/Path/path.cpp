@@ -22,19 +22,6 @@
 
 babelwires::Path::Path() {}
 
-babelwires::Path::Path(const ValueTreeNode* valueTreeNode) {
-    const ValueTreeNode* current = valueTreeNode;
-    const ValueTreeNode* parent = current->getOwner();
-    while (parent) {
-        m_steps.push_back(parent->getStepToChild(current));
-        assert(!m_steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
-        current = parent;
-        parent = current->getOwner();
-    }
-
-    std::reverse(m_steps.begin(), m_steps.end());
-}
-
 babelwires::Path::Path(std::vector<PathStep> steps)
     : m_steps(std::move(steps)) {
     assert(std::none_of(m_steps.begin(), m_steps.end(), [](auto p) { return p.isNotAStep(); }) &&

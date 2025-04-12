@@ -1,19 +1,20 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 #include <BabelWiresLib/Project/Nodes/editTree.hpp>
-#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testModifier.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -187,10 +188,8 @@ namespace {
                              babelwires::ValueTreeNode* input, babelwires::ValueTreeNode* output) {
         cache.setValueTrees("Test", input, output);
         ASSERT_EQ(cache.getNumRows(), 6);
-        auto inputInfo =
-            input ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*input) : nullptr;
-        auto outputInfo =
-            output ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*output) : nullptr;
+        auto inputInfo = input ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*input) : nullptr;
+        auto outputInfo = output ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*output) : nullptr;
         auto info = inputInfo ? inputInfo.get() : outputInfo.get();
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -287,10 +286,8 @@ namespace {
                                babelwires::ValueTreeNode* output) {
         ASSERT_TRUE(input);
 
-        auto inputInfo =
-            input ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*input) : nullptr;
-        auto outputInfo =
-            output ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*output) : nullptr;
+        auto inputInfo = input ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*input) : nullptr;
+        auto outputInfo = output ? std::make_unique<testUtils::TestComplexRecordTypeFeatureInfo>(*output) : nullptr;
         auto info = inputInfo ? inputInfo.get() : outputInfo.get();
 
         // Add a modifier to the first int
@@ -410,7 +407,7 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisType());
+                                           testUtils::TestComplexRecordType::getThisType());
     inputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -425,7 +422,7 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisType());
+                                            testUtils::TestComplexRecordType::getThisType());
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -439,9 +436,9 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisType());
+                                           testUtils::TestComplexRecordType::getThisType());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisType());
+                                            testUtils::TestComplexRecordType::getThisType());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
@@ -457,9 +454,9 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisType());
+                                           testUtils::TestComplexRecordType::getThisType());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisType());
+                                            testUtils::TestComplexRecordType::getThisType());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
@@ -521,9 +518,9 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisType());
+                                           testUtils::TestComplexRecordType::getThisType());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                                 testUtils::TestComplexRecordType::getThisType());
+                                            testUtils::TestComplexRecordType::getThisType());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
@@ -622,7 +619,7 @@ namespace {
     }
 
     void checkFileContentsEntry(const babelwires::ContentsCacheEntry* entry, babelwires::ValueTreeRoot* inputFeature,
-                           babelwires::ValueTreeRoot* outputFeature, bool isExpanded) {
+                                babelwires::ValueTreeRoot* outputFeature, bool isExpanded) {
         EXPECT_EQ(entry->getLabel(), "Contents");
         if (inputFeature) {
             EXPECT_EQ(entry->getInput(), inputFeature->getChild(0));
@@ -659,9 +656,8 @@ namespace {
     }
 
     void testFileCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
-                                 babelwires::ValueTreeRoot* inputFeature,
-                                 babelwires::ValueTreeRoot* outputFeature) {
-                                    
+                                 babelwires::ValueTreeRoot* inputFeature, babelwires::ValueTreeRoot* outputFeature) {
+
         ASSERT_EQ(cache.getNumRows(), 2);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -739,7 +735,7 @@ TEST(ContentsCacheTest, inputFileFeatureOnly) {
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
     inputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
-    
+
     cache.setValueTrees("Test", &inputFeature, nullptr);
     testFileCommonBehaviour(cache, editTree, &inputFeature, nullptr);
     testModifierBehaviour(testEnvironment.m_projectContext, cache, editTree, &inputFeature, nullptr);
@@ -751,7 +747,8 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem,
+                                            testUtils::getTestFileType());
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -766,7 +763,8 @@ TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
-    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem,
+                                            testUtils::getTestFileType());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
