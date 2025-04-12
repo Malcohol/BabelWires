@@ -16,6 +16,7 @@ namespace babelwires {
     using ArrayIndex = std::uint16_t;
 
     class IdentifierRegistry;
+    struct IdentifierVisitor;
 
     /// A PathStep is a union of a ShortId and an ArrayIndex.
     union PathStep {
@@ -113,6 +114,8 @@ namespace babelwires {
         /// How the not-a-step value is represented as a string.
         static constexpr char c_notAStepRepresentation[] = "(notAStep)";
 
+        /// If this step is a field, apply the visitor to it.
+        void visitIdentifiers(IdentifierVisitor& visitor);
       private:
         /// Get a efficient representation of the contents of this object.
         std::uint64_t getDataAsCode() const { return m_code & 0xffffffffffff0000; }

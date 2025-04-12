@@ -14,6 +14,7 @@
 
 #include <Common/Hash/hash.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Identifiers/identifierVisitable.hpp>
 #include <Common/Log/debugLogger.hpp>
 #include <Common/types.hpp>
 
@@ -183,4 +184,10 @@ std::size_t babelwires::Path::getHash() const {
         hash::mixInto(hash, step);
     }
     return hash;
+}
+
+void babelwires::Path::visitIdentifiers(IdentifierVisitor& visitor) {
+    for (auto& step : m_steps) {
+        step.visitIdentifiers(visitor);
+    }
 }

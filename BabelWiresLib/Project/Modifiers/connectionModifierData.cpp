@@ -74,9 +74,5 @@ std::unique_ptr<babelwires::Modifier> babelwires::ConnectionModifierData::create
 
 void babelwires::ConnectionModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
     ModifierData::visitIdentifiers(visitor);
-    for (auto& s : m_sourcePath) {
-        if (s.isField()) {
-            visitor(s.getField());
-        }
-    }
+    m_sourcePath.visitIdentifiers(visitor);
 }

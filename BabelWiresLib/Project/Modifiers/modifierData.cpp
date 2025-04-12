@@ -23,11 +23,7 @@ babelwires::ValueTreeNode* babelwires::ModifierData::getTarget(ValueTreeNode* co
 }
 
 void babelwires::ModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
-    for (auto& s : m_targetPath) {
-        if (s.isField()) {
-            visitor(s.getField());
-        }
-    }
+    m_targetPath.visitIdentifiers(visitor);
 }
 
 void babelwires::ModifierData::visitFilePaths(FilePathVisitor& visitor) {}

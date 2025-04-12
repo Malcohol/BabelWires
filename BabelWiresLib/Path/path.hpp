@@ -90,6 +90,8 @@ namespace babelwires {
         iterator begin() { return m_steps.begin(); }
         iterator end() { return m_steps.end(); }
 
+        /// Apply the visitor to any fields in the path.
+        void visitIdentifiers(IdentifierVisitor& visitor);
       private:
         /// Returns -1, 0 or 1.
         int compare(const Path& other) const;

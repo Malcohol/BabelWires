@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Identifiers/identifierVisitable.hpp>
 #include <Common/exceptions.hpp>
 
 #include <charconv>
@@ -59,5 +60,11 @@ babelwires::PathStep babelwires::PathStep::deserializeFromString(std::string_vie
         return PathStep();
     } else {
         return PathStep(ShortId::deserializeFromString(str));
+    }
+}
+
+void babelwires::PathStep::visitIdentifiers(IdentifierVisitor& visitor) {
+    if (ShortId* field = asField()) {
+        visitor(*field);
     }
 }
