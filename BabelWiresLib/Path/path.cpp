@@ -14,7 +14,7 @@
 
 #include <Common/Hash/hash.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Identifiers/identifierVisitable.hpp>
+#include <Common/Identifiers/identifierVisitor.hpp>
 #include <Common/Log/debugLogger.hpp>
 #include <Common/types.hpp>
 

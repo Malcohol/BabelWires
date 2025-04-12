@@ -8,11 +8,17 @@
  **/
 #pragma once
 
-#include <Common/DataContext/filePathVisitable.hpp>
-#include <Common/Identifiers/identifierVisitable.hpp>
+#include <Common/DataContext/filePathVisitor.hpp>
+#include <Common/Identifiers/identifierVisitor.hpp>
 
 namespace babelwires {
     /// DataVisitable defines an interface for classes storing certain types of data, allowing it to be exposed
     /// to important infrastructural visitors.
-    struct DataVisitable : IdentifierVisitable, FilePathVisitable {};
+    struct DataVisitable {
+        /// Call the visitor on all Identifiers in the object.
+        virtual void visitIdentifiers(IdentifierVisitor& visitor) = 0;
+
+        /// Call the visitor on all FilePaths in the object.
+        virtual void visitFilePaths(FilePathVisitor& visitor) = 0;
+    };
 } // namespace babelwires
