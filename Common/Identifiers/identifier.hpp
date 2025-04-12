@@ -141,7 +141,7 @@ namespace babelwires {
         }
 
         friend bool operator!=(const IdentifierBase& a, const IdentifierBase& b) {
-            return !(a.getTupleOfCodes() == b.getTupleOfCodes());
+            return !(a == b);
         }
 
         friend bool operator<(const IdentifierBase& a, const IdentifierBase& b) {
