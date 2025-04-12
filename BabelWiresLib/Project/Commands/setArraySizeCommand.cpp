@@ -15,6 +15,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <cassert>
 
@@ -37,7 +38,7 @@ bool babelwires::SetArraySizeCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArray(m_pathToArray.tryFollow(*input));
+    auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArray(tryFollow(m_pathToArray, *input));
 
     if (!compoundFeature) {
         return false;

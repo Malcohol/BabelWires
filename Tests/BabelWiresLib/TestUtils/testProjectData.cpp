@@ -4,17 +4,18 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 testUtils::TestProjectData::TestProjectData()
     : m_sourceFilePath(std::string("testSourceFile") + testUtils::TestSourceFileFormat::getFileExtension())
@@ -75,8 +76,8 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
     int recordRecordDiscriminator, int recordInt2Disciminator, int fileIntChildDiscriminator) {
     ASSERT_EQ(projectData.m_nodes.size(), 3);
 
-    const babelwires::NodeData* sortedElements[3] = {
-        projectData.m_nodes[0].get(), projectData.m_nodes[1].get(), projectData.m_nodes[2].get()};
+    const babelwires::NodeData* sortedElements[3] = {projectData.m_nodes[0].get(), projectData.m_nodes[1].get(),
+                                                     projectData.m_nodes[2].get()};
     std::sort(&sortedElements[0], &sortedElements[3],
               [](const babelwires::NodeData* a, const babelwires::NodeData* b) { return a->m_id < b->m_id; });
 
@@ -92,13 +93,12 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
 
         auto modData1 = sortedModifiers[0]->as<babelwires::ConnectionModifierData>();
         ASSERT_TRUE(modData1);
-        EXPECT_EQ(*modData1->m_targetPath.getStep(0).asField(), testUtils::TestProcessorInputOutputType::s_intIdInitializer);
+        EXPECT_EQ(*modData1->m_targetPath.getStep(0).asField(),
+                  testUtils::TestProcessorInputOutputType::s_intIdInitializer);
         EXPECT_EQ(modData1->m_targetPath.getStep(0).asField()->getDiscriminator(), recordIntDiscriminator);
         ASSERT_EQ(modData1->m_sourcePath.getNumSteps(), 2);
-        EXPECT_EQ(*modData1->m_sourcePath.getStep(0).asField(),
-                  babelwires::FileType::getStepToContents());
-        EXPECT_EQ(*modData1->m_sourcePath.getStep(1).asField(),
-                  TestSimpleRecordType::s_int0IdInitializer);
+        EXPECT_EQ(*modData1->m_sourcePath.getStep(0).asField(), babelwires::FileType::getStepToContents());
+        EXPECT_EQ(*modData1->m_sourcePath.getStep(1).asField(), TestSimpleRecordType::s_int0IdInitializer);
         EXPECT_EQ(modData1->m_sourcePath.getStep(1).asField()->getDiscriminator(), fileIntChildDiscriminator);
 
         auto modData2 = sortedModifiers[1]->as<babelwires::ValueAssignmentData>();
@@ -107,8 +107,7 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
         EXPECT_EQ(*modData2->m_targetPath.getStep(0).asField(),
                   testUtils::TestProcessorInputOutputType::s_recordIdInitializer);
         EXPECT_EQ(modData2->m_targetPath.getStep(0).asField()->getDiscriminator(), recordRecordDiscriminator);
-        EXPECT_EQ(*modData2->m_targetPath.getStep(1).asField(),
-                  testUtils::TestSimpleRecordType::s_int0IdInitializer);
+        EXPECT_EQ(*modData2->m_targetPath.getStep(1).asField(), testUtils::TestSimpleRecordType::s_int0IdInitializer);
         EXPECT_EQ(modData2->m_targetPath.getStep(1).asField()->getDiscriminator(), recordInt2Disciminator);
     }
 
@@ -125,10 +124,8 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
     auto modData0 = sortedElements[2]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
     ASSERT_TRUE(modData0);
     ASSERT_EQ(modData0->m_targetPath.getNumSteps(), 2);
-    EXPECT_EQ(*modData0->m_targetPath.getStep(0).asField(),
-                babelwires::FileType::getStepToContents());
-    EXPECT_EQ(*modData0->m_targetPath.getStep(1).asField(),
-                TestSimpleRecordType::s_int0IdInitializer);
+    EXPECT_EQ(*modData0->m_targetPath.getStep(0).asField(), babelwires::FileType::getStepToContents());
+    EXPECT_EQ(*modData0->m_targetPath.getStep(1).asField(), TestSimpleRecordType::s_int0IdInitializer);
     EXPECT_EQ(modData0->m_targetPath.getStep(1).asField()->getDiscriminator(), fileIntChildDiscriminator);
     EXPECT_EQ(*modData0->m_sourcePath.getStep(0).asField(),
               testUtils::TestProcessorInputOutputType::s_arrayIdInitializer);
@@ -136,11 +133,13 @@ void testUtils::TestProjectData::testProjectDataAndDisciminators(
     EXPECT_EQ(sortedElements[2]->m_expandedPaths.size(), 0);
 }
 
-void testUtils::TestProjectData::testProjectData(const babelwires::ProjectContext& context, const babelwires::ProjectData& projectData) {
+void testUtils::TestProjectData::testProjectData(const babelwires::ProjectContext& context,
+                                                 const babelwires::ProjectData& projectData) {
     testUtils::TestProjectData::testProjectDataAndDisciminators(
-        projectData, TestProcessorInputOutputType::getIntId().getDiscriminator(), TestProcessorInputOutputType::getArrayId().getDiscriminator(),
-        TestProcessorInputOutputType::getRecordId().getDiscriminator(), TestSimpleRecordType::getInt0Id().getDiscriminator(),
-        TestSimpleRecordType::getInt0Id().getDiscriminator());
+        projectData, TestProcessorInputOutputType::getIntId().getDiscriminator(),
+        TestProcessorInputOutputType::getArrayId().getDiscriminator(),
+        TestProcessorInputOutputType::getRecordId().getDiscriminator(),
+        TestSimpleRecordType::getInt0Id().getDiscriminator(), TestSimpleRecordType::getInt0Id().getDiscriminator());
 }
 
 void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::ProjectContext& context) {
@@ -150,12 +149,12 @@ void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::
 
     // These have side-effects on the mutable field discriminators in the paths.
     auto modData0 = m_nodes[0]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
-    modData0->m_targetPath.tryFollow(testFileFeature);
-    modData0->m_sourcePath.tryFollow(testRecord);
+    tryFollow(modData0->m_targetPath, testFileFeature);
+    tryFollow(modData0->m_sourcePath, testRecord);
     auto modData1 = m_nodes[1]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
-    modData1->m_targetPath.tryFollow(testRecord);
-    modData1->m_sourcePath.tryFollow(testFileFeature);
+    tryFollow(modData1->m_targetPath, testRecord);
+    tryFollow(modData1->m_sourcePath, testFileFeature);
     auto modData2 = m_nodes[1]->m_modifiers[1].get()->as<babelwires::ValueAssignmentData>();
-    modData2->m_targetPath.tryFollow(testRecord);
-    m_nodes[1]->m_expandedPaths[0].tryFollow(testRecord);
+    tryFollow(modData2->m_targetPath, testRecord);
+    tryFollow(m_nodes[1]->m_expandedPaths[0], testRecord);
 }

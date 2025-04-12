@@ -14,6 +14,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 babelwires::ActivateOptionalCommand::ActivateOptionalCommand(std::string commandName, NodeId nodeId, Path pathToRecord,
                                                              ShortId optional)
@@ -34,7 +35,7 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
     }
 
     const auto [compoundFeature, optionals] =
-        ValueTreeHelper::getInfoFromRecordWithOptionals(m_pathToRecord.tryFollow(*input));
+        ValueTreeHelper::getInfoFromRecordWithOptionals(tryFollow(m_pathToRecord, *input));
 
     if (!compoundFeature) {
         return false;

@@ -15,6 +15,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, NodeId targetId,
                                                    std::unique_ptr<ModifierData> modifierToAdd)
@@ -39,7 +40,7 @@ bool babelwires::AddModifierCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    if (!m_modifierToAdd->m_targetPath.tryFollow(*input)) {
+    if (!tryFollow(m_modifierToAdd->m_targetPath, *input)) {
         return false;
     }
 

@@ -3,6 +3,7 @@
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
@@ -209,13 +210,13 @@ TEST(FeaturePathTest, pathTryFollow) {
 
     testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
-    EXPECT_EQ(info.m_pathToRecord.tryFollow(testRecordFeature), &testRecordFeature);
-    EXPECT_EQ(info.m_pathToInt.tryFollow(testRecordFeature), &info.m_int);
-    EXPECT_EQ(info.m_pathToArray.tryFollow(testRecordFeature), &info.m_array);
-    EXPECT_EQ(info.m_pathToElem0.tryFollow(testRecordFeature), &info.m_elem0);
-    EXPECT_EQ(info.m_pathToElem1.tryFollow(testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(info.m_pathToSubRecord.tryFollow(testRecordFeature), &info.m_subRecord);
-    EXPECT_EQ(info.m_pathToSubRecordInt.tryFollow(testRecordFeature), &info.m_subRecordInt);
+    EXPECT_EQ(tryFollow(info.m_pathToRecord, testRecordFeature), &testRecordFeature);
+    EXPECT_EQ(tryFollow(info.m_pathToInt, testRecordFeature), &info.m_int);
+    EXPECT_EQ(tryFollow(info.m_pathToArray, testRecordFeature), &info.m_array);
+    EXPECT_EQ(tryFollow(info.m_pathToElem0, testRecordFeature), &info.m_elem0);
+    EXPECT_EQ(tryFollow(info.m_pathToElem1, testRecordFeature), &info.m_elem1);
+    EXPECT_EQ(tryFollow(info.m_pathToSubRecord, testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(tryFollow(info.m_pathToSubRecordInt, testRecordFeature), &info.m_subRecordInt);
 }
 
 TEST(FeaturePathTest, pathFollowFail) {
@@ -248,11 +249,11 @@ TEST(FeaturePathTest, pathFollowFail) {
     EXPECT_THROW(pathValueAsRecord.follow(testRecordFeature), babelwires::ModelException);
     EXPECT_THROW(pathValueAsArray.follow(testRecordFeature), babelwires::ModelException);
 
-    EXPECT_EQ(pathToNonField.tryFollow(testRecordFeature), nullptr);
-    EXPECT_EQ(pathToNonIndex.tryFollow(testRecordFeature), nullptr);
-    EXPECT_EQ(pathOffEndOfArray.tryFollow(testRecordFeature), nullptr);
-    EXPECT_EQ(pathValueAsRecord.tryFollow(testRecordFeature), nullptr);
-    EXPECT_EQ(pathValueAsArray.tryFollow(testRecordFeature), nullptr);
+    EXPECT_EQ(tryFollow(pathToNonField, testRecordFeature), nullptr);
+    EXPECT_EQ(tryFollow(pathToNonIndex, testRecordFeature), nullptr);
+    EXPECT_EQ(tryFollow(pathOffEndOfArray, testRecordFeature), nullptr);
+    EXPECT_EQ(tryFollow(pathValueAsRecord, testRecordFeature), nullptr);
+    EXPECT_EQ(tryFollow(pathValueAsArray, testRecordFeature), nullptr);
 }
 
 TEST(FeaturePathTest, pathSerialization) {

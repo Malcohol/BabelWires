@@ -11,6 +11,7 @@
 
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
 #include <QCloseEvent>
@@ -59,7 +60,7 @@ babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope,
         throw ModelException() << "The node does not have editable features.";
     }
 
-    const auto* const inputTreeNode = data.getPathToValue().tryFollow(*input);
+    const auto* const inputTreeNode = tryFollow(data.getPathToValue(), *input);
     if (!inputTreeNode) {
         throw ModelException() << "There is no value at that location.";
     }
@@ -81,7 +82,7 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTree
         return nullptr;
     }
 
-    const auto* const inputTreeNode = data.getPathToValue().tryFollow(*input);
+    const auto* const inputTreeNode = tryFollow(data.getPathToValue(), *input);
     if (!inputTreeNode) {
         return nullptr;
     }

@@ -133,27 +133,6 @@ const babelwires::ValueTreeNode& babelwires::Path::follow(const ValueTreeNode& s
     return followPath<const ValueTreeNode>(start, *this);
 }
 
-namespace {
-
-    template <typename T> T* tryFollowPath(T* start, const babelwires::Path& p, int index = 0) {
-        if (start && index < p.getNumSteps()) {
-            T* child = start->tryGetChildFromStep(p.getStep(index));
-            return tryFollowPath(child, p, index + 1);
-        } else {
-            return start;
-        }
-    }
-
-} // namespace
-
-babelwires::ValueTreeNode* babelwires::Path::tryFollow(ValueTreeNode& start) const {
-    return tryFollowPath<ValueTreeNode>(&start, *this);
-}
-
-const babelwires::ValueTreeNode* babelwires::Path::tryFollow(const ValueTreeNode& start) const {
-    return tryFollowPath<const ValueTreeNode>(&start, *this);
-}
-
 int babelwires::Path::compare(const Path& other) const {
     auto it = m_steps.begin();
     auto oit = other.m_steps.begin();

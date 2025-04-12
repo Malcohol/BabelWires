@@ -17,6 +17,7 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 babelwires::AddNodeForOutputTreeValueCommand::AddNodeForOutputTreeValueCommand(std::string commandName,
                                                                                NodeId originalNodeId, Path pathToValue,
@@ -36,7 +37,7 @@ bool babelwires::AddNodeForOutputTreeValueCommand::initializeAndExecute(Project&
         return false;
     }
 
-    if (!m_pathToValue.tryFollow(*nodeOutput)) {
+    if (!tryFollow(m_pathToValue, *nodeOutput)) {
         return false;
     }
 

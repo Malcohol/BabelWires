@@ -55,10 +55,6 @@ namespace babelwires {
         ValueTreeNode& follow(ValueTreeNode& start) const;
         const ValueTreeNode& follow(const ValueTreeNode& start) const;
 
-        /// Returns nullptr if the path cannot be followed.
-        ValueTreeNode* tryFollow(ValueTreeNode& start) const;
-        const ValueTreeNode* tryFollow(const ValueTreeNode& start) const;
-
         bool operator==(const Path& other) const;
         bool operator!=(const Path& other) const;
         bool operator<(const Path& other) const;
