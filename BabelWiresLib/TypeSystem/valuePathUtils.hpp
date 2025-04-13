@@ -1,5 +1,5 @@
 /**
- * Functions for exploring values with FeaturePaths.
+ * Functions for exploring values with Paths.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -16,9 +16,9 @@ namespace babelwires {
     class TypeSystem;
 
     /// Obtain a reference to a ValueHolder to data in start.
-    std::optional<std::tuple<const Type&, const ValueHolder&>> tryFollow(const TypeSystem& typeSystem, const Type& type, const Path& path, const ValueHolder& start);
+    std::optional<std::tuple<const Type&, const ValueHolder&>> tryFollowPath(const TypeSystem& typeSystem, const Type& type, const Path& path, const ValueHolder& start);
 
     /// Obtain a reference to a ValueHolder to data in a copy of start.
     /// Throws if the path cannot be followed.
-    std::tuple<const Type&, ValueHolder&> followNonConst(const TypeSystem& typeSystem, const Type& type, const Path& path, ValueHolder& start);
+    std::tuple<const Type&, ValueHolder&> followPathNonConst(const TypeSystem& typeSystem, const Type& type, const Path& path, ValueHolder& start);
 }

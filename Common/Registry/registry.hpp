@@ -62,17 +62,17 @@ namespace babelwires {
         RegistryEntry* addEntry(std::unique_ptr<RegistryEntry> newEntry);
 
         /// Find an entry by an internal key which should be stable between versions of the program.
-        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
-        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
         const RegistryEntry* getEntryByIdentifier(const LongId& identifier) const;
+
+        /// Find an entry by an internal key which should be stable between versions of the program.
+        /// Ensure the provided identifier is resolved if the entry is found.
+        const RegistryEntry* getEntryByIdentifierAndResolve(LongId& identifier) const;
 
         /// Find an entry which is expected to be present.
         /// Will throw an RegistryException if the entry is not found.
-        /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
-        /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
         const RegistryEntry& getRegisteredEntry(const LongId& identifier) const;
 
-      protected:
+        protected:
         const RegistryEntry* getEntryByName(std::string_view name) const;
 
         /// Protected non-const version available to subclasses.

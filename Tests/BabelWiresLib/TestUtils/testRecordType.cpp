@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
-
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
@@ -65,13 +65,13 @@ babelwires::Path testUtils::TestSimpleRecordElementData::getPathToRecord() {
 
 babelwires::Path testUtils::TestSimpleRecordElementData::getPathToRecordInt0() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt0Id()));
+    path.pushStep(TestSimpleRecordType::getInt0Id());
     return path;
 }
 
 babelwires::Path testUtils::TestSimpleRecordElementData::getPathToRecordInt1() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt1Id()));
+    path.pushStep(TestSimpleRecordType::getInt1Id());
     return path;
 }
 
@@ -84,83 +84,83 @@ babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecord() {
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordInt0() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestComplexRecordType::getInt0Id()));
+    path.pushStep(TestComplexRecordType::getInt0Id());
     return path;
 }
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordOpInt() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestComplexRecordType::getOpIntId()));
+    path.pushStep(TestComplexRecordType::getOpIntId());
     return path;
 }
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordSubrecord() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestComplexRecordType::getSubrecordId()));
+    path.pushStep(TestComplexRecordType::getSubrecordId());
     return path;
 }
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt0() {
     babelwires::Path path = getPathToRecordSubrecord();
-    path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt0Id()));
+    path.pushStep(TestSimpleRecordType::getInt0Id());
     return path;
 }
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1() {
     babelwires::Path path = getPathToRecordSubrecord();
-    path.pushStep(babelwires::PathStep(TestSimpleRecordType::getInt1Id()));
+    path.pushStep(TestSimpleRecordType::getInt1Id());
     return path;
 }
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordInt1() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestComplexRecordType::getInt1Id()));
+    path.pushStep(TestComplexRecordType::getInt1Id());
     return path;
 }
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordOpRec() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestComplexRecordType::getOpRecId()));
+    path.pushStep(TestComplexRecordType::getOpRecId());
     return path;
 }
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordString() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestComplexRecordType::getStringId()));
+    path.pushStep(TestComplexRecordType::getStringId());
     return path;
 }
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordArray() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(babelwires::PathStep(TestComplexRecordType::getArrayId()));
+    path.pushStep(TestComplexRecordType::getArrayId());
     return path;
 }
 
 babelwires::Path testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(unsigned int i) {
     babelwires::Path path = getPathToRecordArray();
-    path.pushStep(babelwires::PathStep(i));
+    path.pushStep(i);
     return path;
 }
 
 testUtils::TestComplexRecordTypeFeatureInfo::TestComplexRecordTypeFeatureInfo(
     const babelwires::ValueTreeNode& testRecord)
     : m_record(testRecord)
-    , m_int(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getInt0Id()))
+    , m_int(testRecord.getChildFromStep(testUtils::TestComplexRecordType::getInt0Id())
                        .is<babelwires::ValueTreeNode>())
-    , m_array(testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getArrayId()))
+    , m_array(testRecord.getChildFromStep(testUtils::TestComplexRecordType::getArrayId())
                          .is<babelwires::ValueTreeNode>())
-    , m_elem0(m_array.getChildFromStep(babelwires::PathStep(0)).is<babelwires::ValueTreeNode>())
-    , m_elem1(m_array.getChildFromStep(babelwires::PathStep(1)).is<babelwires::ValueTreeNode>())
+    , m_elem0(m_array.getChildFromStep(0).is<babelwires::ValueTreeNode>())
+    , m_elem1(m_array.getChildFromStep(1).is<babelwires::ValueTreeNode>())
     , m_subRecord(
-          testRecord.getChildFromStep(babelwires::PathStep(testUtils::TestComplexRecordType::getSubrecordId()))
+          testRecord.getChildFromStep(testUtils::TestComplexRecordType::getSubrecordId())
               .is<babelwires::ValueTreeNode>())
     , m_subRecordInt(
-          m_subRecord.getChildFromStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()))
+          m_subRecord.getChildFromStep(testUtils::TestSimpleRecordType::getInt0Id())
               .is<babelwires::ValueTreeNode>())
-    , m_pathToRecord(&testRecord)
-    , m_pathToInt(&m_int)
-    , m_pathToArray(&m_array)
-    , m_pathToElem0(&m_elem0)
-    , m_pathToElem1(&m_elem1)
-    , m_pathToSubRecord(&m_subRecord)
-    , m_pathToSubRecordInt(&m_subRecordInt) {}
+    , m_pathToRecord(babelwires::getPathTo(&testRecord))
+    , m_pathToInt(babelwires::getPathTo(&m_int))
+    , m_pathToArray(babelwires::getPathTo(&m_array))
+    , m_pathToElem0(babelwires::getPathTo(&m_elem0))
+    , m_pathToElem1(babelwires::getPathTo(&m_elem1))
+    , m_pathToSubRecord(babelwires::getPathTo(&m_subRecord))
+    , m_pathToSubRecordInt(babelwires::getPathTo(&m_subRecordInt)) {}

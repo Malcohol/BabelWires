@@ -18,6 +18,7 @@
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <algorithm>
 #include <array>
@@ -128,7 +129,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         const char* newline = "";
         for (const auto& entry : entriesToProcess) {
             if (!entry.m_failureString.empty()) {
-                compositeException << newline << "Failure processing entry " << Path(&entry.m_inputEntry) << ": "
+                compositeException << newline << "Failure processing entry " << getPathTo(&entry.m_inputEntry) << ": "
                                    << entry.m_failureString;
                 newline = "\n";
             }

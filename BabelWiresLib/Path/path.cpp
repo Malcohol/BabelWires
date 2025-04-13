@@ -14,60 +14,22 @@
 
 #include <Common/Hash/hash.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
+#include <Common/Identifiers/identifierVisitor.hpp>
 #include <Common/Log/debugLogger.hpp>
 #include <Common/types.hpp>
 
 #include <algorithm>
 #include <type_traits>
 
+// Try to ensure Path maintains the standard pattern for the IdentifierVisitor.
+static_assert(babelwires::IdentifierVisitable<babelwires::Path>);
+
 babelwires::Path::Path() {}
-
-babelwires::Path::Path(const ValueTreeNode* valueTreeNode) {
-    const ValueTreeNode* current = valueTreeNode;
-    const ValueTreeNode* parent = current->getOwner();
-    while (parent) {
-        m_steps.push_back(parent->getStepToChild(current));
-        assert(!m_steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
-        current = parent;
-        parent = current->getOwner();
-    }
-
-    std::reverse(m_steps.begin(), m_steps.end());
-}
 
 babelwires::Path::Path(std::vector<PathStep> steps)
     : m_steps(std::move(steps)) {
     assert(std::none_of(m_steps.begin(), m_steps.end(), [](auto p) { return p.isNotAStep(); }) &&
            "Attempt to construct a path from a vector containing a non-step");
-}
-
-babelwires::Path::RootAndPath<const babelwires::ValueTreeRoot>
-babelwires::Path::getRootAndPath(const ValueTreeNode& valueTreeNode) {
-    std::vector<PathStep> steps;
-    const ValueTreeNode* current = &valueTreeNode;
-    const ValueTreeNode* parent = valueTreeNode.getOwner();
-    while (parent) {
-        steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
-        current = parent;
-        parent = current->getOwner();
-    }
-    std::reverse(steps.begin(), steps.end());
-    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
-}
-
-babelwires::Path::RootAndPath<babelwires::ValueTreeRoot> babelwires::Path::getRootAndPath(ValueTreeNode& valueTreeNode) {
-    std::vector<PathStep> steps;
-    ValueTreeNode* current = &valueTreeNode;
-    ValueTreeNode* parent = valueTreeNode.getOwnerNonConst();
-    while (parent) {
-        steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
-        current = parent;
-        parent = current->getOwnerNonConst();
-    }
-    std::reverse(steps.begin(), steps.end());
-    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
 }
 
 void babelwires::Path::pushStep(PathStep step) {
@@ -130,59 +92,6 @@ babelwires::Path babelwires::Path::deserializeFromString(const std::string& path
     return path;
 }
 
-namespace {
-
-    template <typename T> T& followPath(T& start, const babelwires::Path& p, int& index) {
-        if (index < p.getNumSteps()) {
-            T& child = start.getChildFromStep(p.getStep(index));
-            ++index;
-            return followPath(child, p, index);
-        } else {
-            return start;
-        }
-    }
-
-    template <typename T> T& followPath(T& start, const babelwires::Path& p) {
-        int index = 0;
-        try {
-            return followPath(start, p, index);
-        } catch (const std::exception& e) {
-            throw babelwires::ModelException()
-                << e.what() << "; when trying to follow step #" << index + 1 << " in path \"" << p << '\"';
-        }
-    }
-
-} // namespace
-
-babelwires::ValueTreeNode& babelwires::Path::follow(ValueTreeNode& start) const {
-    return followPath<ValueTreeNode>(start, *this);
-}
-
-const babelwires::ValueTreeNode& babelwires::Path::follow(const ValueTreeNode& start) const {
-    return followPath<const ValueTreeNode>(start, *this);
-}
-
-namespace {
-
-    template <typename T> T* tryFollowPath(T* start, const babelwires::Path& p, int index = 0) {
-        if (start && index < p.getNumSteps()) {
-            T* child = start->tryGetChildFromStep(p.getStep(index));
-            return tryFollowPath(child, p, index + 1);
-        } else {
-            return start;
-        }
-    }
-
-} // namespace
-
-babelwires::ValueTreeNode* babelwires::Path::tryFollow(ValueTreeNode& start) const {
-    return tryFollowPath<ValueTreeNode>(&start, *this);
-}
-
-const babelwires::ValueTreeNode* babelwires::Path::tryFollow(const ValueTreeNode& start) const {
-    return tryFollowPath<const ValueTreeNode>(&start, *this);
-}
-
 int babelwires::Path::compare(const Path& other) const {
     auto it = m_steps.begin();
     auto oit = other.m_steps.begin();
@@ -242,7 +151,7 @@ unsigned int babelwires::Path::getNumSteps() const {
 void babelwires::Path::truncate(unsigned int newNumSteps) {
     assert((newNumSteps <= m_steps.size()) && "You can only shrink with truncate");
     // Have to provide a fill value even though it is never used.
-    m_steps.resize(newNumSteps, PathStep(0));
+    m_steps.resize(newNumSteps, 0);
 }
 
 void babelwires::Path::removePrefix(unsigned int numSteps) {
@@ -278,4 +187,10 @@ std::size_t babelwires::Path::getHash() const {
         hash::mixInto(hash, step);
     }
     return hash;
+}
+
+void babelwires::Path::visitIdentifiers(IdentifierVisitor& visitor) {
+    for (auto& step : m_steps) {
+        step.visitIdentifiers(visitor);
+    }
 }

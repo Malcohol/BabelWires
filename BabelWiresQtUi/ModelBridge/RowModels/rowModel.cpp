@@ -20,6 +20,7 @@
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <QBrush>
 
@@ -141,7 +142,7 @@ void babelwires::RowModel::getContextMenuActions(
         if (compoundFeature) {
             const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
             //QString tooltip = "Array actions are not permitted when an array is a connection target";
-            Path pathToArray(compoundFeature);
+            Path pathToArray = getPathTo(compoundFeature);
             const PathStep step = compoundFeature->getStepToChild(input);
             const ArrayIndex index = step.getIndex();
             {

@@ -1,13 +1,12 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
@@ -109,7 +108,8 @@ namespace {
 
         EXPECT_EQ(recordType.getNumActiveFields(value), numOptionals);
 
-        EXPECT_EQ(recordType.getNumChildren(value), testUtils::TestComplexRecordType::s_numNonOptionalFields + numOptionals);
+        EXPECT_EQ(recordType.getNumChildren(value),
+                  testUtils::TestComplexRecordType::s_numNonOptionalFields + numOptionals);
 
         std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>>
             childInfos;
@@ -199,27 +199,33 @@ TEST(RecordTypeTest, ensureActivated) {
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { testUtils::TestComplexRecordType::getOpIntId() });
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue,
+                               {testUtils::TestComplexRecordType::getOpIntId()});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, false);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { testUtils::TestComplexRecordType::getOpIntId(), testUtils::TestComplexRecordType::getOpRecId() });
+    recordType.ensureActivated(
+        testEnvironment.m_typeSystem, newValue,
+        {testUtils::TestComplexRecordType::getOpIntId(), testUtils::TestComplexRecordType::getOpRecId()});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { testUtils::TestComplexRecordType::getOpRecId() } );
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue,
+                               {testUtils::TestComplexRecordType::getOpRecId()});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, true);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { });
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, {});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { testUtils::TestComplexRecordType::getOpIntId(), testUtils::TestComplexRecordType::getOpRecId() });
+    recordType.ensureActivated(
+        testEnvironment.m_typeSystem, newValue,
+        {testUtils::TestComplexRecordType::getOpIntId(), testUtils::TestComplexRecordType::getOpRecId()});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, { });
+    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, {});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false);
 }
@@ -235,7 +241,8 @@ TEST(RecordTypeTest, getChildNonConstFixedField) {
 
     const unsigned int int0Index = 0;
 
-    EXPECT_EQ(*std::get<1>(recordType.getChild(value, int0Index)).asField(), testUtils::TestComplexRecordType::getInt0Id());    
+    EXPECT_EQ(*std::get<1>(recordType.getChild(value, int0Index)).asField(),
+              testUtils::TestComplexRecordType::getInt0Id());
 
     auto [value0, step0, type0] = recordType.getChild(value, int0Index);
 
@@ -254,7 +261,7 @@ TEST(RecordTypeTest, getChildNonConstFixedField) {
     EXPECT_NE(valueHolder0, valueHolder1);
 
     auto [value2, step2, type2] = recordType.getChild(value, int0Index);
-    EXPECT_EQ(*value2, valueHolder1);   
+    EXPECT_EQ(*value2, valueHolder1);
 }
 
 TEST(RecordTypeTest, getChildNonConstOptionalField) {
@@ -268,7 +275,8 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
 
     const unsigned int opRecIndex = 3;
 
-    EXPECT_EQ(*std::get<1>(recordType.getChild(value, opRecIndex)).asField(), testUtils::TestComplexRecordType::getOpRecId());
+    EXPECT_EQ(*std::get<1>(recordType.getChild(value, opRecIndex)).asField(),
+              testUtils::TestComplexRecordType::getOpRecId());
 
     auto [value0, step0, type0] = recordType.getChild(value, opRecIndex);
 
@@ -280,7 +288,7 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
     EXPECT_EQ(step0, step1);
     EXPECT_EQ(type0, type1);
 
-    const babelwires::RecordType& opRecType =  type0.resolve(testEnvironment.m_typeSystem).is<babelwires::RecordType>();
+    const babelwires::RecordType& opRecType = type0.resolve(testEnvironment.m_typeSystem).is<babelwires::RecordType>();
 
     // Test modification by modifying a field within the field.
 
@@ -292,78 +300,78 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
 
     auto [value2, step2, type2] = recordType.getChild(value, opRecIndex);
     EXPECT_EQ(*value2, valueHolder1);
-    
+
     auto [subvalue2, substep2, subtype2] = opRecType.getChild(*value2, 0);
     EXPECT_EQ(*subvalue2, *subvalue0);
 }
 
-TEST(RecordTypeTest, subtype) 
-{
+TEST(RecordTypeTest, subtype) {
     testUtils::TestEnvironment testEnvironment;
 
     struct RecordWithNoFields : babelwires::RecordType {
-        RecordWithNoFields() : RecordType({}) {}
+        RecordWithNoFields()
+            : RecordType({}) {}
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("NoFields"), 1);
     };
 
     struct RecordA0 : babelwires::RecordType {
-        RecordA0() : RecordType({
-            {testUtils::getTestRegisteredIdentifier("fieldA", 1), babelwires::DefaultIntType::getThisType()}
-        }) {}
+        RecordA0()
+            : RecordType(
+                  {{testUtils::getTestRegisteredIdentifier("fieldA", 1), babelwires::DefaultIntType::getThisType()}}) {}
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordA0"), 1);
     };
 
     struct RecordA1 : babelwires::RecordType {
-        RecordA1() : RecordType({
-            {testUtils::getTestRegisteredIdentifier("fieldA", 2), babelwires::DefaultIntType::getThisType()}
-        }) {}
+        RecordA1()
+            : RecordType(
+                  {{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()}}) {}
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordA1"), 1);
     };
 
     struct RecordB : babelwires::RecordType {
-        RecordB() : RecordType({
-            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()}
-        }) {}
+        RecordB()
+            : RecordType(
+                  {{testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()}}) {}
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordB"), 1);
     };
 
     struct RecordAB : babelwires::RecordType {
-        RecordAB() : RecordType({
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()}
-        }) {}
+        RecordAB()
+            : RecordType(
+                  {{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
+                   {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()}}) {}
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAB"), 1);
     };
 
     struct RecordAS : babelwires::RecordType {
-        RecordAS() : RecordType({
-            {testUtils::getTestRegisteredIdentifier("fieldA", 3), babelwires::StringType::getThisType()}
-        }) {}
+        RecordAS()
+            : RecordType(
+                  {{testUtils::getTestRegisteredIdentifier("fieldA", 3), babelwires::StringType::getThisType()}}) {}
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAS"), 1);
     };
 
     struct RecordAOpt : babelwires::RecordType {
-        RecordAOpt() : RecordType({
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisType(), babelwires::RecordType::Optionality::optionalDefaultInactive}
-        }) {}
+        RecordAOpt()
+            : RecordType({{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
+                          {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisType(),
+                           babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAOpt"), 1);
     };
 
     struct RecordABOpt : babelwires::RecordType {
-        RecordABOpt() : RecordType({
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisType(), babelwires::RecordType::Optionality::optionalDefaultInactive}
-        }) {}
+        RecordABOpt()
+            : RecordType({{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
+                          {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()},
+                          {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisType(),
+                           babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordABOpt"), 1);
     };
 
     struct RecordAOptS : babelwires::RecordType {
-        RecordAOptS() : RecordType({
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::StringType::getThisType(), babelwires::RecordType::Optionality::optionalDefaultInactive}
-        }) {}
+        RecordAOptS()
+            : RecordType({{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
+                          {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::StringType::getThisType(),
+                           babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
         PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAOptS"), 1);
     };
 
@@ -377,35 +385,97 @@ TEST(RecordTypeTest, subtype)
     testEnvironment.m_typeSystem.addEntry<RecordABOpt>();
     testEnvironment.m_typeSystem.addEntry<RecordAOptS>();
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordWithNoFields::getThisType(), RecordA0::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordWithNoFields::getThisType()), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordA1::getThisType()), babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA1::getThisType(), RecordA0::getThisType()), babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordAB::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordB::getThisType(), RecordAB::getThisType()), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordWithNoFields::getThisType(), RecordA0::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordWithNoFields::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordA1::getThisType()),
+              babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA1::getThisType(), RecordA0::getThisType()),
+              babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordAB::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordB::getThisType(), RecordAB::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
 
     // Incompatible types
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAS::getThisType(), RecordA0::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordAS::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAS::getThisType(), RecordAB::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
-    
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAS::getThisType(), RecordA0::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordAS::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAS::getThisType(), RecordAB::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
+
     // With optionals: Optional fields do not impact subtyping since they are not part of the type's contract,
     // unless the types are incompatible (see next sequence of tests, below).
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordAOpt::getThisType()), babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOpt::getThisType(), RecordA0::getThisType()), babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordABOpt::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordABOpt::getThisType(), RecordA0::getThisType()), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordAOpt::getThisType()),
+              babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOpt::getThisType(), RecordA0::getThisType()),
+              babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordABOpt::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordABOpt::getThisType(), RecordA0::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
 
     // Incompatible and optional
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOpt::getThisType(), RecordAOptS::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOptS::getThisType(), RecordAOpt::getThisType()), babelwires::SubtypeOrder::IsUnrelated);    
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOpt::getThisType(), RecordAOptS::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOptS::getThisType(), RecordAOpt::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
 }
 
-TEST(RecordTypeTest, featureChanges)
-{
+// Test the use of the constructor which takes a parent type.
+TEST(RecordTypeTest, subtypeConstructor) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_typeSystem, testUtils::TestComplexRecordType::getThisType());
+    struct RecordParent : babelwires::RecordType {
+        RecordParent()
+            : RecordType({{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
+                          {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()},
+                          {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisType(),
+                           babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordParent"), 1);
+    };
+
+    struct RecordChild : babelwires::RecordType {
+        RecordChild(const babelwires::TypeSystem& typeSystem)
+            : RecordType(RecordParent::getThisType().resolve(typeSystem).is<babelwires::RecordType>(),
+                         {{testUtils::getTestRegisteredIdentifier("fieldC"), babelwires::DefaultIntType::getThisType()},
+                          {testUtils::getTestRegisteredIdentifier("fOpt2"), babelwires::DefaultIntType::getThisType(),
+                           babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordChild"), 1);
+    };
+    testEnvironment.m_typeSystem.addEntry<RecordParent>();
+    const babelwires::RecordType& foo =
+        RecordParent::getThisType().resolve(testEnvironment.m_typeSystem).is<babelwires::RecordType>();
+
+    const babelwires::RecordType* const abOpt =
+        testEnvironment.m_typeSystem.addEntry<RecordChild>(testEnvironment.m_typeSystem);
+
+    const std::vector<babelwires::RecordType::Field> fields = abOpt->getFields();
+    EXPECT_EQ(fields.size(), 5);
+    EXPECT_EQ(fields[0].m_identifier, "fieldA");
+    EXPECT_EQ(fields[1].m_identifier, "fieldB");
+    EXPECT_EQ(fields[2].m_identifier, "fOpt");
+    EXPECT_EQ(fields[3].m_identifier, "fieldC");
+    EXPECT_EQ(fields[4].m_identifier, "fOpt2");
+
+    const std::vector<babelwires::ShortId> optionals = abOpt->getOptionalFieldIds();
+    EXPECT_EQ(optionals.size(), 2);
+    EXPECT_EQ(optionals[0], "fOpt");
+    EXPECT_EQ(optionals[1], "fOpt2");
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordParent::getThisType(), RecordChild::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordChild::getThisType(), RecordParent::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
+}
+
+TEST(RecordTypeTest, featureChanges) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_typeSystem,
+                                           testUtils::TestComplexRecordType::getThisType());
     valueFeature.setToDefault();
 
     const testUtils::TestComplexRecordType* recordType = valueFeature.getType().as<testUtils::TestComplexRecordType>();
@@ -424,8 +494,8 @@ TEST(RecordTypeTest, featureChanges)
     valueFeature.clearChanges();
     {
         babelwires::Path pathToInt;
-        pathToInt.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
-        pathToInt.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id()));
+        pathToInt.pushStep(testUtils::TestComplexRecordType::getOpRecId());
+        pathToInt.pushStep(testUtils::TestSimpleRecordType::getInt0Id());
         valueFeature.setDescendentValue(pathToInt, babelwires::IntValue(15));
     }
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
@@ -441,8 +511,7 @@ TEST(RecordTypeTest, featureChanges)
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 }
 
-TEST(RecordTypeTest, valueEquality)
-{
+TEST(RecordTypeTest, valueEquality) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordType recordType;
 
@@ -468,8 +537,7 @@ TEST(RecordTypeTest, valueEquality)
     EXPECT_EQ(value0, value1);
 }
 
-TEST(RecordTypeTest, valueHash)
-{
+TEST(RecordTypeTest, valueHash) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordType recordType;
 
@@ -491,7 +559,7 @@ TEST(RecordTypeTest, valueHash)
     EXPECT_EQ(hash0, hash2);
 
     // Prepare to modify a child.
-    auto index = recordType.getChildIndexFromStep(value, babelwires::PathStep(testUtils::TestComplexRecordType::getInt0Id()));
+    auto index = recordType.getChildIndexFromStep(value, testUtils::TestComplexRecordType::getInt0Id());
     auto child = recordType.getChildNonConst(value, index);
 
     // Still unmodified.
@@ -504,16 +572,19 @@ TEST(RecordTypeTest, valueHash)
     EXPECT_NE(hash0, hash4);
 }
 
-TEST(RecordTypeTest, exceptions)
-{
+TEST(RecordTypeTest, exceptions) {
     testUtils::TestEnvironment testEnvironment;
     testUtils::TestComplexRecordType recordType;
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(value);
 
-    EXPECT_THROW(recordType.deactivateField(value, testUtils::TestComplexRecordType::getOpIntId()), babelwires::ModelException);
-    EXPECT_NO_THROW(recordType.activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpIntId()));
-    EXPECT_THROW(recordType.activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpIntId()), babelwires::ModelException);
+    EXPECT_THROW(recordType.deactivateField(value, testUtils::TestComplexRecordType::getOpIntId()),
+                 babelwires::ModelException);
+    EXPECT_NO_THROW(
+        recordType.activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpIntId()));
+    EXPECT_THROW(
+        recordType.activateField(testEnvironment.m_typeSystem, value, testUtils::TestComplexRecordType::getOpIntId()),
+        babelwires::ModelException);
     EXPECT_THROW(recordType.activateField(testEnvironment.m_typeSystem, value, "foo"), babelwires::ModelException);
 }

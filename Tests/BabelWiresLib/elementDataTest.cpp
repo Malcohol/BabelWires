@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
@@ -57,11 +58,11 @@ namespace {
     }
 
     void setModifiers(babelwires::NodeData& data, babelwires::ShortId fieldId) {
-        setModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
+        setModifiers(data, babelwires::Path({fieldId}));
     }
 
     void checkModifiers(const babelwires::NodeData& data, babelwires::ShortId fieldId) {
-        checkModifiers(data, babelwires::Path({babelwires::PathStep(fieldId)}));
+        checkModifiers(data, babelwires::Path({fieldId}));
     }
 } // namespace
 

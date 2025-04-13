@@ -2,19 +2,20 @@
  * The command which expands or collapses a ValueTreeNode.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/Commands/setExpandedCommand.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <cassert>
 
-babelwires::SetExpandedCommand::SetExpandedCommand(std::string commandName, NodeId nodeId,
-                                                   Path pathToCompound, bool expanded)
+babelwires::SetExpandedCommand::SetExpandedCommand(std::string commandName, NodeId nodeId, Path pathToCompound,
+                                                   bool expanded)
     : SimpleCommand(std::move(commandName))
     , m_nodeId(nodeId)
     , m_pathToCompound(std::move(pathToCompound))
@@ -32,11 +33,11 @@ bool babelwires::SetExpandedCommand::initialize(const Project& project) {
 
     const ValueTreeNode* compound = nullptr;
     if (const ValueTreeNode* valueTreeNode = node->getInput()) {
-        compound = m_pathToCompound.tryFollow(*valueTreeNode);
+        compound = tryFollowPath(m_pathToCompound, *valueTreeNode);
     }
     if (!compound) {
         if (const ValueTreeNode* valueTreeNode = node->getOutput()) {
-            compound = m_pathToCompound.tryFollow(*valueTreeNode);
+            compound = tryFollowPath(m_pathToCompound, *valueTreeNode);
         }
     }
     if (!compound) {

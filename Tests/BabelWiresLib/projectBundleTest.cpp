@@ -4,6 +4,7 @@
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
@@ -29,28 +30,28 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
             // itself or one of the features or types registered in the TestEnvironment.
             testUtils::TestRecordFeature testRecord;
             testUtils::TestFileFeature testFileFeature(testEnvironment.m_projectContext);
-            EXPECT_EQ(babelwires::Path(testRecord.m_int).getLastStep().asField()->getDiscriminator(), 4);
-            EXPECT_EQ(babelwires::Path(testRecord.m_array).getLastStep().asField()->getDiscriminator(),
+            EXPECT_EQ(babelwires::getPathTo(testRecord.m_int).getLastStep().asField()->getDiscriminator(), 4);
+            EXPECT_EQ(babelwires::getPathTo(testRecord.m_array).getLastStep().asField()->getDiscriminator(),
                       3);
             EXPECT_EQ(
-                babelwires::Path(testRecord.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
-            EXPECT_EQ(babelwires::Path(testRecord.m_intFeature2).getLastStep().asField()->getDiscriminator(), 1);
+                babelwires::getPathTo(testRecord.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
+            EXPECT_EQ(babelwires::getPathTo(testRecord.m_intFeature2).getLastStep().asField()->getDiscriminator(), 1);
             EXPECT_EQ(
-                babelwires::Path(testFileFeature.m_intChildFeature).getLastStep().asField()->getDiscriminator(),
+                babelwires::getPathTo(testFileFeature.m_intChildFeature).getLastStep().asField()->getDiscriminator(),
                 3);
 
             // Sanity check that the ids are unaffected by the registration re-running.
             testUtils::TestRecordFeature testRecord2;
             testUtils::TestFileFeature testFileFeature2(testEnvironment.m_projectContext);
-            EXPECT_EQ(babelwires::Path(testRecord2.m_int).getLastStep().asField()->getDiscriminator(), 4);
-            EXPECT_EQ(babelwires::Path(testRecord2.m_array).getLastStep().asField()->getDiscriminator(),
+            EXPECT_EQ(babelwires::getPathTo(testRecord2.m_int).getLastStep().asField()->getDiscriminator(), 4);
+            EXPECT_EQ(babelwires::getPathTo(testRecord2.m_array).getLastStep().asField()->getDiscriminator(),
                       3);
             EXPECT_EQ(
-                babelwires::Path(testRecord2.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
-            EXPECT_EQ(babelwires::Path(testRecord2.m_intFeature2).getLastStep().asField()->getDiscriminator(),
+                babelwires::getPathTo(testRecord2.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
+            EXPECT_EQ(babelwires::getPathTo(testRecord2.m_intFeature2).getLastStep().asField()->getDiscriminator(),
                       1);
             EXPECT_EQ(
-                babelwires::Path(testFileFeature2.m_intChildFeature).getLastStep().asField()->getDiscriminator(),
+                babelwires::getPathTo(testFileFeature2.m_intChildFeature).getLastStep().asField()->getDiscriminator(),
                 3);
         }
 

@@ -7,13 +7,8 @@
  **/
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
@@ -21,9 +16,15 @@
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Common/IO/fileDataSource.hpp>
 #include <Common/Log/userLogger.hpp>
@@ -119,7 +120,7 @@ void babelwires::Project::removeModifier(NodeId nodeId, const Path& featurePath,
 }
 
 void babelwires::Project::adjustModifiersInArrayElements(NodeId nodeId, const babelwires::Path& pathToArray,
-                                    babelwires::ArrayIndex startIndex, int adjustment) {
+                                                         babelwires::ArrayIndex startIndex, int adjustment) {
     if (adjustment < 0) {
         startIndex -= adjustment;
     }
@@ -151,7 +152,7 @@ void babelwires::Project::addArrayEntries(NodeId nodeId, const Path& pathToArray
 
     if (Node* const node = getNode(nodeId)) {
         if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
-            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputArray);
+            ValueTreeNode* valueTreeNode = tryFollowPath(pathToArray, *inputArray);
             assert(valueTreeNode && "Path should resolve");
             assert(valueTreeNode->getType().as<ArrayType>());
 
@@ -171,15 +172,13 @@ void babelwires::Project::addArrayEntries(NodeId nodeId, const Path& pathToArray
                     ArraySizeModifierData arrayInitDataPtr;
                     arrayInitDataPtr.m_targetPath = pathToArray;
                     arrayInitDataPtr.m_size = valueTreeNode->getNumChildren();
-                    arrayModifier =
-                        static_cast<ArraySizeModifier*>(node->addModifier(m_userLogger, arrayInitDataPtr));
+                    arrayModifier = static_cast<ArraySizeModifier*>(node->addModifier(m_userLogger, arrayInitDataPtr));
                 }
             }
 
             // Next, set the array size.
-            if (arrayModifier)
-            { 
-                arrayModifier->addArrayEntries(m_userLogger, inputArray, indexOfNewElement, numEntriesToAdd); 
+            if (arrayModifier) {
+                arrayModifier->addArrayEntries(m_userLogger, inputArray, indexOfNewElement, numEntriesToAdd);
             }
 
             if (arrayModifier && !ensureModifier) {
@@ -189,13 +188,13 @@ void babelwires::Project::addArrayEntries(NodeId nodeId, const Path& pathToArray
     }
 }
 
-void babelwires::Project::removeArrayEntries(NodeId nodeId, const Path& pathToArray,
-                                             int indexOfElementToRemove, int numEntriesToRemove, bool ensureModifier) {
+void babelwires::Project::removeArrayEntries(NodeId nodeId, const Path& pathToArray, int indexOfElementToRemove,
+                                             int numEntriesToRemove, bool ensureModifier) {
     assert((indexOfElementToRemove >= 0) && "indexOfEntriesToRemove must be positive");
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     if (Node* const node = getNode(nodeId)) {
         if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
-            ValueTreeNode* valueTreeNode = pathToArray.tryFollow(*inputArray);
+            ValueTreeNode* valueTreeNode = tryFollowPath(pathToArray, *inputArray);
             assert(valueTreeNode && "Path should resolve");
             assert(valueTreeNode->getType().as<ArrayType>());
 
@@ -215,15 +214,13 @@ void babelwires::Project::removeArrayEntries(NodeId nodeId, const Path& pathToAr
                     ArraySizeModifierData arrayInitDataPtr;
                     arrayInitDataPtr.m_targetPath = pathToArray;
                     arrayInitDataPtr.m_size = valueTreeNode->getNumChildren();
-                    arrayModifier =
-                        static_cast<ArraySizeModifier*>(node->addModifier(m_userLogger, arrayInitDataPtr));
+                    arrayModifier = static_cast<ArraySizeModifier*>(node->addModifier(m_userLogger, arrayInitDataPtr));
                 }
             }
 
             // Next, set the array size.
             if (arrayModifier) {
-                arrayModifier->removeArrayEntries(m_userLogger, inputArray, indexOfElementToRemove,
-                                                  numEntriesToRemove);
+                arrayModifier->removeArrayEntries(m_userLogger, inputArray, indexOfElementToRemove, numEntriesToRemove);
             }
 
             if (arrayModifier && !ensureModifier) {
@@ -408,9 +405,9 @@ void babelwires::Project::removeConnectionFromCache(Node* node, ConnectionModifi
 void babelwires::Project::validateConnectionCache() const {
 #ifndef NDEBUG
     const auto checkOwned = [this](const Node* pointerToCheck) {
-        const auto it =
-            std::find_if(m_nodes.begin(), m_nodes.end(),
-                         [pointerToCheck](const auto& uPtr) { return std::get<1>(uPtr).get() == pointerToCheck; });
+        const auto it = std::find_if(m_nodes.begin(), m_nodes.end(), [pointerToCheck](const auto& uPtr) {
+            return std::get<1>(uPtr).get() == pointerToCheck;
+        });
         assert((it != m_nodes.end()) && "The cache refers to an node that is not owned by the project");
     };
 
@@ -551,8 +548,7 @@ void babelwires::Project::process() {
     }
 }
 
-const std::map<babelwires::NodeId, std::unique_ptr<babelwires::Node>>&
-babelwires::Project::getNodes() const {
+const std::map<babelwires::NodeId, std::unique_ptr<babelwires::Node>>& babelwires::Project::getNodes() const {
     return m_nodes;
 }
 
@@ -563,8 +559,7 @@ void babelwires::Project::clearChanges() {
     m_removedNodes.clear();
 }
 
-const std::map<babelwires::NodeId, std::unique_ptr<babelwires::Node>>&
-babelwires::Project::getRemovedNodes() const {
+const std::map<babelwires::NodeId, std::unique_ptr<babelwires::Node>>& babelwires::Project::getRemovedNodes() const {
     return m_removedNodes;
 }
 

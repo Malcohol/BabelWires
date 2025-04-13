@@ -8,15 +8,16 @@
  **/
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
-#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
-#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/types.hpp>
@@ -120,8 +121,8 @@ babelwires::Modifier* babelwires::Node::addModifierWithoutApplyingIt(const Modif
     return rawModifierPtr;
 }
 
-babelwires::Modifier* babelwires::Node::addModifier(UserLogger& userLogger,
-                                                              const ModifierData& modifierData, bool applyModifier) {
+babelwires::Modifier* babelwires::Node::addModifier(UserLogger& userLogger, const ModifierData& modifierData,
+                                                    bool applyModifier) {
     Modifier* newModifier = addModifierWithoutApplyingIt(modifierData);
     if (applyModifier) {
         newModifier->applyIfLocal(userLogger, getInputNonConst(newModifier->getTargetPath()));
@@ -130,8 +131,7 @@ babelwires::Modifier* babelwires::Node::addModifier(UserLogger& userLogger,
 }
 
 void babelwires::Node::removeModifier(Modifier* modifier, bool unapplyModifier) {
-    assert((const_cast<const Modifier*>(modifier)->getOwner() == this) &&
-           "This Node is not the owner of the modifier");
+    assert((const_cast<const Modifier*>(modifier)->getOwner() == this) && "This Node is not the owner of the modifier");
 
     m_removedModifiers.emplace_back(std::move(m_edits.removeModifier(modifier)));
     ValueTreeNode* input = getInputNonConst(modifier->getTargetPath());
@@ -152,12 +152,12 @@ std::unique_ptr<babelwires::NodeData> babelwires::Node::extractNodeData() const 
     // Strip out the currently unused paths.
     auto it = std::remove_if(data->m_expandedPaths.begin(), data->m_expandedPaths.end(), [this](const Path& p) {
         if (const ValueTreeNode* input = getInput()) {
-            if (p.tryFollow(*input)) {
+            if (tryFollowPath(p, *input)) {
                 return false;
             }
         }
         if (const ValueTreeNode* output = getOutput()) {
-            if (p.tryFollow(*output)) {
+            if (tryFollowPath(p, *output)) {
                 return false;
             }
         }
@@ -287,8 +287,8 @@ void babelwires::Node::process(Project& project, UserLogger& userLogger) {
     doProcess(userLogger);
 }
 
-void babelwires::Node::adjustArrayIndices(const babelwires::Path& pathToArray,
-                                                    babelwires::ArrayIndex startIndex, int adjustment) {
+void babelwires::Node::adjustArrayIndices(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
+                                          int adjustment) {
     m_edits.adjustArrayIndices(pathToArray, startIndex, adjustment);
 }
 
@@ -309,7 +309,7 @@ void babelwires::Node::setModifierMoving(const babelwires::Modifier& modifierAbo
 namespace {
 
     babelwires::ValueTreeNode* tryFollowPathToValue(babelwires::ValueTreeNode* start, const babelwires::Path& p,
-                                              int index) {
+                                                    int index) {
         if ((index < p.getNumSteps()) && !start->as<babelwires::ValueTreeRoot>()) {
             if (auto* compound = start) {
                 babelwires::ValueTreeNode& child = compound->getChildFromStep(p.getStep(index));
@@ -373,9 +373,7 @@ void babelwires::Node::finishModifications(const Project& project, UserLogger& u
     m_modifiedPaths.clear();
 }
 
-
-void babelwires::Node::setValueTrees(std::string rootLabel, ValueTreeRoot* input,
-                                               const ValueTreeRoot* output) {
+void babelwires::Node::setValueTrees(std::string rootLabel, ValueTreeRoot* input, const ValueTreeRoot* output) {
     m_contentsCache.setValueTrees(std::move(rootLabel), input, output);
 }
 

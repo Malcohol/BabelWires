@@ -25,9 +25,6 @@ namespace babelwires {
         /// Construct an empty path.
         Path();
 
-        /// Construct a path which leads to the given ValueTreeNode.
-        explicit Path(const ValueTreeNode* valueTreeNode);
-
         Path(Path&& other) = default;
 
         Path(const Path& other) = default;
@@ -38,14 +35,6 @@ namespace babelwires {
         Path& operator=(const Path& other) = default;
 
         Path& operator=(Path&& other) = default;
-
-        template <typename VALUE_TREE_ROOT> struct RootAndPath;
-
-        /// Get a path and the root.
-        static RootAndPath<const ValueTreeRoot> getRootAndPath(const ValueTreeNode& valueTreeNode);
-
-        /// Get a path and the root.
-        static RootAndPath<ValueTreeRoot> getRootAndPath(ValueTreeNode& valueTreeNode);
 
         /// Add a step to the path.
         void pushStep(PathStep step);
@@ -58,14 +47,6 @@ namespace babelwires {
 
         /// Parse a serialized representation of a path.
         static Path deserializeFromString(const std::string& pathString);
-
-        /// Throws if the path cannot be followed.
-        ValueTreeNode& follow(ValueTreeNode& start) const;
-        const ValueTreeNode& follow(const ValueTreeNode& start) const;
-
-        /// Returns nullptr if the path cannot be followed.
-        ValueTreeNode* tryFollow(ValueTreeNode& start) const;
-        const ValueTreeNode* tryFollow(const ValueTreeNode& start) const;
 
         bool operator==(const Path& other) const;
         bool operator!=(const Path& other) const;
@@ -109,6 +90,8 @@ namespace babelwires {
         iterator begin() { return m_steps.begin(); }
         iterator end() { return m_steps.end(); }
 
+        /// Apply the visitor to any fields in the path.
+        void visitIdentifiers(IdentifierVisitor& visitor);
       private:
         /// Returns -1, 0 or 1.
         int compare(const Path& other) const;
@@ -119,12 +102,6 @@ namespace babelwires {
 
     /// Write a path to an ostream.
     std::ostream& operator<<(std::ostream& os, const Path& p);
-
-    template <typename VALUE_TREE_ROOT> struct Path::RootAndPath {
-        VALUE_TREE_ROOT& m_root;
-        Path m_pathFromRoot;
-    };
-
 } // namespace babelwires
 
 namespace std {

@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/TypeSystem/valuePath.hpp>
+#include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 struct babelwires::ValueTreeRoot::ComplexConstructorArguments {
@@ -61,7 +61,7 @@ void babelwires::ValueTreeRoot::doSetToDefault() {
 void babelwires::ValueTreeRoot::setDescendentValue(const Path& path, const ValueHolder& newValue) {
     assert((path.getNumSteps() > 0) && "SetDescendentValue is only intended for strict descendents");
     ValueHolder newRootValue = getValue();
-    auto [_, valueInCopy] = followNonConst(m_typeSystem, getType(), path, newRootValue);
+    auto [_, valueInCopy] = followPathNonConst(m_typeSystem, getType(), path, newRootValue);
     valueInCopy = newValue;
     reconcileChangesAndSynchronizeChildren(m_typeSystem, newRootValue, path);
 }

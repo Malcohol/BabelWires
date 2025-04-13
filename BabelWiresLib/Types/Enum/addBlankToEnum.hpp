@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
 namespace babelwires {
+    // TODO This is redundant. Remove it and use EnumUnionTypeConstructor and EnumAtomTypeConstructor instead.
     /// A unary type constructor which adds a blank value to an existing enum.
     /// This is useful in map targets to indicate when the map should exclude an entry, rather than select a mapped
     /// value.

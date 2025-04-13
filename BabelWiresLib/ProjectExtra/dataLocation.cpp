@@ -44,11 +44,7 @@ void babelwires::DataLocation::deserializeContents(Deserializer& deserializer) {
 }
 
 void babelwires::DataLocation::visitIdentifiers(IdentifierVisitor& visitor) {
-    for (auto& s : m_pathToValue) {
-        if (s.isField()) {
-            visitor(s.getField());
-        }
-    }
+    m_pathToValue.visitIdentifiers(visitor);
 }
 
 void babelwires::DataLocation::visitFilePaths(FilePathVisitor& visitor) {}

@@ -1,7 +1,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
 
-#include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
+#include <BabelWiresLib/Types/Int/intType.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
@@ -69,17 +69,14 @@ babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToRecordWi
 }
 
 const babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToFieldA0() {
-    return std::vector<babelwires::PathStep>{
-        babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA0Id())};
+    return std::vector<babelwires::PathStep>{testUtils::TestRecordWithVariantsType::getFieldA0Id()};
 }
 
 const babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToFieldA1_Int0() {
-    return std::vector<babelwires::PathStep>{
-        babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldA1Id()),
-        babelwires::PathStep(testUtils::TestSimpleRecordType::getInt0Id())};
+    return std::vector<babelwires::PathStep>{testUtils::TestRecordWithVariantsType::getFieldA1Id(),
+                                             testUtils::TestSimpleRecordType::getInt0Id()};
 }
 
 const babelwires::Path testUtils::TestRecordWithVariantsElementData::getPathToFieldAB() {
-    return std::vector<babelwires::PathStep>{
-        babelwires::PathStep(testUtils::TestRecordWithVariantsType::getFieldABId())};
+    return std::vector<babelwires::PathStep>{testUtils::TestRecordWithVariantsType::getFieldABId()};
 }

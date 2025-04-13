@@ -16,22 +16,27 @@ babelwires::IdentifierBase<NUM_BLOCKS>::getDiscriminator() const {
 }
 
 template <unsigned int NUM_BLOCKS>
-void babelwires::IdentifierBase<NUM_BLOCKS>::setDiscriminator(Discriminator index) const {
+void babelwires::IdentifierBase<NUM_BLOCKS>::setDiscriminator(Discriminator index) {
     m_data.m_discriminator = index;
 }
 
 template <unsigned int NUM_BLOCKS>
-void babelwires::IdentifierBase<NUM_BLOCKS>::copyDiscriminatorTo(const IdentifierBase& other) const {
-    if (other.getDiscriminator() == 0) {
-        assert(other.getDiscriminator() == 0);
-        other.setDiscriminator(getDiscriminator());
-    }
+babelwires::IdentifierBase<NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::withoutDiscriminator() const { 
+    IdentifierBase thisWithoutDiscriminator = *this;
+    thisWithoutDiscriminator.setDiscriminator(0);
+    return thisWithoutDiscriminator; 
 }
 
 template <unsigned int NUM_BLOCKS>
 template <size_t... INSEQ>
 auto babelwires::IdentifierBase<NUM_BLOCKS>::getTupleOfCodesFromIndexSequence(std::index_sequence<INSEQ...>) const {
     return std::make_tuple(getDataAsCode<INSEQ>()...);
+}
+
+template <unsigned int NUM_BLOCKS>
+template <size_t... INSEQ>
+auto babelwires::IdentifierBase<NUM_BLOCKS>::getTupleOfDataFromIndexSequence(std::index_sequence<INSEQ...>) const {
+    return std::make_tuple(getData<INSEQ>()...);
 }
 
 template <unsigned int NUM_BLOCKS>
