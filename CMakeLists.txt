@@ -65,6 +65,7 @@ add_subdirectory(Tests/Common)
 add_subdirectory(Tests/BabelWiresLib)
 add_subdirectory(Tests/BabelWiresLib/TestUtils)
 
+add_subdirectory(Domains/TestDomain)
 add_subdirectory(Domains/Music )
 
 add_subdirectory(BabelWiresExe)

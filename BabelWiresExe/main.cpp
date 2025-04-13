@@ -35,6 +35,7 @@
 #include <Domains/Music/Plugins/Smf/Plugin/libRegistration.hpp>
 #include <Domains/Music/SeqWiresLib/libRegistration.hpp>
 #include <Domains/Music/SeqWiresLibUi/libRegistration.hpp>
+#include <Domains/TestDomain/libRegistration.hpp>
 
 #include <cassert>
 #include <chrono>
@@ -90,6 +91,9 @@ int main(int argc, char* argv[]) {
         seqwires::registerLib(context);
         seqwiresUi::registerLib(context);
         smf::registerLib(context);
+
+        // Comment / Uncomment to enable a domain of testing data.
+        testDomain::registerLib(context);
 
         if (options.m_mode == ProgramOptions::MODE_RUN_PROJECT) {
             Project project(context, log);
