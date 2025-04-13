@@ -39,15 +39,6 @@ TEST(IdentifierTest, identifiers) {
     babelwires::ShortId goodbye("Byebye");
     goodbye.setDiscriminator(17);
     EXPECT_NE(hello, goodbye);
-
-    // Only copy over unset discriminators.
-
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), 27);
-
-    hello1.setDiscriminator(0);
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), hello.getDiscriminator());
 }
 
 // For sanity's sake, the identifiers are ordered alphabetically.
@@ -161,13 +152,6 @@ TEST(IdentifierTest, longIdentifiers) {
     babelwires::LongId goodbye("GoodbyeGoodbyeGoodbye");
     goodbye.setDiscriminator(17);
     EXPECT_NE(hello, goodbye);
-
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), 27);
-
-    hello1.setDiscriminator(0);
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), hello.getDiscriminator());
 }
 
 TEST(IdentifierTest, longIdentifierOrder) {

@@ -101,16 +101,6 @@ namespace babelwires {
         /// Write to the stream in a human-readable way.
         void writeToStreamReadable(std::ostream& os, const IdentifierRegistry& identifierRegistry) const;
 
-        /// Assuming this and other are equal fields, copy the discriminator from other to this.
-        void copyDiscriminatorFrom(const PathStep& other) {
-            if (ShortId* thisField = asField()) {
-                const ShortId* otherField = other.asField();
-                assert(otherField);
-                assert(*thisField == *otherField);
-                otherField->copyDiscriminatorTo(*thisField);
-            }
-        }
-
         /// How the not-a-step value is represented as a string.
         static constexpr char c_notAStepRepresentation[] = "(notAStep)";
 

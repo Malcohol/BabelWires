@@ -172,9 +172,6 @@ namespace babelwires {
         /// Set the discriminator (which distinguishes between identifiers with the same textual content).
         void setDiscriminator(Discriminator index);
 
-        /// If other doesn't have a discriminator set, set its discriminator to the discrimintor of this.
-        void copyDiscriminatorTo(IdentifierBase& other) const;
-
         /// Get a version of this identifier with the discriminator set to 0.
         IdentifierBase withoutDiscriminator() const;
 

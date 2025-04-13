@@ -58,7 +58,6 @@ bool babelwires::EnumType::isAValue(const babelwires::ShortId& id) const {
         return false;
     }
     // TODO DISCRIMINATORS
-    //id.setDiscriminator(it->first.getDiscriminator());
     return true;
 }
 

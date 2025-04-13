@@ -1,8 +1,7 @@
 /**
- * IdentifierVisitable defines an interface for classes storing identifiers, allowing them to be exposed
- * to important infrastructural visitors.
+ * The IdentifierVisitor is an interface for objects which need to visit all the identifiers in some object.
  *
- * (C) 2021 Malcolm Tyrrell
+ * (C) 2025 Malcolm Tyrrell
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
@@ -21,6 +20,10 @@ namespace babelwires {
         t.visitIdentifiers(visitor);
     };
 
+    /// The IdentifierVisitor is an interface for objects which need to visit all the identifiers in some object.
+    /// The use-cases are for preparing identifiers when they an object is being moved from one context to another.
+    /// For example, when data is deserialized from a file, the discriminators may not match those of the current system.
+    /// Because the job is to adjust the identifiers, the visitor expects non-const access to the object it visits.
     struct IdentifierVisitor {
         virtual ~IdentifierVisitor() = default;
         virtual void operator()(ShortId& identifier) = 0;

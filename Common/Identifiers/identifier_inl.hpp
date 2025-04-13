@@ -21,13 +21,6 @@ void babelwires::IdentifierBase<NUM_BLOCKS>::setDiscriminator(Discriminator inde
 }
 
 template <unsigned int NUM_BLOCKS>
-void babelwires::IdentifierBase<NUM_BLOCKS>::copyDiscriminatorTo(IdentifierBase& other) const {
-    if (other.getDiscriminator() == 0) {
-        other.setDiscriminator(getDiscriminator());
-    }
-}
-
-template <unsigned int NUM_BLOCKS>
 babelwires::IdentifierBase<NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::withoutDiscriminator() const { 
     IdentifierBase thisWithoutDiscriminator = *this;
     thisWithoutDiscriminator.setDiscriminator(0);
