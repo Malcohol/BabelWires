@@ -13,7 +13,13 @@
 #include <functional>
 
 namespace babelwires {
-    struct DataVisitable;
+    struct IdentifierVisitor;
+
+    /// The standard pattern for an object being visitable is that it has a visitIdentifiers
+    /// method that takes a visitor parameter.
+    template<typename T> concept IdentifierVisitable = requires(T t, IdentifierVisitor& visitor) {
+        t.visitIdentifiers(visitor);
+    };
 
     struct IdentifierVisitor {
         virtual ~IdentifierVisitor() = default;
@@ -24,10 +30,14 @@ namespace babelwires {
         /// Allow the visitor to be applied to types in templates which may or may have identifier members.
         void operator()(...) {}
 
-        // Applying a visitor to an object is _not_ the usual pattern for visiting it, but it's tempting to write
-        // code of that form. The usual pattern is to call a visitIdentifiers method.
-        // This catches misuses, at least for classes that derive from DataVisitable.
-        void operator()(DataVisitable&) = delete;
-        void operator()(const DataVisitable&) = delete;
+        // Applying a visitor to an object is _not_ the usual pattern for visiting it. However, I've mistakenly
+        // written code of that form which didn't get caught because of the ... overload.
+        // The following deletions should help catch these mistakes.
+
+        template<typename T> requires IdentifierVisitable<T>
+        void operator()(T&) = delete;
+
+        template<typename T> requires IdentifierVisitable<T>
+        void operator()(const T&) = delete;
     };
 }

@@ -14,6 +14,9 @@
 #include <charconv>
 #include <sstream>
 
+// Try to ensure PathStep maintains the standard pattern for the IdentifierVisitor.
+static_assert(babelwires::IdentifierVisitable<babelwires::PathStep>);
+
 void babelwires::PathStep::writeToStream(std::ostream& os) const {
     if (const ShortId* f = asField()) {
         os << *f;

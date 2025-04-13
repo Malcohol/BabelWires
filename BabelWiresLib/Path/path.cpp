@@ -21,6 +21,9 @@
 #include <algorithm>
 #include <type_traits>
 
+// Try to ensure Path maintains the standard pattern for the IdentifierVisitor.
+static_assert(babelwires::IdentifierVisitable<babelwires::Path>);
+
 babelwires::Path::Path() {}
 
 babelwires::Path::Path(std::vector<PathStep> steps)
