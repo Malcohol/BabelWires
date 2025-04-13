@@ -19,13 +19,9 @@ namespace testUtils {
         void setFilePaths(std::string_view sourceFilePath, std::string_view targetFilePath);
 
         /// Test that the structure of the data matches the structure as constructed.
-        /// Also check that the discriminators in the path IDs match the provided values.
         /// This is agnostic about the order of the elements.
         // Note: The first argument is not required to be an instance of this class.
-        static void testProjectDataAndDisciminators(const babelwires::ProjectData& projectData,
-                                                    int recordIntDiscriminator, int recordArrayDiscriminator,
-                                                    int recordRecordDiscriminator, int recordInt2Disciminator,
-                                                    int fileIntChildDiscriminator);
+        static void testProjectData(const babelwires::ProjectData& projectData);
 
         /// Test that the structure of the data matches the structure as constructed.
         /// Also check that the discriminators in the path IDs match the currently registered values.
