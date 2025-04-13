@@ -22,11 +22,12 @@ babelwires::RecordType::RecordType(std::vector<Field> fields)
 namespace {
     std::vector<babelwires::RecordType::Field>
     getCombinedFieldSet(const babelwires::RecordType& parent,
-                        std::vector<babelwires::RecordType::Field> additionalFields) {
+                    std::vector<babelwires::RecordType::Field> additionalFields) {
         const std::size_t numParentFields = parent.getFields().size();
         const std::size_t numAdditionalFields = additionalFields.size();
-        additionalFields.resize(numParentFields + numAdditionalFields);
-        std::move(additionalFields.begin(), additionalFields.end(), additionalFields.begin() + numParentFields);
+        const std::size_t combinedSize = numParentFields + numAdditionalFields;
+        additionalFields.resize(combinedSize);
+        std::move_backward(additionalFields.begin(), additionalFields.begin() + numAdditionalFields, additionalFields.begin() + combinedSize);
         std::copy(parent.getFields().begin(), parent.getFields().end(), additionalFields.begin());
         return std::move(additionalFields);
     }

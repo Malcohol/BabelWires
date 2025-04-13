@@ -428,41 +428,46 @@ TEST(RecordTypeTest, subtype) {
 TEST(RecordTypeTest, subtypeConstructor) {
     testUtils::TestEnvironment testEnvironment;
 
-    struct RecordAOpt : babelwires::RecordType {
-        RecordAOpt()
+    struct RecordParent : babelwires::RecordType {
+        RecordParent()
             : RecordType({{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
+                          {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()},
                           {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisType(),
                            babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAOpt"), 1);
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordParent"), 1);
     };
 
-    struct RecordABOpt : babelwires::RecordType {
-        RecordABOpt(const babelwires::TypeSystem& typeSystem)
-            : RecordType(RecordAOpt::getThisType().resolve(typeSystem).is<babelwires::RecordType>(),
-                         {{testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()},
+    struct RecordChild : babelwires::RecordType {
+        RecordChild(const babelwires::TypeSystem& typeSystem)
+            : RecordType(RecordParent::getThisType().resolve(typeSystem).is<babelwires::RecordType>(),
+                         {{testUtils::getTestRegisteredIdentifier("fieldC"), babelwires::DefaultIntType::getThisType()},
                           {testUtils::getTestRegisteredIdentifier("fOpt2"), babelwires::DefaultIntType::getThisType(),
                            babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordABOpt"), 1);
+        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordChild"), 1);
     };
+    testEnvironment.m_typeSystem.addEntry<RecordParent>();
+    const babelwires::RecordType& foo =
+        RecordParent::getThisType().resolve(testEnvironment.m_typeSystem).is<babelwires::RecordType>();
 
-    testEnvironment.m_typeSystem.addEntry<RecordAOpt>();
-    const babelwires::RecordType* const abOpt = testEnvironment.m_typeSystem.addEntry<RecordABOpt>(testEnvironment.m_typeSystem);
+    const babelwires::RecordType* const abOpt =
+        testEnvironment.m_typeSystem.addEntry<RecordChild>(testEnvironment.m_typeSystem);
 
     const std::vector<babelwires::RecordType::Field> fields = abOpt->getFields();
-    EXPECT_EQ(fields.size(), 4);
+    EXPECT_EQ(fields.size(), 5);
     EXPECT_EQ(fields[0].m_identifier, "fieldA");
-    EXPECT_EQ(fields[1].m_identifier, "fOpt");
-    EXPECT_EQ(fields[2].m_identifier, "fieldB");
-    EXPECT_EQ(fields[3].m_identifier, "fOpt2");
+    EXPECT_EQ(fields[1].m_identifier, "fieldB");
+    EXPECT_EQ(fields[2].m_identifier, "fOpt");
+    EXPECT_EQ(fields[3].m_identifier, "fieldC");
+    EXPECT_EQ(fields[4].m_identifier, "fOpt2");
 
     const std::vector<babelwires::ShortId> optionals = abOpt->getOptionalFieldIds();
     EXPECT_EQ(optionals.size(), 2);
     EXPECT_EQ(optionals[0], "fOpt");
     EXPECT_EQ(optionals[1], "fOpt2");
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOpt::getThisType(), RecordABOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordParent::getThisType(), RecordChild::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordABOpt::getThisType(), RecordAOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordChild::getThisType(), RecordParent::getThisType()),
               babelwires::SubtypeOrder::IsSubtype);
 }
 
