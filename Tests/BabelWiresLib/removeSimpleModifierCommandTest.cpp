@@ -9,16 +9,17 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
     {
         babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
-        intAssignment.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+        intAssignment.m_targetPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
         elementData.m_modifiers.emplace_back(intAssignment.clone());
     }
 
@@ -29,7 +30,7 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
     ASSERT_NE(element, nullptr);
 
     const auto checkModifiers = [&testEnvironment, element](bool isCommandExecuted) {
-        const babelwires::Modifier* intAssignment = element->findModifier(testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
+        const babelwires::Modifier* intAssignment = element->findModifier(testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
         int numModifiersAtElement = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
             ++numModifiersAtElement;
@@ -45,7 +46,7 @@ TEST(RemoveSimpleModifierCommandTest, executeAndUndo) {
 
     checkModifiers(false);
 
-    babelwires::RemoveSimpleModifierSubcommand testCopyConstructor(elementId, testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
+    babelwires::RemoveSimpleModifierSubcommand testCopyConstructor(elementId, testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
     babelwires::RemoveSimpleModifierSubcommand command = testCopyConstructor;
 
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
@@ -72,7 +73,7 @@ TEST(RemoveSimpleModifierCommandTest, failSafelyNoElement) {
 TEST(RemoveSimpleModifierCommandTest, failSafelyNoModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
 
     babelwires::RemoveSimpleModifierSubcommand command(elementId, babelwires::Path::deserializeFromString("qqq/zzz"));
 

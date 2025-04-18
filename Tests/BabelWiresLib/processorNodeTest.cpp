@@ -8,8 +8,9 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Domains/TestDomain/testProcessor.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
@@ -17,7 +18,7 @@ TEST(ProcessorNodeTest, sourceFileDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ProcessorNodeData data;
-    data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
+    data.m_factoryIdentifier = testDomain::TestProcessor::getFactoryIdentifier();
     data.m_factoryVersion = 1;
 
     auto node = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
@@ -27,13 +28,13 @@ TEST(ProcessorNodeTest, sourceFileDataCreateElement) {
     babelwires::ProcessorNode* processorNode = static_cast<babelwires::ProcessorNode*>(node.get());
 
     auto& inputFeature = *processorNode->getInput();
-    ASSERT_TRUE(inputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());
+    ASSERT_TRUE(inputFeature.getType().as<const testDomain::TestProcessorInputOutputType>());
 
     const auto& outputFeature = *processorNode->getOutput();
-    ASSERT_TRUE(outputFeature.getType().as<const testUtils::TestProcessorInputOutputType>());
+    ASSERT_TRUE(outputFeature.getType().as<const testDomain::TestProcessorInputOutputType>());
 
-    testUtils::TestProcessorInputOutputType::ConstInstance input{inputFeature};
-    testUtils::TestProcessorInputOutputType::ConstInstance output{outputFeature};
+    testDomain::TestProcessorInputOutputType::ConstInstance input{inputFeature};
+    testDomain::TestProcessorInputOutputType::ConstInstance output{outputFeature};
 
     EXPECT_EQ(output.getArray().getSize(), 2);
 

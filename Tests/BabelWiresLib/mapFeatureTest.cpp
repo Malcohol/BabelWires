@@ -13,7 +13,8 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Domains/TestDomain/testEnum.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
@@ -70,11 +71,11 @@ TEST(MapFeatureTest, assign) {
     babelwires::ValueTreeRoot testTypeTestTypeFeature(
         testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestType, testUtils::TestType>());
     babelwires::ValueTreeRoot testEnumTestTypeFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestEnum, testUtils::TestType>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestEnum, testUtils::TestType>());
     babelwires::ValueTreeRoot testTypeTestEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestType, testUtils::TestEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestType, testDomain::TestEnum>());
     babelwires::ValueTreeRoot testEnumTestEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestEnum, testUtils::TestEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestEnum, testDomain::TestEnum>());
 
     testTypeTestTypeFeature.setToDefault();
     testTypeTestEnumFeature.setToDefault();
@@ -87,11 +88,11 @@ TEST(MapFeatureTest, assign) {
     EXPECT_THROW(testTypeTestTypeFeature.assign(testEnumTestEnumFeature), babelwires::ModelException);
 
     babelwires::ValueTreeRoot testEnumTestSubEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestEnum, testUtils::TestSubEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestEnum, testDomain::TestSubEnum>());
     babelwires::ValueTreeRoot testSubEnumTestEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestSubEnum, testUtils::TestEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestSubEnum, testDomain::TestEnum>());
     babelwires::ValueTreeRoot testSubEnumTestSubEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestSubEnum, testUtils::TestSubEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestSubEnum, testDomain::TestSubEnum>());
 
     testEnumTestSubEnumFeature.setToDefault();
     testSubEnumTestEnumFeature.setToDefault();
@@ -130,11 +131,11 @@ TEST(MapFeatureTest, setAndGet) {
     babelwires::ValueTreeRoot testTypeTestTypeFeature(
         testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestType, testUtils::TestType>());
     babelwires::ValueTreeRoot testEnumTestTypeFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestEnum, testUtils::TestType>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestEnum, testUtils::TestType>());
     babelwires::ValueTreeRoot testTypeTestEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestType, testUtils::TestEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestType, testDomain::TestEnum>());
     babelwires::ValueTreeRoot testEnumTestEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestEnum, testUtils::TestEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestEnum, testDomain::TestEnum>());
 
     testTypeTestTypeFeature.setToDefault();
     testTypeTestEnumFeature.setToDefault();
@@ -147,11 +148,11 @@ TEST(MapFeatureTest, setAndGet) {
     EXPECT_THROW(testTypeTestTypeFeature.setValue(testEnumTestEnumFeature.getValue()), babelwires::ModelException);
 
     babelwires::ValueTreeRoot testEnumTestSubEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestEnum, testUtils::TestSubEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestEnum, testDomain::TestSubEnum>());
     babelwires::ValueTreeRoot testSubEnumTestEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestSubEnum, testUtils::TestEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestSubEnum, testDomain::TestEnum>());
     babelwires::ValueTreeRoot testSubEnumTestSubEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapTypeRef<testUtils::TestSubEnum, testUtils::TestSubEnum>());
+        testEnvironment.m_typeSystem, getTestMapTypeRef<testDomain::TestSubEnum, testDomain::TestSubEnum>());
 
     testEnumTestSubEnumFeature.setToDefault();
     testSubEnumTestEnumFeature.setToDefault();

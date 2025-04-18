@@ -2,7 +2,8 @@
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Domains/TestDomain/testEnum.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
@@ -20,6 +21,6 @@ TEST(TypeTest, typeAndValue)
     EXPECT_TRUE(value.as<testUtils::TestValue>());
     EXPECT_TRUE(testType.isValidValue(typeSystem, value));
 
-    testUtils::TestEnum testEnum;
+    testDomain::TestEnum testEnum;
     EXPECT_FALSE(testEnum.isValidValue(typeSystem, value));
 }

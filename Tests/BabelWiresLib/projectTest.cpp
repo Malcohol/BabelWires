@@ -1,23 +1,24 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
+#include <Domains/TestDomain/testArrayType.hpp>
+#include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testProcessor.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
@@ -33,7 +34,7 @@ TEST(ProjectTest, setAndExtractProjectData) {
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath),
                              babelwires::pathToString(targetFilePath.m_filePath));
-    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
+    testDomain::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
     testEnvironment.m_project.setProjectData(projectData);
     // Processing ensures the featurePaths get resolved.
@@ -68,8 +69,7 @@ TEST(ProjectTest, projectId) {
 TEST(ProjectTest, addGetAndRemoveElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId elementId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
 
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     EXPECT_NE(node, nullptr);
@@ -97,13 +97,12 @@ TEST(ProjectTest, addGetAndRemoveElement) {
 TEST(ProjectTest, addAndRemoveLocalModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId elementId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
 
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(node, nullptr);
 
-    const babelwires::Path pathToFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::Path pathToFeature = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
     EXPECT_EQ(node->findModifier(pathToFeature), nullptr);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(199));
@@ -123,17 +122,17 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId sourceNodeId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+        testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
     const babelwires::Node* sourceElement = testEnvironment.m_project.getNode(sourceNodeId);
     ASSERT_NE(sourceElement, nullptr);
 
     const babelwires::NodeId targetNodeId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+        testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
     const babelwires::Node* targetElement = testEnvironment.m_project.getNode(targetNodeId);
     ASSERT_NE(targetElement, nullptr);
 
-    const babelwires::Path pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    const babelwires::Path pathToSourceFeature = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(0);
+    const babelwires::Path pathToTargetFeature = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::Path pathToSourceFeature = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(0);
 
     EXPECT_EQ(sourceElement->findModifier(pathToTargetFeature), nullptr);
     babelwires::ConnectionModifierData modData;
@@ -154,13 +153,12 @@ TEST(ProjectTest, addAndRemoveConnectionModifier) {
 TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId elementId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
 
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(node, nullptr);
 
-    const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path pathToArray = testDomain::TestComplexRecordElementData::getPathToRecordArray();
     EXPECT_EQ(node->findModifier(pathToArray), nullptr);
 
     testEnvironment.m_project.process();
@@ -171,7 +169,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
         ASSERT_NE(modifier, nullptr);
         ASSERT_TRUE(modifier->getModifierData().as<babelwires::ArraySizeModifierData>());
         EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size,
-                  testUtils::TestSimpleArrayType::s_defaultSize + 2);
+                  testDomain::TestSimpleArrayType::s_defaultSize + 2);
     }
 
     testEnvironment.m_project.process();
@@ -180,7 +178,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
         const babelwires::Modifier* const modifier = node->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
         EXPECT_EQ(modifier->getModifierData().as<babelwires::ArraySizeModifierData>()->m_size,
-                  testUtils::TestSimpleArrayType::s_defaultSize + 4);
+                  testDomain::TestSimpleArrayType::s_defaultSize + 4);
     }
 
     testEnvironment.m_project.process();
@@ -189,7 +187,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
         const babelwires::Modifier* const modifier = node->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
         EXPECT_EQ(modifier->getModifierData().as<babelwires::ArraySizeModifierData>()->m_size,
-                  testUtils::TestSimpleArrayType::s_defaultSize + 2);
+                  testDomain::TestSimpleArrayType::s_defaultSize + 2);
     }
 
     testEnvironment.m_project.process();
@@ -218,16 +216,15 @@ namespace {
 TEST(ProjectTest, addAndRemoveArrayEntriesModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId elementId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
 
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(node, nullptr);
 
-    const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::Path pathToArray1 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    const babelwires::Path pathToArray2 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(2);
-    const babelwires::Path pathToArray4 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
+    const babelwires::Path pathToArray = testDomain::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path pathToArray1 = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::Path pathToArray2 = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(2);
+    const babelwires::Path pathToArray4 = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(702));
     modData.m_targetPath = pathToArray1;
@@ -267,20 +264,20 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId sourceNodeId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+        testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
     const babelwires::Node* sourceElement = testEnvironment.m_project.getNode(sourceNodeId);
     ASSERT_NE(sourceElement, nullptr);
 
     const babelwires::NodeId targetNodeId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+        testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
     const babelwires::Node* targetElement = testEnvironment.m_project.getNode(targetNodeId);
     ASSERT_NE(targetElement, nullptr);
 
-    const babelwires::Path pathToTargetFeature = testUtils::TestComplexRecordElementData::getPathToRecordInt0();
-    const babelwires::Path pathToArray = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::Path pathToArray1 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    const babelwires::Path pathToArray2 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(2);
-    const babelwires::Path pathToArray4 = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
+    const babelwires::Path pathToTargetFeature = testDomain::TestComplexRecordElementData::getPathToRecordInt0();
+    const babelwires::Path pathToArray = testDomain::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path pathToArray1 = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    const babelwires::Path pathToArray2 = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(2);
+    const babelwires::Path pathToArray4 = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
 
     EXPECT_EQ(sourceElement->findModifier(pathToArray), nullptr);
 
@@ -324,7 +321,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
 TEST(ProjectTest, uiProperties) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestComplexRecordElementData testFeatureData;
+    testDomain::TestComplexRecordElementData testFeatureData;
     testFeatureData.m_uiData.m_uiPosition.m_x = 8;
     testFeatureData.m_uiData.m_uiPosition.m_y = 2;
     testFeatureData.m_uiData.m_uiSize.m_width = 77;
@@ -353,15 +350,14 @@ TEST(ProjectTest, uiProperties) {
 TEST(ProjectTest, elementIds) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId elementId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+    const babelwires::NodeId elementId = testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
     EXPECT_NE(elementId, babelwires::INVALID_NODE_ID);
     ASSERT_NE(elementId, 3);
 
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(node, nullptr);
 
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
     elementData.m_id = 3;
 
     const babelwires::NodeId nodeId1 = testEnvironment.m_project.addNode(elementData);
@@ -384,36 +380,33 @@ TEST(ProjectTest, elementIds) {
 TEST(ProjectTest, reloadSource) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TempFilePath tempFilePath("testSource." + testUtils::TestSourceFileFormat::getFileExtension());
+    testUtils::TempFilePath tempFilePath("testSource." + testDomain::TestSourceFileFormat::getFileExtension());
 
-    testUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 14);
+    testDomain::TestSourceFileFormat::writeToTestFile(tempFilePath, 14);
 
     babelwires::SourceFileNodeData sourceFileData;
     sourceFileData.m_filePath = tempFilePath;
-    sourceFileData.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
+    sourceFileData.m_factoryIdentifier = testDomain::TestSourceFileFormat::getThisIdentifier();
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(sourceFileData);
-    const babelwires::Node* node =
-        testEnvironment.m_project.getNode(elementId)->as<babelwires::Node>();
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId)->as<babelwires::Node>();
     ASSERT_NE(node, nullptr);
     ASSERT_NE(node->getOutput(), nullptr);
 
     auto getIntInElement = [node]() {
-        testUtils::TestSimpleRecordType::ConstInstance instance(node->getOutput()
-                                                                    ->is<babelwires::ValueTreeNode>()
-                                                                    .getChild(0)
-                                                                    ->is<babelwires::ValueTreeNode>());
+        testDomain::TestSimpleRecordType::ConstInstance instance(
+            node->getOutput()->is<babelwires::ValueTreeNode>().getChild(0)->is<babelwires::ValueTreeNode>());
         return instance.getintR0().get();
     };
 
     EXPECT_EQ(getIntInElement(), 14);
 
-    testUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 88);
+    testDomain::TestSourceFileFormat::writeToTestFile(tempFilePath, 88);
 
     testEnvironment.m_project.tryToReloadSource(elementId);
     EXPECT_EQ(getIntInElement(), 88);
 
-    testUtils::TestSourceFileFormat::writeToTestFile(tempFilePath, 55);
+    testDomain::TestSourceFileFormat::writeToTestFile(tempFilePath, 55);
 
     testEnvironment.m_project.tryToReloadAllSources();
     EXPECT_EQ(getIntInElement(), 55);
@@ -429,36 +422,35 @@ TEST(ProjectTest, reloadSource) {
 TEST(ProjectTest, saveTarget) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TempFilePath tempFilePath("testTarget." + testUtils::TestSourceFileFormat::getFileExtension());
+    testUtils::TempFilePath tempFilePath("testTarget." + testDomain::TestSourceFileFormat::getFileExtension());
 
     babelwires::TargetFileNodeData targetFileData;
     targetFileData.m_filePath = tempFilePath;
-    targetFileData.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
+    targetFileData.m_factoryIdentifier = testDomain::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(targetFileData);
-    babelwires::Node* node =
-        testEnvironment.m_project.getNode(elementId)->as<babelwires::Node>();
+    babelwires::Node* node = testEnvironment.m_project.getNode(elementId)->as<babelwires::Node>();
     ASSERT_NE(node, nullptr);
     ASSERT_NE(node->getInput(), nullptr);
 
-    testUtils::TestSimpleRecordType::Instance instance(node->getInputNonConst(babelwires::Path())
-                                                           ->is<babelwires::ValueTreeNode>()
-                                                           .getChild(0)
-                                                           ->is<babelwires::ValueTreeNode>());
+    testDomain::TestSimpleRecordType::Instance instance(node->getInputNonConst(babelwires::Path())
+                                                            ->is<babelwires::ValueTreeNode>()
+                                                            .getChild(0)
+                                                            ->is<babelwires::ValueTreeNode>());
 
     instance.getintR0().set(47);
 
     testEnvironment.m_project.tryToSaveTarget(elementId);
 
-    EXPECT_EQ(testUtils::TestSourceFileFormat::getFileData(tempFilePath), 47);
+    EXPECT_EQ(testDomain::TestSourceFileFormat::getFileData(tempFilePath), 47);
 
     instance.getintR0().set(30);
     testEnvironment.m_project.tryToSaveTarget(elementId);
-    EXPECT_EQ(testUtils::TestSourceFileFormat::getFileData(tempFilePath), 30);
+    EXPECT_EQ(testDomain::TestSourceFileFormat::getFileData(tempFilePath), 30);
 
     instance.getintR0().set(79);
     testEnvironment.m_project.tryToSaveAllTargets();
-    EXPECT_EQ(testUtils::TestSourceFileFormat::getFileData(tempFilePath), 79);
+    EXPECT_EQ(testDomain::TestSourceFileFormat::getFileData(tempFilePath), 79);
 
     std::ofstream lockThisStream = tempFilePath.openForWriting();
 
@@ -477,7 +469,7 @@ TEST(ProjectTest, process) {
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath),
                              babelwires::pathToString(targetFilePath.m_filePath));
-    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
+    testDomain::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
     testEnvironment.m_project.setProjectData(projectData);
     testEnvironment.m_project.process();
@@ -486,8 +478,7 @@ TEST(ProjectTest, process) {
         testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceNodeId);
     ASSERT_NE(sourceElement, nullptr);
 
-    const babelwires::Node* processor =
-        testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId);
+    const babelwires::Node* processor = testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
     const babelwires::ValueTreeNode* processorInput = processor->getInput();
     ASSERT_NE(processorInput, nullptr);
@@ -498,29 +489,29 @@ TEST(ProjectTest, process) {
         testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetNodeId);
     ASSERT_NE(targetElement, nullptr);
 
-    testUtils::TestSimpleRecordType::ConstInstance targetInput(*targetElement->getInput()->getChild(0));
+    testDomain::TestSimpleRecordType::ConstInstance targetInput(*targetElement->getInput()->getChild(0));
     // 4rd array entry, where they count up from the input value (3).
     EXPECT_EQ(targetInput.getintR0().get(), 6);
 
-    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 4);
+    testDomain::TestSourceFileFormat::writeToTestFile(sourceFilePath, 4);
     testEnvironment.m_project.tryToReloadSource(testUtils::TestProjectData::c_sourceNodeId);
     testEnvironment.m_project.process();
     EXPECT_EQ(targetInput.getintR0().get(), 7);
 
     // Removing this modifier will mean the output array is shorter than the modifier at the target requires.
     testEnvironment.m_project.removeModifier(testUtils::TestProjectData::c_processorId,
-                                             testUtils::TestProcessorInputOutputType::s_pathToInt);
+                                             testDomain::TestProcessorInputOutputType::s_pathToInt);
     testEnvironment.m_project.process();
-    EXPECT_TRUE(targetElement->findModifier(testUtils::getTestFileElementPathToInt0())->isFailed());
+    EXPECT_TRUE(targetElement->findModifier(testDomain::getTestFileElementPathToInt0())->isFailed());
     EXPECT_EQ(targetInput.getintR0().get(), 0);
 
     babelwires::NodeId newProcId;
     {
         babelwires::ProcessorNodeData procData;
-        procData.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
+        procData.m_factoryIdentifier = testDomain::TestProcessor::getFactoryIdentifier();
 
         babelwires::ValueAssignmentData modData(babelwires::IntValue(5));
-        modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt2;
+        modData.m_targetPath = testDomain::TestProcessorInputOutputType::s_pathToInt2;
         procData.m_modifiers.emplace_back(modData.clone());
 
         newProcId = testEnvironment.m_project.addNode(procData);
@@ -528,9 +519,9 @@ TEST(ProjectTest, process) {
 
     {
         babelwires::ConnectionModifierData modData;
-        modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt;
+        modData.m_targetPath = testDomain::TestProcessorInputOutputType::s_pathToInt;
         modData.m_sourceId = newProcId;
-        modData.m_sourcePath = testUtils::TestProcessorInputOutputType::s_pathToInt2;
+        modData.m_sourcePath = testDomain::TestProcessorInputOutputType::s_pathToInt2;
         testEnvironment.m_project.addModifier(testUtils::TestProjectData::c_processorId, modData);
     }
     testEnvironment.m_project.process();
@@ -540,7 +531,7 @@ TEST(ProjectTest, process) {
 TEST(ProjectTest, dependencyLoop) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
 
     const babelwires::NodeId nodeId1 = testEnvironment.m_project.addNode(elementData);
     const babelwires::NodeId nodeId2 = testEnvironment.m_project.addNode(elementData);
@@ -608,7 +599,7 @@ TEST(ProjectTest, dependencyLoop) {
 TEST(ProjectTest, dependencyLoopAndProcessing) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
 
     const babelwires::NodeId nodeId1 = testEnvironment.m_project.addNode(elementData);
     const babelwires::NodeId nodeId2 = testEnvironment.m_project.addNode(elementData);
@@ -673,7 +664,7 @@ TEST(ProjectTest, dependencyLoopAndProcessing) {
     EXPECT_FALSE(node4->isInDependencyLoop());
 
     ASSERT_NE(node3->getOutput(), nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(*node3->getOutput());
+    testDomain::TestComplexRecordType::ConstInstance instance(*node3->getOutput());
     EXPECT_EQ(instance.getintR0().get(), 16);
 
     testEnvironment.m_project.removeModifier(nodeId2, elementData.getPathToRecordInt0());
@@ -693,8 +684,8 @@ TEST(ProjectTest, updateWithAvailableIds) {
     testUtils::TestEnvironment testEnvironment;
 
     std::vector<babelwires::NodeId> idsToCheck0 = {testUtils::TestProjectData::c_sourceNodeId,
-                                                      testUtils::TestProjectData::c_processorId,
-                                                      testUtils::TestProjectData::c_targetNodeId};
+                                                   testUtils::TestProjectData::c_processorId,
+                                                   testUtils::TestProjectData::c_targetNodeId};
     testEnvironment.m_project.updateWithAvailableIds(idsToCheck0);
     EXPECT_EQ(idsToCheck0[0], testUtils::TestProjectData::c_sourceNodeId);
     EXPECT_EQ(idsToCheck0[1], testUtils::TestProjectData::c_processorId);
@@ -704,8 +695,8 @@ TEST(ProjectTest, updateWithAvailableIds) {
     testEnvironment.m_project.setProjectData(projectData);
 
     std::vector<babelwires::NodeId> idsToCheck1 = {testUtils::TestProjectData::c_sourceNodeId,
-                                                      testUtils::TestProjectData::c_processorId,
-                                                      testUtils::TestProjectData::c_targetNodeId};
+                                                   testUtils::TestProjectData::c_processorId,
+                                                   testUtils::TestProjectData::c_targetNodeId};
     testEnvironment.m_project.updateWithAvailableIds(idsToCheck1);
     EXPECT_NE(idsToCheck1[0], testUtils::TestProjectData::c_sourceNodeId);
     EXPECT_NE(idsToCheck1[1], testUtils::TestProjectData::c_processorId);
@@ -715,14 +706,14 @@ TEST(ProjectTest, updateWithAvailableIds) {
     EXPECT_NE(idsToCheck1[2], idsToCheck1[0]);
 
     for (int i = 0; i < 3; ++i) {
-        testUtils::TestComplexRecordElementData data;
+        testDomain::TestComplexRecordElementData data;
         data.m_id = idsToCheck1[i];
         EXPECT_EQ(testEnvironment.m_project.addNode(data), idsToCheck1[i]);
     }
 
     std::vector<babelwires::NodeId> idsToCheck2 = {testUtils::TestProjectData::c_sourceNodeId,
-                                                      testUtils::TestProjectData::c_processorId,
-                                                      testUtils::TestProjectData::c_targetNodeId};
+                                                   testUtils::TestProjectData::c_processorId,
+                                                   testUtils::TestProjectData::c_targetNodeId};
     testEnvironment.m_project.updateWithAvailableIds(idsToCheck2);
     EXPECT_NE(idsToCheck2[0], testUtils::TestProjectData::c_sourceNodeId);
     EXPECT_NE(idsToCheck2[1], testUtils::TestProjectData::c_processorId);
@@ -747,7 +738,7 @@ TEST(ProjectTest, processWithFailure) {
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath),
                              babelwires::pathToString(targetFilePath.m_filePath));
-    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
+    testDomain::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
     testEnvironment.m_project.setProjectData(projectData);
     testEnvironment.m_project.process();
@@ -756,8 +747,7 @@ TEST(ProjectTest, processWithFailure) {
         testEnvironment.m_project.getNode(testUtils::TestProjectData::c_sourceNodeId);
     ASSERT_NE(sourceElement, nullptr);
 
-    const babelwires::Node* processor =
-        testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId);
+    const babelwires::Node* processor = testEnvironment.m_project.getNode(testUtils::TestProjectData::c_processorId);
     ASSERT_NE(processor, nullptr);
     ASSERT_TRUE(processor->isFailed());
 

@@ -110,9 +110,9 @@ namespace testDomain {
     };
 
 
-    /// Useful for unit tests which want to access parts of the feature hierarchy of this record type
+    /// Useful for unit tests which want to access parts of the ValueTreeNode hierarchy of this record type
     /// without using the Instance system.
-    // Currently not all features are represented.
+    // Currently not all ValueTreeNodes are represented.
     struct TestComplexRecordTypeFeatureInfo {
         const babelwires::ValueTreeNode& m_record;
         const babelwires::ValueTreeNode& m_int;

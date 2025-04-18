@@ -11,7 +11,8 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Domains/TestDomain/testEnum.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
@@ -19,14 +20,14 @@ TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestEnum::getThisType()}});
+    mapProject.setAllowedSourceTypeRefs({{testDomain::TestEnum::getThisType()}});
     mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testUtils::TestSubSubEnum1::getThisType());
+    mapValue.setSourceTypeRef(testDomain::TestSubSubEnum1::getThisType());
     mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestEnum::getThisType(),
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestEnum::getThisType(),
                                               testUtils::TestType::getThisType());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
@@ -49,19 +50,19 @@ TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
 
     mapProject.setMapValue(mapValue);
 
-    EXPECT_EQ(mapProject.getCurrentSourceTypeRef(), testUtils::TestSubSubEnum1::getThisType());
+    EXPECT_EQ(mapProject.getCurrentSourceTypeRef(), testDomain::TestSubSubEnum1::getThisType());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(3).getValidity());
 
-    babelwires::SetMapSourceTypeCommand testCopyConstructor("Set type", testUtils::TestSubSubEnum2::getThisType());
+    babelwires::SetMapSourceTypeCommand testCopyConstructor("Set type", testDomain::TestSubSubEnum2::getThisType());
     babelwires::SetMapSourceTypeCommand command = testCopyConstructor;
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
 
-    EXPECT_EQ(mapProject.getCurrentSourceTypeRef(), testUtils::TestSubSubEnum2::getThisType());
+    EXPECT_EQ(mapProject.getCurrentSourceTypeRef(), testDomain::TestSubSubEnum2::getThisType());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(1).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());
@@ -69,7 +70,7 @@ TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
 
     command.undo(mapProject);
 
-    EXPECT_EQ(mapProject.getCurrentSourceTypeRef(), testUtils::TestSubSubEnum1::getThisType());
+    EXPECT_EQ(mapProject.getCurrentSourceTypeRef(), testDomain::TestSubSubEnum1::getThisType());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
@@ -93,7 +94,7 @@ TEST(SetMapSourceTypeCommandTest, failWithUnallowedType) {
 
     mapProject.setMapValue(mapValue);
 
-    babelwires::SetMapSourceTypeCommand command("Set type", testUtils::TestEnum::getThisType());
+    babelwires::SetMapSourceTypeCommand command("Set type", testDomain::TestEnum::getThisType());
 
     EXPECT_FALSE(command.initialize(mapProject));
 }

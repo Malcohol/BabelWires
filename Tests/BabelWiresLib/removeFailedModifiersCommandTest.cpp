@@ -11,34 +11,35 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
+#include <Domains/TestDomain/testArrayType.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 namespace {
     void testRemoveFailedModifiers(bool isWholeRecord) {
         testUtils::TestEnvironment testEnvironment;
 
-        testUtils::TestComplexRecordElementData elementData;
+        testDomain::TestComplexRecordElementData elementData;
         {
             // Will fail.
             babelwires::ValueAssignmentData intAssignment(babelwires::IntValue(12));
-            intAssignment.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(
-                testUtils::TestSimpleArrayType::s_maximumSize);
+            intAssignment.m_targetPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(
+                testDomain::TestSimpleArrayType::s_maximumSize);
             elementData.m_modifiers.emplace_back(intAssignment.clone());
         }
         {
             // OK
             babelwires::ArraySizeModifierData arrayInitialization;
-            arrayInitialization.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-            arrayInitialization.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
+            arrayInitialization.m_targetPath = testDomain::TestComplexRecordElementData::getPathToRecordArray();
+            arrayInitialization.m_size = testDomain::TestSimpleArrayType::s_nonDefaultSize;
             elementData.m_modifiers.emplace_back(arrayInitialization.clone());
         }
         {
             // Will fail.
             babelwires::ConnectionModifierData inputConnection;
-            inputConnection.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
-            inputConnection.m_sourcePath = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
+            inputConnection.m_targetPath = testDomain::TestComplexRecordElementData::getPathToRecordInt1();
+            inputConnection.m_sourcePath = testDomain::TestComplexRecordElementData::getPathToRecordInt1();
             inputConnection.m_sourceId = 57;
             elementData.m_modifiers.emplace_back(inputConnection.clone());
         }
@@ -51,12 +52,12 @@ namespace {
 
         const auto checkModifiers = [&testEnvironment, element, isWholeRecord](bool isCommandExecuted) {
             const babelwires::Modifier* intAssignment =
-                element->findModifier(testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(
-                    testUtils::TestSimpleArrayType::s_maximumSize));
+                element->findModifier(testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(
+                    testDomain::TestSimpleArrayType::s_maximumSize));
             const babelwires::Modifier* arrayInitialization =
-                element->findModifier(testUtils::TestComplexRecordElementData::getPathToRecordArray());
+                element->findModifier(testDomain::TestComplexRecordElementData::getPathToRecordArray());
             const babelwires::Modifier* inputConnection =
-                element->findModifier(testUtils::TestComplexRecordElementData::getPathToRecordInt1());
+                element->findModifier(testDomain::TestComplexRecordElementData::getPathToRecordInt1());
             int numModifiersAtElement = 0;
             int numModifiersAtTarget = 0;
             for (const auto* m : element->getEdits().modifierRange()) {
@@ -86,7 +87,7 @@ namespace {
         checkModifiers(false);
 
         const babelwires::Path commandPath =
-            isWholeRecord ? babelwires::Path() : testUtils::TestComplexRecordElementData::getPathToRecordArray();
+            isWholeRecord ? babelwires::Path() : testDomain::TestComplexRecordElementData::getPathToRecordArray();
 
         babelwires::RemoveFailedModifiersCommand testCopyConstructor("Test command", elementId, commandPath);
         babelwires::RemoveFailedModifiersCommand command = testCopyConstructor;
@@ -131,7 +132,7 @@ TEST(RemoveFailedModifiersCommandTest, failSafelyNoSubFeature) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId =
-        testEnvironment.m_project.addNode(testUtils::TestComplexRecordElementData());
+        testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
 
     babelwires::RemoveFailedModifiersCommand command("Test command", elementId,
                                                      babelwires::Path::deserializeFromString("qqq/zzz"));

@@ -37,4 +37,7 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::TestProcessorInputOutputType>();
 
     context.m_processorReg.addProcessor<TestProcessor>();
+
+    context.m_targetFileFormatReg.addEntry<TestTargetFileFormat>();
+    context.m_sourceFileFormatReg.addEntry<TestSourceFileFormat>();
 }

@@ -12,7 +12,8 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Domains/TestDomain/testEnum.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
 namespace {
@@ -92,8 +93,8 @@ namespace {
         babelwires::EnumValue targetValue3;
         targetValue3.set("Erm");
 
-        return setUpTestMapValue(typeSystem, testUtils::TestEnum::getThisType(),
-                                testUtils::TestEnum::getThisType(), sourceValue1, sourceValue2, targetValue1,
+        return setUpTestMapValue(typeSystem, testDomain::TestEnum::getThisType(),
+                                testDomain::TestEnum::getThisType(), sourceValue1, sourceValue2, targetValue1,
                                 targetValue2, targetValue3, allToOneFallback);
     }
 
@@ -115,7 +116,7 @@ namespace {
         targetValue3.set("Erm");
 
         return setUpTestMapValue(typeSystem, testUtils::TestType::getThisType(),
-                                testUtils::TestEnum::getThisType(), sourceValue1, sourceValue2, targetValue1,
+                                testDomain::TestEnum::getThisType(), sourceValue1, sourceValue2, targetValue1,
                                 targetValue2, targetValue3, true);
     }
 
@@ -136,8 +137,8 @@ namespace {
         testUtils::TestValue targetValue3;
         targetValue3.m_value = "zzz";
 
-        return setUpTestMapValue(typeSystem, testUtils::TestEnum::getThisType(),
-                                testUtils::TestEnum::getThisType(), sourceValue1, sourceValue2, targetValue1,
+        return setUpTestMapValue(typeSystem, testDomain::TestEnum::getThisType(),
+                                testDomain::TestEnum::getThisType(), sourceValue1, sourceValue2, targetValue1,
                                 targetValue2, targetValue3, true);
     }
 } // namespace
@@ -175,9 +176,9 @@ TEST(MapHelperTest, unorderedMapApplicator_allToSameFallback) {
 TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testUtils::TestType>();
-    typeSystem.addEntry<testUtils::TestEnum>();
+    typeSystem.addEntry<testDomain::TestEnum>();
 
-    const testUtils::TestEnum& testEnum = typeSystem.getEntryByType<testUtils::TestEnum>();
+    const testDomain::TestEnum& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestTypeTestEnumMapValue(typeSystem, mapValue);
 
@@ -193,54 +194,54 @@ TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
 
 TEST(MapHelperTest, enumSourceMapApplicator_allToOneFallback) {
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestEnum>();
+    typeSystem.addEntry<testDomain::TestEnum>();
 
-    const testUtils::TestEnum& testEnum = typeSystem.getEntryByType<testUtils::TestEnum>();
+    const testDomain::TestEnum& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestEnumMapValue(typeSystem, mapValue, true);
 
-    babelwires::EnumSourceMapApplicator<testUtils::TestEnum, testUtils::TestEnum::Value> mapApplicator(
-        mapValue, testEnum, babelwires::EnumToValueValueAdapter<testUtils::TestEnum>{testEnum});
+    babelwires::EnumSourceMapApplicator<testDomain::TestEnum, testDomain::TestEnum::Value> mapApplicator(
+        mapValue, testEnum, babelwires::EnumToValueValueAdapter<testDomain::TestEnum>{testEnum});
 
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Foo], testUtils::TestEnum::Value::Oom);
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Bar], testUtils::TestEnum::Value::Boo);
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Erm], testUtils::TestEnum::Value::Erm);
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Oom], testUtils::TestEnum::Value::Erm);
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Boo], testUtils::TestEnum::Value::Erm);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Foo], testDomain::TestEnum::Value::Oom);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Bar], testDomain::TestEnum::Value::Boo);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Erm], testDomain::TestEnum::Value::Erm);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Oom], testDomain::TestEnum::Value::Erm);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Boo], testDomain::TestEnum::Value::Erm);
 }
 
 TEST(MapHelperTest, enumSourceMapApplicator_allToSameFallback) {
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestEnum>();
+    typeSystem.addEntry<testDomain::TestEnum>();
 
-    const testUtils::TestEnum& testEnum = typeSystem.getEntryByType<testUtils::TestEnum>();
+    const testDomain::TestEnum& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestEnumMapValue(typeSystem, mapValue, false);
 
-    babelwires::EnumSourceMapApplicator<testUtils::TestEnum, testUtils::TestEnum::Value> mapApplicator(
-        mapValue, testEnum, babelwires::EnumToValueValueAdapter<testUtils::TestEnum>{testEnum});
+    babelwires::EnumSourceMapApplicator<testDomain::TestEnum, testDomain::TestEnum::Value> mapApplicator(
+        mapValue, testEnum, babelwires::EnumToValueValueAdapter<testDomain::TestEnum>{testEnum});
 
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Foo], testUtils::TestEnum::Value::Oom);
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Bar], testUtils::TestEnum::Value::Boo);
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Erm], testUtils::TestEnum::Value::Erm);
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Oom], testUtils::TestEnum::Value::Oom);
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Boo], testUtils::TestEnum::Value::Boo);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Foo], testDomain::TestEnum::Value::Oom);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Bar], testDomain::TestEnum::Value::Boo);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Erm], testDomain::TestEnum::Value::Erm);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Oom], testDomain::TestEnum::Value::Oom);
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Boo], testDomain::TestEnum::Value::Boo);
 }
 
 TEST(MapHelperTest, enumSourceMapApplicator_differentTypes) {
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestEnum>();
+    typeSystem.addEntry<testDomain::TestEnum>();
 
-    const testUtils::TestEnum& testEnum = typeSystem.getEntryByType<testUtils::TestEnum>();
+    const testDomain::TestEnum& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestEnumTestTypeMapValue(typeSystem, mapValue);
 
-    babelwires::EnumSourceMapApplicator<testUtils::TestEnum, std::string> mapApplicator(mapValue, testEnum,
+    babelwires::EnumSourceMapApplicator<testDomain::TestEnum, std::string> mapApplicator(mapValue, testEnum,
                                                                                         &testValueAdapter);
 
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Foo], "xxx");
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Bar], "yyy");
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Erm], "zzz");
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Oom], "zzz");
-    EXPECT_EQ(mapApplicator[testUtils::TestEnum::Value::Boo], "zzz");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Foo], "xxx");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Bar], "yyy");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Erm], "zzz");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Oom], "zzz");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Boo], "zzz");
 }
