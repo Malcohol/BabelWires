@@ -8,25 +8,16 @@
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 
+#include <Domains/TestDomain/testSumType.hpp>
+
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-namespace {
-    class TestSumType : public babelwires::SumType {
-      public:
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestSumType"), 1);
-        TestSumType(unsigned int defaultType)
-            : babelwires::SumType({babelwires::DefaultIntType::getThisType(),
-                                   babelwires::DefaultRationalType::getThisType()},
-                                  defaultType) {}
-    };
-} // namespace
-
 TEST(SumTypeTest, sumTypeDefault0) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestSumType sumType(0);
+    testDomain::TestSumType sumType(0);
 
     EXPECT_EQ(sumType.getSummands().size(), 2);
     EXPECT_EQ(sumType.getSummands()[0], babelwires::DefaultIntType::getThisType());
@@ -51,7 +42,7 @@ TEST(SumTypeTest, sumTypeDefault0) {
 TEST(SumTypeTest, sumTypeDefault1) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestSumType sumType(1);
+    testDomain::TestSumType sumType(1);
 
     EXPECT_EQ(sumType.getSummands().size(), 2);
     EXPECT_EQ(sumType.getSummands()[0], babelwires::DefaultIntType::getThisType());
