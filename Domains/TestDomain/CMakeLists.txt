@@ -3,6 +3,7 @@ SET( LIB_TEST_UTILS_SRCS
     testArrayType.cpp
     testEnum.cpp
     testFileFormats.cpp
+    testParallelProcessor.cpp
     testProcessor.cpp
     testRecordType.cpp
     testRecordWithVariantsType.cpp

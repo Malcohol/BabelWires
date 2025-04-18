@@ -15,6 +15,7 @@
 #include <Domains/TestDomain/testRecordWithVariantsType.hpp>
 #include <Domains/TestDomain/testSumType.hpp>
 #include <Domains/TestDomain/testTupleType.hpp>
+#include <Domains/TestDomain/testParallelProcessor.hpp>
 
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
@@ -34,10 +35,14 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::TestSumType>();
     context.m_typeSystem.addEntry<testDomain::TestTupleType>();
 
+    context.m_typeSystem.addEntry<testDomain::TestParallelProcessorInput>();
+    context.m_typeSystem.addEntry<testDomain::TestParallelProcessorOutput>();
     context.m_typeSystem.addEntry<testDomain::TestProcessorInputOutputType>();
 
     context.m_processorReg.addProcessor<TestProcessor>();
+    context.m_processorReg.addProcessor<TestParallelProcessor>();
 
     context.m_targetFileFormatReg.addEntry<TestTargetFileFormat>();
     context.m_sourceFileFormatReg.addEntry<TestSourceFileFormat>();
 }
+
