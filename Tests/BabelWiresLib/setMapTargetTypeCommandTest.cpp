@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
@@ -20,14 +21,14 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisType()}});
+    mapProject.setAllowedSourceTypeRefs({{babelwires::StringType::getThisType()}});
     mapProject.setAllowedTargetTypeRefs({{testDomain::TestEnum::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testUtils::TestType::getThisType());
+    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
     mapValue.setTargetTypeRef(testDomain::TestSubSubEnum1::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testUtils::TestType::getThisType(),
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, babelwires::StringType::getThisType(),
                                               testDomain::TestEnum::getThisType());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
@@ -83,15 +84,15 @@ TEST(SetMapTargetTypeCommandTest, failWithUnallowedType) {
     testUtils::TestEnvironment environment;
         
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testUtils::TestType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{testUtils::TestType::getThisType()}});
+    mapProject.setAllowedSourceTypeRefs({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedTargetTypeRefs({{babelwires::StringType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testUtils::TestType::getThisType());
-    mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
+    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testUtils::TestType::getThisType());
+                                                       babelwires::StringType::getThisType());
     mapValue.emplaceBack(allToOne.clone());
 
     mapProject.setMapValue(mapValue);
