@@ -46,8 +46,13 @@ namespace testDomain {
     };
 
     struct RecordAOptS : babelwires::RecordType {
-        PRIMITIVE_TYPE("RecordAOptS", "record with int field A and string field Opt", "62fd3ee0-3a98-4775-b6fc-2c37143491f6", 1);
+        PRIMITIVE_TYPE("RecordAOptS", "Record with int field A and string field Opt", "62fd3ee0-3a98-4775-b6fc-2c37143491f6", 1);
         RecordAOptS();
+    };
+
+    struct RecordABOptChild : babelwires::RecordType {
+        RecordABOptChild(const babelwires::TypeSystem& typeSystem);
+        PRIMITIVE_TYPE("RecordChild", "Child of RecordABOpt", "0cc46b96-9ce0-4722-aba9-9009d12f1bcc", 1);
     };
 
 } // namespace testDomain

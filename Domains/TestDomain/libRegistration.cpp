@@ -44,6 +44,7 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::RecordAOpt>();
     context.m_typeSystem.addEntry<testDomain::RecordABOpt>();
     context.m_typeSystem.addEntry<testDomain::RecordAOptS>();
+    context.m_typeSystem.addEntry<testDomain::RecordABOptChild>(context.m_typeSystem);
 
     context.m_typeSystem.addEntry<testDomain::TestParallelProcessorInput>();
     context.m_typeSystem.addEntry<testDomain::TestParallelProcessorOutput>();
