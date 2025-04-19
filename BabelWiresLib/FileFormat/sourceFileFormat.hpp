@@ -14,8 +14,9 @@
 #include <string>
 #include <vector>
 
+#include <filesystem>
+
 namespace babelwires {
-    class DataSource;
     struct UserLogger;
 } // namespace babelwires
 
@@ -26,7 +27,7 @@ namespace babelwires {
     class SourceFileFormat : public FileTypeEntry, ProductInfo {
       public:
         SourceFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
-        virtual std::unique_ptr<babelwires::ValueTreeRoot> loadFromFile(DataSource& dataSource, const ProjectContext& projectContext,
+        virtual std::unique_ptr<babelwires::ValueTreeRoot> loadFromFile(const std::filesystem::path& path, const ProjectContext& projectContext,
                                                                       UserLogger& userLogger) const = 0;
     };
 

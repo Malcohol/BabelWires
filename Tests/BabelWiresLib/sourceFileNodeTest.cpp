@@ -18,15 +18,13 @@
 namespace {
     void createTestFile(testUtils::TestEnvironment& testEnvironment, const std::filesystem::path& path,
                         int value = 14) {
-        std::ofstream tempFile(path);
-
         auto fileFormat = std::make_unique<testDomain::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<babelwires::ValueTreeRoot>(testEnvironment.m_projectContext.m_typeSystem,
                                                                        testDomain::getTestFileType());
         fileFeature->setToDefault();
         testDomain::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
         instance.getintR0().set(value);
-        fileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFile);
+        fileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, path);
     }
 } // namespace
 

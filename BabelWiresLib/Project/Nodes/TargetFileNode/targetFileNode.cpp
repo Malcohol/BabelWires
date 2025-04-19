@@ -17,7 +17,6 @@
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 
 #include <Common/Hash/hash.hpp>
-#include <Common/IO/outFileStream.hpp>
 #include <Common/Log/userLogger.hpp>
 
 #include <fstream>
@@ -109,11 +108,9 @@ bool babelwires::TargetFileNode::save(const ProjectContext& context, UserLogger&
         return false;
     }
     try {
-        OutFileStream outStream(data.m_filePath);
         const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
         assert(format && "FileFeature with unregistered file format");
-        format->writeToFile(context, userLogger, *m_valueTreeRoot, outStream);
-        outStream.close();
+        format->writeToFile(context, userLogger, *m_valueTreeRoot, data.m_filePath);
         if (m_saveHashWhenSaved != m_saveHash) {
             setChanged(Changes::NodeLabelChanged);
             m_saveHashWhenSaved = m_saveHash;

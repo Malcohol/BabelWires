@@ -442,15 +442,24 @@ TEST(ProjectTest, saveTarget) {
 
     testEnvironment.m_project.tryToSaveTarget(elementId);
 
-    EXPECT_EQ(testDomain::TestSourceFileFormat::getFileData(tempFilePath), 47);
+    {
+        auto [r0, r1] = testDomain::TestSourceFileFormat::getFileData(tempFilePath);
+        EXPECT_EQ(r0, 47);
+    }
 
     instance.getintR0().set(30);
     testEnvironment.m_project.tryToSaveTarget(elementId);
-    EXPECT_EQ(testDomain::TestSourceFileFormat::getFileData(tempFilePath), 30);
+    {
+        auto [r0, r1] = testDomain::TestSourceFileFormat::getFileData(tempFilePath);
+        EXPECT_EQ(r0, 30);
+    }
 
     instance.getintR0().set(79);
     testEnvironment.m_project.tryToSaveAllTargets();
-    EXPECT_EQ(testDomain::TestSourceFileFormat::getFileData(tempFilePath), 79);
+    {
+        auto [r0, r1] = testDomain::TestSourceFileFormat::getFileData(tempFilePath);
+        EXPECT_EQ(r0, 79);
+    }
 
     std::ofstream lockThisStream = tempFilePath.openForWriting();
 

@@ -25,10 +25,10 @@ namespace {
         testUtils::TempFilePath filePath2("erm" + testDomain::TestSourceFileFormat::getFileExtension());
 
         if (source1Present) {
-            testDomain::TestSourceFileFormat::writeToTestFile(filePath1, 'x');
+            testDomain::TestSourceFileFormat::writeToTestFile(filePath1, 100);
         }
         if (source2Present) {
-            testDomain::TestSourceFileFormat::writeToTestFile(filePath2, 'q');
+            testDomain::TestSourceFileFormat::writeToTestFile(filePath2, 200);
         }
 
         babelwires::SourceFileNodeData elementData;
@@ -46,7 +46,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
         if (source1Present) {
-            EXPECT_EQ(getOutput().getintR0().get(), 'x');
+            EXPECT_EQ(getOutput().getintR0().get(), 100);
         }
 
         babelwires::ChangeFileCommand testCopyConstructor("Test command", elementId, filePath2.m_filePath);
@@ -61,7 +61,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
-            EXPECT_EQ(getOutput().getintR0().get(), 'q');
+            EXPECT_EQ(getOutput().getintR0().get(), 200);
         }
 
         command.undo(testEnvironment.m_project);
@@ -69,7 +69,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
         if (source1Present) {
-            EXPECT_EQ(getOutput().getintR0().get(), 'x');
+            EXPECT_EQ(getOutput().getintR0().get(), 100);
         }
 
         command.execute(testEnvironment.m_project);
@@ -77,7 +77,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
-            EXPECT_EQ(getOutput().getintR0().get(), 'q');
+            EXPECT_EQ(getOutput().getintR0().get(), 200);
         }
     }
 } // namespace

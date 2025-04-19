@@ -163,10 +163,10 @@ TEST(ProjectBundleTest, factoryMetadata) {
         testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
 
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(
-        "Data for the factory \"testFactoryFormat\" (testFactoryFormat) corresponds to an old version (1)"));
+        "Data for the factory \"Test Target File Format\" (TestTargetFormat) corresponds to an old version (1)"));
     EXPECT_FALSE(testEnvironment.m_log.hasSubstringIgnoreCase("Data for the factory \"testProcessor\""));
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(
-        "Data for the factory \"testFileFormat\" (testFileFormat) has an unknown version (3)"));
+        "Data for the factory \"Test Source File Format\" (TestSourceFormat) has an unknown version (3)"));
 }
 
 TEST(ProjectBundleTest, filePathResolution) {

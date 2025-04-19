@@ -15,8 +15,7 @@
 #include <fstream>
 
 namespace {
-    const char s_fileFormatId[] = "testFileFormat";
-    const char s_factoryFormatId[] = "testFactoryFormat";
+    const char s_fileFormat[] = "testFileFormat";
     const char s_manufacturer[] = "Test Manufacturer";
     const char s_product[] = "Test Product";
 } // namespace
@@ -33,18 +32,15 @@ babelwires::Path testDomain::getTestFileElementPathToInt0() {
 }
 
 babelwires::LongId testDomain::TestSourceFileFormat::getThisIdentifier() {
-    return s_fileFormatId;
+    return BW_LONG_ID("TestSourceFormat", "Test Source File Format", "c2e45d49-2707-4109-8642-a0a87143c315");
 }
 
 std::string testDomain::TestSourceFileFormat::getFileExtension() {
-    return s_fileFormatId;
+    return s_fileFormat;
 }
 
 testDomain::TestSourceFileFormat::TestSourceFileFormat()
-    : SourceFileFormat(babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
-                           s_fileFormatId, s_fileFormatId, "f557b89a-2499-465a-a605-5ef7f69284c4",
-                           babelwires::IdentifierRegistry::Authority::isAuthoritative),
-                       1, {s_fileFormatId}) {}
+    : SourceFileFormat(getThisIdentifier(), 1, {s_fileFormat}) {}
 
 std::string testDomain::TestSourceFileFormat::getManufacturerName() const {
     return s_manufacturer;
@@ -54,56 +50,46 @@ std::string testDomain::TestSourceFileFormat::getProductName() const {
     return s_product;
 }
 
-namespace {
-    char getFileDataInternal(babelwires::DataSource& dataSource) {
-        int value = 0;
-        for (char c : s_fileFormatId) {
-            babelwires::Byte d = dataSource.getNextByte();
-            if (c != 0) {
-                if (d != c) {
-                    throw babelwires::ParseException() << "Invalid TestSourceFileFormat file";
-                }
-            } else {
-                value = d;
-            }
-        }
-        if (!dataSource.isEof()) {
-            throw babelwires::ParseException() << "Invalid TestSourceFileFormat file";
-        }
-        return value;
-    }
-} // namespace
+void testDomain::TestSourceFileFormat::writeToTestFile(const std::filesystem::path& path, int r0, int r1) {
+    std::ofstream fs(path);
+    fs << s_fileFormat << " " << r0 << " " << r1 << "\n";
+}
 
-char testDomain::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
-    babelwires::FileDataSource dataSource(path);
-    return getFileDataInternal(dataSource);
+std::tuple<int, int> testDomain::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
+    std::string formatId;
+    int r0, r1;
+    try {
+        std::ifstream is(path);
+        is.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        is >> formatId >> r0 >> r1;
+    } catch (...) {
+        throw babelwires::ParseException() << "Failed to parse file at " << path;
+    }
+    if (formatId != s_fileFormat) {
+        throw babelwires::ParseException() << "File at " << path << " was not in the expected format";
+    }
+    return {r0, r1};
 }
 
 std::unique_ptr<babelwires::ValueTreeRoot>
-testDomain::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource,
+testDomain::TestSourceFileFormat::loadFromFile(const std::filesystem::path& path,
                                               const babelwires::ProjectContext& projectContext,
                                               babelwires::UserLogger& userLogger) const {
-    const int value = getFileDataInternal(dataSource);
+    auto [r0, r1] = getFileData(path);
     auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
     newFeature->setToDefault();
     TestSimpleRecordType::Instance instance{newFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
-    instance.getintR0().set(value);
+    instance.getintR0().set(r0);
+    instance.getintR1().set(r1);
     return newFeature;
 }
 
-void testDomain::TestSourceFileFormat::writeToTestFile(const std::filesystem::path& path, char testData) {
-    std::ofstream fs(path);
-    fs << s_fileFormatId << testData;
-}
-
 testDomain::TestTargetFileFormat::TestTargetFileFormat()
-    : TargetFileFormat(babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(
-                           s_factoryFormatId, s_factoryFormatId, "a9a603aa-9d83-4f12-ac35-de0056d5a568",
-                           babelwires::IdentifierRegistry::Authority::isAuthoritative),
-                       3, {s_fileFormatId}) {}
+    : TargetFileFormat(getThisIdentifier(),
+                       3, {s_fileFormat}) {}
 
 babelwires::LongId testDomain::TestTargetFileFormat::getThisIdentifier() {
-    return s_factoryFormatId;
+    return BW_LONG_ID("TestTargetFormat", "Test Target File Format", "0e0bf791-c161-41d0-9690-223d05a057bd");
 }
 
 std::string testDomain::TestTargetFileFormat::getManufacturerName() const {
@@ -122,7 +108,8 @@ testDomain::TestTargetFileFormat::createNewValue(const babelwires::ProjectContex
 void testDomain::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
                                                   babelwires::UserLogger& userLogger,
                                                   const babelwires::ValueTreeRoot& contents,
-                                                  std::ostream& os) const {
+                                                  const std::filesystem::path& path) const {
+    std::ofstream os(path);    
     TestSimpleRecordType::ConstInstance instance{contents.getChild(0)->is<babelwires::ValueTreeNode>()};
-    os << s_fileFormatId << char(instance.getintR0().get());
+    TestSourceFileFormat::writeToTestFile(path, instance.getintR0().get(), instance.getintR1().get());
 }
