@@ -127,15 +127,13 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     tempFileName << "foo." << testDomain::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath(tempFileName.str());
     {
-        std::ofstream tempFile = tempFilePath.openForWriting();
-
         auto targetFileFormat = std::make_unique<testDomain::TestTargetFileFormat>();
         auto fileFeature = std::make_unique<babelwires::ValueTreeRoot>(testEnvironment.m_projectContext.m_typeSystem,
                                                                        testDomain::getTestFileType());
         fileFeature->setToDefault();
         testDomain::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
         instance.getintR0().set(14);
-        targetFileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFile);
+        targetFileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFilePath);
     }
 
     // Create sourceFileData which expect to be able to load the file.

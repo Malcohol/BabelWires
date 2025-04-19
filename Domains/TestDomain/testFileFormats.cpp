@@ -122,7 +122,8 @@ testDomain::TestTargetFileFormat::createNewValue(const babelwires::ProjectContex
 void testDomain::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
                                                   babelwires::UserLogger& userLogger,
                                                   const babelwires::ValueTreeRoot& contents,
-                                                  std::ostream& os) const {
+                                                  const std::filesystem::path& path) const {
+    std::ofstream os(path);    
     TestSimpleRecordType::ConstInstance instance{contents.getChild(0)->is<babelwires::ValueTreeNode>()};
     os << s_fileFormatId << char(instance.getintR0().get());
 }

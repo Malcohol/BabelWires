@@ -41,7 +41,7 @@ namespace testDomain {
         std::unique_ptr<babelwires::ValueTreeRoot>
         createNewValue(const babelwires::ProjectContext& projectContext) const override;
         void writeToFile(const babelwires::ProjectContext& projectContext, babelwires::UserLogger& userLogger,
-                         const babelwires::ValueTreeRoot& contents, std::ostream& os) const override;
+                         const babelwires::ValueTreeRoot& contents, const std::filesystem::path& path) const override;
     };
 
 } // namespace testDomain

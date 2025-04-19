@@ -2,7 +2,7 @@
  * Factories for code which knows how to create, load and save FileFeatures.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -10,7 +10,7 @@
 #include <Common/Registry/fileTypeRegistry.hpp>
 #include <Common/productInfo.hpp>
 
-#include <istream>
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -28,7 +28,8 @@ namespace babelwires {
       public:
         TargetFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
         virtual std::unique_ptr<ValueTreeRoot> createNewValue(const ProjectContext& projectContext) const = 0;
-        virtual void writeToFile(const ProjectContext& projectContext, UserLogger& userLogger, const ValueTreeRoot& contents, std::ostream& os) const = 0;
+        virtual void writeToFile(const ProjectContext& projectContext, UserLogger& userLogger,
+                                 const ValueTreeRoot& contents, const std::filesystem::path& path) const = 0;
     };
 
     /// Registry of TargetFileFactories.
