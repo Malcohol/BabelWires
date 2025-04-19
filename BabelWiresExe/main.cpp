@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
         smf::registerLib(context);
 
         // Comment / Uncomment to enable a domain of testing data.
-        testDomain::registerLib(context);
+        //testDomain::registerLib(context);
 
         if (options.m_mode == ProgramOptions::MODE_RUN_PROJECT) {
             Project project(context, log);
