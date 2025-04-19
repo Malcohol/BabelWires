@@ -56,10 +56,15 @@ void testDomain::TestSourceFileFormat::writeToTestFile(const std::filesystem::pa
 }
 
 std::tuple<int, int> testDomain::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
-    std::ifstream is(path);
     std::string formatId;
     int r0, r1;
-    is >> formatId >> r0 >> r1;
+    try {
+        std::ifstream is(path);
+        is.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        is >> formatId >> r0 >> r1;
+    } catch (...) {
+        throw babelwires::ParseException() << "Failed to parse file at " << path;
+    }
     if (formatId != s_fileFormat) {
         throw babelwires::ParseException() << "File at " << path << " was not in the expected format";
     }
