@@ -9,8 +9,9 @@
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>
@@ -18,41 +19,41 @@
 TEST(ActivateOptionalsModifierDataTest, apply) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisType());
+                                                testDomain::TestComplexRecordType::getThisType());
     valueFeature.setToDefault();
-    const auto* type = valueFeature.getType().as<testUtils::TestComplexRecordType>();
+    const auto* type = valueFeature.getType().as<testDomain::TestComplexRecordType>();
 
-    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpIntId()));
-    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpIntId()));
+    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpRecId()));
 
     babelwires::ActivateOptionalsModifierData data;
-    data.m_selectedOptionals.emplace_back(testUtils::TestComplexRecordType::getOpIntId());
+    data.m_selectedOptionals.emplace_back(testDomain::TestComplexRecordType::getOpIntId());
 
     data.apply(&valueFeature);
 
-    EXPECT_TRUE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpIntId()));
-    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_TRUE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpIntId()));
+    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpRecId()));
 
     babelwires::ActivateOptionalsModifierData data2;
-    data2.m_selectedOptionals.emplace_back(testUtils::TestComplexRecordType::getOpRecId());
+    data2.m_selectedOptionals.emplace_back(testDomain::TestComplexRecordType::getOpRecId());
 
     data2.apply(&valueFeature);
 
-    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpIntId()));
-    EXPECT_TRUE(type->isActivated(valueFeature.getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpIntId()));
+    EXPECT_TRUE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpRecId()));
 }
 
 TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                testUtils::TestComplexRecordType::getThisType());
+                                                testDomain::TestComplexRecordType::getThisType());
     valueFeature.setToDefault();
-    const auto* type = valueFeature.getType().as<testUtils::TestComplexRecordType>();
+    const auto* type = valueFeature.getType().as<testDomain::TestComplexRecordType>();
 
     babelwires::ValueHolder before = valueFeature.getValue();
 
     babelwires::ActivateOptionalsModifierData data;
-    data.m_selectedOptionals.emplace_back(testUtils::TestComplexRecordType::getOpIntId());
+    data.m_selectedOptionals.emplace_back(testDomain::TestComplexRecordType::getOpIntId());
     data.m_selectedOptionals.emplace_back("foo");
 
     EXPECT_THROW(data.apply(&valueFeature), babelwires::ModelException);
@@ -63,7 +64,7 @@ TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
 TEST(ActivateOptionalsModifierDataTest, failureNotARecordWithOptionals) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                testUtils::TestSimpleRecordType::getThisType());
+                                                testDomain::TestSimpleRecordType::getThisType());
     valueFeature.setToDefault();
 
     babelwires::ActivateOptionalsModifierData data;

@@ -11,19 +11,20 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
 
     const babelwires::NodeId sourceId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
     const babelwires::NodeId targetId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
 
     const babelwires::ValueNode* const element =
         testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
@@ -36,18 +37,18 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
     const babelwires::Path pathToValue;
 
     babelwires::Path pathToOptional = pathToValue;
-    pathToOptional.pushStep(testUtils::TestComplexRecordType::getOpRecId());
+    pathToOptional.pushStep(testDomain::TestComplexRecordType::getOpRecId());
 
     babelwires::Path pathToIntInOptional = pathToOptional;
-    pathToIntInOptional.pushStep(testUtils::TestSimpleRecordType::getInt1Id());
+    pathToIntInOptional.pushStep(testDomain::TestSimpleRecordType::getInt1Id());
 
     babelwires::Path pathToIntInSimpleRecord = pathToValue;
-    pathToIntInSimpleRecord.pushStep(testUtils::TestSimpleRecordType::getInt1Id());
+    pathToIntInSimpleRecord.pushStep(testDomain::TestSimpleRecordType::getInt1Id());
 
     {
         babelwires::ActivateOptionalsModifierData activateOptionalsModifierData;
         activateOptionalsModifierData.m_targetPath = pathToValue;
-        activateOptionalsModifierData.m_selectedOptionals.emplace_back(testUtils::TestComplexRecordType::getOpRecId());
+        activateOptionalsModifierData.m_selectedOptionals.emplace_back(testDomain::TestComplexRecordType::getOpRecId());
         testEnvironment.m_project.addModifier(elementId, activateOptionalsModifierData);
     }
     {
@@ -67,10 +68,10 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
 
     const babelwires::ValueTreeNode* const input = element->getInput();
     ASSERT_NE(input, nullptr);
-    const testUtils::TestComplexRecordType* const type = input->getType().as<testUtils::TestComplexRecordType>();
+    const testDomain::TestComplexRecordType* const type = input->getType().as<testDomain::TestComplexRecordType>();
 
     babelwires::DeactivateOptionalCommand testCopyConstructor("Test command", elementId, pathToValue,
-        testUtils::TestComplexRecordType::getOpRecId());
+        testDomain::TestComplexRecordType::getOpRecId());
     babelwires::DeactivateOptionalCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
@@ -104,19 +105,19 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
 
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_FALSE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_FALSE(type->isActivated(input->getValue(), testDomain::TestComplexRecordType::getOpRecId()));
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_TRUE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_TRUE(type->isActivated(input->getValue(), testDomain::TestComplexRecordType::getOpRecId()));
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_FALSE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_FALSE(type->isActivated(input->getValue(), testDomain::TestComplexRecordType::getOpRecId()));
     checkModifiers(true);
 }
 
@@ -137,7 +138,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::DeactivateOptionalCommand command("Test command", 51,
                                                   babelwires::Path::deserializeFromString("qqq/zzz"), opId);
 
-    babelwires::ValueNodeData elementData(testUtils::TestComplexRecordType::getThisType());
+    babelwires::ValueNodeData elementData(testDomain::TestComplexRecordType::getThisType());
     elementData.m_id = 51;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
@@ -151,7 +152,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoOptional) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
 
     const babelwires::Path pathToValue;
 
@@ -166,7 +167,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
 
     // Not an optional field
     babelwires::ShortId opId("flerm");
@@ -185,12 +186,12 @@ TEST(DeactivateOptionalsCommandTest, failSafelyAlreadyInactive) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
 
     const babelwires::Path pathToValue;
 
     babelwires::DeactivateOptionalCommand command(
-        "Test command", elementId, pathToValue, testUtils::TestComplexRecordType::getOpIntId());
+        "Test command", elementId, pathToValue, testDomain::TestComplexRecordType::getOpIntId());
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
 }

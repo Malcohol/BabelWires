@@ -9,8 +9,9 @@
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
+#include <Domains/TestDomain/testRecordWithVariantsType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>
@@ -18,25 +19,25 @@
 TEST(SelectRecordVariantModifierDataTest, apply) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot valueFeature(
-        testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisType());
+        testEnvironment.m_typeSystem, testDomain::TestRecordWithVariantsType::getThisType());
     valueFeature.setToDefault();
-    const auto* type = valueFeature.getType().as<testUtils::TestRecordWithVariantsType>();
+    const auto* type = valueFeature.getType().as<testDomain::TestRecordWithVariantsType>();
 
-    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagBId());
+    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testDomain::TestRecordWithVariantsType::getTagBId());
 
     babelwires::SelectRecordVariantModifierData data;
-    data.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagAId();
+    data.m_tagToSelect = testDomain::TestRecordWithVariantsType::getTagAId();
 
     data.apply(&valueFeature);
 
-    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagAId());
+    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testDomain::TestRecordWithVariantsType::getTagAId());
 
     babelwires::SelectRecordVariantModifierData data2;
-    data2.m_tagToSelect = testUtils::TestRecordWithVariantsType::getTagCId();
+    data2.m_tagToSelect = testDomain::TestRecordWithVariantsType::getTagCId();
 
     data2.apply(&valueFeature);
 
-    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testUtils::TestRecordWithVariantsType::getTagCId());
+    EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testDomain::TestRecordWithVariantsType::getTagCId());
 }
 
 TEST(SelectRecordVariantModifierDataTest, failureNotATag) {
@@ -45,7 +46,7 @@ TEST(SelectRecordVariantModifierDataTest, failureNotATag) {
 
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot valueFeature(
-        testEnvironment.m_typeSystem, testUtils::TestRecordWithVariantsType::getThisType());
+        testEnvironment.m_typeSystem, testDomain::TestRecordWithVariantsType::getThisType());
 
     valueFeature.setToDefault();
 

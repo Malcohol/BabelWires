@@ -5,7 +5,7 @@
 
 #include <filesystem>
 
-namespace testUtils {
+namespace testDomain {
     /// A file type which wraps a TestSimpleRecordType.
     babelwires::TypeRef getTestFileType();
 
@@ -44,4 +44,4 @@ namespace testUtils {
                          const babelwires::ValueTreeRoot& contents, std::ostream& os) const override;
     };
 
-} // namespace testUtils
+} // namespace testDomain

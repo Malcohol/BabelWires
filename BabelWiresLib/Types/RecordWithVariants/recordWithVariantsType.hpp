@@ -9,9 +9,6 @@
 
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
-// TODO Remove
-//#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
-
 namespace babelwires {
 
     /// RecordWithVariantsType is like a RecordType but has a number of variants.
@@ -98,14 +95,5 @@ namespace babelwires {
         /// Points into the m_fields struct.
         std::unordered_map<ShortId, std::vector<const Field*>> m_tagToVariantCache;
     };
-
-/*
-      class TestRecordWithVariants : public RecordWithVariantsType {
-        public:
-          TestRecordWithVariants();
-
-          PRIMITIVE_TYPE("recordV2", "RecordWithVariants", "08860254-fdb1-4272-bc0c-6ad44824e7eb", 1);
-      };
-*/
 
 } // namespace babelwires

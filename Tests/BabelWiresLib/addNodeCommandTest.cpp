@@ -8,13 +8,14 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(AddNodeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::AddNodeCommand testCopyConstructor("Test command", std::make_unique<testUtils::TestSimpleRecordElementData>());
+    babelwires::AddNodeCommand testCopyConstructor("Test command", std::make_unique<testDomain::TestSimpleRecordElementData>());
     babelwires::AddNodeCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
@@ -41,7 +42,7 @@ TEST(AddNodeCommandTest, executeAndUndo) {
 TEST(AddNodeCommandTest, subsumeMoves) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::AddNodeCommand addCommand("Test command", std::make_unique<testUtils::TestSimpleRecordElementData>());
+    babelwires::AddNodeCommand addCommand("Test command", std::make_unique<testDomain::TestSimpleRecordElementData>());
 
     EXPECT_TRUE(addCommand.initializeAndExecute(testEnvironment.m_project));
 

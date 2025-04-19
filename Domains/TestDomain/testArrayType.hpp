@@ -2,7 +2,7 @@
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
-namespace testUtils {
+namespace testDomain {
     class TestSimpleArrayType : public babelwires::ArrayType {
       public:
         TestSimpleArrayType();
@@ -41,4 +41,4 @@ namespace testUtils {
         static babelwires::Path getPathToArray_2();
     };
 
-} // namespace testUtils
+} // namespace testDomain

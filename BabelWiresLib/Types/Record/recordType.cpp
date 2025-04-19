@@ -22,12 +22,13 @@ babelwires::RecordType::RecordType(std::vector<Field> fields)
 namespace {
     std::vector<babelwires::RecordType::Field>
     getCombinedFieldSet(const babelwires::RecordType& parent,
-                    std::vector<babelwires::RecordType::Field> additionalFields) {
+                        std::vector<babelwires::RecordType::Field> additionalFields) {
         const std::size_t numParentFields = parent.getFields().size();
         const std::size_t numAdditionalFields = additionalFields.size();
         const std::size_t combinedSize = numParentFields + numAdditionalFields;
         additionalFields.resize(combinedSize);
-        std::move_backward(additionalFields.begin(), additionalFields.begin() + numAdditionalFields, additionalFields.begin() + combinedSize);
+        std::move_backward(additionalFields.begin(), additionalFields.begin() + numAdditionalFields,
+                           additionalFields.begin() + combinedSize);
         std::copy(parent.getFields().begin(), parent.getFields().end(), additionalFields.begin());
         return std::move(additionalFields);
     }
@@ -302,11 +303,12 @@ babelwires::SubtypeOrder babelwires::RecordType::compareSubtypeHelper(const Type
         }
     }
     if (thisIt != thisFields.end()) {
-        if (updateAndCheckUnrelated(SubtypeOrder::IsSubtype)) {
+        if ((thisIt->m_optionality == Optionality::alwaysActive) && updateAndCheckUnrelated(SubtypeOrder::IsSubtype)) {
             return SubtypeOrder::IsUnrelated;
         }
     } else if (otherIt != otherFields.end()) {
-        if (updateAndCheckUnrelated(SubtypeOrder::IsSupertype)) {
+        if ((otherIt->m_optionality == Optionality::alwaysActive) &&
+            updateAndCheckUnrelated(SubtypeOrder::IsSupertype)) {
             return SubtypeOrder::IsUnrelated;
         }
     }

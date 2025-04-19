@@ -9,9 +9,6 @@
 
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
-// TODO Remove
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
-
 namespace babelwires {
 
     /// ArrayTypes have values which contain a dynamically-sized sequence of child values.
@@ -53,21 +50,4 @@ namespace babelwires {
         unsigned int m_minimumSize;
         unsigned int m_maximumSize;
     };
-
-/* For testing
-    // TODO Remove
-    class TestArrayType : public ArrayType {
-      public:
-        TestArrayType();
-        
-        PRIMITIVE_TYPE("arrayT", "Array", "0171a8a6-9ff7-4fed-a7fe-836529b690ae", 1);
-    };
-
-    class TestArrayType2 : public ArrayType {
-      public:
-        TestArrayType2();
-        
-        PRIMITIVE_TYPE("arrayT2", "Array2", "0171a8a6-9ff7-4fed-a7fe-836529b690af", 1);
-    };
-*/
 } // namespace babelwires

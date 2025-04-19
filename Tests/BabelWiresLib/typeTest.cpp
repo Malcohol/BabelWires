@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/stringValue.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
+#include <Domains/TestDomain/testEnum.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 
@@ -14,12 +15,12 @@ TEST(TypeTest, typeAndValue)
     babelwires::TypeSystem typeSystem;
     // This mostly just exercises the API.
 
-    testUtils::TestType testType;
-    auto [valueHolder, value] = testType.createValue(typeSystem);
+    babelwires::StringType type;
+    auto [valueHolder, value] = type.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
-    EXPECT_TRUE(value.as<testUtils::TestValue>());
-    EXPECT_TRUE(testType.isValidValue(typeSystem, value));
+    EXPECT_TRUE(value.as<babelwires::StringValue>());
+    EXPECT_TRUE(type.isValidValue(typeSystem, value));
 
-    testUtils::TestEnum testEnum;
+    testDomain::TestEnum testEnum;
     EXPECT_FALSE(testEnum.isValidValue(typeSystem, value));
 }

@@ -2,14 +2,8 @@
 
 #include <BabelWiresLib/libRegistration.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testSumType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testTupleType.hpp>
+#include <Domains/TestDomain/libRegistration.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
@@ -20,6 +14,7 @@ testUtils::TestEnvironment::TestEnvironment()
     , m_project(m_projectContext, m_log) {
 
     babelwires::registerLib(m_projectContext);
+    testDomain::registerLib(m_projectContext);
 
     {
         // Also register some irrelevant field names.
@@ -31,25 +26,7 @@ testUtils::TestEnvironment::TestEnvironment()
             babelwires::IdentifierRegistry::Authority::isAuthoritative);
     }
 
-    m_targetFileFormatReg.addEntry<TestTargetFileFormat>();
-    m_sourceFileFormatReg.addEntry<TestSourceFileFormat>();
-
     m_typeSystem.addEntry<testUtils::TestType>();
-    m_typeSystem.addEntry<testUtils::TestEnum>();
-    m_typeSystem.addEntry<testUtils::TestSubEnum>();
-    m_typeSystem.addEntry<testUtils::TestSubSubEnum1>();
-    m_typeSystem.addEntry<testUtils::TestSubSubEnum2>();
-    m_typeSystem.addEntry<testUtils::TestSimpleArrayType>();
-    m_typeSystem.addEntry<testUtils::TestCompoundArrayType>();
-    m_typeSystem.addEntry<testUtils::TestSimpleRecordType>();
-    m_typeSystem.addEntry<testUtils::TestComplexRecordType>();
-    m_typeSystem.addEntry<testUtils::TestRecordWithVariantsType>();
-    m_typeSystem.addEntry<testUtils::TestSumType>();
-    m_typeSystem.addEntry<testUtils::TestTupleType>();
-
-    m_typeSystem.addEntry<testUtils::TestProcessorInputOutputType>();
-
-    m_processorReg.addProcessor<TestProcessor>();
 
     m_typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();

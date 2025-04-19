@@ -1,24 +1,24 @@
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Domains/TestDomain/testEnum.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-ENUM_DEFINE_ENUM_VALUE_SOURCE(testUtils::TestEnum, TESTENUM_VALUES);
+ENUM_DEFINE_ENUM_VALUE_SOURCE(testDomain::TestEnum, TESTENUM_VALUES);
 
-testUtils::TestEnum::TestEnum()
+testDomain::TestEnum::TestEnum()
     : babelwires::EnumType(getStaticValueSet(), 1) {}
 
-testUtils::TestSubEnum::TestSubEnum()
+testDomain::TestSubEnum::TestSubEnum()
     : babelwires::EnumType({TestEnum::getIdentifierFromValue(TestEnum::Value::Bar),
                             TestEnum::getIdentifierFromValue(TestEnum::Value::Erm),
                             TestEnum::getIdentifierFromValue(TestEnum::Value::Oom)},
                            1) {}
 
-testUtils::TestSubSubEnum1::TestSubSubEnum1()
+testDomain::TestSubSubEnum1::TestSubSubEnum1()
     : babelwires::EnumType({TestEnum::getIdentifierFromValue(TestEnum::Value::Bar),
                             TestEnum::getIdentifierFromValue(TestEnum::Value::Erm)},
                            1) {}
 
-testUtils::TestSubSubEnum2::TestSubSubEnum2()
+testDomain::TestSubSubEnum2::TestSubSubEnum2()
     : babelwires::EnumType({TestEnum::getIdentifierFromValue(TestEnum::Value::Erm),
                             TestEnum::getIdentifierFromValue(TestEnum::Value::Oom)},
                            1) {}

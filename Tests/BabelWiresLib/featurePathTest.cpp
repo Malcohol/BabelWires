@@ -12,8 +12,9 @@
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 #include <Common/exceptions.hpp>
 
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
 
@@ -121,10 +122,10 @@ TEST(FeaturePathTest, pathFollow) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
-                                                     testUtils::TestComplexRecordType::getThisType());
+                                                     testDomain::TestComplexRecordType::getThisType());
     testRecordFeature.setToDefault();
 
-    testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
+    testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     EXPECT_EQ(&followPath(info.m_pathToRecord, testRecordFeature), &testRecordFeature);
     EXPECT_EQ(&followPath(info.m_pathToInt, testRecordFeature), &info.m_int);
@@ -137,25 +138,25 @@ TEST(FeaturePathTest, pathFollow) {
     EXPECT_EQ(info.m_pathToRecord.getNumSteps(), 0);
 
     EXPECT_EQ(info.m_pathToInt.getNumSteps(), 1);
-    EXPECT_EQ(info.m_pathToInt.getStep(0).getField(), testUtils::TestComplexRecordType::getInt0Id());
+    EXPECT_EQ(info.m_pathToInt.getStep(0).getField(), testDomain::TestComplexRecordType::getInt0Id());
 
     EXPECT_EQ(info.m_pathToArray.getNumSteps(), 1);
-    EXPECT_EQ(info.m_pathToArray.getStep(0).getField(), testUtils::TestComplexRecordType::getArrayId());
+    EXPECT_EQ(info.m_pathToArray.getStep(0).getField(), testDomain::TestComplexRecordType::getArrayId());
 
     EXPECT_EQ(info.m_pathToElem0.getNumSteps(), 2);
-    EXPECT_EQ(info.m_pathToElem0.getStep(0).getField(), testUtils::TestComplexRecordType::getArrayId());
+    EXPECT_EQ(info.m_pathToElem0.getStep(0).getField(), testDomain::TestComplexRecordType::getArrayId());
     EXPECT_EQ(info.m_pathToElem0.getStep(1).getIndex(), 0);
 
     EXPECT_EQ(info.m_pathToElem1.getNumSteps(), 2);
-    EXPECT_EQ(info.m_pathToElem1.getStep(0).getField(), testUtils::TestComplexRecordType::getArrayId());
+    EXPECT_EQ(info.m_pathToElem1.getStep(0).getField(), testDomain::TestComplexRecordType::getArrayId());
     EXPECT_EQ(info.m_pathToElem1.getStep(1).getIndex(), 1);
 
     EXPECT_EQ(info.m_pathToSubRecord.getNumSteps(), 1);
-    EXPECT_EQ(info.m_pathToSubRecord.getStep(0).getField(), testUtils::TestComplexRecordType::getSubrecordId());
+    EXPECT_EQ(info.m_pathToSubRecord.getStep(0).getField(), testDomain::TestComplexRecordType::getSubrecordId());
 
     EXPECT_EQ(info.m_pathToSubRecordInt.getNumSteps(), 2);
-    EXPECT_EQ(info.m_pathToSubRecordInt.getStep(0).getField(), testUtils::TestComplexRecordType::getSubrecordId());
-    EXPECT_EQ(info.m_pathToSubRecordInt.getStep(1).getField(), testUtils::TestSimpleRecordType::getInt0Id());
+    EXPECT_EQ(info.m_pathToSubRecordInt.getStep(0).getField(), testDomain::TestComplexRecordType::getSubrecordId());
+    EXPECT_EQ(info.m_pathToSubRecordInt.getStep(1).getField(), testDomain::TestSimpleRecordType::getInt0Id());
 }
 
 TEST(FeaturePathTest, pathResolve) {
@@ -168,15 +169,15 @@ TEST(FeaturePathTest, pathResolve) {
     babelwires::Path pathToSubRecord;
     babelwires::Path pathToInt2;
 
-    pathToInt.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::s_intIdInitializer));
-    pathToArray.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::s_arrayIdInitializer));
-    pathToElem0.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::s_arrayIdInitializer));
+    pathToInt.pushStep(babelwires::PathStep(testDomain::TestComplexRecordType::s_intIdInitializer));
+    pathToArray.pushStep(babelwires::PathStep(testDomain::TestComplexRecordType::s_arrayIdInitializer));
+    pathToElem0.pushStep(babelwires::PathStep(testDomain::TestComplexRecordType::s_arrayIdInitializer));
     pathToElem0.pushStep(0);
-    pathToElem1.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::s_arrayIdInitializer));
+    pathToElem1.pushStep(babelwires::PathStep(testDomain::TestComplexRecordType::s_arrayIdInitializer));
     pathToElem1.pushStep(1);
-    pathToSubRecord.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::s_subRecordIdInitializer));
-    pathToInt2.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::s_subRecordIdInitializer));
-    pathToInt2.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::s_int0IdInitializer));
+    pathToSubRecord.pushStep(babelwires::PathStep(testDomain::TestComplexRecordType::s_subRecordIdInitializer));
+    pathToInt2.pushStep(babelwires::PathStep(testDomain::TestComplexRecordType::s_subRecordIdInitializer));
+    pathToInt2.pushStep(babelwires::PathStep(testDomain::TestSimpleRecordType::s_int0IdInitializer));
 
     EXPECT_EQ(pathToInt.getStep(0).getField().getDiscriminator(), 0);
     EXPECT_EQ(pathToArray.getStep(0).getField().getDiscriminator(), 0);
@@ -187,10 +188,10 @@ TEST(FeaturePathTest, pathResolve) {
     EXPECT_EQ(pathToInt2.getStep(1).getField().getDiscriminator(), 0);
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
-                                                     testUtils::TestComplexRecordType::getThisType());
+                                                     testDomain::TestComplexRecordType::getThisType());
     testRecordFeature.setToDefault();
 
-    testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
+    testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     // The paths should work even though they didn't use registered field identifiers.
     EXPECT_EQ(&followPath(pathToInt, testRecordFeature), &info.m_int);
@@ -205,10 +206,10 @@ TEST(FeaturePathTest, pathTryFollow) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
-                                                     testUtils::TestComplexRecordType::getThisType());
+                                                     testDomain::TestComplexRecordType::getThisType());
     testRecordFeature.setToDefault();
 
-    testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
+    testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     EXPECT_EQ(tryFollowPath(info.m_pathToRecord, testRecordFeature), &testRecordFeature);
     EXPECT_EQ(tryFollowPath(info.m_pathToInt, testRecordFeature), &info.m_int);
@@ -230,18 +231,18 @@ TEST(FeaturePathTest, pathFollowFail) {
 
     pathToNonField.pushStep(babelwires::PathStep("Forb"));
     pathToNonIndex.pushStep(0);
-    pathOffEndOfArray.pushStep(testUtils::TestComplexRecordType::getArrayId());
+    pathOffEndOfArray.pushStep(testDomain::TestComplexRecordType::getArrayId());
     pathOffEndOfArray.pushStep(5);
-    pathValueAsRecord.pushStep(testUtils::TestComplexRecordType::getSubrecordId());
+    pathValueAsRecord.pushStep(testDomain::TestComplexRecordType::getSubrecordId());
     pathValueAsRecord.pushStep(babelwires::PathStep("flerm"));
-    pathValueAsArray.pushStep(testUtils::TestComplexRecordType::getInt1Id());
+    pathValueAsArray.pushStep(testDomain::TestComplexRecordType::getInt1Id());
     pathValueAsArray.pushStep(12);
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
-                                                     testUtils::TestComplexRecordType::getThisType());
+                                                     testDomain::TestComplexRecordType::getThisType());
     testRecordFeature.setToDefault();
 
-    testUtils::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
+    testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     EXPECT_THROW(followPath(pathToNonField, testRecordFeature), babelwires::ModelException);
     EXPECT_THROW(followPath(pathToNonIndex, testRecordFeature), babelwires::ModelException);

@@ -8,7 +8,8 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Domains/TestDomain/testFileFormats.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
@@ -23,11 +24,11 @@ TEST(TargetFileNodeTest, targetFileDataCreateElement) {
     testUtils::TestEnvironment testEnvironment;
 
     std::ostringstream tempFileName;
-    tempFileName << "foo." << testUtils::TestSourceFileFormat::getFileExtension();
+    tempFileName << "foo." << testDomain::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath(tempFileName.str());
 
     babelwires::TargetFileNodeData data;
-    data.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
+    data.m_factoryIdentifier = testDomain::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
@@ -41,7 +42,7 @@ TEST(TargetFileNodeTest, targetFileDataCreateElement) {
     EXPECT_EQ(targetFileNode->getFilePath(), tempFilePath.m_filePath);
     EXPECT_EQ(targetFileNode->getSupportedFileOperations(), babelwires::FileNode::FileOperations::save);
     EXPECT_NE(targetFileNode->getFileFormatInformation(testEnvironment.m_projectContext), nullptr);
-    EXPECT_EQ(targetFileNode->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), testUtils::TestTargetFileFormat::getThisIdentifier());
+    EXPECT_EQ(targetFileNode->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), testDomain::TestTargetFileFormat::getThisIdentifier());
 
     EXPECT_TRUE(endsWithStar(targetFileNode->getLabel()));
     EXPECT_TRUE(targetFileNode->save(testEnvironment.m_projectContext, testEnvironment.m_log));
@@ -49,7 +50,7 @@ TEST(TargetFileNodeTest, targetFileDataCreateElement) {
 
     targetFileNode->clearChanges();
 
-    const babelwires::Path pathToInt = testUtils::getTestFileElementPathToInt0();
+    const babelwires::Path pathToInt = testDomain::getTestFileElementPathToInt0();
 
     {
         babelwires::ValueAssignmentData intMod(babelwires::IntValue(30));
@@ -77,15 +78,15 @@ TEST(TargetFileNodeTest, changeFile) {
 
     // Create a test file.
     std::ostringstream tempFileName1;
-    tempFileName1 << "foo1." << testUtils::TestSourceFileFormat::getFileExtension();
+    tempFileName1 << "foo1." << testDomain::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath1(tempFileName1.str());
 
     std::ostringstream tempFileName2;
-    tempFileName2 << "foo2." << testUtils::TestSourceFileFormat::getFileExtension();
+    tempFileName2 << "foo2." << testDomain::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath2(tempFileName2.str());
 
     babelwires::TargetFileNodeData data;
-    data.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
+    data.m_factoryIdentifier = testDomain::TestTargetFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
 

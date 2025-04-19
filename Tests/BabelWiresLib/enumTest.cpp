@@ -8,14 +8,15 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Domains/TestDomain/testEnum.hpp>
+
 #include <Tests/TestUtils/equalSets.hpp>
-#include <Tests/TestUtils/testIdentifiers.hpp>
+
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(EnumTest, basic) {
     testUtils::TestLog log;
-    testUtils::TestEnum testEnum;
+    testDomain::TestEnum testEnum;
 
     EXPECT_TRUE(testUtils::areEqualSets(testEnum.getValueSet(),
                                         babelwires::EnumType::ValueSet{"Foo", "Bar", "Erm", "Oom", "Boo"}));
@@ -49,23 +50,23 @@ TEST(EnumTest, basic) {
 
 TEST(EnumTest, enumWithCppEnum) {
     testUtils::TestLog log;
-    testUtils::TestEnum testEnum;
+    testDomain::TestEnum testEnum;
 
-    EXPECT_EQ(testEnum.getValueFromIdentifier("Foo"), testUtils::TestEnum::Value::Foo);
-    EXPECT_EQ(testEnum.getValueFromIdentifier("Bar"), testUtils::TestEnum::Value::Bar);
-    EXPECT_EQ(testEnum.getValueFromIdentifier("Erm"), testUtils::TestEnum::Value::Erm);
-    EXPECT_EQ(testEnum.getValueFromIdentifier("Oom"), testUtils::TestEnum::Value::Oom);
-    EXPECT_EQ(testEnum.getValueFromIdentifier("Boo"), testUtils::TestEnum::Value::Boo);
-    EXPECT_EQ(testEnum.getIdentifierFromValue(testUtils::TestEnum::Value::Foo), "Foo");
-    EXPECT_EQ(testEnum.getIdentifierFromValue(testUtils::TestEnum::Value::Bar), "Bar");
-    EXPECT_EQ(testEnum.getIdentifierFromValue(testUtils::TestEnum::Value::Erm), "Erm");
-    EXPECT_EQ(testEnum.getIdentifierFromValue(testUtils::TestEnum::Value::Oom), "Oom");
-    EXPECT_EQ(testEnum.getIdentifierFromValue(testUtils::TestEnum::Value::Boo), "Boo");
+    EXPECT_EQ(testEnum.getValueFromIdentifier("Foo"), testDomain::TestEnum::Value::Foo);
+    EXPECT_EQ(testEnum.getValueFromIdentifier("Bar"), testDomain::TestEnum::Value::Bar);
+    EXPECT_EQ(testEnum.getValueFromIdentifier("Erm"), testDomain::TestEnum::Value::Erm);
+    EXPECT_EQ(testEnum.getValueFromIdentifier("Oom"), testDomain::TestEnum::Value::Oom);
+    EXPECT_EQ(testEnum.getValueFromIdentifier("Boo"), testDomain::TestEnum::Value::Boo);
+    EXPECT_EQ(testEnum.getIdentifierFromValue(testDomain::TestEnum::Value::Foo), "Foo");
+    EXPECT_EQ(testEnum.getIdentifierFromValue(testDomain::TestEnum::Value::Bar), "Bar");
+    EXPECT_EQ(testEnum.getIdentifierFromValue(testDomain::TestEnum::Value::Erm), "Erm");
+    EXPECT_EQ(testEnum.getIdentifierFromValue(testDomain::TestEnum::Value::Oom), "Oom");
+    EXPECT_EQ(testEnum.getIdentifierFromValue(testDomain::TestEnum::Value::Boo), "Boo");
 }
 
 TEST(EnumTest, createValue) {
     babelwires::TypeSystem typeSystem;
-    testUtils::TestEnum testEnum;
+    testDomain::TestEnum testEnum;
 
     auto [valueHolder, value] = testEnum.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
@@ -84,12 +85,12 @@ TEST(EnumTest, subEnum) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
 
-    typeSystem.addEntry<testUtils::TestEnum>();
+    typeSystem.addEntry<testDomain::TestEnum>();
     // Have to register Sub-Enums in the TypeSystem or they don't work.
-    typeSystem.addEntry<testUtils::TestSubEnum>();
+    typeSystem.addEntry<testDomain::TestSubEnum>();
 
-    const auto& testEnum = typeSystem.getEntryByType<testUtils::TestEnum>();
-    const auto& testSubEnum = typeSystem.getEntryByType<testUtils::TestSubEnum>();
+    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& testSubEnum = typeSystem.getEntryByType<testDomain::TestSubEnum>();
 
     auto [valueHolder, value] = testSubEnum.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);

@@ -1,9 +1,5 @@
-#include <gtest/gtest.h>
-
 #include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
-
-#include <Tests/TestUtils/testIdentifiers.hpp>
 
 #pragma once
 
@@ -18,7 +14,7 @@ namespace babelwires {
     X(Oom, "Oom", "9fb8e407-2413-4600-83c8-c7ac42fbd365")                                                                                              \
     X(Boo, "Boo", "df6e11db-1351-4fc4-b9c1-3d0afacd5284")
 
-namespace testUtils {
+namespace testDomain {
 
 // Foo, Bar, Erm, Oom, Boo
     struct TestEnum : babelwires::EnumType {
@@ -46,4 +42,4 @@ namespace testUtils {
         PRIMITIVE_TYPE("SubSubEnum2", "SubSubEnum2", "e787e345-0138-4b46-9f43-d12ed57d4ee9", 1);
         TestSubSubEnum2();
     };
-} // namespace testUtils
+} // namespace testDomain

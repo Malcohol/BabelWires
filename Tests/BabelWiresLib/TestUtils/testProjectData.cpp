@@ -13,51 +13,52 @@
 #include <BabelWiresLib/Types/File/fileType.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
+#include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testProcessor.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 
 testUtils::TestProjectData::TestProjectData()
-    : m_sourceFilePath(std::string("testSourceFile") + testUtils::TestSourceFileFormat::getFileExtension())
-    , m_targetFilePath(std::string("testTargetFile") + testUtils::TestSourceFileFormat::getFileExtension()) {
+    : m_sourceFilePath(std::string("testSourceFile") + testDomain::TestSourceFileFormat::getFileExtension())
+    , m_targetFilePath(std::string("testTargetFile") + testDomain::TestSourceFileFormat::getFileExtension()) {
     m_projectId = 1243;
     {
         babelwires::TargetFileNodeData data;
-        data.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
+        data.m_factoryIdentifier = testDomain::TestTargetFileFormat::getThisIdentifier();
         data.m_id = c_targetNodeId;
         data.m_filePath = m_targetFilePath;
         {
             babelwires::ConnectionModifierData modData;
-            modData.m_targetPath = testUtils::getTestFileElementPathToInt0();
+            modData.m_targetPath = testDomain::getTestFileElementPathToInt0();
             modData.m_sourceId = c_processorId;
-            modData.m_sourcePath = testUtils::TestProcessorInputOutputType::s_pathToArray_3;
+            modData.m_sourcePath = testDomain::TestProcessorInputOutputType::s_pathToArray_3;
             data.m_modifiers.emplace_back(modData.clone());
         }
         m_nodes.emplace_back(data.clone());
     }
     {
         babelwires::ProcessorNodeData data;
-        data.m_factoryIdentifier = testUtils::TestProcessor::getFactoryIdentifier();
+        data.m_factoryIdentifier = testDomain::TestProcessor::getFactoryIdentifier();
         data.m_id = c_processorId;
         {
             babelwires::ConnectionModifierData modData;
-            modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt;
+            modData.m_targetPath = testDomain::TestProcessorInputOutputType::s_pathToInt;
             modData.m_sourceId = c_sourceNodeId;
-            modData.m_sourcePath = testUtils::getTestFileElementPathToInt0();
+            modData.m_sourcePath = testDomain::getTestFileElementPathToInt0();
             data.m_modifiers.emplace_back(modData.clone());
         }
         {
             babelwires::ValueAssignmentData modData(babelwires::IntValue(44));
-            modData.m_targetPath = testUtils::TestProcessorInputOutputType::s_pathToInt2;
+            modData.m_targetPath = testDomain::TestProcessorInputOutputType::s_pathToInt2;
             data.m_modifiers.emplace_back(modData.clone());
         }
-        data.m_expandedPaths.emplace_back(testUtils::TestProcessorInputOutputType::s_pathToArray);
+        data.m_expandedPaths.emplace_back(testDomain::TestProcessorInputOutputType::s_pathToArray);
         m_nodes.emplace_back(data.clone());
     }
     {
         babelwires::SourceFileNodeData data;
         data.m_id = c_sourceNodeId;
-        data.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
+        data.m_factoryIdentifier = testDomain::TestSourceFileFormat::getThisIdentifier();
         data.m_filePath = m_sourceFilePath;
         m_nodes.emplace_back(data.clone());
     }
@@ -91,16 +92,16 @@ void testUtils::TestProjectData::testProjectData(const babelwires::ProjectData& 
 
         auto modData1 = sortedModifiers[0]->as<babelwires::ConnectionModifierData>();
         ASSERT_TRUE(modData1);
-        EXPECT_EQ(modData1->m_targetPath, testUtils::TestProcessorInputOutputType::s_pathToInt);
-        EXPECT_EQ(modData1->m_sourcePath, testUtils::getTestFileElementPathToInt0());
+        EXPECT_EQ(modData1->m_targetPath, testDomain::TestProcessorInputOutputType::s_pathToInt);
+        EXPECT_EQ(modData1->m_sourcePath, testDomain::getTestFileElementPathToInt0());
 
         auto modData2 = sortedModifiers[1]->as<babelwires::ValueAssignmentData>();
         ASSERT_TRUE(modData2);
-        EXPECT_EQ(modData2->m_targetPath, testUtils::TestProcessorInputOutputType::s_pathToInt2);
+        EXPECT_EQ(modData2->m_targetPath, testDomain::TestProcessorInputOutputType::s_pathToInt2);
     }
 
     ASSERT_EQ(sortedElements[0]->m_expandedPaths.size(), 1);
-    EXPECT_EQ(sortedElements[0]->m_expandedPaths[0], testUtils::TestProcessorInputOutputType::s_pathToArray);
+    EXPECT_EQ(sortedElements[0]->m_expandedPaths[0], testDomain::TestProcessorInputOutputType::s_pathToArray);
 
     EXPECT_EQ(sortedElements[1]->m_id, c_sourceNodeId);
 
@@ -108,8 +109,8 @@ void testUtils::TestProjectData::testProjectData(const babelwires::ProjectData& 
     ASSERT_EQ(sortedElements[2]->m_modifiers.size(), 1);
     auto modData0 = sortedElements[2]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();
     ASSERT_TRUE(modData0);
-    ASSERT_EQ(modData0->m_targetPath, testUtils::getTestFileElementPathToInt0());
-    EXPECT_EQ(modData0->m_sourcePath, testUtils::TestProcessorInputOutputType::s_pathToArray_3);
+    ASSERT_EQ(modData0->m_targetPath, testDomain::getTestFileElementPathToInt0());
+    EXPECT_EQ(modData0->m_sourcePath, testDomain::TestProcessorInputOutputType::s_pathToArray_3);
     EXPECT_EQ(sortedElements[2]->m_expandedPaths.size(), 0);
 }
 
@@ -119,9 +120,9 @@ void testUtils::TestProjectData::testProjectData(const babelwires::ProjectContex
 }
 
 void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::ProjectContext& context) {
-    babelwires::ValueTreeRoot testRecord(context.m_typeSystem, testUtils::TestProcessorInputOutputType::getThisType());
+    babelwires::ValueTreeRoot testRecord(context.m_typeSystem, testDomain::TestProcessorInputOutputType::getThisType());
     testRecord.setToDefault();
-    babelwires::ValueTreeRoot testFileFeature(context.m_typeSystem, testUtils::getTestFileType());
+    babelwires::ValueTreeRoot testFileFeature(context.m_typeSystem, testDomain::getTestFileType());
 
     // These have side-effects on the field discriminators in the paths.
     auto modData0 = m_nodes[0]->m_modifiers[0].get()->as<babelwires::ConnectionModifierData>();

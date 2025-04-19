@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
 
 testUtils::TestNodeData::TestNodeData() {
     m_factoryIdentifier = "TestFactory";
@@ -36,7 +36,7 @@ testUtils::TestNode::TestNode(const babelwires::ProjectContext& context,
                                                   const TestNodeData& data, babelwires::NodeId newId)
     : Node(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
-    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, TestComplexRecordType::getThisType());
+    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, testDomain::TestComplexRecordType::getThisType());
 }
 
 void testUtils::TestNode::doProcess(babelwires::UserLogger&) {}
@@ -64,6 +64,6 @@ void testUtils::TestNode::simulateFailure(const babelwires::ProjectContext& cont
 }
 
 void testUtils::TestNode::simulateRecovery(const babelwires::ProjectContext& context) {
-    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, TestComplexRecordType::getThisType());
+    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, testDomain::TestComplexRecordType::getThisType());
     clearInternalFailure();
 }

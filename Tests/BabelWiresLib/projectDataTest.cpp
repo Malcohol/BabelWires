@@ -8,8 +8,9 @@
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
+#include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testProcessor.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
@@ -38,7 +39,7 @@ TEST(ProjectDataTest, serialization) {
         const babelwires::NodeData* data = dataPtr->m_nodes[0].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 45);
-        EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestTargetFileFormat::getThisIdentifier());
+        EXPECT_EQ(data->m_factoryIdentifier, testDomain::TestTargetFileFormat::getThisIdentifier());
         const babelwires::TargetFileNodeData* targetData = data->as<babelwires::TargetFileNodeData>();
         ASSERT_TRUE(targetData);
         ASSERT_EQ(targetData->m_filePath, testUtils::TestProjectData().m_targetFilePath);
@@ -47,7 +48,7 @@ TEST(ProjectDataTest, serialization) {
         const babelwires::NodeData* data = dataPtr->m_nodes[1].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 6);
-        EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestProcessor::getFactoryIdentifier());
+        EXPECT_EQ(data->m_factoryIdentifier, testDomain::TestProcessor::getFactoryIdentifier());
         const babelwires::ProcessorNodeData* processorData = data->as<babelwires::ProcessorNodeData>();
         ASSERT_TRUE(processorData);
     }
@@ -55,7 +56,7 @@ TEST(ProjectDataTest, serialization) {
         const babelwires::NodeData* data = dataPtr->m_nodes[2].get();
         ASSERT_TRUE(data);
         EXPECT_EQ(data->m_id, 12);
-        EXPECT_EQ(data->m_factoryIdentifier, testUtils::TestSourceFileFormat::getThisIdentifier());
+        EXPECT_EQ(data->m_factoryIdentifier, testDomain::TestSourceFileFormat::getThisIdentifier());
         const babelwires::SourceFileNodeData* sourceData = data->as<babelwires::SourceFileNodeData>();
         ASSERT_TRUE(sourceData);
         ASSERT_EQ(sourceData->m_filePath, babelwires::FilePath(testUtils::TestProjectData().m_sourceFilePath));
