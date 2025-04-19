@@ -22,7 +22,7 @@ namespace testDomain {
         TestSourceFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::ValueTreeRoot> loadFromFile(babelwires::DataSource& dataSource,
+        std::unique_ptr<babelwires::ValueTreeRoot> loadFromFile(const std::filesystem::path& path,
                                                               const babelwires::ProjectContext& projectContext,
                                                               babelwires::UserLogger& userLogger) const override;
 

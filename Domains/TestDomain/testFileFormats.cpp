@@ -80,10 +80,10 @@ char testDomain::TestSourceFileFormat::getFileData(const std::filesystem::path& 
 }
 
 std::unique_ptr<babelwires::ValueTreeRoot>
-testDomain::TestSourceFileFormat::loadFromFile(babelwires::DataSource& dataSource,
+testDomain::TestSourceFileFormat::loadFromFile(const std::filesystem::path& path,
                                               const babelwires::ProjectContext& projectContext,
                                               babelwires::UserLogger& userLogger) const {
-    const int value = getFileDataInternal(dataSource);
+    const int value = getFileData(path);
     auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
     newFeature->setToDefault();
     TestSimpleRecordType::Instance instance{newFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
