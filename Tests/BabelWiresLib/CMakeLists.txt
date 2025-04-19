@@ -41,6 +41,7 @@ SET( LIB_TESTS_SRCS
     processorNodeTest.cpp
     projectBundleTest.cpp
     projectDataTest.cpp
+    projectLoadTest.cpp
     projectObserverTest.cpp
     projectSerializationTest.cpp
     projectTest.cpp
@@ -78,6 +79,15 @@ SET( LIB_TESTS_SRCS
     valueHolderTest.cpp
     valueNodeTest.cpp
    )
+
+
+FILE(GLOB TestData "${CMAKE_CURRENT_SOURCE_DIR}/TestData/*")
+
+MESSAGE("Copying BabelWiresLib TestData files to build folder")
+FOREACH(file ${TestData})
+    GET_FILENAME_COMPONENT(fileName ${file} NAME)
+    CONFIGURE_FILE(${file} "${CMAKE_CURRENT_BINARY_DIR}/${fileName}" COPYONLY)
+ENDFOREACH()
 
 ADD_EXECUTABLE( babelWiresTests ${LIB_TESTS_SRCS} )
 TARGET_INCLUDE_DIRECTORIES( babelWiresTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
