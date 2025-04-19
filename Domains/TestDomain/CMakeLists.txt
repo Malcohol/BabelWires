@@ -6,6 +6,7 @@ SET( LIB_TEST_UTILS_SRCS
     testParallelProcessor.cpp
     testProcessor.cpp
     testRecordType.cpp
+    testRecordTypeHierarchy.cpp
     testRecordWithVariantsType.cpp
    )
 

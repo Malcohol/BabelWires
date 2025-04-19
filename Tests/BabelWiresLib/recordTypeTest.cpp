@@ -11,6 +11,7 @@
 
 #include <Domains/TestDomain/testEnum.hpp>
 #include <Domains/TestDomain/testRecordType.hpp>
+#include <Domains/TestDomain/testRecordTypeHierarchy.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
@@ -310,119 +311,42 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
 TEST(RecordTypeTest, subtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    struct RecordWithNoFields : babelwires::RecordType {
-        RecordWithNoFields()
-            : RecordType({}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("NoFields"), 1);
-    };
-
-    struct RecordA0 : babelwires::RecordType {
-        RecordA0()
-            : RecordType(
-                  {{testUtils::getTestRegisteredIdentifier("fieldA", 1), babelwires::DefaultIntType::getThisType()}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordA0"), 1);
-    };
-
-    struct RecordA1 : babelwires::RecordType {
-        RecordA1()
-            : RecordType(
-                  {{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordA1"), 1);
-    };
-
-    struct RecordB : babelwires::RecordType {
-        RecordB()
-            : RecordType(
-                  {{testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordB"), 1);
-    };
-
-    struct RecordAB : babelwires::RecordType {
-        RecordAB()
-            : RecordType(
-                  {{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-                   {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAB"), 1);
-    };
-
-    struct RecordAS : babelwires::RecordType {
-        RecordAS()
-            : RecordType(
-                  {{testUtils::getTestRegisteredIdentifier("fieldA", 3), babelwires::StringType::getThisType()}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAS"), 1);
-    };
-
-    struct RecordAOpt : babelwires::RecordType {
-        RecordAOpt()
-            : RecordType({{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-                          {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisType(),
-                           babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAOpt"), 1);
-    };
-
-    struct RecordABOpt : babelwires::RecordType {
-        RecordABOpt()
-            : RecordType({{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-                          {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()},
-                          {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::DefaultIntType::getThisType(),
-                           babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordABOpt"), 1);
-    };
-
-    struct RecordAOptS : babelwires::RecordType {
-        RecordAOptS()
-            : RecordType({{testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-                          {testUtils::getTestRegisteredIdentifier("fOpt"), babelwires::StringType::getThisType(),
-                           babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordAOptS"), 1);
-    };
-
-    testEnvironment.m_typeSystem.addEntry<RecordWithNoFields>();
-    testEnvironment.m_typeSystem.addEntry<RecordA0>();
-    testEnvironment.m_typeSystem.addEntry<RecordA1>();
-    testEnvironment.m_typeSystem.addEntry<RecordAS>();
-    testEnvironment.m_typeSystem.addEntry<RecordB>();
-    testEnvironment.m_typeSystem.addEntry<RecordAB>();
-    testEnvironment.m_typeSystem.addEntry<RecordAOpt>();
-    testEnvironment.m_typeSystem.addEntry<RecordABOpt>();
-    testEnvironment.m_typeSystem.addEntry<RecordAOptS>();
-
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordWithNoFields::getThisType(), RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordWithNoFields::getThisType(), testDomain::RecordA0::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordWithNoFields::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(), testDomain::RecordWithNoFields::getThisType()),
               babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordA1::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(), testDomain::RecordA1::getThisType()),
               babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA1::getThisType(), RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA1::getThisType(), testDomain::RecordA0::getThisType()),
               babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordAB::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(), testDomain::RecordAB::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordB::getThisType(), RecordAB::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordB::getThisType(), testDomain::RecordAB::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
 
     // Incompatible types
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAS::getThisType(), RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAS::getThisType(), testDomain::RecordA0::getThisType()),
               babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordAS::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(), testDomain::RecordAS::getThisType()),
               babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAS::getThisType(), RecordAB::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAS::getThisType(), testDomain::RecordAB::getThisType()),
               babelwires::SubtypeOrder::IsUnrelated);
 
     // With optionals: Optional fields do not impact subtyping since they are not part of the type's contract,
     // unless the types are incompatible (see next sequence of tests, below).
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordAOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(), testDomain::RecordAOpt::getThisType()),
               babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOpt::getThisType(), RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(), testDomain::RecordA0::getThisType()),
               babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordA0::getThisType(), RecordABOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(), testDomain::RecordABOpt::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordABOpt::getThisType(), RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordABOpt::getThisType(), testDomain::RecordA0::getThisType()),
               babelwires::SubtypeOrder::IsSubtype);
 
     // Incompatible and optional
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOpt::getThisType(), RecordAOptS::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(), testDomain::RecordAOptS::getThisType()),
               babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordAOptS::getThisType(), RecordAOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOptS::getThisType(), testDomain::RecordAOpt::getThisType()),
               babelwires::SubtypeOrder::IsUnrelated);
 }
 

@@ -10,12 +10,13 @@
 #include <Domains/TestDomain/testArrayType.hpp>
 #include <Domains/TestDomain/testEnum.hpp>
 #include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testParallelProcessor.hpp>
 #include <Domains/TestDomain/testProcessor.hpp>
 #include <Domains/TestDomain/testRecordType.hpp>
+#include <Domains/TestDomain/testRecordTypeHierarchy.hpp>
 #include <Domains/TestDomain/testRecordWithVariantsType.hpp>
 #include <Domains/TestDomain/testSumType.hpp>
 #include <Domains/TestDomain/testTupleType.hpp>
-#include <Domains/TestDomain/testParallelProcessor.hpp>
 
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
@@ -34,6 +35,15 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::TestRecordWithVariantsType>();
     context.m_typeSystem.addEntry<testDomain::TestSumType>();
     context.m_typeSystem.addEntry<testDomain::TestTupleType>();
+    context.m_typeSystem.addEntry<testDomain::RecordWithNoFields>();
+    context.m_typeSystem.addEntry<testDomain::RecordA0>();
+    context.m_typeSystem.addEntry<testDomain::RecordA1>();
+    context.m_typeSystem.addEntry<testDomain::RecordAS>();
+    context.m_typeSystem.addEntry<testDomain::RecordB>();
+    context.m_typeSystem.addEntry<testDomain::RecordAB>();
+    context.m_typeSystem.addEntry<testDomain::RecordAOpt>();
+    context.m_typeSystem.addEntry<testDomain::RecordABOpt>();
+    context.m_typeSystem.addEntry<testDomain::RecordAOptS>();
 
     context.m_typeSystem.addEntry<testDomain::TestParallelProcessorInput>();
     context.m_typeSystem.addEntry<testDomain::TestParallelProcessorOutput>();
@@ -45,4 +55,3 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_targetFileFormatReg.addEntry<TestTargetFileFormat>();
     context.m_sourceFileFormatReg.addEntry<TestSourceFileFormat>();
 }
-
