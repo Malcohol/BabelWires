@@ -10,8 +10,6 @@
 
 #include <Domains/TestDomain/testSumType.hpp>
 
-#include <Tests/TestUtils/testIdentifiers.hpp>
-
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(SumTypeTest, sumTypeDefault0) {

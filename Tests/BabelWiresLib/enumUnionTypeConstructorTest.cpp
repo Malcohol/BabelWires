@@ -13,7 +13,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
-#include <Tests/TestUtils/testIdentifiers.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(EnumUnionTypeConstructorTest, construct) {

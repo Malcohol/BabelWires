@@ -14,8 +14,6 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-#include <Tests/TestUtils/testIdentifiers.hpp>
-
 namespace {
     bool findPath(const std::string& log, const babelwires::ValueTreeNode& f) {
         const babelwires::Path path = babelwires::getPathTo(&f);

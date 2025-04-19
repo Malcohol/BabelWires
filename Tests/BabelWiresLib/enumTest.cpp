@@ -11,7 +11,7 @@
 #include <Domains/TestDomain/testEnum.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
-#include <Tests/TestUtils/testIdentifiers.hpp>
+
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(EnumTest, basic) {

@@ -18,8 +18,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testModifier.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
 
-#include <Tests/TestUtils/testIdentifiers.hpp>
-
 namespace {
     std::unique_ptr<testUtils::LocalTestModifier> createIntModifier(babelwires::Path path,
                                                                     babelwires::Node* owner = nullptr) {

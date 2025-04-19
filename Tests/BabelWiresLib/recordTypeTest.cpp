@@ -16,7 +16,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
-#include <Tests/TestUtils/testIdentifiers.hpp>
 
 TEST(RecordTypeTest, simpleRecordTypeValue) {
     testUtils::TestEnvironment testEnvironment;

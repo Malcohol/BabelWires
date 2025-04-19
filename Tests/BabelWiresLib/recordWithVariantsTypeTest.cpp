@@ -15,7 +15,6 @@
 #include <Domains/TestDomain/testRecordWithVariantsTypeHierarchy.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/TestUtils/testIdentifiers.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 
@@ -27,7 +26,7 @@ TEST(RecordWithVariantsTypeTest, tags) {
     EXPECT_TRUE(recordType.isTag(testDomain::TestRecordWithVariantsType::getTagBId()));
     EXPECT_TRUE(recordType.isTag(testDomain::TestRecordWithVariantsType::getTagCId()));
 
-    EXPECT_FALSE(recordType.isTag(testUtils::getTestRegisteredIdentifier("foo")));
+    EXPECT_FALSE(recordType.isTag("foo"));
 
     EXPECT_EQ(recordType.getIndexOfTag(testDomain::TestRecordWithVariantsType::getTagAId()), 0);
     EXPECT_EQ(recordType.getIndexOfTag(testDomain::TestRecordWithVariantsType::getTagBId()), 1);
