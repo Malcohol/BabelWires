@@ -8,6 +8,7 @@ SET( LIB_TEST_UTILS_SRCS
     testRecordType.cpp
     testRecordTypeHierarchy.cpp
     testRecordWithVariantsType.cpp
+    testRecordWithVariantsTypeHierarchy.cpp
    )
 
 ADD_LIBRARY( libTestDomain ${LIB_TEST_UTILS_SRCS} )

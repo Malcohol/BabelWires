@@ -15,6 +15,7 @@
 #include <Domains/TestDomain/testRecordType.hpp>
 #include <Domains/TestDomain/testRecordTypeHierarchy.hpp>
 #include <Domains/TestDomain/testRecordWithVariantsType.hpp>
+#include <Domains/TestDomain/testRecordWithVariantsTypeHierarchy.hpp>
 #include <Domains/TestDomain/testSumType.hpp>
 #include <Domains/TestDomain/testTupleType.hpp>
 
@@ -45,6 +46,17 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::RecordABOpt>();
     context.m_typeSystem.addEntry<testDomain::RecordAOptS>();
     context.m_typeSystem.addEntry<testDomain::RecordABOptChild>(context.m_typeSystem);
+
+    context.m_typeSystem.addEntry<testDomain::RecordVWithNoFields>();
+    context.m_typeSystem.addEntry<testDomain::RecordVA0>();
+    context.m_typeSystem.addEntry<testDomain::RecordVA1>();
+    context.m_typeSystem.addEntry<testDomain::RecordVAS>();
+    context.m_typeSystem.addEntry<testDomain::RecordVB>();
+    context.m_typeSystem.addEntry<testDomain::RecordVAB>();
+    context.m_typeSystem.addEntry<testDomain::RecordVAV0>();
+    context.m_typeSystem.addEntry<testDomain::RecordVABV0>();
+    context.m_typeSystem.addEntry<testDomain::RecordVABV01>();
+    context.m_typeSystem.addEntry<testDomain::RecordVAVB>();
 
     context.m_typeSystem.addEntry<testDomain::TestParallelProcessorInput>();
     context.m_typeSystem.addEntry<testDomain::TestParallelProcessorOutput>();

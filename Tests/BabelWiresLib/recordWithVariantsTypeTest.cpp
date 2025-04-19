@@ -1,17 +1,18 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 #include <Domains/TestDomain/testRecordType.hpp>
 #include <Domains/TestDomain/testRecordWithVariantsType.hpp>
+#include <Domains/TestDomain/testRecordWithVariantsTypeHierarchy.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -109,7 +110,8 @@ TEST(RecordWithVariantsTypeTest, getFieldsRemovedByChangeOfBranch) {
         {testDomain::TestRecordWithVariantsType::getFieldB0Id(),
          testDomain::TestRecordWithVariantsType::getFieldBCId()}));
     EXPECT_TRUE(testUtils::areEqualSets(
-        recordType.getFieldsRemovedByChangeOfBranch(newValue, testDomain::TestRecordWithVariantsType::getTagBId()), {}));
+        recordType.getFieldsRemovedByChangeOfBranch(newValue, testDomain::TestRecordWithVariantsType::getTagBId()),
+        {}));
     EXPECT_TRUE(testUtils::areEqualSets(
         recordType.getFieldsRemovedByChangeOfBranch(newValue, testDomain::TestRecordWithVariantsType::getTagCId()),
         {testDomain::TestRecordWithVariantsType::getFieldB0Id(),
@@ -136,7 +138,7 @@ TEST(RecordWithVariantsTypeTest, isValidValue) {
     EXPECT_TRUE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
 
     babelwires::Value& nonConstValue = newValue.copyContentsAndGetNonConst();
-    auto* nonConstRecordValue = nonConstValue.as<babelwires::RecordWithVariantsValue>();    
+    auto* nonConstRecordValue = nonConstValue.as<babelwires::RecordWithVariantsValue>();
     EXPECT_NE(nonConstRecordValue, nullptr);
 
     // An extra field is allowed
@@ -158,8 +160,8 @@ TEST(RecordWithVariantsTypeTest, isValidValue) {
 
 namespace {
     void verifyComplexRecord(const babelwires::TypeSystem& typeSystem,
-                             const testDomain::TestRecordWithVariantsType& recordType, const babelwires::ValueHolder& value,
-                             babelwires::ShortId expectedTag) {
+                             const testDomain::TestRecordWithVariantsType& recordType,
+                             const babelwires::ValueHolder& value, babelwires::ShortId expectedTag) {
         auto* const recordValue = value->as<babelwires::RecordWithVariantsValue>();
         EXPECT_NE(recordValue, nullptr);
 
@@ -172,9 +174,11 @@ namespace {
 
         EXPECT_EQ((recordValue->tryGetValue(testDomain::TestRecordWithVariantsType::getFieldA0Id()) != nullptr), isA);
         EXPECT_EQ((recordValue->tryGetValue(testDomain::TestRecordWithVariantsType::getFieldA1Id()) != nullptr), isA);
-        EXPECT_EQ((recordValue->tryGetValue(testDomain::TestRecordWithVariantsType::getFieldABId()) != nullptr), isA || isB);
+        EXPECT_EQ((recordValue->tryGetValue(testDomain::TestRecordWithVariantsType::getFieldABId()) != nullptr),
+                  isA || isB);
         EXPECT_EQ((recordValue->tryGetValue(testDomain::TestRecordWithVariantsType::getFieldB0Id()) != nullptr), isB);
-        EXPECT_EQ((recordValue->tryGetValue(testDomain::TestRecordWithVariantsType::getFieldBCId()) != nullptr), isB || isC);
+        EXPECT_EQ((recordValue->tryGetValue(testDomain::TestRecordWithVariantsType::getFieldBCId()) != nullptr),
+                  isB || isC);
 
         const unsigned int numChildren = 2 + (isC ? 1 : 3);
 
@@ -201,19 +205,26 @@ namespace {
         EXPECT_EQ(*std::get<1>(childInfos[ff1Index]).asField(), testDomain::TestRecordWithVariantsType::getFf1Id());
 
         if (isA) {
-            EXPECT_EQ(*std::get<1>(childInfos[fieldA0Index]).asField(), testDomain::TestRecordWithVariantsType::getFieldA0Id());
-            EXPECT_EQ(*std::get<1>(childInfos[fieldABIndex]).asField(), testDomain::TestRecordWithVariantsType::getFieldABId());
-            EXPECT_EQ(*std::get<1>(childInfos[fieldA1Index]).asField(), testDomain::TestRecordWithVariantsType::getFieldA1Id());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldA0Index]).asField(),
+                      testDomain::TestRecordWithVariantsType::getFieldA0Id());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldABIndex]).asField(),
+                      testDomain::TestRecordWithVariantsType::getFieldABId());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldA1Index]).asField(),
+                      testDomain::TestRecordWithVariantsType::getFieldA1Id());
         }
 
         if (isB) {
-            EXPECT_EQ(*std::get<1>(childInfos[fieldB0Index]).asField(), testDomain::TestRecordWithVariantsType::getFieldB0Id());
-            EXPECT_EQ(*std::get<1>(childInfos[fieldABIndex]).asField(), testDomain::TestRecordWithVariantsType::getFieldABId());
-            EXPECT_EQ(*std::get<1>(childInfos[fieldBCIndex]).asField(), testDomain::TestRecordWithVariantsType::getFieldBCId());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldB0Index]).asField(),
+                      testDomain::TestRecordWithVariantsType::getFieldB0Id());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldABIndex]).asField(),
+                      testDomain::TestRecordWithVariantsType::getFieldABId());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldBCIndex]).asField(),
+                      testDomain::TestRecordWithVariantsType::getFieldBCId());
         }
 
         if (isC) {
-            EXPECT_EQ(*std::get<1>(childInfos[fieldBCIndex]).asField(), testDomain::TestRecordWithVariantsType::getFieldBCId());
+            EXPECT_EQ(*std::get<1>(childInfos[fieldBCIndex]).asField(),
+                      testDomain::TestRecordWithVariantsType::getFieldBCId());
         }
 
         for (unsigned int i = 0; i < numChildren; ++i) {
@@ -221,22 +232,25 @@ namespace {
             EXPECT_TRUE(types[i]->isValidValue(typeSystem, *std::get<0>(childInfos[i])->getUnsafe()));
         }
     }
-}
+} // namespace
 
 TEST(RecordWithVariantsTypeTest, traversal) {
     testUtils::TestEnvironment testEnvironment;
     testDomain::TestRecordWithVariantsType recordType;
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
-    EXPECT_TRUE(value);   
+    EXPECT_TRUE(value);
 
-    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value, testDomain::TestRecordWithVariantsType::getTagBId());
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value,
+                        testDomain::TestRecordWithVariantsType::getTagBId());
 
     recordType.selectTag(testEnvironment.m_typeSystem, value, testDomain::TestRecordWithVariantsType::getTagAId());
-    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value, testDomain::TestRecordWithVariantsType::getTagAId());
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value,
+                        testDomain::TestRecordWithVariantsType::getTagAId());
 
     recordType.selectTag(testEnvironment.m_typeSystem, value, testDomain::TestRecordWithVariantsType::getTagCId());
-    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value, testDomain::TestRecordWithVariantsType::getTagCId());
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, value,
+                        testDomain::TestRecordWithVariantsType::getTagCId());
 }
 
 TEST(RecordWithVariantsTypeTest, getChildNonConstOfFixedField) {
@@ -244,11 +258,12 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFixedField) {
     testDomain::TestRecordWithVariantsType recordType;
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
-    EXPECT_TRUE(value);   
+    EXPECT_TRUE(value);
 
     const unsigned int ff1Index = 3;
 
-    EXPECT_EQ(*std::get<1>(recordType.getChild(value, ff1Index)).asField(), testDomain::TestRecordWithVariantsType::getFf1Id());    
+    EXPECT_EQ(*std::get<1>(recordType.getChild(value, ff1Index)).asField(),
+              testDomain::TestRecordWithVariantsType::getFf1Id());
 
     auto [value0, step0, type0] = recordType.getChild(value, ff1Index);
 
@@ -267,22 +282,22 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFixedField) {
     EXPECT_NE(valueHolder0, valueHolder1);
 
     auto [value2, step2, type2] = recordType.getChild(value, ff1Index);
-    EXPECT_EQ(*value2, valueHolder1);   
+    EXPECT_EQ(*value2, valueHolder1);
 }
-
 
 TEST(RecordWithVariantsTypeTest, getChildNonConstOfFieldInBranch) {
     testUtils::TestEnvironment testEnvironment;
     testDomain::TestRecordWithVariantsType recordType;
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
-    EXPECT_TRUE(value);   
+    EXPECT_TRUE(value);
 
     recordType.selectTag(testEnvironment.m_typeSystem, value, testDomain::TestRecordWithVariantsType::getTagCId());
 
     const unsigned int fieldBCIndex = 2;
 
-    EXPECT_EQ(*std::get<1>(recordType.getChild(value, fieldBCIndex)).asField(), testDomain::TestRecordWithVariantsType::getFieldBCId());    
+    EXPECT_EQ(*std::get<1>(recordType.getChild(value, fieldBCIndex)).asField(),
+              testDomain::TestRecordWithVariantsType::getFieldBCId());
 
     auto [value0, step0, type0] = recordType.getChild(value, fieldBCIndex);
 
@@ -301,143 +316,99 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFieldInBranch) {
     EXPECT_NE(valueHolder0, valueHolder1);
 
     auto [value2, step2, type2] = recordType.getChild(value, fieldBCIndex);
-    EXPECT_EQ(*value2, valueHolder1);   
+    EXPECT_EQ(*value2, valueHolder1);
 }
 
-TEST(RecordWithVariantsTypeTest, subtype) 
-{
+TEST(RecordWithVariantsTypeTest, subtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    struct RecordVWithNoFields : babelwires::RecordWithVariantsType {
-        RecordVWithNoFields() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1)}, {}) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("VarNoFields"), 1);
-    };
-
-    struct RecordVA0 : babelwires::RecordWithVariantsType {
-        RecordVA0() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1)}, {
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()}
-        }) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordVA0"), 1);
-    };
-
-    struct RecordVA1 : babelwires::RecordWithVariantsType {
-        RecordVA1() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1)}, {
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()}
-        }) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordVA1"), 1);
-    };
-
-    struct RecordVB : babelwires::RecordWithVariantsType {
-        RecordVB() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1)}, {
-            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()}
-        }) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordVB"), 1);
-    };
-
-    struct RecordVAB : babelwires::RecordWithVariantsType {
-        RecordVAB() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1)}, {
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()}
-        }) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordVAB"), 1);
-    };
-
-    struct RecordVAS : babelwires::RecordWithVariantsType {
-        RecordVAS() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1)}, {
-            {testUtils::getTestRegisteredIdentifier("fieldA", 3), babelwires::StringType::getThisType()}
-        }) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordVAS"), 1);
-    };
-
-    struct RecordVAV0 : babelwires::RecordWithVariantsType {
-        RecordVAV0() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1), testUtils::getTestRegisteredIdentifier("tag0", 1)}, {
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("field0"), babelwires::DefaultIntType::getThisType(), {testUtils::getTestRegisteredIdentifier("tag0", 1)}}
-        }) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordVAV0"), 1);
-    };
-
-    struct RecordVABV0 : babelwires::RecordWithVariantsType {
-        RecordVABV0() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1), testUtils::getTestRegisteredIdentifier("tag0", 1)}, {
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("field0"), babelwires::DefaultIntType::getThisType(), {testUtils::getTestRegisteredIdentifier("tag0", 1)}},
-            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()}
-        }) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordVABV0"), 1);
-    };
-
-    struct RecordVABV01 : babelwires::RecordWithVariantsType {
-        RecordVABV01() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1), testUtils::getTestRegisteredIdentifier("tag0", 1)}, {
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("field0"), babelwires::DefaultIntType::getThisType(), {testUtils::getTestRegisteredIdentifier("tag0", 1)}},
-            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("field1"), babelwires::DefaultIntType::getThisType(), {testUtils::getTestRegisteredIdentifier("tag0", 1)}}
-        }) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordVABV01"), 1);
-    };
-
-    struct RecordVAVB : babelwires::RecordWithVariantsType {
-        RecordVAVB() : RecordWithVariantsType({testUtils::getTestRegisteredIdentifier("dtag", 1), testUtils::getTestRegisteredIdentifier("tag0", 1)}, {
-            {testUtils::getTestRegisteredIdentifier("fieldA"), babelwires::DefaultIntType::getThisType()},
-            {testUtils::getTestRegisteredIdentifier("fieldB"), babelwires::DefaultIntType::getThisType(), {testUtils::getTestRegisteredIdentifier("dtag", 1)}}
-        }) {}
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("RecordVAVB"), 1);
-    };
-
-    testEnvironment.m_typeSystem.addEntry<RecordVWithNoFields>();
-    testEnvironment.m_typeSystem.addEntry<RecordVA0>();
-    testEnvironment.m_typeSystem.addEntry<RecordVA1>();
-    testEnvironment.m_typeSystem.addEntry<RecordVAS>();
-    testEnvironment.m_typeSystem.addEntry<RecordVB>();
-    testEnvironment.m_typeSystem.addEntry<RecordVAB>();
-    testEnvironment.m_typeSystem.addEntry<RecordVAV0>();
-    testEnvironment.m_typeSystem.addEntry<RecordVABV0>();
-    testEnvironment.m_typeSystem.addEntry<RecordVABV01>();
-    testEnvironment.m_typeSystem.addEntry<RecordVAVB>();
-
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVWithNoFields::getThisType(), RecordVA0::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVA0::getThisType(), RecordVWithNoFields::getThisType()), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVA0::getThisType(), RecordVA1::getThisType()), babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVA1::getThisType(), RecordVA0::getThisType()), babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVA0::getThisType(), RecordVAB::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVB::getThisType(), RecordVAB::getThisType()), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVWithNoFields::getThisType(),
+                                                          testDomain::RecordVA0::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
+                                                          testDomain::RecordVWithNoFields::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
+                                                          testDomain::RecordVA1::getThisType()),
+              babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA1::getThisType(),
+                                                          testDomain::RecordVA0::getThisType()),
+              babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
+                                                          testDomain::RecordVAB::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVB::getThisType(),
+                                                          testDomain::RecordVAB::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
 
     // Incompatible types
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVAS::getThisType(), RecordVA0::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVA0::getThisType(), RecordVAS::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVAS::getThisType(), RecordVAB::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAS::getThisType(),
+                                                          testDomain::RecordVA0::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
+                                                          testDomain::RecordVAS::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAS::getThisType(),
+                                                          testDomain::RecordVAB::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
 
     // With variants
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVA0::getThisType(), RecordVAV0::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVAV0::getThisType(), RecordVA0::getThisType()), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVA0::getThisType(), RecordVABV0::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVABV0::getThisType(), RecordVA0::getThisType()), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVAB::getThisType(), RecordVABV0::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVABV0::getThisType(), RecordVAB::getThisType()), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVABV0::getThisType(), RecordVABV01::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVABV01::getThisType(), RecordVABV0::getThisType()), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
+                                                          testDomain::RecordVAV0::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAV0::getThisType(),
+                                                          testDomain::RecordVA0::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
+                                                          testDomain::RecordVABV0::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVABV0::getThisType(),
+                                                          testDomain::RecordVA0::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAB::getThisType(),
+                                                          testDomain::RecordVABV0::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVABV0::getThisType(),
+                                                          testDomain::RecordVAB::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVABV0::getThisType(),
+                                                          testDomain::RecordVABV01::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVABV01::getThisType(),
+                                                          testDomain::RecordVABV0::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVA0::getThisType(), RecordVAVB::getThisType()), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVAVB::getThisType(), RecordVA0::getThisType()), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVAB::getThisType(), RecordVAVB::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(RecordVAVB::getThisType(), RecordVAB::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
+                                                          testDomain::RecordVAVB::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAVB::getThisType(),
+                                                          testDomain::RecordVA0::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAB::getThisType(),
+                                                          testDomain::RecordVAVB::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAVB::getThisType(),
+                                                          testDomain::RecordVAB::getThisType()),
+              babelwires::SubtypeOrder::IsUnrelated);
 }
 
-TEST(RecordWithVariantsTypeTest, featureChanges)
-{
+TEST(RecordWithVariantsTypeTest, featureChanges) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_typeSystem, testDomain::TestRecordWithVariantsType::getThisType());
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_typeSystem,
+                                           testDomain::TestRecordWithVariantsType::getThisType());
     valueFeature.setToDefault();
 
-    const testDomain::TestRecordWithVariantsType* recordWithVariantsType = valueFeature.getType().as<testDomain::TestRecordWithVariantsType>();
+    const testDomain::TestRecordWithVariantsType* recordWithVariantsType =
+        valueFeature.getType().as<testDomain::TestRecordWithVariantsType>();
     ASSERT_NE(recordWithVariantsType, nullptr);
 
     valueFeature.clearChanges();
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     {
         babelwires::ValueHolder value = valueFeature.getValue();
-        recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value, testDomain::TestRecordWithVariantsType::getTagAId());
+        recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value,
+                                          testDomain::TestRecordWithVariantsType::getTagAId());
         valueFeature.setValue(value);
     }
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
@@ -446,7 +417,8 @@ TEST(RecordWithVariantsTypeTest, featureChanges)
     valueFeature.clearChanges();
     {
         babelwires::ValueHolder value = valueFeature.getValue();
-        recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value, testDomain::TestRecordWithVariantsType::getTagDId());
+        recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value,
+                                          testDomain::TestRecordWithVariantsType::getTagDId());
         valueFeature.setValue(value);
     }
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
@@ -463,8 +435,7 @@ TEST(RecordWithVariantsTypeTest, featureChanges)
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
 }
 
-TEST(RecordWithVariantsTypeTest, valueEquality)
-{
+TEST(RecordWithVariantsTypeTest, valueEquality) {
     testUtils::TestEnvironment testEnvironment;
     testDomain::TestRecordWithVariantsType recordType;
 
@@ -486,8 +457,7 @@ TEST(RecordWithVariantsTypeTest, valueEquality)
     EXPECT_EQ(value0, value1);
 }
 
-TEST(RecordWithVariantsTypeTest, valueHash)
-{
+TEST(RecordWithVariantsTypeTest, valueHash) {
     testUtils::TestEnvironment testEnvironment;
     testDomain::TestRecordWithVariantsType recordType;
 
@@ -509,4 +479,3 @@ TEST(RecordWithVariantsTypeTest, valueHash)
     EXPECT_NE(hash0, hash2);
     EXPECT_NE(hash1, hash2);
 }
-
