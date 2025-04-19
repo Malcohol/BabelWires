@@ -13,6 +13,7 @@
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 void babelwires::projectUtilities::translate(const UiPosition& offset, ProjectData& dataInOut) {
     for (auto& elementData : dataInOut.m_nodes) {
@@ -61,7 +62,7 @@ namespace {
                         }
                     }
                     if (!foundOverridingModifier) {
-                        assert(pathToPossibleValueInTarget.tryFollow(*targetElement->getInput()) &&
+                        assert(tryFollowPath(pathToPossibleValueInTarget, *targetElement->getInput()) &&
                                "Expected to find a matching feature in the target, since ancestors are connected and "
                                "there "
                                "are no overriding modifiers");

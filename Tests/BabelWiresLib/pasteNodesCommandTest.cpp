@@ -13,11 +13,12 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testProcessor.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
@@ -30,7 +31,7 @@ TEST(PasteNodesCommandTest, executeAndUndoEmptyProject) {
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
     projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath),
                              babelwires::pathToString(targetFilePath.m_filePath));
-    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
+    testDomain::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
     babelwires::PasteNodesCommand testCopyConstructor("Test command", std::move(projectData));
     babelwires::PasteNodesCommand command = testCopyConstructor;
@@ -55,11 +56,11 @@ TEST(PasteNodesCommandTest, executeAndUndoEmptyProject) {
         ASSERT_NE(targetElement, nullptr);
 
         // Confirm that some modifiers were pasted too.
-        ASSERT_NE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt), nullptr);
+        ASSERT_NE(processor->getEdits().findModifier(testDomain::TestProcessorInputOutputType::s_pathToInt), nullptr);
         EXPECT_FALSE(
-            processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt)->isFailed());
-        ASSERT_NE(targetElement->getEdits().findModifier(testUtils::getTestFileElementPathToInt0()), nullptr);
-        EXPECT_FALSE(targetElement->getEdits().findModifier(testUtils::getTestFileElementPathToInt0())->isFailed());
+            processor->getEdits().findModifier(testDomain::TestProcessorInputOutputType::s_pathToInt)->isFailed());
+        ASSERT_NE(targetElement->getEdits().findModifier(testDomain::getTestFileElementPathToInt0()), nullptr);
+        EXPECT_FALSE(targetElement->getEdits().findModifier(testDomain::getTestFileElementPathToInt0())->isFailed());
     };
     checkForProjectData();
 
@@ -91,7 +92,7 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
                              babelwires::pathToString(targetFilePath.m_filePath));
     originalProjectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath),
                                      babelwires::pathToString(targetFilePath.m_filePath));
-    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath);
+    testDomain::TestSourceFileFormat::writeToTestFile(sourceFilePath);
 
     {
         // Confirm the original data applied as expected.
@@ -104,8 +105,8 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
         const babelwires::Node* targetElement =
             testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetNodeId);
         ASSERT_NE(targetElement, nullptr);
-        ASSERT_NE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt), nullptr);
-        EXPECT_FALSE(processor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt)->isFailed());
+        ASSERT_NE(processor->getEdits().findModifier(testDomain::TestProcessorInputOutputType::s_pathToInt), nullptr);
+        EXPECT_FALSE(processor->getEdits().findModifier(testDomain::TestProcessorInputOutputType::s_pathToInt)->isFailed());
     };
 
     babelwires::PasteNodesCommand command("Test command", std::move(projectData));
@@ -163,7 +164,7 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
             EXPECT_NE(newProcessor, nullptr);
             EXPECT_NE(newTargetElement, nullptr);
             const babelwires::Modifier* modifier =
-                newProcessor->getEdits().findModifier(testUtils::TestProcessorInputOutputType::s_pathToInt);
+                newProcessor->getEdits().findModifier(testDomain::TestProcessorInputOutputType::s_pathToInt);
             ASSERT_NE(modifier, nullptr);
             EXPECT_FALSE(modifier->isFailed());
             const babelwires::ConnectionModifierData* modData =
@@ -197,7 +198,7 @@ namespace {
     void testSourceElementsOutsideProjectData(bool isPastingIntoSameProject) {
         testUtils::TestEnvironment testEnvironment;
 
-        testUtils::TestComplexRecordElementData sourceElementData;
+        testDomain::TestComplexRecordElementData sourceElementData;
         babelwires::NodeId sourceNodeId =
             testEnvironment.m_project.addNode(sourceElementData);
 
@@ -211,7 +212,7 @@ namespace {
             projectData.m_projectId = testEnvironment.m_project.getProjectId();
         }
 
-        testUtils::TestComplexRecordElementData targetElementData;
+        testDomain::TestComplexRecordElementData targetElementData;
         {
             babelwires::ConnectionModifierData modifierData;
             modifierData.m_targetPath = targetElementData.getPathToRecordInt0();

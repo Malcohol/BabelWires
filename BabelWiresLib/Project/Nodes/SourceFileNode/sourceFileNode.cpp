@@ -16,7 +16,6 @@
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
-#include <Common/IO/fileDataSource.hpp>
 #include <Common/Log/userLogger.hpp>
 
 babelwires::SourceFileNode::SourceFileNode(const ProjectContext& context, UserLogger& userLogger,
@@ -89,8 +88,7 @@ bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogge
             throw ModelException() << "No file name";
         }
 
-        FileDataSource file(data.m_filePath);
-        setValueTreeRoot(format.loadFromFile(file, context, userLogger));
+        setValueTreeRoot(format.loadFromFile(data.m_filePath, context, userLogger));
         clearInternalFailure();
         return true;
     } catch (const RegistryException& e) {

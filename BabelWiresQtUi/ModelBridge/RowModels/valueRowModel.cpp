@@ -15,6 +15,7 @@
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <QString>
 
@@ -50,7 +51,7 @@ babelwires::ValueRowModel::createCommandFromEditor(QWidget* editor) const {
     if (EditableValueHolder newValue = m_valueModelDispatcher->createValueFromEditorIfDifferent(editor)) {
         const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
         auto modifier = std::make_unique<babelwires::ValueAssignmentData>(std::move(newValue));
-        modifier->m_targetPath = babelwires::Path(&valueTreeNode);
+        modifier->m_targetPath = babelwires::getPathTo(&valueTreeNode);
         return std::make_unique<AddModifierCommand>("Set value", m_node->getNodeId(), std::move(modifier));
     }
     return nullptr;
@@ -90,5 +91,5 @@ void babelwires::ValueRowModel::getContextMenuActions(
     RowModel::getContextMenuActions(actionsOut);
     const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
     m_valueModelDispatcher->getContextMenuActions(
-        ProjectDataLocation{m_node->getNodeId(), babelwires::Path(&valueTreeNode)}, actionsOut);
+        ProjectDataLocation{m_node->getNodeId(), babelwires::getPathTo(&valueTreeNode)}, actionsOut);
 }

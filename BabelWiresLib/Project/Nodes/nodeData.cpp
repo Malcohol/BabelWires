@@ -101,11 +101,7 @@ void babelwires::NodeData::visitIdentifiers(IdentifierVisitor& visitor) {
         m->visitIdentifiers(visitor);
     }
     for (auto& p : m_expandedPaths) {
-        for (auto& s : p) {
-            if (s.isField()) {
-                visitor(s.getField());
-            }
-        }
+        p.visitIdentifiers(visitor);
     }
 }
 

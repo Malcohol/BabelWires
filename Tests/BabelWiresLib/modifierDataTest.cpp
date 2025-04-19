@@ -15,8 +15,9 @@
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
+
+#include <Domains/TestDomain/testRecordType.hpp>
+#include <Domains/TestDomain/testArrayType.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
 
@@ -24,15 +25,15 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ArraySizeModifierData data;
-    data.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
+    data.m_size = testDomain::TestSimpleArrayType::s_nonDefaultSize;
 
-    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testUtils::TestSimpleArrayType::getThisType());
+    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testDomain::TestSimpleArrayType::getThisType());
     arrayFeature.setToDefault();
 
-    EXPECT_EQ(arrayFeature.getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(arrayFeature.getNumChildren(), testDomain::TestSimpleArrayType::s_defaultSize);
 
     data.apply(&arrayFeature);
-    EXPECT_EQ(arrayFeature.getNumChildren(), testUtils::TestSimpleArrayType::s_nonDefaultSize);
+    EXPECT_EQ(arrayFeature.getNumChildren(), testDomain::TestSimpleArrayType::s_nonDefaultSize);
 
     babelwires::ValueTreeRoot notArrayFeature(testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisType());
     EXPECT_THROW(data.apply(&notArrayFeature), babelwires::ModelException);

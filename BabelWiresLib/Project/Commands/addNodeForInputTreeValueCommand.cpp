@@ -16,6 +16,7 @@
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 babelwires::AddNodeForInputTreeValueCommand::AddNodeForInputTreeValueCommand(std::string commandName,
                                                                              NodeId originalNodeId, Path pathToValue,
@@ -36,7 +37,7 @@ bool babelwires::AddNodeForInputTreeValueCommand::initializeAndExecute(Project& 
         return false;
     }
 
-    if (!m_pathToValue.tryFollow(*nodeInput)) {
+    if (!tryFollowPath(m_pathToValue, *nodeInput)) {
         return false;
     }
 
@@ -52,7 +53,7 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
     assert(originalNode);
     const ValueTreeNode* const nodeInput = originalNode->getInput();
     assert(nodeInput);
-    const ValueTreeNode& originalValue = m_pathToValue.follow(*nodeInput);
+    const ValueTreeNode& originalValue = followPath(m_pathToValue, *nodeInput);
 
     ValueNodeData newNodeData(originalValue.getTypeRef());
     newNodeData.m_id = m_newNodeId;

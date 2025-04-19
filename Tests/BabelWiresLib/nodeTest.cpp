@@ -8,10 +8,11 @@
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
+#include <Domains/TestDomain/testArrayType.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>
@@ -63,12 +64,12 @@ TEST(NodeTest, uiData) {
 
 TEST(NodeTest, modifiers) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
 
-    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path arrayPath = testDomain::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
     const babelwires::Path arrayElemPath2 =
-        testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
+        testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
     const babelwires::Path failedPath = babelwires::Path::deserializeFromString("foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
@@ -127,7 +128,7 @@ TEST(NodeTest, modifiers) {
         featureElement->getInput();
     ASSERT_TRUE(testRecordFeature);
 
-    testUtils::TestComplexRecordType::ConstInstance testRecord(*testRecordFeature);
+    testDomain::TestComplexRecordType::ConstInstance testRecord(*testRecordFeature);
     EXPECT_EQ(testRecord.getarray().getSize(), 5);
     EXPECT_EQ(testRecord.getarray().getEntry(3).get(), 16);
 
@@ -157,18 +158,18 @@ TEST(NodeTest, modifiers) {
     {
         featureElement->removeModifier(featureElement->findModifier(arrayPath));
         EXPECT_EQ(featureElement->findModifier(arrayPath), nullptr);
-        EXPECT_EQ(testRecord.getarray().getSize(), testUtils::TestSimpleArrayType::s_defaultSize);
+        EXPECT_EQ(testRecord.getarray().getSize(), testDomain::TestSimpleArrayType::s_defaultSize);
     }
 }
 
 TEST(NodeTest, expandedPaths) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestComplexRecordElementData featureElementData;
+    testDomain::TestComplexRecordElementData featureElementData;
 
-    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path arrayPath = testDomain::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
     const babelwires::Path arrayElemPath2 =
-        testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
+        testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
     const babelwires::Path fooBar = babelwires::Path::deserializeFromString("foo/bar");
 
     featureElementData.m_expandedPaths.emplace_back(arrayElemPath);
@@ -218,12 +219,12 @@ TEST(NodeTest, expandedPaths) {
 
 TEST(NodeTest, extractNodeData) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestComplexRecordElementData featureElementData;
+    testDomain::TestComplexRecordElementData featureElementData;
 
-    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path arrayPath = testDomain::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
     const babelwires::Path arrayElemPath2 =
-        testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
+        testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
     const babelwires::Path failedPath = babelwires::Path::deserializeFromString("value/foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
@@ -300,10 +301,10 @@ TEST(NodeTest, extractNodeData) {
 
 TEST(NodeTest, removedModifiers) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestComplexRecordElementData featureElementData;
+    testDomain::TestComplexRecordElementData featureElementData;
 
-    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path arrayPath = testDomain::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
     const babelwires::Path failedPath = babelwires::Path::deserializeFromString("foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
@@ -383,7 +384,7 @@ TEST(NodeTest, failure) {
 
 TEST(NodeTest, simpleChanges) {
     testUtils::TestEnvironment testEnvironment;
-    testUtils::TestComplexRecordElementData featureElementData;
+    testDomain::TestComplexRecordElementData featureElementData;
 
     auto featureElement =
         featureElementData.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 66);
@@ -392,8 +393,8 @@ TEST(NodeTest, simpleChanges) {
     featureElement->clearChanges();
     EXPECT_FALSE(featureElement->isChanged(babelwires::Node::Changes::SomethingChanged));
 
-    const babelwires::Path arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-    const babelwires::Path arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
+    const babelwires::Path arrayPath = testDomain::TestComplexRecordElementData::getPathToRecordArray();
+    const babelwires::Path arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
 
     {
         featureElement->clearChanges();
@@ -413,7 +414,7 @@ TEST(NodeTest, simpleChanges) {
         featureElement->clearChanges();
         babelwires::ArraySizeModifierData arrayInitData;
         arrayInitData.m_targetPath = arrayPath;
-        arrayInitData.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
+        arrayInitData.m_size = testDomain::TestSimpleArrayType::s_nonDefaultSize;
         featureElement->addModifier(testEnvironment.m_log, arrayInitData);
         featureElement->process(testEnvironment.m_project, testEnvironment.m_log);
 

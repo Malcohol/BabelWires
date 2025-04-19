@@ -4,10 +4,12 @@
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+
+#include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testProcessor.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testProcessor.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
@@ -29,28 +31,28 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
             // itself or one of the features or types registered in the TestEnvironment.
             testUtils::TestRecordFeature testRecord;
             testUtils::TestFileFeature testFileFeature(testEnvironment.m_projectContext);
-            EXPECT_EQ(babelwires::Path(testRecord.m_int).getLastStep().asField()->getDiscriminator(), 4);
-            EXPECT_EQ(babelwires::Path(testRecord.m_array).getLastStep().asField()->getDiscriminator(),
+            EXPECT_EQ(babelwires::getPathTo(testRecord.m_int).getLastStep().asField()->getDiscriminator(), 4);
+            EXPECT_EQ(babelwires::getPathTo(testRecord.m_array).getLastStep().asField()->getDiscriminator(),
                       3);
             EXPECT_EQ(
-                babelwires::Path(testRecord.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
-            EXPECT_EQ(babelwires::Path(testRecord.m_intFeature2).getLastStep().asField()->getDiscriminator(), 1);
+                babelwires::getPathTo(testRecord.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
+            EXPECT_EQ(babelwires::getPathTo(testRecord.m_intFeature2).getLastStep().asField()->getDiscriminator(), 1);
             EXPECT_EQ(
-                babelwires::Path(testFileFeature.m_intChildFeature).getLastStep().asField()->getDiscriminator(),
+                babelwires::getPathTo(testFileFeature.m_intChildFeature).getLastStep().asField()->getDiscriminator(),
                 3);
 
             // Sanity check that the ids are unaffected by the registration re-running.
             testUtils::TestRecordFeature testRecord2;
             testUtils::TestFileFeature testFileFeature2(testEnvironment.m_projectContext);
-            EXPECT_EQ(babelwires::Path(testRecord2.m_int).getLastStep().asField()->getDiscriminator(), 4);
-            EXPECT_EQ(babelwires::Path(testRecord2.m_array).getLastStep().asField()->getDiscriminator(),
+            EXPECT_EQ(babelwires::getPathTo(testRecord2.m_int).getLastStep().asField()->getDiscriminator(), 4);
+            EXPECT_EQ(babelwires::getPathTo(testRecord2.m_array).getLastStep().asField()->getDiscriminator(),
                       3);
             EXPECT_EQ(
-                babelwires::Path(testRecord2.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
-            EXPECT_EQ(babelwires::Path(testRecord2.m_intFeature2).getLastStep().asField()->getDiscriminator(),
+                babelwires::getPathTo(testRecord2.m_subRecord).getLastStep().asField()->getDiscriminator(), 2);
+            EXPECT_EQ(babelwires::getPathTo(testRecord2.m_intFeature2).getLastStep().asField()->getDiscriminator(),
                       1);
             EXPECT_EQ(
-                babelwires::Path(testFileFeature2.m_intChildFeature).getLastStep().asField()->getDiscriminator(),
+                babelwires::getPathTo(testFileFeature2.m_intChildFeature).getLastStep().asField()->getDiscriminator(),
                 3);
         }
 
@@ -87,21 +89,21 @@ TEST(ProjectBundleTest, fieldIdsInPaths) {
                 const babelwires::LongId& fieldIdentifier = std::get<0>(v);
                 const std::string& fieldName = *std::get<1>(v);
                 const babelwires::Uuid& uuid = *std::get<2>(v);
-                if (uuid == testUtils::TestProcessorInputOutputType::s_intUuid) {
-                    EXPECT_EQ(fieldName, testUtils::TestProcessorInputOutputType::s_intFieldName);
-                    EXPECT_EQ(fieldIdentifier, testUtils::TestProcessorInputOutputType::s_intIdInitializer);
+                if (uuid == testDomain::TestProcessorInputOutputType::s_intUuid) {
+                    EXPECT_EQ(fieldName, testDomain::TestProcessorInputOutputType::s_intFieldName);
+                    EXPECT_EQ(fieldIdentifier, testDomain::TestProcessorInputOutputType::s_intIdInitializer);
                     EXPECT_EQ(fieldIdentifier.getDiscriminator(), recordIntDiscriminator);
-                } else if (uuid == testUtils::TestProcessorInputOutputType::s_arrayUuid) {
-                    EXPECT_EQ(fieldName, testUtils::TestProcessorInputOutputType::s_arrayFieldName);
-                    EXPECT_EQ(fieldIdentifier, testUtils::TestProcessorInputOutputType::s_arrayIdInitializer);
+                } else if (uuid == testDomain::TestProcessorInputOutputType::s_arrayUuid) {
+                    EXPECT_EQ(fieldName, testDomain::TestProcessorInputOutputType::s_arrayFieldName);
+                    EXPECT_EQ(fieldIdentifier, testDomain::TestProcessorInputOutputType::s_arrayIdInitializer);
                     EXPECT_EQ(fieldIdentifier.getDiscriminator(), recordArrayDiscriminator);
-                } else if (uuid == testUtils::TestProcessorInputOutputType::s_recordUuid) {
-                    EXPECT_EQ(fieldName, testUtils::TestProcessorInputOutputType::s_recordFieldName);
-                    EXPECT_EQ(fieldIdentifier, testUtils::TestProcessorInputOutputType::s_recordIdInitializer);
+                } else if (uuid == testDomain::TestProcessorInputOutputType::s_recordUuid) {
+                    EXPECT_EQ(fieldName, testDomain::TestProcessorInputOutputType::s_recordFieldName);
+                    EXPECT_EQ(fieldIdentifier, testDomain::TestProcessorInputOutputType::s_recordIdInitializer);
                     EXPECT_EQ(fieldIdentifier.getDiscriminator(), recordRecordDiscriminator);
-                } else if (uuid == testUtils::TestSimpleRecordType::s_int0Uuid) {
-                    EXPECT_EQ(fieldName, testUtils::TestSimpleRecordType::s_int0FieldName);
-                    EXPECT_EQ(fieldIdentifier, testUtils::TestSimpleRecordType::s_int0IdInitializer);
+                } else if (uuid == testDomain::TestSimpleRecordType::s_int0Uuid) {
+                    EXPECT_EQ(fieldName, testDomain::TestSimpleRecordType::s_int0FieldName);
+                    EXPECT_EQ(fieldIdentifier, testDomain::TestSimpleRecordType::s_int0IdInitializer);
                     recordInt2Disciminator = fieldIdentifier.getDiscriminator();
                     EXPECT_GE(recordInt2Disciminator, 1);
                     EXPECT_LE(recordInt2Disciminator, 2);
@@ -153,18 +155,18 @@ TEST(ProjectBundleTest, factoryMetadata) {
     bundle.interpretInCurrentContext();
 
     ASSERT_EQ(bundle.getFactoryMetadata().size(), 3);
-    EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestTargetFileFormat::getThisIdentifier())->second, 1);
-    EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestProcessor::getFactoryIdentifier())->second, 2);
-    EXPECT_EQ(bundle.getFactoryMetadata().find(testUtils::TestSourceFileFormat::getThisIdentifier())->second, 3);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(testDomain::TestTargetFileFormat::getThisIdentifier())->second, 1);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(testDomain::TestProcessor::getFactoryIdentifier())->second, 2);
+    EXPECT_EQ(bundle.getFactoryMetadata().find(testDomain::TestSourceFileFormat::getThisIdentifier())->second, 3);
 
     babelwires::ProjectData resolvedData = std::move(bundle).resolveAgainstCurrentContext(
         testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
 
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(
-        "Data for the factory \"testFactoryFormat\" (testFactoryFormat) corresponds to an old version (1)"));
+        "Data for the factory \"Test Target File Format\" (TestTargetFormat) corresponds to an old version (1)"));
     EXPECT_FALSE(testEnvironment.m_log.hasSubstringIgnoreCase("Data for the factory \"testProcessor\""));
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(
-        "Data for the factory \"testFileFormat\" (testFileFormat) has an unknown version (3)"));
+        "Data for the factory \"Test Source File Format\" (TestSourceFormat) has an unknown version (3)"));
 }
 
 TEST(ProjectBundleTest, filePathResolution) {
@@ -257,10 +259,10 @@ TEST(ProjectBundleTest, factoryIdentifiers) {
     babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testUtils::TestProcessorFactory::getThisType(),
                                                              "Other test processor",
 "41000000-1111-2222-3333-888888888888", babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testUtils::TestSourceFileFormat::getThisType(),
+    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testDomain::TestSourceFileFormat::getThisType(),
                                                              "Other test source factory",
 "41000000-1111-2222-3333-999999999999", babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testUtils::TestTargetFileFormat::getThisType(),
+    babelwires::IdentifierRegistry::write()->addLongIdWithMetadata(testDomain::TestTargetFileFormat::getThisType(),
                                                              "Other test target factory",
 "41000000-1111-2222-3333-aaaaaaaaaaaa", babelwires::IdentifierRegistry::Authority::isAuthoritative);
 

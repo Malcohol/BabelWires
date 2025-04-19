@@ -5,6 +5,8 @@
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/stringValue.hpp>
 
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
@@ -106,6 +108,7 @@ TEST(MapValueTest, moveAssignment) {
 }
 
 TEST(MapValueTest, equality) {
+    testUtils::TestLog log;
     babelwires::MapValue mapValue;
     babelwires::MapValue mapValue2;
 
@@ -133,19 +136,19 @@ TEST(MapValueTest, equality) {
     EXPECT_FALSE(mapValue != mapValue2);
 
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestType>();
+    typeSystem.addEntry<babelwires::StringType>();
 
-    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
 
     EXPECT_FALSE(mapValue == mapValue2);
     EXPECT_TRUE(mapValue != mapValue2);
 
-    mapValue2.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue2.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
 
     EXPECT_TRUE(mapValue == mapValue2);
     EXPECT_FALSE(mapValue != mapValue2);
 
-    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
     mapValue2.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
     EXPECT_FALSE(mapValue == mapValue2);
@@ -177,17 +180,17 @@ TEST(MapValueTest, getHash) {
     EXPECT_EQ(mapValue.getHash(), mapValue2.getHash());
 
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestType>();
+    typeSystem.addEntry<babelwires::StringType>();
 
-    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
 
     EXPECT_NE(mapValue.getHash(), mapValue2.getHash());
 
-    mapValue2.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue2.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
 
     EXPECT_EQ(mapValue.getHash(), mapValue2.getHash());
 
-    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
     mapValue2.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
     EXPECT_NE(mapValue.getHash(), mapValue2.getHash());
@@ -197,11 +200,11 @@ TEST(MapValueTest, isInvalid_validMap) {
     babelwires::MapValue mapValue;
 
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestType>();  
+    typeSystem.addEntry<babelwires::StringType>();  
 
-    mapValue.setSourceTypeRef(testUtils::TestType::getThisType());
-    mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
-    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
     mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
     EXPECT_TRUE(mapValue.isValid(typeSystem));
@@ -216,11 +219,11 @@ TEST(MapValueTest, isInvalid_outOfPlaceFallback) {
     babelwires::MapValue mapValue;
 
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestType>();  
+    typeSystem.addEntry<babelwires::StringType>();  
 
-    mapValue.setSourceTypeRef(testUtils::TestType::getThisType());
-    mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
-    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
     mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
     mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
@@ -231,11 +234,11 @@ TEST(MapValueTest, isInvalid_noFallback) {
     babelwires::MapValue mapValue;
 
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestType>();  
+    typeSystem.addEntry<babelwires::StringType>();  
 
-    mapValue.setSourceTypeRef(testUtils::TestType::getThisType());
-    mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
-    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
 
     EXPECT_FALSE(mapValue.isValid(typeSystem));
 }
@@ -244,11 +247,11 @@ TEST(MapValueTest, isValid_typeMismatch) {
     babelwires::MapValue mapValue;
 
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestType>();  
+    typeSystem.addEntry<babelwires::StringType>();  
 
     mapValue.setSourceTypeRef(testTypeId1);
-    mapValue.setTargetTypeRef(testUtils::TestType::getThisType());
-    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType()));
+    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType()));
     mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
     EXPECT_FALSE(mapValue.isValid(typeSystem));
@@ -262,12 +265,12 @@ TEST(MapValueTest, serializationTest) {
         mapValue.setTargetTypeRef(testTypeId2);
     
         babelwires::TypeSystem typeSystem;
-        typeSystem.addEntry<testUtils::TestType>();  
+        typeSystem.addEntry<babelwires::StringType>();  
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.
-        auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType());
-        testUtils::TestValue entrySourceValue;
-        entrySourceValue.m_value = "test mapValue serialization";
+        auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType());
+        babelwires::StringValue entrySourceValue;
+        entrySourceValue.set("test mapValue serialization");
         entryData->setSourceValue(entrySourceValue);
         mapValue.emplaceBack(std::move(entryData));
         mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
@@ -291,9 +294,9 @@ TEST(MapValueTest, serializationTest) {
     EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::One21);
     const babelwires::EditableValueHolder& sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
     ASSERT_NE(sourceValue, nullptr);
-    const auto *const sourceAsTestValue = sourceValue->as<testUtils::TestValue>();
+    const auto *const sourceAsTestValue = sourceValue->as<babelwires::StringValue>();
     ASSERT_NE(sourceAsTestValue, nullptr);
-    EXPECT_EQ(sourceAsTestValue->m_value, "test mapValue serialization");
+    EXPECT_EQ(sourceAsTestValue->get(), "test mapValue serialization");
 
     EXPECT_EQ(dataPtr->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::All2Sm);
 }
@@ -305,13 +308,13 @@ TEST(MapValueTest, cloneTest) {
     mapValue.setTargetTypeRef(testTypeId2);
 
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testUtils::TestType>();  
+    typeSystem.addEntry<babelwires::StringType>();  
 
     // Note: We want to be able to clone when entries do not match the types, as in this case.
-    auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, testUtils::TestType::getThisType(), testUtils::TestType::getThisType());
+    auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType());
     auto entryDataPtr = entryData.get();
-    testUtils::TestValue entrySourceValue;
-    entrySourceValue.m_value = "test mapValue serialization";
+    babelwires::StringValue entrySourceValue;
+    entrySourceValue.set("test mapValue serialization");
     entryData->setSourceValue(entrySourceValue);
     mapValue.emplaceBack(std::move(entryData));
     mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());

@@ -14,6 +14,7 @@
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 babelwires::SelectRecordVariantCommand::SelectRecordVariantCommand(std::string commandName, NodeId nodeId,
                                                                    Path pathToRecord, ShortId tagToSelect)
@@ -44,7 +45,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
     }
 
     const auto [compoundFeature, isCurrentTag, fieldsToRemove] =
-        ValueTreeHelper::getInfoFromRecordWithVariants(m_pathToRecord.tryFollow(*input), m_tagToSelect);
+        ValueTreeHelper::getInfoFromRecordWithVariants(tryFollowPath(m_pathToRecord, *input), m_tagToSelect);
 
     if (!compoundFeature) {
         return false;
@@ -60,7 +61,7 @@ bool babelwires::SelectRecordVariantCommand::initializeAndExecute(Project& proje
 
     for (const auto& field : fieldsToRemove) {
         Path pathToField = m_pathToRecord;
-        pathToField.pushStep(PathStep(field));
+        pathToField.pushStep(field);
         addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToField));
     }
 

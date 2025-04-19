@@ -47,9 +47,16 @@ const babelwires::RegistryEntry*
 babelwires::UntypedRegistry::getEntryByIdentifier(const LongId& identifier) const {
     const auto& it = m_entries.find(identifier);
     if (it != m_entries.end()) {
-        // resolve the identifier if it is currently unresolved.
-        it->first.copyDiscriminatorTo(identifier);
         return it->second.get();
+    }
+    return nullptr;
+}
+
+const babelwires::RegistryEntry*
+babelwires::UntypedRegistry::getEntryByIdentifierAndResolve(LongId& identifier) const {
+    if (const auto* entry = getEntryByIdentifier(identifier)) {
+        identifier = entry->getIdentifier();
+        return entry;
     }
     return nullptr;
 }
@@ -58,8 +65,6 @@ babelwires::RegistryEntry*
 babelwires::UntypedRegistry::getEntryByIdentifierNonConst(const LongId& identifier) const {
     const auto& it = m_entries.find(identifier);
     if (it != m_entries.end()) {
-        // resolve the identifier if it is currently unresolved.
-        it->first.copyDiscriminatorTo(identifier);
         return it->second.get();
     }
     return nullptr;

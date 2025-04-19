@@ -8,7 +8,8 @@
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
 #include <Common/Serialization/XML/xmlSerializer.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
+#include <Domains/TestDomain/testEnum.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>

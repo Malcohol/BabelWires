@@ -10,29 +10,30 @@
 #include <BabelWiresLib/Project/project.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 namespace {
     void testSourceFileChange(bool source1Present, bool source2Present) {
         testUtils::TestEnvironment testEnvironment;
 
-        testUtils::TempFilePath filePath1("foo" + testUtils::TestSourceFileFormat::getFileExtension());
-        testUtils::TempFilePath filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
+        testUtils::TempFilePath filePath1("foo" + testDomain::TestSourceFileFormat::getFileExtension());
+        testUtils::TempFilePath filePath2("erm" + testDomain::TestSourceFileFormat::getFileExtension());
 
         if (source1Present) {
-            testUtils::TestSourceFileFormat::writeToTestFile(filePath1, 'x');
+            testDomain::TestSourceFileFormat::writeToTestFile(filePath1, 100);
         }
         if (source2Present) {
-            testUtils::TestSourceFileFormat::writeToTestFile(filePath2, 'q');
+            testDomain::TestSourceFileFormat::writeToTestFile(filePath2, 200);
         }
 
         babelwires::SourceFileNodeData elementData;
         elementData.m_filePath = filePath1;
-        elementData.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
+        elementData.m_factoryIdentifier = testDomain::TestSourceFileFormat::getThisIdentifier();
 
         const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
         const auto* element =
@@ -40,12 +41,12 @@ namespace {
         ASSERT_NE(element, nullptr);
 
         const auto getOutput = [element]() {
-            return testUtils::TestSimpleRecordType::ConstInstance(*element->getOutput()->getChild(0));
+            return testDomain::TestSimpleRecordType::ConstInstance(*element->getOutput()->getChild(0));
         };
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
         if (source1Present) {
-            EXPECT_EQ(getOutput().getintR0().get(), 'x');
+            EXPECT_EQ(getOutput().getintR0().get(), 100);
         }
 
         babelwires::ChangeFileCommand testCopyConstructor("Test command", elementId, filePath2.m_filePath);
@@ -60,7 +61,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
-            EXPECT_EQ(getOutput().getintR0().get(), 'q');
+            EXPECT_EQ(getOutput().getintR0().get(), 200);
         }
 
         command.undo(testEnvironment.m_project);
@@ -68,7 +69,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath1.m_filePath);
         if (source1Present) {
-            EXPECT_EQ(getOutput().getintR0().get(), 'x');
+            EXPECT_EQ(getOutput().getintR0().get(), 100);
         }
 
         command.execute(testEnvironment.m_project);
@@ -76,7 +77,7 @@ namespace {
 
         EXPECT_EQ(element->getFilePath(), filePath2.m_filePath);
         if (source2Present) {
-            EXPECT_EQ(getOutput().getintR0().get(), 'q');
+            EXPECT_EQ(getOutput().getintR0().get(), 200);
         }
     }
 } // namespace
@@ -100,12 +101,12 @@ TEST(ChangeFileCommandTest, executeAndUndoSourceMissing1and2) {
 TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     testUtils::TestEnvironment testEnvironment;
 
-    std::string filePath1("foo" + testUtils::TestSourceFileFormat::getFileExtension());
-    std::string filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
+    std::string filePath1("foo" + testDomain::TestSourceFileFormat::getFileExtension());
+    std::string filePath2("erm" + testDomain::TestSourceFileFormat::getFileExtension());
 
     babelwires::TargetFileNodeData elementData;
     elementData.m_filePath = filePath1;
-    elementData.m_factoryIdentifier = testUtils::TestTargetFileFormat::getThisIdentifier();
+    elementData.m_factoryIdentifier = testDomain::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const auto* element = testEnvironment.m_project.getNode(elementId)->as<babelwires::TargetFileNode>();
@@ -138,7 +139,7 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
 TEST(ChangeFileCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    std::string filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
+    std::string filePath2("erm" + testDomain::TestSourceFileFormat::getFileExtension());
     babelwires::ChangeFileCommand command("Test command", 57, filePath2);
 
     testEnvironment.m_project.process();
@@ -152,7 +153,7 @@ TEST(ChangeFileCommandTest, failSafelyNotAFileElement) {
     const babelwires::NodeId elementId =
         testEnvironment.m_project.addNode(testUtils::TestNodeData());
 
-    std::string filePath2("erm" + testUtils::TestSourceFileFormat::getFileExtension());
+    std::string filePath2("erm" + testDomain::TestSourceFileFormat::getFileExtension());
     babelwires::ChangeFileCommand command("Test command", elementId, filePath2);
 
     testEnvironment.m_project.process();

@@ -14,7 +14,7 @@
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
-#include <BabelWiresLib/TypeSystem/valuePath.hpp>
+#include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 
 #include <map>
@@ -191,7 +191,7 @@ babelwires::PathStep babelwires::ValueTreeNode::getStepToChild(const ValueTreeNo
 int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const {
     const auto it = m_children.find0(step);
     if (it != m_children.end()) {
-        step.copyDiscriminatorFrom(it.getKey0());
+        // TODO DISCRIMINATORS
         return it.getKey1();
     }
     return -1;

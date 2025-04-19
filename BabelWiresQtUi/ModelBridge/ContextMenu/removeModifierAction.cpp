@@ -16,6 +16,7 @@
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 babelwires::RemoveModifierAction::RemoveModifierAction()
     : NodeContentsContextMenuActionBase(tr("Remove modifier")) {}
@@ -38,7 +39,7 @@ void babelwires::RemoveModifierAction::actionTriggered(babelwires::NodeContentsM
     }
     const ValueTreeNode* const valueTreeNode = entry->getInputThenOutput();
     assert(valueTreeNode && "No valueTreeNode for row model");
-    const bool isModified = (valueTreeNode == entry->getInput()) && node->findModifier(Path(valueTreeNode));
+    const bool isModified = (valueTreeNode == entry->getInput()) && node->findModifier(getPathTo(valueTreeNode));
     if (isModified) {
         projectBridge.scheduleCommand(
             std::make_unique<RemoveModifierCommand>("Remove modifier", elementId, entry->getPath()));

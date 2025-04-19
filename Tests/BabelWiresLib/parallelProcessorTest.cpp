@@ -1,73 +1,22 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
-#include <BabelWiresLib/Processors/parallelProcessor.hpp>
-
-#include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Instance/instance.hpp>
+#include <BabelWiresLib/Path/path.hpp>
+#include <BabelWiresLib/Processors/parallelProcessor.hpp>
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Domains/TestDomain/testParallelProcessor.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-#include <Tests/TestUtils/testIdentifiers.hpp>
-
 namespace {
-
-    babelwires::TypeRef getLimitedIntType() {
-        return babelwires::IntTypeConstructor::makeTypeRef(-20, 20, 0);
-    }
-
-    babelwires::ShortId getCommonArrayId() {
-        return testUtils::getTestRegisteredIdentifier("array");
-    }
-
-    class TestParallelProcessorInput : public babelwires::ParallelProcessorInputBase {
-      public:
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestProcIn"), 1);
-
-        TestParallelProcessorInput()
-            : babelwires::ParallelProcessorInputBase(
-                  {{testUtils::getTestRegisteredIdentifier("intVal"), getLimitedIntType()}}, getCommonArrayId(),
-                  getLimitedIntType()) {}
-    };
-
-    class TestParallelProcessorOutput : public babelwires::ParallelProcessorOutputBase {
-      public:
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestProcOut"), 1);
-
-        TestParallelProcessorOutput()
-            : babelwires::ParallelProcessorOutputBase(getCommonArrayId(), getLimitedIntType()) {}
-    };
-
-    struct TestParallelProcessor : babelwires::ParallelProcessor {
-        TestParallelProcessor(const babelwires::ProjectContext& context)
-            : babelwires::ParallelProcessor(context, TestParallelProcessorInput::getThisType(),
-                                            TestParallelProcessorOutput::getThisType()) {}
-
-        void processEntry(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
-                          const babelwires::ValueTreeNode& inputEntry,
-                          babelwires::ValueTreeNode& outputEntry) const override {
-
-            {
-                // Log the input path.
-                userLogger.logInfo() << babelwires::Path(&inputEntry);
-            }
-
-            babelwires::ConstInstance<babelwires::IntType> entryIn{inputEntry};
-            babelwires::Instance<babelwires::IntType> entryOut{outputEntry};
-
-            const babelwires::ValueTreeNode& intValueTreeNode =
-                input.getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
-
-            entryOut.set(entryIn.get() + intValueTreeNode.getValue()->is<babelwires::IntValue>().get());
-        }
-    };
-
     bool findPath(const std::string& log, const babelwires::ValueTreeNode& f) {
-        const babelwires::Path path(&f);
+        const babelwires::Path path = babelwires::getPathTo(&f);
         std::ostringstream pathStream;
         pathStream << path;
         std::string pathString = pathStream.str();
@@ -78,10 +27,9 @@ namespace {
 TEST(ParallelProcessorTest, updateOutputOnChanges) {
     // Use the testEnvironment's log to determine when the processEntry method is called.
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<TestParallelProcessorInput>();
-    testEnvironment.m_typeSystem.addEntry<TestParallelProcessorOutput>();
 
-    TestParallelProcessor processor(testEnvironment.m_projectContext);
+
+    testDomain::TestParallelProcessor processor(testEnvironment.m_projectContext);
     processor.getInput().setToDefault();
     processor.getOutput().setToDefault();
 
@@ -92,9 +40,9 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
         processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayTreeNode =
-        input.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        input.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
     const babelwires::ValueTreeNode& outputArrayTreeNode =
-        output.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        output.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
 
     babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayTreeNode);
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
@@ -134,10 +82,8 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
 
 TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<TestParallelProcessorInput>();
-    testEnvironment.m_typeSystem.addEntry<TestParallelProcessorOutput>();
 
-    TestParallelProcessor processor(testEnvironment.m_projectContext);
+    testDomain::TestParallelProcessor processor(testEnvironment.m_projectContext);
     processor.getInput().setToDefault();
     processor.getOutput().setToDefault();
 
@@ -148,9 +94,9 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
         processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayTreeNode =
-        input.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        input.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
     const babelwires::ValueTreeNode& outputArrayTreeNode =
-        output.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        output.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
 
     babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayTreeNode);
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
@@ -204,10 +150,8 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
 
 TEST(ParallelProcessorTest, testFailure) {
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_typeSystem.addEntry<TestParallelProcessorInput>();
-    testEnvironment.m_typeSystem.addEntry<TestParallelProcessorOutput>();
 
-    TestParallelProcessor processor(testEnvironment.m_projectContext);
+    testDomain::TestParallelProcessor processor(testEnvironment.m_projectContext);
     processor.getInput().setToDefault();
     processor.getOutput().setToDefault();
 
@@ -218,9 +162,9 @@ TEST(ParallelProcessorTest, testFailure) {
         processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayTreeNode =
-        input.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        input.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
     const babelwires::ValueTreeNode& outputArrayTreeNode =
-        output.getChildFromStep(babelwires::PathStep(getCommonArrayId())).is<babelwires::ValueTreeNode>();
+        output.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
 
     babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayTreeNode);
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(

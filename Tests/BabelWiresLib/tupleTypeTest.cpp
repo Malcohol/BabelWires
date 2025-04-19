@@ -8,14 +8,15 @@
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
 
+#include <Domains/TestDomain/testEnum.hpp>
+#include <Domains/TestDomain/testTupleType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testEnum.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testTupleType.hpp>
 
 TEST(TupleTypeTest, createValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestTupleType tupleType;
+    testDomain::TestTupleType tupleType;
 
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
     EXPECT_EQ(tupleType.getComponentTypes()[0], babelwires::DefaultIntType::getThisType());
@@ -38,7 +39,7 @@ TEST(TupleTypeTest, createValue) {
 TEST(TupleTypeTest, valueToString) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestTupleType tupleType;
+    testDomain::TestTupleType tupleType;
     babelwires::NewValueHolder newValue = tupleType.createValue(testEnvironment.m_typeSystem);
     auto* newTuple = newValue.m_nonConstReference.as<babelwires::TupleValue>();
     ASSERT_NE(newTuple, nullptr);
@@ -107,10 +108,10 @@ TEST(TupleTypeTest, tupleTypeConstructorMalformed) {
 TEST(TupleTypeTest, compareSubtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef AAA = babelwires::TupleTypeConstructor::makeTypeRef({testUtils::TestEnum::getThisType(), testUtils::TestEnum::getThisType(), testUtils::TestEnum::getThisType()});
-    babelwires::TypeRef AAB = babelwires::TupleTypeConstructor::makeTypeRef({testUtils::TestEnum::getThisType(), testUtils::TestEnum::getThisType(), testUtils::TestSubEnum::getThisType()});
-    babelwires::TypeRef BAC = babelwires::TupleTypeConstructor::makeTypeRef({testUtils::TestSubEnum::getThisType(), testUtils::TestEnum::getThisType(), testUtils::TestSubSubEnum1::getThisType()});
-    babelwires::TypeRef CAB = babelwires::TupleTypeConstructor::makeTypeRef({testUtils::TestSubSubEnum1::getThisType(), testUtils::TestEnum::getThisType(), testUtils::TestSubEnum::getThisType()});
+    babelwires::TypeRef AAA = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType()});
+    babelwires::TypeRef AAB = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestSubEnum::getThisType()});
+    babelwires::TypeRef BAC = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestSubEnum::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestSubSubEnum1::getThisType()});
+    babelwires::TypeRef CAB = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestSubSubEnum1::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestSubEnum::getThisType()});
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(AAA, AAA), babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(AAA, AAB), babelwires::SubtypeOrder::IsSupertype);

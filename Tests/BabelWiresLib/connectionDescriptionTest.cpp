@@ -7,8 +7,9 @@
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 TEST(ConnectionDescriptionTest, equalityAndHash) {
     const babelwires::Path path0 = babelwires::Path::deserializeFromString("a/b");
@@ -66,19 +67,19 @@ TEST(ConnectionDescriptionTest, getCommands) {
     const babelwires::NodeId targetId = 14;
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
-    connectionData.m_sourcePath = testUtils::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
+    connectionData.m_targetPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1);
+    connectionData.m_sourcePath = testDomain::TestComplexRecordElementData::getPathToRecordSubrecordInt1();
     connectionData.m_sourceId = sourceId;
 
     babelwires::ConnectionDescription connection(14, connectionData);
 
     {
-        testUtils::TestComplexRecordElementData sourceElementData;
+        testDomain::TestComplexRecordElementData sourceElementData;
         sourceElementData.m_id = sourceId;
         testEnvironment.m_project.addNode(sourceElementData);
     }
     {
-        testUtils::TestComplexRecordElementData targetElementData;
+        testDomain::TestComplexRecordElementData targetElementData;
         targetElementData.m_id = targetId;
         testEnvironment.m_project.addNode(targetElementData);
     }
@@ -93,7 +94,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
 
     const auto checkModifier = [&testEnvironment, targetElement, &connectionData](bool isAdded) {
         const babelwires::Modifier* modifier =
-            targetElement->findModifier(testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
+            targetElement->findModifier(testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
         if (isAdded) {
             ASSERT_NE(modifier, nullptr);
             const babelwires::ConnectionModifier* connection = modifier->as<babelwires::ConnectionModifier>();

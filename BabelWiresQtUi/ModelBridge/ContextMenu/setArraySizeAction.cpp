@@ -7,20 +7,21 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/setArraySizeAction.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setArraySizeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <QInputDialog>
 
@@ -28,7 +29,8 @@ babelwires::SetArraySizeAction::SetArraySizeAction(babelwires::Path pathToArray)
     : NodeContentsContextMenuActionBase(tr("Set array size"))
     , m_pathToArray(std::move(pathToArray)) {}
 
-void babelwires::SetArraySizeAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
+void babelwires::SetArraySizeAction::actionTriggered(babelwires::NodeContentsModel& model,
+                                                     const QModelIndex& index) const {
     ProjectBridge& projectBridge = model.getProjectBridge();
     const NodeId elementId = model.getNodeId();
 
@@ -39,7 +41,7 @@ void babelwires::SetArraySizeAction::actionTriggered(babelwires::NodeContentsMod
         AccessModelScope scope(projectBridge);
         const Node* const node = scope.getProject().getNode(elementId);
 
-        const babelwires::ValueTreeNode* const input = m_pathToArray.tryFollow(*node->getInput());
+        const babelwires::ValueTreeNode* const input = tryFollowPath(m_pathToArray, *node->getInput());
         auto [compoundFeature, s, r, initialSize] = ValueTreeHelper::getInfoFromArray(input);
         if (!compoundFeature) {
             return;

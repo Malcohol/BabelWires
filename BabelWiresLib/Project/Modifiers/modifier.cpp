@@ -2,16 +2,17 @@
  * A Modifier changes the value in a Node, and corresponds to a user edit.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
- 
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
+
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Common/Log/userLogger.hpp>
 
@@ -58,7 +59,7 @@ const babelwires::Path& babelwires::Modifier::getTargetPath() const {
 void babelwires::Modifier::unapply(ValueTreeNode* container) const {
     assert(!isFailed() && "Don't try to unapply a failed modifier.");
     try {
-        ValueTreeNode& f = m_data->m_targetPath.follow(*container);
+        ValueTreeNode& f = followPath(m_data->m_targetPath, *container);
         // When undone, array size modifiers should not reset the remaining children.
         f.setToDefault();
     } catch (const BaseException& e) {
@@ -121,8 +122,8 @@ void babelwires::Modifier::setFailed(State failureState, std::string reasonForFa
     m_reasonForFailure = std::move(reasonForFailure);
 }
 
-void babelwires::Modifier::adjustArrayIndex(const babelwires::Path& pathToArray,
-                                            babelwires::ArrayIndex startIndex, int adjustment) {
+void babelwires::Modifier::adjustArrayIndex(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
+                                            int adjustment) {
     babelwires::ModifierData& modifierData = getModifierData();
     Path& modifierPath = modifierData.m_targetPath;
 

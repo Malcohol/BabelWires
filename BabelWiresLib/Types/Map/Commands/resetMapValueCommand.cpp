@@ -10,7 +10,7 @@
 
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/TypeSystem/valuePath.hpp>
+#include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
@@ -48,7 +48,7 @@ bool babelwires::ResetMapValueCommand::initialize(const MapProject& map) {
     /*
     const TypeSystem& typeSystem = map.getProjectContext().m_typeSystem;
     std::optional<std::tuple<const babelwires::Type&, const babelwires::ValueHolder&>> optional =
-        tryFollow(typeSystem, *typeInMap, m_location.getPathToValue(), *entryHolder);
+        tryFollowPath(typeSystem, *typeInMap, m_location.getPathToValue(), *entryHolder);
 
     if (!optional.has_value()) {
         return false;
@@ -82,7 +82,7 @@ void babelwires::ResetMapValueCommand::execute(MapProject& map) const {
 
     ValueHolder newEntry = *entryHolder;
     std::tuple<const babelwires::Type&, babelwires::ValueHolder> optional =
-        followNonConst(typeSystem, *type, m_location.getPathToValue(), newEntry);
+        followPathNonConst(typeSystem, *type, m_location.getPathToValue(), newEntry);
 
     // set value
 
@@ -124,7 +124,7 @@ void babelwires::ResetMapValueCommand::undo(MapProject& map) const {
 
     ValueHolder newEntry = *entryHolder;
     std::tuple<const babelwires::Type&, babelwires::ValueHolder> optional =
-        followNonConst(typeSystem, *type, m_location.getPathToValue(), newEntry);
+        followPathNonConst(typeSystem, *type, m_location.getPathToValue(), newEntry);
 
     // restore value
 

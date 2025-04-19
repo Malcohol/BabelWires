@@ -3,21 +3,22 @@
 #include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNode.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
-#include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
@@ -28,8 +29,9 @@ TEST(RemoveNodeCommandTest, executeAndUndo) {
 
     testUtils::TempFilePath sourceFilePath(projectData.m_sourceFilePath);
     testUtils::TempFilePath targetFilePath(projectData.m_targetFilePath);
-    projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath), babelwires::pathToString(targetFilePath.m_filePath));
-    testUtils::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
+    projectData.setFilePaths(babelwires::pathToString(sourceFilePath.m_filePath),
+                             babelwires::pathToString(targetFilePath.m_filePath));
+    testDomain::TestSourceFileFormat::writeToTestFile(sourceFilePath, 3);
 
     testEnvironment.m_project.setProjectData(projectData);
     testEnvironment.m_project.process();
@@ -49,7 +51,7 @@ TEST(RemoveNodeCommandTest, executeAndUndo) {
             testEnvironment.m_project.getNode(testUtils::TestProjectData::c_targetNodeId);
         ASSERT_NE(targetElement, nullptr);
         const babelwires::Modifier* targetModifier =
-            targetElement->getEdits().findModifier(testUtils::getTestFileElementPathToInt0());
+            targetElement->getEdits().findModifier(testDomain::getTestFileElementPathToInt0());
         if (isCommandExecuted) {
             ASSERT_EQ(targetModifier, nullptr);
         } else {
@@ -98,12 +100,10 @@ TEST(RemoveNodeCommandTest, failSafelyNoElement) {
 TEST(RemoveNodeCommandTest, subsumption) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
 
-    const babelwires::NodeId element1Id =
-        testEnvironment.m_project.addNode(elementData);
-    const babelwires::NodeId element2Id =
-        testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId element1Id = testEnvironment.m_project.addNode(elementData);
+    const babelwires::NodeId element2Id = testEnvironment.m_project.addNode(elementData);
 
     {
         babelwires::ConnectionModifierData modData;
@@ -135,9 +135,8 @@ TEST(RemoveNodeCommandTest, subsumption) {
     EXPECT_NE(testEnvironment.m_project.getNode(element1Id), nullptr);
     EXPECT_NE(testEnvironment.m_project.getNode(element2Id), nullptr);
     {
-        const babelwires::Modifier* modifier = testEnvironment.m_project.getNode(element2Id)
-                                                   ->getEdits()
-                                                   .findModifier(elementData.getPathToRecordInt0());
+        const babelwires::Modifier* modifier =
+            testEnvironment.m_project.getNode(element2Id)->getEdits().findModifier(elementData.getPathToRecordInt0());
         EXPECT_NE(modifier, nullptr);
         EXPECT_FALSE(modifier->isFailed());
     }

@@ -15,6 +15,7 @@
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 babelwires::DeactivateOptionalCommand::DeactivateOptionalCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                ShortId optional)
@@ -37,7 +38,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
     }
 
     const auto [compoundFeature, optionals] =
-        ValueTreeHelper::getInfoFromRecordWithOptionals(m_pathToRecord.tryFollow(*input));
+        ValueTreeHelper::getInfoFromRecordWithOptionals(tryFollowPath(m_pathToRecord, *input));
 
     if (!compoundFeature) {
         return false;   
@@ -60,7 +61,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
     }
 
     Path pathToOptional = m_pathToRecord;
-    pathToOptional.pushStep(PathStep(m_optional));
+    pathToOptional.pushStep(m_optional);
     addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToOptional));
 
     if (!CompoundCommand::initializeAndExecute(project)) {

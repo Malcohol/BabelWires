@@ -13,41 +13,42 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
+#include <Domains/TestDomain/testArrayType.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
+#include <Domains/TestDomain/testRecordWithVariantsType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordWithVariantsType.hpp>
 
 TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId =
-        testEnvironment.m_project.addNode(testUtils::TestArrayElementData());
+        testEnvironment.m_project.addNode(testDomain::TestArrayElementData());
     const babelwires::NodeId sourceId =
-        testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
+        testEnvironment.m_project.addNode(testDomain::TestSimpleRecordElementData());
     const babelwires::NodeId targetId =
-        testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
+        testEnvironment.m_project.addNode(testDomain::TestSimpleRecordElementData());
 
-    const unsigned int initialArraySize = testUtils::TestSimpleArrayType::s_defaultSize + 2;
+    const unsigned int initialArraySize = testDomain::TestSimpleArrayType::s_defaultSize + 2;
     const babelwires::Path pathToArrayEntry =
-        testUtils::TestArrayElementData::getPathToArrayEntry(testUtils::TestSimpleArrayType::s_defaultSize + 1);
+        testDomain::TestArrayElementData::getPathToArrayEntry(testDomain::TestSimpleArrayType::s_defaultSize + 1);
 
     {
         babelwires::ArraySizeModifierData arrayInitialization;
-        arrayInitialization.m_targetPath = testUtils::TestArrayElementData::getPathToArray();
+        arrayInitialization.m_targetPath = testDomain::TestArrayElementData::getPathToArray();
         arrayInitialization.m_size = initialArraySize;
         testEnvironment.m_project.addModifier(elementId, arrayInitialization);
     }
     {
         babelwires::ConnectionModifierData inputConnection;
         inputConnection.m_targetPath = pathToArrayEntry;
-        inputConnection.m_sourcePath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
+        inputConnection.m_sourcePath = testDomain::TestSimpleRecordElementData::getPathToRecordInt0();
         inputConnection.m_sourceId = sourceId;
         testEnvironment.m_project.addModifier(elementId, inputConnection);
     }
     {
         babelwires::ConnectionModifierData outputConnection;
-        outputConnection.m_targetPath = testUtils::TestSimpleRecordElementData::getPathToRecordInt0();
+        outputConnection.m_targetPath = testDomain::TestSimpleRecordElementData::getPathToRecordInt0();
         outputConnection.m_sourcePath = pathToArrayEntry;
         outputConnection.m_sourceId = elementId;
         testEnvironment.m_project.addModifier(targetId, outputConnection);
@@ -63,7 +64,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
         const babelwires::Modifier* inputConnection =
             element->findModifier(pathToArrayEntry);
         const babelwires::Modifier* outputConnection =
-            targetElement->findModifier(testUtils::TestSimpleRecordElementData::getPathToRecordInt0());
+            targetElement->findModifier(testDomain::TestSimpleRecordElementData::getPathToRecordInt0());
         int numModifiersAtElement = 0;
         int numModifiersAtTarget = 0;
         for (const auto* m : element->getEdits().modifierRange()) {
@@ -90,7 +91,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     EXPECT_EQ(element->getInput()->getNumChildren(), initialArraySize);
 
     babelwires::RemoveModifierCommand testCopyConstructor("Test command", elementId,
-        testUtils::TestArrayElementData::getPathToArray());
+        testDomain::TestArrayElementData::getPathToArray());
     babelwires::RemoveModifierCommand command = testCopyConstructor;
 
     EXPECT_EQ(command.getName(), "Test command");
@@ -100,7 +101,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
 
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testDomain::TestSimpleArrayType::s_defaultSize);
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
@@ -112,7 +113,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoArray) {
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_EQ(element->getInput()->getNumChildren(), testUtils::TestSimpleArrayType::s_defaultSize);
+    EXPECT_EQ(element->getInput()->getNumChildren(), testDomain::TestSimpleArrayType::s_defaultSize);
     checkModifiers(true);
 }
 
@@ -120,12 +121,12 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testUtils::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
 
     const babelwires::NodeId sourceId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
     const babelwires::NodeId targetId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testUtils::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
 
     const babelwires::ValueNode* const element =
         testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
@@ -138,18 +139,18 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     const babelwires::Path pathToValue;
 
     babelwires::Path pathToOptional = pathToValue;
-    pathToOptional.pushStep(babelwires::PathStep(testUtils::TestComplexRecordType::getOpRecId()));
+    pathToOptional.pushStep(testDomain::TestComplexRecordType::getOpRecId());
 
     babelwires::Path pathToIntInOptional = pathToOptional;
-    pathToIntInOptional.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
+    pathToIntInOptional.pushStep(testDomain::TestSimpleRecordType::getInt1Id());
 
     babelwires::Path pathToIntInSimpleRecord = pathToValue;
-    pathToIntInSimpleRecord.pushStep(babelwires::PathStep(testUtils::TestSimpleRecordType::getInt1Id()));
+    pathToIntInSimpleRecord.pushStep(testDomain::TestSimpleRecordType::getInt1Id());
 
     {
         babelwires::ActivateOptionalsModifierData activateOptionalsModifierData;
         activateOptionalsModifierData.m_targetPath = pathToValue;
-        activateOptionalsModifierData.m_selectedOptionals.emplace_back(testUtils::TestComplexRecordType::getOpRecId());
+        activateOptionalsModifierData.m_selectedOptionals.emplace_back(testDomain::TestComplexRecordType::getOpRecId());
         testEnvironment.m_project.addModifier(elementId, activateOptionalsModifierData);
     }
     {
@@ -169,7 +170,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
 
     const babelwires::ValueTreeNode* const input = element->getInput();
     ASSERT_NE(input, nullptr);
-    const testUtils::TestComplexRecordType* const type = input->getType().as<testUtils::TestComplexRecordType>();
+    const testDomain::TestComplexRecordType* const type = input->getType().as<testDomain::TestComplexRecordType>();
 
     babelwires::RemoveModifierCommand command("Test command", elementId, pathToValue);
 
@@ -205,19 +206,19 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
 
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
 
-    EXPECT_FALSE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_FALSE(type->isActivated(input->getValue(), testDomain::TestComplexRecordType::getOpRecId()));
     checkModifiers(true);
 
     command.undo(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_TRUE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_TRUE(type->isActivated(input->getValue(), testDomain::TestComplexRecordType::getOpRecId()));
     checkModifiers(false);
 
     command.execute(testEnvironment.m_project);
     testEnvironment.m_project.process();
 
-    EXPECT_FALSE(type->isActivated(input->getValue(), testUtils::TestComplexRecordType::getOpRecId()));
+    EXPECT_FALSE(type->isActivated(input->getValue(), testDomain::TestComplexRecordType::getOpRecId()));
     checkModifiers(true);
 }
 
@@ -234,7 +235,7 @@ TEST(RemoveModifierCommandTest, failSafelyNoModifier) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId =
-        testEnvironment.m_project.addNode(testUtils::TestSimpleRecordElementData());
+        testEnvironment.m_project.addNode(testDomain::TestSimpleRecordElementData());
 
     babelwires::RemoveModifierCommand command("Test command", elementId,
                                               babelwires::Path::deserializeFromString("qqq/zzz"));

@@ -11,17 +11,6 @@
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-/*
-// TODO Remove
-#include <BabelWiresLib/Types/Int/intType.hpp>
-
-babelwires::TestArrayType::TestArrayType()
-    : ArrayType(DefaultIntType::getThisType(), 1, 10, 3) {}
-
-babelwires::TestArrayType2::TestArrayType2()
-    : ArrayType(TestArrayType::getThisType(), 1, 4, 2) {}
-*/
-
 babelwires::ArrayType::ArrayType(TypeRef entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
     : m_entryType(std::move(entryType))
     , m_minimumSize(minimumSize)

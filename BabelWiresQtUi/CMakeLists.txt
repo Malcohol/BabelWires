@@ -38,6 +38,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/selectVariantAction.cpp
     ModelBridge/ContextMenu/setArraySizeAction.cpp
     ModelBridge/ContextMenu/openValueEditorAction.cpp
+    Utilities/colours.cpp
     Utilities/fileDialogs.cpp
     Utilities/qtUtils.cpp
     ComplexValueEditors/complexValueEditor.cpp

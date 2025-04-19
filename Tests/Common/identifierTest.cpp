@@ -12,32 +12,33 @@
 TEST(IdentifierTest, identifiers) {
     babelwires::ShortId hello("Hello");
     EXPECT_EQ(hello.getDiscriminator(), 0);
-    hello.setDiscriminator(17);
 
     std::string helloStr = "Hello";
     babelwires::ShortId hello1(helloStr);
-    hello1.setDiscriminator(27);
 
-    // Discriminators are not used to distinguish fields.
+    // Identifiers with equal text and unset discriminators should compare equal.
     EXPECT_EQ(hello, hello1);
+
+    // If one identifier has an unset discriminator they should still compare equal.
+    hello.setDiscriminator(17);
+    EXPECT_EQ(hello, hello1);
+
+    // Equal text and discriminators should compare equal.
+    hello1.setDiscriminator(17);
+    EXPECT_EQ(hello, hello1);
+
+    // But two identifiers with equal text and different discriminators are never equal.
+    hello1.setDiscriminator(27);
+    EXPECT_NE(hello, hello1);
+
+    // Discriminators do not contribute to the hash.
     std::hash<babelwires::ShortId> fieldHasher;
     EXPECT_EQ(fieldHasher(hello), fieldHasher(hello1));
 
+    // Different text means non-equal discriminators even if the discriminators are equal.
     babelwires::ShortId goodbye("Byebye");
     goodbye.setDiscriminator(17);
     EXPECT_NE(hello, goodbye);
-
-    // Only copy over unset discriminators. Reason:
-    // If a field in a file has no discriminator, it will be updated by the project after opening.
-    // However, if a field in a file already carries discrimintors, which don't resolve via their UUID,
-    // we assume that they should be respected and not modified, even if they match fields.
-
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), 27);
-
-    hello1.setDiscriminator(0);
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), hello.getDiscriminator());
 }
 
 // For sanity's sake, the identifiers are ordered alphabetically.
@@ -122,29 +123,35 @@ TEST(IdentifierTest, identifierDeserialization) {
 }
 
 TEST(IdentifierTest, longIdentifiers) {
-    babelwires::LongId hello("Hello");
+    babelwires::LongId hello("HelloHelloHello");
     EXPECT_EQ(hello.getDiscriminator(), 0);
-    hello.setDiscriminator(17);
 
-    std::string helloStr = "Hello";
+    std::string helloStr = "HelloHelloHello";
     babelwires::LongId hello1(helloStr);
-    hello1.setDiscriminator(27);
 
-    // Discriminators are not used to distinguish fields.
+    // Identifiers with equal text and unset discriminators should compare equal.
     EXPECT_EQ(hello, hello1);
+
+    // If one identifier has an unset discriminator they should still compare equal.
+    hello.setDiscriminator(17);
+    EXPECT_EQ(hello, hello1);
+
+    // Equal text and discriminators should compare equal.
+    hello1.setDiscriminator(17);
+    EXPECT_EQ(hello, hello1);
+
+    // But two identifiers with equal text and different discriminators are never equal.
+    hello1.setDiscriminator(27);
+    EXPECT_NE(hello, hello1);
+
+    // Discriminators do not contribute to the hash.
     std::hash<babelwires::LongId> fieldHasher;
     EXPECT_EQ(fieldHasher(hello), fieldHasher(hello1));
 
-    babelwires::LongId goodbye("AMuchLongerIndetifier");
+    // Different text means non-equal discriminators even if the discriminators are equal.
+    babelwires::LongId goodbye("GoodbyeGoodbyeGoodbye");
     goodbye.setDiscriminator(17);
     EXPECT_NE(hello, goodbye);
-
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), 27);
-
-    hello1.setDiscriminator(0);
-    hello.copyDiscriminatorTo(hello1);
-    EXPECT_EQ(hello1.getDiscriminator(), hello.getDiscriminator());
 }
 
 TEST(IdentifierTest, longIdentifierOrder) {
@@ -239,7 +246,7 @@ TEST(IdentifierTest, longIdentifierDeserialization) {
 }
 
 TEST(IdentifierTest, shortToLongIdentifiers) {
-    const babelwires::ShortId hello = "Hello";
+    babelwires::ShortId hello = "Hello";
     const babelwires::LongId hello1 = hello;
     EXPECT_EQ(hello, hello1);
 
@@ -250,7 +257,7 @@ TEST(IdentifierTest, shortToLongIdentifiers) {
 }
 
 TEST(IdentifierTest, longToShortIdentifiers) {
-    const babelwires::LongId hello = "Helloo";
+    babelwires::LongId hello = "Helloo";
     const babelwires::ShortId hello1(hello);
     EXPECT_EQ(hello, hello1);
 

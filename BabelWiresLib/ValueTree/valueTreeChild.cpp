@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 
@@ -25,7 +26,7 @@ void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
         const TypeSystem& typeSystem = getTypeSystem();
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
-            auto rootAndPath = Path::getRootAndPath(*this);
+            auto rootAndPath = getRootAndPathTo(*this);
             rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
         } else {
             throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
@@ -36,6 +37,6 @@ void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
 void babelwires::ValueTreeChild::doSetToDefault() {
     const TypeSystem& typeSystem = getTypeSystem();
     auto [newValue, _] = getType().createValue(typeSystem);
-    auto rootAndPath = Path::getRootAndPath(*this);
+    auto rootAndPath = getRootAndPathTo(*this);
     rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
 }

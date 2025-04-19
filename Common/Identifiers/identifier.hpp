@@ -25,20 +25,24 @@ namespace babelwires {
     constexpr char s_pathDelimiter = s_pathDelimiterString[0];
     constexpr char s_discriminatorDelimiter = '\'';
 
-    /// An identifier uniquely identifies an object in some local context and globally.
-    /// The primary use-case is identifying fields within records.
+    /// Identifiers are used to uniquely identify objects in a global context.
+    /// They give identity to record fields, enum values and types, for example.
     ///
-    /// It stores a short string (N bytes) and a numeric discriminator (2 bytes).
-    /// The string should be sufficient on its own to uniquely define an object during
-    /// local usage (e.g. a field within a record or the value carried by an EnumValue).
-    /// The discriminator is used to ensure the identifier is globally unique, which allows
-    /// the identifier to act as a key for look-up in a global registry.
+    /// An identifier stores a short string (N bytes) and a numeric discriminator (2 bytes).
+    /// The discriminator is used to ensure the identifier is globally unique. Global uniqueness
+    /// is achieved by registering the identifier with the IdentifierRegistry. The most convenient way
+    /// of registering an identifier is to use the BW_SHORT_ID macro.
     ///
-    /// Global uniqueness is achieved by registering the identifier with the IdentifierRegistry.
-    /// The most convenient way of registering an identifier is to use the BW_SHORT_ID macro.
+    /// An identifier with a zero-discriminator is called "unresolved". An identifier which has a non-zero
+    /// discriminator (because it has been registered) is called "resolved".
     ///
+    /// CAUTION: In almost all situations, use resolved discriminators:
+    /// Unresolved identifiers are special and test equal to any identifier whose textual part matches
+    /// regardless of the discriminator. This makes EQUALITY NON-TRANSITIVE on sets that have mixtures
+    /// of resolved and unresolved identifiers. Standard algorithms can misbehave in this situation!
+    /// 
     /// Data is arranged so the bit pattern can never be confused for array indices, when
-    /// considering FeaturePaths. On little-endian architectures, the string is stored in
+    /// considering Paths. On little-endian architectures, the string is stored in
     /// reverse order. (On big-endian architectures, the string would be stored in the
     /// normal way, but that's a todo.)
     ///
@@ -83,7 +87,7 @@ namespace babelwires {
             std::reverse_copy(str, str + N, m_data.m_chars);
         }
 
-        /// Statically exclude literals which are too long.
+        /// Statically exclude literals that are too long.
         template <unsigned int M, typename std::enable_if_t<(M > N + 1), int> = 0>
         IdentifierBase(const char (&str)[M]) = delete;
 
@@ -122,27 +126,30 @@ namespace babelwires {
         /// This throws a ParseException if the identifier is not valid.
         static IdentifierBase deserializeFromString(std::string_view str);
 
-        /// Shorter identifiers can be converted to a code, which does excludes the discriminator.
+        /// Shorter identifiers can be converted to a code, which does exclude the discriminator.
         template <int T = NUM_BLOCKS, typename std::enable_if_t<(T == 1), std::nullptr_t> = nullptr>
         std::uint64_t toCode() const {
             return getDataAsCode<0>();
         }
 
       public:
+        /// Identifiers can match if one or other discriminator is zero.
         friend bool operator==(const IdentifierBase& a, const IdentifierBase& b) {
-            return a.getTupleOfCodes() == b.getTupleOfCodes();
+            return (a.getTupleOfCodes() == b.getTupleOfCodes()) &&
+                   ((a.getDiscriminator() == b.getDiscriminator()) ||
+                    (a.getDiscriminator() == 0 || b.getDiscriminator() == 0));
         }
 
         friend bool operator!=(const IdentifierBase& a, const IdentifierBase& b) {
-            return a.getTupleOfCodes() != b.getTupleOfCodes();
+            return !(a == b);
         }
 
         friend bool operator<(const IdentifierBase& a, const IdentifierBase& b) {
-            return a.getTupleOfCodes() < b.getTupleOfCodes();
+            return a.getTupleOfData() < b.getTupleOfData();
         }
 
         friend bool operator<=(const IdentifierBase& a, const IdentifierBase& b) {
-            return a.getTupleOfCodes() <= b.getTupleOfCodes();
+            return a.getTupleOfData() <= b.getTupleOfData();
         }
 
         friend std::ostream& operator<<(std::ostream& os, const IdentifierBase& identifier) {
@@ -163,10 +170,10 @@ namespace babelwires {
         Discriminator getDiscriminator() const;
 
         /// Set the discriminator (which distinguishes between identifiers with the same textual content).
-        void setDiscriminator(Discriminator index) const;
+        void setDiscriminator(Discriminator index);
 
-        /// If other doesn't have a discriminator set, set its discriminator to the discrimintor of this.
-        void copyDiscriminatorTo(const IdentifierBase& other) const;
+        /// Get a version of this identifier with the discriminator set to 0.
+        IdentifierBase withoutDiscriminator() const;
 
       private:
         /// Called by the constructors to ensure the data is valid.
@@ -174,6 +181,10 @@ namespace babelwires {
 
         /// Write the textual portion of the identifier to the stream.
         void writeTextToStream(std::ostream& os) const;
+
+        template <unsigned int M, typename std::enable_if_t<(M < NUM_BLOCKS), int> = 0> std::uint64_t getData() const {
+            return m_code[NUM_BLOCKS - 1 - M];
+        }
 
         // Comparisons and hash calculations are based on the integer representation, but we need to mask out the
         // discriminator.
@@ -199,6 +210,10 @@ namespace babelwires {
             return getTupleOfCodesFromIndexSequence(std::make_index_sequence<NUM_BLOCKS>{});
         }
 
+        template <size_t... INSEQ> auto getTupleOfDataFromIndexSequence(std::index_sequence<INSEQ...>) const;
+
+        auto getTupleOfData() const { return getTupleOfDataFromIndexSequence(std::make_index_sequence<NUM_BLOCKS>{}); }
+
         /// Helper method to build a hash out of the codes.
         template <size_t... INSEQ> std::size_t getHashFromIndexSequence(std::index_sequence<INSEQ...>) const;
 
@@ -211,7 +226,7 @@ namespace babelwires {
 
         // TODO Big-endian.
         struct Data {
-            mutable std::uint16_t m_discriminator;
+            std::uint16_t m_discriminator;
             char m_chars[N];
         } m_data = {0};
 

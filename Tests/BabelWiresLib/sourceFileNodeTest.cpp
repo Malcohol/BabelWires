@@ -1,29 +1,30 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testFileFormats.hpp>
+#include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 #include <fstream>
 
 namespace {
-    void createTestFile(testUtils::TestEnvironment& testEnvironment, const std::filesystem::path& path, int value = 14) {
-        std::ofstream tempFile(path);
-
-        auto fileFormat = std::make_unique<testUtils::TestTargetFileFormat>();
-        auto fileFeature = std::make_unique<babelwires::ValueTreeRoot>(testEnvironment.m_projectContext.m_typeSystem, testUtils::getTestFileType());
+    void createTestFile(testUtils::TestEnvironment& testEnvironment, const std::filesystem::path& path,
+                        int value = 14) {
+        auto fileFormat = std::make_unique<testDomain::TestTargetFileFormat>();
+        auto fileFeature = std::make_unique<babelwires::ValueTreeRoot>(testEnvironment.m_projectContext.m_typeSystem,
+                                                                       testDomain::getTestFileType());
         fileFeature->setToDefault();
-        testUtils::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
+        testDomain::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
         instance.getintR0().set(value);
-        fileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFile);
+        fileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, path);
     }
 } // namespace
 
@@ -32,14 +33,14 @@ TEST(SourceFileNodeTest, sourceFileDataCreateElement) {
 
     // Create a test file.
     std::ostringstream tempFileName;
-    tempFileName << "foo." << testUtils::TestSourceFileFormat::getFileExtension();
+    tempFileName << "foo." << testDomain::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath(tempFileName.str());
 
     createTestFile(testEnvironment, tempFilePath);
 
     // Create sourceFileData which expect to be able to load the file.
     babelwires::SourceFileNodeData data;
-    data.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
+    data.m_factoryIdentifier = testDomain::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
@@ -47,13 +48,13 @@ TEST(SourceFileNodeTest, sourceFileDataCreateElement) {
     ASSERT_TRUE(node);
     ASSERT_FALSE(node->isFailed());
     ASSERT_TRUE(node->as<babelwires::SourceFileNode>());
-    babelwires::SourceFileNode* sourceFileNode =
-        static_cast<babelwires::SourceFileNode*>(node.get());
+    babelwires::SourceFileNode* sourceFileNode = static_cast<babelwires::SourceFileNode*>(node.get());
 
     EXPECT_EQ(sourceFileNode->getFilePath(), tempFilePath.m_filePath);
     EXPECT_EQ(sourceFileNode->getSupportedFileOperations(), babelwires::FileNode::FileOperations::reload);
     EXPECT_NE(sourceFileNode->getFileFormatInformation(testEnvironment.m_projectContext), nullptr);
-    EXPECT_EQ(sourceFileNode->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(), testUtils::TestSourceFileFormat::getThisIdentifier());
+    EXPECT_EQ(sourceFileNode->getFileFormatInformation(testEnvironment.m_projectContext)->getIdentifier(),
+              testDomain::TestSourceFileFormat::getThisIdentifier());
 
     std::filesystem::remove(tempFilePath);
 
@@ -91,11 +92,11 @@ TEST(SourceFileNodeTest, changeFile) {
 
     // Create a test file.
     std::ostringstream tempFileName1;
-    tempFileName1 << "foo1." << testUtils::TestSourceFileFormat::getFileExtension();
+    tempFileName1 << "foo1." << testDomain::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath1(tempFileName1.str());
 
     std::ostringstream tempFileName2;
-    tempFileName2 << "foo2." << testUtils::TestSourceFileFormat::getFileExtension();
+    tempFileName2 << "foo2." << testDomain::TestSourceFileFormat::getFileExtension();
     testUtils::TempFilePath tempFilePath2(tempFileName2.str());
 
     createTestFile(testEnvironment, tempFilePath1, 18);
@@ -103,7 +104,7 @@ TEST(SourceFileNodeTest, changeFile) {
 
     // Create sourceFileData which expect to be able to load the file.
     babelwires::SourceFileNodeData data;
-    data.m_factoryIdentifier = testUtils::TestSourceFileFormat::getThisIdentifier();
+    data.m_factoryIdentifier = testDomain::TestSourceFileFormat::getThisIdentifier();
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath1;
 
@@ -111,8 +112,7 @@ TEST(SourceFileNodeTest, changeFile) {
     ASSERT_TRUE(node);
     ASSERT_FALSE(node->isFailed());
     ASSERT_TRUE(node->as<babelwires::SourceFileNode>());
-    babelwires::SourceFileNode* sourceFileNode =
-        static_cast<babelwires::SourceFileNode*>(node.get());
+    babelwires::SourceFileNode* sourceFileNode = static_cast<babelwires::SourceFileNode*>(node.get());
 
     sourceFileNode->clearChanges();
     sourceFileNode->setFilePath(tempFilePath2.m_filePath);

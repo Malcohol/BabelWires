@@ -7,25 +7,8 @@
  **/
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
-
-// TODO Remove
-#include <BabelWiresLib/Types/Int/intType.hpp>
-
-/*
-babelwires::TestRecordType::TestRecordType()
-    : RecordType(
-          {{BW_SHORT_ID("foo", "Foo", "b36ab40f-c570-46f7-9dab-3af1b8f3216e"), DefaultIntType::getThisType()},
-           {BW_SHORT_ID("erm", "Erm", "bcb21539-6d10-41b2-886b-4b46f158f6bd"), DefaultIntType::getThisType()}}) {}
-
-babelwires::TestRecordType2::TestRecordType2()
-    : RecordType(
-          {{BW_SHORT_ID("bar", "Bar", "8e746efa-1db8-4c43-b80c-451b6ee5db55"), DefaultIntType::getThisType()},
-           {BW_SHORT_ID("obj", "Obj", "e4629b27-0286-4712-8cf4-6cce69bb3636"), TestRecordType::getThisType()},
-           {BW_SHORT_ID("merm", "Merm", "b69f16a6-fcfb-49e8-be4b-c7910bff15c7"), DefaultIntType::getThisType(),
-            Optionality::optionalDefaultInactive}}) {}
-*/
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 babelwires::RecordType::RecordType(std::vector<Field> fields)
     : m_fields(std::move(fields)) {
@@ -35,6 +18,24 @@ babelwires::RecordType::RecordType(std::vector<Field> fields)
         }
     }
 }
+
+namespace {
+    std::vector<babelwires::RecordType::Field>
+    getCombinedFieldSet(const babelwires::RecordType& parent,
+                        std::vector<babelwires::RecordType::Field> additionalFields) {
+        const std::size_t numParentFields = parent.getFields().size();
+        const std::size_t numAdditionalFields = additionalFields.size();
+        const std::size_t combinedSize = numParentFields + numAdditionalFields;
+        additionalFields.resize(combinedSize);
+        std::move_backward(additionalFields.begin(), additionalFields.begin() + numAdditionalFields,
+                           additionalFields.begin() + combinedSize);
+        std::copy(parent.getFields().begin(), parent.getFields().end(), additionalFields.begin());
+        return std::move(additionalFields);
+    }
+} // namespace
+
+babelwires::RecordType::RecordType(const RecordType& parent, std::vector<Field> additionalFields)
+    : RecordType(getCombinedFieldSet(parent, std::move(additionalFields))) {}
 
 std::string babelwires::RecordType::getKind() const {
     return "record";
@@ -54,7 +55,7 @@ void babelwires::RecordType::activateField(const TypeSystem& typeSystem, ValueHo
 
     if (field.m_optionality == Optionality::alwaysActive) {
         throw ModelException() << "Field " << fieldId << " is not an optional and cannot be activated";
-    } 
+    }
     if (isActivated(value, fieldId)) {
         throw ModelException() << "Field " << fieldId << " is already activated";
     }
@@ -302,11 +303,12 @@ babelwires::SubtypeOrder babelwires::RecordType::compareSubtypeHelper(const Type
         }
     }
     if (thisIt != thisFields.end()) {
-        if (updateAndCheckUnrelated(SubtypeOrder::IsSubtype)) {
+        if ((thisIt->m_optionality == Optionality::alwaysActive) && updateAndCheckUnrelated(SubtypeOrder::IsSubtype)) {
             return SubtypeOrder::IsUnrelated;
         }
     } else if (otherIt != otherFields.end()) {
-        if (updateAndCheckUnrelated(SubtypeOrder::IsSupertype)) {
+        if ((otherIt->m_optionality == Optionality::alwaysActive) &&
+            updateAndCheckUnrelated(SubtypeOrder::IsSupertype)) {
             return SubtypeOrder::IsUnrelated;
         }
     }

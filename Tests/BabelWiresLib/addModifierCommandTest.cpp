@@ -11,20 +11,21 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
+#include <Domains/TestDomain/testRecordType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 
 TEST(AddModifierCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(node, nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(*node->getInput());
+    testDomain::TestComplexRecordType::ConstInstance instance(*node->getInput());
 
-    static_assert(8 != testUtils::TestComplexRecordType::c_int1default);
-    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    static_assert(8 != testDomain::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(instance.getintR1().get(), testDomain::TestComplexRecordType::c_int1default);
     EXPECT_EQ(node->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(8));
@@ -41,7 +42,7 @@ TEST(AddModifierCommandTest, executeAndUndo) {
     EXPECT_NE(node->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     command.undo(testEnvironment.m_project);
-    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(instance.getintR1().get(), testDomain::TestComplexRecordType::c_int1default);
     EXPECT_EQ(node->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     command.execute(testEnvironment.m_project);
@@ -52,14 +53,14 @@ TEST(AddModifierCommandTest, executeAndUndo) {
 TEST(AddModifierCommandTest, executeAndUndoFail) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(node, nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(*node->getInput());
+    testDomain::TestComplexRecordType::ConstInstance instance(*node->getInput());
 
-    static_assert(12 > testUtils::TestComplexRecordType::c_int1max);
-    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    static_assert(12 > testDomain::TestComplexRecordType::c_int1max);
+    EXPECT_EQ(instance.getintR1().get(), testDomain::TestComplexRecordType::c_int1default);
     EXPECT_EQ(node->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(12));
@@ -70,16 +71,16 @@ TEST(AddModifierCommandTest, executeAndUndoFail) {
 
     testEnvironment.m_project.process();
     EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
-    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(instance.getintR1().get(), testDomain::TestComplexRecordType::c_int1default);
     EXPECT_NE(node->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
     EXPECT_TRUE(node->getEdits().findModifier(elementData.getPathToRecordInt1())->isFailed());
 
     command.undo(testEnvironment.m_project);
-    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(instance.getintR1().get(), testDomain::TestComplexRecordType::c_int1default);
     EXPECT_EQ(node->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
 
     command.execute(testEnvironment.m_project);
-    EXPECT_EQ(instance.getintR1().get(), testUtils::TestComplexRecordType::c_int1default);
+    EXPECT_EQ(instance.getintR1().get(), testDomain::TestComplexRecordType::c_int1default);
     EXPECT_NE(node->getEdits().findModifier(elementData.getPathToRecordInt1()), nullptr);
     EXPECT_TRUE(node->getEdits().findModifier(elementData.getPathToRecordInt1())->isFailed());
 }
@@ -87,9 +88,9 @@ TEST(AddModifierCommandTest, executeAndUndoFail) {
 TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
     {
-        static_assert(5 != testUtils::TestComplexRecordType::c_int1default);
+        static_assert(5 != testDomain::TestComplexRecordType::c_int1default);
         babelwires::ValueAssignmentData modData(babelwires::IntValue(5));
         modData.m_targetPath = elementData.getPathToRecordInt1();
         elementData.m_modifiers.emplace_back(modData.clone());
@@ -97,10 +98,10 @@ TEST(AddModifierCommandTest, executeAndUndoPreexistingModifier) {
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     ASSERT_NE(node, nullptr);
-    testUtils::TestComplexRecordType::ConstInstance instance(*node->getInput());
+    testDomain::TestComplexRecordType::ConstInstance instance(*node->getInput());
     EXPECT_EQ(instance.getintR1().get(), 5);
 
-    static_assert(8 != testUtils::TestComplexRecordType::c_int1default);
+    static_assert(8 != testDomain::TestComplexRecordType::c_int1default);
     babelwires::ValueAssignmentData modData(babelwires::IntValue(8));
     modData.m_targetPath = elementData.getPathToRecordInt1();
 
@@ -136,7 +137,7 @@ TEST(AddModifierCommandTest, failSafelyNoElement) {
 TEST(AddModifierCommandTest, failSafelyNoTarget) {
     testUtils::TestEnvironment testEnvironment;
 
-    testUtils::TestComplexRecordElementData elementData;
+    testDomain::TestComplexRecordElementData elementData;
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     testEnvironment.m_project.getNode(elementId);
 

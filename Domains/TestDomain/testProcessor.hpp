@@ -3,9 +3,9 @@
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
 
-namespace testUtils {
+namespace testDomain {
     /// Carries a TestRecord for input and output.
     /// The effect of the processor ensures:
     /// * the array of the output has a size equal to the int at "int0" in the input.
@@ -75,4 +75,4 @@ namespace testUtils {
                           babelwires::ValueTreeNode& output) const override;
     };
 
-} // namespace testUtils
+} // namespace testDomain

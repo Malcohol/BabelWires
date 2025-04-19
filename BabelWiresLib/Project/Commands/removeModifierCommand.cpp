@@ -7,27 +7,27 @@
  **/
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/deactivateOptionalCommand.hpp>
-#include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <cassert>
 
-babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName, NodeId targetId,
-                                                         Path featurePath)
+babelwires::RemoveModifierCommand::RemoveModifierCommand(std::string commandName, NodeId targetId, Path featurePath)
     : CompoundCommand(std::move(commandName))
     , m_nodeId(targetId)
     , m_path(featurePath) {}
@@ -67,16 +67,16 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
         // remove themselves cleanly.
         if (modifier->getModifierData().as<ArraySizeModifierData>()) {
             auto [compoundFeature, currentSize, range, initialSize] =
-                ValueTreeHelper::getInfoFromArray(m_path.tryFollow(*input));
+                ValueTreeHelper::getInfoFromArray(tryFollowPath(m_path, *input));
             if (compoundFeature) {
                 if (currentSize != initialSize) {
-                    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(
-                        m_nodeId, m_path, initialSize, initialSize - currentSize));
+                    addSubCommand(std::make_unique<AdjustModifiersInArraySubcommand>(m_nodeId, m_path, initialSize,
+                                                                                     initialSize - currentSize));
                 }
             }
         } else if (const auto* optModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
             auto [compoundFeature, optionals] =
-                ValueTreeHelper::getInfoFromRecordWithOptionals(m_path.tryFollow(*input));
+                ValueTreeHelper::getInfoFromRecordWithOptionals(tryFollowPath(m_path, *input));
             if (compoundFeature) {
                 for (auto optionalField : optionals) {
                     if (optionalField.second) {
@@ -87,11 +87,11 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
             }
         } else if (const auto* varModifierData = modifier->getModifierData().as<SelectRecordVariantModifierData>()) {
             auto [compoundFeature, isDefault, fieldsToRemove] =
-                ValueTreeHelper::getInfoFromRecordWithVariants(m_path.tryFollow(*input));
+                ValueTreeHelper::getInfoFromRecordWithVariants(tryFollowPath(m_path, *input));
             if (!isDefault) {
                 for (auto fieldToRemove : fieldsToRemove) {
                     Path pathToFieldToRemove = m_path;
-                    pathToFieldToRemove.pushStep(babelwires::PathStep(fieldToRemove));
+                    pathToFieldToRemove.pushStep(fieldToRemove);
                     addSubCommand(std::make_unique<RemoveAllEditsSubcommand>(m_nodeId, pathToFieldToRemove));
                 }
             }

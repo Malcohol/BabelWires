@@ -4,7 +4,7 @@
 
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
 
-namespace testUtils {
+namespace testDomain {
 
     class TestRecordWithVariantsType : public babelwires::RecordWithVariantsType {
       public:
@@ -37,4 +37,4 @@ namespace testUtils {
         static const babelwires::Path getPathToFieldAB();
     };
 
-} // namespace testUtils
+} // namespace testDomain

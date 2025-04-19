@@ -10,35 +10,36 @@
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
+#include <Domains/TestDomain/testRecordType.hpp>
+#include <Domains/TestDomain/testArrayType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testRecordType.hpp>
 #include <Tests/TestUtils/testLog.hpp>
-#include <Tests/BabelWiresLib/TestUtils/testArrayType.hpp>
 
 struct NodeConnectionTest : ::testing::Test {
   protected:
     void SetUp() override {
-        testUtils::TestComplexRecordElementData featureElementData;
+        testDomain::TestComplexRecordElementData featureElementData;
 
         m_nodeId = m_context.m_project.addNode(featureElementData);
         m_featureElement = m_context.m_project.getNode(m_nodeId);
 
-        static_assert(testUtils::TestSimpleArrayType::s_nonDefaultSize > testUtils::TestSimpleArrayType::s_defaultSize);
-        static_assert(testUtils::TestSimpleArrayType::s_defaultSize > 0);
+        static_assert(testDomain::TestSimpleArrayType::s_nonDefaultSize > testDomain::TestSimpleArrayType::s_defaultSize);
+        static_assert(testDomain::TestSimpleArrayType::s_defaultSize > 0);
 
-        m_arrayPath = testUtils::TestComplexRecordElementData::getPathToRecordArray();
-        m_arrayElemPath = testUtils::TestComplexRecordElementData::getPathToRecordArrayEntry(testUtils::TestSimpleArrayType::s_nonDefaultSize - 1);
-        m_targetPath = testUtils::TestComplexRecordElementData::getPathToRecordInt1();
+        m_arrayPath = testDomain::TestComplexRecordElementData::getPathToRecordArray();
+        m_arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(testDomain::TestSimpleArrayType::s_nonDefaultSize - 1);
+        m_targetPath = testDomain::TestComplexRecordElementData::getPathToRecordInt1();
 
         // Add a Node to the project to which connections can be made.
-        testUtils::TestComplexRecordElementData sourceElementData;
+        testDomain::TestComplexRecordElementData sourceElementData;
 
         m_sourceId = m_context.m_project.addNode(sourceElementData);
         m_sourceElement = m_context.m_project.getNode(m_sourceId);
         ASSERT_TRUE(m_sourceElement);
 
         m_arrayInitData.m_targetPath = m_arrayPath;
-        m_arrayInitData.m_size = testUtils::TestSimpleArrayType::s_nonDefaultSize;
+        m_arrayInitData.m_size = testDomain::TestSimpleArrayType::s_nonDefaultSize;
 
         // The target int has a limit range, but this value is within the range.
         m_arrayElemData = babelwires::ValueAssignmentData(babelwires::IntValue(4));
