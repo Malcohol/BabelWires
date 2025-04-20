@@ -18,6 +18,11 @@ babelwires::ProjectCommandContextMenuAction::ProjectCommandContextMenuAction(std
     , m_command(std::move(command))
  {}
 
+ babelwires::ProjectCommandContextMenuAction::ProjectCommandContextMenuAction(QString actionName, std::unique_ptr<Command<Project>> command)
+    : NodeContentsContextMenuActionBase(actionName)
+    , m_command(std::move(command))
+ {}
+
  babelwires::ProjectCommandContextMenuAction::~ProjectCommandContextMenuAction() = default;
 
 void babelwires::ProjectCommandContextMenuAction::actionTriggered(babelwires::NodeContentsModel& model,
