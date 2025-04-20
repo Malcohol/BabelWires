@@ -1,5 +1,5 @@
 /**
- * A line editor QWidget which can be used for editing ValueFeatures.
+ * A line editor QWidget which can be used for editing Values.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -13,7 +13,7 @@
 
 namespace babelwires {
 
-    /// A line editor QWidget which can be used for editing ValueFeatures.
+    /// A line editor QWidget which can be used for editing Values.
     class LineEditValueEditor : public ValueEditorCommonBase<QLineEdit> {
         Q_OBJECT
       public:
@@ -21,7 +21,7 @@ namespace babelwires {
         LineEditValueEditor(QWidget* parent);
 
         /// Set the text to bold.
-        void setFeatureIsModified(bool isModified) override;
+        void setIsModified(bool isModified) override;
     };
 
 } // namespace babelwires

@@ -35,7 +35,7 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
                                             bool isStructureEditable) {
     m_valueModel = &m_valueModelStorage;
     // TODO Allow the UI to register callbacks into the corresponding ValueTypes.
-    if (valueModelRegistry.handleFeature(&type, m_valueModel)) {
+    if (valueModelRegistry.handleValueTreeNodeOfType(&type, m_valueModel)) {
         // Handled by a registered handler.
     } else if (type.as<EnumType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::EnumValueModel));

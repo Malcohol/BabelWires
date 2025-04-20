@@ -49,9 +49,9 @@ const babelwires::ValueTreeNode* babelwires::RowModel::getOutputThenInput() cons
     return m_contentsCacheEntry->getOutputThenInput();
 }
 
-bool babelwires::RowModel::isFeatureModified() const {
+bool babelwires::RowModel::isModified() const {
     assert(!m_contentsCacheEntry->hasModifier() ||
-           hasInput() && "It does not make sense for a modifier to be present when there is no input feature");
+           hasInput() && "It does not make sense for a modifier to be present when there is no input ValueTreeNode");
     return m_contentsCacheEntry->hasModifier();
 }
 
@@ -68,7 +68,7 @@ QString babelwires::RowModel::getTooltip() const {
         assert(modifier->isFailed() && "The cache is inconsistent with the data");
         return modifier->getReasonForFailure().c_str();
     } else if (m_contentsCacheEntry->hasFailedHiddenModifiers()) {
-        QString message = "This feature contains failed modifiers:";
+        QString message = "There are failed modifiers:";
         int numFailedModifiers = 0;
         for (const Modifier* modifier : m_node->getEdits().modifierRange(m_contentsCacheEntry->getPath())) {
             if (modifier->isFailed()) {
@@ -132,7 +132,7 @@ QSize babelwires::RowModel::sizeHint(QStyleOptionViewItem& option, const QModelI
 
 void babelwires::RowModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
     const NodeId nodeId = m_node->getNodeId();
-    if (isFeatureModified()) {
+    if (isModified()) {
         actionsOut.emplace_back(std::make_unique<ProjectCommandContextMenuAction>(
             std::make_unique<RemoveModifierCommand>("Remove modifier", nodeId, m_contentsCacheEntry->getPath())
         ));
@@ -143,12 +143,12 @@ void babelwires::RowModel::getContextMenuActions(std::vector<ContextMenuEntry>& 
         ));
     }
     if (const babelwires::ValueTreeNode* input = getInput()) {
-        auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArray(input->getOwner());
-        if (compoundFeature) {
+        auto [compound, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArray(input->getOwner());
+        if (compound) {
             const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
             // QString tooltip = "Array actions are not permitted when an array is a connection target";
-            Path pathToArray = getPathTo(compoundFeature);
-            const PathStep step = compoundFeature->getStepToChild(input);
+            Path pathToArray = getPathTo(compound);
+            const PathStep step = compound->getStepToChild(input);
             const ArrayIndex index = step.getIndex();
             {
                 auto insertElement = std::make_unique<ProjectCommandContextMenuAction>(

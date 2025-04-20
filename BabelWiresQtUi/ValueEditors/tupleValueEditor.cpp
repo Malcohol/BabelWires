@@ -73,9 +73,9 @@ void babelwires::TupleValueEditor::setEditorData(const TupleValue& tupleValue) {
     }
 }
 
-void babelwires::TupleValueEditor::setFeatureIsModified(bool isModified) {
+void babelwires::TupleValueEditor::setIsModified(bool isModified) {
     for (auto& data : m_perComponentData) {
-        babelwires::ValueEditorInterface::getValueEditorInterface(data.m_valueEditor).setFeatureIsModified(isModified);
+        babelwires::ValueEditorInterface::getValueEditorInterface(data.m_valueEditor).setIsModified(isModified);
     }
 }
 

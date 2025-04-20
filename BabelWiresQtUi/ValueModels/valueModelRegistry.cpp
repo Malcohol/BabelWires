@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ValueModels/valueModelRegistry.hpp>
 
-bool babelwires::ValueModelRegistry::handleFeature(const Type* type, ValueModel* valueModelAllocation) const {
+bool babelwires::ValueModelRegistry::handleValueTreeNodeOfType(const Type* type, ValueModel* valueModelAllocation) const {
     for (const auto& h : m_handlers) {
         if (h(type, valueModelAllocation)) {
             return true;

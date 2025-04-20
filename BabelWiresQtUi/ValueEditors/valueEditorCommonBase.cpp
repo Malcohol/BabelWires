@@ -1,5 +1,5 @@
 /**
- * Common functionality for editors which allow the user to edit ValueFeatures.
+ * Common functionality for editors which allow the user to edit Values.
  *
  * (C) 2021 Malcolm Tyrrell
  *

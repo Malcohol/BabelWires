@@ -1,5 +1,5 @@
 /**
- * A spinBox QWidget which can be used for editing ValueFeatures.
+ * A spinBox QWidget which can be used for editing Values.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -58,7 +58,7 @@ babelwires::SpinBoxValueEditor::SpinBoxValueEditor(QWidget* parent,
                         this, [this]() { emit m_signals->editorHasChanged(this); });
 }
 
-void babelwires::SpinBoxValueEditor::setFeatureIsModified(bool isModified) {
+void babelwires::SpinBoxValueEditor::setIsModified(bool isModified) {
     QLineEdit* lineEditor = lineEdit();
     QFont font = lineEditor->font();
     font.setBold(isModified);

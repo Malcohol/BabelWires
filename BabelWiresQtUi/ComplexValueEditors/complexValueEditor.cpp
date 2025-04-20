@@ -57,7 +57,7 @@ babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope,
 
     const ValueTreeNode* const input = node->getInput();
     if (!input) {
-        throw ModelException() << "The node does not have editable features.";
+        throw ModelException() << "The node does not have editable content.";
     }
 
     const auto* const inputTreeNode = tryFollowPath(data.getPathToValue(), *input);
@@ -92,7 +92,7 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTree
 const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueTreeNode(AccessModelScope& scope,
                                                                                 const ProjectDataLocation& data) {
     const ValueTreeNode* const valueTreeNode = tryGetValueTreeNode(scope, data);
-    assert(valueTreeNode && "There was not value feature");
+    assert(valueTreeNode && "There was no ValueTreeNode");
     return *valueTreeNode;
 }
 

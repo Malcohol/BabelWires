@@ -1,5 +1,5 @@
 /**
- * A dropdown QWidget which can be used for editing ValueFeatures.
+ * A dropdown QWidget which can be used for editing Values.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -19,7 +19,7 @@ namespace babelwires {
         DropDownValueEditor(QWidget* parent);
 
         /// Set the text to bold.
-        void setFeatureIsModified(bool isModified) override;
+        void setIsModified(bool isModified) override;
 
         // This is overridden to ensure the popup does not have an excessive height.
         void showPopup() override;

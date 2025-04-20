@@ -35,8 +35,8 @@ namespace babelwires {
             });
         }
 
-        /// Return true if this feature could be handled by one of the registered handlers.
-        bool handleFeature(const Type* type, ValueModel* valueModelAllocation) const;
+        /// Return true if this ValueTreeNode could be handled by one of the registered handlers.
+        bool handleValueTreeNodeOfType(const Type* type, ValueModel* valueModelAllocation) const;
 
       private:
         std::vector<Handler> m_handlers;

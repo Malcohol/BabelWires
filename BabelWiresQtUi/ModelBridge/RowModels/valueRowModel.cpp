@@ -1,5 +1,5 @@
 /**
- * The row model for ValueFeatures.
+ * The row model for ValueTreeNodes.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -34,7 +34,7 @@ const babelwires::ValueTreeNode& babelwires::ValueRowModel::getValueTreeNode() c
 
 QVariant babelwires::ValueRowModel::getValueDisplayData() const {
     const ValueModel::StyleHint styleHint =
-        isFeatureModified() ? ValueModel::StyleHint::Bold : ValueModel::StyleHint::Normal;
+        isModified() ? ValueModel::StyleHint::Bold : ValueModel::StyleHint::Normal;
     return m_valueModelDispatcher->getDisplayData(styleHint);
 }
 

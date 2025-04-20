@@ -42,8 +42,8 @@ void babelwires::SetArraySizeAction::actionTriggered(babelwires::NodeContentsMod
         const Node* const node = scope.getProject().getNode(elementId);
 
         const babelwires::ValueTreeNode* const input = tryFollowPath(m_pathToArray, *node->getInput());
-        auto [compoundFeature, s, r, initialSize] = ValueTreeHelper::getInfoFromArray(input);
-        if (!compoundFeature) {
+        auto [compound, s, r, initialSize] = ValueTreeHelper::getInfoFromArray(input);
+        if (!compound) {
             return;
         }
         currentSize = s;
