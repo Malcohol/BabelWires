@@ -7,19 +7,20 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/insertArrayEntryAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/projectCommandContextMenuAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/removeArrayEntryAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/removeFailedModifiersAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <QBrush>
@@ -129,8 +130,7 @@ QSize babelwires::RowModel::sizeHint(QStyleOptionViewItem& option, const QModelI
     return {};
 }
 
-void babelwires::RowModel::getContextMenuActions(
-    std::vector<ContextMenuEntry>& actionsOut) const {
+void babelwires::RowModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
     if (isFeatureModified()) {
         actionsOut.emplace_back(std::make_unique<RemoveModifierAction>());
     }
@@ -141,19 +141,21 @@ void babelwires::RowModel::getContextMenuActions(
         auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArray(input->getOwner());
         if (compoundFeature) {
             const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
-            //QString tooltip = "Array actions are not permitted when an array is a connection target";
+            // QString tooltip = "Array actions are not permitted when an array is a connection target";
             Path pathToArray = getPathTo(compoundFeature);
             const PathStep step = compoundFeature->getStepToChild(input);
             const ArrayIndex index = step.getIndex();
             {
                 auto insertElement =
-                    std::make_unique<InsertArrayEntryAction>("Add element before", pathToArray, index);
+                    std::make_unique<ProjectCommandContextMenuAction>(std::make_unique<AddEntriesToArrayCommand>(
+                        "Add element before", m_node->getNodeId(), pathToArray, index));
                 insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }
             {
                 auto insertElement =
-                    std::make_unique<InsertArrayEntryAction>("Add element after", pathToArray, index + 1);
+                    std::make_unique<ProjectCommandContextMenuAction>(
+                        std::make_unique<AddEntriesToArrayCommand>("Add element after", m_node->getNodeId(), pathToArray, index + 1));
                 insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }

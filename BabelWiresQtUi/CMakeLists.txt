@@ -26,7 +26,6 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/Internal/flowSceneConnectionInfo.cpp
     ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.cpp
     ModelBridge/ContextMenu/removeModifierAction.cpp
-    ModelBridge/ContextMenu/insertArrayEntryAction.cpp
     ModelBridge/ContextMenu/removeArrayEntryAction.cpp
     ModelBridge/ContextMenu/reloadFileAction.cpp
     ModelBridge/ContextMenu/changeSourceFileAction.cpp
