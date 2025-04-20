@@ -31,7 +31,6 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/saveFileAction.cpp
     ModelBridge/ContextMenu/saveFileAsAction.cpp
     ModelBridge/ContextMenu/optionalActivationAction.cpp
-    ModelBridge/ContextMenu/selectVariantAction.cpp
     ModelBridge/ContextMenu/setArraySizeAction.cpp
     ModelBridge/ContextMenu/openValueEditorAction.cpp
     Utilities/colours.cpp

@@ -7,17 +7,17 @@
  **/
 #include <BabelWiresQtUi/ValueModels/recordWithVariantsValueModel.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/selectVariantAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/projectCommandContextMenuAction.hpp>
 
+#include <BabelWiresLib/Project/Commands/selectRecordVariantCommand.hpp>
 #include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
-#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
+#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 
 #include <Common/Log/debugLogger.hpp>
 
-void babelwires::RecordWithVariantsValueModel::getContextMenuActions(
-    const DataLocation& location,
-    std::vector<ContextMenuEntry>& entriesOut) const {
+void babelwires::RecordWithVariantsValueModel::getContextMenuActions(const DataLocation& location,
+                                                                     std::vector<ContextMenuEntry>& entriesOut) const {
     ValueModel::getContextMenuActions(location, entriesOut);
     if (!m_isReadOnly) {
         if (const auto& projectDataLocation = location.as<ProjectDataLocation>()) {
@@ -26,7 +26,10 @@ void babelwires::RecordWithVariantsValueModel::getContextMenuActions(
             const RecordWithVariantsValue& recordValue = getValue()->is<RecordWithVariantsValue>();
             const ShortId currentTag = recordValue.getTag();
             for (auto tagId : recordType.getTags()) {
-                auto selectVariant = std::make_unique<SelectVariantAction>(projectDataLocation->getPathToValue(), tagId);
+                std::string fieldName = IdentifierRegistry::read()->getName(tagId).c_str();
+                auto selectVariant = std::make_unique<ProjectCommandContextMenuAction>(
+                    std::make_unique<SelectRecordVariantCommand>("Select variant " + fieldName, projectDataLocation->getNodeId(),
+                                                                 projectDataLocation->getPathToValue(), tagId));
                 if (tagId == currentTag) {
                     selectVariant->setChecked(true);
                     selectVariant->setEnabled(false);

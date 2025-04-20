@@ -14,7 +14,7 @@
 namespace babelwires {
     class Project;
 
-    /// QAction for the remove modifier action in the context menu.
+    /// Action which applies a command to the project.
     class ProjectCommandContextMenuAction : public NodeContentsContextMenuActionBase {
       public:
         ProjectCommandContextMenuAction(std::unique_ptr<Command<Project>> command);
