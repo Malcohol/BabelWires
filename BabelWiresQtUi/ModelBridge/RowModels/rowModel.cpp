@@ -8,13 +8,13 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/projectCommandContextMenuAction.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeArrayEntryAction.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeFailedModifiersAction.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
@@ -131,11 +131,16 @@ QSize babelwires::RowModel::sizeHint(QStyleOptionViewItem& option, const QModelI
 }
 
 void babelwires::RowModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
+    const NodeId nodeId = m_node->getNodeId();
     if (isFeatureModified()) {
-        actionsOut.emplace_back(std::make_unique<RemoveModifierAction>());
+        actionsOut.emplace_back(std::make_unique<ProjectCommandContextMenuAction>(
+            std::make_unique<RemoveModifierCommand>("Remove modifier", nodeId, m_contentsCacheEntry->getPath())
+        ));
     }
     if (m_contentsCacheEntry->hasFailedModifier() || m_contentsCacheEntry->hasFailedHiddenModifiers()) {
-        actionsOut.emplace_back(std::make_unique<RemoveFailedModifiersAction>());
+        actionsOut.emplace_back(std::make_unique<ProjectCommandContextMenuAction>(
+            std::make_unique<RemoveFailedModifiersCommand>("Remove failed modifiers", nodeId, m_contentsCacheEntry->getPath())
+        ));
     }
     if (const babelwires::ValueTreeNode* input = getInput()) {
         auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArray(input->getOwner());
@@ -146,21 +151,21 @@ void babelwires::RowModel::getContextMenuActions(std::vector<ContextMenuEntry>& 
             const PathStep step = compoundFeature->getStepToChild(input);
             const ArrayIndex index = step.getIndex();
             {
-                auto insertElement =
-                    std::make_unique<ProjectCommandContextMenuAction>(std::make_unique<AddEntriesToArrayCommand>(
-                        "Add element before", m_node->getNodeId(), pathToArray, index));
+                auto insertElement = std::make_unique<ProjectCommandContextMenuAction>(
+                    std::make_unique<AddEntriesToArrayCommand>("Add element before", nodeId, pathToArray, index));
                 insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }
             {
-                auto insertElement =
-                    std::make_unique<ProjectCommandContextMenuAction>(
-                        std::make_unique<AddEntriesToArrayCommand>("Add element after", m_node->getNodeId(), pathToArray, index + 1));
+                auto insertElement = std::make_unique<ProjectCommandContextMenuAction>(
+                    std::make_unique<AddEntriesToArrayCommand>("Add element after", nodeId, pathToArray, index + 1));
                 insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }
             {
-                auto removeElement = std::make_unique<RemoveArrayEntryAction>(pathToArray, index);
+                auto removeElement =
+                    std::make_unique<ProjectCommandContextMenuAction>(std::make_unique<RemoveEntryFromArrayCommand>(
+                        "Remove array element", nodeId, pathToArray, index, 1));
                 removeElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize - 1));
                 actionsOut.emplace_back(std::move(removeElement));
             }

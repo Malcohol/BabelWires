@@ -25,14 +25,11 @@ SET( BABELWIRESQTUI_SRCS
     ValueEditors/valueEditorCommonBase.cpp
     ModelBridge/Internal/flowSceneConnectionInfo.cpp
     ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.cpp
-    ModelBridge/ContextMenu/removeModifierAction.cpp
-    ModelBridge/ContextMenu/removeArrayEntryAction.cpp
     ModelBridge/ContextMenu/reloadFileAction.cpp
     ModelBridge/ContextMenu/changeSourceFileAction.cpp
     ModelBridge/ContextMenu/projectCommandContextMenuAction.cpp
     ModelBridge/ContextMenu/saveFileAction.cpp
     ModelBridge/ContextMenu/saveFileAsAction.cpp
-    ModelBridge/ContextMenu/removeFailedModifiersAction.cpp
     ModelBridge/ContextMenu/optionalActivationAction.cpp
     ModelBridge/ContextMenu/selectVariantAction.cpp
     ModelBridge/ContextMenu/setArraySizeAction.cpp
