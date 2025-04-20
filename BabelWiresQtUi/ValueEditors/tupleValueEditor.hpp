@@ -1,5 +1,5 @@
 /**
- * A spinBox QWidget which can be used for editing ValueFeatures.
+ * A spinBox QWidget which can be used for editing Values.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -30,7 +30,7 @@ namespace babelwires {
         void setEditorData(const TupleValue& tupleValue);
 
         /// Set the text to bold.
-        void setFeatureIsModified(bool isModified) override;
+        void setIsModified(bool isModified) override;
 
         const TupleType& getType() const;
 

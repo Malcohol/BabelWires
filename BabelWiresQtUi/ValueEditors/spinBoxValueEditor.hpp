@@ -1,5 +1,5 @@
 /**
- * A spinBox QWidget which can be used for editing ValueFeatures.
+ * A spinBox QWidget which can be used for editing Values.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -13,7 +13,7 @@
 namespace babelwires {
     class ValueNames;
 
-    /// A spinBox QWidget which can be used for editing ValueFeatures.
+    /// A spinBox QWidget which can be used for editing Values.
     // TODO: The handling of valueName text entry is needs work.
     class SpinBoxValueEditor : public ValueEditorCommonBase<QSpinBox> {
         Q_OBJECT
@@ -22,7 +22,7 @@ namespace babelwires {
         SpinBoxValueEditor(QWidget* parent, const ValueNames* valueNames);
 
         /// Set the text to bold.
-        void setFeatureIsModified(bool isModified) override;
+        void setIsModified(bool isModified) override;
 
         static QString getNamedValueString(const ValueNames* valueNames, int value);
 

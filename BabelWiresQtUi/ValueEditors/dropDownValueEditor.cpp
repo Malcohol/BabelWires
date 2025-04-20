@@ -1,5 +1,5 @@
 /**
- * A combobox QWidget which can be used for editing ValueFeatures.
+ * A combobox QWidget which can be used for editing Values.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -23,7 +23,7 @@ babelwires::DropDownValueEditor::DropDownValueEditor(QWidget* parent)
                      [this]() { emit m_signals->editorHasChanged(this); });
 }
 
-void babelwires::DropDownValueEditor::setFeatureIsModified(bool isModified) {
+void babelwires::DropDownValueEditor::setIsModified(bool isModified) {
     // TODO: when you click on the row value the value is not bold.
 }
 

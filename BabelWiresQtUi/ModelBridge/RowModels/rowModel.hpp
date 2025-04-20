@@ -47,13 +47,13 @@ namespace babelwires {
             normal,
             editable,
             failed,
-            // There's a failed modifier which is hidden because a containing feature is collapsed in the UI.
+            // There's a failed modifier which is hidden because a containing ValueTreeNode is collapsed in the UI.
             failedHidden
         };
 
         virtual BackgroundStyle getBackgroundStyle(ColumnType c) const;
 
-        /// Only called for input features.
+        /// Only called for input ValueTreeNodes.
         virtual bool isItemEditable() const;
 
         /// Return an editor for editing the value.
@@ -82,7 +82,7 @@ namespace babelwires {
         virtual void getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const;
 
       public:
-        bool isFeatureModified() const;
+        bool isModified() const;
 
       protected:
         bool hasInput() const;

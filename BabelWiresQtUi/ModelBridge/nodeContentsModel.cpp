@@ -1,5 +1,5 @@
 /**
- * FeatureModel is the QAbstractTableModel which represents the data in a Node.
+ * NodeContentsModel is the QAbstractTableModel which represents the data in a Node.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -136,7 +136,7 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
             return getBackgroundColour(backgroundType);
         }
         case Qt::FontRole: {
-            if (rowModel->isFeatureModified()) {
+            if (rowModel->isModified()) {
                 QFont font;
                 font.setBold(true);
                 return font;

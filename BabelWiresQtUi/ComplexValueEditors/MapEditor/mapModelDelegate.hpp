@@ -14,7 +14,7 @@ namespace babelwires {
     class MapModelDelegate : public QStyledItemDelegate {
         Q_OBJECT
       public:
-        /// Construct a delegate to handle the editing of features.
+        /// Construct a delegate to handle the editing of the map.
         MapModelDelegate(QObject* parent);
 
         virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option,

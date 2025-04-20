@@ -1,5 +1,5 @@
 /**
- * The row model for ValueFeatures.
+ * The row model for regular ValueTreeNodes.
  *
  * (C) 2021 Malcolm Tyrrell
  * 

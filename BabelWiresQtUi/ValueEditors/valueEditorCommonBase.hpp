@@ -1,5 +1,5 @@
 /**
- * Common functionality for editors which allow the user to edit ValueFeatures.
+ * Common functionality for editors which allow the user to edit Values.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -35,7 +35,7 @@ namespace babelwires {
     /// the compiler. Instead, it is found dynamically by querying a QObject propery.
     struct ValueEditorInterface {
         /// Typical implementations will set text to bold.
-        virtual void setFeatureIsModified(bool isModified) = 0;
+        virtual void setIsModified(bool isModified) = 0;
 
         /// Get somewhere to store the connection between the model and the delegate for this editor.
         virtual QMetaObject::Connection& getValuesChangedConnection() = 0;

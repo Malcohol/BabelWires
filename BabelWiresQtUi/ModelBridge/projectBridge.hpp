@@ -114,7 +114,7 @@ namespace babelwires {
         void removeConnectionFromFlowScene(const ConnectionDescription& connection);
 
         /// Add the node but not the connection to the flow scene.
-        void addNodeToFlowScene(const Node* feature);
+        void addNodeToFlowScene(const Node* node);
 
         /// Remove the node from the flow scene.
         void removeNodeFromFlowScene(NodeId elementId);

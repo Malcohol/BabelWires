@@ -7,19 +7,20 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/insertArrayEntryAction.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeArrayEntryAction.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeFailedModifiersAction.hpp>
-#include <BabelWiresQtUi/ModelBridge/ContextMenu/removeModifierAction.hpp>
+#include <BabelWiresQtUi/ModelBridge/ContextMenu/projectCommandContextMenuAction.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/Project/Commands/addEntriesToArrayCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeFailedModifiersCommand.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <QBrush>
@@ -48,9 +49,9 @@ const babelwires::ValueTreeNode* babelwires::RowModel::getOutputThenInput() cons
     return m_contentsCacheEntry->getOutputThenInput();
 }
 
-bool babelwires::RowModel::isFeatureModified() const {
+bool babelwires::RowModel::isModified() const {
     assert(!m_contentsCacheEntry->hasModifier() ||
-           hasInput() && "It does not make sense for a modifier to be present when there is no input feature");
+           hasInput() && "It does not make sense for a modifier to be present when there is no input ValueTreeNode");
     return m_contentsCacheEntry->hasModifier();
 }
 
@@ -67,7 +68,7 @@ QString babelwires::RowModel::getTooltip() const {
         assert(modifier->isFailed() && "The cache is inconsistent with the data");
         return modifier->getReasonForFailure().c_str();
     } else if (m_contentsCacheEntry->hasFailedHiddenModifiers()) {
-        QString message = "This feature contains failed modifiers:";
+        QString message = "There are failed modifiers:";
         int numFailedModifiers = 0;
         for (const Modifier* modifier : m_node->getEdits().modifierRange(m_contentsCacheEntry->getPath())) {
             if (modifier->isFailed()) {
@@ -129,36 +130,42 @@ QSize babelwires::RowModel::sizeHint(QStyleOptionViewItem& option, const QModelI
     return {};
 }
 
-void babelwires::RowModel::getContextMenuActions(
-    std::vector<ContextMenuEntry>& actionsOut) const {
-    if (isFeatureModified()) {
-        actionsOut.emplace_back(std::make_unique<RemoveModifierAction>());
+void babelwires::RowModel::getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const {
+    const NodeId nodeId = m_node->getNodeId();
+    if (isModified()) {
+        actionsOut.emplace_back(std::make_unique<ProjectCommandContextMenuAction>(
+            std::make_unique<RemoveModifierCommand>("Remove modifier", nodeId, m_contentsCacheEntry->getPath())
+        ));
     }
     if (m_contentsCacheEntry->hasFailedModifier() || m_contentsCacheEntry->hasFailedHiddenModifiers()) {
-        actionsOut.emplace_back(std::make_unique<RemoveFailedModifiersAction>());
+        actionsOut.emplace_back(std::make_unique<ProjectCommandContextMenuAction>(
+            std::make_unique<RemoveFailedModifiersCommand>("Remove failed modifiers", nodeId, m_contentsCacheEntry->getPath())
+        ));
     }
     if (const babelwires::ValueTreeNode* input = getInput()) {
-        auto [compoundFeature, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArray(input->getOwner());
-        if (compoundFeature) {
+        auto [compound, currentSize, range, initialSize] = ValueTreeHelper::getInfoFromArray(input->getOwner());
+        if (compound) {
             const bool arrayActionsAreEnabled = m_contentsCacheEntry->isStructureEditable();
-            //QString tooltip = "Array actions are not permitted when an array is a connection target";
-            Path pathToArray = getPathTo(compoundFeature);
-            const PathStep step = compoundFeature->getStepToChild(input);
+            // QString tooltip = "Array actions are not permitted when an array is a connection target";
+            Path pathToArray = getPathTo(compound);
+            const PathStep step = compound->getStepToChild(input);
             const ArrayIndex index = step.getIndex();
             {
-                auto insertElement =
-                    std::make_unique<InsertArrayEntryAction>("Add element before", pathToArray, index);
+                auto insertElement = std::make_unique<ProjectCommandContextMenuAction>(
+                    std::make_unique<AddEntriesToArrayCommand>("Add element before", nodeId, pathToArray, index));
                 insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }
             {
-                auto insertElement =
-                    std::make_unique<InsertArrayEntryAction>("Add element after", pathToArray, index + 1);
+                auto insertElement = std::make_unique<ProjectCommandContextMenuAction>(
+                    std::make_unique<AddEntriesToArrayCommand>("Add element after", nodeId, pathToArray, index + 1));
                 insertElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize + 1));
                 actionsOut.emplace_back(std::move(insertElement));
             }
             {
-                auto removeElement = std::make_unique<RemoveArrayEntryAction>(pathToArray, index);
+                auto removeElement =
+                    std::make_unique<ProjectCommandContextMenuAction>(std::make_unique<RemoveEntryFromArrayCommand>(
+                        "Remove array element", nodeId, pathToArray, index, 1));
                 removeElement->setEnabled(arrayActionsAreEnabled && range.contains(currentSize - 1));
                 actionsOut.emplace_back(std::move(removeElement));
             }

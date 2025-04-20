@@ -1,5 +1,5 @@
 /**
- * A line editor QWidget which can be used for editing ValueFeatures.
+ * A line editor QWidget which can be used for editing Values.
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -13,7 +13,7 @@
 babelwires::LineEditValueEditor::LineEditValueEditor(QWidget* parent)
     : ValueEditorCommonBase(parent) {}
 
-void babelwires::LineEditValueEditor::setFeatureIsModified(bool isModified) {
+void babelwires::LineEditValueEditor::setIsModified(bool isModified) {
     QFont f = font();
     f.setBold(isModified);
     setFont(f);

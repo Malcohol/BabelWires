@@ -27,7 +27,7 @@ QWidget* babelwires::MapModelDelegate::createEditor(QWidget* parent, const QStyl
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
     assert(mapEntryModel->isItemEditable() &&
-           "We should not be trying to create an editor for a non-editable feature");
+           "We should not be trying to create an editor for a non-editable map");
 
     QWidget* const editor = mapEntryModel->createEditor(parent, index);
 
@@ -58,7 +58,7 @@ void babelwires::MapModelDelegate::setEditorData(QWidget* editor, const QModelIn
     mapModel->initMapEntryModelDispatcher(index, mapEntryModel);
 
     assert(mapEntryModel->isItemEditable() &&
-           "We should not be trying to create an editor for a non-editable feature");
+           "We should not be trying to create an editor for a non-editable map");
 
     mapEntryModel->setEditorData(editor);
 }

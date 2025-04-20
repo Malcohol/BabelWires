@@ -16,7 +16,7 @@ namespace babelwires {
     class RowModelDelegate : public QStyledItemDelegate {
         Q_OBJECT
       public:
-        /// Construct a delegate to handle the editing of features.
+        /// Construct a delegate to handle the editing of ValueTreeNodes.
         RowModelDelegate(QObject* parent, ProjectBridge& projectBridge);
 
         QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option,

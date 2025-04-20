@@ -30,16 +30,16 @@ namespace babelwires {
 
             // TODO Why are these static?
 
-            /// Convenience Function: Get the Feature referred to by the data, or assert.
-            /// Note: This returns const because editors never modify features directly.
+            /// Convenience Function: Get the ValueTreeNode referred to by the data, or assert.
+            /// Note: This returns const because editors never modify the model directly.
             static const ValueTreeNode& getValueTreeNode(AccessModelScope& scope, const ProjectDataLocation& data);
 
-            /// Convenience Function: Get the Feature referred to by the data, or return nullptr.
-            /// Note: This returns const because editors never modify features directly.
+            /// Convenience Function: Get the ValueTreeNode referred to by the data, or return nullptr.
+            /// Note: This returns const because editors never modify the model directly.
             static const ValueTreeNode* tryGetValueTreeNode(AccessModelScope& scope, const ProjectDataLocation& data);
 
-            /// Convenience Function: Get the Feature referred to by the data, or throw a ModelException.
-            /// Note: This returns const because editors never modify features directly.
+            /// Convenience Function: Get the ValueTreeNode referred to by the data, or throw a ModelException.
+            /// Note: This returns const because editors never modify the model directly.
             static const ValueTreeNode& getValueTreeNodeOrThrow(AccessModelScope& scope, const ProjectDataLocation& data);
 
         signals:

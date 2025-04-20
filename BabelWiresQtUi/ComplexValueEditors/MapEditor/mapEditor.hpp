@@ -38,18 +38,18 @@ namespace babelwires {
         /// Apply the state of this map to the project.
         void applyMapToProject();
 
-        /// Get the MapFeature or assert.
+        /// Get the ValueTreeNode holding the map or assert.
         const ValueTreeNode& getMapTreeNode(AccessModelScope& scope) const;
 
-        /// Get the mapValue from the project or assert.
+        /// Get the MapValue from the project or assert.
         const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
 
-        /// Get the MapFeature or return nullptr.
+        /// Get the ValueTreeNode holding the map or return nullptr.
         const ValueTreeNode* tryGetMapTreeNode(AccessModelScope& scope) const;
 
         /// See if there is a map assignment.
         /// If there is, return its data.
-        /// Otherwise return the data of the mapFeature.
+        /// Otherwise return the data of the ValueTreeNode.
         ValueHolderTemplate<MapValue> tryGetMapValueFromProject(AccessModelScope& scope) const;
 
         const MapProject& getMapProject() const;
@@ -73,7 +73,7 @@ namespace babelwires {
         /// Get a suitable title for the window carrying this widget.
         QString getTitle() const;
 
-        /// Try to find a MapValueAssignment in the project which applies to the mapFeature.
+        /// Try to find a MapValueAssignment in the project which applies to the Map.
         const ValueAssignmentData* tryGetMapValueAssignmentData(AccessModelScope& scope) const;
 
         void updateUiAfterChange() const;

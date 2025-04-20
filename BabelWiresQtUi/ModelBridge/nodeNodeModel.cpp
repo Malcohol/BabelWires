@@ -108,7 +108,7 @@ QtNodes::PortIndex babelwires::NodeNodeModel::getPortAtPath(AccessModelScope& sc
     const Node* node = m_model->getNode(scope);
     assert(node && "Check before calling this.");
     const int row = node->getContentsCache().getIndexOfPath((portType == QtNodes::PortType::In), path);
-    assert((row != -1) && "Path did not lead to a known feature");
+    assert((row != -1) && "Path did not lead to a ValueTreeNode");
     // TODO Assert that the entry corresponds to the correct portType.
     return row;
 }
