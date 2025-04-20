@@ -27,7 +27,7 @@ void babelwires::RecordWithVariantsValueModel::getContextMenuActions(const DataL
             const ShortId currentTag = recordValue.getTag();
             for (auto tagId : recordType.getTags()) {
                 std::string fieldName = IdentifierRegistry::read()->getName(tagId).c_str();
-                auto selectVariant = std::make_unique<ProjectCommandContextMenuAction>(
+                auto selectVariant = std::make_unique<ProjectCommandContextMenuAction>(fieldName.c_str(),
                     std::make_unique<SelectRecordVariantCommand>("Select variant " + fieldName, projectDataLocation->getNodeId(),
                                                                  projectDataLocation->getPathToValue(), tagId));
                 if (tagId == currentTag) {
