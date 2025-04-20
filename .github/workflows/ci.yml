@@ -79,9 +79,9 @@ jobs:
       run: Tests/Common/${{ matrix.config.targetFolder }}commonTests${{ matrix.config.exeExtension }}
 
     - name: BabelWiresTest
-      working-directory: build
+      working-directory: build/Tests/BabelWiresLib
       shell: bash
-      run: Tests/BabelWiresLib/${{ matrix.config.targetFolder }}babelWiresTests${{ matrix.config.exeExtension }}
+      run: ./${{ matrix.config.targetFolder }}babelWiresTests${{ matrix.config.exeExtension }}
 
     - name: SeqWiresLibTests
       working-directory: build
