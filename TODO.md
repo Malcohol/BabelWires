@@ -28,13 +28,14 @@ Bugs:
 * The UI does not update a row directly after a failed modifier is removed, so the row stays red.
 * RecordWithOptionalsFeatureTest::changes test only works if the values are default. Deactivating a non-default optional should not set the value changed flag.
 * Save with changes but no project file should offer "Save As", not "Save".
+* SpinBoxes do not work properly in value editor of the TestTupleType. (Open a TestTupleType in BabelWires)
+* SumTypes cannot be connected to in the project. The UI treats them as having incompatible kind.
 
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.
 * Do non-const Node::getInputFeature and getOutputFeature really need to be public?
 
 New features:
-* "Run project" - Load all, process, save all.
 * Make undo move the view to the XY and scale position of the undone command.
 * New "Error Map Fallback" - fails a processor if the fallback is every used.
 
@@ -45,14 +46,13 @@ Unit Tests:
 Model
 * Consider a coercion system so numeric types can always be assigned.
 * Implement RecordType Optionality::optionalDefaultActive
-* Float type
-
+* Bool and float types
+* Generics - e.g. ports that can accept non-specific types, which cause the types of other ports to adapt (or something like that)
 
 Processors:
-* Plugin containing standard processors for built-in types (+, *, etc)
+* A domain of standard operations (e.g. arithmetic and string manipulation)
 
 Refactor:
-* Reorganize Path and ValuePath: Path has support for ValueTreeNode but not Values which seems wrong.
 * Abandon EditableValue and EditableValueHolder (and ValueHolder template).
   - Will have to live with unimplemented asserts.
   - A tuple shouldn't have to be editable, but right now I have to choose.
@@ -78,11 +78,13 @@ UI:
 * ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.
 * ValueModel could be a template, to avoid all the ising and asing in the subclasses.
 * The dispatcher should call a virtual method in the value type. That method would have to call a callback registered into the value type from the UI.
-* Many ContextMenuActions could just be ProjectCommandContextMenuActions wrapping a command.
 * No way to access the context menu if a SumType was a component of a tuple type.
   - Something like: value editors could intercept the context menu and use the widget parent chain to populate the full context menu.
+  - Try to define a general pattern for populating context menus.
+* Whenever a context menu can appear, it should always appear, but greyed out.
+  - Consider a tooltip which explains why.
 
-Parallel processing:
+Parallel project processing:
 * Not implemented, but code written with this in mind.
   - Access to the project state is already funnelled through AccessModelScope and UpdateModelScope.
   - The UI does not keep pointers to features.
