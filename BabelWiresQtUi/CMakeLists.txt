@@ -8,12 +8,11 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/valueNodeFactory.cpp
     ModelBridge/baseNodeModel.cpp
     ModelBridge/projectBridge.cpp
-    ModelBridge/nodeNodeModel.cpp
     ModelBridge/nodeContentsView.cpp
     ModelBridge/nodeContentsModel.cpp
     ModelBridge/rowModelDelegate.cpp
-    ModelBridge/modifyModelScope.cpp
-    ModelBridge/accessModelScope.cpp
+    NodeEditorBridge/modifyModelScope.cpp
+    NodeEditorBridge/accessModelScope.cpp
     ModelBridge/RowModels/fileRowModel.cpp
     ModelBridge/RowModels/rowModel.cpp
     ModelBridge/RowModels/rowModelDispatcher.cpp
@@ -23,7 +22,9 @@ SET( BABELWIRESQTUI_SRCS
     ValueEditors/lineEditValueEditor.cpp
     ValueEditors/tupleValueEditor.cpp
     ValueEditors/valueEditorCommonBase.cpp
-    ModelBridge/Internal/flowSceneConnectionInfo.cpp
+    NodeEditorBridge/nodeNodeModel.cpp
+    NodeEditorBridge/projectGraphicsScene.cpp
+    NodeEditorBridge/projectGraphModel.cpp
     ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.cpp
     ModelBridge/ContextMenu/reloadFileAction.cpp
     ModelBridge/ContextMenu/changeSourceFileAction.cpp

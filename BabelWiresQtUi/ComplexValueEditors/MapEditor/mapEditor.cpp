@@ -11,7 +11,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModelDelegate.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
 #include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 

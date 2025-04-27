@@ -10,17 +10,17 @@
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 
-babelwires::ModifyModelScope::ModifyModelScope(ProjectBridge& bridge)
+babelwires::ModifyModelScope::ModifyModelScope(ProjectGraphModel& bridge)
     : AccessModelScope(bridge) {}
 
 babelwires::ModifyModelScope::~ModifyModelScope() {
-    m_projectBridge.processAndHandleModelChanges();
+    m_projectGraphModel.processAndHandleModelChanges();
 }
 
 babelwires::Project& babelwires::ModifyModelScope::getProject() {
-    return m_projectBridge.m_project;
+    return m_projectGraphModel.m_project;
 }
 
 babelwires::CommandManager<babelwires::Project>& babelwires::ModifyModelScope::getCommandManager() {
-    return m_projectBridge.m_commandManager;
+    return m_projectGraphModel.m_commandManager;
 }

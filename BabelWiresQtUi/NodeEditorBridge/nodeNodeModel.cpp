@@ -5,10 +5,10 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ModelBridge/nodeNodeModel.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/nodeNodeModel.hpp>
 
 #include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsView.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>

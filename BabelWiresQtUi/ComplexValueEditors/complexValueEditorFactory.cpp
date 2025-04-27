@@ -8,7 +8,7 @@
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorFactory.hpp>
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>

@@ -23,27 +23,30 @@ namespace babelwires {
 
     struct UiSize;
 
-    /// The NodeDataModel which presents a BabelWires Node as a QtNode.
-    class NodeNodeModel : public BaseNodeModel {
+    /// This manages the View, Model and Delegate of a Node's embedded widget.
+    /// TODO: Right now, it also manages access to a bunch of other node information.
+    /// However, I think that second role is not necessary: The ProjectGraphModel can
+    /// go to the Project for almost all of the information.
+    class NodeNodeModel : public QObject {
         Q_OBJECT
 
       public:
         NodeNodeModel(ProjectBridge& project, NodeId elementId);
         ~NodeNodeModel();
 
-        virtual unsigned int nPorts(QtNodes::PortType portType) const override;
-        virtual QtNodes::NodeDataType dataType(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const override;
-        virtual QWidget* embeddedWidget() override;
+        unsigned int nPorts(QtNodes::PortType portType) const;
+        QtNodes::NodeDataType dataType(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const;
+        QWidget* embeddedWidget();
 
         babelwires::NodeId getNodeId() const;
-        virtual QString caption() const override;
+        QString caption() const;
 
         const Path& getPathAtPort(AccessModelScope& scope, QtNodes::PortType portType,
                                          QtNodes::PortIndex portIndex) const;
         QtNodes::PortIndex getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
                                          const Path& path) const;
 
-        ResizableAxes resizable() const override { return HorizontallyResizable; }
+        ResizableAxes resizable() const { return HorizontallyResizable; }
 
         void setSize(const UiSize& newSize);
 
@@ -63,13 +66,11 @@ namespace babelwires {
         const ValueTreeNode* getOutput(AccessModelScope& scope, int portIndex) const;
 
       protected:
-        NodeId m_nodeId;
+        babelwires::NodeId m_nodeId;
 
         NodeContentsView* m_view;
         NodeContentsModel* m_model;
         RowModelDelegate* m_delegate;
-
-        int m_numRows = 0;
     };
 
 } // namespace babelwires

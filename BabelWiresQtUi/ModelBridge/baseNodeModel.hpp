@@ -8,7 +8,7 @@
 #pragma once
 
 #include <QtCore/QObject>
-#include <nodes/NodeDataModel>
+#include <nodes/NodeDelegateModel>
 
 namespace babelwires {
 

@@ -5,17 +5,17 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 
 babelwires::AccessModelScope::AccessModelScope(ProjectBridge& bridge)
-    : m_projectBridge(bridge) {}
+    : m_projectGraphModel(bridge) {}
 
 babelwires::AccessModelScope::~AccessModelScope() {}
 
 const babelwires::Project& babelwires::AccessModelScope::getProject() {
-    return m_projectBridge.m_project;
+    return m_projectGraphModel.m_project;
 }
 
 const babelwires::CommandManager<babelwires::Project>& babelwires::AccessModelScope::getCommandManager() {
-    return m_projectBridge.m_commandManager;
+    return m_projectGraphModel.m_commandManager;
 }

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
 namespace babelwires {
 
@@ -16,14 +16,14 @@ namespace babelwires {
     /// Note: This class is intended to future proofs the system for the day when concurrency is added to the project.
     class AccessModelScope {
       public:
-        AccessModelScope(ProjectBridge& bridge);
+        AccessModelScope(ProjectGraphModel& bridge);
         virtual ~AccessModelScope();
 
         const CommandManager<Project>& getCommandManager();
         const Project& getProject();
 
       protected:
-        ProjectBridge& m_projectBridge;
+        ProjectGraphModel& m_projectGraphModel;
     };
 
 } // namespace babelwires

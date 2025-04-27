@@ -8,7 +8,7 @@
 #include <BabelWiresQtUi/mainWindow.hpp>
 
 #include <BabelWiresQtUi/LogWindow/logWindow.hpp>
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
