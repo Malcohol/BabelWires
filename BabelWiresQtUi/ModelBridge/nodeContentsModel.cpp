@@ -10,7 +10,7 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
 #include <BabelWiresQtUi/Utilities/colours.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>

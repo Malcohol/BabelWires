@@ -146,32 +146,32 @@ babelwires::NodeContentsModel& babelwires::NodeNodeModel::getModel() {
     return *m_model;
 }
 
-void babelwires::NodeNodeModel::addInConnection(const ConnectionId& connectionId) {
+void babelwires::NodeNodeModel::addInConnection(const QtNodes::ConnectionId& connectionId) {
     assert(!isInConnection(connectionId));
     m_inConnections.emplace_back(connectionId);
 }
 
-void babelwires::NodeNodeModel::addOutConnection(const ConnectionId& connectionId) {
+void babelwires::NodeNodeModel::addOutConnection(const QtNodes::ConnectionId& connectionId) {
     assert(!isOutConnection(connectionId));
     m_outConnections.emplace_back(connectionId);
 }
 
-void babelwires::NodeNodeModel::removeInConnection(const ConnectionId& connectionId) {
+void babelwires::NodeNodeModel::removeInConnection(const QtNodes::ConnectionId& connectionId) {
     assert(isInConnection(connectionId));
     const auto it = std::find(m_inConnections.begin(), m_inConnections.end(), connectionId);
     assert(it != m_inConnections.end());
     m_inConnections.erase(it);
 }
 
-void babelwires::NodeNodeModel::removeOutConnection(const ConnectionId& connectionId) {
+void babelwires::NodeNodeModel::removeOutConnection(const QtNodes::ConnectionId& connectionId) {
     assert(isOutConnection(connectionId));
     const auto it = std::find(m_outConnections.begin(), m_outConnections.end(), connectionId);
     assert(it != m_outConnections.end());
     m_outConnections.erase(it);
 }
 
-std::unordered_set<ConnectionId> babelwires::NodeNodeModel::getAllConnectionIds() const {
-    std::unordered_set<ConnectionId> connections;
+std::unordered_set<QtNodes::ConnectionId> babelwires::NodeNodeModel::getAllConnectionIds() const {
+    std::unordered_set<QtNodes::ConnectionId> connections;
     connections.reserve(m_inConnections.size() + m_outConnections.size());
     for (const auto& inConnection : m_inConnections) {
         connections.insert(inConnection);
@@ -182,8 +182,8 @@ std::unordered_set<ConnectionId> babelwires::NodeNodeModel::getAllConnectionIds(
     return connections;
 }
 
-std::unordered_set<ConnectionId> babelwires::NodeNodeModel::getConnections(QtNodes::NodeId nodeId, PortType portType,
-                                                                            PortIndex index) const {
+std::unordered_set<QtNodes::ConnectionId> babelwires::NodeNodeModel::getConnections(QtNodes::NodeId nodeId, QtNodes::PortType portType,
+    QtNodes::PortIndex index) const {
     std::unordered_set<ConnectionId> connectionsAtPort;
     if (portType == QtNodes::PortType::In) {
         for (const auto& connectionId : m_inConnections) {

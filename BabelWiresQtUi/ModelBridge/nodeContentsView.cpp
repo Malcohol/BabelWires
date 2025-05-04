@@ -9,7 +9,7 @@
 
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
 #include <BabelWiresLib/Project/Commands/addNodeForInputTreeValueCommand.hpp>
 #include <BabelWiresLib/Project/Commands/addNodeForOutputTreeValueCommand.hpp>

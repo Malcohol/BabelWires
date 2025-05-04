@@ -51,22 +51,22 @@ namespace babelwires {
       public:
         // The AbstractGraphModel interface.
         std::unordered_set<QtNodes::NodeId> allNodeIds() const override;
-        std::unordered_set<ConnectionId> allConnectionIds(NodeId const nodeId) const override;
-        std::unordered_set<ConnectionId> connections(NodeId nodeId, PortType portType, PortIndex index) const override;
-        bool connectionExists(ConnectionId const connectionId) const override;
-        bool connectionPossible(ConnectionId const connectionId) const override;
-        void addConnection(ConnectionId const connectionId) override;
+        std::unordered_set<QtNodes::ConnectionId> allConnectionIds(QtNodes::NodeId const nodeId) const override;
+        std::unordered_set<QtNodes::ConnectionId> connections(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index) const override;
+        bool connectionExists(QtNodes::ConnectionId const connectionId) const override;
+        bool connectionPossible(QtNodes::ConnectionId const connectionId) const override;
+        void addConnection(QtNodes::ConnectionId const connectionId) override;
         bool nodeExists(QtNodes::NodeId const nodeId) const override;
-        QVariant nodeData(QtNodes::NodeId nodeId, NodeRole role) const override;
+        QVariant nodeData(QtNodes::NodeId nodeId, QtNodes::NodeRole role) const override;
         QtNodes::NodeFlags nodeFlags(QtNodes::NodeId nodeId) const override;
-        bool setNodeData(QtNodes::NodeId nodeId, NodeRole role, QVariant value) override;
-        QVariant portData(QtNodes::NodeId nodeId, PortType portType, PortIndex index, PortRole role) const override;
-        bool deleteConnection(ConnectionId const connectionId) override;
+        bool setNodeData(QtNodes::NodeId nodeId, QtNodes::NodeRole role, QVariant value) override;
+        QVariant portData(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index, QtNodes::PortRole role) const override;
+        bool deleteConnection(QtNodes::ConnectionId const connectionId) override;
         bool deleteNode(QtNodes::NodeId const nodeId) override;
 
         // Parts of the interface that are not needed in this use-case.
-        bool setPortData(QtNodes::NodeId nodeId, PortType portType, PortIndex index, QVariant const& value,
-                         PortRole role = PortRole::Data) override {
+        bool setPortData(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index, QVariant const& value,
+          QtNodes::PortRole role = QtNodes::PortRole::Data) override {
             assert(false);
         };
         QtNodes::NodeId newNodeId() override { assert(false); };
@@ -81,7 +81,7 @@ namespace babelwires {
 
       private:
         QtNodes::ConnectionId createConnectionIdFromConnectionDescription(AccessModelScope& scope,
-                                                                          ConnectionDescription& connection);
+                                                                          const ConnectionDescription& connection);
         ConnectionDescription createConnectionDescriptionFromConnectionId(AccessModelScope& scope,
                                                                           const QtNodes::ConnectionId& connectionId);
         void addToConnectionCache(const QtNodes::ConnectionId& connectionId);

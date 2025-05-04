@@ -13,6 +13,7 @@
 #include <QtNodes/NodeData>
 
 #include <vector>
+#include <unordered_set>
 
 namespace babelwires {
     class ValueTreeNode;
@@ -50,19 +51,22 @@ namespace babelwires {
         QtNodes::PortIndex getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
                                          const Path& path) const;
 
-        ResizableAxes resizable() const { return HorizontallyResizable; }
+        //TODO ResizableAxes resizable() const { return HorizontallyResizable; }
 
         void setSize(const UiSize& newSize);
 
         /// Return the model for the embedded widget.
         NodeContentsModel& getModel();
 
-        void addInConnection(const ConnectionId& connectionId);
-        void addOutConnection(const ConnectionId& connectionId);
-        std::unordered_set<ConnectionId> getAllConnectionIds() const;
-        std::unordered_set<ConnectionId> getConnections(PortType portType, PortIndex index) const;
-        bool isInConnection(const ConnectionId& connectionId) const;
-        bool isOutConnection(const ConnectionId& connectionId) const;
+        void addInConnection(const QtNodes::ConnectionId& connectionId);
+        void addOutConnection(const QtNodes::ConnectionId& connectionId);
+        void removeInConnection(const QtNodes::ConnectionId& connectionId);
+        void removeOutConnection(const QtNodes::ConnectionId& connectionId);
+
+        std::unordered_set<QtNodes::ConnectionId> getAllConnectionIds() const;
+        std::unordered_set<QtNodes::ConnectionId> getConnections(QtNodes::PortType portType, QtNodes::PortIndex index) const;
+        bool isInConnection(const QtNodes::ConnectionId& connectionId) const;
+        bool isOutConnection(const QtNodes::ConnectionId& connectionId) const;
 
       public slots:
         void customContextMenuRequested(const QPoint& pos);

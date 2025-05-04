@@ -6,9 +6,18 @@
  */
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
+#include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/Project/Commands/resizeNodeCommand.hpp>
+#include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
+
 #include <BabelWiresQtUi/NodeEditorBridge/nodeNodeModel.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 
 #include <BabelWiresLib/Project/project.hpp>
+
+#include <QTimer>
 
 babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManager<Project>& commandManager,
                                                  UiProjectContext& projectContext)
@@ -40,61 +49,60 @@ babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManage
 }
 
 QtNodes::ConnectionId
-babelwires::ProjectGraphModel::createConnectionIdFromConnection(AccessModelScope& scope,
-                                                                ConnectionDescription& connection) {
+babelwires::ProjectGraphModel::createConnectionIdFromConnectionDescription(AccessModelScope& scope,
+                                                                const ConnectionDescription& connection) {
     const auto sourceIt = m_nodeModels.find(connection.m_sourceId);
     assert(sourceIt != m_nodeModels.end());
     const auto targetIt = m_nodeModels.find(connection.m_targetId);
     assert(targetIt != m_nodeModels.end());
     QtNodes::PortIndex portIndexOut =
-        sourceIt.second->getPortAtPath(scope, QtNodes::PortType::Out, connection.m_sourcePath);
+        sourceIt->second->getPortAtPath(scope, QtNodes::PortType::Out, connection.m_sourcePath);
     QtNodes::PortIndex portIndexIn =
-        targetIt.second->getPortAtPath(scope, QtNodes::PortType::In, connection.m_targetPath);
+        targetIt->second->getPortAtPath(scope, QtNodes::PortType::In, connection.m_targetPath);
     return QtNodes::ConnectionId{connection.m_sourceId, portIndexOut, connection.m_targetId, portIndexIn};
 }
 
-ConnectionDescription
+babelwires::ConnectionDescription
 babelwires::ProjectGraphModel::createConnectionDescriptionFromConnectionId(AccessModelScope& scope,
                                                                            const QtNodes::ConnectionId& connectionId) {
-    const auto sourceIt = m_nodeModels.find(connectionId.outPortId);
+    const auto sourceIt = m_nodeModels.find(connectionId.outNodeId);
     assert(sourceIt != m_nodeModels.end());
-    const auto targetIt = m_nodeModels.find(connectionId.inPortId);
+    const auto targetIt = m_nodeModels.find(connectionId.inNodeId);
     assert(targetIt != m_nodeModels.end());
-    const Path sourcePath = sourceIt.second->getPathAtPort(scope, QtNodes::PortType::Out, c.outPortIndex);
-    const Path targetPath = targetIt.second->getPathAtPort(scope, QtNodes::PortType::In, c.inPortIndex);
-    return ConnectionDescription{connectionId.m_sourceId, std::move(sourcePath), connectionId.m_targetId,
+    const Path sourcePath = sourceIt->second->getPathAtPort(scope, QtNodes::PortType::Out, connectionId.outPortIndex);
+    const Path targetPath = targetIt->second->getPathAtPort(scope, QtNodes::PortType::In, connectionId.inPortIndex);
+    return ConnectionDescription{connectionId.outNodeId, std::move(sourcePath), connectionId.inNodeId,
                                  std::move(targetPath)};
 }
 
-void babelwires::ProjectGraphModel::addToConnectionCache(const ConnectionId& connectionId) {
-    const auto sourceIt = m_nodeModels.find(connectionId.outPortId);
+void babelwires::ProjectGraphModel::addToConnectionCache(const QtNodes::ConnectionId& connectionId) {
+    const auto sourceIt = m_nodeModels.find(connectionId.outNodeId);
     assert(sourceIt != m_nodeModels.end());
-    sourceIt.second->addOutConnection(connectionId);
-    const auto targetIt = m_nodeModels.find(connectionId.inPortId);
+    sourceIt->second->addOutConnection(connectionId);
+    const auto targetIt = m_nodeModels.find(connectionId.inNodeId);
     assert(targetIt != m_nodeModels.end());
-    targetIt.second->addInConnection(connectionId);
+    targetIt->second->addInConnection(connectionId);
 }
 
-void babelwires::ProjectGraphModel::removeFromConnectionCache(const ConnectionId& connectionId) {
-    const auto sourceIt = m_nodeModels.find(connectionId.outPortId);
+void babelwires::ProjectGraphModel::removeFromConnectionCache(const QtNodes::ConnectionId& connectionId) {
+    const auto sourceIt = m_nodeModels.find(connectionId.outNodeId);
     assert(sourceIt != m_nodeModels.end());
-    sourceIt.second->removeOutConnection(connectionId);
-    const auto targetIt = m_nodeModels.find(connectionId.inPortId);
+    sourceIt->second->removeOutConnection(connectionId);
+    const auto targetIt = m_nodeModels.find(connectionId.inNodeId);
     assert(targetIt != m_nodeModels.end());
-    targetIt.second->removeInConnection(connectionId);
+    targetIt->second->removeInConnection(connectionId);
 }
 
 void babelwires::ProjectGraphModel::addConnectionToFlowScene(const ConnectionDescription& connection) {
     AccessModelScope scope(*this);
-    const QtNodes::ConnectionId connectionId = createConnectionIdFromConnection(scope, connection);
+    const QtNodes::ConnectionId connectionId = createConnectionIdFromConnectionDescription(scope, connection);
     connectionCreated(connectionId);
     addToConnectionCache(connectionId);
 }
 
 void babelwires::ProjectGraphModel::removeConnectionFromFlowScene(const ConnectionDescription& connection) {
-    removeFromConnectionCache(connectionId);
     AccessModelScope scope(*this);
-    const QtNodes::ConnectionId connectionId = createConnectionIdFromConnection(scope, connection);
+    const QtNodes::ConnectionId connectionId = createConnectionIdFromConnectionDescription(scope, connection);
     removeFromConnectionCache(connectionId);
     connectionDeleted(connectionId);
 }
@@ -125,10 +133,10 @@ void babelwires::ProjectGraphModel::removeNodeFromFlowScene(NodeId nodeId) {
     nodeDeleted(nodeId);
 }
 
-std::unordered_set<NodeId> babelwires::ProjectGraphModel::allNodeIds() const {
-    AccessModelScope scope(this);
+std::unordered_set<QtNodes::NodeId> babelwires::ProjectGraphModel::allNodeIds() const {
+    AccessModelScope scope(*this);
     const auto& nodes = scope.getProject().getNodes();
-    std::unordered_set<NodeId> nodeIds;
+    std::unordered_set<QtNodes::NodeId> nodeIds;
     nodeIds.reserve(nodes.size());
     for (const auto& pair : nodes) {
         nodeIds.insert(pair.first);
@@ -136,119 +144,120 @@ std::unordered_set<NodeId> babelwires::ProjectGraphModel::allNodeIds() const {
     return nodeIds;
 }
 
-std::unordered_set<ConnectionId> babelwires::ProjectGraphModel::allConnectionIds(QtNodes::NodeId const nodeId) const {
+std::unordered_set<QtNodes::ConnectionId> babelwires::ProjectGraphModel::allConnectionIds(QtNodes::NodeId const nodeId) const {
     // Because rows can be collapsed, the connectionInfo structure in the project cannot be used for this.
     const auto nodeIt = m_nodeModels.find(nodeId);
     assert(nodeIt != m_nodeModels.end());
-    return *nodeIt.second->getAllConnectionIds();
+    return *nodeIt->second->getAllConnectionIds();
 }
 
-std::unordered_set<ConnectionId> babelwires::ProjectGraphModel::connections(QtNodes::NodeId nodeId, PortType portType,
-                                                                            PortIndex index) const {
+std::unordered_set<QtNodes::ConnectionId> babelwires::ProjectGraphModel::connections(QtNodes::NodeId nodeId, QtNodes::PortType portType,
+    QtNodes::PortIndex index) const {
     const auto nodeIt = m_nodeModels.find(nodeId);
     assert(nodeIt != m_nodeModels.end());
-    return nodeIt.second->getConnections(portType, index);
-};
+    return nodeIt->second->getConnections(portType, index);
+}
 
-bool babelwires::ProjectGraphModel::connectionExists(ConnectionId const connectionId) const {
-    const auto nodeIt = m_nodeModels.find(connectionId.inPortId);
+bool babelwires::ProjectGraphModel::connectionExists(QtNodes::ConnectionId const connectionId) const {
+    const auto nodeIt = m_nodeModels.find(connectionId.inNodeId);
     assert(nodeIt != m_nodeModels.end());
-    return nodeIt.second->isInConnection();
-};
+    return nodeIt->second->isInConnection(connectionId);
+}
 
-bool babelwires::ProjectGraphModel::connectionPossible(ConnectionId const connectionId) const {
+bool babelwires::ProjectGraphModel::connectionPossible(QtNodes::ConnectionId const connectionId) const {
     // TODO
     return true;
-};
+}
 
-void babelwires::ProjectGraphModel::addConnection(ConnectionId const connectionId) {
+void babelwires::ProjectGraphModel::addConnection(QtNodes::ConnectionId const connectionId) {
     addToConnectionCache(connectionId);
-    auto connectionDescription = createConnectionDescriptionFromConnectionId(connectionId);
+    AccessModelScope scope(*this);
+    auto connectionDescription = createConnectionDescriptionFromConnectionId(scope, connectionId);
     scheduleCommand(connectionDescription.getConnectionCommand());
     // TODO
-    m_projectObserver.ignoreAddedConnection(std::move(modelInfo));
-};
+    m_projectObserver.ignoreAddedConnection(std::move(connectionDescription));
+}
 
 bool babelwires::ProjectGraphModel::nodeExists(QtNodes::NodeId const nodeId) const {
     return (m_nodeModels.find(nodeId) != m_nodeModels.end());
-};
+}
 
-QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, NodeRole role) const {
+QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes::NodeRole role) const {
     const auto it = m_nodeModels.find(nodeId);
     assert(it != m_nodeModels.end());
-    const NodeNodeModel& nodeModel = *it.second;
+    const NodeNodeModel& nodeModel = *it->second;
     switch (role) {
-        case NodeRole::Type:
+        case QtNodes::NodeRole::Type:
             // TODO This should maybe be something like processor / value / source / target.
             return "TODO type";
-        case NodeRole::Position: {
+        case QtNodes::NodeRole::Position: {
             AccessModelScope scope(*this);
             const Node* const node = scope.getProject().getNode(nodeId);
-            const UiPosition position = node.getUiPosition();
+            const UiPosition position = node->getUiPosition();
             return QPointF{position.m_x, position.m_y};
         }
-        case NodeRole::Size: {
+        case QtNodes::NodeRole::Size: {
             AccessModelScope scope(*this);
             const Node* const node = scope.getProject().getNode(nodeId);
-            const UiSize size = node.getUiSize();
+            const UiSize size = node->getUiSize();
             return QSize{size.m_width, nodeModel.embeddedWidget()->height()};
         }
-        case NodeRole::CaptionVisible:
+        case QtNodes::NodeRole::CaptionVisible:
             return true;
-        case NodeRole::Caption:
+        case QtNodes::NodeRole::Caption:
             return nodeModel.caption();
-        case NodeRole::InPortCount:
+        case QtNodes::NodeRole::InPortCount:
             return nodeModel.nPorts(QtNodes::PortType::In);
-        case NodeRole::OutPortCount:
+        case QtNodes::NodeRole::OutPortCount:
             return nodeModel.nPorts(QtNodes::PortType::Out);
-        case NodeRole::Widget:
+        case QtNodes::NodeRole::Widget:
             return nodeModel.embeddedWidget();
 
         // Unimplemented.
-        case NodeRole::Style:
-        case NodeRole::InternalData:
+        case QtNodes::NodeRole::Style:
+        case QtNodes::NodeRole::InternalData:
         default:
             assert(false && "Not expecting this kind of node data to be queried");
             return {};
     }
-};
+}
 
-QtNodes::NodeFlags babelwires::ProjectGraphModel::nodeFlags(NodeId nodeId) const {
+QtNodes::NodeFlags babelwires::ProjectGraphModel::nodeFlags(QtNodes::NodeId nodeId) const {
     // TODO Distinguish between horizontal and vertical resizing.
     return QtNodes::NodeFlag::Resizable;
-};
+}
 
-bool babelwires::ProjectGraphModel::setNodeData(NodeId nodeId, NodeRole role, QVariant value) {
+bool babelwires::ProjectGraphModel::setNodeData(QtNodes::NodeId nodeId, QtNodes::NodeRole role, QVariant value) {
     switch (role) {
-        case NodeRole::Position:
+        case QtNodes::NodeRole::Position:
             nodeMoved(nodeId, value.value<QPointF>());
-        case NodeRole::Size:
+        case QtNodes::NodeRole::Size:
             nodeResized(nodeId, value.value<QSize>());
         default:
             assert(false && "Not expecting this kind of node data to change");
             return false;
     }
-};
+}
 
-QVariant babelwires::ProjectGraphModel::portData(NodeId nodeId, PortType portType, PortIndex index,
-                                                 PortRole role) const {};
+QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index,
+    QtNodes::PortRole role) const {};
 
-bool babelwires::ProjectGraphModel::deleteConnection(ConnectionId const connectionId) {
+bool babelwires::ProjectGraphModel::deleteConnection(QtNodes::ConnectionId const connectionId) {
     removeFromConnectionCache(connectionId);
     AccessModelScope scope(*this);
     auto connectionDescription = createConnectionDescriptionFromConnectionId(scope, connectionId);
     scheduleCommand(connectionDescription.getDisconnectionCommand());
     // TODO
-    m_projectObserver.ignoreRemovedConnection(std::move(modelInfo));
-};
+    m_projectObserver.ignoreRemovedConnection(std::move(connectionDescription));
+}
 
-bool babelwires::ProjectGraphModel::deleteNode(NodeId const nodeId) {
+bool babelwires::ProjectGraphModel::deleteNode(QtNodes::NodeId const nodeId) {
     switch (m_state) {
         case State::ListeningToFlowScene: {
             auto it = m_nodeModels.find(nodeId);
             assert(it != m_nodeModels.end());
             // This assert is non-essential, but it helps establish assumptions about the behaviour of the flow scene.
-            assert(it.second->getAllConnectionIds().size() == 0 && "Node was removed while there were active connections");
+            assert(it->second->getAllConnectionIds().size() == 0 && "Node was removed while there were active connections");
             m_nodeModels.erase(it);
             scheduleCommand(std::make_unique<RemoveNodeCommand>("Remove node", nodeId));
         }
@@ -260,15 +269,14 @@ bool babelwires::ProjectGraphModel::deleteNode(NodeId const nodeId) {
             assert(false && "Unexpected state");
         }
     }
-};
+}
 
-void babelwires::ProjectGraphModel::onNodeMoved(QtNodes::NodeId nodeId, const QPointF& newLocation) {
+void babelwires::ProjectGraphModel::nodeMoved(QtNodes::NodeId nodeId, const QPointF& newLocation) {
     switch (m_state) {
         case State::ListeningToFlowScene: {
             const auto it = m_nodeModels.find(nodeId);
             assert(it != m_nodeModels.end());
             NodeNodeModel& nodeNodeModel = *it->second;
-            auto& nodeNodeModel = dynamic_cast<NodeNodeModel&>(dataModel);
 
             AccessModelScope scope(*this);
             const Node* node = scope.getProject().getNode(nodeId);
@@ -292,13 +300,12 @@ void babelwires::ProjectGraphModel::onNodeMoved(QtNodes::NodeId nodeId, const QP
     }
 }
 
-void babelwires::ProjectGraphModel::onNodeResized(QtNodes::NodeId nodeId, const QSize& newSize) {
+void babelwires::ProjectGraphModel::nodeResized(QtNodes::NodeId nodeId, const QSize& newSize) {
     switch (m_state) {
         case State::ListeningToFlowScene: {
             const auto it = m_nodeModels.find(nodeId);
             assert(it != m_nodeModels.end());
             NodeNodeModel& nodeNodeModel = *it->second;
-            auto& nodeNodeModel = dynamic_cast<NodeNodeModel&>(dataModel);
 
             AccessModelScope scope(*this);
             const Node* node = scope.getProject().getNode(nodeId);
@@ -329,7 +336,7 @@ void babelwires::ProjectGraphModel::scheduleCommand(std::unique_ptr<Command<Proj
     } else {
         m_scheduledCommand = std::move(command);
         // Schedule the execution of the command.
-        QTimer::singleShot(0, this, &ProjectBridge::onIdle);
+        QTimer::singleShot(0, this, &ProjectGraphModel::onIdle);
     }
 }
 
