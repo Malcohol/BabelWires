@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/uiMain.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/mainWindow.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 

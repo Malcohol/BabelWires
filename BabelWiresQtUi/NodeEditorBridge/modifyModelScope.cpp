@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>

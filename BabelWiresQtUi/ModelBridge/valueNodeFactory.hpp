@@ -7,8 +7,6 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ModelBridge/baseNodeModel.hpp>
-
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 namespace babelwires {

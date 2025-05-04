@@ -9,12 +9,12 @@
 
 #include <BabelWiresQtUi/LogWindow/logWindow.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
-#include <BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp>
-#include <BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp>
-#include <BabelWiresQtUi/ModelBridge/valueNodeFactory.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
+//#include <BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp>
+//#include <BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp>
+//#include <BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp>
+//#include <BabelWiresQtUi/ModelBridge/valueNodeFactory.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>

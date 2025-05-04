@@ -16,6 +16,8 @@
 
 #include <QtNodes/AbstractGraphModel>
 
+#include <QGraphicsView>
+
 namespace babelwires {
     class Project;
     struct ProjectContext;
@@ -30,7 +32,7 @@ namespace babelwires {
     class MainWindow;
     class NodeNodeModel;
 
-    class ProjectGraphModel : public AbstractGraphModel {
+    class ProjectGraphModel : public QtNodes::AbstractGraphModel {
       public:
         ProjectGraphModel(Project& project, CommandManager<Project>& commandManager, UiProjectContext& projectContext);
 

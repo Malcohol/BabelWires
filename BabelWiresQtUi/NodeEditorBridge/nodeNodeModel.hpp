@@ -8,7 +8,11 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectIds.hpp>
-#include <BabelWiresQtUi/ModelBridge/baseNodeModel.hpp>
+
+#include <QtNodes/Definitions>
+#include <QtNodes/NodeData>
+
+#include <vector>
 
 namespace babelwires {
     class ValueTreeNode;
