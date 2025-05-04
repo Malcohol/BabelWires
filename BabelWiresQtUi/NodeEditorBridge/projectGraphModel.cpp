@@ -6,14 +6,14 @@
  */
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
-#include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Commands/resizeNodeCommand.hpp>
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
+#include <BabelWiresLib/Project/Commands/resizeNodeCommand.hpp>
+#include <BabelWiresLib/Project/Nodes/node.hpp>
 
-#include <BabelWiresQtUi/NodeEditorBridge/nodeNodeModel.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/nodeNodeModel.hpp>
 
 #include <BabelWiresLib/Project/project.hpp>
 
@@ -50,7 +50,7 @@ babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManage
 
 QtNodes::ConnectionId
 babelwires::ProjectGraphModel::createConnectionIdFromConnectionDescription(AccessModelScope& scope,
-                                                                const ConnectionDescription& connection) {
+                                                                           const ConnectionDescription& connection) {
     const auto sourceIt = m_nodeModels.find(connection.m_sourceId);
     assert(sourceIt != m_nodeModels.end());
     const auto targetIt = m_nodeModels.find(connection.m_targetId);
@@ -134,25 +134,25 @@ void babelwires::ProjectGraphModel::removeNodeFromFlowScene(NodeId nodeId) {
 }
 
 std::unordered_set<QtNodes::NodeId> babelwires::ProjectGraphModel::allNodeIds() const {
-    AccessModelScope scope(*this);
-    const auto& nodes = scope.getProject().getNodes();
     std::unordered_set<QtNodes::NodeId> nodeIds;
-    nodeIds.reserve(nodes.size());
-    for (const auto& pair : nodes) {
+    nodeIds.reserve(m_nodeModels.size());
+    for (const auto& pair : m_nodeModels) {
         nodeIds.insert(pair.first);
     }
     return nodeIds;
 }
 
-std::unordered_set<QtNodes::ConnectionId> babelwires::ProjectGraphModel::allConnectionIds(QtNodes::NodeId const nodeId) const {
+std::unordered_set<QtNodes::ConnectionId>
+babelwires::ProjectGraphModel::allConnectionIds(QtNodes::NodeId const nodeId) const {
     // Because rows can be collapsed, the connectionInfo structure in the project cannot be used for this.
     const auto nodeIt = m_nodeModels.find(nodeId);
     assert(nodeIt != m_nodeModels.end());
-    return *nodeIt->second->getAllConnectionIds();
+    return nodeIt->second->getAllConnectionIds();
 }
 
-std::unordered_set<QtNodes::ConnectionId> babelwires::ProjectGraphModel::connections(QtNodes::NodeId nodeId, QtNodes::PortType portType,
-    QtNodes::PortIndex index) const {
+std::unordered_set<QtNodes::ConnectionId> babelwires::ProjectGraphModel::connections(QtNodes::NodeId nodeId,
+                                                                                     QtNodes::PortType portType,
+                                                                                     QtNodes::PortIndex index) const {
     const auto nodeIt = m_nodeModels.find(nodeId);
     assert(nodeIt != m_nodeModels.end());
     return nodeIt->second->getConnections(portType, index);
@@ -239,8 +239,26 @@ bool babelwires::ProjectGraphModel::setNodeData(QtNodes::NodeId nodeId, QtNodes:
     }
 }
 
-QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index,
-    QtNodes::PortRole role) const {};
+QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes::PortType portType,
+                                                 QtNodes::PortIndex index, QtNodes::PortRole role) const {
+    // TODO
+    switch (role) {
+        case QtNodes::PortRole::DataType: ///< `QString` describing the port data type.
+            return "TODO";
+        case QtNodes::PortRole::ConnectionPolicyRole: ///< `enum` ConnectionPolicyRole
+            // TODO Not sure what option is needed here. Only collapsing should create many in connections at a single
+            // port.
+            return QVariant::fromValue(QtNodes::ConnectionPolicy::Many);
+        case QtNodes::PortRole::CaptionVisible: ///< `bool` for caption visibility.
+            return false;
+        case QtNodes::PortRole::Caption: ///< `QString` for port caption.
+            return "";
+        default:
+        case QtNodes::PortRole::Data: ///< `std::shared_ptr<NodeData>`.
+            assert(false);
+            return {};
+    };
+}
 
 bool babelwires::ProjectGraphModel::deleteConnection(QtNodes::ConnectionId const connectionId) {
     removeFromConnectionCache(connectionId);
@@ -256,8 +274,10 @@ bool babelwires::ProjectGraphModel::deleteNode(QtNodes::NodeId const nodeId) {
         case State::ListeningToFlowScene: {
             auto it = m_nodeModels.find(nodeId);
             assert(it != m_nodeModels.end());
-            // This assert is non-essential, but it helps establish assumptions about the behaviour of the flow scene.
-            assert(it->second->getAllConnectionIds().size() == 0 && "Node was removed while there were active connections");
+            // This assert is non-essential, but it helps establish assumptions about the behaviour of the flow
+            // scene.
+            assert(it->second->getAllConnectionIds().size() == 0 &&
+                   "Node was removed while there were active connections");
             m_nodeModels.erase(it);
             scheduleCommand(std::make_unique<RemoveNodeCommand>("Remove node", nodeId));
         }

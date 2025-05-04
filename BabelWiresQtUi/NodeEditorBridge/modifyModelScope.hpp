@@ -19,11 +19,15 @@ namespace babelwires {
         ModifyModelScope(ProjectGraphModel& bridge);
         virtual ~ModifyModelScope();
 
+        const CommandManager<Project>& getCommandManager() const;
         CommandManager<Project>& getCommandManager();
+
+        const Project& getProject() const;
         Project& getProject();
 
       private:
         ProjectGraphModel::State m_previousState;
+        ProjectGraphModel& m_projectGraphModel;
     };
 
 } // namespace babelwires

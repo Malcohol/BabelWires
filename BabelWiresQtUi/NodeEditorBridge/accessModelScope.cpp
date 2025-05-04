@@ -7,15 +7,15 @@
  **/
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 
-babelwires::AccessModelScope::AccessModelScope(ProjectBridge& bridge)
+babelwires::AccessModelScope::AccessModelScope(const ProjectGraphModel& bridge)
     : m_projectGraphModel(bridge) {}
 
 babelwires::AccessModelScope::~AccessModelScope() {}
 
-const babelwires::Project& babelwires::AccessModelScope::getProject() {
+const babelwires::Project& babelwires::AccessModelScope::getProject() const {
     return m_projectGraphModel.m_project;
 }
 
-const babelwires::CommandManager<babelwires::Project>& babelwires::AccessModelScope::getCommandManager() {
+const babelwires::CommandManager<babelwires::Project>& babelwires::AccessModelScope::getCommandManager() const {
     return m_projectGraphModel.m_commandManager;
 }

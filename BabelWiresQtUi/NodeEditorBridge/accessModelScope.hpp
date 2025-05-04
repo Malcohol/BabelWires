@@ -16,14 +16,14 @@ namespace babelwires {
     /// Note: This class is intended to future proofs the system for the day when concurrency is added to the project.
     class AccessModelScope {
       public:
-        AccessModelScope(ProjectGraphModel& bridge);
-        virtual ~AccessModelScope();
+        AccessModelScope(const ProjectGraphModel& bridge);
+        ~AccessModelScope();
 
-        const CommandManager<Project>& getCommandManager();
-        const Project& getProject();
+        const CommandManager<Project>& getCommandManager() const;
+        const Project& getProject() const;
 
       protected:
-        ProjectGraphModel& m_projectGraphModel;
+        const ProjectGraphModel& m_projectGraphModel;
     };
 
 } // namespace babelwires
