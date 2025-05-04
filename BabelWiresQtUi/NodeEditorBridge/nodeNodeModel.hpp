@@ -53,6 +53,13 @@ namespace babelwires {
         /// Return the model for the embedded widget.
         NodeContentsModel& getModel();
 
+        void addInConnection(const ConnectionId& connectionId);
+        void addOutConnection(const ConnectionId& connectionId);
+        std::unordered_set<ConnectionId> getAllConnectionIds() const;
+        std::unordered_set<ConnectionId> getConnections(PortType portType, PortIndex index) const;
+        bool isInConnection(const ConnectionId& connectionId) const;
+        bool isOutConnection(const ConnectionId& connectionId) const;
+
       public slots:
         void customContextMenuRequested(const QPoint& pos);
 
@@ -67,6 +74,11 @@ namespace babelwires {
 
       protected:
         babelwires::NodeId m_nodeId;
+
+        // Cache knowledge about connections: Collapsed rows makes it awkward to extract from the model
+        // TODO: Push knowledge about collapsed collections in to the data layer.
+        std::vector<QtNodes::ConnectionId> m_inConnections;
+        std::vector<QtNodes::ConnectionId> m_outConnections;
 
         NodeContentsView* m_view;
         NodeContentsModel* m_model;

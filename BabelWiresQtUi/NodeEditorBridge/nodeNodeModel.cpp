@@ -145,3 +145,78 @@ babelwires::NodeContentsModel& babelwires::NodeNodeModel::getModel() {
     assert(m_model && "Model should always exist");
     return *m_model;
 }
+
+void babelwires::NodeNodeModel::addInConnection(const ConnectionId& connectionId) {
+    assert(!isInConnection(connectionId));
+    m_inConnections.emplace_back(connectionId);
+}
+
+void babelwires::NodeNodeModel::addOutConnection(const ConnectionId& connectionId) {
+    assert(!isOutConnection(connectionId));
+    m_outConnections.emplace_back(connectionId);
+}
+
+void babelwires::NodeNodeModel::removeInConnection(const ConnectionId& connectionId) {
+    assert(isInConnection(connectionId));
+    const auto it = std::find(m_inConnections.begin(), m_inConnections.end(), connectionId);
+    assert(it != m_inConnections.end());
+    m_inConnections.erase(it);
+}
+
+void babelwires::NodeNodeModel::removeOutConnection(const ConnectionId& connectionId) {
+    assert(isOutConnection(connectionId));
+    const auto it = std::find(m_outConnections.begin(), m_outConnections.end(), connectionId);
+    assert(it != m_outConnections.end());
+    m_outConnections.erase(it);
+}
+
+std::unordered_set<ConnectionId> babelwires::NodeNodeModel::getAllConnectionIds() const {
+    std::unordered_set<ConnectionId> connections;
+    connections.reserve(m_inConnections.size() + m_outConnections.size());
+    for (const auto& inConnection : m_inConnections) {
+        connections.insert(inConnection);
+    }
+    for (const auto& outConnection : m_outConnections) {
+        connections.insert(outConnection);
+    }
+    return connections;
+}
+
+std::unordered_set<ConnectionId> babelwires::NodeNodeModel::getConnections(QtNodes::NodeId nodeId, PortType portType,
+                                                                            PortIndex index) const {
+    std::unordered_set<ConnectionId> connectionsAtPort;
+    if (portType == QtNodes::PortType::In) {
+        for (const auto& connectionId : m_inConnections) {
+            if (connectionId.inPortIndex) {
+                connectionsAtPort.insert(connectionId);
+            }
+        }
+    } else {
+        for (const auto& connectionId : m_outConnections) {
+            if (connectionId.outPortIndex) {
+                connectionsAtPort.insert(connectionId);
+            }
+        }
+    }
+    return connectionsAtPort;
+};
+
+bool babelwires::NodeNodeModel::isInConnection(const QtNodes::ConnectionId& connectionId) const {
+    for (const auto& inConnectionId : m_inConnections) {
+        if ((inConnectionId.inPortIndex == connectionId.inPortIndex) && (inConnectionId.outNodeId == connectionId.outNodeId)
+        && (inConnectionId.outPortIndex == outConnectionId.outPortIndex)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool babelwires::NodeNodeModel::isOutConnection(const QtNodes::ConnectionId& connectionId) const {
+    for (const auto& outConnectionId : m_outConnections) {
+        if ((outConnectionId.outPortIndex == connectionId.outPortIndex) && (outConnectionId.inNodeId == connectionId.inNodeId)
+        && (outConnectionId.inPortIndex == outConnectionId.inPortIndex)) {
+            return true;
+        }
+    }
+    return false;
+}
