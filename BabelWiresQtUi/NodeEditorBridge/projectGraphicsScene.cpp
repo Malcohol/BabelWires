@@ -8,14 +8,14 @@
 
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/processorNodeFactory.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/sourceFileNodeFactory.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/targetFileNodeFactory.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/valueNodeFactory.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
 #include <QHeaderView>
 #include <QLineEdit>
@@ -24,10 +24,14 @@
 #include <QWidgetAction>
 
 babelwires::ProjectGraphicsScene::ProjectGraphicsScene(ProjectGraphModel& projectGraphModel)
-    : BasicGraphicsScene(projectGraphModel)
+    : BasicGraphicsScene(projectGraphModel) {}
 
 void babelwires::ProjectGraphicsScene::addNodeFactory(std::unique_ptr<NodeFactory> nodeFactory) {
     m_nodeFactories.emplace_back(std::move(nodeFactory));
+}
+
+void babelwires::ProjectGraphicsScene::setWidgetForDialogs(QWidget* widgetForDialogs) {
+    m_widgetForDialogs = widgetForDialogs;
 }
 
 QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos) {
@@ -57,10 +61,10 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
     for (const auto& nodeFactory : m_nodeFactories) {
         auto category = new QTreeWidgetItem(treeView);
         category->setText(0, nodeFactory->getCategoryName());
-        category->setFlags(item->flags() & ~Qt::ItemIsSelectable);
+        category->setFlags(category->flags() & ~Qt::ItemIsSelectable);
         for (const auto& factoryName : nodeFactory->getFactoryNames()) {
-            auto item = new QTreeWidgetItem(parent);
-            item->setText(0, factoryName);    
+            auto item = new QTreeWidgetItem(category);
+            item->setText(0, factoryName);
         }
     }
 
@@ -74,14 +78,15 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
         QTreeWidgetItem* parent = item->parent();
         assert(parent && "non-parents should be selectable");
 
-        const auto factoryIt = std::find_if(m_nodeFactories.begin(), m_nodeFactories.end(), [parent](const auto& nodeFactory) {
-            return nodeFactory->getCategoryName() == parent->text(0);
-        });
+        const auto factoryIt =
+            std::find_if(m_nodeFactories.begin(), m_nodeFactories.end(), [parent](const auto& nodeFactory) {
+                return nodeFactory->getCategoryName() == parent->text(0);
+            });
         assert(factoryIt != m_nodeFactories.end());
 
-        ProjectGraphModel& projectGraphModel = qobject_cast<ProjectGraphModel&>(graphModel());
+        ProjectGraphModel* projectGraphModel = qobject_cast<ProjectGraphModel*>(&graphModel());
 
-        factoryIt->createNode(projectGraphModel, item->text(0), scenePos);
+        (*factoryIt)->createNode(*projectGraphModel, item->text(0), scenePos, m_widgetForDialogs);
 
         modelMenu->close();
     });

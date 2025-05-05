@@ -17,31 +17,39 @@
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-babelwires::SourceFileNodeFactory::SourceFileNodeFactory(const SourceFileFormatRegistry* sourceFileFormat)
+#include <Common/Identifiers/identifierRegistry.hpp> 
+
+babelwires::SourceFileNodeFactory::SourceFileNodeFactory(const SourceFileFormatRegistry& sourceFileFormatRegistry)
     : m_sourceFileFormatRegistry(sourceFileFormatRegistry) {}
 
-QString babelwires::SourceFileNodeFactory::name() const {
+QString babelwires::SourceFileNodeFactory::getCategoryName() const {
     return m_sourceFileFormatRegistry.getRegistryName().c_str();
 }
 
 QList<QString> babelwires::SourceFileNodeFactory::getFactoryNames() const {
-    // TODO
+    QList<QString> factoryNames;
+    auto identifierRegistry = IdentifierRegistry::read();
+    for (const auto& entry : m_sourceFileFormatRegistry) {
+        factoryNames.append(identifierRegistry->getName(entry.getIdentifier()).c_str());
+    }
+    return factoryNames;
 }
 
 void babelwires::SourceFileNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName,
-                                                   QPointF const scenePos, QWidget* parentForDialogs) {
-    const SourceFileFormatFactory* sourceFileFormatFactory = m_sourceFileFormatRegistry.getEntryByName(factoryName);
-    assert(sourceFileFormatFactory);
+                                                   QPointF scenePos, QWidget* parentForDialogs) {
+    const SourceFileFormat* sourceFileFormat = m_sourceFileFormatRegistry.getEntryByName(factoryName.toStdString());
+    assert(sourceFileFormat);
 
-    QString filePath = showOpenFileDialog(m_projectGraphModel->getFlowGraphWidget(), *m_sourceFileFormat);
+    QString filePath = showOpenFileDialog(parentForDialogs, *sourceFileFormat);
 
     if (!filePath.isNull()) {
-        auto newDataPtr = std::make_unique<SourceFileNodeData>();
-        newDataPtr->m_factoryIdentifier = sourceFileFormatFactory->getIdentifier();
-        newDataPtr->m_filePath = filePath.toStdString();
-        newDataPtr->m_factoryVersion = sourceFileFormatFactory->getVersion();
-        // TODO position
+        auto newNodeData = std::make_unique<SourceFileNodeData>();
+        newNodeData->m_factoryIdentifier = sourceFileFormat->getIdentifier();
+        newNodeData->m_filePath = filePath.toStdString();
+        newNodeData->m_factoryVersion = sourceFileFormat->getVersion();
+        newNodeData->m_uiData.m_uiPosition.m_x = scenePos.x();
+        newNodeData->m_uiData.m_uiPosition.m_y = scenePos.y();
 
-        projectGraphModel->scheduleCommand(std::make_unique<AddNodeCommand>("Add source file", std::move(newDataPtr)));
+        projectGraphModel.scheduleCommand(std::make_unique<AddNodeCommand>("Add source file", std::move(newNodeData)));
     }
 }

@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/NodeEditorBridge/Factories/nodeFactory.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/nodeFactory.hpp>
 
 namespace babelwires {
     class TargetFileFormatRegistry;
@@ -20,7 +20,7 @@ namespace babelwires {
 
         QList<QString> getFactoryNames() const override;
 
-        void createNode(ProjectGraphModel& projectGraphModel, QString factoryName, QPointF const scenePos,
+        void createNode(ProjectGraphModel& projectGraphModel, QString factoryName, QPointF scenePos,
                         QWidget* parentForDialogs) override;
 
       private:

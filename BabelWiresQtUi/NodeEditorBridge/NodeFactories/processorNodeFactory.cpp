@@ -14,6 +14,8 @@
 #include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 
+#include <Common/Identifiers/identifierRegistry.hpp> 
+
 babelwires::ProcessorNodeFactory::ProcessorNodeFactory(const ProcessorFactoryRegistry& processorFactoryRegistry)
     : m_processorFactoryRegistry(processorFactoryRegistry) {}
 
@@ -22,18 +24,24 @@ QString babelwires::ProcessorNodeFactory::getCategoryName() const {
 }
 
 QList<QString> babelwires::ProcessorNodeFactory::getFactoryNames() const {
-    // TODO
+    QList<QString> factoryNames;
+    auto identifierRegistry = IdentifierRegistry::read();
+    for (const auto& entry : m_processorFactoryRegistry) {
+        factoryNames.append(identifierRegistry->getName(entry.getIdentifier()).c_str());
+    }
+    return factoryNames;
 }
 
 void babelwires::ProcessorNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName,
-                                                  QPointF const scenePos, QWidget* parentForDialogs) {
-    const ProcessorFactory* processorFactory = m_processorFactoryRegistry.getEntryByName(factoryName);
+                                                  QPointF scenePos, QWidget* parentForDialogs) {
+    const ProcessorFactory* processorFactory = m_processorFactoryRegistry.getEntryByName(factoryName.toStdString());
     assert(processorFactory);
 
     auto newNodeData = std::make_unique<ProcessorNodeData>();
-    newNodeData->m_factoryIdentifier = m_processorFactory->getIdentifier();
-    newNodeData->m_factoryVersion = m_processorFactory->getVersion();
-    // TODO position
+    newNodeData->m_factoryIdentifier = processorFactory->getIdentifier();
+    newNodeData->m_factoryVersion = processorFactory->getVersion();
+    newNodeData->m_uiData.m_uiPosition.m_x = scenePos.x();
+    newNodeData->m_uiData.m_uiPosition.m_y = scenePos.y();
 
-    projectGraphModel->scheduleCommand(std::make_unique<AddNodeCommand>("Add processor", std::move(newNodeData)));
+    projectGraphModel.scheduleCommand(std::make_unique<AddNodeCommand>("Add processor", std::move(newNodeData)));
 }

@@ -23,8 +23,11 @@ namespace babelwires {
         void addNodeFactory(std::unique_ptr<NodeFactory> nodeFactory);
 
         QMenu* createSceneMenu(QPointF const scenePos) override;
+
+        void setWidgetForDialogs(QWidget* widgetForDialogs);
       private:
         std::vector<std::unique_ptr<NodeFactory>> m_nodeFactories;
+        QWidget* m_widgetForDialogs = nullptr;
     };
 
 } // namespace babelwires

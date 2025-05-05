@@ -2,7 +2,7 @@
  * The MainWindow of the application.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresQtUi/mainWindow.hpp>
@@ -11,33 +11,27 @@
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
-//#include <BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp>
-//#include <BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp>
-//#include <BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp>
-//#include <BabelWiresQtUi/ModelBridge/valueNodeFactory.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphicsScene.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Project/Commands/pasteNodesCommand.hpp>
-#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
+#include <BabelWiresLib/Project/Commands/pasteNodesCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 #include <BabelWiresLib/Project/projectUtilities.hpp>
 #include <BabelWiresLib/Serialization/projectSerialization.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <Common/Log/unifiedLog.hpp>
 #include <Common/exceptions.hpp>
 
-#include <nodes/DataModelRegistry>
-#include <nodes/FlowScene>
-#include <nodes/FlowView>
-#include <nodes/NodeData>
+#include <QtNodes/GraphicsView>
 
 #include <QApplication>
 #include <QClipboard>
@@ -53,36 +47,17 @@
 namespace {
     constexpr char s_initialFilePath[] = "Untitled";
 
-    std::shared_ptr<QtNodes::DataModelRegistry> registerDataModels(babelwires::ProjectGraphModel& projectGraphModel) {
-        auto ret = std::make_shared<QtNodes::DataModelRegistry>();
-
-        const auto& context = projectGraphModel.getContext();
-        for (const auto& f : context.m_sourceFileFormatReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::SourceFileNodeFactory(&projectGraphModel, &f),
-                                                       "Source Files");
-        }
-        for (const auto& f : context.m_targetFileFormatReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::TargetFileNodeFactory(&projectGraphModel, &f),
-                                                       "Target Files");
-        }
-        for (const auto& f : context.m_processorReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::ProcessorNodeFactory(&projectGraphModel, &f),
-                                                       "Processors");
-        }
-        for (const auto& t : context.m_typeSystem.getAllPrimitiveTypes()) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::ValueNodeFactory(&projectGraphModel, t), "Values");
-        }
-
-        return ret;
-    }
 } // namespace
 
 babelwires::MainWindow::MainWindow(ProjectGraphModel& projectGraphModel, UnifiedLog& log)
     : m_projectGraphModel(projectGraphModel)
     , m_userLogger(log) {
-    auto scene = std::make_unique<QtNodes::FlowScene>(registerDataModels(projectGraphModel));
-    projectGraphModel.connectToFlowScene(*scene);
-    setCentralWidget(new QtNodes::FlowView(scene.release()));
+
+    auto scene = new ProjectGraphicsScene(projectGraphModel);
+    auto view = new QtNodes::GraphicsView(scene);
+    scene->setWidgetForDialogs(view);
+
+    setCentralWidget(view);
 
     createActions();
     createMenus();
@@ -154,7 +129,8 @@ void babelwires::MainWindow::createActions() {
     m_copyAction->setEnabled(false);
     connect(m_copyAction.get(), &QAction::triggered, this, &MainWindow::copy);
 
-    connect(&m_projectGraphModel, &ProjectGraphModel::nodeSelectionChanged, this, &MainWindow::onNodeSelectionChanged);
+    // TODO
+    //connect(&m_projectGraphModel, &ProjectGraphModel::nodeSelectionChanged, this, &MainWindow::onNodeSelectionChanged);
 
     m_pasteAction = std::make_unique<QAction>(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
     m_pasteAction->setShortcuts(QKeySequence::Paste);
@@ -296,8 +272,8 @@ void babelwires::MainWindow::openProject() {
                     std::string filePathStr = filePath.toStdString();
                     m_userLogger.logInfo() << "Open project \"" << filePathStr << '"';
                     ModifyModelScope scope(m_projectGraphModel);
-                    ProjectData projectData = ProjectSerialization::loadFromFile(
-                        filePathStr, m_projectGraphModel.getContext(), m_userLogger);
+                    ProjectData projectData =
+                        ProjectSerialization::loadFromFile(filePathStr, m_projectGraphModel.getContext(), m_userLogger);
                     scope.getProject().setProjectData(projectData);
                     setCurrentFilePath(filePath);
                     return;
@@ -339,8 +315,7 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
 QString babelwires::MainWindow::getFullFilePath() const {
     if (!m_currentProjectFileName.isEmpty()) {
         return QFileInfo(m_currentProjectDir + "/" + m_currentProjectFileName).filePath();
-    }
-    else {
+    } else {
         return QString();
     }
 }
@@ -390,7 +365,7 @@ void babelwires::MainWindow::redo() {
 babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
     ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes();
 
-    auto* flowView = dynamic_cast<QtNodes::FlowView*>(centralWidget());
+    auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
     assert(flowView && "Unexpected central widget");
     const QPointF centre = flowView->sceneRect().center();
     UiPosition offset{static_cast<UiCoord>(-centre.x()), static_cast<UiCoord>(-centre.y())};
@@ -433,10 +408,10 @@ void babelwires::MainWindow::paste() {
     std::string asString(contents.data(), contents.length());
 
     try {
-        ProjectData projectData =
-            ProjectSerialization::loadFromString(asString, m_projectGraphModel.getContext(), getFullFilePath().toStdString(), m_userLogger);
+        ProjectData projectData = ProjectSerialization::loadFromString(asString, m_projectGraphModel.getContext(),
+                                                                       getFullFilePath().toStdString(), m_userLogger);
         {
-            auto* flowView = dynamic_cast<QtNodes::FlowView*>(centralWidget());
+            auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
             assert(flowView && "Unexpected central widget");
             const QPointF centre = flowView->sceneRect().center();
             UiPosition offset{static_cast<UiCoord>(centre.x()), static_cast<UiCoord>(centre.y())};

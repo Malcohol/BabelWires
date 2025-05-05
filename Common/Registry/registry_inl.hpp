@@ -63,3 +63,8 @@ template <typename ENTRY> typename babelwires::Registry<ENTRY>::Iterator babelwi
 template <typename ENTRY> typename babelwires::Registry<ENTRY>::Iterator babelwires::Registry<ENTRY>::end() const {
     return m_untypedRegistry.end();
 }
+
+template <typename ENTRY>
+const ENTRY* babelwires::Registry<ENTRY>::getEntryByName(std::string_view name) const {
+    return static_cast<const ENTRY*>(m_untypedRegistry.getEntryByName(name));
+}

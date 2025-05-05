@@ -5,35 +5,41 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/targetFileNodeFactory.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/nodeNodeModel.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
 #include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 
-babelwires::TargetFileNodeFactory::TargetFileNodeFactory(const TargetFileFormatRegistry* targetFileFormat)
+#include <Common/Identifiers/identifierRegistry.hpp> 
+
+babelwires::TargetFileNodeFactory::TargetFileNodeFactory(const TargetFileFormatRegistry& targetFileFormatRegistry)
     : m_targetFileFormatRegistry(targetFileFormatRegistry) {}
 
-QString babelwires::TargetFileNodeFactory::name() const {
+QString babelwires::TargetFileNodeFactory::getCategoryName() const {
     return m_targetFileFormatRegistry.getRegistryName().c_str();
 }
 
 QList<QString> babelwires::TargetFileNodeFactory::getFactoryNames() const {
-    // TODO
+    QList<QString> factoryNames;
+    auto identifierRegistry = IdentifierRegistry::read();
+    for (const auto& entry : m_targetFileFormatRegistry) {
+        factoryNames.append(identifierRegistry->getName(entry.getIdentifier()).c_str());
+    }
+    return factoryNames;
 }
 
-void babelwires::TargetFileNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName,
-    const TargetFileFormatFactory* targetFileFormatFactory = m_targetFileFormatRegistry.getEntryByName(factoryName);
-    assert(targetFileFormatFactory);
+void babelwires::TargetFileNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName, QPointF scenePos, QWidget* parentForDialogs) {
+    const TargetFileFormat* targetFileFormat = m_targetFileFormatRegistry.getEntryByName(factoryName.toStdString());
+    assert(targetFileFormat);
 
-    QPointF const scenePos, QWidget* parentForDialogs) {
-    auto newDataPtr = std::make_unique<TargetFileNodeData>();
-    newDataPtr->m_factoryIdentifier = m_targetFileFormat->getIdentifier();
-    newDataPtr->m_factoryVersion = m_targetFileFormat->getVersion();
-    // TODO position
+    auto newNodeData = std::make_unique<TargetFileNodeData>();
+    newNodeData->m_factoryIdentifier = targetFileFormat->getIdentifier();
+    newNodeData->m_factoryVersion = targetFileFormat->getVersion();
+    newNodeData->m_uiData.m_uiPosition.m_x = scenePos.x();
+    newNodeData->m_uiData.m_uiPosition.m_y = scenePos.y();
 
-    projectGraphModel->executeAddNodeCommand(std::make_unique<AddNodeCommand>("Add target file", std::move(newDataPtr)));
+    projectGraphModel.scheduleCommand(std::make_unique<AddNodeCommand>("Add target file", std::move(newNodeData)));
 }

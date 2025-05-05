@@ -14,6 +14,8 @@
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+#include <optional>
+
 babelwires::ValueNodeFactory::ValueNodeFactory(const TypeSystem& typeSystem)
     : m_typeSystem(typeSystem) {}
 
@@ -22,22 +24,31 @@ QString babelwires::ValueNodeFactory::getCategoryName() const {
 }
 
 QList<QString> babelwires::ValueNodeFactory::getFactoryNames() const {
-    for (const auto& t : context.m_typeSystem.getAllPrimitiveTypes()) {
-        // TODO
+    QList<QString> factoryNames;
+    auto identifierRegistry = IdentifierRegistry::read();
+    for (const auto& typeId : m_typeSystem.getAllPrimitiveTypes()) {
+        factoryNames.append(identifierRegistry->getName(typeId).c_str());
     }
+    return factoryNames;
 }
 
 void babelwires::ValueNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName,
-                                              QPointF const scenePos, QWidget* parentForDialogs) {
-    PrimitiveTypeId typeId;
-    for (const auto& t : context.m_typeSystem.getAllPrimitiveTypes()) {
-        // TODO
+                                              QPointF scenePos, QWidget* parentForDialogs) {
+    std::optional<PrimitiveTypeId> typeId;
+    {
+        auto identifierRegistry = IdentifierRegistry::read();
+        for (const auto& tid : m_typeSystem.getAllPrimitiveTypes()) {
+            if(factoryName == identifierRegistry->getName(tid).c_str()) {
+                typeId = tid;
+                break;
+            }
+        }
+        assert(typeId && "FactoryName not found when creating Value Node");
     }
 
-    typeId.resolve(m_typeSystem);
+    auto newNodeData = std::make_unique<ValueNodeData>(*typeId);
+    newNodeData->m_uiData.m_uiPosition.m_x = scenePos.x();
+    newNodeData->m_uiData.m_uiPosition.m_y = scenePos.y();
 
-    auto newDataPtr = std::make_unique<ValueNodeData>(m_typeOfValue);
-    // TODO position
-
-    projectGraphModel->scheduleCommand(std::make_unique<AddNodeCommand>("Add Value Node", std::move(newDataPtr)));
+    projectGraphModel.scheduleCommand(std::make_unique<AddNodeCommand>("Add Value Node", std::move(newNodeData)));
 }

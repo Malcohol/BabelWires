@@ -133,6 +133,8 @@ namespace babelwires {
         /// This is called when entries are added and can be used to validate them, for example.
         virtual void onEntryRegistered(ENTRY& newEntry) const {}
 
+        const ENTRY* getEntryByName(std::string_view name) const;
+
       public:
         class Iterator;
         // Iteration.
