@@ -33,6 +33,7 @@ namespace babelwires {
     class NodeNodeModel;
 
     class ProjectGraphModel : public QtNodes::AbstractGraphModel {
+        Q_OBJECT
       public:
         ProjectGraphModel(Project& project, CommandManager<Project>& commandManager, UiProjectContext& projectContext);
         ~ProjectGraphModel();

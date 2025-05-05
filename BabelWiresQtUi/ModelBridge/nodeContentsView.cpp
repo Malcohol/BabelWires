@@ -79,7 +79,7 @@ std::tuple<int, int> babelwires::NodeContentsView::getLeftRightEdgeFromWidgetLef
         return global;
     };
 
-    const QtNodes::AbstractNodeGeometry& nodeGeometry = qobject_cast<const QtNodes::BasicGraphicsScene&>(graphicsView->scene()).nodeGeometry();
+    const QtNodes::AbstractNodeGeometry& nodeGeometry = qobject_cast<const QtNodes::BasicGraphicsScene*>(graphicsView->scene())->nodeGeometry();
 
     const QPointF graphicsObjectTopLeftGlobal = graphicsObjectToGlobal(QPointF(0,0));
     const QPointF graphicsObjectTopRightGlobal = graphicsObjectToGlobal(QPointF(nodeGeometry.size(m_nodeId).width(), 0));

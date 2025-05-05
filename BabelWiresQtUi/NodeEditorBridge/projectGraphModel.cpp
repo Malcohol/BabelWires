@@ -73,7 +73,7 @@ babelwires::ProjectGraphModel::createConnectionDescriptionFromConnectionId(const
     assert(targetIt != m_nodeModels.end());
     const Path sourcePath = sourceIt->second->getPathAtPort(scope, QtNodes::PortType::Out, connectionId.outPortIndex);
     const Path targetPath = targetIt->second->getPathAtPort(scope, QtNodes::PortType::In, connectionId.inPortIndex);
-    return ConnectionDescription{connectionId.outNodeId, std::move(sourcePath), connectionId.inNodeId,
+    return ConnectionDescription{static_cast<NodeId>(connectionId.outNodeId), std::move(sourcePath), static_cast<NodeId>(connectionId.inNodeId),
                                  std::move(targetPath)};
 }
 
@@ -196,7 +196,7 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
             AccessModelScope scope(*this);
             const Node* const node = scope.getProject().getNode(nodeId);
             const UiPosition position = node->getUiPosition();
-            return QPointF{position.m_x, position.m_y};
+            return QPointF{static_cast<qreal>(position.m_x), static_cast<qreal>(position.m_y)};
         }
         case QtNodes::NodeRole::Size: {
             AccessModelScope scope(*this);
@@ -280,6 +280,8 @@ bool babelwires::ProjectGraphModel::deleteConnection(QtNodes::ConnectionId const
     scheduleCommand(connectionDescription.getDisconnectionCommand());
     // TODO
     m_projectObserver.ignoreRemovedConnection(std::move(connectionDescription));
+    // TODO?
+    return true;
 }
 
 bool babelwires::ProjectGraphModel::deleteNode(QtNodes::NodeId const nodeId) {
@@ -302,6 +304,8 @@ bool babelwires::ProjectGraphModel::deleteNode(QtNodes::NodeId const nodeId) {
             assert(false && "Unexpected state");
         }
     }
+    // TODO? 
+    return true;
 }
 
 void babelwires::ProjectGraphModel::nodeMoved(QtNodes::NodeId nodeId, const QPointF& newLocation) {
