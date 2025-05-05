@@ -35,10 +35,19 @@ namespace babelwires {
     class ProjectGraphModel : public QtNodes::AbstractGraphModel {
       public:
         ProjectGraphModel(Project& project, CommandManager<Project>& commandManager, UiProjectContext& projectContext);
+        ~ProjectGraphModel();
 
         /// The command will be executed when Qt is idle.
         /// Only one command can be scheduled.
         void scheduleCommand(std::unique_ptr<Command<Project>> command);
+
+        /// Execute an Command now.
+        /// Almost always prefer scheduleCommand: this should only be used if explicit notification is
+        /// needed when the command fails.
+        /// For example, when a complex editor fails to apply its contents to the project, we want to
+        /// very explicitly notify the user so they do not lose lots of work.
+        /// Returns true if the command succeeded.
+        bool executeCommandSynchronously(std::unique_ptr<Command<Project>> command);
 
         /// Get a pointer to the main window, which is needed when creating editors for values such as maps.
         MainWindow* getMainWindow() const;
@@ -48,6 +57,7 @@ namespace babelwires {
 
         void setMainWindow(MainWindow* mainWindow);
 
+        const UiProjectContext& getContext() const;
       public:
         // The AbstractGraphModel interface.
         std::unordered_set<QtNodes::NodeId> allNodeIds() const override;
@@ -79,10 +89,12 @@ namespace babelwires {
         /// Called from setNodeData.
         void nodeResized(QtNodes::NodeId n, const QSize& newSize);
 
+        QString getNodeCaption(QtNodes::NodeId nodeId) const;
+
       private:
-        QtNodes::ConnectionId createConnectionIdFromConnectionDescription(AccessModelScope& scope,
+        QtNodes::ConnectionId createConnectionIdFromConnectionDescription(const AccessModelScope& scope,
                                                                           const ConnectionDescription& connection);
-        ConnectionDescription createConnectionDescriptionFromConnectionId(AccessModelScope& scope,
+        ConnectionDescription createConnectionDescriptionFromConnectionId(const AccessModelScope& scope,
                                                                           const QtNodes::ConnectionId& connectionId);
         void addToConnectionCache(const QtNodes::ConnectionId& connectionId);
         void removeFromConnectionCache(const QtNodes::ConnectionId& connectionId);

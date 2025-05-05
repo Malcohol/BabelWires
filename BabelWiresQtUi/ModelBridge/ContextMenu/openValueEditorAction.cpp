@@ -8,7 +8,7 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/openValueEditorAction.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 #include <BabelWiresQtUi/mainWindow.hpp>
 
@@ -21,8 +21,8 @@ babelwires::OpenValueEditorAction::OpenValueEditorAction(const QString& text, co
 babelwires::OpenValueEditorAction::~OpenValueEditorAction() = default;
 
 void babelwires::OpenValueEditorAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
-    ProjectBridge& projectBridge = model.getProjectBridge();
+    ProjectGraphModel& projectGraphModel = model.getProjectGraphModel();
     const NodeId elementId = model.getNodeId();
 
-    model.getProjectBridge().getMainWindow()->openEditorForValue(*m_location);
+    model.getProjectGraphModel().getMainWindow()->openEditorForValue(*m_location);
 }

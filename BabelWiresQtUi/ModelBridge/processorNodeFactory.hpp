@@ -10,12 +10,12 @@
 #include <BabelWiresQtUi/ModelBridge/baseNodeModel.hpp>
 
 namespace babelwires {
-    class ProjectBridge;
+    class ProjectGraphModel;
     class ProcessorFactory;
 
     class ProcessorNodeFactory : public NodeFactoryBase {
       public:
-        ProcessorNodeFactory(ProjectBridge* projectBridge, const ProcessorFactory* processorFactory);
+        ProcessorNodeFactory(ProjectGraphModel* projectGraphModel, const ProcessorFactory* processorFactory);
 
         QString name() const override;
         std::unique_ptr<QtNodes::NodeDataModel> createNode() const;

@@ -8,11 +8,14 @@
 
 #include <QtNodes/BasicGraphicsScene>
 
+#include <QMenu>
+
 namespace babelwires {
 
     class ProjectGraphModel;
+    struct ProjectContext;
 
-    class ProjectGraphicsScene : public BasicGraphicsScene {
+    class ProjectGraphicsScene : public QtNodes::BasicGraphicsScene {
       public:
         ProjectGraphicsScene(ProjectGraphModel& graphModel, const ProjectContext& projectContext);
 

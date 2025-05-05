@@ -10,11 +10,11 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 namespace babelwires {
-    class ProjectBridge;
+    class ProjectGraphModel;
     
     class ValueNodeFactory : public NodeFactoryBase {
       public:
-        ValueNodeFactory(ProjectBridge* projectBridge, TypeRef typeOfValue);
+        ValueNodeFactory(ProjectGraphModel* projectGraphModel, TypeRef typeOfValue);
 
         QString name() const override;
         std::unique_ptr<QtNodes::NodeDataModel> createNode() const;

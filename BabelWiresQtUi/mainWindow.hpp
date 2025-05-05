@@ -24,7 +24,7 @@ class QToolBar;
 namespace babelwires {
     class UnifiedLog;
     struct UserLogger;
-    class ProjectBridge;
+    class ProjectGraphModel;
     struct ProjectData;
     class LogWindow;
 
@@ -33,7 +33,7 @@ namespace babelwires {
         Q_OBJECT
 
       public:
-        MainWindow(ProjectBridge& projectBridge, UnifiedLog& log);
+        MainWindow(ProjectGraphModel& projectGraphModel, UnifiedLog& log);
         ~MainWindow();
 
         void openEditorForValue(const ProjectDataLocation& data);
@@ -94,7 +94,7 @@ namespace babelwires {
         void closeEvent(QCloseEvent* event) override;
 
       private:
-        ProjectBridge& m_projectBridge;
+        ProjectGraphModel& m_projectGraphModel;
         QToolBar* m_mainToolbar;
         UserLogger& m_userLogger;
         LogWindow* m_logWindow;

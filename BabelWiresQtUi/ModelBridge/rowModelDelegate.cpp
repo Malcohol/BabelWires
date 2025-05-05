@@ -10,8 +10,8 @@
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModelDispatcher.hpp>
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
@@ -29,9 +29,9 @@
 
 #include <cassert>
 
-babelwires::RowModelDelegate::RowModelDelegate(QObject* parent, ProjectBridge& projectBridge)
+babelwires::RowModelDelegate::RowModelDelegate(QObject* parent, ProjectGraphModel& projectGraphModel)
     : QStyledItemDelegate(parent)
-    , m_projectBridge(projectBridge) {}
+    , m_projectGraphModel(projectGraphModel) {}
 
 QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option,
                                                         const QModelIndex& index) const {
@@ -43,7 +43,7 @@ QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyl
     const NodeContentsModel* const model = dynamic_cast<const NodeContentsModel*>(index.model());
     assert(model && "Unexpected model");
 
-    AccessModelScope scope(m_projectBridge);
+    AccessModelScope scope(m_projectGraphModel);
     const Node* const node = model->getNode(scope);
     if (!node) {
         return nullptr;
@@ -53,7 +53,7 @@ QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyl
     if (!entry) {
         return nullptr;
     }
-    const babelwires::UiProjectContext& context = m_projectBridge.getContext();
+    const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
     RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable ValueTreeNode");
@@ -83,7 +83,7 @@ void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIn
     const NodeContentsModel* model = dynamic_cast<const NodeContentsModel*>(index.model());
     assert(model && "Unexpected model");
 
-    AccessModelScope scope(m_projectBridge);
+    AccessModelScope scope(m_projectGraphModel);
     const Node* node = model->getNode(scope);
     if (!node) {
         return;
@@ -94,7 +94,7 @@ void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIn
         return;
     }
 
-    const babelwires::UiProjectContext& context = m_projectBridge.getContext();
+    const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
     RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable ValueTreeNode");
@@ -106,7 +106,7 @@ void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIn
 
 void babelwires::RowModelDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
                                                     const QModelIndex& index) const {
-    AccessModelScope scope(m_projectBridge);
+    AccessModelScope scope(m_projectGraphModel);
     NodeContentsModel* nodeContentsModel = dynamic_cast<NodeContentsModel*>(model);
     assert(model && "Unexpected model");
 
@@ -119,13 +119,13 @@ void babelwires::RowModelDelegate::setModelData(QWidget* editor, QAbstractItemMo
     if (!entry) {
         return;
     }
-    const babelwires::UiProjectContext& context = m_projectBridge.getContext();
+    const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
     RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable ValueTreeNode");
     // Allow the function to reject the contents of the editor.
     if (std::unique_ptr<Command<Project>> command = rowModel->createCommandFromEditor(editor)) {
-        m_projectBridge.scheduleCommand(std::move(command));
+        m_projectGraphModel.scheduleCommand(std::move(command));
     }
 }
 
@@ -136,10 +136,10 @@ void babelwires::RowModelDelegate::paint(QPainter* painter, const QStyleOptionVi
         const NodeContentsModel* nodeContentsModel = dynamic_cast<const NodeContentsModel*>(index.model());
         assert(nodeContentsModel && "Unexpected model");
 
-        AccessModelScope scope(m_projectBridge);
+        AccessModelScope scope(m_projectGraphModel);
         if (const Node* node = nodeContentsModel->getNode(scope)) {
             if (const babelwires::ContentsCacheEntry* entry = nodeContentsModel->getEntry(scope, index)) {
-                const babelwires::UiProjectContext& context = m_projectBridge.getContext();
+                const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
                 RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
                 if (rowModel->hasCustomPainting()) {
                     QStyleOptionViewItem options = option;
@@ -162,10 +162,10 @@ QSize babelwires::RowModelDelegate::sizeHint(const QStyleOptionViewItem& option,
         const NodeContentsModel* nodeContentsModel = dynamic_cast<const NodeContentsModel*>(index.model());
         assert(nodeContentsModel && "Unexpected model");
 
-        AccessModelScope scope(m_projectBridge);
+        AccessModelScope scope(m_projectGraphModel);
         if (const Node* node = nodeContentsModel->getNode(scope)) {
             if (const babelwires::ContentsCacheEntry* entry = nodeContentsModel->getEntry(scope, index)) {
-                const babelwires::UiProjectContext& context = m_projectBridge.getContext();
+                const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
                 RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
                 if (rowModel->hasCustomPainting()) {
                     QStyleOptionViewItem options = option;

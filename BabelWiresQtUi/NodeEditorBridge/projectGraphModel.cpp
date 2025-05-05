@@ -48,8 +48,10 @@ babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManage
         m_projectObserver.m_contentWasChanged.subscribe([this](NodeId nodeId) { nodeUpdated(nodeId); }));
 }
 
+babelwires::ProjectGraphModel::~ProjectGraphModel() = default;
+
 QtNodes::ConnectionId
-babelwires::ProjectGraphModel::createConnectionIdFromConnectionDescription(AccessModelScope& scope,
+babelwires::ProjectGraphModel::createConnectionIdFromConnectionDescription(const AccessModelScope& scope,
                                                                            const ConnectionDescription& connection) {
     const auto sourceIt = m_nodeModels.find(connection.m_sourceId);
     assert(sourceIt != m_nodeModels.end());
@@ -63,7 +65,7 @@ babelwires::ProjectGraphModel::createConnectionIdFromConnectionDescription(Acces
 }
 
 babelwires::ConnectionDescription
-babelwires::ProjectGraphModel::createConnectionDescriptionFromConnectionId(AccessModelScope& scope,
+babelwires::ProjectGraphModel::createConnectionDescriptionFromConnectionId(const AccessModelScope& scope,
                                                                            const QtNodes::ConnectionId& connectionId) {
     const auto sourceIt = m_nodeModels.find(connectionId.outNodeId);
     assert(sourceIt != m_nodeModels.end());
@@ -200,18 +202,24 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
             AccessModelScope scope(*this);
             const Node* const node = scope.getProject().getNode(nodeId);
             const UiSize size = node->getUiSize();
-            return QSize{size.m_width, nodeModel.embeddedWidget()->height()};
+            return QSize{size.m_width, nodeModel.getEmbeddedWidget()->height()};
         }
         case QtNodes::NodeRole::CaptionVisible:
             return true;
-        case QtNodes::NodeRole::Caption:
-            return nodeModel.caption();
-        case QtNodes::NodeRole::InPortCount:
-            return nodeModel.nPorts(QtNodes::PortType::In);
-        case QtNodes::NodeRole::OutPortCount:
-            return nodeModel.nPorts(QtNodes::PortType::Out);
+        case QtNodes::NodeRole::Caption: {
+            AccessModelScope scope(*this);
+            return nodeModel.caption(scope);
+        }
+        case QtNodes::NodeRole::InPortCount: {
+            AccessModelScope scope(*this);
+            return nodeModel.nPorts(scope, QtNodes::PortType::In);
+        }
+        case QtNodes::NodeRole::OutPortCount: {
+            AccessModelScope scope(*this);
+            return nodeModel.nPorts(scope, QtNodes::PortType::Out);
+        }
         case QtNodes::NodeRole::Widget:
-            return nodeModel.embeddedWidget();
+            return nodeModel.getEmbeddedWidget();
 
         // Unimplemented.
         case QtNodes::NodeRole::Style:
@@ -243,8 +251,13 @@ QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes
                                                  QtNodes::PortIndex index, QtNodes::PortRole role) const {
     // TODO
     switch (role) {
-        case QtNodes::PortRole::DataType: ///< `QString` describing the port data type.
-            return "TODO";
+        case QtNodes::PortRole::DataType: { ///< `QString` describing the port data type. 
+            const auto it = m_nodeModels.find(nodeId);
+            assert(it != m_nodeModels.end());
+            const NodeNodeModel& nodeModel = *it->second;
+            AccessModelScope scope(*this);
+            return QVariant::fromValue(nodeModel.dataType(scope, portType, index));
+        }
         case QtNodes::PortRole::ConnectionPolicyRole: ///< `enum` ConnectionPolicyRole
             // TODO Not sure what option is needed here. Only collapsing should create many in connections at a single
             // port.
@@ -252,7 +265,7 @@ QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes
         case QtNodes::PortRole::CaptionVisible: ///< `bool` for caption visibility.
             return false;
         case QtNodes::PortRole::Caption: ///< `QString` for port caption.
-            return "";
+            return QString();
         default:
         case QtNodes::PortRole::Data: ///< `std::shared_ptr<NodeData>`.
             assert(false);
@@ -304,7 +317,7 @@ void babelwires::ProjectGraphModel::nodeMoved(QtNodes::NodeId nodeId, const QPoi
             const UiPosition& uiPosition = node->getNodeData().m_uiData.m_uiPosition;
             UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
             if (uiPosition != newPosition) {
-                std::string commandName = "Move " + nodeNodeModel.caption().toStdString();
+                std::string commandName = "Move " + nodeNodeModel.caption(scope).toStdString();
                 scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, nodeId, newPosition));
                 m_projectObserver.ignoreMovedNode(nodeId);
             }
@@ -331,9 +344,9 @@ void babelwires::ProjectGraphModel::nodeResized(QtNodes::NodeId nodeId, const QS
             const Node* node = scope.getProject().getNode(nodeId);
             assert(node && "The node should already be in the project");
             const int currentWidth = node->getUiSize().m_width;
-            const int newWidth = nodeNodeModel.embeddedWidget()->size().width();
+            const int newWidth = nodeNodeModel.getEmbeddedWidget()->size().width();
             if (newWidth != currentWidth) {
-                std::string commandName = "Resize " + nodeNodeModel.caption().toStdString();
+                std::string commandName = "Resize " + nodeNodeModel.caption(scope).toStdString();
                 scheduleCommand(std::make_unique<ResizeNodeCommand>(commandName, nodeId, UiSize{newWidth}));
                 m_projectObserver.ignoreResizedNode(nodeId);
             }
@@ -358,6 +371,12 @@ void babelwires::ProjectGraphModel::scheduleCommand(std::unique_ptr<Command<Proj
         // Schedule the execution of the command.
         QTimer::singleShot(0, this, &ProjectGraphModel::onIdle);
     }
+}
+
+bool babelwires::ProjectGraphModel::executeCommandSynchronously(std::unique_ptr<Command<Project>> command) {
+    ModifyModelScope scope(*this);
+    std::unique_ptr<Command<Project>> commandPtr = std::move(command);
+    return scope.getCommandManager().executeAndStealCommand(commandPtr);
 }
 
 void babelwires::ProjectGraphModel::processAndHandleModelChanges() {

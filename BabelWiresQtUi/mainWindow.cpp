@@ -53,35 +53,35 @@
 namespace {
     constexpr char s_initialFilePath[] = "Untitled";
 
-    std::shared_ptr<QtNodes::DataModelRegistry> registerDataModels(babelwires::ProjectBridge& projectBridge) {
+    std::shared_ptr<QtNodes::DataModelRegistry> registerDataModels(babelwires::ProjectGraphModel& projectGraphModel) {
         auto ret = std::make_shared<QtNodes::DataModelRegistry>();
 
-        const auto& context = projectBridge.getContext();
+        const auto& context = projectGraphModel.getContext();
         for (const auto& f : context.m_sourceFileFormatReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::SourceFileNodeFactory(&projectBridge, &f),
+            ret->registerModel<QtNodes::NodeDataModel>(babelwires::SourceFileNodeFactory(&projectGraphModel, &f),
                                                        "Source Files");
         }
         for (const auto& f : context.m_targetFileFormatReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::TargetFileNodeFactory(&projectBridge, &f),
+            ret->registerModel<QtNodes::NodeDataModel>(babelwires::TargetFileNodeFactory(&projectGraphModel, &f),
                                                        "Target Files");
         }
         for (const auto& f : context.m_processorReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::ProcessorNodeFactory(&projectBridge, &f),
+            ret->registerModel<QtNodes::NodeDataModel>(babelwires::ProcessorNodeFactory(&projectGraphModel, &f),
                                                        "Processors");
         }
         for (const auto& t : context.m_typeSystem.getAllPrimitiveTypes()) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::ValueNodeFactory(&projectBridge, t), "Values");
+            ret->registerModel<QtNodes::NodeDataModel>(babelwires::ValueNodeFactory(&projectGraphModel, t), "Values");
         }
 
         return ret;
     }
 } // namespace
 
-babelwires::MainWindow::MainWindow(ProjectBridge& projectBridge, UnifiedLog& log)
-    : m_projectBridge(projectBridge)
+babelwires::MainWindow::MainWindow(ProjectGraphModel& projectGraphModel, UnifiedLog& log)
+    : m_projectGraphModel(projectGraphModel)
     , m_userLogger(log) {
-    auto scene = std::make_unique<QtNodes::FlowScene>(registerDataModels(projectBridge));
-    projectBridge.connectToFlowScene(*scene);
+    auto scene = std::make_unique<QtNodes::FlowScene>(registerDataModels(projectGraphModel));
+    projectGraphModel.connectToFlowScene(*scene);
     setCentralWidget(new QtNodes::FlowView(scene.release()));
 
     createActions();
@@ -139,7 +139,7 @@ void babelwires::MainWindow::createActions() {
     connect(m_redoAction.get(), &QAction::triggered, this, &MainWindow::redo);
 
     {
-        ModifyModelScope scope(m_projectBridge);
+        ModifyModelScope scope(m_projectGraphModel);
         m_undoStateChangedSubscription =
             scope.getCommandManager().signal_undoStateChanged.subscribe([this]() { onUndoStateChanged(); });
     }
@@ -154,7 +154,7 @@ void babelwires::MainWindow::createActions() {
     m_copyAction->setEnabled(false);
     connect(m_copyAction.get(), &QAction::triggered, this, &MainWindow::copy);
 
-    connect(&m_projectBridge, &ProjectBridge::nodeSelectionChanged, this, &MainWindow::onNodeSelectionChanged);
+    connect(&m_projectGraphModel, &ProjectGraphModel::nodeSelectionChanged, this, &MainWindow::onNodeSelectionChanged);
 
     m_pasteAction = std::make_unique<QAction>(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
     m_pasteAction->setShortcuts(QKeySequence::Paste);
@@ -252,7 +252,7 @@ void babelwires::MainWindow::createDockWidgets(UnifiedLog& log) {
 }
 
 void babelwires::MainWindow::onUndoStateChanged() {
-    AccessModelScope scope(m_projectBridge);
+    AccessModelScope scope(m_projectGraphModel);
     const babelwires::CommandManager<Project>& commandManager = scope.getCommandManager();
 
     if (commandManager.canUndo()) {
@@ -281,12 +281,12 @@ void babelwires::MainWindow::onUndoStateChanged() {
 void babelwires::MainWindow::openProject() {
     if (maybeSave()) {
         QString dialogCaption = tr("Open project");
-        QString filePath = QFileDialog::getOpenFileName(m_projectBridge.getFlowGraphWidget(), dialogCaption,
+        QString filePath = QFileDialog::getOpenFileName(m_projectGraphModel.getFlowGraphWidget(), dialogCaption,
                                                         m_currentProjectDir, getDialogProjectFormat());
         if (!filePath.isNull()) {
             {
                 logDebug() << "Clearing project before open project";
-                ModifyModelScope scope(m_projectBridge);
+                ModifyModelScope scope(m_projectGraphModel);
                 scope.getProject().clear();
                 scope.getCommandManager().clear();
                 setInitialFilePath();
@@ -295,9 +295,9 @@ void babelwires::MainWindow::openProject() {
                 try {
                     std::string filePathStr = filePath.toStdString();
                     m_userLogger.logInfo() << "Open project \"" << filePathStr << '"';
-                    ModifyModelScope scope(m_projectBridge);
+                    ModifyModelScope scope(m_projectGraphModel);
                     ProjectData projectData = ProjectSerialization::loadFromFile(
-                        filePathStr, m_projectBridge.getContext(), m_userLogger);
+                        filePathStr, m_projectGraphModel.getContext(), m_userLogger);
                     scope.getProject().setProjectData(projectData);
                     setCurrentFilePath(filePath);
                     return;
@@ -320,7 +320,7 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
         try {
             std::string filePathStr = filePath.toStdString();
             m_userLogger.logInfo() << "Save project to \"" << filePathStr << '"';
-            ModifyModelScope scope(m_projectBridge);
+            ModifyModelScope scope(m_projectGraphModel);
             ProjectSerialization::saveToFile(filePathStr, scope.getProject().extractProjectData());
             scope.getCommandManager().setCursor();
             return true;
@@ -355,7 +355,7 @@ void babelwires::MainWindow::saveProject() {
 
 void babelwires::MainWindow::saveProjectAs() {
     QString dialogCaption = tr("Save project as");
-    QString filePath = QFileDialog::getSaveFileName(m_projectBridge.getFlowGraphWidget(), dialogCaption,
+    QString filePath = QFileDialog::getSaveFileName(m_projectGraphModel.getFlowGraphWidget(), dialogCaption,
                                                     m_currentProjectDir, getDialogProjectFormat());
     if (!filePath.isNull()) {
         const QString ext = getProjectExtension();
@@ -370,7 +370,7 @@ void babelwires::MainWindow::saveProjectAs() {
 void babelwires::MainWindow::newProject() {
     if (maybeSave()) {
         m_userLogger.logInfo() << "New project";
-        ModifyModelScope scope(m_projectBridge);
+        ModifyModelScope scope(m_projectGraphModel);
         scope.getProject().clear();
         scope.getCommandManager().clear();
         setInitialFilePath();
@@ -378,17 +378,17 @@ void babelwires::MainWindow::newProject() {
 }
 
 void babelwires::MainWindow::undo() {
-    ModifyModelScope scope(m_projectBridge);
+    ModifyModelScope scope(m_projectGraphModel);
     scope.getCommandManager().undo();
 }
 
 void babelwires::MainWindow::redo() {
-    ModifyModelScope scope(m_projectBridge);
+    ModifyModelScope scope(m_projectGraphModel);
     scope.getCommandManager().redo();
 }
 
 babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
-    ProjectData projectData = m_projectBridge.getDataFromSelectedNodes();
+    ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes();
 
     auto* flowView = dynamic_cast<QtNodes::FlowView*>(centralWidget());
     assert(flowView && "Unexpected central widget");
@@ -418,7 +418,7 @@ void babelwires::MainWindow::cut() {
 
     writeToClipboard(std::move(projectData));
 
-    m_projectBridge.scheduleCommand(std::move(command));
+    m_projectGraphModel.scheduleCommand(std::move(command));
 }
 
 void babelwires::MainWindow::copy() {
@@ -434,7 +434,7 @@ void babelwires::MainWindow::paste() {
 
     try {
         ProjectData projectData =
-            ProjectSerialization::loadFromString(asString, m_projectBridge.getContext(), getFullFilePath().toStdString(), m_userLogger);
+            ProjectSerialization::loadFromString(asString, m_projectGraphModel.getContext(), getFullFilePath().toStdString(), m_userLogger);
         {
             auto* flowView = dynamic_cast<QtNodes::FlowView*>(centralWidget());
             assert(flowView && "Unexpected central widget");
@@ -444,16 +444,16 @@ void babelwires::MainWindow::paste() {
         }
 
         auto command = std::make_unique<PasteNodesCommand>("Paste elements", std::move(projectData));
-        m_projectBridge.scheduleCommand(std::move(command));
+        m_projectGraphModel.scheduleCommand(std::move(command));
     } catch (std::exception&) {
         // When using a specific mime-type, log a debug message?
         m_userLogger.logWarning() << "Failed to paste from clipboard";
     }
-    m_projectBridge.selectNewNodes();
+    m_projectGraphModel.selectNewNodes();
 }
 
 bool babelwires::MainWindow::maybeSave() {
-    AccessModelScope scope(m_projectBridge);
+    AccessModelScope scope(m_projectGraphModel);
     if (!scope.getCommandManager().isAtCursor()) {
         while (1) {
             switch (QMessageBox::warning(
@@ -501,13 +501,13 @@ void babelwires::MainWindow::closeEvent(QCloseEvent* event) {
 
 void babelwires::MainWindow::reloadAllSources() {
     m_userLogger.logInfo() << "Reload all sources";
-    ModifyModelScope scope(m_projectBridge);
+    ModifyModelScope scope(m_projectGraphModel);
     scope.getProject().tryToReloadAllSources();
 }
 
 void babelwires::MainWindow::saveAllTargets() {
     m_userLogger.logInfo() << "Save all targets";
-    ModifyModelScope scope(m_projectBridge);
+    ModifyModelScope scope(m_projectGraphModel);
     scope.getProject().tryToSaveAllTargets();
 }
 
@@ -530,13 +530,13 @@ void babelwires::MainWindow::onShowLogWindow(bool show) {
 }
 
 QString babelwires::MainWindow::getApplicationTitle() const {
-    const std::string& title = m_projectBridge.getContext().m_applicationIdentity.m_applicationTitle;
+    const std::string& title = m_projectGraphModel.getContext().m_applicationIdentity.m_applicationTitle;
     assert(!title.empty() && "m_applicationTitle must be provided");
     return title.c_str();
 }
 
 QString babelwires::MainWindow::getProjectExtension() const {
-    const std::string& ext = m_projectBridge.getContext().m_applicationIdentity.m_projectExtension;
+    const std::string& ext = m_projectGraphModel.getContext().m_applicationIdentity.m_projectExtension;
     assert(!ext.empty() && "m_projectExtension must be provided");
     assert((ext[0] == '.') && "The extension must begin with .");
     return ext.c_str();
@@ -552,5 +552,5 @@ QString babelwires::MainWindow::getClipboardMimetype() const {
 }
 
 void babelwires::MainWindow::openEditorForValue(const ProjectDataLocation& data) {
-    m_valueEditorManager.openEditorForValue(this, m_projectBridge, m_userLogger, data);
+    m_valueEditorManager.openEditorForValue(this, m_projectGraphModel, m_userLogger, data);
 }

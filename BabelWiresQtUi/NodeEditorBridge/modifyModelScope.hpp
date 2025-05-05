@@ -14,10 +14,10 @@ namespace babelwires {
 
     /// Any changes to the model should be performed within the scope of an object of this type.
     /// Note: This class is intended to future proofs the system for the day when concurrency is added to the project.
-    class ModifyModelScope : public AccessModelScope {
+    class ModifyModelScope final {
       public:
         ModifyModelScope(ProjectGraphModel& bridge);
-        virtual ~ModifyModelScope();
+        ~ModifyModelScope();
 
         const CommandManager<Project>& getCommandManager() const;
         CommandManager<Project>& getCommandManager();

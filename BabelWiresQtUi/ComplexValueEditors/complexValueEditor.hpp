@@ -12,7 +12,7 @@
 #include <QWidget>
 
 namespace babelwires {
-    class ProjectBridge;
+    class ProjectGraphModel;
     struct UserLogger;
     class ValueTreeNode;
     class AccessModelScope;
@@ -24,7 +24,7 @@ namespace babelwires {
         public:
             /// For now, ComplexValueEditors are only available for values in the project.
             // TODO: Generalize this to work for values elsewhere.
-            ComplexValueEditor(QWidget *parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ProjectDataLocation& data);
+            ComplexValueEditor(QWidget *parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data);
 
             const ProjectDataLocation& getDataLocation() const;
 
@@ -32,21 +32,21 @@ namespace babelwires {
 
             /// Convenience Function: Get the ValueTreeNode referred to by the data, or assert.
             /// Note: This returns const because editors never modify the model directly.
-            static const ValueTreeNode& getValueTreeNode(AccessModelScope& scope, const ProjectDataLocation& data);
+            static const ValueTreeNode& getValueTreeNode(const AccessModelScope& scope, const ProjectDataLocation& data);
 
             /// Convenience Function: Get the ValueTreeNode referred to by the data, or return nullptr.
             /// Note: This returns const because editors never modify the model directly.
-            static const ValueTreeNode* tryGetValueTreeNode(AccessModelScope& scope, const ProjectDataLocation& data);
+            static const ValueTreeNode* tryGetValueTreeNode(const AccessModelScope& scope, const ProjectDataLocation& data);
 
             /// Convenience Function: Get the ValueTreeNode referred to by the data, or throw a ModelException.
             /// Note: This returns const because editors never modify the model directly.
-            static const ValueTreeNode& getValueTreeNodeOrThrow(AccessModelScope& scope, const ProjectDataLocation& data);
+            static const ValueTreeNode& getValueTreeNodeOrThrow(const AccessModelScope& scope, const ProjectDataLocation& data);
 
         signals:
             void editorClosing();
 
         protected:
-            ProjectBridge& getProjectBridge();
+            ProjectGraphModel& getProjectGraphModel();
             UserLogger& getUserLogger();
             void closeEvent(QCloseEvent* event) override;
 
@@ -57,7 +57,7 @@ namespace babelwires {
 
         private:
             /// Needed when making changes to the project.
-            ProjectBridge& m_projectBridge;
+            ProjectGraphModel& m_projectGraphModel;
 
             /// 
             UserLogger& m_userLogger;

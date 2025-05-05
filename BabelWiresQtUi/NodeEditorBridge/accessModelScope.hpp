@@ -14,7 +14,7 @@ namespace babelwires {
 
     /// Any readonly access to the model contents should be performed within the scope of an object of this type.
     /// Note: This class is intended to future proofs the system for the day when concurrency is added to the project.
-    class AccessModelScope {
+    class AccessModelScope final {
       public:
         AccessModelScope(const ProjectGraphModel& bridge);
         ~AccessModelScope();

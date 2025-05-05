@@ -27,9 +27,9 @@ struct babelwires::Ui::Impl {
     void runMainLoop() {
         Project project(m_projectContext, m_log);
         CommandManager commandManager(project, m_log);
-        ProjectBridge projectBridge(project, commandManager, m_projectContext);
-        MainWindow mainWidget(projectBridge, m_log);
-        projectBridge.setMainWindow(&mainWidget);
+        ProjectGraphModel projectGraphModel(project, commandManager, m_projectContext);
+        MainWindow mainWidget(projectGraphModel, m_log);
+        projectGraphModel.setMainWindow(&mainWidget);
 
         m_app.exec();
     }

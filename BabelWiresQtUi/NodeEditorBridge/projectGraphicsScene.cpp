@@ -6,6 +6,8 @@
  */
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphicsScene.hpp>
 
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
+
 babelwires::ProjectGraphicsScene::ProjectGraphicsScene(ProjectGraphModel& graphModel,
                                                        const ProjectContext& projectContext)
     : BasicGraphicsScene(graphModel) {}

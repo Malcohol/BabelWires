@@ -25,6 +25,7 @@ namespace babelwires {
     class NodeContentsModel;
     class RowModelDelegate;
     class AccessModelScope;
+    class ProjectGraphModel;
 
     struct UiSize;
 
@@ -36,19 +37,21 @@ namespace babelwires {
         Q_OBJECT
 
       public:
-        NodeNodeModel(ProjectBridge& project, NodeId elementId);
+        NodeNodeModel(ProjectGraphModel& project, NodeId nodeId);
         ~NodeNodeModel();
 
-        unsigned int nPorts(QtNodes::PortType portType) const;
-        QtNodes::NodeDataType dataType(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const;
-        QWidget* embeddedWidget();
+        unsigned int nPorts(const AccessModelScope& scope, QtNodes::PortType portType) const;
+        QtNodes::NodeDataType dataType(const AccessModelScope& scope, QtNodes::PortType portType, QtNodes::PortIndex portIndex) const;
 
-        babelwires::NodeId getNodeId() const;
-        QString caption() const;
+        const QWidget* getEmbeddedWidget() const;
+        QWidget* getEmbeddedWidget();
 
-        const Path& getPathAtPort(AccessModelScope& scope, QtNodes::PortType portType,
+        //babelwires::NodeId getNodeId() const;
+        QString caption(const AccessModelScope& scope) const;
+
+        const Path& getPathAtPort(const AccessModelScope& scope, QtNodes::PortType portType,
                                          QtNodes::PortIndex portIndex) const;
-        QtNodes::PortIndex getPortAtPath(AccessModelScope& scope, QtNodes::PortType portType,
+        QtNodes::PortIndex getPortAtPath(const AccessModelScope& scope, QtNodes::PortType portType,
                                          const Path& path) const;
 
         //TODO ResizableAxes resizable() const { return HorizontallyResizable; }
@@ -72,13 +75,10 @@ namespace babelwires {
         void customContextMenuRequested(const QPoint& pos);
 
       protected:
-        /// Set up the contents to match the state of the node.
-        void setContents(std::string label, NodeId nodeId);
-
         static QtNodes::NodeDataType getDataTypeFromTreeValueNode(const ValueTreeNode* f);
 
-        const ValueTreeNode* getInput(AccessModelScope& scope, int portIndex) const;
-        const ValueTreeNode* getOutput(AccessModelScope& scope, int portIndex) const;
+        const ValueTreeNode* getInput(const AccessModelScope& scope, int portIndex) const;
+        const ValueTreeNode* getOutput(const AccessModelScope& scope, int portIndex) const;
 
       protected:
         babelwires::NodeId m_nodeId;

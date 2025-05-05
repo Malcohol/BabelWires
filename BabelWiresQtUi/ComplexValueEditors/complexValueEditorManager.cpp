@@ -11,11 +11,11 @@
 
 #include <Common/Log/userLogger.hpp>
 
-void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ProjectDataLocation& data) {
+void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data) {
     auto it = std::find_if(m_openValueEditors.begin(), m_openValueEditors.end(), [&data](const ComplexValueEditor* editor){ return data == editor->getDataLocation(); });
     if (it == m_openValueEditors.end()) {
         try {
-            ComplexValueEditor* newEditor = m_valueEditorFactory.createEditor(parent, projectBridge, userLogger, data);
+            ComplexValueEditor* newEditor = m_valueEditorFactory.createEditor(parent, projectGraphModel, userLogger, data);
             m_openValueEditors.emplace_back(newEditor);
             it = m_openValueEditors.end() - 1;
             QObject::connect(newEditor, &ComplexValueEditor::editorClosing, this, &ComplexValueEditorManager::onValueEditorClose);

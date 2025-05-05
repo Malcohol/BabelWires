@@ -25,12 +25,12 @@ namespace QtNodes {
 
 namespace babelwires {
 
-    class ProjectBridge;
+    class ProjectGraphModel;
 
     class NodeContentsView : public QTableView {
         Q_OBJECT
       public:
-        NodeContentsView(NodeId elementId, ProjectBridge& projectBridge);
+        NodeContentsView(NodeId elementId, ProjectGraphModel& projectGraphModel);
 
         /// The default size is too big when there are three or fewer rows.
         QSize sizeHint() const override;
@@ -60,7 +60,7 @@ namespace babelwires {
         std::tuple<int, int> getLeftRightEdgeFromWidgetLeft() const;
 
       private:
-        ProjectBridge& m_projectBridge;
+        ProjectGraphModel& m_projectGraphModel;
         NodeId m_nodeId;
 
         struct DragState {

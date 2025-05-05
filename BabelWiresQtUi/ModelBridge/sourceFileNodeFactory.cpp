@@ -8,7 +8,7 @@
 #include <BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/nodeNodeModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 
 #include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
@@ -19,8 +19,8 @@
 
 #include <nodes/FlowScene>
 
-babelwires::SourceFileNodeFactory::SourceFileNodeFactory(ProjectBridge* projectBridge, const SourceFileFormat* sourceFileFormat)
-    : NodeFactoryBase(projectBridge)
+babelwires::SourceFileNodeFactory::SourceFileNodeFactory(ProjectGraphModel* projectGraphModel, const SourceFileFormat* sourceFileFormat)
+    : NodeFactoryBase(projectGraphModel)
     , m_sourceFileFormat(sourceFileFormat) {}
 
 QString babelwires::SourceFileNodeFactory::name() const {
@@ -28,7 +28,7 @@ QString babelwires::SourceFileNodeFactory::name() const {
 }
 
 std::unique_ptr<QtNodes::NodeDataModel> babelwires::SourceFileNodeFactory::createNode() const {
-    QString filePath = showOpenFileDialog(m_projectBridge->getFlowGraphWidget(), *m_sourceFileFormat);
+    QString filePath = showOpenFileDialog(m_projectGraphModel->getFlowGraphWidget(), *m_sourceFileFormat);
 
     if (!filePath.isNull()) {
         auto newDataPtr = std::make_unique<SourceFileNodeData>();
@@ -38,8 +38,8 @@ std::unique_ptr<QtNodes::NodeDataModel> babelwires::SourceFileNodeFactory::creat
 
         auto commandPtr = std::make_unique<AddNodeCommand>("Add source file", std::move(newDataPtr));
         AddNodeCommand& addNodeCommand = *commandPtr;
-        if (m_projectBridge->executeAddNodeCommand(std::move(commandPtr))) {
-            return std::make_unique<NodeNodeModel>(*m_projectBridge, addNodeCommand.getNodeId());
+        if (m_projectGraphModel->executeAddNodeCommand(std::move(commandPtr))) {
+            return std::make_unique<NodeNodeModel>(*m_projectGraphModel, addNodeCommand.getNodeId());
         }
     }
     return nullptr;
