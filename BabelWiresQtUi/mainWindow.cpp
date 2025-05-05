@@ -129,7 +129,7 @@ void babelwires::MainWindow::createActions() {
     m_copyAction->setEnabled(false);
     connect(m_copyAction.get(), &QAction::triggered, this, &MainWindow::copy);
 
-    // TODO
+    // TODO Selection
     //connect(&m_projectGraphModel, &ProjectGraphModel::nodeSelectionChanged, this, &MainWindow::onNodeSelectionChanged);
 
     m_pasteAction = std::make_unique<QAction>(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
@@ -363,15 +363,17 @@ void babelwires::MainWindow::redo() {
 }
 
 babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
-    ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes();
-
-    auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
-    assert(flowView && "Unexpected central widget");
-    const QPointF centre = flowView->sceneRect().center();
-    UiPosition offset{static_cast<UiCoord>(-centre.x()), static_cast<UiCoord>(-centre.y())};
-    projectUtilities::translate(offset, projectData);
-
-    return projectData;
+    // TODO Selection
+    //ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes();
+    //
+    //auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
+    //assert(flowView && "Unexpected central widget");
+    //const QPointF centre = flowView->sceneRect().center();
+    //UiPosition offset{static_cast<UiCoord>(-centre.x()), static_cast<UiCoord>(-centre.y())};
+    //projectUtilities::translate(offset, projectData);
+    //
+    //return projectData;
+    return {};
 }
 
 void babelwires::MainWindow::writeToClipboard(ProjectData projectData) {
@@ -424,7 +426,8 @@ void babelwires::MainWindow::paste() {
         // When using a specific mime-type, log a debug message?
         m_userLogger.logWarning() << "Failed to paste from clipboard";
     }
-    m_projectGraphModel.selectNewNodes();
+    // TODO Selection
+    //m_projectGraphModel.selectNewNodes();
 }
 
 bool babelwires::MainWindow::maybeSave() {
