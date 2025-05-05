@@ -6,6 +6,8 @@
  */
 #pragma once
 
+#include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/nodeFactory.hpp>
+
 #include <QtNodes/BasicGraphicsScene>
 
 #include <QMenu>
@@ -13,13 +15,16 @@
 namespace babelwires {
 
     class ProjectGraphModel;
-    struct ProjectContext;
 
     class ProjectGraphicsScene : public QtNodes::BasicGraphicsScene {
       public:
-        ProjectGraphicsScene(ProjectGraphModel& graphModel, const ProjectContext& projectContext);
+        ProjectGraphicsScene(ProjectGraphModel& graphModel);
+
+        void addNodeFactory(std::unique_ptr<NodeFactory> nodeFactory);
 
         QMenu* createSceneMenu(QPointF const scenePos) override;
+      private:
+        std::vector<std::unique_ptr<NodeFactory>> m_nodeFactories;
     };
 
 } // namespace babelwires

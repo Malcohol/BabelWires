@@ -1,76 +1,93 @@
-/** 
- * 
+/**
+ *
  * Copyright (C) 2025 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  */
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphicsScene.hpp>
 
-#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
+#include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
+#include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
 
-babelwires::ProjectGraphicsScene::ProjectGraphicsScene(ProjectGraphModel& graphModel,
-                                                       const ProjectContext& projectContext)
-    : BasicGraphicsScene(graphModel) {}
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/processorNodeFactory.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/sourceFileNodeFactory.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/targetFileNodeFactory.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/valueNodeFactory.hpp>
+
+#include <QHeaderView>
+#include <QLineEdit>
+#include <QMenu>
+#include <QTreeWidget>
+#include <QWidgetAction>
+
+babelwires::ProjectGraphicsScene::ProjectGraphicsScene(ProjectGraphModel& projectGraphModel)
+    : BasicGraphicsScene(projectGraphModel)
+
+void babelwires::ProjectGraphicsScene::addNodeFactory(std::unique_ptr<NodeFactory> nodeFactory) {
+    m_nodeFactories.emplace_back(std::move(nodeFactory));
+}
 
 QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos) {
-    /*
-        QMenu *modelMenu = new QMenu();
+    QMenu* modelMenu = new QMenu();
 
     // Add filterbox to the context menu
-    auto *txtBox = new QLineEdit(modelMenu);
+    auto* txtBox = new QLineEdit(modelMenu);
     txtBox->setPlaceholderText(QStringLiteral("Filter"));
     txtBox->setClearButtonEnabled(true);
 
-    auto *txtBoxAction = new QWidgetAction(modelMenu);
+    auto* txtBoxAction = new QWidgetAction(modelMenu);
     txtBoxAction->setDefaultWidget(txtBox);
 
     // 1.
     modelMenu->addAction(txtBoxAction);
 
     // Add result treeview to the context menu
-    QTreeWidget *treeView = new QTreeWidget(modelMenu);
+    QTreeWidget* treeView = new QTreeWidget(modelMenu);
     treeView->header()->close();
 
-    auto *treeViewAction = new QWidgetAction(modelMenu);
+    auto* treeViewAction = new QWidgetAction(modelMenu);
     treeViewAction->setDefaultWidget(treeView);
 
     // 2.
     modelMenu->addAction(treeViewAction);
 
-    auto registry = _graphModel.dataModelRegistry();
-
-    for (auto const &cat : registry->categories()) {
-        auto item = new QTreeWidgetItem(treeView);
-        item->setText(0, cat);
-        item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
-    }
-
-    for (auto const &assoc : registry->registeredModelsCategoryAssociation()) {
-        QList<QTreeWidgetItem *> parent = treeView->findItems(assoc.second, Qt::MatchExactly);
-
-        if (parent.count() <= 0)
-            continue;
-
-        auto item = new QTreeWidgetItem(parent.first());
-        item->setText(0, assoc.first);
+    for (const auto& nodeFactory : m_nodeFactories) {
+        auto category = new QTreeWidgetItem(treeView);
+        category->setText(0, nodeFactory->getCategoryName());
+        category->setFlags(item->flags() & ~Qt::ItemIsSelectable);
+        for (const auto& factoryName : nodeFactory->getFactoryNames()) {
+            auto item = new QTreeWidgetItem(parent);
+            item->setText(0, factoryName);    
+        }
     }
 
     treeView->expandAll();
 
-    connect(treeView,
-            &QTreeWidget::itemClicked,
-            [this, modelMenu, scenePos](QTreeWidgetItem *item, int) {
-                if (!(item->flags() & (Qt::ItemIsSelectable))) {
-                    return;
-                }
+    connect(treeView, &QTreeWidget::itemClicked, [this, modelMenu, scenePos](QTreeWidgetItem* item, int) {
+        if (!(item->flags() & (Qt::ItemIsSelectable))) {
+            return;
+        }
 
-                this->undoStack().push(new CreateCommand(this, item->text(0), scenePos));
+        QTreeWidgetItem* parent = item->parent();
+        assert(parent && "non-parents should be selectable");
 
-                modelMenu->close();
-            });
+        const auto factoryIt = std::find_if(m_nodeFactories.begin(), m_nodeFactories.end(), [parent](const auto& nodeFactory) {
+            return nodeFactory->getCategoryName() == parent->text(0);
+        });
+        assert(factoryIt != m_nodeFactories.end());
 
-    //Setup filtering
-    connect(txtBox, &QLineEdit::textChanged, [treeView](const QString &text) {
+        ProjectGraphModel& projectGraphModel = qobject_cast<ProjectGraphModel&>(graphModel());
+
+        factoryIt->createNode(projectGraphModel, item->text(0), scenePos);
+
+        modelMenu->close();
+    });
+
+    // Setup filtering
+    connect(txtBox, &QLineEdit::textChanged, [treeView](const QString& text) {
         QTreeWidgetItemIterator categoryIt(treeView, QTreeWidgetItemIterator::HasChildren);
         while (*categoryIt)
             (*categoryIt++)->setHidden(true);
@@ -80,7 +97,7 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
             const bool match = (modelName.contains(text, Qt::CaseInsensitive));
             (*it)->setHidden(!match);
             if (match) {
-                QTreeWidgetItem *parent = (*it)->parent();
+                QTreeWidgetItem* parent = (*it)->parent();
                 while (parent) {
                     parent->setHidden(false);
                     parent = parent->parent();
@@ -97,6 +114,4 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
     modelMenu->setAttribute(Qt::WA_DeleteOnClose);
 
     return modelMenu;
-    
-    */
 }

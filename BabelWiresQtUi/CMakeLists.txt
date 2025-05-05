@@ -16,6 +16,11 @@ SET( BABELWIRESQTUI_SRCS
     ValueEditors/lineEditValueEditor.cpp
     ValueEditors/tupleValueEditor.cpp
     ValueEditors/valueEditorCommonBase.cpp
+    NodeEditorBridge/NodeFactories/nodeFactory.cpp
+    NodeEditorBridge/NodeFactories/processorNodeFactory.cpp
+    NodeEditorBridge/NodeFactories/sourceFileNodeFactory.cpp
+    NodeEditorBridge/NodeFactories/targetFileNodeFactory.cpp
+    NodeEditorBridge/NodeFactories/valueNodeFactory.cpp
     NodeEditorBridge/nodeNodeModel.cpp
     NodeEditorBridge/projectGraphicsScene.cpp
     NodeEditorBridge/projectGraphModel.cpp
