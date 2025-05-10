@@ -17,6 +17,8 @@
 
 #include <BabelWiresLib/Project/project.hpp>
 
+#include <QtNodes/StyleCollection>
+
 #include <QTimer>
 
 babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManager<Project>& commandManager,
@@ -221,8 +223,12 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
         case QtNodes::NodeRole::Widget:
             return nodeModel.getEmbeddedWidget();
 
+        case QtNodes::NodeRole::Style: {
+            auto style = QtNodes::StyleCollection::nodeStyle();
+            return style.toJson().toVariantMap();
+        }
+
         // Unimplemented.
-        case QtNodes::NodeRole::Style:
         case QtNodes::NodeRole::InternalData:
         default:
             assert(false && "Not expecting this kind of node data to be queried");
@@ -239,8 +245,10 @@ bool babelwires::ProjectGraphModel::setNodeData(QtNodes::NodeId nodeId, QtNodes:
     switch (role) {
         case QtNodes::NodeRole::Position:
             nodeMoved(nodeId, value.value<QPointF>());
+            return true;
         case QtNodes::NodeRole::Size:
             nodeResized(nodeId, value.value<QSize>());
+            return true;
         default:
             assert(false && "Not expecting this kind of node data to change");
             return false;
