@@ -27,8 +27,6 @@ namespace babelwires {
     class AccessModelScope;
     class ProjectGraphModel;
 
-    struct UiSize;
-
     /// This manages the View, Model and Delegate of a Node's embedded widget.
     /// TODO: Right now, it also manages access to a bunch of other node information.
     /// However, I think that second role is not necessary: The ProjectGraphModel can
@@ -46,7 +44,6 @@ namespace babelwires {
         const QWidget* getEmbeddedWidget() const;
         QWidget* getEmbeddedWidget();
 
-        //babelwires::NodeId getNodeId() const;
         QString caption(const AccessModelScope& scope) const;
 
         const Path& getPathAtPort(const AccessModelScope& scope, QtNodes::PortType portType,
@@ -56,7 +53,8 @@ namespace babelwires {
 
         //TODO ResizableAxes resizable() const { return HorizontallyResizable; }
 
-        void setSize(const UiSize& newSize);
+        int getHeight() const;
+        void setHeight(int newHeight);
 
         /// Return the model for the embedded widget.
         NodeContentsModel& getModel();
@@ -91,6 +89,10 @@ namespace babelwires {
         NodeContentsView* m_view;
         NodeContentsModel* m_model;
         RowModelDelegate* m_delegate;
+
+        /// Width is user-editable, so it's stored in the data model. Height is calculated by NodeEditor code, but
+        /// needs to be cached.
+        int m_height;
     };
 
 } // namespace babelwires

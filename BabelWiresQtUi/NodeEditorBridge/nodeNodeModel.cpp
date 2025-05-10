@@ -39,10 +39,6 @@ babelwires::NodeNodeModel::NodeNodeModel(ProjectGraphModel& projectGraphModel, N
 
 babelwires::NodeNodeModel::~NodeNodeModel() = default;
 
-//babelwires::NodeId babelwires::NodeNodeModel::getNodeId() const {
-//    return m_nodeId;
-//}
-
 const QWidget* babelwires::NodeNodeModel::getEmbeddedWidget() const {
     return m_view;
 }
@@ -126,10 +122,12 @@ void babelwires::NodeNodeModel::customContextMenuRequested(const QPoint& pos) {
     }
 }
 
-void babelwires::NodeNodeModel::setSize(const UiSize& newSize) {
-    QWidget* widget = getEmbeddedWidget();
-    widget->setMinimumWidth(newSize.m_width);
-    widget->setMaximumWidth(newSize.m_width);
+int babelwires::NodeNodeModel::getHeight() const {
+    return m_height;
+}
+
+void babelwires::NodeNodeModel::setHeight(int newHeight) {
+    m_height = newHeight;
 }
 
 babelwires::NodeContentsModel& babelwires::NodeNodeModel::getModel() {

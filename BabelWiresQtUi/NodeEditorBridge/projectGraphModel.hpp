@@ -140,12 +140,12 @@ namespace babelwires {
             ListeningToFlowScene,
 
             /// Changes to the model require the bridge to update the flow scene.
-            /// We ignore flowScene callbacks while in this state.
-            ProcessingModelChanges,
-
-            /// The bridge expects the flow scene to inform it about a new node.
-            WaitingForNewNode,
+            /// We ignore non-const flowScene callbacks while in this state.
+            ProcessingModelChanges
         };
+
+        class StateScope;
+        friend class StateScope;
 
         /// The state of the project bridge.
         State m_state;

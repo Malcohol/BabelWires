@@ -21,6 +21,21 @@
 
 #include <QTimer>
 
+class babelwires::ProjectGraphModel::StateScope final {
+  public:
+    StateScope(ProjectGraphModel& projectGraphModel, State newState)
+        : m_projectGraphModel(projectGraphModel)
+        , m_previousState(projectGraphModel.m_state) {
+        projectGraphModel.m_state = newState;
+    }
+
+    ~StateScope() { m_projectGraphModel.m_state = m_previousState; }
+
+  private:
+    ProjectGraphModel& m_projectGraphModel;
+    State m_previousState;
+};
+
 babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManager<Project>& commandManager,
                                                  UiProjectContext& projectContext)
     : m_project(project)
@@ -75,8 +90,8 @@ babelwires::ProjectGraphModel::createConnectionDescriptionFromConnectionId(const
     assert(targetIt != m_nodeModels.end());
     const Path sourcePath = sourceIt->second->getPathAtPort(scope, QtNodes::PortType::Out, connectionId.outPortIndex);
     const Path targetPath = targetIt->second->getPathAtPort(scope, QtNodes::PortType::In, connectionId.inPortIndex);
-    return ConnectionDescription{static_cast<NodeId>(connectionId.outNodeId), std::move(sourcePath), static_cast<NodeId>(connectionId.inNodeId),
-                                 std::move(targetPath)};
+    return ConnectionDescription{static_cast<NodeId>(connectionId.outNodeId), std::move(sourcePath),
+                                 static_cast<NodeId>(connectionId.inNodeId), std::move(targetPath)};
 }
 
 void babelwires::ProjectGraphModel::addToConnectionCache(const QtNodes::ConnectionId& connectionId) {
@@ -98,6 +113,7 @@ void babelwires::ProjectGraphModel::removeFromConnectionCache(const QtNodes::Con
 }
 
 void babelwires::ProjectGraphModel::addConnectionToFlowScene(const ConnectionDescription& connection) {
+    assert(m_state == State::ProcessingModelChanges);
     AccessModelScope scope(*this);
     const QtNodes::ConnectionId connectionId = createConnectionIdFromConnectionDescription(scope, connection);
     connectionCreated(connectionId);
@@ -105,6 +121,7 @@ void babelwires::ProjectGraphModel::addConnectionToFlowScene(const ConnectionDes
 }
 
 void babelwires::ProjectGraphModel::removeConnectionFromFlowScene(const ConnectionDescription& connection) {
+    assert(m_state == State::ProcessingModelChanges);
     AccessModelScope scope(*this);
     const QtNodes::ConnectionId connectionId = createConnectionIdFromConnectionDescription(scope, connection);
     removeFromConnectionCache(connectionId);
@@ -112,6 +129,7 @@ void babelwires::ProjectGraphModel::removeConnectionFromFlowScene(const Connecti
 }
 
 void babelwires::ProjectGraphModel::addNodeToFlowScene(const Node* node) {
+    assert(m_state == State::ProcessingModelChanges);
     const NodeId nodeId = node->getNodeId();
 #ifndef NDEBUG
     const auto resultPair =
@@ -131,6 +149,7 @@ void babelwires::ProjectGraphModel::addNodeToFlowScene(const Node* node) {
 }
 
 void babelwires::ProjectGraphModel::removeNodeFromFlowScene(NodeId nodeId) {
+    assert(m_state == State::ProcessingModelChanges);
     auto it = m_nodeModels.find(nodeId);
     assert((it != m_nodeModels.end()) && "Trying to remove unrecognized node");
     m_nodeModels.erase(it);
@@ -174,6 +193,7 @@ bool babelwires::ProjectGraphModel::connectionPossible(QtNodes::ConnectionId con
 }
 
 void babelwires::ProjectGraphModel::addConnection(QtNodes::ConnectionId const connectionId) {
+    assert(m_state == State::ListeningToFlowScene);
     addToConnectionCache(connectionId);
     AccessModelScope scope(*this);
     auto connectionDescription = createConnectionDescriptionFromConnectionId(scope, connectionId);
@@ -204,7 +224,7 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
             AccessModelScope scope(*this);
             const Node* const node = scope.getProject().getNode(nodeId);
             const UiSize size = node->getUiSize();
-            return QSize{size.m_width, nodeModel.getEmbeddedWidget()->height()};
+            return QSize{size.m_width, nodeModel.getHeight()};
         }
         case QtNodes::NodeRole::CaptionVisible:
             return true;
@@ -220,9 +240,11 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
             AccessModelScope scope(*this);
             return nodeModel.nPorts(scope, QtNodes::PortType::Out);
         }
-        case QtNodes::NodeRole::Widget:
-            return nodeModel.getEmbeddedWidget();
-
+        case QtNodes::NodeRole::Widget: {
+            // TODO fromValue won't accept a const QWidget*
+            QWidget* widget = const_cast<QWidget*>(nodeModel.getEmbeddedWidget());
+            return QVariant::fromValue(widget);
+        }
         case QtNodes::NodeRole::Style: {
             auto style = QtNodes::StyleCollection::nodeStyle();
             return style.toJson().toVariantMap();
@@ -257,9 +279,8 @@ bool babelwires::ProjectGraphModel::setNodeData(QtNodes::NodeId nodeId, QtNodes:
 
 QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes::PortType portType,
                                                  QtNodes::PortIndex index, QtNodes::PortRole role) const {
-    // TODO
     switch (role) {
-        case QtNodes::PortRole::DataType: { ///< `QString` describing the port data type. 
+        case QtNodes::PortRole::DataType: { ///< `QString` describing the port data type.
             const auto it = m_nodeModels.find(nodeId);
             assert(it != m_nodeModels.end());
             const NodeNodeModel& nodeModel = *it->second;
@@ -282,6 +303,7 @@ QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes
 }
 
 bool babelwires::ProjectGraphModel::deleteConnection(QtNodes::ConnectionId const connectionId) {
+    assert(m_state == State::ListeningToFlowScene);
     removeFromConnectionCache(connectionId);
     AccessModelScope scope(*this);
     auto connectionDescription = createConnectionDescriptionFromConnectionId(scope, connectionId);
@@ -293,88 +315,61 @@ bool babelwires::ProjectGraphModel::deleteConnection(QtNodes::ConnectionId const
 }
 
 bool babelwires::ProjectGraphModel::deleteNode(QtNodes::NodeId const nodeId) {
-    switch (m_state) {
-        case State::ListeningToFlowScene: {
-            auto it = m_nodeModels.find(nodeId);
-            assert(it != m_nodeModels.end());
-            // This assert is non-essential, but it helps establish assumptions about the behaviour of the flow
-            // scene.
-            assert(it->second->getAllConnectionIds().size() == 0 &&
-                   "Node was removed while there were active connections");
-            m_nodeModels.erase(it);
-            scheduleCommand(std::make_unique<RemoveNodeCommand>("Remove node", nodeId));
-        }
-        case State::ProcessingModelChanges: {
-            // Nothing to do.
-            break;
-        }
-        default: {
-            assert(false && "Unexpected state");
-        }
-    }
-    // TODO? 
+    assert(m_state == State::ListeningToFlowScene);
+    auto it = m_nodeModels.find(nodeId);
+    assert(it != m_nodeModels.end());
+    // This assert is non-essential, but it helps establish assumptions about the behaviour of the flow
+    // scene.
+    assert(it->second->getAllConnectionIds().size() == 0 &&
+            "Node was removed while there were active connections");
+    m_nodeModels.erase(it);
+    scheduleCommand(std::make_unique<RemoveNodeCommand>("Remove node", nodeId));
+    // TODO?
     return true;
 }
 
 void babelwires::ProjectGraphModel::nodeMoved(QtNodes::NodeId nodeId, const QPointF& newLocation) {
-    switch (m_state) {
-        case State::ListeningToFlowScene: {
-            const auto it = m_nodeModels.find(nodeId);
-            assert(it != m_nodeModels.end());
-            NodeNodeModel& nodeNodeModel = *it->second;
+    if (m_state != State::ListeningToFlowScene) {
+        return;
+    }
+    const auto it = m_nodeModels.find(nodeId);
+    assert(it != m_nodeModels.end());
+    NodeNodeModel& nodeNodeModel = *it->second;
 
-            AccessModelScope scope(*this);
-            const Node* node = scope.getProject().getNode(nodeId);
-            assert(node && "The node should already be in the project");
-            const UiPosition& uiPosition = node->getNodeData().m_uiData.m_uiPosition;
-            UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
-            if (uiPosition != newPosition) {
-                std::string commandName = "Move " + nodeNodeModel.caption(scope).toStdString();
-                scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, nodeId, newPosition));
-                m_projectObserver.ignoreMovedNode(nodeId);
-            }
-            break;
-        }
-        case State::ProcessingModelChanges: {
-            // Nothing to do.
-            break;
-        }
-        default: {
-            assert(false && "Unexpected state");
-        }
+    AccessModelScope scope(*this);
+    const Node* node = scope.getProject().getNode(nodeId);
+    assert(node && "The node should already be in the project");
+    const UiPosition& uiPosition = node->getNodeData().m_uiData.m_uiPosition;
+    UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
+    if (uiPosition != newPosition) {
+        std::string commandName = "Move " + nodeNodeModel.caption(scope).toStdString();
+        scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, nodeId, newPosition));
+        m_projectObserver.ignoreMovedNode(nodeId);
     }
 }
 
 void babelwires::ProjectGraphModel::nodeResized(QtNodes::NodeId nodeId, const QSize& newSize) {
-    switch (m_state) {
-        case State::ListeningToFlowScene: {
-            const auto it = m_nodeModels.find(nodeId);
-            assert(it != m_nodeModels.end());
-            NodeNodeModel& nodeNodeModel = *it->second;
-
-            AccessModelScope scope(*this);
-            const Node* node = scope.getProject().getNode(nodeId);
-            assert(node && "The node should already be in the project");
-            const int currentWidth = node->getUiSize().m_width;
-            const int newWidth = nodeNodeModel.getEmbeddedWidget()->size().width();
-            if (newWidth != currentWidth) {
-                std::string commandName = "Resize " + nodeNodeModel.caption(scope).toStdString();
-                scheduleCommand(std::make_unique<ResizeNodeCommand>(commandName, nodeId, UiSize{newWidth}));
-                m_projectObserver.ignoreResizedNode(nodeId);
-            }
-            break;
+    const auto it = m_nodeModels.find(nodeId);
+    assert(it != m_nodeModels.end());
+    NodeNodeModel& nodeNodeModel = *it->second;
+    nodeNodeModel.setHeight(newSize.height());
+    if (m_state == State::ListeningToFlowScene) {
+        AccessModelScope scope(*this);
+        const Node* node = scope.getProject().getNode(nodeId);
+        assert(node && "The node should already be in the project");
+        const int currentWidth = node->getUiSize().m_width;
+        const int newWidth = newSize.width();
+        if (newWidth != currentWidth) {
+            std::string commandName = "Resize " + nodeNodeModel.caption(scope).toStdString();
+            scheduleCommand(std::make_unique<ResizeNodeCommand>(commandName, nodeId, UiSize{newWidth}));
+            m_projectObserver.ignoreResizedNode(nodeId);
         }
-        case State::ProcessingModelChanges: {
-            // Nothing to do.
-            break;
-        }
-        default: {
-            assert(false && "Unexpected state");
-        }
+    
     }
 }
 
 void babelwires::ProjectGraphModel::scheduleCommand(std::unique_ptr<Command<Project>> command) {
+    assert(m_state != State::ProcessingModelChanges);
     if (m_scheduledCommand) {
         assert(m_scheduledCommand->shouldSubsume(*command, false) && "Commands scheduled together should subsume");
         m_scheduledCommand->subsume(std::move(command));
@@ -386,30 +381,28 @@ void babelwires::ProjectGraphModel::scheduleCommand(std::unique_ptr<Command<Proj
 }
 
 bool babelwires::ProjectGraphModel::executeCommandSynchronously(std::unique_ptr<Command<Project>> command) {
+    assert(m_state != State::ProcessingModelChanges);
     ModifyModelScope scope(*this);
     std::unique_ptr<Command<Project>> commandPtr = std::move(command);
     return scope.getCommandManager().executeAndStealCommand(commandPtr);
 }
 
 void babelwires::ProjectGraphModel::processAndHandleModelChanges() {
+    assert(m_state != State::ProcessingModelChanges);
     // This is called from ~ModifyModelScope, so no scope is needed here.
     m_project.process();
-
-    // Below we modify the UI, but don't want the model to react, so temporarily use ProcessingModelChanges.
-    const State backedUpState = m_state;
-    m_state = State::ProcessingModelChanges;
-
-    m_projectObserver.interpretChangesAndFireSignals();
-
+    {
+        StateScope stateScope(*this, State::ProcessingModelChanges);
+        m_projectObserver.interpretChangesAndFireSignals();
+    }
     m_project.clearChanges();
-
-    m_state = backedUpState;
 
     // Reset this if it was set.
     m_newNodesShouldBeSelected = false;
 }
 
 void babelwires::ProjectGraphModel::onIdle() {
+    assert(m_state == State::ListeningToFlowScene);
     if (m_scheduledCommand) {
         ModifyModelScope scope(*this);
         std::unique_ptr<Command<Project>> scheduledCommand = std::move(m_scheduledCommand);

@@ -176,7 +176,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     // We compile the changes into these containers, and apply them below.
     // Note: The nodeeditor based UI does not know how to handle nodes which have changed
     // their number of ports, so we have to remove and re-add such nodes.
-    // TODO: Consider using a set rather than an unordered_set, since the iteratation below
+    // TODO: Consider using a set rather than an unordered_set, since the iteration below
     // will introduce non-determinacy.
     std::vector<const Node*> nodesToCreate;
     std::unordered_set<ConnectionDescription> connectionsToAdd;
