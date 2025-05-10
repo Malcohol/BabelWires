@@ -317,7 +317,6 @@ bool babelwires::ProjectGraphModel::deleteNode(QtNodes::NodeId const nodeId) {
     // scene.
     assert(it->second->getAllConnectionIds().size() == 0 &&
             "Node was removed while there were active connections");
-    m_nodeModels.erase(it);
     scheduleCommand(std::make_unique<RemoveNodeCommand>("Remove node", nodeId));
     // TODO?
     return true;
