@@ -122,12 +122,12 @@ void babelwires::NodeNodeModel::customContextMenuRequested(const QPoint& pos) {
     }
 }
 
-int babelwires::NodeNodeModel::getHeight() const {
-    return m_height;
+QSize babelwires::NodeNodeModel::getCachedSize() const {
+    return m_cachedSize;
 }
 
-void babelwires::NodeNodeModel::setHeight(int newHeight) {
-    m_height = newHeight;
+void babelwires::NodeNodeModel::setCachedSize(QSize newSize) {
+    m_cachedSize = newSize;
 }
 
 babelwires::NodeContentsModel& babelwires::NodeNodeModel::getModel() {

@@ -12,6 +12,8 @@
 #include <QtNodes/Definitions>
 #include <QtNodes/NodeData>
 
+#include <QSize>
+
 #include <vector>
 #include <unordered_set>
 
@@ -51,10 +53,8 @@ namespace babelwires {
         QtNodes::PortIndex getPortAtPath(const AccessModelScope& scope, QtNodes::PortType portType,
                                          const Path& path) const;
 
-        //TODO ResizableAxes resizable() const { return HorizontallyResizable; }
-
-        int getHeight() const;
-        void setHeight(int newHeight);
+        QSize getCachedSize() const;
+        void setCachedSize(QSize newSize);
 
         /// Return the model for the embedded widget.
         NodeContentsModel& getModel();
@@ -90,9 +90,8 @@ namespace babelwires {
         NodeContentsModel* m_model;
         RowModelDelegate* m_delegate;
 
-        /// Width is user-editable, so it's stored in the data model. Height is calculated by NodeEditor code, but
-        /// needs to be cached.
-        int m_height;
+        /// The model is expected to cache the size.
+        QSize m_cachedSize;
     };
 
 } // namespace babelwires

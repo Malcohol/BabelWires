@@ -220,12 +220,8 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
             const UiPosition position = node->getUiPosition();
             return QPointF{static_cast<qreal>(position.m_x), static_cast<qreal>(position.m_y)};
         }
-        case QtNodes::NodeRole::Size: {
-            AccessModelScope scope(*this);
-            const Node* const node = scope.getProject().getNode(nodeId);
-            const UiSize size = node->getUiSize();
-            return QSize{size.m_width, nodeModel.getHeight()};
-        }
+        case QtNodes::NodeRole::Size:
+            return nodeModel.getCachedSize();
         case QtNodes::NodeRole::CaptionVisible:
             return true;
         case QtNodes::NodeRole::Caption: {
@@ -259,8 +255,7 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
 }
 
 QtNodes::NodeFlags babelwires::ProjectGraphModel::nodeFlags(QtNodes::NodeId nodeId) const {
-    // TODO Distinguish between horizontal and vertical resizing.
-    return QtNodes::NodeFlag::Resizable;
+    return QtNodes::NodeFlag::NoFlags;
 }
 
 bool babelwires::ProjectGraphModel::setNodeData(QtNodes::NodeId nodeId, QtNodes::NodeRole role, QVariant value) {
@@ -352,21 +347,7 @@ void babelwires::ProjectGraphModel::nodeResized(QtNodes::NodeId nodeId, const QS
     const auto it = m_nodeModels.find(nodeId);
     assert(it != m_nodeModels.end());
     NodeNodeModel& nodeNodeModel = *it->second;
-    nodeNodeModel.setHeight(newSize.height());
-    //if (m_state == State::ListeningToFlowScene) 
-    {
-        AccessModelScope scope(*this);
-        const Node* node = scope.getProject().getNode(nodeId);
-        assert(node && "The node should already be in the project");
-        const int currentWidth = node->getUiSize().m_width;
-        const int newWidth = newSize.width();
-        if (newWidth != currentWidth) {
-            std::string commandName = "Resize " + nodeNodeModel.caption(scope).toStdString();
-            scheduleCommand(std::make_unique<ResizeNodeCommand>(commandName, nodeId, UiSize{newWidth}));
-            //m_projectObserver.ignoreResizedNode(nodeId);
-        }
-    
-    }
+    nodeNodeModel.setCachedSize(newSize);
 }
 
 void babelwires::ProjectGraphModel::scheduleCommand(std::unique_ptr<Command<Project>> command) {
