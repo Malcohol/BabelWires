@@ -413,6 +413,15 @@ babelwires::MainWindow* babelwires::ProjectGraphModel::getMainWindow() const {
     return m_mainWindow;
 }
 
-void babelwires::ProjectGraphModel::setMainWindow(MainWindow* mainWindow) {
+QGraphicsView* babelwires::ProjectGraphModel::getFlowGraphWidget() {
+    return m_flowGraphWidget;
+}
+
+void babelwires::ProjectGraphModel::setWidgets(MainWindow* mainWindow, QGraphicsView* flowGraphWidget) {
     m_mainWindow = mainWindow;
+    m_flowGraphWidget = flowGraphWidget;
+}
+
+const babelwires::UiProjectContext& babelwires::ProjectGraphModel::getContext() const {
+    return m_projectContext;
 }

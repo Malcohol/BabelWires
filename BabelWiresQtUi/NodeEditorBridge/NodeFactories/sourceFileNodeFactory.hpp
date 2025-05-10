@@ -20,8 +20,7 @@ namespace babelwires {
 
         QList<QString> getFactoryNames() const override;
 
-        void createNode(ProjectGraphModel& projectGraphModel, QString factoryName, QPointF scenePos,
-                        QWidget* parentForDialogs) override;
+        void createNode(ProjectGraphModel& projectGraphModel, QString factoryName, QPointF scenePos) override;
 
       private:
         const SourceFileFormatRegistry& m_sourceFileFormatRegistry;

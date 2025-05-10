@@ -56,7 +56,7 @@ namespace babelwires {
         /// This can be used as the parent of dialogs and menus.
         QGraphicsView* getFlowGraphWidget();
 
-        void setMainWindow(MainWindow* mainWindow);
+        void setWidgets(MainWindow* mainWindow, QGraphicsView* flowGraphWidget);
 
         const UiProjectContext& getContext() const;
       public:
@@ -131,6 +131,7 @@ namespace babelwires {
         UiProjectContext& m_projectContext;
 
         MainWindow* m_mainWindow = nullptr;
+        QGraphicsView* m_flowGraphWidget = nullptr;
 
         /// We use an explicit state variable.
         enum class State {

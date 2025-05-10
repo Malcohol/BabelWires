@@ -55,7 +55,7 @@ babelwires::MainWindow::MainWindow(ProjectGraphModel& projectGraphModel, Unified
 
     auto scene = new ProjectGraphicsScene(projectGraphModel);
     auto view = new QtNodes::GraphicsView(scene);
-    scene->setWidgetForDialogs(view);
+    projectGraphModel.setWidgets(this, view);
 
     setCentralWidget(view);
 

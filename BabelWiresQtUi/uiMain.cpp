@@ -29,7 +29,6 @@ struct babelwires::Ui::Impl {
         CommandManager commandManager(project, m_log);
         ProjectGraphModel projectGraphModel(project, commandManager, m_projectContext);
         MainWindow mainWidget(projectGraphModel, m_log);
-        projectGraphModel.setMainWindow(&mainWidget);
 
         m_app.exec();
     }

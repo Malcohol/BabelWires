@@ -28,7 +28,7 @@ void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::NodeContent
     ProjectGraphModel& projectGraphModel = model.getProjectGraphModel();
     const NodeId elementId = model.getNodeId();
 
-    // Since formats are immuatable and live in the registry, they can be accessed outside a scope.
+    // Since formats are immutable and live in the registry, they can be accessed outside a scope.
     const FileTypeEntry* fileFormatInformation = nullptr;
     {
         AccessModelScope scope(projectGraphModel);

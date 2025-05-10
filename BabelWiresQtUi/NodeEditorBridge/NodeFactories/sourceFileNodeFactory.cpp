@@ -36,11 +36,11 @@ QList<QString> babelwires::SourceFileNodeFactory::getFactoryNames() const {
 }
 
 void babelwires::SourceFileNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName,
-                                                   QPointF scenePos, QWidget* parentForDialogs) {
+                                                   QPointF scenePos) {
     const SourceFileFormat* sourceFileFormat = m_sourceFileFormatRegistry.getEntryByName(factoryName.toStdString());
     assert(sourceFileFormat);
 
-    QString filePath = showOpenFileDialog(parentForDialogs, *sourceFileFormat);
+    QString filePath = showOpenFileDialog(projectGraphModel.getFlowGraphWidget(), *sourceFileFormat);
 
     if (!filePath.isNull()) {
         auto newNodeData = std::make_unique<SourceFileNodeData>();

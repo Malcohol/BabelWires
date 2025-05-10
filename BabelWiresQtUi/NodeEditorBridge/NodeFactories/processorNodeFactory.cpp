@@ -33,7 +33,7 @@ QList<QString> babelwires::ProcessorNodeFactory::getFactoryNames() const {
 }
 
 void babelwires::ProcessorNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName,
-                                                  QPointF scenePos, QWidget* parentForDialogs) {
+                                                  QPointF scenePos) {
     const ProcessorFactory* processorFactory = m_processorFactoryRegistry.getEntryByName(factoryName.toStdString());
     assert(processorFactory);
 

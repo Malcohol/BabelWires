@@ -86,7 +86,7 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
 
         ProjectGraphModel* projectGraphModel = qobject_cast<ProjectGraphModel*>(&graphModel());
 
-        (*factoryIt)->createNode(*projectGraphModel, item->text(0), scenePos, m_widgetForDialogs);
+        (*factoryIt)->createNode(*projectGraphModel, item->text(0), scenePos);
 
         modelMenu->close();
     });

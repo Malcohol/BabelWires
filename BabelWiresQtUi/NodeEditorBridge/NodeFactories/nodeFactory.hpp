@@ -6,7 +6,9 @@
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <QWidget>
+#include <QList>
+#include <QString>
+#include <QPointF>
 
 namespace babelwires {
     class ProjectGraphModel;
@@ -19,7 +21,6 @@ namespace babelwires {
 
         virtual QList<QString> getFactoryNames() const = 0;
 
-        virtual void createNode(ProjectGraphModel& projectGraphicsScene, QString factoryName, QPointF const scenePos,
-                                QWidget* parentForDialogs) = 0;
+        virtual void createNode(ProjectGraphModel& projectGraphicsScene, QString factoryName, QPointF const scenePos) = 0;
     };
 } // namespace babelwires

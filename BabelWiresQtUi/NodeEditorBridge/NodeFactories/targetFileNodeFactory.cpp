@@ -31,7 +31,7 @@ QList<QString> babelwires::TargetFileNodeFactory::getFactoryNames() const {
     return factoryNames;
 }
 
-void babelwires::TargetFileNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName, QPointF scenePos, QWidget* parentForDialogs) {
+void babelwires::TargetFileNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName, QPointF scenePos) {
     const TargetFileFormat* targetFileFormat = m_targetFileFormatRegistry.getEntryByName(factoryName.toStdString());
     assert(targetFileFormat);
 

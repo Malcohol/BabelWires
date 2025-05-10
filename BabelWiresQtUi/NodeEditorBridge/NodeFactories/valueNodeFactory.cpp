@@ -33,7 +33,7 @@ QList<QString> babelwires::ValueNodeFactory::getFactoryNames() const {
 }
 
 void babelwires::ValueNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName,
-                                              QPointF scenePos, QWidget* parentForDialogs) {
+                                              QPointF scenePos) {
     std::optional<PrimitiveTypeId> typeId;
     {
         auto identifierRegistry = IdentifierRegistry::read();
