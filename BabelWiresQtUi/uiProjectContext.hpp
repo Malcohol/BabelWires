@@ -12,12 +12,12 @@
 namespace babelwires {
     class ValueModelRegistry;
 
-    /// Values which give a particular BabelWires application its identity.
+    /// Values which give the application its identity.
     struct ApplicationIdentity
     {
-        /// The name of the application (e.g. "FooEditor")
+        /// The name of the application ("BabelWires")
         std::string m_applicationTitle;
-        /// The extension to use for projects (e.g. ".fooproj")
+        /// The extension to use for projects (e.g. ".babelwires")
         std::string m_projectExtension;
     };
 

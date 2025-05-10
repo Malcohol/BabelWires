@@ -11,10 +11,11 @@
 
 namespace babelwires {
     class SourceFileFormatRegistry;
+    class UiProjectContext;
 
     class SourceFileNodeFactory : public NodeFactory {
       public:
-        SourceFileNodeFactory(const SourceFileFormatRegistry& sourceFileFormatRegistry);
+        SourceFileNodeFactory(const UiProjectContext& projectContext);
 
         QString getCategoryName() const override;
 

@@ -8,6 +8,7 @@
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/valueNodeFactory.hpp>
 
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
@@ -16,8 +17,8 @@
 
 #include <optional>
 
-babelwires::ValueNodeFactory::ValueNodeFactory(const TypeSystem& typeSystem)
-    : m_typeSystem(typeSystem) {}
+babelwires::ValueNodeFactory::ValueNodeFactory(const UiProjectContext& projectContext)
+    : m_typeSystem(projectContext.m_typeSystem) {}
 
 QString babelwires::ValueNodeFactory::getCategoryName() const {
     return "Values";

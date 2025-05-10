@@ -20,11 +20,13 @@ namespace babelwires {
       public:
         ProjectGraphicsScene(ProjectGraphModel& graphModel);
 
-        void addNodeFactory(std::unique_ptr<NodeFactory> nodeFactory);
-
         QMenu* createSceneMenu(QPointF const scenePos) override;
 
         void setWidgetForDialogs(QWidget* widgetForDialogs);
+
+      private:
+        void addNodeFactory(std::unique_ptr<NodeFactory> nodeFactory);
+        
       private:
         std::vector<std::unique_ptr<NodeFactory>> m_nodeFactories;
         QWidget* m_widgetForDialogs = nullptr;

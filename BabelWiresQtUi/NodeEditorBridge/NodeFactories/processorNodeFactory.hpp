@@ -11,10 +11,11 @@
 
 namespace babelwires {
     class ProcessorFactoryRegistry;
+    class UiProjectContext;
 
     class ProcessorNodeFactory : public NodeFactory {
       public:
-        ProcessorNodeFactory(const ProcessorFactoryRegistry& processorFactoryRegistry);
+        ProcessorNodeFactory(const UiProjectContext& projectContext);
 
         QString getCategoryName() const override;
 

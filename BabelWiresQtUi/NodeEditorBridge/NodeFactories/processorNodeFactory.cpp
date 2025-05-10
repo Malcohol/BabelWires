@@ -8,6 +8,7 @@
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/processorNodeFactory.hpp>
 
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
@@ -16,8 +17,8 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp> 
 
-babelwires::ProcessorNodeFactory::ProcessorNodeFactory(const ProcessorFactoryRegistry& processorFactoryRegistry)
-    : m_processorFactoryRegistry(processorFactoryRegistry) {}
+babelwires::ProcessorNodeFactory::ProcessorNodeFactory(const UiProjectContext& projectContext)
+    : m_processorFactoryRegistry(projectContext.m_processorReg) {}
 
 QString babelwires::ProcessorNodeFactory::getCategoryName() const {
     return m_processorFactoryRegistry.getRegistryName().c_str();

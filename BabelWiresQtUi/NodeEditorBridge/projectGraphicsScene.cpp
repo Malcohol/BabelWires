@@ -6,11 +6,6 @@
  */
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphicsScene.hpp>
 
-#include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
-#include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
-#include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/processorNodeFactory.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/sourceFileNodeFactory.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/targetFileNodeFactory.hpp>
@@ -24,7 +19,14 @@
 #include <QWidgetAction>
 
 babelwires::ProjectGraphicsScene::ProjectGraphicsScene(ProjectGraphModel& projectGraphModel)
-    : BasicGraphicsScene(projectGraphModel) {}
+    : BasicGraphicsScene(projectGraphModel) {
+        const auto& context = projectGraphModel.getContext();
+        // TODO This maybe should be managed externally to this class.
+        addNodeFactory(std::make_unique<SourceFileNodeFactory>(context));
+        addNodeFactory(std::make_unique<TargetFileNodeFactory>(context));
+        addNodeFactory(std::make_unique<ProcessorNodeFactory>(context));
+        addNodeFactory(std::make_unique<ValueNodeFactory>(context));
+    }
 
 void babelwires::ProjectGraphicsScene::addNodeFactory(std::unique_ptr<NodeFactory> nodeFactory) {
     m_nodeFactories.emplace_back(std::move(nodeFactory));

@@ -11,10 +11,11 @@
 
 namespace babelwires {
     class TypeSystem;
+    class UiProjectContext;
 
     class ValueNodeFactory : public NodeFactory {
       public:
-        ValueNodeFactory(const TypeSystem& typeSystem);
+        ValueNodeFactory(const UiProjectContext& uiProjectContext);
 
         QString getCategoryName() const override;
 

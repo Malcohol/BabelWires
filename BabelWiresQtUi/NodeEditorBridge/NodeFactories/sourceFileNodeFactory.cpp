@@ -10,6 +10,7 @@
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
@@ -19,8 +20,8 @@
 
 #include <Common/Identifiers/identifierRegistry.hpp> 
 
-babelwires::SourceFileNodeFactory::SourceFileNodeFactory(const SourceFileFormatRegistry& sourceFileFormatRegistry)
-    : m_sourceFileFormatRegistry(sourceFileFormatRegistry) {}
+babelwires::SourceFileNodeFactory::SourceFileNodeFactory(const UiProjectContext& projectContext)
+    : m_sourceFileFormatRegistry(projectContext.m_sourceFileFormatReg) {}
 
 QString babelwires::SourceFileNodeFactory::getCategoryName() const {
     return m_sourceFileFormatRegistry.getRegistryName().c_str();
