@@ -344,7 +344,7 @@ void babelwires::ProjectGraphModel::nodeMoved(QtNodes::NodeId nodeId, const QPoi
     if (uiPosition != newPosition) {
         std::string commandName = "Move " + nodeNodeModel.caption(scope).toStdString();
         scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, nodeId, newPosition));
-        m_projectObserver.ignoreMovedNode(nodeId);
+        //m_projectObserver.ignoreMovedNode(nodeId);
     }
 }
 
@@ -353,7 +353,8 @@ void babelwires::ProjectGraphModel::nodeResized(QtNodes::NodeId nodeId, const QS
     assert(it != m_nodeModels.end());
     NodeNodeModel& nodeNodeModel = *it->second;
     nodeNodeModel.setHeight(newSize.height());
-    if (m_state == State::ListeningToFlowScene) {
+    //if (m_state == State::ListeningToFlowScene) 
+    {
         AccessModelScope scope(*this);
         const Node* node = scope.getProject().getNode(nodeId);
         assert(node && "The node should already be in the project");
@@ -362,14 +363,14 @@ void babelwires::ProjectGraphModel::nodeResized(QtNodes::NodeId nodeId, const QS
         if (newWidth != currentWidth) {
             std::string commandName = "Resize " + nodeNodeModel.caption(scope).toStdString();
             scheduleCommand(std::make_unique<ResizeNodeCommand>(commandName, nodeId, UiSize{newWidth}));
-            m_projectObserver.ignoreResizedNode(nodeId);
+            //m_projectObserver.ignoreResizedNode(nodeId);
         }
     
     }
 }
 
 void babelwires::ProjectGraphModel::scheduleCommand(std::unique_ptr<Command<Project>> command) {
-    assert(m_state != State::ProcessingModelChanges);
+    //assert(m_state != State::ProcessingModelChanges);
     if (m_scheduledCommand) {
         assert(m_scheduledCommand->shouldSubsume(*command, false) && "Commands scheduled together should subsume");
         m_scheduledCommand->subsume(std::move(command));
