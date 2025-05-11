@@ -18,6 +18,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <QtNodes/StyleCollection>
+#include <QtNodes/internal/NodeGraphicsObject.hpp>
 
 #include <QTimer>
 
@@ -386,4 +387,21 @@ void babelwires::ProjectGraphModel::setWidgets(MainWindow* mainWindow, QGraphics
 
 const babelwires::UiProjectContext& babelwires::ProjectGraphModel::getContext() const {
     return m_projectContext;
+}
+
+babelwires::ProjectData babelwires::ProjectGraphModel::getDataFromSelectedNodes(QList<QGraphicsItem*> selectedItems) const {
+    ProjectData projectData;
+    AccessModelScope scope(*this);
+    const Project& project = scope.getProject();
+    projectData.m_projectId = project.getProjectId();
+
+    for (QGraphicsItem *item : selectedItems) {
+        if (auto nodeGraphicsObject = qgraphicsitem_cast<QtNodes::NodeGraphicsObject *>(item)) {
+            const Node* const node = project.getNode(nodeGraphicsObject->nodeId());
+            assert(node && "The node is not in the project");
+            projectData.m_nodes.emplace_back(node->extractNodeData());
+        }
+    }
+
+    return projectData;
 }

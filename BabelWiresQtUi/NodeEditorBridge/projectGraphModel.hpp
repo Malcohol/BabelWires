@@ -59,6 +59,8 @@ namespace babelwires {
         void setWidgets(MainWindow* mainWindow, QGraphicsView* flowGraphWidget);
 
         const UiProjectContext& getContext() const;
+
+        ProjectData getDataFromSelectedNodes(QList<QGraphicsItem*> selectedItems) const;
       public:
         // The AbstractGraphModel interface.
         std::unordered_set<QtNodes::NodeId> allNodeIds() const override;

@@ -53,8 +53,11 @@ babelwires::MainWindow::MainWindow(ProjectGraphModel& projectGraphModel, Unified
     : m_projectGraphModel(projectGraphModel)
     , m_userLogger(log) {
 
-    auto scene = new ProjectGraphicsScene(projectGraphModel);
-    auto view = new QtNodes::GraphicsView(scene);
+    m_graphicsScene = new ProjectGraphicsScene(projectGraphModel);
+    // Don't call the constructor that takes a scene, since it calls setScene.
+    auto view = new QtNodes::GraphicsView();
+    // Don't call GraphicsView setScene, since it registers actions we don't want.
+    view->QGraphicsView::setScene(m_graphicsScene);
     projectGraphModel.setWidgets(this, view);
 
     setCentralWidget(view);
@@ -129,9 +132,8 @@ void babelwires::MainWindow::createActions() {
     m_copyAction->setEnabled(false);
     connect(m_copyAction.get(), &QAction::triggered, this, &MainWindow::copy);
 
-    // TODO Selection
-    //connect(&m_projectGraphModel, &ProjectGraphModel::nodeSelectionChanged, this, &MainWindow::onNodeSelectionChanged);
-
+    connect(m_graphicsScene, &QGraphicsScene::selectionChanged, this, &MainWindow::onNodeSelectionChanged);
+    
     m_pasteAction = std::make_unique<QAction>(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
     m_pasteAction->setShortcuts(QKeySequence::Paste);
     onClipboardChanged();
@@ -363,17 +365,15 @@ void babelwires::MainWindow::redo() {
 }
 
 babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
-    // TODO Selection
-    //ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes();
-    //
-    //auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
-    //assert(flowView && "Unexpected central widget");
-    //const QPointF centre = flowView->sceneRect().center();
-    //UiPosition offset{static_cast<UiCoord>(-centre.x()), static_cast<UiCoord>(-centre.y())};
-    //projectUtilities::translate(offset, projectData);
-    //
-    //return projectData;
-    return {};
+    ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes(m_graphicsScene->selectedItems());
+    
+    auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
+    assert(flowView && "Unexpected central widget");
+    const QPointF centre = flowView->sceneRect().center();
+    UiPosition offset{static_cast<UiCoord>(-centre.x()), static_cast<UiCoord>(-centre.y())};
+    projectUtilities::translate(offset, projectData);
+    
+    return projectData;
 }
 
 void babelwires::MainWindow::writeToClipboard(ProjectData projectData) {
@@ -489,8 +489,8 @@ void babelwires::MainWindow::saveAllTargets() {
     scope.getProject().tryToSaveAllTargets();
 }
 
-void babelwires::MainWindow::onNodeSelectionChanged(int numNodesSelected) {
-    const bool enabled = (numNodesSelected > 0);
+void babelwires::MainWindow::onNodeSelectionChanged() {
+    const bool enabled = (m_graphicsScene->selectedItems().size() > 0);
     m_cutAction->setEnabled(enabled);
     m_copyAction->setEnabled(enabled);
 }

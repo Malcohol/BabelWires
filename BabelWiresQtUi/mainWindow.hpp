@@ -20,6 +20,7 @@
 #include <unordered_map>
 
 class QToolBar;
+class QGraphicsScene;
 
 namespace babelwires {
     class UnifiedLog;
@@ -56,7 +57,7 @@ namespace babelwires {
         void paste();
         void reloadAllSources();
         void saveAllTargets();
-        void onNodeSelectionChanged(int numNodesSelected);
+        void onNodeSelectionChanged();
         void onClipboardChanged();
 
       private:
@@ -95,6 +96,7 @@ namespace babelwires {
 
       private:
         ProjectGraphModel& m_projectGraphModel;
+        QGraphicsScene* m_graphicsScene;
         QToolBar* m_mainToolbar;
         UserLogger& m_userLogger;
         LogWindow* m_logWindow;
