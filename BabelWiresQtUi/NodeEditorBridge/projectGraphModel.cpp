@@ -50,10 +50,10 @@ babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManage
         m_projectObserver.m_nodeWasRemoved.subscribe([this](NodeId nodeId) { removeNodeFromFlowScene(nodeId); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasMoved.subscribe(
-        [this](NodeId nodeId, const UiPosition& uiPosition) { nodePositionUpdated(nodeId); }));
+        [this](NodeId nodeId, const UiPosition& uiPosition) { Q_EMIT nodePositionUpdated(nodeId); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasResized.subscribe(
-        [this](NodeId nodeId, const UiSize& newSize) { nodeUpdated(nodeId); }));
+        [this](NodeId nodeId, const UiSize& newSize) { Q_EMIT nodeUpdated(nodeId); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_connectionWasAdded.subscribe(
         [this](const ConnectionDescription& connection) { addConnectionToFlowScene(connection); }));
@@ -62,7 +62,7 @@ babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManage
         [this](const ConnectionDescription& connection) { removeConnectionFromFlowScene(connection); }));
 
     m_projectObserverSubscriptions.emplace_back(
-        m_projectObserver.m_contentWasChanged.subscribe([this](NodeId nodeId) { nodeUpdated(nodeId); }));
+        m_projectObserver.m_contentWasChanged.subscribe([this](NodeId nodeId) { Q_EMIT nodeUpdated(nodeId); }));
 }
 
 babelwires::ProjectGraphModel::~ProjectGraphModel() = default;
@@ -98,7 +98,7 @@ void babelwires::ProjectGraphModel::addConnectionToFlowScene(const ConnectionDes
     assert(m_state == State::ProcessingModelChanges);
     AccessModelScope scope(*this);
     const QtNodes::ConnectionId connectionId = createConnectionIdFromConnectionDescription(scope, connection);
-    connectionCreated(connectionId);
+    Q_EMIT connectionCreated(connectionId);
     const auto sourceIt = m_nodeModels.find(connectionId.outNodeId);
     assert(sourceIt != m_nodeModels.end());
     sourceIt->second->addOutConnection(connectionId, connection);
@@ -116,7 +116,7 @@ void babelwires::ProjectGraphModel::removeConnectionFromFlowScene(const Connecti
     const auto targetIt = m_nodeModels.find(connection.m_targetId);
     assert(targetIt != m_nodeModels.end());
     const QtNodes::ConnectionId connectionId = targetIt->second->removeInConnection(connection);
-    connectionDeleted(connectionId);
+    Q_EMIT connectionDeleted(connectionId);
 }
 
 void babelwires::ProjectGraphModel::addNodeToFlowScene(const Node* node) {
@@ -127,10 +127,10 @@ void babelwires::ProjectGraphModel::addNodeToFlowScene(const Node* node) {
 #endif
         m_nodeModels.insert(std::make_pair(nodeId, std::make_unique<NodeNodeModel>(*this, nodeId)));
     assert(resultPair.second && "There's already a nodeModel for that nodeId");
-    nodeCreated(nodeId);
+    Q_EMIT nodeCreated(nodeId);
     // We don't need to add connections here: The project observer will fire signals about them.
 
-    /* TODO Would need access to graphics objects.
+    /* TODO need access to graphics objects.
     // Place new nodes at the very top.
     newNode.nodeGraphicsObject().setZValue(std::numeric_limits<qreal>::max());
     if (m_newNodesShouldBeSelected) {
@@ -144,7 +144,7 @@ void babelwires::ProjectGraphModel::removeNodeFromFlowScene(NodeId nodeId) {
     auto it = m_nodeModels.find(nodeId);
     assert((it != m_nodeModels.end()) && "Trying to remove unrecognized node");
     m_nodeModels.erase(it);
-    nodeDeleted(nodeId);
+    Q_EMIT nodeDeleted(nodeId);
 }
 
 std::unordered_set<QtNodes::NodeId> babelwires::ProjectGraphModel::allNodeIds() const {
@@ -319,7 +319,6 @@ void babelwires::ProjectGraphModel::nodeMoved(QtNodes::NodeId nodeId, const QPoi
     if (uiPosition != newPosition) {
         std::string commandName = "Move " + nodeNodeModel.caption(scope).toStdString();
         scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, nodeId, newPosition));
-        //m_projectObserver.ignoreMovedNode(nodeId);
     }
 }
 
