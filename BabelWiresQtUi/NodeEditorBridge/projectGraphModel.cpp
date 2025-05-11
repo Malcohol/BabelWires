@@ -18,7 +18,6 @@
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <QtNodes/StyleCollection>
-#include <QtNodes/internal/NodeGraphicsObject.hpp>
 
 #include <QTimer>
 
@@ -286,24 +285,6 @@ QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes
     };
 }
 
-bool babelwires::ProjectGraphModel::deleteConnection(QtNodes::ConnectionId const connectionId) {
-    assert(m_state == State::ListeningToFlowScene);
-    AccessModelScope scope(*this);
-    auto connectionDescription = createConnectionDescriptionFromConnectionId(scope, connectionId);
-    scheduleCommand(connectionDescription.getDisconnectionCommand());
-    // TODO?
-    return true;
-}
-
-bool babelwires::ProjectGraphModel::deleteNode(QtNodes::NodeId const nodeId) {
-    assert(m_state == State::ListeningToFlowScene);
-    auto it = m_nodeModels.find(nodeId);
-    assert(it != m_nodeModels.end());
-    scheduleCommand(std::make_unique<RemoveNodeCommand>("Remove node", nodeId));
-    // TODO?
-    return true;
-}
-
 void babelwires::ProjectGraphModel::nodeMoved(QtNodes::NodeId nodeId, const QPointF& newLocation) {
     if (m_state != State::ListeningToFlowScene) {
         return;
@@ -389,18 +370,16 @@ const babelwires::UiProjectContext& babelwires::ProjectGraphModel::getContext() 
     return m_projectContext;
 }
 
-babelwires::ProjectData babelwires::ProjectGraphModel::getDataFromSelectedNodes(QList<QGraphicsItem*> selectedItems) const {
+babelwires::ProjectData babelwires::ProjectGraphModel::getDataFromSelectedNodes(const std::vector<NodeId>& selectedNodes) const {
     ProjectData projectData;
     AccessModelScope scope(*this);
     const Project& project = scope.getProject();
     projectData.m_projectId = project.getProjectId();
 
-    for (QGraphicsItem *item : selectedItems) {
-        if (auto nodeGraphicsObject = qgraphicsitem_cast<QtNodes::NodeGraphicsObject *>(item)) {
-            const Node* const node = project.getNode(nodeGraphicsObject->nodeId());
-            assert(node && "The node is not in the project");
-            projectData.m_nodes.emplace_back(node->extractNodeData());
-        }
+    for (NodeId nodeId : selectedNodes) {
+        const Node* const node = project.getNode(nodeId);
+        assert(node && "The node is not in the project");
+        projectData.m_nodes.emplace_back(node->extractNodeData());
     }
 
     return projectData;

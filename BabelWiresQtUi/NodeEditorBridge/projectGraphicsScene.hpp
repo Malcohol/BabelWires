@@ -24,6 +24,15 @@ namespace babelwires {
 
         void setWidgetForDialogs(QWidget* widgetForDialogs);
 
+        struct SelectedObjects {
+          std::vector<NodeId> m_nodeIds;
+          std::vector<QtNodes::ConnectionId> m_connectionIds;
+        };
+
+        bool isSomethingSelected() const;
+        bool areNodesSelected() const;
+        SelectedObjects getSelectedObjects() const;
+
       private:
         void addNodeFactory(std::unique_ptr<NodeFactory> nodeFactory);
         

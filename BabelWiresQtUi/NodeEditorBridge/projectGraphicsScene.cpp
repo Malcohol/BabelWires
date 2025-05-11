@@ -12,6 +12,10 @@
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/valueNodeFactory.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
+// TODO - internal
+#include <QtNodes/internal/NodeGraphicsObject.hpp>
+#include <QtNodes/internal/ConnectionGraphicsObject.hpp>
+
 #include <QHeaderView>
 #include <QLineEdit>
 #include <QMenu>
@@ -121,4 +125,32 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
     modelMenu->setAttribute(Qt::WA_DeleteOnClose);
 
     return modelMenu;
+}
+
+bool babelwires::ProjectGraphicsScene::isSomethingSelected() const {
+    return selectedItems().size() > 0;
+}
+
+bool babelwires::ProjectGraphicsScene::areNodesSelected() const {
+    for (QGraphicsItem *item : selectedItems()) {
+        if (qgraphicsitem_cast<QtNodes::NodeGraphicsObject*>(item)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+babelwires::ProjectGraphicsScene::SelectedObjects babelwires::ProjectGraphicsScene::getSelectedObjects() const {
+    SelectedObjects selection;
+
+    for (QGraphicsItem *item : selectedItems()) {
+        if (auto nodeGraphicsObject = qgraphicsitem_cast<QtNodes::NodeGraphicsObject*>(item)) {
+            selection.m_nodeIds.emplace_back(nodeGraphicsObject->nodeId());
+        }
+        if (auto connectionGraphicsObject = qgraphicsitem_cast<QtNodes::ConnectionGraphicsObject*>(item)) {
+            selection.m_connectionIds.emplace_back(connectionGraphicsObject->connectionId());
+        }
+    }
+
+    return selection;
 }

@@ -52,7 +52,7 @@ namespace babelwires {
 
         /// Get a pointer to the main window, which is needed when creating editors for values such as maps.
         MainWindow* getMainWindow() const;
-        
+
         /// This can be used as the parent of dialogs and menus.
         QGraphicsView* getFlowGraphWidget();
 
@@ -60,12 +60,14 @@ namespace babelwires {
 
         const UiProjectContext& getContext() const;
 
-        ProjectData getDataFromSelectedNodes(QList<QGraphicsItem*> selectedItems) const;
+        ProjectData getDataFromSelectedNodes(const std::vector<NodeId>& selectedNodes) const;
+
       public:
         // The AbstractGraphModel interface.
         std::unordered_set<QtNodes::NodeId> allNodeIds() const override;
         std::unordered_set<QtNodes::ConnectionId> allConnectionIds(QtNodes::NodeId const nodeId) const override;
-        std::unordered_set<QtNodes::ConnectionId> connections(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index) const override;
+        std::unordered_set<QtNodes::ConnectionId> connections(QtNodes::NodeId nodeId, QtNodes::PortType portType,
+                                                              QtNodes::PortIndex index) const override;
         bool connectionExists(QtNodes::ConnectionId const connectionId) const override;
         bool connectionPossible(QtNodes::ConnectionId const connectionId) const override;
         void addConnection(QtNodes::ConnectionId const connectionId) override;
@@ -73,17 +75,38 @@ namespace babelwires {
         QVariant nodeData(QtNodes::NodeId nodeId, QtNodes::NodeRole role) const override;
         QtNodes::NodeFlags nodeFlags(QtNodes::NodeId nodeId) const override;
         bool setNodeData(QtNodes::NodeId nodeId, QtNodes::NodeRole role, QVariant value) override;
-        QVariant portData(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index, QtNodes::PortRole role) const override;
-        bool deleteConnection(QtNodes::ConnectionId const connectionId) override;
-        bool deleteNode(QtNodes::NodeId const nodeId) override;
+        QVariant portData(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index,
+                          QtNodes::PortRole role) const override;
 
+      public:
         // Parts of the interface that are not needed in this use-case.
-        bool setPortData(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index, QVariant const& value,
-          QtNodes::PortRole role = QtNodes::PortRole::Data) override {
+        bool setPortData(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index,
+                         QVariant const& value, QtNodes::PortRole role = QtNodes::PortRole::Data) override {
             assert(false);
+            return false;
         };
-        QtNodes::NodeId newNodeId() override { assert(false); };
-        QtNodes::NodeId addNode(QString const nodeType = QString()) override { assert(false); };
+        QtNodes::NodeId newNodeId() override {
+            assert(false);
+            return 0;
+        };
+        QtNodes::NodeId addNode(QString const nodeType = QString()) override {
+            assert(false);
+            return 0;
+        };
+        bool deleteConnection(QtNodes::ConnectionId const connectionId) override {
+            assert(false);
+            return false;
+        }
+        bool deleteNode(QtNodes::NodeId const nodeId) override {
+            assert(false);
+            return false;
+        }
+
+      public:
+        QtNodes::ConnectionId createConnectionIdFromConnectionDescription(const AccessModelScope& scope,
+                                                                          const ConnectionDescription& connection);
+        ConnectionDescription createConnectionDescriptionFromConnectionId(const AccessModelScope& scope,
+                                                                          const QtNodes::ConnectionId& connectionId);
 
       private:
         /// Called from setNodeData.
@@ -94,11 +117,6 @@ namespace babelwires {
 
         QString getNodeCaption(QtNodes::NodeId nodeId) const;
 
-      private:
-        QtNodes::ConnectionId createConnectionIdFromConnectionDescription(const AccessModelScope& scope,
-                                                                          const ConnectionDescription& connection);
-        ConnectionDescription createConnectionDescriptionFromConnectionId(const AccessModelScope& scope,
-                                                                          const QtNodes::ConnectionId& connectionId);
       private:
         // Changes caused by the model
 
@@ -115,11 +133,11 @@ namespace babelwires {
         void removeNodeFromFlowScene(NodeId elementId);
 
       private:
-        /// Respond to changes in the model.
-        void processAndHandleModelChanges();
-
         // Callback that can be fired when Qt is idle.
         void onIdle();
+
+        /// Respond to changes in the model.
+        void processAndHandleModelChanges();
 
       private:
         friend AccessModelScope;

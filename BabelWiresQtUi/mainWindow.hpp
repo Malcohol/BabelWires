@@ -20,12 +20,12 @@
 #include <unordered_map>
 
 class QToolBar;
-class QGraphicsScene;
 
 namespace babelwires {
     class UnifiedLog;
     struct UserLogger;
     class ProjectGraphModel;
+    class ProjectGraphicsScene;
     struct ProjectData;
     class LogWindow;
 
@@ -52,6 +52,7 @@ namespace babelwires {
         void newProject();
         void undo();
         void redo();
+        void del();
         void cut();
         void copy();
         void paste();
@@ -96,7 +97,7 @@ namespace babelwires {
 
       private:
         ProjectGraphModel& m_projectGraphModel;
-        QGraphicsScene* m_graphicsScene;
+        ProjectGraphicsScene* m_graphicsScene;
         QToolBar* m_mainToolbar;
         UserLogger& m_userLogger;
         LogWindow* m_logWindow;
@@ -109,6 +110,7 @@ namespace babelwires {
 
         std::unique_ptr<QAction> m_undoAction;
         std::unique_ptr<QAction> m_redoAction;
+        std::unique_ptr<QAction> m_deleteAction;
         std::unique_ptr<QAction> m_cutAction;
         std::unique_ptr<QAction> m_copyAction;
         std::unique_ptr<QAction> m_pasteAction;

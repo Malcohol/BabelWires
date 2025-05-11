@@ -38,6 +38,8 @@ namespace babelwires {
         /// Remove the described connection.
         RemoveNodeCommand(std::string commandName, ConnectionDescription connection);
 
+        RemoveNodeCommand(std::string commandName, std::vector<NodeId> nodes, std::vector<ConnectionDescription> connections);
+
         RemoveNodeCommand(const RemoveNodeCommand& other);
 
         virtual ~RemoveNodeCommand();

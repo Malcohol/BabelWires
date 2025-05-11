@@ -122,6 +122,11 @@ void babelwires::MainWindow::createActions() {
             scope.getCommandManager().signal_undoStateChanged.subscribe([this]() { onUndoStateChanged(); });
     }
 
+    m_deleteAction = std::make_unique<QAction>(QIcon::fromTheme("edit-delete"), tr("&Delete"), this);
+    m_deleteAction->setShortcut(QKeySequence::Delete);
+    m_deleteAction->setEnabled(false);
+    connect(m_deleteAction.get(), &QAction::triggered, this, &MainWindow::del);
+
     m_cutAction = std::make_unique<QAction>(QIcon::fromTheme("edit-cut"), tr("&Cut"), this);
     m_cutAction->setShortcuts(QKeySequence::Cut);
     m_cutAction->setEnabled(false);
@@ -181,6 +186,8 @@ void babelwires::MainWindow::createMenus() {
         editMenu->addAction(m_undoAction.get());
         editMenu->addAction(m_redoAction.get());
         editMenu->addSeparator();
+        editMenu->addAction(m_deleteAction.get());
+        editMenu->addSeparator();
         editMenu->addAction(m_cutAction.get());
         editMenu->addAction(m_copyAction.get());
         editMenu->addAction(m_pasteAction.get());
@@ -208,6 +215,10 @@ void babelwires::MainWindow::createToolbars() {
 
     m_mainToolbar->addAction(m_undoAction.get());
     m_mainToolbar->addAction(m_redoAction.get());
+
+    m_mainToolbar->addSeparator();
+
+    m_mainToolbar->addAction(m_deleteAction.get());
 
     m_mainToolbar->addSeparator();
 
@@ -365,7 +376,9 @@ void babelwires::MainWindow::redo() {
 }
 
 babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
-    ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes(m_graphicsScene->selectedItems());
+    assert(m_graphicsScene->areNodesSelected());
+    ProjectGraphicsScene::SelectedObjects selectedObjects = m_graphicsScene->getSelectedObjects();
+    ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes(selectedObjects.m_nodeIds);
     
     auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
     assert(flowView && "Unexpected central widget");
@@ -385,7 +398,25 @@ void babelwires::MainWindow::writeToClipboard(ProjectData projectData) {
     QApplication::clipboard()->setMimeData(mimedata.release());
 }
 
+void babelwires::MainWindow::del() {
+    assert(m_graphicsScene->isSomethingSelected());
+    ProjectGraphicsScene::SelectedObjects selectedObjects = m_graphicsScene->getSelectedObjects();
+
+    std::vector<ConnectionDescription> connectionDescriptions;
+    connectionDescriptions.reserve(selectedObjects.m_connectionIds.size());
+    {
+        AccessModelScope scope(m_projectGraphModel);
+        for (auto connectionId : selectedObjects.m_connectionIds) {
+            connectionDescriptions.emplace_back(m_projectGraphModel.createConnectionDescriptionFromConnectionId(scope, connectionId));
+        }
+    }
+    auto command = std::make_unique<RemoveNodeCommand>("Delete objects", std::move(selectedObjects.m_nodeIds), std::move(connectionDescriptions));
+    m_projectGraphModel.scheduleCommand(std::move(command));
+}
+
 void babelwires::MainWindow::cut() {
+    assert(m_graphicsScene->areNodesSelected());
+    
     auto projectData = getProjectDataFromSelection();
 
     auto command = std::make_unique<RemoveNodeCommand>("Cut elements");
@@ -490,9 +521,11 @@ void babelwires::MainWindow::saveAllTargets() {
 }
 
 void babelwires::MainWindow::onNodeSelectionChanged() {
-    const bool enabled = (m_graphicsScene->selectedItems().size() > 0);
-    m_cutAction->setEnabled(enabled);
-    m_copyAction->setEnabled(enabled);
+    const bool areNodesSelected = m_graphicsScene->areNodesSelected();
+    m_cutAction->setEnabled(areNodesSelected);
+    m_copyAction->setEnabled(areNodesSelected);
+    const bool isSomethingSelected = m_graphicsScene->isSomethingSelected();
+    m_deleteAction->setEnabled(isSomethingSelected);
 }
 
 void babelwires::MainWindow::onClipboardChanged() {
