@@ -92,6 +92,12 @@ namespace babelwires {
         void onShowMainToolbar(bool show);
         void onShowLogWindow(bool show);
 
+        /// Ensure new nodes are always be placed on the top.
+        void onNodeCreatedPutOnTop(NodeId nodeId);
+
+        /// Ensure new nodes are selected. This is connected only temporarily.
+        void onNodeCreatedSetSelected(NodeId nodeId);
+
       protected:
         void closeEvent(QCloseEvent* event) override;
 

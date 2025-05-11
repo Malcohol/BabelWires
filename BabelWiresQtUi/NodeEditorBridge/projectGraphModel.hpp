@@ -62,6 +62,10 @@ namespace babelwires {
 
         ProjectData getDataFromSelectedNodes(const std::vector<NodeId>& selectedNodes) const;
 
+        /// Allows a connection to be connected until the next phase of processing is complete.
+        /// Used by MainWindow::paste to ensure that newly added nodes start their lives selected.
+        void disconnectAfterProcessing(QMetaObject::Connection connection);
+
       public:
         // The AbstractGraphModel interface.
         std::unordered_set<QtNodes::NodeId> allNodeIds() const override;
@@ -180,7 +184,8 @@ namespace babelwires {
         /// and crashes.
         std::unique_ptr<Command<Project>> m_scheduledCommand;
 
-        bool m_newNodesShouldBeSelected = false;
+        /// 
+        QMetaObject::Connection m_disconnectAfterProcessing;
     };
 
 } // namespace babelwires

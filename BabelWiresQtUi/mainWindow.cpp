@@ -70,6 +70,8 @@ babelwires::MainWindow::MainWindow(ProjectGraphModel& projectGraphModel, Unified
     setInitialFilePath();
     resize(800, 600);
     showNormal();
+
+    connect(&m_projectGraphModel, &ProjectGraphModel::nodeCreated, this, &MainWindow::onNodeCreatedPutOnTop);
 }
 
 babelwires::MainWindow::~MainWindow() = default;
@@ -457,8 +459,9 @@ void babelwires::MainWindow::paste() {
         // When using a specific mime-type, log a debug message?
         m_userLogger.logWarning() << "Failed to paste from clipboard";
     }
-    // TODO Selection
-    //m_projectGraphModel.selectNewNodes();
+    m_graphicsScene->clearSelection();
+    QMetaObject::Connection connection = connect(&m_projectGraphModel, &ProjectGraphModel::nodeCreated, this, &MainWindow::onNodeCreatedSetSelected);
+    m_projectGraphModel.disconnectAfterProcessing(std::move(connection));
 }
 
 bool babelwires::MainWindow::maybeSave() {
@@ -564,4 +567,12 @@ QString babelwires::MainWindow::getClipboardMimetype() const {
 
 void babelwires::MainWindow::openEditorForValue(const ProjectDataLocation& data) {
     m_valueEditorManager.openEditorForValue(this, m_projectGraphModel, m_userLogger, data);
+}
+
+void babelwires::MainWindow::onNodeCreatedSetSelected(NodeId nodeId) {
+    m_graphicsScene->setNodeSelected(nodeId);
+}
+
+void babelwires::MainWindow::onNodeCreatedPutOnTop(NodeId nodeId) {
+    m_graphicsScene->setNodeOnTop(nodeId);
 }

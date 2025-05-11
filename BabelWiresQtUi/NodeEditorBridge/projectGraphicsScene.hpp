@@ -33,6 +33,12 @@ namespace babelwires {
         bool areNodesSelected() const;
         SelectedObjects getSelectedObjects() const;
 
+        /// Add the node to the selection.
+        void setNodeSelected(NodeId nodeId);
+
+        /// Set the Z value so the node appears on top.
+        void setNodeOnTop(NodeId nodeId);
+
       private:
         void addNodeFactory(std::unique_ptr<NodeFactory> nodeFactory);
         

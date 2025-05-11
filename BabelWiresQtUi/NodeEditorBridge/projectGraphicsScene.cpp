@@ -144,13 +144,25 @@ babelwires::ProjectGraphicsScene::SelectedObjects babelwires::ProjectGraphicsSce
     SelectedObjects selection;
 
     for (QGraphicsItem *item : selectedItems()) {
-        if (auto nodeGraphicsObject = qgraphicsitem_cast<QtNodes::NodeGraphicsObject*>(item)) {
-            selection.m_nodeIds.emplace_back(nodeGraphicsObject->nodeId());
+        if (auto nodeGraphics = qgraphicsitem_cast<QtNodes::NodeGraphicsObject*>(item)) {
+            selection.m_nodeIds.emplace_back(nodeGraphics->nodeId());
         }
-        if (auto connectionGraphicsObject = qgraphicsitem_cast<QtNodes::ConnectionGraphicsObject*>(item)) {
-            selection.m_connectionIds.emplace_back(connectionGraphicsObject->connectionId());
+        if (auto connectionGraphics = qgraphicsitem_cast<QtNodes::ConnectionGraphicsObject*>(item)) {
+            selection.m_connectionIds.emplace_back(connectionGraphics->connectionId());
         }
     }
 
     return selection;
+}
+
+void babelwires::ProjectGraphicsScene::setNodeSelected(NodeId nodeId) {
+    QtNodes::NodeGraphicsObject* nodeGraphics = nodeGraphicsObject(nodeId);
+    assert(nodeGraphics);
+    nodeGraphics->setSelected(true);
+}
+
+void babelwires::ProjectGraphicsScene::setNodeOnTop(NodeId nodeId) {
+    QtNodes::NodeGraphicsObject* nodeGraphics = nodeGraphicsObject(nodeId);
+    assert(nodeGraphics);
+    nodeGraphics->setZValue(std::numeric_limits<qreal>::max());
 }

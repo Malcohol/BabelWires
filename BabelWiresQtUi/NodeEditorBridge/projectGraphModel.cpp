@@ -129,14 +129,6 @@ void babelwires::ProjectGraphModel::addNodeToFlowScene(const Node* node) {
     assert(resultPair.second && "There's already a nodeModel for that nodeId");
     Q_EMIT nodeCreated(nodeId);
     // We don't need to add connections here: The project observer will fire signals about them.
-
-    /* TODO need access to graphics objects.
-    // Place new nodes at the very top.
-    newNode.nodeGraphicsObject().setZValue(std::numeric_limits<qreal>::max());
-    if (m_newNodesShouldBeSelected) {
-        newNode.nodeGraphicsObject().setSelected(true);
-    }
-    */
 }
 
 void babelwires::ProjectGraphModel::removeNodeFromFlowScene(NodeId nodeId) {
@@ -341,7 +333,10 @@ void babelwires::ProjectGraphModel::processAndHandleModelChanges() {
     m_project.clearChanges();
 
     // Reset this if it was set.
-    m_newNodesShouldBeSelected = false;
+    if (m_disconnectAfterProcessing) {
+        QObject::disconnect(m_disconnectAfterProcessing);
+        m_disconnectAfterProcessing = QMetaObject::Connection();
+    }
 }
 
 void babelwires::ProjectGraphModel::onIdle() {
@@ -383,4 +378,10 @@ babelwires::ProjectData babelwires::ProjectGraphModel::getDataFromSelectedNodes(
     }
 
     return projectData;
+}
+
+void babelwires::ProjectGraphModel::disconnectAfterProcessing(QMetaObject::Connection connection) {
+    assert(!m_disconnectAfterProcessing);
+    assert(connection);
+    m_disconnectAfterProcessing = std::move(connection);
 }
