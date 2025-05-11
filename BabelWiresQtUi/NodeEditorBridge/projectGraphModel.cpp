@@ -94,37 +94,28 @@ babelwires::ProjectGraphModel::createConnectionDescriptionFromConnectionId(const
                                  static_cast<NodeId>(connectionId.inNodeId), std::move(targetPath)};
 }
 
-void babelwires::ProjectGraphModel::addToConnectionCache(const QtNodes::ConnectionId& connectionId) {
-    const auto sourceIt = m_nodeModels.find(connectionId.outNodeId);
-    assert(sourceIt != m_nodeModels.end());
-    sourceIt->second->addOutConnection(connectionId);
-    const auto targetIt = m_nodeModels.find(connectionId.inNodeId);
-    assert(targetIt != m_nodeModels.end());
-    targetIt->second->addInConnection(connectionId);
-}
-
-void babelwires::ProjectGraphModel::removeFromConnectionCache(const QtNodes::ConnectionId& connectionId) {
-    const auto sourceIt = m_nodeModels.find(connectionId.outNodeId);
-    assert(sourceIt != m_nodeModels.end());
-    sourceIt->second->removeOutConnection(connectionId);
-    const auto targetIt = m_nodeModels.find(connectionId.inNodeId);
-    assert(targetIt != m_nodeModels.end());
-    targetIt->second->removeInConnection(connectionId);
-}
-
 void babelwires::ProjectGraphModel::addConnectionToFlowScene(const ConnectionDescription& connection) {
     assert(m_state == State::ProcessingModelChanges);
     AccessModelScope scope(*this);
     const QtNodes::ConnectionId connectionId = createConnectionIdFromConnectionDescription(scope, connection);
     connectionCreated(connectionId);
-    addToConnectionCache(connectionId);
+    const auto sourceIt = m_nodeModels.find(connectionId.outNodeId);
+    assert(sourceIt != m_nodeModels.end());
+    sourceIt->second->addOutConnection(connectionId, connection);
+    const auto targetIt = m_nodeModels.find(connectionId.inNodeId);
+    assert(targetIt != m_nodeModels.end());
+    targetIt->second->addInConnection(connectionId, connection);
 }
 
 void babelwires::ProjectGraphModel::removeConnectionFromFlowScene(const ConnectionDescription& connection) {
     assert(m_state == State::ProcessingModelChanges);
     AccessModelScope scope(*this);
-    const QtNodes::ConnectionId connectionId = createConnectionIdFromConnectionDescription(scope, connection);
-    removeFromConnectionCache(connectionId);
+    const auto sourceIt = m_nodeModels.find(connection.m_sourceId);
+    assert(sourceIt != m_nodeModels.end());
+    sourceIt->second->removeOutConnection(connection);
+    const auto targetIt = m_nodeModels.find(connection.m_targetId);
+    assert(targetIt != m_nodeModels.end());
+    const QtNodes::ConnectionId connectionId = targetIt->second->removeInConnection(connection);
     connectionDeleted(connectionId);
 }
 
@@ -194,12 +185,9 @@ bool babelwires::ProjectGraphModel::connectionPossible(QtNodes::ConnectionId con
 
 void babelwires::ProjectGraphModel::addConnection(QtNodes::ConnectionId const connectionId) {
     assert(m_state == State::ListeningToFlowScene);
-    addToConnectionCache(connectionId);
     AccessModelScope scope(*this);
     auto connectionDescription = createConnectionDescriptionFromConnectionId(scope, connectionId);
     scheduleCommand(connectionDescription.getConnectionCommand());
-    // TODO
-    m_projectObserver.ignoreAddedConnection(std::move(connectionDescription));
 }
 
 bool babelwires::ProjectGraphModel::nodeExists(QtNodes::NodeId const nodeId) const {
@@ -299,12 +287,9 @@ QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes
 
 bool babelwires::ProjectGraphModel::deleteConnection(QtNodes::ConnectionId const connectionId) {
     assert(m_state == State::ListeningToFlowScene);
-    removeFromConnectionCache(connectionId);
     AccessModelScope scope(*this);
     auto connectionDescription = createConnectionDescriptionFromConnectionId(scope, connectionId);
     scheduleCommand(connectionDescription.getDisconnectionCommand());
-    // TODO
-    m_projectObserver.ignoreRemovedConnection(std::move(connectionDescription));
     // TODO?
     return true;
 }
@@ -313,10 +298,6 @@ bool babelwires::ProjectGraphModel::deleteNode(QtNodes::NodeId const nodeId) {
     assert(m_state == State::ListeningToFlowScene);
     auto it = m_nodeModels.find(nodeId);
     assert(it != m_nodeModels.end());
-    // This assert is non-essential, but it helps establish assumptions about the behaviour of the flow
-    // scene.
-    assert(it->second->getAllConnectionIds().size() == 0 &&
-            "Node was removed while there were active connections");
     scheduleCommand(std::make_unique<RemoveNodeCommand>("Remove node", nodeId));
     // TODO?
     return true;

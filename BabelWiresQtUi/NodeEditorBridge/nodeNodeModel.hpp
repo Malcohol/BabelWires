@@ -22,6 +22,7 @@ namespace babelwires {
     class Node;
     class ContentsCache;
     class Path;
+    class ConnectionDescription;
 
     class NodeContentsView;
     class NodeContentsModel;
@@ -59,10 +60,11 @@ namespace babelwires {
         /// Return the model for the embedded widget.
         NodeContentsModel& getModel();
 
-        void addInConnection(const QtNodes::ConnectionId& connectionId);
-        void addOutConnection(const QtNodes::ConnectionId& connectionId);
-        void removeInConnection(const QtNodes::ConnectionId& connectionId);
-        void removeOutConnection(const QtNodes::ConnectionId& connectionId);
+        void addInConnection(const QtNodes::ConnectionId& connectionId, const ConnectionDescription& connectionDescription);
+        void addOutConnection(const QtNodes::ConnectionId& connectionId, const ConnectionDescription& connectionDescription);
+        
+        QtNodes::ConnectionId removeInConnection(const ConnectionDescription& connectionDescription);
+        QtNodes::ConnectionId removeOutConnection(const ConnectionDescription& connectionDescription);
 
         std::unordered_set<QtNodes::ConnectionId> getAllConnectionIds() const;
         std::unordered_set<QtNodes::ConnectionId> getConnections(QtNodes::PortType portType, QtNodes::PortIndex index) const;
@@ -83,8 +85,8 @@ namespace babelwires {
 
         // Cache knowledge about connections: Collapsed rows makes it awkward to extract from the model
         // TODO: Push knowledge about collapsed collections in to the data layer.
-        std::vector<QtNodes::ConnectionId> m_inConnections;
-        std::vector<QtNodes::ConnectionId> m_outConnections;
+        std::vector<std::tuple<QtNodes::ConnectionId, ConnectionDescription>> m_inConnections;
+        std::vector<std::tuple<QtNodes::ConnectionId, ConnectionDescription>> m_outConnections;
 
         NodeContentsView* m_view;
         NodeContentsModel* m_model;

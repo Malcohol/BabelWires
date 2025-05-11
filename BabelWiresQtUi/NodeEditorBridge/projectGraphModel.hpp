@@ -97,9 +97,6 @@ namespace babelwires {
                                                                           const ConnectionDescription& connection);
         ConnectionDescription createConnectionDescriptionFromConnectionId(const AccessModelScope& scope,
                                                                           const QtNodes::ConnectionId& connectionId);
-        void addToConnectionCache(const QtNodes::ConnectionId& connectionId);
-        void removeFromConnectionCache(const QtNodes::ConnectionId& connectionId);
-
       private:
         // Changes caused by the model
 
