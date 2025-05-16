@@ -183,14 +183,14 @@ std::unordered_set<QtNodes::ConnectionId> babelwires::NodeNodeModel::getConnecti
     if (portType == QtNodes::PortType::In) {
         for (const auto& inConnection : m_inConnections) {
             const auto& connectionId = std::get<0>(inConnection);
-            if (connectionId.inPortIndex) {
+            if (connectionId.inPortIndex == index) {
                 connectionsAtPort.insert(connectionId);
             }
         }
     } else {
         for (const auto& outConnection : m_outConnections) {
             const auto& connectionId = std::get<0>(outConnection);
-            if (connectionId.outPortIndex) {
+            if (connectionId.outPortIndex == index) {
                 connectionsAtPort.insert(connectionId);
             }
         }
