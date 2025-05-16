@@ -171,8 +171,20 @@ bool babelwires::ProjectGraphModel::connectionExists(QtNodes::ConnectionId const
 }
 
 bool babelwires::ProjectGraphModel::connectionPossible(QtNodes::ConnectionId const connectionId) const {
-    // TODO
-    return true;
+    const auto targetIt = m_nodeModels.find(connectionId.inNodeId);
+    assert(targetIt != m_nodeModels.end());
+    const NodeNodeModel& targetNodeModel = *targetIt->second;
+
+    const auto sourceIt = m_nodeModels.find(connectionId.inNodeId);
+    assert(sourceIt != m_nodeModels.end());
+    const NodeNodeModel& sourceNodeModel = *sourceIt->second;
+
+    AccessModelScope scope(*this);
+    const QtNodes::NodeDataType sourceDataType = sourceNodeModel.dataType(scope, QtNodes::PortType::Out, connectionId.outPortIndex);
+    const QtNodes::NodeDataType targetDataType = targetNodeModel.dataType(scope, QtNodes::PortType::In, connectionId.inPortIndex);
+
+    // TODO: Use Subtyping.
+    return !sourceDataType.id.isEmpty() && !targetDataType.id.isEmpty() && sourceDataType.id == targetDataType.id;
 }
 
 void babelwires::ProjectGraphModel::addConnection(QtNodes::ConnectionId const connectionId) {
