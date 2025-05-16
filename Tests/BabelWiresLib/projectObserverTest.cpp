@@ -64,192 +64,120 @@ namespace {
     };
 } // namespace
 
-namespace {
-    void testNodeAdded(bool shouldIgnore) {
-        testUtils::TestEnvironment testEnvironment;
-
-        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
-        ObservedChanges observedChanges(projectObserver);
-
-        const babelwires::NodeId elementId =
-            testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
-
-        if (shouldIgnore) {
-            projectObserver.ignoreAddedNode(elementId);
-        }
-
-        testEnvironment.m_project.process();
-        projectObserver.interpretChangesAndFireSignals();
-
-        if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
-        } else {
-            ASSERT_EQ(observedChanges.m_nodesAdded.size(), 1);
-            EXPECT_EQ(observedChanges.m_nodesAdded[0]->getNodeId(), elementId);
-        }
-
-        EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
-        EXPECT_TRUE(observedChanges.m_nodesResized.empty());
-        EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
-        EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
-    }
-} // namespace
-
 TEST(ProjectObserverTest, nodeAdded) {
-    testNodeAdded(false);
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
+    ObservedChanges observedChanges(projectObserver);
+
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
+
+    testEnvironment.m_project.process();
+    projectObserver.interpretChangesAndFireSignals();
+
+    ASSERT_EQ(observedChanges.m_nodesAdded.size(), 1);
+    EXPECT_EQ(observedChanges.m_nodesAdded[0]->getNodeId(), elementId);
+
+    EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
+    EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
+    EXPECT_TRUE(observedChanges.m_nodesResized.empty());
+    EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
+    EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
+    EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
 }
-
-TEST(ProjectObserverTest, nodeAddedIgnore) {
-    testNodeAdded(false);
-}
-
-namespace {
-    void testNodeRemoved(bool shouldIgnore) {
-            testUtils::TestEnvironment testEnvironment;
-
-        const babelwires::NodeId elementId =
-            testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
-
-        testEnvironment.m_project.process();
-        testEnvironment.m_project.clearChanges();
-
-        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
-        ObservedChanges observedChanges(projectObserver);
-
-        testEnvironment.m_project.removeNode(elementId);
-        testEnvironment.m_project.process();
-
-        if (shouldIgnore) {
-            projectObserver.ignoreRemovedNode(elementId);
-        }
-
-        projectObserver.interpretChangesAndFireSignals();
-
-        EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
-
-        if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
-        } else {
-            ASSERT_EQ(observedChanges.m_nodesRemoved.size(), 1);
-            EXPECT_EQ(observedChanges.m_nodesRemoved[0], elementId);
-        }
-
-        EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
-        EXPECT_TRUE(observedChanges.m_nodesResized.empty());
-        EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
-        EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
-    }
-} // namespace
 
 TEST(ProjectObserverTest, nodeRemoved) {
-    testNodeRemoved(false);
+    testUtils::TestEnvironment testEnvironment;
+
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
+
+    testEnvironment.m_project.process();
+    testEnvironment.m_project.clearChanges();
+
+    babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
+    ObservedChanges observedChanges(projectObserver);
+
+    testEnvironment.m_project.removeNode(elementId);
+    testEnvironment.m_project.process();
+
+    projectObserver.interpretChangesAndFireSignals();
+
+    EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
+
+    ASSERT_EQ(observedChanges.m_nodesRemoved.size(), 1);
+    EXPECT_EQ(observedChanges.m_nodesRemoved[0], elementId);
+
+    EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
+    EXPECT_TRUE(observedChanges.m_nodesResized.empty());
+    EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
+    EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
+    EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
 }
-
-TEST(ProjectObserverTest, nodeRemovedIgnore) {
-    testNodeRemoved(true);
-}
-
-namespace {
-    void testNodeMoved(bool shouldIgnore) {
-            testUtils::TestEnvironment testEnvironment;
-
-        const babelwires::NodeId elementId =
-            testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
-
-        testEnvironment.m_project.clearChanges();
-
-        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
-        ObservedChanges observedChanges(projectObserver);
-
-        babelwires::UiPosition newPosition{15, 72};
-
-        testEnvironment.m_project.setNodePosition(elementId, newPosition);
-        testEnvironment.m_project.process();
-
-        if (shouldIgnore) {
-            projectObserver.ignoreMovedNode(elementId);
-        }
-
-        projectObserver.interpretChangesAndFireSignals();
-
-        EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
-        EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
-
-        if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
-        } else {
-            ASSERT_EQ(observedChanges.m_nodesMoved.size(), 1);
-            EXPECT_EQ(observedChanges.m_nodesMoved[0], std::tuple(elementId, newPosition));
-        }
-
-        EXPECT_TRUE(observedChanges.m_nodesResized.empty());
-        EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
-        EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
-    }
-} // namespace
 
 TEST(ProjectObserverTest, nodeMoved) {
-    testNodeMoved(false);
+    testUtils::TestEnvironment testEnvironment;
+
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
+
+    testEnvironment.m_project.clearChanges();
+
+    babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
+    ObservedChanges observedChanges(projectObserver);
+
+    babelwires::UiPosition newPosition{15, 72};
+
+    testEnvironment.m_project.setNodePosition(elementId, newPosition);
+    testEnvironment.m_project.process();
+
+    projectObserver.interpretChangesAndFireSignals();
+
+    EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
+    EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
+
+    ASSERT_EQ(observedChanges.m_nodesMoved.size(), 1);
+    EXPECT_EQ(observedChanges.m_nodesMoved[0], std::tuple(elementId, newPosition));
+
+    EXPECT_TRUE(observedChanges.m_nodesResized.empty());
+    EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
+    EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
+    EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
 }
-
-TEST(ProjectObserverTest, nodeMovedIgnore) {
-    testNodeMoved(true);
-}
-
-namespace {
-    void testNodesResized(bool shouldIgnore) {
-            testUtils::TestEnvironment testEnvironment;
-
-        const babelwires::NodeId elementId =
-            testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
-
-        testEnvironment.m_project.clearChanges();
-
-        babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
-        ObservedChanges observedChanges(projectObserver);
-
-        babelwires::UiSize newSize{81};
-
-        testEnvironment.m_project.setNodeContentsSize(elementId, newSize);
-        testEnvironment.m_project.process();
-
-        if (shouldIgnore) {
-            projectObserver.ignoreResizedNode(elementId);
-        }
-
-        projectObserver.interpretChangesAndFireSignals();
-
-        EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
-        EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
-
-        if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_nodesResized.empty());
-        } else {
-            ASSERT_EQ(observedChanges.m_nodesResized.size(), 1);
-            EXPECT_EQ(observedChanges.m_nodesResized[0], std::tuple(elementId, newSize));
-        }
-
-        EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
-        EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
-        EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
-    }
-} // namespace
 
 TEST(ProjectObserverTest, nodeResized) {
-    testNodesResized(false);
-}
+    testUtils::TestEnvironment testEnvironment;
 
-TEST(ProjectObserverTest, nodeResizedIgnore) {
-    testNodesResized(true);
+    const babelwires::NodeId elementId =
+        testEnvironment.m_project.addNode(testDomain::TestComplexRecordElementData());
+
+    testEnvironment.m_project.clearChanges();
+
+    babelwires::ProjectObserver projectObserver(testEnvironment.m_project);
+    ObservedChanges observedChanges(projectObserver);
+
+    babelwires::UiSize newSize{81};
+
+    testEnvironment.m_project.setNodeContentsSize(elementId, newSize);
+    testEnvironment.m_project.process();
+
+    projectObserver.interpretChangesAndFireSignals();
+
+    EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
+    EXPECT_TRUE(observedChanges.m_nodesRemoved.empty());
+    EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
+
+    ASSERT_EQ(observedChanges.m_nodesResized.size(), 1);
+    EXPECT_EQ(observedChanges.m_nodesResized[0], std::tuple(elementId, newSize));
+
+    EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
+    EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
+    EXPECT_TRUE(observedChanges.m_contentsChanged.empty());
 }
 
 namespace {
-    void testConnectionAdded(bool shouldIgnore, bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
+    void testConnectionAdded(bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
         testUtils::TestEnvironment testEnvironment;
 
         testDomain::TestComplexRecordElementData sourceElementData;
@@ -291,10 +219,6 @@ namespace {
 
         testEnvironment.m_project.process();
 
-        if (shouldIgnore) {
-            projectObserver.ignoreAddedConnection(connectionDescription);
-        }
-
         projectObserver.interpretChangesAndFireSignals();
 
         EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
@@ -302,12 +226,8 @@ namespace {
         EXPECT_TRUE(observedChanges.m_nodesMoved.empty());
         EXPECT_TRUE(observedChanges.m_nodesResized.empty());
 
-        if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
-        } else {
-            ASSERT_EQ(observedChanges.m_connectionsAdded.size(), 1);
-            EXPECT_EQ(observedChanges.m_connectionsAdded[0], connectionDescription);
-        }
+        ASSERT_EQ(observedChanges.m_connectionsAdded.size(), 1);
+        EXPECT_EQ(observedChanges.m_connectionsAdded[0], connectionDescription);
 
         EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
 
@@ -317,39 +237,23 @@ namespace {
 } // namespace
 
 TEST(ProjectObserverTest, connectionAddedNoTruncation) {
-    testConnectionAdded(false, true, true);
+    testConnectionAdded(true, true);
 }
 
 TEST(ProjectObserverTest, connectionAddedTargetTruncated) {
-    testConnectionAdded(false, true, false);
+    testConnectionAdded(true, false);
 }
 
 TEST(ProjectObserverTest, connectionAddedSourceTruncated) {
-    testConnectionAdded(false, true, false);
+    testConnectionAdded(true, false);
 }
 
 TEST(ProjectObserverTest, connectionAddedBothTruncated) {
-    testConnectionAdded(false, false, false);
-}
-
-TEST(ProjectObserverTest, connectionAddedNoTruncationIgnore) {
-    testConnectionAdded(true, true, true);
-}
-
-TEST(ProjectObserverTest, connectionAddedTargetTruncatedIgnore) {
-    testConnectionAdded(true, true, false);
-}
-
-TEST(ProjectObserverTest, connectionAddedSourceTruncatedIgnore) {
-    testConnectionAdded(true, true, false);
-}
-
-TEST(ProjectObserverTest, connectionAddedBothTruncatedIgnore) {
-    testConnectionAdded(true, false, false);
+    testConnectionAdded(false, false);
 }
 
 namespace {
-    void testConnectionRemoved(bool shouldIgnore, bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
+    void testConnectionRemoved(bool sourceRecordIsExpanded, bool targetArrayIsExpanded) {
             testUtils::TestEnvironment testEnvironment;
 
         testDomain::TestComplexRecordElementData sourceElementData;
@@ -392,9 +296,6 @@ namespace {
 
         testEnvironment.m_project.process();
 
-        if (shouldIgnore) {
-            projectObserver.ignoreRemovedConnection(connectionDescription);
-        }
         projectObserver.interpretChangesAndFireSignals();
 
         EXPECT_TRUE(observedChanges.m_nodesAdded.empty());
@@ -403,12 +304,8 @@ namespace {
         EXPECT_TRUE(observedChanges.m_nodesResized.empty());
         EXPECT_TRUE(observedChanges.m_connectionsAdded.empty());
 
-        if (shouldIgnore) {
-            EXPECT_TRUE(observedChanges.m_connectionsRemoved.empty());
-        } else {
-            ASSERT_EQ(observedChanges.m_connectionsRemoved.size(), 1);
-            EXPECT_EQ(observedChanges.m_connectionsRemoved[0], connectionDescription);
-        }
+        ASSERT_EQ(observedChanges.m_connectionsRemoved.size(), 1);
+        EXPECT_EQ(observedChanges.m_connectionsRemoved[0], connectionDescription);
 
         EXPECT_EQ(observedChanges.m_contentsChanged.size(), 1);
         EXPECT_EQ(observedChanges.m_contentsChanged[0], targetNodeId);
@@ -416,35 +313,19 @@ namespace {
 } // namespace
 
 TEST(ProjectObserverTest, connectionRemovedNoTruncation) {
-    testConnectionRemoved(false, true, true);
+    testConnectionRemoved(true, true);
 }
 
 TEST(ProjectObserverTest, connectionRemovedTargetTruncated) {
-    testConnectionRemoved(false, true, false);
+    testConnectionRemoved(true, false);
 }
 
 TEST(ProjectObserverTest, connectionRemovedSourceTruncated) {
-    testConnectionRemoved(false, true, false);
+    testConnectionRemoved(true, false);
 }
 
 TEST(ProjectObserverTest, connectionRemovedBothTruncated) {
-    testConnectionRemoved(false, false, false);
-}
-
-TEST(ProjectObserverTest, connectionRemovedNoTruncationIgnore) {
-    testConnectionRemoved(true, true, true);
-}
-
-TEST(ProjectObserverTest, connectionRemovedTargetTruncatedIgnore) {
-    testConnectionRemoved(true, true, false);
-}
-
-TEST(ProjectObserverTest, connectionRemovedSourceTruncatedIgnore) {
-    testConnectionRemoved(true, true, false);
-}
-
-TEST(ProjectObserverTest, connectionRemovedBothTruncatedIgnore) {
-    testConnectionRemoved(true, false, false);
+    testConnectionRemoved(false, false);
 }
 
 TEST(ProjectObserverTest, nodeContentsChanged) {
