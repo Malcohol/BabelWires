@@ -72,7 +72,6 @@ namespace babelwires {
         std::unordered_set<QtNodes::ConnectionId> allConnectionIds(QtNodes::NodeId const nodeId) const override;
         std::unordered_set<QtNodes::ConnectionId> connections(QtNodes::NodeId nodeId, QtNodes::PortType portType,
                                                               QtNodes::PortIndex index) const override;
-        bool connectionExists(QtNodes::ConnectionId const connectionId) const override;
         bool connectionPossible(QtNodes::ConnectionId const connectionId) const override;
         void addConnection(QtNodes::ConnectionId const connectionId) override;
         bool nodeExists(QtNodes::NodeId const nodeId) const override;
@@ -97,6 +96,10 @@ namespace babelwires {
             assert(false);
             return 0;
         };
+        bool connectionExists(QtNodes::ConnectionId const connectionId) const override {
+          assert(false);
+          return false;
+        }
         bool deleteConnection(QtNodes::ConnectionId const connectionId) override {
             assert(false);
             return false;

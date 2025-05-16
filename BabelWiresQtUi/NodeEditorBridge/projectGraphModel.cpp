@@ -164,12 +164,6 @@ std::unordered_set<QtNodes::ConnectionId> babelwires::ProjectGraphModel::connect
     return nodeIt->second->getConnections(portType, index);
 }
 
-bool babelwires::ProjectGraphModel::connectionExists(QtNodes::ConnectionId const connectionId) const {
-    const auto nodeIt = m_nodeModels.find(connectionId.inNodeId);
-    assert(nodeIt != m_nodeModels.end());
-    return nodeIt->second->isInConnection(connectionId);
-}
-
 bool babelwires::ProjectGraphModel::connectionPossible(QtNodes::ConnectionId const connectionId) const {
     const auto targetIt = m_nodeModels.find(connectionId.inNodeId);
     assert(targetIt != m_nodeModels.end());
