@@ -199,11 +199,12 @@ std::unordered_set<QtNodes::ConnectionId> babelwires::NodeNodeModel::getConnecti
 };
 
 bool babelwires::NodeNodeModel::isInConnection(const QtNodes::ConnectionId& connectionId) const {
+    assert(connectionId.inNodeId == m_nodeId);
     for (const auto& inConnection : m_inConnections) {
         const auto& inConnectionId = std::get<0>(inConnection);
-        if ((inConnectionId.inPortIndex == inConnectionId.inPortIndex) &&
-            (inConnectionId.outNodeId == inConnectionId.outNodeId) &&
-            (inConnectionId.outPortIndex == inConnectionId.outPortIndex)) {
+        if ((inConnectionId.inPortIndex == connectionId.inPortIndex) &&
+            (inConnectionId.outNodeId == connectionId.outNodeId) &&
+            (inConnectionId.outPortIndex == connectionId.outPortIndex)) {
             return true;
         }
     }
@@ -211,6 +212,7 @@ bool babelwires::NodeNodeModel::isInConnection(const QtNodes::ConnectionId& conn
 }
 
 bool babelwires::NodeNodeModel::isOutConnection(const QtNodes::ConnectionId& connectionId) const {
+    assert(connectionId.outNodeId == m_nodeId);
     for (const auto& outConnection : m_outConnections) {
         const auto& outConnectionId = std::get<0>(outConnection);
         if ((outConnectionId.outPortIndex == connectionId.outPortIndex) &&
