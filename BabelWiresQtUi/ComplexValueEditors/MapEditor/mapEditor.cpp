@@ -11,8 +11,8 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModelDelegate.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
 #include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
@@ -42,10 +42,10 @@
 #define MAP_FILE_EXTENSION ".bw_map"
 #define MAP_FORMAT_STRING "Map (*" MAP_FILE_EXTENSION ")"
 
-babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
+babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger,
                                  const ProjectDataLocation& data)
-    : ComplexValueEditor(parent, projectBridge, userLogger, data)
-    , m_map(projectBridge.getContext())
+    : ComplexValueEditor(parent, projectGraphModel, userLogger, data)
+    , m_map(projectGraphModel.getContext())
     , m_commandManager(m_map, userLogger) {
     setWindowTitle(getTitle());
     QLayout* mainLayout = new QVBoxLayout();
@@ -85,8 +85,8 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
         typeBar->setLayout(typeBarLayout);
 
         {
-            AccessModelScope scope(getProjectBridge());
-            const UiProjectContext& context = projectBridge.getContext();
+            AccessModelScope scope(getProjectGraphModel());
+            const UiProjectContext& context = projectGraphModel.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
             const ValueTreeNode& mapTreeNode = getMapTreeNode(scope);
             m_typeRef = mapTreeNode.getTypeRef();
@@ -123,7 +123,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectBridge& projectBridge, 
                     [this]() { MapEditor::setTargetTypeFromWidget(); });
         }
         m_mapView = new MapView;
-        m_mapModel = new MapModel(m_mapView, projectBridge.getContext(), *this);
+        m_mapModel = new MapModel(m_mapView, projectGraphModel.getContext(), *this);
         m_mapView->setContextMenuPolicy(Qt::CustomContextMenu);
         auto delegate = new MapModelDelegate(this);
         m_mapView->setItemDelegate(delegate);
@@ -182,7 +182,7 @@ void babelwires::MapEditor::applyMapToProject() {
 
     auto setValueCommand =
         std::make_unique<AddModifierCommand>("Set map value", getDataLocation().getNodeId(), std::move(modifierData));
-    if (!getProjectBridge().executeCommandSynchronously(std::move(setValueCommand))) {
+    if (!getProjectGraphModel().executeCommandSynchronously(std::move(setValueCommand))) {
         warnThatMapNoLongerInProject("Cannot apply the map.");
     } else {
         // Note: We take the position that once the map has been applied to the project, it's equivalent to
@@ -192,13 +192,13 @@ void babelwires::MapEditor::applyMapToProject() {
     }
 }
 
-const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(AccessModelScope& scope) const {
+const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(const AccessModelScope& scope) const {
     const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getDataLocation());
     assert(mapTreeNode.getType().as<MapType>() || mapTreeNode.getType().as<SumOfMapsType>());
     return mapTreeNode;
 }
 
-const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(AccessModelScope& scope) const {
+const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(const AccessModelScope& scope) const {
     if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
         if (const MapValue* const mapValue = modifier->getValue()->as<MapValue>()) {
             return *mapValue;
@@ -207,7 +207,7 @@ const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(Access
     return getMapTreeNode(scope).getValue()->is<MapValue>();
 }
 
-const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(AccessModelScope& scope) const {
+const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(const AccessModelScope& scope) const {
     const ValueTreeNode* mapTreeNode = ComplexValueEditor::tryGetValueTreeNode(scope, getDataLocation());
     if (mapTreeNode->getType().as<MapType>() || mapTreeNode->getType().as<SumOfMapsType>()) {
         return mapTreeNode;
@@ -216,7 +216,7 @@ const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(Access
 }
 
 const babelwires::ValueAssignmentData*
-babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) const {
+babelwires::MapEditor::tryGetMapValueAssignmentData(const AccessModelScope& scope) const {
     const Node* const node = scope.getProject().getNode(getDataLocation().getNodeId());
 
     if (!node) {
@@ -233,7 +233,7 @@ babelwires::MapEditor::tryGetMapValueAssignmentData(AccessModelScope& scope) con
 }
 
 babelwires::ValueHolderTemplate<babelwires::MapValue>
-babelwires::MapEditor::tryGetMapValueFromProject(AccessModelScope& scope) const {
+babelwires::MapEditor::tryGetMapValueFromProject(const AccessModelScope& scope) const {
     if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
         if (ValueHolderTemplate<MapValue> mapValue = modifier->getValue().asValueHolder<MapValue>()) {
             return mapValue;
@@ -249,7 +249,7 @@ babelwires::MapEditor::tryGetMapValueFromProject(AccessModelScope& scope) const 
 }
 
 void babelwires::MapEditor::updateMapFromProject() {
-    AccessModelScope scope(getProjectBridge());
+    AccessModelScope scope(getProjectGraphModel());
     ValueHolderTemplate<MapValue> mapValueFromProject = tryGetMapValueFromProject(scope);
     if (mapValueFromProject) {
         getUserLogger().logInfo() << "Refreshing the map from the project";
@@ -323,7 +323,7 @@ void babelwires::MapEditor::loadMapFromFile() {
                 std::string filePathStr = filePath.toStdString();
                 getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
                 MapValue mapValue =
-                    MapSerialization::loadFromFile(filePathStr, getProjectBridge().getContext(), getUserLogger());
+                    MapSerialization::loadFromFile(filePathStr, getProjectGraphModel().getContext(), getUserLogger());
                 setEditorMap(mapValue);
                 m_lastSaveFilePath = filePath;
                 return;
@@ -425,7 +425,7 @@ void babelwires::MapEditor::onUndoStateChanged() {
 }
 
 void babelwires::MapEditor::setToDefault() {
-    const TypeSystem& typeSystem = getProjectBridge().getContext().m_typeSystem;
+    const TypeSystem& typeSystem = getProjectGraphModel().getContext().m_typeSystem;
     const MapType& mapType = m_typeRef.resolve(typeSystem).is<MapType>();
     ValueHolderTemplate<MapValue> defaultMapValue = mapType.createValue(typeSystem).m_valueHolder;
     executeCommand(std::make_unique<SetMapCommand>("Restore default map", std::move(defaultMapValue)));

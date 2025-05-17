@@ -20,7 +20,7 @@ namespace babelwires {
     class ContentsCache;
     class Node;
     class ContentsCacheEntry;
-    class ProjectBridge;
+    class ProjectGraphModel;
     class AccessModelScope;
     class Path;
 
@@ -28,7 +28,7 @@ namespace babelwires {
     class NodeContentsModel : public QAbstractTableModel {
         Q_OBJECT
       public:
-        NodeContentsModel(QObject* parent, NodeId elementId, ProjectBridge& projectBridge);
+        NodeContentsModel(QObject* parent, NodeId elementId, ProjectGraphModel& projectGraphModel);
 
         int rowCount(const QModelIndex& /*parent*/) const override;
         int columnCount(const QModelIndex& /*parent*/) const override;
@@ -36,16 +36,16 @@ namespace babelwires {
         Qt::ItemFlags flags(const QModelIndex& index) const override;
 
         /// Access the associated Node.
-        const Node* getNode(AccessModelScope& scope) const;
+        const Node* getNode(const AccessModelScope& scope) const;
         /// Access an entry in the ContentsCache.
-        const ContentsCacheEntry* getEntry(AccessModelScope& scope, const QModelIndex& index) const;
-        const ContentsCacheEntry* getEntry(AccessModelScope& scope, int row) const;
+        const ContentsCacheEntry* getEntry(const AccessModelScope& scope, const QModelIndex& index) const;
+        const ContentsCacheEntry* getEntry(const AccessModelScope& scope, int row) const;
         /// Access the number of rows.
-        int getNumRows(AccessModelScope& scope) const;
+        int getNumRows(const AccessModelScope& scope) const;
 
         void getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut, const QModelIndex& index);
 
-        ProjectBridge& getProjectBridge();
+        ProjectGraphModel& getProjectGraphModel();
 
         NodeId getNodeId() const;
 
@@ -56,7 +56,7 @@ namespace babelwires {
         void valuesMayHaveChanged() const;
 
       private:
-        ProjectBridge& m_projectBridge;
+        ProjectGraphModel& m_projectGraphModel;
         NodeId m_nodeId;
     };
 

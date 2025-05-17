@@ -8,8 +8,8 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAction.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
 #include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
@@ -18,10 +18,10 @@ babelwires::SaveFileAction::SaveFileAction()
     : NodeContentsContextMenuActionBase(tr("Save file")) {}
 
 void babelwires::SaveFileAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
-    ProjectBridge& projectBridge = model.getProjectBridge();
+    ProjectGraphModel& projectGraphModel = model.getProjectGraphModel();
     const NodeId elementId = model.getNodeId();
 
-    ModifyModelScope scope(projectBridge);
+    ModifyModelScope scope(projectGraphModel);
     Node* const node = scope.getProject().getNode(elementId);
     if (!node) {
         return;

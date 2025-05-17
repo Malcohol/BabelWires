@@ -33,7 +33,7 @@ namespace babelwires {
         //void commitEditorValue();
 
       //private:
-      //  ProjectBridge& m_projectBridge;
+      //  ProjectGraphModel& m_projectGraphModel;
     };
 
 }

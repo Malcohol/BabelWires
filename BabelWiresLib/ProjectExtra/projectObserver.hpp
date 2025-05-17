@@ -36,12 +36,6 @@ namespace babelwires {
     /// to keep itself consistent with the project. Therefore, the signals about
     /// connections describe paths which are truncated to the first collapsed
     /// compound.
-    ///
-    /// The ignore methods handle the fact that the UI may already have performed
-    /// operations, so we don't want it to perform them again. For example, moving
-    /// a Node in the UI.
-    /// TODO: Adjust the UI so non-continuous operations (e.g. add or remove Node) do not need this mechanism.
-    /// TODO: Think about ways of avoiding it for continuous operations too.
     class ProjectObserver {
       public:
         /// Construct a project observe to observe the given project.
@@ -50,24 +44,6 @@ namespace babelwires {
         /// Fire signals based on the changes observed in the project.
         /// Does not clear the project's changes.
         void interpretChangesAndFireSignals();
-
-        /// Don't fire a signal if this node is observed being added.
-        void ignoreAddedNode(NodeId nodeId);
-
-        /// Don't fire a signal if this node is observed being removed.
-        void ignoreRemovedNode(NodeId nodeId);
-
-        /// Don't fire a signal if this node is observed being moved.
-        void ignoreMovedNode(NodeId nodeId);
-
-        /// Don't fire a signal if this node is observed being resized.
-        void ignoreResizedNode(NodeId nodeId);
-
-        /// Don't fire a signal if this connection is observed being added.
-        void ignoreAddedConnection(ConnectionDescription connection);
-
-        /// Don't fire a signal if this connection is observed being removed.
-        void ignoreRemovedConnection(ConnectionDescription connection);
 
       public:
         /// A node was observed being added.
@@ -92,54 +68,8 @@ namespace babelwires {
         Signal<NodeId> m_contentWasChanged;
 
       private:
-        /// Fire the m_nodeWasAdded signal, unless the node is to be ignored.
-        void nodeWasAdded(const Node* node);
-
-        /// Fire the m_nodeWasRemoved signal, unless the node is to be ignored.
-        void nodeWasRemoved(NodeId nodeId);
-
-        /// Fire the m_nodeWasMoved signal, unless the node is to be ignored.
-        void nodeWasMoved(NodeId nodeId, const UiPosition& uiPosition);
-
-        /// Fire the m_nodeWasResized signal, unless the node is to be ignored.
-        void nodeWasResized(NodeId nodeId, const UiSize& newSize);
-
-        /// Fire the m_connectionWasAdded signal, unless the connection is to be ignored.
-        void connectionWasAdded(const ConnectionDescription& connection);
-
-        /// Fire the m_connectionWasRemoved signal, unless the connection is to be ignored.
-        void connectionWasRemoved(const ConnectionDescription& connection);
-
-        /// Fire the content was changed signal.
-        void contentWasChanged(NodeId nodeId);
-
-      private:
         /// The project whose changes this object is observing.
         const Project& m_project;
-
-        /// When the flowscene adds a node, we want to ignore it when we observe
-        /// changes in the model.
-        std::unordered_set<NodeId> m_addedNodesToIgnore;
-
-        /// When the flowscene removes a node, we want to ignore it when we observe
-        /// changes in the model.
-        std::unordered_set<NodeId> m_removedNodesToIgnore;
-
-        /// When the flowscene moves a node, we want to ignore it when we observe changes
-        /// in the model.
-        std::unordered_set<NodeId> m_movedNodesToIgnore;
-
-        /// When the flowscene resizes a node, we want to ignore it when we observe changes
-        /// in the model.
-        std::unordered_set<NodeId> m_resizedNodesToIgnore;
-
-        /// When the flowscene adds a connection, we want to ignore it when we observe
-        /// changes in the model.
-        std::unordered_set<ConnectionDescription> m_addedConnectionsToIgnore;
-
-        /// When the flowscene removes a connection, we want to ignore it when we observe
-        /// changes in the model.
-        std::unordered_set<ConnectionDescription> m_removedConnectionsToIgnore;
     };
 
 } // namespace babelwires

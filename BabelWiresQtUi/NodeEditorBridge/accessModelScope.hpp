@@ -8,22 +8,22 @@
 #pragma once
 
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
 namespace babelwires {
 
     /// Any readonly access to the model contents should be performed within the scope of an object of this type.
     /// Note: This class is intended to future proofs the system for the day when concurrency is added to the project.
-    class AccessModelScope {
+    class AccessModelScope final {
       public:
-        AccessModelScope(ProjectBridge& bridge);
-        virtual ~AccessModelScope();
+        AccessModelScope(const ProjectGraphModel& bridge);
+        ~AccessModelScope();
 
-        const CommandManager<Project>& getCommandManager();
-        const Project& getProject();
+        const CommandManager<Project>& getCommandManager() const;
+        const Project& getProject() const;
 
       protected:
-        ProjectBridge& m_projectBridge;
+        const ProjectGraphModel& m_projectGraphModel;
     };
 
 } // namespace babelwires

@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
@@ -16,10 +16,10 @@
 
 #include <QCloseEvent>
 
-babelwires::ComplexValueEditor::ComplexValueEditor(QWidget* parent, ProjectBridge& projectBridge,
+babelwires::ComplexValueEditor::ComplexValueEditor(QWidget* parent, ProjectGraphModel& projectGraphModel,
                                                    UserLogger& userLogger, const ProjectDataLocation& data)
     : QWidget(parent)
-    , m_projectBridge(projectBridge)
+    , m_projectGraphModel(projectGraphModel)
     , m_userLogger(userLogger)
     , m_data(data.clone()) {}
 
@@ -27,8 +27,8 @@ const babelwires::ProjectDataLocation& babelwires::ComplexValueEditor::getDataLo
     return *m_data;
 }
 
-babelwires::ProjectBridge& babelwires::ComplexValueEditor::getProjectBridge() {
-    return m_projectBridge;
+babelwires::ProjectGraphModel& babelwires::ComplexValueEditor::getProjectGraphModel() {
+    return m_projectGraphModel;
 }
 
 babelwires::UserLogger& babelwires::ComplexValueEditor::getUserLogger() {
@@ -46,7 +46,7 @@ void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
 }
 
 const babelwires::ValueTreeNode&
-babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope, const ProjectDataLocation& data) {
+babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(const AccessModelScope& scope, const ProjectDataLocation& data) {
     const Project& project = scope.getProject();
 
     const Node* node = project.getNode(data.getNodeId());
@@ -67,7 +67,7 @@ babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(AccessModelScope& scope,
     return *inputTreeNode;
 }
 
-const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTreeNode(AccessModelScope& scope,
+const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTreeNode(const AccessModelScope& scope,
                                                                                    const ProjectDataLocation& data) {
     const Project& project = scope.getProject();
 
@@ -89,7 +89,7 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTree
     return inputTreeNode;
 }
 
-const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueTreeNode(AccessModelScope& scope,
+const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueTreeNode(const AccessModelScope& scope,
                                                                                 const ProjectDataLocation& data) {
     const ValueTreeNode* const valueTreeNode = tryGetValueTreeNode(scope, data);
     assert(valueTreeNode && "There was no ValueTreeNode");

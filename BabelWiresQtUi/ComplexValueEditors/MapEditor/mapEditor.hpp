@@ -18,7 +18,7 @@
 #include <QWidget>
 
 namespace babelwires {
-    class ProjectBridge;
+    class ProjectGraphModel;
     class MapModel;
     class MapView;
     struct ValueAssignmentData;
@@ -29,7 +29,7 @@ namespace babelwires {
       Q_OBJECT
       public:
         /// data - Enough information to restore the state of a MapEditor.
-        MapEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
+        MapEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger,
                   const ProjectDataLocation& data);
 
         /// Resets the map editor to the state of the given map.
@@ -39,18 +39,18 @@ namespace babelwires {
         void applyMapToProject();
 
         /// Get the ValueTreeNode holding the map or assert.
-        const ValueTreeNode& getMapTreeNode(AccessModelScope& scope) const;
+        const ValueTreeNode& getMapTreeNode(const AccessModelScope& scope) const;
 
         /// Get the MapValue from the project or assert.
-        const MapValue& getMapValueFromProject(AccessModelScope& scope) const;
+        const MapValue& getMapValueFromProject(const AccessModelScope& scope) const;
 
         /// Get the ValueTreeNode holding the map or return nullptr.
-        const ValueTreeNode* tryGetMapTreeNode(AccessModelScope& scope) const;
+        const ValueTreeNode* tryGetMapTreeNode(const AccessModelScope& scope) const;
 
         /// See if there is a map assignment.
         /// If there is, return its data.
         /// Otherwise return the data of the ValueTreeNode.
-        ValueHolderTemplate<MapValue> tryGetMapValueFromProject(AccessModelScope& scope) const;
+        ValueHolderTemplate<MapValue> tryGetMapValueFromProject(const AccessModelScope& scope) const;
 
         const MapProject& getMapProject() const;
 
@@ -74,7 +74,7 @@ namespace babelwires {
         QString getTitle() const;
 
         /// Try to find a MapValueAssignment in the project which applies to the Map.
-        const ValueAssignmentData* tryGetMapValueAssignmentData(AccessModelScope& scope) const;
+        const ValueAssignmentData* tryGetMapValueAssignmentData(const AccessModelScope& scope) const;
 
         void updateUiAfterChange() const;
 

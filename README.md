@@ -58,5 +58,5 @@ BabelWires is licensed under the GPLv3.
 See the [LICENSE](LICENSE) file.
 
 BabelWires uses a customized version of the [Nodeeditor](https://github.com/paceholder/nodeeditor) project for its GUI.
-My fork with the customizations is [here](https://github.com/Malcohol/nodeeditor), and that libary (and my customizations) are licensed under the BSD 3-Clause License.
+My fork with the customizations is [here](https://github.com/Malcohol/nodeeditor/tree/Malcohol/V3ChangesForBabelwires), and that libary (and my customizations) are licensed under the BSD 3-Clause License.
 

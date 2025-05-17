@@ -18,65 +18,6 @@
 babelwires::ProjectObserver::ProjectObserver(const Project& project)
     : m_project(project) {}
 
-void babelwires::ProjectObserver::nodeWasAdded(const Node* node) {
-    const NodeId nodeId = node->getNodeId();
-    auto ignoreIt = m_addedNodesToIgnore.find(nodeId);
-    if (ignoreIt == m_addedNodesToIgnore.end()) {
-        m_nodeWasAdded.fire(node);
-    } else {
-        m_addedNodesToIgnore.erase(nodeId);
-    }
-}
-
-void babelwires::ProjectObserver::nodeWasRemoved(NodeId nodeId) {
-    auto ignoreIt = m_removedNodesToIgnore.find(nodeId);
-    if (ignoreIt == m_removedNodesToIgnore.end()) {
-        m_nodeWasRemoved.fire(nodeId);
-    } else {
-        m_removedNodesToIgnore.erase(ignoreIt);
-    }
-}
-
-void babelwires::ProjectObserver::nodeWasMoved(NodeId nodeId, const UiPosition& uiPosition) {
-    auto ignoreIt = m_movedNodesToIgnore.find(nodeId);
-    if (ignoreIt == m_movedNodesToIgnore.end()) {
-        m_nodeWasMoved.fire(nodeId, uiPosition);
-    } else {
-        m_movedNodesToIgnore.erase(ignoreIt);
-    }
-}
-
-void babelwires::ProjectObserver::nodeWasResized(NodeId nodeId, const UiSize& newSize) {
-    auto ignoreIt = m_resizedNodesToIgnore.find(nodeId);
-    if (ignoreIt == m_resizedNodesToIgnore.end()) {
-        m_nodeWasResized.fire(nodeId, newSize);
-    } else {
-        m_resizedNodesToIgnore.erase(ignoreIt);
-    }
-}
-
-void babelwires::ProjectObserver::connectionWasAdded(const ConnectionDescription& connection) {
-    auto ignoreIt = m_addedConnectionsToIgnore.find(connection);
-    if (ignoreIt == m_addedConnectionsToIgnore.end()) {
-        m_connectionWasAdded.fire(connection);
-    } else {
-        m_addedConnectionsToIgnore.erase(ignoreIt);
-    }
-}
-
-void babelwires::ProjectObserver::connectionWasRemoved(const ConnectionDescription& connection) {
-    auto ignoreIt = m_removedConnectionsToIgnore.find(connection);
-    if (ignoreIt == m_removedConnectionsToIgnore.end()) {
-        m_connectionWasRemoved.fire(connection);
-    } else {
-        m_removedConnectionsToIgnore.erase(ignoreIt);
-    }
-}
-
-void babelwires::ProjectObserver::contentWasChanged(NodeId nodeId) {
-    m_contentWasChanged.fire(nodeId);
-}
-
 namespace {
     using State = babelwires::EditTree::State;
 
@@ -176,7 +117,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     // We compile the changes into these containers, and apply them below.
     // Note: The nodeeditor based UI does not know how to handle nodes which have changed
     // their number of ports, so we have to remove and re-add such nodes.
-    // TODO: Consider using a set rather than an unordered_set, since the iteratation below
+    // TODO: Consider using a set rather than an unordered_set, since the iteration below
     // will introduce non-determinacy.
     std::vector<const Node*> nodesToCreate;
     std::unordered_set<ConnectionDescription> connectionsToAdd;
@@ -229,11 +170,11 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
             }
 
             if (node->isChanged(Node::Changes::UiPositionChanged)) {
-                nodeWasMoved(nodeId, node->getUiPosition());
+                m_nodeWasMoved.fire(nodeId, node->getUiPosition());
             }
 
             if (node->isChanged(Node::Changes::UiSizeChanged)) {
-                nodeWasResized(nodeId, node->getUiSize());
+                m_nodeWasResized.fire(nodeId, node->getUiSize());
             }
 
             // const bool hasStructureChange = node->isChanged(someStructureChange);
@@ -261,12 +202,13 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
                             addToConnections(connectionsToAdd, State::CurrentState, std::move(connection), m_project,
                                              node);
 
-                        } else if (m_addedConnectionsToIgnore.erase(connection)) {
-                            // Stop the connection from being skipped when the nodesToCreate are processed.
-                            // This might do nothing if the node was not going to be ignored.
-                            addToConnections(connectionsToRemove, State::PreviousState, std::move(connection),
-                                             m_project, node);
-                        }
+                        } 
+                        //else if (m_addedConnectionsToIgnore.erase(connection)) {
+                        //    // Stop the connection from being skipped when the nodesToCreate are processed.
+                        //    // This might do nothing if the node was not going to be ignored.
+                        //    addToConnections(connectionsToRemove, State::PreviousState, std::move(connection),
+                        //                     m_project, node);
+                        //}
                     }
                 }
             }
@@ -276,19 +218,19 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
     // Now fire the callbacks in the appropriate order.
 
     for (const auto& connection : connectionsToRemove) {
-        connectionWasRemoved(connection);
+        m_connectionWasRemoved.fire(connection);
     }
 
     for (const auto& node : nodesToRemove) {
-        nodeWasRemoved(node->getNodeId());
+        m_nodeWasRemoved.fire(node->getNodeId());
     }
 
     for (auto&& node : nodesToCreate) {
-        nodeWasAdded(node);
+        m_nodeWasAdded.fire(node);
     }
 
     for (auto&& connection : connectionsToAdd) {
-        connectionWasAdded(connection);
+        m_connectionWasAdded.fire(connection);
     }
 
     // Update the nodes that didn't have structural changes.
@@ -300,38 +242,7 @@ void babelwires::ProjectObserver::interpretChangesAndFireSignals() {
                 Node::Changes::NodeRecovered) &&
             !node->getContentsCache().isChanged(ContentsCache::Changes::StructureChanged) &&
             !node->isChanged(babelwires::Node::Changes::NodeIsNew)) {
-            contentWasChanged(node->getNodeId());
+            m_contentWasChanged.fire(node->getNodeId());
         }
     }
-
-    assert((m_addedNodesToIgnore.empty()) && "Did not observe the newly created nodes.");
-    assert(m_removedNodesToIgnore.empty() && "Did not observe the newly deleted nodes.");
-    assert((m_addedConnectionsToIgnore.empty()) && "Did not observe the newly added connections");
-    assert(m_removedConnectionsToIgnore.empty() && "Did not observe all newly deleted connections");
-    assert((m_movedNodesToIgnore.empty()) && "Did not observe the newly moved nodes.");
-    assert((m_resizedNodesToIgnore.empty()) && "Did not observe the newly resized nodes.");
-}
-
-void babelwires::ProjectObserver::ignoreAddedNode(NodeId nodeId) {
-    m_addedNodesToIgnore.insert(nodeId);
-}
-
-void babelwires::ProjectObserver::ignoreRemovedNode(NodeId nodeId) {
-    m_removedNodesToIgnore.insert(nodeId);
-}
-
-void babelwires::ProjectObserver::ignoreAddedConnection(ConnectionDescription connection) {
-    m_addedConnectionsToIgnore.insert(std::move(connection));
-}
-
-void babelwires::ProjectObserver::ignoreRemovedConnection(ConnectionDescription connection) {
-    m_removedConnectionsToIgnore.insert(std::move(connection));
-}
-
-void babelwires::ProjectObserver::ignoreMovedNode(NodeId nodeId) {
-    m_movedNodesToIgnore.insert(nodeId);
-}
-
-void babelwires::ProjectObserver::ignoreResizedNode(NodeId nodeId) {
-    m_resizedNodesToIgnore.insert(nodeId);
 }

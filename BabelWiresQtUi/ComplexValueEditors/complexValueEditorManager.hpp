@@ -11,14 +11,14 @@
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorFactory.hpp>
 
 namespace babelwires {
-    class ProjectBridge;
+    class ProjectGraphModel;
     struct UserLogger;
 
     class ComplexValueEditorManager : public QObject {
         Q_OBJECT
 
       public:
-        void openEditorForValue(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger,
+        void openEditorForValue(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger,
                                 const ProjectDataLocation& data);
 
         void closeAllValueEditors();

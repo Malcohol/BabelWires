@@ -14,12 +14,12 @@
 namespace babelwires {
     class UnifiedLog;
     struct UserLogger;
-    class ProjectBridge;
+    class ProjectGraphModel;
  
     /// Constructs the correct type of editor to open.
     class ComplexValueEditorFactory {
       public:
         /// This will throw a ModelException if it does not make sense to open an editor for the value at data.
-        ComplexValueEditor* createEditor(QWidget* parent, ProjectBridge& projectBridge, UserLogger& userLogger, const ProjectDataLocation& data);
+        ComplexValueEditor* createEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data);
     };
 }

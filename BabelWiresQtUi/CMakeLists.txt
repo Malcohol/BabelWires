@@ -2,18 +2,11 @@ SET( BABELWIRESQTUI_SRCS
     uiMain.cpp
     mainWindow.cpp
     LogWindow/logWindow.cpp
-    ModelBridge/sourceFileNodeFactory.cpp
-    ModelBridge/targetFileNodeFactory.cpp
-    ModelBridge/processorNodeFactory.cpp
-    ModelBridge/valueNodeFactory.cpp
-    ModelBridge/baseNodeModel.cpp
-    ModelBridge/projectBridge.cpp
-    ModelBridge/nodeNodeModel.cpp
     ModelBridge/nodeContentsView.cpp
     ModelBridge/nodeContentsModel.cpp
     ModelBridge/rowModelDelegate.cpp
-    ModelBridge/modifyModelScope.cpp
-    ModelBridge/accessModelScope.cpp
+    NodeEditorBridge/modifyModelScope.cpp
+    NodeEditorBridge/accessModelScope.cpp
     ModelBridge/RowModels/fileRowModel.cpp
     ModelBridge/RowModels/rowModel.cpp
     ModelBridge/RowModels/rowModelDispatcher.cpp
@@ -23,7 +16,14 @@ SET( BABELWIRESQTUI_SRCS
     ValueEditors/lineEditValueEditor.cpp
     ValueEditors/tupleValueEditor.cpp
     ValueEditors/valueEditorCommonBase.cpp
-    ModelBridge/Internal/flowSceneConnectionInfo.cpp
+    NodeEditorBridge/NodeFactories/nodeFactory.cpp
+    NodeEditorBridge/NodeFactories/processorNodeFactory.cpp
+    NodeEditorBridge/NodeFactories/sourceFileNodeFactory.cpp
+    NodeEditorBridge/NodeFactories/targetFileNodeFactory.cpp
+    NodeEditorBridge/NodeFactories/valueNodeFactory.cpp
+    NodeEditorBridge/nodeNodeModel.cpp
+    NodeEditorBridge/projectGraphicsScene.cpp
+    NodeEditorBridge/projectGraphModel.cpp
     ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.cpp
     ModelBridge/ContextMenu/reloadFileAction.cpp
     ModelBridge/ContextMenu/changeSourceFileAction.cpp
@@ -70,4 +70,4 @@ ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )
 
 TARGET_COMPILE_DEFINITIONS(BabelWiresQtUi PRIVATE NODE_EDITOR_STATIC)
 TARGET_INCLUDE_DIRECTORIES(BabelWiresQtUi PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
-TARGET_LINK_LIBRARIES( BabelWiresQtUi BabelWiresLib Common nodes Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL)
+TARGET_LINK_LIBRARIES( BabelWiresQtUi BabelWiresLib Common QtNodes Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL)
