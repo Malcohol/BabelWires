@@ -74,6 +74,7 @@ namespace babelwires {
                                                               QtNodes::PortIndex index) const override;
         bool connectionPossible(QtNodes::ConnectionId const connectionId) const override;
         void addConnection(QtNodes::ConnectionId const connectionId) override;
+        bool deleteConnection(QtNodes::ConnectionId const connectionId) override;
         bool nodeExists(QtNodes::NodeId const nodeId) const override;
         QVariant nodeData(QtNodes::NodeId nodeId, QtNodes::NodeRole role) const override;
         QtNodes::NodeFlags nodeFlags(QtNodes::NodeId nodeId) const override;
@@ -91,7 +92,6 @@ namespace babelwires {
         QtNodes::NodeId newNodeId() override { assert(false); return 0; };
         QtNodes::NodeId addNode(QString const nodeType = QString()) override { assert(false); return 0; };
         bool connectionExists(QtNodes::ConnectionId const connectionId) const override { assert(false); return false; }
-        bool deleteConnection(QtNodes::ConnectionId const connectionId) override { assert(false); return false; }
         bool deleteNode(QtNodes::NodeId const nodeId) override { assert(false); return false; }
         // clang-format off
 

@@ -187,6 +187,14 @@ void babelwires::ProjectGraphModel::addConnection(QtNodes::ConnectionId const co
     scheduleCommand(connectionDescription.getConnectionCommand());
 }
 
+bool babelwires::ProjectGraphModel::deleteConnection(QtNodes::ConnectionId const connectionId) {
+    assert(m_state == State::ListeningToFlowScene);
+    AccessModelScope scope(*this);
+    auto connectionDescription = createConnectionDescriptionFromConnectionId(scope, connectionId);
+    scheduleCommand(connectionDescription.getDisconnectionCommand());
+    return true; 
+}
+
 bool babelwires::ProjectGraphModel::nodeExists(QtNodes::NodeId const nodeId) const {
     return (m_nodeModels.find(nodeId) != m_nodeModels.end());
 }
