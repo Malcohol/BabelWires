@@ -35,7 +35,6 @@
 #include <QFont>
 #include <QLineEdit>
 #include <QMenu>
-#include <QMouseEvent>
 #include <QPainter>
 
 #include <cassert>
