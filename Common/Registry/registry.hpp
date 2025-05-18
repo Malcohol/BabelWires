@@ -8,7 +8,7 @@
 #pragma once
 
 #include <Common/exceptions.hpp>
-//#include <Common/types.hpp>
+// #include <Common/types.hpp>
 #include <Common/Identifiers/identifier.hpp>
 
 #include <Common/types.hpp>
@@ -72,7 +72,7 @@ namespace babelwires {
         /// Will throw an RegistryException if the entry is not found.
         const RegistryEntry& getRegisteredEntry(const LongId& identifier) const;
 
-        protected:
+      protected:
         const RegistryEntry* getEntryByName(std::string_view name) const;
 
         /// Protected non-const version available to subclasses.
@@ -96,12 +96,16 @@ namespace babelwires {
       public:
         Registry(std::string registryName);
 
+        std::string getRegistryName() const;
+
         /// Transfer ownership to the registry.
-        template<typename ENTRY_SUBTYPE, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
+        template <typename ENTRY_SUBTYPE,
+                  std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
         ENTRY_SUBTYPE* addEntry(std::unique_ptr<ENTRY_SUBTYPE> newEntry);
 
         /// Construct a new entry which is owned by the registry.
-        template<typename ENTRY_SUBTYPE, typename... ARGS, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
+        template <typename ENTRY_SUBTYPE, typename... ARGS,
+                  std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
         ENTRY_SUBTYPE* addEntry(ARGS&&... args);
 
         /// Find an entry by an internal key which should be stable between
@@ -118,15 +122,18 @@ namespace babelwires {
 
         /// If ENTRY_SUBTYPE has the common static method "getThisIdentifier", then you can look it up by type
         /// and get a typed reference back.
-        template<typename ENTRY_SUBTYPE, std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
+        template <typename ENTRY_SUBTYPE,
+                  std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
         const ENTRY_SUBTYPE& getEntryByType() const {
-          const ENTRY& entry = getRegisteredEntry(ENTRY_SUBTYPE::getThisType());
-          assert(dynamic_cast<const ENTRY_SUBTYPE*>(&entry) && "The registered type was not of the expected type");
-          return static_cast<const ENTRY_SUBTYPE&>(entry);
+            const ENTRY& entry = getRegisteredEntry(ENTRY_SUBTYPE::getThisType());
+            assert(dynamic_cast<const ENTRY_SUBTYPE*>(&entry) && "The registered type was not of the expected type");
+            return static_cast<const ENTRY_SUBTYPE&>(entry);
         }
 
         /// This is called when entries are added and can be used to validate them, for example.
         virtual void onEntryRegistered(ENTRY& newEntry) const {}
+
+        const ENTRY* getEntryByName(std::string_view name) const;
 
       public:
         class Iterator;

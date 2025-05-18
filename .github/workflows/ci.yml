@@ -50,18 +50,12 @@ jobs:
         g++ --version
         qtchooser -print-env
 
-    #- name: Install CMake on Windows
-    #  if: startsWith(matrix.config.os, 'windows')
-    #  run: |
-    #    choco install cmake --version=3.31.0
-
     - name: Install Qt on Windows
       if: startsWith(matrix.config.os, 'windows')
       uses: jurplel/install-qt-action@v4
       with:
         version: '5.15.2'
         host: 'windows'
-        setup-python: 'false'
 
     - name: Configure CMake
       run: |

@@ -8,7 +8,7 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/projectCommandContextMenuAction.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
 #include <BabelWiresLib/Project/Commands/removeEntryFromArrayCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
@@ -27,7 +27,7 @@ babelwires::ProjectCommandContextMenuAction::ProjectCommandContextMenuAction(std
 
 void babelwires::ProjectCommandContextMenuAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                          const QModelIndex& index) const {
-    ProjectBridge& projectBridge = model.getProjectBridge();
+    ProjectGraphModel& projectGraphModel = model.getProjectGraphModel();
     const NodeId elementId = model.getNodeId();
-    projectBridge.scheduleCommand(m_command->clone());
+    projectGraphModel.scheduleCommand(m_command->clone());
 }

@@ -24,7 +24,8 @@ class QToolBar;
 namespace babelwires {
     class UnifiedLog;
     struct UserLogger;
-    class ProjectBridge;
+    class ProjectGraphModel;
+    class ProjectGraphicsScene;
     struct ProjectData;
     class LogWindow;
 
@@ -33,7 +34,7 @@ namespace babelwires {
         Q_OBJECT
 
       public:
-        MainWindow(ProjectBridge& projectBridge, UnifiedLog& log);
+        MainWindow(ProjectGraphModel& projectGraphModel, UnifiedLog& log);
         ~MainWindow();
 
         void openEditorForValue(const ProjectDataLocation& data);
@@ -51,12 +52,13 @@ namespace babelwires {
         void newProject();
         void undo();
         void redo();
+        void del();
         void cut();
         void copy();
         void paste();
         void reloadAllSources();
         void saveAllTargets();
-        void onNodeSelectionChanged(int numNodesSelected);
+        void onNodeSelectionChanged();
         void onClipboardChanged();
 
       private:
@@ -90,11 +92,18 @@ namespace babelwires {
         void onShowMainToolbar(bool show);
         void onShowLogWindow(bool show);
 
+        /// Ensure new nodes are always be placed on the top.
+        void onNodeCreatedPutOnTop(NodeId nodeId);
+
+        /// Ensure new nodes are selected. This is connected only temporarily.
+        void onNodeCreatedSetSelected(NodeId nodeId);
+
       protected:
         void closeEvent(QCloseEvent* event) override;
 
       private:
-        ProjectBridge& m_projectBridge;
+        ProjectGraphModel& m_projectGraphModel;
+        ProjectGraphicsScene* m_graphicsScene;
         QToolBar* m_mainToolbar;
         UserLogger& m_userLogger;
         LogWindow* m_logWindow;
@@ -107,6 +116,7 @@ namespace babelwires {
 
         std::unique_ptr<QAction> m_undoAction;
         std::unique_ptr<QAction> m_redoAction;
+        std::unique_ptr<QAction> m_deleteAction;
         std::unique_ptr<QAction> m_cutAction;
         std::unique_ptr<QAction> m_copyAction;
         std::unique_ptr<QAction> m_pasteAction;

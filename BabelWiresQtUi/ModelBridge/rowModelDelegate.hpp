@@ -11,13 +11,13 @@
 
 namespace babelwires {
 
-    class ProjectBridge;
+    class ProjectGraphModel;
 
     class RowModelDelegate : public QStyledItemDelegate {
         Q_OBJECT
       public:
         /// Construct a delegate to handle the editing of ValueTreeNodes.
-        RowModelDelegate(QObject* parent, ProjectBridge& projectBridge);
+        RowModelDelegate(QObject* parent, ProjectGraphModel& projectGraphModel);
 
         QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option,
                               const QModelIndex& index) const override;
@@ -32,6 +32,6 @@ namespace babelwires {
         void commitEditorValue();
 
       private:
-        ProjectBridge& m_projectBridge;
+        ProjectGraphModel& m_projectGraphModel;
     };
 } // namespace babelwires

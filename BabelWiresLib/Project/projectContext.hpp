@@ -1,5 +1,5 @@
 /**
- * The ProjectContext provides the project with access to its fundimental dependencies (e.g. registries).
+ * The ProjectContext provides the project with access to its fundamental dependencies (e.g. registries).
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -19,7 +19,7 @@ namespace babelwires {
     class ProcessorFactoryRegistry;
     class TypeSystem;
 
-    /// The ProjectContext provides the project with access to its fundimental dependencies (e.g. registries).
+    /// The ProjectContext provides the project with access to its fundamental dependencies (e.g. registries).
     /// This approach is an instance of dependency injection, and is used for almost all of the dependencies.
     /// Other dependencies not included here:
     /// * The debug log, because that is needed everywhere.

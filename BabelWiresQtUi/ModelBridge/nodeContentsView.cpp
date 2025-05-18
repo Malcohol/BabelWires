@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/nodeContentsView.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
 #include <BabelWiresLib/Project/Commands/addNodeForInputTreeValueCommand.hpp>
 #include <BabelWiresLib/Project/Commands/addNodeForOutputTreeValueCommand.hpp>
@@ -21,10 +21,15 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsView>
 
+// TODO
+#include <QtNodes/internal/NodeGraphicsObject.hpp>
+#include <QtNodes/internal/AbstractNodeGeometry.hpp>
+#include <QtNodes/BasicGraphicsScene>
+
 #include <cassert>
 
-babelwires::NodeContentsView::NodeContentsView(NodeId elementId, ProjectBridge& projectBridge)
-    : m_projectBridge(projectBridge)
+babelwires::NodeContentsView::NodeContentsView(NodeId elementId, ProjectGraphModel& projectGraphModel)
+    : m_projectGraphModel(projectGraphModel)
     , m_nodeId(elementId) {
     setEditTriggers(QAbstractItemView::AllEditTriggers);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -41,7 +46,7 @@ babelwires::NodeContentsView::NodeContentsView(NodeId elementId, ProjectBridge& 
 }
 
 QSize babelwires::NodeContentsView::sizeHint() const {
-    AccessModelScope scope(m_projectBridge);
+    AccessModelScope scope(m_projectGraphModel);
     if (const Node* node = scope.getProject().getNode(m_nodeId)) {
         // The width is stored, and the height will stretched to fit the node by the UI.
         return QSize(node->getUiSize().m_width, 1);
@@ -63,7 +68,7 @@ const QtNodes::NodeGraphicsObject& babelwires::NodeContentsView::getNodeGraphics
 
 std::tuple<int, int> babelwires::NodeContentsView::getLeftRightEdgeFromWidgetLeft() const {
     const QtNodes::NodeGraphicsObject& graphicsObject = getNodeGraphicsObject();
-    const QGraphicsView* const graphicsView = m_projectBridge.getFlowGraphWidget();
+    const QGraphicsView* const graphicsView = m_projectGraphModel.getFlowGraphWidget();
 
     const QPoint widgetTopLeftGlobal = mapToGlobalCorrect(QPoint(0,0));
 
@@ -74,10 +79,10 @@ std::tuple<int, int> babelwires::NodeContentsView::getLeftRightEdgeFromWidgetLef
         return global;
     };
 
-    const QtNodes::NodeGeometry& nodeGeometry = graphicsObject.node().nodeGeometry();
+    const QtNodes::AbstractNodeGeometry& nodeGeometry = qobject_cast<const QtNodes::BasicGraphicsScene*>(graphicsView->scene())->nodeGeometry();
 
     const QPointF graphicsObjectTopLeftGlobal = graphicsObjectToGlobal(QPointF(0,0));
-    const QPointF graphicsObjectTopRightGlobal = graphicsObjectToGlobal(QPointF(nodeGeometry.width(), 0));
+    const QPointF graphicsObjectTopRightGlobal = graphicsObjectToGlobal(QPointF(nodeGeometry.size(m_nodeId).width(), 0));
 
     const int leftEdgeWidgetPos = graphicsObjectTopLeftGlobal.x() - widgetTopLeftGlobal.x();
     const int rightEdgeWidgetPos = graphicsObjectTopRightGlobal.x() - widgetTopLeftGlobal.x(); 
@@ -113,7 +118,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
         if (event->pos().rx() < m_dragState->m_leftEdgeWidgetPos) {
             Path path;
             {
-                AccessModelScope scope(m_projectBridge);
+                AccessModelScope scope(m_projectGraphModel);
                 const Node* const node = scope.getProject().getNode(m_nodeId);
                 if (!node) {
                     return;
@@ -134,13 +139,13 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
             const AddNodeForInputTreeValueCommand* const commandRawPtr = command.get();
             // Synchronous because the command has the NodeId only after it runs.
             // TODO: Would it be better to reserve the ID here, outside the project?
-            if (m_projectBridge.executeCommandSynchronously(std::move(command))) {
+            if (m_projectGraphModel.executeCommandSynchronously(std::move(command))) {
                 m_dragState->m_newNodeId = commandRawPtr->getNodeId();
             }
         } else if (event->pos().rx() > m_dragState->m_rightEdgeWidgetPos) {
             Path path;
             {
-                AccessModelScope scope(m_projectBridge);
+                AccessModelScope scope(m_projectGraphModel);
                 const Node* const node = scope.getProject().getNode(m_nodeId);
                 if (!node) {
                     return;
@@ -161,13 +166,13 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
             const AddNodeForOutputTreeValueCommand* const commandRawPtr = command.get();
             // Synchronous because the command has the NodeId only after it runs.
             // TODO: Would it be better to reserve the ID here, outside the project?
-            if (m_projectBridge.executeCommandSynchronously(std::move(command))) {
+            if (m_projectGraphModel.executeCommandSynchronously(std::move(command))) {
                 m_dragState->m_newNodeId = commandRawPtr->getNodeId();
             }
         }
     } else {
         // Move node
-        m_projectBridge.scheduleCommand(std::make_unique<MoveNodeCommand>(
+        m_projectGraphModel.scheduleCommand(std::make_unique<MoveNodeCommand>(
             "Drag new node", m_dragState->m_newNodeId, getFlowScenePositionFromLocalPosition(event->pos())));
     }
 }
@@ -185,7 +190,7 @@ QPointF babelwires::NodeContentsView::mapToScene(QPoint localPos) const {
 
 QPoint babelwires::NodeContentsView::mapToGlobalCorrect(QPoint localPos) const {
     const QPointF posInScene = mapToScene(localPos);
-    const QGraphicsView* const graphicsView = m_projectBridge.getFlowGraphWidget();
+    const QGraphicsView* const graphicsView = m_projectGraphModel.getFlowGraphWidget();
     const QPoint posInView = graphicsView->mapFromScene(posInScene);
     return graphicsView->mapToGlobal(posInView);
 }

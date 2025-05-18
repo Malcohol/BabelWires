@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/changeSourceFileAction.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
@@ -25,13 +25,13 @@ babelwires::ChangeSourceFileAction::ChangeSourceFileAction()
 
 void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                          const QModelIndex& index) const {
-    ProjectBridge& projectBridge = model.getProjectBridge();
+    ProjectGraphModel& projectGraphModel = model.getProjectGraphModel();
     const NodeId elementId = model.getNodeId();
 
-    // Since formats are immuatable and live in the registry, they can be accessed outside a scope.
+    // Since formats are immutable and live in the registry, they can be accessed outside a scope.
     const FileTypeEntry* fileFormatInformation = nullptr;
     {
-        AccessModelScope scope(projectBridge);
+        AccessModelScope scope(projectGraphModel);
         const Project& project = scope.getProject();
         const Node* const f = project.getNode(elementId);
         if (!f) {
@@ -44,13 +44,13 @@ void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::NodeContent
         if (isZero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
             return;
         }
-        fileFormatInformation = fileElement->getFileFormatInformation(projectBridge.getContext());
+        fileFormatInformation = fileElement->getFileFormatInformation(projectGraphModel.getContext());
     }
     assert(fileFormatInformation && "This function should not be called when the format is not registered");
 
-    QString newFilePath = showOpenFileDialog(projectBridge.getFlowGraphWidget(), *fileFormatInformation);
+    QString newFilePath = showOpenFileDialog(projectGraphModel.getFlowGraphWidget(), *fileFormatInformation);
     if (!newFilePath.isEmpty()) {
-        projectBridge.scheduleCommand(
+        projectGraphModel.scheduleCommand(
             std::make_unique<ChangeFileCommand>("Change file path", elementId, newFilePath.toStdString()));
     }
 }

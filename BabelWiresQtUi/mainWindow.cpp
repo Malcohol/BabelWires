@@ -2,42 +2,36 @@
  * The MainWindow of the application.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresQtUi/mainWindow.hpp>
 
 #include <BabelWiresQtUi/LogWindow/logWindow.hpp>
-#include <BabelWiresQtUi/ModelBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/processorNodeFactory.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
-#include <BabelWiresQtUi/ModelBridge/sourceFileNodeFactory.hpp>
-#include <BabelWiresQtUi/ModelBridge/targetFileNodeFactory.hpp>
-#include <BabelWiresQtUi/ModelBridge/valueNodeFactory.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphicsScene.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Project/Commands/pasteNodesCommand.hpp>
-#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
+#include <BabelWiresLib/Project/Commands/pasteNodesCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 #include <BabelWiresLib/Project/projectUtilities.hpp>
 #include <BabelWiresLib/Serialization/projectSerialization.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <Common/Log/unifiedLog.hpp>
 #include <Common/exceptions.hpp>
 
-#include <nodes/DataModelRegistry>
-#include <nodes/FlowScene>
-#include <nodes/FlowView>
-#include <nodes/NodeData>
+#include <QtNodes/GraphicsView>
 
 #include <QApplication>
 #include <QClipboard>
@@ -53,36 +47,20 @@
 namespace {
     constexpr char s_initialFilePath[] = "Untitled";
 
-    std::shared_ptr<QtNodes::DataModelRegistry> registerDataModels(babelwires::ProjectBridge& projectBridge) {
-        auto ret = std::make_shared<QtNodes::DataModelRegistry>();
-
-        const auto& context = projectBridge.getContext();
-        for (const auto& f : context.m_sourceFileFormatReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::SourceFileNodeFactory(&projectBridge, &f),
-                                                       "Source Files");
-        }
-        for (const auto& f : context.m_targetFileFormatReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::TargetFileNodeFactory(&projectBridge, &f),
-                                                       "Target Files");
-        }
-        for (const auto& f : context.m_processorReg) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::ProcessorNodeFactory(&projectBridge, &f),
-                                                       "Processors");
-        }
-        for (const auto& t : context.m_typeSystem.getAllPrimitiveTypes()) {
-            ret->registerModel<QtNodes::NodeDataModel>(babelwires::ValueNodeFactory(&projectBridge, t), "Values");
-        }
-
-        return ret;
-    }
 } // namespace
 
-babelwires::MainWindow::MainWindow(ProjectBridge& projectBridge, UnifiedLog& log)
-    : m_projectBridge(projectBridge)
+babelwires::MainWindow::MainWindow(ProjectGraphModel& projectGraphModel, UnifiedLog& log)
+    : m_projectGraphModel(projectGraphModel)
     , m_userLogger(log) {
-    auto scene = std::make_unique<QtNodes::FlowScene>(registerDataModels(projectBridge));
-    projectBridge.connectToFlowScene(*scene);
-    setCentralWidget(new QtNodes::FlowView(scene.release()));
+
+    m_graphicsScene = new ProjectGraphicsScene(projectGraphModel);
+    // Don't call the constructor that takes a scene, since it calls setScene.
+    auto view = new QtNodes::GraphicsView();
+    // Don't call GraphicsView setScene, since it registers actions we don't want.
+    view->QGraphicsView::setScene(m_graphicsScene);
+    projectGraphModel.setWidgets(this, view);
+
+    setCentralWidget(view);
 
     createActions();
     createMenus();
@@ -92,6 +70,8 @@ babelwires::MainWindow::MainWindow(ProjectBridge& projectBridge, UnifiedLog& log
     setInitialFilePath();
     resize(800, 600);
     showNormal();
+
+    connect(&m_projectGraphModel, &ProjectGraphModel::nodeCreated, this, &MainWindow::onNodeCreatedPutOnTop);
 }
 
 babelwires::MainWindow::~MainWindow() = default;
@@ -139,10 +119,15 @@ void babelwires::MainWindow::createActions() {
     connect(m_redoAction.get(), &QAction::triggered, this, &MainWindow::redo);
 
     {
-        ModifyModelScope scope(m_projectBridge);
+        ModifyModelScope scope(m_projectGraphModel);
         m_undoStateChangedSubscription =
             scope.getCommandManager().signal_undoStateChanged.subscribe([this]() { onUndoStateChanged(); });
     }
+
+    m_deleteAction = std::make_unique<QAction>(QIcon::fromTheme("edit-delete"), tr("&Delete"), this);
+    m_deleteAction->setShortcut(QKeySequence::Delete);
+    m_deleteAction->setEnabled(false);
+    connect(m_deleteAction.get(), &QAction::triggered, this, &MainWindow::del);
 
     m_cutAction = std::make_unique<QAction>(QIcon::fromTheme("edit-cut"), tr("&Cut"), this);
     m_cutAction->setShortcuts(QKeySequence::Cut);
@@ -154,8 +139,8 @@ void babelwires::MainWindow::createActions() {
     m_copyAction->setEnabled(false);
     connect(m_copyAction.get(), &QAction::triggered, this, &MainWindow::copy);
 
-    connect(&m_projectBridge, &ProjectBridge::nodeSelectionChanged, this, &MainWindow::onNodeSelectionChanged);
-
+    connect(m_graphicsScene, &QGraphicsScene::selectionChanged, this, &MainWindow::onNodeSelectionChanged);
+    
     m_pasteAction = std::make_unique<QAction>(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
     m_pasteAction->setShortcuts(QKeySequence::Paste);
     onClipboardChanged();
@@ -203,6 +188,8 @@ void babelwires::MainWindow::createMenus() {
         editMenu->addAction(m_undoAction.get());
         editMenu->addAction(m_redoAction.get());
         editMenu->addSeparator();
+        editMenu->addAction(m_deleteAction.get());
+        editMenu->addSeparator();
         editMenu->addAction(m_cutAction.get());
         editMenu->addAction(m_copyAction.get());
         editMenu->addAction(m_pasteAction.get());
@@ -233,6 +220,10 @@ void babelwires::MainWindow::createToolbars() {
 
     m_mainToolbar->addSeparator();
 
+    m_mainToolbar->addAction(m_deleteAction.get());
+
+    m_mainToolbar->addSeparator();
+
     m_mainToolbar->addAction(m_copyAction.get());
     m_mainToolbar->addAction(m_cutAction.get());
     m_mainToolbar->addAction(m_pasteAction.get());
@@ -252,7 +243,7 @@ void babelwires::MainWindow::createDockWidgets(UnifiedLog& log) {
 }
 
 void babelwires::MainWindow::onUndoStateChanged() {
-    AccessModelScope scope(m_projectBridge);
+    AccessModelScope scope(m_projectGraphModel);
     const babelwires::CommandManager<Project>& commandManager = scope.getCommandManager();
 
     if (commandManager.canUndo()) {
@@ -281,12 +272,12 @@ void babelwires::MainWindow::onUndoStateChanged() {
 void babelwires::MainWindow::openProject() {
     if (maybeSave()) {
         QString dialogCaption = tr("Open project");
-        QString filePath = QFileDialog::getOpenFileName(m_projectBridge.getFlowGraphWidget(), dialogCaption,
+        QString filePath = QFileDialog::getOpenFileName(m_projectGraphModel.getFlowGraphWidget(), dialogCaption,
                                                         m_currentProjectDir, getDialogProjectFormat());
         if (!filePath.isNull()) {
             {
                 logDebug() << "Clearing project before open project";
-                ModifyModelScope scope(m_projectBridge);
+                ModifyModelScope scope(m_projectGraphModel);
                 scope.getProject().clear();
                 scope.getCommandManager().clear();
                 setInitialFilePath();
@@ -295,9 +286,9 @@ void babelwires::MainWindow::openProject() {
                 try {
                     std::string filePathStr = filePath.toStdString();
                     m_userLogger.logInfo() << "Open project \"" << filePathStr << '"';
-                    ModifyModelScope scope(m_projectBridge);
-                    ProjectData projectData = ProjectSerialization::loadFromFile(
-                        filePathStr, m_projectBridge.getContext(), m_userLogger);
+                    ModifyModelScope scope(m_projectGraphModel);
+                    ProjectData projectData =
+                        ProjectSerialization::loadFromFile(filePathStr, m_projectGraphModel.getContext(), m_userLogger);
                     scope.getProject().setProjectData(projectData);
                     setCurrentFilePath(filePath);
                     return;
@@ -320,7 +311,7 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
         try {
             std::string filePathStr = filePath.toStdString();
             m_userLogger.logInfo() << "Save project to \"" << filePathStr << '"';
-            ModifyModelScope scope(m_projectBridge);
+            ModifyModelScope scope(m_projectGraphModel);
             ProjectSerialization::saveToFile(filePathStr, scope.getProject().extractProjectData());
             scope.getCommandManager().setCursor();
             return true;
@@ -339,8 +330,7 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
 QString babelwires::MainWindow::getFullFilePath() const {
     if (!m_currentProjectFileName.isEmpty()) {
         return QFileInfo(m_currentProjectDir + "/" + m_currentProjectFileName).filePath();
-    }
-    else {
+    } else {
         return QString();
     }
 }
@@ -355,7 +345,7 @@ void babelwires::MainWindow::saveProject() {
 
 void babelwires::MainWindow::saveProjectAs() {
     QString dialogCaption = tr("Save project as");
-    QString filePath = QFileDialog::getSaveFileName(m_projectBridge.getFlowGraphWidget(), dialogCaption,
+    QString filePath = QFileDialog::getSaveFileName(m_projectGraphModel.getFlowGraphWidget(), dialogCaption,
                                                     m_currentProjectDir, getDialogProjectFormat());
     if (!filePath.isNull()) {
         const QString ext = getProjectExtension();
@@ -370,7 +360,7 @@ void babelwires::MainWindow::saveProjectAs() {
 void babelwires::MainWindow::newProject() {
     if (maybeSave()) {
         m_userLogger.logInfo() << "New project";
-        ModifyModelScope scope(m_projectBridge);
+        ModifyModelScope scope(m_projectGraphModel);
         scope.getProject().clear();
         scope.getCommandManager().clear();
         setInitialFilePath();
@@ -378,24 +368,26 @@ void babelwires::MainWindow::newProject() {
 }
 
 void babelwires::MainWindow::undo() {
-    ModifyModelScope scope(m_projectBridge);
+    ModifyModelScope scope(m_projectGraphModel);
     scope.getCommandManager().undo();
 }
 
 void babelwires::MainWindow::redo() {
-    ModifyModelScope scope(m_projectBridge);
+    ModifyModelScope scope(m_projectGraphModel);
     scope.getCommandManager().redo();
 }
 
 babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
-    ProjectData projectData = m_projectBridge.getDataFromSelectedNodes();
-
-    auto* flowView = dynamic_cast<QtNodes::FlowView*>(centralWidget());
+    assert(m_graphicsScene->areNodesSelected());
+    ProjectGraphicsScene::SelectedObjects selectedObjects = m_graphicsScene->getSelectedObjects();
+    ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes(selectedObjects.m_nodeIds);
+    
+    auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
     assert(flowView && "Unexpected central widget");
     const QPointF centre = flowView->sceneRect().center();
     UiPosition offset{static_cast<UiCoord>(-centre.x()), static_cast<UiCoord>(-centre.y())};
     projectUtilities::translate(offset, projectData);
-
+    
     return projectData;
 }
 
@@ -408,7 +400,25 @@ void babelwires::MainWindow::writeToClipboard(ProjectData projectData) {
     QApplication::clipboard()->setMimeData(mimedata.release());
 }
 
+void babelwires::MainWindow::del() {
+    assert(m_graphicsScene->isSomethingSelected());
+    ProjectGraphicsScene::SelectedObjects selectedObjects = m_graphicsScene->getSelectedObjects();
+
+    std::vector<ConnectionDescription> connectionDescriptions;
+    connectionDescriptions.reserve(selectedObjects.m_connectionIds.size());
+    {
+        AccessModelScope scope(m_projectGraphModel);
+        for (auto connectionId : selectedObjects.m_connectionIds) {
+            connectionDescriptions.emplace_back(m_projectGraphModel.createConnectionDescriptionFromConnectionId(scope, connectionId));
+        }
+    }
+    auto command = std::make_unique<RemoveNodeCommand>("Delete objects", std::move(selectedObjects.m_nodeIds), std::move(connectionDescriptions));
+    m_projectGraphModel.scheduleCommand(std::move(command));
+}
+
 void babelwires::MainWindow::cut() {
+    assert(m_graphicsScene->areNodesSelected());
+    
     auto projectData = getProjectDataFromSelection();
 
     auto command = std::make_unique<RemoveNodeCommand>("Cut elements");
@@ -418,7 +428,7 @@ void babelwires::MainWindow::cut() {
 
     writeToClipboard(std::move(projectData));
 
-    m_projectBridge.scheduleCommand(std::move(command));
+    m_projectGraphModel.scheduleCommand(std::move(command));
 }
 
 void babelwires::MainWindow::copy() {
@@ -433,10 +443,10 @@ void babelwires::MainWindow::paste() {
     std::string asString(contents.data(), contents.length());
 
     try {
-        ProjectData projectData =
-            ProjectSerialization::loadFromString(asString, m_projectBridge.getContext(), getFullFilePath().toStdString(), m_userLogger);
+        ProjectData projectData = ProjectSerialization::loadFromString(asString, m_projectGraphModel.getContext(),
+                                                                       getFullFilePath().toStdString(), m_userLogger);
         {
-            auto* flowView = dynamic_cast<QtNodes::FlowView*>(centralWidget());
+            auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
             assert(flowView && "Unexpected central widget");
             const QPointF centre = flowView->sceneRect().center();
             UiPosition offset{static_cast<UiCoord>(centre.x()), static_cast<UiCoord>(centre.y())};
@@ -444,16 +454,18 @@ void babelwires::MainWindow::paste() {
         }
 
         auto command = std::make_unique<PasteNodesCommand>("Paste elements", std::move(projectData));
-        m_projectBridge.scheduleCommand(std::move(command));
+        m_projectGraphModel.scheduleCommand(std::move(command));
     } catch (std::exception&) {
         // When using a specific mime-type, log a debug message?
         m_userLogger.logWarning() << "Failed to paste from clipboard";
     }
-    m_projectBridge.selectNewNodes();
+    m_graphicsScene->clearSelection();
+    QMetaObject::Connection connection = connect(&m_projectGraphModel, &ProjectGraphModel::nodeCreated, this, &MainWindow::onNodeCreatedSetSelected);
+    m_projectGraphModel.disconnectAfterProcessing(std::move(connection));
 }
 
 bool babelwires::MainWindow::maybeSave() {
-    AccessModelScope scope(m_projectBridge);
+    AccessModelScope scope(m_projectGraphModel);
     if (!scope.getCommandManager().isAtCursor()) {
         while (1) {
             switch (QMessageBox::warning(
@@ -501,20 +513,22 @@ void babelwires::MainWindow::closeEvent(QCloseEvent* event) {
 
 void babelwires::MainWindow::reloadAllSources() {
     m_userLogger.logInfo() << "Reload all sources";
-    ModifyModelScope scope(m_projectBridge);
+    ModifyModelScope scope(m_projectGraphModel);
     scope.getProject().tryToReloadAllSources();
 }
 
 void babelwires::MainWindow::saveAllTargets() {
     m_userLogger.logInfo() << "Save all targets";
-    ModifyModelScope scope(m_projectBridge);
+    ModifyModelScope scope(m_projectGraphModel);
     scope.getProject().tryToSaveAllTargets();
 }
 
-void babelwires::MainWindow::onNodeSelectionChanged(int numNodesSelected) {
-    const bool enabled = (numNodesSelected > 0);
-    m_cutAction->setEnabled(enabled);
-    m_copyAction->setEnabled(enabled);
+void babelwires::MainWindow::onNodeSelectionChanged() {
+    const bool areNodesSelected = m_graphicsScene->areNodesSelected();
+    m_cutAction->setEnabled(areNodesSelected);
+    m_copyAction->setEnabled(areNodesSelected);
+    const bool isSomethingSelected = m_graphicsScene->isSomethingSelected();
+    m_deleteAction->setEnabled(isSomethingSelected);
 }
 
 void babelwires::MainWindow::onClipboardChanged() {
@@ -530,13 +544,13 @@ void babelwires::MainWindow::onShowLogWindow(bool show) {
 }
 
 QString babelwires::MainWindow::getApplicationTitle() const {
-    const std::string& title = m_projectBridge.getContext().m_applicationIdentity.m_applicationTitle;
+    const std::string& title = m_projectGraphModel.getContext().m_applicationIdentity.m_applicationTitle;
     assert(!title.empty() && "m_applicationTitle must be provided");
     return title.c_str();
 }
 
 QString babelwires::MainWindow::getProjectExtension() const {
-    const std::string& ext = m_projectBridge.getContext().m_applicationIdentity.m_projectExtension;
+    const std::string& ext = m_projectGraphModel.getContext().m_applicationIdentity.m_projectExtension;
     assert(!ext.empty() && "m_projectExtension must be provided");
     assert((ext[0] == '.') && "The extension must begin with .");
     return ext.c_str();
@@ -552,5 +566,13 @@ QString babelwires::MainWindow::getClipboardMimetype() const {
 }
 
 void babelwires::MainWindow::openEditorForValue(const ProjectDataLocation& data) {
-    m_valueEditorManager.openEditorForValue(this, m_projectBridge, m_userLogger, data);
+    m_valueEditorManager.openEditorForValue(this, m_projectGraphModel, m_userLogger, data);
+}
+
+void babelwires::MainWindow::onNodeCreatedSetSelected(NodeId nodeId) {
+    m_graphicsScene->setNodeSelected(nodeId);
+}
+
+void babelwires::MainWindow::onNodeCreatedPutOnTop(NodeId nodeId) {
+    m_graphicsScene->setNodeOnTop(nodeId);
 }

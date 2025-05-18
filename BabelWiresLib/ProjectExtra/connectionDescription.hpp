@@ -22,6 +22,7 @@ namespace babelwires {
         ConnectionDescription(const ConnectionDescription& other);
         ConnectionDescription(ConnectionDescription&& other);
         ConnectionDescription(NodeId targetId, const ConnectionModifierData& data);
+        ConnectionDescription(NodeId sourceId, Path sourcePath, NodeId targetId, Path targetPath);
         ConnectionDescription& operator=(const ConnectionDescription& other);
         ConnectionDescription& operator=(ConnectionDescription&& other);
 

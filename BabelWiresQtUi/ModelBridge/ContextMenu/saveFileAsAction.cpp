@@ -8,8 +8,8 @@
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/saveFileAsAction.hpp>
 
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
@@ -22,13 +22,13 @@ babelwires::SaveFileAsAction::SaveFileAsAction()
     : NodeContentsContextMenuActionBase(tr("Save file as\u2026")) {}
 
 void babelwires::SaveFileAsAction::actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const {
-    ProjectBridge& projectBridge = model.getProjectBridge();
+    ProjectGraphModel& projectGraphModel = model.getProjectGraphModel();
     const NodeId elementId = model.getNodeId();
 
     // Since formats are immuatable and live in the registry, they can be accessed outside a scope.
     const FileTypeEntry* fileFormatInformation = nullptr;
     {
-        AccessModelScope scope(projectBridge);
+        AccessModelScope scope(projectGraphModel);
         const Project& project = scope.getProject();
         const Node* const node = project.getNode(elementId);
         if (!node) {
@@ -41,15 +41,15 @@ void babelwires::SaveFileAsAction::actionTriggered(babelwires::NodeContentsModel
         if (isZero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::save)) {
             return;
         }
-        fileFormatInformation = fileElement->getFileFormatInformation(projectBridge.getContext());
+        fileFormatInformation = fileElement->getFileFormatInformation(projectGraphModel.getContext());
     }
     assert(fileFormatInformation && "This function should not be called when the format is not registered");
 
-    QString newFilePath = showSaveFileDialog(projectBridge.getFlowGraphWidget(), *fileFormatInformation);
+    QString newFilePath = showSaveFileDialog(projectGraphModel.getFlowGraphWidget(), *fileFormatInformation);
 
     if (!newFilePath.isEmpty()) {
         // This is synchronous, but that's probably appropriate for saving.
-        ModifyModelScope scope(projectBridge);
+        ModifyModelScope scope(projectGraphModel);
         std::unique_ptr<Command<Project>> commandPtr =
             std::make_unique<ChangeFileCommand>("Change file path", elementId, newFilePath.toStdString());
         if (scope.getCommandManager().executeAndStealCommand(commandPtr)) {

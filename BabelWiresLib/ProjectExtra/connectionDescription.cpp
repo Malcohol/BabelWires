@@ -33,6 +33,9 @@ babelwires::ConnectionDescription::ConnectionDescription() = default;
 babelwires::ConnectionDescription::ConnectionDescription(const ConnectionDescription& other) = default;
 babelwires::ConnectionDescription::ConnectionDescription(ConnectionDescription&& other) = default;
 
+babelwires::ConnectionDescription::ConnectionDescription(NodeId sourceId, Path sourcePath, NodeId targetId, Path targetPath)
+    : m_sourceId(sourceId), m_sourcePath(std::move(sourcePath)), m_targetId(targetId), m_targetPath(std::move(targetPath)) {}
+
 babelwires::ConnectionDescription& babelwires::ConnectionDescription::operator=(const ConnectionDescription& other) {
     m_sourceId = other.m_sourceId;
     m_targetId = other.m_targetId;

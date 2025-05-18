@@ -1,5 +1,5 @@
 /**
- * Nodes are the fundimental constituent of the project.
+ * Nodes are the fundamental constituent of the project.
  * They expose input and output Features, and carry edits.
  *
  * (C) 2021 Malcolm Tyrrell
@@ -30,7 +30,7 @@ namespace babelwires {
     struct UiSize;
     struct ProjectContext;
 
-    /// The fundimental constituent of the project.
+    /// The fundamental constituent of the project.
     /// Nodes expose input and output Features, and carry edits.
     class Node {
       public:

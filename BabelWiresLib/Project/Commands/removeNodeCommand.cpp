@@ -2,17 +2,16 @@
  * The command which removes content from a project.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 
+#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
+#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
-
 
 #include <algorithm>
 #include <cassert>
@@ -28,10 +27,16 @@ babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName, Connec
     : SimpleCommand(commandName)
     , m_connections{std::move(connection)} {}
 
+babelwires::RemoveNodeCommand::RemoveNodeCommand(std::string commandName, std::vector<NodeId> nodes,
+                                                 std::vector<ConnectionDescription> connections)
+    : SimpleCommand(commandName)
+    , m_nodeIds(std::move(nodes))
+    , m_connections{std::move(connections)} {}
+
 babelwires::RemoveNodeCommand::RemoveNodeCommand(const RemoveNodeCommand& other)
-: SimpleCommand(other)
-, m_nodeIds(other.m_nodeIds)
-, m_connections(other.m_connections) {
+    : SimpleCommand(other)
+    , m_nodeIds(other.m_nodeIds)
+    , m_connections(other.m_connections) {
     m_nodesToRestore.reserve(other.m_nodesToRestore.size());
     for (const auto& e : other.m_nodesToRestore) {
         m_nodesToRestore.emplace_back(e->clone());
@@ -42,7 +47,7 @@ babelwires::RemoveNodeCommand::RemoveNodeCommand(const RemoveNodeCommand& other)
 babelwires::RemoveNodeCommand::~RemoveNodeCommand() = default;
 
 bool babelwires::RemoveNodeCommand::addConnection(const babelwires::ConnectionDescription& desc,
-                                                     ConnectionSet& connectionSet, const babelwires::Project& project) {
+                                                  ConnectionSet& connectionSet, const babelwires::Project& project) {
     const Node* targetElement = project.getNode(desc.m_targetId);
     if (!targetElement) {
         return false;
@@ -87,8 +92,7 @@ bool babelwires::RemoveNodeCommand::addConnection(const babelwires::ConnectionDe
         }
 
         const ConnectionModifierData& data = actualConnection->getModifierData();
-        if ((data.m_sourceId != desc.m_sourceId) ||
-            !desc.m_sourcePath.isPrefixOf(data.m_sourcePath)) {
+        if ((data.m_sourceId != desc.m_sourceId) || !desc.m_sourcePath.isPrefixOf(data.m_sourcePath)) {
             return false;
         }
 
@@ -129,18 +133,18 @@ bool babelwires::RemoveNodeCommand::initialize(const Project& project) {
         std::unique_ptr<NodeData> newElementData = node->extractNodeData();
 
         // Move any connections described in the connections into the m_connections vector.
-        auto newEnd = std::remove_if(
-            newElementData->m_modifiers.begin(), newElementData->m_modifiers.end(),
-            [this, elementId, &connectionsBeingRemoved](const std::unique_ptr<ModifierData>& modData) {
-                if (const auto* assignFromData = modData.get()->as<ConnectionModifierData>()) {
-                    ConnectionDescription connection(elementId, *assignFromData);
-                    if (connectionsBeingRemoved.insert(connection).second) {
-                        m_connections.emplace_back(connection);
-                    }
-                    return true;
-                }
-                return false;
-            });
+        auto newEnd =
+            std::remove_if(newElementData->m_modifiers.begin(), newElementData->m_modifiers.end(),
+                           [this, elementId, &connectionsBeingRemoved](const std::unique_ptr<ModifierData>& modData) {
+                               if (const auto* assignFromData = modData.get()->as<ConnectionModifierData>()) {
+                                   ConnectionDescription connection(elementId, *assignFromData);
+                                   if (connectionsBeingRemoved.insert(connection).second) {
+                                       m_connections.emplace_back(connection);
+                                   }
+                                   return true;
+                               }
+                               return false;
+                           });
         newElementData->m_modifiers.erase(newEnd, newElementData->m_modifiers.end());
 
         m_nodesToRestore.emplace_back(std::move(newElementData));
@@ -188,16 +192,14 @@ void babelwires::RemoveNodeCommand::undo(Project& project) const {
     }
 }
 
-bool babelwires::RemoveNodeCommand::shouldSubsume(const Command& subsequentCommand,
-                                                     bool thisIsAlreadyExecuted) const {
+bool babelwires::RemoveNodeCommand::shouldSubsume(const Command& subsequentCommand, bool thisIsAlreadyExecuted) const {
     return !thisIsAlreadyExecuted && subsequentCommand.as<RemoveNodeCommand>();
 }
 
 void babelwires::RemoveNodeCommand::subsume(std::unique_ptr<Command> subsequentCommand) {
     assert(subsequentCommand->as<RemoveNodeCommand>() && "subsume should not have been called");
     RemoveNodeCommand* removeNodeCommand = static_cast<RemoveNodeCommand*>(subsequentCommand.get());
-    m_nodeIds.insert(m_nodeIds.end(), removeNodeCommand->m_nodeIds.begin(),
-                        removeNodeCommand->m_nodeIds.end());
+    m_nodeIds.insert(m_nodeIds.end(), removeNodeCommand->m_nodeIds.begin(), removeNodeCommand->m_nodeIds.end());
 }
 
 void babelwires::RemoveNodeCommand::addNodeToRemove(NodeId elementId) {

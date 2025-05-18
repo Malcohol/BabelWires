@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/setArraySizeAction.hpp>
 
-#include <BabelWiresQtUi/ModelBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
-#include <BabelWiresQtUi/ModelBridge/projectBridge.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
@@ -31,14 +31,14 @@ babelwires::SetArraySizeAction::SetArraySizeAction(babelwires::Path pathToArray)
 
 void babelwires::SetArraySizeAction::actionTriggered(babelwires::NodeContentsModel& model,
                                                      const QModelIndex& index) const {
-    ProjectBridge& projectBridge = model.getProjectBridge();
+    ProjectGraphModel& projectGraphModel = model.getProjectGraphModel();
     const NodeId elementId = model.getNodeId();
 
     unsigned int currentSize;
     Range<unsigned int> range;
     // Don't keep the project locked.
     {
-        AccessModelScope scope(projectBridge);
+        AccessModelScope scope(projectGraphModel);
         const Node* const node = scope.getProject().getNode(elementId);
 
         const babelwires::ValueTreeNode* const input = tryFollowPath(m_pathToArray, *node->getInput());
@@ -53,11 +53,11 @@ void babelwires::SetArraySizeAction::actionTriggered(babelwires::NodeContentsMod
     bool ok;
     std::ostringstream text;
     text << "Array at " << m_pathToArray;
-    int newSize = QInputDialog::getInt(projectBridge.getFlowGraphWidget(), "Set array size", text.str().c_str(),
+    int newSize = QInputDialog::getInt(projectGraphModel.getFlowGraphWidget(), "Set array size", text.str().c_str(),
                                        currentSize, range.m_min, range.m_max, 1, &ok);
 
     if (ok) {
-        projectBridge.scheduleCommand(
+        projectGraphModel.scheduleCommand(
             std::make_unique<SetArraySizeCommand>("Set array size", elementId, m_pathToArray, newSize));
     }
 }
