@@ -22,7 +22,7 @@ namespace babelwires {
     class Node;
     class ContentsCache;
     class Path;
-    class ConnectionDescription;
+    struct ConnectionDescription;
 
     class NodeContentsView;
     class NodeContentsModel;

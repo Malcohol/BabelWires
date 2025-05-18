@@ -11,7 +11,7 @@
 
 namespace babelwires {
     class ProcessorFactoryRegistry;
-    class UiProjectContext;
+    struct UiProjectContext;
 
     class ProcessorNodeFactory : public NodeFactory {
       public:

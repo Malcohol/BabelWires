@@ -11,7 +11,7 @@
 
 namespace babelwires {
     class TargetFileFormatRegistry;
-    class UiProjectContext;
+    struct UiProjectContext;
 
     class TargetFileNodeFactory : public NodeFactory {
       public:

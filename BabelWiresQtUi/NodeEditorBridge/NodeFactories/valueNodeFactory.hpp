@@ -11,7 +11,7 @@
 
 namespace babelwires {
     class TypeSystem;
-    class UiProjectContext;
+    struct UiProjectContext;
 
     class ValueNodeFactory : public NodeFactory {
       public:
