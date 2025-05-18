@@ -82,32 +82,18 @@ namespace babelwires {
                           QtNodes::PortRole role) const override;
 
       public:
-        // Parts of the interface that are not needed in this use-case.
+        // Parts of the AbstractGraphModel interface that are never called in BabelWires, but still
+        // need an implementation.
+        // clang-format off
         bool setPortData(QtNodes::NodeId nodeId, QtNodes::PortType portType, QtNodes::PortIndex index,
-                         QVariant const& value, QtNodes::PortRole role = QtNodes::PortRole::Data) override {
-            assert(false);
-            return false;
-        };
-        QtNodes::NodeId newNodeId() override {
-            assert(false);
-            return 0;
-        };
-        QtNodes::NodeId addNode(QString const nodeType = QString()) override {
-            assert(false);
-            return 0;
-        };
-        bool connectionExists(QtNodes::ConnectionId const connectionId) const override {
-          assert(false);
-          return false;
-        }
-        bool deleteConnection(QtNodes::ConnectionId const connectionId) override {
-            assert(false);
-            return false;
-        }
-        bool deleteNode(QtNodes::NodeId const nodeId) override {
-            assert(false);
-            return false;
-        }
+                         QVariant const& value, QtNodes::PortRole role = QtNodes::PortRole::Data) override
+          { assert(false); return false; };
+        QtNodes::NodeId newNodeId() override { assert(false); return 0; };
+        QtNodes::NodeId addNode(QString const nodeType = QString()) override { assert(false); return 0; };
+        bool connectionExists(QtNodes::ConnectionId const connectionId) const override { assert(false); return false; }
+        bool deleteConnection(QtNodes::ConnectionId const connectionId) override { assert(false); return false; }
+        bool deleteNode(QtNodes::NodeId const nodeId) override { assert(false); return false; }
+        // clang-format off
 
       public:
         QtNodes::ConnectionId createConnectionIdFromConnectionDescription(const AccessModelScope& scope,
