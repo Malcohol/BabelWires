@@ -217,7 +217,7 @@ bool babelwires::NodeNodeModel::isOutConnection(const QtNodes::ConnectionId& con
         const auto& outConnectionId = std::get<0>(outConnection);
         if ((outConnectionId.outPortIndex == connectionId.outPortIndex) &&
             (outConnectionId.inNodeId == connectionId.inNodeId) &&
-            (outConnectionId.inPortIndex == outConnectionId.inPortIndex)) {
+            (outConnectionId.inPortIndex == connectionId.inPortIndex)) {
             return true;
         }
     }

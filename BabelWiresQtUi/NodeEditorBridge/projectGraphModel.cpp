@@ -109,7 +109,6 @@ void babelwires::ProjectGraphModel::addConnectionToFlowScene(const ConnectionDes
 
 void babelwires::ProjectGraphModel::removeConnectionFromFlowScene(const ConnectionDescription& connection) {
     assert(m_state == State::ProcessingModelChanges);
-    AccessModelScope scope(*this);
     const auto sourceIt = m_nodeModels.find(connection.m_sourceId);
     assert(sourceIt != m_nodeModels.end());
     sourceIt->second->removeOutConnection(connection);
