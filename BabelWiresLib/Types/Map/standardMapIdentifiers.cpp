@@ -17,3 +17,7 @@ babelwires::ShortId babelwires::getWildcardMatchId()
 {
     return BW_SHORT_ID("_match", c_wildcardMatch, "eae0f1ad-630b-4c64-911e-c38572a5e5ae");
 }
+
+babelwires::ShortId babelwires::getBlankValueId() {
+    return BW_SHORT_ID("____", c_blankName, "9e715cdc-399a-48b7-bc04-ad98e9e900d9");
+}

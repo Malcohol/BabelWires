@@ -12,7 +12,9 @@
 namespace babelwires {
     constexpr const char c_wildcard[] = "*";
     constexpr const char c_wildcardMatch[] = "<match>";
+    constexpr const char c_blankName[] = "____";
 
-    babelwires::ShortId getWildcardId();
-    babelwires::ShortId getWildcardMatchId();
+    ShortId getWildcardId();
+    ShortId getWildcardMatchId();
+    ShortId getBlankValueId();
 }
