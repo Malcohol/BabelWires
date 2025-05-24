@@ -90,19 +90,19 @@ std::optional<babelwires::SubtypeOrder> babelwires::EnumType::compareSubtypeHelp
     while ((it < m_sortedValues.end()) && (otherIt < otherEnum->m_sortedValues.end())) {
         if (*it < *otherIt) {
             foundValueNotInOther = true;
-            if (foundValueInBoth) {
+            if (foundValueNotInThis && foundValueInBoth) {
                 return SubtypeOrder::IsIntersecting;
             }
             ++it;
         } else if (*otherIt < *it) {
             foundValueNotInThis = true;
-            if (foundValueInBoth) {
+            if (foundValueNotInOther && foundValueInBoth) {
                 return SubtypeOrder::IsIntersecting;
             }
             ++otherIt;
         } else {
             foundValueInBoth = true;
-            if (foundValueNotInOther || foundValueNotInThis) {
+            if (foundValueNotInOther && foundValueNotInThis) {
                 return SubtypeOrder::IsIntersecting;
             }
             ++it;

@@ -151,9 +151,9 @@ TEST(ArrayTypeTest, setSizeArrayCanBeEmpty) {
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 0);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    EXPECT_THROW(
-        arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testDomain::TestSimpleArrayType::s_maximumSize + 1),
-        babelwires::ModelException);
+    EXPECT_THROW(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder,
+                                   testDomain::TestSimpleArrayType::s_maximumSize + 1),
+                 babelwires::ModelException);
 }
 
 TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
@@ -176,7 +176,8 @@ TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), testDomain::TestCompoundArrayType::s_maximumSize);
 
     arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testDomain::TestCompoundArrayType::s_maximumSize - 1);
-    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), testDomain::TestCompoundArrayType::s_maximumSize - 1);
+    EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(),
+              testDomain::TestCompoundArrayType::s_maximumSize - 1);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
     arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testDomain::TestCompoundArrayType::s_maximumSize);
@@ -452,6 +453,18 @@ TEST(ArrayTypeTest, subtyping) {
             {testDomain::TestEnum::getThisType()},
             {babelwires::IntValue(2), babelwires::IntValue(6), babelwires::IntValue(3)}});
 
+    babelwires::TypeRef arrayOfDifferentTypeRef(
+        babelwires::ArrayTypeConstructor::getThisIdentifier(),
+        babelwires::TypeConstructorArguments{
+            {babelwires::StringType::getThisType()},
+            {babelwires::IntValue(2), babelwires::IntValue(6), babelwires::IntValue(3)}});
+
+    babelwires::TypeRef arrayOfDisjointLength(
+        babelwires::ArrayTypeConstructor::getThisIdentifier(),
+        babelwires::TypeConstructorArguments{
+            {babelwires::StringType::getThisType()},
+            {babelwires::IntValue(8), babelwires::IntValue(10), babelwires::IntValue(8)}});
+
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeRef, arrayTypeRef),
               babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeRef, biggerArrayTypeRef),
@@ -463,14 +476,23 @@ TEST(ArrayTypeTest, subtyping) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfSupertypeTypeRef, arrayTypeRef),
               babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(biggerArrayTypeRef, arrayOfSupertypeTypeRef),
-              babelwires::SubtypeOrder::IsDisjoint);
+              babelwires::SubtypeOrder::IsIntersecting);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfSupertypeTypeRef, biggerArrayTypeRef),
+              babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeRef, arrayOfDifferentTypeRef),
+              babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfDifferentTypeRef, arrayTypeRef),
+              babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeRef, arrayOfDisjointLength),
+              babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfDisjointLength, arrayTypeRef),
               babelwires::SubtypeOrder::IsDisjoint);
 }
 
 TEST(ArrayTypeTest, featureChanges) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testDomain::TestSimpleArrayType::getThisType());
+    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem,
+                                           testDomain::TestSimpleArrayType::getThisType());
     arrayFeature.setToDefault();
 
     const testDomain::TestSimpleArrayType* arrayType = arrayFeature.getType().as<testDomain::TestSimpleArrayType>();

@@ -385,10 +385,17 @@ TEST(RecordWithVariantsTypeTest, subtype) {
               babelwires::SubtypeOrder::IsSubtype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAB::getThisType(),
                                                           testDomain::RecordVAVB::getThisType()),
-              babelwires::SubtypeOrder::IsDisjoint);
+              babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAVB::getThisType(),
                                                           testDomain::RecordVAB::getThisType()),
-              babelwires::SubtypeOrder::IsDisjoint);
+              babelwires::SubtypeOrder::IsSubtype);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVABV0::getThisType(),
+                                                          testDomain::RecordVABV1::getThisType()),
+              babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVABV1::getThisType(),
+                                                          testDomain::RecordVABV0::getThisType()),
+              babelwires::SubtypeOrder::IsIntersecting);
 }
 
 TEST(RecordWithVariantsTypeTest, featureChanges) {

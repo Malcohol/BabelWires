@@ -272,10 +272,7 @@ babelwires::RecordWithVariantsType::compareSubtypeHelper(const TypeSystem& typeS
     std::vector<const Field*> thisFixedFields = getFixedFields();
     std::vector<const Field*> otherFixedFields = otherRecord->getFixedFields();
 
-    const SubtypeOrder fieldComparison = sortAndCompareFieldSets(typeSystem, thisFixedFields, otherFixedFields);
-    if (updateAndCheckDisjoint(currentOrder, fieldComparison)) {
-        return SubtypeOrder::IsDisjoint;
-    }
+    const SubtypeOrder fieldComparison = SubtypeOrder::IsEquivalent;
 
     Tags tags = getTags();
     Tags otherTags = otherRecord->getTags();

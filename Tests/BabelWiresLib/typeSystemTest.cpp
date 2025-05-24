@@ -111,9 +111,9 @@ TEST(TypeSystemTest, isRelatedTypes) {
     EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubEnum::getThisType(),
                                                            testDomain::TestSubSubEnum2::getThisType()));
 
-    EXPECT_FALSE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum1::getThisType(),
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum1::getThisType(),
                                                             testDomain::TestSubSubEnum2::getThisType()));
-    EXPECT_FALSE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum2::getThisType(),
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum2::getThisType(),
                                                             testDomain::TestSubSubEnum1::getThisType()));
 }
 

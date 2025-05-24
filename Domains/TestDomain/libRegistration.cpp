@@ -55,6 +55,7 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::RecordVAB>();
     context.m_typeSystem.addEntry<testDomain::RecordVAV0>();
     context.m_typeSystem.addEntry<testDomain::RecordVABV0>();
+    context.m_typeSystem.addEntry<testDomain::RecordVABV1>();
     context.m_typeSystem.addEntry<testDomain::RecordVABV01>();
     context.m_typeSystem.addEntry<testDomain::RecordVAVB>();
 

@@ -7,6 +7,9 @@ namespace {
     babelwires::ShortId getIdForTag0() {
         return BW_SHORT_ID("tag0", "tag0", "5ad43c59-358f-463b-8b1c-0dd8482c4463");
     }
+    babelwires::ShortId getIdForTag1() {
+        return BW_SHORT_ID("tag1", "tag1", "612d1fbe-efd0-4ee5-bb20-4694f1f757b4");
+    }
     babelwires::ShortId getIdForA() {
         return BW_SHORT_ID("A", "A", "b30a8d72-a330-48e7-8f43-cdea54264c7b");
     }
@@ -49,6 +52,12 @@ testDomain::RecordVABV0::RecordVABV0()
     : RecordWithVariantsType({getIdForDefaultTag(), getIdForTag0()},
                              {{getIdForA(), babelwires::DefaultIntType::getThisType()},
                               {getIdFor0(), babelwires::DefaultIntType::getThisType(), {getIdForTag0()}},
+                              {getIdForB(), babelwires::DefaultIntType::getThisType()}}) {}
+
+testDomain::RecordVABV1::RecordVABV1()
+    : RecordWithVariantsType({getIdForDefaultTag(), getIdForTag0(), getIdForTag1()},
+                             {{getIdForA(), babelwires::DefaultIntType::getThisType()},
+                              {getIdFor1(), babelwires::DefaultIntType::getThisType(), {getIdForTag1()}},
                               {getIdForB(), babelwires::DefaultIntType::getThisType()}}) {}
 
 testDomain::RecordVABV01::RecordVABV01()
