@@ -12,6 +12,8 @@
 
 #include <Common/Identifiers/identifier.hpp>
 
+#include <optional>
+
 namespace babelwires {
 
     /// A type describes a valid set of values.
@@ -39,9 +41,9 @@ namespace babelwires {
         /// Return a short string which defines the kind of values this type handles.
         virtual std::string getKind() const = 0;
 
-        /// Are two types constructed by this type constructor related by subtyping?
-        /// By default, this returns IsUnrelated.
-        virtual SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const;
+        /// How are this type and other related by subtyping? A type may not know if it's related to
+        /// other, so by default, this returns nothing.
+        virtual std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const;
 
         /// Used for display to the user, so it does not have to be parsable or even comprehensive.
         virtual std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const = 0;

@@ -76,44 +76,49 @@ std::string babelwires::EnumType::getKind() const {
     return EnumValue::serializationType;
 }
 
-babelwires::SubtypeOrder babelwires::EnumType::compareSubtypeHelper(const TypeSystem& typeSystem,
+std::optional<babelwires::SubtypeOrder> babelwires::EnumType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                     const Type& other) const {
     const EnumType* const otherEnum = other.as<EnumType>();
     if (!otherEnum) {
-        return SubtypeOrder::IsUnrelated;
+        return {};
     }
     auto it = m_sortedValues.begin();
     auto otherIt = otherEnum->m_sortedValues.begin();
-    bool thisIsNotSubtype = false;
-    bool thisIsNotSuperType = false;
+    bool foundValueNotInOther = false;
+    bool foundValueNotInThis = false;
+    bool foundValueInBoth = false;
     while ((it < m_sortedValues.end()) && (otherIt < otherEnum->m_sortedValues.end())) {
         if (*it < *otherIt) {
-            thisIsNotSubtype = true;
-            if (thisIsNotSuperType) {
-                return SubtypeOrder::IsUnrelated;
+            foundValueNotInOther = true;
+            if (foundValueInBoth) {
+                return SubtypeOrder::IsIntersecting;
             }
             ++it;
         } else if (*otherIt < *it) {
-            thisIsNotSuperType = true;
-            if (thisIsNotSubtype) {
-                return SubtypeOrder::IsUnrelated;
+            foundValueNotInThis = true;
+            if (foundValueInBoth) {
+                return SubtypeOrder::IsIntersecting;
             }
             ++otherIt;
         } else {
+            foundValueInBoth = true;
+            if (foundValueNotInOther || foundValueNotInThis) {
+                return SubtypeOrder::IsIntersecting;
+            }
             ++it;
             ++otherIt;
         }
     }
     if (it != m_sortedValues.end()) {
-        thisIsNotSubtype = true;
+        foundValueNotInOther = true;
     } else if (otherIt != otherEnum->m_sortedValues.end()) {
-        thisIsNotSuperType = true;
+        foundValueNotInThis = true;
     }
-    if (thisIsNotSubtype && thisIsNotSuperType) {
-        return SubtypeOrder::IsUnrelated;
-    } else if (thisIsNotSubtype) {
+    if (foundValueNotInOther && foundValueNotInThis) {
+        return foundValueInBoth ? SubtypeOrder::IsIntersecting : SubtypeOrder::IsDisjoint;
+    } else if (foundValueNotInOther) {
         return SubtypeOrder::IsSupertype;
-    } else if (thisIsNotSuperType) {
+    } else if (foundValueNotInThis) {
         return SubtypeOrder::IsSubtype;
     } else {
         return SubtypeOrder::IsEquivalent;

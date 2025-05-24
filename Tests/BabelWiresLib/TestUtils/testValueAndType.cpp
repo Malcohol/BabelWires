@@ -63,10 +63,10 @@ std::string testUtils::TestType::getKind() const {
     return "Test";
 }
 
-babelwires::SubtypeOrder testUtils::TestType::compareSubtypeHelper(const babelwires::TypeSystem& typeSystem, const babelwires::Type& other) const {
+std::optional<babelwires::SubtypeOrder> testUtils::TestType::compareSubtypeHelper(const babelwires::TypeSystem& typeSystem, const babelwires::Type& other) const {
     const TestType *const otherTestType = other.as<TestType>();
     if (!otherTestType) {
-        return babelwires::SubtypeOrder::IsUnrelated;
+        return {};
     }
     // Exploit overflow
     const unsigned int maximumLengthThis = m_maximumLength - 1;

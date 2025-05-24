@@ -41,20 +41,21 @@ const babelwires::TypeRef& babelwires::MapType::getTargetTypeRef() const {
     return m_targetTypeRef;
 }
 
-babelwires::SubtypeOrder babelwires::MapType::compareSubtypeHelper(const TypeSystem& typeSystem,
+std::optional<babelwires::SubtypeOrder> babelwires::MapType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                    const Type& other) const {
     const MapType* const otherMapType = other.as<MapType>();
     if (!otherMapType) {
-        return SubtypeOrder::IsUnrelated;
+        return {};
     }
-    const SubtypeOrder orderSource =
+    const SubtypeOrder sourceOrder =
         typeSystem.compareSubtype(m_sourceTypeRef, otherMapType->m_sourceTypeRef);
-    if (orderSource == SubtypeOrder::IsUnrelated) {
-        return SubtypeOrder::IsUnrelated;
+    if (sourceOrder == SubtypeOrder::IsDisjoint) {
+        // Because of the fallback logic, we only exclude disjoint source types here.
+        return SubtypeOrder::IsDisjoint;
     }
-    const SubtypeOrder orderTarget =
+    const SubtypeOrder targetOrder =
         typeSystem.compareSubtype(m_targetTypeRef, otherMapType->m_targetTypeRef);
-    return orderTarget;
+    return targetOrder;
 }
 
 std::string babelwires::MapType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 

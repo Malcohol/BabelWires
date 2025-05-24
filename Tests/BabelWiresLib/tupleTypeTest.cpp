@@ -120,6 +120,6 @@ TEST(TupleTypeTest, compareSubtype) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(AAB, BAC), babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(BAC, AAB), babelwires::SubtypeOrder::IsSubtype);
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(BAC, CAB), babelwires::SubtypeOrder::IsUnrelated);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(CAB, BAC), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(BAC, CAB), babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(CAB, BAC), babelwires::SubtypeOrder::IsDisjoint);
 }

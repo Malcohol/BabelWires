@@ -28,7 +28,7 @@ namespace babelwires {
 
         const ComponentTypes& getComponentTypes() const;
 
-        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
       private:
         ComponentTypes m_componentTypes;

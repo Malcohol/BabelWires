@@ -463,9 +463,9 @@ TEST(ArrayTypeTest, subtyping) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfSupertypeTypeRef, arrayTypeRef),
               babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(biggerArrayTypeRef, arrayOfSupertypeTypeRef),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfSupertypeTypeRef, biggerArrayTypeRef),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
 }
 
 TEST(ArrayTypeTest, featureChanges) {

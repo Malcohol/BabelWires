@@ -36,30 +36,13 @@ std::string babelwires::RationalType::getKind() const {
     return RationalValue::serializationType;
 }
 
-babelwires::SubtypeOrder babelwires::RationalType::compareSubtypeHelper(const TypeSystem& typeSystem,
+std::optional<babelwires::SubtypeOrder> babelwires::RationalType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                               const Type& other) const {
     const RationalType *const otherRationalType = other.as<RationalType>();
     if (!otherRationalType) {
-        return SubtypeOrder::IsUnrelated;
+        return {};
     }
-
-    const auto& rangeThis = getRange();
-    const auto& rangeOther = otherRationalType->getRange();
-
-    const bool thisSubOther = rangeOther.contains(rangeThis);
-    const bool otherSubThis = rangeThis.contains(rangeOther);
-
-    if (thisSubOther && otherSubThis) {
-        return SubtypeOrder::IsEquivalent;
-    } else if (thisSubOther) {
-        return SubtypeOrder::IsSubtype;
-    } else if (otherSubThis) {
-        return SubtypeOrder::IsSupertype;
-    } else {
-        return SubtypeOrder::IsUnrelated;
-    }
-
-    return SubtypeOrder::IsEquivalent;
+    return subtypeFromRanges(getRange(), otherRationalType->getRange());
 }
 
 std::string babelwires::RationalType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 

@@ -124,10 +124,10 @@ TEST(AddBlankToEnum, compareSubtype) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum1, addBlankToEnumToSubSubEnum1),
               babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum1, addBlankToEnumToSubSubEnum2),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum2, addBlankToEnumToSubEnum), babelwires::SubtypeOrder::IsSubtype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum2, addBlankToEnumToSubSubEnum1),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubSubEnum2, addBlankToEnumToSubSubEnum2),
               babelwires::SubtypeOrder::IsEquivalent);
 
@@ -136,12 +136,12 @@ TEST(AddBlankToEnum, compareSubtype) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubEnum, testDomain::TestSubSubEnum1::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(addBlankToEnumToSubEnum, testDomain::TestEnum::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::TestSubEnum::getThisType(), addBlankToEnumToSubEnum),
               babelwires::SubtypeOrder::IsSubtype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::TestSubSubEnum1::getThisType(), addBlankToEnumToSubEnum),
               babelwires::SubtypeOrder::IsSubtype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::TestEnum::getThisType(), addBlankToEnumToSubEnum),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
 }

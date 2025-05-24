@@ -49,32 +49,23 @@ const babelwires::TupleType::ComponentTypes& babelwires::TupleType::getComponent
     return m_componentTypes;
 }
 
-babelwires::SubtypeOrder babelwires::TupleType::compareSubtypeHelper(
+std::optional<babelwires::SubtypeOrder> babelwires::TupleType::compareSubtypeHelper(
     const TypeSystem& typeSystem, const Type& other) const {
     
     const TupleType* const otherTupleType = other.as<TupleType>();
     if (!otherTupleType) {
-        return SubtypeOrder::IsUnrelated;
+        return {};
     }
-    const std::vector<TypeRef>& parametersA = getComponentTypes();
-    const std::vector<TypeRef>& parametersB = otherTupleType->getComponentTypes();
-    
-    if (parametersA.size() != parametersB.size()) {
-        return SubtypeOrder::IsUnrelated;
+    const std::vector<TypeRef>& componentsA = getComponentTypes();
+    const std::vector<TypeRef>& componentsB = otherTupleType->getComponentTypes();
+  
+    if (componentsA.size() != componentsB.size()) {
+        return SubtypeOrder::IsDisjoint;
     }
-    SubtypeOrder order = typeSystem.compareSubtype(parametersA[0], parametersB[0]);
-    if (order == SubtypeOrder::IsUnrelated) {
-        return SubtypeOrder::IsUnrelated;
-    }
-    for (int i = 1; i < parametersA.size(); ++i) {
-        const SubtypeOrder currentOrder = typeSystem.compareSubtype(parametersA[i], parametersB[i]);
-        if ((currentOrder != SubtypeOrder::IsEquivalent) && (currentOrder != order)) {
-            if (order == SubtypeOrder::IsEquivalent) {
-                order = currentOrder;
-            } else {
-                return SubtypeOrder::IsUnrelated;
-            }
-        }
+    SubtypeOrder order = SubtypeOrder::IsEquivalent;
+    for (int i = 0; i < componentsA.size(); ++i) {
+        const SubtypeOrder componentOrder = typeSystem.compareSubtype(componentsA[i], componentsB[i]);
+        order = subtypeProduct(order, componentOrder);
     }
     return order;
 }

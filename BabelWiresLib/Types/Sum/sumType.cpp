@@ -44,31 +44,30 @@ unsigned int babelwires::SumType::getIndexOfDefaultSummand() const {
 }
 
 
-babelwires::SubtypeOrder babelwires::SumType::compareSubtypeHelper(
+std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelper(
     const TypeSystem& typeSystem, const Type& other) const {
-    
-    const SumType* const otherSumType = other.as<SumType>();
-    if (!otherSumType) {
-        return SubtypeOrder::IsUnrelated;
-    }
+
     const std::vector<TypeRef>& summandsA = getSummands();
-    const std::vector<TypeRef>& summandsB = otherSumType->getSummands();
     
-    if ((summandsA.size() <= 2) || (summandsB.size() != summandsA.size())) {
-        return SubtypeOrder::IsUnrelated;
+    // Two cases:
+    // 1. Other type is not a sum. Compare it to each summand.
+    //   no result => return {}
+    // 2. Other type is a sum. Compare summands pairwise.
+    //   no result => return unrelated.
+
+    const SumType* const otherSumType = other.as<SumType>();
+    // If other is not a sumtype, we treat it as a sum type with one summand.
+    std::vector<TypeRef> summandsForNonSumType;
+    if (!otherSumType) {
+        summandsForNonSumType.emplace_back(other.getTypeRef());
     }
-    SubtypeOrder order = typeSystem.compareSubtype(summandsA[0], summandsB[0]);
-    if (order == SubtypeOrder::IsUnrelated) {
-        return SubtypeOrder::IsUnrelated;
-    }
-    for (int i = 1; i < summandsA.size(); ++i) {
-        const SubtypeOrder currentOrder = typeSystem.compareSubtype(summandsA[i], summandsB[i]);
-        if ((currentOrder != SubtypeOrder::IsEquivalent) && (currentOrder != order)) {
-            if (order == SubtypeOrder::IsEquivalent) {
-                order = currentOrder;
-            } else {
-                return SubtypeOrder::IsUnrelated;
-            }
+    const std::vector<TypeRef>& summandsB = otherSumType ? otherSumType->getSummands() : summandsForNonSumType;
+    
+    SubtypeOrder order = SubtypeOrder::IsDisjoint;
+    for (int i = 0; i < summandsA.size(); ++i) {
+        for (int j = 0; j < summandsB.size(); ++j) {
+            const SubtypeOrder summandOrder = typeSystem.compareSubtype(summandsA[i], summandsB[i]);
+            order = subtypeSum(order, summandOrder);
         }
     }
     return order;

@@ -19,15 +19,17 @@ namespace babelwires {
     /// The SubTypeOrder describes the relationship between two types.
     enum class SubtypeOrder {
         /// Both types have the same set of values.
-        /// Note that this does not necessarily mean the types are equal.
-        /// For example, two types could have the same range of values, but different defaults.
+        /// Note that this does not necessarily mean the types are identical.
+        /// For example, two types could have the same set of values, but different defaults.
         IsEquivalent,
         /// Every value of the first type is a member of the second type.
         IsSubtype,
         /// Every value of the second type is a member of the first type.
         IsSupertype,
-        /// The types are neither Subtypes nor Supertypes of each other.
-        IsUnrelated
+        /// The types have some values in common.
+        IsIntersecting,
+        /// The types have no values in common.
+        IsDisjoint
     };
 
     /// Swap IsSubtype and IsSupertype.
@@ -42,19 +44,57 @@ namespace babelwires {
         }
     }
 
-    /// The least order value greater than or equal to a or b, according to the partial order,
-    /// where IsSubtype and IsSupertype are not comparable, and IsEquivalent is the least element.
-    /// This allows two orders to be combined in a way that accounts for their compatibility.
-    // TODO Needs a better name.
-    inline SubtypeOrder subtypeOrderSupremum(SubtypeOrder a, SubtypeOrder b) {
+    /// TODO Provide an intuition for what this does.
+    inline SubtypeOrder subtypeProduct(SubtypeOrder a, SubtypeOrder b) {
         if (a == b) {
             return a;
         } else if (a == SubtypeOrder::IsEquivalent) {
             return b;
         } else if (b == SubtypeOrder::IsEquivalent) {
             return a;
+        } else if ((a == SubtypeOrder::IsDisjoint) || (b == SubtypeOrder::IsDisjoint)) {
+            return SubtypeOrder::IsDisjoint;
         } else {
-            return SubtypeOrder::IsUnrelated;
+            return SubtypeOrder::IsIntersecting;
+        }
+    }
+    
+    /// TODO Provide an intuition for what this does.
+    inline SubtypeOrder subtypeSum(SubtypeOrder a, SubtypeOrder b) {
+        if (a == b) {
+            return a;
+        } else if (a == SubtypeOrder::IsDisjoint) {
+            return b;
+        } else if (b == SubtypeOrder::IsDisjoint) {
+            return a;
+        } else if ((a == SubtypeOrder::IsEquivalent) || (b == SubtypeOrder::IsEquivalent)) {
+            return SubtypeOrder::IsEquivalent;
+        } else {
+            return SubtypeOrder::IsIntersecting;
+        }
+    }
+
+    /// Determine a SubtypeOrder value by comparing two ranges.
+    template<typename T>
+    SubtypeOrder subtypeFromRanges(const Range<T>& rangeA, const Range<T>& rangeB) {
+        if ((rangeA.m_min == rangeB.m_min) && (rangeA.m_max == rangeB.m_max)) {
+            return SubtypeOrder::IsEquivalent;
+        } else if (rangeA.m_min <= rangeB.m_min) {
+            if (rangeA.m_max >= rangeB.m_max) {
+                return SubtypeOrder::IsSupertype;    
+            } else if (rangeA.m_max >= rangeB.m_min) {
+                return SubtypeOrder::IsIntersecting;
+            } else {
+                return SubtypeOrder::IsDisjoint;
+            }
+        } else {
+            if (rangeA.m_max <= rangeB.m_max) {
+                return SubtypeOrder::IsSubtype;    
+            } else if (rangeA.m_min <= rangeB.m_max) {
+                return SubtypeOrder::IsIntersecting;
+            } else {
+                return SubtypeOrder::IsDisjoint;
+            }
         }
     }
 } // namespace babelwires

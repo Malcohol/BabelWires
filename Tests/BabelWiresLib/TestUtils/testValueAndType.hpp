@@ -37,7 +37,7 @@ namespace testUtils {
         bool isValidValue(const babelwires::TypeSystem& typeSystem, const babelwires::Value& value) const override;
         std::string getKind() const override;
 
-        babelwires::SubtypeOrder compareSubtypeHelper(const babelwires::TypeSystem& typeSystem, const babelwires::Type& other) const override;
+        std::optional<babelwires::SubtypeOrder> compareSubtypeHelper(const babelwires::TypeSystem& typeSystem, const babelwires::Type& other) const override;
 
         std::string valueToString(const babelwires::TypeSystem& typeSystem, const babelwires::ValueHolder& v) const override;
 

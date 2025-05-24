@@ -63,9 +63,6 @@ namespace babelwires {
         /// Confirm whether typeA is a subtype or supertype of type B (equality is allowed).
         bool isRelatedType(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
 
-        /// Determine whether primitive typeA and primitive typeB are related by the subtype order.
-        SubtypeOrder compareSubtypePrimitives(const PrimitiveTypeId& typeIdA, const PrimitiveTypeId& typeIdB) const;
-
         TypeIdSet getAllPrimitiveTypes() const;
 
         /// Get all the primitive types tagged with the given tag.

@@ -333,13 +333,13 @@ TEST(RecordTypeTest, subtype) {
     // Incompatible types
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAS::getThisType(),
                                                           testDomain::RecordA0::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
                                                           testDomain::RecordAS::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAS::getThisType(),
                                                           testDomain::RecordAB::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
 
     // With optionals: Optional fields do not impact subtyping since they are not part of the type's contract,
     // unless the types are incompatible (see next sequence of tests, below).
@@ -359,10 +359,10 @@ TEST(RecordTypeTest, subtype) {
     // Incompatible and optional
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(),
                                                           testDomain::RecordAOptS::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOptS::getThisType(),
                                                           testDomain::RecordAOpt::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
 }
 
 // Test the use of the constructor which takes a parent type.
