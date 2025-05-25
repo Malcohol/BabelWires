@@ -59,21 +59,6 @@ namespace babelwires {
         }
     }
     
-    /// TODO Provide an intuition for what this does.
-    inline SubtypeOrder subtypeSum(SubtypeOrder a, SubtypeOrder b) {
-        if (a == b) {
-            return a;
-        } else if (a == SubtypeOrder::IsDisjoint) {
-            return b;
-        } else if (b == SubtypeOrder::IsDisjoint) {
-            return a;
-        } else if ((a == SubtypeOrder::IsEquivalent) || (b == SubtypeOrder::IsEquivalent)) {
-            return SubtypeOrder::IsEquivalent;
-        } else {
-            return SubtypeOrder::IsIntersecting;
-        }
-    }
-
     /// Determine a SubtypeOrder value by comparing two ranges.
     template<typename T>
     SubtypeOrder subtypeFromRanges(const Range<T>& rangeA, const Range<T>& rangeB) {

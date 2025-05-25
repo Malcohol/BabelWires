@@ -5,6 +5,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 
@@ -133,4 +134,22 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
                                       {babelwires::IntValue(2)}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
+}
+
+
+TEST(SumTypeTest, compareSubtype) {
+    testUtils::TestEnvironment testEnvironment;
+
+    const babelwires::TypeRef sumType = testDomain::TestSumType::getThisType();
+
+    const babelwires::TypeRef intType = babelwires::DefaultIntType::getThisType();
+    const babelwires::TypeRef ratType = babelwires::DefaultRationalType::getThisType();
+    const babelwires::TypeRef stringType = babelwires::StringType::getThisType();
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(intType, sumType), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumType, intType), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ratType, sumType), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumType, ratType), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(stringType, sumType), babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumType, stringType), babelwires::SubtypeOrder::IsDisjoint);
 }
