@@ -58,15 +58,20 @@ namespace babelwires {
             return SubtypeOrder::IsIntersecting;
         }
     }
-    
+
     /// Determine a SubtypeOrder value by comparing two ranges.
-    template<typename T>
-    SubtypeOrder subtypeFromRanges(const Range<T>& rangeA, const Range<T>& rangeB) {
-        if ((rangeA.m_min == rangeB.m_min) && (rangeA.m_max == rangeB.m_max)) {
-            return SubtypeOrder::IsEquivalent;
-        } else if (rangeA.m_min <= rangeB.m_min) {
+    template <typename T> SubtypeOrder subtypeFromRanges(const Range<T>& rangeA, const Range<T>& rangeB) {
+        if (rangeA.m_min == rangeB.m_min) {
+            if (rangeA.m_max == rangeB.m_max) {
+                return SubtypeOrder::IsEquivalent;
+            } else if (rangeA.m_max < rangeB.m_max) {
+                return SubtypeOrder::IsSubtype;
+            } else {
+                return SubtypeOrder::IsSupertype;
+            }
+        } else if (rangeA.m_min < rangeB.m_min) {
             if (rangeA.m_max >= rangeB.m_max) {
-                return SubtypeOrder::IsSupertype;    
+                return SubtypeOrder::IsSupertype;
             } else if (rangeA.m_max >= rangeB.m_min) {
                 return SubtypeOrder::IsIntersecting;
             } else {
@@ -74,7 +79,7 @@ namespace babelwires {
             }
         } else {
             if (rangeA.m_max <= rangeB.m_max) {
-                return SubtypeOrder::IsSubtype;    
+                return SubtypeOrder::IsSubtype;
             } else if (rangeA.m_min <= rangeB.m_max) {
                 return SubtypeOrder::IsIntersecting;
             } else {

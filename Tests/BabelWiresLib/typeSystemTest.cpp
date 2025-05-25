@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 
@@ -124,4 +125,30 @@ TEST(TypeSystemTest, getTaggedTypes) {
 
     EXPECT_EQ(types.size(), 1);
     EXPECT_EQ(types[0], testUtils::TestType::getThisType());
+}
+
+TEST(TypeSystemTest, subtypeFromRanges) {
+    const babelwires::Range<int> range04(0, 4);
+    const babelwires::Range<int> range03(0, 3);
+    const babelwires::Range<int> range13(1, 3);
+    const babelwires::Range<int> range14(1, 4);
+    const babelwires::Range<int> range48(4, 8);
+    const babelwires::Range<int> range59(5, 9);
+    
+    EXPECT_EQ(babelwires::subtypeFromRanges(range13, range13), babelwires::SubtypeOrder::IsEquivalent);
+
+    EXPECT_EQ(babelwires::subtypeFromRanges(range13, range04), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(babelwires::subtypeFromRanges(range04, range13), babelwires::SubtypeOrder::IsSupertype);
+
+    EXPECT_EQ(babelwires::subtypeFromRanges(range03, range04), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(babelwires::subtypeFromRanges(range04, range03), babelwires::SubtypeOrder::IsSupertype);
+
+    EXPECT_EQ(babelwires::subtypeFromRanges(range13, range14), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(babelwires::subtypeFromRanges(range14, range13), babelwires::SubtypeOrder::IsSupertype);
+
+    EXPECT_EQ(babelwires::subtypeFromRanges(range04, range48), babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(babelwires::subtypeFromRanges(range48, range04), babelwires::SubtypeOrder::IsIntersecting);
+
+    EXPECT_EQ(babelwires::subtypeFromRanges(range04, range59), babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(babelwires::subtypeFromRanges(range59, range04), babelwires::SubtypeOrder::IsDisjoint);
 }
