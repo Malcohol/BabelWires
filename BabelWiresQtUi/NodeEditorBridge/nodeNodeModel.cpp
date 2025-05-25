@@ -47,12 +47,13 @@ QWidget* babelwires::NodeNodeModel::getEmbeddedWidget() {
     return m_view;
 }
 
-unsigned int babelwires::NodeNodeModel::nPorts(const AccessModelScope& scope, QtNodes::PortType portType) const {
+unsigned int babelwires::NodeNodeModel::getNumberOfPorts(const AccessModelScope& scope,
+                                                         QtNodes::PortType portType) const {
     return m_model->getNumRows(scope);
 }
 
-QtNodes::NodeDataType babelwires::NodeNodeModel::dataType(const AccessModelScope& scope, QtNodes::PortType portType,
-                                                          QtNodes::PortIndex portIndex) const {
+QtNodes::NodeDataType babelwires::NodeNodeModel::getDataType(const AccessModelScope& scope, QtNodes::PortType portType,
+                                                             QtNodes::PortIndex portIndex) const {
     if (portType == QtNodes::PortType::In) {
         return getDataTypeFromTreeValueNode(getInput(scope, portIndex));
     } else {
@@ -112,7 +113,7 @@ const babelwires::Path& babelwires::NodeNodeModel::getPathAtPort(const AccessMod
 
 QtNodes::PortIndex babelwires::NodeNodeModel::getPortAtPath(const AccessModelScope& scope, QtNodes::PortType portType,
                                                             const Path& path) const {
-    const Node* node = m_model->getNode(scope);
+    const Node* const node = m_model->getNode(scope);
     assert(node && "Check before calling this.");
     const int row = node->getContentsCache().getIndexOfPath((portType == QtNodes::PortType::In), path);
     assert((row != -1) && "Path did not lead to a ValueTreeNode");
@@ -120,8 +121,8 @@ QtNodes::PortIndex babelwires::NodeNodeModel::getPortAtPath(const AccessModelSco
     return row;
 }
 
-QString babelwires::NodeNodeModel::caption(const AccessModelScope& scope) const {
-    if (const Node* node = scope.getProject().getNode(m_nodeId)) {
+QString babelwires::NodeNodeModel::getCaption(const AccessModelScope& scope) const {
+    if (const Node* const node = scope.getProject().getNode(m_nodeId)) {
         return QString(node->getLabel().c_str());
     } else {
         return "Dying node";

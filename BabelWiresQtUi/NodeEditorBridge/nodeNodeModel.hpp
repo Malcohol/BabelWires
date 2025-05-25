@@ -42,8 +42,8 @@ namespace babelwires {
         NodeNodeModel(ProjectGraphModel& project, NodeId nodeId);
         ~NodeNodeModel();
 
-        unsigned int nPorts(const AccessModelScope& scope, QtNodes::PortType portType) const;
-        QtNodes::NodeDataType dataType(const AccessModelScope& scope, QtNodes::PortType portType, QtNodes::PortIndex portIndex) const;
+        unsigned int getNumberOfPorts(const AccessModelScope& scope, QtNodes::PortType portType) const;
+        QtNodes::NodeDataType getDataType(const AccessModelScope& scope, QtNodes::PortType portType, QtNodes::PortIndex portIndex) const;
 
         const Type* getInputType(const AccessModelScope& scope, QtNodes::PortIndex portIndex) const;
         const Type* getOutputType(const AccessModelScope& scope, QtNodes::PortIndex portIndex) const;
@@ -51,7 +51,7 @@ namespace babelwires {
         const QWidget* getEmbeddedWidget() const;
         QWidget* getEmbeddedWidget();
 
-        QString caption(const AccessModelScope& scope) const;
+        QString getCaption(const AccessModelScope& scope) const;
 
         const Path& getPathAtPort(const AccessModelScope& scope, QtNodes::PortType portType,
                                          QtNodes::PortIndex portIndex) const;

@@ -222,15 +222,15 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
             return true;
         case QtNodes::NodeRole::Caption: {
             AccessModelScope scope(*this);
-            return nodeModel.caption(scope);
+            return nodeModel.getCaption(scope);
         }
         case QtNodes::NodeRole::InPortCount: {
             AccessModelScope scope(*this);
-            return nodeModel.nPorts(scope, QtNodes::PortType::In);
+            return nodeModel.getNumberOfPorts(scope, QtNodes::PortType::In);
         }
         case QtNodes::NodeRole::OutPortCount: {
             AccessModelScope scope(*this);
-            return nodeModel.nPorts(scope, QtNodes::PortType::Out);
+            return nodeModel.getNumberOfPorts(scope, QtNodes::PortType::Out);
         }
         case QtNodes::NodeRole::Widget: {
             // TODO fromValue won't accept a const QWidget*
@@ -276,7 +276,7 @@ QVariant babelwires::ProjectGraphModel::portData(QtNodes::NodeId nodeId, QtNodes
             assert(it != m_nodeModels.end());
             const NodeNodeModel& nodeModel = *it->second;
             AccessModelScope scope(*this);
-            return QVariant::fromValue(nodeModel.dataType(scope, portType, index));
+            return QVariant::fromValue(nodeModel.getDataType(scope, portType, index));
         }
         case QtNodes::PortRole::ConnectionPolicyRole: ///< `enum` ConnectionPolicyRole
             // TODO Not sure what option is needed here. Only collapsing should create many in connections at a single
@@ -307,7 +307,7 @@ void babelwires::ProjectGraphModel::nodeMoved(QtNodes::NodeId nodeId, const QPoi
     const UiPosition& uiPosition = node->getNodeData().m_uiData.m_uiPosition;
     UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
     if (uiPosition != newPosition) {
-        std::string commandName = "Move " + nodeNodeModel.caption(scope).toStdString();
+        std::string commandName = "Move " + nodeNodeModel.getCaption(scope).toStdString();
         scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, nodeId, newPosition));
     }
 }
