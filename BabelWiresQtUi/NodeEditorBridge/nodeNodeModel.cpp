@@ -60,7 +60,24 @@ QtNodes::NodeDataType babelwires::NodeNodeModel::dataType(const AccessModelScope
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getInput(const AccessModelScope& scope, int portIndex) const {
+const babelwires::Type* babelwires::NodeNodeModel::getInputType(const AccessModelScope& scope,
+                                                                QtNodes::PortIndex portIndex) const {
+    if (const ValueTreeNode* const input = getInput(scope, portIndex)) {
+        return &input->getType();
+    }
+    return nullptr;
+}
+
+const babelwires::Type* babelwires::NodeNodeModel::getOutputType(const AccessModelScope& scope,
+                                                                 QtNodes::PortIndex portIndex) const {
+    if (const ValueTreeNode* const output = getOutput(scope, portIndex)) {
+        return &output->getType();
+    }
+    return nullptr;
+}
+
+const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getInput(const AccessModelScope& scope,
+                                                                     int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
         return entry->getInput();
     } else {
@@ -68,7 +85,8 @@ const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getInput(const Acces
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getOutput(const AccessModelScope& scope, int portIndex) const {
+const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getOutput(const AccessModelScope& scope,
+                                                                      int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
         return entry->getOutput();
     } else {
@@ -83,7 +101,8 @@ QtNodes::NodeDataType babelwires::NodeNodeModel::getDataTypeFromTreeValueNode(co
     return QtNodes::NodeDataType();
 }
 
-const babelwires::Path& babelwires::NodeNodeModel::getPathAtPort(const AccessModelScope& scope, QtNodes::PortType portType,
+const babelwires::Path& babelwires::NodeNodeModel::getPathAtPort(const AccessModelScope& scope,
+                                                                 QtNodes::PortType portType,
                                                                  QtNodes::PortIndex portIndex) const {
     const ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex);
     assert(entry && "Check before calling this.");
@@ -130,35 +149,36 @@ void babelwires::NodeNodeModel::setCachedSize(QSize newSize) {
     m_cachedSize = newSize;
 }
 
-babelwires::NodeContentsModel& babelwires::NodeNodeModel::getModel() {
-    assert(m_model && "Model should always exist");
-    return *m_model;
-}
-
-void babelwires::NodeNodeModel::addInConnection(const QtNodes::ConnectionId& connectionId, const ConnectionDescription& connectionDescription) {
+void babelwires::NodeNodeModel::addInConnection(const QtNodes::ConnectionId& connectionId,
+                                                const ConnectionDescription& connectionDescription) {
     assert(!isInConnection(connectionId));
     m_inConnections.emplace_back(std::tuple{connectionId, connectionDescription});
 }
 
-void babelwires::NodeNodeModel::addOutConnection(const QtNodes::ConnectionId& connectionId, const ConnectionDescription& connectionDescription) {
+void babelwires::NodeNodeModel::addOutConnection(const QtNodes::ConnectionId& connectionId,
+                                                 const ConnectionDescription& connectionDescription) {
     assert(!isOutConnection(connectionId));
     m_outConnections.emplace_back(std::tuple{connectionId, connectionDescription});
 }
 
-QtNodes::ConnectionId babelwires::NodeNodeModel::removeInConnection(const ConnectionDescription& connectionDescription) {
-    const auto it = std::find_if(m_inConnections.begin(), m_inConnections.end(), [connectionDescription](const auto& tuple) {
-        return std::get<1>(tuple) == connectionDescription;
-    });
+QtNodes::ConnectionId
+babelwires::NodeNodeModel::removeInConnection(const ConnectionDescription& connectionDescription) {
+    const auto it =
+        std::find_if(m_inConnections.begin(), m_inConnections.end(), [connectionDescription](const auto& tuple) {
+            return std::get<1>(tuple) == connectionDescription;
+        });
     assert(it != m_inConnections.end());
     const QtNodes::ConnectionId connectionId = std::get<0>(*it);
     m_inConnections.erase(it);
     return connectionId;
 }
 
-QtNodes::ConnectionId babelwires::NodeNodeModel::removeOutConnection(const ConnectionDescription& connectionDescription) {
-    const auto it = std::find_if(m_outConnections.begin(), m_outConnections.end(), [connectionDescription](const auto& tuple) {
-        return std::get<1>(tuple) == connectionDescription;
-    });
+QtNodes::ConnectionId
+babelwires::NodeNodeModel::removeOutConnection(const ConnectionDescription& connectionDescription) {
+    const auto it =
+        std::find_if(m_outConnections.begin(), m_outConnections.end(), [connectionDescription](const auto& tuple) {
+            return std::get<1>(tuple) == connectionDescription;
+        });
     assert(it != m_outConnections.end());
     const QtNodes::ConnectionId connectionId = std::get<0>(*it);
     m_outConnections.erase(it);

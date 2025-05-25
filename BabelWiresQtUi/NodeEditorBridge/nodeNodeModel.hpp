@@ -23,6 +23,7 @@ namespace babelwires {
     class ContentsCache;
     class Path;
     struct ConnectionDescription;
+    class Type;
 
     class NodeContentsView;
     class NodeContentsModel;
@@ -44,6 +45,9 @@ namespace babelwires {
         unsigned int nPorts(const AccessModelScope& scope, QtNodes::PortType portType) const;
         QtNodes::NodeDataType dataType(const AccessModelScope& scope, QtNodes::PortType portType, QtNodes::PortIndex portIndex) const;
 
+        const Type* getInputType(const AccessModelScope& scope, QtNodes::PortIndex portIndex) const;
+        const Type* getOutputType(const AccessModelScope& scope, QtNodes::PortIndex portIndex) const;
+
         const QWidget* getEmbeddedWidget() const;
         QWidget* getEmbeddedWidget();
 
@@ -56,9 +60,6 @@ namespace babelwires {
 
         QSize getCachedSize() const;
         void setCachedSize(QSize newSize);
-
-        /// Return the model for the embedded widget.
-        NodeContentsModel& getModel();
 
         void addInConnection(const QtNodes::ConnectionId& connectionId, const ConnectionDescription& connectionDescription);
         void addOutConnection(const QtNodes::ConnectionId& connectionId, const ConnectionDescription& connectionDescription);

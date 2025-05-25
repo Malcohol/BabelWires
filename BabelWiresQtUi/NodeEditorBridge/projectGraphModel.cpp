@@ -10,10 +10,12 @@
 #include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/Project/Commands/resizeNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/nodeNodeModel.hpp>
+#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Project/project.hpp>
 
@@ -168,16 +170,17 @@ bool babelwires::ProjectGraphModel::connectionPossible(QtNodes::ConnectionId con
     assert(targetIt != m_nodeModels.end());
     const NodeNodeModel& targetNodeModel = *targetIt->second;
 
-    const auto sourceIt = m_nodeModels.find(connectionId.inNodeId);
+    const auto sourceIt = m_nodeModels.find(connectionId.outNodeId);
     assert(sourceIt != m_nodeModels.end());
     const NodeNodeModel& sourceNodeModel = *sourceIt->second;
 
     AccessModelScope scope(*this);
-    const QtNodes::NodeDataType sourceDataType = sourceNodeModel.dataType(scope, QtNodes::PortType::Out, connectionId.outPortIndex);
-    const QtNodes::NodeDataType targetDataType = targetNodeModel.dataType(scope, QtNodes::PortType::In, connectionId.inPortIndex);
+    const Type* const sourceType = sourceNodeModel.getOutputType(scope, connectionId.outPortIndex);
+    const Type* const targetType = targetNodeModel.getInputType(scope, connectionId.inPortIndex);
 
-    // TODO: Use Subtyping.
-    return !sourceDataType.id.isEmpty() && !targetDataType.id.isEmpty() && sourceDataType.id == targetDataType.id;
+    // Note: isSubtype is too strict for the default behaviour. For example: A numeric type with a wide range could not be connected to a
+    // numeric type with a narrow range.
+    return sourceType && targetType && m_projectContext.m_typeSystem.isRelatedType(sourceType->getTypeRef(), targetType->getTypeRef());
 }
 
 void babelwires::ProjectGraphModel::addConnection(QtNodes::ConnectionId const connectionId) {
