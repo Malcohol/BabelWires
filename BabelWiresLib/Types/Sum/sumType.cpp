@@ -9,48 +9,6 @@
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-namespace {
-    babelwires::SubtypeOrder opInner(babelwires::SubtypeOrder a, babelwires::SubtypeOrder b) {
-        if (a == b) {
-            return a;
-        } else if (a == babelwires::SubtypeOrder::IsEquivalent) {
-            if (b == babelwires::SubtypeOrder::IsSubtype) {
-                return babelwires::SubtypeOrder::IsSubtype;
-            } else if (b == babelwires::SubtypeOrder::IsSupertype) {
-                return babelwires::SubtypeOrder::IsEquivalent;
-            } else if (b == babelwires::SubtypeOrder::IsIntersecting) {
-                return babelwires::SubtypeOrder::IsIntersecting;
-            } else if (b == babelwires::SubtypeOrder::IsDisjoint) {
-                return babelwires::SubtypeOrder::IsSubtype;
-            }
-        } else if (a == babelwires::SubtypeOrder::IsSubtype) {
-            if (b == babelwires::SubtypeOrder::IsSupertype) {
-                return babelwires::SubtypeOrder::IsSubtype;
-            } else if (b == babelwires::SubtypeOrder::IsIntersecting) {
-                return babelwires::SubtypeOrder::IsSubtype;
-            } else if (b == babelwires::SubtypeOrder::IsDisjoint) {
-                return babelwires::SubtypeOrder::IsSubtype;
-            }
-        } else if (a == babelwires::SubtypeOrder::IsSupertype) {
-            if (b == babelwires::SubtypeOrder::IsIntersecting) {
-                return babelwires::SubtypeOrder::IsIntersecting;
-            } else if (b == babelwires::SubtypeOrder::IsDisjoint) {
-                return babelwires::SubtypeOrder::IsIntersecting;
-            }
-        } else if (a == babelwires::SubtypeOrder::IsIntersecting) {
-            if (b == babelwires::SubtypeOrder::IsDisjoint) {
-                return babelwires::SubtypeOrder::IsIntersecting;
-            }
-        }
-        return opInner(b, a);
-    }
-
-    babelwires::SubtypeOrder opOuter(babelwires::SubtypeOrder a, babelwires::SubtypeOrder b) {
-        return babelwires::reverseSubtypeOrder(
-            opInner(babelwires::reverseSubtypeOrder(a), babelwires::reverseSubtypeOrder(b)));
-    }
-} // namespace
-
 babelwires::SumType::SumType(Summands summands, unsigned int indexOfDefaultSummand)
     : m_summands(std::move(summands))
     , m_indexOfDefaultSummand(indexOfDefaultSummand) {
@@ -85,6 +43,36 @@ unsigned int babelwires::SumType::getIndexOfDefaultSummand() const {
     return m_indexOfDefaultSummand;
 }
 
+babelwires::SubtypeOrder babelwires::SumType::opInner(SubtypeOrder subTest, SubtypeOrder superTest) {
+    static constexpr SubtypeOrder combineTable[5][5] = {
+        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype },
+        { SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype },
+        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting },
+        { SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting },
+        { SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting, SubtypeOrder::IsDisjoint }
+    };
+    return combineTable[static_cast<unsigned int>(subTest)][static_cast<unsigned int>(superTest)];
+}
+
+babelwires::SubtypeOrder babelwires::SumType::opOuter(SubtypeOrder a, SubtypeOrder b) {
+    return reverseSubtypeOrder(
+        opInner(reverseSubtypeOrder(a), reverseSubtypeOrder(b)));
+}
+
+babelwires::SubtypeOrder babelwires::SumType::opCombine(SubtypeOrder subTest, SubtypeOrder superTest) {
+    static constexpr SubtypeOrder inconsistent = static_cast<SubtypeOrder>(255);
+    static constexpr SubtypeOrder combineTable[5][5] = {
+        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, inconsistent },
+        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, inconsistent },
+        { SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, inconsistent },
+        { SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, inconsistent },
+        { inconsistent, inconsistent, inconsistent, inconsistent, SubtypeOrder::IsDisjoint }
+    };
+    const auto result = combineTable[static_cast<unsigned int>(subTest)][static_cast<unsigned int>(superTest)];
+    assert((result != inconsistent) && "Inconsistent result");
+    return result;
+}
+
 std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                                   const Type& other) const {
 
@@ -104,17 +92,26 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
     }
     const std::vector<TypeRef>& summandsB = otherSumType ? otherSumType->getSummands() : summandsForNonSumType;
 
-    std::optional<SubtypeOrder> order;
+    std::optional<SubtypeOrder> aOrder;
+    std::vector<std::optional<SubtypeOrder>> summandBOrders;
+    summandBOrders.resize(summandsB.size());
     for (int i = 0; i < summandsA.size(); ++i) {
         std::optional<SubtypeOrder> summandAOrder;
         for (int j = 0; j < summandsB.size(); ++j) {
-            const SubtypeOrder summandBOrder = typeSystem.compareSubtype(summandsA[i], summandsB[j]);
-            summandAOrder = summandAOrder ? opInner(*summandAOrder, summandBOrder) : summandBOrder;
+            const SubtypeOrder summandABOrder = typeSystem.compareSubtype(summandsA[i], summandsB[j]);
+            auto& summandBOrder = summandBOrders[j];
+            summandAOrder = summandAOrder ? opInner(summandABOrder, *summandAOrder) : summandABOrder;
+            summandBOrder = summandBOrder ? opOuter(summandABOrder, *summandBOrder) : summandABOrder;
         }
-        order = order ? opOuter(*summandAOrder, *order) : summandAOrder;
+        aOrder = aOrder ? opOuter(*summandAOrder, *aOrder) : summandAOrder;
     }
-    assert(order && "Optional should be resolved here");
-    return *order;
+    assert(aOrder && "Optional should be resolved here");
+    SubtypeOrder bOrder = *summandBOrders[0];
+    for (int j = 1; j < summandsB.size(); ++j) {
+        bOrder = opInner(*summandBOrders[j], bOrder);
+    }
+
+    return opCombine(*aOrder, bOrder);
 }
 
 std::string babelwires::SumType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {

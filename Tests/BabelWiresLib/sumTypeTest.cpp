@@ -112,30 +112,29 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
                  babelwires::TypeSystemException);
 
     // Wrong value argument
-    EXPECT_THROW(babelwires::TypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
-                                     {{babelwires::DefaultIntType::getThisType(),
-                                       babelwires::DefaultRationalType::getThisType()},
-                                      {babelwires::RationalValue(1)}})
+    EXPECT_THROW(babelwires::TypeRef(
+                     babelwires::SumTypeConstructor::getThisIdentifier(),
+                     {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
+                      {babelwires::RationalValue(1)}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 
     // Too many value arguments
-    EXPECT_THROW(babelwires::TypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
-                                     {{babelwires::DefaultIntType::getThisType(),
-                                       babelwires::DefaultRationalType::getThisType()},
-                                      {babelwires::IntValue(1), babelwires::IntValue(1)}})
+    EXPECT_THROW(babelwires::TypeRef(
+                     babelwires::SumTypeConstructor::getThisIdentifier(),
+                     {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
+                      {babelwires::IntValue(1), babelwires::IntValue(1)}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 
     // value argument out of range
-    EXPECT_THROW(babelwires::TypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
-                                     {{babelwires::DefaultIntType::getThisType(),
-                                       babelwires::DefaultRationalType::getThisType()},
-                                      {babelwires::IntValue(2)}})
+    EXPECT_THROW(babelwires::TypeRef(
+                     babelwires::SumTypeConstructor::getThisIdentifier(),
+                     {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
+                      {babelwires::IntValue(2)}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 }
-
 
 TEST(SumTypeTest, compareSubtype) {
     testUtils::TestEnvironment testEnvironment;
@@ -152,4 +151,75 @@ TEST(SumTypeTest, compareSubtype) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumType, ratType), babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(stringType, sumType), babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumType, stringType), babelwires::SubtypeOrder::IsDisjoint);
+}
+
+namespace {
+    const std::array<babelwires::SubtypeOrder, 5> subtypeOrderElements = {
+        babelwires::SubtypeOrder::IsEquivalent, babelwires::SubtypeOrder::IsSubtype,
+        babelwires::SubtypeOrder::IsSupertype, babelwires::SubtypeOrder::IsIntersecting,
+        babelwires::SubtypeOrder::IsDisjoint};
+}
+
+TEST(SumTypeTest, opInnerSymmetric) {
+    for (auto a : subtypeOrderElements) {
+        for (auto b : subtypeOrderElements) {
+            const babelwires::SubtypeOrder ab = babelwires::SumType::opInner(a, b);
+            const babelwires::SubtypeOrder ba = babelwires::SumType::opInner(b, a);
+            EXPECT_EQ(ab, ba);
+        }
+    }
+}
+
+TEST(SumTypeTest, opInnerAssociative) {
+    for (auto a : subtypeOrderElements) {
+        for (auto b : subtypeOrderElements) {
+            for (auto c : subtypeOrderElements) {
+                const babelwires::SubtypeOrder ab_c =
+                    babelwires::SumType::opInner(babelwires::SumType::opInner(a, b), c);
+                const babelwires::SubtypeOrder a_bc =
+                    babelwires::SumType::opInner(a, babelwires::SumType::opInner(c, b));
+                EXPECT_EQ(ab_c, a_bc);
+            }
+        }
+    }
+}
+
+TEST(SumTypeTest, opOuterSymmetric) {
+    for (auto a : subtypeOrderElements) {
+        for (auto b : subtypeOrderElements) {
+            const babelwires::SubtypeOrder ab = babelwires::SumType::opOuter(a, b);
+            const babelwires::SubtypeOrder ba = babelwires::SumType::opOuter(b, a);
+            EXPECT_EQ(ab, ba);
+        }
+    }
+}
+
+TEST(SumTypeTest, opOuterAssociative) {
+    for (auto a : subtypeOrderElements) {
+        for (auto b : subtypeOrderElements) {
+            for (auto c : subtypeOrderElements) {
+                const babelwires::SubtypeOrder ab_c =
+                    babelwires::SumType::opOuter(babelwires::SumType::opOuter(a, b), c);
+                const babelwires::SubtypeOrder a_bc =
+                    babelwires::SumType::opOuter(a, babelwires::SumType::opOuter(c, b));
+                EXPECT_EQ(ab_c, a_bc);
+            }
+        }
+    }
+}
+
+TEST(SumTypeTest, compareSubtype2) {
+    testUtils::TestEnvironment testEnvironment;
+
+    const babelwires::TypeRef sumTypeNN = testDomain::TestSumTypeZnQn::getThisType();
+    const babelwires::TypeRef sumTypeWN = testDomain::TestSumTypeZwQn::getThisType();
+    const babelwires::TypeRef sumTypeWW = testDomain::TestSumTypeZwQw::getThisType();
+    const babelwires::TypeRef sumTypeNWS = testDomain::TestSumTypeZnQwS::getThisType();
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeNN, sumTypeNN), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeNN, sumTypeWW), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeWN, sumTypeNWS), babelwires::SubtypeOrder::IsIntersecting);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeNN, sumTypeWN), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeWN, sumTypeNN), babelwires::SubtypeOrder::IsSupertype);
 }

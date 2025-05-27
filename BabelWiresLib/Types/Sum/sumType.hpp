@@ -37,6 +37,18 @@ namespace babelwires {
 
         std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
+
+      public:
+        /// If a is the relationship between T and U, and b is the relationship between T and V
+        /// then (a opInner b) is the relationship between T and (U + V).
+        static SubtypeOrder opInner(SubtypeOrder a, SubtypeOrder b);
+
+        /// If a is the relationship between T and V, and b is the relationship between U and V
+        /// then (a opInner b) is the relationship between (T + U) and V.
+        static SubtypeOrder opOuter(SubtypeOrder a, SubtypeOrder b);
+
+        static SubtypeOrder opCombine(SubtypeOrder a, SubtypeOrder b);
+
       private:
         Summands m_summands;
         unsigned int m_indexOfDefaultSummand;
