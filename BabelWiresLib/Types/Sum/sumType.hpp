@@ -40,14 +40,16 @@ namespace babelwires {
 
       public:
         /// If a is the relationship between T and U, and b is the relationship between T and V
-        /// then (a opInner b) is the relationship between T and (U + V).
-        static SubtypeOrder opInner(SubtypeOrder a, SubtypeOrder b);
+        /// then this is the relationship between T and (U + V).
+        static SubtypeOrder opUnionRight(SubtypeOrder a, SubtypeOrder b);
 
         /// If a is the relationship between T and V, and b is the relationship between U and V
-        /// then (a opInner b) is the relationship between (T + U) and V.
-        static SubtypeOrder opOuter(SubtypeOrder a, SubtypeOrder b);
+        /// then this is the relationship between (T + U) and V.
+        static SubtypeOrder opUnionLeft(SubtypeOrder a, SubtypeOrder b);
 
-        static SubtypeOrder opCombine(SubtypeOrder a, SubtypeOrder b);
+        /// Combine the result of testing As a subtype of Bs with the result of
+        /// testing As a supertype of Bs.
+        static SubtypeOrder opCombine(SubtypeOrder subTest, SubtypeOrder superTest);
 
       private:
         Summands m_summands;

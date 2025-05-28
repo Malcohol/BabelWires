@@ -43,7 +43,7 @@ unsigned int babelwires::SumType::getIndexOfDefaultSummand() const {
     return m_indexOfDefaultSummand;
 }
 
-babelwires::SubtypeOrder babelwires::SumType::opInner(SubtypeOrder subTest, SubtypeOrder superTest) {
+babelwires::SubtypeOrder babelwires::SumType::opUnionRight(SubtypeOrder subTest, SubtypeOrder superTest) {
     static constexpr SubtypeOrder combineTable[5][5] = {
         { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype },
         { SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype },
@@ -54,22 +54,22 @@ babelwires::SubtypeOrder babelwires::SumType::opInner(SubtypeOrder subTest, Subt
     return combineTable[static_cast<unsigned int>(subTest)][static_cast<unsigned int>(superTest)];
 }
 
-babelwires::SubtypeOrder babelwires::SumType::opOuter(SubtypeOrder a, SubtypeOrder b) {
+babelwires::SubtypeOrder babelwires::SumType::opUnionLeft(SubtypeOrder a, SubtypeOrder b) {
     return reverseSubtypeOrder(
-        opInner(reverseSubtypeOrder(a), reverseSubtypeOrder(b)));
+        opUnionRight(reverseSubtypeOrder(a), reverseSubtypeOrder(b)));
 }
 
 babelwires::SubtypeOrder babelwires::SumType::opCombine(SubtypeOrder subTest, SubtypeOrder superTest) {
-    static constexpr SubtypeOrder inconsistent = static_cast<SubtypeOrder>(255);
+    static constexpr SubtypeOrder error = static_cast<SubtypeOrder>(255);
     static constexpr SubtypeOrder combineTable[5][5] = {
-        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, inconsistent },
-        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, inconsistent },
-        { SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, inconsistent },
-        { SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, inconsistent },
-        { inconsistent, inconsistent, inconsistent, inconsistent, SubtypeOrder::IsDisjoint }
+        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, error },
+        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, error },
+        { SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, error },
+        { SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, error },
+        { error, error, error, error, SubtypeOrder::IsDisjoint }
     };
     const auto result = combineTable[static_cast<unsigned int>(subTest)][static_cast<unsigned int>(superTest)];
-    assert((result != inconsistent) && "Inconsistent result");
+    assert((result != error) && "Inconsistent result");
     return result;
 }
 
@@ -78,11 +78,13 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
 
     const std::vector<TypeRef>& summandsA = getSummands();
 
-    // Two cases:
-    // 1. Other type is not a sum. Compare it to each summand.
-    //   no result => return {}
-    // 2. Other type is a sum. Compare summands pairwise.
-    //   no result => return unrelated.
+    // TODO
+    // 1. Other type is not a sum.
+    //   disjoint => {}
+    // 2. Other type is a sum.
+    //   disjoin => disjoint.
+
+    // TODO Flatten summand sumtypes into the summand lists.
 
     const SumType* const otherSumType = other.as<SumType>();
     // If other is not a sumtype, we treat it as a sum type with one summand.
@@ -92,26 +94,27 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
     }
     const std::vector<TypeRef>& summandsB = otherSumType ? otherSumType->getSummands() : summandsForNonSumType;
 
-    std::optional<SubtypeOrder> aOrder;
-    std::vector<std::optional<SubtypeOrder>> summandBOrders;
-    summandBOrders.resize(summandsB.size());
+    // Using optionals here as a pseudo-identity for the operators.
+    std::optional<SubtypeOrder> subTest;
+    std::vector<std::optional<SubtypeOrder>> superTestForBs(summandsB.size());
     for (int i = 0; i < summandsA.size(); ++i) {
-        std::optional<SubtypeOrder> summandAOrder;
+        std::optional<SubtypeOrder> subTestForA;
         for (int j = 0; j < summandsB.size(); ++j) {
-            const SubtypeOrder summandABOrder = typeSystem.compareSubtype(summandsA[i], summandsB[j]);
-            auto& summandBOrder = summandBOrders[j];
-            summandAOrder = summandAOrder ? opInner(summandABOrder, *summandAOrder) : summandABOrder;
-            summandBOrder = summandBOrder ? opOuter(summandABOrder, *summandBOrder) : summandABOrder;
+            const SubtypeOrder ab = typeSystem.compareSubtype(summandsA[i], summandsB[j]);
+            auto& superTestForB = superTestForBs[j];
+            subTestForA = subTestForA ? opUnionRight(ab, *subTestForA) : ab;
+            superTestForB = superTestForB ? opUnionLeft(ab, *superTestForB) : ab;
         }
-        aOrder = aOrder ? opOuter(*summandAOrder, *aOrder) : summandAOrder;
+        subTest = subTest ? opUnionLeft(*subTestForA, *subTest) : subTestForA;
     }
-    assert(aOrder && "Optional should be resolved here");
-    SubtypeOrder bOrder = *summandBOrders[0];
+    assert(subTest && "Optional should be resolved here");
+    SubtypeOrder superTest = *superTestForBs[0];
     for (int j = 1; j < summandsB.size(); ++j) {
-        bOrder = opInner(*summandBOrders[j], bOrder);
+        assert(superTestForBs[j] && "Optional should be resolved here");
+        superTest = opUnionRight(*superTestForBs[j], superTest);
     }
 
-    return opCombine(*aOrder, bOrder);
+    return opCombine(*subTest, superTest);
 }
 
 std::string babelwires::SumType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
