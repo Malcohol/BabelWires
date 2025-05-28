@@ -211,15 +211,47 @@ TEST(SumTypeTest, opOuterAssociative) {
 TEST(SumTypeTest, compareSubtype2) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypeRef sumTypeNN = testDomain::TestSumTypeZnQn::getThisType();
-    const babelwires::TypeRef sumTypeWN = testDomain::TestSumTypeZwQn::getThisType();
-    const babelwires::TypeRef sumTypeWW = testDomain::TestSumTypeZwQw::getThisType();
-    const babelwires::TypeRef sumTypeNWS = testDomain::TestSumTypeZnQwS::getThisType();
+    const babelwires::TypeRef Zn = babelwires::IntTypeConstructor::makeTypeRef(0, 4);
+    const babelwires::TypeRef Zd = babelwires::IntTypeConstructor::makeTypeRef(8, 16, 8);
+    const babelwires::TypeRef Zw = babelwires::IntTypeConstructor::makeTypeRef(0, 16);
+    const babelwires::TypeRef Qn = babelwires::RationalTypeConstructor::makeTypeRef(0, 4);
+    const babelwires::TypeRef Qw = babelwires::RationalTypeConstructor::makeTypeRef(0, 16);
+    const babelwires::TypeRef S = babelwires::StringType::getThisType();
+    const babelwires::TypeRef ZnQn = babelwires::SumTypeConstructor::makeTypeRef(
+        {Zn, Qn});
+    const babelwires::TypeRef QnZn = babelwires::SumTypeConstructor::makeTypeRef(
+        {Qn, Zn});
+    const babelwires::TypeRef ZwQn = babelwires::SumTypeConstructor::makeTypeRef(
+        {Zw, Qn});
+    const babelwires::TypeRef ZwQw = babelwires::SumTypeConstructor::makeTypeRef(
+        {Zw, Qw});
+    const babelwires::TypeRef ZnQnS = babelwires::SumTypeConstructor::makeTypeRef(
+        {Zn, Qn, S});
+    const babelwires::TypeRef ZdS = babelwires::SumTypeConstructor::makeTypeRef(
+        {Zd, S});    
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeNN, sumTypeNN), babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeNN, sumTypeWW), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeWN, sumTypeNWS), babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZnQn, ZnQn),
+        babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZnQn, QnZn),
+        babelwires::SubtypeOrder::IsEquivalent);
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeNN, sumTypeWN), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(sumTypeWN, sumTypeNN), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(Zn, ZnQn),
+        babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZnQn, Zn),
+        babelwires::SubtypeOrder::IsSupertype);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(Zw, ZnQn),
+        babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZnQn, Zw),
+        babelwires::SubtypeOrder::IsIntersecting);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZnQn, ZwQw), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZwQn, ZnQnS),
+              babelwires::SubtypeOrder::IsIntersecting);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZnQn, ZwQn), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZwQn, ZnQn), babelwires::SubtypeOrder::IsSupertype);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZnQn, ZdS), babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(ZdS, ZnQn), babelwires::SubtypeOrder::IsDisjoint);
 }
