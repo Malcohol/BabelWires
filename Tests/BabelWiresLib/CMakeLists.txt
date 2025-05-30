@@ -67,6 +67,7 @@ SET( LIB_TESTS_SRCS
     sourceFileNodeTest.cpp
     stringTypeTest.cpp
     stringValueTest.cpp
+    subtypeUtilsTest.cpp
     sumOfMapsTypeTest.cpp
     sumTypeTest.cpp
     targetFileNodeTest.cpp

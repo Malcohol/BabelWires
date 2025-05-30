@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
 #include <BabelWiresLib/Types/Int/intValue.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 

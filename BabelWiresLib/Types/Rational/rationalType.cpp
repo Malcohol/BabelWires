@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 

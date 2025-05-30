@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 babelwires::RecordType::RecordType(std::vector<Field> fields)

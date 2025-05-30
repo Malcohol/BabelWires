@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 
 babelwires::SumType::SumType(Summands summands, unsigned int indexOfDefaultSummand)
     : m_summands(std::move(summands))

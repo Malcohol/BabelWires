@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 

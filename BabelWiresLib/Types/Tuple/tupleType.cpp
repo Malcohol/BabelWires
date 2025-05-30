@@ -7,6 +7,7 @@
  **/
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 

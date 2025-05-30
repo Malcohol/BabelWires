@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
+
 #include <algorithm>
 namespace {
     void insertTypeId(babelwires::TypeSystem::TypeIdSet& typeIds, const babelwires::PrimitiveTypeId& typeId) {
