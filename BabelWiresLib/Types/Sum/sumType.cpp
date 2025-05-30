@@ -73,26 +73,46 @@ babelwires::SubtypeOrder babelwires::SumType::opCombine(SubtypeOrder subTest, Su
     return result;
 }
 
+namespace {
+    /// Flatten any upper structure of sumtypes into the summand vector
+    /// Return false if a subtype did not resolve 
+    bool flattenSubSumtypes(const babelwires::TypeSystem& typeSystem, std::vector<babelwires::TypeRef>& summands) {
+        unsigned int i = 0;
+        while (i < summands.size()) {
+            babelwires::TypeRef& summand = summands[i];
+            if (const babelwires::Type* summandType = summand.tryResolve(typeSystem)) {
+                if (const babelwires::SumType* const subSumType = summandType->as<babelwires::SumType>()) {
+                    const std::vector<babelwires::TypeRef>& subSummands = subSumType->getSummands();
+                    summand = subSummands[0];
+                    summands.insert(summands.end(), subSummands.begin() + 1, subSummands.end());
+                } else {
+                    ++i;
+                }    
+            } else {
+                // Unresolved subtype
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
 std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                                   const Type& other) const {
-
-    const std::vector<TypeRef>& summandsA = getSummands();
+    std::vector<TypeRef> summandsA = getSummands();
+    std::vector<TypeRef> summandsB;
+    summandsB.emplace_back(other.getTypeRef());
+    // Flatten sumtypes into the vector to ensure sumtypes are associative. 
+    if (!flattenSubSumtypes(typeSystem, summandsA) || !flattenSubSumtypes(typeSystem, summandsB)) {
+        // Unresolved subtype
+        return SubtypeOrder::IsDisjoint;
+    }
 
     // TODO
     // 1. Other type is not a sum.
     //   disjoint => {}
     // 2. Other type is a sum.
     //   disjoin => disjoint.
-
-    // TODO Flatten summand sumtypes into the summand lists.
-
-    const SumType* const otherSumType = other.as<SumType>();
-    // If other is not a sumtype, we treat it as a sum type with one summand.
-    std::vector<TypeRef> summandsForNonSumType;
-    if (!otherSumType) {
-        summandsForNonSumType.emplace_back(other.getTypeRef());
-    }
-    const std::vector<TypeRef>& summandsB = otherSumType ? otherSumType->getSummands() : summandsForNonSumType;
 
     // Using optionals here as a pseudo-identity for the operators.
     std::optional<SubtypeOrder> subTest;
