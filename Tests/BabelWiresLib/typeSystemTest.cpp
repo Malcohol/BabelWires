@@ -127,6 +127,37 @@ TEST(TypeSystemTest, getTaggedTypes) {
     EXPECT_EQ(types[0], testUtils::TestType::getThisType());
 }
 
+namespace {
+    const std::array<babelwires::SubtypeOrder, 5> subtypeOrderElements = {
+        babelwires::SubtypeOrder::IsEquivalent, babelwires::SubtypeOrder::IsSubtype,
+        babelwires::SubtypeOrder::IsSupertype, babelwires::SubtypeOrder::IsIntersecting,
+        babelwires::SubtypeOrder::IsDisjoint};
+}
+
+TEST(TypeSystemTest, subtypeProductSymmetric) {
+    for (auto a : subtypeOrderElements) {
+        for (auto b : subtypeOrderElements) {
+            const babelwires::SubtypeOrder ab = babelwires::subtypeProduct(a, b);
+            const babelwires::SubtypeOrder ba = babelwires::subtypeProduct(b, a);
+            EXPECT_EQ(ab, ba);
+        }
+    }
+}
+
+TEST(TypeSystemTest, subtypeProductAssociative) {
+    for (auto a : subtypeOrderElements) {
+        for (auto b : subtypeOrderElements) {
+            for (auto c : subtypeOrderElements) {
+                const babelwires::SubtypeOrder ab_c =
+                    babelwires::subtypeProduct(babelwires::subtypeProduct(a, b), c);
+                const babelwires::SubtypeOrder a_bc =
+                    babelwires::subtypeProduct(a, babelwires::subtypeProduct(c, b));
+                EXPECT_EQ(ab_c, a_bc);
+            }
+        }
+    }
+}
+
 TEST(TypeSystemTest, subtypeFromRanges) {
     const babelwires::Range<int> range04(0, 4);
     const babelwires::Range<int> range03(0, 3);
@@ -152,3 +183,4 @@ TEST(TypeSystemTest, subtypeFromRanges) {
     EXPECT_EQ(babelwires::subtypeFromRanges(range04, range59), babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(babelwires::subtypeFromRanges(range59, range04), babelwires::SubtypeOrder::IsDisjoint);
 }
+

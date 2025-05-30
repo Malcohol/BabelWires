@@ -44,7 +44,8 @@ namespace babelwires {
         }
     }
 
-    /// TODO Provide an intuition for what this does.
+    /// If a is the subtypeOrder between T and U, and b is the subtypeOrder between V and W
+    /// then this is the relationship between (T * U) and (V * W).
     inline SubtypeOrder subtypeProduct(SubtypeOrder a, SubtypeOrder b) {
         if (a == b) {
             return a;
