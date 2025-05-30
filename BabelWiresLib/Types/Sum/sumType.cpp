@@ -109,12 +109,6 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
         return SubtypeOrder::IsDisjoint;
     }
 
-    // TODO
-    // 1. Other type is not a sum.
-    //   disjoint => {}
-    // 2. Other type is a sum.
-    //   disjoin => disjoint.
-
     // Using optionals here as a pseudo-identity for the operators.
     std::optional<SubtypeOrder> subTest;
     std::vector<std::optional<SubtypeOrder>> superTestForBs(summandsB.size());
@@ -135,7 +129,18 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
         superTest = opUnionRight(*superTestForBs[j], superTest);
     }
 
-    return opCombine(*subTest, superTest);
+    const SubtypeOrder result = opCombine(*subTest, superTest);
+    if (result == SubtypeOrder::IsDisjoint) {
+        if (other.as<SumType>()) {
+            // Definitely disjoint
+            return SubtypeOrder::IsDisjoint;
+        } else {
+            // Maybe disjoint, but should allow the other type the opportunity to judge the comparison.
+            return {};
+        }
+    } else {
+        return result;
+    }
 }
 
 std::string babelwires::SumType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
