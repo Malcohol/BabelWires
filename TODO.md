@@ -2,12 +2,6 @@ Structured Data Flow:
 1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
 1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
 
-Important unresolved issue:
-* Identifiers are used for enum values, but discriminators are ignored for ==. Is that OK?
-  - This is more likely to lead to confusion than with fields.
-  - Note that they should always display correctly, so the discriminator needs to work properly.
-  - Perhaps field comparison should not use regular operator== but a special one?
-
 Bugs:
 * Moving compound connections targets between nodes does not work properly.
   e.g. Three test record values. 
@@ -16,7 +10,7 @@ Bugs:
   1. Move the target connection to the third
   1. Expand the third record
   1. Observe that the connection gets removed.
-* Connecting to a array which already has a size modifier will remove any modifiers above its default size.
+* Connecting to an array which already has a size modifier will remove any modifiers above its default size.
   * When the array size modifier removed, it removes those modifiers even though the new connection might set the array to a sufficiently large size.
 * Moving a target connection from a valid record target to a record target of a different type does not cause the modifier to fail.
 * The "*" suffix of a target feature label is not always removed directly after saving.
@@ -26,15 +20,17 @@ Bugs:
 * RecordWithOptionalsFeatureTest::changes test only works if the values are default. Deactivating a non-default optional should not set the value changed flag.
 * Save with changes but no project file should offer "Save As", not "Save".
 * SpinBoxes do not work properly in value editor of the TestTupleType. (Open a TestTupleType in BabelWires)
-* SumTypes cannot be connected to in the project. The UI treats them as having incompatible kind.
 
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.
 * Do non-const Node::getInputFeature and getOutputFeature really need to be public?
+* The complex types used by the ChordMap function (in SeqWires) suggest that my attempt at flexible maps wasn't successful
+  - The types and function are doing work I thought the framework would do.
+  - Review the map system: Perhaps I should just simplify it.
 
 New features:
 * Make undo move the view to the XY and scale position of the undone command.
-* New "Error Map Fallback" - fails a processor if the fallback is every used.
+* New "Error Map Fallback" - fails a processor if the fallback is ever used.
 
 Unit Tests:
 * Array commands with pre-existing ArraySizeModifier
@@ -70,6 +66,7 @@ Refactor:
   - Could have a custom stream (or formatter) which has a lock on the identifier registry. Deadlock a danger here.
   - deserializeToString methods should return a tuple which includes the position after the parsed object.
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
+* Can any classes be simplified using operator <=>
 
 UI:
 * ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.
@@ -78,13 +75,13 @@ UI:
 * No way to access the context menu if a SumType was a component of a tuple type.
   - Something like: value editors could intercept the context menu and use the widget parent chain to populate the full context menu.
   - Try to define a general pattern for populating context menus.
-* Whenever a context menu can appear, it should always appear, but greyed out.
+* Whenever a context menu item can appear, it should appear, but greyed out.
   - Consider a tooltip which explains why.
 
 Parallel project processing:
 * Not implemented, but code written with this in mind.
   - Access to the project state is already funnelled through AccessModelScope and UpdateModelScope.
-  - The UI does not keep pointers to features.
+  - The UI does not store pointers to model data (I hope).
 * Investigate when use-case with expensive processing arises.
 * Processors would run in background threads. When they are finished, they would:
   - lock the project,
@@ -96,9 +93,8 @@ Parallel project processing:
 
 Ideas:
 * Provide serializer via a registry, and move tinyxml dependency into its own lib.
-  - Consider switching from XML to yaml for project files
 * Require commands to be serializable, to enable structured logging.
-* Don't format strings in debug logs: Use JSON so they are easy to parse.
+* Don't format strings in log files: Use JSON so they are easy to parse.
 * SelectableArrays: For arrays larger than 16 elements:
   - Each element has an input drop down which selects the output array element.
   - This would be useful for complex input formats.
@@ -113,4 +109,4 @@ Speculative ideas:
 
 Optimizations:
 * Edit tree could offer "getModifiersAbove(path)" for use in some commands. (E.g. hasAncestorConnection)
-
+* Cache compareSubtype result.
