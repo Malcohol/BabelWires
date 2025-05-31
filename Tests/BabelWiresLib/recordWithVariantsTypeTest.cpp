@@ -343,13 +343,13 @@ TEST(RecordWithVariantsTypeTest, subtype) {
     // Incompatible types
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAS::getThisType(),
                                                           testDomain::RecordVA0::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
                                                           testDomain::RecordVAS::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAS::getThisType(),
                                                           testDomain::RecordVAB::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsDisjoint);
 
     // With variants
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
@@ -385,10 +385,17 @@ TEST(RecordWithVariantsTypeTest, subtype) {
               babelwires::SubtypeOrder::IsSubtype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAB::getThisType(),
                                                           testDomain::RecordVAVB::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAVB::getThisType(),
                                                           testDomain::RecordVAB::getThisType()),
-              babelwires::SubtypeOrder::IsUnrelated);
+              babelwires::SubtypeOrder::IsSubtype);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVABV0::getThisType(),
+                                                          testDomain::RecordVABV1::getThisType()),
+              babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVABV1::getThisType(),
+                                                          testDomain::RecordVABV0::getThisType()),
+              babelwires::SubtypeOrder::IsIntersecting);
 }
 
 TEST(RecordWithVariantsTypeTest, featureChanges) {

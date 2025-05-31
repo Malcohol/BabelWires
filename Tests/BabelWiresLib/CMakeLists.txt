@@ -2,7 +2,6 @@ SET( LIB_TESTS_SRCS
     babelWiresTests.cpp
     activateOptionalsModifierDataTest.cpp
     activateOptionalCommandTest.cpp
-    addBlankToEnumTest.cpp
     addNodeCommandTest.cpp
     addNodeForInputTreeValueCommandTest.cpp
     addNodeForOutputTreeValueCommandTest.cpp
@@ -68,6 +67,7 @@ SET( LIB_TESTS_SRCS
     sourceFileNodeTest.cpp
     stringTypeTest.cpp
     stringValueTest.cpp
+    subtypeUtilsTest.cpp
     sumOfMapsTypeTest.cpp
     sumTypeTest.cpp
     targetFileNodeTest.cpp

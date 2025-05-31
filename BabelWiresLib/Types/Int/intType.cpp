@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
 #include <BabelWiresLib/Types/Int/intValue.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
@@ -36,30 +37,13 @@ std::string babelwires::IntType::getKind() const {
     return IntValue::serializationType;
 }
 
-babelwires::SubtypeOrder babelwires::IntType::compareSubtypeHelper(const TypeSystem& typeSystem,
+std::optional<babelwires::SubtypeOrder> babelwires::IntType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                    const Type& other) const {
     const IntType* const otherIntType = other.as<IntType>();
     if (!otherIntType) {
-        return SubtypeOrder::IsUnrelated;
+        return {};
     }
-
-    const auto& rangeThis = getRange();
-    const auto& rangeOther = otherIntType->getRange();
-
-    const bool thisSubOther = rangeOther.contains(rangeThis);
-    const bool otherSubThis = rangeThis.contains(rangeOther);
-
-    if (thisSubOther && otherSubThis) {
-        return SubtypeOrder::IsEquivalent;
-    } else if (thisSubOther) {
-        return SubtypeOrder::IsSubtype;
-    } else if (otherSubThis) {
-        return SubtypeOrder::IsSupertype;
-    } else {
-        return SubtypeOrder::IsUnrelated;
-    }
-
-    return SubtypeOrder::IsEquivalent;
+    return subtypeFromRanges(getRange(), otherIntType->getRange());
 }
 
 std::string babelwires::IntType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {

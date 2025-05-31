@@ -24,11 +24,11 @@ std::string babelwires::StringType::getKind() const {
 }
 
 
-babelwires::SubtypeOrder babelwires::StringType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
+std::optional<babelwires::SubtypeOrder> babelwires::StringType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
     if (other.as<StringType>()) {
         return SubtypeOrder::IsEquivalent;
     } else {
-        return SubtypeOrder::IsUnrelated;
+        return {};
     }
 }
 

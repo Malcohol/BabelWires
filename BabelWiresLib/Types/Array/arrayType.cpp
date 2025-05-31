@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
@@ -106,34 +107,15 @@ std::string babelwires::ArrayType::getKind() const {
     return "array";
 }
 
-babelwires::SubtypeOrder babelwires::ArrayType::compareSubtypeHelper(const TypeSystem& typeSystem,
+std::optional<babelwires::SubtypeOrder> babelwires::ArrayType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                      const Type& other) const {
     const ArrayType* const otherArray = other.as<ArrayType>();
     if (!otherArray) {
-        return SubtypeOrder::IsUnrelated;
+        return {};
     }
-    SubtypeOrder rangeOrder;
-    if ((m_minimumSize == otherArray->m_minimumSize) && (m_maximumSize == otherArray->m_maximumSize)) {
-        rangeOrder = SubtypeOrder::IsEquivalent;
-    } else if ((m_minimumSize >= otherArray->m_minimumSize) && (m_maximumSize <= otherArray->m_maximumSize)) {
-        rangeOrder = SubtypeOrder::IsSubtype;
-    } else if ((m_minimumSize <= otherArray->m_minimumSize) && (m_maximumSize >= otherArray->m_maximumSize)) {
-        rangeOrder = SubtypeOrder::IsSupertype;
-    } else {
-        return SubtypeOrder::IsUnrelated;
-    }
-
+    const SubtypeOrder rangeOrder = subtypeFromRanges(getSizeRange(), otherArray->getSizeRange());
     const SubtypeOrder entryOrder = typeSystem.compareSubtype(m_entryType, otherArray->getEntryType());
-
-    if (entryOrder == rangeOrder) {
-        return entryOrder;
-    } else if (entryOrder == SubtypeOrder::IsEquivalent) {
-        return rangeOrder;
-    } else if (rangeOrder == SubtypeOrder::IsEquivalent) {
-        return entryOrder;
-    } else {
-        return SubtypeOrder::IsUnrelated;
-    }
+    return subtypeProduct(rangeOrder, entryOrder);
 }
 
 unsigned int babelwires::ArrayType::getNumChildren(const ValueHolder& compoundValue) const {

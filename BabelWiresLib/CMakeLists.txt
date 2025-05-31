@@ -99,7 +99,6 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/Subcommands/removeSimpleModifierSubcommand.cpp
 	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
 	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp
-	Types/Enum/addBlankToEnum.cpp
 	Types/Enum/enumAtomTypeConstructor.cpp
 	Types/Enum/enumType.cpp
 	Types/Enum/enumUnionTypeConstructor.cpp

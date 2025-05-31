@@ -45,13 +45,19 @@ namespace testDomain {
         RecordVABV0();
     };
 
+
+    struct RecordVABV1 : babelwires::RecordWithVariantsType {
+        PRIMITIVE_TYPE("RecordVABV1", "RecordWithVariants with fields A, 1 and B", "77756b6b-0388-4359-a103-36eeefe023f6", 1);
+        RecordVABV1();
+    };
+
     struct RecordVABV01 : babelwires::RecordWithVariantsType {
         PRIMITIVE_TYPE("RecordVABV01", "RecordWithVariants with fields A, 0, B and 1", "65c4a33e-c88c-4c61-bc9d-0dd2b2f7b021", 1);
         RecordVABV01();
     };
 
     struct RecordVAVB : babelwires::RecordWithVariantsType {
-        PRIMITIVE_TYPE("RecordVAVB", "RecordWithVariants with fields A and B in 1", "0d4e6599-a15b-41eb-aa8a-8d6c51db77b7", 1);
+        PRIMITIVE_TYPE("RecordVAVB", "RecordWithVariants with fields A, and B in default", "0d4e6599-a15b-41eb-aa8a-8d6c51db77b7", 1);
         RecordVAVB();
     };
 

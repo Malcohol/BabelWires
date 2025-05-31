@@ -8,6 +8,8 @@
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 babelwires::RecordType::RecordType(std::vector<Field> fields)
@@ -251,17 +253,17 @@ int babelwires::RecordType::getChildIndexFromStep(const ValueHolder& compoundVal
     return -1;
 }
 
-babelwires::SubtypeOrder babelwires::RecordType::compareSubtypeHelper(const TypeSystem& typeSystem,
+std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                       const Type& other) const {
     const RecordType* const otherRecord = other.as<RecordType>();
     if (!otherRecord) {
-        return SubtypeOrder::IsUnrelated;
+        return {};
     }
     SubtypeOrder currentOrder = SubtypeOrder::IsEquivalent;
 
-    auto updateAndCheckUnrelated = [&currentOrder](SubtypeOrder localOrder) {
-        currentOrder = subtypeOrderSupremum(currentOrder, localOrder);
-        return (currentOrder == SubtypeOrder::IsUnrelated);
+    auto updateAndCheckDisjoint = [&currentOrder](SubtypeOrder localOrder) {
+        currentOrder = subtypeProduct(currentOrder, localOrder);
+        return (currentOrder == SubtypeOrder::IsDisjoint);
     };
     // Field order is not important for subtyping.
     // We use sorted sets of fields to allow mutual traversal by identifier.
@@ -274,42 +276,37 @@ babelwires::SubtypeOrder babelwires::RecordType::compareSubtypeHelper(const Type
     auto otherIt = otherFields.begin();
     while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
         if (thisIt->m_identifier == otherIt->m_identifier) {
-            const Type* const thisFieldType = thisIt->m_type.tryResolve(typeSystem);
-            const Type* const otherFieldType = otherIt->m_type.tryResolve(typeSystem);
-            if (!thisFieldType || !otherFieldType) {
-                return SubtypeOrder::IsUnrelated;
-            }
-            const SubtypeOrder fieldComparison = thisFieldType->compareSubtypeHelper(typeSystem, *otherFieldType);
-            if (updateAndCheckUnrelated(fieldComparison)) {
-                return SubtypeOrder::IsUnrelated;
+            const SubtypeOrder fieldComparison = typeSystem.compareSubtype(thisIt->m_type, otherIt->m_type);
+            if (updateAndCheckDisjoint(fieldComparison)) {
+                return SubtypeOrder::IsDisjoint;
             }
             ++thisIt;
             ++otherIt;
         } else if (thisIt->m_identifier < otherIt->m_identifier) {
             // A record with an additional _required_ field can be a subtype of one without it.
             // A record with an additional _optional_ field can actually have the same set of valid values as one
-            // without it, since we use "duck typing".
+            // without it, since we use a form of "duck typing".
             if ((thisIt->m_optionality == Optionality::alwaysActive) &&
-                updateAndCheckUnrelated(SubtypeOrder::IsSubtype)) {
-                return SubtypeOrder::IsUnrelated;
+                updateAndCheckDisjoint(SubtypeOrder::IsSubtype)) {
+                return SubtypeOrder::IsDisjoint;
             }
             ++thisIt;
         } else { // if (otherIt->m_identifier < thisIt->m_identifier) {
             if ((otherIt->m_optionality == Optionality::alwaysActive) &&
-                updateAndCheckUnrelated(SubtypeOrder::IsSupertype)) {
-                return SubtypeOrder::IsUnrelated;
+                updateAndCheckDisjoint(SubtypeOrder::IsSupertype)) {
+                return SubtypeOrder::IsDisjoint;
             }
             ++otherIt;
         }
     }
     if (thisIt != thisFields.end()) {
-        if ((thisIt->m_optionality == Optionality::alwaysActive) && updateAndCheckUnrelated(SubtypeOrder::IsSubtype)) {
-            return SubtypeOrder::IsUnrelated;
+        if ((thisIt->m_optionality == Optionality::alwaysActive) && updateAndCheckDisjoint(SubtypeOrder::IsSubtype)) {
+            return SubtypeOrder::IsDisjoint;
         }
     } else if (otherIt != otherFields.end()) {
         if ((otherIt->m_optionality == Optionality::alwaysActive) &&
-            updateAndCheckUnrelated(SubtypeOrder::IsSupertype)) {
-            return SubtypeOrder::IsUnrelated;
+            updateAndCheckDisjoint(SubtypeOrder::IsSupertype)) {
+            return SubtypeOrder::IsDisjoint;
         }
     }
     return currentOrder;

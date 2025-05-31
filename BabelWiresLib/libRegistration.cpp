@@ -10,7 +10,6 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
-#include <BabelWiresLib/Types/Enum/addBlankToEnum.hpp>
 #include <BabelWiresLib/Types/Enum/enumAtomTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Enum/enumUnionTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
@@ -25,10 +24,6 @@
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
 
-/*
-// TODO Remove
-#include <BabelWiresLib/Types/Array/arrayType.hpp>
-*/
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
@@ -39,7 +34,6 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<DefaultRationalType>();
     context.m_typeSystem.addEntry<MapEntryFallbackKind>();
     context.m_typeSystem.addEntry<FailureType>();
-    context.m_typeSystem.addTypeConstructor<AddBlankToEnum>();
     context.m_typeSystem.addTypeConstructor<EnumAtomTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<EnumUnionTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<IntTypeConstructor>();
@@ -49,13 +43,4 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addTypeConstructor<ArrayTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<FileTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<TupleTypeConstructor>();
-
-    /*
-        // TODO Remove
-        context.m_typeSystem.addEntry<TestArrayType>();
-        context.m_typeSystem.addEntry<TestArrayType2>();
-        context.m_typeSystem.addEntry<TestRecordType>();
-        context.m_typeSystem.addEntry<TestRecordType2>();
-        context.m_typeSystem.addEntry<TestRecordWithVariants>();
-    */
 }

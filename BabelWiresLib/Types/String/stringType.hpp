@@ -12,6 +12,7 @@
 
 namespace babelwires {
 
+    // TODO Strings should have a length limit.
     class StringType : public Type {
       public:
         PRIMITIVE_TYPE("string", "String", "0e422e25-cb94-40a3-8790-4918c918e637", 1);
@@ -22,7 +23,7 @@ namespace babelwires {
 
         std::string getKind() const override;
 
-        SubtypeOrder compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
 
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
     };

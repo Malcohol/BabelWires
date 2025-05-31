@@ -13,8 +13,8 @@ std::string babelwires::Type::getName() const {
     return getTypeRef().toString();
 }
 
-babelwires::SubtypeOrder babelwires::Type::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
-    return SubtypeOrder::IsUnrelated;
+std::optional<babelwires::SubtypeOrder> babelwires::Type::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
+    return {};
 }
 
 void babelwires::Type::addTag(Tag tag) {

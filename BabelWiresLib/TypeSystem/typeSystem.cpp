@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
+
 #include <algorithm>
 namespace {
     void insertTypeId(babelwires::TypeSystem::TypeIdSet& typeIds, const babelwires::PrimitiveTypeId& typeId) {
@@ -37,7 +39,7 @@ babelwires::Type* babelwires::TypeSystem::addPrimitiveType(LongId typeId, Versio
     auto addResult = m_primitiveTypeRegistry.emplace(
         std::pair<LongId, PrimitiveTypeInfo>{typeId, PrimitiveTypeInfo{std::move(newType), version}});
     assert(addResult.second && "Type with that identifier already registered");
-    babelwires::Type *const newTypeRaw = std::get<0>(addResult.first->second).get();
+    babelwires::Type* const newTypeRaw = std::get<0>(addResult.first->second).get();
     for (auto it : newTypeRaw->getTags()) {
         m_taggedPrimitiveTypes[it].emplace_back(typeId);
     }
@@ -68,18 +70,21 @@ babelwires::TypeSystem::addTypeConstructorInternal(TypeConstructorId typeId, Ver
 }
 
 babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& typeRefA,
-                                                                          const TypeRef& typeRefB) const {
+                                                                const TypeRef& typeRefB) const {
     // TODO Thread-safe cache here.
     if (typeRefA == typeRefB) {
         return SubtypeOrder::IsEquivalent;
     }
     if (const Type* typeA = typeRefA.tryResolve(*this)) {
         if (const Type* typeB = typeRefB.tryResolve(*this)) {
-            // Assume that typeA can definitively answer the question without having to ask typeB.
-            return typeA->compareSubtypeHelper(*this, *typeB);
+            if (const auto resultFromA = typeA->compareSubtypeHelper(*this, *typeB)) {
+                return *resultFromA;
+            } else if (const auto resultFromB = typeB->compareSubtypeHelper(*this, *typeA)) {
+                return reverseSubtypeOrder(*resultFromB);
+            }
         }
     }
-    return SubtypeOrder::IsUnrelated;
+    return SubtypeOrder::IsDisjoint;
 }
 
 bool babelwires::TypeSystem::isSubType(const TypeRef& typeRefA, const TypeRef& typeRefB) const {
@@ -88,7 +93,7 @@ bool babelwires::TypeSystem::isSubType(const TypeRef& typeRefA, const TypeRef& t
 }
 
 bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeRefA, const TypeRef& typeRefB) const {
-    return compareSubtype(typeRefA, typeRefB) != SubtypeOrder::IsUnrelated;
+    return compareSubtype(typeRefA, typeRefB) != SubtypeOrder::IsDisjoint;
 }
 
 babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getTaggedPrimitiveTypes(Type::Tag tag) const {

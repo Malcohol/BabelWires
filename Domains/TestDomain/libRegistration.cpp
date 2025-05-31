@@ -33,10 +33,11 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::TestCompoundArrayType>();
     context.m_typeSystem.addEntry<testDomain::TestSimpleRecordType>();
     context.m_typeSystem.addEntry<testDomain::TestComplexRecordType>();
-    context.m_typeSystem.addEntry<testDomain::TestRecordWithVariantsType>();
-    context.m_typeSystem.addEntry<testDomain::TestSumType>();
+    context.m_typeSystem.addEntry<testDomain::TestRecordWithVariantsType>();    
     context.m_typeSystem.addEntry<testDomain::TestTupleType>();
     context.m_typeSystem.addEntry<testDomain::RecordWithNoFields>();
+    context.m_typeSystem.addEntry<testDomain::TestSumType>();
+
     context.m_typeSystem.addEntry<testDomain::RecordA0>();
     context.m_typeSystem.addEntry<testDomain::RecordA1>();
     context.m_typeSystem.addEntry<testDomain::RecordAS>();
@@ -55,6 +56,7 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::RecordVAB>();
     context.m_typeSystem.addEntry<testDomain::RecordVAV0>();
     context.m_typeSystem.addEntry<testDomain::RecordVABV0>();
+    context.m_typeSystem.addEntry<testDomain::RecordVABV1>();
     context.m_typeSystem.addEntry<testDomain::RecordVABV01>();
     context.m_typeSystem.addEntry<testDomain::RecordVAVB>();
 

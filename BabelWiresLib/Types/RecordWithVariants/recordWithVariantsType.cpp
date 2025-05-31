@@ -7,8 +7,9 @@
  **/
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
-
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 babelwires::RecordWithVariantsType::RecordWithVariantsType(Tags tags, std::vector<FieldWithTags> fields,
@@ -201,9 +202,9 @@ babelwires::RecordWithVariantsType::getFixedFields() const {
 }
 
 namespace {
-    bool updateAndCheckUnrelated(babelwires::SubtypeOrder& currentOrder, babelwires::SubtypeOrder localOrder) {
-        currentOrder = subtypeOrderSupremum(currentOrder, localOrder);
-        return (currentOrder == babelwires::SubtypeOrder::IsUnrelated);
+    bool updateAndCheckDisjoint(babelwires::SubtypeOrder& currentOrder, babelwires::SubtypeOrder localOrder) {
+        currentOrder = subtypeProduct(currentOrder, localOrder);
+        return (currentOrder == babelwires::SubtypeOrder::IsDisjoint);
     };
 
     babelwires::SubtypeOrder
@@ -221,15 +222,10 @@ namespace {
         auto otherIt = otherFields.begin();
         while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
             if ((*thisIt)->m_identifier == (*otherIt)->m_identifier) {
-                const babelwires::Type* const thisFieldType = (*thisIt)->m_type.tryResolve(typeSystem);
-                const babelwires::Type* const otherFieldType = (*otherIt)->m_type.tryResolve(typeSystem);
-                if (!thisFieldType || !otherFieldType) {
-                    return babelwires::SubtypeOrder::IsUnrelated;
-                }
                 const babelwires::SubtypeOrder fieldComparison =
-                    thisFieldType->compareSubtypeHelper(typeSystem, *otherFieldType);
-                if (updateAndCheckUnrelated(currentOrder, fieldComparison)) {
-                    return babelwires::SubtypeOrder::IsUnrelated;
+                    typeSystem.compareSubtype((*thisIt)->m_type, (*otherIt)->m_type);
+                if (updateAndCheckDisjoint(currentOrder, fieldComparison)) {
+                    return babelwires::SubtypeOrder::IsDisjoint;
                 }
                 ++thisIt;
                 ++otherIt;
@@ -237,35 +233,35 @@ namespace {
                 // A record with an additional _required_ field can be a subtype of one without it.
                 // A record with an additional _optional_ field can actually have the same set of valid values as one
                 // without it, since we use "duck typing".
-                if (updateAndCheckUnrelated(currentOrder, babelwires::SubtypeOrder::IsSubtype)) {
-                    return babelwires::SubtypeOrder::IsUnrelated;
+                if (updateAndCheckDisjoint(currentOrder, babelwires::SubtypeOrder::IsSubtype)) {
+                    return babelwires::SubtypeOrder::IsDisjoint;
                 }
                 ++thisIt;
             } else { // if ((*otherIt)->m_identifier < (*thisIt)->m_identifier) {
-                if (updateAndCheckUnrelated(currentOrder, babelwires::SubtypeOrder::IsSupertype)) {
-                    return babelwires::SubtypeOrder::IsUnrelated;
+                if (updateAndCheckDisjoint(currentOrder, babelwires::SubtypeOrder::IsSupertype)) {
+                    return babelwires::SubtypeOrder::IsDisjoint;
                 }
                 ++otherIt;
             }
         }
         if (thisIt != thisFields.end()) {
-            if (updateAndCheckUnrelated(currentOrder, babelwires::SubtypeOrder::IsSubtype)) {
-                return babelwires::SubtypeOrder::IsUnrelated;
+            if (updateAndCheckDisjoint(currentOrder, babelwires::SubtypeOrder::IsSubtype)) {
+                return babelwires::SubtypeOrder::IsDisjoint;
             }
         } else if (otherIt != otherFields.end()) {
-            if (updateAndCheckUnrelated(currentOrder, babelwires::SubtypeOrder::IsSupertype)) {
-                return babelwires::SubtypeOrder::IsUnrelated;
+            if (updateAndCheckDisjoint(currentOrder, babelwires::SubtypeOrder::IsSupertype)) {
+                return babelwires::SubtypeOrder::IsDisjoint;
             }
         }
         return currentOrder;
     }
 } // namespace
 
-babelwires::SubtypeOrder babelwires::RecordWithVariantsType::compareSubtypeHelper(const TypeSystem& typeSystem,
-                                                                                  const Type& other) const {
+std::optional<babelwires::SubtypeOrder>
+babelwires::RecordWithVariantsType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
     const RecordWithVariantsType* const otherRecord = other.as<RecordWithVariantsType>();
     if (!otherRecord) {
-        return SubtypeOrder::IsUnrelated;
+        return {};
     }
 
     // TODO This is not a complete solution (even considering that we don't yet support coercion).
@@ -277,10 +273,7 @@ babelwires::SubtypeOrder babelwires::RecordWithVariantsType::compareSubtypeHelpe
     std::vector<const Field*> thisFixedFields = getFixedFields();
     std::vector<const Field*> otherFixedFields = otherRecord->getFixedFields();
 
-    const SubtypeOrder fieldComparison = sortAndCompareFieldSets(typeSystem, thisFixedFields, otherFixedFields);
-    if (updateAndCheckUnrelated(currentOrder, fieldComparison)) {
-        return SubtypeOrder::IsUnrelated;
-    }
+    const SubtypeOrder fieldComparison = SubtypeOrder::IsEquivalent;
 
     Tags tags = getTags();
     Tags otherTags = otherRecord->getTags();
@@ -296,30 +289,30 @@ babelwires::SubtypeOrder babelwires::RecordWithVariantsType::compareSubtypeHelpe
             std::vector<const Field*> otherFields = otherRecord->m_tagToVariantCache.find(*otherIt)->second;
 
             const SubtypeOrder fieldComparison = sortAndCompareFieldSets(typeSystem, thisFields, otherFields);
-            if (updateAndCheckUnrelated(currentOrder, fieldComparison)) {
-                return SubtypeOrder::IsUnrelated;
+            if (updateAndCheckDisjoint(currentOrder, fieldComparison)) {
+                return SubtypeOrder::IsDisjoint;
             }
             ++thisIt;
             ++otherIt;
         } else if (*thisIt < *otherIt) {
-            if (updateAndCheckUnrelated(currentOrder, SubtypeOrder::IsSubtype)) {
-                return SubtypeOrder::IsUnrelated;
+            if (updateAndCheckDisjoint(currentOrder, SubtypeOrder::IsSubtype)) {
+                return SubtypeOrder::IsDisjoint;
             }
             ++thisIt;
         } else { // if (*otherIt < *thisIt) {
-            if (updateAndCheckUnrelated(currentOrder, SubtypeOrder::IsSupertype)) {
-                return SubtypeOrder::IsUnrelated;
+            if (updateAndCheckDisjoint(currentOrder, SubtypeOrder::IsSupertype)) {
+                return SubtypeOrder::IsDisjoint;
             }
             ++otherIt;
         }
     }
     if (thisIt != tags.end()) {
-        if (updateAndCheckUnrelated(currentOrder, SubtypeOrder::IsSubtype)) {
-            return SubtypeOrder::IsUnrelated;
+        if (updateAndCheckDisjoint(currentOrder, SubtypeOrder::IsSubtype)) {
+            return SubtypeOrder::IsDisjoint;
         }
     } else if (otherIt != otherTags.end()) {
-        if (updateAndCheckUnrelated(currentOrder, SubtypeOrder::IsSupertype)) {
-            return SubtypeOrder::IsUnrelated;
+        if (updateAndCheckDisjoint(currentOrder, SubtypeOrder::IsSupertype)) {
+            return SubtypeOrder::IsDisjoint;
         }
     }
     return currentOrder;

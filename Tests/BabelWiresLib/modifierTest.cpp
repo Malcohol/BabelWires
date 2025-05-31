@@ -402,5 +402,5 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     // The string will now be default.
     EXPECT_TRUE(targetInstance.getstring().get().empty());
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
-    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("incompatible"));
+    EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("not a valid instance"));
 }

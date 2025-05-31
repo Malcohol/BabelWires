@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 
@@ -67,7 +68,7 @@ TEST(TypeSystemTest, compareSubtype) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testType4, testType4), babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testType4, testType6), babelwires::SubtypeOrder::IsSubtype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testType6, testType4), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testType6, testDomain::TestEnum::getThisType()), babelwires::SubtypeOrder::IsUnrelated);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testType6, testDomain::TestEnum::getThisType()), babelwires::SubtypeOrder::IsDisjoint);
 }
 
 TEST(TypeSystemTest, isRelatedTypes) {
@@ -111,9 +112,9 @@ TEST(TypeSystemTest, isRelatedTypes) {
     EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubEnum::getThisType(),
                                                            testDomain::TestSubSubEnum2::getThisType()));
 
-    EXPECT_FALSE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum1::getThisType(),
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum1::getThisType(),
                                                             testDomain::TestSubSubEnum2::getThisType()));
-    EXPECT_FALSE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum2::getThisType(),
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum2::getThisType(),
                                                             testDomain::TestSubSubEnum1::getThisType()));
 }
 
