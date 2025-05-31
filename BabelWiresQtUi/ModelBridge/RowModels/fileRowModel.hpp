@@ -18,7 +18,7 @@ namespace babelwires {
       public:
         virtual QVariant getValueDisplayData() const override;
 
-        virtual QString getTooltip() const override;
+        virtual QString getTooltip(ColumnType c) const override;
 
         virtual void
         getContextMenuActions(std::vector<ContextMenuEntry>& actionsOut) const override;

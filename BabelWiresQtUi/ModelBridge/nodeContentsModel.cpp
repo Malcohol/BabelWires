@@ -89,7 +89,7 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
         return QVariant();
     }
 
-    const int column = index.column();
+    const RowModel::ColumnType columnType = index.column() ? RowModel::ColumnType::Value : RowModel::ColumnType::Key;
 
     const ValueTreeNode* valueTreeNode = entry->getInputThenOutput();
     assert(valueTreeNode && "No valueTreeNode for row model");
@@ -98,7 +98,7 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
 
     switch (role) {
         case Qt::DisplayRole: {
-            if (column == 0) {
+            if (columnType == RowModel::ColumnType::Key) {
                 if (entry->isExpandable()) {
                     const char* triangle;
                     if (entry->isExpanded()) {
@@ -111,15 +111,14 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
                     return QString(entry->getIndent() * 2, ' ') + entry->getLabel().c_str();
                 }
             } else {
-                assert((column == 1) && "Column out of range");
                 return rowModel->getValueDisplayData();
             }
         }
         case Qt::ToolTipRole: {
-            return rowModel->getTooltip();
+            return rowModel->getTooltip(columnType);
         }
         case Qt::BackgroundRole: {
-            const babelwires::RowModel::BackgroundStyle backgroundStyle = rowModel->getBackgroundStyle(column ? RowModel::ColumnType::Value : RowModel::ColumnType::Key);
+            const babelwires::RowModel::BackgroundStyle backgroundStyle = rowModel->getBackgroundStyle(columnType);
             BackgroundType backgroundType = BackgroundType::normal;
             switch(backgroundStyle) {
                 case RowModel::BackgroundStyle::failed:

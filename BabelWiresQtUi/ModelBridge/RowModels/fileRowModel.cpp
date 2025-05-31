@@ -28,12 +28,14 @@ QVariant babelwires::FileRowModel::getValueDisplayData() const {
     return QString(babelwires::pathToString(getFileElement().getFilePath().filename()).c_str());
 }
 
-QString babelwires::FileRowModel::getTooltip() const {
+QString babelwires::FileRowModel::getTooltip(ColumnType c) const {
     if (m_node->isFailed()) {
-        return RowModel::getTooltip();
-    } else {
+        return RowModel::getTooltip(c);
+    } else if (c == ColumnType::Value) {
         // Full path.
         return QString(babelwires::pathToString(getFileElement().getFilePath()).c_str());
+    } else {
+        return {};
     }
 }
 
