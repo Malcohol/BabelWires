@@ -152,5 +152,5 @@ TEST(IntTypeTest, typeName) {
     babelwires::TypeRef intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
-    EXPECT_EQ(intTypeRef.toString(), "{-12..14}");
+    EXPECT_EQ(intTypeRef.toString(), "Integer{-12..14}");
 }

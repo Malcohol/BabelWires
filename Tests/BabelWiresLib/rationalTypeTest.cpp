@@ -158,5 +158,5 @@ TEST(RationalTypeTest, typeName) {
         babelwires::RationalTypeConstructor::getThisIdentifier(), babelwires::RationalValue(babelwires::Rational(2, 3)),
         babelwires::RationalValue(babelwires::Rational(4, 3)), babelwires::RationalValue(1));
 
-    EXPECT_EQ(rationalTypeRef.toString(), "{2/3..1 1/3}");
+    EXPECT_EQ(rationalTypeRef.toString(), "Rational{2/3..1 1/3}");
 }
