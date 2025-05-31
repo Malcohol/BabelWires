@@ -22,7 +22,7 @@ TEST(ArrayTypeTest, simpleArrayTypeCreateValue) {
     EXPECT_EQ(arrayType.getInitialSize(), testDomain::TestSimpleArrayType::s_defaultSize);
     EXPECT_EQ(arrayType.getSizeRange().m_min, testDomain::TestSimpleArrayType::s_minimumSize);
     EXPECT_EQ(arrayType.getSizeRange().m_max, testDomain::TestSimpleArrayType::s_maximumSize);
-    EXPECT_FALSE(arrayType.getKind().empty());
+    EXPECT_FALSE(arrayType.getFlavour().empty());
 
     babelwires::ValueHolder newValue = arrayType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -49,7 +49,7 @@ TEST(ArrayTypeTest, compoundArrayTypeCreateValue) {
     EXPECT_EQ(arrayType.getInitialSize(), testDomain::TestCompoundArrayType::s_defaultSize);
     EXPECT_EQ(arrayType.getSizeRange().m_min, testDomain::TestCompoundArrayType::s_minimumSize);
     EXPECT_EQ(arrayType.getSizeRange().m_max, testDomain::TestCompoundArrayType::s_maximumSize);
-    EXPECT_FALSE(arrayType.getKind().empty());
+    EXPECT_FALSE(arrayType.getFlavour().empty());
 
     babelwires::ValueHolder newValue = arrayType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);

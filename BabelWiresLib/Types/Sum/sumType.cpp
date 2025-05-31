@@ -31,7 +31,7 @@ bool babelwires::SumType::isValidValue(const TypeSystem& typeSystem, const Value
     return getIndexOfValue(typeSystem, v) != -1;
 };
 
-std::string babelwires::SumType::getKind() const {
+std::string babelwires::SumType::getFlavour() const {
     //TODO Maybe better to concatenate the summand kinds?
     return "sum";
 }

@@ -103,7 +103,7 @@ bool babelwires::ArrayType::isValidValue(const TypeSystem& typeSystem, const Val
     return true;
 }
 
-std::string babelwires::ArrayType::getKind() const {
+std::string babelwires::ArrayType::getFlavour() const {
     return "array";
 }
 

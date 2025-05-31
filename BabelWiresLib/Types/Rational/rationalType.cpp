@@ -33,7 +33,7 @@ babelwires::Range<babelwires::Rational> babelwires::RationalType::getRange() con
     return m_range;
 }
 
-std::string babelwires::RationalType::getKind() const {
+std::string babelwires::RationalType::getFlavour() const {
     return RationalValue::serializationType;
 }
 

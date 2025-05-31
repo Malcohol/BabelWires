@@ -59,7 +59,7 @@ bool testUtils::TestType::isValidValue(const babelwires::TypeSystem& typeSystem,
     return (m_maximumLength == 0) || (testValue->m_value.size() <= m_maximumLength);
 }
 
-std::string testUtils::TestType::getKind() const {
+std::string testUtils::TestType::getFlavour() const {
     return "Test";
 }
 

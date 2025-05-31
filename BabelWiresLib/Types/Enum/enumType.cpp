@@ -72,7 +72,7 @@ babelwires::NewValueHolder babelwires::EnumType::createValue(const TypeSystem& t
     return ValueHolder::makeValue<EnumValue>(getIdentifierFromIndex(getIndexOfDefaultValue()));
 }
 
-std::string babelwires::EnumType::getKind() const {
+std::string babelwires::EnumType::getFlavour() const {
     return EnumValue::serializationType;
 }
 

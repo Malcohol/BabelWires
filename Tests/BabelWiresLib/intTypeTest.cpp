@@ -50,7 +50,7 @@ TEST(IntTypeTest, defaultIntTypeIsValidValue) {
 TEST(IntTypeTest, defaultIntTypeGetKind) {
     babelwires::DefaultIntType intType;
 
-    EXPECT_FALSE(intType.getKind().empty());
+    EXPECT_FALSE(intType.getFlavour().empty());
 }
 
 TEST(IntTypeTest, defaultIntTypeIsRegistered) {
@@ -143,7 +143,7 @@ TEST(IntTypeTest, sameKind) {
 
     babelwires::DefaultIntType defaultIntType;
 
-    EXPECT_EQ(defaultIntType.getKind(), type->getKind());
+    EXPECT_EQ(defaultIntType.getFlavour(), type->getFlavour());
 }
 
 TEST(IntTypeTest, typeName) {

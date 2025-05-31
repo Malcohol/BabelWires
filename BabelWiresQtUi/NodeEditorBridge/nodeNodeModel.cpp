@@ -96,8 +96,8 @@ const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getOutput(const Acce
 }
 
 QtNodes::NodeDataType babelwires::NodeNodeModel::getDataTypeFromTreeValueNode(const babelwires::ValueTreeNode* f) {
-    if (f && f->getKind() != "") {
-        return QtNodes::NodeDataType{f->getKind().c_str(), ""};
+    if (f && f->getFlavour() != "") {
+        return QtNodes::NodeDataType{f->getFlavour().c_str(), ""};
     }
     return QtNodes::NodeDataType();
 }

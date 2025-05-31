@@ -50,7 +50,7 @@ TEST(RationalTypeTest, defaultRationalTypeIsValidValue) {
 TEST(RationalTypeTest, defaultRationalTypeGetKind) {
     babelwires::DefaultRationalType rationalType;
 
-    EXPECT_FALSE(rationalType.getKind().empty());
+    EXPECT_FALSE(rationalType.getFlavour().empty());
 }
 
 TEST(RationalTypeTest, defaultRationalTypeIsRegistered) {
@@ -148,7 +148,7 @@ TEST(RationalTypeTest, sameKind) {
 
     babelwires::DefaultRationalType defaultRationalType;
 
-    EXPECT_EQ(defaultRationalType.getKind(), type->getKind());
+    EXPECT_EQ(defaultRationalType.getFlavour(), type->getFlavour());
 }
 
 TEST(RationalTypeTest, typeName) {

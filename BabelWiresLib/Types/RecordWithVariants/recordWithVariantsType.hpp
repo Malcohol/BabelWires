@@ -37,7 +37,7 @@ namespace babelwires {
         RecordWithVariantsType(Tags tags, std::vector<FieldWithTags> fields, unsigned int defaultTagIndex = 0);
 
         // For now, this is a separate kind from RecordType.
-        std::string getKind() const override;
+        std::string getFlavour() const override;
 
         /// Return the set of tags.
         const Tags& getTags() const;

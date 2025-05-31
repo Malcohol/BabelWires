@@ -30,7 +30,7 @@ bool babelwires::MapType::isValidValue(const TypeSystem& typeSystem, const Value
     return false;
 }
 
-std::string babelwires::MapType::getKind() const {
+std::string babelwires::MapType::getFlavour() const {
     return MapValue::serializationType;
 }
 

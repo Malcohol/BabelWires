@@ -34,7 +34,7 @@ TEST(StringTypeTest, stringTypeIsValidValue) {
 TEST(StringTypeTest, stringTypeGetKind) {
     babelwires::StringType stringType;
 
-    EXPECT_FALSE(stringType.getKind().empty());
+    EXPECT_FALSE(stringType.getFlavour().empty());
 }
 
 TEST(StringTypeTest, stringTypeIsRegistered) {

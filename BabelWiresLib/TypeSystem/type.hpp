@@ -38,10 +38,11 @@ namespace babelwires {
         /// Complex types constructed by TypeConstructors must provide their own implementation.
         virtual TypeRef getTypeRef() const = 0;
 
-        /// Return a short string which identifies the type of data this type handles.
-        /// If there is a unique class for values of this type, then the serializationType of that class 
-        /// is a good choice.
-        virtual std::string getKind() const = 0;
+        /// Return a short string which can be used in the UI to give a sense of the data this type handles.
+        /// It is not used to impose any formal restrictions.
+        /// In cases where the type has a unique and serializable class of values, the serializationType of that
+        /// class is a good choice.
+        virtual std::string getFlavour() const = 0;
 
         /// How are this type and other related by subtyping? A type may not know if it's related to
         /// other, so by default, this returns an empty optional. (If neither type know how they are

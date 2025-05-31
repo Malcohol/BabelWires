@@ -26,7 +26,7 @@ namespace babelwires {
 
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
 
-        std::string getKind() const override;
+        std::string getFlavour() const override;
 
         const TypeRef& getSourceTypeRef() const;
         const TypeRef& getTargetTypeRef() const;

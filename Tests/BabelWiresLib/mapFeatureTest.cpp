@@ -61,8 +61,8 @@ TEST(MapFeatureTest, isCompatible) {
     babelwires::ValueTreeRoot intFeature(testEnvironment.m_typeSystem,
                                               babelwires::DefaultIntType::getThisType());
 
-    EXPECT_EQ(mapFeature1.getKind(), mapFeature2.getKind());
-    EXPECT_NE(mapFeature1.getKind(), intFeature.getKind());
+    EXPECT_EQ(mapFeature1.getFlavour(), mapFeature2.getFlavour());
+    EXPECT_NE(mapFeature1.getFlavour(), intFeature.getFlavour());
 }
 
 TEST(MapFeatureTest, assign) {
