@@ -147,9 +147,6 @@ void babelwires::ValueTreeNode::setValue(const ValueHolder& newValue) {
 }
 
 void babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
-    if (getKind() != other.getKind()) {
-        throw ModelException() << "Assigning an incompatible value";
-    }
     setValue(other.getValue());
 }
 
