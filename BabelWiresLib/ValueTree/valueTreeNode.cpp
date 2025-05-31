@@ -150,8 +150,8 @@ void babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
     setValue(other.getValue());
 }
 
-std::string babelwires::ValueTreeNode::getKind() const {
-    return getType().getKind();
+std::string babelwires::ValueTreeNode::getFlavour() const {
+    return getType().getFlavour();
 }
 
 const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {

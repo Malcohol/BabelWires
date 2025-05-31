@@ -20,7 +20,7 @@ namespace babelwires {
         FileType(TypeRef typeOfContents);
 
         /// Returns the empty string, preventing the file from being connected to or from.
-        std::string getKind() const override;
+        std::string getFlavour() const override;
 
         /// The identifier of the field which holds the file's contents.
         static babelwires::ShortId getStepToContents();

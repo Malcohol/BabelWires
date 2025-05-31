@@ -10,7 +10,7 @@
 babelwires::FileType::FileType(TypeRef typeOfContents)
     : RecordType({{getStepToContents(), typeOfContents}}) {}
 
-std::string babelwires::FileType::getKind() const {
+std::string babelwires::FileType::getFlavour() const {
     return "";
 }
 

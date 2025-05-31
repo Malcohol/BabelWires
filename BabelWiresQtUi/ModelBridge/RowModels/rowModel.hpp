@@ -39,9 +39,9 @@ namespace babelwires {
 
         virtual QVariant getValueDisplayData() const;
 
-        virtual QString getTooltip() const;
-
         enum class ColumnType { Key, Value };
+
+        virtual QString getTooltip(ColumnType c) const;
 
         enum class BackgroundStyle {
             normal,

@@ -32,7 +32,7 @@ namespace babelwires {
         /// unique, a subtyping relationship should never arise unintentionally.
         RecordType(const RecordType& parent, std::vector<Field> additionalFields);
 
-        std::string getKind() const override;
+        std::string getFlavour() const override;
 
         /// Active the field, so it appears in the record.
         void activateField(const TypeSystem& typeSystem, ValueHolder& value, ShortId fieldId) const;

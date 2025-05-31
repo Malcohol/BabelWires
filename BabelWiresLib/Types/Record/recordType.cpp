@@ -39,7 +39,7 @@ namespace {
 babelwires::RecordType::RecordType(const RecordType& parent, std::vector<Field> additionalFields)
     : RecordType(getCombinedFieldSet(parent, std::move(additionalFields))) {}
 
-std::string babelwires::RecordType::getKind() const {
+std::string babelwires::RecordType::getFlavour() const {
     return "record";
 }
 

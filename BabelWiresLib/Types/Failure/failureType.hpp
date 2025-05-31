@@ -21,7 +21,7 @@ namespace babelwires {
 
         FailureType() : RecordType({}) {}
 
-        std::string getKind() const override { return "Failed"; }
+        std::string getFlavour() const override { return "Failed"; }
     };
 
 }

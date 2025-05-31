@@ -41,6 +41,8 @@ Model
 * Implement RecordType Optionality::optionalDefaultActive
 * Bool and float types
 * Generics - e.g. ports that can accept non-specific types, which cause the types of other ports to adapt (or something like that)
+* RationalType granularity
+* StringType length
 
 Processors:
 * A domain of standard operations (e.g. arithmetic and string manipulation)

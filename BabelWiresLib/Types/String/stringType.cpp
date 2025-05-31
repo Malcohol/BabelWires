@@ -19,7 +19,7 @@ bool babelwires::StringType::isValidValue(const TypeSystem& typeSystem, const Va
     return v.as<StringValue>();
 }
 
-std::string babelwires::StringType::getKind() const {
+std::string babelwires::StringType::getFlavour() const {
     return StringValue::serializationType;
 }
 

@@ -16,6 +16,7 @@
 #include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+#include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <QString>
 
@@ -76,13 +77,19 @@ QSize babelwires::ValueRowModel::sizeHint(QStyleOptionViewItem& option, const QM
     return m_valueModelDispatcher->sizeHint(option);
 }
 
-QString babelwires::ValueRowModel::getTooltip() const {
-    QString rowTooltip = RowModel::getTooltip();
-    QString valueTooltip = m_valueModelDispatcher->getTooltip();
-    if (rowTooltip.isEmpty() || valueTooltip.isEmpty()) {
-        return rowTooltip + valueTooltip;
+QString babelwires::ValueRowModel::getTooltip(ColumnType c) const {
+    const QString rowTooltip = RowModel::getTooltip(c);
+    QString columnTooltip;
+    if (c == ColumnType::Key) {
+        const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
+        columnTooltip = QString("%1 : %2").arg(m_contentsCacheEntry->getLabel().c_str()).arg(valueTreeNode.getType().getName().c_str());
     } else {
-        return rowTooltip + "/n" + valueTooltip;
+        columnTooltip = m_valueModelDispatcher->getTooltip();
+    } 
+    if (rowTooltip.isEmpty() || columnTooltip.isEmpty()) {
+        return rowTooltip + columnTooltip;
+    } else {
+        return rowTooltip + "/n" + columnTooltip;
     }
 }
 

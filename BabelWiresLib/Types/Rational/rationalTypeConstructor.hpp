@@ -17,7 +17,7 @@ namespace babelwires {
       public:
         // The name format is not distinct from that of int, so there can be ambiguity. That's probably
         // alright because type names are not used for anything other than display.
-        TYPE_CONSTRUCTOR("Rational", "{{[0]..[1]}}", "dc2b335e-9336-471e-bc71-466bb65229d2", 1);
+        TYPE_CONSTRUCTOR("Rational", "Rational{{[0]..[1]}}", "dc2b335e-9336-471e-bc71-466bb65229d2", 1);
 
         std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;

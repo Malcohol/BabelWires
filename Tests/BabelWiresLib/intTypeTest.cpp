@@ -50,7 +50,7 @@ TEST(IntTypeTest, defaultIntTypeIsValidValue) {
 TEST(IntTypeTest, defaultIntTypeGetKind) {
     babelwires::DefaultIntType intType;
 
-    EXPECT_FALSE(intType.getKind().empty());
+    EXPECT_FALSE(intType.getFlavour().empty());
 }
 
 TEST(IntTypeTest, defaultIntTypeIsRegistered) {
@@ -143,7 +143,7 @@ TEST(IntTypeTest, sameKind) {
 
     babelwires::DefaultIntType defaultIntType;
 
-    EXPECT_EQ(defaultIntType.getKind(), type->getKind());
+    EXPECT_EQ(defaultIntType.getFlavour(), type->getFlavour());
 }
 
 TEST(IntTypeTest, typeName) {
@@ -152,5 +152,5 @@ TEST(IntTypeTest, typeName) {
     babelwires::TypeRef intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
-    EXPECT_EQ(intTypeRef.toString(), "{-12..14}");
+    EXPECT_EQ(intTypeRef.toString(), "Integer{-12..14}");
 }

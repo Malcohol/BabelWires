@@ -43,7 +43,7 @@ babelwires::RecordWithVariantsType::RecordWithVariantsType(Tags tags, std::vecto
     }
 }
 
-std::string babelwires::RecordWithVariantsType::getKind() const {
+std::string babelwires::RecordWithVariantsType::getFlavour() const {
     return "variant";
 }
 

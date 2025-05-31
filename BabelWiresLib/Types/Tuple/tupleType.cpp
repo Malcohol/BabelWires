@@ -42,7 +42,7 @@ bool babelwires::TupleType::isValidValue(const TypeSystem& typeSystem, const Val
     return true;
 };
 
-std::string babelwires::TupleType::getKind() const {
+std::string babelwires::TupleType::getFlavour() const {
     return "tuple";
 }
 

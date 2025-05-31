@@ -25,7 +25,7 @@ namespace babelwires {
 
         const TypeRef& getEntryType() const;
 
-        std::string getKind() const override;
+        std::string getFlavour() const override;
 
         void setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
         void insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement, unsigned int numEntriesToAdd) const;
