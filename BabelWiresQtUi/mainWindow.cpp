@@ -32,6 +32,7 @@
 #include <Common/exceptions.hpp>
 
 #include <QtNodes/GraphicsView>
+#include <QtNodes/ConnectionStyle>
 
 #include <QApplication>
 #include <QClipboard>
@@ -52,7 +53,7 @@ namespace {
 babelwires::MainWindow::MainWindow(ProjectGraphModel& projectGraphModel, UnifiedLog& log)
     : m_projectGraphModel(projectGraphModel)
     , m_userLogger(log) {
-
+    QtNodes::ConnectionStyle::setConnectionStyle(R"({ "ConnectionStyle" : { "UseDataDefinedColors" : true } })");
     m_graphicsScene = new ProjectGraphicsScene(projectGraphModel);
     // Don't call the constructor that takes a scene, since it calls setScene.
     auto view = new QtNodes::GraphicsView();
