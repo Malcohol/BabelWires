@@ -32,7 +32,7 @@ bool babelwires::SumType::isValidValue(const TypeSystem& typeSystem, const Value
 };
 
 std::string babelwires::SumType::getKind() const {
-    // Would be better if this was somehow the union of the kinds of the summands.
+    //TODO Maybe better to concatenate the summand kinds?
     return "sum";
 }
 
