@@ -294,35 +294,34 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
             ++thisIt;
             ++otherIt;
         } else if (thisIt->m_identifier < otherIt->m_identifier) {
+            containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSubtype);
             if (thisIt->m_optionality == Optionality::alwaysActive) {
-                containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSubtype);
                 fixedSuperTest = SubtypeOrder::IsDisjoint;
             }
             ++thisIt;
         } else { // if (otherIt->m_identifier < thisIt->m_identifier) {
+            containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSupertype);
             if (otherIt->m_optionality == Optionality::alwaysActive) {
-                containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSupertype);
                 fixedSubTest = SubtypeOrder::IsDisjoint;
             }
             ++otherIt;
         }
     }
     while (thisIt != thisFields.end()) {
+        containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSubtype);
         if (thisIt->m_optionality == Optionality::alwaysActive) {
-            containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSubtype);
             fixedSuperTest = SubtypeOrder::IsDisjoint;
         }
         ++thisIt;
     }
     while (otherIt != otherFields.end()) {
+        containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSupertype);
         if (otherIt->m_optionality == Optionality::alwaysActive) {
-            containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSupertype);
             fixedSubTest = SubtypeOrder::IsDisjoint;
         }
         ++otherIt;
     }
-    
-    if ((containmentTest != SubtypeOrder::IsIntersecting) && (containmentTest != SubtypeOrder::IsDisjoint)) {
+    if (containmentTest != SubtypeOrder::IsDisjoint) {
         return containmentTest;
     }
     if ((fixedSubTest && (fixedSubTest != SubtypeOrder::IsDisjoint)) || (fixedSuperTest && (fixedSuperTest != SubtypeOrder::IsDisjoint))) {
