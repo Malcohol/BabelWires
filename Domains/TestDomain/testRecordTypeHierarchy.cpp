@@ -1,5 +1,9 @@
 #include <Domains/TestDomain/testRecordTypeHierarchy.hpp>
 
+#include <BabelWiresLib/Types/String/stringType.hpp>
+
+#include <Domains/TestDomain/testEnum.hpp>
+
 namespace {
     babelwires::ShortId getIdForA() {
         return BW_SHORT_ID("A", "A", "31b7733a-555c-4970-9ebf-5b863272a86d");
@@ -22,39 +26,53 @@ testDomain::RecordWithNoFields::RecordWithNoFields()
     : RecordType({}) {}
 
 testDomain::RecordA0::RecordA0()
-    : RecordType({{getIdForA(), babelwires::DefaultIntType::getThisType()}}) {}
+    : RecordType({{getIdForA(), TestSubEnum::getThisType()}}) {}
 
 testDomain::RecordA1::RecordA1()
-    : RecordType({{getIdForA(), babelwires::DefaultIntType::getThisType()}}) {}
+    : RecordType({{getIdForA(), TestSubEnum::getThisType()}}) {}
 
 testDomain::RecordB::RecordB()
-    : RecordType({{getIdForB(), babelwires::DefaultIntType::getThisType()}}) {}
+    : RecordType({{getIdForB(), TestSubEnum::getThisType()}}) {}
 
 testDomain::RecordAB::RecordAB()
-    : RecordType({{getIdForA(), babelwires::DefaultIntType::getThisType()},
-                  {getIdForB(), babelwires::DefaultIntType::getThisType()}}) {}
+    : RecordType({{getIdForA(), TestSubEnum::getThisType()}, {getIdForB(), TestSubEnum::getThisType()}}) {}
 
 testDomain::RecordAS::RecordAS()
     : RecordType({{getIdForA(), babelwires::StringType::getThisType()}}) {}
 
 testDomain::RecordAOpt::RecordAOpt()
-    : RecordType({{getIdForA(), babelwires::DefaultIntType::getThisType()},
-                  {getIdForOpt(), babelwires::DefaultIntType::getThisType(),
-                   babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
+    : RecordType(
+          {{getIdForA(), TestSubEnum::getThisType()},
+           {getIdForOpt(), TestSubEnum::getThisType(), babelwires::RecordType::Optionality::optionalDefaultInactive}}) {
+}
+
+testDomain::RecordAOptFixed::RecordAOptFixed()
+    : RecordType(
+          {{getIdForA(), TestSubEnum::getThisType()},
+           {getIdForOpt(), TestSubEnum::getThisType()}}) {
+}
 
 testDomain::RecordABOpt::RecordABOpt()
-    : RecordType({{getIdForA(), babelwires::DefaultIntType::getThisType()},
-                  {getIdForB(), babelwires::DefaultIntType::getThisType()},
-                  {getIdForOpt(), babelwires::DefaultIntType::getThisType(),
-                   babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
+    : RecordType(
+          {{getIdForA(), TestSubEnum::getThisType()},
+           {getIdForB(), TestSubEnum::getThisType()},
+           {getIdForOpt(), TestSubEnum::getThisType(), babelwires::RecordType::Optionality::optionalDefaultInactive}}) {
+}
 
 testDomain::RecordAOptS::RecordAOptS()
-    : RecordType({{getIdForA(), babelwires::DefaultIntType::getThisType()},
+    : RecordType({{getIdForA(), TestSubEnum::getThisType()},
                   {getIdForOpt(), babelwires::StringType::getThisType(),
                    babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
 
 testDomain::RecordABOptChild::RecordABOptChild(const babelwires::TypeSystem& typeSystem)
     : RecordType(RecordABOpt::getThisType().resolve(typeSystem).is<babelwires::RecordType>(),
-                 {{getIdForC(), babelwires::DefaultIntType::getThisType()},
-                  {getIdForOpt2(), babelwires::DefaultIntType::getThisType(),
+                 {{getIdForC(), TestSubEnum::getThisType()},
+                  {getIdForOpt2(), TestSubEnum::getThisType(),
                    babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
+
+testDomain::RecordAsub0::RecordAsub0()
+    : RecordType({{getIdForA(), TestSubSubEnum1::getThisType()}}) {}
+
+testDomain::RecordAsubBsup::RecordAsubBsup()
+    : RecordType({{getIdForA(), TestSubSubEnum1::getThisType()}, {getIdForB(), TestEnum::getThisType()}}) {}
+
