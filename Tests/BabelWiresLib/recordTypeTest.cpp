@@ -329,8 +329,8 @@ TEST(RecordTypeTest, subtype) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordB::getThisType(),
                                                           testDomain::RecordAB::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
-    
-    // { A = TestSubEnum::erm, B = TestSubEnum::erm } belongs to both A0 and B.
+
+    // { A = TestSubEnum::erm, B = TestSubEnum::erm } is a member of both A0 and B.
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
                                                           testDomain::RecordB::getThisType()),
               babelwires::SubtypeOrder::IsIntersecting);
@@ -350,14 +350,14 @@ TEST(RecordTypeTest, subtype) {
               babelwires::SubtypeOrder::IsDisjoint);
 
     // With optionals.
-    // { A = TestSubEnum::erm, Opt = 100 } belongs to A0 but not to AOpt, where Opt is expected to be a TestSubEnum.
+    // { A = TestSubEnum::erm, Opt = 100 } is a member of A0 but not of AOpt, where Opt is expected to be a TestSubEnum.
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
                                                           testDomain::RecordAOpt::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(),
                                                           testDomain::RecordA0::getThisType()),
               babelwires::SubtypeOrder::IsSubtype);
-              
+
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
                                                           testDomain::RecordABOpt::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
@@ -371,8 +371,16 @@ TEST(RecordTypeTest, subtype) {
                                                           testDomain::RecordAOpt::getThisType()),
               babelwires::SubtypeOrder::IsSubtype);
 
+    // { a : TestSubEnum::erm, b : TestSubEnum::erm } is a member of both.
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOptS::getThisType(),
+                                                          testDomain::RecordABOpt::getThisType()),
+              babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordABOpt::getThisType(),
+                                                          testDomain::RecordAOptS::getThisType()),
+              babelwires::SubtypeOrder::IsIntersecting);
+
     // Intersecting with optionals
-    // { A = TestSubEnum::erm } belongs to both.
+    // { A = TestSubEnum::erm } is a member of both.
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(),
                                                           testDomain::RecordAOptS::getThisType()),
               babelwires::SubtypeOrder::IsIntersecting);

@@ -269,7 +269,11 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
     std::sort(thisFields.begin(), thisFields.end(), fieldLess);
     std::sort(otherFields.begin(), otherFields.end(), fieldLess);
 
-    SubtypeOrder containmentTest = SubtypeOrder::IsEquivalent;
+    // This is suitable for testing containment, but is too strict to distinguish IsIntersecting from IsDisjoint.
+    // For example, two records with incompatible optionals may still intersect.
+    SubtypeOrder allFieldTest = SubtypeOrder::IsEquivalent;
+    // These two orders are obtained solely from fixed fields and are intended to distinguish IsIntersecting from
+    // IsDisjoint.
     std::optional<SubtypeOrder> fixedSubTest;
     std::optional<SubtypeOrder> fixedSuperTest;
 
@@ -278,29 +282,29 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
     while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
         if (thisIt->m_identifier == otherIt->m_identifier) {
             const SubtypeOrder fieldComparison = typeSystem.compareSubtype(thisIt->m_type, otherIt->m_type);
-            containmentTest = subtypeProduct(containmentTest, fieldComparison);
+            allFieldTest = subtypeProduct(allFieldTest, fieldComparison);
             if (thisIt->m_optionality == Optionality::alwaysActive) {
                 if (otherIt->m_optionality != Optionality::alwaysActive) {
-                    containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSubtype);
+                    allFieldTest = subtypeProduct(allFieldTest, SubtypeOrder::IsSubtype);
                 }
                 fixedSubTest = fixedSubTest ? subtypeProduct(*fixedSubTest, fieldComparison) : fieldComparison;
             }
             if (otherIt->m_optionality == Optionality::alwaysActive) {
                 if (thisIt->m_optionality != Optionality::alwaysActive) {
-                    containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSupertype);
+                    allFieldTest = subtypeProduct(allFieldTest, SubtypeOrder::IsSupertype);
                 }
                 fixedSuperTest = fixedSuperTest ? subtypeProduct(*fixedSuperTest, fieldComparison) : fieldComparison;
             }
             ++thisIt;
             ++otherIt;
         } else if (thisIt->m_identifier < otherIt->m_identifier) {
-            containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSubtype);
+            allFieldTest = subtypeProduct(allFieldTest, SubtypeOrder::IsSubtype);
             if (thisIt->m_optionality == Optionality::alwaysActive) {
                 fixedSuperTest = SubtypeOrder::IsDisjoint;
             }
             ++thisIt;
         } else { // if (otherIt->m_identifier < thisIt->m_identifier) {
-            containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSupertype);
+            allFieldTest = subtypeProduct(allFieldTest, SubtypeOrder::IsSupertype);
             if (otherIt->m_optionality == Optionality::alwaysActive) {
                 fixedSubTest = SubtypeOrder::IsDisjoint;
             }
@@ -308,21 +312,21 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
         }
     }
     while (thisIt != thisFields.end()) {
-        containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSubtype);
+        allFieldTest = subtypeProduct(allFieldTest, SubtypeOrder::IsSubtype);
         if (thisIt->m_optionality == Optionality::alwaysActive) {
             fixedSuperTest = SubtypeOrder::IsDisjoint;
         }
         ++thisIt;
     }
     while (otherIt != otherFields.end()) {
-        containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSupertype);
+        allFieldTest = subtypeProduct(allFieldTest, SubtypeOrder::IsSupertype);
         if (otherIt->m_optionality == Optionality::alwaysActive) {
             fixedSubTest = SubtypeOrder::IsDisjoint;
         }
         ++otherIt;
     }
-    if (containmentTest != SubtypeOrder::IsDisjoint) {
-        return containmentTest;
+    if (allFieldTest != SubtypeOrder::IsDisjoint) {
+        return allFieldTest;
     }
     if ((fixedSubTest && (fixedSubTest != SubtypeOrder::IsDisjoint)) || (fixedSuperTest && (fixedSuperTest != SubtypeOrder::IsDisjoint))) {
         return SubtypeOrder::IsIntersecting;
