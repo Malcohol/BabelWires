@@ -344,8 +344,7 @@ TEST(RecordTypeTest, subtype) {
                                                           testDomain::RecordAB::getThisType()),
               babelwires::SubtypeOrder::IsDisjoint);
 
-    // With optionals: Optional fields do not impact subtyping since they are not part of the type's contract,
-    // unless the types are incompatible (see next sequence of tests, below).
+    // With optionals.
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
                                                           testDomain::RecordAOpt::getThisType()),
               babelwires::SubtypeOrder::IsEquivalent);
@@ -358,13 +357,33 @@ TEST(RecordTypeTest, subtype) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordABOpt::getThisType(),
                                                           testDomain::RecordA0::getThisType()),
               babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(),
+                                                          testDomain::RecordAOptFixed::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOptFixed::getThisType(),
+                                                          testDomain::RecordAOpt::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
 
-    // Incompatible and optional
+    // Intersecting with optionals
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(),
                                                           testDomain::RecordAOptS::getThisType()),
               babelwires::SubtypeOrder::IsIntersecting);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOptS::getThisType(),
                                                           testDomain::RecordAOpt::getThisType()),
+              babelwires::SubtypeOrder::IsIntersecting);
+
+    // With field subtypes
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAsub0::getThisType(),
+                                                          testDomain::RecordA0::getThisType()),
+              babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
+                                                          testDomain::RecordAsub0::getThisType()),
+              babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAB::getThisType(),
+                                                          testDomain::RecordAsubBsup::getThisType()),
+              babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAsubBsup::getThisType(),
+                                                          testDomain::RecordAB::getThisType()),
               babelwires::SubtypeOrder::IsIntersecting);
 }
 

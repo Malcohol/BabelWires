@@ -44,9 +44,12 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::RecordB>();
     context.m_typeSystem.addEntry<testDomain::RecordAB>();
     context.m_typeSystem.addEntry<testDomain::RecordAOpt>();
+    context.m_typeSystem.addEntry<testDomain::RecordAOptFixed>();
     context.m_typeSystem.addEntry<testDomain::RecordABOpt>();
     context.m_typeSystem.addEntry<testDomain::RecordAOptS>();
     context.m_typeSystem.addEntry<testDomain::RecordABOptChild>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordAsub0>();
+    context.m_typeSystem.addEntry<testDomain::RecordAsubBsup>();
 
     context.m_typeSystem.addEntry<testDomain::RecordVWithNoFields>();
     context.m_typeSystem.addEntry<testDomain::RecordVA0>();

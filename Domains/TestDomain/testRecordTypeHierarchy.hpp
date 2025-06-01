@@ -38,6 +38,11 @@ namespace testDomain {
         RecordAOpt();
     };
 
+    struct RecordAOptFixed : babelwires::RecordType {
+        PRIMITIVE_TYPE("RecordAOpt", "Record with int fields A and Opt, where in this case, Opt is a fixed field", "a3665c18-e5f2-41b7-8cf0-bf3a1396e029", 1);
+        RecordAOptFixed();
+    };
+
     struct RecordABOpt : babelwires::RecordType {
         PRIMITIVE_TYPE("RecordABOpt", "Record with int fields A, B and Opt", "5a21780a-0a56-481a-a850-4afb18b3bc2d", 1);
         RecordABOpt();
@@ -52,5 +57,16 @@ namespace testDomain {
         RecordABOptChild(const babelwires::TypeSystem& typeSystem);
         PRIMITIVE_TYPE("RecordChild", "Child of RecordABOpt", "0cc46b96-9ce0-4722-aba9-9009d12f1bcc", 1);
     };
+
+    struct RecordAsub0 : babelwires::RecordType {
+        PRIMITIVE_TYPE("RecordAsub0", "Record with field A which is a subtype of the original A", "a2a71062-213e-456e-91dd-0df1ca1a1dae", 1);
+        RecordAsub0();
+    };
+
+    struct RecordAsubBsup : babelwires::RecordType {
+        PRIMITIVE_TYPE("RecordAsubBsup", "Record with field A and B, which is a supertype of the original B", "21418e19-f5d6-4f26-9948-e9497595c11d", 1);
+        RecordAsubBsup();
+    };
+    
 
 } // namespace testDomain

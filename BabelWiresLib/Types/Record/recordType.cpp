@@ -262,6 +262,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
 
     // Field order is not important for subtyping.
     // We use sorted sets of fields to allow mutual traversal by identifier.
+    // MAYBEDO: Consider storing sorted fields in the record at construction.
     std::vector<Field> thisFields = m_fields;
     std::vector<Field> otherFields = otherRecord->m_fields;
     auto fieldLess = [](const Field& a, const Field& b) { return a.m_identifier < b.m_identifier; };
@@ -279,9 +280,15 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
             const SubtypeOrder fieldComparison = typeSystem.compareSubtype(thisIt->m_type, otherIt->m_type);
             containmentTest = subtypeProduct(containmentTest, fieldComparison);
             if (thisIt->m_optionality == Optionality::alwaysActive) {
+                if (otherIt->m_optionality != Optionality::alwaysActive) {
+                    containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSubtype);
+                }
                 fixedSubTest = fixedSubTest ? subtypeProduct(*fixedSubTest, fieldComparison) : fieldComparison;
             }
             if (otherIt->m_optionality == Optionality::alwaysActive) {
+                if (thisIt->m_optionality != Optionality::alwaysActive) {
+                    containmentTest = subtypeProduct(containmentTest, SubtypeOrder::IsSupertype);
+                }
                 fixedSuperTest = fixedSuperTest ? subtypeProduct(*fixedSuperTest, fieldComparison) : fieldComparison;
             }
             ++thisIt;
