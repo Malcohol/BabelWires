@@ -339,11 +339,13 @@ TEST(RecordWithVariantsTypeTest, subtype) {
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVB::getThisType(),
                                                           testDomain::RecordVAB::getThisType()),
               babelwires::SubtypeOrder::IsSupertype);
-
-    // Incompatible types
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
                                                           testDomain::RecordVB::getThisType()),
-              babelwires::SubtypeOrder::IsDisjoint);
+              babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVB::getThisType(),
+                                                          testDomain::RecordVA0::getThisType()),
+              babelwires::SubtypeOrder::IsIntersecting);
+    // Incompatible types
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAS::getThisType(),
                                                           testDomain::RecordVA0::getThisType()),
               babelwires::SubtypeOrder::IsDisjoint);
