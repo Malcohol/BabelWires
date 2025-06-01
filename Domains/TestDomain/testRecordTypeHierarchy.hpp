@@ -1,7 +1,5 @@
 #include <BabelWiresLib/TypeSystem/primitiveType.hpp>
-#include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
 
 namespace testDomain {
 

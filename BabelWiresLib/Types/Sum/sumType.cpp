@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 babelwires::SumType::SumType(Summands summands, unsigned int indexOfDefaultSummand)
     : m_summands(std::move(summands))
@@ -32,7 +32,7 @@ bool babelwires::SumType::isValidValue(const TypeSystem& typeSystem, const Value
 };
 
 std::string babelwires::SumType::getFlavour() const {
-    //TODO Maybe better to concatenate the summand kinds?
+    // TODO Maybe better to concatenate the summand kinds?
     return "sum";
 }
 
@@ -46,29 +46,37 @@ unsigned int babelwires::SumType::getIndexOfDefaultSummand() const {
 
 babelwires::SubtypeOrder babelwires::SumType::opUnionRight(SubtypeOrder subTest, SubtypeOrder superTest) {
     static constexpr SubtypeOrder combineTable[5][5] = {
-        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype },
-        { SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype },
-        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting },
-        { SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting },
-        { SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting, SubtypeOrder::IsDisjoint }
-    };
+        {SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype,
+         SubtypeOrder::IsSubtype},
+        {SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype,
+         SubtypeOrder::IsSubtype},
+        {SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting,
+         SubtypeOrder::IsIntersecting},
+        {SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting,
+         SubtypeOrder::IsIntersecting},
+        {SubtypeOrder::IsSubtype, SubtypeOrder::IsSubtype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsIntersecting,
+         SubtypeOrder::IsDisjoint}};
     return combineTable[static_cast<unsigned int>(subTest)][static_cast<unsigned int>(superTest)];
 }
 
 babelwires::SubtypeOrder babelwires::SumType::opUnionLeft(SubtypeOrder a, SubtypeOrder b) {
-    return reverseSubtypeOrder(
-        opUnionRight(reverseSubtypeOrder(a), reverseSubtypeOrder(b)));
+    return reverseSubtypeOrder(opUnionRight(reverseSubtypeOrder(a), reverseSubtypeOrder(b)));
 }
 
 babelwires::SubtypeOrder babelwires::SumType::opCombine(SubtypeOrder subTest, SubtypeOrder superTest) {
     static constexpr SubtypeOrder error = static_cast<SubtypeOrder>(255);
+    // The asymmetry arises because the function arguments have an asymmetric semantics: The subtest carrying
+    // an IsSupertype value is a weaker input than the subtest carrying an IsSubtype value.
     static constexpr SubtypeOrder combineTable[5][5] = {
-        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, error },
-        { SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, error },
-        { SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, error },
-        { SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, error },
-        { error, error, error, error, SubtypeOrder::IsDisjoint }
-    };
+        {SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype,
+         error},
+        {SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype, SubtypeOrder::IsEquivalent, SubtypeOrder::IsSubtype,
+         error},
+        {SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype,
+         SubtypeOrder::IsIntersecting, error},
+        {SubtypeOrder::IsSupertype, SubtypeOrder::IsIntersecting, SubtypeOrder::IsSupertype,
+         SubtypeOrder::IsIntersecting, error},
+        {error, error, error, error, SubtypeOrder::IsDisjoint}};
     const auto result = combineTable[static_cast<unsigned int>(subTest)][static_cast<unsigned int>(superTest)];
     assert((result != error) && "Inconsistent result");
     return result;
@@ -76,7 +84,7 @@ babelwires::SubtypeOrder babelwires::SumType::opCombine(SubtypeOrder subTest, Su
 
 namespace {
     /// Flatten any upper structure of sumtypes into the summand vector
-    /// Return false if a subtype did not resolve 
+    /// Return false if a subtype did not resolve
     bool flattenSubSumtypes(const babelwires::TypeSystem& typeSystem, std::vector<babelwires::TypeRef>& summands) {
         unsigned int i = 0;
         while (i < summands.size()) {
@@ -88,7 +96,7 @@ namespace {
                     summands.insert(summands.end(), subSummands.begin() + 1, subSummands.end());
                 } else {
                     ++i;
-                }    
+                }
             } else {
                 // Unresolved subtype
                 return false;
@@ -96,14 +104,14 @@ namespace {
         }
         return true;
     }
-}
+} // namespace
 
 std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                                   const Type& other) const {
     std::vector<TypeRef> summandsA = getSummands();
     std::vector<TypeRef> summandsB;
     summandsB.emplace_back(other.getTypeRef());
-    // Flatten sumtypes into the vector to ensure sumtypes are associative. 
+    // Flatten sumtypes into the vector to ensure sumtypes are associative.
     if (!flattenSubSumtypes(typeSystem, summandsA) || !flattenSubSumtypes(typeSystem, summandsB)) {
         // Unresolved subtype
         return SubtypeOrder::IsDisjoint;

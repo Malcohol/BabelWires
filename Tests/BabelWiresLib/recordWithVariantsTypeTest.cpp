@@ -341,6 +341,9 @@ TEST(RecordWithVariantsTypeTest, subtype) {
               babelwires::SubtypeOrder::IsSupertype);
 
     // Incompatible types
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVA0::getThisType(),
+                                                          testDomain::RecordVB::getThisType()),
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordVAS::getThisType(),
                                                           testDomain::RecordVA0::getThisType()),
               babelwires::SubtypeOrder::IsDisjoint);

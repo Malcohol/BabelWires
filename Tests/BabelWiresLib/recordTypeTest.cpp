@@ -331,6 +331,9 @@ TEST(RecordTypeTest, subtype) {
               babelwires::SubtypeOrder::IsSupertype);
 
     // Incompatible types
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
+                                                          testDomain::RecordB::getThisType()),
+              babelwires::SubtypeOrder::IsDisjoint);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAS::getThisType(),
                                                           testDomain::RecordA0::getThisType()),
               babelwires::SubtypeOrder::IsDisjoint);
@@ -359,10 +362,10 @@ TEST(RecordTypeTest, subtype) {
     // Incompatible and optional
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(),
                                                           testDomain::RecordAOptS::getThisType()),
-              babelwires::SubtypeOrder::IsDisjoint);
+              babelwires::SubtypeOrder::IsIntersecting);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOptS::getThisType(),
                                                           testDomain::RecordAOpt::getThisType()),
-              babelwires::SubtypeOrder::IsDisjoint);
+              babelwires::SubtypeOrder::IsIntersecting);
 }
 
 // Test the use of the constructor which takes a parent type.

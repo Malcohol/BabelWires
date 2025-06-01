@@ -1,5 +1,8 @@
 #include <Domains/TestDomain/testRecordTypeHierarchy.hpp>
 
+#include <BabelWiresLib/Types/Int/intType.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
+
 namespace {
     babelwires::ShortId getIdForA() {
         return BW_SHORT_ID("A", "A", "31b7733a-555c-4970-9ebf-5b863272a86d");
