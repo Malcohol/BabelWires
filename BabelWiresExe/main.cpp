@@ -33,8 +33,8 @@
 
 // "plugins"
 #include <Domains/Music/Plugins/Smf/Plugin/libRegistration.hpp>
-#include <Domains/Music/SeqWiresLib/libRegistration.hpp>
-#include <Domains/Music/SeqWiresLibUi/libRegistration.hpp>
+#include <Domains/Music/MusicLib/libRegistration.hpp>
+#include <Domains/Music/MusicLibUi/libRegistration.hpp>
 #include <Domains/TestDomain/libRegistration.hpp>
 
 #include <cassert>
