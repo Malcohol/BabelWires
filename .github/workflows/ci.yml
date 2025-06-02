@@ -80,7 +80,7 @@ jobs:
     - name: MusicLibTests
       working-directory: build
       shell: bash
-      run: Domains/Music/Tests/MusicLib/${{ matrix.config.targetFolder }}MusicLibTests${{ matrix.config.exeExtension }}
+      run: Domains/Music/Tests/MusicLib/${{ matrix.config.targetFolder }}musicLibTests${{ matrix.config.exeExtension }}
 
     - name: Seq2tapeLibTests
       working-directory: build
