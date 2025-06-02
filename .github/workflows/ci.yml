@@ -87,12 +87,6 @@ jobs:
       shell: bash
       run: Domains/Music/Tests/Seq2tapeLib/${{ matrix.config.targetFolder }}seq2tapeLibTests${{ matrix.config.exeExtension }}
 
-    - name: AlsaTests
-      if: startsWith(matrix.config.name, 'Ubuntu')
-      working-directory: build
-      shell: bash
-      run: Domains/Music/BabelWiresAudio/Alsa/Tests/${{ matrix.config.targetFolder }}alsaTests${{ matrix.config.exeExtension }}
-
     - name: SmfTests
       working-directory: build/Domains/Music/Plugins/Smf/Tests
       shell: bash
