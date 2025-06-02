@@ -9,6 +9,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <ostream>
 
 struct ProgramOptions {
     ProgramOptions(int argc, char* argv[]);

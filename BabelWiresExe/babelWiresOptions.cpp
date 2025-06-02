@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresExe/babelWiresOptions.hpp>
 
-#include <Common/Audio/fileAudioDest.hpp>
+#include <Common/exceptions.hpp>
 
 namespace {
     const char s_helpString[] = "help";
