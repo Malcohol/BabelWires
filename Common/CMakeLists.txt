@@ -1,9 +1,4 @@
 SET( COMMON_SRCS
-	Audio/audioDest.cpp
-	Audio/audioSource.cpp
-	Audio/audioInterface.cpp
-	Audio/fileAudioDest.cpp
-	Audio/fileAudioSource.cpp
 	DataContext/filePath.cpp
 	exceptions.cpp
 	Identifiers/identifierRegistry.cpp
@@ -34,4 +29,4 @@ SET( COMMON_SRCS
 
 ADD_LIBRARY( Common ${COMMON_SRCS} )
 TARGET_INCLUDE_DIRECTORIES( Common PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/.. )
-TARGET_LINK_LIBRARIES(Common PUBLIC tinyxml2 sndfile)
+TARGET_LINK_LIBRARIES(Common PUBLIC tinyxml2)

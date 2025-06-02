@@ -23,8 +23,6 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/libRegistration.hpp>
 
-#include <Common/Audio/fileAudioDest.hpp>
-#include <Common/Audio/fileAudioSource.hpp>
 #include <Common/IO/fileDataSource.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Log/ostreamLogListener.hpp>

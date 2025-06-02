@@ -1,7 +1,3 @@
-Structured Data Flow:
-1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
-1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
-
 Bugs:
 * Moving compound connections targets between nodes does not work properly.
   e.g. Three test record values. 
@@ -28,6 +24,10 @@ Things to check:
   - The types and function are doing work I thought the framework would do.
   - Review the map system: Perhaps I should just simplify it.
 
+Structured Data Flow:
+1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
+1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
+
 New features:
 * Make undo move the view to the XY and scale position of the undone command.
 * New "Error Map Fallback" - fails a processor if the fallback is ever used.
@@ -44,8 +44,9 @@ Model
 * RationalType granularity
 * StringType length
 
-Processors:
-* A domain of standard operations (e.g. arithmetic and string manipulation)
+Domains:
+* standard numeric library
+* standard string library
 
 Refactor:
 * Abandon EditableValue and EditableValueHolder (and ValueHolder template).
@@ -79,6 +80,9 @@ UI:
   - Try to define a general pattern for populating context menus.
 * Whenever a context menu item can appear, it should appear, but greyed out.
   - Consider a tooltip which explains why.
+* Provide a way so user can see input AND output values when they differ.
+  - The obvious approach is to give Processors could have three columns, but that would use a lot of horizontal space.
+  - Could make the columns selectable on a node-by-node basis.
 
 Parallel project processing:
 * Not implemented, but code written with this in mind.

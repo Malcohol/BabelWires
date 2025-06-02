@@ -1,5 +1,4 @@
 SET( COMMON_TESTS_SRCS
-   audioInterfaceRegistryTest.cpp
    blockStreamTest.cpp
    cloneTest.cpp
    commonTests.cpp
