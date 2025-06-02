@@ -77,10 +77,10 @@ jobs:
       shell: bash
       run: ./${{ matrix.config.targetFolder }}babelWiresTests${{ matrix.config.exeExtension }}
 
-    - name: SeqWiresLibTests
+    - name: MusicLibTests
       working-directory: build
       shell: bash
-      run: Domains/Music/Tests/SeqWiresLib/${{ matrix.config.targetFolder }}seqWiresLibTests${{ matrix.config.exeExtension }}
+      run: Domains/Music/Tests/MusicLib/${{ matrix.config.targetFolder }}musicLibTests${{ matrix.config.exeExtension }}
 
     - name: Seq2tapeLibTests
       working-directory: build

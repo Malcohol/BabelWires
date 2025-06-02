@@ -33,8 +33,8 @@
 
 // "plugins"
 #include <Domains/Music/Plugins/Smf/Plugin/libRegistration.hpp>
-#include <Domains/Music/SeqWiresLib/libRegistration.hpp>
-#include <Domains/Music/SeqWiresLibUi/libRegistration.hpp>
+#include <Domains/Music/MusicLib/libRegistration.hpp>
+#include <Domains/Music/MusicLibUi/libRegistration.hpp>
 #include <Domains/TestDomain/libRegistration.hpp>
 
 #include <cassert>
@@ -88,8 +88,8 @@ int main(int argc, char* argv[]) {
 
         // register factories, etc.
         babelwires::registerLib(context);
-        seqwires::registerLib(context);
-        seqwiresUi::registerLib(context);
+        bw_music::registerLib(context);
+        bw_musicUi::registerLib(context);
         smf::registerLib(context);
 
         // Comment / Uncomment to enable a domain of testing data.

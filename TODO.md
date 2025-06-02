@@ -24,7 +24,7 @@ Bugs:
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.
 * Do non-const Node::getInputFeature and getOutputFeature really need to be public?
-* The complex types used by the ChordMap function (in SeqWires) suggest that my attempt at flexible maps wasn't successful
+* The complex types used by the ChordMap function (in BabelWires-Music) suggest that my attempt at flexible maps wasn't successful
   - The types and function are doing work I thought the framework would do.
   - Review the map system: Perhaps I should just simplify it.
 

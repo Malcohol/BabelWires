@@ -1,5 +1,5 @@
 /**
- * Register factories etc. for SeqWires into BabelWires.
+ * Register factories etc. for the TestDomain into BabelWires.
  * 
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -14,4 +14,4 @@ namespace babelwires {
 namespace testDomain {
     /// This is not a true plugin model, because everything is statically linked.
     void registerLib(babelwires::ProjectContext& context);
-} // namespace seqwires
+} // namespace testDomain
