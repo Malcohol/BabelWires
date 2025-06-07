@@ -125,3 +125,20 @@ babelwires::BlockStream::const_iterator babelwires::BlockStream::end() const {
 babelwires::BlockStream::const_iterator babelwires::BlockStream::begin() const {
     return begin_impl<StreamEvent>();
 }
+
+
+std::reverse_iterator<babelwires::BlockStream::iterator> babelwires::BlockStream::rend() {
+    return std::make_reverse_iterator(begin());
+}
+
+std::reverse_iterator<babelwires::BlockStream::iterator> babelwires::BlockStream::rbegin() {
+    return std::make_reverse_iterator(end());
+}
+
+std::reverse_iterator<babelwires::BlockStream::const_iterator> babelwires::BlockStream::rend() const {
+    return std::make_reverse_iterator(begin());
+}
+
+std::reverse_iterator<babelwires::BlockStream::const_iterator> babelwires::BlockStream::rbegin() const {
+    return std::make_reverse_iterator(end());
+}
