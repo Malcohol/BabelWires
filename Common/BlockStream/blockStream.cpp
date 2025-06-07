@@ -75,8 +75,9 @@ void babelwires::BlockStream::fixBlockAfterEventAdded(DataBlock& block, StreamEv
     if (block.m_firstEvent == nullptr) {
         block.m_firstEvent = &newEvent;
     } else {
-        block.m_lastEvent->m_numBytesToNextEvent =
-            reinterpret_cast<babelwires::Byte*>(&newEvent) - reinterpret_cast<babelwires::Byte*>(block.m_lastEvent);
+        const std::uint16_t diff = reinterpret_cast<babelwires::Byte*>(&newEvent) - reinterpret_cast<babelwires::Byte*>(block.m_lastEvent);
+        block.m_lastEvent->m_numBytesToNextEvent = diff;
+        newEvent.m_numBytesFromPreviousEvent = diff;
     }
     block.m_lastEvent = &newEvent;
     ++m_numEvents;

@@ -2,7 +2,7 @@
  * A container which can carry a sequence of hetrogeneous events.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 template <typename BLOCKSTREAM, typename EVENT> struct babelwires::BlockStream::Iterator {
@@ -21,7 +21,11 @@ template <typename BLOCKSTREAM, typename EVENT> struct babelwires::BlockStream::
     EVENT* operator->() const { return m_current; }
 
     Iterator& operator++() {
-        if (m_current->m_numBytesToNextEvent > 0) {
+        if (!m_current) {
+            assert((m_blockIndex == -1) && "Operator++ called in unexpected state");
+            m_blockIndex = 0;
+            m_current = static_cast<EVENT*>(m_blockStream->m_blocks[0]->m_firstEvent);
+        } else if (m_current->m_numBytesToNextEvent > 0) {
             auto* nextEvent = m_current->getNextEventInBlock();
             assert((nextEvent->template as<EVENT>() != nullptr) && "The stream contained an event of unexpected type");
             m_current = static_cast<EVENT*>(nextEvent);
@@ -41,10 +45,36 @@ template <typename BLOCKSTREAM, typename EVENT> struct babelwires::BlockStream::
         return *this;
     }
 
+    Iterator& operator--() {
+        if (m_current == nullptr) {
+            assert((m_blockIndex == m_blockStream->m_blocks.size()) && "operator-- called in unexpected state");
+            --m_blockIndex;
+            m_current = static_cast<EVENT*>(m_blockStream->m_blocks[m_blockIndex]->m_lastEvent);
+        } else if (m_current->m_numBytesFromPreviousEvent > 0) {
+            auto* previousEvent = m_current->getPreviousEventInBlock();
+            assert((previousEvent->template as<EVENT>() != nullptr) &&
+                   "The stream contained an event of unexpected type");
+            m_current = static_cast<EVENT*>(previousEvent);
+        } else {
+            assert((m_current == m_blockStream->m_blocks[m_blockIndex]->m_firstEvent) &&
+                   "The event is not the first in its block");
+            --m_blockIndex;
+            if (m_blockIndex == -1) {
+                m_current = nullptr;
+            } else {
+                auto* previousEvent = m_blockStream->m_blocks[m_blockIndex]->m_lastEvent;
+                assert((previousEvent->template as<EVENT>() != nullptr) &&
+                       "The stream contained an event of unexpected type");
+                m_current = static_cast<EVENT*>(previousEvent);
+            }
+        }
+        return *this;
+    }
+
     BLOCKSTREAM* m_blockStream;
-    /// This will be m_blockStream->m_blocks.size() in the end iterator
-    std::size_t m_blockIndex = 0;
-    /// This will be nullptr in the end iterator
+    /// This will be m_blockStream->m_blocks.size() in the end iterator, and -1 in the rend iterator.
+    int m_blockIndex = 0;
+    /// This will be nullptr in the end and rend iterator
     EVENT* m_current = nullptr;
 };
 
@@ -70,11 +100,11 @@ babelwires::BlockStream::begin_impl() const {
 
 template <typename EVENT>
 babelwires::BlockStream::Iterator<babelwires::BlockStream, EVENT> babelwires::BlockStream::end_impl() {
-    return Iterator<BlockStream, EVENT>{this, m_blocks.size(), nullptr};
+    return Iterator<BlockStream, EVENT>{this, static_cast<typeof(babelwires::BlockStream::Iterator<babelwires::BlockStream, EVENT>::m_blockIndex)>(m_blocks.size()), nullptr};
 }
 
 template <typename EVENT>
 babelwires::BlockStream::Iterator<const babelwires::BlockStream, const EVENT>
 babelwires::BlockStream::end_impl() const {
-    return Iterator<const BlockStream, const EVENT>{this, m_blocks.size(), nullptr};
+    return Iterator<const BlockStream, const EVENT>{this, static_cast<typeof(babelwires::BlockStream::Iterator<babelwires::BlockStream, EVENT>::m_blockIndex)>(m_blocks.size()), nullptr};
 }
