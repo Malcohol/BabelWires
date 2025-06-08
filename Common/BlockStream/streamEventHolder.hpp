@@ -87,7 +87,11 @@ namespace babelwires {
         operator bool() const { return hasEvent(); }
 
         /// This just makes the carried event available for moving.
-        EVENT&& release() { return std::move(*m_event); }
+        EVENT&& release() { 
+            EVENT* event = m_event;
+            m_event = nullptr;
+            return std::move(*event);
+        }
 
         /// Destroy the contained event if there is one.
         void reset() {
