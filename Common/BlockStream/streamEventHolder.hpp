@@ -84,6 +84,8 @@ namespace babelwires {
 
         bool hasEvent() const { return m_event; }
 
+        operator bool() const { return hasEvent(); }
+
         /// This just makes the carried event available for moving.
         EVENT&& release() { return std::move(*m_event); }
 
