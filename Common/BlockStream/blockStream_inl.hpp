@@ -57,7 +57,7 @@ struct babelwires::BlockStream::Iterator : std::bidirectional_iterator_tag {
     }
 
     Iterator operator++(int) {
-        Iterator tmp;
+        Iterator tmp = *this;
         ++(*this);
         return tmp;
     }
@@ -86,7 +86,7 @@ struct babelwires::BlockStream::Iterator : std::bidirectional_iterator_tag {
     }
 
     Iterator operator--(int) {
-        Iterator tmp;
+        Iterator tmp = *this;
         --(*this);
         return tmp;
     }
