@@ -17,13 +17,13 @@ namespace babelwires {
         StreamEventHolder() = default;
 
         /// Construct a StreamEventHolder by copying or moving the given event into the buffer.
-        template <typename EVENT2, typename = std::enable_if_t<std::is_convertible_v<EVENT2, EVENT>>>
+        template <typename EVENT2, typename = std::enable_if_t<std::is_convertible_v<EVENT2, const EVENT&>>>
         StreamEventHolder(EVENT2&& srcEvent) {
             m_event = &std::forward<EVENT2>(srcEvent).cloneInto(m_buffer);
         };
 
         /// Replace the carried event by the given one, either copying or moving it.
-        template <typename EVENT2, typename = std::enable_if_t<std::is_convertible_v<EVENT2, EVENT>>>
+        template <typename EVENT2, typename = std::enable_if_t<std::is_convertible_v<EVENT2, const EVENT&>>>
         StreamEventHolder& operator=(EVENT2&& srcEvent) {
             reset();
             m_event = &std::forward<EVENT2>(srcEvent).cloneInto(m_buffer);
