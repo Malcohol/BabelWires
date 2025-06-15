@@ -63,6 +63,11 @@ namespace babelwires {
         template <typename EVENT> Iterator<BlockStream, EVENT> end_impl();
         template <typename EVENT> Iterator<const BlockStream, const EVENT> end_impl() const;
 
+        template <typename EVENT> std::reverse_iterator<Iterator<BlockStream, EVENT>> rbegin_impl();
+        template <typename EVENT> std::reverse_iterator<Iterator<const BlockStream, const EVENT>> rbegin_impl() const;
+        template <typename EVENT> std::reverse_iterator<Iterator<BlockStream, EVENT>> rend_impl();
+        template <typename EVENT> std::reverse_iterator<Iterator<const BlockStream, const EVENT>> rend_impl() const;
+
       public:
         // Public for testing.
 

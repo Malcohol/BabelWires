@@ -79,7 +79,7 @@ struct babelwires::BlockStream::Iterator : std::bidirectional_iterator_tag {
             --m_blockIndex;
             auto* previousEvent = m_blockStream->m_blocks[m_blockIndex]->m_lastEvent;
             assert((previousEvent->template as<EVENT>() != nullptr) &&
-                    "The stream contained an event of unexpected type");
+                   "The stream contained an event of unexpected type");
             m_current = static_cast<EVENT*>(previousEvent);
         }
         return *this;
@@ -118,4 +118,28 @@ template <typename EVENT>
 babelwires::BlockStream::Iterator<const babelwires::BlockStream, const EVENT>
 babelwires::BlockStream::end_impl() const {
     return Iterator<const BlockStream, const EVENT>(this, false);
+}
+
+template <typename EVENT>
+std::reverse_iterator<babelwires::BlockStream::Iterator<babelwires::BlockStream, EVENT>>
+babelwires::BlockStream::rbegin_impl() {
+    return std::make_reverse_iterator(begin_impl<EVENT>());
+}
+
+template <typename EVENT>
+std::reverse_iterator<babelwires::BlockStream::Iterator<const babelwires::BlockStream, const EVENT>>
+babelwires::BlockStream::rbegin_impl() const {
+    return std::make_reverse_iterator(begin_impl<EVENT>());
+}
+
+template <typename EVENT>
+std::reverse_iterator<babelwires::BlockStream::Iterator<babelwires::BlockStream, EVENT>>
+babelwires::BlockStream::rend_impl() {
+    return std::make_reverse_iterator(end_impl<EVENT>());
+}
+
+template <typename EVENT>
+std::reverse_iterator<babelwires::BlockStream::Iterator<const babelwires::BlockStream, const EVENT>>
+babelwires::BlockStream::rend_impl() const {
+    return std::make_reverse_iterator(end_impl<EVENT>());
 }
