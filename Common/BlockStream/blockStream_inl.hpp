@@ -123,23 +123,23 @@ babelwires::BlockStream::end_impl() const {
 template <typename EVENT>
 std::reverse_iterator<babelwires::BlockStream::Iterator<babelwires::BlockStream, EVENT>>
 babelwires::BlockStream::rbegin_impl() {
-    return std::make_reverse_iterator(begin_impl<EVENT>());
+    return std::make_reverse_iterator(end_impl<EVENT>());
 }
 
 template <typename EVENT>
 std::reverse_iterator<babelwires::BlockStream::Iterator<const babelwires::BlockStream, const EVENT>>
 babelwires::BlockStream::rbegin_impl() const {
-    return std::make_reverse_iterator(begin_impl<EVENT>());
+    return std::make_reverse_iterator(end_impl<EVENT>());
 }
 
 template <typename EVENT>
 std::reverse_iterator<babelwires::BlockStream::Iterator<babelwires::BlockStream, EVENT>>
 babelwires::BlockStream::rend_impl() {
-    return std::make_reverse_iterator(end_impl<EVENT>());
+    return std::make_reverse_iterator(begin_impl<EVENT>());
 }
 
 template <typename EVENT>
 std::reverse_iterator<babelwires::BlockStream::Iterator<const babelwires::BlockStream, const EVENT>>
 babelwires::BlockStream::rend_impl() const {
-    return std::make_reverse_iterator(end_impl<EVENT>());
+    return std::make_reverse_iterator(begin_impl<EVENT>());
 }
