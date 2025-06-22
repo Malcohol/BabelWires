@@ -11,6 +11,8 @@
 
 #include <QtWidgets/QFileDialog>
 
+#include <QStringBuilder>
+
 namespace {
     QString getFormatString(const babelwires::FileTypeEntry& format) {
         QString dialogFormats = QString(format.getName().c_str()) + " (";
@@ -19,7 +21,11 @@ namespace {
             if (i > 0) {
                 dialogFormats = dialogFormats + " ";
             }
-            dialogFormats = dialogFormats + "*." + extensions[i].c_str();
+            dialogFormats = dialogFormats + "*.";
+            // Force case-insensitivity using reg-ex
+            for (auto c : extensions[i]) {
+                dialogFormats = dialogFormats % QChar('[') % QChar(std::tolower(c)) % QChar(std::toupper(c)) % QChar(']');
+            }
         }
         dialogFormats = dialogFormats + ")";
         return dialogFormats;
