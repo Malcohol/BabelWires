@@ -75,8 +75,9 @@ void babelwires::BlockStream::fixBlockAfterEventAdded(DataBlock& block, StreamEv
     if (block.m_firstEvent == nullptr) {
         block.m_firstEvent = &newEvent;
     } else {
-        block.m_lastEvent->m_numBytesToNextEvent =
-            reinterpret_cast<babelwires::Byte*>(&newEvent) - reinterpret_cast<babelwires::Byte*>(block.m_lastEvent);
+        const std::uint16_t diff = reinterpret_cast<babelwires::Byte*>(&newEvent) - reinterpret_cast<babelwires::Byte*>(block.m_lastEvent);
+        block.m_lastEvent->m_numBytesToNextEvent = diff;
+        newEvent.m_numBytesFromPreviousEvent = diff;
     }
     block.m_lastEvent = &newEvent;
     ++m_numEvents;
@@ -123,4 +124,21 @@ babelwires::BlockStream::const_iterator babelwires::BlockStream::end() const {
 
 babelwires::BlockStream::const_iterator babelwires::BlockStream::begin() const {
     return begin_impl<StreamEvent>();
+}
+
+
+std::reverse_iterator<babelwires::BlockStream::iterator> babelwires::BlockStream::rend() {
+    return std::make_reverse_iterator(begin());
+}
+
+std::reverse_iterator<babelwires::BlockStream::iterator> babelwires::BlockStream::rbegin() {
+    return std::make_reverse_iterator(end());
+}
+
+std::reverse_iterator<babelwires::BlockStream::const_iterator> babelwires::BlockStream::rend() const {
+    return std::make_reverse_iterator(begin());
+}
+
+std::reverse_iterator<babelwires::BlockStream::const_iterator> babelwires::BlockStream::rbegin() const {
+    return std::make_reverse_iterator(end());
 }

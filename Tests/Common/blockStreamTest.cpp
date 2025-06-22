@@ -56,6 +56,13 @@ TEST(BlockStream, BlocksAndAlignment) {
         ++count;
     }
     EXPECT_EQ(count, loopCount * 2);
+
+    // Reverse iteration.
+    count = 0;
+    for (auto it = stream.rbegin(); it != stream.rend(); ++it ) {
+        ++count;
+    }
+    EXPECT_EQ(count, loopCount * 2);
 }
 
 namespace {

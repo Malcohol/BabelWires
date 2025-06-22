@@ -72,18 +72,32 @@ namespace babelwires {
         friend BlockStream;
 
         StreamEvent* getNextEventInBlock() {
-            assert(m_numBytesToNextEvent && "There is no next event");
+            assert(m_numBytesToNextEvent && "There is no next event in this block");
             return reinterpret_cast<StreamEvent*>(reinterpret_cast<babelwires::Byte*>(this) + m_numBytesToNextEvent);
         }
 
         const StreamEvent* getNextEventInBlock() const {
-            assert(m_numBytesToNextEvent && "There is no next event");
+            assert(m_numBytesToNextEvent && "There is no next event in this block");
             return reinterpret_cast<const StreamEvent*>(reinterpret_cast<const babelwires::Byte*>(this) +
                                                         m_numBytesToNextEvent);
+        }
+
+        StreamEvent* getPreviousEventInBlock() {
+            assert(m_numBytesFromPreviousEvent && "There is no previous event in this block");
+            return reinterpret_cast<StreamEvent*>(reinterpret_cast<babelwires::Byte*>(this) - m_numBytesFromPreviousEvent);
+        }
+
+        const StreamEvent* getPreviousEventInBlock() const {
+            assert(m_numBytesFromPreviousEvent && "There is no previous event in this block");
+            return reinterpret_cast<const StreamEvent*>(reinterpret_cast<const babelwires::Byte*>(this) -
+                                                        m_numBytesFromPreviousEvent);
         }
 
       private:
         /// The number of bytes from the address of this event to the address of the next event.
         std::uint16_t m_numBytesToNextEvent = 0;
+
+        /// The number of bytes from the address of the preview event to the address of this event.
+        std::uint16_t m_numBytesFromPreviousEvent = 0;
     };
 } // namespace babelwires
