@@ -69,6 +69,7 @@ SET( BABELWIRESLIB_SRCS
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
 	Processors/processorFactory.cpp
+	Utilities/applyToSubvalues.cpp
 	ValueTree/valueTreeChild.cpp
 	ValueTree/valueTreeHelper.cpp
 	ValueTree/valueTreeNode.cpp

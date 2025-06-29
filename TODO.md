@@ -49,6 +49,9 @@ Domains:
 * standard string library
 
 Refactor:
+* getChildNonConst should take a Value& not a ValueHolder&
+  - The current design mean that tree algorithms call copyContentsAndGetNonConst repeatedly for the same container.
+  - getChild should probably be adjusted to match, although that's more painful.
 * Abandon EditableValue and EditableValueHolder (and ValueHolder template).
   - Will have to live with unimplemented asserts.
   - A tuple shouldn't have to be editable, but right now I have to choose.
