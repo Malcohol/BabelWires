@@ -58,8 +58,10 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/mapTypeConstructor.cpp
 	Types/Map/standardMapIdentifiers.cpp
 	Types/Map/SumOfMaps/sumOfMapsType.cpp
+	Types/Record/fieldIdValue.cpp
 	Types/Record/recordType.cpp
 	Types/Record/recordValue.cpp
+	Types/Record/recordTypeConstructor.cpp
 	Types/RecordWithVariants/recordWithVariantsType.cpp
 	Types/RecordWithVariants/recordWithVariantsValue.cpp
 	Types/Tuple/tupleType.cpp

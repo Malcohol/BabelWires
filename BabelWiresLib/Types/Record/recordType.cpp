@@ -15,6 +15,7 @@
 babelwires::RecordType::RecordType(std::vector<Field> fields)
     : m_fields(std::move(fields)) {
     for (const auto& f : m_fields) {
+        assert(f.m_identifier.getDiscriminator() != 0 && "Field identifiers must be registered");
         if (f.m_optionality != Optionality::alwaysActive) {
             m_optionalFieldIds.emplace_back(f.m_identifier);
         }

@@ -1,7 +1,7 @@
 /**
- * Holds a single value of an enum.
+ * Holds the identifier of a field name.
  *
- * (C) 2021 Malcolm Tyrrell
+ * (C) 2025 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
@@ -11,13 +11,13 @@
 
 namespace babelwires {
 
-    class EnumValue : public IdentifierValueBase<ShortId> {
+    class FieldIdValue : public IdentifierValueBase<ShortId> {
       public:
-        CLONEABLE(EnumValue);
-        SERIALIZABLE(EnumValue, "enum", EditableValue, 1);
+        CLONEABLE(FieldIdValue);
+        SERIALIZABLE(FieldIdValue, "fieldId", EditableValue, 1);
 
-        EnumValue();
-        EnumValue(ShortId value);
+        FieldIdValue();
+        FieldIdValue(ShortId value);
 
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
