@@ -1,19 +1,20 @@
 /**
- * 
+ * Construct a simple record from types and fieldIds.
  *
- * (C) 2021 Malcolm Tyrrell
+ * (C) 2025 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
+#include <BabelWiresLib/Types/Record/fieldIdValue.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
-
 std::unique_ptr<babelwires::Type>
-babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                              const std::vector<EditableValueHolder>& valueArguments) const {
+babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+                                                 const std::vector<const Type*>& typeArguments,
+                                                 const std::vector<EditableValueHolder>& valueArguments) const {
     if (typeArguments.size() != valueArguments.size()) {
         throw TypeSystemException() << "RecordTypeConstructor requires the same number of types and values, but got "
                                     << typeArguments.size() << " and " << valueArguments.size() << " respectively";
