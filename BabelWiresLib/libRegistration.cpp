@@ -20,6 +20,7 @@
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
