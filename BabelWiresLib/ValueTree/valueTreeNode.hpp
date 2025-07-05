@@ -15,14 +15,6 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
-#include <cassert>
-#include <functional>
-#include <memory>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <vector>
-
 namespace babelwires {
     class Type;
     class ValueTreeRoot;
