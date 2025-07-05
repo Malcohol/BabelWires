@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
-#include <BabelWiresLib/Types/Record/fieldIdValue.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 std::unique_ptr<babelwires::Type>

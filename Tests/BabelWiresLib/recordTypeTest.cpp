@@ -3,6 +3,7 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
+#include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
@@ -548,4 +549,74 @@ TEST(RecordTypeTest, exceptions) {
         recordType.activateField(testEnvironment.m_typeSystem, value, testDomain::TestComplexRecordType::getOpIntId()),
         babelwires::ModelException);
     EXPECT_THROW(recordType.activateField(testEnvironment.m_typeSystem, value, "foo"), babelwires::ModelException);
+}
+
+TEST(RecordTypeTest, constructorBasics) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef recordTypeRef(babelwires::RecordTypeConstructor::getThisIdentifier(),
+        babelwires::TypeConstructorArguments{
+            { babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType() },
+            { babelwires::FieldIdValue("int0"), babelwires::FieldIdValue("str0") }
+        });
+
+    const babelwires::Type& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(type.as<babelwires::RecordType>());
+    const babelwires::RecordType& recordType = type.is<babelwires::RecordType>();
+    EXPECT_EQ(recordType.getFields().size(), 2);
+    EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
+    EXPECT_EQ(recordType.getFields()[0].m_type, babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(recordType.getFields()[1].m_identifier, "str0");
+    EXPECT_EQ(recordType.getFields()[1].m_type, babelwires::StringType::getThisType());
+}
+
+TEST(RecordTypeTest, constructorBadArgs) {
+    testUtils::TestEnvironment testEnvironment;
+
+    {
+        babelwires::TypeRef recordTypeRef(babelwires::RecordTypeConstructor::getThisIdentifier(),
+            babelwires::TypeConstructorArguments{
+                { babelwires::DefaultIntType::getThisType() },
+                { /* No value */ }
+            });
+        EXPECT_THROW(recordTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+    }
+    {
+        babelwires::TypeRef recordTypeRef(babelwires::RecordTypeConstructor::getThisIdentifier(),
+            babelwires::TypeConstructorArguments{
+                { babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType() },
+                { babelwires::FieldIdValue("int0"), babelwires::IntValue(42) }
+            });
+        EXPECT_THROW(recordTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+    }
+}
+
+TEST(RecordTypeTest, constructorMakeRef) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef recordTypeRef = babelwires::RecordTypeConstructor::makeTypeRef(
+        "int0", babelwires::DefaultIntType::getThisType(),
+        "str0", babelwires::StringType::getThisType()
+    );
+
+    const babelwires::Type& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(type.as<babelwires::RecordType>());
+    const babelwires::RecordType& recordType = type.is<babelwires::RecordType>();
+    EXPECT_EQ(recordType.getFields().size(), 2);
+    EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
+    EXPECT_EQ(recordType.getFields()[0].m_type, babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(recordType.getFields()[1].m_identifier, "str0");
+    EXPECT_EQ(recordType.getFields()[1].m_type, babelwires::StringType::getThisType());
+}
+
+TEST(RecordTypeTest, constructorName) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef recordTypeRef = babelwires::RecordTypeConstructor::makeTypeRef(
+        "a", babelwires::StringType::getThisType(),
+        "b", babelwires::DefaultIntType::getThisType(),
+        "c", babelwires::StringType::getThisType()
+    );
+
+    EXPECT_EQ(recordTypeRef.toString(), "Record{a, b, c : String, Integer, String}");
 }
