@@ -17,6 +17,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
+#include <Tests/TestUtils/testIdentifiers.hpp>
 
 TEST(RecordTypeTest, simpleRecordTypeValue) {
     testUtils::TestEnvironment testEnvironment;
@@ -554,11 +555,12 @@ TEST(RecordTypeTest, exceptions) {
 TEST(RecordTypeTest, constructorBasics) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef recordTypeRef(babelwires::RecordTypeConstructor::getThisIdentifier(),
+    babelwires::TypeRef recordTypeRef(
+        babelwires::RecordTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            { babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType() },
-            { babelwires::FieldIdValue("int0"), babelwires::FieldIdValue("str0") }
-        });
+            {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()},
+            {babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int0")),
+             babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"))}});
 
     const babelwires::Type& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
     ASSERT_TRUE(type.as<babelwires::RecordType>());
@@ -574,19 +576,17 @@ TEST(RecordTypeTest, constructorBadArgs) {
     testUtils::TestEnvironment testEnvironment;
 
     {
-        babelwires::TypeRef recordTypeRef(babelwires::RecordTypeConstructor::getThisIdentifier(),
-            babelwires::TypeConstructorArguments{
-                { babelwires::DefaultIntType::getThisType() },
-                { /* No value */ }
-            });
+        babelwires::TypeRef recordTypeRef(
+            babelwires::RecordTypeConstructor::getThisIdentifier(),
+            babelwires::TypeConstructorArguments{{babelwires::DefaultIntType::getThisType()}, {/* No value */}});
         EXPECT_THROW(recordTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
     }
     {
-        babelwires::TypeRef recordTypeRef(babelwires::RecordTypeConstructor::getThisIdentifier(),
+        babelwires::TypeRef recordTypeRef(
+            babelwires::RecordTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                { babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType() },
-                { babelwires::FieldIdValue("int0"), babelwires::IntValue(42) }
-            });
+                {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()},
+                {babelwires::FieldIdValue("int0"), babelwires::IntValue(42)}});
         EXPECT_THROW(recordTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
     }
 }
@@ -595,9 +595,8 @@ TEST(RecordTypeTest, constructorMakeRef) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::TypeRef recordTypeRef = babelwires::RecordTypeConstructor::makeTypeRef(
-        "int0", babelwires::DefaultIntType::getThisType(),
-        "str0", babelwires::StringType::getThisType()
-    );
+        testUtils::getTestRegisteredIdentifier("int0"), babelwires::DefaultIntType::getThisType(),
+        testUtils::getTestRegisteredIdentifier("str0"), babelwires::StringType::getThisType());
 
     const babelwires::Type& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
     ASSERT_TRUE(type.as<babelwires::RecordType>());
@@ -613,10 +612,8 @@ TEST(RecordTypeTest, constructorName) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::TypeRef recordTypeRef = babelwires::RecordTypeConstructor::makeTypeRef(
-        "a", babelwires::StringType::getThisType(),
-        "b", babelwires::DefaultIntType::getThisType(),
-        "c", babelwires::StringType::getThisType()
-    );
+        "a", babelwires::StringType::getThisType(), "b", babelwires::DefaultIntType::getThisType(), "c",
+        babelwires::StringType::getThisType());
 
     EXPECT_EQ(recordTypeRef.toString(), "Record{a, b, c : String, Integer, String}");
 }
