@@ -12,15 +12,17 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::GenericType::GenericType(TypeRef baseType)
-    : m_baseType(std::move(baseType)) {}
+babelwires::GenericType::GenericType(TypeRef wrappedType, std::vector<TypeRef> typeVariableBaseTypes)
+    : m_wrappedType(std::move(wrappedType))
+    , m_typeVariableBaseTypes(typeVariableBaseTypes) {}
 
 std::string babelwires::GenericType::getFlavour() const {
-    return "generic";
+    // Not connectable.
+    return "";
 }
 
 babelwires::NewValueHolder babelwires::GenericType::createValue(const TypeSystem& typeSystem) const {
-    return babelwires::ValueHolder::makeValue<GenericValue>();
+    return babelwires::ValueHolder::makeValue<GenericValue>(m_wrappedType, m_typeVariableBaseTypes.size());
 }
 
 bool babelwires::GenericType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
@@ -28,6 +30,8 @@ bool babelwires::GenericType::isValidValue(const TypeSystem& typeSystem, const V
     if (!genericValue) {
         return false;
     }
+    // TODO
+    /*
     if (const auto& value = genericValue->getValue()) {
         if (m_baseType) {
             if (typeSystem.isSubType(genericValue->getTypeRef(), m_baseType)) {
@@ -43,27 +47,27 @@ bool babelwires::GenericType::isValidValue(const TypeSystem& typeSystem, const V
     } else {
         return false;
     }
+        */
 }
 
 unsigned int babelwires::GenericType::getNumChildren(const ValueHolder& compoundValue) const {
-    const GenericValue& genericValue = compoundValue->is<GenericValue>();
-    return genericValue.getValue() ? 1 : 0;
+    return 1;
 }
 
 std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>
 babelwires::GenericType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     assert(i == 0 && "GenericType only has one child");
     const GenericValue& genericValue = compoundValue->is<GenericValue>();
-    assert(genericValue.getValue() && "GenericType child requested but value is empty");
-    return {&genericValue.getValue(), getStepToValue(), genericValue.getTypeRef()};
+    assert(genericValue.getValue() && "GenericType child value is empty");
+    return {&genericValue.getValue(), getStepToValue(), genericValue.getWrappedType()};
 }
 
 std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>
 babelwires::GenericType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     assert(i == 0 && "GenericType only has one child");
     GenericValue& genericValue = compoundValue.copyContentsAndGetNonConst().is<GenericValue>();
-    assert(genericValue.getValue() && "GenericType child requested but value is empty");
-    return {&genericValue.getValue(), getStepToValue(), genericValue.getTypeRef()};
+    assert(genericValue.getValue() && "GenericType child value is empty");
+    return {&genericValue.getValue(), getStepToValue(), genericValue.getWrappedType()};
 }
 
 int babelwires::GenericType::getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const {
@@ -75,19 +79,17 @@ int babelwires::GenericType::getChildIndexFromStep(const ValueHolder& compoundVa
 std::optional<babelwires::SubtypeOrder> babelwires::GenericType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                                       const Type& other) const {
     // TODO
-    return SubtypeOrder::IsIntersecting;
+    return SubtypeOrder::IsDisjoint;
 }
 
 std::string babelwires::GenericType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
     const GenericValue& genericValue = v->is<GenericValue>();
+    assert(genericValue.getValue() && "GenericType child value is empty");
     const auto& value = genericValue.getValue();
-    if (!value) {
-        return "empty";
-    }
-    const Type& baseType = genericValue.getTypeRef().assertResolve(typeSystem);
+    const Type& baseType = genericValue.getWrappedType().assertResolve(typeSystem);
     return baseType.valueToString(typeSystem, value);
 }
 
 babelwires::ShortId babelwires::GenericType::getStepToValue() {
-    return BW_SHORT_ID("value", "value", "69d92618-a000-476e-afc1-9121e1bfac1e");
+    return BW_SHORT_ID("wrappd", "value", "69d92618-a000-476e-afc1-9121e1bfac1e");
 }

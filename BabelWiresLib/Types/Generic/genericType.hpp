@@ -13,9 +13,12 @@ namespace babelwires {
 
     /// A type that wraps another type containing type variables that can be instantiated in
     /// different ways.
+    /// Type type always has a single child, which is the type it wraps.
     class GenericType : public CompoundType {
       public:
-        GenericType(TypeRef baseType = TypeRef());
+        /// Create a generic type with variables restricted by the given base types.
+        /// A default constructed TypeRef means no restriction.
+        GenericType(TypeRef wrappedType, std::vector<TypeRef> variableBaseTypes);
 
         std::string getFlavour() const override;
 
@@ -34,7 +37,7 @@ namespace babelwires {
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
 
       private:
-        /// 
-        TypeRef m_baseType;
+        TypeRef m_wrappedType;
+        std::vector<TypeRef> m_typeVariableBaseTypes;
     };
 } // namespace babelwires

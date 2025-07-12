@@ -9,43 +9,41 @@
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
-babelwires::TypeRef babelwires::GenericValue::getTypeRef() const {
-    return m_typeRef;
+babelwires::GenericValue::GenericValue(TypeRef wrappedType, unsigned int numVariables)
+    : m_actualWrappedType(wrappedType)
+    , m_typeVariableAssignments(numVariables)
+{
+}
+
+
+const babelwires::TypeRef& babelwires::GenericValue::getWrappedType() const {
+    return m_actualWrappedType;
 }
 
 const babelwires::ValueHolder& babelwires::GenericValue::getValue() const {
-    return m_value;
+    return m_wrappedValue;
 }
 
 babelwires::ValueHolder& babelwires::GenericValue::getValue() {
-    return m_value;
-}
-
-void babelwires::GenericValue::setTypeRef(const TypeSystem& typeSystem, TypeRef typeRef) {
-    if (m_typeRef != typeRef) {
-        m_typeRef = typeRef;
-        const Type& type = typeRef.assertResolve(typeSystem);
-        m_value = type.createValue(typeSystem);
-    }
+    return m_wrappedValue;
 }
 
 void babelwires::GenericValue::setValue(const TypeSystem& typeSystem, const ValueHolder& value) {
-    assert(m_typeRef.assertResolve(typeSystem).isValidValue(typeSystem, *value));
-    m_value = value;
+    assert(m_actualWrappedType.assertResolve(typeSystem).isValidValue(typeSystem, *value));
+    m_wrappedValue = value;
 }
 
 std::size_t babelwires::GenericValue::getHash() const {
-    // Arbitrary discriminator.
-    std::size_t hash = 0x07070808;
-    if (m_typeRef) {
-        hash::mixInto(hash, m_typeRef, m_value);
+    auto hash = hash::mixtureOf(std::string("Generic"), m_actualWrappedType, m_wrappedValue);
+    for (const auto& t : m_typeVariableAssignments) {
+        hash::mixInto(hash, t);
     }
     return hash;
 }
 
 bool babelwires::GenericValue::operator==(const Value& other) const {
     if (const GenericValue* otherValue = other.as<GenericValue>()) {
-        return (m_typeRef == otherValue->m_typeRef) && (m_value == otherValue->m_value);
+        return (m_actualWrappedType == otherValue->m_actualWrappedType) && (m_wrappedValue == otherValue->m_wrappedValue);
     } else {
         return false;
     }

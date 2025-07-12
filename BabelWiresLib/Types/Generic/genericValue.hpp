@@ -16,22 +16,25 @@ namespace babelwires {
       public:
         CLONEABLE(GenericValue);
 
-        GenericValue() = default;
+        GenericValue(TypeRef wrappedType, unsigned int numVariables);
 
-        TypeRef getTypeRef() const;
+        const TypeRef& getWrappedType() const;
         
         const ValueHolder& getValue() const;
         ValueHolder& getValue();
 
-        void setTypeRef(const TypeSystem& typeSystem, TypeRef typeRef);
         void setValue(const TypeSystem& typeSystem, const ValueHolder& value);
 
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
 
       private:
-        /// When this is not set, the
-        TypeRef m_typeRef;
-        ValueHolder m_value;
+        /// The actual type may differ from the GenericType's wrapped type
+        /// because variables will have been substituted.
+        TypeRef m_actualWrappedType;
+        /// When unassigned, these hold a default constructed TypeRef.
+        std::vector<TypeRef> m_typeVariableAssignments;
+        /// The current value of the actualWrappedType.
+        ValueHolder m_wrappedValue;
     };
 }
