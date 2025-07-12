@@ -34,7 +34,7 @@ babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructo
 const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
         const babelwires::Type* operator()(std::monostate) { return nullptr; }
-        const babelwires::Type* operator()(RegisteredTypeId typeId) { return m_typeSystem.tryGetPrimitiveType(typeId); }
+        const babelwires::Type* operator()(RegisteredTypeId typeId) { return m_typeSystem.tryGetRegisteredType(typeId); }
         const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
             try {
                 const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
@@ -57,7 +57,7 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         const babelwires::Type& operator()(std::monostate) {
             throw TypeSystemException() << "A null type cannot be resolved.";
         }
-        const babelwires::Type& operator()(RegisteredTypeId typeId) { return m_typeSystem.getPrimitiveType(typeId); }
+        const babelwires::Type& operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredType(typeId); }
         const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);
@@ -119,7 +119,7 @@ std::string babelwires::TypeRef::toString() const {
 void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
     struct VisitorMethods {
         void operator()(std::monostate) {}
-        void operator()(const RegisteredTypeId& typeId) { m_serializer.serializeValue("primitiveTypeId", typeId); }
+        void operator()(const RegisteredTypeId& typeId) { m_serializer.serializeValue("typeId", typeId); }
         void operator()(const ConstructedTypeData& constructedTypeData) {
             m_serializer.serializeValue("typeConstructorId", std::get<0>(constructedTypeData));
             m_serializer.serializeArray("typeArguments", std::get<1>(constructedTypeData).m_typeArguments);
@@ -137,10 +137,10 @@ void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
 }
 
 void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
-    RegisteredTypeId primitiveTypeId;
-    if (deserializer.deserializeValue("primitiveTypeId", primitiveTypeId,
+    RegisteredTypeId typeId;
+    if (deserializer.deserializeValue("typeId", typeId,
                                       babelwires::Deserializer::IsOptional::Optional)) {
-        m_storage = primitiveTypeId;
+        m_storage = typeId;
     } else {
         TypeConstructorId typeConstructorId;
         if (deserializer.deserializeValue("typeConstructorId", typeConstructorId,

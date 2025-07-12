@@ -19,8 +19,8 @@
 
 TEST(TypeRefTest, equality) {
     babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::RegisteredTypeId("Foo"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeRef registeredTypeRef1(babelwires::RegisteredTypeId("Foo"));
+    babelwires::TypeRef registeredTypeRef2(babelwires::RegisteredTypeId("Bar"));
     babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
     babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
                                             babelwires::RegisteredTypeId("Flerm"));
@@ -33,34 +33,34 @@ TEST(TypeRefTest, equality) {
         babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     EXPECT_EQ(nullTypeRef, nullTypeRef);
-    EXPECT_EQ(primitiveTypeRef1, primitiveTypeRef1);
-    EXPECT_EQ(primitiveTypeRef2, primitiveTypeRef2);
+    EXPECT_EQ(registeredTypeRef1, registeredTypeRef1);
+    EXPECT_EQ(registeredTypeRef2, registeredTypeRef2);
     EXPECT_EQ(constructedTypeRef1, constructedTypeRef1);
     EXPECT_EQ(constructedTypeRef2, constructedTypeRef2);
     EXPECT_EQ(constructedTypeRef3, constructedTypeRef3);
     EXPECT_EQ(constructedTypeRefValue1, constructedTypeRefValue1);
     EXPECT_EQ(constructedTypeRefMixed1, constructedTypeRefMixed1);
 
-    EXPECT_NE(nullTypeRef, primitiveTypeRef1);
-    EXPECT_NE(nullTypeRef, primitiveTypeRef2);
+    EXPECT_NE(nullTypeRef, registeredTypeRef1);
+    EXPECT_NE(nullTypeRef, registeredTypeRef2);
     EXPECT_NE(nullTypeRef, constructedTypeRef1);
     EXPECT_NE(nullTypeRef, constructedTypeRef2);
     EXPECT_NE(nullTypeRef, constructedTypeRef3);
     EXPECT_NE(nullTypeRef, constructedTypeRefValue1);
     EXPECT_NE(nullTypeRef, constructedTypeRefMixed1);
 
-    EXPECT_NE(primitiveTypeRef1, primitiveTypeRef2);
-    EXPECT_NE(primitiveTypeRef1, constructedTypeRef1);
-    EXPECT_NE(primitiveTypeRef1, constructedTypeRef2);
-    EXPECT_NE(primitiveTypeRef1, constructedTypeRef3);
-    EXPECT_NE(primitiveTypeRef1, constructedTypeRefValue1);
-    EXPECT_NE(primitiveTypeRef1, constructedTypeRefMixed1);
+    EXPECT_NE(registeredTypeRef1, registeredTypeRef2);
+    EXPECT_NE(registeredTypeRef1, constructedTypeRef1);
+    EXPECT_NE(registeredTypeRef1, constructedTypeRef2);
+    EXPECT_NE(registeredTypeRef1, constructedTypeRef3);
+    EXPECT_NE(registeredTypeRef1, constructedTypeRefValue1);
+    EXPECT_NE(registeredTypeRef1, constructedTypeRefMixed1);
 
-    EXPECT_NE(primitiveTypeRef2, constructedTypeRef1);
-    EXPECT_NE(primitiveTypeRef2, constructedTypeRef2);
-    EXPECT_NE(primitiveTypeRef2, constructedTypeRef3);
-    EXPECT_NE(primitiveTypeRef2, constructedTypeRefValue1);
-    EXPECT_NE(primitiveTypeRef2, constructedTypeRefMixed1);
+    EXPECT_NE(registeredTypeRef2, constructedTypeRef1);
+    EXPECT_NE(registeredTypeRef2, constructedTypeRef2);
+    EXPECT_NE(registeredTypeRef2, constructedTypeRef3);
+    EXPECT_NE(registeredTypeRef2, constructedTypeRefValue1);
+    EXPECT_NE(registeredTypeRef2, constructedTypeRefMixed1);
 
     EXPECT_NE(constructedTypeRef1, constructedTypeRef2);
     EXPECT_NE(constructedTypeRef1, constructedTypeRef3);
@@ -328,8 +328,8 @@ TEST(TypeRefTest, toStringMalformed) {
 
 TEST(TypeRefTest, serialization) {
     babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::RegisteredTypeId("Foo"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeRef registeredTypeRef1(babelwires::RegisteredTypeId("Foo"));
+    babelwires::TypeRef registeredTypeRef2(babelwires::RegisteredTypeId("Bar"));
     babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
     babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
                                             babelwires::RegisteredTypeId("Flerm"));
@@ -342,7 +342,7 @@ TEST(TypeRefTest, serialization) {
         babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     std::vector<babelwires::TypeRef> testRefs = {
-        nullTypeRef,         primitiveTypeRef1,   primitiveTypeRef2,        constructedTypeRef1,
+        nullTypeRef,         registeredTypeRef1,   registeredTypeRef2,        constructedTypeRef1,
         constructedTypeRef2, constructedTypeRef3, constructedTypeRefValue1, constructedTypeRefMixed1};
 
     for (auto typeRef : testRefs) {
@@ -412,8 +412,8 @@ TEST(TypeRefTest, visitIdentifiers) {
 
 TEST(TypeRefTest, hash) {
     babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::RegisteredTypeId("Foo"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeRef registeredTypeRef1(babelwires::RegisteredTypeId("Foo"));
+    babelwires::TypeRef registeredTypeRef2(babelwires::RegisteredTypeId("Bar"));
     babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
     babelwires::TypeRef constructedTypeRef2(
         babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
@@ -430,14 +430,14 @@ TEST(TypeRefTest, hash) {
     std::hash<babelwires::TypeRef> hasher;
 
     // In theory, some of these could fail due to a hash collision.
-    EXPECT_NE(hasher(nullTypeRef), hasher(primitiveTypeRef1));
-    EXPECT_NE(hasher(primitiveTypeRef1), hasher(primitiveTypeRef2));
-    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRef1));
-    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRef2));
-    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRef3));
-    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRefValue1));
-    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRefValue2));
-    EXPECT_NE(hasher(primitiveTypeRef1), hasher(constructedTypeRefMixed1));
+    EXPECT_NE(hasher(nullTypeRef), hasher(registeredTypeRef1));
+    EXPECT_NE(hasher(registeredTypeRef1), hasher(registeredTypeRef2));
+    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRef1));
+    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRef2));
+    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRef3));
+    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRefValue1));
+    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRefValue2));
+    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRefMixed1));
     EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRef2));
     EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRef3));
     EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRefValue1));

@@ -20,28 +20,28 @@ namespace {
 babelwires::TypeSystem::TypeSystem() = default;
 babelwires::TypeSystem::~TypeSystem() = default;
 
-const babelwires::Type* babelwires::TypeSystem::tryGetPrimitiveType(RegisteredTypeId id) const {
-    auto it = m_primitiveTypeRegistry.find(id);
-    if (it != m_primitiveTypeRegistry.end()) {
+const babelwires::Type* babelwires::TypeSystem::tryGetRegisteredType(RegisteredTypeId id) const {
+    auto it = m_registeredTypeRegistry.find(id);
+    if (it != m_registeredTypeRegistry.end()) {
         return std::get<0>(it->second).get();
     }
     return nullptr;
 }
 
-const babelwires::Type& babelwires::TypeSystem::getPrimitiveType(RegisteredTypeId id) const {
-    auto it = m_primitiveTypeRegistry.find(id);
-    assert((it != m_primitiveTypeRegistry.end()) && "Primitive Type not registered in type system");
+const babelwires::Type& babelwires::TypeSystem::getRegisteredType(RegisteredTypeId id) const {
+    auto it = m_registeredTypeRegistry.find(id);
+    assert((it != m_registeredTypeRegistry.end()) && "Primitive Type not registered in type system");
     return *std::get<0>(it->second);
 }
 
-babelwires::Type* babelwires::TypeSystem::addPrimitiveType(LongId typeId, VersionNumber version,
+babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId, VersionNumber version,
                                                            std::unique_ptr<Type> newType) {
-    auto addResult = m_primitiveTypeRegistry.emplace(
-        std::pair<LongId, PrimitiveTypeInfo>{typeId, PrimitiveTypeInfo{std::move(newType), version}});
+    auto addResult = m_registeredTypeRegistry.emplace(
+        std::pair<LongId, RegisteredTypeInfo>{typeId, RegisteredTypeInfo{std::move(newType), version}});
     assert(addResult.second && "Type with that identifier already registered");
     babelwires::Type* const newTypeRaw = std::get<0>(addResult.first->second).get();
     for (auto it : newTypeRaw->getTags()) {
-        m_taggedPrimitiveTypes[it].emplace_back(typeId);
+        m_taggedRegisteredTypes[it].emplace_back(typeId);
     }
     return newTypeRaw;
 }
@@ -96,17 +96,17 @@ bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeRefA, const TypeRe
     return compareSubtype(typeRefA, typeRefB) != SubtypeOrder::IsDisjoint;
 }
 
-babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getTaggedPrimitiveTypes(Type::Tag tag) const {
-    const auto it = m_taggedPrimitiveTypes.find(tag);
-    if (it != m_taggedPrimitiveTypes.end()) {
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getTaggedRegisteredTypes(Type::Tag tag) const {
+    const auto it = m_taggedRegisteredTypes.find(tag);
+    if (it != m_taggedRegisteredTypes.end()) {
         return it->second;
     }
     return {};
 }
 
-babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllPrimitiveTypes() const {
+babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllRegisteredTypes() const {
     babelwires::TypeSystem::TypeIdSet result;
-    for (const auto& it : m_primitiveTypeRegistry) {
+    for (const auto& it : m_registeredTypeRegistry) {
         result.emplace_back(it.first);
     }
     return result;

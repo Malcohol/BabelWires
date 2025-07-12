@@ -57,7 +57,7 @@ TEST(IntTypeTest, defaultIntTypeIsRegistered) {
     testUtils::TestEnvironment testEnvironment;
 
     const auto* const foundType =
-        testEnvironment.m_typeSystem.tryGetPrimitiveType(babelwires::DefaultIntType::getThisIdentifier());
+        testEnvironment.m_typeSystem.tryGetRegisteredType(babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_NE(foundType, nullptr);
     EXPECT_NE(foundType->as<babelwires::DefaultIntType>(), nullptr);
 }

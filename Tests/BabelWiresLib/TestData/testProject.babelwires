@@ -55,7 +55,7 @@
                     </expandedPaths>
                 </targetFile>
                 <value id="8" factory="nofact">
-                    <type primitiveTypeId="crecordT'1"/>
+                    <type typeId="crecordT'1"/>
                     <modifiers>
                         <assignFrom path="rec'1" sourceId="4" sourcePath="Record'1"/>
                     </modifiers>
