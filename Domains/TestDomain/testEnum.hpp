@@ -1,5 +1,5 @@
 #include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
 #pragma once
 
@@ -18,7 +18,7 @@ namespace testDomain {
 
 // Foo, Bar, Erm, Oom, Boo
     struct TestEnum : babelwires::EnumType {
-        PRIMITIVE_TYPE("Enum", "Enum", "d5cbc549-0c16-45aa-874b-c81b9bef21f3", 1);
+        REGISTERED_TYPE("Enum", "Enum", "d5cbc549-0c16-45aa-874b-c81b9bef21f3", 1);
         TestEnum();
 
         /// Expose a C++ enum which matches the Enum.
@@ -27,19 +27,19 @@ namespace testDomain {
 
     // Bar, Erm, Oom
     struct TestSubEnum : babelwires::EnumType {
-        PRIMITIVE_TYPE("SubEnum", "SubEnum", "80ba8f33-3851-48b4-a510-52770468d5f6", 1);
+        REGISTERED_TYPE("SubEnum", "SubEnum", "80ba8f33-3851-48b4-a510-52770468d5f6", 1);
         TestSubEnum();
     };
 
     // Bar, Erm
     struct TestSubSubEnum1 : babelwires::EnumType {
-        PRIMITIVE_TYPE("SubSubEnum1", "SubSubEnum1", "5cdf92b9-6d0e-4477-b853-336dafc2828d", 1);
+        REGISTERED_TYPE("SubSubEnum1", "SubSubEnum1", "5cdf92b9-6d0e-4477-b853-336dafc2828d", 1);
         TestSubSubEnum1();
     };
 
     // Erm, Oom
     struct TestSubSubEnum2 : babelwires::EnumType {
-        PRIMITIVE_TYPE("SubSubEnum2", "SubSubEnum2", "e787e345-0138-4b46-9f43-d12ed57d4ee9", 1);
+        REGISTERED_TYPE("SubSubEnum2", "SubSubEnum2", "e787e345-0138-4b46-9f43-d12ed57d4ee9", 1);
         TestSubSubEnum2();
     };
 } // namespace testDomain

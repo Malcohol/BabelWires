@@ -4,7 +4,7 @@
 
 #include <BabelWiresLib/Instance/instance.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
 namespace testDomain {
 
@@ -12,7 +12,7 @@ namespace testDomain {
       public:
         TestSimpleRecordType();
 
-        PRIMITIVE_TYPE("srecordT", "SimpleRecord", "ea96a409-6424-4924-aefe-ecbe66139f17", 1);
+        REGISTERED_TYPE("srecordT", "SimpleRecord", "ea96a409-6424-4924-aefe-ecbe66139f17", 1);
 
         DECLARE_INSTANCE_BEGIN(TestSimpleRecordType)
         DECLARE_INSTANCE_FIELD(intR0, babelwires::IntType)
@@ -38,7 +38,7 @@ namespace testDomain {
       public:
         TestComplexRecordType();
 
-        PRIMITIVE_TYPE("crecordT", "ComplexRecord", "87291871-677d-41a1-81e7-bf1206b1d396", 1);
+        REGISTERED_TYPE("crecordT", "ComplexRecord", "87291871-677d-41a1-81e7-bf1206b1d396", 1);
 
         static constexpr int c_int1min = -10;
         static constexpr int c_int1max = 10;

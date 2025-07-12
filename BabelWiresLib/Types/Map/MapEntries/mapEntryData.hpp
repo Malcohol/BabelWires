@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
 #include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 
 #include <Common/Cloning/cloneable.hpp>
@@ -30,7 +30,7 @@ namespace babelwires {
     /// The enum that determines the algorithm used.
     class MapEntryFallbackKind : public babelwires::EnumType {
       public:
-        PRIMITIVE_TYPE("FallbackKind", "MapEntryFallbackKind", "11e020d5-526e-412d-aa9f-ac464ea34d26", 1);
+        REGISTERED_TYPE("FallbackKind", "MapEntryFallbackKind", "11e020d5-526e-412d-aa9f-ac464ea34d26", 1);
         MapEntryFallbackKind();
 
         ENUM_DEFINE_CPP_ENUM(BW_MAP_ENTRY_FALLBACK_KIND);

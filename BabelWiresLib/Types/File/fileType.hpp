@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Types/Record/recordType.hpp>
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
 namespace babelwires {
 

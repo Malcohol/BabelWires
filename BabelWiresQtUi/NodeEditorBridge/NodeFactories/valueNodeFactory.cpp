@@ -27,7 +27,7 @@ QString babelwires::ValueNodeFactory::getCategoryName() const {
 QList<QString> babelwires::ValueNodeFactory::getFactoryNames() const {
     QList<QString> factoryNames;
     auto identifierRegistry = IdentifierRegistry::read();
-    for (const auto& typeId : m_typeSystem.getAllPrimitiveTypes()) {
+    for (const auto& typeId : m_typeSystem.getAllRegisteredTypes()) {
         factoryNames.append(identifierRegistry->getName(typeId).c_str());
     }
     return factoryNames;
@@ -35,10 +35,10 @@ QList<QString> babelwires::ValueNodeFactory::getFactoryNames() const {
 
 void babelwires::ValueNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName,
                                               QPointF scenePos) {
-    std::optional<PrimitiveTypeId> typeId;
+    std::optional<RegisteredTypeId> typeId;
     {
         auto identifierRegistry = IdentifierRegistry::read();
-        for (const auto& tid : m_typeSystem.getAllPrimitiveTypes()) {
+        for (const auto& tid : m_typeSystem.getAllRegisteredTypes()) {
             if(factoryName == identifierRegistry->getName(tid).c_str()) {
                 typeId = tid;
                 break;
