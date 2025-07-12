@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
 #include <Common/Math/rational.hpp>
 
@@ -41,6 +41,6 @@ namespace babelwires {
       public:
         DefaultRationalType();
 
-        PRIMITIVE_TYPE("rational", "Rational", "995624d6-6f1d-4407-babd-66ec74989c07", 1);
+        REGISTERED_TYPE("rational", "Rational", "995624d6-6f1d-4407-babd-66ec74989c07", 1);
     };
 }

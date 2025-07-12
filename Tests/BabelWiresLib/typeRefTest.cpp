@@ -19,18 +19,18 @@
 
 TEST(TypeRefTest, equality) {
     babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Foo"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Bar"));
-    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"));
-    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-                                            babelwires::PrimitiveTypeId("Flerm"));
+    babelwires::TypeRef primitiveTypeRef1(babelwires::RegisteredTypeId("Foo"));
+    babelwires::TypeRef primitiveTypeRef2(babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
+                                            babelwires::RegisteredTypeId("Flerm"));
     babelwires::TypeRef constructedTypeRef3(
-        babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")));
+        babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
+        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::RegisteredTypeId("Erm")));
     babelwires::TypeRef constructedTypeRefValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
     babelwires::TypeRef constructedTypeRefMixed1(
         babelwires::TypeConstructorId("Foo"),
-        babelwires::TypeConstructorArguments{{babelwires::PrimitiveTypeId("Bar")}, {babelwires::IntValue(16)}});
+        babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     EXPECT_EQ(nullTypeRef, nullTypeRef);
     EXPECT_EQ(primitiveTypeRef1, primitiveTypeRef1);
@@ -116,7 +116,7 @@ TEST(TypeRefTest, tryResolveFailure) {
     babelwires::TypeSystem typeSystem;
 
     EXPECT_EQ(nullptr, babelwires::TypeRef().tryResolve(typeSystem));
-    EXPECT_EQ(nullptr, babelwires::TypeRef(babelwires::PrimitiveTypeId("Foo")).tryResolve(typeSystem));
+    EXPECT_EQ(nullptr, babelwires::TypeRef(babelwires::RegisteredTypeId("Foo")).tryResolve(typeSystem));
 }
 
 TEST(TypeRefTest, tryResolveParallel) {
@@ -179,7 +179,7 @@ TEST(TypeRefTest, toStringSuccessTypes) {
 
     EXPECT_EQ(babelwires::TypeRef().toString(), "[]");
 
-    babelwires::PrimitiveTypeId foo = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
+    babelwires::RegisteredTypeId foo = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Foo", "Foofoo", "00000000-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
@@ -281,7 +281,7 @@ TEST(TypeRefTest, toStringSuccessMixed) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
-    babelwires::PrimitiveTypeId foo = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
+    babelwires::RegisteredTypeId foo = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Foo", "Foofoo", "325d9560-6330-43bb-80b4-963843ec8fba",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     babelwires::StringValue bar("bar");
@@ -299,7 +299,7 @@ TEST(TypeRefTest, toStringMalformed) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
-    babelwires::PrimitiveTypeId foo = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
+    babelwires::RegisteredTypeId foo = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Foo", "Foofoo", "00000000-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
@@ -328,18 +328,18 @@ TEST(TypeRefTest, toStringMalformed) {
 
 TEST(TypeRefTest, serialization) {
     babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Foo"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Bar"));
-    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"));
-    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-                                            babelwires::PrimitiveTypeId("Flerm"));
+    babelwires::TypeRef primitiveTypeRef1(babelwires::RegisteredTypeId("Foo"));
+    babelwires::TypeRef primitiveTypeRef2(babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeRef constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
+                                            babelwires::RegisteredTypeId("Flerm"));
     babelwires::TypeRef constructedTypeRef3(
-        babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")));
+        babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
+        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::RegisteredTypeId("Erm")));
     babelwires::TypeRef constructedTypeRefValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
     babelwires::TypeRef constructedTypeRefMixed1(
         babelwires::TypeConstructorId("Foo"),
-        babelwires::TypeConstructorArguments{{babelwires::PrimitiveTypeId("Bar")}, {babelwires::IntValue(16)}});
+        babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     std::vector<babelwires::TypeRef> testRefs = {
         nullTypeRef,         primitiveTypeRef1,   primitiveTypeRef2,        constructedTypeRef1,
@@ -412,20 +412,20 @@ TEST(TypeRefTest, visitIdentifiers) {
 
 TEST(TypeRefTest, hash) {
     babelwires::TypeRef nullTypeRef;
-    babelwires::TypeRef primitiveTypeRef1(babelwires::PrimitiveTypeId("Foo"));
-    babelwires::TypeRef primitiveTypeRef2(babelwires::PrimitiveTypeId("Bar"));
-    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"));
+    babelwires::TypeRef primitiveTypeRef1(babelwires::RegisteredTypeId("Foo"));
+    babelwires::TypeRef primitiveTypeRef2(babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeRef constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
     babelwires::TypeRef constructedTypeRef2(
-        babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::PrimitiveTypeId("Erm")));
+        babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
+        babelwires::TypeRef(babelwires::TypeConstructorId("Flerm"), babelwires::RegisteredTypeId("Erm")));
     babelwires::TypeRef constructedTypeRef3(
-        babelwires::TypeConstructorId("Foo"), babelwires::PrimitiveTypeId("Bar"),
-        babelwires::TypeRef(babelwires::TypeConstructorId("Oom"), babelwires::PrimitiveTypeId("Erm")));
+        babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
+        babelwires::TypeRef(babelwires::TypeConstructorId("Oom"), babelwires::RegisteredTypeId("Erm")));
     babelwires::TypeRef constructedTypeRefValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
     babelwires::TypeRef constructedTypeRefValue2(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Erm"));
     babelwires::TypeRef constructedTypeRefMixed1(
         babelwires::TypeConstructorId("Foo"),
-        babelwires::TypeConstructorArguments{{babelwires::PrimitiveTypeId("Bar")}, {babelwires::IntValue(16)}});
+        babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     std::hash<babelwires::TypeRef> hasher;
 

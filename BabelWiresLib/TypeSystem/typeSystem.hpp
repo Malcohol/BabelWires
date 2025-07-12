@@ -34,8 +34,8 @@ namespace babelwires {
             return getPrimitiveType(TYPE::getThisIdentifier()).template is<TYPE>();
         }
 
-        const Type* tryGetPrimitiveType(PrimitiveTypeId id) const;
-        const Type& getPrimitiveType(PrimitiveTypeId id) const;
+        const Type* tryGetPrimitiveType(RegisteredTypeId id) const;
+        const Type& getPrimitiveType(RegisteredTypeId id) const;
 
         template <typename TYPE_CONSTRUCTOR, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
@@ -52,7 +52,7 @@ namespace babelwires {
         const TypeConstructor* tryGetTypeConstructor(TypeConstructorId id) const;
         const TypeConstructor& getTypeConstructor(TypeConstructorId id) const;
 
-        using TypeIdSet = std::vector<PrimitiveTypeId>;
+        using TypeIdSet = std::vector<RegisteredTypeId>;
 
         /// Determine how typeA and typeB are related by the subtype order.
         SubtypeOrder compareSubtype(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
@@ -74,13 +74,13 @@ namespace babelwires {
 
       protected:
         using PrimitiveTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;
-        std::unordered_map<PrimitiveTypeId, PrimitiveTypeInfo> m_primitiveTypeRegistry;
+        std::unordered_map<RegisteredTypeId, PrimitiveTypeInfo> m_primitiveTypeRegistry;
 
         using TypeConstructorInfo = std::tuple<std::unique_ptr<TypeConstructor>, VersionNumber>;
         std::unordered_map<TypeConstructorId, TypeConstructorInfo> m_typeConstructorRegistry;
 
         /// Fast look-up of tagged types.
-        std::unordered_map<Type::Tag, std::vector<PrimitiveTypeId>> m_taggedPrimitiveTypes;
+        std::unordered_map<Type::Tag, std::vector<RegisteredTypeId>> m_taggedPrimitiveTypes;
     };
 
 } // namespace babelwires

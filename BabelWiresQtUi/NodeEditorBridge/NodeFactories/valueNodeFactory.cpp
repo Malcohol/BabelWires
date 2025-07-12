@@ -35,7 +35,7 @@ QList<QString> babelwires::ValueNodeFactory::getFactoryNames() const {
 
 void babelwires::ValueNodeFactory::createNode(ProjectGraphModel& projectGraphModel, QString factoryName,
                                               QPointF scenePos) {
-    std::optional<PrimitiveTypeId> typeId;
+    std::optional<RegisteredTypeId> typeId;
     {
         auto identifierRegistry = IdentifierRegistry::read();
         for (const auto& tid : m_typeSystem.getAllPrimitiveTypes()) {

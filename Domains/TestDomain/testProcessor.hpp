@@ -19,7 +19,7 @@ namespace testDomain {
       public:
         TestProcessorInputOutputType();
 
-        PRIMITIVE_TYPE("TestProcInOut", "TestProcInputOutput", "a6dd948b-e9f4-4f03-bd5d-ecf2d608f026", 1);
+        REGISTERED_TYPE("TestProcInOut", "TestProcInputOutput", "a6dd948b-e9f4-4f03-bd5d-ecf2d608f026", 1);
 
         DECLARE_INSTANCE_BEGIN(TestProcessorInputOutputType)
         DECLARE_INSTANCE_FIELD(Int, babelwires::IntType)

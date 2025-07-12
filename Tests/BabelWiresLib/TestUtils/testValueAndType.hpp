@@ -1,4 +1,4 @@
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
@@ -28,7 +28,7 @@ namespace testUtils {
     /// The Type of TestValues.
     class TestType : public babelwires::Type {
       public:
-        PRIMITIVE_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("TestType"), 1);
+        REGISTERED_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("TestType"), 1);
 
         /// 0 == unbounded.
         TestType(unsigned int maximumLength = 0, std::string defaultValue = "Default value");

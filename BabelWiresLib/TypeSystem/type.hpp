@@ -34,7 +34,7 @@ namespace babelwires {
         virtual bool isValidValue(const TypeSystem& typeSystem, const Value& v) const = 0;
 
         /// Get a TypeRef that describes this type.
-        /// Primitive types get an implementation of this method from the PRIMITIVE_TYPE macro.
+        /// Primitive types get an implementation of this method from the REGISTERED_TYPE macro.
         /// Complex types constructed by TypeConstructors must provide their own implementation.
         virtual TypeRef getTypeRef() const = 0;
 

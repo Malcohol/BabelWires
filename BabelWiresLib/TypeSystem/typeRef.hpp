@@ -31,7 +31,7 @@ namespace babelwires {
         TypeRef();
 
         /// A TypeRef describing a primitive type.
-        TypeRef(PrimitiveTypeId typeId);
+        TypeRef(RegisteredTypeId typeId);
 
         /// A TypeRef describing a complex type, constructed by applying the TypeConstructor
         /// to the arguments.
@@ -83,7 +83,7 @@ namespace babelwires {
       private:
         // TODO More compact storage.
         using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArguments>;
-        using Storage = std::variant<std::monostate, PrimitiveTypeId, ConstructedTypeData>;
+        using Storage = std::variant<std::monostate, RegisteredTypeId, ConstructedTypeData>;
 
       private:
         Storage m_storage;

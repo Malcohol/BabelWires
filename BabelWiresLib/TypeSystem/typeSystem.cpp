@@ -11,7 +11,7 @@
 
 #include <algorithm>
 namespace {
-    void insertTypeId(babelwires::TypeSystem::TypeIdSet& typeIds, const babelwires::PrimitiveTypeId& typeId) {
+    void insertTypeId(babelwires::TypeSystem::TypeIdSet& typeIds, const babelwires::RegisteredTypeId& typeId) {
         auto it = std::upper_bound(typeIds.begin(), typeIds.end(), typeId);
         typeIds.insert(it, typeId);
     }
@@ -20,7 +20,7 @@ namespace {
 babelwires::TypeSystem::TypeSystem() = default;
 babelwires::TypeSystem::~TypeSystem() = default;
 
-const babelwires::Type* babelwires::TypeSystem::tryGetPrimitiveType(PrimitiveTypeId id) const {
+const babelwires::Type* babelwires::TypeSystem::tryGetPrimitiveType(RegisteredTypeId id) const {
     auto it = m_primitiveTypeRegistry.find(id);
     if (it != m_primitiveTypeRegistry.end()) {
         return std::get<0>(it->second).get();
@@ -28,7 +28,7 @@ const babelwires::Type* babelwires::TypeSystem::tryGetPrimitiveType(PrimitiveTyp
     return nullptr;
 }
 
-const babelwires::Type& babelwires::TypeSystem::getPrimitiveType(PrimitiveTypeId id) const {
+const babelwires::Type& babelwires::TypeSystem::getPrimitiveType(RegisteredTypeId id) const {
     auto it = m_primitiveTypeRegistry.find(id);
     assert((it != m_primitiveTypeRegistry.end()) && "Primitive Type not registered in type system");
     return *std::get<0>(it->second);

@@ -1,5 +1,5 @@
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
 namespace testDomain {
@@ -14,7 +14,7 @@ namespace testDomain {
 
         static babelwires::TypeRef getEntryTypeStatic();
 
-        PRIMITIVE_TYPE("sarray", "Test Simple Array", "2bca3f50-8d9d-46ba-bf43-e0a583f5bcf7", 1);
+        REGISTERED_TYPE("sarray", "Test Simple Array", "2bca3f50-8d9d-46ba-bf43-e0a583f5bcf7", 1);
     };
 
     class TestCompoundArrayType : public babelwires::ArrayType {
@@ -27,7 +27,7 @@ namespace testDomain {
 
         static babelwires::TypeRef getEntryTypeStatic();
 
-        PRIMITIVE_TYPE("carray", "Test Compound Array", "e2125eb9-b8a5-470a-a287-7142ff5a6b9c", 1);
+        REGISTERED_TYPE("carray", "Test Compound Array", "e2125eb9-b8a5-470a-a287-7142ff5a6b9c", 1);
     };
 
     /// ValueNodeData which creates an element carrying a simple array.

@@ -22,7 +22,7 @@ namespace {
 
 babelwires::TypeRef::TypeRef() = default;
 
-babelwires::TypeRef::TypeRef(PrimitiveTypeId typeId)
+babelwires::TypeRef::TypeRef(RegisteredTypeId typeId)
     : m_storage(typeId) {}
 
 babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments)
@@ -34,7 +34,7 @@ babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructo
 const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
         const babelwires::Type* operator()(std::monostate) { return nullptr; }
-        const babelwires::Type* operator()(PrimitiveTypeId typeId) { return m_typeSystem.tryGetPrimitiveType(typeId); }
+        const babelwires::Type* operator()(RegisteredTypeId typeId) { return m_typeSystem.tryGetPrimitiveType(typeId); }
         const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
             try {
                 const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
@@ -57,7 +57,7 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         const babelwires::Type& operator()(std::monostate) {
             throw TypeSystemException() << "A null type cannot be resolved.";
         }
-        const babelwires::Type& operator()(PrimitiveTypeId typeId) { return m_typeSystem.getPrimitiveType(typeId); }
+        const babelwires::Type& operator()(RegisteredTypeId typeId) { return m_typeSystem.getPrimitiveType(typeId); }
         const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);
@@ -84,7 +84,7 @@ const babelwires::Type& babelwires::TypeRef::assertResolve(const TypeSystem& typ
 std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {
     struct VisitorMethods {
         std::string operator()(std::monostate) { return defaultStateString; }
-        std::string operator()(PrimitiveTypeId typeId) { return m_identifierRegistry->getName(typeId); }
+        std::string operator()(RegisteredTypeId typeId) { return m_identifierRegistry->getName(typeId); }
         std::string operator()(const ConstructedTypeData& constructedTypeData) {
             std::string formatString = m_identifierRegistry->getName(std::get<0>(constructedTypeData));
             // TODO The VisitorMethods object should own these.
@@ -119,7 +119,7 @@ std::string babelwires::TypeRef::toString() const {
 void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
     struct VisitorMethods {
         void operator()(std::monostate) {}
-        void operator()(const PrimitiveTypeId& typeId) { m_serializer.serializeValue("primitiveTypeId", typeId); }
+        void operator()(const RegisteredTypeId& typeId) { m_serializer.serializeValue("primitiveTypeId", typeId); }
         void operator()(const ConstructedTypeData& constructedTypeData) {
             m_serializer.serializeValue("typeConstructorId", std::get<0>(constructedTypeData));
             m_serializer.serializeArray("typeArguments", std::get<1>(constructedTypeData).m_typeArguments);
@@ -137,7 +137,7 @@ void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
 }
 
 void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
-    PrimitiveTypeId primitiveTypeId;
+    RegisteredTypeId primitiveTypeId;
     if (deserializer.deserializeValue("primitiveTypeId", primitiveTypeId,
                                       babelwires::Deserializer::IsOptional::Optional)) {
         m_storage = primitiveTypeId;
@@ -168,7 +168,7 @@ void babelwires::TypeRef::visitIdentifiers(IdentifierVisitor& visitor) {
     // Note: The visitor needs to access the actual stored data, so be careful to avoid copies.
     struct VisitorMethods {
         void operator()(std::monostate) {}
-        void operator()(PrimitiveTypeId& typeId) { m_visitor(typeId); }
+        void operator()(RegisteredTypeId& typeId) { m_visitor(typeId); }
         void operator()(ConstructedTypeData& higherOrderData) {
             m_visitor(std::get<0>(higherOrderData));
             auto& arguments = std::get<1>(higherOrderData).m_typeArguments;
@@ -187,7 +187,7 @@ std::size_t babelwires::TypeRef::getHash() const {
     // I wonder if the construction of std::hash objects creates pointless overhead here?
     struct VisitorMethods {
         void operator()(std::monostate) { hash::mixInto(m_currentHash, 0x11122233); }
-        void operator()(const PrimitiveTypeId& typeId) { hash::mixInto(m_currentHash, typeId); }
+        void operator()(const RegisteredTypeId& typeId) { hash::mixInto(m_currentHash, typeId); }
         void operator()(const ConstructedTypeData& higherOrderData) {
             hash::mixInto(m_currentHash, std::get<0>(higherOrderData), std::get<1>(higherOrderData));
         }
