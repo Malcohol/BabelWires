@@ -11,8 +11,8 @@
 
 namespace babelwires {
 
-    /// A type that can hold a value of any type.
-    /// The assigned types can be limited by providing a base type.
+    /// A type that wraps another type containing type variables that can be instantiated in
+    /// different ways.
     class GenericType : public CompoundType {
       public:
         GenericType(TypeRef baseType = TypeRef());

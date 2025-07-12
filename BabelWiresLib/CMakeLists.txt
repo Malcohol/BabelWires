@@ -39,6 +39,8 @@ SET( BABELWIRESLIB_SRCS
 	Types/File/fileTypeConstructor.cpp
 	Types/Generic/genericType.cpp
 	Types/Generic/genericValue.cpp
+	Types/Generic/typeVariableType.cpp
+	Types/Generic/typeVariableValue.cpp
 	Types/Map/Commands/addEntryToMapCommand.cpp
 	Types/Map/Commands/removeEntryFromMapCommand.cpp
 	Types/Map/Commands/replaceMapEntryCommand.cpp
