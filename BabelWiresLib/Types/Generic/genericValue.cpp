@@ -30,11 +30,6 @@ babelwires::ValueHolder& babelwires::GenericValue::getValue() {
     return m_wrappedValue;
 }
 
-void babelwires::GenericValue::setValue(const TypeSystem& typeSystem, const ValueHolder& value) {
-    assert(m_actualWrappedType.assertResolve(typeSystem).isValidValue(typeSystem, *value));
-    m_wrappedValue = value;
-}
-
 std::size_t babelwires::GenericValue::getHash() const {
     auto hash = hash::mixtureOf(std::string("Generic"), m_actualWrappedType, m_wrappedValue);
     for (const auto& t : m_typeVariableAssignments) {

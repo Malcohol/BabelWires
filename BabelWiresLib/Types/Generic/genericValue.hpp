@@ -20,17 +20,21 @@ namespace babelwires {
 
         const TypeRef& getWrappedType() const;
 
+        /// Update the typeVariableAssignments
         void assignTypeVariable(unsigned int variableIndex, const TypeRef& typeValue);
+
+        /// Set the actualWrappedType to that determined by the current type assignment
+        /// and update the wrappedValue to an instance of the type.
         void instantiate(const TypeSystem& typeSystem, const TypeRef& wrappedType);
 
         const ValueHolder& getValue() const;
         ValueHolder& getValue();
 
-        void setValue(const TypeSystem& typeSystem, const ValueHolder& value);
-
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
       private:
+        /// Build a version of wrappedType where type variables are substituted according to the
+        /// type assignment.
         TypeRef buildInstantiatedType(const TypeRef& wrappedType) const;
 
       private:
