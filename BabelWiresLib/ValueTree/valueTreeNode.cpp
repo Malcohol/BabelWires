@@ -146,7 +146,12 @@ void babelwires::ValueTreeNode::setValue(const ValueHolder& newValue) {
     doSetValue(newValue);
 }
 
+void babelwires::ValueTreeNode::setType(const TypeRef& typeRef) {
+    return;
+}
+
 void babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
+    setType(other.getTypeRef());
     setValue(other.getValue());
 }
 

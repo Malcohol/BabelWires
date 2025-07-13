@@ -120,6 +120,9 @@ namespace babelwires {
         /// In this special case, the changes are known to lie at the end of path p.
         void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path);
 
+        /// 
+        virtual void setType(const TypeRef& typeRef);
+
       private:
         void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path, unsigned int pathIndex);
 

@@ -24,5 +24,6 @@ namespace babelwires {
       protected:
         void doSetValue(const ValueHolder& newValue) override;
         void doSetToDefault() override;
+        void setType(const TypeRef& typeRef);
     };
 } // namespace babelwires
