@@ -9,9 +9,10 @@
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
-babelwires::GenericValue::GenericValue(TypeRef wrappedType, unsigned int numVariables)
+babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, TypeRef wrappedType, unsigned int numVariables)
     : m_actualWrappedType(wrappedType)
     , m_typeVariableAssignments(numVariables)
+    , m_wrappedValue(m_actualWrappedType.resolve(typeSystem).createValue(typeSystem))
 {
 }
 

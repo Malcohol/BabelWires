@@ -12,9 +12,9 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::GenericType::GenericType(TypeRef wrappedType, std::vector<TypeRef> typeVariableBaseTypes)
+babelwires::GenericType::GenericType(TypeRef wrappedType, unsigned int numVariables)
     : m_wrappedType(std::move(wrappedType))
-    , m_typeVariableBaseTypes(typeVariableBaseTypes) {}
+    , m_numVariables(numVariables) {}
 
 std::string babelwires::GenericType::getFlavour() const {
     // Not connectable.
@@ -22,7 +22,7 @@ std::string babelwires::GenericType::getFlavour() const {
 }
 
 babelwires::NewValueHolder babelwires::GenericType::createValue(const TypeSystem& typeSystem) const {
-    return babelwires::ValueHolder::makeValue<GenericValue>(m_wrappedType, m_typeVariableBaseTypes.size());
+    return babelwires::ValueHolder::makeValue<GenericValue>(typeSystem, m_wrappedType, m_numVariables);
 }
 
 bool babelwires::GenericType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
@@ -30,24 +30,9 @@ bool babelwires::GenericType::isValidValue(const TypeSystem& typeSystem, const V
     if (!genericValue) {
         return false;
     }
+
     // TODO
-    /*
-    if (const auto& value = genericValue->getValue()) {
-        if (m_baseType) {
-            if (typeSystem.isSubType(genericValue->getTypeRef(), m_baseType)) {
-                assert(genericValue->getTypeRef().assertResolve(typeSystem).isValidValue(typeSystem, *value) &&
-                       "Encountered a generic value whose value didn't match its type.");
-                return true; // The value is of a type that is a subtype of the base type.
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
-    } else {
-        return false;
-    }
-        */
+    return true;
 }
 
 unsigned int babelwires::GenericType::getNumChildren(const ValueHolder& compoundValue) const {
@@ -92,4 +77,22 @@ std::string babelwires::GenericType::valueToString(const TypeSystem& typeSystem,
 
 babelwires::ShortId babelwires::GenericType::getStepToValue() {
     return BW_SHORT_ID("wrappd", "value", "69d92618-a000-476e-afc1-9121e1bfac1e");
+}
+
+void babelwires::GenericType::instantiate(ValueHolder& genericValue, unsigned int variableIndex, const TypeRef& typeValue) const {
+    struct Visitor {
+        TypeRef operator()(std::monostate) {
+            return TypeRef();
+        }
+        TypeRef operator()(const RegisteredTypeId& typeId) { 
+            // TODO Simplifying limitation for now: registered types may not contain type variables.
+            return typeId;
+        }
+        TypeRef operator()(const TypeConstructorId& constructorId, const TypeConstructorArguments& constructorArguments) {
+            // If type variable: Possibly substitute
+            // Else: Recurse.
+            return TypeRef();
+        }
+    } visitor;
+    m_wrappedType.visit<Visitor, TypeRef>(visitor);
 }

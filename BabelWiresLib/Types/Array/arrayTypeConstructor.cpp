@@ -13,8 +13,9 @@
 
 std::tuple<unsigned int, unsigned int, unsigned int>
 babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
+    // TODO default size should be optional.
     if (valueArguments.size() != 3) {
-        throw TypeSystemException() << "IntTypeConstructor expects 3 value arguments but got " << valueArguments.size();
+        throw TypeSystemException() << "ArrayTypeConstructor expects 3 value arguments but got " << valueArguments.size();
     }
 
     IntValue::NativeType args[3];

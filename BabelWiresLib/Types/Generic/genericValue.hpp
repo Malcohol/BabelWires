@@ -16,7 +16,7 @@ namespace babelwires {
       public:
         CLONEABLE(GenericValue);
 
-        GenericValue(TypeRef wrappedType, unsigned int numVariables);
+        GenericValue(const TypeSystem& typeSystem, TypeRef wrappedType, unsigned int numVariables);
 
         const TypeRef& getWrappedType() const;
         

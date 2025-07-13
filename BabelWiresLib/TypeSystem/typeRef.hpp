@@ -80,6 +80,11 @@ namespace babelwires {
         /// Returns a parsed type and a position just beyond that type.
         static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);
 
+      public:
+        /// Visit each of the cases of the TypeRef.
+        template <typename Visitor, typename R = decltype(Visitor::operator()(std::monostate()))>
+        R visit(Visitor& visitor) const;
+
       private:
         // TODO More compact storage.
         using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArguments>;

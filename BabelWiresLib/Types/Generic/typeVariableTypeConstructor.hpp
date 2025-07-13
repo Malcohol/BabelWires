@@ -10,22 +10,21 @@
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 namespace babelwires {
-    /// Construct a new ArrayType from a TypeRef and three IntValues: min size, max size and default size.
-    class ArrayTypeConstructor : public TypeConstructor {
+    /// Construct a TypeVariable from two IntValues: The index in the generic type and the number of
+    /// generic types to traverse upwards to find the generic type of which this is a variable.
+    class TypeVariableTypeConstructor : public TypeConstructor {
       public:
-        /// Note that the default size is not represented in the name.
-        TYPE_CONSTRUCTOR("Array", "Array<{0}>[[[0]..[1]]]", "3f8cac9a-2c0b-439f-97ed-bde16874b994", 1);
+        TYPE_CONSTRUCTOR("TVar", "TVar([0|,])", "33f14749-b652-4d53-808b-8d8c281c310f", 1);
 
         std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
 
         /// Convenience method.
-        /// If defaultSize is less than minimumSize, the minimumSize is used.
-        static TypeRef makeTypeRef(TypeRef entryType, unsigned int minSize, unsigned int maxSize, unsigned int defaultSize = 0);
+        static TypeRef makeTypeRef(unsigned int typeVariableIndex = 0, unsigned int numGenericTypeLevels = 0);
 
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
-        static std::tuple<unsigned int, unsigned int, unsigned int>
+        static std::tuple<unsigned int, unsigned int>
         extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
     };
 } // namespace babelwires
