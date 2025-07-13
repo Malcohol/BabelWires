@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
+#include <optional>
+
 namespace babelwires {
     /// Construct a TypeVariable from two IntValues: The index in the generic type and the number of
     /// generic types to traverse upwards to find the generic type of which this is a variable.
@@ -22,8 +24,16 @@ namespace babelwires {
         /// Convenience method.
         static TypeRef makeTypeRef(unsigned int typeVariableIndex = 0, unsigned int numGenericTypeLevels = 0);
 
+        struct VariableData {
+          unsigned int m_typeVariableIndex;
+          unsigned int m_numGenericTypeLevels;
+        };
+
+        /// Convenience method
+        static std::optional<VariableData> isTypeVariable(const TypeRef& typeRef);
+
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
-        static std::tuple<unsigned int, unsigned int>
+        static VariableData
         extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
     };
 } // namespace babelwires

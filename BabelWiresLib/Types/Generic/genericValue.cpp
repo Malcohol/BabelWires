@@ -62,13 +62,12 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
             return typeId;
         }
         TypeRef operator()(const TypeConstructorId& constructorId, const TypeConstructorArguments& constructorArguments) {
-            // If type variable: Possibly substitute
             if (constructorId == TypeVariableTypeConstructor::getThisIdentifier()) {
-                const auto [index, level] = TypeVariableTypeConstructor::extractValueArguments(constructorArguments.m_valueArguments);
-                if (level == m_level) {
+                const TypeVariableTypeConstructor::VariableData variableData = TypeVariableTypeConstructor::extractValueArguments(constructorArguments.m_valueArguments);
+                if (variableData.m_numGenericTypeLevels == m_level) {
                     const auto& typeAssignments = m_genericValue.m_typeVariableAssignments;
-                    assert(index <= typeAssignments.size());
-                    if (const TypeRef& assignment = typeAssignments[index]) {
+                    assert(variableData.m_typeVariableIndex <= typeAssignments.size());
+                    if (const TypeRef& assignment = typeAssignments[variableData.m_typeVariableIndex]) {
                         return assignment;
                     } else {
                         return TypeRef(constructorId, constructorArguments);
