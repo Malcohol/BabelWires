@@ -25,7 +25,7 @@ namespace babelwires {
         static babelwires::ShortId getStepToValue();
 
         /// Instantiate the specified type variable using the given type.
-        void instantiate(ValueHolder& genericValue, unsigned int variableIndex, const TypeRef& typeValue) const;
+        void instantiate(const TypeSystem& typeSystem, ValueHolder& genericValue, unsigned int variableIndex, const TypeRef& typeValue) const;
 
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

@@ -19,7 +19,10 @@ namespace babelwires {
         GenericValue(const TypeSystem& typeSystem, TypeRef wrappedType, unsigned int numVariables);
 
         const TypeRef& getWrappedType() const;
-        
+
+        void assignTypeVariable(unsigned int variableIndex, const TypeRef& typeValue);
+        void instantiate(const TypeSystem& typeSystem, const TypeRef& wrappedType);
+
         const ValueHolder& getValue() const;
         ValueHolder& getValue();
 
@@ -27,6 +30,8 @@ namespace babelwires {
 
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
+      private:
+        TypeRef buildInstantiatedType(const TypeRef& wrappedType) const;
 
       private:
         /// The actual type may differ from the GenericType's wrapped type

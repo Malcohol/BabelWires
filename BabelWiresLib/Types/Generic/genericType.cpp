@@ -79,20 +79,8 @@ babelwires::ShortId babelwires::GenericType::getStepToValue() {
     return BW_SHORT_ID("wrappd", "value", "69d92618-a000-476e-afc1-9121e1bfac1e");
 }
 
-void babelwires::GenericType::instantiate(ValueHolder& genericValue, unsigned int variableIndex, const TypeRef& typeValue) const {
-    struct Visitor {
-        TypeRef operator()(std::monostate) {
-            return TypeRef();
-        }
-        TypeRef operator()(const RegisteredTypeId& typeId) { 
-            // TODO Simplifying limitation for now: registered types may not contain type variables.
-            return typeId;
-        }
-        TypeRef operator()(const TypeConstructorId& constructorId, const TypeConstructorArguments& constructorArguments) {
-            // If type variable: Possibly substitute
-            // Else: Recurse.
-            return TypeRef();
-        }
-    } visitor;
-    m_wrappedType.visit<Visitor, TypeRef>(visitor);
+void babelwires::GenericType::instantiate(const TypeSystem& typeSystem, ValueHolder& genericValue, unsigned int variableIndex, const TypeRef& typeValue) const {
+    GenericValue& value = genericValue.copyContentsAndGetNonConst().is<GenericValue>();
+    value.assignTypeVariable(variableIndex, typeValue);
+    value.instantiate(typeSystem, m_wrappedType);
 }

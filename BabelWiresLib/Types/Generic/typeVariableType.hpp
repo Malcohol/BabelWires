@@ -12,6 +12,10 @@
 namespace babelwires {
 
     /// The Type used at a type variable that has not been instantiated.
+    /// The algorithm for instantiating type variables uses TypeRef expressions, 
+    /// so it get the variable index and generic type level information from
+    /// the TypeVariableTypeConstructor expression. Therefore, this type object
+    /// doesn't need to carry that information.
     class TypeVariableType : public Type {
       public:
         TypeVariableType();

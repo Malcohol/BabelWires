@@ -22,7 +22,6 @@ namespace babelwires {
         /// Convenience method.
         static TypeRef makeTypeRef(unsigned int typeVariableIndex = 0, unsigned int numGenericTypeLevels = 0);
 
-      private:
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
         static std::tuple<unsigned int, unsigned int>
         extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);

@@ -7,6 +7,8 @@
 
 testDomain::TestGenericType::TestGenericType()
 : GenericType(
+    // Note: We assume generic types are made using TypeRef expressions, so this cannot
+    // use a registered record type. Similarly, the array cannot be a registered type.
     babelwires::RecordTypeConstructor::makeTypeRef(
         BW_SHORT_ID("x", "x", "2bff1eef-8ca5-4988-85f7-7fb1f29e629c"), 
         babelwires::TypeVariableTypeConstructor::makeTypeRef(),
@@ -21,5 +23,4 @@ testDomain::TestGenericType::TestGenericType()
     1
 )
 {
-    
 }
