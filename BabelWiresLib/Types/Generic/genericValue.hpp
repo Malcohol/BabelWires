@@ -10,6 +10,7 @@
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/Path/path.hpp>
 
 namespace babelwires {
     class GenericValue : public Value {
@@ -21,11 +22,7 @@ namespace babelwires {
         const TypeRef& getWrappedType() const;
 
         /// Update the typeVariableAssignments
-        void assignTypeVariable(unsigned int variableIndex, const TypeRef& typeValue);
-
-        /// Set the actualWrappedType to that determined by the current type assignment
-        /// and update the wrappedValue to an instance of the type.
-        void instantiate(const TypeSystem& typeSystem, const TypeRef& wrappedType);
+        void assignTypeVariableAndInstantiate(const TypeSystem& typeSystem, const TypeRef& wrappedTypeRef, unsigned int variableIndex, const TypeRef& typeValue);
 
         const ValueHolder& getValue() const;
         ValueHolder& getValue();
@@ -36,6 +33,8 @@ namespace babelwires {
         /// Build a version of wrappedType where type variables are substituted according to the
         /// type assignment.
         TypeRef buildInstantiatedType(const TypeRef& wrappedType) const;
+        
+        std::vector<Path> findPathsToTypeVariableInstances(const TypeSystem& typeSystem, unsigned int variableIndex) const;
 
       private:
         /// The actual type may differ from the GenericType's wrapped type

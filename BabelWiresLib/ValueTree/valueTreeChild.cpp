@@ -11,6 +11,7 @@
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
@@ -37,34 +38,47 @@ void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
 
 void babelwires::ValueTreeChild::doSetToDefault() {
     const TypeSystem& typeSystem = getTypeSystem();
-    auto [newValue, _] = getType().createValue(typeSystem);
-    auto rootAndPath = getRootAndPathTo(*this);
+    const auto [newValue, _] = getType().createValue(typeSystem);
+    const auto rootAndPath = getRootAndPathTo(*this);
     rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
 }
 
 void babelwires::ValueTreeChild::setType(const TypeRef& type) {
-    if (const auto variableData = TypeVariableTypeConstructor::isTypeVariable(getTypeRef())) {
-        // Search up the tree for the generic type.
-        unsigned int level = variableData->m_numGenericTypeLevels;
-        ValueTreeNode* current = this;
-        ValueTreeNode* parent;
-        do {
-            parent = current->getOwnerNonConst();
-            if (!parent) {
-                // This could happen if a subtree beneath a generic type was dragged out of a node,
-                // TODO: This is not a useful state, so do something to prevent it.
-                return;
-            } else if (parent->getType().as<GenericType>()) {
-                if (level == 0) {
-                    current = parent;
-                    break;
-                } else {
-                    --level;
-                }
-            }
-            current = parent;
-        } while (1);
-        const GenericType& genericType = current->getType().is<GenericType>();
-        genericType.instantiate(getTypeSystem(), current->getValue(), variableData->m_typeVariableIndex, type);
+    const auto variableData = TypeVariableTypeConstructor::isTypeVariable(getTypeRef());
+    if (!variableData) {
+        return;
     }
+
+    // Search up the tree for the generic type.
+    unsigned int level = variableData->m_numGenericTypeLevels;
+    ValueTreeNode* current = this;
+    ValueTreeNode* parent;
+    do {
+        parent = current->getOwnerNonConst();
+        if (!parent) {
+            // This could happen if a subtree beneath a generic type was dragged out of a node,
+            // TODO: This is not a useful state, so do something to prevent it.
+            return;
+        } else if (parent->getType().as<GenericType>()) {
+            if (level == 0) {
+                current = parent;
+                break;
+            } else {
+                --level;
+            }
+        }
+        current = parent;
+    } while (1);
+    const GenericType& genericType = current->getType().is<GenericType>();
+
+    const TypeSystem& typeSystem = getTypeSystem();
+
+    // Get a non-const ValueHolder corresponding to current.
+    ValueHolder newValue = current->getValue();
+    genericType.instantiate(typeSystem, newValue, variableData->m_typeVariableIndex, type);
+
+    // Set this value at the tree
+    const auto rootAndPath = getRootAndPathTo(*current);
+
+    rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
 }

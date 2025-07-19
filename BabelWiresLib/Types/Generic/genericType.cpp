@@ -81,6 +81,5 @@ babelwires::ShortId babelwires::GenericType::getStepToValue() {
 
 void babelwires::GenericType::instantiate(const TypeSystem& typeSystem, ValueHolder& genericValue, unsigned int variableIndex, const TypeRef& typeValue) const {
     GenericValue& value = genericValue.copyContentsAndGetNonConst().is<GenericValue>();
-    value.assignTypeVariable(variableIndex, typeValue);
-    value.instantiate(typeSystem, m_wrappedType);
+    value.assignTypeVariableAndInstantiate(typeSystem, m_wrappedType, variableIndex, typeValue);
 }
