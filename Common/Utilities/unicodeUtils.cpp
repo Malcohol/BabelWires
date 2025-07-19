@@ -9,7 +9,6 @@
 #include <Common/Utilities/unicodeUtils.hpp>
 
 #include <stack>
-#include <ostream>
 #include <cstdint>
 
 void babelwires::writeUnicodeSubscript(std::ostream& os, int number) {
