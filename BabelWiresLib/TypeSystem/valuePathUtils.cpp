@@ -68,9 +68,9 @@ namespace {
             // Break the paths span into sub-spans, corresponding to children.
             auto left = paths.begin();
             auto next = left;
-            babelwires::PathStep currentStep = (*left)->getStep(depth);
             do {
                 ++next;
+                const babelwires::PathStep currentStep = (*left)->getStep(depth);
                 if ((next == paths.end()) || currentStep != (*next)->getStep(depth)) {
                     const std::span<const babelwires::Path*> childSpan(left, next);
                     const int childIndex = compoundType->getChildIndexFromStep(valueHolder, currentStep);
