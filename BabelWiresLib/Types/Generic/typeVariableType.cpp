@@ -28,9 +28,15 @@ bool babelwires::TypeVariableType::isValidValue(const TypeSystem& typeSystem, co
 
 std::optional<babelwires::SubtypeOrder> babelwires::TypeVariableType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
     // TODO: Since the subtype order is responsible for connectivity, this may need to be more sophisticated.
-    return other.as<TypeVariableType>() ? SubtypeOrder::IsEquivalent : SubtypeOrder::IsDisjoint;
+    return other.as<TypeVariableType>() ? SubtypeOrder::IsEquivalent : SubtypeOrder::IsIntersecting;
 }
 
 std::string babelwires::TypeVariableType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
     return "<generic>";
+}
+
+babelwires::TypeVariableTypeConstructor::VariableData babelwires::TypeVariableType::getVariableData() const {
+    auto optVariableData = TypeVariableTypeConstructor::isTypeVariable(getTypeRef());
+    assert(optVariableData && "A typeVariable had a typeRef that wasn't using a typeVariableTypeConstructor");
+    return *optVariableData;
 }

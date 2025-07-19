@@ -8,19 +8,21 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 
 namespace babelwires {
 
     /// The Type used at a type variable that has not been instantiated.
-    /// The algorithm for instantiating type variables uses TypeRef expressions, 
-    /// so it get the variable index and generic type level information from
-    /// the TypeVariableTypeConstructor expression. Therefore, this type object
-    /// doesn't need to carry that information.
+    /// The information about the type variable is carried by the typeRef.
     class TypeVariableType : public Type {
       public:
         TypeVariableType();
 
         std::string getFlavour() const override;
+
+        /// Convenience method that extracts the data from this type's TypeRef.
+        /// This method asserts if this type was not constructed in the expected way.
+        TypeVariableTypeConstructor::VariableData getVariableData() const;
 
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
