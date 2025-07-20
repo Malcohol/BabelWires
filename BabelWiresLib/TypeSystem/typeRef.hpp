@@ -83,7 +83,7 @@ namespace babelwires {
 
       public:
         /// Visit each of the cases of the TypeRef.
-        /// Warning: Be very careful with this, since you can assume very little about how a constructor uses its
+        /// Warning: Be very careful with this, because you can assume very little about how a constructor uses its
         /// arguments. For example, the presence of a typeref argument does not guarantee that an instance of the
         /// corresponding type is contained in the result.
         template <typename Visitor, typename R = decltype(Visitor::operator()(std::monostate()))>

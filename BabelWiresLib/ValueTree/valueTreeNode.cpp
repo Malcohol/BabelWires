@@ -209,8 +209,8 @@ void babelwires::ValueTreeNode::initializeChildren(const TypeSystem& typeSystem)
 
     const unsigned int numChildrenNow = compound->getNumChildren(value);
     for (unsigned int i = 0; i < numChildrenNow; ++i) {
-        auto [childValue, step, type] = compound->getChild(value, i);
-        auto child = std::make_unique<ValueTreeChild>(type, *childValue, this);
+        auto [childValue, step, childTypeRef] = compound->getChild(value, i);
+        auto child = std::make_unique<ValueTreeChild>(childTypeRef, *childValue, this);
         child->initializeChildren(typeSystem);
         m_children.insert_or_assign(step, i, std::move(child));
     }
@@ -239,8 +239,8 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
         std::map<PathStep, NewChildInfo> otherValues;
         unsigned int newNumChildren = compound->getNumChildren(other);
         for (unsigned int i = 0; i < newNumChildren; ++i) {
-            auto [child, step, typeRef] = compound->getChild(other, i);
-            otherValues.emplace(std::pair{step, NewChildInfo{child, typeRef, i}});
+            auto [child, step, childTypeRef] = compound->getChild(other, i);
+            otherValues.emplace(std::pair{step, NewChildInfo{child, childTypeRef, i}});
         }
 
         auto currentIt = currentChildren.begin();
