@@ -11,7 +11,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                               const std::vector<const Type*>& typeArguments,
                                               const std::vector<EditableValueHolder>& valueArguments) const {

@@ -17,7 +17,7 @@ namespace babelwires {
         /// Note that the we don't represent the default in the name.
         TYPE_CONSTRUCTOR("Map", "{0}\u21C9{1}", "7b45de96-b355-4d87-a1b1-a6305b660716", 1);
 
-        std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
 
         /// Convenience method.

@@ -40,7 +40,7 @@ babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector
     return {static_cast<unsigned int>(args[0]), static_cast<unsigned int>(args[1])};
 }
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                        const std::vector<const Type*>& typeArguments,
                                                        const std::vector<EditableValueHolder>& valueArguments) const {

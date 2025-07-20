@@ -48,7 +48,7 @@ babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<Editab
     return {static_cast<unsigned int>(args[0]), static_cast<unsigned int>(args[1]), static_cast<unsigned int>(args[2])};
 }
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                               const std::vector<const Type*>& typeArguments,
                                               const std::vector<EditableValueHolder>& valueArguments) const {

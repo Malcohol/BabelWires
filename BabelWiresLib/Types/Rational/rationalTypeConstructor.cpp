@@ -29,7 +29,7 @@ babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<Edi
     return {{args[0], args[1]}, args[2]};
 }
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                               const std::vector<EditableValueHolder>& valueArguments) const {
     if (typeArguments.size() != 0) {

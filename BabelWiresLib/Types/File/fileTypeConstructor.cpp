@@ -10,7 +10,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                   const std::vector<const Type*>& typeArguments,
                                                   const std::vector<EditableValueHolder>& valueArguments) const {

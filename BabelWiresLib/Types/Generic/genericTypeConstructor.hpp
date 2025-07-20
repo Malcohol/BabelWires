@@ -15,7 +15,7 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("Gen", "Gen<[0]>", "56ff5848-9be4-4288-a893-eec7ef15e675", 1);
 
-        std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
 
         /// Convenience method.

@@ -20,7 +20,7 @@ namespace babelwires {
         /// Convenience method.
         static TypeRef makeTypeRef(TypeRef typeOfContents);
 
-        std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
     };
 } // namespace babelwires

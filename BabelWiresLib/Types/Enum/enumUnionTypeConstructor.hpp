@@ -16,7 +16,7 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("EnumUnion", "({0| U })", "92eade8a-5315-419f-b3c6-71424ff6ea49", 1);
 
-        std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
+        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                             const std::vector<EditableValueHolder>& valueArguments) const override;
 
         /// Convenience method for binary unions

@@ -13,7 +13,7 @@
 
 #include <unordered_set>
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                    const std::vector<const Type*>& typeArguments,
                                                    const std::vector<EditableValueHolder>& valueArguments) const {

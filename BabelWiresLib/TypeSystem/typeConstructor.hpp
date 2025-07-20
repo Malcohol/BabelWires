@@ -38,14 +38,16 @@ namespace babelwires {
         virtual TypeConstructorId getTypeConstructorId() const = 0;
 
       protected:
+        using TypeConstructorResult = std::variant<std::unique_ptr<Type>, const Type*>;
+
         /// Construct the new type or throw a TypeSystemException if it cannot be constructed.
         /// The newTypeRef is provided to allow implementations to move it into the constructed type.
-        virtual std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+        virtual TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                     const std::vector<const Type*>& typeArguments,
                                                     const std::vector<EditableValueHolder>& valueArguments) const = 0;
 
       private:
-        using PerTypeStorage = std::variant<std::monostate, std::unique_ptr<Type>, std::string>;
+        using PerTypeStorage = std::variant<std::monostate, std::unique_ptr<Type>, const Type*, std::string>;
 
         const PerTypeStorage& getOrConstructTypeInternal(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 

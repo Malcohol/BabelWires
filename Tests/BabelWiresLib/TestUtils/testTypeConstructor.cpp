@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 testUtils::TestUnaryTypeConstructor::constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
                                                     const std::vector<babelwires::EditableValueHolder>& valueArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
@@ -13,7 +13,7 @@ testUtils::TestUnaryTypeConstructor::constructType(const babelwires::TypeSystem&
     return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef), sourceType->m_maximumLength + 1);
 }
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 testUtils::TestBinaryTypeConstructor::constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
                                                     const std::vector<babelwires::EditableValueHolder>& valueArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
@@ -25,7 +25,7 @@ testUtils::TestBinaryTypeConstructor::constructType(const babelwires::TypeSystem
     return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef), sourceType0->m_maximumLength + sourceType1->m_maximumLength);
 }
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 testUtils::TestMixedTypeConstructor::constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
                                                     const std::vector<babelwires::EditableValueHolder>& valueArguments) const {
     assert(typeArguments.size() == 1);

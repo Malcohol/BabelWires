@@ -37,7 +37,7 @@ babelwires::GenericTypeConstructor::extractValueArguments(const std::vector<Edit
     }
 }
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                   const std::vector<const Type*>& typeArguments,
                                                   const std::vector<EditableValueHolder>& valueArguments) const {

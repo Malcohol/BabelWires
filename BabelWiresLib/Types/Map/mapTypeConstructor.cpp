@@ -30,7 +30,7 @@ babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSyst
     }
 }
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                               const std::vector<const Type*>& typeArguments,
                                               const std::vector<EditableValueHolder>& valueArguments) const {

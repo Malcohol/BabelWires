@@ -11,7 +11,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::EnumAtomTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                    const std::vector<const Type*>& typeArguments,
                                                    const std::vector<EditableValueHolder>& valueArguments) const {

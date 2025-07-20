@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                               const std::vector<const Type*>& typeArguments,
                                               const std::vector<EditableValueHolder>& valueArguments) const {

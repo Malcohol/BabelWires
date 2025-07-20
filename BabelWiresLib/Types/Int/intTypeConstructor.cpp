@@ -28,7 +28,7 @@ babelwires::IntTypeConstructor::extractValueArguments(const std::vector<Editable
     return {{args[0], args[1]}, args[2]};
 }
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
                                               const std::vector<EditableValueHolder>& valueArguments) const {
     if (typeArguments.size() != 0) {
