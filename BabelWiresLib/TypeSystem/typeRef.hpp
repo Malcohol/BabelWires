@@ -42,7 +42,8 @@ namespace babelwires {
         TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0, TypeRef typeRef1);
         TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0);
         TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0, EditableValueHolder value1);
-        TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0, EditableValueHolder value1, EditableValueHolder value2);
+        TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0, EditableValueHolder value1,
+                EditableValueHolder value2);
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
         /// Returns null if this TypeRef does not resolve.
@@ -82,6 +83,9 @@ namespace babelwires {
 
       public:
         /// Visit each of the cases of the TypeRef.
+        /// Warning: Be very careful with this, since you can assume very little about how a constructor uses its
+        /// arguments. For example, the presence of a typeref argument does not guarantee that an instance of the
+        /// corresponding type is contained in the result.
         template <typename Visitor, typename R = decltype(Visitor::operator()(std::monostate()))>
         R visit(Visitor& visitor) const;
 
