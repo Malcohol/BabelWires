@@ -7,10 +7,9 @@
  **/
 #include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 
-#include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
-
 
 babelwires::TypeRef babelwires::GenericTypeConstructor::makeTypeRef(unsigned int numVariables) {
     return TypeRef(GenericTypeConstructor::getThisIdentifier(), IntValue(numVariables));
@@ -39,15 +38,15 @@ babelwires::GenericTypeConstructor::extractValueArguments(const std::vector<Edit
 
 babelwires::TypeConstructor::TypeConstructorResult
 babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
-                                                  const std::vector<const Type*>& typeArguments,
-                                                  const std::vector<EditableValueHolder>& valueArguments) const {
-    unsigned int numVariables = extractValueArguments(valueArguments);
+                                                  const TypeConstructorArguments& arguments,
+                                                  const std::vector<const Type*>& resolvedTypeArguments) const {
+    unsigned int numVariables = extractValueArguments(arguments.m_valueArguments);
 
-    if (typeArguments.size() != 1) {
+    if (arguments.m_typeArguments.size() != 1) {
         throw TypeSystemException() << "GenericTypeConstructor expects 1 type argument but got "
-                                    << typeArguments.size();
+                                    << arguments.m_typeArguments.size();
     }
-    const TypeRef& wrappedType = typeArguments[0]->getTypeRef();
+    const TypeRef& wrappedType = arguments.m_typeArguments[0];
 
     return std::make_unique<ConstructedType<GenericType>>(std::move(newTypeRef), wrappedType, numVariables);
 }

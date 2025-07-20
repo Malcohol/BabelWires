@@ -15,8 +15,9 @@ namespace testUtils {
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Unary"), 1);
 
         babelwires::TypeConstructor::TypeConstructorResult
-        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
-                                                    const std::vector<babelwires::EditableValueHolder>& valueArguments) const override;
+        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
+                      const babelwires::TypeConstructorArguments& arguments,
+                      const std::vector<const babelwires::Type*>& resolvedTypeArguments) const override;
     };
 
     class TestBinaryTypeConstructor : public babelwires::TypeConstructor {
@@ -24,8 +25,9 @@ namespace testUtils {
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Binary"), 1);
 
         babelwires::TypeConstructor::TypeConstructorResult
-        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
-                                                    const std::vector<babelwires::EditableValueHolder>& valueArguments) const override;
+        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
+                      const babelwires::TypeConstructorArguments& arguments,
+                      const std::vector<const babelwires::Type*>& resolvedTypeArguments) const override;
     };
 
     /// Takes a TestType and a StringValue and constructs a new TestType with the value concatenated onto its default.
@@ -34,8 +36,9 @@ namespace testUtils {
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Mixed"), 1);
 
         babelwires::TypeConstructor::TypeConstructorResult
-        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef, const std::vector<const babelwires::Type*>& typeArguments,
-                                                    const std::vector<babelwires::EditableValueHolder>& valueArguments) const override;
+        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
+                      const babelwires::TypeConstructorArguments& arguments,
+                      const std::vector<const babelwires::Type*>& resolvedTypeArguments) const override;
     };
 
 } // namespace testUtils

@@ -77,8 +77,7 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
             // Only construct the type if the arity is correct.
             if (resolvedArguments.size() == arguments.m_typeArguments.size()) {
                 try {
-                    TypeConstructorResult result = constructType(typeSystem, std::move(newTypeRef), resolvedArguments,
-                                                                 arguments.m_valueArguments);
+                    TypeConstructorResult result = constructType(typeSystem, std::move(newTypeRef), arguments, resolvedArguments);
                     if (std::holds_alternative<std::unique_ptr<Type>>(result)) {
                         assert(std::get<std::unique_ptr<Type>>(result) &&
                             "Returning a null unique pointer from a TypeConstructor is not permitted");

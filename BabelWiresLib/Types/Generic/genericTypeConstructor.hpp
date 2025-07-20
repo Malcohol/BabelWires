@@ -15,8 +15,8 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("Gen", "Gen<[0]>", "56ff5848-9be4-4288-a893-eec7ef15e675", 1);
 
-        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                            const std::vector<EditableValueHolder>& valueArguments) const override;
+        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
+                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
 
         /// Convenience method.
         static TypeRef makeTypeRef(unsigned int numVariables = 1);

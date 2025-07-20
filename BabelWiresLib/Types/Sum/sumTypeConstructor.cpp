@@ -14,20 +14,20 @@
 
 babelwires::TypeConstructor::TypeConstructorResult
 babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
-                                              const std::vector<const Type*>& typeArguments,
-                                              const std::vector<EditableValueHolder>& valueArguments) const {
-    if (typeArguments.size() < 2) {
+                                              const TypeConstructorArguments& arguments,
+                                              const std::vector<const Type*>& resolvedTypeArguments) const {
+    if (arguments.m_typeArguments.size() < 2) {
         throw TypeSystemException() << "SumTypeConstructor expects at least 2 type arguments but got "
-                                    << typeArguments.size();
+                                    << arguments.m_typeArguments.size();
     }
     unsigned int defaultIndex = 0;
-    if (valueArguments.size() > 1) {
+    if (arguments.m_valueArguments.size() > 1) {
         throw TypeSystemException() << "SumTypeConstructor expects at most 1 value argument but got "
-                                    << valueArguments.size();
-    } else if (valueArguments.size() == 1) {
-        if (const auto* intValue = valueArguments[0]->as<babelwires::IntValue>()) {
+                                    << arguments.m_valueArguments.size();
+    } else if (arguments.m_valueArguments.size() == 1) {
+        if (const auto* intValue = arguments.m_valueArguments[0]->as<babelwires::IntValue>()) {
             defaultIndex = intValue->get();
-            if (defaultIndex >= typeArguments.size()) {
+            if (defaultIndex >= arguments.m_typeArguments.size()) {
                 throw TypeSystemException() << "The default index provided to the SumTypeConstructor was out of range";
             }
         } else {
@@ -35,11 +35,7 @@ babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, Type
         }
     }
 
-    std::vector<TypeRef> summands;
-    summands.reserve(typeArguments.size());
-    std::for_each(typeArguments.begin(), typeArguments.end(),
-                  [&summands](const Type* t) { summands.emplace_back(t->getTypeRef()); });
-    return std::make_unique<ConstructedType<SumType>>(std::move(newTypeRef), summands, defaultIndex);
+    return std::make_unique<ConstructedType<SumType>>(std::move(newTypeRef), arguments.m_typeArguments, defaultIndex);
 }
 
 babelwires::TypeRef babelwires::SumTypeConstructor::makeTypeRef(std::vector<TypeRef> types) {

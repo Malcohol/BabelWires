@@ -17,8 +17,8 @@ namespace babelwires {
         // SumTypes are variadic.
         TYPE_CONSTRUCTOR("Sum", "{0|+}", "e9978340-49d9-49f3-922a-3c367f5feaec", 1);
 
-        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                            const std::vector<EditableValueHolder>& valueArguments) const override;
+        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
+                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
 
         // Convenience method
         static TypeRef makeTypeRef(std::vector<TypeRef> types);

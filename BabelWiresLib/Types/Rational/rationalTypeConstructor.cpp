@@ -14,7 +14,8 @@
 std::tuple<babelwires::Range<babelwires::Rational>, babelwires::Rational>
 babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
     if (valueArguments.size() != 3) {
-        throw TypeSystemException() << "RationalTypeConstructor expects 3 value arguments but got " << valueArguments.size();
+        throw TypeSystemException() << "RationalTypeConstructor expects 3 value arguments but got "
+                                    << valueArguments.size();
     }
 
     Rational args[3];
@@ -22,7 +23,8 @@ babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<Edi
         if (const RationalValue* intValue = valueArguments[i]->as<RationalValue>()) {
             args[i] = intValue->get();
         } else {
-            throw TypeSystemException() << "Argument " << i << " given to RationalTypeConstructor was not an RationalValue";
+            throw TypeSystemException() << "Argument " << i
+                                        << " given to RationalTypeConstructor was not an RationalValue";
         }
     }
 
@@ -30,17 +32,19 @@ babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<Edi
 }
 
 babelwires::TypeConstructor::TypeConstructorResult
-babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                              const std::vector<EditableValueHolder>& valueArguments) const {
-    if (typeArguments.size() != 0) {
+babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+                                                   const TypeConstructorArguments& arguments,
+                                                   const std::vector<const Type*>& resolvedTypeArguments) const {
+    if (arguments.m_typeArguments.size() != 0) {
         throw TypeSystemException() << "RationalTypeConstructor does not expect type arguments but got "
-                                    << typeArguments.size();
+                                    << arguments.m_typeArguments.size();
     }
-    auto [range, defaultValue] = extractValueArguments(valueArguments);
+    auto [range, defaultValue] = extractValueArguments(arguments.m_valueArguments);
     return std::make_unique<ConstructedType<RationalType>>(std::move(newTypeRef), range, defaultValue);
 }
 
-babelwires::TypeRef babelwires::RationalTypeConstructor::makeTypeRef(Rational min, Rational max, Rational defaultValue) {
+babelwires::TypeRef babelwires::RationalTypeConstructor::makeTypeRef(Rational min, Rational max,
+                                                                     Rational defaultValue) {
     assert(min <= defaultValue);
     assert(defaultValue <= max);
     return TypeRef(getThisIdentifier(), RationalValue(min), RationalValue(max), RationalValue(defaultValue));

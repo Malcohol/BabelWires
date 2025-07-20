@@ -32,21 +32,20 @@ babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSyst
 
 babelwires::TypeConstructor::TypeConstructorResult
 babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
-                                              const std::vector<const Type*>& typeArguments,
-                                              const std::vector<EditableValueHolder>& valueArguments) const {
-    if (typeArguments.size() != 2) {
-        throw TypeSystemException() << "MapTypeConstructor expects 2 type arguments but got " << typeArguments.size();
+                                              const TypeConstructorArguments& arguments,
+                                              const std::vector<const Type*>& resolvedTypeArguments) const {
+    if (arguments.m_typeArguments.size() != 2) {
+        throw TypeSystemException() << "MapTypeConstructor expects 2 type arguments but got "
+                                    << arguments.m_typeArguments.size();
     }
-    babelwires::MapEntryData::Kind kind = extractValueArguments(typeSystem, valueArguments);
-    return std::make_unique<ConstructedType<MapType>>(std::move(newTypeRef), typeArguments[0]->getTypeRef(),
-                                                      typeArguments[1]->getTypeRef(), kind);
+    babelwires::MapEntryData::Kind kind = extractValueArguments(typeSystem, arguments.m_valueArguments);
+    return std::make_unique<ConstructedType<MapType>>(std::move(newTypeRef), arguments.m_typeArguments[0],
+                                                      arguments.m_typeArguments[1], kind);
 }
 
 babelwires::TypeRef babelwires::MapTypeConstructor::makeTypeRef(TypeRef sourceTypeRef, TypeRef targetTypeRef,
                                                                 MapEntryData::Kind fallbackKind) {
-    return TypeRef{
-        getThisIdentifier(),
-        TypeConstructorArguments{
-            {std::move(sourceTypeRef), std::move(targetTypeRef)},
-            {EnumValue(MapEntryFallbackKind::getIdentifierFromValue(fallbackKind))}}};
+    return TypeRef{getThisIdentifier(),
+                   TypeConstructorArguments{{std::move(sourceTypeRef), std::move(targetTypeRef)},
+                                            {EnumValue(MapEntryFallbackKind::getIdentifierFromValue(fallbackKind))}}};
 }
