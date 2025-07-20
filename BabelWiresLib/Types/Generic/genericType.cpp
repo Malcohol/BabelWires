@@ -8,13 +8,50 @@
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/genericValue.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
+namespace {
+    /// Calculate how many generic type levels this type has.
+    unsigned int calculateGenericTypeHeight(const babelwires::TypeRef& wrappedType) {
+        struct Visitor {
+            unsigned int operator()(std::monostate) { return 0; }
+            unsigned int operator()(const babelwires::RegisteredTypeId& typeId) {
+                // A type variable does not work if it's inside a registered type.
+                return 0;
+            }
+            unsigned int operator()(const babelwires::TypeConstructorId& constructorId,
+                                    const babelwires::TypeConstructorArguments& constructorArguments) {
+                unsigned int height = 0;
+                for (const auto& arg : constructorArguments.m_typeArguments) {
+                    height = std::max(height, calculateGenericTypeHeight(arg));
+                }
+                if (constructorId == babelwires::GenericTypeConstructor::getThisIdentifier()) {
+                    // If this is a GenericType, we increment the height for its type arguments.
+                    ++height;
+                }
+                return height;
+            }
+        } visitor;
+        return wrappedType.visit<Visitor, unsigned int>(visitor);
+    }
+} // namespace
+
 babelwires::GenericType::GenericType(TypeRef wrappedType, unsigned int numVariables)
     : m_wrappedType(std::move(wrappedType))
-    , m_numVariables(numVariables) {}
+    , m_numVariables(numVariables) {
+        assert(m_numVariables > 0 && "GenericType must have at least one type variable");
+        assert(m_numVariables <= TypeVariableType::c_maxNumTypeVariables &&
+               "GenericType with too many type variables");
+    // Height is used to choose a visualization of type variables.
+    // Registered types that are themselves generic types could lead to duplication, but that's not a big problem.
+    m_genericTypeHeight = calculateGenericTypeHeight(m_wrappedType);
+    assert(m_genericTypeHeight < TypeVariableType::c_maxGenericTypeLevels &&
+           "GenericType with too many generic type levels");
+}
 
 std::string babelwires::GenericType::getFlavour() const {
     // Not connectable.
@@ -70,16 +107,30 @@ std::optional<babelwires::SubtypeOrder> babelwires::GenericType::compareSubtypeH
 std::string babelwires::GenericType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
     const GenericValue& genericValue = v->is<GenericValue>();
     assert(genericValue.getValue() && "GenericType child value is empty");
-    const auto& value = genericValue.getValue();
-    const Type& baseType = genericValue.getWrappedType().assertResolve(typeSystem);
-    return baseType.valueToString(typeSystem, value);
+    auto typeAssignments = genericValue.getTypeAssignments();
+    const char* sep = "";
+    std::ostringstream os;
+    os << "<";
+    for (unsigned int i = 0; i < typeAssignments.size(); ++i) {
+        const TypeRef& assignment = typeAssignments[i];
+        os << sep;
+        if (assignment) {
+            os << assignment.toString();
+        } else {
+            os << TypeVariableType::toString({i, m_genericTypeHeight});
+        }
+        sep = ", ";
+    }
+    os << ">";
+    return os.str();
 }
 
 babelwires::ShortId babelwires::GenericType::getStepToValue() {
     return BW_SHORT_ID("wrappd", "value", "69d92618-a000-476e-afc1-9121e1bfac1e");
 }
 
-void babelwires::GenericType::instantiate(const TypeSystem& typeSystem, ValueHolder& genericValue, unsigned int variableIndex, const TypeRef& typeValue) const {
+void babelwires::GenericType::instantiate(const TypeSystem& typeSystem, ValueHolder& genericValue,
+                                          unsigned int variableIndex, const TypeRef& typeValue) const {
     GenericValue& value = genericValue.copyContentsAndGetNonConst().is<GenericValue>();
     value.assignTypeVariableAndInstantiate(typeSystem, m_wrappedType, variableIndex, typeValue);
 }

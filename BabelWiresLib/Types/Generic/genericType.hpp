@@ -43,5 +43,7 @@ namespace babelwires {
       private:
         TypeRef m_wrappedType;
         unsigned int m_numVariables;
+        // The maximum number of nested generic types in the wrapped type.
+        unsigned int m_genericTypeHeight;
     };
 } // namespace babelwires

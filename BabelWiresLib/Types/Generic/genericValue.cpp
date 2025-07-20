@@ -12,6 +12,7 @@
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
+#include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 
 babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, TypeRef wrappedType, unsigned int numVariables)
@@ -21,6 +22,10 @@ babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, TypeRef wra
 
 const babelwires::TypeRef& babelwires::GenericValue::getWrappedType() const {
     return m_actualWrappedType;
+}
+
+const std::vector<babelwires::TypeRef>& babelwires::GenericValue::getTypeAssignments() const {
+    return m_typeVariableAssignments;
 }
 
 const babelwires::ValueHolder& babelwires::GenericValue::getValue() const {
@@ -74,7 +79,11 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
                 }
             }
             unsigned int level = m_level;
-            // TODO when GenericTypeConstructor is implemented, special case it here to increment level.
+            if (constructorId == GenericTypeConstructor::getThisIdentifier()) {
+                // Variables under this constructor would have to jump over this GenericType to
+                // reach the one were processing.
+                ++level;
+            }
             std::vector<TypeRef> children;
             children.reserve(constructorArguments.m_typeArguments.size());
             for (const auto& c : constructorArguments.m_typeArguments) {

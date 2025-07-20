@@ -39,6 +39,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/File/fileTypeConstructor.cpp
 	Types/Generic/genericType.cpp
 	Types/Generic/genericValue.cpp
+	Types/Generic/genericTypeConstructor.cpp
 	Types/Generic/typeVariableType.cpp
 	Types/Generic/typeVariableValue.cpp
 	Types/Generic/typeVariableTypeConstructor.cpp

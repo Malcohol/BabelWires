@@ -21,6 +21,8 @@ namespace babelwires {
 
         const TypeRef& getWrappedType() const;
 
+        const std::vector<TypeRef>& getTypeAssignments() const;
+
         /// Update the typeVariableAssignments
         void assignTypeVariableAndInstantiate(const TypeSystem& typeSystem, const TypeRef& wrappedTypeRef, unsigned int variableIndex, const TypeRef& typeValue);
 

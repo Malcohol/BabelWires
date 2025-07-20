@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Types/Generic/typeVariableValue.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
+#include <Common/Utilities/unicodeUtils.hpp>
 
 babelwires::TypeVariableType::TypeVariableType() = default;
 
@@ -32,11 +33,19 @@ std::optional<babelwires::SubtypeOrder> babelwires::TypeVariableType::compareSub
 }
 
 std::string babelwires::TypeVariableType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
-    return "<generic>";
+    return toString(getVariableData());
 }
 
 babelwires::TypeVariableTypeConstructor::VariableData babelwires::TypeVariableType::getVariableData() const {
     auto optVariableData = TypeVariableTypeConstructor::isTypeVariable(getTypeRef());
     assert(optVariableData && "A typeVariable had a typeRef that wasn't using a typeVariableTypeConstructor");
     return *optVariableData;
+}
+
+std::string babelwires::TypeVariableType::toString(TypeVariableTypeConstructor::VariableData variableData) {
+    std::ostringstream os;
+    assert(variableData.m_numGenericTypeLevels < c_maxGenericTypeLevels);
+    os.put('T' + variableData.m_numGenericTypeLevels);
+    writeUnicodeSubscript(os, variableData.m_typeVariableIndex);
+    return os.str();
 }
