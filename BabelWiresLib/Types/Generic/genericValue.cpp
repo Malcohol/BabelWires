@@ -72,7 +72,7 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
                     const auto& typeAssignments = m_genericValue.m_typeVariableAssignments;
                     assert(variableData.m_typeVariableIndex <= typeAssignments.size());
                     if (const TypeRef& assignment = typeAssignments[variableData.m_typeVariableIndex]) {
-                        return assignment;
+                        return TypeRef(constructorId, {{assignment}, constructorArguments.m_valueArguments});
                     } else {
                         return TypeRef(constructorId, constructorArguments);
                     }

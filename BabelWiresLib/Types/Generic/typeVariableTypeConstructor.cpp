@@ -44,9 +44,18 @@ babelwires::TypeConstructor::TypeConstructorResult
 babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                        const std::vector<const Type*>& typeArguments,
                                                        const std::vector<EditableValueHolder>& valueArguments) const {
+    // Verify the arguments are valid, but actually they don't need to be passed to the resulting types.
     /*VariableData variableData =*/ extractValueArguments(valueArguments);
 
-    return std::make_unique<ConstructedType<TypeVariableType>>(std::move(newTypeRef));
+    if (typeArguments.size() > 1) {
+        throw TypeSystemException() << "TypeVariableTypeConstructor expects 0 or 1 type arguments but got "
+                                    << typeArguments.size();
+    }
+    if (typeArguments.size() == 1) {
+        return typeArguments[0];
+    } else {
+        return std::make_unique<ConstructedType<TypeVariableType>>(std::move(newTypeRef));
+    }
 }
 
 babelwires::TypeRef babelwires::TypeVariableTypeConstructor::makeTypeRef(unsigned int typeVariableIndex,

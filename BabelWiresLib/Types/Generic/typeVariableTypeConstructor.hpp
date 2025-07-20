@@ -1,5 +1,5 @@
 /**
- * A TypeConstructor which constructs an array type with a particular entry type, size range and default size.
+ * A TypeConstructor which constructs a TypeVariable from two IntValues and an optional typeRef.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -12,7 +12,10 @@
 #include <optional>
 
 namespace babelwires {
-    /// Construct a TypeVariable from two IntValues: The index in the generic type and the number of
+    /// Construct a TypeVariable from two IntValues and an optional typeRef.
+    /// If there is a typeRef argument, it means the variable has been instantiated and the
+    /// type constructor expression is a pure wrapper for the instantiated type.
+    /// The two IntValues represent the index of the variable in the generic type and the number of
     /// generic types to traverse upwards to find the generic type of which this is a variable.
     class TypeVariableTypeConstructor : public TypeConstructor {
       public:
