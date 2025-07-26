@@ -27,7 +27,7 @@ babelwires::Path babelwires::getPathTo(const ValueTreeNode* valueTreeNode) {
     return Path(std::move(steps));
 }
 
-babelwires::NodeAndPath<const babelwires::ValueTreeRoot>
+babelwires::RootAndPath<const babelwires::ValueTreeRoot>
 babelwires::getRootAndPathTo(const ValueTreeNode& valueTreeNode) {
     std::vector<PathStep> steps;
     const ValueTreeNode* current = &valueTreeNode;
@@ -43,7 +43,7 @@ babelwires::getRootAndPathTo(const ValueTreeNode& valueTreeNode) {
     return {current->is<ValueTreeRoot>(), Path(std::move(steps))};
 }
 
-babelwires::NodeAndPath<babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(ValueTreeNode& valueTreeNode) {
+babelwires::RootAndPath<babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(ValueTreeNode& valueTreeNode) {
     std::vector<PathStep> steps;
     ValueTreeNode* current = &valueTreeNode;
     ValueTreeNode* parent = valueTreeNode.getOwnerNonConst();
@@ -111,8 +111,7 @@ const babelwires::ValueTreeNode* babelwires::tryFollowPath(const Path& path, con
     return tryFollowPathImpl<const ValueTreeNode>(&start, path);
 }
 
-const babelwires::ValueTreeNode*
-babelwires::tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode) {
+const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode) {
     auto variableData = TypeVariableTypeConstructor::isTypeVariable(valueTreeNode.getTypeRef());
     assert(variableData && "ValueTreeNode is not a type variable");
 

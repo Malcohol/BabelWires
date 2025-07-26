@@ -14,13 +14,13 @@ namespace babelwires
 {
     Path getPathTo(const ValueTreeNode* valueTreeNode);
 
-    template <typename VALUE_TREE_NODE> struct NodeAndPath {
-        VALUE_TREE_NODE& m_node;
-        Path m_pathFromNode;
+    template <typename VALUE_TREE_ROOT> struct RootAndPath {
+        VALUE_TREE_ROOT& m_root;
+        Path m_pathFromRoot;
     };
 
-    NodeAndPath<const ValueTreeRoot> getRootAndPathTo(const ValueTreeNode& valueTreeNode);
-    NodeAndPath<ValueTreeRoot> getRootAndPathTo(ValueTreeNode& valueTreeNode);
+    RootAndPath<const ValueTreeRoot> getRootAndPathTo(const ValueTreeNode& valueTreeNode);
+    RootAndPath<ValueTreeRoot> getRootAndPathTo(ValueTreeNode& valueTreeNode);
 
     ValueTreeNode& followPath(const Path& path, ValueTreeNode& start);
     const ValueTreeNode& followPath(const Path& path, const ValueTreeNode& start);
