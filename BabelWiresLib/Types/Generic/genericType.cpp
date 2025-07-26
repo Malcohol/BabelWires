@@ -53,6 +53,13 @@ babelwires::GenericType::GenericType(TypeRef wrappedType, unsigned int numVariab
            "GenericType with too many generic type levels");
 }
 
+const babelwires::TypeRef& babelwires::GenericType::getTypeAssignment(const ValueHolder& genericValue, unsigned int variableIndex) const {
+    const GenericValue& value = genericValue->is<GenericValue>();
+    const auto& typeAssignments = value.getTypeAssignments();
+    assert(variableIndex < typeAssignments.size() && "Variable index out of bounds");
+    return typeAssignments[variableIndex];
+}
+
 unsigned int babelwires::GenericType::getNumVariables() const {
     return m_numVariables;
 }

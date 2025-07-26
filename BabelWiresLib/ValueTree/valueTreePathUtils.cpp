@@ -111,25 +111,21 @@ const babelwires::ValueTreeNode* babelwires::tryFollowPath(const Path& path, con
     return tryFollowPathImpl<const ValueTreeNode>(&start, path);
 }
 
-babelwires::NodeAndPath<babelwires::ValueTreeNode>
-babelwires::getGenericTypeFromVariable(ValueTreeNode& valueTreeNode) {
+const babelwires::ValueTreeNode*
+babelwires::tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode) {
     auto variableData = TypeVariableTypeConstructor::isTypeVariable(valueTreeNode.getTypeRef());
-    if (!variableData) {
-        throw ModelException() << "ValueTreeNode is not a type variable";
-    }
+    assert(variableData && "ValueTreeNode is not a type variable");
 
     unsigned int level = variableData->m_numGenericTypeLevels;
-    std::vector<PathStep> steps;
-    ValueTreeNode* current = &valueTreeNode;
-    ValueTreeNode* parent;
+    const ValueTreeNode* current = &valueTreeNode;
+    const ValueTreeNode* parent;
     do {
-        parent = current->getOwnerNonConst();
+        parent = current->getOwner();
         if (!parent) {
             // This could happen if a subtree beneath a generic type was dragged out of a node,
             // TODO: This is not a useful state, so do something to prevent it.
-            throw ModelException() << "The type variable was not contained in a GenericType";
+            return nullptr;
         } else {
-            steps.push_back(parent->getStepToChild(current));
             if (parent->getType().as<GenericType>()) {
                 if (level == 0) {
                     current = parent;
@@ -141,7 +137,9 @@ babelwires::getGenericTypeFromVariable(ValueTreeNode& valueTreeNode) {
         }
         current = parent;
     } while (true);
-    std::reverse(steps.begin(), steps.end());
+    if (variableData->m_typeVariableIndex >= current->getType().is<GenericType>().getNumVariables()) {
+        return nullptr;
+    }
 
-    return {*current, Path(std::move(steps))};
+    return current;
 }

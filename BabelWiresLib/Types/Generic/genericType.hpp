@@ -31,6 +31,8 @@ namespace babelwires {
         /// Get the number of type variables in this GenericType.
         unsigned int getNumVariables() const;
 
+        const TypeRef& getTypeAssignment(const ValueHolder& genericValue, unsigned int variableIndex) const;
+
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;

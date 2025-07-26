@@ -29,5 +29,5 @@ namespace babelwires
     const ValueTreeNode* tryFollowPath(const Path& path, const ValueTreeNode& start);
 
     /// Given a node at a type variable, search up the tree for the GenericType that contains it.
-    NodeAndPath<ValueTreeNode> getGenericTypeFromVariable(ValueTreeNode& valueTreeNode);
+    const ValueTreeNode* tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode);
 }

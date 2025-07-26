@@ -71,6 +71,7 @@ Refactor:
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
 * Can any classes be simplified using operator <=>?
 * Rename TypeRef to something like TypeExpression or TypoExpr.
+* Should Types be memory managed using shared_ptr, to allow purely constructed types to be collected?
 
 UI:
 * ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.
