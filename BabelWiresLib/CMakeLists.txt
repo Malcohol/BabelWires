@@ -22,6 +22,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/connectionModifierData.cpp
 	Project/Modifiers/activateOptionalsModifierData.cpp
 	Project/Modifiers/selectRecordVariantModifierData.cpp
+	Project/Modifiers/setTypeVariableModifierData.cpp
 	Project/Modifiers/valueAssignmentData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp

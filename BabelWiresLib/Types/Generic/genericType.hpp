@@ -14,6 +14,7 @@ namespace babelwires {
     /// A type that wraps another type containing type variables that can be instantiated in
     /// different ways.
     /// Type type always has a single child, which is the type it wraps.
+    // MAYBEDO: It might be nicer if variables were represented by an identifier instead of index?
     class GenericType : public CompoundType {
       public:
         /// Create a generic type with the given number of variables.
@@ -26,6 +27,9 @@ namespace babelwires {
 
         /// Instantiate the specified type variable using the given type.
         void instantiate(const TypeSystem& typeSystem, ValueHolder& genericValue, unsigned int variableIndex, const TypeRef& typeValue) const;
+
+        /// Get the number of type variables in this GenericType.
+        unsigned int getNumVariables() const;
 
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

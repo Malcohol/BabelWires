@@ -53,6 +53,10 @@ babelwires::GenericType::GenericType(TypeRef wrappedType, unsigned int numVariab
            "GenericType with too many generic type levels");
 }
 
+unsigned int babelwires::GenericType::getNumVariables() const {
+    return m_numVariables;
+}
+
 std::string babelwires::GenericType::getFlavour() const {
     // Not connectable.
     return "";
