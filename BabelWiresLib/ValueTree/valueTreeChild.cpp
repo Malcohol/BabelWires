@@ -29,7 +29,7 @@ void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
         const Type& type = getType();
         if (type.isValidValue(typeSystem, *newValue)) {
             auto rootAndPath = getRootAndPathTo(*this);
-            rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
+            rootAndPath.m_node.setDescendentValue(rootAndPath.m_pathFromNode, newValue);
         } else {
             throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
         }
@@ -40,7 +40,7 @@ void babelwires::ValueTreeChild::doSetToDefault() {
     const TypeSystem& typeSystem = getTypeSystem();
     const auto [newValue, _] = getType().createValue(typeSystem);
     const auto rootAndPath = getRootAndPathTo(*this);
-    rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
+    rootAndPath.m_node.setDescendentValue(rootAndPath.m_pathFromNode, newValue);
 }
 
 void babelwires::ValueTreeChild::setType(const TypeRef& type) {
@@ -80,5 +80,5 @@ void babelwires::ValueTreeChild::setType(const TypeRef& type) {
     // Set this value at the tree
     const auto rootAndPath = getRootAndPathTo(*current);
 
-    rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
+    rootAndPath.m_node.setDescendentValue(rootAndPath.m_pathFromNode, newValue);
 }

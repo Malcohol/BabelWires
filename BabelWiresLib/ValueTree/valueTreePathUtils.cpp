@@ -7,8 +7,10 @@
  **/
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/Types/Generic/genericType.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 babelwires::Path babelwires::getPathTo(const ValueTreeNode* valueTreeNode) {
     std::vector<PathStep> steps;
@@ -16,7 +18,8 @@ babelwires::Path babelwires::getPathTo(const ValueTreeNode* valueTreeNode) {
     const ValueTreeNode* parent = current->getOwner();
     while (parent) {
         steps.push_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() &&
+               "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
@@ -24,34 +27,36 @@ babelwires::Path babelwires::getPathTo(const ValueTreeNode* valueTreeNode) {
     return Path(std::move(steps));
 }
 
-babelwires::RootAndPath<const babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(const ValueTreeNode& valueTreeNode) {
+babelwires::NodeAndPath<const babelwires::ValueTreeRoot>
+babelwires::getRootAndPathTo(const ValueTreeNode& valueTreeNode) {
     std::vector<PathStep> steps;
     const ValueTreeNode* current = &valueTreeNode;
     const ValueTreeNode* parent = valueTreeNode.getOwner();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() &&
+               "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
     std::reverse(steps.begin(), steps.end());
-    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
+    return {current->is<ValueTreeRoot>(), Path(std::move(steps))};
 }
 
-babelwires::RootAndPath<babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(ValueTreeNode& valueTreeNode) {
+babelwires::NodeAndPath<babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(ValueTreeNode& valueTreeNode) {
     std::vector<PathStep> steps;
     ValueTreeNode* current = &valueTreeNode;
     ValueTreeNode* parent = valueTreeNode.getOwnerNonConst();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() &&
+               "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwnerNonConst();
     }
     std::reverse(steps.begin(), steps.end());
-    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
+    return {current->is<ValueTreeRoot>(), Path(std::move(steps))};
 }
-
 
 namespace {
 
@@ -77,7 +82,6 @@ namespace {
 
 } // namespace
 
-
 babelwires::ValueTreeNode& babelwires::followPath(const Path& path, ValueTreeNode& start) {
     return followPathImpl<ValueTreeNode>(start, path);
 }
@@ -85,7 +89,6 @@ babelwires::ValueTreeNode& babelwires::followPath(const Path& path, ValueTreeNod
 const babelwires::ValueTreeNode& babelwires::followPath(const Path& path, const ValueTreeNode& start) {
     return followPathImpl<const ValueTreeNode>(start, path);
 }
-
 
 namespace {
 
@@ -106,4 +109,39 @@ babelwires::ValueTreeNode* babelwires::tryFollowPath(const Path& path, ValueTree
 
 const babelwires::ValueTreeNode* babelwires::tryFollowPath(const Path& path, const ValueTreeNode& start) {
     return tryFollowPathImpl<const ValueTreeNode>(&start, path);
+}
+
+babelwires::NodeAndPath<babelwires::ValueTreeNode>
+babelwires::getGenericTypeFromVariable(ValueTreeNode& valueTreeNode) {
+    auto variableData = TypeVariableTypeConstructor::isTypeVariable(valueTreeNode.getTypeRef());
+    if (!variableData) {
+        throw ModelException() << "ValueTreeNode is not a type variable";
+    }
+
+    unsigned int level = variableData->m_numGenericTypeLevels;
+    std::vector<PathStep> steps;
+    ValueTreeNode* current = &valueTreeNode;
+    ValueTreeNode* parent;
+    do {
+        parent = current->getOwnerNonConst();
+        if (!parent) {
+            // This could happen if a subtree beneath a generic type was dragged out of a node,
+            // TODO: This is not a useful state, so do something to prevent it.
+            throw ModelException() << "The type variable was not contained in a GenericType";
+        } else {
+            steps.push_back(parent->getStepToChild(current));
+            if (parent->getType().as<GenericType>()) {
+                if (level == 0) {
+                    current = parent;
+                    break;
+                } else {
+                    --level;
+                }
+            }
+        }
+        current = parent;
+    } while (true);
+    std::reverse(steps.begin(), steps.end());
+
+    return {*current, Path(std::move(steps))};
 }
