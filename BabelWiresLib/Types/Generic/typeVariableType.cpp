@@ -44,8 +44,10 @@ babelwires::TypeVariableTypeConstructor::VariableData babelwires::TypeVariableTy
 
 std::string babelwires::TypeVariableType::toString(TypeVariableTypeConstructor::VariableData variableData) {
     std::ostringstream os;
-    assert(variableData.m_numGenericTypeLevels < c_maxGenericTypeLevels);
-    os.put('T' + variableData.m_numGenericTypeLevels);
-    writeUnicodeSubscript(os, variableData.m_typeVariableIndex);
+    const char letter = (('T' - 'A' + variableData.m_typeVariableIndex) % 26) + 'A';
+    os.put(letter);
+    if (variableData.m_numGenericTypeLevels > 0) {
+        writeUnicodeSuperscript(os, variableData.m_numGenericTypeLevels);
+    }
     return os.str();
 }

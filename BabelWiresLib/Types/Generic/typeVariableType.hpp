@@ -24,8 +24,7 @@ namespace babelwires {
         /// This method asserts if this type was not constructed in the expected way.
         TypeVariableTypeConstructor::VariableData getVariableData() const;
 
-        static constexpr unsigned int c_maxGenericTypeLevels = ('Z' - 'T') - 1;
-        static constexpr unsigned int c_maxNumTypeVariables = 10;
+        static constexpr unsigned int c_maxNumTypeVariables = 26;
 
         static std::string toString(TypeVariableTypeConstructor::VariableData variableData);
 

@@ -49,8 +49,6 @@ babelwires::GenericType::GenericType(TypeRef wrappedType, unsigned int numVariab
     // Height is used to choose a visualization of type variables.
     // Registered types that are themselves generic types could lead to duplication, but that's not a big problem.
     m_genericTypeHeight = calculateGenericTypeHeight(m_wrappedType);
-    assert(m_genericTypeHeight < TypeVariableType::c_maxGenericTypeLevels &&
-           "GenericType with too many generic type levels");
 }
 
 const babelwires::TypeRef& babelwires::GenericType::getTypeAssignment(const ValueHolder& genericValue, unsigned int variableIndex) const {
@@ -128,7 +126,7 @@ std::string babelwires::GenericType::valueToString(const TypeSystem& typeSystem,
         if (assignment) {
             os << assignment.toString();
         } else {
-            os << TypeVariableType::toString({i, m_genericTypeHeight});
+            os << TypeVariableType::toString({i, 0});
         }
         sep = ", ";
     }
