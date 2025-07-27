@@ -11,8 +11,8 @@
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
-babelwires::TypeRef babelwires::GenericTypeConstructor::makeTypeRef(unsigned int numVariables) {
-    return TypeRef(GenericTypeConstructor::getThisIdentifier(), IntValue(numVariables));
+babelwires::TypeRef babelwires::GenericTypeConstructor::makeTypeRef(TypeRef wrappedType, unsigned int numVariables) {
+    return TypeRef(GenericTypeConstructor::getThisIdentifier(), {{wrappedType}, {IntValue(numVariables)}});
 }
 
 unsigned int

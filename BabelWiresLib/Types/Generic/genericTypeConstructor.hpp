@@ -19,7 +19,7 @@ namespace babelwires {
                                             const std::vector<const Type*>& resolvedTypeArguments) const override;
 
         /// Convenience method.
-        static TypeRef makeTypeRef(unsigned int numVariables = 1);
+        static TypeRef makeTypeRef(TypeRef wrappedType, unsigned int numVariables = 1);
 
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
         static unsigned int
