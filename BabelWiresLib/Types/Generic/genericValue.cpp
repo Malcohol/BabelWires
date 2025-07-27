@@ -10,9 +10,9 @@
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
-#include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 
 babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, TypeRef wrappedType, unsigned int numVariables)
@@ -98,55 +98,16 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
     return wrappedType.visit<Visitor, TypeRef>(visitor);
 }
 
-namespace babelwires {
-
-    void findPathsRecursive(const TypeSystem& typeSystem, const Type& type, const ValueHolder& value, unsigned int variableIndex,
-                           unsigned int genericTypeCount, const Path& pathToHere, std::vector<Path>& pathsOut) {
-        if (const auto& typeVar = type.as<TypeVariableType>()) {
-            const TypeVariableTypeConstructor::VariableData variableData = typeVar->getVariableData();
-            if ((genericTypeCount == variableData.m_numGenericTypeLevels) &&
-                (variableIndex == variableData.m_typeVariableIndex)) {
-                    pathsOut.emplace_back(pathToHere);
-            }
-        } else if (const auto& compoundType = type.as<CompoundType>()) {
-            if (type.as<GenericType>()) {
-                ++genericTypeCount;
-            }
-            for (unsigned int i = 0; i < compoundType->getNumChildren(value); ++i) {
-                auto [childValue, step, childTypeRef] = compoundType->getChild(value, i);
-                const Type& childType = childTypeRef.resolve(typeSystem);
-                Path pathToChild = pathToHere;
-                pathToChild.pushStep(step);
-                findPathsRecursive(typeSystem, childType, *childValue, variableIndex, genericTypeCount, pathToChild, pathsOut);
-            }
-        } else {
-            return;
-        }
-    }
-
-} // namespace babelwires
-
-std::vector<babelwires::Path>
-babelwires::GenericValue::findPathsToTypeVariableInstances(const TypeSystem& typeSystem, unsigned int variableIndex) const {
+void babelwires::GenericValue::assignTypeVariableAndInstantiate(const TypeSystem& typeSystem,
+                                                                const TypeRef& wrappedTypeRef,
+                                                                unsigned int variableIndex, const TypeRef& typeValue) {
     assert((variableIndex < m_typeVariableAssignments.size()) && "variableIndex out of range");
     assert(!m_typeVariableAssignments[variableIndex] && "The  type variable at variableIndex is already instantiated");
-    const Type& type = m_actualWrappedType.resolve(typeSystem);
-    std::vector<babelwires::Path> pathsOut;
-    findPathsRecursive(typeSystem, type, m_wrappedValue, variableIndex, 0, Path(), pathsOut);
-    return pathsOut;
-}
-
-void babelwires::GenericValue::assignTypeVariableAndInstantiate(const TypeSystem& typeSystem, const TypeRef& wrappedTypeRef, unsigned int variableIndex, const TypeRef& typeValue) {
-    assert((variableIndex < m_typeVariableAssignments.size()) && "variableIndex out of range");
-    assert(!m_typeVariableAssignments[variableIndex] && "The  type variable at variableIndex is already instantiated");
-
-    const std::vector<Path> pathsToTypeVariables = findPathsToTypeVariableInstances(typeSystem, variableIndex);
-    const Type& wrappedType = m_actualWrappedType.resolve(typeSystem);
-    const Type& typeValueType = typeValue.resolve(typeSystem);
-    visitPathsNonConst(typeSystem, wrappedType, m_wrappedValue, pathsToTypeVariables, [&typeSystem, &typeValueType](const Type& type, ValueHolder& typeVariableValue) {
-        typeVariableValue = typeValueType.createValue(typeSystem);
-    });
 
     m_typeVariableAssignments[variableIndex] = typeValue;
     m_actualWrappedType = buildInstantiatedType(wrappedTypeRef);
+    // Updating the existing wrapped value by exploring it doesn't account for the fact that values may carry types in
+    // non-obvious ways. In particular, GenericValue carries the m_actualWrappedType and typeAssignments, neither of
+    // which would be updated if we encountered a nested generic type used exploration.
+    m_wrappedValue = m_actualWrappedType.resolve(typeSystem).createValue(typeSystem);
 }

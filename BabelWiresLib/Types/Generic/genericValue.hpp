@@ -36,8 +36,6 @@ namespace babelwires {
         /// type assignment.
         TypeRef buildInstantiatedType(const TypeRef& wrappedType) const;
         
-        std::vector<Path> findPathsToTypeVariableInstances(const TypeSystem& typeSystem, unsigned int variableIndex) const;
-
       private:
         /// The actual type may differ from the GenericType's wrapped type
         /// because variables will have been substituted.
