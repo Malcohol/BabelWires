@@ -9,9 +9,6 @@
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
-#include <BabelWiresLib/Types/Generic/genericType.hpp>
-#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
-#include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
