@@ -97,8 +97,10 @@ namespace {
                 return true;
             }
             bool operator()(const RepeatedOperator& op) {
-                if (op.m_startIndex >= m_args.size()) {
+                if (op.m_startIndex > m_args.size()) {
                     return false;
+                } else if (op.m_startIndex == m_args.size()) {
+                    return true;
                 }
                 m_os << m_args[op.m_startIndex];
                 for (int i = op.m_startIndex + 1; i < m_args.size(); ++i) {
