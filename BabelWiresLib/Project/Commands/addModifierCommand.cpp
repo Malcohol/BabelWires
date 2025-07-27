@@ -22,6 +22,7 @@ babelwires::AddModifierCommand::AddModifierCommand(std::string commandName, Node
     : CompoundCommand(commandName)
     , m_targetNodeId(targetId)
     , m_modifierToAdd(std::move(modifierToAdd)) {
+    // TODO This modifier might be reused for generic operations, so it may not be possible to assert the following.
     assert(!m_modifierToAdd->as<ConnectionModifierData>() &&
            "Connections should be added with the AddConnectionCommand");
 }

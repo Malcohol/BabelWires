@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/genericValue.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
@@ -43,15 +44,15 @@ namespace {
 babelwires::GenericType::GenericType(TypeRef wrappedType, unsigned int numVariables)
     : m_wrappedType(std::move(wrappedType))
     , m_numVariables(numVariables) {
-        assert(m_numVariables > 0 && "GenericType must have at least one type variable");
-        assert(m_numVariables <= TypeVariableType::c_maxNumTypeVariables &&
-               "GenericType with too many type variables");
+    assert(m_numVariables > 0 && "GenericType must have at least one type variable");
+    assert(m_numVariables <= TypeVariableType::c_maxNumTypeVariables && "GenericType with too many type variables");
     // Height is used to choose a visualization of type variables.
     // Registered types that are themselves generic types could lead to duplication, but that's not a big problem.
     m_genericTypeHeight = calculateGenericTypeHeight(m_wrappedType);
 }
 
-const babelwires::TypeRef& babelwires::GenericType::getTypeAssignment(const ValueHolder& genericValue, unsigned int variableIndex) const {
+const babelwires::TypeRef& babelwires::GenericType::getTypeAssignment(const ValueHolder& genericValue,
+                                                                      unsigned int variableIndex) const {
     const GenericValue& value = genericValue->is<GenericValue>();
     const auto& typeAssignments = value.getTypeAssignments();
     assert(variableIndex < typeAssignments.size() && "Variable index out of bounds");
@@ -138,8 +139,26 @@ babelwires::ShortId babelwires::GenericType::getStepToValue() {
     return BW_SHORT_ID("wrappd", "value", "69d92618-a000-476e-afc1-9121e1bfac1e");
 }
 
-void babelwires::GenericType::instantiate(const TypeSystem& typeSystem, ValueHolder& genericValue,
-                                          unsigned int variableIndex, const TypeRef& typeValue) const {
-    GenericValue& value = genericValue.copyContentsAndGetNonConst().is<GenericValue>();
-    value.assignTypeVariableAndInstantiate(typeSystem, m_wrappedType, variableIndex, typeValue);
+void babelwires::GenericType::setTypeVariableAssignmentAndInstantiate(
+    const TypeSystem& typeSystem, ValueHolder& genericValue, const std::vector<TypeRef>& typeVariableAssignments) const {
+    if (typeVariableAssignments.size() > m_numVariables) {
+        throw ModelException() << "Too many type variable assignments for GenericType";
+    }
+    const GenericValue& constGenericValue = genericValue->is<GenericValue>();
+    const auto& currentAssignments = constGenericValue.getTypeAssignments();
+    
+    bool changed = false;
+    for (unsigned int i = 0; i < typeVariableAssignments.size(); ++i) {
+        if (currentAssignments[i] != typeVariableAssignments[i]) {
+            changed = true;
+            break;
+        }
+    }
+    if (!changed) {
+        // No change, nothing to do.
+        return;
+    }
+    GenericValue& mutableGenericValue = genericValue.copyContentsAndGetNonConst().is<GenericValue>();
+    mutableGenericValue.getTypeAssignments() = typeVariableAssignments;
+    mutableGenericValue.instantiate(typeSystem, m_wrappedType);
 }

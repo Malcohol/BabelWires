@@ -1,5 +1,5 @@
 /**
- * 
+ *
  *
  * (C) 2025 Malcolm Tyrrell
  *
@@ -10,11 +10,11 @@
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 namespace babelwires {
+    struct TypeVariableAssignment;
 
     /// A type that wraps another type containing type variables that can be instantiated in
     /// different ways.
     /// Type type always has a single child, which is the type it wraps.
-    // MAYBEDO: It might be nicer if variables were represented by an identifier instead of index?
     class GenericType : public CompoundType {
       public:
         /// Create a generic type with the given number of variables.
@@ -26,7 +26,11 @@ namespace babelwires {
         static babelwires::ShortId getStepToValue();
 
         /// Instantiate the specified type variable using the given type.
-        void instantiate(const TypeSystem& typeSystem, ValueHolder& genericValue, unsigned int variableIndex, const TypeRef& typeValue) const;
+        void instantiate(const TypeSystem& typeSystem, ValueHolder& genericValue, unsigned int variableIndex,
+                         const TypeRef& typeValue) const;
+
+        void setTypeVariableAssignmentAndInstantiate(const TypeSystem& typeSystem, ValueHolder& genericValue, 
+            const std::vector<TypeRef>& typeVariableAssignments) const;
 
         /// Get the number of type variables in this GenericType.
         unsigned int getNumVariables() const;
@@ -43,7 +47,8 @@ namespace babelwires {
         std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue,
                                                                             unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
-        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                         const Type& other) const override;
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
 
       private:

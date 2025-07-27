@@ -28,6 +28,10 @@ const std::vector<babelwires::TypeRef>& babelwires::GenericValue::getTypeAssignm
     return m_typeVariableAssignments;
 }
 
+std::vector<babelwires::TypeRef>& babelwires::GenericValue::getTypeAssignments() {
+    return m_typeVariableAssignments;
+}
+
 const babelwires::ValueHolder& babelwires::GenericValue::getValue() const {
     return m_wrappedValue;
 }
@@ -98,13 +102,7 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
     return wrappedType.visit<Visitor, TypeRef>(visitor);
 }
 
-void babelwires::GenericValue::assignTypeVariableAndInstantiate(const TypeSystem& typeSystem,
-                                                                const TypeRef& wrappedTypeRef,
-                                                                unsigned int variableIndex, const TypeRef& typeValue) {
-    assert((variableIndex < m_typeVariableAssignments.size()) && "variableIndex out of range");
-    assert(!m_typeVariableAssignments[variableIndex] && "The  type variable at variableIndex is already instantiated");
-
-    m_typeVariableAssignments[variableIndex] = typeValue;
+void babelwires::GenericValue::instantiate(const TypeSystem& typeSystem, const TypeRef& wrappedTypeRef) {
     m_actualWrappedType = buildInstantiatedType(wrappedTypeRef);
     // Updating the existing wrapped value by exploring it doesn't account for the fact that values may carry types in
     // non-obvious ways. In particular, GenericValue carries the m_actualWrappedType and typeAssignments, neither of

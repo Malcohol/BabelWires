@@ -1,5 +1,5 @@
 /**
- * SetTypeVariableModifierData is used to set a type variable to specific type.
+ * SetTypeVariableModifierData is used to assign specific types to type variables.
  *
  * (C) 2025 Malcolm Tyrrell
  * 
@@ -11,7 +11,7 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 namespace babelwires {
-    /// SetTypeVariableModifierData is used to select the variant of a RecordWithVariantsType.
+    /// SetTypeVariableModifierData is used to assign specific types to type variables.
     struct SetTypeVariableModifierData : LocalModifierData {
         CLONEABLE(SetTypeVariableModifierData);
         SERIALIZABLE(SetTypeVariableModifierData, "setTypeVariable", LocalModifierData, 1);
@@ -20,10 +20,6 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
-        /// The type to which the variable should be set.
-        TypeRef m_typeRef;
-
-        /// The index of the variable in the generic type.
-        unsigned int m_variableIndex;
+        std::vector<TypeRef> m_typeAssignments;
     };
 }
