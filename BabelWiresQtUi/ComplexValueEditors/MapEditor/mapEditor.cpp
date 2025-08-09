@@ -107,13 +107,13 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGrap
             m_map.setMapValue(mapValue);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
-                m_sourceTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedSourceTypeRefs().m_typeRefs);
+                m_sourceTypeWidget = new TypeWidget(typeBar, m_map.getAllowedSourceTypeRefs().m_typeRefs);
                 m_sourceTypeWidget->setTypeRef(m_map.getCurrentSourceTypeRef());
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
-                m_targetTypeWidget = new TypeWidget(typeBar, typeSystem, m_map.getAllowedTargetTypeRefs().m_typeRefs);
+                m_targetTypeWidget = new TypeWidget(typeBar, m_map.getAllowedTargetTypeRefs().m_typeRefs);
                 m_targetTypeWidget->setTypeRef(m_map.getCurrentTargetTypeRef());
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }

@@ -16,7 +16,7 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const std::vector<TypeRef>& allowedTypeRefs);
+        TypeWidget(QWidget* parent, const std::vector<TypeRef>& allowedTypeRefs);
 
         const TypeRef& getTypeRef() const;
         void setTypeRef(const TypeRef& id);

@@ -17,8 +17,7 @@
 #include <cassert>
 #include <unordered_set>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem,
-                                   const std::vector<TypeRef>& allowedTypeRefs)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeRef>& allowedTypeRefs)
     : QComboBox(parent)
     , m_hasBadItem(false) {
     m_defaultStyleSheet = styleSheet();
@@ -37,8 +36,7 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     sortedNames.reserve(typeRefSet.size());
 
     for (const auto& typeRef : typeRefSet) {
-        const Type& type = typeRef.resolve(typeSystem);
-        sortedNames.emplace_back(std::tuple{type.getName(), typeRef});
+        sortedNames.emplace_back(std::tuple{typeRef.toString(), typeRef});
     }
     
     std::sort(sortedNames.begin(), sortedNames.end(), [](const auto& a, const auto& b) {
