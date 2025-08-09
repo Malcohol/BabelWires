@@ -11,14 +11,14 @@ Here's a screenshot of the MapEditor defining a map between two types:
 
 BabelWires is intended to be more flexible and expressive than command-line conversion utilities while having a lower barrier to entry than programming languages.
 
-## Structured Data Flow
+## Compound Data Flow
 
-BabelWires uses a variant of the [dataflow paradigm](https://en.wikipedia.org/wiki/Dataflow_programming) I'm calling _structured data flow_.
+BabelWires uses a variant of the [dataflow paradigm](https://en.wikipedia.org/wiki/Dataflow_programming) I'm calling _compound data flow_.
 
 As in conventional data flow systems, there are nodes with ports that can be wired together: In BabelWires, data enters the system at nodes corresponding to input files, passes through data processing nodes and reaches nodes corresponding to output files.
 
-Less conventionally, the nodes and connections in BabelWires have a _structure_ defined by the types of a type system.
-Complex nodes with multiple ports correspond to values of compound data types.
+Less conventionally, the nodes and connections in BabelWires have a structure defined by the types of a type system.
+That structure can correspond to _compound data types_ such as arrays and records.
 In the simple synthetic example below, the nodes contain arrays of integers.
 The UI presents such nodes as expandable, hierarchical property panels.
 In the example, the top connection assigns the whole array value on the left to the array on the right.
