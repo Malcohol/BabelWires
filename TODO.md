@@ -72,6 +72,7 @@ Refactor:
 * Can any classes be simplified using operator <=>?
 * Rename TypeRef to something like TypeExpression or TypoExpr.
 * Should Types be memory managed using shared_ptr, to allow purely constructed types to be collected?
+* Rational should use the new Unicode utils and not require UI specialization.
 
 UI:
 * ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.

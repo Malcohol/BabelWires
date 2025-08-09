@@ -1,4 +1,11 @@
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
+/**
+ *
+ *
+ * (C) 2025 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#include <BabelWiresQtUi/ValueEditors/typeWidget.hpp>
 
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
@@ -11,7 +18,7 @@
 #include <unordered_set>
 
 babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem,
-                                   const MapProject::AllowedTypes& allowedTypeRefs)
+                                   const std::vector<TypeRef>& allowedTypeRefs)
     : QComboBox(parent)
     , m_hasBadItem(false) {
     m_defaultStyleSheet = styleSheet();
@@ -22,7 +29,7 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
 
     // Ensure uniqueness.
     std::unordered_set<TypeRef> typeRefSet;
-    for (const auto& typeRef : allowedTypeRefs.m_typeRefs) {
+    for (const auto& typeRef : allowedTypeRefs) {
         typeRefSet.insert(typeRef);
     }
 

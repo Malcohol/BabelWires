@@ -15,6 +15,7 @@ SET( BABELWIRESQTUI_SRCS
     ValueEditors/spinBoxValueEditor.cpp
     ValueEditors/lineEditValueEditor.cpp
     ValueEditors/tupleValueEditor.cpp
+    ValueEditors/typeWidget.cpp
     ValueEditors/valueEditorCommonBase.cpp
     NodeEditorBridge/NodeFactories/nodeFactory.cpp
     NodeEditorBridge/NodeFactories/processorNodeFactory.cpp
@@ -39,7 +40,6 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/complexValueEditorFactory.cpp
     ComplexValueEditors/complexValueEditorManager.cpp
     ComplexValueEditors/MapEditor/mapEditor.cpp
-    ComplexValueEditors/MapEditor/typeWidget.cpp
     ComplexValueEditors/MapEditor/mapModel.cpp
     ComplexValueEditors/MapEditor/mapModelDelegate.cpp
     ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModel.cpp
