@@ -106,6 +106,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/resizeNodeCommand.cpp
 	Project/Commands/selectRecordVariantCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
+	Project/Commands/setTypeVariableCommand.cpp
 	Project/Commands/Subcommands/removeSimpleModifierSubcommand.cpp
 	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
 	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp

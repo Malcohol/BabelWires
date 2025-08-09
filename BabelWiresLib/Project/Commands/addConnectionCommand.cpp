@@ -10,6 +10,7 @@
 
 #include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/Commands/setTypeVariableCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -74,22 +75,10 @@ bool babelwires::AddConnectionCommand::initializeAndExecute(Project& project) {
             // rather than the TypeRef are the output node.
             const TypeRef& currentAssignment = genericType.getTypeAssignment(genericNode->getValue(), variableData->m_typeVariableIndex);
             if (!currentAssignment) {
-                auto newData = std::make_unique<SetTypeVariableModifierData>();
-                newData->m_targetPath = getPathTo(genericNode);
-                if (const Modifier *const currentModifier = targetNode->findModifier(newData->m_targetPath)) {
-                    if (const auto* const setTypeVariableModifier = currentModifier->getModifierData().as<SetTypeVariableModifierData>()) {
-                        // If the modifier already exists, then we can just update it.
-                        newData->m_typeAssignments = setTypeVariableModifier->m_typeAssignments;
-                    } else {
-                        // If the modifier exists, but is not a SetTypeVariableModifierData, then we need to remove it.
-                        addSubCommand(std::make_unique<RemoveModifierCommand>("Remove existing modifier subcommand",
-                                                                              m_targetNodeId,
-                                                                              m_typeAssignmentModifier->m_targetPath));
-                    }
-                }
-                newData->m_typeAssignments.resize(genericType.getNumVariables());
-                newData->m_typeAssignments[variableData->m_typeVariableIndex] = output->getType().getTypeRef();
-                addSubCommand(std::make_unique<AddModifierCommand>("Set type variable", m_targetNodeId, std::move(newData)));
+                auto subCommand = std::make_unique<SetTypeVariableCommand>(
+                    "Set type variable", m_targetNodeId, getPathTo(genericNode), variableData->m_typeVariableIndex,
+                    output->getType().getTypeRef());
+                addSubCommand(std::move(subCommand));
             }
         }
     }

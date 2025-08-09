@@ -33,6 +33,7 @@ SET( BABELWIRESQTUI_SRCS
     ModelBridge/ContextMenu/saveFileAsAction.cpp
     ModelBridge/ContextMenu/setArraySizeAction.cpp
     ModelBridge/ContextMenu/openValueEditorAction.cpp
+    ModelBridge/ContextMenu/setTypeVariableAction.cpp
     Utilities/colours.cpp
     Utilities/fileDialogs.cpp
     Utilities/qtUtils.cpp
@@ -50,8 +51,10 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/MapContextMenuActions/mapCommandContextMenuAction.cpp
     ContextMenu/contextMenu.cpp
     ContextMenu/contextMenuAction.cpp
+    Dialogs/typeInputDialog.cpp
     ValueModels/arrayValueModel.cpp
     ValueModels/enumValueModel.cpp
+    ValueModels/genericTypeValueModel.cpp
     ValueModels/intValueModel.cpp
     ValueModels/rationalValueModel.cpp
     ValueModels/recordValueModel.cpp
