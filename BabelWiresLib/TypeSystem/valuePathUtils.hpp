@@ -21,4 +21,8 @@ namespace babelwires {
     /// Obtain a reference to a ValueHolder to data in a copy of start.
     /// Throws if the path cannot be followed.
     std::tuple<const Type&, ValueHolder&> followPathNonConst(const TypeSystem& typeSystem, const Type& type, const Path& path, ValueHolder& start);
+    
+    /// For each path, call the visitor at the corresponding value.
+    /// Asserts if the paths cannot be followed.
+    void visitPathsNonConst(const TypeSystem& typeSystem, const Type& type, ValueHolder& value, const std::vector<Path>& paths, const std::function<void(const Type&, ValueHolder&)>& visitor);
 }

@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 
-#include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/Commands/addConnectionCommand.hpp>
 #include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
@@ -21,7 +21,7 @@ babelwires::ConnectionDescription::getConnectionCommand() const {
     modifier->m_sourceId = m_sourceId;
     modifier->m_targetPath = m_targetPath;
     modifier->m_sourcePath = m_sourcePath;
-    return std::make_unique<babelwires::AddModifierCommand>("Add connection", m_targetId, std::move(modifier));
+    return std::make_unique<babelwires::AddConnectionCommand>("Add connection", m_targetId, std::move(modifier));
 }
 
 std::unique_ptr<babelwires::Command<babelwires::Project>>

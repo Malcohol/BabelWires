@@ -15,14 +15,6 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
-#include <cassert>
-#include <functional>
-#include <memory>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <vector>
-
 namespace babelwires {
     class Type;
     class ValueTreeRoot;
@@ -33,6 +25,7 @@ namespace babelwires {
     /// A ValueTree holds a Value and adds:
     /// 1. Change management (i.e. recording when a value has changed)
     /// 2. Ownership (i.e. storing a parent pointer, which allows the paths to values to be constructed)
+    /// 3. Convenient access to the TypeSystem.
     /// Note that the underlying values can be shared, so they cannot carry this data.
     class ValueTreeNode {
       public:

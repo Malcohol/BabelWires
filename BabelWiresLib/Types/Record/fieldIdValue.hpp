@@ -1,5 +1,5 @@
 /**
- * Holds the identifier of a field name.
+ * Holds the identifier of a field.
  *
  * (C) 2025 Malcolm Tyrrell
  *
@@ -11,6 +11,8 @@
 
 namespace babelwires {
 
+    /// Holds the identifier of a field.
+    /// This allows field identifiers to be made available to the RecordTypeConstructor.
     class FieldIdValue : public IdentifierValueBase<ShortId> {
       public:
         CLONEABLE(FieldIdValue);

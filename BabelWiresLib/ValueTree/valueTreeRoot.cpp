@@ -59,7 +59,6 @@ void babelwires::ValueTreeRoot::doSetToDefault() {
 }
 
 void babelwires::ValueTreeRoot::setDescendentValue(const Path& path, const ValueHolder& newValue) {
-    assert((path.getNumSteps() > 0) && "SetDescendentValue is only intended for strict descendents");
     ValueHolder newRootValue = getValue();
     auto [_, valueInCopy] = followPathNonConst(m_typeSystem, getType(), path, newRootValue);
     valueInCopy = newValue;

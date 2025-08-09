@@ -16,8 +16,8 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("EnumAtom", "[0]", "cb88eeac-92e6-4a77-aa73-04db08c0d628", 1);
 
-        std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                            const std::vector<EditableValueHolder>& valueArguments) const override;
+        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
+                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
 
         /// Convenience method.
         static TypeRef makeTypeRef(EnumValue value);

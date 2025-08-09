@@ -28,17 +28,19 @@ babelwires::IntTypeConstructor::extractValueArguments(const std::vector<Editable
     return {{args[0], args[1]}, args[2]};
 }
 
-std::unique_ptr<babelwires::Type>
-babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                              const std::vector<EditableValueHolder>& valueArguments) const {
-    if (typeArguments.size() != 0) {
+babelwires::TypeConstructor::TypeConstructorResult
+babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+                                              const TypeConstructorArguments& arguments,
+                                              const std::vector<const Type*>& resolvedTypeArguments) const {
+    if (arguments.m_typeArguments.size() != 0) {
         throw TypeSystemException() << "IntTypeConstructor does not expect type arguments but got "
-                                    << typeArguments.size();
+                                    << arguments.m_typeArguments.size();
     }
-    auto [range, defaultValue] = extractValueArguments(valueArguments);
+    auto [range, defaultValue] = extractValueArguments(arguments.m_valueArguments);
     return std::make_unique<ConstructedType<IntType>>(std::move(newTypeRef), range, defaultValue);
 }
 
-babelwires::TypeRef babelwires::IntTypeConstructor::makeTypeRef(IntValue::NativeType min, IntValue::NativeType max, IntValue::NativeType defaultValue) {
+babelwires::TypeRef babelwires::IntTypeConstructor::makeTypeRef(IntValue::NativeType min, IntValue::NativeType max,
+                                                                IntValue::NativeType defaultValue) {
     return TypeRef(getThisIdentifier(), IntValue(min), IntValue(max), IntValue(defaultValue));
 }

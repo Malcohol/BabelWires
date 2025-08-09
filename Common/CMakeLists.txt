@@ -25,6 +25,7 @@ SET( COMMON_SRCS
 	Signal/signalSubscription.cpp
 	BlockStream/blockStream.cpp
 	Utilities/result.cpp
+	Utilities/unicodeUtils.cpp
    )
 
 ADD_LIBRARY( Common ${COMMON_SRCS} )
