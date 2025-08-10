@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 
 #include <optional>
 
@@ -27,16 +28,7 @@ namespace babelwires {
         /// Convenience method.
         static TypeRef makeTypeRef(unsigned int typeVariableIndex = 0, unsigned int numGenericTypeLevels = 0);
 
-        struct VariableData {
-          unsigned int m_typeVariableIndex;
-          unsigned int m_numGenericTypeLevels;
-        };
-
-        /// Convenience method
-        static std::optional<VariableData> isTypeVariable(const TypeRef& typeRef);
-
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
-        static VariableData
-        extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
+        static TypeVariableData extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
     };
 } // namespace babelwires

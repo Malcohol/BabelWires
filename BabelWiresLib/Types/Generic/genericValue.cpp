@@ -70,7 +70,7 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
         TypeRef operator()(const TypeConstructorId& constructorId,
                            const TypeConstructorArguments& constructorArguments) {
             if (constructorId == TypeVariableTypeConstructor::getThisIdentifier()) {
-                const TypeVariableTypeConstructor::VariableData variableData =
+                const TypeVariableData variableData =
                     TypeVariableTypeConstructor::extractValueArguments(constructorArguments.m_valueArguments);
                 if (variableData.m_numGenericTypeLevels == m_level) {
                     const auto& typeAssignments = m_genericValue.m_typeVariableAssignments;

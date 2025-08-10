@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
-babelwires::TypeVariableTypeConstructor::VariableData
+babelwires::TypeVariableData
 babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
     // TODO make optional
     if (valueArguments.size() != 2) {
@@ -62,24 +62,4 @@ babelwires::TypeRef babelwires::TypeVariableTypeConstructor::makeTypeRef(unsigne
                                                                          unsigned int numGenericTypeLevels) {
     return babelwires::TypeRef{getThisIdentifier(), babelwires::IntValue(typeVariableIndex),
                                babelwires::IntValue(numGenericTypeLevels)};
-}
-
-std::optional<babelwires::TypeVariableTypeConstructor::VariableData> babelwires::TypeVariableTypeConstructor::isTypeVariable(const TypeRef& typeRef) {
-    struct Visitor {
-        std::optional<VariableData> operator()(std::monostate) {
-            return {};
-        }
-        std::optional<VariableData> operator()(const RegisteredTypeId& typeId) { 
-            // Reasonable assumption: no one would register a type variable type.
-            return {};
-        }
-        std::optional<VariableData> operator()(const TypeConstructorId& constructorId, const TypeConstructorArguments& constructorArguments) {
-            if (constructorId == TypeVariableTypeConstructor::getThisIdentifier()) {
-                return extractValueArguments(constructorArguments.m_valueArguments);
-            } else {
-                return {};
-            }
-        }
-    } visitor;
-    return typeRef.visit<Visitor, std::optional<VariableData>>(visitor);
 }

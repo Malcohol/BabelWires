@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
-#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 
 namespace babelwires {
 
@@ -21,12 +21,8 @@ namespace babelwires {
         std::string getFlavour() const override;
 
         /// Convenience method that extracts the data from this type's TypeRef.
-        /// This method asserts if this type was not constructed in the expected way.
-        TypeVariableTypeConstructor::VariableData getVariableData() const;
-
-        static constexpr unsigned int c_maxNumTypeVariables = 26;
-
-        static std::string toString(TypeVariableTypeConstructor::VariableData variableData);
+        /// The method asserts if this type was not constructed in the expected way.
+        TypeVariableData getVariableData() const;
 
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

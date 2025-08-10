@@ -18,7 +18,7 @@
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
-#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 
@@ -67,7 +67,7 @@ bool babelwires::AddConnectionCommand::initializeAndExecute(Project& project) {
     }
 
     const TypeRef& type = inputTreeNode->getTypeRef();
-    if (auto variableData = TypeVariableTypeConstructor::isTypeVariable(type)) {
+    if (auto variableData = TypeVariableData::isTypeVariable(type)) {
         if (auto genericNode = tryGetGenericTypeFromVariable(*inputTreeNode)) {
             const GenericType& genericType = genericNode->getType().is<GenericType>();
             assert (variableData->m_typeVariableIndex < genericType.getNumVariables());

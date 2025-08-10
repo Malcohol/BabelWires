@@ -45,7 +45,7 @@ babelwires::GenericType::GenericType(TypeRef wrappedType, unsigned int numVariab
     : m_wrappedType(std::move(wrappedType))
     , m_numVariables(numVariables) {
     assert(m_numVariables > 0 && "GenericType must have at least one type variable");
-    assert(m_numVariables <= TypeVariableType::c_maxNumTypeVariables && "GenericType with too many type variables");
+    assert(m_numVariables <= TypeVariableData::c_maxNumTypeVariables && "GenericType with too many type variables");
     // Height is used to choose a visualization of type variables.
     // Registered types that are themselves generic types could lead to duplication, but that's not a big problem.
     m_genericTypeHeight = calculateGenericTypeHeight(m_wrappedType);
@@ -127,7 +127,7 @@ std::string babelwires::GenericType::valueToString(const TypeSystem& typeSystem,
         if (assignment) {
             os << assignment.toString();
         } else {
-            os << TypeVariableType::toString({i, 0});
+            os << TypeVariableData{i}.toString();
         }
         sep = ", ";
     }

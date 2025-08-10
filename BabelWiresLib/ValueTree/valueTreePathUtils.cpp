@@ -8,7 +8,7 @@
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
-#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
@@ -112,7 +112,7 @@ const babelwires::ValueTreeNode* babelwires::tryFollowPath(const Path& path, con
 }
 
 const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode) {
-    auto variableData = TypeVariableTypeConstructor::isTypeVariable(valueTreeNode.getTypeRef());
+    auto variableData = TypeVariableData::isTypeVariable(valueTreeNode.getTypeRef());
     assert(variableData && "ValueTreeNode is not a type variable");
 
     unsigned int level = variableData->m_numGenericTypeLevels;
